@@ -85,14 +85,14 @@ export default class ShoppingCart extends Component {
                 </Header>
               </Menu.Item>
 
-              <Menu.Menu position='right'>
+              {/* <Menu.Menu position='right'>
                 <Menu.Item>
                   <Button icon basic labelPosition='left' data-test="shopping_cart_back_btn" onClick={() => { Router.push('/marketplace/all') }}>
                     <Icon name='chevron left' />
                     <FormattedMessage id='cart.backToProductPurchaseInfo' defaultMessage='Back to Product/Purchase info'>{(text) => text}</FormattedMessage>
                   </Button>
                 </Menu.Item>
-              </Menu.Menu>
+              </Menu.Menu> */}
             </Menu>
           </Container>
         </div>
@@ -117,7 +117,7 @@ export default class ShoppingCart extends Component {
                 handleContinue={this.handleContinueShopping}
                 open={this.state.modalOpen}
                 trigger={
-                  <Button size='large' basic fluid color='blue' data-test="shopping_cart_keep_shopping_btn" onClick={() => this.props.sidebarChanged({ isOpen: !this.props.sidebar.isOpen })}>
+                  <Button size='large' basic fluid color='blue' data-test="shopping_cart_keep_shopping_btn" onClick={() => Router.push('/marketplace/all')}>
                     <FormattedMessage id='cart.keepShopping' defaultMessage='Keep Shopping'>{(text) => text}</FormattedMessage>
                   </Button>
                 } />

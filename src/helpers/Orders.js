@@ -6,6 +6,8 @@ export function getOrderStatus(orderStatus) {
             return 'Confirmed'
         case 3:
             return 'Rejected'
+        case 4:
+            return 'Draft'
         default:
             return 'N/A'
     }
@@ -42,11 +44,15 @@ export function getReviewStatus(reviewStatus) {
 export function getPaymentStatus(paymentStatus) {
     switch (paymentStatus) {
         case 1:
-            return 'Escrow'
+            return 'Pending'
         case 2:
             return 'Paid'
         case 3:
             return 'Refunded'
+        case 4:
+            return 'Canceled'
+        case 5:
+            return 'Failed'
         default:
             return 'N/A'
     }

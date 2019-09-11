@@ -10,6 +10,7 @@ export const initialState = {
   popupValues: null,
   isOpenPopup: false,
   isOpenPopup2: false,
+  isOpenUploadDocumentsPopup: null,
   usersRows: [],
   userEditRoles: false,
   roles: [],
@@ -131,6 +132,18 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenImportPopup: false
         //popupValues: null
+      }
+    }
+    case AT.SETTINGS_OPEN_UPLOAD_DOCUMENTS_POPUP: {
+      return {
+        ...state,
+        isOpenUploadDocumentsPopup: true
+      }
+    }
+    case AT.SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP: {
+      return {
+        ...state,
+        isOpenUploadDocumentsPopup: false
       }
     }
     case AT.OPEN_ROLES_POPUP: {

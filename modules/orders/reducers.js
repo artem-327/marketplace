@@ -1,5 +1,6 @@
 import * as AT from './action-types'
 import { INVENTORY_LINK_ATTACHMENT } from '~/modules/inventory/action-types'
+import { getSafe } from '~/utils/functions'
 
 const initialState = {
     data: [],
@@ -14,7 +15,9 @@ const initialState = {
     selectedIndex: -1,
     statusFilter: null,
     searchedCompanies: [],
-    openedAssignLots: false
+    openedAssignLots: false,
+    openedReinitiateTransfer: false,
+    bankAccounts: []
 }
 
 export default function(state = initialState, action) {
@@ -115,6 +118,27 @@ export default function(state = initialState, action) {
                 ...state,
                 openedAssignLots: false
             }
+        case AT.ORDER_OPEN_REINITIATE_TRANSFER:
+            return {
+                ...state,
+                openedReinitiateTransfer: true
+            }
+        case AT.ORDER_CLOSE_REINITIATE_TRANSFER:
+            return {
+                ...state,
+                openedReinitiateTransfer: false
+            }
+        case AT.ORDER_LOAD_BANK_ACCOUNTS_FULFILLED:
+            return {
+                ...state,
+                bankAccounts: action.payload.data.map(bankAccount => {
+                    return {
+                        id: bankAccount.id,
+                        text: bankAccount.name,
+                        value: bankAccount.id
+                    }
+                })
+            }
         case AT.ORDER_GET_LOTS_FULFILLED:
             // prepare lots for used product offers
             let poLots = (state.detail.lots ? state.detail.lots : [])
@@ -140,11 +164,13 @@ export default function(state = initialState, action) {
                 })
             })
 
+            const statePoLots = getSafe(() => state.detail.poLots, [])
+
             return {
                 ...state,
                 detail: {
                     ...state.detail,
-                    poLots: poLots
+                    poLots: statePoLots.concat(poLots)
                 }
             }
         case AT.ORDER_ASSIGN_LOTS_FULFILLED:
@@ -163,6 +189,14 @@ export default function(state = initialState, action) {
                             ...orderItem
                         }
                   })
+                }
+            }
+        case AT.ORDER_PAY_ORDER_FULFILLED:
+            return {
+                ...state,
+                detail: {
+                    ...state.detail,
+                    ...action.payload.data
                 }
             }
         default:

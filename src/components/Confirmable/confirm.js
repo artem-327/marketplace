@@ -8,7 +8,7 @@ const confirm = createConfirmation(ConfirmDialog);
 
 // confirm function easy to call.
 export default function (title, confirmation, options = {
-    cancelText: <FormattedMessage id='global.cancel' defaultMessage='Cancel' />,
+    cancelText: <FormattedMessage id='global.no' defaultMessage='No' />,
     proceedText: <FormattedMessage id='global.yes' defaultMessage='Yes' />
 }) {
     return confirm({ title, confirmation, options })

@@ -13,7 +13,7 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { AttachmentManager } from '~/modules/attachments'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
-import ProdexTable from '~/components/table'
+
 
 const TopDivider = styled(Divider)`
   padding-bottom: 20px;
@@ -42,10 +42,6 @@ const TopMargedColumn = styled(GridColumn)`
   margin-top: 6px !important;
 `
 
-const BottomUnpaddedRow = styled(GridRow)`
-  padding-bottom: 0px !important;
-`
-
 const TableCellBig = styled(TableCell)`
   @media (min-width: 768px) {
     width: 15%;
@@ -70,6 +66,28 @@ const TableCellMini = styled(TableCell)`
 const GridHeader = styled(Header)`
   padding-top: 10px !important;
   font-size: 1.142857em !important;
+  font-weight: 500;
+`
+
+const InnerRow = styled(GridRow)`
+  padding-top: 0 !important;
+  padding-bottom: 1em !important;
+  
+  &.header {
+    padding-top: calc(1rem -  0.14285714em) !important;
+    
+    h3.ui.header:first-child {
+      margin-top: 0;
+    }
+    
+    &:first-child h3.ui.header:first-child {
+      margin-top: -0.14285714em;
+    }
+  }
+  
+  &.divider {
+    padding-bottom: 0 !important;
+  }
 `
 
 const initValues = {
@@ -525,14 +543,19 @@ class AddInventoryForm extends Component {
                           <DropdownMenu.Item text={formatMessage({ id: 'addInventory.documents.view', defaultMessage: 'View' })} onClick={() => this.viewAttachment(document.name, document.id)} />
                         ) : null}
                         <DropdownMenu.Item text={formatMessage({ id: 'global.download', defaultMessage: 'Download' })} onClick={() => this.downloadAttachment(document.name, document.id)} />
-                        <DropdownMenu.Item text={formatMessage({ id: 'global.delete', defaultMessage: 'Delete' })} onClick={() => this.removeAttachment(
-                          document.lotId ? true : false, // isLot
-                          document.name, // documentName
-                          document.id, // documentId
-                          document.lotId ? document.lotId : this.props.id, // connectedId
-                          values,
-                          setFieldValue
-                        )} />
+                        <DropdownMenu.Item text={formatMessage({ id: 'global.delete', defaultMessage: 'Delete' })} onClick={() => confirm(
+                          formatMessage({ id: 'confirm.deleteAttachment', defaultMessage: 'Delete Attachment' }),
+                          formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${document.name}?` }, { item: document.name })
+                        ).then(() => {
+                          this.removeAttachment(
+                            document.lotId ? true : false, // isLot
+                            document.name, // documentName
+                            document.id, // documentId
+                            document.lotId ? document.lotId : this.props.id, // connectedId
+                            values,
+                            setFieldValue
+                          )
+                        })} />
                       </DropdownMenu.Menu>
                     </DropdownMenu>
                   </Table.Cell>
@@ -565,8 +588,8 @@ class AddInventoryForm extends Component {
     for (let i = 0; i < count; i++) {
 
       tiers.push(
-        <GridRow>
-          <TopMargedColumn computer={2}>
+        <InnerRow>
+          <TopMargedColumn computer={2} textAlign='center'>
             <label name={`pricingTiers[${i}].level`}>{i + 1}</label>
           </TopMargedColumn>
 
@@ -585,18 +608,18 @@ class AddInventoryForm extends Component {
           <GridColumn computer={1} data-test={`add_inventory_manuallyModified_${i}_inp`} >
             <Input name={`pricingTiers[%{i}].manuallyModified`} inputProps={{ type: 'hidden', value: 0 }} />
           </GridColumn>
-        </GridRow>
+        </InnerRow>
       )
     }
 
     return (
       <>
-        <BottomUnpaddedRow>
+        <InnerRow>
           <GridColumn computer={2}><FormattedMessage id='addInventory.level' defaultMessage='Level' /></GridColumn>
           <GridColumn computer={1} />
           <GridColumn computer={6}><FormattedMessage id='global.quantity' defaultMessage='Quantity' /></GridColumn>
           <GridColumn computer={6}><FormattedMessage id='addInventory.fobPrice' defaultMessage='FOB Price' /></GridColumn>
-        </BottomUnpaddedRow>
+        </InnerRow>
         {tiers}
       </>
     )
@@ -606,9 +629,11 @@ class AddInventoryForm extends Component {
     const {
       activeIndex
     } = this.state
+    console.log(values)
+    let defaultMessage = values.product ? 'N/A' : ''
 
     const { toastManager, intl: { formatMessage } } = this.props
-
+    let casProducts = getSafe(() => values.product.casProducts, '')
     return (
       <Grid className='product-details' centered>
         <CustomPaddedColumn>
@@ -627,52 +652,56 @@ class AddInventoryForm extends Component {
               <Accordion.Content active={activeIndex === 0}>
                 <Grid columns={2} className='data-grid'>
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.productName' defaultMessage='Product Name' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product ? values.product.productName : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.productName, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.productNumber' defaultMessage='Product Number' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product ? values.product.productCode : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.productCode, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.measurement' defaultMessage='Measurement' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product ? values.product.packagingSize : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.packagingSize, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.um' defaultMessage='U/M' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingUnit ? values.product.packagingUnit.name : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.packagingUnit.name, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.up' defaultMessage='U/P' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingType ? values.product.packagingType.name : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.packagingType.name, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.casIndexName' defaultMessage='CAS Index Name' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.casIndexName : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}><p>{casProducts && (casProducts.length > 1 ? 'Blend' : casProducts[0].casProduct.casIndexName)}</p></GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.casNumber' defaultMessage='CAS Number' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.casNumber : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.casNumberCombined, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.masterProduct' defaultMessage='Master Product' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product ? !!values.product.masterProduct : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.masterProduct.toString(), defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.chemicalName' defaultMessage='Chemical Name' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.chemicalName : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{casProducts && (casProducts.length > 1 ? 'Blend' : casProducts[0].casProduct.chemicalName)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.hazaardous' defaultMessage='Hazaardous' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.hazaardous ? !!values.product.hazaardous : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{values.product && (getSafe(() => values.product.hazaardous.toString(), false) ? 'Yes' : 'No')}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.unCode' defaultMessage='UN Code' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.unNumber ? values.product.unNumber.unNumberCode : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.unNumber.unNumberCode, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.packGrp' defaultMessage='Packaging Group' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingGroup ? values.product.packagingGroup.groupCode : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.packagingGroup.groupCode, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.hazaardousClass' defaultMessage='Hazaardous Class' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{values.product && values.product.hazardClasses ? values.product.hazardClasses.map(hClass => { return (<Popup content={hClass.description} trigger={<Label>{hClass.classCode}</Label>} />) }) : ''}</Label.Group></GridColumn>
+                  <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{
+                    getSafe(() => values.product.hazardClasses.length > 0, false)
+                      ? values.product.hazardClasses.map(hClass => (<Popup content={hClass.description} trigger={<Label>{hClass.classCode}</Label>} />)) : defaultMessage}
+                  </Label.Group>
+                  </GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.stackable' defaultMessage='Stackable' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product ? values.product.stackable : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{values.product && (getSafe(() => values.product.stackable) ? 'Yes' : 'No')}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.freightClass' defaultMessage='Freight Class' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product ? values.product.freightClass : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.freightClass, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.nmfcNumber' defaultMessage='NMFC Number' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product ? values.product.nmfcNumber : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.nmfcNumber, defaultMessage)}</GridColumn>
                 </Grid>
               </Accordion.Content>
             </Accordion>
@@ -713,8 +742,8 @@ class AddInventoryForm extends Component {
                               <FormattedMessage id='addInventory.invalidForm' defaultMessage='Form is invalid' />,
                               <FormattedMessage id='addInventory.fixErrorsBeforeSubmit' defaultMessage='There are errors on current tab. Please, fix them before submit.' />,
                             ), {
-                                appearance: 'error'
-                              })
+                              appearance: 'error'
+                            })
                           }
                         }).catch(e => {
                           console.error('CATCH', e)
@@ -1011,181 +1040,202 @@ class AddInventoryForm extends Component {
                         <Tab.Pane style={{ padding: '0 32px' }}>
                           <Grid divided style={{ marginTop: '2rem' }}>
                             <Grid.Column computer={5} tablet={5} mobile={7}>
-                              <Header as='h3'>
-                                <FormattedMessage id='addInventory.whatToList' defaultMessage='What product do you want to list?'>
-                                  {(text) =>
-                                    <>
-                                      {text}
-                                      <Popup
-                                        content={<>
-                                          <FormattedMessage
-                                            id='addInventory.enterProductInfo1'
-                                            defaultMessage='Enter any product name, product number, or trade name from your product catalog for the product offer that you would like to list. Once you do the data related to that product name/umber will populate in the right hand column.' />
-                                          <br /><br />
-                                          <FormattedMessage
-                                            id='addInventory.enterProductInfo2'
-                                            defaultMessage='If you do not see the product that you would like to list then check in Settings/Product Catalog that it is entered and mapped to a CAS Index Name/Number and then return to this page.' />
-                                          <br /><br />
-                                          <FormattedMessage
-                                            id='addInventory.enterProductInfo3'
-                                            defaultMessage='Entering a product name and number and mapping to a CAS Index Name and Number is required first before entering a product offer.' />
-                                        </>
+                              <Grid>
+                                <InnerRow className='header'>
+                                  <GridColumn>
+                                    <Header as='h3'>
+                                      <FormattedMessage id='addInventory.whatToList' defaultMessage='What product do you want to list?'>
+                                        {(text) =>
+                                          <>
+                                            {text}
+                                            <Popup
+                                              content={<>
+                                                <FormattedMessage
+                                                  id='addInventory.enterProductInfo1'
+                                                  defaultMessage='Enter any product name, product number, or trade name from your product catalog for the product offer that you would like to list. Once you do the data related to that product name/umber will populate in the right hand column.' />
+                                                <br /><br />
+                                                <FormattedMessage
+                                                  id='addInventory.enterProductInfo2'
+                                                  defaultMessage='If you do not see the product that you would like to list then check in Settings/Product Catalog that it is entered and mapped to a CAS Index Name/Number and then return to this page.' />
+                                                <br /><br />
+                                                <FormattedMessage
+                                                  id='addInventory.enterProductInfo3'
+                                                  defaultMessage='Entering a product name and number and mapping to a CAS Index Name and Number is required first before entering a product offer.' />
+                                              </>
+                                              }
+                                              trigger={<Icon name='info circle' color='blue' />}
+                                              wide />
+                                          </>
                                         }
-                                        trigger={<Icon name='info circle' color='blue' />}
-                                        wide />
-                                    </>
-                                  }
 
-                                </FormattedMessage>
-                              </Header>
-                              <FormGroup>
-                                <FormField width={10}>
-                                  <Dropdown
-                                    label={formatMessage({ id: 'addInventory.productSearch', defaultMessage: 'Product Search' })}
-                                    name='product'
-                                    options={this.state.searchedProducts}
-                                    inputProps={{
-                                      'data-test': 'new_inventory_product_search_drpdn',
-                                      style: { width: '300px' },
-                                      size: 'large',
-                                      minCharacters: 3,
-                                      icon: 'search',
-                                      search: options => options,
-                                      selection: true,
-                                      clearable: true,
-                                      loading: searchedProductsLoading,
-                                      onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && this.searchProducts(searchQuery)
-                                    }}
-                                  />
-                                </FormField>
-                              </FormGroup>
+                                      </FormattedMessage>
+                                    </Header>
+                                  </GridColumn>
+                                </InnerRow>
+                                <InnerRow>
+                                  <GridColumn width={10}>
+                                    <Dropdown
+                                      label={formatMessage({ id: 'addInventory.productSearch', defaultMessage: 'Product Search' })}
+                                      name='product'
+                                      options={this.state.searchedProducts}
+                                      inputProps={{
+                                        'data-test': 'new_inventory_product_search_drpdn',
+                                        style: { width: '300px' },
+                                        size: 'large',
+                                        minCharacters: 3,
+                                        icon: 'search',
+                                        search: options => options,
+                                        selection: true,
+                                        clearable: true,
+                                        loading: searchedProductsLoading,
+                                        onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && this.searchProducts(searchQuery)
+                                      }}
+                                    />
+                                  </GridColumn>
+                                </InnerRow>
+                                <InnerRow className='header'>
+                                  <GridColumn>
+                                    <Header as='h3'><FormattedMessage id='addInventory.isInStock' defaultMessage='Is this product in stock?' /></Header>
+                                  </GridColumn>
+                                </InnerRow>
+                                <InnerRow>
+                                  <GridColumn computer={5} tablet={8}>
+                                    <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='inStock' data-test='add_inventory_instock_no_rad' />
+                                  </GridColumn>
+                                  <GridColumn computer={5} tablet={8}>
+                                    <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='inStock' data-test='add_inventory_instock_yes_rad' />
+                                  </GridColumn>
+                                </InnerRow>
+                                <InnerRow className='header'>
+                                  <GridColumn>
+                                    <Header as='h3'>
+                                      <FormattedMessage id='addInventory.pickupDays' defaultMessage='How many business days to pick up?'>{(text) => (
+                                        <>
+                                          {text}
+                                          <Popup
+                                            content={<FormattedMessage id='addInventory.pickupDays.description' defaultMessage='Processing Time is the number of business days from when an order is confirmed that it will take you to have your product offer ready for pick up at your designated warehouse. NOTE: Saturdays and Sundays do not count for Processing Time.' />}
+                                            trigger={<Icon name='info circle' color='blue' />}
+                                            wide />
+                                        </>
 
-                              <Header as='h3'><FormattedMessage id='addInventory.isInStock' defaultMessage='Is this product in stock?' /></Header>
-                              <FormGroup inline>
-                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='inStock' data-test='add_inventory_instock_no_rad' />
-                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='inStock' data-test='add_inventory_instock_yes_rad' />
-                              </FormGroup>
-                              <Header as='h3'>
-                                <FormattedMessage id='addInventory.pickupDays' defaultMessage='How many business days to pick up?'>{(text) => (
-                                  <>
-                                    {text}
-                                    <Popup
-                                      content={<FormattedMessage id='addInventory.pickupDays.description' defaultMessage='Processing Time is the number of business days from when an order is confirmed that it will take you to have your product offer ready for pick up at your designated warehouse. NOTE: Saturdays and Sundays do not count for Processing Time.' />}
-                                      trigger={<Icon name='info circle' color='blue' />}
-                                      wide />
-                                  </>
+                                      )}</FormattedMessage>
 
-                                )}</FormattedMessage>
-
-                              </Header>
-                              <FormGroup>
-                                <FormField width={10}>
-                                  <Grid>
-                                    <GridRow>
-                                      <GridColumn computer={8} tablet={16}>
-
-
-                                        <Dropdown label='Processing Time' name='processingTimeNum' options={this.getProcessingTimes()}
-                                          inputProps={{
-                                            'data-test': 'new_inventory_processing_time_days_weeks_drpdn',
-                                            onChange: (e, { value }) => {
-                                              setFieldValue(`processingTimeDays`, value * values.processingTimeDW)
-                                            }
-                                          }}
-                                        />
-                                      </GridColumn>
-                                      <GridColumn computer={8} tablet={16}>
-                                        <Dropdown label='Days / Weeks' name='processingTimeDW' options={[{ value: 1, key: 1, text: 'Days' }, { value: 5, key: 5, text: 'Weeks' }]}
-                                          inputProps={{
-                                            'data-test': 'new_inventory_processing_time_value_drpdn',
-                                            onChange: (e, { value }) => {
-                                              setFieldValue(`processingTimeDays`, values.processingTimeNum * value)
-                                            }
-                                          }}
-                                        />
-                                      </GridColumn>
-                                    </GridRow>
-                                  </Grid>
-                                </FormField>
-                              </FormGroup>
-
-                              <Header as='h3'>
-                                <FormattedMessage id='addInventory.expiration' defaultMessage='Does this offer expire?'>
-                                  {(text) => (
-                                    <>
-                                      {text}
-                                      <Popup
-                                        content={<FormattedMessage id='addInventory.expirationDescription' defaultValue='If you would like to limit this pricing for a certain time period then enter the last date that you would like to make this offer available. After the date this product will not be available on the Marketplace until you adjust the date till into the future.' />}
-                                        trigger={<Icon name='info circle' color='blue' />}
-                                        wide />
-                                    </>
-                                  )}
-                                </FormattedMessage>
-                              </Header>
-                              <FormGroup inline>
-                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='doesExpire' data-test='add_inventory_expire_no_rad' />
-                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='doesExpire' data-test='add_inventory_expire_yes_rad' />
-                              </FormGroup>
-                              <FormGroup>
-                                <FormField width={10} >
-                                  <DateInput
-                                    inputProps={{ disabled: !values.doesExpire, 'data-test': 'add_inventory_product_expirationDate_dtin' }}
-                                    label={formatMessage({ id: 'addInventory.expirationDate', defaultMessage: 'Expiration Date' })}
-                                    name='validityDate' />
-                                </FormField>
-                              </FormGroup>
-
-                              <Header as='h3'>
-                                <FormattedMessage id='addInventory.shipFrom.header' defaultMessage='Where will this product ship from?'>{(text) => (
-                                  <>
-                                    {text}
-                                    <Popup
-                                      content={<FormattedMessage id='addInventory.shipFrom.description' defaultMessage='Warehouse is the physical location where your product offer will be picked up after an order is accepted. If you do not see the warehouse you need to list then go to Settings/Warehouses and add the information there. If you do not have permissions to add a new Warehouse then contact your company Admin.' />}
-                                      trigger={<Icon name='info circle' color='blue' />}
-                                      wide />
-                                  </>
-                                )}</FormattedMessage>
-                              </Header>
-                              <FormGroup>
-                                <FormField width={10}>
-                                  <Dropdown
-                                    label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })}
-                                    name='warehouse'
-                                    options={warehousesList} inputProps={{
-                                      selection: true,
-                                      value: 0
-                                    }}
-                                    inputProps={{ 'data-test': 'new_inventory_warehouse_drpdn' }} />
-                                </FormField>
-                              </FormGroup>
-
-                              <Header as='h3'>
-                                <FormattedMessage id='addInventory.availablePackages' defaultMessage='How many packages are available?'>
-                                  {(text) => (
-                                    <>
-                                      {text}
-                                      <Popup content={<FormattedMessage id='addInventory.availablePackages.description' defaultMessage='Total packages represents the number of drums, totes, super sacks etc that you will be listing for this product offer. Your packaging type and measurement for this product offer will populate on the right panel as soon as you select a product name/number.' />}
-                                        trigger={<Icon name='info circle' color='blue' />} />
-                                    </>
-                                  )}
-                                </FormattedMessage>
-                              </Header>
-                              <FormGroup>
-                                <FormField width={10} data-test='add_inventory_product_totalPackages_inp' >
-                                  <Input
-                                    label={formatMessage({ id: 'addInventory.totalPackages', defaultMessage: 'Total Packages' })}
-                                    inputProps={{ type: 'number', min: '1', step: '1' }}
-                                    name='pkgAmount' />
-                                </FormField>
-                              </FormGroup>
-
+                                    </Header>
+                                  </GridColumn>
+                                </InnerRow>
+                                <InnerRow>
+                                  <GridColumn computer={5} tablet={8} mobile={16}>
+                                    <Dropdown label='Processing Time' name='processingTimeNum' options={this.getProcessingTimes()}
+                                      inputProps={{
+                                        'data-test': 'new_inventory_processing_time_days_weeks_drpdn',
+                                        onChange: (e, { value }) => {
+                                          setFieldValue(`processingTimeDays`, value * values.processingTimeDW)
+                                        }
+                                      }}
+                                    />
+                                  </GridColumn>
+                                  <GridColumn computer={5} tablet={8} mobile={16}>
+                                    <Dropdown label='Days / Weeks' name='processingTimeDW' options={[{ value: 1, key: 1, text: 'Days' }, { value: 5, key: 5, text: 'Weeks' }]}
+                                      inputProps={{
+                                        'data-test': 'new_inventory_processing_time_value_drpdn',
+                                        onChange: (e, { value }) => {
+                                          setFieldValue(`processingTimeDays`, values.processingTimeNum * value)
+                                        }
+                                      }}
+                                    />
+                                  </GridColumn>
+                                </InnerRow>
+                                <InnerRow className='header'>
+                                  <GridColumn>
+                                    <Header as='h3'>
+                                      <FormattedMessage id='addInventory.expiration' defaultMessage='Does this offer expire?'>
+                                        {(text) => (
+                                          <>
+                                            {text}
+                                            <Popup
+                                              content={<FormattedMessage id='addInventory.expirationDescription' defaultValue='If you would like to limit this pricing for a certain time period then enter the last date that you would like to make this offer available. After the date this product will not be available on the Marketplace until you adjust the date till into the future.' />}
+                                              trigger={<Icon name='info circle' color='blue' />}
+                                              wide />
+                                          </>
+                                        )}
+                                      </FormattedMessage>
+                                    </Header>
+                                  </GridColumn>
+                                </InnerRow>
+                                <InnerRow>
+                                  <GridColumn computer={5} tablet={8}>
+                                    <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='doesExpire' data-test='add_inventory_expire_no_rad' />
+                                  </GridColumn>
+                                  <GridColumn computer={5} tablet={8}>
+                                    <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='doesExpire' data-test='add_inventory_expire_yes_rad' />
+                                  </GridColumn>
+                                </InnerRow>
+                                <InnerRow>
+                                  <GridColumn computer={10} tablet={16}>
+                                    <DateInput
+                                      inputProps={{ disabled: !values.doesExpire, 'data-test': 'add_inventory_product_expirationDate_dtin' }}
+                                      label={formatMessage({ id: 'addInventory.expirationDate', defaultMessage: 'Expiration Date' })}
+                                      name='validityDate' />
+                                  </GridColumn>
+                                </InnerRow>
+                                <InnerRow className='header'>
+                                  <GridColumn>
+                                    <Header as='h3'>
+                                      <FormattedMessage id='addInventory.shipFrom.header' defaultMessage='Where will this product ship from?'>{(text) => (
+                                        <>
+                                          {text}
+                                          <Popup
+                                            content={<FormattedMessage id='addInventory.shipFrom.description' defaultMessage='Warehouse is the physical location where your product offer will be picked up after an order is accepted. If you do not see the warehouse you need to list then go to Settings/Warehouses and add the information there. If you do not have permissions to add a new Warehouse then contact your company Admin.' />}
+                                            trigger={<Icon name='info circle' color='blue' />}
+                                            wide />
+                                        </>
+                                      )}</FormattedMessage>
+                                    </Header>
+                                  </GridColumn>
+                                </InnerRow>
+                                <InnerRow>
+                                  <GridColumn computer={10} tablet={16}>
+                                    <Dropdown
+                                      label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })}
+                                      name='warehouse'
+                                      options={warehousesList}
+                                      inputProps={{
+                                        selection: true,
+                                        value: 0,
+                                        'data-test': 'new_inventory_warehouse_drpdn'
+                                      }} />
+                                  </GridColumn>
+                                </InnerRow>
+                                <InnerRow className='header'>
+                                  <GridColumn>
+                                    <Header as='h3'>
+                                      <FormattedMessage id='addInventory.availablePackages' defaultMessage='How many packages are available?'>
+                                        {(text) => (
+                                          <>
+                                            {text}
+                                            <Popup content={<FormattedMessage id='addInventory.availablePackages.description' defaultMessage='Total packages represents the number of drums, totes, super sacks etc that you will be listing for this product offer. Your packaging type and measurement for this product offer will populate on the right panel as soon as you select a product name/number.' />}
+                                              trigger={<Icon name='info circle' color='blue' />} />
+                                          </>
+                                        )}
+                                      </FormattedMessage>
+                                    </Header>
+                                  </GridColumn>
+                                </InnerRow>
+                                <InnerRow>
+                                  <GridColumn computer={10} tablet={16} data-test='add_inventory_product_totalPackages_inp'>
+                                    <Input
+                                      label={formatMessage({ id: 'addInventory.totalPackages', defaultMessage: 'Total Packages' })}
+                                      inputProps={{ type: 'number', min: '1', step: '1' }}
+                                      name='pkgAmount' />
+                                  </GridColumn>
+                                </InnerRow>
+                              </Grid>
                             </Grid.Column>
                             <GridColumn computer={6} tablet={6} mobile={8}>
                               <Grid centered>
                                 <GridColumn width={12}>
                                   <Grid>
-
-                                    <GridRow>
+                                    <InnerRow className='header'>
                                       <GridColumn>
                                         <Header as='h3'>
                                           <FormattedMessage id='addInventory.minimumOrderRequirement' defaultMessage='Is there any order minimum requirement?'>
@@ -1204,8 +1254,9 @@ class AddInventoryForm extends Component {
                                           </FormattedMessage>
                                         </Header>
                                       </GridColumn>
-                                    </GridRow>
-                                    <GridRow>
+                                    </InnerRow>
+
+                                    <InnerRow>
                                       <GridColumn computer={8} tablet={16}>
                                         <Radio
                                           label={formatMessage({ id: 'global.no', defaultMessage: 'No' })}
@@ -1226,9 +1277,9 @@ class AddInventoryForm extends Component {
                                           name='minimumRequirement'
                                           data-test='add_inventory_minimumRequirement_yes_rad' />
                                       </GridColumn>
-                                    </GridRow>
+                                    </InnerRow>
 
-                                    <GridRow>
+                                    <InnerRow>
                                       <GridColumn computer={8} tablet={16} data-test='add_inventory_product_minimumOQ_inp' >
                                         <Input
                                           label={formatMessage({ id: 'addInventory.minimumOQ', defaultMessage: 'Minimum OQ' })}
@@ -1258,8 +1309,9 @@ class AddInventoryForm extends Component {
                                             onChange: (e, { value }) => this.onSplitsChange(value, values, setFieldValue, validateForm)
                                           }} />
                                       </GridColumn>
-                                    </GridRow>
-                                    <GridRow>
+                                    </InnerRow>
+
+                                    <InnerRow className='header'>
                                       <GridColumn>
                                         <Header as='h3'>
                                           <FormattedMessage id='addInventory.pricesCount' defaultMessage='How many price tiers would you like to offer?'>
@@ -1281,9 +1333,9 @@ class AddInventoryForm extends Component {
                                           </FormattedMessage>
                                         </Header>
                                       </GridColumn>
-                                    </GridRow>
+                                    </InnerRow>
 
-                                    <GridRow>
+                                    <InnerRow>
                                       <GridColumn computer={16} tablet={16}>
                                         <Dropdown
                                           label={formatMessage({ id: 'addInventory.priceTiers', defaultMessage: 'Price Tiers' })}
@@ -1302,10 +1354,10 @@ class AddInventoryForm extends Component {
                                           }}
                                         />
                                       </GridColumn>
-                                    </GridRow>
+                                    </InnerRow>
 
 
-                                    <GridRow>
+                                    <InnerRow className='header'>
                                       <GridColumn>
                                         <Header as='h3'>
                                           <FormattedMessage id='addInventory.fobPrice.header' defaultMessage='What is the FOB price for each tier?'>
@@ -1325,17 +1377,17 @@ class AddInventoryForm extends Component {
                                           </FormattedMessage>
                                         </Header>
                                       </GridColumn>
-                                    </GridRow>
+                                    </InnerRow>
                                     {/* <Grid> */}
                                     {this.renderPricingTiers(values.priceTiers, setFieldValue)}
                                     {/* </Grid> */}
-                                    <GridRow>
+                                    <InnerRow className='divider'>
                                       <GridColumn>
                                         <Divider />
                                       </GridColumn>
-                                    </GridRow>
+                                    </InnerRow>
 
-                                    <GridRow>
+                                    <InnerRow className='header'>
                                       <GridColumn>
                                         <Header as='h3'>
                                           <FormattedMessage id='addInventory.uploadSpecSheet.header' defaultMessage='Upload Spec Sheet'>
@@ -1359,53 +1411,57 @@ class AddInventoryForm extends Component {
                                           </FormattedMessage>
                                         </Header>
                                       </GridColumn>
-                                    </GridRow>
+                                    </InnerRow>
 
-                                    <UploadLot {...this.props}
-                                      attachments={values.attachments}
-                                      name='attachments'
-                                      type={2}
-                                      fileMaxSize={20}
-                                      onChange={(files) => setFieldValue(
-                                        `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
-                                        {
-                                          id: files.id,
-                                          name: files.name,
-                                          documentType: files.documentType
-                                        }
-                                      )}
-                                      data-test='new_inventory_attachments_drop'
-                                      emptyContent={(
-                                        <>
-                                          {formatMessage({ id: 'addInventory.dragDrop' })}
-                                          <br />
-                                          <FormattedMessage id='addInventory.dragDropOr'
-                                            defaultMessage={'or {link} to select from computer'}
-                                            values={{
-                                              link: (
-                                                <a>
-                                                  <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                                                </a>
-                                              )
-                                            }} />
-                                        </>
-                                      )}
-                                      uploadedContent={(
-                                        <label>
-                                          <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-                                          <br />
-                                          <FormattedMessage id='addInventory.dragDropOr'
-                                            defaultMessage={'or {link} to select from computer'}
-                                            values={{
-                                              link: (
-                                                <a>
-                                                  <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                                                </a>
-                                              )
-                                            }} />
-                                        </label>
-                                      )}
-                                    />
+                                    <InnerRow>
+                                      <GridColumn>
+                                        <UploadLot {...this.props}
+                                          attachments={values.attachments}
+                                          name='attachments'
+                                          type={2}
+                                          fileMaxSize={20}
+                                          onChange={(files) => setFieldValue(
+                                            `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+                                            {
+                                              id: files.id,
+                                              name: files.name,
+                                              documentType: files.documentType
+                                            }
+                                          )}
+                                          data-test='new_inventory_attachments_drop'
+                                          emptyContent={(
+                                            <>
+                                              {formatMessage({ id: 'addInventory.dragDrop' })}
+                                              <br />
+                                              <FormattedMessage id='addInventory.dragDropOr'
+                                                defaultMessage={'or {link} to select from computer'}
+                                                values={{
+                                                  link: (
+                                                    <a>
+                                                      <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                                    </a>
+                                                  )
+                                                }} />
+                                            </>
+                                          )}
+                                          uploadedContent={(
+                                            <label>
+                                              <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+                                              <br />
+                                              <FormattedMessage id='addInventory.dragDropOr'
+                                                defaultMessage={'or {link} to select from computer'}
+                                                values={{
+                                                  link: (
+                                                    <a>
+                                                      <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                                    </a>
+                                                  )
+                                                }} />
+                                            </label>
+                                          )}
+                                        />
+                                      </GridColumn>
+                                    </InnerRow>
                                     {/* </Segment> */}
                                   </Grid>
                                 </GridColumn>
@@ -1659,7 +1715,7 @@ class AddInventoryForm extends Component {
                                 )}
                               />
 
-                              <Header as='h3'><FormattedMessage id='addInventory.productCost' defaultMessage='PRODUCT COST' /></Header>
+                              <Header as='h3'><FormattedMessage id='addInventory.productCost' defaultMessage='Product Cost' /></Header>
                               <Grid>
                                 <GridColumn width={4}>
                                   <FormField width={12} data-test='add_inventory_costUOM_inp' >
@@ -1832,7 +1888,7 @@ class AddInventoryForm extends Component {
                           <Grid style={{ marginTop: '2rem' }}>
                             <GridColumn computer={11} tablet={11} mobile={16}>
                               {this.renderEditDocuments(values, setFieldValue, validateForm)}
-                              <Header as='h3'><FormattedMessage id='addInventory.additionalDocs' defaultMessage='ADDITIONAL DOCUMENTS' /></Header>
+                              <Header as='h3'><FormattedMessage id='addInventory.additionalDocs' defaultMessage='Additional Documents' /></Header>
                               <Grid>
                                 <GridColumn width={10}>
                                   <UploadLot {...this.props}

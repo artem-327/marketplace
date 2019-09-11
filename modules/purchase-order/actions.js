@@ -53,3 +53,5 @@ export const getStates = (search = null) => ({ type: AT.STATES_FETCH, payload: a
 export const getWarehouses = () => ({ type: AT.GET_WAREHOUSES, payload: api.getWarehouses() })
 
 export const updateHazmatInfo = (cartItemId, payload) => ({ type: AT.UPDATE_HAZMAT_INFO, payload: api.updateHazmatInfo(cartItemId, payload) })
+
+export const postPurchaseOrder = (values) => ({ type: AT.POST_PURCHASE_ORDER, payload: api.postPurchaseOrder(values) })

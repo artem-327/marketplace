@@ -20,5 +20,8 @@ export default {
   assignLots: (orderId, orderItemId, assignedLots) => api.patch(`/prodex/api/sale-orders/${orderId}/order-item/${orderItemId}/assign-lots`, assignedLots),
   linkAttachment: (lotId, aId) => api.post(`/prodex/api/attachment-links/to-lot?attachmentId=${aId}&lotId=${lotId}`),
   removeAttachment: (aId) => api.delete('/prodex/api/attachments/' + aId),
-  removeAttachmentLink: (lotId, aId) => api.delete(`/prodex/api/attachment-links/to-lot?attachmentId=${aId}&lotId=${lotId}`)
+  removeAttachmentLink: (lotId, aId) => api.delete(`/prodex/api/attachment-links/to-lot?attachmentId=${aId}&lotId=${lotId}`),
+  payOrder: (orderId, bankAccount) => api.post(`/prodex/api/payments/pay?purchaseOrderId=${orderId}&bankAccountId=${bankAccount}`),
+  cancelPayment: (orderId) => api.patch(`/prodex/api/payments/dwolla/transfer/${orderId}/cancel`),
+  loadBankAccounts: () => api.get(`/prodex/api/payments/bank-accounts`)
 }
