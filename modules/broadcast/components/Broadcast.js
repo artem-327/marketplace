@@ -113,7 +113,6 @@ class Broadcast extends Component {
   }
 
   handleChange = (node) => {
-    console.log('handleChnge')
     this.setState({ tree: this.state.tree, change: true, saved: false })
   }
 
