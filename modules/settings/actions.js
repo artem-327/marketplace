@@ -97,6 +97,17 @@ export function closeImportPopupCancel() {
   }
 }
 
+export function openUploadDocumentsPopup() {
+  return {
+    type: AT.SETTINGS_OPEN_UPLOAD_DOCUMENTS_POPUP
+  }
+}
+export function closeUploadDocumentsPopup() {
+  return {
+    type: AT.SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP
+  }
+}
+
 export function openEditPopup(rows) {
   return {
     type: AT.OPEN_EDIT_POPUP,

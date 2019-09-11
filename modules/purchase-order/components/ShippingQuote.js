@@ -70,7 +70,7 @@ export default class ShippingQuote extends Component {
           <Grid>
             <GridRow>
               <GridColumn computer={16}>
-                <FormattedMessage id='cart.nothing' defaultMessage='Nothing to show' />
+                <FormattedMessage id='cart.nothing' defaultMessage='Please, first select a shipping destination Warehouse or Delivery Address' />
               </GridColumn>
             </GridRow>
           </Grid>

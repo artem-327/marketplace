@@ -12,41 +12,41 @@ import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
 
 const textsTable = {
   'users': {
-    BtnAddText: 'User',
-    SearchText: 'Search user by name, title or branch ...'
+    BtnAddText: "settings.tables.users.buttonAdd",
+    SearchText: "settings.tables.users.search"
   },
   'branches': {
-    BtnAddText: 'Branch',
-    SearchText: 'Search branch by name, address or contact ...'
+    BtnAddText: "settings.tables.branches.buttonAdd",
+    SearchText: "settings.tables.branches.search"
   },
   'warehouses': {
-    BtnAddText: 'Warehouse',
-    SearchText: 'Search warehouse by name, address or contact ...'
+    BtnAddText: "settings.tables.warehouses.buttonAdd",
+    SearchText: "settings.tables.warehouses.search"
   },
   'products': {
-    BtnAddText: 'Product',
-    BtnImportText: 'Products',
-    SearchText: 'Search product catalog by name, number ...'
+    BtnAddText: "settings.tables.products.buttonAdd",
+    BtnImportText: "settings.tables.products.buttonImport",
+    SearchText: "settings.tables.products.search"
   },
   'global-broadcast': {
-    BtnAddText: 'Global Price Book',
-    SearchText: 'Search global broadcast by name ...'
+    BtnAddText: "settings.tables.globalBroadcast.buttonAdd",
+    SearchText: "settings.tables.globalBroadcast.search"
   },
   'credit-cards': {
-    BtnAddText: 'Credit card',
-    SearchText: 'Search credit card ...'
+    BtnAddText: "settings.tables.creditCards.buttonAdd",
+    SearchText: "settings.tables.creditCards.search"
   },
   'bank-accounts': {
-    BtnAddText: 'Bank Account',
-    SearchText: 'Search bank account ...'
+    BtnAddText: "settings.tables.bankAccounts.buttonAdd",
+    SearchText: "settings.tables.bankAccounts.search"
   },
   'delivery-addresses': {
-    BtnAddText: 'Delivery Address',
-    SearchText: 'Search delivery address ...'
+    BtnAddText: "settings.tables.deliveryAddresses.buttonAdd",
+    SearchText: "settings.tables.deliveryAddresses.search"
   },
   'logistics': {
-    BtnAddText: 'Logistics',
-    SearchText: 'Search logistics ...'
+    BtnAddText: "settings.tables.logistics.buttonAdd",
+    SearchText: "settings.tables.logistics.search"
   }
 }
 
@@ -87,12 +87,14 @@ class TablesHandlers extends Component {
       currentTab,
       openPopup,
       openImportPopup,
+      openUploadDocumentsPopup,
       handleProductCatalogUnmappedValue,
       productCatalogUnmappedValue,
       openDwollaPopup,
       dwollaAccBalance,
       openGlobalBroadcast,
-      bankAccounts
+      bankAccounts,
+      intl: { formatMessage }
     } = this.props
 
     const { filterValue } = this.state
@@ -114,7 +116,10 @@ class TablesHandlers extends Component {
                   size="large"
                   icon="search"
                   value={filterValue}
-                  placeholder={textsTable[currentTab.type].SearchText}
+                  placeholder={formatMessage({
+                    id: textsTable[currentTab.type].SearchText,
+                    defaultMessage: 'Select Credit Card'
+                  })}
                   onChange={this.handleFilterChange}
                 />
               </Menu.Item>
@@ -122,7 +127,7 @@ class TablesHandlers extends Component {
             <Menu.Item>
               {currentTab.type === 'products' && (
                 <Checkbox
-                  label='Unmapped only'
+                  label={<FormattedMessage id='settings.tables.products.unmappedOnly' defaultMessage='Unmapped only22' >{(text) => text}</FormattedMessage>}
                   defaultChecked={productCatalogUnmappedValue}
                   onChange={(e, { checked }) => Datagrid.setQuery({ unmappedOnly: checked })}
                   data-test='settings_dwolla_unmapped_only_chckb'
@@ -136,7 +141,7 @@ class TablesHandlers extends Component {
                   onClick={() => openDwollaPopup()}
                   data-test='settings_dwolla_open_popup_btn'
                 >
-                  Register Dwolla Account
+                  <FormattedMessage id='settings.tables.bankAccounts.registerDwolla' defaultMessage='Register Dwolla Account' >{(text) => text}</FormattedMessage>
               </Button>
               )}
               {(bankAccTab && bankAccounts.uploadDocumentsButton) && (
@@ -144,9 +149,10 @@ class TablesHandlers extends Component {
                   size="large"
                   style={{ marginLeft: 10 }}
                   primary
+                  onClick={() => openUploadDocumentsPopup()}
                   data-test='settings_dwolla_upload_documents_btn'
                 >
-                  Upload Documents
+                  <FormattedMessage id='settings.tables.bankAccounts.uploadDoc' defaultMessage='Upload Documents' >{(text) => text}</FormattedMessage>
                 </Button>
               )}
               {(bankAccTab && bankAccounts.dwollaBalance) && (
@@ -166,7 +172,7 @@ class TablesHandlers extends Component {
                   }}
                   data-test='settings_open_popup_btn'
                 >
-                  Add {textsTable[currentTab.type].BtnAddText}
+                  <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{(text) => text}</FormattedMessage>
                 </Button>
               )}
               {currentTab.type === 'products' && (
@@ -177,7 +183,7 @@ class TablesHandlers extends Component {
                   onClick={() => openImportPopup()}
                   data-test='settings_open_import_popup_btn'
                 >
-                  Import {textsTable[currentTab.type].BtnImportText}
+                  <FormattedMessage id={textsTable[currentTab.type].BtnImportText}>{(text) => text}</FormattedMessage>
                 </Button>
               )}
             </Menu.Item>
@@ -190,8 +196,7 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = (state) => {
   const company = get(state, 'auth.identity.company', null)
-  // ! ! Temporary, until 'dwollaAccountStatus' is returned from BE
-  const dwollaAccountStatus = company && company.dwollaAccountStatus ? company.dwollaAccountStatus : (company && company.hasDwollaAccount ? 'verified' : 'none')
+  const dwollaAccountStatus = company && company.dwollaAccountStatus || 'none'
 
   return {
     bankAccounts: bankAccountsConfig[dwollaAccountStatus],
