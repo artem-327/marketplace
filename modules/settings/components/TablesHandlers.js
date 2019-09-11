@@ -99,7 +99,7 @@ class TablesHandlers extends Component {
 
     const { filterValue } = this.state
     const bankAccTab = currentTab.type === 'bank-accounts'
-
+    console.log({ currentTab })
     return (
       <Menu secondary>
         <Menu.Item header>
@@ -142,7 +142,7 @@ class TablesHandlers extends Component {
                   data-test='settings_dwolla_open_popup_btn'
                 >
                   <FormattedMessage id='settings.tables.bankAccounts.registerDwolla' defaultMessage='Register Dwolla Account' >{(text) => text}</FormattedMessage>
-              </Button>
+                </Button>
               )}
               {(bankAccTab && bankAccounts.uploadDocumentsButton) && (
                 <Button
@@ -161,30 +161,31 @@ class TablesHandlers extends Component {
                   <FormattedNumber style='currency' currency={dwollaAccBalance.currency} value={dwollaAccBalance.value} />
                 </>
               )}
-              {(!bankAccTab || bankAccounts.addButton) && (
-                <Button
-                  size="large"
-                  style={{marginLeft: 10}}
-                  primary
-                  onClick={() => {
-                    if (currentTab.type === 'global-broadcast') openGlobalBroadcast()
-                    else openPopup()
-                  }}
-                  data-test='settings_open_popup_btn'
-                >
-                  <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{(text) => text}</FormattedMessage>
-                </Button>
-              )}
-              {currentTab.type === 'products' && (
-                <Button
-                  size="large"
-                  style={{ marginLeft: 10 }}
-                  primary
-                  onClick={() => openImportPopup()}
-                  data-test='settings_open_import_popup_btn'
-                >
-                  <FormattedMessage id={textsTable[currentTab.type].BtnImportText}>{(text) => text}</FormattedMessage>
-                </Button>
+              {!currentTab.hideButtons && (
+                <>
+                  {(!bankAccTab || bankAccounts.addButton) && (
+                    <Button
+                      size="large"
+                      style={{ marginLeft: 10 }}
+                      primary
+                      onClick={() => openPopup()}
+                      data-test='settings_open_popup_btn'
+                    >
+                      <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{(text) => text}</FormattedMessage>
+                    </Button>
+                  )}
+                  {currentTab.type === 'products' && (
+                    <Button
+                      size="large"
+                      style={{ marginLeft: 10 }}
+                      primary
+                      onClick={() => openImportPopup()}
+                      data-test='settings_open_import_popup_btn'
+                    >
+                      <FormattedMessage id={textsTable[currentTab.type].BtnImportText}>{(text) => text}</FormattedMessage>
+                    </Button>
+                  )}
+                </>
               )}
             </Menu.Item>
           </Menu.Menu>

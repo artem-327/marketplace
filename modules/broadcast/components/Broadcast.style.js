@@ -1,4 +1,4 @@
-import { Menu } from 'semantic-ui-react'
+import { Grid, GridRow } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 const COLORS = {
@@ -50,7 +50,7 @@ const Content = styled.div`
 `
 
 const RowContent = styled.div`
-  flex: 1 1 250px;
+  flex: 1 1 auto;
 `
 
 const Toggle = styled.div`
@@ -66,6 +66,19 @@ const Checkbox = styled.div`
   align-items: center;
 `
 
+const BottomUnpaddedRow = styled(GridRow)`
+  padding-bottom: 0px !important;
+`
+
+const RightAlignedDiv = styled.div`
+  text-align: right;
+  margin-top: 20px;
+`
+
+const StretchedGrid = styled(Grid)`
+  height: 100vh;
+`
+
 export const Rule = {
   Row,
   RowContent,
@@ -73,5 +86,11 @@ export const Rule = {
   Content,
   Header,
   Checkbox,
-  Toggle
+  Toggle,
+}
+
+export {
+  BottomUnpaddedRow,
+  RightAlignedDiv,
+  StretchedGrid,
 }

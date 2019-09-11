@@ -337,6 +337,8 @@
   "confirm.missingCOfA.content": "You have allocated packages on lot without C of A document. Do you really want to proceed and assign lots?",
   "confirm.cancelPayment.title": "Cancel Payment",
   "confirm.cancelPayment.content": "Do you really want to Cancel Payment for Order #{orderId}",
+  "confirm.broadcast.unsavedChanges.header": "Unsaved changes",
+  "confirm.broadcast.unsavedChanges.content": "You have unsaved broadcast rules changes. Do you wish to save them?",
   "login.username": "Username",
   "login.password": "Password",
   "login.login": "LOG IN",

@@ -14,7 +14,7 @@ class PriceBook extends Component {
   render() {
     return (
       <Segment loading={this.state.loading} padded='very' basic>
-        <Broadcast additionalGridProps={{ celled: true }} isPrepared={!this.state.loading} asModal={false} />
+        <Broadcast isPrepared={!this.state.loading} asModal={false} />
       </Segment>
     )
 
