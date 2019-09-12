@@ -121,7 +121,8 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
       contactEmail: c.primaryUser ?
         c.primaryUser.email
         : '',
-      reviewRequested: c.reviewRequested
+      reviewRequested: c.reviewRequested,
+      hasLogo: c.hasLogo
     })),
     confirmMessage: admin.confirmMessage,
     deleteRowById: admin.deleteRowById,
