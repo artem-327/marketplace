@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import './uploadLot.scss'
 import upload from '~/src/images/upload/upload.png'
 import uploaded from '~/src/images/upload/uploaded.png'
-import PropTypes, { node, object } from 'prop-types'
+import PropTypes from 'prop-types'
 import File from '~/src/pages/inventory/addInventory/components/Upload/components/File'
 import ReactDropzone from 'react-dropzone'
 import { FormattedMessage } from 'react-intl'
@@ -49,8 +49,8 @@ class UploadLot extends Component {
           <FormattedMessage id='errors.fileTooLarge.header' defaultMessage='Too large file' />,
           <FormattedMessage id='errors.fileTooLarge.content' values={{ name: blob.name, size: fileMaxSize }} defaultMessage='File is larger than maximal allowed size' />,
         ), {
-            appearance: 'error'
-          })
+          appearance: 'error'
+        })
       }
     })
   }
@@ -66,8 +66,8 @@ class UploadLot extends Component {
       <FormattedMessage id='errors.fileNotUploaded.header' defaultMessage='File not uploaded' />,
       <FormattedMessage id='errors.fileNotUploaded.content' defaultMessage={`File ${fileName} was not uploaded due to an error`} values={{ name: fileName }} />
     ), {
-        appearance: 'error'
-      })
+      appearance: 'error'
+    })
   }
 
   onPreviewDrop = async (files) => {
@@ -82,8 +82,8 @@ class UploadLot extends Component {
         <FormattedMessage id='errors.fileNotUploaded.header' defaultMessage='File not uploaded' />,
         <FormattedMessage id='errors.fileNotUploaded.specifyDocType' defaultMessage='You have to specify document type first' />
       ), {
-          appearance: 'error'
-        })
+        appearance: 'error'
+      })
     }
 
     // add new files to attachments and save indexes of own files
@@ -121,9 +121,9 @@ class UploadLot extends Component {
   }
 
   render() {
-    let { attachments, disabled, filesLimit, toastManager, Input, inputProps } = this.props
+    let { attachments, disabled, filesLimit, toastManager } = this.props
     let hasFile = this.props.attachments && this.props.attachments.length !== 0
-    
+
     const limitMsg = generateToastMarkup(
       <FormattedMessage id='errors.fileNotUploaded.limitExceeded.header' defaultMessage='File limit exceeded' />,
       <FormattedMessage id='errors.fileNotUploaded.limitExceeded.content' values={{ count: filesLimit }} defaultMessage={`You can't upload more than ${filesLimit} document(s)`} />
@@ -138,10 +138,10 @@ class UploadLot extends Component {
               render={arrayHelpers => (
                 <>
                   {attachments && attachments.length ? attachments.map((file, index) => (
-                    <Input key={file.id} onRemove={() => {
+                    <File key={file.id} onRemove={() => {
                       this.removeFile(file)
                       arrayHelpers.remove(index)
-                    }} disabled={true} className='file lot' name={'kkt'} index={index} {...inputProps} />
+                    }} disabled={true} className='file lot' name={file.name} index={index} />
                   )) : ''}
                 </>
               )}
@@ -177,10 +177,10 @@ class UploadLot extends Component {
                 render={arrayHelpers => (
                   <>
                     {attachments && attachments.length ? attachments.map((file, index) => (
-                      <Input key={file.id} onRemove={() => {
+                      <File key={file.id} onRemove={() => {
                         this.removeFile(file)
                         arrayHelpers.remove(index)
-                      }} className='file lot' name={file.name ? file.name : this.props.name} index={index} {...inputProps} />
+                      }} className='file lot' name={file.name ? file.name : this.props.name} index={index} />
                     )) : ''}
                   </>
                 )} />
@@ -221,14 +221,7 @@ UploadLot.propTypes = {
   files: PropTypes.array,
   type: PropTypes.string,
   uploadClass: PropTypes.string,
-  uploadedClass: PropTypes.string,
-  input: node,
-  inputProps: object
-}
-
-UploadLot.defaultProps = {
-  input: File,
-  inputProps: {}
+  uploadedClass: PropTypes.string
 }
 
 export default withToastManager(UploadLot)
