@@ -7,6 +7,9 @@ import {formatMoney} from '~/src/utils/functions'
 import moment from "moment/moment"
 import { withDatagrid } from '~/modules/datagrid'
 import { withRouter } from 'next/router'
+import { applyFilter } from '~/modules/filter/actions'
+import { ArrayToMultiple } from '~/components/formatted-messages'
+import React from "react";
 
 function mapStateToProps(state, {router, datagrid}) {
   const { orders } = state
@@ -16,6 +19,7 @@ function mapStateToProps(state, {router, datagrid}) {
     orders.data = []
   }
   const { type } = query
+  console.log(datagrid.rows)
   return {
     endpointType: query.type === 'sales' ? 'sale' : query.type,
     queryType: query.type,
@@ -27,7 +31,8 @@ function mapStateToProps(state, {router, datagrid}) {
       globalStatus: r.globalStatus,
       date: moment(r.orderDate).format('MM/DD/YYYY'),
       customerName: (type === 'sales' ? r.buyerCompanyName : r.sellerCompanyName),
-      productName: (typeof r.orderItems[0].productName !== 'undefined' ? r.orderItems[0].productName : 'N/A'),
+      //productName: (typeof r.orderItems[0].productName !== 'undefined' ? r.orderItems[0].productName : 'N/A'),
+      productName: <ArrayToMultiple values={r.orderItems.map(d => (d.productName))} />,
       orderStatus: OrdersHelper.getOrderStatus(r.orderStatus),
       shippingStatus: OrdersHelper.getShippingStatus(r.shippingStatus),
       reviewStatus: OrdersHelper.getReviewStatus(r.reviewStatus),
@@ -43,7 +48,7 @@ function mapStateToProps(state, {router, datagrid}) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({...Actions, dispatch}, dispatch)
+    return bindActionCreators({...Actions, dispatch, applyFilter}, dispatch)
 }
 
 export default withDatagrid(withRouter(connect(mapStateToProps, mapDispatchToProps)(Orders)))
