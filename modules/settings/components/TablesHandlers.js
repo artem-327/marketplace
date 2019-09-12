@@ -92,18 +92,18 @@ class TablesHandlers extends Component {
       openPopup,
       openImportPopup,
       openUploadDocumentsPopup,
-      handleProductCatalogUnmappedValue,
+      // handleProductCatalogUnmappedValue,
       productCatalogUnmappedValue,
       openDwollaPopup,
       dwollaAccBalance,
-      openGlobalBroadcast,
+      // openGlobalBroadcast,
       bankAccounts,
       intl: { formatMessage }
     } = this.props
 
     const { filterValue } = this.state
     const bankAccTab = currentTab.type === 'bank-accounts'
-    console.log({ currentTab })
+    
     return (
       <Menu secondary>
         <Menu.Item header>

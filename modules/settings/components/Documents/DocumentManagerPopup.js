@@ -8,7 +8,7 @@ import * as Yup from 'yup'
 import styled from 'styled-components'
 import moment from 'moment'
 import { withToastManager } from 'react-toast-notifications'
-import Link from 'next/link'
+
 import { FileInput, DateInput } from '~/components/custom-formik'
 
 import { errorMessages, dateValidation } from '~/constants/yupValidation'
@@ -123,8 +123,6 @@ class DocumentPopup extends Component {
               this.submitForm = submitForm
               return (
                 <Form loading={isSubmitting}>
-                  {/* <a target='_blank' href='https://dev.echoexchange.net/api/attachments/1/download'>abbbb</a> */}
-                  <Link target='_blank' href='/download/attachments/2'>Link</Link>
                   <FormGroup widths='equal'>
                     <Input name='customName' label='Custom Name' />
                     <Input name='description' label='Description' />

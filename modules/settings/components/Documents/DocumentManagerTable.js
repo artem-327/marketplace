@@ -1,15 +1,25 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
+import moment from 'moment'
+import styled from 'styled-components'
 
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 
 import { openPopup } from '~/modules/settings/actions'
 import { removeAttachment } from '~/modules/inventory/actions'
-import Router from 'next/router'
 import { getSafe } from '~/utils/functions'
-import moment from 'moment'
+
+const BasicLink = styled.a`
+  color: black !important;
+  text-decoration: none !important;
+  &:hover {
+    color: black !important;
+    text-decoration: none !important;    
+  }
+`
+
 
 const columns = [ // TODO - check en.json for those ids
   { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage> },
@@ -22,7 +32,7 @@ class DocumentManager extends Component {
 
   render() {
     const { datagrid, rows, openPopup, removeAttachment, loading } = this.props
-    console.log({ datagrid })
+
     return (
       <ProdexGrid
         tableName='settings_documents'
@@ -32,10 +42,18 @@ class DocumentManager extends Component {
         loading={datagrid.loading || loading}
         style={{ marginTop: '5px' }}
         rowActions={[
-          { text: 'Edit', callback: row => openPopup(row) },
-          { text: 'Download', callback: row => Router.push('/download/attachments/2') },
           {
-            text: 'Delete', callback: async row => {
+            text: <FormattedMessage id='global.edit' defaultMessage='Edit'>{text => text}</FormattedMessage>,
+            callback: row => openPopup(row)
+          },
+          {
+            text: row => <BasicLink target='_blank' href={`/download/attachments/${row.id}`}>
+              <FormattedMessage id='global.download' defaultMessage='Download'>{text => text}</FormattedMessage>
+            </BasicLink>,
+            callback: () => { }
+          },
+          {
+            text: <FormattedMessage id='global.delete' defaultMessage='Delete'>{text => text}</FormattedMessage>, callback: async row => {
               await removeAttachment(row.id)
               datagrid.removeRow(row.id)
             }

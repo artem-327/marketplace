@@ -268,9 +268,14 @@ class Settings extends Component {
 
       'documents': {
         url: '/prodex/api/attachments/datagrid/',
-        searchToFilter: v => ([
-
-        ])
+        searchToFilter: v => v ? ([
+          { operator: 'LIKE', path: 'Attachment.name', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Attachment.customName', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Attachment.documentType.name', values: [`%${v}%`] }
+        ]) : [],
+        params: {
+          orOperator: true
+        }
       }
     }
 
