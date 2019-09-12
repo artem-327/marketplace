@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from "redux"
 import * as Actions from "../../actions"
 import { loadFile, addAttachment} from "~/modules/inventory/actions"
-import { Modal, ModalContent, Header, Button, Grid } from "semantic-ui-react"
+import { Modal, ModalContent, Header, Button, Grid, Dimmer, Loader, Segment } from "semantic-ui-react"
 import { Form, Dropdown } from 'formik-semantic-ui'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
@@ -30,17 +30,24 @@ const validationScheme = val.object().shape({
 })
 
 class ReinitiateTransfer extends React.Component {
+  state = {
+    allowTransfer: false
+  }
 
   componentDidMount() {
     this.props.loadBankAccounts()
   }
 
   render() {
-    const { intl: { formatMessage}, bankAccounts, orderId, toastManager } = this.props
+    const { intl: { formatMessage}, bankAccounts, bankAccountsLoading, orderId, toastManager } = this.props
+    const { allowTransfer } = this.state
 
     return (
       <>
         <Modal open={true}>
+          <Dimmer active={bankAccountsLoading} inverted>
+            <Loader />
+          </Dimmer>
           <Modal.Header>
             <FormattedMessage id='order.reinitiateTransfer' defaultMessage='Reinitiate Transfer' />
             <Subtitle as='h4'>
@@ -76,7 +83,19 @@ class ReinitiateTransfer extends React.Component {
                     <>
                       <Grid>
                         <Grid.Column width={6}>
-                          <Dropdown name='paymentAccount' options={bankAccounts} inputProps={{ placeholder: formatMessage({ id: 'order.reinitiateTransfer.dropdownPlaceholder', defaultMessage: '-- select payment account --' }) }} />
+                          <Dropdown name='paymentAccount'
+                                    options={bankAccounts}
+                                    inputProps={{
+                                      placeholder: formatMessage({ id: 'order.reinitiateTransfer.dropdownPlaceholder', defaultMessage: '-- select payment account --' }),
+                                      onChange: (e, {value}) => {
+                                        if (value)
+                                          this.setState({allowTransfer: true})
+                                        else
+                                          this.setState({allowTransfer: false})
+                                      },
+                                      clearable: true
+                                    }}
+                          />
                         </Grid.Column>
                         <Grid.Column width={4}></Grid.Column>
                         <Grid.Column floated='right' width={3}>
@@ -85,7 +104,7 @@ class ReinitiateTransfer extends React.Component {
                           </Button>
                         </Grid.Column>
                         <Grid.Column floated='right' width={3}>
-                          <Button primary fluid>
+                          <Button primary fluid disabled={!allowTransfer}>
                             <FormattedMessage id='order.reinitiateTransfer.transfer' defaultMessage='Transfer' tagName='span' />
                           </Button>
                         </Grid.Column>
@@ -105,7 +124,8 @@ class ReinitiateTransfer extends React.Component {
 function mapStateToProps(state) {
   return {
     orderId: state.orders.detail.id,
-    bankAccounts: state.orders.bankAccounts
+    bankAccounts: state.orders.bankAccounts,
+    bankAccountsLoading: state.orders.bankAccountsLoading
   }
 }
 
