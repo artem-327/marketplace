@@ -17,7 +17,8 @@ const initialState = {
     searchedCompanies: [],
     openedAssignLots: false,
     openedReinitiateTransfer: false,
-    bankAccounts: []
+    bankAccounts: [],
+    bankAccountsLoading: false
 }
 
 export default function(state = initialState, action) {
@@ -128,6 +129,11 @@ export default function(state = initialState, action) {
                 ...state,
                 openedReinitiateTransfer: false
             }
+        case AT.ORDER_LOAD_BANK_ACCOUNTS_PENDING:
+            return {
+                ...state,
+                bankAccountsLoading: true
+            }
         case AT.ORDER_LOAD_BANK_ACCOUNTS_FULFILLED:
             return {
                 ...state,
@@ -137,7 +143,13 @@ export default function(state = initialState, action) {
                         text: bankAccount.name,
                         value: bankAccount.id
                     }
-                })
+                }),
+                bankAccountsLoading: false
+            }
+        case AT.ORDER_LOAD_BANK_ACCOUNTS_REJECTED:
+            return {
+                ...state,
+                bankAccountsLoading: false,
             }
         case AT.ORDER_GET_LOTS_FULFILLED:
             // prepare lots for used product offers

@@ -721,7 +721,7 @@
   "cart.1shipping": "1. Shipping",
   "cart.shippingAddress": "Shipping Address",
   "cart.billingInfo": "Billing Info",
-  "cart.nothing": "Please, first select a shipping destination Warehouse or Delivery Address",
+  "cart.nothing": "Please, first select a shipping destination Warehouse or Delivery Address.",
   "cart.carrier": "Carrier",
   "cart.cost": "Cost",
   "cart.etd": "ETD",
