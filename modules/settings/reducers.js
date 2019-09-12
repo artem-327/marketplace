@@ -1,4 +1,6 @@
-import * as AT from "./action-types"
+import * as AT from './action-types'
+import * as inventoryAT from '~/modules/inventory/action-types'
+
 import { defaultTabs } from "./contants"
 
 export const initialState = {
@@ -1224,6 +1226,31 @@ export default function reducer(state = initialState, action) {
         dwollaSaving: false
       }
     }
+
+    /* ATTACHMENTS */
+
+    case AT.SETTINGS_REMOVE_ATTACHMENT_PENDING:
+    case inventoryAT.INVENTORY_ADD_ATTACHMENT_PENDING:
+    case inventoryAT.INVENTORY_REMOVE_ATTACHMENT_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.SETTINGS_REMOVE_ATTACHMENT_FULFILLED:
+    case AT.SETTINGS_REMOVE_ATTACHMENT_REJECTED:
+    case inventoryAT.INVENTORY_ADD_ATTACHMENT_FULFILLED:
+    case inventoryAT.INVENTORY_ADD_ATTACHMENT_REJECTED:
+    case inventoryAT.INVENTORY_REMOVE_ATTACHMENT_FULFILLED:
+    case inventoryAT.INVENTORY_REMOVE_ATTACHMENT_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+
 
     default: {
       return state

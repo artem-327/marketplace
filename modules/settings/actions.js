@@ -922,9 +922,9 @@ export function loadFile(attachment) {
 }
 
 export function addAttachment(attachment, type, expirationDate) {
-  return {
-    type: AT.SETTINGS_ADD_ATTACHMENT,
-    payload: api.addAttachment(attachment, type, expirationDate)
+  return async dispatch => {
+    await dispatch({ type: AT.SETTINGS_ADD_ATTACHMENT, payload: api.addAttachment(attachment, type, expirationDate) })
+    Datagrid.loadData()
   }
 }
 

@@ -12,7 +12,7 @@ axios.interceptors.request.use(function (config) {
   const auth = Cookie.getJSON('auth')
   
   if (auth && !config.headers['Authorization']) config.headers['Authorization'] = 'Bearer ' + auth.access_token
-
+  
   return config
 }, function (error) {
   // Do something with request error
@@ -24,8 +24,8 @@ axios.interceptors.response.use(response => response, function (error) {
     // do nothing
   } else {
     // Do something with response error
-    
-     
+
+
     if (error.response && error.response.status === 401) {
       Router.push('/auth/logout?auto=true')
     }

@@ -104,6 +104,7 @@ class Orders extends Component {
             apiUrl={datagrid.apiUrl}
             filters={datagrid.filters}
             data-test='menu_orders_filter'
+
           />
           {isFetching ? <Spinner /> :
 

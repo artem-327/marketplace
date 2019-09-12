@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import './uploadLot.scss'
 import upload from '~/src/images/upload/upload.png'
 import uploaded from '~/src/images/upload/uploaded.png'
-import PropTypes from 'prop-types'
+import PropTypes, { node, object } from 'prop-types'
 import File from '~/src/pages/inventory/addInventory/components/Upload/components/File'
 import ReactDropzone from 'react-dropzone'
 import { FormattedMessage } from 'react-intl'
@@ -121,13 +121,13 @@ class UploadLot extends Component {
   }
 
   render() {
-    let { attachments, disabled, filesLimit, toastManager } = this.props
+    let { attachments, disabled, filesLimit, toastManager, Input, inputProps } = this.props
     let hasFile = this.props.attachments && this.props.attachments.length !== 0
-
+    
     const limitMsg = generateToastMarkup(
       <FormattedMessage id='errors.fileNotUploaded.limitExceeded.header' defaultMessage='File limit exceeded' />,
       <FormattedMessage id='errors.fileNotUploaded.limitExceeded.content' values={{ count: filesLimit }} defaultMessage={`You can't upload more than ${filesLimit} document(s)`} />
-      )
+    )
 
     return (
       <div className={'uploadLot ' + (hasFile ? ' has-file' : '')}>
@@ -138,10 +138,10 @@ class UploadLot extends Component {
               render={arrayHelpers => (
                 <>
                   {attachments && attachments.length ? attachments.map((file, index) => (
-                    <File key={file.id} onRemove={() => {
+                    <Input key={file.id} onRemove={() => {
                       this.removeFile(file)
                       arrayHelpers.remove(index)
-                    }} disabled={true} className='file lot' name={file.name} index={index} />
+                    }} disabled={true} className='file lot' name={'kkt'} index={index} {...inputProps} />
                   )) : ''}
                 </>
               )}
@@ -177,10 +177,10 @@ class UploadLot extends Component {
                 render={arrayHelpers => (
                   <>
                     {attachments && attachments.length ? attachments.map((file, index) => (
-                      <File key={file.id} onRemove={() => {
+                      <Input key={file.id} onRemove={() => {
                         this.removeFile(file)
                         arrayHelpers.remove(index)
-                      }} className='file lot' name={file.name ? file.name : this.props.name} index={index} />
+                      }} className='file lot' name={file.name ? file.name : this.props.name} index={index} {...inputProps} />
                     )) : ''}
                   </>
                 )} />
@@ -221,7 +221,14 @@ UploadLot.propTypes = {
   files: PropTypes.array,
   type: PropTypes.string,
   uploadClass: PropTypes.string,
-  uploadedClass: PropTypes.string
+  uploadedClass: PropTypes.string,
+  input: node,
+  inputProps: object
+}
+
+UploadLot.defaultProps = {
+  input: File,
+  inputProps: {}
 }
 
 export default withToastManager(UploadLot)

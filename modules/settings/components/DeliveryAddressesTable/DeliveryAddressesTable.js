@@ -23,11 +23,11 @@ import Router from "next/router"
 class DeliveryAddressesTable extends Component {
   state = {
     columns: [
-      { name: 'streetAddress', title: <FormattedMessage id='global.streetName' defaultMessage='Street Name' /> },
-      { name: 'city', title: <FormattedMessage id='global.city' defaultMessage='City' /> },
-      { name: 'province', title: <FormattedMessage id='global.stateProvince' defaultMessage='State/Province' /> },
-      { name: 'country', title: <FormattedMessage id='global.country' defaultMessage='Country' /> },
-      { name: 'zip', title: <FormattedMessage id='global.zipCode' defaultMessage='ZIP Code' /> },
+      { name: 'streetAddress', title: <FormattedMessage id='global.streetName' defaultMessage='Street Name'>{text => text}</FormattedMessage> },
+      { name: 'city', title: <FormattedMessage id='global.city' defaultMessage='City'>{text => text}</FormattedMessage> },
+      { name: 'province', title: <FormattedMessage id='global.stateProvince' defaultMessage='State/Province'>{text => text}</FormattedMessage> },
+      { name: 'country', title: <FormattedMessage id='global.country' defaultMessage='Country'>{text => text}</FormattedMessage> },
+      { name: 'zip', title: <FormattedMessage id='global.zipCode' defaultMessage='ZIP Code'>{text => text}</FormattedMessage> },
     ]
   }
 

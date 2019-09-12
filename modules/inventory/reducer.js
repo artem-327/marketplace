@@ -22,6 +22,7 @@ export const initialState = {
   loading: false,
   autocompleteData: [],
   autocompleteDataLoading: false,
+  documentTypesFetching: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -235,9 +236,17 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.INVENTORY_GET_DOCUMENT_TYPES_PENDING: {
+      return {
+        ...state,
+        documentTypesFetching: true
+      }
+    }
+
     case AT.INVENTORY_GET_DOCUMENT_TYPES_FULFILLED: {
       return {
         ...state,
+        documentTypesFetching: false,
         listDocumentTypes: action.payload.data.map((docType) => {
           return {
             key: docType.id,
@@ -245,6 +254,13 @@ export default function reducer(state = initialState, action) {
             value: docType.id
           }
         })
+      }
+    }
+
+    case AT.INVENTORY_GET_DOCUMENT_TYPES_REJECTED: {
+      return {
+        ...state,
+        documentTypesFetching: false
       }
     }
 
@@ -348,6 +364,13 @@ export default function reducer(state = initialState, action) {
         ...state,
         autocompleteDataLoading: false
       }
+    }
+
+
+    /* ADD_ATTACHMENT */
+
+    case AT.INVENTORY_ADD_ATTACHMENT_FULFILLED: {
+      
     }
 
 

@@ -51,7 +51,7 @@ class FormikInput extends Component {
                   value={field.value}
                   animation="none"
                   onChange={(e, {name, value}) => {
-                    setFieldValue(form, name, value, false)
+                    setFieldValue(form, name, value, true)
                     Promise.resolve().then(() => {
                       onChange && onChange(e, {name, value})
                     })

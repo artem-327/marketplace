@@ -29,6 +29,9 @@ import LogisticsPopup from './LogisticsTable/LogisticsPopup'
 
 import SystemSettings from '~/components/settings'
 
+import DocumentsTable from './Documents/DocumentManagerTable'
+import DocumentsPopup from './Documents/DocumentManagerPopup'
+
 import DwollaAccount from './DwollaAccountComponent'
 import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
@@ -160,7 +163,8 @@ class Settings extends Component {
         <Segment basic padded='very'>
           <SystemSettings asModal={false} inputsInGroup={3} role='company' />
         </Segment>
-      )
+      ),
+      'documents': <DocumentsTable />
     }
 
     const popupForm = {
@@ -172,7 +176,8 @@ class Settings extends Component {
       'bank-accounts': <BankAccountsPopup />,
       'credit-cards': <CreditCardsPopup />,
       'delivery-addresses': <DeliveryAddressesPopup />,
-      'logistics': <LogisticsPopup />
+      'logistics': <LogisticsPopup />,
+      'documents': <DocumentsPopup />
 
     }
 
@@ -260,6 +265,18 @@ class Settings extends Component {
           { operator: 'LIKE', path: 'DeliveryAddress.address.streetAddress', values: [`%${v}%`] }
         ])
       },
+
+      'documents': {
+        url: '/prodex/api/attachments/datagrid/',
+        searchToFilter: v => v ? ([
+          { operator: 'LIKE', path: 'Attachment.name', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Attachment.customName', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Attachment.documentType.name', values: [`%${v}%`] }
+        ]) : [],
+        params: {
+          orOperator: true
+        }
+      }
     }
 
     return datagridApiMap[currentTab.type]
