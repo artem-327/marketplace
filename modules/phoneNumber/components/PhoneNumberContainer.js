@@ -11,7 +11,7 @@ function mapStateToProps({ phoneNumber }) {
         key: d.id,
         text: '+' + d.phoneCode,
         value: d.phoneCode,
-        description: d.name
+        description: d.name,
       }
     }),
   }
