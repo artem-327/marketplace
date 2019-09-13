@@ -349,7 +349,7 @@ class AddNewPopupCasProducts extends React.Component {
                 <Form loading={isSubmitting}>
                   <Accordion exclusive={false}>
                     <Modal.Content>
-                      <CompanyForm selectLogo={selectLogo} removeLogo={removeLogo} companyLogo={companyLogo} />
+                      <CompanyForm admin={true} selectLogo={selectLogo} removeLogo={removeLogo} companyLogo={companyLogo} />
                       {!popupValues && (
                         <>
                           <Divider />

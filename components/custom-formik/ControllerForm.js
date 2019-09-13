@@ -17,7 +17,7 @@ class ControllerForm extends Component {
 
         <FormGroup widths='equal' data-test='settings_dwolla_dwollaController_name_inp'>
           <Input inputProps={{ fluid: true }} label={formatMessage({ id: 'global.firstName', defaultMessage: 'First Name' })} name='dwollaController.firstName' />
-          <Input label={formatMessage({ id: 'global.lastName', defaultMessage: 'Last Name' })} name='dwollaController.lastName' />
+          <Input inputProps={{ fluid: true }} label={formatMessage({ id: 'global.lastName', defaultMessage: 'Last Name' })} name='dwollaController.lastName' />
         </FormGroup>
 
         <AddressForm
@@ -44,7 +44,7 @@ class ControllerForm extends Component {
           } name='dwollaController.ssn' />
           <Input inputProps={{ fluid: true }} label={formatMessage({ id: 'global.title', defaultMessage: 'Title' })} name='dwollaController.jobTitle' />
           <DateInput
-           inputProps={{ fluid: true }}
+            inputProps={{ fluid: true }}
             label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
             name='dwollaController.dateOfBirth' />
         </FormGroup>

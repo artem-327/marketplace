@@ -489,6 +489,7 @@ class AddInventoryForm extends Component {
   renderEditDocuments = (values, setFieldValue, validateForm) => {
     const { edit, removeAttachment, removeAttachmentLink, intl: { formatMessage } } = this.props
     const { additional, attachments, lots } = values
+    console.log({ edit, type: typeof attachments })
     if (typeof attachments === 'undefined' || !edit)
       return false
 
@@ -512,7 +513,10 @@ class AddInventoryForm extends Component {
             <GridHeader as='h3'><FormattedMessage id='addInventory.productOfferDocuments' defaultMessage='Product Offer has these documents' /></GridHeader>
           </GridColumn>
           <GridColumn width={6} textAlign='right'>
-            <AttachmentManager returnSelectedRows={(rows) => this.attachDocuments(rows, values, setFieldValue)} lockSelection={documents.map(doc => doc.id)} />
+            <AttachmentManager
+              returnSelectedRows={(rows) => this.attachDocuments(rows, values, setFieldValue)}
+              lockSelection={documents.map(doc => doc.id)}
+            />
           </GridColumn>
         </Grid>
         <Table>

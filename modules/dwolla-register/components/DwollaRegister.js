@@ -184,7 +184,7 @@ class DwollaRegister extends Component {
           <>
             <GridRow>
               <GridColumn computer={10} tablet={3} mobile={2} />
-              <FormColumn largeScreen={6} computer={8} tablet={8} mobile={10}>
+              <FormColumn largeScreen={6} computer={8} tablet={9} mobile={10}>
                 <Segment padded>
                   <Header as='h4'><FormattedMessage id='dwolla.confirmCompanyInfo' defaultMessage='Confirm Company Information' /></Header>
                   <Header as='h5'><FormattedMessage id='global.step' defaultMessage='Step' /> {' '} {this.state.step} / {numberOfSteps}</Header>
@@ -347,7 +347,7 @@ class DwollaRegister extends Component {
       case 5: {
         return (
           <>
-            <GridColumn computer={9}>
+            <GridColumn computer={9} tablet={8}>
               <Segment padded>
                 <Grid>
                   <GridRow>
@@ -378,9 +378,9 @@ class DwollaRegister extends Component {
               </Segment>
 
             </GridColumn>
-            <GridColumn computer={1} />
+            <GridColumn computer={1} only='computer'/>
 
-            <FormColumn computer={6}>
+            <FormColumn computer={6} tablet={8}>
               <Segment padded>
                 <GridRow>
                   <GridColumn>
@@ -556,14 +556,14 @@ class DwollaRegister extends Component {
         businessName: getSafe(() => identity.company.name),
         businessType: getSafe(() => identity.company.businessType.id),
         address: {
-          streetAddress: getSafe(() => primaryBranch.address.streetAddress),
+          streetAddress: getSafe(() => primaryBranch.address.streetAddress, ''),
           country: JSON.stringify({
             countryId: getSafe(() => primaryBranch.address.country.id),
             hasProvinces: getSafe(() => primaryBranch.address.country.hasProvinces)
           }),
           province: getSafe(() => primaryBranch.address.province.id),
           zip: getSafe(() => primaryBranch.address.zip.zip, false),
-          city: getSafe(() => primaryBranch.address.city)
+          city: getSafe(() => primaryBranch.address.city,'')
         },
         businessClassification: '9ed35a3b-7d6f-11e3-83c8-5404a6144203',
         industryClassification: '9ed38136-7d6f-11e3-bd75-5404a6144203',
@@ -628,7 +628,6 @@ class DwollaRegister extends Component {
             initialValues={initialValues}
             validationSchema={this.getValidationSchema()}
             render={(formikProps) => {
-              
               return (
                 <Form>
                   <Grid verticalAlign={this.state.step === 1 ? 'middle' : 'top'} padded='very' centered>

@@ -49,8 +49,8 @@ class UploadLot extends Component {
           <FormattedMessage id='errors.fileTooLarge.header' defaultMessage='Too large file' />,
           <FormattedMessage id='errors.fileTooLarge.content' values={{ name: blob.name, size: fileMaxSize }} defaultMessage='File is larger than maximal allowed size' />,
         ), {
-            appearance: 'error'
-          })
+          appearance: 'error'
+        })
       }
     })
   }
@@ -66,8 +66,8 @@ class UploadLot extends Component {
       <FormattedMessage id='errors.fileNotUploaded.header' defaultMessage='File not uploaded' />,
       <FormattedMessage id='errors.fileNotUploaded.content' defaultMessage={`File ${fileName} was not uploaded due to an error`} values={{ name: fileName }} />
     ), {
-        appearance: 'error'
-      })
+      appearance: 'error'
+    })
   }
 
   onPreviewDrop = async (files) => {
@@ -82,8 +82,8 @@ class UploadLot extends Component {
         <FormattedMessage id='errors.fileNotUploaded.header' defaultMessage='File not uploaded' />,
         <FormattedMessage id='errors.fileNotUploaded.specifyDocType' defaultMessage='You have to specify document type first' />
       ), {
-          appearance: 'error'
-        })
+        appearance: 'error'
+      })
     }
 
     // add new files to attachments and save indexes of own files
@@ -127,7 +127,7 @@ class UploadLot extends Component {
     const limitMsg = generateToastMarkup(
       <FormattedMessage id='errors.fileNotUploaded.limitExceeded.header' defaultMessage='File limit exceeded' />,
       <FormattedMessage id='errors.fileNotUploaded.limitExceeded.content' values={{ count: filesLimit }} defaultMessage={`You can't upload more than ${filesLimit} document(s)`} />
-      )
+    )
 
     return (
       <div className={'uploadLot ' + (hasFile ? ' has-file' : '')}>

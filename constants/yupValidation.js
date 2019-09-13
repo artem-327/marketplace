@@ -68,10 +68,17 @@ export const phoneValidation = () => (
     .matches(/([0-9\(\)\-\+\s])/, errorMessages.invalidPhoneNumber)
 )
 
-export const dateValidation = () => (
-  Yup.string()
-    .test('date-format', errorMessages.invalidDateFormat(), (value) => moment(value, 'YYYY-MM-DD', true).isValid()).required(errorMessages.requiredMessage)
-)
+export const dateValidation = (required = true) => {
+  let isValid = Yup.string()
+    .test('date-format', errorMessages.invalidDateFormat(), (value) => {
+      return moment(value, 'YYYY-MM-DD', true).isValid() || (!required && !value)
+    })
+
+  if (required) return isValid.concat(Yup.string().required(errorMessages.requiredMessage))
+  else return isValid
+  // .required(errorMessages.requiredMessage)
+
+}
 
 export const ssnValidation = () => (
   Yup.string()

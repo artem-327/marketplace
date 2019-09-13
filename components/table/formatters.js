@@ -13,7 +13,7 @@ export function rowActionsCellFormatter({ column: { actions }, row }) {
           <Dropdown.Item
             data-test={`action_${row.id}_${i}`}
             key={i}
-            text={a.text}
+            text={typeof a.text !== 'function' ? a.text : a.text(row)}
             disabled={getSafe(() => a.disabled(row), false)}
             onClick={() => a.callback(row)}
           />
