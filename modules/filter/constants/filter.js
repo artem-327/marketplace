@@ -135,7 +135,7 @@ export const datagridValues = {
         }
 
         case filterTypes.MARKETPLACE: {
-          var path = paths.casProduct.id
+          var path = paths.productOffers.productId
           break
         }
 
