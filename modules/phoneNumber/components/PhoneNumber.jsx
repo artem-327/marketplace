@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { string, array, object, bool, func } from "prop-types"
-import { FormGroup, FormField, Dropdown, Input, Grid } from 'semantic-ui-react'
+import { FormGroup, FormField, Dropdown, Input, Table, TableCell, Grid } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 //import { InputMask } from 'react-input-mask'
@@ -8,7 +8,10 @@ const InputMask = require("react-input-mask")
 import get from 'lodash/get'
 
 const StyledDropdown = styled(Dropdown)`
-  min-width: 150px !important;
+  min-width: 120px !important;
+`
+
+const StyledInputMask = styled(InputMask)`
   .default.text {
     font-weight: normal;
   }
@@ -69,7 +72,32 @@ export default class PhoneNumber extends Component {
     return (
       <FormField>
         <label><FormattedMessage id='global.phone' defaultMessage='Phone' /></label>
-        <InputMask
+
+        {true && (
+        <span style={{ display: 'flex'}}>
+          <StyledDropdown
+            options={phoneCountryCodes}
+            onChange={(e, data) => this.handleChange('phoneCountryCode', data.value)}
+            selection
+            search
+            placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+XXX' })}
+            value={phoneCountryCode}
+          />
+          <StyledInputMask
+            mask="999 999 9999"
+            maskChar=" "
+            compact
+            type='text'
+            value={phoneNumber}
+            onChange={(data) => this.handleChange('phoneNumber', data.target.value)}
+            placeholder={formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
+          />
+        </span>
+        )}
+
+
+        {false && (
+          <InputMask
           mask="999 999 9999"
           maskChar=" "
           type='text'
@@ -94,8 +122,9 @@ export default class PhoneNumber extends Component {
               placeholder={formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
             />
           }
-
         </InputMask>
+        )}
+
       </FormField>
     )
   }

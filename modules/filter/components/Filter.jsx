@@ -141,18 +141,19 @@ class Filter extends Component {
     let { filters, ...rest } = savedFilter
 
     return {
-      filters: filters.map((filter) => ({ ...filter, values: filter.values.map((val) => val.value) })),
-      ...rest
+      filters: filters.map((filter) => ({ operator: filter.operator, path: filter.path, values: filter.values.map((val) => val.value) })),
+      pageNumber: savedFilter.pageNumber,
+      pageSize: 50
     }
   }
 
 
   handleSubmit = (params) => { // { setSubmitting }
-    let { onApply } = this.props
+    let { onApply, applyFilter } = this.props
 
     let filter = this.generateRequestData(params)
 
-    this.props.applyFilter(filter)
+    applyFilter(filter)
     onApply(this.toDatagridFilter(filter))
   }
 
@@ -165,7 +166,14 @@ class Filter extends Component {
       let requestData = self.generateRequestData(params)
 
       if (id) await self.props.updateFilter(id, requestData)
-      else await self.props.saveFilter(self.props.savedUrl, requestData)
+      else {
+        
+        await self.props.saveFilter(self.props.savedUrl, {...requestData, filters: requestData.filters.map((filter) => ({
+          operator: filter.operator,
+          path: filter.path,
+          values: filter.values
+        }))})
+      }
 
 
       toastManager.add(<div>

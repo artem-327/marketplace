@@ -19,53 +19,55 @@ export function loginInit() {
 }
 
 export function login(username, password) {
-  return {
-    type: AT.LOGIN,
+  return async dispatch => {
+    await dispatch({
+      type: AT.LOGIN, async payload() {
+        const auth = await authorize(username, password)
+        setAuth(auth)
+        const identity = await api.getIdentity()
 
-    async payload() {
-      const auth = await authorize(username, password)
-      setAuth(auth)
-      const identity = await api.getIdentity()
+        let company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
+        const preferredCurrency = identity.preferredCurrency
 
-      let company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
-      const preferredCurrency = identity.preferredCurrency
-      
-      
-      const authPayload = {
-        ...auth,
-        identity: {
-          ...identity,
-          company: identity.company || company ? {
-            ...identity.company,
-            ...company
-          } : null
-        },
-        preferredCurrency
+
+        const authPayload = {
+          ...auth,
+          identity: {
+            ...identity,
+            company: identity.company || company ? {
+              ...identity.company,
+              ...company
+            } : null
+          },
+          preferredCurrency
+        }
+
+
+
+        const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
+
+        let accessRights = {}
+
+        if (identity.roles) {
+          ROLES_ENUM.forEach(role => {
+            accessRights[role.propertyName] = !!identity.roles.find((el) => el.id === role.id)
+          })
+        }
+
+
+        setAuth(authPayload)
+
+        // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
+        if (!(identity.roles.find(role => role.name === 'Company Admin') && getSafe(() => identity.company.reviewRequested, false))) {
+          isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
+        }
+
+        return authPayload
       }
-
-
-
-      const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
-
-      let accessRights = {}
-
-      if (identity.roles) {
-        ROLES_ENUM.forEach(role => {
-          accessRights[role.propertyName] = !!identity.roles.find((el) => el.id === role.id)
-        })
-      }
-
-
-      setAuth(authPayload)
-
-      // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
-      if (!(identity.roles.find(role => role.name === 'Company Admin') && getSafe(() => identity.company.reviewRequested, false))) {
-        isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
-      }
-
-      return authPayload
-    }
+    })
+    // dispatch(triggerAgreementModal(true))
   }
+
 }
 
 export function getVersion() {
@@ -134,3 +136,5 @@ export const searchProvinces = (countryId) => ({ type: AT.AUTH_SEARCH_PROVINCES,
 export const updateIdentity = (payload) => ({ type: AT.UPDATE_IDENTITY, payload })
 
 export const updateCompany = (id, payload) => ({ type: AT.UPDATE_COMPANY, payload: api.updateCompany(id, payload) })
+
+export const agreeWithTOS = () => ({ type: AT.AGREE_WITH_TOS, payload: api.agreeWithTOS() })

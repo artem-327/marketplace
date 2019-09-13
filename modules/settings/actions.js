@@ -967,3 +967,5 @@ export const resetSettings = () => ({ type: AT.RESET_SETTINGS, payload: true })
 export const triggerSystemSettingsModal = (force = null) => ({ type: AT.TRIGGER_SYSTEM_SETTINGS_MODAL, payload: force })
 
 export const getBusinessClassifications = () => ({ type: AT.GET_BUSINESS_CLASSIFICATIONS, payload: api.getBusinessClassifications() })
+
+export const triggerAgreementModal = (force = null, modalProps = {}) => ({ type: AT.TRIGGER_AGREEMENT_MODAL, payload: { force, modalProps } })
