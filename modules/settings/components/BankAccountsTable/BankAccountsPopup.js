@@ -75,12 +75,14 @@ class BankAccountsPopup extends React.Component {
       popupValues,
       intl: { formatMessage }
     } = this.props
-    const title = popupValues ? 'Edit' : 'Add'
 
     return (
       <Modal open centered={false}>
         <Modal.Header>
-          {`${title} `} <FormattedMessage id='settings.bankAcc' defaultMessage='Bank Account' />
+          {popupValues
+            ? <FormattedMessage id='settings.EditBankAcc' defaultMessage='Edit Bank Account' />
+            : <FormattedMessage id='settings.AddBankAcc' defaultMessage='Add Bank Account' />
+          }
         </Modal.Header>
         <Modal.Content>
           <Form

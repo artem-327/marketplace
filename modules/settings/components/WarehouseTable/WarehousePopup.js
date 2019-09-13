@@ -144,18 +144,27 @@ class WarehousePopup extends React.Component {
 
 
     const { closePopup, popupValues, country, currentTab, provincesDropDown } = this.props
-    const title = <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} defaultMessage={popupValues ? 'Edit ' : 'Add'}>{(text) => text}</FormattedMessage>
 
+    const name = currentTab.type === 'branches'
+      ? <FormattedMessage id='settings.branchName' defaultMessage='Branch Name' />
+      : <FormattedMessage id='settings.warehouseName' defaultMessage='Warehouse Name' />
 
-    const name = currentTab.type === 'branches' ? 'Branch Name' : 'Warehouse Name'
-    const modalTitle = <FormattedMessage id={`global.${currentTab.type === 'branches' ? 'branch' : 'warehouse'}`} defaultMessage={currentTab.type === 'branches' ? 'Branch' : 'Warehouse'}>{(text) => text}</FormattedMessage>
     let initialValues = this.getInitialFormValues()
 
+    const modalTitle = currentTab.type === 'branches'
+      ? (popupValues
+        ? <FormattedMessage id='settings.EditBranch' defaultMessage='Edit Branch' />
+        : <FormattedMessage id='settings.AddBranch' defaultMessage='Add Branch' />
+        )
+      : (popupValues
+        ? <FormattedMessage id='settings.EditWarehouse' defaultMessage='Edit Warehouse' />
+        : <FormattedMessage id='settings.AddWarehouse' defaultMessage='Add Warehouse' />
+      )
 
     return (
       <Modal open centered={false}>
         <Modal.Header>
-          {`${title} `} {modalTitle}
+          {modalTitle}
         </Modal.Header>
         <Modal.Content>
           <Form
