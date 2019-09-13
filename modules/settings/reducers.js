@@ -102,17 +102,6 @@ export const initialState = {
   }
 }
 
-
-{/* <FormattedMessage id='verification.termsOfAgreement' values={{
-  echosTermsAndServices: <Link href='https://echoexchange.net/docs/terms-and-services'>{formatMessage({ id: 'verification.termsAndServices' })}</Link>,
-  echosTermsOfUse: <Link href='https://echoexchange.net/docs/terms-of-use'>{formatMessage({ id: 'verification.termsOfUse' })}</Link>,
-  echosPrivacyPolicy: <Link href='https://echoexchange.net/docs/privacy-policy'>{formatMessage({ id: 'verification.privacyPolicy' })}</Link>,
-  dwollasTermsOfServices: <Link href='https://www.dwolla.com/legal/tos/'>{formatMessage({ id: 'verification.termsAndServices' })}</Link>,
-  dwollasPrivacyPolicy: <Link href='https://www.dwolla.com/legal/privacy/'>{formatMessage({ id: 'verification.privacyPolicy' })}</Link>
-}} /> */}
-
-
-
 export default function reducer(state = initialState, action) {
   const { payload } = action
 
