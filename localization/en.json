@@ -1,4 +1,6 @@
 {
+  "agree.withTOS.header": "Agree with Terms of Services",
+  "agree.withTOS.content": "Our {tos} were updated and it appears you have not agreed with the updated version yet. If you with to continue, please, read the updated Terms of Service, check the checkbox to confirm you agreement with those and click Continue button. You can also leave now by clicking Logout button.",
   "auth.resetMyPassword": "Password Reset",
   "auth.cancelPasswordReset": "Cancel Password Reset",
   "auth.username": "Username",

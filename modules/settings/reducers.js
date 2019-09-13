@@ -1,7 +1,10 @@
 import * as AT from './action-types'
 import * as inventoryAT from '~/modules/inventory/action-types'
+import Link from 'next/link'
 
 import { defaultTabs } from "./contants"
+
+import { FormattedMessage } from 'react-intl'
 
 export const initialState = {
   editPopupBoolean: false,
@@ -75,8 +78,40 @@ export const initialState = {
   dwollaAccBalance: null,
   businessClassifications: [],
   dwollaSaving: false,
-  countriesLoading: false
+  countriesLoading: false,
+  agreementModal: {
+    open: false,
+    declineButtonContent: <FormattedMessage id='global.logout' defaultMessage='Logout'>{text => text}</FormattedMessage>,
+    acceptButtonContent: <FormattedMessage id='global.accept' defaultMessage='Accept'>{text => text}</FormattedMessage>,
+    modalHeader:
+      <FormattedMessage
+        id='agree.withTOS.header'
+        defaultMessage='Agree with Terms of Services' />,
+    modalContent:
+      <FormattedMessage
+        id='agree.withTOS.content'
+        values={{
+          tos: <FormattedMessage id='verification.termsAndServices'>
+            {text => <Link href='https://echoexchange.net/docs/terms-and-services'><a target='_blank'>{text}</a></Link>}
+          </FormattedMessage>
+
+        }
+        } />,
+
+
+  }
 }
+
+
+{/* <FormattedMessage id='verification.termsOfAgreement' values={{
+  echosTermsAndServices: <Link href='https://echoexchange.net/docs/terms-and-services'>{formatMessage({ id: 'verification.termsAndServices' })}</Link>,
+  echosTermsOfUse: <Link href='https://echoexchange.net/docs/terms-of-use'>{formatMessage({ id: 'verification.termsOfUse' })}</Link>,
+  echosPrivacyPolicy: <Link href='https://echoexchange.net/docs/privacy-policy'>{formatMessage({ id: 'verification.privacyPolicy' })}</Link>,
+  dwollasTermsOfServices: <Link href='https://www.dwolla.com/legal/tos/'>{formatMessage({ id: 'verification.termsAndServices' })}</Link>,
+  dwollasPrivacyPolicy: <Link href='https://www.dwolla.com/legal/privacy/'>{formatMessage({ id: 'verification.privacyPolicy' })}</Link>
+}} /> */}
+
+
 
 export default function reducer(state = initialState, action) {
   const { payload } = action
@@ -1250,6 +1285,23 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    /* TRIGGER_AGREEMENT_MODAL */
+
+    case AT.TRIGGER_AGREEMENT_MODAL: {
+      let { force, modalProps } = payload
+      let { open } = !state.agreementModal
+
+      if (force !== null) open = force
+
+      return {
+        ...state,
+        agreementModal: {
+          ...state.agreementModal,
+          open,
+          // ...modalProps
+        }
+      }
+    }
 
 
     default: {

@@ -1,7 +1,8 @@
+import moment from 'moment'
+
 import * as AT from './action-types'
 import { ROLES_ENUM } from '../../src/utils/constants'
 import { getSafe } from '~/utils/functions'
-
 import { ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '~/modules/admin/action-types'
 import { SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '~/modules/settings/action-types'
 
@@ -257,6 +258,17 @@ export default function reducer(state = initialState, action) {
             dwollaAccountStatus: 'verified',
           }
 
+        }
+      }
+    }
+    /* AGREE_TOS */
+
+    case AT.AGREE_WITH_TOS_FULFILLED: {
+      return {
+        ...state,
+        identity: {
+          ...state.identity,
+          tosAgreementDate: moment().utc().format()
         }
       }
     }
