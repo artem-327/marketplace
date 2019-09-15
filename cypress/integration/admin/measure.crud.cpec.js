@@ -3,7 +3,7 @@ context("Units of measure CRUD", () => {
     beforeEach(function () {
         cy.server()
         cy.route("GET", '/prodex/api/packaging-groups').as('loading')
-        cy.route("GET", '/prodex/api/units').as('unitLoad')
+        cy.route("POST", '/prodex/api/units/datagrid').as('unitLoad')
 
         cy.login("admin@example.com", "echopass123")
 

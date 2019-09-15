@@ -46,6 +46,7 @@ context("Prodex Product Catalog CRUD", () => {
         cy.clickSave()
 
         cy.contains("Created Product")
+        cy.get("input[type=text]").type("Bondonium")
 
         let filter = [{"operator":"LIKE","path":"Product.productName","values":["%Bondo%"]},
             {"operator":"LIKE","path":"Product.productCode","values":["%Bondo%"]}]
@@ -79,6 +80,9 @@ context("Prodex Product Catalog CRUD", () => {
     })
 
     it("Edits a product", () => {
+        cy.get("input[type=text]").type("Bondonium")
+        cy.waitForUI()
+
         cy.get('[data-test=action_' + productId + ']').click()
         cy.get('[data-test=action_' + productId + '_0]').click()
 
@@ -100,6 +104,9 @@ context("Prodex Product Catalog CRUD", () => {
         cy.route("POST", "/prodex/api/products/trade-names*").as("nameSaving")
         cy.route("GET", "/prodex/api/products/trade-names/***").as("nameGetting")
 
+        cy.get("input[type=text]").type("Jamesonium")
+        cy.waitForUI()
+
         cy.get('[data-test=action_' + productId + ']').click()
         cy.get('[data-test=action_' + productId + '_1]').click()
 
@@ -114,6 +121,7 @@ context("Prodex Product Catalog CRUD", () => {
 
         cy.contains("Close").click()
 
+        cy.get("input[type=text]").clear().type("Jamesonium")
         cy.waitForUI()
 
         cy.get('[data-test=action_' + productId + ']').click()
@@ -128,6 +136,9 @@ context("Prodex Product Catalog CRUD", () => {
     xit("Deletes a alternative name", () => {
         cy.route("POST", "/prodex/api/products/trade-names*").as("nameSaving")
         cy.route("GET", "/prodex/api/products/trade-names/***").as("nameGetting")
+
+        cy.get("input[type=text]").type("Jamesonium")
+        cy.waitForUI()
 
         cy.get('[data-test=action_' + productId + ']').click()
 
@@ -144,6 +155,9 @@ context("Prodex Product Catalog CRUD", () => {
             .should("not.exist")
 
         cy.contains("Close").click()
+
+        cy.get("input[type=text]").clear().type("Jamesonium")
+        cy.waitForUI()
 
         cy.waitForUI()
 
@@ -170,6 +184,9 @@ context("Prodex Product Catalog CRUD", () => {
     })
 
     it("Deletes a product", () => {
+        cy.get("input[type=text]").clear().type("Jamesonium")
+        cy.waitForUI()
+
         cy.get('[data-test=action_' + productId + ']').click()
 
         cy.get('[data-test=action_' + productId + '_2]').click()

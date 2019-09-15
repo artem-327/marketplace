@@ -5,7 +5,7 @@ context("Market Segments CRUD", () => {
     beforeEach(function () {
         cy.server()
         cy.route("GET", '/prodex/api/packaging-groups').as('loading')
-        cy.route("GET", '/prodex/api/market-segments').as('segments')
+        cy.route("POST", '/prodex/api/market-segments/datagrid').as('segments')
 
         cy.login("admin@example.com", "echopass123")
 
@@ -57,8 +57,9 @@ context("Market Segments CRUD", () => {
         cy.clickSave()
 
         cy.contains("Updated Market Segment")
+        cy.waitForUI()
 
-        cy.get("input[type=text]").type("Test")
+        cy.get("input[type=text]").type("Great")
 
         cy.get('[data-test=action_' + documentId + ']').click()
         cy.get('[data-test=action_' + documentId + '_0]').click()

@@ -2,8 +2,9 @@ context("Prodex Bank Account CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.route("GET", '/prodex/api/payments/bank-accounts***').as('accountsLoading')
+        cy.route("POST",'/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
+        cy.route("GET", '/prodex/api/payments/*').as('accountsLoading')
+        cy.route("POST",'/prodex/api/payments/**').as('verifyLoading')
 
         cy.login("user1@example.com", "echopass123")
 
@@ -48,15 +49,25 @@ context("Prodex Bank Account CRUD", () => {
 
         cy.contains("Initiate Verification").click()
 
-        cy.wait("@accountsLoading")
+        cy.wait("@verifyLoading")
 
         cy.contains("Verification in process")
     })
 
-    xit("Complete Verification bank account", () => {
+    it("Complete Verification bank account", () => {
         cy.get("input[type=text]").type("David Tester")
+        cy.waitForUI()
 
         cy.get("i[class='ellipsis vertical large icon']").click()
+        cy.contains("Finalize Verification").click()
+
+        cy.get("#field_input_amount1").type("0.05")
+        cy.get("#field_input_amount2").type("0.04")
+
+        cy.get("[data-test='settings_bank_account_confirm_btn']").click()
+        cy.wait('@verifyLoading')
+
+        cy.contains('Verified')
     })
 
     it("Checks error messages", () => {
@@ -67,7 +78,7 @@ context("Prodex Bank Account CRUD", () => {
         cy.get(".error")
             .should("have.length",4)
             .find(".sui-error-message").each((element) => {
-            expect(element.text()).to.match(/(Required)/i)
+            expect(element.text()).to.match(/(Required)|(Must be an number)/i)
         })
     })
 
