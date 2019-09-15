@@ -143,7 +143,7 @@ context("Inventory CRUD",() => {
         cy.get("[data-test=new_inventory_productOptional]").click()
 
 		cy.get("#field_dropdown_origin").click()
-		cy.contains("Dominican Republic").click()
+		cy.contains("Angola").click()
 
 		cy.get("#field_dropdown_productForm").click()
 		cy.contains("Fiber").click()
@@ -171,7 +171,7 @@ context("Inventory CRUD",() => {
         cy.waitForUI()
 
         cy.contains('Multiple').trigger("mouseover")
-        cy.get('[data-test=my_inventory_lot_number_btn]').should("be.visible")
+        cy.get('[data-test=array_to_multiple_list]').should("be.visible")
         cy.get("div[role='listitem']").should("have.length",2)
     })
 

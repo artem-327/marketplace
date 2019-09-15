@@ -38,7 +38,7 @@ context("Inventory Broadcasting", () => {
 
                     cy.get('div[type=region]').eq(0).within(() => {
                         cy.get("input[type=checkbox]").click({force: true})
-                        cy.get("input[type=number]").type("5")
+                        cy.get("input[type=number]").type("5",{force: true})
                     })
 
                     cy.get("div[class=actions]").within(($region) => {

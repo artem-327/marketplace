@@ -58,8 +58,9 @@ context("Manufacturers CRUD", () => {
         cy.clickSave()
 
         cy.contains("Updated Manufacturer")
+        cy.waitForUI()
 
-        cy.get("input[type=text]").type("Test")
+        cy.get("input[type=text]").clear().type("Artio")
 
         cy.get('[data-test=action_' + manufacturerId + ']').click()
         cy.get('[data-test=action_' + manufacturerId + '_0]').click()
