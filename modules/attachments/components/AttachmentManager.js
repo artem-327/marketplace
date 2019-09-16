@@ -1,13 +1,23 @@
 import React, { Component } from 'react'
-import { Modal, Menu, Segment, Button } from 'semantic-ui-react'
+import { Modal, Input, Button, Grid, GridRow, GridColumn, Header } from 'semantic-ui-react'
 import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
 import { FormattedMessage } from 'react-intl'
+import styled from 'styled-components'
+import { debounce } from 'lodash'
+
 import ProdexTable from '~/components/table'
+import DocumentManagerPopup from '~/modules/settings/components/Documents/DocumentManagerPopup'
+
+const CustomHeader = styled.div`
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+`
 
 const AttachmentModal = withDatagrid(class extends Component {
   state = {
     open: false,
-    selectedRows: []
+    uploadOpen: false,
+    selectedRows: [],
   }
 
   returnSelectedRows = async () => {
@@ -15,21 +25,44 @@ const AttachmentModal = withDatagrid(class extends Component {
     await this.props.returnSelectedRows(this.state.selectedRows.map(srIndex => {
       return datagrid.rows[srIndex]
     }))
-    this.setState({open: false})
+    this.setState({ open: false })
   }
+
+
+
+  handleSearch = debounce(({ value }) => {
+    let { datagrid } = this.props
+    datagrid.setSearch(value)
+  }, 250)
+
 
   render() {
     const { datagrid, lockSelection } = this.props
 
     return (
       <>
-        <Modal centered={true} open={this.state.open} trigger={<Button basic type='button' onClick={() => this.setState({open: true})}>Attachements</Button>} onClose={() => this.setState({open: false})}>
-          <Modal.Header>
-            Attachements Manager
-            <Button type='button' floated='right' primary disabled={!this.state.selectedRows.length} onClick={this.returnSelectedRows}>
-              <FormattedMessage id={'attachments.attachSelected'} defaultMessage='Attach Selected Files'>{(text)=>text}</FormattedMessage>
-            </Button>
-          </Modal.Header>
+        <Modal centered={true} open={this.state.open} trigger={<Button basic type='button' onClick={() => this.setState({ open: true })}>Attachements</Button>} onClose={() => this.setState({ open: false })}>
+          <CustomHeader>
+            <Grid verticalAlign='middle'>
+              <GridRow>
+                <GridColumn width={6}><Header as='h2'>
+                  <FormattedMessage id='global.attachementsManager' defaultMessage='Attachements Manager'>{text => text}</FormattedMessage></Header>
+                </GridColumn>
+
+                <GridColumn width={4} floated='right'>
+                  <Input icon='search' fluid placeholder='Search...' onChange={(_, data) => this.handleSearch(data)} />
+                </GridColumn>
+
+                <GridColumn width={4}>
+                  <Button type='button' fluid primary disabled={!this.state.selectedRows.length} onClick={this.returnSelectedRows}>
+                    <FormattedMessage id='attachments.attachSelected' defaultMessage='Attach Selected Files'>{(text) => text}</FormattedMessage>
+                  </Button>
+                </GridColumn>
+              </GridRow>
+
+            </Grid>
+
+          </CustomHeader>
           <Modal.Content scrolling>
             <ProdexTable
               {...datagrid.tableProps}
@@ -58,6 +91,14 @@ const AttachmentModal = withDatagrid(class extends Component {
               }
             />
           </Modal.Content>
+
+
+          <Modal.Actions>
+            <Button basic onClick={() => this.setState({ open: false })}><FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage></Button>
+            <Button primary onClick={() => this.setState({ uploadOpen: true })}><FormattedMessage id='global....' defaultMessage='Upload another'>{text => text}</FormattedMessage></Button>
+            {this.state.uploadOpen && <DocumentManagerPopup onClose={() => this.setState({ uploadOpen: false })} />}
+          </Modal.Actions>
+
         </Modal>
       </>
     )
@@ -65,9 +106,21 @@ const AttachmentModal = withDatagrid(class extends Component {
 })
 
 class AttachmentManager extends Component {
+  getApiConfig = () => ({
+    url: '/prodex/api/attachments/datagrid/',
+    searchToFilter: v => v ? ([
+      { operator: 'LIKE', path: 'Attachment.name', values: [`%${v}%`] },
+      { operator: 'LIKE', path: 'Attachment.customName', values: [`%${v}%`] },
+      { operator: 'LIKE', path: 'Attachment.documentType.name', values: [`%${v}%`] }
+    ]) : [],
+    params: {
+      orOperator: true
+    }
+  })
+
   render() {
     return (
-      <DatagridProvider apiConfig={{ url: '/prodex/api/attachments/datagrid/' }}>
+      <DatagridProvider apiConfig={this.getApiConfig()}>
         <AttachmentModal returnSelectedRows={this.props.returnSelectedRows} lockSelection={this.props.lockSelection} />
       </DatagridProvider>
     )
