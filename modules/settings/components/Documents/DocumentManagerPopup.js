@@ -17,6 +17,7 @@ import { getSafe, generateToastMarkup, removeEmpty } from '~/utils/functions'
 
 import { closePopup } from '~/modules/settings/actions'
 import { getDocumentTypes, addAttachment, updateAttachment } from '~/modules/inventory/actions'
+import { func } from 'prop-types'
 
 const validationSchema = Yup.lazy(values => {
 
@@ -68,7 +69,7 @@ class DocumentPopup extends Component {
       closePopup, popupValues, documentTypes,
       intl: { formatMessage }, documentTypesFetching,
       edit, toastManager, addAttachment,
-      updateAttachment } = this.props
+      updateAttachment, onClose } = this.props
 
     return (
       <Modal open>
@@ -116,6 +117,7 @@ class DocumentPopup extends Component {
               finally {
                 setSubmitting(false)
                 closePopup()
+                onClose()
               }
             }}
             render={({ values, errors, submitForm, setFieldValue, isSubmitting }) => {
@@ -187,7 +189,10 @@ class DocumentPopup extends Component {
 
         </Modal.Content>
         <Modal.Actions>
-          <Button basic onClick={() => closePopup()}>
+          <Button basic onClick={() => {
+            closePopup()
+            onClose()
+          }}>
             <FormattedMessage id='global.close' defaultMessage='Close'>{text => text}</FormattedMessage>
           </Button>
 
@@ -198,6 +203,14 @@ class DocumentPopup extends Component {
       </Modal>
     )
   }
+}
+
+DocumentPopup.propTypes = {
+  onClose: func
+}
+
+DocumentPopup.defaultProps = {
+  onClose: () => { }
 }
 
 const mapStateToProps = ({ simpleAdd, settings }) => {
