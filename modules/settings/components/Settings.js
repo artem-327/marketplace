@@ -43,6 +43,7 @@ import { addTab, tabChanged, resetSettings, loadLogo, openPopup } from '../actio
 
 
 import { updateCompany } from '~/modules/auth/actions'
+import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
 import { validationSchema } from '~/modules/company-form/constants'
 
 import { DatagridProvider } from '~/modules/datagrid'
@@ -89,8 +90,9 @@ class Settings extends Component {
   }
 
   companyDetails = () => {
-    let { toastManager } = this.props
+    let { toastManager, postCompanyLogo, deleteCompanyLogo } = this.props
     const { selectLogo, removeLogo, companyUpdated } = this
+    const { companyLogo } = this.state
     return (
       <TopMargedGrid relaxed='very' centered>
         <GridColumn computer={12}>
@@ -107,11 +109,16 @@ class Settings extends Component {
                     const loadedLogo = btoa(reader.result)
                     await updateCompany(values.id, { ...values, businessType: values.businessType.id, logo: loadedLogo })
 
+                    await postCompanyLogo(values.id, companyLogo)
+
                     companyUpdated(values.name)
                   }
                   reader.readAsBinaryString(this.state.companyLogo)
                 } else {
                   await updateCompany(values.id, { ...values, businessType: values.businessType.id })
+
+                  if (values.hasLogo)
+                    await deleteCompanyLogo(values.id)
 
                   companyUpdated(values.name)
                 }
@@ -318,5 +325,5 @@ const mapStateToProps = ({ settings, auth }) => {
 
 export default connect(
   mapStateToProps,
-  { addTab, updateCompany, tabChanged, resetSettings, loadLogo }
+  { addTab, updateCompany, tabChanged, resetSettings, loadLogo, postCompanyLogo, deleteCompanyLogo }
 )(withToastManager(Settings))

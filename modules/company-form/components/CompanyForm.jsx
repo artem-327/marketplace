@@ -58,7 +58,6 @@ class CompanyForm extends Component {
 
   selectLogo = (file) => {
     if (this.getMimeType(file.name)) {
-      this.props.postCompanyLogo(this.props.companyId, file)
       this.props.selectLogo(file)
     } else {
       this.props.toastManager.add(generateToastMarkup(
@@ -71,7 +70,6 @@ class CompanyForm extends Component {
   }
 
   removeLogo = () => {
-    this.props.deleteCompanyLogo(this.props.companyId)
     this.props.removeLogo()
   }
 
