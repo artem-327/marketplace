@@ -65,7 +65,7 @@ export const passwordValidation = () => (
 export const phoneValidation = () => (
   Yup.string().trim()
     .min(3, errorMessages.minLength(3))
-    .matches(/([0-9\(\)\-\+\s])/, errorMessages.invalidPhoneNumber)
+    .matches(/^[0-9\(\)\-\+\s]+$/, errorMessages.invalidPhoneNumber)
 )
 
 export const dateValidation = (required = true) => {
@@ -166,9 +166,9 @@ export const dunsValidation = () => {
 
   return (
     Yup.string(errorMessages.requiredMessage)
-      .test('duns', errorMessages.invalidValueFormat('12-345-6789 or 123456789'), (val) => {
+      .test('duns', errorMessages.invalidValueFormat('123456789'), (val) => {
         if(!val) return false
-        if (val.includes('-')) return /^[0-9]{2}\-[0-9]{3}\-[0-9]{4}$/.test(val)
+        // if (val.includes('-')) return /^[0-9]{2}\-[0-9]{3}\-[0-9]{4}$/.test(val)
         else return /^[0-9]{9}$/.test(val)
       })
   )
