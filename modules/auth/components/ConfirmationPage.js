@@ -9,7 +9,7 @@ import * as val from 'yup'
 import Router from 'next/router'
 import Logo from '~/assets/images/logos/logo-dark.png'
 
-import { dunsValidation, addressValidationSchema, errorMessages, einValidation } from '~/constants/yupValidation'
+import { dunsValidation, addressValidationSchema, errorMessages, einValidation, phoneValidation } from '~/constants/yupValidation'
 
 import { getSafe } from '~/utils/functions'
 import { AddressForm } from '~/modules/address-form'
@@ -60,7 +60,7 @@ const validationScheme = val.object().shape({
   companyAdminUser: val.object().shape({
     name: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
     jobTitle: val.string(),
-    phone: val.string(),
+    phone: phoneValidation().concat(val.string().required(errorMessages.requiredMessage)),
     email: val.string(errorMessages.invalidEmail).email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
   }),
   dba: val.string(),

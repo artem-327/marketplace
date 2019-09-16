@@ -25,7 +25,8 @@ export default class AddressForm extends Component {
     provinces: [],
     countryId: null,
     hasProvinces: false,
-    provicesAreFetching: false
+    provicesAreFetching: false,
+    previousAddressLength: 0
   }
 
   fetchProvinces = async (countryId, hasProvinces) => {
@@ -74,7 +75,7 @@ export default class AddressForm extends Component {
 
   handleChange = (_, { name, value }) => {
     let { addressDatalistOptions, values, } = this.props
-    const { getAddressSearch, setFieldValue, addZip } = this.props
+    const { getAddressSearch, setFieldValue, addZip, addressDatalistLength } = this.props
 
     if (!values) return
 
@@ -101,16 +102,28 @@ export default class AddressForm extends Component {
       const parts = name.split('.')
       let newValues = { ...values, address: { ...values.address, [parts.pop()]: value } }
 
-      const body = {
-        city: getSafe(() => newValues.address.city),
-        countryId: getSafe(() => JSON.parse(newValues.address.country).countryId),
-        provinceId: getSafe(() => newValues.address.province),
-        streetAddress: getSafe(() => newValues.address.streetAddress),
-        zip: getSafe(() => newValues.address.zip)
-      }
+      const adrLength =
+        newValues.address.city.length + newValues.address.streetAddress.length +
+        ((newValues.address.province !== '') && 1)
 
-      if (Object.entries(body).length === 0) return
-      getAddressSearch(body)
+      if (adrLength > 1 && adrLength > this.state.previousAddressLength && !addressDatalistLength) {
+        this.setState({previousAddressLength: adrLength})
+        return
+      }
+      else {
+        this.setState({previousAddressLength: adrLength})
+
+        const body = {
+          city: getSafe(() => newValues.address.city),
+          countryId: getSafe(() => JSON.parse(newValues.address.country).countryId),
+          provinceId: getSafe(() => newValues.address.province),
+          streetAddress: getSafe(() => newValues.address.streetAddress),
+          zip: getSafe(() => newValues.address.zip)
+        }
+
+        if (Object.entries(body).length === 0) return
+        getAddressSearch(body)
+      }
     }
   }
 

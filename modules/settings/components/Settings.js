@@ -216,43 +216,43 @@ class Settings extends Component {
       // 'company-details': this.companyDetails(),
       'users': {
         url: `/prodex/api/users/datagrid`,
-        searchToFilter: v => ([
+        searchToFilter: v => v ?([
           { operator: 'LIKE', path: 'User.name', values: [`%${v}%`] },
           { operator: 'LIKE', path: 'User.homeBranch.name', values: [`%${v}%`] },
           // { operator: 'LIKE', path: '', values: [`%${v}%`] }, // TODO here should be User.jobTitle but BE doesn't seem to have it as filterable field...
-        ]),
+        ]) : [],
         params: {
           orOperator: true
         }
       },
       'branches': {
         url: `/prodex/api/branches/datagrid`,
-        searchToFilter: v => ([
+        searchToFilter: v => v ? ([
           { operator: 'LIKE', path: 'Branch.name', values: [`%${v}%`] },
           { operator: 'LIKE', path: 'Branch.address.streetAddress', values: [`%${v}%`] },
           { operator: 'LIKE', path: 'Branch.contactName', values: [`%${v}%`] },
-        ]),
+        ]) : [],
         params: {
           orOperator: true
         }
       },
       'warehouses': {
         url: `/prodex/api/branches/warehouses/datagrid`,
-        searchToFilter: v => ([
+        searchToFilter: v => v ? ([
           { operator: 'LIKE', path: 'Branch.name', values: [`%${v}%`] },
           { operator: 'LIKE', path: 'Branch.address.streetAddress', values: [`%${v}%`] },
           { operator: 'LIKE', path: 'Branch.contactName', values: [`%${v}%`] },
-        ]),
+        ]) : [],
         params: {
           orOperator: true
         }
       },
       'products': {
         url: `/prodex/api/products/datagrid`,
-        searchToFilter: v => ([
+        searchToFilter: v => v ? ([
           { operator: 'LIKE', path: 'Product.productName', values: [`%${v}%`] },
           { operator: 'LIKE', path: 'Product.productCode', values: [`%${v}%`] },
-        ]),
+        ]) : [],
         params: {
           orOperator: true
         }
@@ -261,9 +261,9 @@ class Settings extends Component {
       // 'credit-cards': null,
       'delivery-addresses': {
         url: '/prodex/api/delivery-addresses/datagrid',
-        searchToFilter: v => ([
+        searchToFilter: v => v ? ([
           { operator: 'LIKE', path: 'DeliveryAddress.address.streetAddress', values: [`%${v}%`] }
-        ])
+        ]) : []
       },
 
       'documents': {
