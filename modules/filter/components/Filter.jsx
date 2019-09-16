@@ -4,6 +4,7 @@ import { Form, Input, Checkbox as FormikCheckbox, Dropdown } from 'formik-semant
 import { Field as FormikField } from 'formik'
 import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
+import { getSafe } from '~/utils/functions'
 
 import { withToastManager } from 'react-toast-notifications'
 
@@ -14,7 +15,7 @@ import {
   Checkbox, Grid,
   GridRow, GridColumn,
   Dropdown as SemanticDropdown,
-  Transition
+  Transition, Header
 } from 'semantic-ui-react'
 
 import { uniqueArrayByKey } from '~/utils/functions'
@@ -342,7 +343,10 @@ class Filter extends Component {
     return (
       <>
         <FormField>
-          <Dropdown name={name} options={dateDropdownOptions} selection
+          <Dropdown
+            name={name}
+            options={dateDropdownOptions}
+            selection
             onChange={handleChange}
             inputProps={{
               'data-test': 'filter_dateField_drpdn',
@@ -434,6 +438,28 @@ class Filter extends Component {
   // {"id":"431210","name":"1,2-dibromo-3,3,3-trifluoropropane","casNumber":"431-21-0"}
   //  {"id":"431210","name":"1,2-dibromo-3,3,3-trifluoropropane","casNumberCombined":"431-21-0"}
 
+  getOptions = (options) => {
+    if (getSafe(() => options[0].content, false)) {
+      return options.map(option => ({
+        key: option.key,
+        text: option.text,
+        value: option.value,
+        content: (
+          <Header style={{ fontSize: '1em' }}>
+            <Header.Content>
+              {`${option.content.productCode ? option.content.productCode : ''} ${option.content.productName ? option.content.productName : ''}`}
+              {option.content.casProducts.map(cp => (
+                <Header.Subheader>{`${cp.casProduct.casNumber} ${cp.casProduct.chemicalName}`}</Header.Subheader>
+              ))}
+            </Header.Content>
+          </Header>
+        )
+      }))
+    } else {
+      return options
+    }
+  }
+
   formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError }) => {
     let {
       productConditions, productForms, packagingTypes,
@@ -460,7 +486,7 @@ class Filter extends Component {
       selection: true,
       multiple: true,
       fluid: true,
-      options: uniqueArrayByKey(savedAutocompleteData.concat(autocompleteData), 'id'),
+      options: this.getOptions(uniqueArrayByKey(savedAutocompleteData.concat(autocompleteData), 'id')),
       loading: autocompleteDataLoading,
       name: 'search',
       placeholder: <FormattedMessage id='filter.searchProducts' defaultMessage='Search Products' />,

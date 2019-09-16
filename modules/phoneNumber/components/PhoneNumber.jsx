@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { string, array, object, bool, func } from "prop-types"
-import { FormGroup, FormField, Dropdown, Input, Table, TableCell, Grid } from 'semantic-ui-react'
+import { string, object, bool, func } from "prop-types"
+import { FormField, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 //import { InputMask } from 'react-input-mask'
@@ -9,6 +9,34 @@ import get from 'lodash/get'
 
 const StyledDropdown = styled(Dropdown)`
   min-width: 120px !important;
+  cursor: pointer !important;
+  word-wrap: normal;
+  line-height: 1em;
+  white-space: normal;
+  outline: 0;
+  min-width: 14em;
+  min-height: 2.71428571em;
+  background: #FFFFFF;
+  display: inline-block;
+  padding: 0.78571429em 0.78571429em 0.78571429em 0.78571429em;
+  color: rgba(0, 0, 0, 0.87);
+  border: 1px solid rgba(34, 36, 99, 0.15);
+  border-radius: 0.28571429rem;
+  transition: width 0.1s ease, -webkit-box-shadow 0.1s ease;
+  transition: box-shadow 0.1s ease, width 0.1s ease;
+  transition: box-shadow 0.1s ease, width 0.1s ease, -webkit-box-shadow 0.1s ease;
+  text-align:right !important;
+  > .search.icon,
+  > .delete.icon,
+  > .dropdown.icon {
+    cursor: pointer !important;
+    width: auto;
+    height: auto;
+    line-height: 1.21428571em;
+    z-index: 3;
+    opacity: 0.8;
+    transition: opacity 0.1s ease;
+  }
 `
 
 const StyledInputMask = styled(InputMask)`
@@ -72,13 +100,10 @@ export default class PhoneNumber extends Component {
     return (
       <FormField>
         <label><FormattedMessage id='global.phone' defaultMessage='Phone' /></label>
-
-        {true && (
         <span style={{ display: 'flex'}}>
           <StyledDropdown
             options={phoneCountryCodes}
             onChange={(e, data) => this.handleChange('phoneCountryCode', data.value)}
-            selection
             search
             placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+XXX' })}
             value={phoneCountryCode}
@@ -93,38 +118,6 @@ export default class PhoneNumber extends Component {
             placeholder={formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
           />
         </span>
-        )}
-
-
-        {false && (
-          <InputMask
-          mask="999 999 9999"
-          maskChar=" "
-          type='text'
-          value={phoneNumber}
-          onChange={(data) => this.handleChange('phoneNumber', data.target.value)}
-          >
-          {(inputProps) =>
-            <Input
-              {...inputProps}
-              type='text'
-              label={
-                <StyledDropdown
-                  options={phoneCountryCodes}
-                  onChange={(e, data) => this.handleChange('phoneCountryCode', data.value)}
-                  selection
-                  compact
-                  placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+XXX' })}
-                  value={phoneCountryCode}
-                />
-              }
-              labelPosition='left'
-              placeholder={formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
-            />
-          }
-        </InputMask>
-        )}
-
       </FormField>
     )
   }

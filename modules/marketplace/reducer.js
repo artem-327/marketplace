@@ -35,15 +35,21 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_AUTOCOMPLETE_DATA_MARKETPLACE_FULFILLED: {
-      return {
+      const rVal = {
         ...state,
         autocompleteDataLoading: false,
         autocompleteData: uniqueArrayByKey(payload, 'id').map((el) => ({
           key: el.id,
-          text: `${el.chemicalName} (${el.casNumber})`,
-          value: JSON.stringify({ id: el.id, name: el.chemicalName, casNumber: el.casNumber }),
-        })).concat(state.autocompleteData)
+          text: `${el.productCode ? el.productCode : ''} ${el.productName ? el.productName : ''}`,
+          value: JSON.stringify({ id: el.id, name: el.casProducts[0].casProduct.chemicalName, casNumber: el.casProducts[0].casProduct.casNumber }),
+          content: {
+            productCode: el.productCode,
+            productName: el.productName,
+            casProducts: el.casProducts
+          }
+        }))
       }
+      return rVal
     }
 
     case AT.GET_AUTOCOMPLETE_DATA_MARKETPLACE_REJECTED: {
