@@ -118,7 +118,10 @@ class LoginForm extends Component {
                     if (!inputsState.passwordError && !inputsState.usernameError) {
                       if (this.state.resetPassword) await resetPasswordRequest(username)
                       else await login(username, password)
-                    } else this.setState(inputsState)
+                    } else {
+                      this.setState(inputsState)
+                      actions.setSubmitting(false)
+                    }
                   }
                   catch { actions.setSubmitting(false) }
                 }}>

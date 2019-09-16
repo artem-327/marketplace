@@ -17,6 +17,7 @@ function mapStateToProps({ settings }) {
     countriesLoading: settings.countriesLoading,
     addressDatalistOptions,
     addressDatalistData: settings.addressSearch,
+    addressDatalistLength: settings.addressSearch.length,
     loading: settings.loading
   }
 }
