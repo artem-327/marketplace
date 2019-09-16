@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Modal, Icon, Segment, Dimmer, Loader, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab, Popup, Dropdown as DropdownMenu } from 'semantic-ui-react'
+import { Modal, Icon, Segment, Dimmer, Loader, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab, Popup, List, Dropdown as DropdownMenu } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
 import { DateInput } from '~/components/custom-formik'
@@ -92,24 +92,32 @@ const InnerRow = styled(GridRow)`
 
 const initValues = {
   additionalType: 'Unspecified',
+  assayMin: '',
+  assayMax: '',
   costs: [],
   doesExpire: false,
   inStock: true,
   lots: [],
+  manufacturer: null,
   minimumRequirement: true,
   minimum: 1,
   multipleLots: false,
+  origin: null,
   pkgAmount: 1,
   priceTiers: 1,
   pricingTiers: [
     { price: 0.001, quantityFrom: 1 }
   ],
   product: '',
+  productCondition: null,
+  productForm: null,
+  productGrade: null,
   processingTimeDays: 1,
   processingTimeDW: 1,
   processingTimeNum: 1,
   splits: 1,
   touchedLot: false,
+  tradeName: '',
   trackSubCosts: true,
   validityDate: '',
   warehouse: null
@@ -216,11 +224,12 @@ const validationScheme = val.object().shape({
     .nullable(errorMessages.required)
     .moreThan(0, errorMessages.requiredMessage)
     .required(errorMessages.requiredMessage),
-  assayMin: val.number().nullable().min(0, errorMessages.minimum(0)).test('match', errorMessages.minUpToMax,
-    function (assayMin) {
-      return (typeof this.parent.assayMax === 'undefined') || (assayMin <= this.parent.assayMax)
-    }),
-  assayMax: val.number().nullable().min(0, errorMessages.minimum(0))
+  assayMin: val.number().nullable().min(0, errorMessages.minimum(0)).max(100, errorMessages.maximum(100))
+    .test('match', errorMessages.minUpToMax,
+      function (assayMin) {
+        return (typeof this.parent.assayMax === 'undefined') || (assayMin <= this.parent.assayMax)
+      }),
+  assayMax: val.number().nullable().min(0, errorMessages.minimum(0)).max(100, errorMessages.maximum(100))
     .test('match', errorMessages.maxAtLeastMin,
       function (assayMax) {
         return (typeof this.parent.assayMin === 'undefined') || (assayMax >= this.parent.assayMin)
@@ -489,7 +498,6 @@ class AddInventoryForm extends Component {
   renderEditDocuments = (values, setFieldValue, validateForm) => {
     const { edit, removeAttachment, removeAttachmentLink, intl: { formatMessage } } = this.props
     const { additional, attachments, lots } = values
-    console.log({ edit, type: typeof attachments })
     if (typeof attachments === 'undefined' || !edit)
       return false
 
@@ -588,7 +596,7 @@ class AddInventoryForm extends Component {
     for (let i = 0; i < count; i++) {
 
       tiers.push(
-        <InnerRow>
+        <InnerRow key={i+1}>
           <TopMargedColumn computer={2} textAlign='center'>
             <label name={`pricingTiers[${i}].level`}>{i + 1}</label>
           </TopMargedColumn>
@@ -614,7 +622,7 @@ class AddInventoryForm extends Component {
 
     return (
       <>
-        <InnerRow>
+        <InnerRow key={0}>
           <GridColumn computer={2}><FormattedMessage id='addInventory.level' defaultMessage='Level' /></GridColumn>
           <GridColumn computer={1} />
           <GridColumn computer={6}><FormattedMessage id='global.quantity' defaultMessage='Quantity' /></GridColumn>
@@ -626,18 +634,18 @@ class AddInventoryForm extends Component {
   }
 
   renderProductDetails = (values, validateForm, setFieldValue) => {
-    const {
-      activeIndex
-    } = this.state
-    console.log(values)
-    let defaultMessage = values.product ? 'N/A' : ''
+    const { activeIndex } = this.state
 
     const { toastManager, intl: { formatMessage } } = this.props
     let casProducts = getSafe(() => values.product.casProducts, '')
+
+    let defaultMessage = values.product ? 'N/A' : ''
+    const blendMessage = formatMessage({id: 'global.blend', defaultMessage: 'Blend'})
+
     return (
       <Grid className='product-details' centered>
         <CustomPaddedColumn>
-          <Segment fluid
+          <Segment
             attached={values.product ? false : 'top'}
             style={{ padding: '1.5em' }}>
             <Accordion>
@@ -667,16 +675,16 @@ class AddInventoryForm extends Component {
                   <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.packagingType.name, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.casIndexName' defaultMessage='CAS Index Name' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}><p>{casProducts && (casProducts.length > 1 ? 'Blend' : casProducts[0].casProduct.casIndexName)}</p></GridColumn>
+                  <GridColumn computer={8} mobile={16}>{casProducts && (casProducts.length > 1 ? (<Popup content={<List items={casProducts.map(cp => cp.casProduct.casIndexName)} />} trigger={<a>{blendMessage}</a>} />) : getSafe(() => casProducts[0].casProduct.casIndexName, defaultMessage))}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.casNumber' defaultMessage='CAS Number' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.casNumberCombined, defaultMessage)}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{casProducts && (casProducts.length > 1 ? (<Popup content={<List items={casProducts.map(cp => cp.casProduct.casNumber)} />} trigger={<a>{blendMessage}</a>} />) : getSafe(() => values.product.casNumberCombined, defaultMessage))}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.masterProduct' defaultMessage='Master Product' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.masterProduct.toString(), defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.chemicalName' defaultMessage='Chemical Name' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{casProducts && (casProducts.length > 1 ? 'Blend' : casProducts[0].casProduct.chemicalName)}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{casProducts && (casProducts.length > 1 ? (<Popup content={<List items={casProducts.map(cp => cp.casProduct.chemicalName)} />} trigger={<a>{blendMessage}</a>} />) : getSafe(() => casProducts[0].casProduct.chemicalName, defaultMessage))}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.hazaardous' defaultMessage='Hazaardous' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && (getSafe(() => values.product.hazaardous.toString(), false) ? 'Yes' : 'No')}</GridColumn>
@@ -821,7 +829,7 @@ class AddInventoryForm extends Component {
   }
 
   componentWillMount = async () => {
-    await this.props.resetForm()
+    await this.props.resetForm(initValues)
   }
 
   componentDidMount = () => {
@@ -933,7 +941,7 @@ class AddInventoryForm extends Component {
         </div>
 
         <Form
-          enableReinitialize
+          enableReinitialize={true}
           validateOnChange={false}
           initialValues={{ ...initValues, ...initialState }}
           validationSchema={validationScheme}
@@ -1037,7 +1045,7 @@ class AddInventoryForm extends Component {
                         </Menu.Item>
                       ),
                       pane: (
-                        <Tab.Pane style={{ padding: '0 32px' }}>
+                        <Tab.Pane key='productOffer' style={{ padding: '0 32px' }}>
                           <Grid divided style={{ marginTop: '2rem' }}>
                             <Grid.Column computer={5} tablet={5} mobile={7}>
                               <Grid>
@@ -1498,7 +1506,7 @@ class AddInventoryForm extends Component {
                         </Menu.Item>
                       ),
                       pane: (
-                        <Tab.Pane style={{ padding: '0 32px' }}>
+                        <Tab.Pane key='productOptional' style={{ padding: '0 32px' }}>
                           <Grid style={{ marginTop: '2rem' }}>
                             <GridColumn computer={11} tablet={11} mobile={16}>
                               <Grid columns={3} centered>
@@ -1584,7 +1592,8 @@ class AddInventoryForm extends Component {
                                       <Input
                                         name='assayMax'
                                         label={formatMessage({ id: 'addInventory.assayMax', defaultMessage: 'Assay Max %' })}
-                                        inputProps={{ type: 'number', min: 0, step: '0.001', value: null }} />
+                                        inputProps={{ type: 'number', min: 0, step: '0.001', value: null }}
+                                      />
                                     </FormField>
                                   </FormGroup>
                                 </GridColumn>
@@ -1884,7 +1893,7 @@ class AddInventoryForm extends Component {
                         </Menu.Item>
                       ),
                       pane: (
-                        <Tab.Pane style={{ padding: '0 32px' }}>
+                        <Tab.Pane key='productDocuments' style={{ padding: '0 32px' }}>
                           <Grid style={{ marginTop: '2rem' }}>
                             <GridColumn computer={11} tablet={11} mobile={16}>
                               {this.renderEditDocuments(values, setFieldValue, validateForm)}
