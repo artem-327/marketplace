@@ -95,7 +95,7 @@ const AttachmentModal = withDatagrid(class extends Component {
 
           <Modal.Actions>
             <Button basic onClick={() => this.setState({ open: false })}><FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage></Button>
-            <Button primary onClick={() => this.setState({ uploadOpen: true })}><FormattedMessage id='global....' defaultMessage='Upload another'>{text => text}</FormattedMessage></Button>
+            <Button primary onClick={() => this.setState({ uploadOpen: true })}><FormattedMessage id='global.uploadAnother' defaultMessage='Upload Another'>{text => text}</FormattedMessage></Button>
             {this.state.uploadOpen && <DocumentManagerPopup onClose={() => this.setState({ uploadOpen: false })} />}
           </Modal.Actions>
 

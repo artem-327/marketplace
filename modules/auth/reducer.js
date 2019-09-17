@@ -59,7 +59,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.LOGIN_PENDING: {
       return {
-        ...state,
+        ...initialState,
         loginForm: {
           ...loginForm,
           isLoading: false,
