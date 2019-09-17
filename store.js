@@ -58,10 +58,14 @@ import zip from '~/modules/zip-dropdown/reducer'
 import businessTypes from '~/modules/company-form/reducer'
 
 import auth from '~/modules/auth/reducer'
+import { LOGIN_INIT } from '~/modules/auth/action-types'
+
 import broadcast from '~/modules/broadcast/reducer'
 
 import messages from '~/modules/messages/reducer'
 import phoneNumber from '~/modules/phoneNumber/reducer'
+
+
 
 const reducer = combineReducers({
   auth,
@@ -115,6 +119,15 @@ const reducer = combineReducers({
   phoneNumber,
 })
 
+const rootReducer = (state, action) => {
+  switch (action.type) {
+    case LOGIN_INIT: {
+      state = undefined
+    }
+  }
+  return reducer(state, action)
+}
+
 const logger = createLogger({
   predicate: (getState, action) => process.env.NODE_ENV === "development"
 })
@@ -149,7 +162,7 @@ export const makeStore = (preloadedState) => {
   // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 
   const { auth } = loadState() || {}
-  let store = createStore(reducer, { auth }, middleware)
+  let store = createStore(rootReducer, { auth }, middleware)
   // let store = createStore(reducer, middleware)
 
   store.subscribe(throttle(() => {
