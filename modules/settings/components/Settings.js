@@ -103,25 +103,14 @@ class Settings extends Component {
               try {
                 const { updateCompany } = this.props
 
-                if (this.state.companyLogo) {
-                  let reader = new FileReader()
-                  reader.onload = async function () {
-                    const loadedLogo = btoa(reader.result)
-                    await updateCompany(values.id, { ...values, businessType: values.businessType.id, logo: loadedLogo })
-
-                    await postCompanyLogo(values.id, companyLogo)
-
-                    companyUpdated(values.name)
-                  }
-                  reader.readAsBinaryString(this.state.companyLogo)
+                await updateCompany(values.id, { ...values, businessType: values.businessType.id })
+                if (companyLogo) {
+                  await postCompanyLogo(values.id, companyLogo)
                 } else {
-                  await updateCompany(values.id, { ...values, businessType: values.businessType.id })
-
                   if (values.hasLogo)
                     await deleteCompanyLogo(values.id)
-
-                  companyUpdated(values.name)
                 }
+                companyUpdated(values.name)
               } catch (err) {
                 console.error(err)
               }
