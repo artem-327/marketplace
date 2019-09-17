@@ -353,14 +353,21 @@ export function deleteProductName(productId, id) {
 export const deleteCompany = id => ({ type: AT.ADMIN_DELETE_COMPANIES, payload: api.deleteCompany(id) })
 
 export function createCompany(formData) {
-	return async dispatch => {
-		await dispatch({
-			type: AT.ADMIN_CREATE_COMPANY,
-			payload: api.createCompany(formData)
-		})
+  return async dispatch => {
+    let response = await api.createCompany(formData)
+    await dispatch({
+      type: AT.ADMIN_CREATE_COMPANY,
+      response
+    })
 
-		dispatch(closePopup())
-	}
+    /* Called when uploaded logo
+    Datagrid.clear()
+    Datagrid.loadData()
+    */
+
+    dispatch(closePopup())
+    return response
+  }
 }
 
 export function updateCompany(id, formData) {
@@ -371,11 +378,13 @@ export function updateCompany(id, formData) {
 			response
 		})
 
+		/* Called when uploaded logo
 		Datagrid.updateRow(id, () => response)
-
+		*/
 
 		// dispatch(updateIdentity(response))
 		dispatch(closePopup())
+		return response
 		// dispatch(getCompanies())
 	}
 }

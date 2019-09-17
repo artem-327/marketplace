@@ -8,6 +8,7 @@ import {
   getAddressSearchPrimaryBranch, getAddressSearchMailingBranch, removeEmpty
 } from '~/modules/admin/actions'
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
+import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
 import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 // import { ZipDropdown } from '~/modules/zip-dropdown'
@@ -29,6 +30,7 @@ import { AddressForm } from '~/modules/address-form/'
 import { addressValidationSchema } from '~/constants/yupValidation'
 
 import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { Datagrid } from '~/modules/datagrid'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -243,7 +245,9 @@ class AddNewPopupCasProducts extends React.Component {
       intl,
       AddressSuggestPrimaryBranchInput,
       AddressSuggestMailingBranchInput,
-      toastManager
+      toastManager,
+      postCompanyLogo,
+      deleteCompanyLogo
     } = this.props
 
     const { selectLogo, removeLogo } = this
@@ -282,11 +286,19 @@ class AddNewPopupCasProducts extends React.Component {
                 let reader = new FileReader()
                 reader.onload = async function () {
                   const loadedLogo = btoa(reader.result)
-                  await updateCompany(popupValues.id, { ...newValues, businessType: getSafe(() => newValues.businessType.id, null), logo: loadedLogo })
+                  const data = await updateCompany(popupValues.id, { ...newValues, businessType: getSafe(() => newValues.businessType.id, null) })
+                  await postCompanyLogo(data.id, companyLogo)
+
+                  Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: true }))
                 }
                 reader.readAsBinaryString(this.state.companyLogo)
               } else {
-                await updateCompany(popupValues.id, { ...newValues, businessType: newValues.businessType && newValues.businessType.id })
+                const data = await updateCompany(popupValues.id, { ...newValues, businessType: newValues.businessType && newValues.businessType.id })
+
+                if (popupValues.hasLogo)
+                  deleteCompanyLogo(popupValues.id)
+
+                Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: false }))
               }
 
             }
@@ -313,11 +325,18 @@ class AddNewPopupCasProducts extends React.Component {
                 let reader = new FileReader()
                 reader.onload = async function () {
                   const loadedLogo = btoa(reader.result)
-                  await createCompany({ ...payload, logo: loadedLogo })
+                  const data = await createCompany(payload)
+                  await postCompanyLogo(data.id, companyLogo)
+
+                  Datagrid.clear()
+                  Datagrid.loadData()
                 }
                 reader.readAsBinaryString(this.state.companyLogo)
               } else {
                 await createCompany(payload)
+
+                Datagrid.clear()
+                Datagrid.loadData()
               }
             }
             let status = popupValues ? 'companyUpdated' : 'companyCreated'
@@ -450,7 +469,9 @@ const mapDispatchToProps = {
   addZip,
   getZipCodes,
   getAddressSearchPrimaryBranch,
-  getAddressSearchMailingBranch
+  getAddressSearchMailingBranch,
+  postCompanyLogo,
+  deleteCompanyLogo
 }
 
 // const prepareAddressSuggestPrimaryBranch = (AddressSuggestOptions) => (

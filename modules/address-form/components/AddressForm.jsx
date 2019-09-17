@@ -103,8 +103,8 @@ export default class AddressForm extends Component {
       let newValues = { ...values, address: { ...values.address, [parts.pop()]: value } }
 
       const adrLength =
-        newValues.address.city.length + newValues.address.streetAddress.length +
-        ((newValues.address.province !== '') && 1)
+        getSafe(() => newValues.address.city.length, 0) + getSafe(() => newValues.address.streetAddress.length, 0) +
+        (getSafe(newValues.address.province !== '', true) && 1)
 
       if (adrLength > 1 && adrLength > this.state.previousAddressLength && !addressDatalistLength) {
         this.setState({previousAddressLength: adrLength})
