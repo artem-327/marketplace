@@ -282,19 +282,12 @@ class AddNewPopupCasProducts extends React.Component {
                   }
                 })
 
+              const data = await updateCompany(popupValues.id, { ...newValues, businessType: getSafe(() => newValues.businessType.id, null) })
               if (this.state.companyLogo) {
-                let reader = new FileReader()
-                reader.onload = async function () {
-                  const loadedLogo = btoa(reader.result)
-                  const data = await updateCompany(popupValues.id, { ...newValues, businessType: getSafe(() => newValues.businessType.id, null) })
-                  await postCompanyLogo(data.id, companyLogo)
+                postCompanyLogo(data.id, companyLogo)
 
-                  Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: true }))
-                }
-                reader.readAsBinaryString(this.state.companyLogo)
+                Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: true }))
               } else {
-                const data = await updateCompany(popupValues.id, { ...newValues, businessType: newValues.businessType && newValues.businessType.id })
-
                 if (popupValues.hasLogo)
                   deleteCompanyLogo(popupValues.id)
 
