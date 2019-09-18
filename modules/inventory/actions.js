@@ -57,7 +57,7 @@ export function addProductOffer(values, poId = false) {
   const additional = values.additional && values.additional.length ? values.additional.map(add => {
     return add.id
   }) : []
-
+  
   let params = {
     assayMin: getSafe(() => parseFloat(values.assayMin)),
     assayMax: getSafe(() => parseFloat(values.assayMax)),
@@ -65,14 +65,12 @@ export function addProductOffer(values, poId = false) {
     cost: getSafe(() => parseInt(values.cost)),
     costRecords: values.trackSubCosts && values.costs ? values.costs.map(cost => {
       return {
-        attachment: null,
+        attachment: getSafe(() => cost.attachments[0].id),
         description: cost.description,
         lotNumber: cost.lot === 0 ? 0 : values.lots[cost.lot - 1].lotNumber,
         value: parseInt(cost.cost)
       }
     }) : null,
-    // currency
-    // description
     externalNotes: getSafe(() => values.externalNotes),
     inStock: !!values.inStock,
     internalNotes: getSafe(() => values.internalNotes),

@@ -7,7 +7,7 @@ import { debounce } from 'lodash'
 
 import ProdexTable from '~/components/table'
 import DocumentManagerPopup from '~/modules/settings/components/Documents/DocumentManagerPopup'
-import { node } from 'prop-types'
+import { node, object } from 'prop-types'
 
 const CustomHeader = styled.div`
   padding: 1.25rem 1.5rem;
@@ -23,8 +23,9 @@ const AttachmentModal = withDatagrid(class extends Component {
 
   returnSelectedRows = async () => {
     const { datagrid } = this.props
-    await this.props.returnSelectedRows(this.state.selectedRows.map(srIndex => {
-      return datagrid.rows[srIndex]
+    
+    this.props.returnSelectedRows(this.state.selectedRows.map(srIndex => {
+      return { ...datagrid.rows[srIndex], index: srIndex }
     }))
     this.setState({ open: false })
   }
@@ -38,10 +39,7 @@ const AttachmentModal = withDatagrid(class extends Component {
 
 
   render() {
-    const { datagrid, lockSelection, trigger } = this.props
-
-
-    // trigger.onClick = () => console.log('click')
+    const { datagrid, lockSelection, trigger, tableProps } = this.props
 
     return (
       <>
@@ -72,6 +70,7 @@ const AttachmentModal = withDatagrid(class extends Component {
           <Modal.Content scrolling>
             <ProdexTable
               {...datagrid.tableProps}
+              {...tableProps}
               rows={datagrid.rows.map(r => ({
                 id: r.id,
                 name: r.name,
@@ -113,11 +112,13 @@ const AttachmentModal = withDatagrid(class extends Component {
 
 
 AttachmentModal.propTypes = {
-  trigger: node
+  trigger: node,
+  tableProps: object
 }
 
 AttachmentModal.defaultProps = {
-  trigger: <Button basic type='button'><FormattedMessage id='global.attachements' defaultMessage='Attachements'>{text => text}</FormattedMessage></Button>
+  trigger: <Button basic type='button'><FormattedMessage id='global.attachements' defaultMessage='Attachements'>{text => text}</FormattedMessage></Button>,
+  tableProps: {}
 }
 
 class AttachmentManager extends Component {

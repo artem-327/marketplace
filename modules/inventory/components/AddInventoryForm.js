@@ -49,6 +49,16 @@ const TableCellBig = styled(TableCell)`
   }
 `
 
+const FileUploadDiv = styled.div`
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  > * {
+    cursor: pointer;
+  }
+`
+
 const TableCellSmall = styled(TableCell)`
   @media (min-width: 768px) {
     width: 10%;
@@ -1695,12 +1705,17 @@ class AddInventoryForm extends Component {
                                             <TableCellBig><DateInput name={`lots[${index}].expirationDate`} inputProps={{ 'data-test': 'add_inventory_product_expirationDate_dtin' }} /></TableCellBig>
                                             <TableCellBig>
                                               <AttachmentManager
+                                                tableProps={{
+                                                  defaultSelection: getSafe(() => values.lots[index].attachments.map((attachment) => attachment.index), [])
+                                                }}
                                                 trigger={
-                                                  <div>
-                                                    <FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' />
-                                                  </div>
+                                                  <FileUploadDiv>
+                                                    {getSafe(() => `(${values.lots[index].attachments.length}) `)}
+                                                    {getSafe(() => values.lots[index].attachments.map((attachment) => <label>{attachment.name}</label>),
+                                                      <FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' />)}
+                                                  </FileUploadDiv>
                                                 }
-                                                returnSelectedRows={(rows) => console.log({ rows })} />
+                                                returnSelectedRows={(rows) => setFieldValue(`lots[${index}].attachments`, rows)} />
                                               {/* <UploadLot {...this.props}
                                                 attachments={values.lots[index].attachments}
                                                 name={`lots[${index}].attachments`}
@@ -1830,35 +1845,21 @@ class AddInventoryForm extends Component {
                                                 <TableCell width={3}><FormField width={16} data-test={`add_inventory_costUom_${index}_inp`}>
                                                   <Input name={`costs[${index}].costUom`} inputProps={{ type: 'text', step: '0.01', value: null, min: 0, disabled: true }} /></FormField></TableCell>
                                                 <TableCell width={3}>
-                                                  <AttachmentManager trigger={
-                                                    <div>
-                                                      <FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' />
-                                                    </div>
-                                                  }
-                                                    returnSelectedRows={(rows) => console.log({ rows })} />
-                                                  {/* <UploadLot {...this.props}
-                                                    attachments={values.costs[index].attachments}
-                                                    name={`costs[${index}].attachments`}
-                                                    type={3}
-                                                    lot={false}
-                                                    filesLimit={1}
-                                                    fileMaxSize={20}
-                                                    disabled={!values.trackSubCosts}
-                                                    onChange={(files) => setFieldValue(
-                                                      `costs[${index}].attachments[${values.costs[index].attachments && values.costs[index].attachments.length ? values.costs[index].attachments.length : 0}]`,
-                                                      {
-                                                        id: files.id,
-                                                        name: files.name
-                                                      }
-                                                    )}
-                                                    data-test={`add_inventory_costs_${index}_attachments`}
-                                                    emptyContent={(
-                                                      <FormattedMessage
-                                                        id='addInventory.clickUpload'
-                                                        defaultMessage={'Click to upload'}
-                                                      />
-                                                    )}
-                                                  /> */}
+                                                  <AttachmentManager
+                                                    tableProps={{
+                                                      singleSelection: true,
+                                                      defaultSelection: getSafe(() => values.costs[index].attachments.map((attachment) => attachment.index), [])
+                                                    }}
+                                                    trigger={
+                                                      <FileUploadDiv>
+                                                        {getSafe(() => values.costs[index].attachments.map((attachment) => <label>{attachment.name}</label>),
+                                                          <FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' />)}
+                                                      </FileUploadDiv>
+                                                    }
+                                                    returnSelectedRows={(rows) =>
+                                                      setFieldValue(`costs[${index}].attachments`, rows)}
+                                                  />
+
                                                 </TableCell>
                                                 <TableCell width={1}><Icon name='trash alternate outline' size='large' disabled={!values.trackSubCosts} onClick={() => arrayHelpers.remove(index)}
                                                   data-test={`add_inventory_delete_${index}`} /></TableCell>
