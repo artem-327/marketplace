@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Modal, Table, TableCell, TableHeaderCell, FormField, Message, Icon, Popup } from 'semantic-ui-react'
-import { Form, Input, Button } from 'formik-semantic-ui'
+import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import { FieldArray } from 'formik'
 
 import { withToastManager } from 'react-toast-notifications'

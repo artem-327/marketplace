@@ -4,7 +4,7 @@ import { bindActionCreators } from "redux"
 import * as Actions from "../../actions"
 import { loadFile, addAttachment} from "~/modules/inventory/actions"
 import { Modal, ModalContent, Table, Grid, Header, Button, Segment, Tab, TabPane, Menu, Label } from "semantic-ui-react"
-import { Form, Input, Checkbox } from 'formik-semantic-ui'
+import { Form, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FieldArray } from 'formik'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'

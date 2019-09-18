@@ -10,7 +10,7 @@ import {
   putNewUserRoleRequest,
   getCurrencies
 } from '../../actions'
-import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { CheckboxWithValue } from '~/components/custom-formik'
 import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'

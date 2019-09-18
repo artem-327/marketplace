@@ -1,9 +1,11 @@
 import * as AT from './action-types'
 import * as api from './api'
+import moment from 'moment'
+import { getSafe } from '~/utils/functions'
 
-import { createAsyncAction } from 'redux-promise-middleware-actions'
+// import { createAsyncAction } from 'redux-promise-middleware-actions'
 
-import { toggleFilter, filterSaving, filterApplying } from '~/modules/filter/actions'
+// import { toggleFilter, filterSaving, filterApplying } from '~/modules/filter/actions'
 import { Datagrid } from '~/modules/datagrid'
 
 export function initProductOfferEdit(id) {
@@ -57,36 +59,38 @@ export function addProductOffer(values, poId = false) {
   }) : []
 
   let params = {
-    assayMin: values.assayMin ? parseFloat(values.assayMin) : null,
-    assayMax: values.assayMax ? parseFloat(values.assayMax) : null,
+    assayMin: getSafe(() => parseFloat(values.assayMin)),
+    assayMax: getSafe(() => parseFloat(values.assayMax)),
     attachments: attachments.concat(additional),
-    cost: values.cost ? parseInt(values.cost) : null,
+    cost: getSafe(() => parseInt(values.cost)),
     costRecords: values.trackSubCosts && values.costs ? values.costs.map(cost => {
       return {
         attachment: null,
         description: cost.description,
-        lot: cost.lot === 0 ? 0 : values.lots[cost.lot - 1].lotNumber,
+        lotNumber: cost.lot === 0 ? 0 : values.lots[cost.lot - 1].lotNumber,
         value: parseInt(cost.cost)
       }
     }) : null,
-    externalNotes: values.externalNotes ? values.externalNotes : null,
+    // currency
+    // description
+    externalNotes: getSafe(() => values.externalNotes),
     inStock: !!values.inStock,
-    internalNotes: values.internalNotes ? values.internalNotes : null,
+    internalNotes: getSafe(() => values.internalNotes),
     lots: values.lots ? values.lots.map(lot => {
       return {
-        ...lot,
-        expirationDate: lot.expirationDate ? lot.expirationDate + "T00:00:00Z" : null,
-        manufacturedDate: lot.manufacturedDate ? lot.manufacturedDate + "T00:00:00Z" : null,
         attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
           return att.id
-        }) : null
+        }) : null,
+        expirationDate: getSafe(() => moment().utc(lot.expirationDate).format()),
+        lotNumber: lot.lotNumber,
+        manufacturedDate: getSafe(() => moment().utc(lot.manufacturedDate).format()),
+        pkgAmount: getSafe(() => parseInt(lot.pkgAmount))
       }
     }) : null,
-    manufacturer: values.manufacturer ? values.manufacturer : null,
+    manufacturer: getSafe(() => values.manufacturer),
     minimum: parseInt(values.minimum),
-    origin: values.origin ? values.origin : null,
-    pkgAmount: parseInt(values.pkgAmount),
-    price: values.pricing && values.pricing.price ? parseInt(values.pricing.price) : parseInt(values.pricingTiers[0].price),
+    origin: getSafe(() => values.origin),
+    price: getSafe(() => parseInt(values.pricing.price), parseInt(values.pricingTiers[0].price)),
     pricingTiers: values.pricingTiers.map((tier, index) => {
       return {
         price: parseFloat(tier.price),
@@ -95,13 +99,12 @@ export function addProductOffer(values, poId = false) {
     }),
     processingTimeDays: parseInt(values.processingTimeDays),
     product: parseInt(values.product.id),
-    productCode: values.productCode ? values.productCode : null,
-    productCondition: values.productCondition ? parseInt(values.productCondition) : null,
-    productForm: values.productForm ? parseInt(values.productForm) : null,
+    productCondition: getSafe(() => parseInt(values.productCondition)),
+    productForm: getSafe(() => parseInt(values.productForm)),
     productGrades: values.productGrade ? [{ id: values.productGrade }] : null,
     splits: parseInt(values.splits),
-    tradeName: values.tradeName ? values.tradeName : null,
-    validityDate: values.validityDate ? values.validityDate + "T00:00:00Z" : null,
+    tradeName: getSafe(() => values.tradeName),
+    validityDate: getSafe(() => moment().utc(values.validityDate).format()),
     warehouse: parseInt(values.warehouse)
   }
 

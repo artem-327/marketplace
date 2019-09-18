@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, FormGroup, Modal, Button } from 'semantic-ui-react'
-import { Input, Dropdown, Checkbox } from 'formik-semantic-ui'
+import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { Formik } from 'formik'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import * as Yup from 'yup'

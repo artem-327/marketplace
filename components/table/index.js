@@ -4,13 +4,13 @@ import { Getter, Plugin } from '@devexpress/dx-react-core'
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css'
 import styled, { createGlobalStyle } from 'styled-components'
 import { Segment, Icon, Dropdown, Modal, Divider, Grid as GridSemantic } from 'semantic-ui-react'
-import { Form, Checkbox, Button } from 'formik-semantic-ui'
+import { Form, Checkbox, Button } from 'formik-semantic-ui-fixed-validation'
 import _ from 'lodash'
 import GroupCell from './GroupCell'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
 import {
-  SearchState,
+SearchState,
   IntegratedFiltering,
   IntegratedSelection,
   SelectionState,

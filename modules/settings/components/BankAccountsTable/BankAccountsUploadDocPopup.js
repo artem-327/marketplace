@@ -5,7 +5,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup } from '~/utils/functions'
 import { Modal, FormGroup } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from "react-intl";
-import { Button, Form } from "formik-semantic-ui";
+import { Button, Form } from 'formik-semantic-ui-fixed-validation'
 import { closeUploadDocumentsPopup } from "../../actions";
 import Router from "next/dist/client/router";
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'

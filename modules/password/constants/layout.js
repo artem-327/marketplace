@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Form } from 'formik-semantic-ui'
+import { Form } from 'formik-semantic-ui-fixed-validation'
 import { Segment, Image, GridRow } from 'semantic-ui-react'
 
 export const width = 400

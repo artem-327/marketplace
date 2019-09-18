@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Container, Segment, Grid, GridRow, GridColumn, Radio, Divider, Header, FormGroup } from 'semantic-ui-react'
-import { Form, Input, Button } from 'formik-semantic-ui'
+import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import { bool, func, object } from 'prop-types'
 
 import * as Yup from 'yup'

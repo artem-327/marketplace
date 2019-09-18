@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { GridRow, GridColumn, Divider } from 'semantic-ui-react'
-import { Dropdown } from 'formik-semantic-ui'
+import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 import ShippingAddress from './ShippingAddress'
 import Link from 'next/link'
 

@@ -7,7 +7,7 @@ import ShippingEdit from './ShippingEdit'
 import ShippingQuote from "./ShippingQuote"
 import Payment from './Payment'
 import { Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment, Popup } from 'semantic-ui-react'
-import { Form } from 'formik-semantic-ui'
+import { Form } from 'formik-semantic-ui-fixed-validation'
 import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'

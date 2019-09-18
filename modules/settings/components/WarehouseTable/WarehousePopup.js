@@ -11,7 +11,7 @@ import {
   getAddressSearch,
   removeEmpty
 } from '../../actions'
-import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import Router from 'next/router'
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'next/router'
 import { Segment, Image, Button, Message, Grid, GridRow, GridColumn } from 'semantic-ui-react'
-import { Form, Input } from 'formik-semantic-ui'
+import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import ConfirmationPage from '~/modules/auth/components/ConfirmationPage'

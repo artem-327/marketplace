@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { FormGroup, Popup, Icon } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Input } from 'formik-semantic-ui'
+import { Input } from 'formik-semantic-ui-fixed-validation'
 import { DateInput } from '~/components/custom-formik'
 
 import { AddressForm } from '~/modules/address-form/'

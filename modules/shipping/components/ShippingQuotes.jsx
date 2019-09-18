@@ -4,7 +4,7 @@ import moment from 'moment/moment'
 import { bool, objectOf, func } from 'prop-types'
 
 import { Modal, Button, Segment, Divider, FormGroup, FormField, Table, Checkbox } from 'semantic-ui-react'
-import { Form, Button as FButton, Input, Dropdown } from 'formik-semantic-ui'
+import { Form, Button as FButton, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import Router from 'next/router'
 
 

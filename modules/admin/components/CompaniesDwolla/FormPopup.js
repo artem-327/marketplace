@@ -7,7 +7,7 @@ import { Formik } from 'formik'
 import { closeRegisterDwollaAccount, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces, postDwollaAccount } from '../../actions'
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
 import { ZipDropdown } from '~/modules/zip-dropdown'
-import { Input, Button, Dropdown } from 'formik-semantic-ui'
+import { Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { DateInput } from '~/components/custom-formik'
 import * as Yup from 'yup'
 // debug purposes only

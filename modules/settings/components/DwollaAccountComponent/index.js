@@ -8,7 +8,7 @@ import {
   getProvinces,
   postDwollaAccount
 } from '../../actions'
-import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'

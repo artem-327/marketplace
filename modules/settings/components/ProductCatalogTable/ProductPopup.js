@@ -29,7 +29,7 @@ import {
   removeAttachment,
   removeAttachmentLink
 } from '../../actions'
-import { Form, Input, Button, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import './styles.scss'
 import Router from 'next/router'

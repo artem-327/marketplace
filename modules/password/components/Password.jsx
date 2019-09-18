@@ -3,7 +3,7 @@ import { bool } from 'prop-types'
 import { Grid, GridRow, GridColumn, Header } from 'semantic-ui-react'
 
 import Logo from '~/assets/images/logos/logo-dark.png'
-import { Input, Button, Checkbox } from 'formik-semantic-ui'
+import { Input, Button, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Link from 'next/link'
 import Router from 'next/router'

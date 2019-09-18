@@ -6,7 +6,7 @@ import { Grid, GridRow, GridColumn, Header, Divider, Segment, Icon, Popup, List,
 import './styles.scss'
 import { RelaxedRow, HeaderTextRow, WiderPopup, CustomSpan, CustomHeader } from './styledComponents'
 import { FormattedUnit, ArrayToMultiple } from '~/components/formatted-messages'
-import { Form, Input, Checkbox, Dropdown } from 'formik-semantic-ui'
+import { Form, Input, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 
 import { withToastManager } from 'react-toast-notifications'
 import { connect } from 'react-redux'

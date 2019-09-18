@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { func, array, bool, object } from 'prop-types'
 import { Accordion, Segment, Grid, GridRow, GridColumn, Popup, Dimmer, Loader } from 'semantic-ui-react'
-import { Form, Button } from 'formik-semantic-ui'
+import { Form, Button } from 'formik-semantic-ui-fixed-validation'
 import { withToastManager } from 'react-toast-notifications'
 
 import { SavedFilterItem, SavedFilterTitle, SavedFiltersSegment, SavedFilterIcon, AccordionContent, ActionRow } from '../constants/layout'
