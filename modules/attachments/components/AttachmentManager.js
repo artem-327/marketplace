@@ -50,7 +50,7 @@ const AttachmentModal = withDatagrid(class extends Component {
             <Grid verticalAlign='middle'>
               <GridRow>
                 <GridColumn width={6}><Header as='h2'>
-                  <FormattedMessage id='global.attachementsManager' defaultMessage='Attachements Manager'>{text => text}</FormattedMessage></Header>
+                  <FormattedMessage id='global.documentManager' defaultMessage='Document Manager'>{text => text}</FormattedMessage></Header>
                 </GridColumn>
 
                 <GridColumn width={4} floated='right'>
@@ -117,7 +117,7 @@ AttachmentModal.propTypes = {
 }
 
 AttachmentModal.defaultProps = {
-  trigger: <Button basic type='button'><FormattedMessage id='global.attachements' defaultMessage='Attachements'>{text => text}</FormattedMessage></Button>,
+  trigger: <Button basic type='button'><FormattedMessage id='global.documentManager' defaultMessage='Document Manager'>{text => text}</FormattedMessage></Button>,
   tableProps: {}
 }
 
