@@ -535,6 +535,7 @@
   "allInventory.marketplace": "MARKETPLACE",
   "allInventory.shippingQuote": "Shipping Quote",
   "addInventory.addInventory": "ADD INVENTORY",
+  "addInventory.multipleLots": "This value can not be edited as you have specified multiple lots.",
   "addInventory.editInventory": "EDIT INVENTORY",
   "addInventory.addButton": "Add Product Offer",
   "addInventory.editButton": "Save Product Offer",

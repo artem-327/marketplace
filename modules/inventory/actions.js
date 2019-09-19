@@ -119,13 +119,6 @@ export function addProductOffer(values, poId = false) {
     warehouse: parseInt(values.warehouse)
   }
 
-  if (!params.lots) {
-    params.lots = [{
-      lotNumber: "1",
-      pkgAmount: params.pkgAmount
-    }]
-  }
-
   if (poId) {
     return {
       type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
