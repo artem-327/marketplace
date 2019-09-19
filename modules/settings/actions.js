@@ -969,3 +969,5 @@ export const triggerSystemSettingsModal = (force = null) => ({ type: AT.TRIGGER_
 export const getBusinessClassifications = () => ({ type: AT.GET_BUSINESS_CLASSIFICATIONS, payload: api.getBusinessClassifications() })
 
 export const triggerAgreementModal = (force = null, modalProps = {}) => ({ type: AT.TRIGGER_AGREEMENT_MODAL, payload: { force, modalProps } })
+
+export const getVerificationDocumentTypes = () => ({ type: AT.SETTINGS_GET_VERIFICATION_DOCUMENT_TYPES, payload: api.getVerificationDocumentTypes() })

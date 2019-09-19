@@ -60,8 +60,8 @@ export default class ItemCartBody extends Component {
             <div>
               <FormattedMessage
                 id='cart.origin'
-                defaultMessage={`Origin: ${productOffer.origin.name} `}
-                values={{ origin: productOffer.origin.name }}
+                defaultMessage={`Origin: ${productOffer.origin ? productOffer.origin.name : 'N/A'} `}
+                values={{ origin: productOffer.origin ? productOffer.origin.name : 'N/A'}}
               />
             </div>
             <div>
@@ -74,15 +74,15 @@ export default class ItemCartBody extends Component {
             <div>
               <FormattedMessage
                 id='cart.condition'
-                defaultMessage={`Condition: ${productOffer.productCondition.name} `}
-                values={{ condition: productOffer.productCondition.name }}
+                defaultMessage={`Condition: ${productOffer.productCondition ? productOffer.productCondition.name : 'N/A'} `}
+                values={{ condition: productOffer.productCondition ? productOffer.productCondition.name : 'N/A' }}
               />
             </div>
             <div>
               <FormattedMessage
                 id='cart.form'
-                defaultMessage={`Form ${productOffer.productForm.name} `}
-                values={{ form: productOffer.productForm.name }}
+                defaultMessage={`Form ${productOffer.productForm ? productOffer.productForm.name : 'N/A'} `}
+                values={{ form: productOffer.productForm ? productOffer.productForm.name : 'N/A' }}
               />
             </div>
           </div>

@@ -202,6 +202,7 @@ class TablesHandlers extends Component {
 const mapStateToProps = (state) => {
   const company = get(state, 'auth.identity.company', null)
   const dwollaAccountStatus = company && company.dwollaAccountStatus || 'none'
+  //const dwollaAccountStatus = 'document'
 
   return {
     bankAccounts: bankAccountsConfig[dwollaAccountStatus],

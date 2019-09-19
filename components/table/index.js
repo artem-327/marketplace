@@ -61,7 +61,7 @@ const SettingButton = styled(Icon)`
   position: absolute !important;
   cursor: pointer !important;
   top: 8px;
-  right: 28px;
+  left: 2px;
   z-index: 601;
   &:before {
     padding: 10px 16px 10px 10px;

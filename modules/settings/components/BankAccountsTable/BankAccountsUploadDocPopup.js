@@ -3,14 +3,21 @@ import { connect } from 'react-redux'
 
 import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup } from '~/utils/functions'
-import { Modal, FormGroup } from 'semantic-ui-react'
+import {Modal, Grid, GridRow, FormGroup, FormField} from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from "react-intl";
-import { Button, Form } from "formik-semantic-ui";
-import { closeUploadDocumentsPopup } from "../../actions";
+import {Button, Dropdown, Form} from "formik-semantic-ui";
+import { closeUploadDocumentsPopup, getVerificationDocumentTypes } from "../../actions";
 import Router from "next/dist/client/router";
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 
 class BankAccountsUploadDocPopup extends React.Component {
+  componentDidMount() {
+    this.props.getVerificationDocumentTypes()
+  }
+
+
+
+
 
   submitHandler = async (values, { setSubmitting }) => {
     const { toastManager } = this.props
@@ -39,9 +46,12 @@ class BankAccountsUploadDocPopup extends React.Component {
     return initialValues
   }
 
+//https://react-dropzone.netlify.com/
+
   render() {
     const {
       closeUploadDocumentsPopup,
+      verificationDocumentTypes,
       intl: { formatMessage }
     } = this.props
 
@@ -61,14 +71,26 @@ class BankAccountsUploadDocPopup extends React.Component {
             {({ values, setFieldValue }) => {
               return (
                 <>
+                <Grid>
+
+                  <FormField width={8}>
+                    <label>
+                      <FormattedMessage id='addInventory.documentType' defaultMessage={'Document Type'} />
+                    </label>
+                    <Dropdown name={`attachmentType`} options={verificationDocumentTypes} inputProps={{ 'data-test': 'new_inventory_doc_type_drpdn' }} />
+                  </FormField>
+
+                  <GridRow>
+
                   <UploadLot {...this.props}
                     attachments={values.attachments}
                     edit={''}
                     name='attachments'
-                    type={values.attachmentType ? '' + values.attachmentType : 'Unspecified'}
-                    expiration={values.expirationDate ? values.expirationDate + 'T00:00:00Z' : ''}
+                    type={values.attachmentType}
                     unspecifiedTypes={['Unspecified']}
-                    fileMaxSize={20}
+                    fileMaxSize={10}
+                    accept={'image/*'}
+
                     onChange={(files) => setFieldValue(
                      `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
                      {
@@ -109,13 +131,13 @@ class BankAccountsUploadDocPopup extends React.Component {
                     )}
                   />
 
+                  </GridRow>
+                </Grid>
+
                   <div style={{ textAlign: 'right' }}>
-                    <Button.Reset onClick={closeUploadDocumentsPopup} data-test='settings_bank_account_upload_doc_popup_reset_btn'>
-                      <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+                    <Button.Reset onClick={closeUploadDocumentsPopup} data-test='settings_bank_account_upload_doc_popup_close_btn'>
+                      <FormattedMessage id='global.close' defaultMessage='Close'>{(text) => text}</FormattedMessage>
                     </Button.Reset>
-                    <Button.Submit data-test='settings_bank_account_upload_doc_popup_submit_btn'>
-                      <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
-                    </Button.Submit>
                   </div>
                 </>
               )}
@@ -129,9 +151,12 @@ class BankAccountsUploadDocPopup extends React.Component {
 
 const mapDispatchToProps = {
   closeUploadDocumentsPopup,
+  getVerificationDocumentTypes
 }
 const mapStateToProps = state => {
+  console.log('!!!! verificationDocumentTypes', state.settings.verificationDocumentTypes);
   return {
+    verificationDocumentTypes: state.settings.verificationDocumentTypes,
     currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
       state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
   }
