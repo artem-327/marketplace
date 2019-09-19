@@ -7,6 +7,7 @@ import { debounce } from 'lodash'
 
 import ProdexTable from '~/components/table'
 import DocumentManagerPopup from '~/modules/settings/components/Documents/DocumentManagerPopup'
+import { node, object } from 'prop-types'
 
 const CustomHeader = styled.div`
   padding: 1.25rem 1.5rem;
@@ -22,8 +23,9 @@ const AttachmentModal = withDatagrid(class extends Component {
 
   returnSelectedRows = async () => {
     const { datagrid } = this.props
-    await this.props.returnSelectedRows(this.state.selectedRows.map(srIndex => {
-      return datagrid.rows[srIndex]
+    
+    this.props.returnSelectedRows(this.state.selectedRows.map(srIndex => {
+      return { ...datagrid.rows[srIndex], index: srIndex }
     }))
     this.setState({ open: false })
   }
@@ -37,11 +39,13 @@ const AttachmentModal = withDatagrid(class extends Component {
 
 
   render() {
-    const { datagrid, lockSelection } = this.props
+    const { datagrid, lockSelection, trigger, tableProps } = this.props
 
     return (
       <>
-        <Modal centered={true} open={this.state.open} trigger={<Button basic type='button' onClick={() => this.setState({ open: true })}>Attachements</Button>} onClose={() => this.setState({ open: false })}>
+        <Modal centered={true} open={this.state.open}
+          trigger={React.cloneElement(trigger, { onClick: () => this.setState({ open: true }) })}
+          onClose={() => this.setState({ open: false })}>
           <CustomHeader>
             <Grid verticalAlign='middle'>
               <GridRow>
@@ -66,6 +70,7 @@ const AttachmentModal = withDatagrid(class extends Component {
           <Modal.Content scrolling>
             <ProdexTable
               {...datagrid.tableProps}
+              {...tableProps}
               rows={datagrid.rows.map(r => ({
                 id: r.id,
                 name: r.name,
@@ -105,6 +110,17 @@ const AttachmentModal = withDatagrid(class extends Component {
   }
 })
 
+
+AttachmentModal.propTypes = {
+  trigger: node,
+  tableProps: object
+}
+
+AttachmentModal.defaultProps = {
+  trigger: <Button basic type='button'><FormattedMessage id='global.attachements' defaultMessage='Attachements'>{text => text}</FormattedMessage></Button>,
+  tableProps: {}
+}
+
 class AttachmentManager extends Component {
   getApiConfig = () => ({
     url: '/prodex/api/attachments/datagrid/',
@@ -121,7 +137,7 @@ class AttachmentManager extends Component {
   render() {
     return (
       <DatagridProvider apiConfig={this.getApiConfig()}>
-        <AttachmentModal returnSelectedRows={this.props.returnSelectedRows} lockSelection={this.props.lockSelection} />
+        <AttachmentModal {...this.props} />
       </DatagridProvider>
     )
   }

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Modal, FormGroup, Header, Dropdown as SDropdown, FormField, Search } from 'semantic-ui-react'
 
 import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest, getUnNumbersByString } from '../../actions'
-import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import debounce from 'lodash/debounce'
 import escapeRegExp from 'lodash/escapeRegExp'

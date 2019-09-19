@@ -9,7 +9,7 @@ import {
 } from '~/modules/admin/actions'
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
-import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui'
+import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 // import { ZipDropdown } from '~/modules/zip-dropdown'
 // debug purposes only

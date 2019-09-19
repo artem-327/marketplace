@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { FormGroup, FormField, Popup, Image } from 'semantic-ui-react'
-import { Input, Checkbox, Dropdown } from 'formik-semantic-ui'
+import { Input, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import { withToastManager } from 'react-toast-notifications'

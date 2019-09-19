@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dropdown } from 'formik-semantic-ui'
+import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { bool, func, object, string, array, number } from 'prop-types'
 import { debounce } from 'lodash'
 import { FormattedMessage } from 'react-intl'

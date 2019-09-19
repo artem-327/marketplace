@@ -3,7 +3,7 @@ import { number, bool, oneOf } from 'prop-types'
 import { connect } from 'react-redux'
 import { Formik } from 'formik'
 import { FormGroup, Form, Modal, Button, Popup } from 'semantic-ui-react'
-import { Input } from 'formik-semantic-ui'
+import { Input } from 'formik-semantic-ui-fixed-validation'
 import { withToastManager } from 'react-toast-notifications'
 
 

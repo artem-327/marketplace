@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Router from 'next/router'
-import { Form, Input, Checkbox, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui'
+import { Form, Input, Checkbox, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Modal, Icon, Segment, Dimmer, Loader, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab, Popup, List, Dropdown as DropdownMenu } from 'semantic-ui-react'
 import styled from 'styled-components'
@@ -46,6 +46,16 @@ const TableCellBig = styled(TableCell)`
   @media (min-width: 768px) {
     width: 15%;
     max-width: 15%;
+  }
+`
+
+const FileUploadDiv = styled.div`
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  > * {
+    cursor: pointer;
   }
 `
 
@@ -596,7 +606,7 @@ class AddInventoryForm extends Component {
     for (let i = 0; i < count; i++) {
 
       tiers.push(
-        <InnerRow key={i+1}>
+        <InnerRow key={i + 1}>
           <TopMargedColumn computer={2} textAlign='center'>
             <label name={`pricingTiers[${i}].level`}>{i + 1}</label>
           </TopMargedColumn>
@@ -640,7 +650,7 @@ class AddInventoryForm extends Component {
     let casProducts = getSafe(() => values.product.casProducts, '')
 
     let defaultMessage = values.product ? 'N/A' : ''
-    const blendMessage = formatMessage({id: 'global.blend', defaultMessage: 'Blend'})
+    const blendMessage = formatMessage({ id: 'global.blend', defaultMessage: 'Blend' })
 
     return (
       <Grid className='product-details' centered>
@@ -1694,7 +1704,19 @@ class AddInventoryForm extends Component {
                                             <TableCellBig><DateInput name={`lots[${index}].manufacturedDate`} inputProps={{ 'data-test': 'add_inventory_product_manufacturedDate_dtin' }} /></TableCellBig>
                                             <TableCellBig><DateInput name={`lots[${index}].expirationDate`} inputProps={{ 'data-test': 'add_inventory_product_expirationDate_dtin' }} /></TableCellBig>
                                             <TableCellBig>
-                                              <UploadLot {...this.props}
+                                              <AttachmentManager
+                                                tableProps={{
+                                                  defaultSelection: getSafe(() => values.lots[index].attachments.map((attachment) => attachment.index), [])
+                                                }}
+                                                trigger={
+                                                  <FileUploadDiv>
+                                                    {getSafe(() => `(${values.lots[index].attachments.length}) `)}
+                                                    {getSafe(() => values.lots[index].attachments.map((attachment) => <label>{attachment.name}</label>),
+                                                      <FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' />)}
+                                                  </FileUploadDiv>
+                                                }
+                                                returnSelectedRows={(rows) => setFieldValue(`lots[${index}].attachments`, rows)} />
+                                              {/* <UploadLot {...this.props}
                                                 attachments={values.lots[index].attachments}
                                                 name={`lots[${index}].attachments`}
                                                 type={1}
@@ -1711,7 +1733,7 @@ class AddInventoryForm extends Component {
                                                 )}
                                                 data-test={`add_inventory_lots_${index}_attachments`}
                                                 emptyContent={(<FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='A' />)}
-                                              />
+                                              /> */}
                                             </TableCellBig>
                                             <TableCellMini textAlign='center'><Icon name='trash alternate outline' size='large' style={{ 'margin': 0 }} onClick={() => this.removeLot(arrayHelpers, setFieldValue, { costs: values.costs, lots: values.lots, packagingSize: values.product.packagingSize }, index)}
                                               data-test='add_inventory_removeLot_btn' /></TableCellMini>
@@ -1823,29 +1845,21 @@ class AddInventoryForm extends Component {
                                                 <TableCell width={3}><FormField width={16} data-test={`add_inventory_costUom_${index}_inp`}>
                                                   <Input name={`costs[${index}].costUom`} inputProps={{ type: 'text', step: '0.01', value: null, min: 0, disabled: true }} /></FormField></TableCell>
                                                 <TableCell width={3}>
-                                                  <UploadLot {...this.props}
-                                                    attachments={values.costs[index].attachments}
-                                                    name={`costs[${index}].attachments`}
-                                                    type={3}
-                                                    lot={false}
-                                                    filesLimit={1}
-                                                    fileMaxSize={20}
-                                                    disabled={!values.trackSubCosts}
-                                                    onChange={(files) => setFieldValue(
-                                                      `costs[${index}].attachments[${values.costs[index].attachments && values.costs[index].attachments.length ? values.costs[index].attachments.length : 0}]`,
-                                                      {
-                                                        id: files.id,
-                                                        name: files.name
-                                                      }
-                                                    )}
-                                                    data-test={`add_inventory_costs_${index}_attachments`}
-                                                    emptyContent={(
-                                                      <FormattedMessage
-                                                        id='addInventory.clickUpload'
-                                                        defaultMessage={'Click to upload'}
-                                                      />
-                                                    )}
+                                                  <AttachmentManager
+                                                    tableProps={{
+                                                      singleSelection: true,
+                                                      defaultSelection: getSafe(() => values.costs[index].attachments.map((attachment) => attachment.index), [])
+                                                    }}
+                                                    trigger={
+                                                      <FileUploadDiv>
+                                                        {getSafe(() => values.costs[index].attachments.map((attachment) => <label>{attachment.name}</label>),
+                                                          <FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' />)}
+                                                      </FileUploadDiv>
+                                                    }
+                                                    returnSelectedRows={(rows) =>
+                                                      setFieldValue(`costs[${index}].attachments`, rows)}
                                                   />
+
                                                 </TableCell>
                                                 <TableCell width={1}><Icon name='trash alternate outline' size='large' disabled={!values.trackSubCosts} onClick={() => arrayHelpers.remove(index)}
                                                   data-test={`add_inventory_delete_${index}`} /></TableCell>

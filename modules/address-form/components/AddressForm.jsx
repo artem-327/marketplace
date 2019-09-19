@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, Dropdown } from 'formik-semantic-ui'
+import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage } from 'react-intl'
 import { FormGroup, Header, Popup, Dropdown as SemanticDropdown, FormField } from 'semantic-ui-react'
 

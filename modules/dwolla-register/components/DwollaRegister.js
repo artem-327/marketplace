@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Grid, GridColumn, GridRow, Segment, Header, Form, Button, List } from 'semantic-ui-react'
 import styled from 'styled-components'
 import { Formik } from 'formik'
-import { Input, Dropdown, Checkbox } from 'formik-semantic-ui'
+import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import * as Yup from 'yup'

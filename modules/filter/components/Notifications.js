@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { GridColumn, Grid } from 'semantic-ui-react'
 import { injectIntl } from 'react-intl'
-import { Input, Checkbox as FormikCheckbox } from 'formik-semantic-ui'
+import { Input, Checkbox as FormikCheckbox } from 'formik-semantic-ui-fixed-validation'
 
 import { LessPaddedRow } from '../constants/layout'
 

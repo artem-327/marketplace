@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Modal, FormGroup } from 'semantic-ui-react'
-import { Form, Input, Button } from 'formik-semantic-ui'
+import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import Router from 'next/router'
 import { FormattedMessage, injectIntl } from 'react-intl'

@@ -8,7 +8,7 @@ import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 
 import { Container, Segment, Grid, GridRow, GridColumn, Radio, Divider, Header, FormGroup } from 'semantic-ui-react'
-import { Form, Input, Dropdown, Button } from 'formik-semantic-ui'
+import { Form, Input, Dropdown, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { PHONE_REGEXP } from '../../../../utils/constants'
 import { errorMessages, provinceObjectRequired } from '~/constants/yupValidation'

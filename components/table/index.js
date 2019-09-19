@@ -4,10 +4,10 @@ import { Getter, Plugin } from '@devexpress/dx-react-core'
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css'
 import styled, { createGlobalStyle } from 'styled-components'
 import { Segment, Icon, Dropdown, Modal, Divider, Grid as GridSemantic } from 'semantic-ui-react'
-import { Form, Checkbox, Button } from 'formik-semantic-ui'
+import { Form, Checkbox, Button } from 'formik-semantic-ui-fixed-validation'
 import _ from 'lodash'
 import GroupCell from './GroupCell'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import {
   SearchState,
@@ -89,7 +89,8 @@ const getSettingColumn = (columns, formatMessage, columnWidth) => {
             }
             inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
           />
-        )})}
+        )
+      })}
     </GridSemantic.Column>
   )
 }
@@ -148,7 +149,7 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
 const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions' : ''} />
 const GridRoot = props => <Grid.Root {...props} style={{ height: '100%', flex: 1 }} />
 
-const SortLabel = ({column, onSort, children, direction }) => (
+const SortLabel = ({ column, onSort, children, direction }) => (
   <span
     onClick={onSort}
     data-test={`table_sort_action_${column.name}`}
@@ -193,8 +194,8 @@ class PatchedTableSelection extends React.PureComponent {
         cellComponent={(props) => rowSelectionEnabled(props.tableRow.row) ? (
           <TableSelection.Cell {...props} />
         ) : (
-          <Table.StubCell {...props} />
-        )}
+            <Table.StubCell {...props} />
+          )}
         {...restProps}
       />
     )
@@ -239,15 +240,17 @@ class _Table extends Component {
     virtual: pt.bool,
     sorting: pt.bool,
     groupBy: pt.array,
+    defaultSelection: pt.array,
     onSelectionChange: pt.func,
     sameGroupSelectionOnly: pt.bool,
     renderGroupLabel: pt.func,
     getChildGroups: pt.func,
     tableName: pt.string,
+    singleSelection: pt.bool,
     onScrollToEnd: pt.func,
     onRowClick: pt.func,
     onSortingChange: pt.func,
-    onTableReady: pt.func
+    onTableReady: pt.func,
   }
 
   static defaultProps = {
@@ -257,10 +260,12 @@ class _Table extends Component {
     showSelectAll: true,
     showHeader: true,
     loading: false,
+    defaultSelection: [],
     virtual: true,
     sorting: true,
     groupBy: [],
     defaultHiddenColumns: [],
+    singleSelection: false,
     onSelectionChange: () => { },
     onScrollToEnd: () => { },
     onTableReady: () => { }
@@ -323,15 +328,18 @@ class _Table extends Component {
   }
 
   handleSelectionChange = (selection) => {
-    const { onSelectionChange, getChildGroups, rows, sameGroupSelectionOnly } = this.props
+    const { onSelectionChange, getChildGroups, rows, sameGroupSelectionOnly, singleSelection } = this.props
+    const lastSelected = selection
+      .find(selected => this.state.selection.indexOf(selected) === -1)
+
     const groups = getChildGroups(rows)
     const selectionGroups = selection.map(s => groups.find(g => g.childRows.indexOf(rows[s]) > -1))
 
     const sameGroup = selectionGroups.every(sg => sg === selectionGroups[0])
-
+    const finalSelection = singleSelection ? [lastSelected] : selection
     if (sameGroup || !sameGroupSelectionOnly) {
-      this.setState({ selection })
-      onSelectionChange(selection)
+      this.setState({ selection: finalSelection })
+      onSelectionChange(finalSelection)
 
       return true
     }
@@ -434,10 +442,10 @@ class _Table extends Component {
   }
 
   handleTableReady = () => {
-    const { onTableReady, columns } = this.props
+    const { onTableReady, columns, defaultSelection } = this.props
     const { columnsSettings: { sorting: [s] } } = this.state
     const column = s ? columns.find(c => c.name === s.columnName) : {}
-
+    this.setState({ selection: defaultSelection })
     onTableReady({
       sortPath: column.sortPath,
       sortDirection: s && s.direction.toUpperCase()
@@ -561,8 +569,7 @@ class _Table extends Component {
             }
 
             {columnReordering && <DragDropProvider />}
-
-            {rowSelection && <SelectionState selection={this.state.selection} onSelectionChange={this.handleSelectionChange} />}
+            {rowSelection && <SelectionState defaultSelection={[0, 1, 2, 3, 4, 5, 6, 7]} selection={this.state.selection} onSelectionChange={this.handleSelectionChange} />}
             {rowSelection && lockSelection ? (
               <PatchedIntegratedSelection lockSelection={lockSelection} />
             ) : (rowSelection && <IntegratedSelection />)}
@@ -614,12 +621,12 @@ class _Table extends Component {
                 lockSelection={lockSelection}
               />
             ) : (
-              rowSelection &&
-              <TableSelection
-                showSelectAll={showSelectAll && !sameGroupSelectionOnly}
-                selectByRowClick={selectByRowClick}
-              />
-            )}
+                rowSelection &&
+                <TableSelection
+                  showSelectAll={showSelectAll && !sameGroupSelectionOnly}
+                  selectByRowClick={selectByRowClick}
+                />
+              )}
             <DropdownFormatterProvider
               for={columns.filter(c => c.options).map(c => c.name)}
             />

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { object, func, number } from 'prop-types'
-import { Input } from 'formik-semantic-ui'
+import { Input } from 'formik-semantic-ui-fixed-validation'
 import { FormGroup, Header, Popup, Button, Icon } from 'semantic-ui-react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import styled from 'styled-components'

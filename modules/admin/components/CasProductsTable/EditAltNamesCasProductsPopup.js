@@ -21,7 +21,7 @@ import {
   updateProductName,
   deleteProductName,
 } from '../../actions'
-import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui-fixed-validation'
 
 
 const initialFormValues = {

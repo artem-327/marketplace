@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Modal, FormGroup } from 'semantic-ui-react'
 
 import { closeAddPopup, postNewRequest } from '../../actions'
-import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { withToastManager } from 'react-toast-notifications'
 

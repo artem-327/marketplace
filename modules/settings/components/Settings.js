@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Form, Button } from 'formik-semantic-ui'
+import { Form, Button } from 'formik-semantic-ui-fixed-validation'
 import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'

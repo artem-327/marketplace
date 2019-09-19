@@ -5,7 +5,7 @@ import { Header, Modal, Form, Segment, Label, Table } from 'semantic-ui-react'
 import { createConfirmation, confirmable } from 'react-confirm'
 import confirm from '~/src/components/Confirmable/confirm'
 import { Formik } from 'formik'
-import { Input, Button } from 'formik-semantic-ui'
+import { Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import get from 'lodash/get'
 

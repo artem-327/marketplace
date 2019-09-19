@@ -10,7 +10,7 @@ import {
   postNewBankAccountRequest
 } from '../../actions'
 
-import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import Router from 'next/router'
 import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
