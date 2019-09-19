@@ -27,9 +27,22 @@ export function initProductOfferEdit(id) {
 }
 
 export function addAttachment(attachment, type, additionalParams = {}) {
-  return async dispatch => {
-    await dispatch({ type: AT.INVENTORY_ADD_ATTACHMENT, payload: api.addAttachment(attachment, type, additionalParams) })
-    Datagrid.loadData()
+  return {
+    type: AT.INVENTORY_ADD_ATTACHMENT,
+    async payload() {
+      const data = await api.addAttachment(attachment, type, additionalParams)
+      Datagrid.loadData()
+      return data
+    }
+  }
+}
+
+export function addVerificationDocuments(attachment, type) {
+  return {
+    type: AT.INVENTORY_ADD_VERIFICATION_DOCUMENTS,
+    async payload() {
+      return await api.addVerificationDocuments(attachment, type)
+    }
   }
 }
 

@@ -21,6 +21,22 @@ export function addAttachment(attachment, docType, additionalParams = {}) {
   })
 }
 
+export function addVerificationDocuments(attachment, docType) {
+  let params = {type: docType }
+  const formData = new FormData()
+  formData.append('file', attachment)
+
+  let queryParams = generateQueryString(params)
+
+  return api.post(`/prodex/api/payments/dwolla/documents/upload${queryParams}`, formData, {
+    headers: {
+      'accept': 'application/json',
+      'Accept-Language': 'en-US,en;q=0.8',
+      'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+    }
+  })
+}
+
 export function addProductOffer(values) {
   return api.post(`/prodex/api/product-offers/`, values)
 }

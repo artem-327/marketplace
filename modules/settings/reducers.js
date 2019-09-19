@@ -79,6 +79,7 @@ export const initialState = {
   businessClassifications: [],
   dwollaSaving: false,
   countriesLoading: false,
+  verificationDocumentTypes: [],
   agreementModal: {
     open: false,
     declineButtonContent: <FormattedMessage id='global.logout' defaultMessage='Logout'>{text => text}</FormattedMessage>,
@@ -1289,6 +1290,19 @@ export default function reducer(state = initialState, action) {
           open,
           // ...modalProps
         }
+      }
+    }
+
+    case AT.SETTINGS_GET_VERIFICATION_DOCUMENT_TYPES_FULFILLED: {
+      return {
+        ...state,
+        verificationDocumentTypes: action.payload.map((docType, index) => {
+          return {
+            key: index,
+            text: docType,
+            value: docType
+          }
+        })
       }
     }
 
