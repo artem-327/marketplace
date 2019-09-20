@@ -5,6 +5,7 @@ import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validati
 import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
+import { getLanguages } from '~/modules/settings/actions'
 
 import { getSafe } from '~/utils/functions'
 
@@ -41,6 +42,7 @@ class MyProfile extends Component {
   componentDidMount() {
     this.props.getUserMeData()
     this.props.getCurrencies()
+    this.props.getLanguages()
   }
 
   handleChangePassword = () => {
@@ -52,7 +54,9 @@ class MyProfile extends Component {
       closePopup,
       currencies,
       popupValues,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      languages,
+      languagesFetching
     } = this.props
 
     return (
@@ -67,7 +71,7 @@ class MyProfile extends Component {
             onSubmit={async (values, actions) => {
               delete values['email']
               delete values['jobTitle']
-              this.props.updateMyProfile(values)
+              this.props.updateMyProfile({ ...values, language: languages.find((lan) => lan.language === values.language) })
               actions.setSubmitting(false)
             }}
             data-test='my_profile_userData_inp'
@@ -95,16 +99,29 @@ class MyProfile extends Component {
               options={currencies}
               inputProps={{ 'data-test': 'my_profile_currency_drpdn' }} />
 
+            <Dropdown
+              label={formatMessage({ id: 'global.language', defaultMessage: 'Language' })}
+              name='language'
+              inputProps={{
+                loading: languagesFetching
+              }}
+              options={languages.map((lang) => ({
+                key: lang.languageAbbreviation,
+                text: lang.language,
+                value: lang.language
+              }))}
+            />
+
             <FormattedMessage id='profile.lastLoginAt' defaultMessage='Last login at:' /> {popupValues && popupValues.lastLoginAt}
 
             <div style={{ textAlign: 'right' }}>
               <Button style={{ 'margin-bottom': '10px' }} onClick={this.handleChangePassword} data-test='my_profile_change_password_btn'>
-                <FormattedMessage id='password.change' defaultMessage='Change Password' />
+                <FormattedMessage id='password.change' defaultMessage='Change Password'>{text => text}</FormattedMessage>
               </Button>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset data-test='my_profile_reset_btn'><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
-              <Button.Submit data-test='my_profile_submit_btn'><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
+              <Button.Reset data-test='my_profile_reset_btn'><FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage></Button.Reset>
+              <Button.Submit data-test='my_profile_submit_btn'><FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage></Button.Submit>
             </div>
           </Form>
         </Modal.Content>
@@ -118,7 +135,8 @@ const mapDispatchToProps = {
   getUserMeData,
   getCurrencies,
   updateMyProfile,
-  openChangePasswordPopup
+  openChangePasswordPopup,
+  getLanguages
 }
 
 const mapStateToProps = state => {
@@ -130,6 +148,7 @@ const mapStateToProps = state => {
       phone: popupValues.phone,
       jobTitle: popupValues.jobTitle,
       preferredCurrency: popupValues.preferredCurrency && popupValues.preferredCurrency.id,
+      language: getSafe(() => state.auth.identity.preferredLanguage.language),
       lastLoginAt: <FormattedDateTime dateTime={getSafe(() => state.auth.identity.lastLoginAt, null)} />
     } : null,
     currencies: state.profile.currency && state.profile.currency.map(d => {
@@ -140,6 +159,8 @@ const mapStateToProps = state => {
       }
     }),
     changePasswordPopup: state.profile.changePasswordPopup,
+    languages: state.settings.languages,
+    languagesFetching: state.settings.languagesFetching,
   }
 }
 

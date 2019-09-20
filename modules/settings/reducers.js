@@ -98,9 +98,9 @@ export const initialState = {
 
         }
         } />,
-
-
-  }
+  },
+  languages: [],
+  languagesFetching: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -1303,6 +1303,30 @@ export default function reducer(state = initialState, action) {
             value: docType
           }
         })
+      }
+    }
+
+    /* GET_LANGUAGES */
+
+    case AT.GET_LANGUAGES_PENDING: {
+      return {
+        ...state,
+        languagesFetching: true
+      }
+    }
+
+    case AT.GET_LANGUAGES_FULFILLED: {
+      return {
+        ...state,
+        languages: payload,
+        languagesFetching: false
+      }
+    }
+
+    case AT.GET_LANGUAGES_REJECTED: {
+      return {
+        ...state,
+        languagesFetching: false
       }
     }
 

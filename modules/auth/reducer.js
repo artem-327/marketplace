@@ -5,6 +5,7 @@ import { ROLES_ENUM } from '../../src/utils/constants'
 import { getSafe } from '~/utils/functions'
 import { ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '~/modules/admin/action-types'
 import { SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '~/modules/settings/action-types'
+import { SET_PREFERRED_LANGUAGE_FULFILLED } from '~/modules/settings/action-types'
 
 const getAccessRights = (roles) => {
   let accessRights = {}
@@ -269,6 +270,18 @@ export default function reducer(state = initialState, action) {
         identity: {
           ...state.identity,
           tosAgreementDate: moment().utc().format()
+        }
+      }
+    }
+
+    /* SET_LANGUAGE */
+
+    case SET_PREFERRED_LANGUAGE_FULFILLED: {
+      return {
+        ...state,
+        identity: {
+          ...state.identity,
+          preferredLanguage: payload
         }
       }
     }

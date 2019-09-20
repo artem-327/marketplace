@@ -971,3 +971,7 @@ export const getBusinessClassifications = () => ({ type: AT.GET_BUSINESS_CLASSIF
 export const triggerAgreementModal = (force = null, modalProps = {}) => ({ type: AT.TRIGGER_AGREEMENT_MODAL, payload: { force, modalProps } })
 
 export const getVerificationDocumentTypes = () => ({ type: AT.SETTINGS_GET_VERIFICATION_DOCUMENT_TYPES, payload: api.getVerificationDocumentTypes() })
+
+export const getLanguages = () => ({ type: AT.GET_LANGUAGES, payload: api.getLanguages() })
+
+export const setPreferredLanguage = (lang) => ({ type: AT.SET_PREFERRED_LANGUAGE, payload: api.setPreferredLanguage(lang) })

@@ -1,20 +1,23 @@
 import * as AT from "./action-types"
 import api from "./api"
 
+import { SET_PREFERRED_LANGUAGE } from '~/modules/settings/action-types'
+import { setPreferredLanguage } from '~/modules/settings/actions'
+
 const removeEmpty = (obj) =>
-    Object.entries(obj).forEach(([key, val]) => {
-        if (val && typeof val === 'object') {
-            removeEmpty(val)
-            if (Object.entries(val).length === 0) delete obj[key]
-        }
-        else {
-            if (val == null) delete obj[key]
-            else if (typeof val === 'string') {
-                if (val.trim() === '') delete obj[key]
-                else obj[key] = val.trim()
-            }
-        }
-    })
+  Object.entries(obj).forEach(([key, val]) => {
+    if (val && typeof val === 'object') {
+      removeEmpty(val)
+      if (Object.entries(val).length === 0) delete obj[key]
+    }
+    else {
+      if (val == null) delete obj[key]
+      else if (typeof val === 'string') {
+        if (val.trim() === '') delete obj[key]
+        else obj[key] = val.trim()
+      }
+    }
+  })
 
 
 
@@ -27,10 +30,10 @@ export function openProfilePopup() {
 }
 
 export function closePopup() {
-    return {
-        type: AT.PROFILE_CLOSE_POPUP,
-        payload: null
-    }
+  return {
+    type: AT.PROFILE_CLOSE_POPUP,
+    payload: null
+  }
 }
 
 export function openChangePasswordPopup() {
@@ -62,10 +65,17 @@ export function getCurrencies() {
 }
 
 export function updateMyProfile(data) {
-  return {
-    type: AT.PROFILE_UPDATE_MY_PROFILE,
-    payload: api.updateMyProfile(data)
+  return async dispatch => {
+    let payload = {
+      name: data.name,
+      phone: data.phone,
+      preferredCurrency: data.preferredCurrency
+    }
+    await dispatch(setPreferredLanguage(data.language))
+    let response = await dispatch({ type: AT.PROFILE_UPDATE_MY_PROFILE, payload: api.updateMyProfile(payload) })
+    return response
   }
+
 }
 
 export function changePassword(data) {

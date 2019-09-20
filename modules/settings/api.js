@@ -182,5 +182,7 @@ export default {
   getSettings: role => api.get(`/prodex/api/settings/${role}`).then(response => response.data),
   updateSettings: (role, payload) => api.patch(`/prodex/api/settings/${role}`, payload).then(response => response.data),
   getBusinessClassifications: () => api.get('/prodex/api/business-classifications').then(response => response.data),
-  getVerificationDocumentTypes: () => api.get('/prodex/api/payments/dwolla/documents/types').then(response => response.data)
+  getVerificationDocumentTypes: () => api.get('/prodex/api/payments/dwolla/documents/types').then(response => response.data),
+  getLanguages: () => api.get('/prodex/api/cms/languages/').then(response => response.data),
+  setPreferredLanguage: language => api.patch(`/prodex/api/users/me/preferred-language?language=${language.language}`).then(() => language)
 }
