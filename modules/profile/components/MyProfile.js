@@ -68,11 +68,13 @@ class MyProfile extends Component {
             validationSchema={formValidation}
             initialValues={popupValues ? popupValues : initialFormValues}
             onReset={closePopup}
-            onSubmit={async (values, actions) => {
-              delete values['email']
-              delete values['jobTitle']
-              this.props.updateMyProfile({ ...values, language: languages.find((lan) => lan.language === values.language) })
-              actions.setSubmitting(false)
+            onSubmit={async (values, { setSubmitting }) => {
+              try {
+                await this.props.updateMyProfile({ ...values, language: languages.find((lan) => lan.language === values.language) })
+              }
+              catch{ }
+              finally { setSubmitting(false) }
+
             }}
             data-test='my_profile_userData_inp'
           >
