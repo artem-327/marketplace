@@ -35,6 +35,21 @@ export const config = {
     }
   },
 
+  'Product Catalog': {
+    addEditText: <FormattedMessage id='admin.echoProducts' defaultMessage='Echo Product'>{text => text}</FormattedMessage>,
+    formattedMessageName: 'echoProducts',
+    searchText: 'admin.searchEchoProduct',
+    display: {
+      columns: [
+        { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage> },
+        { name: 'code', title: <FormattedMessage id='global.productCode' defaultMessage='Product Code'>{text => text}</FormattedMessage> },
+        { name: 'manufacturer', title: <FormattedMessage id='admin.manufacturer' defaultMessage='Manufacturer'>{text => text}</FormattedMessage> },
+        { name: 'sdsVersionNumber', title: <FormattedMessage id='admin.echoProducts.sdsVersion' defaultMessage='SDS Version'>{text => text}</FormattedMessage> },
+        { name: 'sdsRevisionDate', title: <FormattedMessage id='admin.echoProducts.sdsRevisionDate' defaultMessage='SDS Revision Date'>{text => text}</FormattedMessage> }
+      ]
+    }
+  },
+
   'Units of Measure': {
     addEditText: <FormattedMessage id='admin.unitOfMeasure'>{text => text}</FormattedMessage>,
     formattedMessageName: 'unitOfMeasurement',
