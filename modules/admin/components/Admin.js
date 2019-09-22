@@ -25,6 +25,9 @@ import CasProductsTable from './CasProductsTable/CasProductsTable'
 import CompaniesTable from './CompaniesTable/Table'
 import CompaniesForm from './CompaniesTable/FormPopup'
 import CompaniesDwollaForm from './CompaniesDwolla/FormPopup'
+import EchoProductForm from './ProductCatalogTable/FormPopup'
+
+import ProductCatalogTable from './ProductCatalogTable/Table'
 
 import { getSafe } from '~/utils/functions'
 
@@ -41,6 +44,7 @@ const tables = {
   'Conditions': <DataTable />,
   'CAS Products': <CasProductsTable />,
   'Companies': <CompaniesTable />,
+  'Product Catalog': <ProductCatalogTable />,
   'Document Types': <DataTable />,
   'Market Segments': <DataTable />,
   'Admin Settings': (
@@ -65,6 +69,13 @@ const datagridConfig = {
     url: '/prodex/api/companies/datagrid',
     searchToFilter: v => ([
       { operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] }
+    ])
+  },
+  'Product Catalog': {
+    url: '/prodex/api/echo-products/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'EchoProduct.name', values: [`%${v}%`] },
+      { operator: 'LIKE', path: 'EchoProduct.code', values: [`%${v}%`] }
     ])
   },
   'Conditions': {
@@ -128,6 +139,7 @@ const editForms = {
   'Companies': <CompaniesForm />,
   'Document Types': <EditPopup1Parameter />,
   'Market Segments': <EditPopup1Parameter />,
+  'Product Catalog': <EchoProductForm />
 }
 
 const edit2Forms = {
@@ -144,7 +156,8 @@ const addForms = {
   'CAS Products': <AddEditCasProductsPopup />,
   'Companies': <CompaniesForm />,
   'Document Types': <AddNewPopup1Parameter />,
-  'Market Segments': <AddNewPopup1Parameter />
+  'Market Segments': <AddNewPopup1Parameter />,
+  'Product Catalog': <EchoProductForm />
 }
 
 const addDwollaForms = {

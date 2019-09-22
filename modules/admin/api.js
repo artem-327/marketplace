@@ -164,3 +164,11 @@ export const resendWelcomeEmail = (userId) => api.get(`/prodex/api/users/id/${us
 export const reviewRequest = (companyId) => api.patch(`/prodex/api/companies/id/${companyId}/review-request`)
 
 export const getCompanyDetails = id => api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)
+
+export const searchCasProduct = (pattern) => api.get(`/prodex/api/cas-products/search?limit=5&pattern=${pattern}`)
+
+export const getDocumentTypes = () => api.get(`/prodex/api/document-types/`)
+
+export const putEchoProduct = (id, values) => api.put(`/prodex/api/echo-products/id/${id}/`, values)
+
+export const searchManufacturers = (text, limit) => api.get(`/prodex/api/manufacturers/search?search=${text}${Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''}`)

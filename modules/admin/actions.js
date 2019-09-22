@@ -397,6 +397,89 @@ export function openEditCompany(id, formData) {
 	}
 }
 
+export function searchUnNumber(pattern) {
+  return {
+    type: AT.ADMIN_SEARCH_UN_NUMBER,
+    payload: api.searchUnNumber(pattern)
+  }
+}
+
+export function putEchoProduct(id, values) {
+	return {
+		type: AT.ADMIN_PUT_ECHO_PRODUCT,
+		payload: api.putEchoProduct(id, values)
+	}
+}
+
+export function searchManufacturers(text, limit = false) {
+  return {
+    type: AT.ADMIN_SEARCH_MANUFACTURERS,
+    payload: api.searchManufacturers(text, limit)
+  }
+}
+
+export function newElementsIndex() {
+  return {
+    type: AT.ADMIN_CREATE_ELEMENTS_INDEX,
+    payload: {}
+  }
+}
+
+export function removeElementsIndex(index) {
+  return {
+    type: AT.ADMIN_REMOVE_ELEMENTS_INDEX,
+    payload: {
+      index
+    }
+  }
+}
+
+export function prepareSearchedCasProducts(elements) {
+  return {
+    type: AT.ADMIN_PREPARE_CAS_PRODUCTS,
+    payload: {
+      elements
+    }
+  }
+}
+
+export function searchCasProduct(pattern, index) {
+  return {
+    type: AT.ADMIN_SEARCH_CAS_PRODUCT,
+    async payload() {
+      const dataResponse = await api.searchCasProduct(pattern)
+      return {
+        ...dataResponse,
+        index
+      }
+    }
+  }
+}
+
+export function getProductsCatalogRequest() {
+  return (dispatch) => {
+    dispatch({
+      type: AT.ADMIN_GET_PRODUCTS_CATALOG_DATA,
+      async payload() {
+        const [hazardClasses, packagingGroups] = await Promise.all([
+          api.getHazardClasses(),
+          api.getPackagingGroups()
+        ])
+        return {
+          hazardClasses: hazardClasses,
+          packagingGroups: packagingGroups
+        }
+      }
+    })
+  }
+}
+
+export function openEditEchoProduct(id, formData) {
+	return async dispatch => {
+		dispatch(openPopup(formData))
+	}
+}
+
 export function openRegisterDwollaAccount(data) {
 	return async dispatch => {
 		dispatch(getCompany(data.id))

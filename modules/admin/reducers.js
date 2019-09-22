@@ -27,6 +27,7 @@ export const initialState = {
   tabsNames: [
     { name: 'CAS Products', id: 7 },
     { name: 'Companies', id: 8 },
+    { name: 'Product Catalog', id: 12 },
     { name: 'Units of Measure', id: 1 },
     { name: 'Units of Packaging', id: 2 },
     { name: 'Manufacturers', id: 3 },
@@ -55,6 +56,13 @@ export const initialState = {
   config: config,
   addressSearchPrimaryBranch: [],
   addressSearchMailingBranch: [],
+
+  productsHazardClasses: [],
+  productsPackagingGroups: [],
+  searchedCasProducts: [],
+  searchedUnNumbers: [],
+  searchedManufacturers: [],
+  searchedManufacturersLoading: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -512,6 +520,93 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         company: payload
+      }
+    }
+
+    case AT.ADMIN_SEARCH_UN_NUMBER_FULFILLED: {
+      return {
+        ...state,
+        searchedUnNumbers: action.payload.data
+      }
+    }
+
+    case AT.ADMIN_CREATE_ELEMENTS_INDEX: {
+      // ADD new array to casProducts
+      let { searchedCasProducts } = state
+      searchedCasProducts.push([])
+
+      return {
+        ...state,
+        searchedCasProducts
+      }
+    }
+
+    case AT.ADMIN_REMOVE_ELEMENTS_INDEX: {
+      // REMOVE array from casProducts
+      let { searchedCasProducts } = state
+      searchedCasProducts.splice(action.payload.index, 1)
+
+      return {
+        ...state,
+        searchedCasProducts
+      }
+    }
+
+    case AT.ADMIN_PREPARE_CAS_PRODUCTS: {
+      return {
+        ...state,
+        searchedCasProducts: action.payload.elements.map(element => {
+          return [element.casProduct]
+        })
+      }
+    }
+
+    case AT.ADMIN_SEARCH_CAS_PRODUCT_FULFILLED: {
+      return {
+        ...state,
+        searchedCasProducts: state.searchedCasProducts.map((list, listIndex) => {
+          if (listIndex === action.payload.index) {
+            return action.payload.data
+          } else {
+            return list
+          }
+        })
+      }
+    }
+
+    case AT.ADMIN_GET_PRODUCTS_CATALOG_DATA_FULFILLED: {
+      const hazardClasses = action.payload.hazardClasses.map((hClass, id) => {
+        return {
+          key: id,
+          text: hClass.classCode + ': ' + hClass.description,
+          value: hClass.id
+        }
+      })
+      const packagingGroups = action.payload.packagingGroups.map((pGroup, id) => {
+        return {
+          key: id,
+          text: pGroup.groupCode + ': ' + pGroup.description,
+          value: pGroup.id
+        }
+      })
+      return {
+        ...state,
+        //loading: false,
+        //loaded: true,
+        productsHazardClasses: hazardClasses,
+        productsPackagingGroups: packagingGroups
+      }
+    }
+
+    case AT.ADMIN_SEARCH_MANUFACTURERS_FULFILLED: {
+      return {
+        ...state,
+        searchedManufacturers: action.payload.data.map(manufacturer => ({
+          key: manufacturer.id,
+          value: manufacturer.id,
+          text: manufacturer.name
+        })),
+        searchedManufacturersLoading: false
       }
     }
 
