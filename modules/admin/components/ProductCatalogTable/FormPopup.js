@@ -11,7 +11,7 @@ import {
 } from '~/modules/admin/actions'
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
-import { Button, Input, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui'
+import { Button, Input, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { DateInput } from '~/components/custom-formik'
 import * as Yup from 'yup'
 
