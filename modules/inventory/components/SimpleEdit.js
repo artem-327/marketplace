@@ -93,21 +93,15 @@ class SimpleEdit extends Component {
           this.setState({ submitting: true })
           let payload = {
             price: values.price,
-            [popupValues.id ? 'product' : 'companyProduct']: values.product,
+            companyProduct: values.product,
             lots: [{
               lotNumber: '1',
               pkgAmount: parseInt(values.quantity)
             }],
+            tradeName: values.casTradeName,
             warehouse: values.warehouse
           }
-
-          if (!popupValues.id) {
-            payload = {
-              ...payload,
-              tradeName: values.casTradeName,
-            }
-          }
-
+          
           try {
             await addProductOffer(payload, popupValues.id, true)
 
