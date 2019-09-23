@@ -66,8 +66,8 @@ context("Prodex Warehouse CRUD", () => {
     })
 
     it("Edits a warehouse", () => {
-        cy.get('[data-test=action_' + branchId + ']').click()
-        cy.get('[data-test=action_' + branchId + '_0]').click()
+        cy.get('[data-test=action_' + branchId + ']').click({force: true})
+        cy.get('[data-test=action_' + branchId + '_0]').click({force: true})
 
         cy.get("#field_input_contactName")
             .clear()
@@ -76,8 +76,8 @@ context("Prodex Warehouse CRUD", () => {
 
         cy.clickSave()
 
-        cy.get('[data-test=action_' + branchId + ']').click()
-        cy.get('[data-test=action_' + branchId + '_0]').click()
+        cy.get('[data-test=action_' + branchId + ']').click({force: true})
+        cy.get('[data-test=action_' + branchId + '_0]').click({force: true})
 
         cy.get("#field_input_contactName")
             .should("have.value","Arnold Schwarzenegger")
@@ -96,8 +96,8 @@ context("Prodex Warehouse CRUD", () => {
     })
 
     it("Deletes a warehouse", () => {
-        cy.get('[data-test=action_' + branchId + ']').click()
-        cy.get('[data-test=action_' + branchId + '_1]').click()
+        cy.get('[data-test=action_' + branchId + ']').click({force: true})
+        cy.get('[data-test=action_' + branchId + '_1]').click({force: true})
 
         cy.clickSave()
 

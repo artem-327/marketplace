@@ -66,8 +66,8 @@ context("Prodex Branches CRUD", () => {
     })
 
     it("Edits a delivery address", () => {
-        cy.get('[data-test=action_' + addressId + ']').click()
-        cy.get('[data-test=action_' + addressId + '_0]').click()
+        cy.get('[data-test=action_' + addressId + ']').click({force: true})
+        cy.get('[data-test=action_' + addressId + '_0]').click({force: true})
 
         cy.get("#field_input_name")
             .clear()
@@ -96,8 +96,8 @@ context("Prodex Branches CRUD", () => {
     })
 
     it("Deletes a branch", () => {
-        cy.get('[data-test=action_' + addressId + ']').click()
-        cy.get('[data-test=action_' + addressId + '_1]').click()
+        cy.get('[data-test=action_' + addressId + ']').click({force: true})
+        cy.get('[data-test=action_' + addressId + '_1]').click({force: true})
 
         cy.clickSave()
 

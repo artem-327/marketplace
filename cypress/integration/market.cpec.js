@@ -20,7 +20,7 @@ context("Market place tests",() => {
 
     it('Filter marketplace', () =>{
         cy.server()
-        cy.route("GET",'/prodex/api/search/cas-products?***').as('search')
+        cy.route("GET",'/prodex/api/products/broadcasted/search?**').as('search')
 
         cy.get(".submenu-filter").click()
 

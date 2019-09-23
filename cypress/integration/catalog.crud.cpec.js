@@ -33,7 +33,7 @@ context("Prodex Product Catalog CRUD", () => {
 
         cy.get("#field_dropdown_packagingType").click()
         cy.get("#field_dropdown_packagingType").within(() => {
-            cy.contains("Steel drums").click()
+            cy.contains("Steel drums").click({force: true})
         })
 
         cy.enterText("#field_input_nmfcNumber", "79547")
@@ -133,7 +133,7 @@ context("Prodex Product Catalog CRUD", () => {
             .should("have.value","007onium")
     })
 
-    xit("Deletes a alternative name", () => {
+    it("Deletes a alternative name", () => {
         cy.route("POST", "/prodex/api/products/trade-names*").as("nameSaving")
         cy.route("GET", "/prodex/api/products/trade-names/***").as("nameGetting")
 
