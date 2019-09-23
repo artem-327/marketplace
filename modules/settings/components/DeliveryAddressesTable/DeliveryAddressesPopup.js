@@ -21,6 +21,7 @@ import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { errorMessages, provinceObjectRequired } from '~/constants/yupValidation'
 
 import { AddressForm } from '~/modules/address-form'
+import { PhoneNumber } from '~/modules/phoneNumber'
 
 
 const initialFormValues = {
@@ -145,7 +146,12 @@ class DeliveryAddressesPopup extends React.Component {
                   </FormGroup>
                   <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
                     <Input type='text' label={formatMessage({ id: 'settings.contactEmail', defaultMessage: 'Contact Email' })} name='email' />
-                    <Input type='text' label={formatMessage({ id: 'settings.contactPhone', defaultMessage: 'Contact Phone' })} name='phoneNumber' />
+                    <PhoneNumber
+                      name='phoneNumber'
+                      values={values}
+                      label={<FormattedMessage id='settings.contactPhone' defaultMessage='Contact Phone' />}
+                      setFieldValue={setFieldValue}
+                    />
                   </FormGroup>
                   <div style={{ textAlign: 'right' }}>
                     <Button.Reset data-test='settings_delivery_address_reset_btn'>

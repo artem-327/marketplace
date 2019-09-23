@@ -53,6 +53,8 @@ export default class ShoppingCart extends Component {
 
     if (cartIsFetching) return <Spinner />
     const itemContent = cart.cartItems && cart.cartItems.map(cartItem => {
+
+      console.log('!!! cartItem', cartItem)
       return (
         <>
           <ItemCartBody
@@ -64,7 +66,10 @@ export default class ShoppingCart extends Component {
             cartItem={cartItem}
             deleteCartItem={deleteCartItem}
             casNumberChemName={
-              <ArrayToMultiple values={cartItem.productOffer.product.casProducts.map(d => (d.casProduct.casNumber + ' ' + d.casProduct.chemicalName))} />
+              <ArrayToMultiple values={
+                //cartItem.productOffer.companyProduct.echoProduct.elements.map(d => (d.casProduct.casNumber + ' ' + d.casProduct.chemicalName))
+                cartItem.productOffer.companyProduct.echoProduct.elements.map(d => (d.displayName)) // ! ! temporary solution
+              } />
             }
           />
         </>

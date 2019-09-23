@@ -10,6 +10,7 @@ import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
 
 import { PHONE_REGEXP } from '../../../src/utils/constants'
+import { PhoneNumber } from '~/modules/phoneNumber'
 
 const BottomMargedGrid = styled(Grid)`
   margin-bottom: 1rem !important;
@@ -71,9 +72,12 @@ class ShippingEdit extends Component {
             label={<FormattedMessage id='global.email' defaultMessage='E-mail Address' />}
             name='email' />
 
-          <Input
+          <PhoneNumber
+            name='phoneNumber'
+            values={values}
             label={<FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />}
-            name='phoneNumber' />
+            setFieldValue={setFieldValue}
+          />
 
         </FormGroup>
       </>

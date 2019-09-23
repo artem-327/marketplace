@@ -21,20 +21,20 @@ function mapStateToProps(store, { datagrid }) {
     ...datagrid,
     appliedFilter: store.filter.filter.appliedFilter,
     rows: datagrid.rows.map(po => {
-      const qtyPart = getSafe(() => po.product.packagingUnit.nameAbbreviation)
+      const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
       let currency = getSafe(() => po.cost.currency.code, 'USD')
-
+      console.log('!!!!!! po', po)
       return {
         id: po.id,
-        productName: po.product.productName,
-        productNumber: getSafe(() => po.product.casNumberCombined, 'Unmapped'),
+        productName: po.companyProduct.intProductName,
+        productNumber: getSafe(() => po.companyProduct.echoProduct.code, 'Unmapped'), // ! ! ???
         merchant: po.warehouse.warehouseName,
         available: <FormattedNumber value={po.pkgAmount} minimumFractionDigits={0} />,
-        packagingType: getSafe(() => po.product.packagingType.name, ''),
-        packagingUnit: getSafe(() => po.product.packagingUnit.nameAbbreviation, ''),
-        packagingSize: getSafe(() => po.product.packagingSize, ''),
-        quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.pkgAmount * po.product.packagingSize} /> : 'N/A',
-        // qtyPart ? `${(parseInt(po.pkgAmount, 10) * parseInt(po.product.packagingSize, 10)).formatNumber()} ${qtyPart}` : 'N/A',
+        packagingType: getSafe(() => po.companyProduct.packagingType.name, ''),
+        packagingUnit: getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, ''),
+        packagingSize: getSafe(() => po.companyProduct.packagingSize, ''),
+        quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.pkgAmount * po.companyProduct.packagingSize} /> : 'N/A',
+        // qtyPart ? `${(parseInt(po.pkgAmount, 10) * parseInt(po.companyProduct.packagingSize, 10)).formatNumber()} ${qtyPart}` : 'N/A',
         fobPrice: po.pricingTiers.length > 1
           ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price} /> -  <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price} /> {qtyPart && (`/ ${qtyPart}`)} </>
           : <> <FormattedNumber style='currency' currency={currency} value={po.pricing.price} /> {qtyPart && (`/ ${qtyPart}`)} </>,
@@ -42,7 +42,7 @@ function mapStateToProps(store, { datagrid }) {
         //   ('$' + po.pricingTiers[po.pricingTiers.length - 1].price.formatMoney(3)
         //     + ' - ' + '$' + po.pricingTiers[0].price.formatMoney(3))
         //   : po.pricing.price ? ('$' + po.pricing.price.formatMoney(3)) : 'N/A',
-        tradeName: '',
+        //tradeName: '',  // ! ! ?? smazat?
         manufacturer: getSafe(() => po.manufacturer.name, 'N/A'),
         origin: getSafe(() => po.origin.name),
         expiration: moment(po.expirationDate).format('MM/DD/YYYY'),

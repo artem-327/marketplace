@@ -13,6 +13,7 @@ import { dunsValidation, addressValidationSchema, errorMessages, einValidation, 
 
 import { getSafe } from '~/utils/functions'
 import { AddressForm } from '~/modules/address-form'
+import { PhoneNumber } from '~/modules/phoneNumber'
 
 const ConfirmSegment = styled(Segment.Group)`
   position: relative;
@@ -177,8 +178,11 @@ class ConfirmationPage extends Component {
                   </Grid.Row>
                   <Grid.Row columns={2}>
                     <Grid.Column data-test='auth_confirm_adminPhone_inp'>
-                      <Input label={formatMessage({ id: 'laststep.admin.phone', defaultMessage: 'Phone *' })}
-                        name='companyAdminUser.phone' />
+                      <PhoneNumber
+                        label={formatMessage({ id: 'laststep.admin.phone', defaultMessage: 'Phone *' })}
+                        name='companyAdminUser.phone'
+                        values={values} setFieldValue={setFieldValue}
+                      />
                     </Grid.Column>
                     <Grid.Column data-test='auth_confirm_adminEmail_inp'>
                       <Input label={formatMessage({ id: 'laststep.admin.email', defaultMessage: 'E-Mail *' })}

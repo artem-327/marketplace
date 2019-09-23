@@ -23,6 +23,7 @@ import { addressValidationSchema, errorMessages } from '~/constants/yupValidatio
 import { AddressForm } from '~/modules/address-form/'
 
 import { getSafe } from '~/utils/functions'
+import { PhoneNumber } from '~/modules/phoneNumber'
 
 
 const minLength = errorMessages.minLength(3)
@@ -187,7 +188,12 @@ class WarehousePopup extends React.Component {
                   <Input type='text' label='Contact Name' name='contactName' fieldProps={{ width: 8 }} />
                 </FormGroup>
                 <FormGroup widths='equal' data-test='settings_warehouse_popup_phoneEmail_inp'>
-                  <Input type='text' label='Phone' name='contactPhone' />
+                  <PhoneNumber
+                    name='contactPhone'
+                    values={values}
+                    label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+                    setFieldValue={setFieldValue}
+                  />
                   <Input type='text' label='Email' name='contactEmail' />
                 </FormGroup>
                 <div style={{ textAlign: 'right' }}>

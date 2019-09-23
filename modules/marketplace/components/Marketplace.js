@@ -26,7 +26,7 @@ class Marketplace extends Component {
       { name: 'packaging', title: <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging'>{(text) => text}</FormattedMessage>, width: 140 },
       { name: 'quantity', title: <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>{(text) => text}</FormattedMessage>, width: 140 },
       { name: 'fobPrice', title: <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>{(text) => text}</FormattedMessage>, width: 160 },
-      { name: 'tradeName', title: <FormattedMessage id='marketplace.tradeName' defaultMessage='Trade Name'>{(text) => text}</FormattedMessage>, width: 140 },
+      //{ name: 'tradeName', title: <FormattedMessage id='marketplace.tradeName' defaultMessage='Trade Name'>{(text) => text}</FormattedMessage>, width: 140 },
       { name: 'manufacturer', title: <FormattedMessage id='marketplace.mfr' defaultMessage='MFR.'>{(text) => text}</FormattedMessage>, width: 120 },
       { name: 'origin', title: <FormattedMessage id='marketplace.origin' defaultMessage='Origin'>{(text) => text}</FormattedMessage>, width: 120 },
       { name: 'expiration', title: <FormattedMessage id='marketplace.expiration' defaultMessage='Expiration'>{(text) => text}</FormattedMessage>, width: 120 },

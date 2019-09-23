@@ -19,12 +19,12 @@ import { agreeWithTOS } from '~/modules/auth/actions'
 import { triggerSystemSettingsModal } from '~/modules/settings/actions'
 
 import Profile from '~/modules/profile/components/Profile'
-import React from 'react'
+import React, {Component} from 'react'
 import Router from 'next/router'
 import { getSafe } from '~/utils/functions'
 import { injectIntl } from 'react-intl'
-
 import { AgreementModal } from '~/components/modals'
+import { getCountryCodes } from '~/modules/phoneNumber/actions'
 
 const TopMenu = styled(Menu)`
   background-color: #33373e !important;
@@ -73,74 +73,97 @@ const MenuLink = withRouter(({ router: { pathname }, to, children, }) => (
   </Link>
 ))
 
-const Layout = ({
-  children, router: { pathname }, title = 'Echo exchange',
-  auth, takeOverCompanyFinish, triggerSystemSettingsModal,
-  profile, openProfilePopup, cartItems, takeover,
-  intl: { formatMessage }, isOpen, agreeWithTOS }) => {
+class Layout extends Component {
+  componentDidMount() {
+    if (!this.props.phoneCountryCodes.length) this.props.getCountryCodes()
+  }
 
+  render()
+  {
+    const {
+      children, router: { pathname }, title = 'Echo exchange',
+      auth, takeOverCompanyFinish, triggerSystemSettingsModal,
+      profile, openProfilePopup, cartItems, takeover,
+      intl: { formatMessage }, isOpen, agreeWithTOS
+    } = this.props
 
-  return (
-    <MainContainer fluid>
-      <PopUp />
-      <Head>
-        <title>{formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo echange' })} / {title}</title>
-      </Head>
-      <TopMenu fixed='top' inverted size='large' borderless>
+    return (
+      <MainContainer fluid>
+        <PopUp/>
+        <Head>
+          <title>{formatMessage({id: 'global.echoTitle', defaultMessage: 'Echo echange'})} / {title}</title>
+        </Head>
+        <TopMenu fixed='top' inverted size='large' borderless>
 
-        <TopMenuContainer fluid>
-          <LogoImage src={Logo} />
+          <TopMenuContainer fluid>
+            <LogoImage src={Logo}/>
 
-          <NavigationMenu takeover={takeover} />
+            <NavigationMenu takeover={takeover}/>
 
-          <Menu.Menu position='right' className='black'>
-            {auth && auth.identity && !auth.identity.isAdmin &&
+            <Menu.Menu position='right' className='black'>
+              {auth && auth.identity && !auth.identity.isAdmin &&
               <Menu.Item onClick={() => Router.push('/cart')} data-test='navigation_menu_cart'>
-                <MiniCart />
+                <MiniCart/>
               </Menu.Item>
-            }
-            <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
-              <Dropdown.Menu data-test='navigation_menu_user_drpdn'>
-                <Dropdown.Item as={Menu.Item} onClick={() => openProfilePopup()} data-test='navigation_menu_user_my_profile_drpdn'>{formatMessage({ id: 'global.myProfile', defaultMessage: 'My Profile' })}</Dropdown.Item>
-                {getSafe(() => auth.identity.isAdmin, false) && takeover &&
-                  <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()} data-test='navigation_menu_user_return_to_admin_drpdn'>{formatMessage({ id: 'global.returnToAdmin', defaultMessage: 'Return To Admin' })}</Dropdown.Item>
-                }
-                {/* {getSafe(() => !auth.identity.isAdmin && !auth.identity.isCompanyAdmin, false) && (
+              }
+              <Dropdown item icon={{name: 'user circle outline', size: 'large'}}>
+                <Dropdown.Menu data-test='navigation_menu_user_drpdn'>
+                  <Dropdown.Item as={Menu.Item} onClick={() => openProfilePopup()}
+                                 data-test='navigation_menu_user_my_profile_drpdn'>{formatMessage({
+                    id: 'global.myProfile',
+                    defaultMessage: 'My Profile'
+                  })}</Dropdown.Item>
+                  {getSafe(() => auth.identity.isAdmin, false) && takeover &&
+                  <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()}
+                                 data-test='navigation_menu_user_return_to_admin_drpdn'>{formatMessage({
+                    id: 'global.returnToAdmin',
+                    defaultMessage: 'Return To Admin'
+                  })}</Dropdown.Item>
+                  }
+                  {/* {getSafe(() => !auth.identity.isAdmin && !auth.identity.isCompanyAdmin, false) && (
                 <Menu.Item onClick={() => triggerSystemSettingsModal(true)}>
                   {formatMessage({ id: 'settings.systemSettings', defaultMessage: 'System Settings' })}
 
                 </Menu.Item>
               )} */}
 
-                {!getSafe(() => auth.identity.isAdmin, false) || takeover && <Menu.Item onClick={() => triggerSystemSettingsModal(true)} data-test='navigation_menu_settings_lnk'>
-                  <>
-                    {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
-                    <Settings role='user' />
-                  </>
-                </Menu.Item>}
-                <Dropdown.Item as={MenuLink} to='/legal/terms-of-service' data-test='navigation_menu_user_terms_of_service_drpdn'>{formatMessage({ id: 'global.termsOfService', defaultMessage: 'Terms of Service' })}</Dropdown.Item>
-                <Dropdown.Item as={MenuLink} to='/auth/logout' data-test='navigation_menu_user_logout_drpdn'>{formatMessage({ id: 'global.logout', defaultMessage: 'Logout' })}</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Menu.Menu>
-        </TopMenuContainer>
-      </TopMenu>
+                  {!getSafe(() => auth.identity.isAdmin, false) || takeover &&
+                  <Menu.Item onClick={() => triggerSystemSettingsModal(true)} data-test='navigation_menu_settings_lnk'>
+                    <>
+                      {formatMessage({id: 'navigation.userSettings', defaultMessage: 'User Settings'})}
+                      <Settings role='user'/>
+                    </>
+                  </Menu.Item>}
+                  <Dropdown.Item as={MenuLink} to='/legal/terms-of-service'
+                                 data-test='navigation_menu_user_terms_of_service_drpdn'>{formatMessage({
+                    id: 'global.termsOfService',
+                    defaultMessage: 'Terms of Service'
+                  })}</Dropdown.Item>
+                  <Dropdown.Item as={MenuLink} to='/auth/logout'
+                                 data-test='navigation_menu_user_logout_drpdn'>{formatMessage({
+                    id: 'global.logout',
+                    defaultMessage: 'Logout'
+                  })}</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </Menu.Menu>
+          </TopMenuContainer>
+        </TopMenu>
 
-      {profile && profile.profilePopup && <Profile />}
-      <FlexContainer>
-        <TopMenuContainer fluid>
-          <Messages />
-        </TopMenuContainer>
-        <ContentContainer fluid className='page-wrapper flex stretched'>
-          {children}
-        </ContentContainer>
-      </FlexContainer>
+        {profile && profile.profilePopup && <Profile/>}
+        <FlexContainer>
+          <TopMenuContainer fluid>
+            <Messages/>
+          </TopMenuContainer>
+          <ContentContainer fluid className='page-wrapper flex stretched'>
+            {children}
+          </ContentContainer>
+        </FlexContainer>
 
-      <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
-    </MainContainer>
-
-
-  )
+        <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen}/>
+      </MainContainer>
+    )
+  }
 }
 
 
@@ -148,7 +171,8 @@ const mapDispatchToProps = {
   takeOverCompanyFinish,
   openProfilePopup,
   triggerSystemSettingsModal,
-  agreeWithTOS
+  agreeWithTOS,
+  getCountryCodes
 }
 
 const mapStateToProps = state => {
@@ -157,7 +181,8 @@ const mapStateToProps = state => {
     profile: state.profile,
     isOpen: getSafe(() => !state.auth.identity.tosAgreementDate, false),
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
-    takeover: getSafe(() => !!state.auth.identity.company.id, false)
+    takeover: getSafe(() => !!state.auth.identity.company.id, false),
+    phoneCountryCodes: getSafe(() => state.phoneNumber.phoneCountryCodes, [])
   }
 }
 

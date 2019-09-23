@@ -10,6 +10,7 @@ import AssignLots from './components/AssignLots'
 import ReinitiateTransfer from './components/ReinitiateTransfer'
 import confirm from '~/src/components/Confirmable/confirm'
 import moment from 'moment/moment'
+import { FormattedPhone } from '~/components/formatted-messages/'
 
 const AccordionTitle = styled(Accordion.Title)`
   text-transform: uppercase;
@@ -448,10 +449,10 @@ class Detail extends Component {
                           <GridDataColumn width={4}><strong>{order.paymentType} <FormattedMessage id='order.address' defaultMessage='Address' /></strong></GridDataColumn>
                           <GridDataColumn width={12}>{order.paymentAddress}</GridDataColumn>
                           <GridDataColumn width={4}><strong>{order.paymentType} <FormattedMessage id='order.phone' defaultMessage='Phone' /></strong></GridDataColumn>
-                          <GridDataColumn width={12}>{order.paymentPhone}</GridDataColumn>
+                          <GridDataColumn width={12}><FormattedPhone value={order.paymentPhone} /></GridDataColumn>
                           <GridDataColumn width={4}><strong>{order.paymentType} <FormattedMessage id='order.email' defaultMessage='E-Mail' /></strong></GridDataColumn>
                           <GridDataColumn width={12}>{order.paymentEmail}</GridDataColumn>
-                          <GridDataColumn width={4}><strong>{order.paymentType} <FormattedMessage id='order.contact' defaultMessage='Contact' />></strong></GridDataColumn>
+                          <GridDataColumn width={4}><strong>{order.paymentType} <FormattedMessage id='order.contact' defaultMessage='Contact' /></strong></GridDataColumn>
                           <GridDataColumn width={12}>{order.paymentContact}</GridDataColumn>
                         </GridData>
                       </Grid.Column>

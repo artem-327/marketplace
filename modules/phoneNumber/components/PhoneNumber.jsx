@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { string, object, bool, func } from "prop-types"
-import { FormField, Dropdown } from 'semantic-ui-react'
+import {FormField, Dropdown, Label, List, Popup} from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 //import { InputMask } from 'react-input-mask'
@@ -8,7 +8,7 @@ const InputMask = require("react-input-mask")
 import get from 'lodash/get'
 
 const StyledDropdown = styled(Dropdown)`
-  min-width: 120px !important;
+  min-width: 80px !important;
   cursor: pointer !important;
   word-wrap: normal;
   line-height: 1em;
@@ -18,7 +18,7 @@ const StyledDropdown = styled(Dropdown)`
   min-height: 2.71428571em;
   background: #FFFFFF;
   display: inline-block;
-  padding: 0.78571429em 0.78571429em 0.78571429em 0.78571429em;
+  padding: 0.78571429em 0.4em 0.78571429em 0.2em;
   color: rgba(0, 0, 0, 0.87);
   border: 1px solid rgba(34, 36, 99, 0.15);
   border-radius: 0.28571429rem;
@@ -46,14 +46,16 @@ const StyledInputMask = styled(InputMask)`
 `
 
 function splitPhoneNumber(phone, phoneCountryCodes) {
-  let i = phoneCountryCodes.findIndex(d => (
+  let filtered = phoneCountryCodes.filter(d => (    // filter possible country codes
     d.value === phone.slice(0, d.value.length)
   ))
 
-  if (i >= 0) {
+  let sorted = filtered.sort(function(a, b) {return b.value.length - a.value.length}) // sort by longest
+
+  if (sorted.length > 0) {
     return {
-      phoneCountryCode: phoneCountryCodes[i].value,
-      phoneNumber: phone.slice(phoneCountryCodes[i].value.length)
+      phoneCountryCode: sorted[0].value,
+      phoneNumber: phone.slice(sorted[0].value.length)
     }
   }
   else {
@@ -65,14 +67,32 @@ export default class PhoneNumber extends Component {
   state = {
     phoneCountryCode: '',
     phoneNumber: '',
+    phoneFull: ''
   }
 
   componentDidMount = async () => {
-    let phone = get(this.props.values, this.props.name, '')
     if (!this.props.phoneCountryCodes.length) await this.props.getCountryCodes()
 
+    let phone = get(this.props.values, this.props.name, '').replace('+', '')
     phone = splitPhoneNumber(phone, this.props.phoneCountryCodes)
-    this.setState({ phoneCountryCode: phone.phoneCountryCode, phoneNumber: phone.phoneNumber })
+    this.setState({
+      phoneCountryCode: phone.phoneCountryCode,
+      phoneNumber: phone.phoneNumber,
+      phoneFull: phone.phoneCountryCode ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
+    })
+  }
+
+  componentDidUpdate(prevProps, nextProps, snapshot) {
+    let phone = get(this.props.values, this.props.name, '').replace('+', '')
+
+    if (phone !== this.state.phoneFull) {
+      phone = splitPhoneNumber(phone, this.props.phoneCountryCodes)
+      this.setState({
+        phoneCountryCode: phone.phoneCountryCode,
+        phoneNumber: phone.phoneNumber,
+        phoneFull: phone.phoneCountryCode ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
+      })
+    }
   }
 
   handleChange = async (fieldName, value) => {
@@ -80,8 +100,10 @@ export default class PhoneNumber extends Component {
 
     if (fieldName === 'phoneNumber') value = value.replace(/\s+/g, '')
 
-    this.setState({ [fieldName]: value })
     const phone = { ...this.state, ...{ [fieldName]: value } }
+    const phoneFull = phone.phoneCountryCode ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
+
+    this.setState({ [fieldName]: value, phoneFull })
 
     setFieldValue(name, phone.phoneCountryCode ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber)
   }
@@ -89,7 +111,8 @@ export default class PhoneNumber extends Component {
   render() {
     let {
       phoneCountryCodes,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      label
     } = this.props
 
     let {
@@ -99,13 +122,13 @@ export default class PhoneNumber extends Component {
 
     return (
       <FormField>
-        <label><FormattedMessage id='global.phone' defaultMessage='Phone' /></label>
+        <label>{label}</label>
         <span style={{ display: 'flex'}}>
           <StyledDropdown
             options={phoneCountryCodes}
             onChange={(e, data) => this.handleChange('phoneCountryCode', data.value)}
             search
-            placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+XXX' })}
+            placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+CCC' })}
             value={phoneCountryCode}
           />
           <StyledInputMask
@@ -127,7 +150,7 @@ PhoneNumber.propTypes = {
   setFieldValue: func,
   name: string.isRequired,
   values: object,
-  label: string,
+  label: object,
   search: bool,
 }
 
@@ -136,4 +159,5 @@ PhoneNumber.defaultProps = {
   name: null,
   values: null,
   search: true,
+  label: 'Phone'
 }

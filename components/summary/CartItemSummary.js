@@ -35,7 +35,7 @@ class CartItemSummary extends Component {
       getHazardClassesDataRequest, getPackagingGroupsDataRequest, addUnNumber } = this.props
     let initialUnNumbers = []
     cartItems.forEach(item => {
-      let unNumber = getSafe(() => item.unNumber, item.productOffer.product.unNumber || '')
+      let unNumber = getSafe(() => item.unNumber, item.productOffer.companyProduct.echoProduct.unNumber.unNumberCode || '')
       if (unNumber && !initialUnNumbers.find((num) => num.id === unNumber.id)) {
         initialUnNumbers.push(unNumber)
       }
@@ -57,16 +57,15 @@ class CartItemSummary extends Component {
       packagingGroups, unNumbersFiltered,
       unNumbersFetching, updateHazmatInfo,
       toastManager } = this.props
-    let { productOffer: { product } } = item
-
+    let { productOffer: { companyProduct } } = item
 
     let initialValues = {
-      unCode: getSafe(() => item.unNumber.id, product.unNumber && product.unNumber.id || ''),
-      packagingGroup: getSafe(() => item.packagingGroup.id, product.packagingGroup ? product.packagingGroup.id : ''),
-      hazardClasses: item.hazardClasses ? item.hazardClasses.map((c) => c.id) : product.hazardClasses.map((hazardClass) => hazardClass.id),
-      freightClass: getSafe(() => item.freightClass, product.freightClass || ''),
-      nmfcNumber: getSafe(() => item.nmfcNumber, product.nmfcNumber || ''),
-      stackable: getSafe(() => item.stackable, product.stackable || false),
+      unCode: getSafe(() => item.unNumber.id, companyProduct.echoProduct.unNumber && companyProduct.echoProduct.unNumber.id || ''),
+      packagingGroup: getSafe(() => item.packagingGroup.id, companyProduct.packagingGroup ? companyProduct.packagingGroup.id : ''),
+      hazardClasses: item.hazardClasses ? item.hazardClasses.map((c) => c.id) : companyProduct.hazardClasses.map((hazardClass) => hazardClass.id),
+      freightClass: getSafe(() => item.freightClass, companyProduct.freightClass || ''),
+      nmfcNumber: getSafe(() => item.nmfcNumber, companyProduct.nmfcNumber || ''),
+      stackable: getSafe(() => item.stackable, companyProduct.stackable || false),
     }
 
     let disabled = !this.state.edittingHazmatInfo
@@ -209,7 +208,7 @@ class CartItemSummary extends Component {
           <Grid columns={2} className='light-gray cart-item-summary'>
             <HeaderTextRow>
               <GridColumn>
-                {productOffer.product.productCode + ' ' + productOffer.product.productName}
+                {productOffer.companyProduct.intProductCode + ' ' + productOffer.companyProduct.intProductName}
               </GridColumn>
 
               <GridColumn floated='right'>
@@ -231,7 +230,10 @@ class CartItemSummary extends Component {
               </GridColumn>
 
               <GridColumn floated='right'>
-                <ArrayToMultiple values={productOffer.product.casProducts.map(d => (d.casProduct.casNumber + ' / ' + d.casProduct.chemicalName))} />
+                <ArrayToMultiple values={
+                  //productOffer.product.casProducts.map(d => (d.casProduct.casNumber + ' / ' + d.casProduct.chemicalName))
+                  productOffer.companyProduct.echoProduct.elements.map(d => (d.displayName)) // ! ! temporary solution
+                } />
               </GridColumn>
             </RelaxedRow>
 
@@ -277,7 +279,7 @@ class CartItemSummary extends Component {
 
               <GridColumn floated='right'>
                 <FormattedUnit
-                  unit={productOffer.product.packagingType.name}
+                  unit={productOffer.companyProduct.packagingType.name}
                   separator=' '
                   value={item.quantity}
                 />
@@ -297,8 +299,8 @@ class CartItemSummary extends Component {
               <GridColumn floated='right'>
                 <FormattedUnit
                   separator=''
-                  unit={productOffer.product.packagingUnit.nameAbbreviation}
-                  value={item.quantity * productOffer.product.packagingSize}
+                  unit={productOffer.companyProduct.packagingUnit.nameAbbreviation}
+                  value={item.quantity * productOffer.companyProduct.packagingSize}
                 />
               </GridColumn>
             </RelaxedRow>
@@ -308,7 +310,7 @@ class CartItemSummary extends Component {
               <GridColumn>
                 <FormattedMessage
                   id='global.pricePer'
-                  values={{ unit: productOffer.product.packagingUnit.nameAbbreviation }}
+                  values={{ unit: productOffer.companyProduct.packagingUnit.nameAbbreviation }}
                 />
               </GridColumn>
 

@@ -18,8 +18,8 @@ export default class Summary extends Component {
 
     let subtotal = 0, totalWeight = 0
     for (let i = 0; i < cartItems.length; i++) {
-      subtotal += (cartItems[i].quantity * cartItems[i].productOffer.product.packagingSize * cartItems[i].pricing.price)
-      totalWeight += cartItems[i].productOffer.product.packagingSize * cartItems[i].quantity
+      subtotal += (cartItems[i].quantity * cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].pricing.price)
+      totalWeight += cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].quantity
     }
 
     let shipping = cart.selectedShipping ? cart.selectedShipping.quote.estimatedPrice : 0
@@ -103,7 +103,7 @@ export default class Summary extends Component {
                 <GridColumn>
                   <FormattedMessage
                     id='global.pricePer'
-                    values={{ unit: cartItems[0].productOffer.product.packagingUnit.nameAbbreviation }}
+                    values={{ unit: cartItems[0].productOffer.companyProduct.packagingUnit.nameAbbreviation }}
                   />
                 </GridColumn>
 

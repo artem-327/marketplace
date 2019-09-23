@@ -131,7 +131,7 @@ export function getLocationString(productOffer) {
     return ''
   }
 
-  return `${location.city}, ${location.province ? `${location.province.abbreviation},` : ''} ${location.country.name}`
+  return `${location.province ? `${location.province.abbreviation},` : ''} ${location.country.name}`
 }
 
 export function addFirstTier(productOffer) {
@@ -151,7 +151,7 @@ export const calculateTotalPrice = cart => {
   let cartItems = cart.cartItems.slice()
 
   cartItems.forEach(cartItem => {
-    cartItem.price = cartItem.pricing.price * cartItem.quantity * cartItem.productOffer.product.packagingSize
+    cartItem.price = cartItem.pricing.price * cartItem.quantity * cartItem.productOffer.companyProduct.packagingSize
     totalPrice += cartItem.price
   })
   return { ...cart, totalPrice, cartItems }

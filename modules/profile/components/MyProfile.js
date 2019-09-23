@@ -11,6 +11,7 @@ import { getSafe } from '~/utils/functions'
 
 import { FormattedDateTime } from '~/components/formatted-messages/'
 import { errorMessages, phoneValidation } from '~/constants/yupValidation'
+import { PhoneNumber } from '~/modules/phoneNumber'
 
 import {
   closePopup,
@@ -78,28 +79,30 @@ class MyProfile extends Component {
             }}
             data-test='my_profile_userData_inp'
           >
-            <Input
-              type='text'
-              label={formatMessage({ id: 'global.email', defaultMessage: 'E-mail' })}
-              name='email' inputProps={{ readOnly: true }} />
-            <Input
-              type='text'
-              label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
-              name='name' />
-            <Input
-              type='text'
-              label={formatMessage({ id: 'global.phone', defaultMessage: 'Phone' })}
-              name='phone' />
-            <Input
-              type='text'
-              label={formatMessage({ id: 'global.title', defaultMessage: 'Title' })}
-              name='jobTitle'
-              inputProps={{ readOnly: true }} />
-            <Dropdown
-              label={formatMessage({ id: 'global.currency', defaultMessage: 'Currency' })}
-              name='preferredCurrency'
-              options={currencies}
-              inputProps={{ 'data-test': 'my_profile_currency_drpdn' }} />
+            {({ values, setFieldValue }) => (
+            <>
+              <Input
+                type='text'
+                label={formatMessage({ id: 'global.email', defaultMessage: 'E-mail' })}
+                name='email' inputProps={{ readOnly: true }} />
+              <Input
+                type='text'
+                label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
+                name='name' />
+              <PhoneNumber
+                label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='phone'
+                values={values} setFieldValue={setFieldValue}
+              />
+              <Input
+                type='text'
+                label={formatMessage({ id: 'global.title', defaultMessage: 'Title' })}
+                name='jobTitle'
+                inputProps={{ readOnly: true }} />
+              <Dropdown
+                label={formatMessage({ id: 'global.currency', defaultMessage: 'Currency' })}
+                name='preferredCurrency'
+                options={currencies}
+                inputProps={{ 'data-test': 'my_profile_currency_drpdn' }} />
 
             <Dropdown
               label={formatMessage({ id: 'global.language', defaultMessage: 'Language' })}
@@ -125,6 +128,7 @@ class MyProfile extends Component {
               <Button.Reset data-test='my_profile_reset_btn'><FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage></Button.Reset>
               <Button.Submit data-test='my_profile_submit_btn'><FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage></Button.Submit>
             </div>
+            </>)}
           </Form>
         </Modal.Content>
       </Modal>

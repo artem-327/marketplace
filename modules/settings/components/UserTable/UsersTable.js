@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
-import { FormattedDateTime } from '~/components/formatted-messages/'
+import { FormattedDateTime, FormattedPhone } from '~/components/formatted-messages/'
 
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
@@ -35,7 +35,7 @@ class UsersTable extends Component {
       { name: 'name', title: <FormattedMessage id='global.user' defaultMessage='User'>{(text) => text}</FormattedMessage> },
       { name: 'jobTitle', title: <FormattedMessage id='global.jobTitle' defaultMessage='Job Title'>{(text) => text}</FormattedMessage> },
       { name: 'email', title: <FormattedMessage id='global.email' defaultMessage='E-mail'>{(text) => text}</FormattedMessage> },
-      { name: 'phone', title: <FormattedMessage id='global.phone' defaultMessage='Phone'>{(text) => text}</FormattedMessage> },
+      { name: 'phoneFormatted', title: <FormattedMessage id='global.phone' defaultMessage='Phone'>{(text) => text}</FormattedMessage> },
       { name: 'homeBranchName', title: <FormattedMessage id='global.homeBranch' defaultMessage='Home Branch'>{(text) => text}</FormattedMessage> },
       { name: 'userRoles', title: <FormattedMessage id='global.roles' defaultMessage='Roles'>{(text) => text}</FormattedMessage>, width: 200 },
       { name: 'lastLoginAt', title: <FormattedMessage id='global.lastLogin' defaultMessage='Last Login'>{(text) => text}</FormattedMessage>, width: 200 },
@@ -175,6 +175,7 @@ const userEnableDisableStatus = (r, currentUserId) => {
         jobTitle: user.jobTitle || '',
         email: user.email,
         phone: user.phone || '',
+        phoneFormatted: <FormattedPhone value={user.phone} />,
         homeBranch: user.homeBranch && user.homeBranch.id,
         additionalBranches: user.additionalBranches && user.additionalBranches.map(b => b.id),
         enabled: user.enabled,

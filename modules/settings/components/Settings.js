@@ -122,7 +122,7 @@ class Settings extends Component {
             {({ values, errors, setFieldValue }) => {
               return (
                 <Segment basic>
-                  <CompanyForm selectLogo={selectLogo} removeLogo={removeLogo} companyLogo={this.state.companyLogo} />
+                  <CompanyForm selectLogo={selectLogo} removeLogo={removeLogo} companyLogo={this.state.companyLogo} values={values} setFieldValue={setFieldValue} />
                   <Grid>
                     <GridColumn floated='right' computer={4}>
                       <Button.Submit fluid data-test='company_details_submit_btn'><FormattedMessage id='global.save'>{(text) => text}</FormattedMessage></Button.Submit>

@@ -6,6 +6,7 @@ import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import { withToastManager } from 'react-toast-notifications'
 
 import { generateToastMarkup } from '~/utils/functions'
+import { PhoneNumber } from '~/modules/phoneNumber'
 
 class CompanyForm extends Component {
 
@@ -74,7 +75,7 @@ class CompanyForm extends Component {
   }
 
   render() {
-    let { intl, loading, data } = this.props
+    let { intl, loading, data, setFieldValue, values } = this.props
     let { selectLogo, removeLogo } = this
 
     const { formatMessage } = intl
@@ -120,7 +121,10 @@ class CompanyForm extends Component {
 
         <FormGroup widths='equal' data-test='company_form_websiteUrlPhone_inp'>
           <Input label={<FormattedMessage id='global.websiteUrl' defaultMessage='Website URL' />} name='website' />
-          <Input label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='phone' />
+          <PhoneNumber
+            label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='phone'
+            values={values} setFieldValue={setFieldValue}
+          />
         </FormGroup>
 
 

@@ -17,6 +17,7 @@ import Router from "next/router"
 import { getSafe } from '~/utils/functions'
 
 import confirm from '~/src/components/Confirmable/confirm'
+import { FormattedPhone } from '~/components/formatted-messages/'
 
 class WarehouseTable extends Component {
   state = {
@@ -27,7 +28,7 @@ class WarehouseTable extends Component {
       { name: 'provinceName', title: <FormattedMessage id='global.stateProvince' defaultMessage='State/Province'>{(text) => text}</FormattedMessage> },
       { name: 'countryName', title: <FormattedMessage id='global.country' defaultMessage='Country'>{(text) => text}</FormattedMessage> },
       { name: 'contactName', title: <FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name'>{(text) => text}</FormattedMessage> },
-      { name: 'phone', title: <FormattedMessage id='global.phone' defaultMessage='Phone'>{(text) => text}</FormattedMessage> },
+      { name: 'phoneFormatted', title: <FormattedMessage id='global.phone' defaultMessage='Phone'>{(text) => text}</FormattedMessage> },
       { name: 'email', title: <FormattedMessage id='global.email' defaultMessage='E-mail'>{(text) => text}</FormattedMessage> }
     ],
     tab: ''
@@ -179,6 +180,7 @@ const mapStateToProps = (state, { datagrid }) => {
         zipID,
         contactName: r.contactName,
         phone: r.contactPhone,
+        phoneFormatted: <FormattedPhone value={r.contactPhone} />,
         email: r.contactEmail,
         branchId: r.id,
         id: r.id,

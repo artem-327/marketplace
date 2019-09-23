@@ -168,6 +168,7 @@ class UsersPopup extends React.Component {
                         <PhoneNumber
                           name='phone'
                           values={values}
+                          label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
                           setFieldValue={setFieldValue}
                         />
                       </FormGroup>

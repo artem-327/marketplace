@@ -4,7 +4,6 @@ import * as Actions from '../actions'
 import {injectIntl} from "react-intl";
 
 function mapStateToProps({ phoneNumber }) {
-
   return {
     phoneCountryCodes: phoneNumber.phoneCountryCodes.map(d => {
       return {

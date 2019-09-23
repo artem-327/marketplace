@@ -31,6 +31,7 @@ import { addressValidationSchema } from '~/constants/yupValidation'
 
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
+import { PhoneNumber } from '~/modules/phoneNumber'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -361,7 +362,7 @@ class AddNewPopupCasProducts extends React.Component {
                 <Form loading={isSubmitting}>
                   <Accordion exclusive={false}>
                     <Modal.Content>
-                      <CompanyForm admin={true} selectLogo={selectLogo} removeLogo={removeLogo} companyLogo={companyLogo} />
+                      <CompanyForm admin={true} selectLogo={selectLogo} removeLogo={removeLogo} companyLogo={companyLogo} values={values} setFieldValue={setFieldValue} />
                       {!popupValues && (
                         <>
                           <Divider />
@@ -378,7 +379,10 @@ class AddNewPopupCasProducts extends React.Component {
                             </FormGroup>
                             <FormGroup widths='equal' data-test='admin_popup_company_primaryUserTitlePhone_inp'>
                               <Input label={<FormattedMessage id='global.jobTitle' defaultMessage='Job Title' />} name='primaryUser.jobTitle' />
-                              <Input label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='primaryUser.phone' />
+                              <PhoneNumber
+                                label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='primaryUser.phone'
+                                values={values} setFieldValue={setFieldValue}
+                              />
                             </FormGroup>
                           </Accordion.Content>
                         </>
@@ -401,7 +405,10 @@ class AddNewPopupCasProducts extends React.Component {
                           <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchNameEmailPhone_inp' >
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='primaryBranch.contactName' />
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />} name='primaryBranch.contactEmail' />
-                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='primaryBranch.contactPhone' />
+                            <PhoneNumber
+                              label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='primaryBranch.contactPhone'
+                              values={values} setFieldValue={setFieldValue}
+                            />
                           </FormGroup>
                           <FormGroup widths='equal'>
                             <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='primaryBranch.warehouse' inputProps={{ 'data-test': 'admin_popup_company_primaryBranch_warehouse_chckb' }} />
@@ -423,7 +430,10 @@ class AddNewPopupCasProducts extends React.Component {
                           <FormGroup widths='equal'>
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact Email' />} name='mailingBranch.contactEmail' />
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='mailingBranch.contactName' />
-                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='mailingBranch.contactPhone' />
+                            <PhoneNumber
+                              label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='mailingBranch.contactPhone'
+                              values={values} setFieldValue={setFieldValue}
+                            />
                           </FormGroup>
                           <FormGroup widths='equal'>
                             <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='mailingBranch.warehouse' inputProps={{ 'data-test': 'admin_popup_company_mailingBranch_warehouse_chckb' }} />

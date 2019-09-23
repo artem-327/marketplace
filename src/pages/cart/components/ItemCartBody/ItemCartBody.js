@@ -11,7 +11,7 @@ export default class ItemCartBody extends Component {
     let { cartItem, deleteCartItem, casNumberChemName } = this.props
     let { productOffer } = cartItem
 
-    let unitName = productOffer.product.packagingUnit.nameAbbreviation
+    let unitName = productOffer.companyProduct.packagingUnit.nameAbbreviation
 
     return (
       <div className='item-cart'>
@@ -19,7 +19,7 @@ export default class ItemCartBody extends Component {
           <div className='item-cart-body-section'>
 
             <div className='item-cart-body-section-name'>
-              {productOffer.product.productCode + ' ' + productOffer.product.productName}
+              {productOffer.companyProduct.intProductCode + ' ' + productOffer.companyProduct.intProductName}
             </div>
 
             <div className='item-cart-body-section-name'>
@@ -51,7 +51,7 @@ export default class ItemCartBody extends Component {
             <div>
               <FormattedMessage id='global.totalWeight' defaultMessage='Total Weight' />:{' '}
               <FormattedUnit
-                value={cartItem.quantity * productOffer.product.packagingSize}
+                value={cartItem.quantity * productOffer.companyProduct.packagingSize}
                 unit={unitName} separator=''
               />
             </div>

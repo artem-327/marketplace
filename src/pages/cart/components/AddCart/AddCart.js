@@ -93,7 +93,9 @@ export default class AddCart extends Component {
     let { pkgAmount, pricingTiers } = offer
 
 
-    let { packagingUnit, packagingSize, packagingType } = offer.product
+    console.log('!!!!!!!!!!! this.props', this.props)
+
+    let { packagingUnit, packagingSize, packagingType } = offer.companyProduct
     let nameAbbreviation = packagingUnit ? packagingUnit.nameAbbreviation : null
 
     let totalPrice = (quantity && pricing) ? pricing.price * quantity * packagingSize : null
@@ -185,7 +187,7 @@ export default class AddCart extends Component {
                 Product Name:
               </GridColumn>
               <GridColumn computer={10}>
-                {offer.product.productName}
+                {offer.companyProduct.intProductName}
               </GridColumn>
             </GridRow>
 
@@ -194,7 +196,7 @@ export default class AddCart extends Component {
                 Product Code:
               </GridColumn>
               <GridColumn computer={10}>
-                {offer.product.productCode}
+                {offer.companyProduct.intProductCode}
               </GridColumn>
             </GridRow>
 
