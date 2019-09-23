@@ -867,7 +867,7 @@ class AddInventoryForm extends Component {
 
   searchProducts = async (text) => {
 
-    let searchedProducts = await this.props.getAutocompleteData({ searchUrl: `/prodex/api/products/own/search?pattern=${text}&onlyMapped=false` })
+    let searchedProducts = await this.props.getAutocompleteData({ searchUrl: `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false` })
     let dropdownOptions = searchedProducts.value.map(p => {
       return {
         text: `${p.productCode ? p.productCode : ''} ${p.productName ? p.productName : ''}`,

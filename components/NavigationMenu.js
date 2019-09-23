@@ -7,6 +7,7 @@ import { injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import Settings from '~/components/settings'
 import { triggerSystemSettingsModal } from '~/modules/settings/actions'
+import { simpleEditTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
@@ -23,7 +24,7 @@ const DropdownItem = ({ children, ...props }) => (
 
 class Navigation extends Component {
   render() {
-    const { isAdmin, auth, takeover, intl: { formatMessage } } = this.props
+    const { isAdmin, auth, takeover, intl: { formatMessage }, simpleEditTrigger } = this.props
 
     return (
       !isAdmin || takeover ? <>
@@ -32,7 +33,7 @@ class Navigation extends Component {
             <Dropdown.Item as={MenuLink} to='/inventory/my' data-test='navigation_menu_inventory_my_drpdn'>
               {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
             </Dropdown.Item>
-            <Dropdown.Item as={MenuLink} to='/inventory/add' data-test='navigation_menu_inventory_add_drpdn'>
+            <Dropdown.Item onClick={() => simpleEditTrigger({}, true)} as={Menu.Item} data-test='navigation_menu_inventory_add_drpdn'>
               {formatMessage({ id: 'navigation.addInventory', defaultMessage: 'Add Inventory' })}
             </Dropdown.Item>
           </Dropdown.Menu>
@@ -75,7 +76,7 @@ class Navigation extends Component {
   }
 }
 
-export default withAuth(connect((store) => ({ auth: store.auth, isAdmin: getSafe(() => store.auth.identity.isAdmin, false) }), { triggerSystemSettingsModal })((injectIntl(Navigation))))
+export default withAuth(connect((store) => ({ auth: store.auth, isAdmin: getSafe(() => store.auth.identity.isAdmin, false) }), { triggerSystemSettingsModal, simpleEditTrigger })((injectIntl(Navigation))))
 
 
 // export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddNewPopupCasProducts))

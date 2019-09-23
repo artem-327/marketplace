@@ -21,30 +21,30 @@ function mapStateToProps(store, { datagrid }) {
     ...store.simpleAdd,
     appliedFilter: store.filter.filter.appliedFilter,
     rows: datagrid.rows.map(po => {
-      const qtyPart = getSafe(() => po.product.packagingUnit.nameAbbreviation)
-      let currency = getSafe(() => po.cost.currency.code, 'USD')
+      const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
+      let currency = getSafe(() => po.price.currency.code, 'USD')
 
       return {
         id: po.id,
         product: po.product,
-        productName: po.product.productName,
+        productName: getSafe(() => po.companyProduct.intProductName),
         tradeName: getSafe(() => po.tradeName, 'N/A'),
-        productNumber: getSafe(() => po.product.productCode, 'N/A'),
+        productNumber: getSafe(() => po.companyProduct.intProductCode, 'N/A'),
         casNumberCombined: getSafe(() => po.product.casNumberCombined, 'Unmapped'),
-        chemicalName: getSafe(() => po.product.casProduct.chemicalName, po.product.productName),
+        chemicalName: getSafe(() => po.product.casProduct.chemicalName, po.companyProduct.intProductName),
         warehouse: po.warehouse.warehouseName,
         productId: getSafe(() => po.product.casProduct.id, 0),
         available: <FormattedNumber minimumFractionDigits={0} value={po.pkgAmount} />,
-        packaging: getSafe(() => po.product.packagingType.name) ? <UnitOfPackaging value={po.product.packagingType.name} /> : 'N/A',
-        pkgAmount: qtyPart ? <FormattedUnit unit={qtyPart} separator={' '} value={po.product.packagingSize} /> : 'N/A',
+        packaging: getSafe(() => po.companyProduct.packagingType.name) ? <UnitOfPackaging value={po.companyProduct.packagingType.name} /> : 'N/A',
+        pkgAmount: qtyPart ? <FormattedUnit unit={qtyPart} separator={' '} value={po.companyProduct.packagingSize} /> : 'N/A',
         //qtyPart ? `${po.product.packagingSize} ${qtyPart}` : 'N/A',
-        quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.pkgAmount * po.product.packagingSize} /> : 'N/A',
+        quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.pkgAmount * po.companyProduct.packagingSize} /> : 'N/A',
         cost: po.pricing.cost ? <FormattedNumber style='currency' currency={currency} value={po.pricing.cost} /> : 'N/A',
         pricingTiers: po.pricingTiers,
         pricing: po.pricing,
         fobPrice: po.pricingTiers.length > 1
           ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price} /> - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price} /> {qtyPart && (`/ ${qtyPart}`)} </>
-          : <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price} /> {qtyPart && (`/ ${qtyPart}`)} </>,
+          : <> <FormattedNumber style='currency' currency={currency} value={getSafe(() => po.pricingTiers[0].price, po.pricing.price)} /> {qtyPart && (`/ ${qtyPart}`)} </>,
         manufacturer: getSafe(() => po.manufacturer.name, 'N/A'),
         broadcasted: po.broadcasted,
         lotNumber: <ArrayToMultiple values={po.lots.map(d => (d.lotNumber))} />,
@@ -63,6 +63,7 @@ function mapStateToProps(store, { datagrid }) {
         offerExpiration: getSafe(() => moment(po.validityDate).format('MM/DD/YYYY'), ''),
       }
     }),
+    unmappedRows: datagrid.rows,
     isOpenImportPopup: store.settings.isOpenImportPopup
   }
 }

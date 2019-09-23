@@ -22,7 +22,9 @@ export const initialState = {
   loading: false,
   autocompleteData: [],
   autocompleteDataLoading: false,
-  documentTypesFetching: false
+  documentTypesFetching: false,
+  simpleEditOpen: false,
+  popupValues: {}
 }
 
 export default function reducer(state = initialState, action) {
@@ -355,7 +357,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         autocompleteDataLoading: false,
-        autocompleteData: uniqueArrayByKey(mapAutocompleteData(payload).concat(state.autocompleteData), 'key'),
+        autocompleteData: uniqueArrayByKey(payload.concat(state.autocompleteData), 'id'),
       }
     }
 
@@ -366,13 +368,16 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SIMPLE_EDIT_TRIGGER: {
+      let simpleEditOpen = !state.simpleEditOpen
+      if (payload.force !== null) simpleEditOpen = payload.force
 
-    /* ADD_ATTACHMENT */
-
-    case AT.INVENTORY_ADD_ATTACHMENT_FULFILLED: {
-      
+      return {
+        ...state,
+        simpleEditOpen,
+        popupValues: payload.popupValues
+      }
     }
-
 
     default: {
       return state

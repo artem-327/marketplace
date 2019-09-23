@@ -54,69 +54,76 @@ export const updateAttachment = (id, payload) => {
 }
 
 
-export function addProductOffer(values, poId = false) {
+export function addProductOffer(values, poId = false, simple = false) {
+  let params = {}
 
-  if (values.lots.length === 0) {
-    values.lots = [{
-      lotNumber: '1',
-      pkgAmount: parseInt(values.pkgAmount)
-    }]
-  }
+  if (!simple) {
 
-  const attachments = values.attachments && values.attachments.length ? values.attachments.map(att => {
-    return att.id
-  }) : []
+    if (values.lots.length === 0) {
+      values.lots = [{
+        lotNumber: '1',
+        pkgAmount: parseInt(values.pkgAmount)
+      }]
+    }
 
-  const additional = values.additional && values.additional.length ? values.additional.map(add => {
-    return add.id
-  }) : []
-  
-  let params = {
-    assayMin: getSafe(() => parseFloat(values.assayMin)),
-    assayMax: getSafe(() => parseFloat(values.assayMax)),
-    attachments: attachments.concat(additional),
-    cost: getSafe(() => parseInt(values.cost)),
-    costRecords: values.trackSubCosts && values.costs ? values.costs.map(cost => {
-      return {
-        attachment: getSafe(() => cost.attachments[0].id),
-        description: cost.description,
-        lotNumber: cost.lot === 0 ? 0 : values.lots[cost.lot - 1].lotNumber,
-        value: parseInt(cost.cost)
-      }
-    }) : null,
-    externalNotes: getSafe(() => values.externalNotes),
-    inStock: !!values.inStock,
-    internalNotes: getSafe(() => values.internalNotes),
-    lots: values.lots ? values.lots.map(lot => {
-      return {
-        attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
-          return att.id
-        }) : null,
-        expirationDate: getSafe(() => moment().utc(lot.expirationDate).format()),
-        lotNumber: lot.lotNumber,
-        manufacturedDate: getSafe(() => moment().utc(lot.manufacturedDate).format()),
-        pkgAmount: getSafe(() => parseInt(lot.pkgAmount))
-      }
-    }) : null,
-    manufacturer: getSafe(() => values.manufacturer),
-    minimum: parseInt(values.minimum),
-    origin: getSafe(() => values.origin),
-    price: getSafe(() => parseInt(values.pricing.price), parseInt(values.pricingTiers[0].price)),
-    pricingTiers: values.pricingTiers.map((tier, index) => {
-      return {
-        price: parseFloat(tier.price),
-        quantityFrom: parseInt(!index ? values.minimum : tier.quantityFrom)
-      }
-    }),
-    processingTimeDays: parseInt(values.processingTimeDays),
-    product: parseInt(values.product.id),
-    productCondition: getSafe(() => parseInt(values.productCondition)),
-    productForm: getSafe(() => parseInt(values.productForm)),
-    productGrades: values.productGrade ? [{ id: values.productGrade }] : null,
-    splits: parseInt(values.splits),
-    tradeName: getSafe(() => values.tradeName),
-    validityDate: getSafe(() => moment().utc(values.validityDate).format()),
-    warehouse: parseInt(values.warehouse)
+    const attachments = values.attachments && values.attachments.length ? values.attachments.map(att => {
+      return att.id
+    }) : []
+
+    const additional = values.additional && values.additional.length ? values.additional.map(add => {
+      return add.id
+    }) : []
+
+    params = {
+      assayMin: getSafe(() => parseFloat(values.assayMin)),
+      assayMax: getSafe(() => parseFloat(values.assayMax)),
+      attachments: attachments.concat(additional),
+      cost: getSafe(() => parseInt(values.cost)),
+      costRecords: values.trackSubCosts && values.costs ? values.costs.map(cost => {
+        return {
+          attachment: getSafe(() => cost.attachments[0].id),
+          description: cost.description,
+          lotNumber: cost.lot === 0 ? 0 : values.lots[cost.lot - 1].lotNumber,
+          value: parseInt(cost.cost)
+        }
+      }) : null,
+      externalNotes: getSafe(() => values.externalNotes),
+      inStock: !!values.inStock,
+      internalNotes: getSafe(() => values.internalNotes),
+      lots: values.lots ? values.lots.map(lot => {
+        return {
+          attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
+            return att.id
+          }) : null,
+          expirationDate: getSafe(() => moment().utc(lot.expirationDate).format()),
+          lotNumber: lot.lotNumber,
+          manufacturedDate: getSafe(() => moment().utc(lot.manufacturedDate).format()),
+          pkgAmount: getSafe(() => parseInt(lot.pkgAmount))
+        }
+      }) : null,
+      manufacturer: getSafe(() => values.manufacturer),
+      minimum: parseInt(values.minimum),
+      origin: getSafe(() => values.origin),
+      price: getSafe(() => parseInt(values.pricing.price), parseInt(values.pricingTiers[0].price)),
+      pricingTiers: values.pricingTiers.map((tier, index) => {
+        return {
+          price: parseFloat(tier.price),
+          quantityFrom: parseInt(!index ? values.minimum : tier.quantityFrom)
+        }
+      }),
+      processingTimeDays: parseInt(values.processingTimeDays),
+      product: parseInt(values.product.id),
+      productCondition: getSafe(() => parseInt(values.productCondition)),
+      productForm: getSafe(() => parseInt(values.productForm)),
+      productGrades: values.productGrade ? [{ id: values.productGrade }] : null,
+      splits: parseInt(values.splits),
+      tradeName: getSafe(() => values.tradeName),
+      validityDate: getSafe(() => moment().utc(values.validityDate).format()),
+      warehouse: parseInt(values.warehouse)
+    }
+
+  } else {
+    params = values
   }
 
   if (poId) {
@@ -216,9 +223,10 @@ export function getProductOffer(productOfferId) {
         data: {
           ...data,
           searchedProducts: [{
-            text: (data.product.productCode ? data.product.productCode + ' ' : '') + data.product.productName,
-            value: data.product,
-            key: data.product.id
+            // text: (data.product.productCode ? data.product.productCode + ' ' : '') + data.product.productName,
+            text: getSafe(() => data.companyProduct.echoProduct.code, data.companyProduct.intProductName),
+            value: data.companyProduct,
+            key: data.companyProduct.id
           }],
           searchedProductsLoading: false
         }
@@ -374,3 +382,5 @@ export function uploadDocuments(isLot, productOfferId, fileIds) {
 export const getAutocompleteData = ({ searchUrl }) => ({ type: AT.GET_AUTOCOMPLETE_DATA, payload: api.getAutocompleteData(searchUrl) })
 
 export const getAllProductOffers = () => ({ type: AT.GET_ALL_PRODUCT_OFFERS, payload: api.getAllProductOffers() })
+
+export const simpleEditTrigger = (popupValues = {}, force = null) => ({ type: AT.SIMPLE_EDIT_TRIGGER, payload: { popupValues, force } })

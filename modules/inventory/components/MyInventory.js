@@ -7,6 +7,7 @@ import ProdexTable from '~/components/table'
 import { Broadcast } from '~/modules/broadcast'
 import { Filter } from '~/modules/filter'
 
+
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import cn from 'classnames'
@@ -147,7 +148,8 @@ class MyInventory extends Component {
       rows,
       datagrid,
       openImportPopup,
-      isOpenImportPopup
+      isOpenImportPopup,
+      simpleEditTrigger
     } = this.props
     const { columns, selectedRows } = this.state
 
@@ -223,7 +225,11 @@ class MyInventory extends Component {
             }}
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
             rowActions={[
-              { text: formatMessage({ id: 'inventory.edit', defaultMessage: 'Edit Listing' }), callback: (row) => Router.push({ pathname: '/inventory/edit', query: { id: row.id } }) },
+              {
+                text: formatMessage({ id: 'inventory.edit', defaultMessage: 'Edit Listing' }), callback: (row) =>
+                  // Router.push({ pathname: '/inventory/edit', query: { id: row.id } })
+                  simpleEditTrigger(datagrid.rows.find((r) => r.id === row.id), true)
+              },
               { text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
               {
                 text: formatMessage({ id: 'inventory.delete', defaultMessage: 'Delete Listing' }), callback: (row) => {
