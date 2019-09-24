@@ -176,5 +176,6 @@ export default {
   getBusinessClassifications: () => api.get('/prodex/api/business-classifications').then(response => response.data),
   getVerificationDocumentTypes: () => api.get('/prodex/api/payments/dwolla/documents/types').then(response => response.data),
   getLanguages: () => api.get('/prodex/api/cms/languages/').then(response => response.data),
-  setPreferredLanguage: language => api.patch(`/prodex/api/users/me/preferred-language?language=${language.language}`).then(() => language)
+  setPreferredLanguage: language => api.patch(`/prodex/api/users/me/preferred-language?language=${language.language}`).then(() => language),
+  searchEchoProducts: (searchQuery, limit) => api.get(`/prodex/api/echo-products/search?pattern=${searchQuery}&limit=${limit}`)
 }

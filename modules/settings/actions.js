@@ -938,3 +938,5 @@ export const getVerificationDocumentTypes = () => ({ type: AT.SETTINGS_GET_VERIF
 export const getLanguages = () => ({ type: AT.GET_LANGUAGES, payload: api.getLanguages() })
 
 export const setPreferredLanguage = (lang) => ({ type: AT.SET_PREFERRED_LANGUAGE, payload: api.setPreferredLanguage(lang) })
+
+export const searchEchoProducts = (searchQuery, limit = 30) => ({ type: AT.SEARCH_ECHO_PRODUCTS, payload: api.searchEchoProducts(searchQuery, limit) })
