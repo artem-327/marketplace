@@ -12,7 +12,7 @@ import { debounce } from 'lodash'
 import confirm from '~/src/components/Confirmable/confirm'
 import { AttachmentManager } from '~/modules/attachments'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages, dateValidation } from '~/constants/yupValidation'
 
 
 const TopDivider = styled(Divider)`
@@ -113,20 +113,16 @@ const initValues = {
     manufacturedDate: '',
     expirationDate: ''
   }],
-  manufacturer: null,
   minimumRequirement: true,
   minimum: 1,
   multipleLots: false,
   origin: null,
-  pkgAmount: 1,
+  quantity: 1,
   priceTiers: 1,
-  pricingTiers: [
-    { price: 0.001, quantityFrom: 1 }
-  ],
   product: '',
   productCondition: null,
   productForm: null,
-  productGrade: null,
+  productGrades: [],
   processingTimeDays: 1,
   processingTimeDW: 1,
   processingTimeNum: 1,
@@ -212,7 +208,7 @@ const validationScheme = val.object().shape({
   product: val.string().required(errorMessages.requiredMessage),
   processingTimeDays: val.number().required(errorMessages.requiredMessage),
   doesExpire: val.bool(),
-  pkgAmount: val.number().typeError(errorMessages.mustBeNumber).nullable().moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage).integer(errorMessages.integer),
+  quantity: val.number().typeError(errorMessages.mustBeNumber).nullable().moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage).integer(errorMessages.integer),
   validityDate: val.string().matches(/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, { message: errorMessages.invalidDate }),
   lots: val.array().of(val.object().uniqueProperty('lotNumber', errorMessages.lotUnique).shape({
     lotNumber: val.string().nullable().required(errorMessages.requiredMessage),
@@ -223,10 +219,9 @@ const validationScheme = val.object().shape({
       .required(errorMessages.requiredMessage)
       .integer(errorMessages.integer)
       .typeError(errorMessages.mustBeNumber),
-    manufacturedDate: val.string().nullable().matches(/^([0-9]{4}\-[0-9]{2}\-[0-9]{2})?$/, { message: errorMessages.invalidDate }),
-    expirationDate: val.string().nullable().matches(/^([0-9]{4}\-[0-9]{2}\-[0-9]{2})?$/, { message: errorMessages.invalidDate }).minDateComparedTo('manufacturedDate', 'Date has to be larger than MFG Date')
+    manufacturedDate: dateValidation(false),
+    expirationDate: dateValidation(false).concat(val.string().minDateComparedTo('manufacturedDate', '> than MFG Date'))
   })).nullable(),
-  manufacturer: val.number().nullable().moreThan(0, 'Manufacturer value is invalid'),
   minimumRequirement: val.bool(),
   minimum: val.number().nullable().divisibleBy(val.ref('splits'), 'Value is not divisible by Splits').moreThan(0, errorMessages.greaterThan(0)),
   splits: val.number().nullable().moreThan(0, errorMessages.greaterThan(0)),
@@ -263,7 +258,7 @@ let tabs = []
 // 1st tab
 tabs.push(['inStock', 'product', 'processingTimeDays', 'doesExpire', 'pkgAmount', 'validityDate', 'minimumRequirement', 'minimum', 'splits', 'priceTiers', 'pricingTiers', 'warehouse'])
 // 2nd tab
-tabs.push(['costs', 'lots', 'origin', 'touchedLot', 'manufacturer'])
+tabs.push(['costs', 'lots', 'origin', 'touchedLot'])
 // 3rd tab
 tabs.push([])
 
@@ -463,7 +458,7 @@ class AddInventoryForm extends Component {
       await setFieldValue('minimum', value)
     }
     validateForm()
-  }, 500)
+  }, 250)
 
   attachDocuments = (newDocuments, values, setFieldValue) => {
     setFieldValue(`additional`, values.additional.concat(newDocuments))
@@ -657,11 +652,12 @@ class AddInventoryForm extends Component {
   renderProductDetails = (values, validateForm, setFieldValue) => {
     const { activeIndex } = this.state
 
-    const { toastManager, intl: { formatMessage } } = this.props
-    let casProducts = getSafe(() => values.product.casProducts, '')
+    const { autocompleteData, toastManager, intl: { formatMessage } } = this.props
 
     let defaultMessage = values.product ? 'N/A' : ''
     const blendMessage = formatMessage({ id: 'global.blend', defaultMessage: 'Blend' })
+    let product = autocompleteData.find((el) => el.id === values.product)
+    let casProducts = getSafe(() => product.echoProduct.elements, '')
 
     return (
       <Grid className='product-details' centered>
@@ -681,56 +677,56 @@ class AddInventoryForm extends Component {
               <Accordion.Content active={activeIndex === 0}>
                 <Grid columns={2} className='data-grid'>
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.productName' defaultMessage='Product Name' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.productName, defaultMessage)}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.intProductName, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.productNumber' defaultMessage='Product Number' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.productCode, defaultMessage)}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.intProductCode, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.measurement' defaultMessage='Measurement' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.packagingSize, defaultMessage)}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.packagingSize, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.um' defaultMessage='U/M' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.packagingUnit.name, defaultMessage)}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.packagingUnit.name, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.up' defaultMessage='U/P' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.packagingType.name, defaultMessage)}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.packagingType.name, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.casIndexName' defaultMessage='CAS Index Name' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{casProducts && (casProducts.length > 1 ? (<Popup content={<List items={casProducts.map(cp => cp.casProduct.casIndexName)} />} trigger={<a>{blendMessage}</a>} />) : getSafe(() => casProducts[0].casProduct.casIndexName, defaultMessage))}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.casNumber' defaultMessage='CAS Number' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{casProducts && (casProducts.length > 1 ? (<Popup content={<List items={casProducts.map(cp => cp.casProduct.casNumber)} />} trigger={<a>{blendMessage}</a>} />) : getSafe(() => values.product.casNumberCombined, defaultMessage))}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{casProducts && (casProducts.length > 1 ? (<Popup content={<List items={casProducts.map(cp => cp.casProduct.casNumber)} />} trigger={<a>{blendMessage}</a>} />) : getSafe(() => casProducts[0].casProduct.casNumber, defaultMessage))}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.masterProduct' defaultMessage='Master Product' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.masterProduct.toString(), defaultMessage)}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.masterProduct.toString(), defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.chemicalName' defaultMessage='Chemical Name' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{casProducts && (casProducts.length > 1 ? (<Popup content={<List items={casProducts.map(cp => cp.casProduct.chemicalName)} />} trigger={<a>{blendMessage}</a>} />) : getSafe(() => casProducts[0].casProduct.chemicalName, defaultMessage))}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.hazaardous' defaultMessage='Hazaardous' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && (getSafe(() => values.product.hazaardous.toString(), false) ? 'Yes' : 'No')}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{values.product && (getSafe(() => product.hazaardous.toString(), false) ? 'Yes' : 'No')}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.unCode' defaultMessage='UN Code' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.unNumber.unNumberCode, defaultMessage)}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.echoProduct.unNumber.unNumberCode, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.packGrp' defaultMessage='Packaging Group' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.packagingGroup.groupCode, defaultMessage)}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.echoProduct.packagingGroup.groupCode, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.hazaardousClass' defaultMessage='Hazaardous Class' /></GridColumn>
                   <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{
-                    getSafe(() => values.product.hazardClasses.length > 0, false)
-                      ? values.product.hazardClasses.map(hClass => (<Popup content={hClass.description} trigger={<Label>{hClass.classCode}</Label>} />)) : defaultMessage}
+                    getSafe(() => product.echoProduct.hazardClasses.length > 0, false)
+                      ? product.echoProduct.hazardClasses.map(hClass => (<Popup content={hClass.description} trigger={<Label>{hClass.classCode}</Label>} />)) : defaultMessage}
                   </Label.Group>
                   </GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.stackable' defaultMessage='Stackable' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && (getSafe(() => values.product.stackable) ? 'Yes' : 'No')}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.stackable) ? 'Yes' : 'No'}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.freightClass' defaultMessage='Freight Class' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.freightClass, defaultMessage)}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.freightClass, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.nmfcNumber' defaultMessage='NMFC Number' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.nmfcNumber, defaultMessage)}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.nmfcNumber, defaultMessage)}</GridColumn>
                 </Grid>
               </Accordion.Content>
             </Accordion>
@@ -752,7 +748,8 @@ class AddInventoryForm extends Component {
 
                 </ResponsiveColumn>
                 <GridColumn computer={10} mobile={16}>
-                  <Button.Submit fluid
+                  <Button.Submit
+                    fluid
                     size='big'
                     floated='right'
                     data-test='new_inventory_submit_btn'
@@ -865,27 +862,9 @@ class AddInventoryForm extends Component {
       this.setState({ 'searchedProducts': this.props.searchedProducts })
   }
 
-  searchProducts = async (text) => {
-
-    let searchedProducts = await this.props.getAutocompleteData({ searchUrl: `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false` })
-    let dropdownOptions = searchedProducts.value.map(p => {
-      return {
-        text: `${p.productCode ? p.productCode : ''} ${p.productName ? p.productName : ''}`,
-        value: p,
-        key: p.id,
-        id: p.id,
-        content: (
-          <Header style={{ fontSize: '1em' }}>
-            <Header.Content>
-              {`${p.productCode ? p.productCode : ''} ${p.productName ? p.productName : ''}`}
-              {this.renderCasProducts(p)}
-            </Header.Content>
-          </Header>
-        )
-      }
-    })
-    this.setState({ 'searchedProducts': dropdownOptions })
-  }
+  searchProducts = debounce((text) => {
+    this.props.getAutocompleteData({ searchUrl: `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false` })
+  }, 250)
 
   renderCasProducts = (product) => {
     if (product.casProducts && product.casProducts.length) {
@@ -914,22 +893,18 @@ class AddInventoryForm extends Component {
 
 
   render() {
-
     const {
       listDocumentTypes,
       listConditions,
       listForms,
       listGrades,
-      searchManufacturers,
-      searchedManufacturers,
-      searchedManufacturersLoading,
       searchOrigins,
       searchedOrigins,
       searchedOriginsLoading,
       searchedProductsLoading,
       warehousesList,
       addProductOffer,
-      // initialState,
+      initialState,
       editProductOffer,
       uploadDocuments,
       loading,
@@ -938,11 +913,8 @@ class AddInventoryForm extends Component {
 
     let { formatMessage } = intl
 
-    const {
-      initialState,
-      // activeIndex
-    } = this.state
 
+    console.log({ initialState })
     return (
       <div id='page' className='flex stretched'>
         <Dimmer active={loading} inverted>
@@ -969,7 +941,7 @@ class AddInventoryForm extends Component {
           onSubmit={async (values, { setSubmitting }) => {
             try {
               await addProductOffer(values, this.props.edit)
-            } catch{ }
+            } catch (e) { console.error(e) }
             finally { setSubmitting(false) }
 
           }}
@@ -977,6 +949,8 @@ class AddInventoryForm extends Component {
           style={{ padding: '20px' }}
         >
           {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
+            this.submitForm = submitForm
+
             return (
               <>
                 <Modal open={this.props.poCreated} closeOnDimmerClick={false} size='tiny'>
@@ -1066,8 +1040,13 @@ class AddInventoryForm extends Component {
                                       <Dropdown
                                         label={formatMessage({ id: 'addInventory.productSearch', defaultMessage: 'Product Search' })}
                                         name='product'
-                                        options={this.state.searchedProducts}
+                                        options={this.props.autocompleteData.map((el) => ({
+                                          key: el.id,
+                                          text: `${getSafe(() => el.intProductCode, '')} ${getSafe(() => el.intProductName, '')}`,
+                                          value: el.id
+                                        }))}
                                         inputProps={{
+                                          loading: this.props.autocompleteDataLoading,
                                           'data-test': 'new_inventory_product_search_drpdn',
                                           style: { width: '300px' },
                                           size: 'large',
@@ -1076,7 +1055,6 @@ class AddInventoryForm extends Component {
                                           search: options => options,
                                           selection: true,
                                           clearable: true,
-                                          loading: searchedProductsLoading,
                                           onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && this.searchProducts(searchQuery)
                                         }}
                                       />
@@ -1114,7 +1092,7 @@ class AddInventoryForm extends Component {
                                   </InnerRow>
                                   <InnerRow>
                                     <GridColumn computer={5} tablet={8} mobile={16}>
-                                      <Dropdown label='Processing Time' name='processingTimeNum' options={this.getProcessingTimes()}
+                                      <Dropdown label='Processing Time' name='processingTimeDays' options={this.getProcessingTimes()}
                                         inputProps={{
                                           'data-test': 'new_inventory_processing_time_days_weeks_drpdn',
                                           onChange: (e, { value }) => {
@@ -1164,7 +1142,7 @@ class AddInventoryForm extends Component {
                                       <DateInput
                                         inputProps={{ disabled: !values.doesExpire, 'data-test': 'add_inventory_product_expirationDate_dtin' }}
                                         label={formatMessage({ id: 'addInventory.expirationDate', defaultMessage: 'Expiration Date' })}
-                                        name='validityDate' />
+                                        name='expirationDate' />
                                     </GridColumn>
                                   </InnerRow>
                                   <InnerRow className='header'>
@@ -1233,10 +1211,10 @@ class AddInventoryForm extends Component {
                                         onChange={(_, { value }) => setFieldValue('lots[0].pkgAmount', value)}
                                         value={
                                           values.lots.length > 1
-                                            ? values.lots.reduce((prev, curr) => parseInt(prev.pkgAmount, 10) + parseInt(curr.pkgAmount))
+                                            ? values.lots.reduce((prev, curr) => parseInt(prev, 10) + parseInt(curr.pkgAmount), 0)
                                             : parseInt(values.lots[0].pkgAmount, 10)
                                         }
-                                        name='pkgAmount' />
+                                        name='quantity' />
                                     </GridColumn>
                                   </InnerRow>
                                 </Grid>
@@ -1354,13 +1332,13 @@ class AddInventoryForm extends Component {
                                             inputProps={{
                                               'data-test': 'new_inventory_price_tiers_drpdn',
                                               fluid: true,
-                                              onChange: (e, { value }) => setFieldValue(
-                                                'pricingTiers',
-                                                [
-                                                  ...values.pricingTiers.slice(0, value),
-                                                  ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({ price: 0.001, quantityFrom: 1 }))
-                                                ]
-                                              )
+                                              onChange: (e, { value }) => {
+                                                let pricingTiers = values.pricingTiers.slice()
+                                                let difference = value - pricingTiers.length
+                                                if (difference < 0) pricingTiers.splice(pricingTiers.length - value)
+                                                else for (let i = 0; i < difference; i++) pricingTiers.push({ price: 0.001, quantityFrom: 1 })
+                                                setFieldValue('pricingTiers', pricingTiers)
+                                              }
                                             }}
                                           />
                                         </GridColumn>
@@ -1529,26 +1507,7 @@ class AddInventoryForm extends Component {
                                         clearable: true,
                                         loading: searchedOriginsLoading,
                                         onChange: (e, { value }) => { value ? console.log(value) : searchOrigins('') },
-                                        onSearchChange: debounce((e, { searchQuery }) => searchOrigins(searchQuery), 500)
-                                      }}
-                                    />
-                                  </FormField>
-                                  <FormField width={16}>
-                                    <Dropdown
-                                      label={formatMessage({ id: 'addInventory.manufacturer', defaultMessage: 'Manufacturer' })}
-                                      name='manufacturer'
-                                      options={searchedManufacturers}
-                                      inputProps={{
-                                        'data-test': 'new_inventory_manufacturer_drpdn',
-                                        size: 'large',
-                                        minCharacters: 0,
-                                        icon: 'search',
-                                        search: true,
-                                        selection: true,
-                                        clearable: true,
-                                        loading: searchedManufacturersLoading,
-                                        onChange: (e, { value }) => { value ? console.log(value) : searchManufacturers('') },
-                                        onSearchChange: debounce((e, { searchQuery }) => searchManufacturers(searchQuery), 500)
+                                        onSearchChange: debounce((e, { searchQuery }) => searchOrigins(searchQuery), 250)
                                       }}
                                     />
                                   </FormField>
@@ -1558,31 +1517,7 @@ class AddInventoryForm extends Component {
                                       name='tradeName'
                                       inputProps={{ type: 'text' }} />
                                   </FormField>
-                                </GridColumn>
-                                <GridColumn width={5}>
-                                  <FormField width={16}>
-                                    <Dropdown
-                                      label={formatMessage({ id: 'addInventory.form', defaultMessage: 'Form' })}
-                                      name='productForm'
-                                      options={listForms}
-                                      inputProps={{ 'data-test': 'new_inventory_form_drpdn' }} />
-                                  </FormField>
-                                  <FormGroup>
-                                    <FormField width={8}>
-                                      <Dropdown
-                                        label={formatMessage({ id: 'addInventory.condition', defaultMessage: 'Condition' })}
-                                        name='productCondition'
-                                        options={listConditions}
-                                        inputProps={{ 'data-test': 'new_inventory_condition_drpdn' }} />
-                                    </FormField>
-                                    <FormField width={8}>
-                                      <Dropdown
-                                        label={formatMessage({ id: 'addInventory.grade', defaultMessage: 'Grade' })}
-                                        name='productGrade'
-                                        options={listGrades}
-                                        inputProps={{ 'data-test': 'new_inventory_grade_drpdn' }} />
-                                    </FormField>
-                                  </FormGroup>
+
                                   <FormGroup>
                                     <FormField width={8} data-test='add_inventory_product_assayMin_inp' >
                                       <Input
@@ -1599,6 +1534,31 @@ class AddInventoryForm extends Component {
                                       />
                                     </FormField>
                                   </FormGroup>
+                                </GridColumn>
+                                <GridColumn width={5}>
+                                  <FormField width={16}>
+                                    <Dropdown
+                                      label={formatMessage({ id: 'addInventory.form', defaultMessage: 'Form' })}
+                                      name='productForm'
+                                      options={listForms}
+                                      inputProps={{ 'data-test': 'new_inventory_form_drpdn' }} />
+                                  </FormField>
+
+                                  <FormField width={16}>
+                                    <Dropdown
+                                      label={formatMessage({ id: 'addInventory.condition', defaultMessage: 'Condition' })}
+                                      name='productCondition'
+                                      options={listConditions}
+                                      inputProps={{ 'data-test': 'new_inventory_condition_drpdn' }} />
+                                  </FormField>
+                                  
+                                  <FormField width={16}>
+                                    <Dropdown
+                                      label={formatMessage({ id: 'addInventory.grade', defaultMessage: 'Grade' })}
+                                      name='productGrades'
+                                      options={listGrades}
+                                      inputProps={{ 'data-test': 'new_inventory_grade_drpdn', selection: true, multiple: true }} />
+                                  </FormField>
                                 </GridColumn>
                                 <GridColumn width={5} floated='right'>
                                   <FormField width={16}>
@@ -1691,17 +1651,7 @@ class AddInventoryForm extends Component {
                                                   else total += parseInt(lot.pkgAmount, 10)
                                                 })
 
-                                                // setFieldValue('pkgAmount', total)
-
-                                                // this.modifyCosts(setFieldValue, {
-                                                //   costs: values.costs,
-                                                //   // lots: values.lots.map((bLot, bIndex) => {
-                                                //   //   return {
-                                                //   //     pkgAmount: bIndex === index ? value : bLot.pkgAmount
-                                                //   //   }
-                                                //   // }),
-                                                //   packagingSize: values.product.packagingSize
-                                                // })
+                                                // setFieldValue('quantity', total)
                                               },
                                             }} /></TableCellSmall>
                                             <TableCellSmall>0</TableCellSmall>
