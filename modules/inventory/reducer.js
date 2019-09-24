@@ -128,21 +128,42 @@ export default function reducer(state = initialState, action) {
       let { data } = action.payload
       let expirationDate = getSafe(() => data.validityDate)
 
+
+
+      let filteredAttachments = data.attachments.reduce(function (filtered, att) {
+        if (att.documentType.id === 2) {
+          var returnedAtt = { id: att.id, name: att.name, linked: true, documentType: { ...att.documentType } }
+          filtered.push(returnedAtt)
+        }
+        return filtered
+      }, [])
+
+      let filteredAdditional = data.attachments.reduce(function (filtered, att) {
+        if (att.documentType.id !== 2) {
+          var returnedAtt = { id: att.id, name: att.name, linked: true, documentType: { ...att.documentType } }
+          filtered.push(returnedAtt)
+        }
+        return filtered
+      }, [])
+
+
       return {
         ...state,
         loading: false,
+        attachments: filteredAttachments,
+        additional: filteredAdditional,
         autocompleteData: uniqueArrayByKey(state.autocompleteData.concat(data.companyProduct)),
         initialState: {
           lots: data.lots.length > 0 ? data.lots.map((el) => ({
-            ...el, 
+            ...el,
             manufacturedDate: moment(el.manufacturedDate).format('YYYY-MM-DD'),
             expirationDate: moment(el.expirationDate).format('YYYY-MM-DD')
           })) : [{
-              lotNumber: 'Lot #1',
-              pkgAmount: 1,
-              manufacturedDate: '',
-              expirationDate: ''
-            }],
+            lotNumber: 'Lot #1',
+            pkgAmount: 1,
+            manufacturedDate: '',
+            expirationDate: ''
+          }],
           processingTimeDays: data.processingTimeDays ? data.processingTimeDays : 1,
           product: data.companyProduct.id,
           warehouse: data.warehouse.id,
@@ -155,9 +176,9 @@ export default function reducer(state = initialState, action) {
           splits: getSafe(() => data.splits, 1),
           priceTiers: data.pricingTiers.length > 0 ? data.pricingTiers.length : 1,
           pricingTiers: data.pricingTiers.length > 0 ? data.pricingTiers : [{ price: 0.001, quantityFrom: 1 }],
-          origin: data.origin.id,
+          origin: getSafe(() => data.origin.id),
           tradeName: data.tradeName,
-          productCondition: data.productCondition.id,
+          productCondition: getSafe(() => data.productCondition.id),
           productForm: getSafe(() => data.productForm.id),
           productGrades: getSafe(() => data.productGrades.map((el) => el.id)),
           assayMin: data.assayMin,
@@ -168,21 +189,7 @@ export default function reducer(state = initialState, action) {
         product: data
       }
 
-      // let filteredAttachments = data.attachments.reduce(function (filtered, att) {
-      //   if (att.documentType.id === 2) {
-      //     var returnedAtt = { id: att.id, name: att.name, linked: true, documentType: { ...att.documentType } }
-      //     filtered.push(returnedAtt)
-      //   }
-      //   return filtered
-      // }, [])
 
-      // let filteredAdditional = data.attachments.reduce(function (filtered, att) {
-      //   if (att.documentType.id !== 2) {
-      //     var returnedAtt = { id: att.id, name: att.name, linked: true, documentType: { ...att.documentType } }
-      //     filtered.push(returnedAtt)
-      //   }
-      //   return filtered
-      // }, [])
 
       // let searchedLists = {}
       // if (action.payload.data.manufacturer) {
