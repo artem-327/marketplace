@@ -189,3 +189,5 @@ export const getDocumentTypes = () => api.get(`/prodex/api/document-types/`)
 export const putEchoProduct = (id, values) => api.put(`/prodex/api/echo-products/id/${id}/`, values)
 
 export const searchManufacturers = (text, limit) => api.get(`/prodex/api/manufacturers/search?search=${text}${Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''}`)
+
+export const searchUnNumber = (pattern) => api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${pattern}`)
