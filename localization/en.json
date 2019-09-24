@@ -989,6 +989,7 @@
   "marketplace.buy": "Buy Product Offer",
   "orders.detail": "Detail",
   "settings.addUser": "Add User",
+  "settings.associatedEchoProducts": "What is the Associated External Product that you would like to map to?",
   "settings.system.allDisabled": "There is nothing to save as none of the values can be changed.",
   "settings.onlyLastFourNumbers": "Enter only last four digits",
   "settings.user.enabled": "User enabled",
