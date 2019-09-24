@@ -41,9 +41,6 @@ const mapStateToProps = state => {
     editPopupBoolean: state.settings.editPopupBoolean,
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
     currentTab: state.settings.currentTab
-    // ! ! ???? TODO - test if 'currentTab: state.settings.currentTab' is working correctly
-    //currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-    //         state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
   }
 }
 

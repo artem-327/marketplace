@@ -587,6 +587,54 @@ export const reviewRequest = (companyId) => {
 	}
 }
 
+export function getAlternativeEchoProductNames(value) {
+	return {
+		type: AT.ADMIN_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES,
+		payload: api.getAlternativeEchoProductNames(value)
+	}
+}
+
+export function postNewEchoProductAltName(productId, value) {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_POST_NEW_ECHO_PRODUCT_ALTERNATIVE_NAME,
+			payload: api.postNewEchoProductAltName(productId, value)
+		})
+		await dispatch(getAlternativeEchoProductNames(productId))
+	}
+}
+
+export function updateEchoProductAltName(productId, id, value) {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_UPDATE_ECHO_PRODUCT_ALTERNATIVE_NAME,
+			payload: api.updateEchoProductAltName(id, value)
+		})
+		await dispatch(getAlternativeEchoProductNames(productId))
+	}
+}
+
+export function deleteEchoProductAltName(productId, id) {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_DELETE_ECHO_PRODUCT_ALTERNATIVE_NAME,
+			payload: api.deleteEchoProductAltName(id)
+		})
+		await dispatch(getAlternativeEchoProductNames(productId))
+	}
+}
+
+export function openEditEchoAltNamesPopup(value) {
+	const data = {
+		name: value.name,
+		code: value.code,
+		id: value.id,
+	}
+	return {
+		type: AT.ADMIN_OPEN_EDIT_2_POPUP,
+		payload: { ...data }
+	}
+}
 
 export const addUnNumber = payload => ({ type: AT.ADMIN_ADD_UN_NUMBER, payload })
 

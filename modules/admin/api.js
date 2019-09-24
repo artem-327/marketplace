@@ -155,6 +155,23 @@ export async function getAddressSearch(body) {
   return data
 }
 
+export async function getAlternativeEchoProductNames(id) {
+  const { data } = await api.get(`/prodex/api/echo-products/alternative-names/echo-product/${id}`)
+  return data
+}
+
+export async function postNewEchoProductAltName(id, data) {
+  await api.post(`/prodex/api/echo-products/alternative-names/echo-product/${id}`, data)
+}
+
+export async function updateEchoProductAltName(id, value) {
+  await api.patch(`/prodex/api/echo-products/alternative-names/id/${id}`, value)
+}
+
+export async function deleteEchoProductAltName(id) {
+  await api.delete(`/prodex/api/echo-products/alternative-names/id/${id}`)
+}
+
 export const takeOverCompany = (id) => api.patch(`/prodex/api/admin/company/${id}/take-over`).then(response => response.data)
 
 export const takeOverCompanyFinish = () => api.patch('/prodex/api/admin/company/take-over/finish').then(response => response.data)

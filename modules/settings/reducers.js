@@ -23,7 +23,6 @@ export const initialState = {
   creditCardsRows: [],
   bankAccountsRows: [],
   productsCatalogRows: [],
-  productAltNames: [],
   productsPackagingType: null,
   packagingTypes: [],
   productsUnitsType: [],
@@ -657,13 +656,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         editPopupSearchProducts
-      }
-    }
-
-    case AT.SETTINGS_GET_PRODUCT_ALTERNATIVE_NAMES_FULFILLED: {
-      return {
-        ...state,
-        productAltNames: action.payload,
       }
     }
 

@@ -154,7 +154,6 @@ const mapDispatchToProps = {
   getVerificationDocumentTypes
 }
 const mapStateToProps = state => {
-  console.log('!!!! verificationDocumentTypes', state.settings.verificationDocumentTypes);
   return {
     verificationDocumentTypes: state.settings.verificationDocumentTypes,
     currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?

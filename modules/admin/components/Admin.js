@@ -26,6 +26,7 @@ import CompaniesTable from './CompaniesTable/Table'
 import CompaniesForm from './CompaniesTable/FormPopup'
 import CompaniesDwollaForm from './CompaniesDwolla/FormPopup'
 import EchoProductForm from './ProductCatalogTable/FormPopup'
+import EditAltNamesEchoProductPopup from './ProductCatalogTable/EditAltNamesEchoProductPopup'
 
 import ProductCatalogTable from './ProductCatalogTable/Table'
 
@@ -144,6 +145,7 @@ const editForms = {
 
 const edit2Forms = {
   'CAS Products': <EditAltNamesCasProductsPopup />,
+  'Product Catalog': <EditAltNamesEchoProductPopup />,
 }
 
 const addForms = {

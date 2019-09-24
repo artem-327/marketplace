@@ -14,7 +14,6 @@ import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
 import EditWarehousePopup from './WarehouseTable/WarehousePopup'
 import EditUsersPopup from './UserTable/UsersPopup'
 import EditProductPopup from './ProductCatalogTable/ProductPopup'
-import EditAltNamesProductPopup from './ProductCatalogTable/EditAltNamesProductPopup'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
 import BankAccountsPopup from './BankAccountsTable/BankAccountsPopup'
 import BankAccountsUploadDocPopup from './BankAccountsTable/BankAccountsUploadDocPopup'
@@ -178,7 +177,7 @@ class Settings extends Component {
     }
 
     const popup2Form = {
-      'products': <EditAltNamesProductPopup />,
+      //'products': <EditAltNamesProductPopup />,
     }
 
     const importForm = {
@@ -197,7 +196,7 @@ class Settings extends Component {
     return (
       <>
         {isOpenPopup && popupForm[currentTab.type]}
-        {isOpenPopup2 && popup2Form[currentTab.type]}
+        {/*isOpenPopup2 && popup2Form[currentTab.type]*/}
         {isOpenImportPopup && importForm[currentTab.type]}
         {isOpenUploadDocumentsPopup && uploadDocForms[currentTab.type]}
         {isDwollaOpenPopup && addDwollaForms[currentTab.type] && Router.push('/dwolla-register')}

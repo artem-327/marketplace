@@ -102,6 +102,7 @@ const InnerRow = styled(GridRow)`
 
 const initValues = {
   additionalType: 'Unspecified',
+  additional: [],
   assayMin: '',
   assayMax: '',
   costs: [],
@@ -523,6 +524,7 @@ class AddInventoryForm extends Component {
       return false
 
     let documents = attachments.concat(additional, lots.reduce(function (filtered, lot) {
+
       if (lot.attachments && lot.attachments.length) {
         lot.attachments.map(attachment => {
           let lotAttachment = {

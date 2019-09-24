@@ -231,8 +231,11 @@ class CartItemSummary extends Component {
 
               <GridColumn floated='right'>
                 <ArrayToMultiple values={
-                  //productOffer.product.casProducts.map(d => (d.casProduct.casNumber + ' / ' + d.casProduct.chemicalName))
-                  productOffer.companyProduct.echoProduct.elements.map(d => (d.displayName)) // ! ! temporary solution
+                  productOffer.companyProduct.echoProduct.elements.map(d => {
+                    return d.proprietary
+                      ? d.displayName
+                      :  d.displayName + ' - ' + d.casProduct.casNumber
+                  })
                 } />
               </GridColumn>
             </RelaxedRow>
