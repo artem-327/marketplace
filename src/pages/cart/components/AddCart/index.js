@@ -12,13 +12,17 @@ import { ArrayToMultiple } from '~/components/formatted-messages'
 function mapStateToProps(store) {
     let pricing = getPricing(store.cart.offerDetail, store.cart.sidebar.quantity)
     let offer = { ...store.cart.offerDetail, locationStr: store.cart.offerDetail ? getLocationString(store.cart.offerDetail) : '' }
-    return { // ! ! fix casProducts
+    return {
         offer: offer,
         order: store.cart.orderDetail,
         sidebar: { ...store.cart.sidebar, pricing },
         offerDetailIsFetching: store.cart.offerDetailIsFetching,
         orderDetailIsFetching: store.cart.orderDetailIsFetching,
-        casProductsChemNames: <ArrayToMultiple values={getSafe(() => offer.product.casProducts, []).map(d => (d.casProduct.chemicalName))} />,
+        casProductsChemNames: <ArrayToMultiple values={getSafe(() => offer.companyProduct.echoProduct.elements, []).map(d => {
+            return d.proprietary
+              ? d.displayName
+              :  d.displayName + ' - ' + d.casProduct.casNumber
+        })} />,
         casProductsCasNumbers: <ArrayToMultiple values={getSafe(() => offer.product.casProducts, []).map(d => (d.casProduct.casNumber))} />,
     }
 }

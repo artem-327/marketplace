@@ -23,10 +23,9 @@ function mapStateToProps(store, { datagrid }) {
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
       let currency = getSafe(() => po.cost.currency.code, 'USD')
-      console.log('!!!!!! po', po)
       return {
         id: po.id,
-        productName: po.companyProduct.intProductName,
+        productName: po.companyProduct.echoProduct.name, // ! ! ? po.companyProduct.intProductName,
         productNumber: getSafe(() => po.companyProduct.echoProduct.code, 'Unmapped'), // ! ! ???
         merchant: po.warehouse.warehouseName,
         available: <FormattedNumber value={po.pkgAmount} minimumFractionDigits={0} />,

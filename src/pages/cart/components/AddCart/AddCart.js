@@ -92,9 +92,6 @@ export default class AddCart extends Component {
 
     let { pkgAmount, pricingTiers } = offer
 
-
-    console.log('!!!!!!!!!!! this.props', this.props)
-
     let { packagingUnit, packagingSize, packagingType } = offer.companyProduct
     let nameAbbreviation = packagingUnit ? packagingUnit.nameAbbreviation : null
 
@@ -187,7 +184,7 @@ export default class AddCart extends Component {
                 Product Name:
               </GridColumn>
               <GridColumn computer={10}>
-                {offer.companyProduct.intProductName}
+                {offer.companyProduct.echoProduct.name}
               </GridColumn>
             </GridRow>
 
@@ -196,27 +193,27 @@ export default class AddCart extends Component {
                 Product Code:
               </GridColumn>
               <GridColumn computer={10}>
-                {offer.companyProduct.intProductCode}
+                {offer.companyProduct.echoProduct.code}
               </GridColumn>
             </GridRow>
 
             <GridRow>
               <GridColumn computer={6}>
-                Chemical Name:
+                Product Elements:
               </GridColumn>
               <GridColumn computer={10}>
                 {this.props.casProductsChemNames}
               </GridColumn>
             </GridRow>
 
-            <GridRow>
+            {/*<GridRow>
               <GridColumn computer={6}>
-                CAS Number:
+                Product Code:
               </GridColumn>
               <GridColumn computer={10}>
-                {this.props.casProductsCasNumbers}
+                {offer.companyProduct.echoProduct.code}
               </GridColumn>
-            </GridRow>
+            </GridRow>*/}
 
             <GridRow>
               <GridColumn computer={6}>

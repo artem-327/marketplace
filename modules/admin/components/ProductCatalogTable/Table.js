@@ -15,7 +15,7 @@ class ProductCatalogTable extends Component {
     return rows.map((row) => {
       return {
         ...row,
-        manufacturer: row.manufacturer.name
+        manufacturerName: row.manufacturer.name
       }
     })
   }
@@ -26,7 +26,8 @@ class ProductCatalogTable extends Component {
       columns,
       rows,
       intl: { formatMessage },
-      openEditEchoProduct
+      openEditEchoProduct,
+      openEditEchoAltNamesPopup
     } = this.props
 
     return (
@@ -37,7 +38,8 @@ class ProductCatalogTable extends Component {
           columns={columns}
           rows={this.getRows(rows)}
           rowActions={[
-            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: (row) => openEditEchoProduct(row.id, row) }
+            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: (row) => openEditEchoProduct(row.id, row) },
+            { text: formatMessage({ id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }), callback: (row) => openEditEchoAltNamesPopup(row) },
           ]}
         />
       </React.Fragment>

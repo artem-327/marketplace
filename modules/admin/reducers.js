@@ -62,7 +62,8 @@ export const initialState = {
   searchedCasProducts: [],
   searchedUnNumbers: [],
   searchedManufacturers: [],
-  searchedManufacturersLoading: false
+  searchedManufacturersLoading: false,
+  altEchoNamesRows: [],
 }
 
 export default function reducer(state = initialState, action) {
@@ -285,6 +286,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES_PENDING:
     case AT.ADMIN_POST_NEW_PRODUCT_NAME_PENDING:
     case AT.ADMIN_UPDATE_PRODUCT_NAME_PENDING:
     case AT.ADMIN_DELETE_PRODUCT_NAME_PENDING:
@@ -320,6 +322,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         altCasNamesRows: action.payload,
+        loading: false
+      }
+    }
+
+    case AT.ADMIN_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES_FULFILLED: {
+      return {
+        ...state,
+        altEchoNamesRows: action.payload,
         loading: false
       }
     }
@@ -402,6 +412,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES_REJECTED:
     case AT.ADMIN_POST_NEW_PRODUCT_NAME_REJECTED:
     case AT.ADMIN_UPDATE_PRODUCT_NAME_REJECTED:
     case AT.ADMIN_DELETE_PRODUCT_NAME_REJECTED:
