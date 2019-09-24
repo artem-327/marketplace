@@ -48,7 +48,7 @@ class SimpleEdit extends Component {
   handleSearch = debounce((searchQuery) => {
     this.props.getAutocompleteData({ searchUrl: `/prodex/api/company-products/own/search?pattern=${searchQuery}&onlyMapped=false` })
   }, 250)
-  
+
 
   render() {
     const { open } = this.state
@@ -70,11 +70,12 @@ class SimpleEdit extends Component {
       id: popupValues.warehouse.id
     })
 
-
+    
     let initialValues = {
+      packagingSize: getSafe(() => popupValues.companyProduct.packagingSize),
       product: getSafe(() => popupValues.companyProduct.id),
-      uom: getSafe(() => popupValues.companyProduct.packagingType.name),
-      packaging: getSafe(() => popupValues.companyProduct.packagingUnit.nameAbbreviation),
+      uom: getSafe(() => popupValues.companyProduct.packagingUnit.nameAbbreviation),
+      packaging: getSafe(() => popupValues.companyProduct.packagingType.name),
       casTradeName: getSafe(() => popupValues.companyProduct.echoProduct.name),
       casProducts: getSafe(() => popupValues.companyProduct.echoProduct.elements, []).map((el) => ({
         casIndexName: el.proprietary ? 'Proprietary' : getSafe(() => el.casProduct.casIndexName),
@@ -101,7 +102,7 @@ class SimpleEdit extends Component {
             tradeName: values.casTradeName,
             warehouse: values.warehouse
           }
-          
+
           try {
             await addProductOffer(payload, popupValues.id, true)
 
@@ -121,7 +122,7 @@ class SimpleEdit extends Component {
             Datagrid.loadData()
 
           }
-          catch { }
+          catch (e) { console.error(e) }
           finally {
             this.setState({ submitting: false })
             simpleEditTrigger({}, false)
@@ -136,6 +137,7 @@ class SimpleEdit extends Component {
 
           return (
             <Modal
+              closeIcon
               centered={false}
               size='small'
               onClose={() => simpleEditTrigger(false)}
@@ -178,12 +180,19 @@ class SimpleEdit extends Component {
                         />
                       </GridColumn>
                     </GridRow>
-                    <GridRow columns={3}>
+                    <GridRow columns={4}>
+                      <GridColumn>
+                        <Input
+                          label={<FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>{text => text}</FormattedMessage>}
+                          name='packagingSize'
+                          inputProps={{ transparent: true, readOnly: true }}
+                        />
+                      </GridColumn>
                       <GridColumn>
                         <Input
                           label={<FormattedMessage id='global.uom' defaultMessage='UOM'>{text => text}</FormattedMessage>}
                           name='uom'
-                          inputProps={{ readOnly: true }}
+                          inputProps={{ transparent: true, readOnly: true }}
                         />
                       </GridColumn>
 
@@ -191,7 +200,7 @@ class SimpleEdit extends Component {
                         <Input
                           label={<FormattedMessage id='global.packaging' defaultMessage='Packaging'>{text => text}</FormattedMessage>}
                           name='packaging'
-                          inputProps={{ readOnly: true }}
+                          inputProps={{ transparent: true, readOnly: true }}
                         />
                       </GridColumn>
 
@@ -199,7 +208,7 @@ class SimpleEdit extends Component {
                         <Input
                           label={<FormattedMessage id='global.casTradeName' defaultMessage='CAS/Trade Name'>{text => text}</FormattedMessage>}
                           name='casTradeName'
-                          inputProps={{ readOnly: true }}
+                          inputProps={{ transparent: true, readOnly: true }}
                         />
                       </GridColumn>
                     </GridRow>
@@ -237,37 +246,37 @@ class SimpleEdit extends Component {
                         <GridColumn>
                           <Input
                             name={`casProducts[${i}].casIndexName`}
-                            inputProps={{ readOnly: true }}
+                            inputProps={{ transparent: true, readOnly: true }}
                           />
                         </GridColumn>
 
                         <GridColumn>
                           <Input
                             name={`casProducts[${i}].casIndexNumber`}
-                            inputProps={{ readOnly: true }}
+                            inputProps={{ transparent: true, readOnly: true }}
                           />
                         </GridColumn>
 
                         <GridColumn>
                           <Input
                             name={`casProducts[${i}].min`}
-                            inputProps={{ readOnly: true }}
+                            inputProps={{ transparent: true, readOnly: true }}
                           />
                         </GridColumn>
 
                         <GridColumn>
                           <Input
                             name={`casProducts[${i}].max`}
-                            inputProps={{ readOnly: true }}
+                            inputProps={{ transparent: true, readOnly: true }}
                           />
                         </GridColumn>
                       </GridRow>
                     ))}
 
                     <Divider />
-            
-                    <GridRow columns={3}>
-                      <GridColumn>
+
+                    <GridRow>
+                      <GridColumn width={4}>
                         <Input
                           inputProps={{
                             type: 'number',
@@ -281,7 +290,7 @@ class SimpleEdit extends Component {
                         />
                       </GridColumn>
 
-                      <GridColumn>
+                      <GridColumn width={4}>
                         <Input
                           inputProps={{
                             type: 'number',
@@ -293,7 +302,7 @@ class SimpleEdit extends Component {
                         />
                       </GridColumn>
 
-                      <GridColumn>
+                      <GridColumn width={8}>
                         <Dropdown
                           inputProps={{
                             loading: warehousesFetching

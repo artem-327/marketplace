@@ -78,7 +78,6 @@ export function addProductOffer(values, poId = false, simple = false) {
       assayMin: getSafe(() => parseFloat(values.assayMin)),
       assayMax: getSafe(() => parseFloat(values.assayMax)),
       attachments: attachments.concat(additional),
-      cost: getSafe(() => parseInt(values.cost)),
       costRecords: values.trackSubCosts && values.costs ? values.costs.map(cost => {
         return {
           attachment: getSafe(() => cost.attachments[0].id),
@@ -87,24 +86,24 @@ export function addProductOffer(values, poId = false, simple = false) {
           value: parseInt(cost.cost)
         }
       }) : null,
+      companyProduct: parseInt(values.product),
       externalNotes: getSafe(() => values.externalNotes),
-      inStock: !!values.inStock,
+      inStock: values.inStock,
       internalNotes: getSafe(() => values.internalNotes),
       lots: values.lots ? values.lots.map(lot => {
         return {
           attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
             return att.id
           }) : null,
-          expirationDate: getSafe(() => moment().utc(lot.expirationDate).format()),
+          expirationDate: getSafe(() => moment(lot.expirationDate).utc(lot.expirationDate).format()),
           lotNumber: lot.lotNumber,
-          manufacturedDate: getSafe(() => moment().utc(lot.manufacturedDate).format()),
+          manufacturedDate: getSafe(() => moment(lot.manufacturedDate).utc(lot.manufacturedDate).format()),
           pkgAmount: getSafe(() => parseInt(lot.pkgAmount))
         }
       }) : null,
       manufacturer: getSafe(() => values.manufacturer),
       minimum: parseInt(values.minimum),
       origin: getSafe(() => values.origin),
-      price: getSafe(() => parseInt(values.pricing.price), parseInt(values.pricingTiers[0].price)),
       pricingTiers: values.pricingTiers.map((tier, index) => {
         return {
           price: parseFloat(tier.price),
@@ -112,13 +111,12 @@ export function addProductOffer(values, poId = false, simple = false) {
         }
       }),
       processingTimeDays: parseInt(values.processingTimeDays),
-      product: parseInt(values.product.id),
       productCondition: getSafe(() => parseInt(values.productCondition)),
       productForm: getSafe(() => parseInt(values.productForm)),
-      productGrades: values.productGrade ? [{ id: values.productGrade }] : null,
+      productGrades: values.productGrades,
       splits: parseInt(values.splits),
       tradeName: getSafe(() => values.tradeName),
-      validityDate: getSafe(() => moment().utc(values.validityDate).format()),
+      validityDate: values.expirationDate ? moment(values.expirationDate).utc(values.expirationDate).format() : null,
       warehouse: parseInt(values.warehouse)
     }
 
@@ -213,27 +211,9 @@ export function getProductGrades() {
   }
 }
 
-export function getProductOffer(productOfferId) {
-  return {
-    type: AT.INVENTORY_GET_PRODUCT_OFFER,
-    async payload() {
-      const { data } = await api.getProductOffer(productOfferId)
-
-      return {
-        data: {
-          ...data,
-          searchedProducts: [{
-            // text: (data.product.productCode ? data.product.productCode + ' ' : '') + data.product.productName,
-            text: getSafe(() => data.companyProduct.echoProduct.code, data.companyProduct.intProductName),
-            value: data.companyProduct,
-            key: data.companyProduct.id
-          }],
-          searchedProductsLoading: false
-        }
-      }
-    }
-  }
-}
+export const getProductOffer = (productOfferId) => (
+  { type: AT.INVENTORY_GET_PRODUCT_OFFER, payload: api.getProductOffer(productOfferId) }
+)
 
 export function deleteProductOffer(productOfferId) {
   return async dispatch => {

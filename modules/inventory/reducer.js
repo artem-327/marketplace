@@ -1,6 +1,7 @@
 import * as AT from './action-types'
 
-import { uniqueArrayByKey, mapAutocompleteData } from '~/utils/functions'
+import { uniqueArrayByKey, getSafe } from '~/utils/functions'
+import moment from 'moment'
 
 export const initialState = {
   fileIds: [],
@@ -24,7 +25,8 @@ export const initialState = {
   autocompleteDataLoading: false,
   documentTypesFetching: false,
   simpleEditOpen: false,
-  popupValues: {}
+  popupValues: {},
+  product: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -122,7 +124,11 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.INVENTORY_GET_PRODUCT_OFFER_FULFILLED: {
+
       let { data } = action.payload
+      let expirationDate = getSafe(() => data.validityDate)
+
+
 
       let filteredAttachments = data.attachments.reduce(function (filtered, att) {
         if (att.documentType.id === 2) {
@@ -140,87 +146,132 @@ export default function reducer(state = initialState, action) {
         return filtered
       }, [])
 
-      let searchedLists = {}
-      if (action.payload.data.manufacturer) {
-        searchedLists.searchedManufacturers = [{
-          key: action.payload.data.manufacturer.id,
-          value: action.payload.data.manufacturer.id,
-          text: action.payload.data.manufacturer.name
-        }]
-      }
-      if (action.payload.data.origin) {
-        searchedLists.searchedOrigins = [{
-          key: action.payload.data.origin.id,
-          value: action.payload.data.origin.id,
-          text: action.payload.data.origin.name
-        }]
-      }
-
-      let days = data.processingTimeDays
 
       return {
         ...state,
-        ...action.payload.data,
         loading: false,
-        fileIds: action.payload.data.attachments.map(att => {
-          att.attachment = true
-          return att
-        }).concat(state.fileIds),
-        poCreated: false,
-        ...searchedLists,
-
+        attachments: filteredAttachments,
+        additional: filteredAdditional,
+        autocompleteData: uniqueArrayByKey(state.autocompleteData.concat(data.companyProduct)),
         initialState: {
-          additional: filteredAdditional,
-          assayMax: data.assayMax,
-          assayMin: data.assayMin,
-          attachments: filteredAttachments,
-          doesExpire: !!data.lots[0].expirationDate,
-          externalNotes: data.externalNotes,
-          lots: data.lots.map(lot => {
-            return {
-              ...lot,
-              expirationDate: lot.expirationDate ? lot.expirationDate.substring(0, 10) : '',
-              manufacturedDate: lot.manufacturedDate ? lot.manufacturedDate.substring(0, 10) : '',
-              attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
-                return {
-                  id: att.id,
-                  name: att.name,
-                  linked: true,
-                  documentType: { ...att.documentType }
-                }
-              }) : []
-            }
-          }),
-          internalNotes: data.internalNotes,
-          manufacturer: data.manufacturer ? data.manufacturer.id : null,
-          minimum: data.minimum,
-          multipleLots: true,
-          origin: data.origin ? data.origin.id : null,
-          pkgAmount: data.pkgAmount,
-          priceTiers: data.pricingTiers.length,
-          pricing: {
-            price: data.pricing.price
-          },
-          pricingTiers: data.pricingTiers.map((pricingTier, index) => {
-            return {
-              ...pricingTier,
-              quantityFrom: !index ? data.minimum : pricingTier.quantityFrom,
-              manuallyModified: 1
-            }
-          }),
-          processingTimeDays: days,
-          processingTimeDW: typeof days === "undefined" ? 1 : (days % 5 ? 1 : 5),
-          processingTimeNum: days % 5 ? days : days / 5,
-          product: data.product,
-          productCondition: data.productCondition ? data.productCondition.id : null,
-          productForm: data.productForm ? data.productForm.id : null,
-          productGrade: data.productGrades && data.productGrades.length ? data.productGrades[0].id : null,
-          splits: data.splits,
+          lots: data.lots.length > 0 ? data.lots.map((el) => ({
+            ...el,
+            manufacturedDate: moment(el.manufacturedDate).format('YYYY-MM-DD'),
+            expirationDate: moment(el.expirationDate).format('YYYY-MM-DD')
+          })) : [{
+            lotNumber: 'Lot #1',
+            pkgAmount: 1,
+            manufacturedDate: '',
+            expirationDate: ''
+          }],
+          processingTimeDays: data.processingTimeDays ? data.processingTimeDays : 1,
+          product: data.companyProduct.id,
+          warehouse: data.warehouse.id,
+          doesExpire: !!expirationDate,
+          inStock: getSafe(() => data.inStock, true),
+          expirationDate: expirationDate ? moment(expirationDate) : null,
+          quantity: data.quantity,
+          minimumRequirement: getSafe(() => !!data.minimum, false),
+          minimum: getSafe(() => data.minimum, 1),
+          splits: getSafe(() => data.splits, 1),
+          priceTiers: data.pricingTiers.length > 0 ? data.pricingTiers.length : 1,
+          pricingTiers: data.pricingTiers.length > 0 ? data.pricingTiers : [{ price: 0.001, quantityFrom: 1 }],
+          origin: getSafe(() => data.origin.id),
           tradeName: data.tradeName,
-          validityDate: data.lots[0].expirationDate ? data.lots[0].expirationDate.substring(0, 10) : '', // TODO: check all lots and get one date (nearest or farthest date?)
-          warehouse: state.warehousesList.find((wh) => wh.id === data.warehouse.id) ? data.warehouse.id : null // data.warehouse.id
-        }
+          productCondition: getSafe(() => data.productCondition.id),
+          productForm: getSafe(() => data.productForm.id),
+          productGrades: getSafe(() => data.productGrades.map((el) => el.id)),
+          assayMin: data.assayMin,
+          assayMax: data.assayMax,
+          internalNotes: data.internalNotes,
+          externalNotes: data.externalNotes
+        },
+        product: data
       }
+
+
+
+      // let searchedLists = {}
+      // if (action.payload.data.manufacturer) {
+      //   searchedLists.searchedManufacturers = [{
+      //     key: action.payload.data.manufacturer.id,
+      //     value: action.payload.data.manufacturer.id,
+      //     text: action.payload.data.manufacturer.name
+      //   }]
+      // }
+      // if (action.payload.data.origin) {
+      //   searchedLists.searchedOrigins = [{
+      //     key: action.payload.data.origin.id,
+      //     value: action.payload.data.origin.id,
+      //     text: action.payload.data.origin.name
+      //   }]
+      // }
+
+      // let days = data.processingTimeDays
+
+      // return {
+      //   ...state,
+      //   ...action.payload.data,
+      //   loading: false,
+      //   fileIds: action.payload.data.attachments.map(att => {
+      //     att.attachment = true
+      //     return att
+      //   }).concat(state.fileIds),
+      //   poCreated: false,
+      //   ...searchedLists,
+
+      //   initialState: {
+      //     additional: filteredAdditional,
+      //     assayMax: data.assayMax,
+      //     assayMin: data.assayMin,
+      //     attachments: filteredAttachments,
+      //     doesExpire: !!data.lots[0].expirationDate,
+      //     externalNotes: data.externalNotes,
+      //     lots: data.lots.map(lot => {
+      //       return {
+      //         ...lot,
+      //         expirationDate: lot.expirationDate ? lot.expirationDate.substring(0, 10) : '',
+      //         manufacturedDate: lot.manufacturedDate ? lot.manufacturedDate.substring(0, 10) : '',
+      //         attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
+      //           return {
+      //             id: att.id,
+      //             name: att.name,
+      //             linked: true,
+      //             documentType: { ...att.documentType }
+      //           }
+      //         }) : []
+      //       }
+      //     }),
+      //     internalNotes: data.internalNotes,
+      //     manufacturer: data.manufacturer ? data.manufacturer.id : null,
+      //     minimum: data.minimum,
+      //     multipleLots: true,
+      //     origin: data.origin ? data.origin.id : null,
+      //     pkgAmount: data.pkgAmount,
+      //     priceTiers: data.pricingTiers.length,
+      //     pricing: {
+      //       price: data.pricing.price
+      //     },
+      //     pricingTiers: data.pricingTiers.map((pricingTier, index) => {
+      //       return {
+      //         ...pricingTier,
+      //         quantityFrom: !index ? data.minimum : pricingTier.quantityFrom,
+      //         manuallyModified: 1
+      //       }
+      //     }),
+      //     processingTimeDays: days,
+      //     processingTimeDW: typeof days === "undefined" ? 1 : (days % 5 ? 1 : 5),
+      //     processingTimeNum: days % 5 ? days : days / 5,
+      //     product: data.product,
+      //     productCondition: data.productCondition ? data.productCondition.id : null,
+      //     productForm: data.productForm ? data.productForm.id : null,
+      //     productGrade: data.productGrades && data.productGrades.length ? data.productGrades[0].id : null,
+      //     splits: data.splits,
+      //     tradeName: data.tradeName,
+      //     validityDate: data.lots[0].expirationDate ? data.lots[0].expirationDate.substring(0, 10) : '', // TODO: check all lots and get one date (nearest or farthest date?)
+      //     warehouse: state.warehousesList.find((wh) => wh.id === data.warehouse.id) ? data.warehouse.id : null // data.warehouse.id
+      //   }
+      // }
     }
 
     case AT.INVENTORY_DELETE_PRODUCT_OFFER_PENDING: {

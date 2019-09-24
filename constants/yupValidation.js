@@ -70,14 +70,11 @@ export const phoneValidation = () => (
 
 export const dateValidation = (required = true) => {
   let isValid = Yup.string()
-    .test('date-format', errorMessages.invalidDateFormat(), (value) => {
-      return moment(value, 'YYYY-MM-DD', true).isValid() || (!required && !value)
-    })
+    .test('date-format', errorMessages.invalidDateFormat(), (value) =>
+      moment(value, 'YYYY-MM-DD', true).isValid() || (!required && !value))
 
   if (required) return isValid.concat(Yup.string().required(errorMessages.requiredMessage))
   else return isValid
-  // .required(errorMessages.requiredMessage)
-
 }
 
 export const ssnValidation = () => (
@@ -167,7 +164,7 @@ export const dunsValidation = () => {
   return (
     Yup.string(errorMessages.requiredMessage)
       .test('duns', errorMessages.invalidValueFormat('123456789'), (val) => {
-        if(!val) return false
+        if (!val) return false
         // if (val.includes('-')) return /^[0-9]{2}\-[0-9]{3}\-[0-9]{4}$/.test(val)
         else return /^[0-9]{9}$/.test(val)
       })

@@ -7,7 +7,7 @@ import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { Modal, Header, FormGroup, FormField, Search, Label, Icon } from 'semantic-ui-react'
+import { Modal, Header, FormGroup, FormField, Search, Label, Icon, Accordion } from 'semantic-ui-react'
 import { DateInput } from '~/components/custom-formik'
 import { FieldArray } from 'formik'
 
@@ -27,16 +27,27 @@ import {
   loadFile,
   addAttachment,
   removeAttachment,
-  removeAttachmentLink
+  removeAttachmentLink,
+  searchEchoProducts
 } from '../../actions'
 import { Form, Input, Button, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import './styles.scss'
 import Router from 'next/router'
+import styled from 'styled-components'
+
 
 import { UnitOfPackaging } from '~/components/formatted-messages'
 
 import { errorMessages } from '~/constants/yupValidation'
+
+const AccordionHeader = styled(Header)`
+  font-size: 18px;  
+  font-weight: bolder;
+  & > i {
+    font-weight: bolder;
+  } 
+`
 
 Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
   return this.test('unique', message, function (value) {
@@ -76,19 +87,21 @@ const formValidation = Yup.object().shape({
     .required(errorMessages.requiredMessage),
   nmfcNumber: Yup.number()
     .typeError(errorMessages.mustBeNumber)
-    .required(errorMessages.requiredMessage)
-    .test('len', errorMessages.exactLength(5), val => getSafe(() => val.toString().length, 0) === 5),
-  casProducts: Yup.array().of(Yup.object().uniqueProperty('casProduct', errorMessages.unique('CAS Product')).shape({
-    casProduct: Yup.number().nullable().typeError(errorMessages.invalidString),
-    minimumConcentration: Yup.number().nullable().min(0).max(100),
-    maximumConcentration: Yup.number().nullable().min(0).max(100)
-  })),
-  hazardClass: Yup.array().of(Yup.number(errorMessages.requiredMessage)).nullable().required(errorMessages.requiredMessage),
-  //packagingGroup: Yup.number()
+    //.required(errorMessages.requiredMessage)
+    .test('len', errorMessages.exactLength(5), val => val ? getSafe(() => val.toString().length, 0) === 5 : true),
+  // casProducts: Yup.array().of(Yup.object().uniqueProperty('casProduct', errorMessages.unique('CAS Product')).shape({
+  //   casProduct: Yup.number().nullable().typeError(errorMessages.invalidString),
+  //   minimumConcentration: Yup.number().nullable().min(0).max(100),
+  //   maximumConcentration: Yup.number().nullable().min(0).max(100)
+  // })),
+  hazardClass: Yup.array().of(Yup.number(errorMessages.requiredMessage)).nullable()//.required(errorMessages.requiredMessage),
+  //packagingGroup: Yup.number()d
 })
 
 class ProductPopup extends React.Component {
-  state = {}
+  state = {
+    advanced: false
+  }
   componentDidMount() {
     this.props.getProductsCatalogRequest()
 
@@ -201,20 +214,20 @@ class ProductPopup extends React.Component {
     this.setState({ value: result, selectedList: [result].concat(this.state.selectedList) })
   }
 
-  handleSearchChange = debounce((e, { searchQuery, dataindex }) => {
+  handleSearchChange = debounce(searchQuery => {
     this.setState({ isLoading: true, value: searchQuery })
 
-    this.props.searchCasProduct(searchQuery, dataindex)
+    this.props.searchEchoProducts(searchQuery)
 
-    setTimeout(() => {
-      const re = new RegExp(escapeRegExp(this.state.value), 'i')
-      const isMatch = result => re.test(result.casProduct)
+    // setTimeout(() => {
+    //   const re = new RegExp(escapeRegExp(this.state.value), 'i')
+    //   const isMatch = result => re.test(result.casProduct)
 
-      this.setState({
-        isLoading: false,
-        results: filter(this.handleCasProduct(), isMatch)
-      })
-    }, 250)
+    //   this.setState({
+    //     isLoading: false,
+    //     results: filter(this.handleCasProduct(), isMatch)
+    //   })
+    // }, 250)
   }, 500)
 
   handleSearchUnNumber = debounce((e, { value }) => {
@@ -246,31 +259,23 @@ class ProductPopup extends React.Component {
   getInitialFormValues = () => {
     const { popupValues } = this.props
     let initialValues = {
-      attachments: [],
-      casProducts: [{ casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100 }],
-      description: '',
+      // attachments: [],
+      // casProducts: [{ casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100 }],
+      // description: '',
       freightClass: null,
-      hazardClass: [],
-      hazardous: false,
+      // hazardClass: [],
+      // hazardous: false,
       nmfcNumber: undefined,
       productName: '',
       productCode: '',
       packagingGroup: null,
       stackable: false,
-      nonHap: null,
-      vocExempt: null,
-      prop65Exempt: null,
-      saferChoice: null,
       packagingUnit: '',
-      expirationDate: '',
-      ...popupValues,
       packagingSize: getSafe(() => popupValues.packagingSize, 'N/A') === 'N/A' ? undefined : popupValues.packagingSize,
       packagingType: getSafe(() => popupValues.packagingType, 'N/A') === 'N/A' ? undefined : popupValues.packagingType,
       unit: getSafe(() => popupValues.unit, 'N/A') === 'N/A' ? undefined : popupValues.unit
     }
-    if (initialValues.casProducts.length === 0) {
-      initialValues.casProducts = [{ casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100 }]
-    }
+
     return initialValues
   }
 
@@ -283,7 +288,9 @@ class ProductPopup extends React.Component {
       freightClasses,
       hazardClasses,
       packagingGroups,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      echoProducts,
+      echoProductsFetching
     } = this.props
 
     const { isLoading, isUnLoading, results, value, packagingTypesReduced } = this.state
@@ -294,7 +301,7 @@ class ProductPopup extends React.Component {
     const searchedUnNumbers = this.props.searchedUnNumbers && this.props.searchedUnNumbers.length ? this.props.searchedUnNumbers : (unNumber ? [unNumber] : [])
 
     return (
-      <Modal open centered={false}>
+      <Modal size='small' open centered={false}>
         <Modal.Header>{title} <FormattedMessage id='global.product' defaultMessage='Product' /></Modal.Header>
         <Modal.Content>
           <Form
@@ -304,40 +311,144 @@ class ProductPopup extends React.Component {
             onSubmit={this.handlerSubmit}
           >
             {({ values, setFieldValue }) => {
-              return (<>
-                <FormGroup widths='equal' data-test='settings_product_popup_nameCodeInci_inp'>
-                  <Input type='text' label={formatMessage({ id: 'global.productName', defaultMessage: 'Product Name' })} name='productName' />
-                  <Input type='text' label={formatMessage({ id: 'global.productNumber', defaultMessage: 'Product Number' })} name='productCode' />
-                  <Input type='text' label={formatMessage({ id: 'global.inciName', defaultMessage: 'INCI Name' })} name='inciName' />
-                </FormGroup>
+              return (
+                <>
+                  <Dropdown
+                    label={<FormattedMessage id='settings.associatedEchoProducts' defaultMessage='What is the Associated External Product that you would like to map to?' />}
+                    options={echoProducts.map((echo) => ({
+                      key: echo.id,
+                      text: echo.name,
+                      value: echo.id
+                    }))}
+                    inputProps={{
+                      fluid: true, search: true,
+                      clearable: true, selection: true,
+                      loading: echoProductsFetching,
+                      onSearchChange: (_, { searchQuery }) => this.handleSearchChange(searchQuery)
+                    }}
+                    name='echoProduct'
+                  />
+                  <FormGroup widths='equal' data-test='settings_product_popup_nameCodeInci_inp'>
+                    <Input type='text' label={formatMessage({ id: 'global.productName', defaultMessage: 'Product Name' })} name='productName' />
+                    <Input type='text' label={formatMessage({ id: 'global.productNumber', defaultMessage: 'Product Number' })} name='productCode' />
+                    {/* <Input type='text' label={formatMessage({ id: 'global.inciName', defaultMessage: 'INCI Name' })} name='inciName' /> */}
+                  </FormGroup>
 
-                <FormGroup style={{ alignItems: 'flex-end', marginBottom: '0' }}>
-                  <FormField width={8}>
-                    <label><FormattedMessage id='settings.associatedCasIndexes' defaultMessage='What are the associated CAS Index Numbers?' /></label>
-                  </FormField>
-                  <FormField width={3}>
+                  <FormGroup data-test='settings_product_popup_packagingSize_inp'>
+                    <Input
+                      fieldProps={{
+                        width: 4
+                      }}
+                      type='text' label={formatMessage({ id: 'global.packagingSize', defaultMessage: 'Packaging Size' })} name='packagingSize' />
+                    <Dropdown
+                      fieldProps={{
+                        width: 6
+                      }}
+                      label={formatMessage({ id: 'global.unit', defaultMessage: 'Unit' })}
+                      name='packagingUnit'
+                      options={productsUnitsType}
+                      inputProps={{
+                        'data-test': 'settings_product_popup_packagingUnit_drpdn',
+                        onChange: (e, d) => {
+                          setFieldValue('packagingType', '')
+                          this.handleUnitChange(d.value, this.props.unitsAll, this.props.packagingTypesAll)
+                        }
+                      }}
+                    />
+                    <Dropdown
+                      fieldProps={{
+                        width: 6
+                      }}
+                      label={formatMessage({ id: 'global.packagingType', defaultMessage: 'Packaging Type' })}
+                      name='packagingType'
+                      options={packagingTypesReduced}
+                      inputProps={{ 'data-test': 'settings_product_popup_packagingType_drpdn' }}
+                    />
+                  </FormGroup>
+
+                  <Accordion>
+                    <Accordion.Title active={this.state.advanced} onClick={() => this.setState((s) => ({ ...s, advanced: !s.advanced }))}>
+                      <AccordionHeader as='h4'>
+                        <Icon color={this.state.advanced ? 'blue' : 'black'} name={this.state.advanced ? 'chevron down' : 'chevron right'} />
+                        <FormattedMessage id='global.advanced' defaultMessage='Advanced'>
+                          {text => text}
+                        </FormattedMessage>
+                      </AccordionHeader>
+                    </Accordion.Title>
+
+                    <Accordion.Content active={this.state.advanced}>
+                      <FormGroup widths='equal'>
+                        <Input
+                          label={formatMessage({ id: 'global.nmfcCode', defaultMessage: 'NMFC Code' })}
+                          type='number'
+                          name='nmfcNumber'
+                        />
+                        <Dropdown
+                          label={formatMessage({ id: 'global.freightClass', defaultMessage: 'Freight Class' })}
+                          name='freightClass'
+                          options={freightClasses}
+                          inputProps={{ 'data-test': 'settings_product_popup_freightClass_drpdn' }}
+                        />
+                      </FormGroup>
+
+                      <FormGroup widths='equal'>
+                        <Input
+                          label={<FormattedMessage id='global.' defaultMessage='Manufacturer Product Name' />}
+                          name='mfrProductName'
+                        />
+
+                        <Input
+                          label={<FormattedMessage id='global.' defaultMessage='Manufacturer Product Code' />}
+                          name='mfrProductCode'
+                        />
+                      </FormGroup>
+
+                      <Checkbox
+                        label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })}
+                        name='stackable'
+                        inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }}
+                      />
+
+
+                    </Accordion.Content>
+                  </Accordion>
+
+
+
+                  {/* <FormGroup style={{ alignItems: 'flex-end', marginBottom: '0' }}> */}
+                  {/* <FormField width={8}>
+                  <label><FormattedMessage id='settings.associatedEchoProducts' defaultMessage='What is the Associated External Product that you would like to map to?' /></label>
+                </FormField> */}
+                  {/* <FormField width={3}>
                     <label><FormattedMessage id='settings.minConcetration' defaultMessage='Min Concentration' /></label>
                   </FormField>
                   <FormField width={3}>
                     <label><FormattedMessage id='settings.maxConcetration' defaultMessage='Max Concentration' /></label>
                   </FormField>
-                </FormGroup>
-                <FieldArray name='casProducts'
+                </FormGroup> */}
+
+
+                  {/* <FieldArray name='casProducts'
                   render={arrayHelpers => (
                     <>
                       {values.casProducts && values.casProducts.length ? values.casProducts.map((casProduct, index) => (
                         <FormGroup key={index}>
                           <FormField width={8}>
                             <Dropdown name={`casProducts[${index}].casProduct`}
-                              options={searchedCasProducts.length > index ? searchedCasProducts[index].map(item => {
-                                return {
-                                  key: item.id,
-                                  id: item.id,
-                                  text: item.casNumber + ' ' + item.chemicalName,
-                                  value: item.id,
-                                  content: <Header content={item.casNumber} subheader={item.chemicalName} style={{ fontSize: '1em' }} />
-                                }
-                              }) : []}
+                              // options={searchedCasProducts.length > index ? searchedCasProducts[index].map(item => {
+                              //   return {
+                              //     key: item.id,
+                              //     id: item.id,
+                              //     text: item.casNumber + ' ' + item.chemicalName,
+                              //     value: item.id,
+                              //     content: <Header content={item.casNumber} subheader={item.chemicalName} style={{ fontSize: '1em' }} />
+                              //   }
+                              // }) : []}
+                              options={echoProducts.map((echo) => ({
+                                key: echo.id,
+                                text: echo.name,
+                                value: echo.id
+                              }))}
                               inputProps={{
                                 'data-test': `settings_product_popup_cas_${index}_drpdn`,
                                 size: 'large',
@@ -346,7 +457,7 @@ class ProductPopup extends React.Component {
                                 search: options => options,
                                 selection: true,
                                 clearable: true,
-                                loading: isLoading,
+                                loading: echoProductsFetching,
                                 //onResultSelect: this.handleResultSelect,
                                 onSearchChange: this.handleSearchChange,
                                 dataindex: index
@@ -383,40 +494,19 @@ class ProductPopup extends React.Component {
                         </FormGroup>
                       )) : ''}
                     </>
-                  )} />
-                <FormGroup>
+                  )} /> */}
+                  {/* <FormGroup>
                   <FormField width={16}>
                     <label><FormattedMessage id='global.description' defaultMessage='Description' /></label>
                     <TextArea rows='3'
                       name='description'
                     />
                   </FormField>
-                </FormGroup>
-                <FormGroup widths='equal' data-test='settings_product_popup_packagingSize_inp'>
-                  <Input type='text' label={formatMessage({ id: 'global.packagingSize', defaultMessage: 'Packaging Size' })} name='packagingSize' />
-                  <Dropdown
-                    label={formatMessage({ id: 'global.unit', defaultMessage: 'Unit' })}
-                    name='packagingUnit'
-                    options={productsUnitsType}
-                    inputProps={{
-                      'data-test': 'settings_product_popup_packagingUnit_drpdn',
-                      onChange: (e, d) => {
-                        setFieldValue('packagingType', '')
-                        this.handleUnitChange(d.value, this.props.unitsAll, this.props.packagingTypesAll)
-                      }
-                    }}
-                  />
-                  <Dropdown
-                    label={formatMessage({ id: 'global.packagingType', defaultMessage: 'Packaging Type' })}
-                    name='packagingType'
-                    options={packagingTypesReduced}
-                    inputProps={{ 'data-test': 'settings_product_popup_packagingType_drpdn' }}
-                  />
-                </FormGroup>
-                <FormGroup widths='equal'>
+                </FormGroup> */}
+
+                  {/* <FormGroup widths='equal'>
                   <FormField>
-                    <Checkbox label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })} name='stackable' inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }} />
-                  </FormField>
+                      </FormField>
                   <FormField>
                     <Checkbox label={formatMessage({ id: 'global.hazardous', defaultMessage: 'Hazardous' })} name='hazardous' inputProps={{ 'data-test': 'settings_product_popup_hazardous_chckb' }} />
                   </FormField>
@@ -432,9 +522,9 @@ class ProductPopup extends React.Component {
                   <FormField>
                     <Checkbox label={formatMessage({ id: 'global.saferChoice', defaultMessage: 'Safer Choice' })} name='saferChoice' inputProps={{ 'data-test': 'settings_product_popup_saferChoice_chckb' }} />
                   </FormField>
-                </FormGroup>
-                <FormGroup widths='equal'>
-                  <FormField>
+                </FormGroup> */}
+                  {/* <FormGroup widths='equal'> */}
+                  {/* <FormField>
                     <label><FormattedMessage id='global.unNumber' defaultMessage='UN Number' /></label>
                     <Search loading={isUnLoading}
                       onResultSelect={this.handleUnNumberSelect}
@@ -449,42 +539,9 @@ class ProductPopup extends React.Component {
                       defaultValue={unNumber && unNumber.unNumberCode ? unNumber.unNumberCode : ''}
                       data-test='settings_product_popup_unNumberCode_inp'
                     />
-                  </FormField>
-                  <FormField data-test='settings_product_popup_nmfcNumber_inp'>
-                    <Input
-                      label={formatMessage({ id: 'global.nmfcCode', defaultMessage: 'NMFC Code' })}
-                      type='number'
-                      name='nmfcNumber'
-                    />
-                  </FormField>
-                  <Dropdown
-                    label={formatMessage({ id: 'global.freightClass', defaultMessage: 'Freight Class' })}
-                    name='freightClass'
-                    options={freightClasses}
-                    inputProps={{ 'data-test': 'settings_product_popup_freightClass_drpdn' }}
-                  />
-                </FormGroup>
-                <FormGroup widths='equal'>
-                  <Dropdown
-                    label={formatMessage({ id: 'global.hazardClass', defaultMessage: 'Hazard Class' })}
-                    name='hazardClass'
-                    options={hazardClasses}
-                    inputProps={{
-                      'data-test': 'settings_product_popup_hazardClass_drpdn',
-                      multiple: true,
-                      selection: true,
-                      search: true,
-                      clearable: true
-                    }}
-                  />
-                  <Dropdown
-                    label={formatMessage({ id: 'global.packagingGroup', defaultMessage: 'Packaging Group' })}
-                    name='packagingGroup'
-                    options={packagingGroups}
-                    inputProps={{ 'data-test': 'settings_product_popup_packagingGroup_drpdn' }}
-                  />
-                </FormGroup>
-                <FormGroup widths='equal'>
+                  </FormField> */}
+
+                  {/* <FormGroup widths='equal'>
                   <FormField>
                     <Dropdown
                       label={formatMessage({ id: 'global.docType', defaultMessage: 'Document Type' })}
@@ -549,22 +606,22 @@ class ProductPopup extends React.Component {
                       )}
                     />
                   </FormField>
-                </FormGroup>
-                <div style={{ textAlign: 'right' }}>
-                  <Button.Reset onClick={closePopup} data-test='settings_product_popup_reset_btn'>
-                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
-                  </Button.Reset>
-                  <Button.Submit data-test='settings_product_popup_submit_btn'>
-                    <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
-                  </Button.Submit>
-                </div>
-              </>
+                </FormGroup> */}
+                  <div style={{ textAlign: 'right' }}>
+                    <Button.Reset onClick={closePopup} data-test='settings_product_popup_reset_btn'>
+                      <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+                    </Button.Reset>
+                    <Button.Submit data-test='settings_product_popup_submit_btn'>
+                      <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
+                    </Button.Submit>
+                  </div>
+                </>
               )
             }
             }
           </Form>
         </Modal.Content>
-      </Modal>
+      </Modal >
     )
   }
 }
@@ -583,31 +640,34 @@ const mapDispatchToProps = {
   loadFile,
   addAttachment,
   removeAttachment,
-  removeAttachmentLink
+  removeAttachmentLink,
+  searchEchoProducts
 }
-const mapStateToProps = state => {
+const mapStateToProps = ({ settings }) => {
   return {
-    popupValues: state.settings.popupValues,
-    productsCatalogRows: state.settings.productsCatalogRows,
-    packagingType: state.settings.productsPackagingType,
-    packagingTypesAll: state.settings.packagingTypes,
-    productsUnitsType: state.settings.productsUnitsType,
-    unitsAll: state.settings.units,
-    freightClasses: state.settings.productsFreightClasses,
-    hazardClasses: state.settings.productsHazardClasses,
-    packagingGroups: state.settings.productsPackagingGroups,
-    searchedCasProducts: state.settings.searchedCasProducts,
-    searchedUnNumbers: state.settings.searchedUnNumbers,
+    popupValues: settings.popupValues,
+    echoProducts: settings.echoProducts,
+    echoProductsFetching: settings.echoProductsFetching,
+    productsCatalogRows: settings.productsCatalogRows,
+    packagingType: settings.productsPackagingType,
+    packagingTypesAll: settings.packagingTypes,
+    productsUnitsType: settings.productsUnitsType,
+    unitsAll: settings.units,
+    freightClasses: settings.productsFreightClasses,
+    hazardClasses: settings.productsHazardClasses,
+    packagingGroups: settings.productsPackagingGroups,
+    searchedCasProducts: settings.searchedCasProducts,
+    searchedUnNumbers: settings.searchedUnNumbers,
     reloadFilter: {
       props: {
         currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-          state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
-        productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
-        productsFilter: state.settings.productsFilter
+          settings.tabsNames.find(tab => tab.type === Router.router.query.type) : settings.tabsNames[0],
+        productCatalogUnmappedValue: settings.productCatalogUnmappedValue,
+        productsFilter: settings.productsFilter
       },
-      value: state.settings.filterValue
+      value: settings.filterValue
     },
-    documentTypes: state.settings.documentTypes
+    documentTypes: settings.documentTypes
   }
 }
 
@@ -615,3 +675,47 @@ export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
 )(withToastManager(ProductPopup)))
+
+
+
+
+
+
+{/* 
+
+<FormField data-test='settings_product_popup_nmfcNumber_inp'>
+                    <Checkbox label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })} name='stackable' inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }} />
+
+                    <Input
+                      label={formatMessage({ id: 'global.nmfcCode', defaultMessage: 'NMFC Code' })}
+                      type='number'
+                      name='nmfcNumber'
+                    />
+                  </FormField>
+                  <Dropdown
+                    label={formatMessage({ id: 'global.freightClass', defaultMessage: 'Freight Class' })}
+                    name='freightClass'
+                    options={freightClasses}
+                    inputProps={{ 'data-test': 'settings_product_popup_freightClass_drpdn' }}
+                  />
+                  <Dropdown
+                    label={formatMessage({ id: 'global.packagingGroup', defaultMessage: 'Packaging Group' })}
+                    name='packagingGroup'
+                    options={packagingGroups}
+                    inputProps={{ 'data-test': 'settings_product_popup_packagingGroup_drpdn' }}
+                  />
+                </FormGroup>
+                <FormGroup widths='equal'>
+                  <Dropdown
+                    label={formatMessage({ id: 'global.hazardClass', defaultMessage: 'Hazard Class' })}
+                    name='hazardClass'
+                    options={hazardClasses}
+                    inputProps={{
+                      'data-test': 'settings_product_popup_hazardClass_drpdn',
+                      multiple: true,
+                      selection: true,
+                      search: true,
+                      clearable: true
+                    }}
+                  />
+                </FormGroup> */}

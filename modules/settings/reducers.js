@@ -99,7 +99,9 @@ export const initialState = {
         } />,
   },
   languages: [],
-  languagesFetching: false
+  languagesFetching: false,
+  echoProducts: [],
+  echoProductsFetching: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -1322,6 +1324,27 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SEARCH_ECHO_PRODUCTS_PENDING: {
+      return {
+        ...state,
+        echoProductsFetching: true
+      }
+    }
+
+    case AT.SEARCH_ECHO_PRODUCTS_FULFILLED: {
+      return {
+        ...state,
+        echoProducts: payload,
+        echoProductsFetching: false
+      }
+    }
+
+    case AT.SEARCH_ECHO_PRODUCTS_REJECTED: {
+      return {
+        ...state,
+        echoProductsFetching: false
+      }
+    }
 
     default: {
       return state
