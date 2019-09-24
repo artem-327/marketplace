@@ -179,6 +179,13 @@ class MyInventory extends Component {
               <Menu.Item>
                 <Button
                   size='large'
+                  onClick={() => simpleEditTrigger({}, true)}>
+                  <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>{text => text}</FormattedMessage>
+                </Button>
+              </Menu.Item>
+              <Menu.Item>
+                <Button
+                  size='large'
                   primary
                   onClick={() => openImportPopup()}
                   data-test='my_inventory_import_btn'>
