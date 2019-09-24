@@ -212,7 +212,7 @@ class AddNewPopupEchoProduct extends React.Component {
               assayMax: parseInt(element.assayMax),
               casProduct: element.casProduct,
             })),
-            emergencyNumber: parseInt(values.emergencyNumber),
+            emergencyNumber: values.emergencyNumber,
             hazardClass: values.hazardClass,
             hazardLabels: values.hazardLabels,
             manufacturer: values.manufacturer,
