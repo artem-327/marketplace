@@ -24,7 +24,7 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add("login", (email, password) => {
+Cypress.Commands.add("FElogin", (email, password) => {
     cy.server()
     //This is the post call we are interested in capturing
     cy.route('POST', '/prodex/oauth/token').as('login')
@@ -45,7 +45,7 @@ Cypress.Commands.add("login", (email, password) => {
     })
 })
 
-Cypress.Commands.add("logout", () => {
+Cypress.Commands.add("FElogout", () => {
     cy.get(".right.menu .user.circle").click("center")
     cy.get(".right.menu .item.dropdown").should("have.class", "visible")
     cy.get(".right.menu .item.dropdown").contains("Logout").click("center")
@@ -57,3 +57,27 @@ Cypress.Commands.add("logout", () => {
 Cypress.Commands.add("waitForUI", () => {
     cy.wait(1500)
 })
+
+Cypress.Commands.add('login', (username, password) =>{
+    cy.request({
+        method: 'POST',
+        url: '/prodex/oauth/token', // baseUrl is prepended to url
+        form: true, // indicates the body should be form urlencoded and sets Content-Type: application/x-www-form-urlencoded headers
+        headers: {
+            authorization: "Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs",
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin'
+        },
+        body: {
+            username: 'user1@example.com',
+            password: 'echopass123',
+            grant_type: 'password'
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        cy.setCookie('auth',JSON.stringify(response.body))
+    })
+
+    cy.visit('/inventory/my')
+})
+
