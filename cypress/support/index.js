@@ -18,6 +18,5 @@ import './commands'
 import './inventoryHelper'
 import './formHelper'
 import './requestHelper'
-import './belog'
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
