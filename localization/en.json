@@ -847,7 +847,7 @@
   "verification.termsAndServices": "Terms and Services",
   "verification.termsOfUse": "Terms of Use",
   "verification.privacyPolicy": "Privacy Policy",
-  "verification.termsOfAgreement": "For US residents only. By checking this box, you agree to Echo's {echosTermsAndServices}, {echosTermsOfUse} and {echosPrivacyPolicy}. As well as Dwolla's {dwollasTermsOfServices} and {dwollasPrivacyPolicy}.",
+  "verification.termsOfAgreement": "For US residents only. By checking this box, you agree to Echo's {echosTermsAndServices}, {echosTermsOfUse} and {echosPrivacyPolicy}, as well as Dwolla's {dwollasTermsOfServices} and {dwollasPrivacyPolicy}.",
   "verification.verification": "We're almost done creating your account. Please provide your e-mail and create a password.",
   "verification.provideSecurityCode": "Please provide the Security Code sent to your email, your email and desired new password.",
   "verification.labels.securityCode": "Security Code",
