@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Form, Modal, Segment, Header, FormGroup, FormField, Search, Label, Icon, Accordion } from 'semantic-ui-react'
+import { Grid, Form, Modal, Segment, Header, FormGroup, FormField, Search, Label, Icon, Accordion } from 'semantic-ui-react'
 import { Formik, FieldArray } from 'formik'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import {
@@ -45,10 +45,43 @@ const AccordionHeader = styled(Header)`
   }
 `
 
+
+const validationScheme = Yup.object().shape({
+  code: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
+  elements: Yup.array().of(Yup.object().shape({
+    name: Yup.string().trim().test('requiredIfProprietary', errorMessages.requiredMessage, function (value) {
+      const { proprietary } = this.parent
+      if (proprietary) {
+        return value != null
+      }
+      return true
+    }),
+    casProduct: Yup.string().nullable().trim().test('requiredIfNotProprietary', errorMessages.requiredMessage, function (value) {
+      const { proprietary } = this.parent
+      if (!proprietary) {
+        return parseInt(value)
+      }
+      return true
+    }),
+    minAssay: Yup.number().min(0).max(100),
+    maxAssay: Yup.number().min(0).max(100)
+  })),
+  emergencyNumber: Yup.string().min(2, errorMessages.requiredMessage).required(errorMessages.requiredMessage),
+  hazardClass: Yup.number(errorMessages.requiredMessage).integer(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
+  hazardLabels: Yup.array().of(Yup.number().integer()).required(errorMessages.requiredMessage),
+  manufacturer: Yup.number().integer().min(1).required(errorMessages.requiredMessage),
+  mfrProductCodes: Yup.array().of(Yup.string().trim()).required(errorMessages.requiredMessage),
+  name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
+  packagingGroup: Yup.number(errorMessages.requiredMessage).integer(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
+  sdsRevisionDate: Yup.string().trim().required(errorMessages.requiredMessage),
+  sdsVersionNumber: Yup.string().trim().required(errorMessages.requiredMessage),
+  unNumber: Yup.number(errorMessages.requiredMessage).integer(errorMessages.requiredMessage).min(1, errorMessages.minLength(1, errorMessages.requiredMessage)).required(errorMessages.requiredMessage),
+  unShippingName: Yup.string().trim().required(errorMessages.requiredMessage)
+})
+
 class AddNewPopupEchoProduct extends React.Component {
   state = {
     isLoading: false,
-    unNumber: null,
     isUnLoading: false,
     value: '',
     optionalOpened: false
@@ -68,33 +101,6 @@ class AddNewPopupEchoProduct extends React.Component {
     this.props.searchManufacturers(getSafe(() => this.props.popupValues.manufacturer.name, ''), 200)
   }
 
-  formValidationNew = () => (Yup.lazy(values => {
-    let minLength = errorMessages.minLength(2)
-
-    let validation = Yup.object().shape({
-      code: Yup.string().trim().min(2, minLength).required(minLength),
-      elements: Yup.array().of(Yup.object().shape({
-        name: Yup.string().trim(),
-        casProduct: Yup.number().integer(),
-        minAssay: Yup.number().min(0).max(100),
-        maxAssay: Yup.number().min(0).max(100)
-      })).required(),
-      emergencyNumber: Yup.number().integer().required(),
-      hazardClass: Yup.number().integer().required(),
-      hazardLabels: Yup.array().of(Yup.number.integer()).required(),
-      manufacturer: Yup.number().integer().min(1).required(),
-      mfrProductCodes: Yup.array().of(Yup.string().trim()).required(),
-      name: Yup.string().trim().min(2, minLength).required(minLength),
-      packagingGroup: Yup.number().integer().required(),
-      sdsRevisionDate: Yup.string().trim().required(),
-      sdsVersionNumber: Yup.string().trim().required(),
-      unNumber: Yup.number().integer().min(1).required(),
-      unShippingName: Yup.string().trim().required()
-    })
-
-    return validation
-  }))
-
   getInitialFormValues = () => {
     const { popupValues } = this.props
     let initialValues = {
@@ -110,14 +116,14 @@ class AddNewPopupEchoProduct extends React.Component {
       ...popupValues,
       elements: getSafe(() => popupValues.elements.map(element => ({
         name: getSafe(() => element.displayName, ''),
-        casProduct: getSafe(() => element.casProduct.id),
+        casProduct: getSafe(() => element.casProduct.id, null),
         assayMin: element.assayMin,
         assayMax: element.assayMax,
         proprietary: element.proprietary,
       })), [{ casProduct: '', assayMin: 100, assayMax: 100 }]),
       manufacturer: getSafe(() => popupValues.manufacturer.id, ''),
       mfrProductCodes: getSafe(() => popupValues.mfrProductCodes, []),
-      unNumber: getSafe(() => popupValues.unNumber.unNumberCode, ''),
+      unNumber: getSafe(() => popupValues.unNumber.id, ''),
       hazardClass: getSafe(() => popupValues.hazardClass.id, ''),
       hazardLabels: getSafe(() => popupValues.hazardLabels.map(hL => hL.id), []),
       packagingGroup: getSafe(() => popupValues.packagingGroup.id, ''),
@@ -125,7 +131,7 @@ class AddNewPopupEchoProduct extends React.Component {
       sdsRevisionDate: getSafe(() => popupValues.sdsRevisionDate.substring(0, 10), '')
     }
     if (initialValues.elements.length === 0) {
-      initialValues.elements = [{ name: '', casProduct: undefined, assayMin: 100, assayMax: 100, proprietary: false }]
+      initialValues.elements = [{ name: '', casProduct: null, assayMin: 100, assayMax: 100, proprietary: false }]
     }
     return initialValues
   }
@@ -171,16 +177,13 @@ class AddNewPopupEchoProduct extends React.Component {
     }))
   }
 
-  handleUnNumberSelect = (e, { result }) => {
-    this.setState({ unNumber: result })
-  }
-
   render() {
     const {
       closePopup,
       popupValues,
       config,
       intl: { formatMessage },
+      toastManager,
       isLoading,
       packagingGroups,
       hazardClasses,
@@ -199,9 +202,10 @@ class AddNewPopupEchoProduct extends React.Component {
       <Formik
         enableReinitialize
         initialValues={this.getInitialFormValues()}
-        validationSchema={this.formValidationNew()}
+        validationSchema={validationScheme}
         onSubmit={async (values, actions) => {
-          const formValues = {
+          let formValues = {
+            ...values,
             code: values.code,
             elements: values.elements.map(element => element.proprietary ? ({
               assayMin: element.assayMin,
@@ -210,7 +214,7 @@ class AddNewPopupEchoProduct extends React.Component {
             }) : ({
               assayMin: parseInt(element.assayMin),
               assayMax: parseInt(element.assayMax),
-              casProduct: element.casProduct,
+              casProduct: parseInt(element.casProduct),
             })),
             emergencyNumber: values.emergencyNumber,
             hazardClass: values.hazardClass,
@@ -221,113 +225,34 @@ class AddNewPopupEchoProduct extends React.Component {
             packagingGroup: values.packagingGroup,
             sdsRevisionDate: values.sdsRevisionDate+'T00:00:00.00000Z',
             sdsVersionNumber: values.sdsVersionNumber,
-            unNumber: stateUnNumber.id,
-            unShippingName: values.unShippingName,
-
-            appearance: values.appearance,
-            aspirationHazard: values.aspirationHazard,
-            autoIgnitionTemperature: values.autoIgnitionTemperature,
-            boilingPointRange: values.boilingPointRange,
-            chronicHealthHazard: values.chronicHealthHazard,
-            conditionsToAvoid: values.conditionsToAvoid,
-            decompositionTemperature: values.decompositionTemperature,
-            developmentalEffects: values.developmentalEffects,
-            dotHazardClass: values.dotHazardClass,
-            dotMarinePollutant: values.dotMarinePollutant,
-            dotProperShippingName: values.dotProperShippingName,
-            dotProperTechnicalName: values.dotProperTechnicalName,
-            dotReportableQuantity: values.dotReportableQuantity,
-            dotSevereMarinePollutant: values.dotSevereMarinePollutant,
-            dotUnNumber: values.dotUnNumber,
-            endocrineDisruptorInformation: values.endocrineDisruptorInformation,
-            evaporationPoint: values.evaporationPoint,
-            eyeContact: values.eyeContact,
-            fireHazard: values.fireHazard,
-            flammability: values.flammability,
-            flammabilityOrExplosiveLower: values.flammabilityOrExplosiveLower,
-            flammabilityOrExplosiveUpper: values.flammabilityOrExplosiveUpper,
-            flammabilitySolidGas: values.flammabilitySolidGas,
-            flashPoint: values.flashPoint,
-            generalAdvice: values.generalAdvice,
-            hazardStatement: values.hazardStatement,
-            hazardousDecompositionProducts: values.hazardousDecompositionProducts,
-            hazardousPolymerization: values.hazardousPolymerization,
-            hazardousReactions: values.hazardousReactions,
-            healthHazard: values.healthHazard,
-            hmis: values.hmis,
-            hnoc: values.hnoc,
-            iataHazardClass: values.iataHazardClass,
-            iataProperShippingName: values.iataProperShippingName,
-            iataProperTechnicalName: values.iataProperTechnicalName,
-            iataUnNumber: values.iataUnNumber,
-            imdgImoHazardClass: values.imdgImoHazardClass,
-            imdgImoProperShippingName: values.imdgImoProperShippingName,
-            imdgImoProperTechnicalName: values.imdgImoProperTechnicalName,
-            imdgImoUnNumber: values.imdgImoUnNumber,
-            incompatibleMaterials: values.incompatibleMaterials,
-            ingestion: values.ingestion,
-            inhalation: values.inhalation,
-            irritation: values.irritation,
-            labelElements: values.labelElements,
-            meltingPointRange: values.meltingPointRange,
-            mexicoGrade: values.mexicoGrade,
-            molecularFormula: values.molecularFormula,
-            molecularWeight: values.molecularWeight,
-            mostImportantSymptomsAndEffects: values.mostImportantSymptomsAndEffects,
-            mutagenicEffects: values.mutagenicEffects,
-            nfpa: values.nfpa,
-            notesToPhysician: values.notesToPhysician,
-            odor: values.odor,
-            odorThreshold: values.odorThreshold,
-            oshaDefinedHazards: values.oshaDefinedHazards,
-            otherAdverseEffects: values.otherAdverseEffects,
-            partitionCoefficient: values.partitionCoefficient,
-            ph: values.ph,
-            physicalHazard: values.physicalHazard,
-            physicalState: values.physicalState,
-            precautionaryStatements: values.precautionaryStatements,
-            productLc50Inhalation: values.productLc50Inhalation,
-            productLd50Dermal: values.productLd50Dermal,
-            productLd50Oral: values.productLd50Oral,
-            reactiveHazard: values.reactiveHazard,
-            reactivityHazard: values.reactivityHazard,
-            recommendedUse: values.recommendedUse,
-            reproductiveEffects: values.reproductiveEffects,
-            sdsIssueDate: values.sdsIssueDate,
-            sdsPreparedBy: values.sdsPreparedBy,
-            sensitization: values.sensitization,
-            signalWord: values.signalWord,
-            skinContact: values.skinContact,
-            solubility: values.solubility,
-            specialHazard: values.specialHazard,
-            specificGravity: values.specificGravity,
-            stability: values.stability,
-            stotRepeatedExposure: values.stotRepeatedExposure,
-            stotSingleExposure: values.stotSingleExposure,
-            supplementalInformation: values.supplementalInformation,
-            symptomsEffects: values.symptomsEffects,
-            tdgHazardClass: values.tdgHazardClass,
-            tdgProperShippingName: values.tdgProperShippingName,
-            tdgProperTechnicalName: values.tdgProperTechnicalName,
-            tdgUnNumber: values.tdgUnNumber,
-            teratogenicity: values.teratogenicity,
-            usesAdvisedAgainst: values.usesAdvisedAgainst,
-            vaporDensity: values.vaporDensity,
-            vaporPressure: values.vaporPressure,
-            viscosity: values.viscosity,
-            wasteDisposalMethods: values.wasteDisposalMethods
+            unNumber: getSafe(() => values.unNumber, null),
+            unShippingName: values.unShippingName
           }
+          delete formValues.mfrProductCode
 
-          if (getSafe(() => popupValues.id, false))
-            putEchoProduct(popupValues.id, formValues)
-          else
-            postEchoProduct(formValues)
+          try {
+            if (getSafe(() => popupValues.id, false))
+              await putEchoProduct(popupValues.id, formValues)
+            else
+              await postEchoProduct(formValues)
 
-          actions.setSubmitting(false)
+            const status = popupValues ? 'echoProductUpdated' : 'echoProductCreated'
+            toastManager.add(generateToastMarkup(
+              <FormattedMessage id={`notifications.${status}.header`}/>,
+              <FormattedMessage id={`notifications.${status}.content`} values={{name: values.name}}/>
+            ), {
+              appearance: 'success'
+            })
+
+            actions.setSubmitting(false)
+            closePopup()
+          } catch (err) {
+            actions.setSubmitting(false)
+          }
         }}
         onReset={closePopup}
         render={props => {
-          let { setFieldValue, values, isSubmitting } = props
+          let { setFieldValue, values, isSubmitting, errors } = props
 
           return (
             <Modal open centered={false} size='small'>
@@ -340,88 +265,88 @@ class AddNewPopupEchoProduct extends React.Component {
                     <Input type='text' label={formatMessage({ id: 'global.productNumber', defaultMessage: 'Product Number' })} name='code' />
                   </FormGroup>
 
-                    <FormGroup style={{ alignItems: 'flex-end', marginBottom: '0' }}>
-                      <FormField width={5}>
-                        <label><FormattedMessage id='settings.associatedCasIndexes' defaultMessage='What are the associated CAS Index Numbers?' /></label>
-                      </FormField>
-                      <FormField width={3}>
-                        <label><FormattedMessage id='settings.minConcetration' defaultMessage='Min Concentration' /></label>
-                      </FormField>
-                      <FormField width={3}>
-                        <label><FormattedMessage id='settings.maxConcetration' defaultMessage='Max Concentration' /></label>
-                      </FormField>
-                      <FormField width={3}>
-                        <label><FormattedMessage id='admin.proprietary' defaultMessage='Proprietary' /></label>
-                      </FormField>
-                    </FormGroup>
-                    <FieldArray name='elements'
-                                render={arrayHelpers => (
-                                  <>
-                                    {values.elements && values.elements.length ? values.elements.map((element, index) => (
-                                      <FormGroup key={index}>
-                                        <FormField width={5}>
-                                          {values.elements[index].proprietary ? (
-                                            <Input name={`elements[${index}].name`} defaultValue={''} inputProps={{ 'data-test': `admin_product_popup_element_${index}_name`}} />
-                                          ) : (
-                                            <Dropdown name={`elements[${index}].casProduct`}
-                                                      options={searchedCasProducts.length > index ? searchedCasProducts[index].map(item => {
-                                                        return {
-                                                          key: item.id,
-                                                          id: item.id,
-                                                          text: item.casNumber + ' ' + item.chemicalName,
-                                                          value: item.id,
-                                                          content: <Header content={item.casNumber} subheader={item.chemicalName} style={{ fontSize: '1em' }} />
-                                                        }
-                                                      }) : []}
-                                                      inputProps={{
-                                                        'data-test': `admin_product_popup_cas_${index}_drpdn`,
-                                                        size: 'large',
-                                                        minCharacters: 3,
-                                                        icon: 'search',
-                                                        search: options => options,
-                                                        selection: true,
-                                                        clearable: true,
-                                                        loading: isLoading,
-                                                        onSearchChange: this.handleSearchChange,
-                                                        dataindex: index
-                                                      }}
-                                                      defaultValue={getSafe(() => element.casProduct.casNumber, false) ? element.casProduct.casNumber : ''}
-                                            />
-                                          )}
-                                        </FormField>
-                                        <FormField width={3} data-test='admin_product_popup_assayMin_inp'>
-                                          <Input type='number' name={`elements[${index}].assayMin`} />
-                                        </FormField>
-                                        <FormField width={3} data-test='admin_product_popup_assayMax_inp'>
-                                          <Input type='number' name={`elements[${index}].assayMax`} />
-                                        </FormField>
-                                        <FormField width={2} data-text='admin_product_popup_proprietary'>
-                                          <Checkbox name={`elements[${index}].proprietary`} />
-                                        </FormField>
-                                        <FormField width={3}>
-                                          {index ? (
-                                            <Button basic icon onClick={() => {
-                                              arrayHelpers.remove(index)
-                                              this.props.removeElementsIndex(index)
-                                            }}
-                                                    data-test={`settings_product_popup_remove_${index}_btn`}>
-                                              <Icon name='minus' />
-                                            </Button>
-                                          ) : ''}
-                                          {values.elements.length === (index + 1) ? (
-                                            <Button basic icon color='green' onClick={() => {
-                                              arrayHelpers.push({ casProduct: '', name: '', assayMin: 0, assayMax: 0, proprietary: false })
-                                              this.props.newElementsIndex()
-                                            }}
-                                                    data-test='settings_product_popup_add_btn'>
-                                              <Icon name='plus' />
-                                            </Button>
-                                          ) : ''}
-                                        </FormField>
-                                      </FormGroup>
-                                    )) : ''}
-                                  </>
-                                )} />
+                  <FormGroup style={{ alignItems: 'flex-end', marginBottom: '0' }}>
+                    <FormField width={5}>
+                      <label><FormattedMessage id='settings.associatedCasIndexes' defaultMessage='What are the associated CAS Index Numbers?' /></label>
+                    </FormField>
+                    <FormField width={3}>
+                      <label><FormattedMessage id='settings.minConcetration' defaultMessage='Min Concentration' /></label>
+                    </FormField>
+                    <FormField width={3}>
+                      <label><FormattedMessage id='settings.maxConcetration' defaultMessage='Max Concentration' /></label>
+                    </FormField>
+                    <FormField width={3}>
+                      <label><FormattedMessage id='admin.proprietary' defaultMessage='Proprietary' /></label>
+                    </FormField>
+                  </FormGroup>
+                  <FieldArray name='elements'
+                              render={arrayHelpers => (
+                                <>
+                                  {values.elements && values.elements.length ? values.elements.map((element, index) => (
+                                    <FormGroup key={index}>
+                                      <FormField width={5}>
+                                        {values.elements[index].proprietary ? (
+                                          <Input name={`elements[${index}].name`} defaultValue={''} inputProps={{ 'data-test': `admin_product_popup_element_${index}_name`}} />
+                                        ) : (
+                                          <Dropdown name={`elements[${index}].casProduct`}
+                                                    options={getSafe(() => searchedCasProducts[index].map(item => {
+                                                      return {
+                                                        key: item.id,
+                                                        id: item.id,
+                                                        text: item.casNumber + ' ' + item.chemicalName,
+                                                        value: item.id,
+                                                        content: <Header content={item.casNumber} subheader={item.chemicalName} style={{ fontSize: '1em' }} />
+                                                      }
+                                                    }), [])}
+                                                    inputProps={{
+                                                      'data-test': `admin_product_popup_cas_${index}_drpdn`,
+                                                      size: 'large',
+                                                      minCharacters: 3,
+                                                      icon: 'search',
+                                                      search: options => options,
+                                                      selection: true,
+                                                      clearable: true,
+                                                      loading: isLoading,
+                                                      onSearchChange: this.handleSearchChange,
+                                                      dataindex: index
+                                                    }}
+                                                    defaultValue={getSafe(() => element.casProduct.casNumber, false) ? element.casProduct.casNumber : null}
+                                          />
+                                        )}
+                                      </FormField>
+                                      <FormField width={3} data-test='admin_product_popup_assayMin_inp'>
+                                        <Input type='number' name={`elements[${index}].assayMin`} />
+                                      </FormField>
+                                      <FormField width={3} data-test='admin_product_popup_assayMax_inp'>
+                                        <Input type='number' name={`elements[${index}].assayMax`} />
+                                      </FormField>
+                                      <FormField width={2} data-text='admin_product_popup_proprietary'>
+                                        <Checkbox name={`elements[${index}].proprietary`} />
+                                      </FormField>
+                                      <FormField width={3}>
+                                        {index ? (
+                                          <Button basic icon onClick={() => {
+                                            arrayHelpers.remove(index)
+                                            this.props.removeElementsIndex(index)
+                                          }}
+                                                  data-test={`settings_product_popup_remove_${index}_btn`}>
+                                            <Icon name='minus' />
+                                          </Button>
+                                        ) : ''}
+                                        {values.elements.length === (index + 1) ? (
+                                          <Button basic icon color='green' onClick={() => {
+                                            arrayHelpers.push({ casProduct: null, name: '', assayMin: 0, assayMax: 0, proprietary: false })
+                                            this.props.newElementsIndex()
+                                          }}
+                                                  data-test='settings_product_popup_add_btn'>
+                                            <Icon name='plus' />
+                                          </Button>
+                                        ) : ''}
+                                      </FormField>
+                                    </FormGroup>
+                                  )) : ''}
+                                </>
+                              )} />
                   <FormGroup widths='equal'>
                     <FormField>
                       <Dropdown
@@ -441,7 +366,7 @@ class AddNewPopupEchoProduct extends React.Component {
                         }}
                       />
                     </FormField>
-                    <FormField>
+                    <FormField error={errors.mfrProductCodes ? true : false}>
                       <Input
                         icon='tags'
                         iconPosition='left'
@@ -456,8 +381,12 @@ class AddNewPopupEchoProduct extends React.Component {
                         setFieldValue('mfrProductCodes', productCodes)
                         setFieldValue('mfrProductCode', '')
                       }}>Add Tag</Button>
+                      {errors.mfrProductCodes ? (
+                        <span className='sui-error-message'>{errors.mfrProductCodes}</span>
+                      ) : null}
                     </FormField>
                     <FormField>
+                      <label><FormattedMessage id='global.codes' defaultMessage='Codes (Tags)' /></label>
                       <FieldArray name='mfrProductCodes' render={arrayHelpers => (
                         <>
                           {values.mfrProductCodes && values.mfrProductCodes.length ? values.mfrProductCodes.map((mfrProductCode, index) => (
@@ -471,11 +400,17 @@ class AddNewPopupEchoProduct extends React.Component {
                     </FormField>
                   </FormGroup>
                   <FormGroup widths='equal'>
-                    <FormField>
+                    <FormField error={errors.unNumber ? true : false}>
                       <label><FormattedMessage id='global.unNumber' defaultMessage='UN Number' /></label>
                       <Search isLoading={false}
-                              onResultSelect={this.handleUnNumberSelect}
+                              onResultSelect={(e, { result }) => setFieldValue('unNumber', result.value)}
                               onSearchChange={this.handleSearchUnNumber}
+                              /*onBlur={(e, data) => {
+                                const searchResults = data.results.filter(unNumber => unNumber.value === values.unNumber)
+                                if (!searchResults.length) {
+                                  setFieldValue('unNumber', '')
+                                }
+                              }}*/
                               results={searchedUnNumbers.map(item => {
                                 return {
                                   id: item.id,
@@ -487,6 +422,7 @@ class AddNewPopupEchoProduct extends React.Component {
                               defaultValue={getSafe(() => unNumber.unNumberCode, '')}
                               data-test='settings_product_popup_unNumberCode_inp'
                       />
+                      <Input type='hidden' name='unNumber' inputProps={{ style: { position: 'absolute', top: '-30000px', left: '-30000px' } }} />
                     </FormField>
                     <FormField data-test='admin_product_popup_unShippingName_inp'>
                       <Input
@@ -495,13 +431,16 @@ class AddNewPopupEchoProduct extends React.Component {
                         name='unShippingName'
                       />
                     </FormField>
-                    <FormField data-test='admin_product_popup_emergencyPhone_inp'>
+                    <FormField data-test='admin_product_popup_emergencyPhone_inp' error={errors.emergencyNumber ? true : false}>
                       <PhoneNumber
                         label={formatMessage({ id: 'global.emergencyPhone', defaultMessage: 'Emergency Phone' })}
                         name='emergencyNumber'
                         values={values}
                         setFieldValue={setFieldValue}
                       />
+                      {errors.emergencyNumber ? (
+                        <span className='sui-error-message'>{errors.emergencyNumber}</span>
+                      ) : null}
                     </FormField>
                   </FormGroup>
                   <FormGroup widths='equal'>
@@ -538,67 +477,79 @@ class AddNewPopupEchoProduct extends React.Component {
                       }}
                     />
                   </FormGroup>
-                  <FormGroup widths='equal'>
-                    <FormField>
-                      <Input label={formatMessage({ id: 'admin.sds.versionNumber', defaultMessage: 'SDS Version Number' })}
-                             name={`sdsVersionNumber`}
-                             inputProps={{ type: 'text' }} />
-                      <DateInput
-                        label={formatMessage({ id: 'admin.sds.revisionDate', defaultMessage: 'SDS Revision Date' })}
-                        name='sdsRevisionDate'
-                        inputProps={{ 'data-test': 'settings_product_popup_expirationDate_dtin' }}
-                      />
-                    </FormField>
-                    <FormField>
-                      <label><FormattedMessage id='global.doc' defaultMessage='Document' /></label>
-                      <UploadLot {...this.props}
-                                 attachments={values.attachments}
-                                 edit={this.props.popupValues ? this.props.popupValues.id : ''}
-                                 name='attachments'
-                                 type={1}
-                                 unspecifiedTypes={['Unspecified']}
-                                 fileMaxSize={20}
-                                 onChange={(files) => setFieldValue(
-                                   `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
-                                   {
-                                     id: files.id,
-                                     name: files.name
-                                   }
-                                 )}
-                                 data-test='settings_product_import_attachments'
-                                 emptyContent={(
-                                   <label>
-                                     <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-                                     <br />
-                                     <FormattedMessage id='addInventory.dragDropOr'
-                                                       defaultMessage={'or {link} to select from computer'}
-                                                       values={{
-                                                         link: (
-                                                           <a>
-                                                             <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                                                           </a>
-                                                         )
-                                                       }} />
-                                   </label>
-                                 )}
-                                 uploadedContent={(
-                                   <label>
-                                     <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-                                     <br />
-                                     <FormattedMessage id='addInventory.dragDropOr'
-                                                       defaultMessage={'or {link} to select from computer'}
-                                                       values={{
-                                                         link: (
-                                                           <a>
-                                                             <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                                                           </a>
-                                                         )
-                                                       }} />
-                                   </label>
-                                 )}
-                      />
-                    </FormField>
-                  </FormGroup>
+                  <Grid>
+                    <Grid.Row>
+                      <Grid.Column width={8}>
+                        <FormGroup widths='equal'>
+                          <FormField error={errors.sdsVersionNumber ? true : false}>
+                            <Input type='text' label={formatMessage({ id: 'admin.sds.versionNumber', defaultMessage: 'SDS Version Number' })} name='sdsVersionNumber' />
+                          </FormField>
+                        </FormGroup>
+                        <FormGroup widths='equal'>
+                          <FormField>
+                            <DateInput
+                              label={formatMessage({ id: 'admin.sds.revisionDate', defaultMessage: 'SDS Revision Date' })}
+                              name='sdsRevisionDate'
+                              inputProps={{ 'data-test': 'settings_product_popup_expirationDate_dtin' }}
+                            />
+                          </FormField>
+                        </FormGroup>
+                      </Grid.Column>
+                      <Grid.Column width={8}>
+                        <FormGroup widths='equal'>
+                          <FormField>
+                            <label><FormattedMessage id='global.doc' defaultMessage='Document' /></label>
+                            <UploadLot {...this.props}
+                                       attachments={values.attachments}
+                                       edit={this.props.popupValues ? this.props.popupValues.id : ''}
+                                       name='attachments'
+                                       type={3}
+                                       unspecifiedTypes={['Unspecified']}
+                                       fileMaxSize={20}
+                                       onChange={(files) => setFieldValue(
+                                         `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+                                         {
+                                           id: files.id,
+                                           name: files.name
+                                         }
+                                       )}
+                                       data-test='settings_product_import_attachments'
+                                       emptyContent={(
+                                         <label>
+                                           <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+                                           <br />
+                                           <FormattedMessage id='addInventory.dragDropOr'
+                                                             defaultMessage={'or {link} to select from computer'}
+                                                             values={{
+                                                               link: (
+                                                                 <a>
+                                                                   <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                                                 </a>
+                                                               )
+                                                             }} />
+                                         </label>
+                                       )}
+                                       uploadedContent={(
+                                         <label>
+                                           <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+                                           <br />
+                                           <FormattedMessage id='addInventory.dragDropOr'
+                                                             defaultMessage={'or {link} to select from computer'}
+                                                             values={{
+                                                               link: (
+                                                                 <a>
+                                                                   <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                                                 </a>
+                                                               )
+                                                             }} />
+                                         </label>
+                                       )}
+                            />
+                          </FormField>
+                        </FormGroup>
+                      </Grid.Column>
+                    </Grid.Row>
+                  </Grid>
                   <Accordion>
                     <Accordion.Title active={this.state.optionalOpened} onClick={this.handleOptionalAccordion} name='optionalValues' data-test='admin_popup_product_accordion_optional'>
                       <AccordionHeader as='h4'>
@@ -1139,7 +1090,7 @@ class AddNewPopupEchoProduct extends React.Component {
                   </Button.Reset>
                 <Button.Submit data-test='admin_popup_company_save_btn' onClick={props.handleSubmit}>
                   <FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage>
-                  </Button.Submit>
+                </Button.Submit>
               </Modal.Actions>
             </Modal>
           )
