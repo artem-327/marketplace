@@ -370,6 +370,8 @@
   "confirm.cancelPayment.content": "Do you really want to Cancel Payment for Order #{orderId}",
   "confirm.broadcast.unsavedChanges.header": "Unsaved changes",
   "confirm.broadcast.unsavedChanges.content": "You have unsaved broadcast rules changes. Do you wish to save them?",
+  "confirm.deleteEchoProduct.title": "Delete Echo Product?",
+  "confirm.deleteEchoProduct.content": "Do you really want to delete {name} echo product?",
   "login.username": "Username",
   "login.password": "Password",
   "login.login": "LOG IN",
