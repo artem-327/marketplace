@@ -8,7 +8,7 @@ import {
   closePopup, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces,
   getAddressSearchPrimaryBranch, getAddressSearchMailingBranch, removeEmpty, getProductsCatalogRequest,
   searchCasProduct, prepareSearchedCasProducts, getDocumentTypes, newElementsIndex, removeElementsIndex, putEchoProduct,
-  searchManufacturers, searchUnNumber
+  postEchoProduct, searchManufacturers, searchUnNumber
 } from '~/modules/admin/actions'
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
@@ -25,7 +25,7 @@ import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
 
 import { validationSchema } from '~/modules/company-form/constants'
-import { provinceObjectRequired, errorMessages } from '~/constants/yupValidation'
+import { errorMessages } from '~/constants/yupValidation'
 
 import { CompanyForm } from '~/modules/company-form/'
 import { AddressForm } from '~/modules/address-form/'
@@ -45,9 +45,6 @@ const AccordionHeader = styled(Header)`
   }
 `
 
-const initialFormValues = {
-}
-
 class AddNewPopupEchoProduct extends React.Component {
   state = {
     isLoading: false,
@@ -60,52 +57,39 @@ class AddNewPopupEchoProduct extends React.Component {
   componentDidMount() {
     this.props.getProductsCatalogRequest()
 
-    if (getSafe(() => this.props.popupValues.elements.length, 0)) {
+    if (getSafe(() => this.props.popupValues.elements.length, false)) {
       this.props.prepareSearchedCasProducts(this.props.popupValues.elements)
+    } else {
+      this.props.newElementsIndex()
     }
+
     this.setState({ unNumber: getSafe(() => this.props.popupValues.unNumber, null) })
 
     this.props.searchManufacturers(getSafe(() => this.props.popupValues.manufacturer.name, ''), 200)
   }
 
   formValidationNew = () => (Yup.lazy(values => {
-    // let primaryUserRequired = values.primaryUser.email !== '' || values.primaryUser.name !== ''
-    let mailingBranchRequired = values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
-      values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
-      values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
-      values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''
-
     let minLength = errorMessages.minLength(2)
 
     let validation = Yup.object().shape({
+      code: Yup.string().trim().min(2, minLength).required(minLength),
+      elements: Yup.array().of(Yup.object().shape({
+        name: Yup.string().trim(),
+        casProduct: Yup.number().integer(),
+        minAssay: Yup.number().min(0).max(100),
+        maxAssay: Yup.number().min(0).max(100)
+      })).required(),
+      emergencyNumber: Yup.number().integer().required(),
+      hazardClass: Yup.number().integer().required(),
+      hazardLabels: Yup.array().of(Yup.number.integer()).required(),
+      manufacturer: Yup.number().integer().min(1).required(),
+      mfrProductCodes: Yup.array().of(Yup.string().trim()).required(),
       name: Yup.string().trim().min(2, minLength).required(minLength),
-
-      mailingBranch: Yup.lazy(() => {
-        if (mailingBranchRequired) return Yup.object().shape({
-          name: Yup.string().trim().min(2, minLength).required(minLength),
-          contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-          contactName: Yup.string().trim().min(2, minLength).required(minLength),
-          contactPhone: Yup.string().trim().required(errorMessages.enterPhoneNumber),
-          address: addressValidationSchema()
-        })
-        return Yup.mixed().notRequired()
-      }),
-
-      primaryBranch: Yup.object().shape({
-        name: Yup.string().trim().min(2, minLength).required(minLength),
-        contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-        contactName: Yup.string().trim().min(2, minLength).required(minLength),
-        contactPhone: Yup.string().trim().required(errorMessages.enterPhoneNumber),
-        address: addressValidationSchema()
-      }),
-      primaryUser: Yup.lazy(() => {
-        // if (primaryUserRequired) 
-        return Yup.object().shape({
-          email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-          name: Yup.string().trim().min(2, minLength).required(minLength),
-        })
-        // return Yup.mixed().notRequired()
-      }),
+      packagingGroup: Yup.number().integer().required(),
+      sdsRevisionDate: Yup.string().trim().required(),
+      sdsVersionNumber: Yup.string().trim().required(),
+      unNumber: Yup.number().integer().min(1).required(),
+      unShippingName: Yup.string().trim().required()
     })
 
     return validation
@@ -115,7 +99,6 @@ class AddNewPopupEchoProduct extends React.Component {
     const { popupValues } = this.props
     let initialValues = {
       attachments: [],
-      elements: [{ casProduct: undefined, assayMin: 100, assayMax: 100 }],
       description: '',
       hazardClass: [],
       unShippingName: undefined,
@@ -125,17 +108,21 @@ class AddNewPopupEchoProduct extends React.Component {
       packagingUnit: '',
       expirationDate: '',
       ...popupValues,
-      elements: popupValues.elements.map(element => ({
+      elements: getSafe(() => popupValues.elements.map(element => ({
         name: getSafe(() => element.displayName, ''),
         casProduct: getSafe(() => element.casProduct.id),
         assayMin: element.assayMin,
         assayMax: element.assayMax,
         proprietary: element.proprietary,
-      })),
+      })), [{ casProduct: '', assayMin: 100, assayMax: 100 }]),
+      manufacturer: getSafe(() => popupValues.manufacturer.id, ''),
+      mfrProductCodes: getSafe(() => popupValues.mfrProductCodes, []),
       unNumber: getSafe(() => popupValues.unNumber.unNumberCode, ''),
-      hazardClass: popupValues.hazardClass.id,
+      hazardClass: getSafe(() => popupValues.hazardClass.id, ''),
+      hazardLabels: getSafe(() => popupValues.hazardLabels.map(hL => hL.id), []),
       packagingGroup: getSafe(() => popupValues.packagingGroup.id, ''),
-      emergencyNumber: ''+getSafe(() => popupValues.emergencyNumber, '')
+      emergencyNumber: ''+getSafe(() => popupValues.emergencyNumber, ''),
+      sdsRevisionDate: getSafe(() => popupValues.sdsRevisionDate.substring(0, 10), '')
     }
     if (initialValues.elements.length === 0) {
       initialValues.elements = [{ name: '', casProduct: undefined, assayMin: 100, assayMax: 100, proprietary: false }]
@@ -212,9 +199,9 @@ class AddNewPopupEchoProduct extends React.Component {
       <Formik
         enableReinitialize
         initialValues={this.getInitialFormValues()}
-        validationSchema={popupValues ? validationSchema : this.formValidationNew()}
+        validationSchema={this.formValidationNew()}
         onSubmit={async (values, actions) => {
-          const editValues = {
+          const formValues = {
             code: values.code,
             elements: values.elements.map(element => element.proprietary ? ({
               assayMin: element.assayMin,
@@ -225,20 +212,23 @@ class AddNewPopupEchoProduct extends React.Component {
               assayMax: parseInt(element.assayMax),
               casProduct: element.casProduct,
             })),
-            emergencyNumber: values.emergencyNumber,
+            emergencyNumber: parseInt(values.emergencyNumber),
             hazardClass: values.hazardClass,
             hazardLabels: values.hazardLabels,
             manufacturer: values.manufacturer,
             mfrProductCodes: values.mfrProductCodes,
             name: values.name,
             packagingGroup: values.packagingGroup,
-            sdsRevisionDate: values.sdsRevisionDate,
+            sdsRevisionDate: values.sdsRevisionDate+'T00:00:00.00000Z',
             sdsVersionNumber: values.sdsVersionNumber,
             unNumber: stateUnNumber.id,
             unShippingName: values.unShippingName
           }
+
           if (getSafe(() => popupValues.id, false))
-            putEchoProduct(popupValues.id, editValues)
+            putEchoProduct(popupValues.id, formValues)
+          else
+            postEchoProduct(formValues)
 
           actions.setSubmitting(false)
         }}
@@ -370,7 +360,6 @@ class AddNewPopupEchoProduct extends React.Component {
                         const newTag = values.mfrProductCode
                         let productCodes = values.mfrProductCodes
                         productCodes.push(newTag)
-                        console.log('product code/s', newTag, productCodes)
                         setFieldValue('mfrProductCodes', productCodes)
                         setFieldValue('mfrProductCode', '')
                       }}>Add Tag</Button>
@@ -473,8 +462,7 @@ class AddNewPopupEchoProduct extends React.Component {
                                  attachments={values.attachments}
                                  edit={this.props.popupValues ? this.props.popupValues.id : ''}
                                  name='attachments'
-                                 type={values.attachmentType ? '' + values.attachmentType : 'Unspecified'}
-                                 expiration={values.expirationDate ? values.expirationDate + 'T00:00:00Z' : ''}
+                                 type={1}
                                  unspecifiedTypes={['Unspecified']}
                                  fileMaxSize={20}
                                  onChange={(files) => setFieldValue(
@@ -1077,6 +1065,7 @@ const mapDispatchToProps = {
   newElementsIndex,
   removeElementsIndex,
   putEchoProduct,
+  postEchoProduct,
   searchManufacturers,
   searchUnNumber
 }

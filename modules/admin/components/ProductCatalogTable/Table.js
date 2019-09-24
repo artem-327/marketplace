@@ -15,7 +15,7 @@ class ProductCatalogTable extends Component {
     return rows.map((row) => {
       return {
         ...row,
-        manufacturer: row.manufacturer.name
+        manufacturerName: row.manufacturer.name
       }
     })
   }

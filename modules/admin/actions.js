@@ -411,6 +411,13 @@ export function putEchoProduct(id, values) {
 	}
 }
 
+export function postEchoProduct(values) {
+	return {
+		type: AT.ADMIN_POST_ECHO_PRODUCT,
+		payload: api.postEchoProduct(values)
+	}
+}
+
 export function searchManufacturers(text, limit = false) {
   return {
     type: AT.ADMIN_SEARCH_MANUFACTURERS,
