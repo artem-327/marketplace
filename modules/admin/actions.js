@@ -418,6 +418,13 @@ export function postEchoProduct(values) {
 	}
 }
 
+export function deleteEchoProduct(echoProductId) {
+	return {
+		type: AT.ADMIN_DELETE_ECHO_PRODUCT,
+		payload: api.deleteEchoProduct(echoProductId)
+	}
+}
+
 export function searchManufacturers(text, limit = false) {
   return {
     type: AT.ADMIN_SEARCH_MANUFACTURERS,
