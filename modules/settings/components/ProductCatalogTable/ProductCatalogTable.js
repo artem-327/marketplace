@@ -18,14 +18,15 @@ class ProductCatalogTable extends Component {
 
   state = {
     columns: [
-      { name: 'productName', title: <FormattedMessage id='global.productName' defaultMessage='Product Name'>{(text) => text}</FormattedMessage>, sortPath: 'Product.productName' },
-      { name: 'productCode', title: <FormattedMessage id='global.productNumber' defaultMessage='Product Number'>{(text) => text}</FormattedMessage>, sortPath: 'Product.productCode' },
-      { name: 'casNumber', title: <FormattedMessage id='global.casNumber' defaultMessage='CAS Number'>{(text) => text}</FormattedMessage> },
-      { name: 'casName', title: <FormattedMessage id='global.casName' defaultMessage='CAS Name'>{(text) => text}</FormattedMessage> },
+      { name: 'intProductName', title: <FormattedMessage id='global.productName' defaultMessage='Product Name'>{(text) => text}</FormattedMessage>, sortPath: 'Product.productName' },
+      { name: 'intProductCode', title: <FormattedMessage id='global.productNumber' defaultMessage='Product Number'>{(text) => text}</FormattedMessage>, sortPath: 'Product.productCode' },
+      { name: 'externalProductName', title: <FormattedMessage id='global.externalProductName' defaultMessage='External Product Name!'>{(text) => text}</FormattedMessage> },
+      { name: 'externalProductCode', title: <FormattedMessage id='global.externalProductCode' defaultMessage='External Product Code!'>{(text) => text}</FormattedMessage> },
       { name: 'packagingSizeFormatted', title: <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>{(text) => text}</FormattedMessage> },
       { name: 'unit', title: <FormattedMessage id='global.unit' defaultMessage='Unit' /> },
       { name: 'packagingTypeName', title: <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>{(text) => text}</FormattedMessage> }
-    ]
+    ],
+    echoProducts: []
   }
 
   // componentDidMount() {
@@ -66,20 +67,10 @@ class ProductCatalogTable extends Component {
     return this.props.editedItem
   }
 
-  getRows = (rows) => {
-    return rows.map(row => {
-      return {
-        ...row,
-        casName: getSafe(() => row.casNames.map) ? (<Popup content={<List items={row.casNames.map(n => { return n })} />} trigger={<span>{row.casName}</span>} />) : row.casName,
-        casNumber: getSafe(() => row.casNumbers.map) ? (<Popup content={<List items={row.casNumbers.map(n => { return n })} />} trigger={<span>{row.casNumber}</span>} />) : row.casNumber
-      }
-    })
-  }
-
   render() {
     const {
       rows,
-      filterValue,
+      // filterValue,
       openPopup,
       openPopup2,
       deleteProduct,
@@ -97,7 +88,7 @@ class ProductCatalogTable extends Component {
           tableName='settings_product_catalog'
           {...datagrid.tableProps}
           loading={datagrid.loading || loading}
-          rows={this.getRows(rows)}
+          rows={rows}
           columns={columns}
           style={{ marginTop: '5px' }}
           rowActions={[
@@ -105,13 +96,14 @@ class ProductCatalogTable extends Component {
             { text: formatMessage({ id: 'settings.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }), callback: (row) => openPopup2(row) },
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              callback: row =>
-                confirm(
-                  formatMessage({ id: 'confirm.deleteProductCatalog', defaultMessage: 'Delete Product Catalog!' }),
+              callback: row => {
+                return confirm(
+                  formatMessage({ id: 'confirm.deleteProductCatalog', defaultMessage: 'Delete Product Catalog' }),
                   formatMessage(
-                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.productName}!?` },
-                    { item: row.productName })
-                ).then(() => deleteProduct(row.id, row.productName))
+                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.intProductName}?` },
+                    { item: row.intProductName })
+                ).then(() => deleteProduct(row.id, row.intProductName))
+              }
             }
           ]}
         />
@@ -122,70 +114,18 @@ class ProductCatalogTable extends Component {
 
 const mapStateToProps = (state, { datagrid }) => {
   return {
-    rows: datagrid.rows.map(product => {
-      let hasCasProducts = product.casProducts && product.casProducts.length
-
+    rows: datagrid.rows.map(product => {     
       return {
-        ...product,
-        id: product.id,
-        attachments: product.attachments ? product.attachments.map(att => {
-          return {
-            id: att.id,
-            name: att.name,
-            linked: true
-          }
-        }) : [],
-        description: getSafe(() => product.description),
-        productName: product.productName,
-        casName: hasCasProducts
-          ? product.casProducts.length > 1
-            ? 'Blend'
-            : product.casProducts[0].casProduct.casIndexName
-          : 'N/A',
-        casNames: hasCasProducts
-          ? product.casProducts.length > 1
-            ? product.casProducts.map(cp => {
-              return cp.casProduct.casIndexName
-            })
-            : null
-          : 'N/A',
-        casNumber: hasCasProducts
-          ? product.casProducts.length > 1
-            ? 'Blend'
-            : product.casProducts[0].casProduct.casNumber
-          : 'N/A',
-        casNumbers: hasCasProducts
-          ? product.casProducts.length > 1
-            ? product.casProducts.map(cp => {
-              return cp.casProduct.casNumber
-            })
-            : null
-          : 'N/A',
-        casProducts: hasCasProducts ? product.casProducts.map((casProduct, cpIndex) => {
-          return {
-            casProduct: casProduct.casProduct.id,
-            minimumConcentration: getSafe(() => casProduct.minimumConcentration, product.casProducts.length === 1 ? 100 : 0),
-            maximumConcentration: getSafe(() => casProduct.maximumConcentration, 100),
-            // minimumConcentration: casProduct.minimumConcentration ? casProduct.minimumConcentration : (product.casProducts.length === 1 ? 100 : 0),
-            // maximumConcentration: casProduct.maximumConcentration ? casProduct.maximumConcentration : 100,
-            item: casProduct
-          }
-        }) : [],
+        ...product, 
         packagingTypeName: getSafe(() => product.packagingType.name) ? <UnitOfPackaging value={product.packagingType.name} /> : 'N/A',
         packagingType: getSafe(() => product.packagingType.id),
         packagingSize: getSafe(() => product.packagingSize, 'N/A'),
         packagingSizeFormatted: product.packagingSize ? <FormattedNumber value={product.packagingSize} minimumFractionDigits={0} /> : 'N/A',
         packagingGroup: getSafe(() => product.packagingGroup.id),
+        externalProductCode: getSafe(() => product.echoProduct.code, 'N/A'),
+        externalProductName: getSafe(() => product.echoProduct.name, 'N/A'),
         unit: getSafe(() => product.packagingUnit.nameAbbreviation, 'N/A'),
         packagingUnit: getSafe(() => product.packagingUnit.id),
-        freightClass: getSafe(() => product.freightClass),
-        hazardous: product.hazardous,
-        hazardClass: product.hazardClasses && product.hazardClasses.length ? product.hazardClasses.map(d => (
-          d.id
-        )) : [],
-        nmfcNumber: getSafe(() => product.nmfcNumber),
-        stackable: product.stackable,
-        unNumber: getSafe(() => product.unNumber)
       }
     }),
     filterValue: state.settings.filterValue,
