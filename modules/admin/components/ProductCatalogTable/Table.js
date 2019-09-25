@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import confirm from '~/src/components/Confirmable/confirm'
 import { injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
@@ -27,7 +28,8 @@ class ProductCatalogTable extends Component {
       rows,
       intl: { formatMessage },
       openEditEchoProduct,
-      openEditEchoAltNamesPopup
+      openEditEchoAltNamesPopup,
+      deleteEchoProduct
     } = this.props
 
     return (
@@ -40,6 +42,14 @@ class ProductCatalogTable extends Component {
           rowActions={[
             { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: (row) => openEditEchoProduct(row.id, row) },
             { text: formatMessage({ id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }), callback: (row) => openEditEchoAltNamesPopup(row) },
+            { text: formatMessage({ id: 'admin.deleteEchoProduct', defaultMessage: 'Delete Echo Product' }), callback: (row) => confirm(
+                formatMessage({ id: 'confirm.deleteEchoProduct.title', defaultMessage: 'Delete Echo Product?' }),
+                formatMessage({ id: 'confirm.deleteEchoProduct.content', defaultMessage: `Do you really want to delete '${row.name}' echo product?` }, { name: row.name })
+              ).then(() => {
+                deleteEchoProduct(row.id)
+                datagrid.removeRow(row.id)
+              })
+            }
           ]}
         />
       </React.Fragment>

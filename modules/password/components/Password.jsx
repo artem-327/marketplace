@@ -85,11 +85,11 @@ class Password extends Component {
                       </GridColumn>
                       <GridColumn computer={14}>
                         <FormattedMessage id='verification.termsOfAgreement' values={{
-                          echosTermsAndServices: <Link href='https://echoexchange.net/docs/terms-and-services'>{formatMessage({ id: 'verification.termsAndServices' })}</Link>,
-                          echosTermsOfUse: <Link href='https://echoexchange.net/docs/terms-of-use'>{formatMessage({ id: 'verification.termsOfUse' })}</Link>,
-                          echosPrivacyPolicy: <Link href='https://echoexchange.net/docs/privacy-policy'>{formatMessage({ id: 'verification.privacyPolicy' })}</Link>,
-                          dwollasTermsOfServices: <Link href='https://www.dwolla.com/legal/tos/'>{formatMessage({ id: 'verification.termsAndServices' })}</Link>,
-                          dwollasPrivacyPolicy: <Link href='https://www.dwolla.com/legal/privacy/'>{formatMessage({ id: 'verification.privacyPolicy' })}</Link>
+                          echosTermsofService: <a href='https://www.echoexchange.net/legal' target='_blank' >{formatMessage({ id: 'verification.termsOfService' })}</a>,
+                          echosTermsOfUse: <a href='https://www.echoexchange.net/legal' target='"_blank' >{formatMessage({ id: 'verification.termsOfUse' })}</a>,
+                          echosPrivacyPolicy: <a href='https://www.echoexchange.net/legal' target='_blank' >{formatMessage({ id: 'verification.privacyPolicy' })}</a>,
+                          dwollasTermsOfService: <a href='https://www.dwolla.com/legal/tos/' target='_blank'>{formatMessage({ id: 'verification.termsOfService' })}</a>,
+                          dwollasPrivacyPolicy: <a href='https://www.dwolla.com/legal/privacy/' target='_blank'>{formatMessage({ id: 'verification.privacyPolicy' })}</a>
                         }} />
                       </GridColumn>
                     </GridRow>

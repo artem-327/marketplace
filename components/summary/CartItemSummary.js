@@ -224,8 +224,8 @@ class CartItemSummary extends Component {
             <RelaxedRow >
               <GridColumn>
                 <FormattedMessage
-                  id='global.CASChemicalName'
-                  defaultMessage='CAS # / Chemical name'
+                  id='global.mixtures'
+                  defaultMessage='Mixtures'
                 />
               </GridColumn>
 

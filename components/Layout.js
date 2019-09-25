@@ -134,7 +134,8 @@ class Layout extends Component {
                         <Settings role='user' />
                       </>
                     </Menu.Item>}
-                  <Dropdown.Item as={MenuLink} to='/legal/terms-of-service'
+                  <Dropdown.Item as={Menu.Item}
+                    onClick={() => window.open('https://www.echoexchange.net/legal')}
                     data-test='navigation_menu_user_terms_of_service_drpdn'>{formatMessage({
                       id: 'global.termsOfService',
                       defaultMessage: 'Terms of Service'
@@ -160,8 +161,7 @@ class Layout extends Component {
           </ContentContainer>
         </FlexContainer>
 
-
-        <SimpleEdit />
+        {auth && auth.identity && !auth.identity.isAdmin && <SimpleEdit />}
         <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
       </MainContainer>
     )

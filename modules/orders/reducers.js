@@ -211,6 +211,14 @@ export default function(state = initialState, action) {
                     ...action.payload.data
                 }
             }
+        case AT.ORDER_CANCEL_PAYMENT_FULFILLED:
+            return {
+                ...state,
+                detail: {
+                    ...state.detail,
+                    paymentStatus: 4
+                }
+            }
         default:
             return state
     }

@@ -74,7 +74,8 @@ class UsersTable extends Component {
       datagrid,
       deleteUser,
       resendWelcomeEmail,
-      toastManager
+      toastManager,
+      currentUserId
       // confirmMessage,
       // handleOpenConfirmPopup,
       // closeConfirmPopup,
@@ -96,13 +97,14 @@ class UsersTable extends Component {
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
           rowActions={[
-            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row) },
-            { text: formatMessage({ id: 'settings.editRoles', defaultMessage: 'Edit Roles' }), callback: row => openRolesPopup(row) },
+            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row), hidden: row => currentUserId === row.id },
+            { text: formatMessage({ id: 'settings.editRoles', defaultMessage: 'Edit Roles' }), callback: row => openRolesPopup(row), hidden: row => currentUserId === row.id },
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }), callback: row => confirm(
                 formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
                 formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` }, { item: row.name })
-              ).then(() => deleteUser(row.id, row.name))
+              ).then(() => deleteUser(row.id, row.name)),
+              hidden: row => currentUserId === row.id
             },
             {
               text: <FormattedMessage id='settings.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
@@ -188,6 +190,7 @@ const userEnableDisableStatus = (r, currentUserId) => {
         switchEnable: userEnableDisableStatus(user, currentUserId),
         lastLoginAt: user.lastLoginAt ? <FormattedDateTime dateTime={user.lastLoginAt} /> : ''
       })),
+      currentUserId,
       addedItem: state.settings.addedItem,
       editedItem: state.settings.editedItem,
       filterValue: state.settings.filterValue,

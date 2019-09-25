@@ -1,13 +1,6 @@
 import api from '~/api'
 import axios from 'axios'
 
-/*
-https://test.echoexchange.net/prodex/api/dev/swagger-diff?oldAppVersion=0.8.6&newAppVersion=0.8.6
-
-BE version 0.8.7.
-
- */
-
 export async function getAlternativeProductNames(value) {
   const { data } = await api.get(`/prodex/api/cas-products/alternative-names/${value}`)
   return data
@@ -189,6 +182,8 @@ export const getDocumentTypes = () => api.get(`/prodex/api/document-types/`)
 export const putEchoProduct = (id, values) => api.put(`/prodex/api/echo-products/id/${id}/`, values)
 
 export const postEchoProduct = (values) => api.post(`/prodex/api/echo-products`, values)
+
+export const deleteEchoProduct = (id) => api.delete(`/prodex/api/echo-products/id/${id}`)
 
 export const searchManufacturers = (text, limit) => api.get(`/prodex/api/manufacturers/search?search=${text}${Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''}`)
 

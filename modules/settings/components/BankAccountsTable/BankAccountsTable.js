@@ -291,8 +291,8 @@ const statusToLabel = {
 }
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
+
   let dwollaDocumentRequired = company && company.dwollaDocumentRequired ? company.dwollaDocumentRequired : 'verify-with-document'
-  
   const dwollaAccountStatus = getSafe(() => company.dwollaAccountStatus, 'none')
   //const dwollaAccountStatus = 'document'
   //let dwollaDocumentRequired = 'verify-with-document'
