@@ -884,6 +884,13 @@ export function loadFile(attachment) {
   }
 }
 
+export function addVerificationDocument(attachment, type) {
+  return async dispatch => {
+    await dispatch({ type: AT.SETTINGS_ADD_VERIFICATION_DOCUMENT, payload: api.addVerificationDocument(attachment, type) })
+    Datagrid.loadData()
+  }
+}
+
 export function addAttachment(attachment, type, expirationDate) {
   return async dispatch => {
     await dispatch({ type: AT.SETTINGS_ADD_ATTACHMENT, payload: api.addAttachment(attachment, type, expirationDate) })

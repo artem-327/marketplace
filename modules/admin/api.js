@@ -1,13 +1,6 @@
 import api from '~/api'
 import axios from 'axios'
 
-/*
-https://test.echoexchange.net/prodex/api/dev/swagger-diff?oldAppVersion=0.8.6&newAppVersion=0.8.6
-
-BE version 0.8.7.
-
- */
-
 export async function getAlternativeProductNames(value) {
   const { data } = await api.get(`/prodex/api/cas-products/alternative-names/${value}`)
   return data

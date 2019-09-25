@@ -8,33 +8,11 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import {Button, Dropdown, Form} from "formik-semantic-ui-fixed-validation";
 import { closeUploadDocumentsPopup, getVerificationDocumentTypes } from "../../actions";
 import Router from "next/dist/client/router";
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadVerifyFiles from './UploadVerifyFiles'
 
 class BankAccountsUploadDocPopup extends React.Component {
   componentDidMount() {
-    this.props.getVerificationDocumentTypes()
-  }
-
-
-
-
-
-  submitHandler = async (values, { setSubmitting }) => {
-    const { toastManager } = this.props
-
-    //! ! console.log('BankAccountsUploadDocPopup - submitHandler - values - ', values)
-    try {
-      //! ! TODO await ... endpoint call
-
-      toastManager.add(generateToastMarkup(
-        <FormattedMessage id='notifications.bankAccountDocumentUpload.header' />,
-        <FormattedMessage id='notifications.bankAccountDocumentUpload.content' />
-        ), { appearance: 'success' }
-      )
-      this.props.closeUploadDocumentsPopup()
-    }
-    catch { }
-    finally { setSubmitting(false) }
+    if (!this.props.verificationDocumentTypes.length)this.props.getVerificationDocumentTypes()
   }
 
   getInitialFormValues = () => {
@@ -64,7 +42,6 @@ class BankAccountsUploadDocPopup extends React.Component {
           <Form
             initialValues={this.getInitialFormValues()}
             onReset={closeUploadDocumentsPopup}
-            onSubmit={this.submitHandler}
             // validateOnChange={false}
             validateOnBlur={false}
           >
@@ -82,9 +59,8 @@ class BankAccountsUploadDocPopup extends React.Component {
 
                   <GridRow>
 
-                  <UploadLot {...this.props}
+                  <UploadVerifyFiles {...this.props}
                     attachments={values.attachments}
-                    edit={''}
                     name='attachments'
                     type={values.attachmentType}
                     unspecifiedTypes={['Unspecified']}
