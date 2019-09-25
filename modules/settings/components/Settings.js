@@ -206,7 +206,7 @@ class Settings extends Component {
   }
 
   getApiConfig = () => {
-    const { productCatalogUnmappedValue, currentTab } = this.props
+    const { currentTab } = this.props
     const datagridApiMap = {
       // 'company-details': this.companyDetails(),
       'users': {
@@ -243,10 +243,14 @@ class Settings extends Component {
         }
       },
       'products': {
-        url: `/prodex/api/products/datagrid`,
+        url: `/prodex/api/company-products/datagrid`,
         searchToFilter: v => v ? ([
-          { operator: 'LIKE', path: 'Product.productName', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'Product.productCode', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'CompanyProduct.intProductName', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'CompanyProduct.intProductCode', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'CompanyProduct.mfrProductName', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'CompanyProduct.mfrProductCode', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'CompanyProduct.echoProduct.name', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'CompanyProduct.echoProduct.code', values: [`%${v}%`] },
         ]) : [],
         params: {
           orOperator: true

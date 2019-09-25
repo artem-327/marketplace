@@ -55,7 +55,7 @@ export default {
   },
   getProductsCatalogByFilter: async (data) => {
     return await
-      api.post(`/prodex/api/products/datagrid?unmappedOnly=${data.unmapped}`, data.body).then(response => response.data)
+      api.post(`/prodex/api/company-products/datagrid?unmappedOnly=${data.unmapped}`, data.body).then(response => response.data)
   },
   getProductTypes: async () => {
     return await
@@ -93,8 +93,8 @@ export default {
   postNewCreditCard: body => api.post('/prodex/api/payments/cards/add', body),
   postNewBankAccount: body =>
     api.post('/prodex/api/payments/bank-accounts/add', body),
-  postNewProduct: (body) => api.post('/prodex/api/products', body),
-  updateProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body),
+  postNewProduct: (body) => api.post('/prodex/api/company-products', body),
+  updateProduct: (id, body) => api.put(`/prodex/api/company-products/id/${id}`, body),
   postNewDwollaAccount: body => api.post('/prodex/api/payments/dwolla/register', body),
   postImportProductCSV: (body, id) => {
     return api
@@ -139,7 +139,7 @@ export default {
   searchUnNumber: (pattern) => api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${pattern}`),
   deleteUser: userId => api.delete(`/prodex/api/users/id/${userId}`).then(() => userId),
   deleteWarehouse: branchId => api.delete(`/prodex/api/branches/${branchId}`).then(() => branchId),
-  deleteProduct: productId => api.delete(`/prodex/api/products/id/${productId}`).then(() => productId),
+  deleteProduct: productId => api.delete(`/prodex/api/company-products/id/${productId}`).then(() => productId),
   deleteCreditCard: cardId =>
     api.delete(`/prodex/api/payments/cards/${cardId}`).then(() => cardId),
   deleteBankAccount: bankAccountId =>
@@ -190,5 +190,5 @@ export default {
   getVerificationDocumentTypes: () => api.get('/prodex/api/payments/dwolla/documents/types').then(response => response.data),
   getLanguages: () => api.get('/prodex/api/cms/languages/').then(response => response.data),
   setPreferredLanguage: language => api.patch(`/prodex/api/users/me/preferred-language?language=${language.language}`).then(() => language),
-  searchEchoProducts: (searchQuery, limit) => api.get(`/prodex/api/echo-products/search?pattern=${searchQuery}&limit=${limit}`)
+  searchEchoProducts: (searchQuery, limit) => api.get(`/prodex/api/echo-products/search?pattern=${searchQuery}&limit=${limit}`).then(response => response.data)
 }

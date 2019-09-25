@@ -103,7 +103,7 @@ class TablesHandlers extends Component {
 
     const { filterValue } = this.state
     const bankAccTab = currentTab.type === 'bank-accounts'
-    
+
     return (
       <Menu secondary>
         <Menu.Item header>
@@ -131,7 +131,7 @@ class TablesHandlers extends Component {
             <Menu.Item>
               {currentTab.type === 'products' && (
                 <Checkbox
-                  label={<FormattedMessage id='settings.tables.products.unmappedOnly' defaultMessage='Unmapped only22' >{(text) => text}</FormattedMessage>}
+                  label={formatMessage({ id: 'settings.tables.products.unmappedOnly', defaultMessage: 'Unmapped only' })}
                   defaultChecked={productCatalogUnmappedValue}
                   onChange={(e, { checked }) => Datagrid.setQuery({ unmappedOnly: checked })}
                   data-test='settings_dwolla_unmapped_only_chckb'
