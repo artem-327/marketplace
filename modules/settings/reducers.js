@@ -86,13 +86,13 @@ export const initialState = {
     modalHeader:
       <FormattedMessage
         id='agree.withTOS.header'
-        defaultMessage='Agree with Terms of Services' />,
+        defaultMessage='Agree with Terms of Service' />,
     modalContent:
       <FormattedMessage
         id='agree.withTOS.content'
         values={{
-          tos: <FormattedMessage id='verification.termsAndServices'>
-            {text => <Link href='https://echoexchange.net/docs/terms-and-services'><a target='_blank'>{text}</a></Link>}
+          tos: <FormattedMessage id='verification.termsOfService'>
+            {text => <Link href='https://echoexchange.net/legal'><a target='_blank'>{text}</a></Link>}
           </FormattedMessage>
 
         }
