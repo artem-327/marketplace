@@ -155,6 +155,8 @@
   "global.casIndexName": "CAS Index Name",
   "global.min": "Min",
   "global.max": "Max",
+  "global.minToMax": "Min - Max",
+  "global.minToMax.data": "{min} - {max}",
   "global.fobPrice": "FOB Price",
   "global.advanced": "Advanced",
   "global.controllerInfo": "Controller Information",

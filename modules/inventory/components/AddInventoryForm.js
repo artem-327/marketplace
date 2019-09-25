@@ -100,6 +100,13 @@ const InnerRow = styled(GridRow)`
   }
 `
 
+const HeaderMixtures = styled(Header)`
+  margin: 0;
+  padding: 0.25em 0 0.75em;
+  text-transform: uppercase;
+  font-weight: 500;
+`
+
 const initValues = {
   additionalType: 'Unspecified',
   additional: [],
@@ -701,20 +708,18 @@ class AddInventoryForm extends Component {
 
                   <GridColumn computer={16} mobile={16}>
                     <Divider />
-                    <Header as='h2'><FormattedMessage id='global.mixtures' defaultMessage='Mixtures'>{text => text}</FormattedMessage></Header>
+                    <HeaderMixtures as='h4'><FormattedMessage id='global.mixtures' defaultMessage='Mixtures'>{text => text}</FormattedMessage></HeaderMixtures>
                   </GridColumn>
 
                   <GridColumn computer={6} mobile={16} className='key small'><FormattedMessage id='addInventory.casIndexName' defaultMessage='CAS Index Name' /></GridColumn>
-                  <GridColumn computer={5} mobile={10} className='key small'><FormattedMessage id='addInventory.casNumber' defaultMessage='CAS Number' /></GridColumn>
-                  <GridColumn computer={2} mobile={3} className='key small'><FormattedMessage id='global.min' defaultMessage='Min'>{text => text}</FormattedMessage></GridColumn>
-                  <GridColumn computer={2} mobile={3} className='key small'><FormattedMessage id='global.max' defaultMessage='Max'>{text => text}</FormattedMessage></GridColumn>
+                  <GridColumn computer={5} mobile={11} className='key small'><FormattedMessage id='addInventory.casNumber' defaultMessage='CAS Number' /></GridColumn>
+                  <GridColumn computer={5} mobile={5} className='key small' textAlign='center'><FormattedMessage id='global.minToMax' defaultMessage='Min - Max'>{text => text}</FormattedMessage></GridColumn>
 
                   {getSafe(() => casProducts.map(casProduct => (
                     <>
                       <GridColumn computer={6} mobile={16} className='small'>{getSafe(() => casProduct.proprietary ? casProduct.name : casProduct.casProduct.casIndexName, defaultMessage)}</GridColumn>
                       <GridColumn computer={5} mobile={16} className='small'>{getSafe(() => casProduct.proprietary ? 'Proprietary' : casProduct.casProduct.casNumber, defaultMessage)}</GridColumn>
-                      <GridColumn computer={2} mobile={3} className='small'>{getSafe(() => casProduct.min, defaultMessage)}</GridColumn>
-                      <GridColumn computer={3} mobile={3} className='small'>{getSafe(() => casProduct.max, defaultMessage)}</GridColumn>
+                      <GridColumn computer={5} mobile={5} className='small' textAlign='center'><FormattedMessage id='global.minToMax.data' defaultMessage='{min} - {max}' values={{ min: getSafe(() => casProduct.assayMin, defaultMessage), max: getSafe(() => casProduct.assayMax, defaultMessage) }}>{text => text}</FormattedMessage></GridColumn>
                     </>
                   )), null)}
 
