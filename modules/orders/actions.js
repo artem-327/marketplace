@@ -49,7 +49,12 @@ export const removeAttachment = (aId) => ({type: AT.ORDER_REMOVE_ATTACHMENT, asy
     fileId: aId
   }
 }})
-export const cancelPayment = (orderId) => ({type: AT.ORDER_CANCEL_PAYMENT, payload: Api.cancelPayment(orderId)})
+export const cancelPayment = (orderId) => ({type: AT.ORDER_CANCEL_PAYMENT, async payload() {
+  await Api.cancelPayment(orderId)
+  return {
+    orderId: orderId
+  }
+}})
 export const openReinitiateTransfer = () => ({type: AT.ORDER_OPEN_REINITIATE_TRANSFER, payload: {}})
 export const closeReinitiateTransfer = () => ({type: AT.ORDER_CLOSE_REINITIATE_TRANSFER, payload: {}})
 export const loadBankAccounts = () => ({type: AT.ORDER_LOAD_BANK_ACCOUNTS, payload: Api.loadBankAccounts()})

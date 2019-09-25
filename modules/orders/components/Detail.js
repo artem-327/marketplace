@@ -11,6 +11,8 @@ import ReinitiateTransfer from './components/ReinitiateTransfer'
 import confirm from '~/src/components/Confirmable/confirm'
 import moment from 'moment/moment'
 import { FormattedPhone } from '~/components/formatted-messages/'
+import { withToastManager } from 'react-toast-notifications'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
 
 const AccordionTitle = styled(Accordion.Title)`
   text-transform: uppercase;
@@ -104,7 +106,7 @@ class Detail extends Component {
   }
 
   render() {
-    const { router, order, action, isDetailFetching, openedAssignLots, openedReinitiateTransfer, cancelPayment } = this.props
+    const { router, order, action, isDetailFetching, openedAssignLots, openedReinitiateTransfer, cancelPayment, toastManager } = this.props
     const { activeIndexes } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
 
@@ -168,7 +170,14 @@ class Detail extends Component {
                                  <a onClick={() => confirm(
                                    <FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />,
                                    <FormattedMessage id='confirm.cancelPayment.content' defaultMessage='Do you really want to Cancel Payment for Order #{orderId}' values={{ orderId: order.id }} />
-                                 ).then(() => { cancelPayment(order.id) })}>
+                                 ).then(() => { cancelPayment(order.id).then(r => {
+                                   toastManager.add(generateToastMarkup(
+                                     <FormattedMessage id='order.cancelTransfer.success.header' defaultMessage='Canceled Payment' />,
+                                     <FormattedMessage id='order.cancelTransfer.success.content' defaultMessage='Payment transfer for order #{orderId} was canceled successfully' values={{ orderId: order.id }} />,
+                                   ), {
+                                     appearance: 'success'
+                                   })
+                                 }) })}>
                                    {order.paymentStatus}
                                  </a>
                                } />
@@ -468,4 +477,4 @@ class Detail extends Component {
   }
 }
 
-export default Detail
+export default withToastManager(Detail)
