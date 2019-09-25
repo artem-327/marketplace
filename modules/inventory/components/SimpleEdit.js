@@ -83,7 +83,7 @@ class SimpleEdit extends Component {
         min: getSafe(() => el.assayMin, ''),
         max: getSafe(() => el.assayMax, '')
       })),
-      price: getSafe(() => popupValues.price.amount),
+      price: getSafe(() => popupValues.pricingTiers[0].price.amount),
       quantity: getSafe(() => popupValues.quantity),
       warehouse: getSafe(() => popupValues.warehouse.id)
     }

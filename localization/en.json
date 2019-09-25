@@ -588,6 +588,8 @@
   "addInventory.chemicalName": "Chemical Name",
   "addInventory.productName": "Product Name",
   "addInventory.productCode": "Product Number",
+  "addInventory.productName.internal": "Internal Product Name",
+  "addInventory.productCode.internal": "Internal Product Number",
   "addInventory.measure": "Measure",
   "addInventory.UM": "U/M",
   "addInventory.UP": "U/P",
