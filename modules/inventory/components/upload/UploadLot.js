@@ -103,8 +103,6 @@ class UploadLot extends Component {
       }
     }
 
-    console.log('!!!!!! onPreviewDrop loadFile', loadFile);
-
     // upload new files as temporary attachments
     if (loadFile && addAttachment) {
       (async function loop(j) {

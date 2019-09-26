@@ -6,12 +6,11 @@ import ReactDropzone from 'react-dropzone'
 import { FormattedMessage } from 'react-intl'
 import { TOO_LARGE_FILE, UPLOAD_FILE_FAILED } from '~/src/modules/errors.js'
 import { FieldArray } from 'formik'
-import { loadFile, addVerificationDocument } from "../../actions";
-
 import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup } from '~/utils/functions'
 import styled from 'styled-components'
 import { Table, TableCell, Modal, Button } from 'semantic-ui-react'
+import Messages from "../../../messages/components/Messages";
 
 
 class UploadVerifyFiles extends Component {
@@ -25,7 +24,6 @@ class UploadVerifyFiles extends Component {
 
   onDropRejected = (blobs) => {
     let { fileMaxSize, toastManager } = this.props
-    console.log('!!!!!!! onDropRejected - blob', blob)
     blobs.forEach(function (blob) {
       if (blob.size > (fileMaxSize * 1024 * 1024)) {
         toastManager.add(generateToastMarkup(
@@ -44,20 +42,22 @@ class UploadVerifyFiles extends Component {
 
   onUploadFail = (fileName, error) => {
     let { fileMaxSize, toastManager } = this.props
+
+    const errorDescription = error.exceptionMessage
+      ? ' : ' + error.exceptionMessage
+      : ''
+
     toastManager.add(generateToastMarkup(
       <FormattedMessage id='errors.fileNotUploaded.header' defaultMessage='File not uploaded' />,
-      <FormattedMessage id='errors.fileNotUploaded.content' defaultMessage={`File ${fileName} was not uploaded due to an error`} values={{ name: fileName }} />
+      <FormattedMessage id='errors.fileNotUploaded.content2' defaultMessage={`File ${fileName} was not uploaded due to an error${errorDescription}`} values={{ name: fileName, errorDescription }} />,
     ), {
       appearance: 'error'
     })
   }
 
   onPreviewDrop = async (files) => {
-    let { type, fileMaxSize, unspecifiedTypes, toastManager } = this.props
+    let { type, fileMaxSize, unspecifiedTypes, toastManager, loadFile, addVerificationDocument } = this.props
     let { onDropRejected, onUploadSuccess, onUploadFail } = this
-
-    console.log('!!!!!! onPreviewDrop files', files);
-
 
     if (typeof unspecifiedTypes === 'undefined')
       unspecifiedTypes = []
@@ -81,43 +81,25 @@ class UploadVerifyFiles extends Component {
         i--
       }
     }
-
-    console.log('!!!!!! onPreviewDrop loadFile', loadFile);
-
-
     // upload new files as temporary attachments
     if (loadFile && addVerificationDocument) {
-
-      console.log('!!!!!! loadFile && addVerificationDocument');
-
       (async function loop(j) {
         if (j < files.length) await new Promise((resolve, reject) => {
           loadFile(files[j]).then(file => {
-            console.log('!!!!!! onPreviewDrop loadFile ok', file);
-
-
-            addVerificationDocument(file.value, parseInt(type)).then((aId) => {
-              console.log('!!!!!! onPreviewDrop addVerificationDocument ok', aId);
-
-              onUploadSuccess(aId.value.data)
-
+            addVerificationDocument(file.value, type).then((aId) => {
+              onUploadSuccess({
+                name: file.value.name,
+                id: aId.value.data.id
+              })
               resolve()
             }).catch(e => {
-              if (e.exceptionMessage) {
-
-
-              }
               onUploadFail(files[j].name, e)
               resolve()
             })
-
-
           }).catch(e => {
             onUploadFail(files[j].name, e)
             resolve()
           })
-
-
         }).then(loop.bind(null, j + 1))
       })(0).then(() => {
       })
@@ -129,7 +111,7 @@ class UploadVerifyFiles extends Component {
   }
 
   render() {
-    let { attachments, disabled, filesLimit, toastManager } = this.props
+    let { attachments, disabled, filesLimit, toastManager, accept } = this.props
     let hasFile = this.props.attachments && this.props.attachments.length !== 0
 
     const limitMsg = generateToastMarkup(
@@ -158,6 +140,7 @@ class UploadVerifyFiles extends Component {
                 {this.props.uploadedContent ? (
                   <ReactDropzone className='dropzoneLotHasFile'
                                  activeClassName='active'
+                                 accept={accept}
                                  onDrop={acceptedFiles => {
                                    if (acceptedFiles.length) {
                                      if (!filesLimit || acceptedFiles.length <= filesLimit) {
@@ -195,6 +178,7 @@ class UploadVerifyFiles extends Component {
               :
               <ReactDropzone className='dropzoneLot'
                              activeClassName='active'
+                             accept={accept}
                              onDrop={acceptedFiles => {
                                if (acceptedFiles.length) {
                                  if (!filesLimit || acceptedFiles.length <= filesLimit) {
@@ -229,7 +213,12 @@ UploadVerifyFiles.propTypes = {
   files: PropTypes.array,
   type: PropTypes.string,
   uploadClass: PropTypes.string,
-  uploadedClass: PropTypes.string
+  uploadedClass: PropTypes.string,
+  accept: PropTypes.string
+}
+
+UploadVerifyFiles.defaultProps = {
+  accept: 'image/jpeg, image/png, application/pdf'
 }
 
 export default withToastManager(UploadVerifyFiles)

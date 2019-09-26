@@ -885,8 +885,11 @@ export function loadFile(attachment) {
 }
 
 export function addVerificationDocument(attachment, type) {
-  return async dispatch => {
-    await dispatch({ type: AT.SETTINGS_ADD_VERIFICATION_DOCUMENT, payload: api.addVerificationDocument(attachment, type) })
+  return {
+    type: AT.SETTINGS_ADD_VERIFICATION_DOCUMENT,
+    async payload() {
+      return await api.addVerificationDocument(attachment, type)
+    }
   }
 }
 

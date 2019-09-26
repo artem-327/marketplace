@@ -76,6 +76,7 @@
   "errors.fileTooLarge.content": "File '{name}' is larger than maximal allowed size: {size} MB",
   "errors.fileNotUploaded.header": "File not uploaded",
   "errors.fileNotUploaded.content": "File {name} was not uploaded due to an error",
+  "errors.fileNotUploaded.content2": "File {name} was not uploaded due to an error{errorDescription}",
   "errors.fileNotUploaded.specifyDocType": "You have to specify document type first",
   "errors.fileNotUploaded.limitExceeded.header": "File limit exceeded",
   "errors.fileNotUploaded.limitExceeded.content": "You can't upload more than {count} document(s)",

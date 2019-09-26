@@ -6,7 +6,8 @@ import { generateToastMarkup } from '~/utils/functions'
 import {Modal, Grid, GridRow, FormGroup, FormField} from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from "react-intl";
 import {Button, Dropdown, Form} from "formik-semantic-ui-fixed-validation";
-import { closeUploadDocumentsPopup, getVerificationDocumentTypes } from "../../actions";
+//import { closeUploadDocumentsPopup, getVerificationDocumentTypes } from "../../actions";
+import * as Actions from '../../actions'
 import Router from "next/dist/client/router";
 import UploadVerifyFiles from './UploadVerifyFiles'
 
@@ -41,7 +42,6 @@ class BankAccountsUploadDocPopup extends React.Component {
           <Form
             initialValues={this.getInitialFormValues()}
             onReset={closeUploadDocumentsPopup}
-            // validateOnChange={false}
             validateOnBlur={false}
           >
             {({ values, setFieldValue }) => {
@@ -64,8 +64,6 @@ class BankAccountsUploadDocPopup extends React.Component {
                     type={values.attachmentType}
                     unspecifiedTypes={['']}
                     fileMaxSize={10}
-                    accept={'image/*'}
-
                     onChange={(files) => setFieldValue(
                      `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
                      {
@@ -125,8 +123,7 @@ class BankAccountsUploadDocPopup extends React.Component {
 }
 
 const mapDispatchToProps = {
-  closeUploadDocumentsPopup,
-  getVerificationDocumentTypes
+  ...Actions
 }
 const mapStateToProps = state => {
   return {

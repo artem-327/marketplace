@@ -142,8 +142,7 @@ export function getPricing(offerDetail, quantity) {
           }
         }
       }
-
-      return { quantityFrom: offerDetail.minimum, price: offerDetail.price.amount }
+      return { quantityFrom: offerDetail.minimum, price: sortedTiers[0].price.amount }
     }
 
     return { quantityFrom: offerDetail.minimum, price: tiers }
