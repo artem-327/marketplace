@@ -195,8 +195,6 @@ export default function reducer(state = initialState, action) {
         })
       }
 
-      // console.log((payload))
-
       return {
         ...state,
         cart: calculateTotalPrice(payload),

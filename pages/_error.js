@@ -29,7 +29,7 @@ export default class Error extends React.Component {
             </Button>
           </Message>
           <Footer>
-            <FormattedMessage id="error.footer" values={{ email: <a href="mailto:support@echoechange.com">support@echoechange.com</a> }} />
+            <FormattedMessage id="error.footer" values={{ email: <a href="mailto:support@echoexchange.com">support@echoexchange.com</a> }} />
           </Footer>
         </PageWrapper>
       </Layout>

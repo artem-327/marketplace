@@ -18,7 +18,6 @@ class BankAccountsUploadDocPopup extends React.Component {
   getInitialFormValues = () => {
     let initialValues = {
       attachments: [],
-      expirationDate: '',
       attachmentType: '',
     }
     return initialValues
@@ -63,7 +62,7 @@ class BankAccountsUploadDocPopup extends React.Component {
                     attachments={values.attachments}
                     name='attachments'
                     type={values.attachmentType}
-                    unspecifiedTypes={['Unspecified']}
+                    unspecifiedTypes={['']}
                     fileMaxSize={10}
                     accept={'image/*'}
 

@@ -88,18 +88,20 @@ export default class AddCart extends Component {
 
   getCartMarkup = () => {
     let { offer, order, isEdit } = this.props
-    let { quantity, pricing, warning } = this.props.sidebar
+    //! ! ? let { quantity, pricing, warning } = this.props.sidebar
+    let { quantity, warning } = this.props.sidebar
 
     let { pkgAmount, pricingTiers } = offer
 
     let { packagingUnit, packagingSize, packagingType } = offer.companyProduct
     let nameAbbreviation = packagingUnit ? packagingUnit.nameAbbreviation : null
 
-    let totalPrice = (quantity && pricing) ? pricing.price * quantity * packagingSize : null
+    //! ! ? let totalPrice = (quantity && pricing) ? pricing.price * quantity * packagingSize : null
+    let totalPrice = (quantity && pricingTiers) ? pricingTiers[0].price.amount * quantity * packagingSize : null
     let error = null
 
     var dropdownOptions = []
-    let currencyCode = offer.price.currency.code || 'USD'
+    let currencyCode = offer.pricingTiers[0].price.currency.code || 'USD'
 
     if (pricingTiers.length > 0) {
       pricingTiers.forEach((tier, i) => {
@@ -108,17 +110,17 @@ export default class AddCart extends Component {
 
         let text = <>
           <FormattedUnit unit='' separator=' - ' value={tier.quantityFrom} /><FormattedUnit unit='' value={quantityTo} />
-          <FormattedNumber style='currency' value={tier.price} currency={currencyCode} />
+          <FormattedNumber style='currency' value={tier.price.amount} currency={currencyCode} />
         </>
         dropdownOptions.push({
           key: i,
-          value: { quantityFrom: tier.quantityFrom, price: tier.price },
+          value: { quantityFrom: tier.quantityFrom, price: tier.price.amount },
           text
         })
       })
     }
     else {
-      let value = offer.pricing.price
+      let value = offer.pricingTiers[0].price.amount
 
       dropdownOptions.push({
         key: 0,
@@ -152,7 +154,7 @@ export default class AddCart extends Component {
     //   <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
     // )
 
-    let canProceed = !warning && pricing
+    let canProceed = !warning && pricingTiers
 
     return (
       <>
@@ -335,10 +337,10 @@ export default class AddCart extends Component {
               <GridColumn computer={6}>Price:</GridColumn>
               <GridColumn computer={10}>
                 {
-                  pricing && !isNaN(pricing.price) ? <><FormattedNumber
+                  pricingTiers && !isNaN(pricingTiers[0].price.amount) ? <><FormattedNumber
                     style='currency'
                     currency={currencyCode}
-                    value={pricing && pricing.price} /> {nameAbbreviation && `/ ${nameAbbreviation}`}</> : null
+                    value={pricingTiers && pricingTiers[0].price.amount } /> {nameAbbreviation && `/ ${nameAbbreviation}`}</> : null
                 }
 
 

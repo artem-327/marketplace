@@ -44,8 +44,8 @@ export default class ItemCartBody extends Component {
               <FormattedNumber
                 id='cart.pricePer'
                 style='currency'
-                currency={cartItem.productOffer.price.currency.code}
-              value={cartItem.pricing.price}
+                currency={cartItem.productOffer.pricingTiers[0].price.currency.code}
+              value={cartItem.productOffer.pricingTiers[0].price.amount}
               />
             </div>
             <div>

@@ -97,10 +97,36 @@ export function getAbbreviation(word) {
   return upper.slice(0, 1) + upper.slice(upper.length - 1, upper.length)
 }
 
-
+/*
 export function getPricing(offerDetail, quantity) {
   if (offerDetail.pricing) {
     let tiers = offerDetail.pricingTiers.length > 0 ? offerDetail.pricingTiers : offerDetail.pricing.price
+
+    if (tiers instanceof Array) {
+      let sortedTiers = tiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
+
+      for (let i = sortedTiers.length - 1; i >= 0; i--) {
+        let { quantityFrom } = sortedTiers[i]
+
+        if (quantity >= quantityFrom) {
+          try {
+            delete sortedTiers[i].id
+          } finally {
+            return sortedTiers[i]
+          }
+        }
+      }
+
+      return { quantityFrom: offerDetail.minimum, price: offerDetail.price.amount }
+    }
+
+    return { quantityFrom: offerDetail.minimum, price: tiers }
+  }
+}
+*/
+export function getPricing(offerDetail, quantity) {
+  if (offerDetail.pricingTiers) {
+    let tiers = offerDetail.pricingTiers.length > 0 ? offerDetail.pricingTiers : offerDetail.pricingTiers[0].price.amount
 
     if (tiers instanceof Array) {
       let sortedTiers = tiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
@@ -150,7 +176,7 @@ export const calculateTotalPrice = cart => {
   let totalPrice = 0
   let cartItems = cart.cartItems.slice()
   cartItems.forEach(cartItem => {
-    cartItem.price = cartItem.pricing.price * cartItem.quantity * cartItem.productOffer.companyProduct.packagingSize
+    cartItem.price = cartItem.pricing.price.amount * cartItem.quantity * cartItem.productOffer.companyProduct.packagingSize
     totalPrice += cartItem.price
   })
   return { ...cart, totalPrice, cartItems }

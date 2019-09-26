@@ -6,7 +6,7 @@ import ReactDropzone from 'react-dropzone'
 import { FormattedMessage } from 'react-intl'
 import { TOO_LARGE_FILE, UPLOAD_FILE_FAILED } from '~/src/modules/errors.js'
 import { FieldArray } from 'formik'
-import { addVerificationDocument } from "../../actions";
+import { loadFile, addVerificationDocument } from "../../actions";
 
 import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup } from '~/utils/functions'
@@ -20,25 +20,12 @@ class UploadVerifyFiles extends Component {
 
     this.state = {
       files: [],
-      duplicateFiles: []
-    }
-  }
-
-  removeFile = (file) => {  // ! ! delete
-    let poId = this.props.edit
-
-    // delete attachment from database
-    if (file.linked) {
-      this.props.removeAttachmentLink(this.props.lot ? true : false, this.props.lot ? this.props.lot.id : poId, file.id).then(() => {
-        this.props.removeAttachment(file.id)
-      })
-    } else {
-      this.props.removeAttachment(file.id)
     }
   }
 
   onDropRejected = (blobs) => {
     let { fileMaxSize, toastManager } = this.props
+    console.log('!!!!!!! onDropRejected - blob', blob)
     blobs.forEach(function (blob) {
       if (blob.size > (fileMaxSize * 1024 * 1024)) {
         toastManager.add(generateToastMarkup(
@@ -51,13 +38,12 @@ class UploadVerifyFiles extends Component {
     })
   }
 
-  onUploadSuccess = (files) => {
-    this.props.onChange(files)
+  onUploadSuccess = (file) => {
+    this.props.onChange(file)
   }
 
-  onUploadFail = (fileName) => {
+  onUploadFail = (fileName, error) => {
     let { fileMaxSize, toastManager } = this.props
-
     toastManager.add(generateToastMarkup(
       <FormattedMessage id='errors.fileNotUploaded.header' defaultMessage='File not uploaded' />,
       <FormattedMessage id='errors.fileNotUploaded.content' defaultMessage={`File ${fileName} was not uploaded due to an error`} values={{ name: fileName }} />
@@ -67,9 +53,11 @@ class UploadVerifyFiles extends Component {
   }
 
   onPreviewDrop = async (files) => {
-    let { loadFile, type, fileMaxSize, unspecifiedTypes, toastManager, expiration, listDocumentTypes } = this.props
+    let { type, fileMaxSize, unspecifiedTypes, toastManager } = this.props
     let { onDropRejected, onUploadSuccess, onUploadFail } = this
-    let duplicateFiles = []
+
+    console.log('!!!!!! onPreviewDrop files', files);
+
 
     if (typeof unspecifiedTypes === 'undefined')
       unspecifiedTypes = []
@@ -81,6 +69,7 @@ class UploadVerifyFiles extends Component {
       ), {
         appearance: 'error'
       })
+      return
     }
 
     // add new files to attachments and save indexes of own files
@@ -93,37 +82,49 @@ class UploadVerifyFiles extends Component {
       }
     }
 
+    console.log('!!!!!! onPreviewDrop loadFile', loadFile);
+
+
     // upload new files as temporary attachments
     if (loadFile && addVerificationDocument) {
+
+      console.log('!!!!!! loadFile && addVerificationDocument');
+
       (async function loop(j) {
         if (j < files.length) await new Promise((resolve, reject) => {
           loadFile(files[j]).then(file => {
+            console.log('!!!!!! onPreviewDrop loadFile ok', file);
+
+
             addVerificationDocument(file.value, parseInt(type)).then((aId) => {
+              console.log('!!!!!! onPreviewDrop addVerificationDocument ok', aId);
+
               onUploadSuccess(aId.value.data)
+
               resolve()
             }).catch(e => {
               if (e.exceptionMessage) {
-                const docType = listDocumentTypes.find(x => x.value === type)
-                duplicateFiles.push({
-                  id: parseInt(e.exceptionMessage),
-                  name: files[j].name,
-                  documentType: {id: docType.value, name: docType.text},
-                  file: file,
-                })
+
+
               }
-              // ! ! onUploadFail(files[j].name)
+              onUploadFail(files[j].name, e)
               resolve()
             })
+
+
           }).catch(e => {
-            onUploadFail(files[j].name)
+            onUploadFail(files[j].name, e)
             resolve()
           })
+
+
         }).then(loop.bind(null, j + 1))
       })(0).then(() => {
-        this.setState({duplicateFiles: duplicateFiles})
       })
+
+
     } else {
-      onUploadSuccess(files)
+      //! ! ??? onUploadSuccess(files)
     }
   }
 
@@ -146,10 +147,7 @@ class UploadVerifyFiles extends Component {
                           render={arrayHelpers => (
                             <>
                               {attachments && attachments.length ? attachments.map((file, index) => (
-                                <File key={file.id} onRemove={() => {
-                                  //this.removeFile(file)
-                                  arrayHelpers.remove(index)
-                                }} disabled={true} className='file lot' name={file.name} index={index} />
+                                <File key={file.id} disabled={true} className='file lot' name={file.name} index={index} />
                               )) : ''}
                             </>
                           )}
@@ -212,6 +210,7 @@ class UploadVerifyFiles extends Component {
                                  return
                                }
                              }}
+                             onDropRejected={this.onDropRejected}
               >
                 <div>
                   {this.props.emptyContent}

@@ -13,21 +13,19 @@ export default class Summary extends Component {
     let { header, cart, totalPrice, additionalContent } = this.props
     let { cartItems } = cart
 
-
     if (cartItems.length === 0) return null
 
     let subtotal = 0, totalWeight = 0
     for (let i = 0; i < cartItems.length; i++) {
-      subtotal += (cartItems[i].quantity * cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].pricing.price)
+      subtotal += (cartItems[i].quantity * cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].pricing.price.amount)
       totalWeight += cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].quantity
     }
 
     let shipping = cart.selectedShipping ? cart.selectedShipping.quote.estimatedPrice : 0
-    let { pricing } = cartItems[0].productOffer
+    let { pricing } = cartItems[0]
     let currency = pricing.price && pricing.price.currency ? pricing.price.currency.code : 'USD'
 
     let pricePerUnit = (totalPrice + shipping) / totalWeight
-
     
     return (
       <Segment>

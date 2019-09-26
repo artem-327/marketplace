@@ -19,7 +19,7 @@ function mapStateToProps(state, {router, datagrid}) {
     orders.data = []
   }
   const { type } = query
-  console.log(datagrid.rows)
+  //console.log(datagrid.rows)
   return {
     endpointType: query.type === 'sales' ? 'sale' : query.type,
     queryType: query.type,
@@ -41,7 +41,10 @@ function mapStateToProps(state, {router, datagrid}) {
       bl: '',
       sds: '',
       cofA: '',
-      orderTotal: "$" + r.totalPrice.formatMoney(2)
+      orderTotal: "$" +
+        r.totalPriceWithShipping
+        ? r.totalPriceWithShipping.formatMoney(2)
+        : r.totalPrice.formatMoney(2)
     })),
     activeStatus: orders.statusFilter
   }

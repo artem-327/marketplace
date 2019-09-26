@@ -148,7 +148,7 @@ class PurchaseOrder extends Component {
     if (cartIsFetching) return <Spinner />
     if (cart.cartItems.length === 0) Router.push('/cart')
 
-    let currency = cart.cartItems[0].productOffer.price.currency.code
+    let currency = cart.cartItems[0].productOffer.pricingTiers[0].price.currency.code
 
 
     let payment = null

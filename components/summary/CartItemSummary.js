@@ -200,7 +200,8 @@ class CartItemSummary extends Component {
 
   renderItem = ({ item, lastChild }) => {
     let { productOffer } = item
-    let { deleteCart, currency } = this.props
+    let { deleteCart } = this.props
+    let currency = this.props.currency.code
 
     return (
       <>
@@ -322,7 +323,7 @@ class CartItemSummary extends Component {
                   style='currency'
                   currency={currency}
                   id='cart.packs'
-                  value={item.pricing.price}
+                  value={item.pricing.price.amount}
                 />
               </GridColumn>
             </RelaxedRow>
