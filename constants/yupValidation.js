@@ -74,7 +74,7 @@ export const dateValidation = (required = true) => {
       moment(value, 'YYYY-MM-DD', true).isValid() || (!required && !value))
 
   if (required) return isValid.concat(Yup.string().required(errorMessages.requiredMessage))
-  else return isValid
+  else return isValid.concat(Yup.string().nullable())
 }
 
 export const ssnValidation = () => (

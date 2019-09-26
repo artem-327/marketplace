@@ -95,9 +95,9 @@ export function addProductOffer(values, poId = false, simple = false) {
           attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
             return att.id
           }) : null,
-          expirationDate: getSafe(() => moment(lot.expirationDate).utc(lot.expirationDate).format()),
+          expirationDate: lot.expirationDate && getSafe(() => moment(lot.expirationDate).utc(lot.expirationDate).format()),
           lotNumber: lot.lotNumber,
-          manufacturedDate: getSafe(() => moment(lot.manufacturedDate).utc(lot.manufacturedDate).format()),
+          manufacturedDate: lot.manufacturedDate && getSafe(() => moment(lot.manufacturedDate).utc(lot.manufacturedDate).format()),
           pkgAmount: getSafe(() => parseInt(lot.pkgAmount))
         }
       }) : null,
