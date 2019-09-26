@@ -8,7 +8,8 @@ import {
   closePopup, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces,
   getAddressSearchPrimaryBranch, getAddressSearchMailingBranch, removeEmpty, getProductsCatalogRequest,
   searchCasProduct, prepareSearchedCasProducts, getDocumentTypes, newElementsIndex, removeElementsIndex, putEchoProduct,
-  postEchoProduct, searchManufacturers, searchUnNumber
+  postEchoProduct, searchManufacturers, searchUnNumber, loadFile, addAttachment, linkAttachment, removeAttachmentLink,
+  removeAttachment
 } from '~/modules/admin/actions'
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
@@ -187,9 +188,11 @@ class AddNewPopupEchoProduct extends React.Component {
       isLoading,
       packagingGroups,
       hazardClasses,
+      postEchoProduct,
       putEchoProduct,
       searchedManufacturers,
-      searchedManufacturersLoading
+      searchedManufacturersLoading,
+      linkAttachment
     } = this.props
 
     const stateUnNumber = this.state.unNumber
@@ -229,12 +232,16 @@ class AddNewPopupEchoProduct extends React.Component {
             unShippingName: values.unShippingName
           }
           delete formValues.mfrProductCode
+          delete formValues.attachments
 
           try {
+            let data = {}
             if (getSafe(() => popupValues.id, false))
-              await putEchoProduct(popupValues.id, formValues)
+              data = await putEchoProduct(popupValues.id, formValues)
             else
-              await postEchoProduct(formValues)
+              data = await postEchoProduct(formValues)
+
+            await linkAttachment(data.value.data.id, values.attachments)
 
             const status = popupValues ? 'echoProductUpdated' : 'echoProductCreated'
             toastManager.add(generateToastMarkup(
@@ -503,7 +510,6 @@ class AddNewPopupEchoProduct extends React.Component {
                                        edit={this.props.popupValues ? this.props.popupValues.id : ''}
                                        name='attachments'
                                        type={3}
-                                       unspecifiedTypes={['Unspecified']}
                                        fileMaxSize={20}
                                        onChange={(files) => setFieldValue(
                                          `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
@@ -1100,6 +1106,11 @@ class AddNewPopupEchoProduct extends React.Component {
 }
 
 const mapDispatchToProps = {
+  loadFile,
+  addAttachment,
+  linkAttachment,
+  removeAttachment,
+  removeAttachmentLink,
   closePopup,
   getDocumentTypes,
   getProductsCatalogRequest,
@@ -1118,7 +1129,7 @@ const mapStateToProps = ({ admin }) => {
     ...admin,
     isLoading: false,
     config: admin.config[admin.currentTab.name],
-    documentTypes: admin.documentTypes,
+    listDocumentTypes: admin.documentTypes,
     packagingGroups: admin.productsPackagingGroups,
     hazardClasses: admin.productsHazardClasses
   }

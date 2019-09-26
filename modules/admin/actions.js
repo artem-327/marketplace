@@ -650,6 +650,54 @@ export function openEditEchoAltNamesPopup(value) {
 	}
 }
 
+export function loadFile(attachment) {
+  return {
+    type: AT.ADMIN_LOAD_FILE,
+    payload: api.loadFile(attachment)
+  }
+}
+
+export function addAttachment(attachment, type, additionalParams = {}) {
+  return {
+    type: AT.ADMIN_ADD_ATTACHMENT,
+    async payload() {
+      const data = await api.addAttachment(attachment, type, additionalParams)
+      return data
+    }
+  }
+}
+
+export function linkAttachment(echoId, attachmentIds) {
+  return {
+    type: AT.ADMIN_LINK_ATTACHMENT,
+    async payload() {
+      async function asyncForEach(array, callback) {
+        for (let index = 0; index < array.length; index++) {
+          await callback(array[index], index, array);
+        }
+      }
+      await asyncForEach(attachmentIds, async (attachment, index) => {
+        await api.linkAttachment(echoId, attachment.id)
+      })
+
+			return true
+		}
+  }
+}
+
+export function removeAttachment(aId) {
+  return async dispatch => {
+    await dispatch({ type: AT.ADMIN_REMOVE_ATTACHMENT, payload: api.removeAttachment(aId) })
+  }
+}
+
+export function removeAttachmentLink(echoId, aId) {
+  return {
+    type: AT.ADMIN_REMOVE_ATTACHMENT_LINK,
+    payload: api.removeAttachmentLink(echoId, aId)
+  }
+}
+
 export const addUnNumber = payload => ({ type: AT.ADMIN_ADD_UN_NUMBER, payload })
 
 export const getCompanyDetails = id => ({ type: AT.ADMIN_GET_COMPANY_DETAILS, payload: api.getCompanyDetails(id) })

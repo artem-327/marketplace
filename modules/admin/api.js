@@ -1,5 +1,6 @@
 import api from '~/api'
-import axios from 'axios'
+import axios from "axios"
+import { generateQueryString } from '~/utils/functions'
 
 export async function getAlternativeProductNames(value) {
   const { data } = await api.get(`/prodex/api/cas-products/alternative-names/${value}`)
@@ -184,6 +185,40 @@ export const putEchoProduct = (id, values) => api.put(`/prodex/api/echo-products
 export const postEchoProduct = (values) => api.post(`/prodex/api/echo-products`, values)
 
 export const deleteEchoProduct = (id) => api.delete(`/prodex/api/echo-products/id/${id}`)
+
+export const loadFile = (attachment) => {
+  return axios({
+    baseURL: '',
+    url: attachment.preview,
+    method: "GET",
+    responseType: "blob"
+  }).then(r => new File([r.data], attachment.name, { type: attachment.type }))
+}
+
+export const addAttachment = (attachment, docType, additionalParams = {}) => {
+  let defaultParams = {
+    isTemporary: true
+  }
+  let params = { ...defaultParams, ...additionalParams, type: docType }
+  const formData = new FormData()
+  formData.append('file', attachment)
+
+  let queryParams = generateQueryString(params)
+
+  return api.post(`/prodex/api/attachments${queryParams}`, formData, {
+    headers: {
+      'accept': 'application/json',
+      'Accept-Language': 'en-US,en;q=0.8',
+      'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+    }
+  })
+}
+
+export const linkAttachment = (echoId, attachmentId) => api.post(`/prodex/api/attachment-links/to-echo-product?attachmentId=${attachmentId}&echoProductId=${echoId}`)
+
+export const removeAttachment = (attachmentId) => api.delete(`/prodex/api/attachments/${attachmentId}`)
+
+export const removeAttachmentLink = (echoId, attachmentId) => api.delete(`/prodex/api/attachment-links/to-echo-product?attachmentId=${attachmentId}&echoProductId=${echoId}`)
 
 export const searchManufacturers = (text, limit) => api.get(`/prodex/api/manufacturers/search?search=${text}${Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''}`)
 
