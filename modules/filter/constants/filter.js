@@ -21,8 +21,8 @@ export const paths = {
   productOffers: {
     productId: 'ProductOffer.product.id',
     quantity: 'ProductOffer.quantity',
-    price: 'ProductOffer.pricingPrice',
-    packagingTypes: 'ProductOffer.product.packagingType.id',
+    price: 'ProductOffer.price',
+    packagingTypes: 'ProductOffer.companyProduct.packagingType.id',
     productConditions: 'ProductOffer.productCondition.id',
     productGrade: 'ProductGrade.id',
     productForms: 'ProductOffer.productForm.id',
