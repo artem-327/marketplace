@@ -153,7 +153,6 @@ class MyInventory extends Component {
     } = this.props
     const { columns, selectedRows } = this.state
 
-
     return (
       <>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
@@ -268,7 +267,7 @@ class MyInventory extends Component {
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}
           savedUrl='/prodex/api/product-offers/own/datagrid/saved-filters'
-          searchUrl={(text) => `/prodex/api/products/own/search?pattern=${text}&onlyMapped=false`}
+          searchUrl={(text) => `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`}
           searchWarehouseUrl={(text) => `/prodex/api/branches/warehouses/search?pattern=${text}`}
           apiUrl={datagrid.apiUrl}
           filters={datagrid.filters}

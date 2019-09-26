@@ -19,7 +19,7 @@ export const filterTypes = {
 
 export const paths = {
   productOffers: {
-    productId: 'ProductOffer.product.id',
+    productId: 'ProductOffer.companyProduct.id',
     quantity: 'ProductOffer.quantity',
     price: 'ProductOffer.price',
     packagingTypes: 'ProductOffer.companyProduct.packagingType.id',
