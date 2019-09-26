@@ -11,6 +11,7 @@ import {
   postImportProductCSV,
   clearDataOfCSV,
   closeImportPopupCancel,
+  postImportEchoProductCSV,
   postImportProductOfferCSV
 } from '../../actions'
 
@@ -51,11 +52,12 @@ class ProductImportPopup extends Component {
   steps = {
     upload: <Upload />,
     map: (
-      <Map productOffer={this.props.productOffer && this.props.productOffer} />
+      <Map productOffer={this.props.productOffer && this.props.productOffer} echoProduct={this.props.echoProduct && this.props.echoProduct} />
     ),
     preview: (
       <Preview
         productOffer={this.props.productOffer && this.props.productOffer}
+        echoProduct={this.props.echoProduct && this.props.echoProduct}
       />
     ),
     confirmation: <ConfirmationPage toUpload={this.toUpload} productOffer={this.props.productOffer && this.props.productOffer} />
@@ -133,7 +135,9 @@ class ProductImportPopup extends Component {
         break
       case 'preview':
         this.props.productOffer
-          ? this.props.postImportProductOfferCSV(mappedDataHeaderCSV, csvFileId)
+          ? this.props.postImportProductOfferCSV(mappedDataHeaderCSV, csvFileId) :
+        this.props.echoProduct
+          ? this.props.postImportEchoProductCSV(mappedDataHeaderCSV, csvFileId)
           : this.props.postImportProductCSV(mappedDataHeaderCSV, csvFileId)
 
         this.setState({ currentStep: 'confirmation', isFinishPreview: true })
@@ -148,6 +152,7 @@ const mapDispatchToProps = {
   postImportProductCSV,
   clearDataOfCSV,
   closeImportPopupCancel,
+  postImportEchoProductCSV,
   postImportProductOfferCSV
 }
 

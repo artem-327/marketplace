@@ -100,7 +100,15 @@ export default {
   postImportProductCSV: (body, id) => {
     return api
       .post(
-        `/prodex/api/imports/csv-import-products?temporaryFileId=${id}`,
+        `/prodex/api/imports/company-products/csv-import?temporaryFileId=${id}`,
+        body
+      )
+      .then(response => response.data)
+  },
+  postImportEchoProductCSV: (body, id) => {
+    return api
+      .post(
+        `/prodex/api/imports/echo-products/csv-import?temporaryFileId=${id}`,
         body
       )
       .then(response => response.data)
@@ -108,7 +116,7 @@ export default {
   postImportProductOfferCSV: (body, id) => {
     return api
       .post(
-        `/prodex/api/imports/csv-import-product-offers?temporaryFileId=${id}`,
+        `/prodex/api/imports/product-offers/csv-import?temporaryFileId=${id}`,
         body
       )
       .then(response => response.data)
@@ -125,10 +133,14 @@ export default {
       })
       .then(response => response.data)
   },
+  getCSVMapEchoProduct: () =>
+    api.get('/prodex/api/imports/echo-products/import-maps').then(response => response.data),
+  postCSVMapEchoProduct: data =>
+    api.post('/prodex/api/imports/echo-products/import-maps', data),
   getCSVMapProductOffer: () =>
-    api.get('/prodex/api/imports/product-offer-maps').then(response => response.data),
+    api.get('/prodex/api/imports/product-offers/import-maps').then(response => response.data),
   postCSVMapProductOffer: data =>
-    api.post('/prodex/api/imports/product-offer-maps', data),
+    api.post('/prodex/api/imports/product-offers/import-maps', data),
   putWarehouse: (branchId, body) =>
     api.put(`/prodex/api/branches/${branchId}`, body).then((r) => r.data),
   // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),

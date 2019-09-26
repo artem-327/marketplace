@@ -34,6 +34,7 @@ import { getSafe } from '~/utils/functions'
 
 import { DatagridProvider } from '~/modules/datagrid'
 import Settings from '~/components/settings'
+import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
 
 const tables = {
@@ -162,6 +163,10 @@ const addForms = {
   'Product Catalog': <EchoProductForm />
 }
 
+const importForm = {
+  'Product Catalog': <ProductImportPopup echoProduct={true} />
+}
+
 const addDwollaForms = {
   'Companies': <CompaniesDwollaForm />
 }
@@ -174,7 +179,8 @@ class Admin extends Component {
       currentEdit2Form,
       currentAddForm,
       currentTab,
-      currentAddDwolla
+      currentAddDwolla,
+      isOpenImportPopup
     } = this.props
 
     return (
@@ -182,6 +188,7 @@ class Admin extends Component {
         {currentAddForm && addForms[currentTab.name]}
         {currentEditForm && editForms[currentTab.name]}
         {currentEdit2Form && edit2Forms[currentTab.name]}
+        {isOpenImportPopup && importForm[currentTab.name]}
         {currentAddDwolla && addDwollaForms[currentTab.name] && Router.push('/dwolla-register/')}
         {tables[currentTab.name] || <p>This page is still under construction</p>}
       </>
@@ -219,6 +226,6 @@ class Admin extends Component {
   }
 }
 
-const mapStateToProps = state => ({ ...state.admin, auth: state.auth })
+const mapStateToProps = state => ({ ...state.admin, auth: state.auth, isOpenImportPopup: state.settings.isOpenImportPopup })
 
 export default withAuth(connect(mapStateToProps, null)(Admin))

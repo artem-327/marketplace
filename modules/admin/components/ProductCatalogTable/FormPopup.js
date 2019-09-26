@@ -366,27 +366,8 @@ class AddNewPopupEchoProduct extends React.Component {
                         }}
                       />
                     </FormField>
-                    <FormField error={errors.mfrProductCodes ? true : false}>
-                      <Input
-                        icon='tags'
-                        iconPosition='left'
-                        label={formatMessage({ id: 'global.mfrProductCodes', defaultMessage: 'Manufacturer Product Codes' })}
-                        placeholder='Enter tags'
-                        name='mfrProductCode'
-                      />
-                      <Button onClick={() => {
-                        const newTag = values.mfrProductCode
-                        let productCodes = values.mfrProductCodes
-                        productCodes.push(newTag)
-                        setFieldValue('mfrProductCodes', productCodes)
-                        setFieldValue('mfrProductCode', '')
-                      }}>Add Tag</Button>
-                      {errors.mfrProductCodes ? (
-                        <span className='sui-error-message'>{errors.mfrProductCodes}</span>
-                      ) : null}
-                    </FormField>
                     <FormField>
-                      <label><FormattedMessage id='global.codes' defaultMessage='Codes (Tags)' /></label>
+                      <FormattedMessage id='global.mfrProductCodes' defaultMessage='Manufacturer Product Codes' />
                       <FieldArray name='mfrProductCodes' render={arrayHelpers => (
                         <>
                           {values.mfrProductCodes && values.mfrProductCodes.length ? values.mfrProductCodes.map((mfrProductCode, index) => (
@@ -397,6 +378,24 @@ class AddNewPopupEchoProduct extends React.Component {
                           )) : ''}
                         </>
                       )} />
+                    </FormField>
+                    <FormField error={errors.mfrProductCodes ? true : false}>
+                      <Input
+                        icon='tags'
+                        iconPosition='left'
+                        placeholder='Enter tags'
+                        name='mfrProductCode'
+                      />
+                      <Button onClick={() => {
+                        const newTag = values.mfrProductCode
+                        let productCodes = values.mfrProductCodes
+                        productCodes.push(newTag)
+                        setFieldValue('mfrProductCodes', productCodes)
+                        setFieldValue('mfrProductCode', '')
+                      }}><FormattedMessage id='admin.echoProduct.addCode' defaultMessage='Add Code'>{text => text}</FormattedMessage></Button>
+                      {errors.mfrProductCodes ? (
+                        <span className='sui-error-message'>{errors.mfrProductCodes}</span>
+                      ) : null}
                     </FormField>
                   </FormGroup>
                   <FormGroup widths='equal'>

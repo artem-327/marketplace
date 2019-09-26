@@ -672,6 +672,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.GET_CSV_MAP_ECHO_PRODUCT_FULFILLED: {
+      return {
+        ...state,
+        maps: action.payload
+      }
+    }
+
     case AT.GET_CSV_MAP_PRODUCT_OFFER_FULFILLED: {
       return {
         ...state,
@@ -715,6 +722,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER_FULFILLED:
+    case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_FULFILLED:
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_FULFILLED: {
       return {
         ...state,

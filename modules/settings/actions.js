@@ -694,10 +694,24 @@ export function uploadCSVFile(payload) {
   }
 }
 
+export function getCSVMapEchoProduct() {
+  return {
+    type: AT.GET_CSV_MAP_ECHO_PRODUCT,
+    payload: api.getCSVMapEchoProduct()
+  }
+}
+
 export function getCSVMapProductOffer() {
   return {
     type: AT.GET_CSV_MAP_PRODUCT_OFFER,
     payload: api.getCSVMapProductOffer()
+  }
+}
+
+export function postCSVMapEchoProduct(payload) {
+  return {
+    type: AT.POST_CSV_MAP_ECHO_PRODUCT,
+    payload: api.postCSVMapEchoProduct(payload)
   }
 }
 
@@ -725,6 +739,13 @@ export function postImportProductCSV(payload, id) {
   return {
     type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS,
     payload: api.postImportProductCSV(payload, id)
+  }
+}
+
+export function postImportEchoProductCSV(payload, id) {
+  return {
+    type: AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS,
+    payload: api.postImportEchoProductCSV(payload, id)
   }
 }
 
