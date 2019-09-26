@@ -131,13 +131,26 @@ const mappingEchoProduct = [
 ]
 
 const mappingProduct = [
-  { text: <FormattedMessage id='global.casNumber' defaultMessage='CAS Number' />, value: 'CAS Number' },
-  { text: <FormattedMessage id='global.packagingMinimum' defaultMessage='Packaging Minimum' />, value: 'Packaging Minimum' },
+  { text: <FormattedMessage id='global.description' defaultMessage='Description' />, value: 'Description' },
+  { text: <FormattedMessage id='global.echoProduct' defaultMessage='Echo Product' />, value: 'Echo Product' },
+  { text: <FormattedMessage id='global.freezeProtect' defaultMessage='Freeze Protect' />, value: 'Freeze Protect' },
+  { text: <FormattedMessage id='global.freightClass' defaultMessage='Freight Class' />, value: 'Freight Class' },
+  { text: <FormattedMessage id='global.hazardous' defaultMessage='Hazardous' />, value: 'Hazardous' },
+  { text: <FormattedMessage id='global.inciName' defaultMessage='INCI Name' />, value: 'INCI Name' },
+  { text: <FormattedMessage id='global.intProductCode' defaultMessage='INT Product Code' />, value: 'INT Product Code' },
+  { text: <FormattedMessage id='global.intProductName' defaultMessage='INT Product Name' />, value: 'INT Product Name' },
+  { text: <FormattedMessage id='global.marketSegments' defaultMessage='Market Segments' />, value: 'Market Segments' },
+  { text: <FormattedMessage id='global.mfrProductCode' defaultMessage='MFR Product Code' />, value: 'MFR Product Code' },
+  { text: <FormattedMessage id='global.mfrProductName' defaultMessage='MFR Product Name' />, value: 'MFR Product Name' },
+  { text: <FormattedMessage id='global.nmfcNumber' defaultMessage='NMFC Number' />, value: 'NMFC Number' },
+  { text: <FormattedMessage id='global.nonHap' defaultMessage='Non Hap' />, value: 'Non Hap' },
   { text: <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size' />, value: 'Packaging Size' },
-  { text: <FormattedMessage id='global.packagingSplits' defaultMessage='Packaging Splits' />, value: 'Packaging Splits' },
   { text: <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type' />, value: 'Packaging Type' },
-  { text: <FormattedMessage id='global.unit' defaultMessage='Unit' />, value: 'Unit' },
-  { text: <FormattedMessage id='global.productName' defaultMessage='Product Name' />, value: 'Product Name' }
+  { text: <FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit' />, value: 'Packaging Unit' },
+  { text: <FormattedMessage id='global.prop65Exempt' defaultMessage='Prop65 Exempt' />, value: 'Prop65 Exempt' },
+  { text: <FormattedMessage id='global.saferChoice' defaultMessage='Safer Choice' />, value: 'Safer Choice' },
+  { text: <FormattedMessage id='global.stackable' defaultMessage='Stackable' />, value: 'Stackable' },
+  { text: <FormattedMessage id='global.vocExempt' defaultMessage='VOC Exempt' />, value: 'VOC Exempt' }
 ]
 
 const mappingProductOffer = [
