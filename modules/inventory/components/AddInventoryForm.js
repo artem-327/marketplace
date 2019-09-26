@@ -1062,7 +1062,7 @@ class AddInventoryForm extends Component {
                                   <InnerRow>
                                     <GridColumn width={10}>
                                       <Dropdown
-                                        label={formatMessage({ id: 'addInventory.productSearch', defaultMessage: 'Product Search' })}
+                                        label={formatMessage({ id: 'addInventory.companyProduct', defaultMessage: 'Company Product' })}
                                         name='product'
                                         options={this.props.autocompleteData.map((el) => ({
                                           key: el.id,
@@ -1070,6 +1070,7 @@ class AddInventoryForm extends Component {
                                           value: el.id
                                         }))}
                                         inputProps={{
+                                          placeholder: <FormattedMessage id='global.startTypingToSearch' defaultMessage='Start typing to begin search' />,
                                           loading: this.props.autocompleteDataLoading,
                                           'data-test': 'new_inventory_product_search_drpdn',
                                           style: { width: '300px' },
