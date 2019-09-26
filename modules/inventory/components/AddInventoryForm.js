@@ -1062,7 +1062,7 @@ class AddInventoryForm extends Component {
                                   <InnerRow>
                                     <GridColumn width={10}>
                                       <Dropdown
-                                        label={formatMessage({ id: 'addInventory.productSearch', defaultMessage: 'Product Search' })}
+                                        label={formatMessage({ id: 'addInventory.companyProduct', defaultMessage: 'Company Product' })}
                                         name='product'
                                         options={this.props.autocompleteData.map((el) => ({
                                           key: el.id,
@@ -1070,6 +1070,7 @@ class AddInventoryForm extends Component {
                                           value: el.id
                                         }))}
                                         inputProps={{
+                                          placeholder: <FormattedMessage id='global.startTypingToSearch' defaultMessage='Start typing to begin search' />,
                                           loading: this.props.autocompleteDataLoading,
                                           'data-test': 'new_inventory_product_search_drpdn',
                                           style: { width: '300px' },
@@ -1608,7 +1609,7 @@ class AddInventoryForm extends Component {
                                 render={arrayHelpers => (
                                   <>
                                     <Message attached='top' className='header-table-fields'>
-                                      <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{ marginTop: '-0.5em' }} onClick={() => arrayHelpers.push({ lotNumber: null, pkgAmount: null, manufacturedDate: '', expirationDate: '' })}
+                                      <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{ marginTop: '-0.5em' }} onClick={() => arrayHelpers.push({ lotNumber: null, pkgAmount: null, manufacturedDate: null, expirationDate: null })}
                                         data-test='new_inventory_add_lot_btn'
                                       />
                                       <FormattedMessage id='addInventory.lotDetails.header' defaultMessage='Lot Details'>

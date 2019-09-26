@@ -23,7 +23,9 @@ const { requiredMessage, mustBeNumber, minimum } = errorMessages
 
 const validationSchema = Yup.object().shape({
   product: Yup.number().required(requiredMessage).typeError(requiredMessage),
-  price: Yup.number().required(requiredMessage).typeError(mustBeNumber).positive(minimum(0.001)),
+  pricingTiers: Yup.array(Yup.object().shape({
+    price: Yup.number().required(requiredMessage).typeError(mustBeNumber).positive(minimum(0.001)),
+  })),
   quantity: Yup.number().required(requiredMessage).typeError(mustBeNumber).positive(minimum(1)),
   warehouse: Yup.number().required(requiredMessage).typeError(requiredMessage)
 })
@@ -70,7 +72,7 @@ class SimpleEdit extends Component {
       id: popupValues.warehouse.id
     })
 
-    
+
     let initialValues = {
       packagingSize: getSafe(() => popupValues.companyProduct.packagingSize),
       product: getSafe(() => popupValues.companyProduct.id),
@@ -83,8 +85,12 @@ class SimpleEdit extends Component {
         min: getSafe(() => el.assayMin, ''),
         max: getSafe(() => el.assayMax, '')
       })),
-      price: getSafe(() => popupValues.pricingTiers[0].price.amount),
-      quantity: getSafe(() => popupValues.quantity),
+      // price: getSafe(() => popupValues.pricingTiers[0].price.amount),
+      pricingTiers: getSafe(() => popupValues.pricingTiers.map((el) => ({
+        quantityFrom: el.quantityFrom,
+        price: el.price.amount
+      })), [{ quantityFrom: 1, price: '' }]),
+      quantity: getSafe(() => popupValues.quantity / popupValues.companyProduct.packagingSize),
       warehouse: getSafe(() => popupValues.warehouse.id)
     }
 
@@ -93,7 +99,10 @@ class SimpleEdit extends Component {
         onSubmit={async (values) => {
           this.setState({ submitting: true })
           let payload = {
-            price: values.price,
+            pricingTiers: values.pricingTiers.map((el) => ({
+              quantityFrom: el.quantityFrom,
+              price: parseFloat(el.price)
+            })),
             companyProduct: values.product,
             lots: [{
               lotNumber: '1',
@@ -134,7 +143,7 @@ class SimpleEdit extends Component {
         validationSchema={validationSchema}
         render={({ submitForm, values }) => {
           this.submitForm = submitForm
-
+          console.log({ values })
           return (
             <Modal
               closeIcon
@@ -159,7 +168,9 @@ class SimpleEdit extends Component {
                           name='product'
                           label={<FormattedMessage id='global.companyProduct' defaultMessage='Company Product'>{text => text}</FormattedMessage>}
                           inputProps={{
+                            placeholder: <FormattedMessage id='global.startTypingToSearch' defaultMessage='Start typing to begin search' />,
                             fluid: true,
+                            icon: 'search',
                             search: true,
                             loading: autocompleteDataLoading,
                             onChange: (_, { value }) => {
@@ -180,101 +191,108 @@ class SimpleEdit extends Component {
                         />
                       </GridColumn>
                     </GridRow>
-                    <GridRow columns={4}>
-                      <GridColumn>
-                        <Input
-                          label={<FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>{text => text}</FormattedMessage>}
-                          name='packagingSize'
-                          inputProps={{ transparent: true, readOnly: true }}
-                        />
-                      </GridColumn>
-                      <GridColumn>
-                        <Input
-                          label={<FormattedMessage id='global.uom' defaultMessage='UOM'>{text => text}</FormattedMessage>}
-                          name='uom'
-                          inputProps={{ transparent: true, readOnly: true }}
-                        />
-                      </GridColumn>
+                    {values.product &&
+                      <>
+                        <GridRow columns={4}>
+                          <GridColumn>
+                            <Input
+                              label={<FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>{text => text}</FormattedMessage>}
+                              name='packagingSize'
+                              inputProps={{ transparent: true, readOnly: true }}
+                            />
+                          </GridColumn>
+                          <GridColumn>
+                            <Input
+                              label={<FormattedMessage id='global.uom' defaultMessage='UOM'>{text => text}</FormattedMessage>}
+                              name='uom'
+                              inputProps={{ transparent: true, readOnly: true }}
+                            />
+                          </GridColumn>
 
-                      <GridColumn>
-                        <Input
-                          label={<FormattedMessage id='global.packaging' defaultMessage='Packaging'>{text => text}</FormattedMessage>}
-                          name='packaging'
-                          inputProps={{ transparent: true, readOnly: true }}
-                        />
-                      </GridColumn>
+                          <GridColumn>
+                            <Input
+                              label={<FormattedMessage id='global.packaging' defaultMessage='Packaging'>{text => text}</FormattedMessage>}
+                              name='packaging'
+                              inputProps={{ transparent: true, readOnly: true }}
+                            />
+                          </GridColumn>
 
-                      <GridColumn>
-                        <Input
-                          label={<FormattedMessage id='global.casTradeName' defaultMessage='CAS/Trade Name'>{text => text}</FormattedMessage>}
-                          name='casTradeName'
-                          inputProps={{ transparent: true, readOnly: true }}
-                        />
-                      </GridColumn>
-                    </GridRow>
-                    <Divider />
+                          <GridColumn>
+                            <Input
+                              label={<FormattedMessage id='global.casTradeName' defaultMessage='CAS/Trade Name'>{text => text}</FormattedMessage>}
+                              name='casTradeName'
+                              inputProps={{ transparent: true, readOnly: true }}
+                            />
+                          </GridColumn>
+                        </GridRow>
+                        {values.casProducts.length > 0 &&
+                          <>
 
-                    <BottomUnpaddedRow columns={4}>
-                      <GridColumn>
-                        <label>
-                          <FormattedMessage id='global.casIndexNumber' defaultMessage='CAS Index Number' />
-                        </label>
-                      </GridColumn>
+                            <Divider />
 
-                      <GridColumn>
-                        <label>
-                          <FormattedMessage id='global.casIndexName' defaultMessage='CAS Index Name' />
-                        </label>
-                      </GridColumn>
+                            <BottomUnpaddedRow columns={4}>
+                              <GridColumn>
+                                <label>
+                                  <FormattedMessage id='global.casIndexNumber' defaultMessage='CAS Index Number' />
+                                </label>
+                              </GridColumn>
 
-                      <GridColumn>
-                        <label>
-                          <FormattedMessage id='global.min' defaultMessage='Min' />
-                        </label>
-                      </GridColumn>
+                              <GridColumn>
+                                <label>
+                                  <FormattedMessage id='global.casIndexName' defaultMessage='CAS Index Name' />
+                                </label>
+                              </GridColumn>
 
-                      <GridColumn>
-                        <label>
-                          <FormattedMessage id='global.max' defaultMessage='Max' />
-                        </label>
-                      </GridColumn>
-                    </BottomUnpaddedRow>
+                              <GridColumn>
+                                <label>
+                                  <FormattedMessage id='global.min' defaultMessage='Min' />
+                                </label>
+                              </GridColumn>
+
+                              <GridColumn>
+                                <label>
+                                  <FormattedMessage id='global.max' defaultMessage='Max' />
+                                </label>
+                              </GridColumn>
+                            </BottomUnpaddedRow>
 
 
-                    {values.casProducts.map((_, i) => (
-                      <GridRow columns={4}>
-                        <GridColumn>
-                          <Input
-                            name={`casProducts[${i}].casIndexName`}
-                            inputProps={{ transparent: true, readOnly: true }}
-                          />
-                        </GridColumn>
+                            {values.casProducts.map((_, i) => (
+                              <GridRow columns={4}>
+                                <GridColumn>
+                                  <Input
+                                    name={`casProducts[${i}].casIndexName`}
+                                    inputProps={{ transparent: true, readOnly: true }}
+                                  />
+                                </GridColumn>
 
-                        <GridColumn>
-                          <Input
-                            name={`casProducts[${i}].casIndexNumber`}
-                            inputProps={{ transparent: true, readOnly: true }}
-                          />
-                        </GridColumn>
+                                <GridColumn>
+                                  <Input
+                                    name={`casProducts[${i}].casIndexNumber`}
+                                    inputProps={{ transparent: true, readOnly: true }}
+                                  />
+                                </GridColumn>
 
-                        <GridColumn>
-                          <Input
-                            name={`casProducts[${i}].min`}
-                            inputProps={{ transparent: true, readOnly: true }}
-                          />
-                        </GridColumn>
+                                <GridColumn>
+                                  <Input
+                                    name={`casProducts[${i}].min`}
+                                    inputProps={{ transparent: true, readOnly: true }}
+                                  />
+                                </GridColumn>
 
-                        <GridColumn>
-                          <Input
-                            name={`casProducts[${i}].max`}
-                            inputProps={{ transparent: true, readOnly: true }}
-                          />
-                        </GridColumn>
-                      </GridRow>
-                    ))}
-
-                    <Divider />
-
+                                <GridColumn>
+                                  <Input
+                                    name={`casProducts[${i}].max`}
+                                    inputProps={{ transparent: true, readOnly: true }}
+                                  />
+                                </GridColumn>
+                              </GridRow>
+                            ))}
+                          </>
+                        }
+                        <Divider />
+                      </>
+                    }
                     <GridRow>
                       <GridColumn width={4}>
                         <Input
@@ -285,7 +303,7 @@ class SimpleEdit extends Component {
                             label: getSafe(() => preferredCurrency.symbol, 'US$'),
                             fluid: true
                           }}
-                          name='price'
+                          name='pricingTiers[0].price'
                           label={<FormattedMessage id='global.fobPrice' defaultMessage='FOB Price'>{text => text}</FormattedMessage>}
                         />
                       </GridColumn>
@@ -316,19 +334,15 @@ class SimpleEdit extends Component {
                           label={<FormattedMessage id='global.warehouse' defaultMessage='Warehouse'>{text => text}</FormattedMessage>}
                         />
                       </GridColumn>
-
                     </GridRow>
                   </Grid>
                 </Form>
               </Modal.Content>
 
-              <Modal.Content>
-              </Modal.Content>
               <Modal.Actions>
                 <Button basic primary onClick={() => Router.push(`/inventory/${popupValues.id ? `edit?id=${popupValues.id}` : 'add'}`)}>
                   <FormattedMessage id='global.advanced' defaultMessage='Advanced'>{text => text}</FormattedMessage>
                 </Button>
-
                 <Button primary type='submit' onClick={() => this.submitForm()}>
                   <FormattedMessage
                     id={`global.${popupValues.id ? 'editListing' : 'addListing'}'`}
