@@ -118,7 +118,7 @@ class ActionsRequired extends React.Component {
           </>
         ) : (
           <>
-            {detail.paymentStatus === 5 && moment().isBefore(repayUntil.add(3, 'days')) ? this.renderSegment(
+            {(detail.paymentStatus === 5 || detail.paymentStatus === 4) && moment().isBefore(repayUntil.add(3, 'days')) ? this.renderSegment(
               'red',
               14,
               null,

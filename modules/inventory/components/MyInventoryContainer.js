@@ -39,12 +39,12 @@ function mapStateToProps(store, { datagrid }) {
         pkgAmount: qtyPart ? <FormattedUnit unit={qtyPart} separator={' '} value={po.companyProduct.packagingSize} /> : 'N/A',
         //qtyPart ? `${po.product.packagingSize} ${qtyPart}` : 'N/A',
         quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.pkgAmount * po.companyProduct.packagingSize} /> : 'N/A',
-        cost: po.pricing.cost ? <FormattedNumber style='currency' currency={currency} value={po.pricing.cost} /> : 'N/A',
+        cost: po.cost ? <FormattedNumber style='currency' currency={currency} value={po.cost.amount} /> : 'N/A',
         pricingTiers: po.pricingTiers,
-        pricing: po.pricing,
+        //pricing: po.pricing,
         fobPrice: po.pricingTiers.length > 1
-          ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price} /> - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price} /> {qtyPart && (`/ ${qtyPart}`)} </>
-          : <> <FormattedNumber style='currency' currency={currency} value={getSafe(() => po.pricingTiers[0].price, po.pricing.price)} /> {qtyPart && (`/ ${qtyPart}`)} </>,
+          ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price.amount} /> - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price.amount} /> {qtyPart && (`/ ${qtyPart}`)} </>
+          : <> <FormattedNumber style='currency' currency={currency} value={getSafe(() => po.pricingTiers[0].price.amount)} /> {qtyPart && (`/ ${qtyPart}`)} </>,
         manufacturer: getSafe(() => po.manufacturer.name, 'N/A'),
         broadcasted: po.broadcasted,
         lotNumber: <ArrayToMultiple values={po.lots.map(d => (d.lotNumber))} />,

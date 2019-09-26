@@ -85,10 +85,10 @@ class Password extends Component {
                       </GridColumn>
                       <GridColumn computer={14}>
                         <FormattedMessage id='verification.termsOfAgreement' values={{
-                          echosTermsAndServices: <a href='https://www.echoexchange.net/legal' target='_blank' >{formatMessage({ id: 'verification.termsAndServices' })}</a>,
+                          echosTermsOfService: <a href='https://www.echoexchange.net/legal' target='_blank' >{formatMessage({ id: 'verification.termsOfService' })}</a>,
                           echosTermsOfUse: <a href='https://www.echoexchange.net/legal' target='"_blank' >{formatMessage({ id: 'verification.termsOfUse' })}</a>,
                           echosPrivacyPolicy: <a href='https://www.echoexchange.net/legal' target='_blank' >{formatMessage({ id: 'verification.privacyPolicy' })}</a>,
-                          dwollasTermsOfServices: <a href='https://www.dwolla.com/legal/tos/' target='_blank'>{formatMessage({ id: 'verification.termsAndServices' })}</a>,
+                          dwollasTermsOfService: <a href='https://www.dwolla.com/legal/tos/' target='_blank'>{formatMessage({ id: 'verification.termsOfService' })}</a>,
                           dwollasPrivacyPolicy: <a href='https://www.dwolla.com/legal/privacy/' target='_blank'>{formatMessage({ id: 'verification.privacyPolicy' })}</a>
                         }} />
                       </GridColumn>

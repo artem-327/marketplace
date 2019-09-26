@@ -100,6 +100,13 @@ const InnerRow = styled(GridRow)`
   }
 `
 
+const HeaderMixtures = styled(Header)`
+  margin: 0;
+  padding: 0.25em 0 0.75em;
+  text-transform: uppercase;
+  font-weight: 500;
+`
+
 const initValues = {
   additionalType: 'Unspecified',
   additional: [],
@@ -678,56 +685,71 @@ class AddInventoryForm extends Component {
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 0}>
                 <Grid columns={2} className='data-grid'>
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.productName' defaultMessage='Product Name' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.productName' defaultMessage='Product Name' /></GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.echoProduct.name, defaultMessage)}</GridColumn>
+
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.productNumber' defaultMessage='Product Number' /></GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.echoProduct.code, defaultMessage)}</GridColumn>
+
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.productName.internal' defaultMessage='Internal Product Name' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.intProductName, defaultMessage)}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.productNumber' defaultMessage='Product Number' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.productNumber.internal' defaultMessage='Internal Product Number' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.intProductCode, defaultMessage)}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.measurement' defaultMessage='Measurement' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.measurement' defaultMessage='Measurement' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.packagingSize, defaultMessage)}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.um' defaultMessage='U/M' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.um' defaultMessage='U/M' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.packagingUnit.name, defaultMessage)}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.up' defaultMessage='U/P' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.up' defaultMessage='U/P' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.packagingType.name, defaultMessage)}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.casIndexName' defaultMessage='CAS Index Name' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{casProducts && (casProducts.length > 1 ? (<Popup content={<List items={casProducts.map(cp => cp.casProduct.casIndexName)} />} trigger={<a>{blendMessage}</a>} />) : getSafe(() => casProducts[0].casProduct.casIndexName, defaultMessage))}</GridColumn>
+                  <GridColumn computer={16} mobile={16}>
+                    <Divider />
+                    <HeaderMixtures as='h4'><FormattedMessage id='global.mixtures' defaultMessage='Mixtures'>{text => text}</FormattedMessage></HeaderMixtures>
+                  </GridColumn>
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.casNumber' defaultMessage='CAS Number' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{casProducts && (casProducts.length > 1 ? (<Popup content={<List items={casProducts.map(cp => cp.casProduct.casNumber)} />} trigger={<a>{blendMessage}</a>} />) : getSafe(() => casProducts[0].casProduct.casNumber, defaultMessage))}</GridColumn>
+                  <GridColumn computer={6} mobile={16} className='key small'><FormattedMessage id='addInventory.casIndexName' defaultMessage='CAS Index Name' /></GridColumn>
+                  <GridColumn computer={5} mobile={11} className='key small'><FormattedMessage id='addInventory.casNumber' defaultMessage='CAS Number' /></GridColumn>
+                  <GridColumn computer={5} mobile={5} className='key small' textAlign='center'><FormattedMessage id='global.minToMax' defaultMessage='Min - Max'>{text => text}</FormattedMessage></GridColumn>
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.masterProduct' defaultMessage='Master Product' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.masterProduct.toString(), defaultMessage)}</GridColumn>
+                  {getSafe(() => casProducts.map(casProduct => (
+                    <>
+                      <GridColumn computer={6} mobile={16} className='small'>{getSafe(() => casProduct.proprietary ? casProduct.name : casProduct.casProduct.casIndexName, defaultMessage)}</GridColumn>
+                      <GridColumn computer={5} mobile={16} className='small'>{getSafe(() => casProduct.proprietary ? 'Proprietary' : casProduct.casProduct.casNumber, defaultMessage)}</GridColumn>
+                      <GridColumn computer={5} mobile={5} className='small' textAlign='center'><FormattedMessage id='global.minToMax.data' defaultMessage='{min} - {max}' values={{ min: getSafe(() => casProduct.assayMin, defaultMessage), max: getSafe(() => casProduct.assayMax, defaultMessage) }}>{text => text}</FormattedMessage></GridColumn>
+                    </>
+                  )), null)}
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.chemicalName' defaultMessage='Chemical Name' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{casProducts && (casProducts.length > 1 ? (<Popup content={<List items={casProducts.map(cp => cp.casProduct.chemicalName)} />} trigger={<a>{blendMessage}</a>} />) : getSafe(() => casProducts[0].casProduct.chemicalName, defaultMessage))}</GridColumn>
+                  <GridColumn computer={16} mobile={16}>
+                    <Divider />
+                  </GridColumn>
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.hazaardous' defaultMessage='Hazaardous' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.hazaardous' defaultMessage='Hazaardous' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && (getSafe(() => product.hazaardous.toString(), false) ? 'Yes' : 'No')}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.unCode' defaultMessage='UN Code' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.unCode' defaultMessage='UN Code' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.echoProduct.unNumber.unNumberCode, defaultMessage)}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.packGrp' defaultMessage='Packaging Group' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.packGrp' defaultMessage='Packaging Group' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.echoProduct.packagingGroup.groupCode, defaultMessage)}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.hazaardousClass' defaultMessage='Hazaardous Class' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.hazaardousClass' defaultMessage='Hazaardous Class' /></GridColumn>
                   <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{
                     getSafe(() => product.echoProduct.hazardClasses.length > 0, false)
                       ? product.echoProduct.hazardClasses.map(hClass => (<Popup content={hClass.description} trigger={<Label>{hClass.classCode}</Label>} />)) : defaultMessage}
                   </Label.Group>
                   </GridColumn>
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.stackable' defaultMessage='Stackable' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.stackable' defaultMessage='Stackable' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.stackable) ? 'Yes' : 'No'}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.freightClass' defaultMessage='Freight Class' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.freightClass' defaultMessage='Freight Class' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.freightClass, defaultMessage)}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.nmfcNumber' defaultMessage='NMFC Number' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.nmfcNumber' defaultMessage='NMFC Number' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.nmfcNumber, defaultMessage)}</GridColumn>
                 </Grid>
               </Accordion.Content>
@@ -916,7 +938,7 @@ class AddInventoryForm extends Component {
     let { formatMessage } = intl
 
 
-    console.log({ initialState })
+    console.log('INITIAL STATE', { initialState })
     return (
       <div id='page' className='flex stretched'>
         <Dimmer active={loading} inverted>

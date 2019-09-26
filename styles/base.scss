@@ -134,8 +134,12 @@ i.icon.clickable:hover {
     padding-bottom: .111111em;
     line-height: 1.777778em;
 
-    &:nth-child(2n+1) {
+    &.key {
       color: #777;
+    }
+
+    &.small {
+      font-size: 1rem;
     }
 
     .labels {

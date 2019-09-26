@@ -146,7 +146,6 @@ export default function reducer(state = initialState, action) {
         return filtered
       }, [])
 
-
       return {
         ...state,
         loading: false,
@@ -175,7 +174,11 @@ export default function reducer(state = initialState, action) {
           minimum: getSafe(() => data.minimum, 1),
           splits: getSafe(() => data.splits, 1),
           priceTiers: data.pricingTiers.length > 0 ? data.pricingTiers.length : 1,
-          pricingTiers: data.pricingTiers.length > 0 ? data.pricingTiers : [{ price: 0.001, quantityFrom: 1 }],
+          pricingTiers: data.pricingTiers.length > 0 ? data.pricingTiers.map(pt => ({
+            id: pt.id,
+            price: pt.price.amount,
+            quantityFrom: pt.quantityFrom
+          })) : [{ price: 0.001, quantityFrom: 1 }],
           origin: getSafe(() => data.origin.id),
           tradeName: data.tradeName,
           productCondition: getSafe(() => data.productCondition.id),
