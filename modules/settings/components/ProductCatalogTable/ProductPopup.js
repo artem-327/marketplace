@@ -43,6 +43,17 @@ const AccordionHeader = styled(Header)`
   } 
 `
 
+
+const initialValues = {
+  intProductName: '',
+  intProductCode: '',
+  packagingSize: '',
+  packagingUnit: '',
+  packagingType: '',
+  nmfcNumber: '',
+
+}
+
 const formValidation = Yup.object().shape({
   intProductName: Yup.string().trim()
     .min(3, errorMessages.minLength(3))
@@ -182,6 +193,7 @@ class ProductPopup extends React.Component {
   getInitialFormValues = () => {
     const { popupValues } = this.props
     return {
+      ...initialValues,
       ...popupValues,
       echoProduct: getSafe(() => popupValues.echoProduct.id),
     }
