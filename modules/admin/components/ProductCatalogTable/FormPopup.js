@@ -245,7 +245,7 @@ class AddNewPopupEchoProduct extends React.Component {
               data = await postEchoProduct(formValues)
 
             let echoProduct = data.value.data
-            notLinkedAttachments = values.attachments.filter(att => !getSafe(() => att.linked, false))
+            const notLinkedAttachments = values.attachments.filter(att => !getSafe(() => att.linked, false))
             await linkAttachment(false, echoProduct.id, notLinkedAttachments)
 
             const docType = listDocumentTypes.find(dt => dt.id === 3)
@@ -257,6 +257,7 @@ class AddNewPopupEchoProduct extends React.Component {
                 linked: true
               }
             })
+
             Datagrid.updateRow(echoProduct.id, () => ({
               ...echoProduct,
               attachments: echoProduct.attachments.concat(notLinkedAttachments)
