@@ -24,8 +24,6 @@ class BankAccountsUploadDocPopup extends React.Component {
     return initialValues
   }
 
-//https://react-dropzone.netlify.com/
-
   render() {
     const {
       closeUploadDocumentsPopup,
@@ -57,56 +55,54 @@ class BankAccountsUploadDocPopup extends React.Component {
                   </FormField>
 
                   <GridRow>
-
-                  <UploadVerifyFiles {...this.props}
-                    attachments={values.attachments}
-                    name='attachments'
-                    type={values.attachmentType}
-                    unspecifiedTypes={['']}
-                    fileMaxSize={10}
-                    onChange={(files) => setFieldValue(
-                     `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
-                     {
-                       id: files.id,
-                       name: files.name
-                     }
-                    )}
-                    data-test='settings_bank_account_upload_doc_import_attachments'
-                    emptyContent={(
-                     <label>
-                       <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-                       <br />
-                       <FormattedMessage id='addInventory.dragDropOr'
-                         defaultMessage={'or {link} to select from computer'}
-                         values={{
-                           link: (
-                             <a>
-                               <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                             </a>
-                           )
-                         }} />
-                     </label>
-                    )}
-                    uploadedContent={(
-                     <label>
-                       <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-                       <br />
-                       <FormattedMessage id='addInventory.dragDropOr'
-                         defaultMessage={'or {link} to select from computer'}
-                         values={{
-                           link: (
-                             <a>
-                               <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                             </a>
-                           )
-                         }} />
-                     </label>
-                    )}
-                  />
-
+                    <UploadVerifyFiles {...this.props}
+                      attachments={values.attachments}
+                      name='attachments'
+                      type={values.attachmentType}
+                      unspecifiedTypes={['']}
+                      fileMaxSize={10}
+                      onChange={(files) => setFieldValue(
+                       `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+                       {
+                         id: files.id,
+                         name: files.name,
+                         type: files.type
+                       }
+                      )}
+                      data-test='settings_bank_account_upload_doc_import_attachments'
+                      emptyContent={(
+                       <label>
+                         <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+                         <br />
+                         <FormattedMessage id='addInventory.dragDropOr'
+                           defaultMessage={'or {link} to select from computer'}
+                           values={{
+                             link: (
+                               <a>
+                                 <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                               </a>
+                             )
+                           }} />
+                       </label>
+                      )}
+                      uploadedContent={(
+                       <label>
+                         <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+                         <br />
+                         <FormattedMessage id='addInventory.dragDropOr'
+                           defaultMessage={'or {link} to select from computer'}
+                           values={{
+                             link: (
+                               <a>
+                                 <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                               </a>
+                             )
+                           }} />
+                       </label>
+                      )}
+                    />
                   </GridRow>
                 </Grid>
-
                   <div style={{ textAlign: 'right' }}>
                     <Button.Reset onClick={closeUploadDocumentsPopup} data-test='settings_bank_account_upload_doc_popup_close_btn'>
                       <FormattedMessage id='global.close' defaultMessage='Close'>{(text) => text}</FormattedMessage>

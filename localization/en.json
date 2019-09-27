@@ -80,6 +80,8 @@
   "errors.fileNotUploaded.specifyDocType": "You have to specify document type first",
   "errors.fileNotUploaded.limitExceeded.header": "File limit exceeded",
   "errors.fileNotUploaded.limitExceeded.content": "You can't upload more than {count} document(s)",
+  "errors.fileNotUploaded.alreadyAttached.header": "File already uploaded",
+  "errors.fileNotUploaded.alreadyAttached.content": "File '{name}' already in attachments",
   "errors.noLotsSelected.header": "No Lots Selected",
   "errors.noLotsSelected.content": "Please check that all order items have selected at least one lot.",
   "errors.notImage.header": "File not Uploaded",

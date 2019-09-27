@@ -17,7 +17,7 @@ export default class Summary extends Component {
 
     let subtotal = 0, totalWeight = 0
     for (let i = 0; i < cartItems.length; i++) {
-      subtotal += (cartItems[i].quantity * cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].pricing.price.amount)
+      subtotal += (cartItems[i].quantity * cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].pricing.price)
       totalWeight += cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].quantity
     }
 

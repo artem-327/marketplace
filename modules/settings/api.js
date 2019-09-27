@@ -80,7 +80,6 @@ export default {
 
 
   loadFile: (attachment) => {
-    console.log('!!!!! loadFile: (attachment) 1', attachment)
     return axios({
       baseURL: '',
       url: attachment.preview,

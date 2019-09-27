@@ -130,22 +130,16 @@ export function getPricing(offerDetail, quantity) {
 
     if (tiers instanceof Array) {
       let sortedTiers = tiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
-
-      for (let i = sortedTiers.length - 1; i >= 0; i--) {
-        let { quantityFrom } = sortedTiers[i]
-
-        if (quantity >= quantityFrom) {
-          try {
-            delete sortedTiers[i].id
-          } finally {
-            return sortedTiers[i]
-          }
-        }
+      let index = 0
+      for (let i = 0; i < sortedTiers.length; i++) {
+        if (quantity >= sortedTiers[i].quantityFrom) {
+          index = i
+        } else break
       }
-      return { quantityFrom: offerDetail.minimum, price: sortedTiers[0].price.amount }
+      return { quantityFrom: offerDetail.minimum, price: sortedTiers[index].price.amount }
     }
 
-    return { quantityFrom: offerDetail.minimum, price: tiers }
+    return { quantityFrom: offerDetail.minimum, price: tiers[0].price.amount }
   }
 }
 
@@ -175,7 +169,7 @@ export const calculateTotalPrice = cart => {
   let totalPrice = 0
   let cartItems = cart.cartItems.slice()
   cartItems.forEach(cartItem => {
-    cartItem.price = cartItem.pricing.price.amount * cartItem.quantity * cartItem.productOffer.companyProduct.packagingSize
+    cartItem.price = cartItem.pricing.price * cartItem.quantity * cartItem.productOffer.companyProduct.packagingSize
     totalPrice += cartItem.price
   })
   return { ...cart, totalPrice, cartItems }

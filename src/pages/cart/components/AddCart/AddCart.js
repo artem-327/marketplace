@@ -10,6 +10,7 @@ import Router from 'next/router'
 import { FormattedNumber, FormattedMessage } from 'react-intl'
 import { FormattedUnit, UnitOfPackaging } from '~/components/formatted-messages'
 import { errorMessages } from '~/constants/yupValidation'
+import { getPricing } from "~/src/utils/functions"
 
 import { isEqual } from 'lodash'
 
@@ -88,19 +89,19 @@ export default class AddCart extends Component {
 
   getCartMarkup = () => {
     let { offer, order, isEdit } = this.props
-    //! ! ? let { quantity, pricing, warning } = this.props.sidebar
-    let { quantity, warning } = this.props.sidebar
+    let { quantity, pricing, warning } = this.props.sidebar
 
     let { pkgAmount, pricingTiers } = offer
+
+    const price = pricing ? pricing.price : null
 
     let { packagingUnit, packagingSize, packagingType } = offer.companyProduct
     let nameAbbreviation = packagingUnit ? packagingUnit.nameAbbreviation : null
 
-    //! ! ? let totalPrice = (quantity && pricing) ? pricing.price * quantity * packagingSize : null
-    let totalPrice = (quantity && pricingTiers) ? pricingTiers[0].price.amount * quantity * packagingSize : null
+    let totalPrice = (quantity && price) ? price * quantity * packagingSize : null
     let error = null
 
-    var dropdownOptions = []
+    let dropdownOptions = []
     let currencyCode = offer.pricingTiers[0].price.currency.code || 'USD'
 
     if (pricingTiers.length > 0) {
@@ -120,7 +121,7 @@ export default class AddCart extends Component {
       })
     }
     else {
-      let value = offer.pricingTiers[0].price.amount
+      let value = price
 
       dropdownOptions.push({
         key: 0,
@@ -154,7 +155,7 @@ export default class AddCart extends Component {
     //   <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
     // )
 
-    let canProceed = !warning && pricingTiers
+    let canProceed = !warning && price
 
     return (
       <>
@@ -337,10 +338,10 @@ export default class AddCart extends Component {
               <GridColumn computer={6}>Price:</GridColumn>
               <GridColumn computer={10}>
                 {
-                  pricingTiers && !isNaN(pricingTiers[0].price.amount) ? <><FormattedNumber
+                  price && !isNaN(price) ? <><FormattedNumber
                     style='currency'
                     currency={currencyCode}
-                    value={pricingTiers && pricingTiers[0].price.amount } /> {nameAbbreviation && `/ ${nameAbbreviation}`}</> : null
+                    value={price } /> {nameAbbreviation && `/ ${nameAbbreviation}`}</> : null
                 }
 
 

@@ -19,7 +19,7 @@ export default class ItemCartBody extends Component {
           <div className='item-cart-body-section'>
 
             <div className='item-cart-body-section-name'>
-              {productOffer.companyProduct.intProductCode + ' ' + productOffer.companyProduct.intProductName}
+              {productOffer.companyProduct.echoProduct.code + ' - ' + productOffer.companyProduct.echoProduct.name}
             </div>
 
             <div className='item-cart-body-section-name'>
@@ -45,7 +45,7 @@ export default class ItemCartBody extends Component {
                 id='cart.pricePer'
                 style='currency'
                 currency={cartItem.productOffer.pricingTiers[0].price.currency.code}
-              value={cartItem.productOffer.pricingTiers[0].price.amount}
+                value={cartItem.productOffer.pricingTiers[0].price.amount}
               />
             </div>
             <div>
