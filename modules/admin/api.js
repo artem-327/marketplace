@@ -180,6 +180,8 @@ export const searchCasProduct = (pattern) => api.get(`/prodex/api/cas-products/s
 
 export const getDocumentTypes = () => api.get(`/prodex/api/document-types/`)
 
+export const getEchoProduct = (id) => api.get(`/prodex/api/echo-products/id/${id}`)
+
 export const putEchoProduct = (id, values) => api.put(`/prodex/api/echo-products/id/${id}/`, values)
 
 export const postEchoProduct = (values) => api.post(`/prodex/api/echo-products`, values)

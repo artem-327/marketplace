@@ -404,24 +404,47 @@ export function searchUnNumber(pattern) {
   }
 }
 
+export function getEchoProduct(id) {
+	return {
+		type: AT.ADMIN_GET_ECHO_PRODUCT,
+		async payload() {
+			const response = await api.getEchoProduct(id)
+			Datagrid.updateRow(id, () => response.data)
+			return response
+		}
+	}
+}
+
 export function putEchoProduct(id, values) {
 	return {
 		type: AT.ADMIN_PUT_ECHO_PRODUCT,
-		payload: api.putEchoProduct(id, values)
+		async payload() {
+			const response = await api.putEchoProduct(id, values)
+      Datagrid.updateRow(id, () => response.data)
+			return response
+    }
 	}
 }
 
 export function postEchoProduct(values) {
 	return {
 		type: AT.ADMIN_POST_ECHO_PRODUCT,
-		payload: api.postEchoProduct(values)
+		async payload() {
+			const response = await api.postEchoProduct(values)
+      Datagrid.loadData()
+			return response
+		}
 	}
 }
 
 export function deleteEchoProduct(echoProductId) {
 	return {
 		type: AT.ADMIN_DELETE_ECHO_PRODUCT,
-		payload: api.deleteEchoProduct(echoProductId)
+		async payload() {
+			const response = await api.deleteEchoProduct(echoProductId)
+      Datagrid.removeRow(echoProductId)
+			return response
+		}
 	}
 }
 
@@ -488,8 +511,23 @@ export function getProductsCatalogRequest() {
   }
 }
 
-export function openEditEchoProduct(id, formData) {
+export function openEditEchoProduct(id) {
 	return async dispatch => {
+		// get newest data
+		const response = await dispatch(getEchoProduct(id))
+		let formData = response.value.data
+
+		// mark attachments as linked
+		if (formData.attachments) {
+      formData.attachments = formData.attachments.map(att => {
+        return {
+          ...att,
+          linked: true
+        }
+      })
+    }
+
+		// open popup with modified data
 		dispatch(openPopup(formData))
 	}
 }
@@ -620,7 +658,7 @@ export function postNewEchoProductAltName(productId, value) {
 
 export function updateEchoProductAltName(productId, id, value) {
 	return async dispatch => {
-		await dispatch({
+		const response = await dispatch({
 			type: AT.ADMIN_UPDATE_ECHO_PRODUCT_ALTERNATIVE_NAME,
 			payload: api.updateEchoProductAltName(id, value)
 		})
@@ -667,7 +705,7 @@ export function addAttachment(attachment, type, additionalParams = {}) {
   }
 }
 
-export function linkAttachment(echoId, attachmentIds) {
+export function linkAttachment(isLot, echoId, attachmentIds) {
   return {
     type: AT.ADMIN_LINK_ATTACHMENT,
     async payload() {
@@ -691,12 +729,14 @@ export function removeAttachment(aId) {
   }
 }
 
-export function removeAttachmentLink(echoId, aId) {
+export function removeAttachmentLink(isLot, echoId, aId) {
   return {
     type: AT.ADMIN_REMOVE_ATTACHMENT_LINK,
     payload: api.removeAttachmentLink(echoId, aId)
   }
 }
+
+export const getDocumentTypes = () => ({ type: AT.ADMIN_GET_DOCUMENT_TYPES, payload: api.getDocumentTypes() })
 
 export const addUnNumber = payload => ({ type: AT.ADMIN_ADD_UN_NUMBER, payload })
 

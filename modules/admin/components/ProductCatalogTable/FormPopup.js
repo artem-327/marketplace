@@ -100,6 +100,8 @@ class AddNewPopupEchoProduct extends React.Component {
     this.setState({ unNumber: getSafe(() => this.props.popupValues.unNumber, null) })
 
     this.props.searchManufacturers(getSafe(() => this.props.popupValues.manufacturer.name, ''), 200)
+
+    this.props.getDocumentTypes()
   }
 
   getInitialFormValues = () => {
@@ -192,7 +194,8 @@ class AddNewPopupEchoProduct extends React.Component {
       putEchoProduct,
       searchedManufacturers,
       searchedManufacturersLoading,
-      linkAttachment
+      linkAttachment,
+      listDocumentTypes
     } = this.props
 
     const stateUnNumber = this.state.unNumber
@@ -241,7 +244,13 @@ class AddNewPopupEchoProduct extends React.Component {
             else
               data = await postEchoProduct(formValues)
 
-            await linkAttachment(data.value.data.id, values.attachments)
+            let echoProduct = data.value.data
+            await linkAttachment(false, echoProduct.id, values.attachments)
+
+            echoProduct.attachments.map(att => {
+              return att
+            })
+            Datagrid.updateRow(echoProduct.id, () => echoProduct)
 
             const status = popupValues ? 'echoProductUpdated' : 'echoProductCreated'
             toastManager.add(generateToastMarkup(
@@ -507,7 +516,7 @@ class AddNewPopupEchoProduct extends React.Component {
                             <label><FormattedMessage id='global.doc' defaultMessage='Document' /></label>
                             <UploadLot {...this.props}
                                        attachments={values.attachments}
-                                       edit={this.props.popupValues ? this.props.popupValues.id : ''}
+                                       edit={getSafe(() => popupValues.id, '')}
                                        name='attachments'
                                        type={3}
                                        fileMaxSize={20}
