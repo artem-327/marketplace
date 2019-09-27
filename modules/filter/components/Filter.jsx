@@ -452,7 +452,7 @@ class Filter extends Component {
             <Header.Content>
               {`${option.content.productCode ? option.content.productCode : ''} ${option.content.productName ? option.content.productName : ''}`}
               {option.content.casProducts.map(cp => (
-                <Header.Subheader>{`${cp.casProduct.casNumber} ${cp.casProduct.chemicalName}`}</Header.Subheader>
+                <Header.Subheader>{`${getSafe(() => cp.casProduct.casNumber, '')} ${getSafe(() => cp.displayName, '')}`}</Header.Subheader>
               ))}
             </Header.Content>
           </Header>

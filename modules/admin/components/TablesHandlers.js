@@ -7,6 +7,7 @@ import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { openPopup, handleFiltersValue } from '../actions'
+import { openImportPopup } from '~/modules/settings/actions'
 import { Datagrid } from '~/modules/datagrid'
 
 class TablesHandlers extends Component {
@@ -56,6 +57,7 @@ class TablesHandlers extends Component {
     const {
       currentTab,
       openPopup,
+      openImportPopup,
       intl
     } = this.props
 
@@ -85,6 +87,17 @@ class TablesHandlers extends Component {
                 <FormattedMessage id='global.add' defaultMessage='Add'>{text => `${text} `}</FormattedMessage>{config[currentTab.name].addEditText}
               </Button>
             </Menu.Item>
+            {currentTab.name === 'Product Catalog' ? (
+              <Menu.Item>
+                <Button
+                  size='large'
+                  primary
+                  onClick={() => openImportPopup()}
+                  data-test='admin_import_btn'>
+                  {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}
+                </Button>
+              </Menu.Item>
+            ) : null }
           </Menu.Menu>
         }
       </Menu>
@@ -103,6 +116,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   openPopup,
+  openImportPopup,
   handleFiltersValue
 }
 

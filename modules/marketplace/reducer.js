@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 
-import { uniqueArrayByKey } from '~/utils/functions'
+import { uniqueArrayByKey, getSafe } from '~/utils/functions'
 
 export const initialState = {
   fileIds: [],
@@ -38,16 +38,20 @@ export default function reducer(state = initialState, action) {
       const rVal = {
         ...state,
         autocompleteDataLoading: false,
-        autocompleteData: uniqueArrayByKey(payload, 'id').map((el) => ({
-          key: el.id,
-          text: `${el.productCode ? el.productCode : ''} ${el.productName ? el.productName : ''}`,
-          value: JSON.stringify({ id: el.id, name: el.casProducts[0].casProduct.chemicalName, casNumber: el.casProducts[0].casProduct.casNumber }),
-          content: {
-            productCode: el.productCode,
-            productName: el.productName,
-            casProducts: el.casProducts
+        autocompleteData: uniqueArrayByKey(payload, 'id').map((el) => {
+          const productCode = getSafe(() => el.mfrProductCode, '')
+          const productName = getSafe(() => el.mfrProductName, '')
+          return {
+            key: el.id,
+            text: `${productCode} ${productName}`,
+            value: JSON.stringify({ id: el.id, name: el.echoProduct.elements[0].casProduct.chemicalName, casNumber: el.echoProduct.elements[0].casProduct.casNumber }),
+            content: {
+              productCode: productCode,
+              productName: productName,
+              casProducts: getSafe(() => el.echoProduct.elements, [])
+            }
           }
-        }))
+        })
       }
       return rVal
     }

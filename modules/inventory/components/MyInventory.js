@@ -23,9 +23,9 @@ class MyInventory extends Component {
   state = {
     columns: [
       { name: 'productName', title: <FormattedMessage id='myInventory.productName' defaultMessage='Product Name'>{(text) => text}</FormattedMessage>, width: 250, sortPath: 'ProductOffer.product.productName' },
-      { name: 'tradeName', title: <FormattedMessage id='myInventory.TradeName' defaultMessage='Trade Name'>{(text) => text}</FormattedMessage>, width: 160 },
       { name: 'productNumber', title: <FormattedMessage id='myInventory.productNumber' defaultMessage='Product Number'>{(text) => text}</FormattedMessage>, width: 160 },
-      { name: 'casNumberCombined', title: <FormattedMessage id='myInventory.casNumber' defaultMessage='CAS Number(s)'>{(text) => text}</FormattedMessage> },
+      { name: 'echoName', disabled: true },
+      { name: 'echoCode', disabled: true },
       { name: 'warehouse', title: <FormattedMessage id='myInventory.warehouse' defaultMessage='Warehouse'>{(text) => text}</FormattedMessage>, width: 180, sortPath: 'ProductOffer.warehouse.warehouse' },
       { name: 'available', title: <FormattedMessage id='myInventory.available' defaultMessage='Available PKGs'>{(text) => text}</FormattedMessage>, width: 130, sortPath: 'ProductOffer.quantity' },
       { name: 'packaging', title: <FormattedMessage id='myInventory.packaging' defaultMessage='Packaging'>{(text) => text}</FormattedMessage>, width: 130, sortPath: 'ProductOffer.product.packagingType.name' },
@@ -153,7 +153,6 @@ class MyInventory extends Component {
     } = this.props
     const { columns, selectedRows } = this.state
 
-
     return (
       <>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
@@ -211,12 +210,12 @@ class MyInventory extends Component {
             columns={columns}
             rows={this.getRows(rows)}
             // rowSelection
-            groupBy={['casNumberCombined']}
+            groupBy={['echoCode']}
             getChildGroups={rows =>
               _(rows)
-                .groupBy('productName')
+                .groupBy('echoName')
                 .map(v => ({
-                  key: `${v[0].productName}_${v[0].casNumberCombined}_${v.length}`,
+                  key: `${v[0].echoName}_${v[0].echoCode}_${v.length}`,
                   childRows: v
                 }))
                 .value()
@@ -268,7 +267,7 @@ class MyInventory extends Component {
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}
           savedUrl='/prodex/api/product-offers/own/datagrid/saved-filters'
-          searchUrl={(text) => `/prodex/api/products/own/search?pattern=${text}&onlyMapped=false`}
+          searchUrl={(text) => `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`}
           searchWarehouseUrl={(text) => `/prodex/api/branches/warehouses/search?pattern=${text}`}
           apiUrl={datagrid.apiUrl}
           filters={datagrid.filters}

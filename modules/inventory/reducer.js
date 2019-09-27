@@ -411,7 +411,24 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         autocompleteDataLoading: false,
-        autocompleteData: uniqueArrayByKey(payload.concat(state.autocompleteData), 'id'),
+        autocompleteData: uniqueArrayByKey(payload.concat(state.autocompleteData), 'id').map((el) => {
+          const productCode = getSafe(() => el.intProductCode, el.mfrProductCode)
+          const productName = getSafe(() => el.intProductName, el.mfrProductName)
+          return {
+            key: el.id,
+            text: `${productCode} ${productName}`,
+            value: JSON.stringify({
+              id: el.id,
+              name: getSafe(() => el.echoProduct.elements[0].casProduct.chemicalName, ''),
+              casNumber: getSafe(() => el.echoProduct.elements[0].casProduct.casNumber, '')
+            }),
+            content: {
+              productCode: productCode,
+              productName: productName,
+              casProducts: getSafe(() => el.echoProduct.elements, [])
+            }
+          }
+        }),
       }
     }
 
