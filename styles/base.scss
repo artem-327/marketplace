@@ -8,6 +8,21 @@ body {
   font-family: 'HelveticaNeueLTPro';
 }
 
+a.ui.button {
+  display: inline !important;
+  padding: 0 !important;
+  background: transparent !important;
+  text-decoration: none !important;
+  font-weight: inherit !important;
+  color: #2185D0 !important;
+
+  &:hover {
+    background: transparent !important;
+    text-decoration: underline !important;
+    color: #2185D0 !important;
+  }
+}
+
 .flex {
   display: flex !important;
   flex-direction: column;

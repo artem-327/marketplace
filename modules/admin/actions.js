@@ -709,17 +709,22 @@ export function linkAttachment(isLot, echoId, attachmentIds) {
   return {
     type: AT.ADMIN_LINK_ATTACHMENT,
     async payload() {
-      async function asyncForEach(array, callback) {
-        for (let index = 0; index < array.length; index++) {
-          await callback(array[index], index, array);
+      if (Array.isArray(attachmentIds)) {
+        async function asyncForEach(array, callback) {
+          for (let index = 0; index < array.length; index++) {
+            await callback(array[index], index, array);
+          }
         }
-      }
-      await asyncForEach(attachmentIds, async (attachment, index) => {
-        await api.linkAttachment(echoId, attachment.id)
-      })
 
-			return true
-		}
+        await asyncForEach(attachmentIds, async (attachment, index) => {
+          await api.linkAttachment(echoId, attachment.id)
+        })
+      } else {
+        await api.linkAttachment(echoId, attachmentIds)
+      }
+
+      return true
+    }
   }
 }
 

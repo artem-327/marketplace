@@ -162,7 +162,7 @@ class UploadLot extends Component {
     let { linkAttachment, type, toastManager, lot } = this.props
 
     await new Promise((resolve, reject) => {
-      linkAttachment(getSafe(() => lot, false), this.props.id, att.id).then((a) => {
+      linkAttachment(getSafe(() => lot, false), this.props.edit, att.id).then((a) => {
         this.onUploadSuccess(att)
         this.removeDuplicateFile(index)
         resolve()
