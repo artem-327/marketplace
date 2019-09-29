@@ -7,7 +7,7 @@ context("Manufacturers CRUD", () => {
         cy.route("POST", '/prodex/api/cas-products/datagrid').as('loading')
         cy.route("POST", '/prodex/api/manufacturers/datagrid').as('manufacturersLoad')
 
-        cy.login("admin@example.com", "echopass123")
+        cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
@@ -48,7 +48,7 @@ context("Manufacturers CRUD", () => {
 
         cy.get('[data-test=action_' + manufacturerId + ']').click()
 
-        cy.get('[data-test=action_' + manufacturerId + '_0]').click()
+        cy.get('[data-test=action_' + manufacturerId + '_0]').click({force: true})
 
         cy.get("#field_input_val0")
             .clear()
@@ -63,7 +63,7 @@ context("Manufacturers CRUD", () => {
         cy.get("input[type=text]").clear().type("Artio")
 
         cy.get('[data-test=action_' + manufacturerId + ']').click()
-        cy.get('[data-test=action_' + manufacturerId + '_0]').click()
+        cy.get('[data-test=action_' + manufacturerId + '_0]').click({force: true})
 
         cy.get("#field_input_val0").should('have.value', "Artio")
     })

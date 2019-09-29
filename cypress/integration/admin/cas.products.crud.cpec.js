@@ -6,7 +6,7 @@ context("CAS products CRUD", () => {
         cy.server()
         cy.route("POST", '/prodex/api/cas-products/datagrid').as('loading')
 
-        cy.login("admin@example.com", "echopass123")
+        cy.FElogin("admin@example.com", "echopass123")
 
         cy.wait('@loading')
         cy.url().should("include", "admin")
@@ -32,6 +32,8 @@ context("CAS products CRUD", () => {
             .children("div")
             .children("input")
             .type("Testinonium")
+
+        cy.waitForUI()
 
         let filter = [{"operator":"LIKE","path":"CasProduct.chemicalName","values":["%Testinonium%"]},
             {"operator":"LIKE","path":"CasProduct.casNumber","values":["%Testinonium%"]}]
@@ -64,6 +66,8 @@ context("CAS products CRUD", () => {
             .children("input")
             .type("Testinonium")
 
+        cy.waitForUI()
+
         cy.get('[data-test=action_' + productId + ']').click()
 
         cy.get('[data-test=action_' + productId + '_0]').click()
@@ -91,6 +95,8 @@ context("CAS products CRUD", () => {
             .children("div")
             .children("input")
             .type("Testerium")
+
+        cy.waitForUI()
 
         cy.get('[data-test=action_' + productId + ']').click()
 
@@ -128,6 +134,8 @@ context("CAS products CRUD", () => {
             .children("div")
             .children("input")
             .type("Testerium")
+
+        cy.waitForUI()
 
         cy.get('[data-test=action_' + productId + ']').click()
         cy.get('[data-test=action_' + productId + '_1]').click()
@@ -176,6 +184,8 @@ context("CAS products CRUD", () => {
             .children("div")
             .children("input")
             .type("Testerium")
+
+        cy.waitForUI()
 
         cy.get('[data-test=action_' + productId + ']').click()
 

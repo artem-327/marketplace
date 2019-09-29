@@ -69,8 +69,8 @@ Cypress.Commands.add('login', (username, password) =>{
             'sec-fetch-site': 'same-origin'
         },
         body: {
-            username: 'user1@example.com',
-            password: 'echopass123',
+            username: username,
+            password: password,
             grant_type: 'password'
         }
     }).then((response) => {

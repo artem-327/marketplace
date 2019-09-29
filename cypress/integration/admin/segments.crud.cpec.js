@@ -7,7 +7,7 @@ context("Market Segments CRUD", () => {
         cy.route("GET", '/prodex/api/packaging-groups').as('loading')
         cy.route("POST", '/prodex/api/market-segments/datagrid').as('segments')
 
-        cy.login("admin@example.com", "echopass123")
+        cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
@@ -28,6 +28,7 @@ context("Market Segments CRUD", () => {
         cy.contains("Market Segment created")
 
         cy.get("input[type=text]").type("Test")
+        cy.waitForUI()
 
         let filter = [{"operator":"LIKE","path":"MarketSegment.name","values":["%Test%"]}]
 
@@ -45,6 +46,7 @@ context("Market Segments CRUD", () => {
 
     it("Edits a market segment", () => {
         cy.get("input[type=text]").type("Test")
+        cy.waitForUI()
 
         cy.get('[data-test=action_' + documentId + ']').click()
         cy.get('[data-test=action_' + documentId + '_0]').click()
@@ -57,9 +59,9 @@ context("Market Segments CRUD", () => {
         cy.clickSave()
 
         cy.contains("Updated Market Segment")
-        cy.waitForUI()
 
-        cy.get("input[type=text]").type("Great")
+        cy.get("input[type=text]").clear().type("Great")
+        cy.waitForUI()
 
         cy.get('[data-test=action_' + documentId + ']').click()
         cy.get('[data-test=action_' + documentId + '_0]').click()
@@ -85,6 +87,7 @@ context("Market Segments CRUD", () => {
 
     it("Deletes a market segment", () => {
         cy.searchInList("Great")
+        cy.waitForUI()
 
         cy.get('[data-test=action_' + documentId + ']').click()
         cy.get('[data-test=action_' + documentId + '_1]').click()
