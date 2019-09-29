@@ -7,7 +7,7 @@ context("Document types CRUD", () => {
         cy.route("GET", '/prodex/api/packaging-groups').as('loading')
         cy.route("POST", '/prodex/api/document-types/datagrid').as('documents')
 
-        cy.login("admin@example.com", "echopass123")
+        cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 

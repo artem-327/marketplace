@@ -7,7 +7,7 @@ context("Grades CRUD", () => {
         cy.route("POST", '/prodex/api/cas-products/datagrid').as('loading')
         cy.route("POST", '/prodex/api/product-grades/datagrid').as('gradesLoad')
 
-        cy.login("admin@example.com", "echopass123")
+        cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
@@ -46,7 +46,7 @@ context("Grades CRUD", () => {
 
         cy.get('[data-test=action_' + gradeId + ']').click()
 
-        cy.get('[data-test=action_' + gradeId + '_0]').click()
+        cy.get('[data-test=action_' + gradeId + '_0]').click({force: true})
 
         cy.get("#field_input_val0")
             .clear()
@@ -58,7 +58,7 @@ context("Grades CRUD", () => {
         cy.contains("Updated Grade")
 
         cy.get('[data-test=action_' + gradeId + ']').click()
-        cy.get('[data-test=action_' + gradeId + '_0]').click()
+        cy.get('[data-test=action_' + gradeId + '_0]').click({force: true})
 
         cy.get("#field_input_val0").should('have.value', "Graceful")
     })

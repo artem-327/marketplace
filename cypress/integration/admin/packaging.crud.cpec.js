@@ -7,7 +7,7 @@ context("Units of packaging CRUD", () => {
         cy.route("GET", '/prodex/api/packaging-groups').as('loading')
         cy.route("POST", '/prodex/api/packaging-types/datagrid').as('packaging')
 
-        cy.login("admin@example.com", "echopass123")
+        cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
@@ -33,6 +33,9 @@ context("Units of packaging CRUD", () => {
 
         cy.contains("Unit of Packaging created")
 
+        cy.get("input[type=text]").type("Test")
+        cy.waitForUI()
+
         let filter = [{"operator":"LIKE","path":"PackagingType.name","values":["%Test%"]}]
 
         cy.getToken().then(token => {
@@ -49,6 +52,9 @@ context("Units of packaging CRUD", () => {
     })
 
     it("Edits a package unit", () => {
+        cy.get("input[type=text]").type("Test")
+        cy.waitForUI()
+
         cy.get('[data-test=action_' + packageId + ']').click()
         cy.get('[data-test=action_' + packageId + '_0]').click()
 
@@ -60,6 +66,9 @@ context("Units of packaging CRUD", () => {
         cy.clickSave()
 
         cy.contains("Updated Unit of Packaging")
+
+        cy.get("input[type=text]").clear().type("Best")
+        cy.waitForUI()
 
         cy.get('[data-test=action_' + packageId + ']').click()
         cy.get('[data-test=action_' + packageId + '_0]').click()
@@ -93,6 +102,9 @@ context("Units of packaging CRUD", () => {
     })
 
     it("Deletes a package unit", () => {
+        cy.get("input[type=text]").type("Best")
+        cy.waitForUI()
+
         cy.get('[data-test=action_' + packageId + ']').click()
         cy.get('[data-test=action_' + packageId + '_1]').click()
 

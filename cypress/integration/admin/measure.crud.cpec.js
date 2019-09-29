@@ -5,11 +5,15 @@ context("Units of measure CRUD", () => {
         cy.route("GET", '/prodex/api/packaging-groups').as('loading')
         cy.route("POST", '/prodex/api/units/datagrid').as('unitLoad')
 
-        cy.login("admin@example.com", "echopass123")
+        cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
         cy.wait('@loading')
+
+        //TODO Workaroud, list won't load
+        cy.get('[data-test="tabs_menu_item_9"]').click()
+        cy.waitForUI()
 
         cy.get('[data-test="tabs_menu_item_1"]').click()
 
@@ -32,7 +36,6 @@ context("Units of measure CRUD", () => {
 
     it("Edits unit of measure", () => {
         cy.get("input[type=text]").type("Test")
-
         cy.waitForUI()
 
         cy.get("i[class='ellipsis vertical large icon']").click()

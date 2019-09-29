@@ -7,7 +7,7 @@ context("Conditions CRUD", () => {
         cy.route("POST", '/prodex/api/cas-products/datagrid').as('loading')
         cy.route("POST", '/prodex/api/product-conditions/datagrid').as('formsLoad')
 
-        cy.login("admin@example.com", "echopass123")
+        cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
