@@ -74,8 +74,11 @@ const validationScheme = Yup.object().shape({
   manufacturer: Yup.number().integer().min(1).required(errorMessages.requiredMessage),
   name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
   packagingGroup: Yup.number(errorMessages.requiredMessage).integer(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
-  sdsRevisionDate: Yup.string().trim().required(errorMessages.requiredMessage),
+  sdsIssueDate: Yup.string().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }),
+  sdsRevisionDate: Yup.string().trim().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }).required(errorMessages.requiredMessage),
   sdsVersionNumber: Yup.string().trim().required(errorMessages.requiredMessage),
+  tdsIssueDate: Yup.string().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }),
+  tdsRevisionDate: Yup.string().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }),
   unNumber: Yup.number(errorMessages.requiredMessage).integer(errorMessages.requiredMessage).min(1, errorMessages.minLength(1, errorMessages.requiredMessage)).required(errorMessages.requiredMessage),
   unShippingName: Yup.string().trim().required(errorMessages.requiredMessage)
 })
@@ -88,6 +91,7 @@ class AddNewPopupEchoProduct extends React.Component {
     optionalOpened: false,
     unNumberCode: '',
     unNumberShippingName: '',
+    codesList: []
   }
 
   componentDidMount() {
@@ -103,7 +107,11 @@ class AddNewPopupEchoProduct extends React.Component {
 
     this.setState({
       unNumber,
-      ...(unNumber && {unNumberCode: unNumber.unNumberCode, unNumberShippingName: unNumber.description})
+      ...(unNumber && {unNumberCode: unNumber.unNumberCode, unNumberShippingName: unNumber.description}),
+      codesList: this.props.popupValues.mfrProductCodes.map(code => ({
+        text: code,
+        value: code
+      }))
     })
 
     this.props.searchManufacturers(getSafe(() => this.props.popupValues.manufacturer.name, ''), 200)
@@ -136,7 +144,10 @@ class AddNewPopupEchoProduct extends React.Component {
       hazardLabels: getSafe(() => popupValues.hazardLabels.map(hL => hL.id), []),
       packagingGroup: getSafe(() => popupValues.packagingGroup.id, ''),
       emergencyNumber: ''+getSafe(() => popupValues.emergencyNumber, ''),
-      sdsRevisionDate: getSafe(() => popupValues.sdsRevisionDate.substring(0, 10), '')
+      sdsIssueDate: getSafe(() => popupValues.sdsIssueDate.substring(0, 10), ''),
+      sdsRevisionDate: getSafe(() => popupValues.sdsRevisionDate.substring(0, 10), ''),
+      tdsIssueDate: getSafe(() => popupValues.tdsIssueDate.substring(0, 10), ''),
+      tdsRevisionDate: getSafe(() => popupValues.tdsRevisionDate.substring(0, 10), '')
     }
     if (initialValues.elements.length === 0) {
       initialValues.elements = [{ name: '', casProduct: null, assayMin: 100, assayMax: 100, proprietary: false }]
@@ -203,6 +214,7 @@ class AddNewPopupEchoProduct extends React.Component {
       listDocumentTypes
     } = this.props
 
+    let codesList = this.state.codesList
     const stateUnNumber = this.state.unNumber
     const casProduct = getSafe(() => popupValues.casProduct, null)
     const unNumber = getSafe(() => popupValues.unNumber, null)
@@ -234,12 +246,14 @@ class AddNewPopupEchoProduct extends React.Component {
             mfrProductCodes: values.mfrProductCodes,
             name: values.name,
             packagingGroup: values.packagingGroup,
-            sdsRevisionDate: values.sdsRevisionDate+'T00:00:00.00000Z',
+            sdsIssueDate: values.sdsIssueDate ? values.sdsIssueDate+'T00:00:00.00000Z' : '',
+            sdsRevisionDate: values.sdsRevisionDate ? values.sdsRevisionDate+'T00:00:00.00000Z' : '',
             sdsVersionNumber: values.sdsVersionNumber,
+            tdsIssueDate: values.tdsIssueDate ? values.tdsIssueDate+'T00:00:00.00000Z' : '',
+            tdsRevisionDate: values.tdsRevisionDate ? values.tdsRevisionDate+'T00:00:00.00000Z' : '',
             unNumber: getSafe(() => values.unNumber, null),
             unShippingName: values.unShippingName
           }
-          delete formValues.mfrProductCode
           delete formValues.attachments
 
           try {
@@ -379,8 +393,8 @@ class AddNewPopupEchoProduct extends React.Component {
                                   )) : ''}
                                 </>
                               )} />
-                  <FormGroup widths='equal'>
-                    <FormField>
+                  <FormGroup>
+                    <FormField width={5}>
                       <Dropdown
                         label={formatMessage({ id: 'addInventory.manufacturer', defaultMessage: 'Manufacturer' })}
                         name='manufacturer'
@@ -398,40 +412,29 @@ class AddNewPopupEchoProduct extends React.Component {
                         }}
                       />
                     </FormField>
-                    <FormField>
+                    <FormField width={11}>
                       <FormattedMessage id='global.mfrProductCodes' defaultMessage='Manufacturer Product Codes' />
-                      <FieldArray name='mfrProductCodes' render={arrayHelpers => (
-                        <>
-                          {values.mfrProductCodes && values.mfrProductCodes.length ? values.mfrProductCodes.map((mfrProductCode, index) => (
-                            <Label>
-                              {mfrProductCode}
-                              <Icon name='delete' onClick={() => arrayHelpers.remove(index)} />
-                            </Label>
-                          )) : ''}
-                        </>
-                      )} />
-                    </FormField>
-                    <FormField error={errors.mfrProductCodes ? true : false}>
-                      <Input
-                        icon='tags'
-                        iconPosition='left'
-                        placeholder='Enter tags'
-                        name='mfrProductCode'
+                      <Dropdown name='mfrProductCodes'
+                                options={codesList}
+                                inputProps={{
+                                  allowAdditions: true,
+                                  additionLabel: formatMessage({ id: 'global.dropdown.add', defaultMessage: 'Add ' }),
+                                  search: true,
+                                  selection: true,
+                                  multiple: true,
+                                  onAddItem: (e, { value }) => {
+                                    const newValue = { text: value, value: value }
+                                    codesList.push(newValue)
+                                    console.log('CODES', codesList)
+                                    this.setState({ codesList: codesList })
+                                  }
+                                }}
+
                       />
-                      <Button onClick={() => {
-                        const newTag = values.mfrProductCode
-                        let productCodes = values.mfrProductCodes
-                        productCodes.push(newTag)
-                        setFieldValue('mfrProductCodes', productCodes)
-                        setFieldValue('mfrProductCode', '')
-                      }}><FormattedMessage id='admin.echoProduct.addCode' defaultMessage='Add Code'>{text => text}</FormattedMessage></Button>
-                      {errors.mfrProductCodes ? (
-                        <span className='sui-error-message'>{errors.mfrProductCodes}</span>
-                      ) : null}
                     </FormField>
                   </FormGroup>
-                  <FormGroup widths='equal'>
-                    <FormField error={errors.unNumber ? true : false}>
+                  <FormGroup>
+                    <FormField width={5} error={errors.unNumber ? true : false}>
                       <label><FormattedMessage id='global.unNumber' defaultMessage='UN Number' /></label>
                       <Search isLoading={false}
                               onResultSelect={(e, { result }) => {
@@ -462,7 +465,7 @@ class AddNewPopupEchoProduct extends React.Component {
                       />
                       <Input type='hidden' name='unNumber' inputProps={{ style: { position: 'absolute', top: '-30000px', left: '-30000px' } }} />
                     </FormField>
-                    <FormField data-test='admin_product_popup_unShippingName_inp'>
+                    <FormField width={6} data-test='admin_product_popup_unShippingName_inp'>
                       <label><FormattedMessage id='global.unShippingName' defaultMessage='UN Shipping Name' /></label>
                       <Search isLoading={false}
                               onResultSelect={(e, { result }) => {
@@ -487,7 +490,7 @@ class AddNewPopupEchoProduct extends React.Component {
                       />
                       <Input type='hidden' name='unShippingName' inputProps={{ style: { position: 'absolute', top: '-30000px', left: '-30000px' } }} />
                     </FormField>
-                    <FormField data-test='admin_product_popup_emergencyPhone_inp' error={errors.emergencyNumber ? true : false}>
+                    <FormField width={5} data-test='admin_product_popup_emergencyPhone_inp' error={errors.emergencyNumber ? true : false}>
                       <PhoneNumber
                         label={formatMessage({ id: 'global.emergencyPhone', defaultMessage: 'Emergency Phone' })}
                         name='emergencyNumber'
