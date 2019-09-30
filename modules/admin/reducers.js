@@ -64,6 +64,7 @@ export const initialState = {
   searchedManufacturers: [],
   searchedManufacturersLoading: false,
   altEchoNamesRows: [],
+  documentTypes: []
 }
 
 export default function reducer(state = initialState, action) {
@@ -618,6 +619,19 @@ export default function reducer(state = initialState, action) {
           text: manufacturer.name
         })),
         searchedManufacturersLoading: false
+      }
+    }
+
+    case AT.ADMIN_GET_DOCUMENT_TYPES_FULFILLED: {
+      return {
+        ...state,
+        documentTypes: action.payload.data.map(docType => {
+          return {
+            ...docType,
+            value: docType.id,
+            text: docType.name
+          }
+        })
       }
     }
 

@@ -10,7 +10,7 @@ import { TOO_LARGE_FILE, UPLOAD_FILE_FAILED } from '~/src/modules/errors.js'
 import { FieldArray } from 'formik'
 import confirm from '~/src/components/Confirmable/confirm'
 import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 import styled from 'styled-components'
 import { Table, TableCell, Modal, Button } from 'semantic-ui-react'
 
@@ -162,7 +162,8 @@ class UploadLot extends Component {
     let { linkAttachment, type, toastManager, lot } = this.props
 
     await new Promise((resolve, reject) => {
-      linkAttachment(lot, this.props.id, att.id).then((a) => {
+      // TODO: this.props.edit/id should be modified globally to id
+      linkAttachment(getSafe(() => lot, false), getSafe(() => this.props.edit, this.props.id), att.id).then((a) => {
         this.onUploadSuccess(att)
         this.removeDuplicateFile(index)
         resolve()

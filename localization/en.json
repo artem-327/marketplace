@@ -1,4 +1,5 @@
 {
+  "date.standardFormat": "MM/DD/YYYY",
   "agree.withTOS.header": "Agree with Terms of Services",
   "agree.withTOS.content": "Our {tos} were updated and it appears you have not agreed with the updated version yet. If you with to continue, please, read the updated Terms of Service, check the checkbox to confirm you agreement with those and click Continue button. You can also leave now by clicking Logout button.",
   "auth.resetMyPassword": "Password Reset",
@@ -53,7 +54,7 @@
   "admin.searchCondition": "Search condition by name",
   "admin.searchDocumentType": "Search document type by name",
   "admin.searchMarketSegment": "Search market segment by name",
-  "admin.searchEchoProduct": "Search echo product by name",
+  "admin.searchEchoProduct": "Search by Product Name or Code",
   "admin.echoProducts.sds": "SDS",
   "admin.echoProducts.sdsVersion": "SDS Version",
   "admin.echoProducts.sdsRevisionDate": "SDS Revision Date",

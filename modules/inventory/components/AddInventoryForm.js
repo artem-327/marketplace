@@ -937,8 +937,6 @@ class AddInventoryForm extends Component {
 
     let { formatMessage } = intl
 
-
-    console.log('INITIAL STATE', { initialState })
     return (
       <div id='page' className='flex stretched'>
         <Dimmer active={loading} inverted>

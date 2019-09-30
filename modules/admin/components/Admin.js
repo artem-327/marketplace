@@ -78,7 +78,10 @@ const datagridConfig = {
     searchToFilter: v => ([
       { operator: 'LIKE', path: 'EchoProduct.name', values: [`%${v}%`] },
       { operator: 'LIKE', path: 'EchoProduct.code', values: [`%${v}%`] }
-    ])
+    ]),
+    params: {
+      orOperator: true
+    }
   },
   'Conditions': {
     url: '/prodex/api/product-conditions/datagrid',

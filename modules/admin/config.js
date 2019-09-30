@@ -41,11 +41,12 @@ export const config = {
     searchText: 'admin.searchEchoProduct',
     display: {
       columns: [
-        { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage> },
-        { name: 'code', title: <FormattedMessage id='global.productCode' defaultMessage='Product Code'>{text => text}</FormattedMessage> },
-        { name: 'manufacturerName', title: <FormattedMessage id='admin.manufacturer' defaultMessage='Manufacturer'>{text => text}</FormattedMessage> },
+        { name: 'name', title: <FormattedMessage id='global.productName' defaultMessage='Product Name'>{text => text}</FormattedMessage>, sortPath: 'EchoProduct.name' },
+        { name: 'code', title: <FormattedMessage id='global.productCode' defaultMessage='Product Code'>{text => text}</FormattedMessage>, sortPath: 'EchoProduct.code' },
+        { name: 'manufacturerName', title: <FormattedMessage id='admin.manufacturer' defaultMessage='Manufacturer'>{text => text}</FormattedMessage>, sortPath: 'EchoProduct.manufacturer.name' },
+        { name: 'sds', title: <FormattedMessage id='admin.echoProducts.sds' defaultMessage='SDS'>{text => text}</FormattedMessage> },
         { name: 'sdsVersionNumber', title: <FormattedMessage id='admin.echoProducts.sdsVersion' defaultMessage='SDS Version'>{text => text}</FormattedMessage> },
-        { name: 'sdsRevisionDate', title: <FormattedMessage id='admin.echoProducts.sdsRevisionDate' defaultMessage='SDS Revision Date'>{text => text}</FormattedMessage> }
+        { name: 'sdsRevisionDate', title: <FormattedMessage id='admin.echoProducts.sdsRevisionDate' defaultMessage='SDS Revision Date'>{text => text}</FormattedMessage>, sortPath: 'EchoProduct.sdsRevisionDate' }
       ]
     }
   },

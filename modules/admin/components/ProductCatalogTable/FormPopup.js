@@ -36,7 +36,7 @@ import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
 import debounce from "lodash/debounce"
 import escapeRegExp from "lodash/escapeRegExp"
-import filter from "lodash/filter";
+import filter from "lodash/filter"
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -107,6 +107,8 @@ class AddNewPopupEchoProduct extends React.Component {
     })
 
     this.props.searchManufacturers(getSafe(() => this.props.popupValues.manufacturer.name, ''), 200)
+
+    this.props.getDocumentTypes()
   }
 
   getInitialFormValues = () => {
@@ -197,7 +199,8 @@ class AddNewPopupEchoProduct extends React.Component {
       putEchoProduct,
       searchedManufacturers,
       searchedManufacturersLoading,
-      linkAttachment
+      linkAttachment,
+      listDocumentTypes
     } = this.props
 
     const stateUnNumber = this.state.unNumber
@@ -246,7 +249,24 @@ class AddNewPopupEchoProduct extends React.Component {
             else
               data = await postEchoProduct(formValues)
 
-            await linkAttachment(data.value.data.id, values.attachments)
+            let echoProduct = data.value.data
+            const notLinkedAttachments = values.attachments.filter(att => !getSafe(() => att.linked, false))
+            await linkAttachment(false, echoProduct.id, notLinkedAttachments)
+
+            const docType = listDocumentTypes.find(dt => dt.id === 3)
+            notLinkedAttachments.map(att => {
+              return {
+                id: att.id,
+                name: att.name,
+                documentType: docType,
+                linked: true
+              }
+            })
+
+            Datagrid.updateRow(echoProduct.id, () => ({
+              ...echoProduct,
+              attachments: echoProduct.attachments.concat(notLinkedAttachments)
+            }))
 
             const status = popupValues ? 'echoProductUpdated' : 'echoProductCreated'
             toastManager.add(generateToastMarkup(
@@ -537,9 +557,10 @@ class AddNewPopupEchoProduct extends React.Component {
                             <label><FormattedMessage id='global.doc' defaultMessage='Document' /></label>
                             <UploadLot {...this.props}
                                        attachments={values.attachments}
-                                       edit={this.props.popupValues ? this.props.popupValues.id : ''}
+                                       edit={getSafe(() => popupValues.id, '')}
                                        name='attachments'
                                        type={3}
+                                       filesLimit={1}
                                        fileMaxSize={20}
                                        onChange={(files) => setFieldValue(
                                          `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
