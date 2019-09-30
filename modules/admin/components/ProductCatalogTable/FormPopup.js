@@ -85,7 +85,9 @@ class AddNewPopupEchoProduct extends React.Component {
     isLoading: false,
     isUnLoading: false,
     value: '',
-    optionalOpened: false
+    optionalOpened: false,
+    unNumberCode: '',
+    unNumberShippingName: '',
   }
 
   componentDidMount() {
@@ -97,7 +99,12 @@ class AddNewPopupEchoProduct extends React.Component {
       this.props.newElementsIndex()
     }
 
-    this.setState({ unNumber: getSafe(() => this.props.popupValues.unNumber, null) })
+    const unNumber = getSafe(() => this.props.popupValues.unNumber, null)
+
+    this.setState({
+      unNumber,
+      ...(unNumber && {unNumberCode: unNumber.unNumberCode, unNumberShippingName: unNumber.description})
+    })
 
     this.props.searchManufacturers(getSafe(() => this.props.popupValues.manufacturer.name, ''), 200)
   }
@@ -107,11 +114,8 @@ class AddNewPopupEchoProduct extends React.Component {
     let initialValues = {
       attachments: [],
       description: '',
-      hazardClass: [],
-      unShippingName: undefined,
       name: '',
       code: '',
-      packagingGroup: null,
       packagingUnit: '',
       expirationDate: '',
       ...popupValues,
@@ -125,6 +129,7 @@ class AddNewPopupEchoProduct extends React.Component {
       manufacturer: getSafe(() => popupValues.manufacturer.id, ''),
       mfrProductCodes: getSafe(() => popupValues.mfrProductCodes, []),
       unNumber: getSafe(() => popupValues.unNumber.id, ''),
+      unShippingName: getSafe(() => popupValues.unNumber.description, ''),
       hazardClass: getSafe(() => popupValues.hazardClass.id, ''),
       hazardLabels: getSafe(() => popupValues.hazardLabels.map(hL => hL.id), []),
       packagingGroup: getSafe(() => popupValues.packagingGroup.id, ''),
@@ -409,8 +414,15 @@ class AddNewPopupEchoProduct extends React.Component {
                     <FormField error={errors.unNumber ? true : false}>
                       <label><FormattedMessage id='global.unNumber' defaultMessage='UN Number' /></label>
                       <Search isLoading={false}
-                              onResultSelect={(e, { result }) => setFieldValue('unNumber', result.value)}
-                              onSearchChange={this.handleSearchUnNumber}
+                              onResultSelect={(e, { result }) => {
+                                setFieldValue('unNumber', result.value)
+                                setFieldValue('unShippingName', result.description)
+                                this.setState({unNumberCode: result.title, unNumberShippingName: result.description})
+                              }}
+                              onSearchChange={(e, d) => {
+                                this.setState({unNumberCode: d.value})
+                                this.handleSearchUnNumber(e, d)
+                              }}
                               /*onBlur={(e, data) => {
                                 const searchResults = data.results.filter(unNumber => unNumber.value === values.unNumber)
                                 if (!searchResults.length) {
@@ -425,17 +437,35 @@ class AddNewPopupEchoProduct extends React.Component {
                                   value: item.id
                                 }
                               })}
-                              defaultValue={getSafe(() => unNumber.unNumberCode, '')}
+                              value={this.state.unNumberCode}
                               data-test='settings_product_popup_unNumberCode_inp'
                       />
                       <Input type='hidden' name='unNumber' inputProps={{ style: { position: 'absolute', top: '-30000px', left: '-30000px' } }} />
                     </FormField>
                     <FormField data-test='admin_product_popup_unShippingName_inp'>
-                      <Input
-                        label={formatMessage({ id: 'global.unShippingName', defaultMessage: 'UN Shipping Name' })}
-                        type='text'
-                        name='unShippingName'
+                      <label><FormattedMessage id='global.unShippingName' defaultMessage='UN Shipping Name' /></label>
+                      <Search isLoading={false}
+                              onResultSelect={(e, { result }) => {
+                                setFieldValue('unShippingName', result.title)
+                                setFieldValue('unNumber', result.value)
+                                this.setState({unNumberCode: result.description, unNumberShippingName: result.title})
+                              }}
+                              onSearchChange={(e, d) => {
+                                this.setState({unNumberShippingName: d.value})
+                                this.handleSearchUnNumber(e, d)
+                              }}
+                              results={searchedUnNumbers.map(item => {
+                                return {
+                                  id: item.id,
+                                  title: item.description,
+                                  description: item.unNumberCode,
+                                  value: item.id
+                                }
+                              })}
+                              value={this.state.unNumberShippingName}
+                              data-test='settings_product_popup_unNumberCode_inp'
                       />
+                      <Input type='hidden' name='unShippingName' inputProps={{ style: { position: 'absolute', top: '-30000px', left: '-30000px' } }} />
                     </FormField>
                     <FormField data-test='admin_product_popup_emergencyPhone_inp' error={errors.emergencyNumber ? true : false}>
                       <PhoneNumber

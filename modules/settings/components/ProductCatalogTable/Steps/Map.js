@@ -321,7 +321,7 @@ class Map extends Component {
     let previousValue = values[column_number]
     values[column_number] = value
 
-    let opts = this.props.productOffer ? mappingProductOffer : mappingProduct
+    let opts = this.props.productOffer ? mappingProductOffer : (this.props.echoProduct ?  mappingEchoProduct : mappingProduct)
     let indexAdd = opts.findIndex(obj => obj.value === previousValue)
 
     for (let i = 0; i < options.length; i++) {

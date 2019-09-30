@@ -41,13 +41,15 @@ class LogisticsPopup extends Component {
       popupValues, closePopup, logisticsProviders,
       logisticsProvidersFetching, createLogisticsAccount, updateLogisticsAccount, intl: { formatMessage }, toastManager } = this.props
 
-    let message = <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`}>{(text) => text}</FormattedMessage>
-
     return (
       <Modal open centered={false}>
-        <Modal.Header>{message} <FormattedMessage id='global.logistics' defaultMessage='Logistics' /></Modal.Header>
+        <Modal.Header>
+          {popupValues
+            ? <FormattedMessage id='settings.editLogistics' defaultMessage='Edit Logistics' />
+            : <FormattedMessage id='settings.addLogistics' defaultMessage='Add Logistics' />
+          }
+        </Modal.Header>
         <Modal.Content>
-
           <Form
             validationSchema={validationSchema}
             enableReinitialize={true}
@@ -120,7 +122,9 @@ class LogisticsPopup extends Component {
           <Button basic onClick={closePopup} data-test='settings_logistics_cancel_btn'>
             <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
           </Button>
-          <Button onClick={() => this.handleSubmit()} primary data-test='settings_logistics_submit_btn'>{message}</Button>
+          <Button onClick={() => this.handleSubmit()} primary data-test='settings_logistics_submit_btn'>
+            <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
+          </Button>
         </Modal.Actions>
       </Modal>
     )

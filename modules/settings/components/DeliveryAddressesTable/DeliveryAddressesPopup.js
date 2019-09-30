@@ -77,7 +77,11 @@ class DeliveryAddressesPopup extends React.Component {
     return (
       <Modal open centered={false} size='small'>
         <Modal.Header>
-          <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} defaultMessage={popupValues ? 'Edit' : 'Add'} /> <FormattedMessage id='settings.deliveryAddress' defaultMessage='Delivery Address' /></Modal.Header>
+          {popupValues
+            ? <FormattedMessage id='settings.editDeliveryAddress' defaultMessage='Edit Delivery Address' />
+            : <FormattedMessage id='settings.addDeliveryAddress' defaultMessage='Add Delivery Address' />
+          }
+        </Modal.Header>
         <Modal.Content>
           <Form
             enableReinitialize

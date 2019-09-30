@@ -163,7 +163,7 @@ export default class AddCart extends Component {
           <Grid verticalAlign='top'>
             <GridRow className='action' columns={1}>
               <GridColumn>
-                <Header>1. Product Information</Header>
+                <Header><FormattedMessage id='cart.InfoHeader' defaultMessage='1. Product Information' /></Header>
               </GridColumn>
             </GridRow>
 
@@ -184,7 +184,7 @@ export default class AddCart extends Component {
 
             <GridRow>
               <GridColumn computer={6}>
-                Product Name:
+                <FormattedMessage id='cart.productName' defaultMessage='Product Name:' />
               </GridColumn>
               <GridColumn computer={10}>
                 {offer.companyProduct.echoProduct.name}
@@ -193,7 +193,7 @@ export default class AddCart extends Component {
 
             <GridRow>
               <GridColumn computer={6}>
-                Product Code:
+                <FormattedMessage id='cart.productCode' defaultMessage='Product Code:' />
               </GridColumn>
               <GridColumn computer={10}>
                 {offer.companyProduct.echoProduct.code}
@@ -202,7 +202,7 @@ export default class AddCart extends Component {
 
             <GridRow>
               <GridColumn computer={6}>
-                Mixtures:
+                <FormattedMessage id='cart.mixtures' defaultMessage='Mixtures:' />
               </GridColumn>
               <GridColumn computer={10}>
                 {this.props.casProductsChemNames}
@@ -220,7 +220,7 @@ export default class AddCart extends Component {
 
             <GridRow>
               <GridColumn computer={6}>
-                Location:
+                <FormattedMessage id='cart.productLocation' defaultMessage='Location:' />
            </GridColumn>
               <GridColumn computer={10}>
                 {offer.locationStr}
@@ -229,7 +229,7 @@ export default class AddCart extends Component {
 
             <GridRow>
               <GridColumn computer={6}>
-                Available Product:
+                <FormattedMessage id='cart.availableProduct' defaultMessage='Available Product:' />
           </GridColumn>
               <GridColumn computer={10}>
                 <FormattedNumber minimumFractionDigits={0} value={pkgAmount} /> <UnitOfPackaging value={packagingType.name} /> / <FormattedUnit unit={nameAbbreviation} separator={' '} value={pkgAmount * packagingSize} />
@@ -239,7 +239,7 @@ export default class AddCart extends Component {
 
             <GridRow>
               <GridColumn computer={6}>
-                Form:
+                <FormattedMessage id='cart.productForm' defaultMessage='Form:' />
          </GridColumn>
               <GridColumn computer={10}>
                 {offer.productForm.name}
@@ -248,7 +248,7 @@ export default class AddCart extends Component {
 
             <GridRow>
               <GridColumn computer={6}>
-                Packaging:
+                <FormattedMessage id='cart.packaging' defaultMessage='Packaging:' />
           </GridColumn>
 
               <GridColumn company={10}>
@@ -268,12 +268,12 @@ export default class AddCart extends Component {
 
             <GridRow className='action'>
               <GridColumn>
-                <Header>2. Purchase Info</Header>
+                <Header><FormattedMessage id='cart.PurchaseHeader' defaultMessage='2. Purchase Info' /></Header>
               </GridColumn>
             </GridRow>
 
             <CustomList selection>
-              <ListHeader>Pricing Level:</ListHeader>
+              <ListHeader><FormattedMessage id='cart.pricingLevel' defaultMessage='Pricing Level:' /></ListHeader>
               {dropdownOptions.map((el) => (
                 <List.Item active={isEqual(el.value, this.props.sidebar.pricing)}>
                   <List.Content>
@@ -300,7 +300,7 @@ export default class AddCart extends Component {
 
             <GridRow verticalAlign='middle' columns={2}>
               <GridColumn>
-                Select Quantity:
+                <FormattedMessage id='cart.selectQuantity' defaultMessage='Select Quantity:' />
               </GridColumn>
               <GridColumn data-test='add_cart_quantity_inp'>
                 <Input
@@ -322,12 +322,12 @@ export default class AddCart extends Component {
 
             <GridRow className='action'>
               <GridColumn>
-                <Header>3. Summary</Header>
+                <Header><FormattedMessage id='cart.SummaryHeader' defaultMessage='3. Summary' /></Header>
               </GridColumn>
             </GridRow>
 
             <GridRow>
-              <GridColumn computer={6}>Total Quantity:</GridColumn>
+              <GridColumn computer={6}><FormattedMessage id='cart.totalQuantity' defaultMessage='Total Quantity:' /></GridColumn>
               <GridColumn computer={10}>
                 {(quantity && quantity > 0 ? <> <FormattedNumber minimumFractionDigits={0} value={quantity} />  <UnitOfPackaging value={packagingType.name} /> </> : null)
                   || (isEdit && <> <FormattedNumber minimumFractionDigits={0} value={order.quantity} />  <UnitOfPackaging value={packagingType.name} /> </>)}
@@ -335,7 +335,7 @@ export default class AddCart extends Component {
             </GridRow>
 
             <GridRow>
-              <GridColumn computer={6}>Price:</GridColumn>
+              <GridColumn computer={6}><FormattedMessage id='cart.price' defaultMessage='Price' /></GridColumn>
               <GridColumn computer={10}>
                 {
                   price && !isNaN(price) ? <><FormattedNumber
@@ -343,13 +343,11 @@ export default class AddCart extends Component {
                     currency={currencyCode}
                     value={price } /> {nameAbbreviation && `/ ${nameAbbreviation}`}</> : null
                 }
-
-
               </GridColumn>
             </GridRow>
             <Divider />
             <GridRow>
-              <GridColumn computer={6}>Subtotal:</GridColumn>
+              <GridColumn computer={6}><FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />:</GridColumn>
               <GridColumn computer={10}>{totalPrice ?
                 <FormattedNumber style='currency' currency={currencyCode} value={totalPrice} />
                 : null}
@@ -363,18 +361,20 @@ export default class AddCart extends Component {
             <GridRow className='action' columns={2}>
               <GridColumn>
                 <Button fluid floated='right' onClick={() => this.props.sidebarChanged({ isOpen: false })}
-                        data-test='add_cart_cancel_btn'>Cancel</Button>
+                        data-test='add_cart_cancel_btn'>
+                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage>
+                </Button>
               </GridColumn>
 
               <GridColumn>
                 {!isEdit
                   ? <Button disabled={!canProceed} fluid floated='right' primary onClick={this.createOrder}
                             data-test='add_cart_create_order_btn'>
-                    Continue
+                    <FormattedMessage id='global.continue' defaultMessage='Continue'>{text => text}</FormattedMessage>
               </Button>
                   : <Button disabled={!canProceed} fluid floated='right' primary onClick={this.editOrder}
                             data-test='add_cart_edit_order_btn'>
-                    Save
+                    <FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage>
                 </Button>
                 }
               </GridColumn>

@@ -211,12 +211,16 @@ class ProductPopup extends React.Component {
     } = this.props
 
     const { packagingTypesReduced } = this.state
-    const title = <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} defaultMessage={`${popupValues ? 'Edit' : 'Add'}`} />
     let editable = popupValues ? (popupValues.productOfferCount === 0 || !popupValues.productOfferCount) : true
 
     return (
       <Modal size='small' open centered={false}>
-        <Modal.Header>{title} <FormattedMessage id='global.product' defaultMessage='Product' /></Modal.Header>
+        <Modal.Header>
+          {popupValues
+            ? <FormattedMessage id='settings.editProduct' defaultMessage='Edit Product' />
+            : <FormattedMessage id='settings.addProduct' defaultMessage='Add Product' />
+          }
+        </Modal.Header>
         <Modal.Content>
           <Form
             initialValues={this.getInitialFormValues()}
