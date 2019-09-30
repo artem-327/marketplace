@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 import { getSafe, deepSearch } from '~/utils/functions'
 import { isValid } from 'ein-validator'
+import validator from 'validator'
 
 const allowedFreightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500]
 
@@ -15,7 +16,7 @@ export const errorMessages = {
   lotHasToBeSelected: <FormattedMessage id='validation.lostHasToBeSelected' defaultMessage='Lot has to be selected' />,
   lotUnique: <FormattedMessage id='validation.lotUnique' defaultMessage='Lot has to be unique' />,
   requiredMessage: <FormattedMessage id='validation.required' defaultMessage='Required' />,
-  invalidPhoneNumber: <FormattedMessage id='validation.phoneNumber' defaultMessage={`Please, enter valid phone number (numbers and \'+-()\' characters can be used)`} />,
+  invalidPhoneNumber: <FormattedMessage id='validation.phoneNumber' defaultMessage={`Please, enter valid phone number.`} />,
   zipCode: <FormattedMessage id='validation.zipCode' defaultMessage='Enter zip code' />,
   minLength: (min) => <FormattedMessage id='validation.minLength' defaultMessage={`Field should have at least ${min} characters`} values={{ min }} />,
   maxLength: (max) => <FormattedMessage id='validation.maxLength' defaultMessage={`Field should have max ${max} characters`} values={{ max }} />,
@@ -63,9 +64,10 @@ export const passwordValidation = () => (
 )
 
 export const phoneValidation = () => (
-  Yup.string().trim()
-    .min(3, errorMessages.minLength(3))
-    .matches(/^[0-9\(\)\-\+\s]+$/, errorMessages.invalidPhoneNumber)
+  Yup.string()
+    .trim()
+    .test('phone-validation', errorMessages.invalidPhoneNumber, (val) => val && validator.isMobilePhone(val))
+    // .matches(/^[0-9\(\)\-\+\s]+$/, errorMessages.invalidPhoneNumber)
 )
 
 export const dateValidation = (required = true) => {
