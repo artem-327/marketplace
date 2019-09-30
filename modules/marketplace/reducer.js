@@ -42,6 +42,7 @@ export default function reducer(state = initialState, action) {
           const productCode = getSafe(() => el.mfrProductCode, '')
           const productName = getSafe(() => el.mfrProductName, '')
           return {
+            ...el,
             key: el.id,
             text: `${productCode} ${productName}`,
             value: JSON.stringify({ id: el.id, name: el.echoProduct.elements[0].casProduct.chemicalName, casNumber: el.echoProduct.elements[0].casProduct.casNumber }),

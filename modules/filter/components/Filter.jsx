@@ -170,12 +170,14 @@ class Filter extends Component {
 
       if (id) await self.props.updateFilter(id, requestData)
       else {
-        
-        await self.props.saveFilter(self.props.savedUrl, {...requestData, filters: requestData.filters.map((filter) => ({
-          operator: filter.operator,
-          path: filter.path,
-          values: filter.values
-        }))})
+
+        await self.props.saveFilter(self.props.savedUrl, {
+          ...requestData, filters: requestData.filters.map((filter) => ({
+            operator: filter.operator,
+            path: filter.path,
+            values: filter.values
+          }))
+        })
       }
 
 
@@ -442,25 +444,23 @@ class Filter extends Component {
   //  {"id":"431210","name":"1,2-dibromo-3,3,3-trifluoropropane","casNumberCombined":"431-21-0"}
 
   getOptions = (options) => {
-    if (getSafe(() => options[0].content, false)) {
-      return options.map(option => ({
-        key: option.key,
-        text: option.text,
-        value: option.value,
-        content: (
-          <Header style={{ fontSize: '1em' }}>
-            <Header.Content>
-              {`${option.content.productCode ? option.content.productCode : ''} ${option.content.productName ? option.content.productName : ''}`}
-              {option.content.casProducts.map(cp => (
-                <Header.Subheader>{`${getSafe(() => cp.casProduct.casNumber, '')} ${getSafe(() => cp.displayName, '')}`}</Header.Subheader>
-              ))}
-            </Header.Content>
-          </Header>
-        )
-      }))
-    } else {
-      return options
-    }
+
+    return options.map(option => ({
+      key: option.key,
+      text: option.text,
+      value: option.value,
+      // content: (
+      //   <Header style={{ fontSize: '1em' }}>
+      //     <Header.Content>
+      //       {`${option.content.productCode ? option.content.productCode : ''} ${option.content.productName ? option.content.productName : ''}`}
+      //       {option.content.casProducts.map(cp => (
+      //         <Header.Subheader>{`${getSafe(() => cp.casProduct.casNumber, '')} ${getSafe(() => cp.displayName, '')}`}</Header.Subheader>
+      //       ))}
+      //     </Header.Content>
+      //   </Header>
+      // )
+    }))
+
   }
 
   formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError }) => {
