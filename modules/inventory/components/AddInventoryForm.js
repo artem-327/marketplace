@@ -975,7 +975,7 @@ class AddInventoryForm extends Component {
 
             return (
               <>
-                <Modal open={this.props.poCreated} closeOnDimmerClick={false} size='tiny'>
+                <Modal closeIcon onClose={this.resetForm} open={this.props.poCreated} size='tiny'>
                   <Modal.Header>
                     <FormattedMessage id={this.props.edit ? 'addInventory.editDone' : 'addInventory.addDone'}
                       defaultMessage={this.props.edit ? 'Product Offer was edited' : 'Product Offer was created'} />

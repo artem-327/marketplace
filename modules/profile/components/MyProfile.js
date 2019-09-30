@@ -61,7 +61,7 @@ class MyProfile extends Component {
     } = this.props
 
     return (
-      <Modal open centered={false} size='small'>
+      <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
         <Modal.Header><FormattedMessage id='profile.myProfile' defaultMessage='My Profile' /></Modal.Header>
         <Modal.Content>
           <Form

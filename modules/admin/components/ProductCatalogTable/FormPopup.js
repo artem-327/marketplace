@@ -287,7 +287,7 @@ class AddNewPopupEchoProduct extends React.Component {
           let { setFieldValue, values, isSubmitting, errors } = props
 
           return (
-            <Modal open centered={false} size='small'>
+            <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
 
               <Modal.Header><FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} /> {config.addEditText}</Modal.Header>
               <Segment basic padded>

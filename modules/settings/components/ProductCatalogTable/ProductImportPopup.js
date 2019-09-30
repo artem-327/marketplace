@@ -73,7 +73,7 @@ class ProductImportPopup extends Component {
     } = this.state
 
     return (
-      <Modal open centered={false}>
+      <Modal closeIcon onClose={() => closeImportPopupCancel(csvFileId)} open centered={false}>
         <Modal.Header><FormattedMessage id='global.csvMapping' defaultMessage='.CSV Mapping' /></Modal.Header>
         <StyledModal>
           <Step.Group widths={3}>

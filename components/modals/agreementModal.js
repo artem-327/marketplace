@@ -24,7 +24,8 @@ class AgreementModal extends Component {
 
     return (
       <Modal {...additionalProps} open={open || isOpen}
-      //onClose={logout}
+        onClose={logout}
+        closeIcon
       >
         <Modal.Header>{modalHeader}</Modal.Header>
         <Modal.Content>

@@ -156,6 +156,7 @@
   "global.logistics": "Logistics",
   "global.packaging": "Packaging",
   "global.casTradeName": "CAS/Trade Name",
+  "global.packagesAvailable": "Packages Available",
   "global.casIndexNumber": "CAS Index Number",
   "global.casIndexName": "CAS Index Name",
   "global.min": "Min",

@@ -33,7 +33,7 @@ class AddNewUnitOfPackagingPopup extends React.Component {
     } = this.props
 
     return (
-      <Modal open centered={false}>
+      <Modal closeIcon onClose={() => closeAddPopup()} open centered={false}>
         <Modal.Header><FormattedMessage id='global.add' defaultMessage='Add' /> {config.addEditText}</Modal.Header>
         <Modal.Content>
           <Form
