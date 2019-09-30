@@ -48,7 +48,7 @@ class SimpleEdit extends Component {
 
   componentDidMount() {
     const { warehouses, getWarehouses, isAdmin, takeover } = this.props
-    
+
     if (warehouses.length === 0 && (!isAdmin || takeover)) getWarehouses()
   }
 
@@ -68,7 +68,7 @@ class SimpleEdit extends Component {
       addProductOffer, toastManager } = this.props
 
 
-    let productOptions = autocompleteData.map((el) => el.content)
+    let productOptions = autocompleteData
     let warehouseOptions = warehouses
 
 
@@ -77,7 +77,6 @@ class SimpleEdit extends Component {
       name: popupValues.warehouse.warehouseName,
       id: popupValues.warehouse.id
     })
-
 
     let initialValues = {
       packagingSize: getSafe(() => popupValues.companyProduct.packagingSize),

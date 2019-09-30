@@ -7,6 +7,7 @@ import ProdexTable from '~/components/table'
 import { Broadcast } from '~/modules/broadcast'
 import { Filter } from '~/modules/filter'
 
+import SimpleEdit from '~/modules/inventory/components/SimpleEdit'
 
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
@@ -263,6 +264,7 @@ class MyInventory extends Component {
 
         </div>
         <Broadcast />
+        <SimpleEdit />
         <Filter
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}
