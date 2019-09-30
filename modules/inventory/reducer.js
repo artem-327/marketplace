@@ -423,6 +423,7 @@ export default function reducer(state = initialState, action) {
               casNumber: getSafe(() => el.echoProduct.elements[0].casProduct.casNumber, '')
             }),
             content: {
+              ...el,
               productCode: productCode,
               productName: productName,
               casProducts: getSafe(() => el.echoProduct.elements, [])

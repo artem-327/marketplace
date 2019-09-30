@@ -62,7 +62,7 @@ class SimpleEdit extends Component {
       addProductOffer, toastManager } = this.props
 
 
-    let productOptions = autocompleteData
+    let productOptions = autocompleteData.map((el) => el.content)
     let warehouseOptions = warehouses
 
 
@@ -72,7 +72,7 @@ class SimpleEdit extends Component {
       id: popupValues.warehouse.id
     })
 
-
+    
     let initialValues = {
       packagingSize: getSafe(() => popupValues.companyProduct.packagingSize),
       product: getSafe(() => popupValues.companyProduct.id),
@@ -143,7 +143,6 @@ class SimpleEdit extends Component {
         validationSchema={validationSchema}
         render={({ submitForm, values }) => {
           this.submitForm = submitForm
-          console.log({ values })
           return (
             <Modal
               closeIcon
@@ -176,7 +175,7 @@ class SimpleEdit extends Component {
                             onChange: (_, { value }) => {
                               simpleEditTrigger({
                                 ...popupValues,
-                                companyProduct: autocompleteData.find((el) => el.id === value)
+                                companyProduct: autocompleteData.find((el) => el.content.id === value).content
                               }, true)
                             },
                             onSearchChange: (_, { searchQuery }) => this.handleSearch(searchQuery)
