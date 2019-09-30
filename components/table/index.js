@@ -104,7 +104,14 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
   const column2 = GridColumns === 1 ? column1 : column1.splice(Math.ceil(column1.length / 2))
 
   return (
-    <Modal open={open} centered={false} style={{ width: modalWidth }}>
+    <Modal
+     open={open} 
+     closeIcon 
+     onClose={onClose}
+     centered={false} 
+     style={{ width: modalWidth }}
+     
+     >
       <Modal.Content>
         <Form
           initialValues={columns.reduce((acc, c) => { acc[c.name] = hiddenColumnNames.indexOf(c.name) === -1; return acc }, {})}

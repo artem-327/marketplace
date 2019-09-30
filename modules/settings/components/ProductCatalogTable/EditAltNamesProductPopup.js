@@ -107,7 +107,7 @@ class EditAltNamesProductPopup extends React.Component {
 
     return (
 
-      <Modal open centered={false}>
+      <Modal closeIcon onClose={() => closePopup()} open centered={false}>
         <Modal.Header><FormattedMessage id='settings.editProductAltNames' defaultMessage='Edit Product Alternative Names' /></Modal.Header>
         <Modal.Content>
           <Form

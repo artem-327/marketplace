@@ -161,7 +161,7 @@ class Layout extends Component {
           </ContentContainer>
         </FlexContainer>
 
-        {auth && auth.identity && !auth.identity.isAdmin && <SimpleEdit />}
+        <SimpleEdit />
         <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
       </MainContainer>
     )

@@ -119,7 +119,7 @@ class UsersPopup extends React.Component {
     }
 
     return (
-      <Modal open centered={false} size={userEditRoles ? 'mini' : null}>
+      <Modal closeIcon onClose={() => closePopup()} open centered={false} size={userEditRoles ? 'mini' : null}>
         <Modal.Header>
           {(userEditRoles
             ? formatMessage({ id: 'settings.assignUserRoles', defaultMessage: 'Assign User Roles' })

@@ -77,7 +77,7 @@ class BankAccountsPopup extends React.Component {
     } = this.props
 
     return (
-      <Modal open centered={false}>
+      <Modal closeIcon onClose={() => closePopup()} open centered={false}>
         <Modal.Header>
           {popupValues
             ? <FormattedMessage id='settings.EditBankAcc' defaultMessage='Edit Bank Account' />

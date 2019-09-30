@@ -214,7 +214,7 @@ class ProductPopup extends React.Component {
     let editable = popupValues ? (popupValues.productOfferCount === 0 || !popupValues.productOfferCount) : true
 
     return (
-      <Modal size='small' open centered={false}>
+      <Modal closeIcon onClose={() => closePopup()} size='small' open centered={false}>
         <Modal.Header>
           {popupValues
             ? <FormattedMessage id='settings.editProduct' defaultMessage='Edit Product' />

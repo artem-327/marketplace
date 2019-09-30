@@ -177,7 +177,7 @@ class AddNewPopupCasProducts extends React.Component {
           let { setFieldValue, values, isSubmitting } = props
 
           return (
-            <Modal open centered={false} size='small'>
+            <Modal closeIcon onClose={() => closeRegisterDwollaAccount()} open centered={false} size='small'>
               <Modal.Header><FormattedMessage id='global.registerDwollaAcc' /></Modal.Header>
               <Segment basic padded>
                 <Form loading={isSubmitting} onSubmit={props.handleSubmit}>

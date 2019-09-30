@@ -42,7 +42,7 @@ class LogisticsPopup extends Component {
       logisticsProvidersFetching, createLogisticsAccount, updateLogisticsAccount, intl: { formatMessage }, toastManager } = this.props
 
     return (
-      <Modal open centered={false}>
+      <Modal closeIcon onClose={() => closePopup()} open centered={false}>
         <Modal.Header>
           {popupValues
             ? <FormattedMessage id='settings.editLogistics' defaultMessage='Edit Logistics' />

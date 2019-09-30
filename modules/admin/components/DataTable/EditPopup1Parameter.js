@@ -35,7 +35,7 @@ class EditPopup1Parameter extends React.Component {
     }
 
     return (
-      <Modal open centered={false}>
+      <Modal closeIcon closeIcon={() => closeEditPopup()} open centered={false}>
         <Modal.Header><FormattedMessage id='global.edit' defaultMessage='Edit' /> {config.addEditText}</Modal.Header>
         <Modal.Content>
           <Form

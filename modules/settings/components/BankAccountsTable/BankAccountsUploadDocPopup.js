@@ -32,7 +32,7 @@ class BankAccountsUploadDocPopup extends React.Component {
     } = this.props
 
     return (
-      <Modal open centered={false}>
+      <Modal closeIcon onClose={() => closeUploadDocumentsPopup()} open centered={false}>
         <Modal.Header>
           <FormattedMessage id='settings.tables.bankAccounts.uploadDoc' defaultMessage='Upload Documents' />
         </Modal.Header>

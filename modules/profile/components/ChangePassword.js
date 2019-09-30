@@ -35,7 +35,7 @@ class ChangePassword extends Component {
     const { closeChangePasswordPopup, intl: { formatMessage } } = this.props
 
     return (
-      <Modal open centered={false} size='small'>
+      <Modal closeIcon onClose={() => closeChangePasswordPopup()} open centered={false} size='small'>
         <Modal.Header><FormattedMessage id='password.change' defaultMessage='Change Password' /></Modal.Header>
         <Modal.Content>
           <Form

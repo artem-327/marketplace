@@ -26,18 +26,17 @@ export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', as
 
   productOffers.forEach(po => {
     let first = po.pricingTiers[0], last = po.pricingTiers[po.pricingTiers.length - 1]
-    if (first.price > 0 && last.price > 0) {
+    if (getSafe(() => first.price.amount, -1) > 0 && getSafe(() => last.price.amount, -1) > 0) {
       pricingTiers.push({ low: first, high: last })
     }
   })
 
   let min = pricingTiers[0].low, max = pricingTiers[0].high
-
   pricingTiers.forEach(tier => {
-    if (tier.low.price < min.price && tier.low.price > 0) min = tier.low
-    if (tier.high.price > max.price && tier.high.price > 0) max = tier.high
+    if (tier.low.price.amount < min.price.amount && tier.low.price.amount > 0) min = tier.low
+    if (tier.high.price.amount > max.price.amount && tier.high.price.amount > 0) max = tier.high
   })
-
+  
   return {
     data,
     id: null,

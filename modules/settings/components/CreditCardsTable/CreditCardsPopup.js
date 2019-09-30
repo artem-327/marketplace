@@ -36,7 +36,7 @@ class CreditCardsPopup extends React.Component {
     const title = popupValues ? 'Edit' : 'Add'
 
     return (
-      <Modal open centered={false}>
+      <Modal closeIcon onClose={() => closePopup()} open centered={false}>
         <Modal.Header>
           {`${title} `} {currentTab.name}
         </Modal.Header>

@@ -44,7 +44,7 @@ class ReinitiateTransfer extends React.Component {
 
     return (
       <>
-        <Modal open={true}>
+        <Modal closeIcon onClose={() => this.props.closeReinitiateTransfer()} open={true}>
           <Dimmer active={bankAccountsLoading} inverted>
             <Loader />
           </Dimmer>

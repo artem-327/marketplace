@@ -302,6 +302,8 @@ class Broadcast extends Component {
                   }
 
 
+                  console.log('submit')
+
                   if (templates.some((el) => el.name === values.name)) {
                     let { name, id } = this.state.selectedTemplate
 
@@ -381,7 +383,7 @@ class Broadcast extends Component {
                           </GridColumn>
 
                           <GridColumn computer={5}>
-                            <Button onClick={this.submitForm} loading={this.props.templateSaving} fluid positive basic data-test='broadcast_modal_submit_btn'>
+                            <Button onClick={this.submitForm} type='button' loading={this.props.templateSaving} fluid positive basic data-test='broadcast_modal_submit_btn'>
                               {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                             </Button>
                           </GridColumn>
@@ -480,7 +482,7 @@ class Broadcast extends Component {
     }
 
     return (
-      <Modal open={open} onClose={closeBroadcast} centered={false} size='large'>
+      <Modal closeIcon open={open} onClose={closeBroadcast} centered={false} size='large'>
         <Modal.Header><FormattedMessage id='inventory.broadcast' defaultMessage='Price Book' /></Modal.Header>
         <Modal.Content scrolling style={{ minHeight: '70vh' }} className='flex stretched'>
           {this.getContent()}

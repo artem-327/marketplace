@@ -75,7 +75,7 @@ class DeliveryAddressesPopup extends React.Component {
 
 
     return (
-      <Modal open centered={false} size='small'>
+      <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
         <Modal.Header>
           {popupValues
             ? <FormattedMessage id='settings.editDeliveryAddress' defaultMessage='Edit Delivery Address' />

@@ -27,7 +27,7 @@ import { provinceObjectRequired, errorMessages } from '~/constants/yupValidation
 
 import { CompanyForm } from '~/modules/company-form/'
 import { AddressForm } from '~/modules/address-form/'
-import { addressValidationSchema } from '~/constants/yupValidation'
+import { addressValidationSchema, phoneValidation } from '~/constants/yupValidation'
 
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
@@ -131,7 +131,8 @@ class AddNewPopupCasProducts extends React.Component {
         name: Yup.string().trim().min(2, minLength).required(minLength),
         contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
         contactName: Yup.string().trim().min(2, minLength).required(minLength),
-        contactPhone: Yup.string().trim().required(errorMessages.enterPhoneNumber),
+        // contactPhone: Yup.string().trim().required(errorMessages.enterPhoneNumber),
+        contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),
         address: addressValidationSchema()
       }),
       primaryUser: Yup.lazy(() => {
@@ -341,8 +342,8 @@ class AddNewPopupCasProducts extends React.Component {
               <FormattedMessage id={`notifications.${status}.header`} />,
               <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
             ), {
-                appearance: 'success'
-              })
+              appearance: 'success'
+            })
           } catch (err) {
             console.error(err)
           }
@@ -352,10 +353,9 @@ class AddNewPopupCasProducts extends React.Component {
         }}
         onReset={closePopup}
         render={props => {
-          let { setFieldValue, values, isSubmitting } = props
-
+          let { setFieldValue, values, isSubmitting, errors } = props
           return (
-            <Modal open centered={false} size='small'>
+            <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
 
               <Modal.Header><FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} /> {config.addEditText}</Modal.Header>
               <Segment basic padded>
@@ -380,6 +380,7 @@ class AddNewPopupCasProducts extends React.Component {
                             <FormGroup widths='equal' data-test='admin_popup_company_primaryUserTitlePhone_inp'>
                               <Input label={<FormattedMessage id='global.jobTitle' defaultMessage='Job Title' />} name='primaryUser.jobTitle' />
                               <PhoneNumber
+                                error={getSafe(() => errors.primaryUser.phone)}
                                 label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='primaryUser.phone'
                                 values={values} setFieldValue={setFieldValue}
                               />
@@ -406,7 +407,9 @@ class AddNewPopupCasProducts extends React.Component {
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='primaryBranch.contactName' />
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />} name='primaryBranch.contactEmail' />
                             <PhoneNumber
-                              label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='primaryBranch.contactPhone'
+                              error={getSafe(() => errors.primaryBranch.contactPhone)}
+                              label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />}
+                              name='primaryBranch.contactPhone'
                               values={values} setFieldValue={setFieldValue}
                             />
                           </FormGroup>
@@ -431,7 +434,9 @@ class AddNewPopupCasProducts extends React.Component {
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact Email' />} name='mailingBranch.contactEmail' />
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='mailingBranch.contactName' />
                             <PhoneNumber
-                              label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='mailingBranch.contactPhone'
+                              error={getSafe(() => errors.mailingBranch.contactPhone)}
+                              label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />}
+                              name='mailingBranch.contactPhone'
                               values={values} setFieldValue={setFieldValue}
                             />
                           </FormGroup>
@@ -449,10 +454,10 @@ class AddNewPopupCasProducts extends React.Component {
               <Modal.Actions>
                 <Button.Reset data-test='admin_popup_company_cancel_btn' onClick={props.handleReset}>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage>
-                  </Button.Reset>
+                </Button.Reset>
                 <Button.Submit data-test='admin_popup_company_save_btn' onClick={props.handleSubmit}>
                   <FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage>
-                  </Button.Submit>
+                </Button.Submit>
               </Modal.Actions>
             </Modal>
           )

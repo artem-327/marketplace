@@ -421,7 +421,7 @@ class AssignLots extends React.Component {
 
     return (
       <>
-        <Modal open={true}>
+        <Modal closeIcon onClose={() => this.props.closeAssignLots()} open={true}>
           <Modal.Header>
             <FormattedMessage id='order.actionRequired' defaultMessage='Action Required' />
             <Subtitle as='h4'>
