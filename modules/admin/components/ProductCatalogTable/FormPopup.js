@@ -108,10 +108,10 @@ class AddNewPopupEchoProduct extends React.Component {
     this.setState({
       unNumber,
       ...(unNumber && {unNumberCode: unNumber.unNumberCode, unNumberShippingName: unNumber.description}),
-      codesList: this.props.popupValues.mfrProductCodes.map(code => ({
+      codesList: getSafe(() => this.props.popupValues.mfrProductCodes.map(code => ({
         text: code,
         value: code
-      }))
+      })), [])
     })
 
     this.props.searchManufacturers(getSafe(() => this.props.popupValues.manufacturer.name, ''), 200)
