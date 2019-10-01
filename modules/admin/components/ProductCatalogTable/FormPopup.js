@@ -48,9 +48,32 @@ const AccordionHeader = styled(Header)`
 `
 
 
+Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
+  return this.test('unique', message, function (value) {
+    if (!value || !value[propertyName]) {
+      return true
+    }
+
+    const { path } = this
+    const options = [...this.parent]
+    const currentIndex = options.indexOf(value)
+
+    const subOptions = options.slice(0, currentIndex)
+
+    if (subOptions.some((option) => option[propertyName] === value[propertyName])) {
+      throw this.createError({
+        path: `${path}.${propertyName}`,
+        message,
+      })
+    }
+
+    return true
+  })
+})
+
 const validationScheme = Yup.object().shape({
   code: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
-  elements: Yup.array().of(Yup.object().shape({
+  elements: Yup.array().of(Yup.object().uniqueProperty('casProduct', errorMessages.unique(<FormattedMessage id='admin.casProduct' name='CAS Product'>{text => text}</FormattedMessage>)).shape({
     name: Yup.string().trim().test('requiredIfProprietary', errorMessages.requiredMessage, function (value) {
       const { proprietary } = this.parent
       if (proprietary) {
@@ -446,12 +469,6 @@ class AddNewPopupEchoProduct extends React.Component {
                                 this.setState({unNumberCode: d.value})
                                 this.handleSearchUnNumber(e, d)
                               }}
-                              /*onBlur={(e, data) => {
-                                const searchResults = data.results.filter(unNumber => unNumber.value === values.unNumber)
-                                if (!searchResults.length) {
-                                  setFieldValue('unNumber', '')
-                                }
-                              }}*/
                               results={searchedUnNumbers.map(item => {
                                 return {
                                   id: item.id,
@@ -465,7 +482,7 @@ class AddNewPopupEchoProduct extends React.Component {
                       />
                       <Input type='hidden' name='unNumber' inputProps={{ style: { position: 'absolute', top: '-30000px', left: '-30000px' } }} />
                     </FormField>
-                    <FormField width={6} data-test='admin_product_popup_unShippingName_inp'>
+                    <FormField width={6} error={errors.unShippingName ? true : false} data-test='admin_product_popup_unShippingName_inp'>
                       <label><FormattedMessage id='global.unShippingName' defaultMessage='UN Shipping Name' /></label>
                       <Search isLoading={false}
                               onResultSelect={(e, { result }) => {
@@ -1060,7 +1077,7 @@ class AddNewPopupEchoProduct extends React.Component {
                       </FormGroup>
                       <FormGroup widths='equal'>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.tdsPreparedBy', defaultMessage: 'TDS Prepared By' })}
+                          <Input label={formatMessage({ id: 'global.tdsPreparedBy', defaultMessage: 'TDS Prepared by' })}
                                  name='tdsPreparedBy'
                                  type='text' />
                         </FormField>
@@ -1114,30 +1131,25 @@ class AddNewPopupEchoProduct extends React.Component {
 
                       <FormGroup widths='equal'>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.hmis', defaultMessage: 'HMIS' })}
-                                 name='hmis'
+                          <Input label={formatMessage({ id: 'global.hmisChronicHealthHazard', defaultMessage: 'HMIS Chronic Health Hazard' })}
+                                 name='hmisChronicHealthHazard'
                                  type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.healthHazard', defaultMessage: 'Health Hazard' })}
-                                 name='healthHazard'
+                          <Input label={formatMessage({ id: 'global.hmisFlammability', defaultMessage: 'HMIS Flammability' })}
+                                 name='hmisFlammability'
                                  type='text' />
                         </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.hmisChronicHealthHazard', defaultMessage: 'HMIS Chronic Health Hazard' })}
-                                 name='nfpaChronicHealthHazard'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.hmisFlammability', defaultMessage: 'HMIS Flammability' })}
-                                 name='nfpaFlammability'
+                          <Input label={formatMessage({ id: 'global.hmisHealthHazard', defaultMessage: 'Health Hazard' })}
+                                 name='hmisHealthHazard'
                                  type='text' />
                         </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.hmisPhysicalHazard', defaultMessage: 'HMIS Physical Hazard' })}
-                                 name='nfpaPhysicalHazard'
+                                 name='hmisPhysicalHazard'
                                  type='text' />
                         </FormField>
                       </FormGroup>
@@ -1146,17 +1158,17 @@ class AddNewPopupEchoProduct extends React.Component {
 
                       <FormGroup widths='equal'>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.nfpa', defaultMessage: 'NFPA' })}
-                                 name='nfpa'
-                                 type='text' />
-                        </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <FormField>
                           <Input label={formatMessage({ id: 'global.nfpaFireHazard', defaultMessage: 'NFPA Fire Hazard' })}
                                  name='nfpaFireHazard'
                                  type='text' />
                         </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.nfpaHealthHazard', defaultMessage: 'NFPA Health Hazard' })}
+                                 name='nfpaHealthHazard'
+                                 type='text' />
+                        </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.nfpaReactivityHazard', defaultMessage: 'NFPA Reactivity Hazard' })}
                                  name='nfpaReactivityHazard'
