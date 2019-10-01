@@ -10,10 +10,10 @@ import { debounce } from 'lodash'
 import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
 import * as Yup from 'yup'
-
+import { CompanyProductMixtures } from '~/components/shared-components/'
 
 import { Datagrid } from '~/modules/datagrid'
-import { uniqueArrayByKey, getSafe, generateToastMarkup } from '~/utils/functions'
+import { uniqueArrayByKey, getSafe, generateToastMarkup, getDesiredCasProductsProps } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 
 import { getWarehouses } from '~/modules/purchase-order/actions'
@@ -21,6 +21,11 @@ import { simpleEditTrigger, getAutocompleteData, addProductOffer } from '~/modul
 
 const BoldLabel = styled.label`
   font-weight: bolder;
+`
+const EllipsisColumn = styled(GridColumn)`
+& input {
+  text-overflow: ellipsis !important;
+}
 `
 
 
@@ -36,9 +41,6 @@ const validationSchema = Yup.object().shape({
 })
 
 
-const BottomUnpaddedRow = styled(GridRow)`
-  padding-bottom: 0px !important;
-`
 
 class SimpleEdit extends Component {
   state = {
@@ -84,12 +86,7 @@ class SimpleEdit extends Component {
       uom: getSafe(() => popupValues.companyProduct.packagingUnit.nameAbbreviation),
       packaging: getSafe(() => popupValues.companyProduct.packagingType.name),
       casTradeName: getSafe(() => popupValues.companyProduct.echoProduct.name),
-      casProducts: getSafe(() => popupValues.companyProduct.echoProduct.elements, []).map((el) => ({
-        casIndexName: el.proprietary ? 'Proprietary' : getSafe(() => el.casProduct.casIndexName),
-        casIndexNumber: getSafe(() => el.casProduct.casNumber),
-        min: getSafe(() => el.assayMin, ''),
-        max: getSafe(() => el.assayMax, '')
-      })),
+      casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.companyProduct.echoProduct.elements, [])),
       // price: getSafe(() => popupValues.pricingTiers[0].price.amount),
       pricingTiers: getSafe(() => popupValues.pricingTiers.map((el) => ({
         quantityFrom: el.quantityFrom,
@@ -148,6 +145,7 @@ class SimpleEdit extends Component {
         validationSchema={validationSchema}
         render={({ submitForm, values }) => {
           this.submitForm = submitForm
+
           return (
             <Modal
               closeIcon
@@ -162,6 +160,7 @@ class SimpleEdit extends Component {
                   defaultMessage={`${popupValues.id ? 'Edit' : 'Add'} Listing`}
                 />
               </Modal.Header>
+
 
               <Modal.Content>
                 <Form loading={this.state.submitting}>
@@ -180,7 +179,7 @@ class SimpleEdit extends Component {
                             onChange: (_, { value }) => {
                               simpleEditTrigger({
                                 ...popupValues,
-                                companyProduct: autocompleteData.find((el) => el.content.id === value).content
+                                companyProduct: autocompleteData.find((el) => el.id === value)
                               }, true)
                             },
                             onSearchChange: (_, { searchQuery }) => this.handleSearch(searchQuery)
@@ -221,78 +220,16 @@ class SimpleEdit extends Component {
                             />
                           </GridColumn>
 
-                          <GridColumn>
+                          <EllipsisColumn>
                             <Input
                               label={<BoldLabel><FormattedMessage id='global.casTradeName' defaultMessage='CAS/Trade Name'>{text => text}</FormattedMessage></BoldLabel>}
                               name='casTradeName'
                               inputProps={{ transparent: true, readOnly: true }}
                             />
-                          </GridColumn>
+                          </EllipsisColumn>
                         </GridRow>
-                        {values.casProducts.length > 0 &&
-                          <>
-                            <Divider />
-
-                            <BottomUnpaddedRow columns={4}>
-                              <GridColumn>
-                                <BoldLabel>
-                                  <FormattedMessage id='global.casIndexNumber' defaultMessage='CAS Index Number' />
-                                </BoldLabel>
-                              </GridColumn>
-
-                              <GridColumn>
-                                <BoldLabel>
-                                  <FormattedMessage id='global.casIndexName' defaultMessage='CAS Index Name' />
-                                </BoldLabel>
-                              </GridColumn>
-
-                              <GridColumn>
-                                <BoldLabel>
-                                  <FormattedMessage id='global.min' defaultMessage='Min' />
-                                </BoldLabel>
-                              </GridColumn>
-
-                              <GridColumn>
-                                <BoldLabel>
-                                  <FormattedMessage id='global.max' defaultMessage='Max' />
-                                </BoldLabel>
-                              </GridColumn>
-                            </BottomUnpaddedRow>
-
-
-                            {values.casProducts.map((_, i) => (
-                              <GridRow columns={4}>
-                                <GridColumn>
-                                  <Input
-                                    name={`casProducts[${i}].casIndexName`}
-                                    inputProps={{ transparent: true, readOnly: true }}
-                                  />
-                                </GridColumn>
-
-                                <GridColumn>
-                                  <Input
-                                    name={`casProducts[${i}].casIndexNumber`}
-                                    inputProps={{ transparent: true, readOnly: true }}
-                                  />
-                                </GridColumn>
-
-                                <GridColumn>
-                                  <Input
-                                    name={`casProducts[${i}].min`}
-                                    inputProps={{ transparent: true, readOnly: true }}
-                                  />
-                                </GridColumn>
-
-                                <GridColumn>
-                                  <Input
-                                    name={`casProducts[${i}].max`}
-                                    inputProps={{ transparent: true, readOnly: true }}
-                                  />
-                                </GridColumn>
-                              </GridRow>
-                            ))}
-                          </>
-                        }
+                        <Divider />
+                        <CompanyProductMixtures casProducts={values.casProducts} />
                         <Divider />
                       </>
                     }

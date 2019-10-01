@@ -688,7 +688,7 @@ class AddInventoryForm extends Component {
                   <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.productName' defaultMessage='Product Name' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.echoProduct.name, defaultMessage)}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.productNumber' defaultMessage='Product Number' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='global.productCode' defaultMessage='Product Code' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.echoProduct.code, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.productName.internal' defaultMessage='Internal Product Name' /></GridColumn>
