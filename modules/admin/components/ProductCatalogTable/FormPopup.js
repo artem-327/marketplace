@@ -1060,7 +1060,7 @@ class AddNewPopupEchoProduct extends React.Component {
                       </FormGroup>
                       <FormGroup widths='equal'>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.tdsPreparedBy', defaultMessage: 'TDS Revision Date' })}
+                          <Input label={formatMessage({ id: 'global.tdsPreparedBy', defaultMessage: 'TDS Prepared By' })}
                                  name='tdsPreparedBy'
                                  type='text' />
                         </FormField>
@@ -1126,17 +1126,17 @@ class AddNewPopupEchoProduct extends React.Component {
                       </FormGroup>
                       <FormGroup widths='equal'>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.nfpaChronicHealthHazard', defaultMessage: 'HMIS Chronic Health Hazard' })}
+                          <Input label={formatMessage({ id: 'global.hmisChronicHealthHazard', defaultMessage: 'HMIS Chronic Health Hazard' })}
                                  name='nfpaChronicHealthHazard'
                                  type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.nfpaFlammability', defaultMessage: 'HMIS Flammability' })}
+                          <Input label={formatMessage({ id: 'global.hmisFlammability', defaultMessage: 'HMIS Flammability' })}
                                  name='nfpaFlammability'
                                  type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.nfpaPhysicalHazard', defaultMessage: 'HMIS Physical Hazard' })}
+                          <Input label={formatMessage({ id: 'global.hmisPhysicalHazard', defaultMessage: 'HMIS Physical Hazard' })}
                                  name='nfpaPhysicalHazard'
                                  type='text' />
                         </FormField>
