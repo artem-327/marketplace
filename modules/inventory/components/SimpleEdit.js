@@ -148,6 +148,7 @@ class SimpleEdit extends Component {
         validationSchema={validationSchema}
         render={({ submitForm, values }) => {
           this.submitForm = submitForm
+          console.log({ values })
           return (
             <Modal
               closeIcon
@@ -180,7 +181,7 @@ class SimpleEdit extends Component {
                             onChange: (_, { value }) => {
                               simpleEditTrigger({
                                 ...popupValues,
-                                companyProduct: autocompleteData.find((el) => el.content.id === value).content
+                                companyProduct: autocompleteData.find((el) => el.id === value)
                               }, true)
                             },
                             onSearchChange: (_, { searchQuery }) => this.handleSearch(searchQuery)
