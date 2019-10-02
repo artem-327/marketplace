@@ -590,7 +590,7 @@ class AddNewPopupEchoProduct extends React.Component {
                           <FormField>
                             <label><FormattedMessage id='global.sdsDocument' defaultMessage='SDS Document' /></label>
                             <UploadLot {...this.props}
-                                       attachments={values.attachments.filter(att => att.documentType.id === 3)}
+                                       attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === 3)}
                                        edit={getSafe(() => popupValues.id, '')}
                                        name='attachments'
                                        type={3}
@@ -600,7 +600,8 @@ class AddNewPopupEchoProduct extends React.Component {
                                          `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
                                          {
                                            id: files.id,
-                                           name: files.name
+                                           name: files.name,
+                                           documentType: files.documentType
                                          }
                                        )}
                                        data-test='settings_product_import_attachments'
@@ -673,7 +674,7 @@ class AddNewPopupEchoProduct extends React.Component {
                           <FormField>
                             <label><FormattedMessage id='global.tdsDocument' defaultMessage='TDS Document' /></label>
                             <UploadLot {...this.props}
-                                       attachments={values.attachments.filter(att => att.documentType.id === 11)}
+                                       attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === 11)}
                                        edit={getSafe(() => popupValues.id, '')}
                                        name='attachments'
                                        type={11}
@@ -683,7 +684,8 @@ class AddNewPopupEchoProduct extends React.Component {
                                          `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
                                          {
                                            id: files.id,
-                                           name: files.name
+                                           name: files.name,
+                                           documentType: files.documentType
                                          }
                                        )}
                                        data-test='settings_product_import_attachments'
