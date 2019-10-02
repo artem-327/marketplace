@@ -247,7 +247,8 @@ class ProductPopup extends React.Component {
                     }))}
 
                     inputProps={{
-                      fluid: true, search: true,
+                      fluid: true, 
+                      search: (val) => val,
                       clearable: true, selection: true,
                       loading: echoProductsFetching,
                       onChange: (_, { value }) =>
