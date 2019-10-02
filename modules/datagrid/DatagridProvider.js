@@ -44,6 +44,12 @@ export class DatagridProvider extends Component {
   //   }
   // }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.apiConfig && prevProps.apiConfig.url && this.props.apiConfig && this.props.apiConfig.url && (prevProps.apiConfig.url !== this.props.apiConfig.url)) {
+      this.setFilter({filters: []})
+    }
+  }
+
   clear = () => {
     this.setState(initialState)
   }
@@ -176,7 +182,7 @@ export class DatagridProvider extends Component {
 
   render() {
     const { rows, loading, datagridParams: { filters } } = this.state
-    
+
     return (
       <DatagridContext.Provider
         value={{

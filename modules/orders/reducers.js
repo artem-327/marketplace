@@ -23,27 +23,33 @@ const initialState = {
 
 export default function(state = initialState, action) {
     switch (action.type) {
+        /*
         case AT.ORDERS_FETCH_REQUESTED:
             return {
                 ...state,
                 isFetching: true,
                 reloadPage: false
             }
+        */
         case AT.ORDERS_FETCH_SUCCESS:
             return {
                 ...state,
                 isFetching: false,
-                data: action.payload.data,
-                dataType: (action.payload.dataType === 'sale' ? 'sales' : action.payload.dataType),
+                //data: action.payload.data,
+                dataType: action.payload.endpointType,
                 reloadPage: false,
-                statusFilter: action.payload.statusFilter
+                statusFilter: action.payload.filter.status,
+                activeStatus: action.payload.filter.status,
+                filterData: action.payload.filter
             }
+        /*
         case AT.ORDERS_FETCH_FAILURE:
             return {
                 ...state,
                 isFetching: false,
                 reloadPage: false
             }
+            */
         case AT.ORDERS_DETAIL_FETCH_REQUESTED:
             return {
                 ...state,

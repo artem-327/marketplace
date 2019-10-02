@@ -103,8 +103,6 @@ class EditAltNamesEchoProductPopup extends React.Component {
       initialState
     } = this.state
 
-    console.log(popupValues)
-
     return (
 
       <Modal open centered={false}>

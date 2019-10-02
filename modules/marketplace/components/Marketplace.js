@@ -46,7 +46,7 @@ class Marketplace extends Component {
   }
 
   componentDidMount() {
-    this.initData()
+    //this.initData()
   }
 
   getRows = () => {
