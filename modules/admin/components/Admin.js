@@ -35,6 +35,7 @@ import { getSafe } from '~/utils/functions'
 
 import { DatagridProvider } from '~/modules/datagrid'
 import Settings from '~/components/settings'
+import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
 const ScrollableSegment = styled(Segment)`
   max-height: 90vh;

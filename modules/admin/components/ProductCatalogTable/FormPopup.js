@@ -590,7 +590,7 @@ class AddNewPopupEchoProduct extends React.Component {
                           <FormField>
                             <label><FormattedMessage id='global.sdsDocument' defaultMessage='SDS Document' /></label>
                             <UploadLot {...this.props}
-                                       attachments={values.attachments}
+                                       attachments={values.attachments.filter(att => att.documentType.id === 3)}
                                        edit={getSafe(() => popupValues.id, '')}
                                        name='attachments'
                                        type={3}
@@ -673,7 +673,7 @@ class AddNewPopupEchoProduct extends React.Component {
                           <FormField>
                             <label><FormattedMessage id='global.tdsDocument' defaultMessage='TDS Document' /></label>
                             <UploadLot {...this.props}
-                                       attachments={values.attachments}
+                                       attachments={values.attachments.filter(att => att.documentType.id === 11)}
                                        edit={getSafe(() => popupValues.id, '')}
                                        name='attachments'
                                        type={11}
