@@ -450,7 +450,8 @@ class AddNewPopupEchoProduct extends React.Component {
                                     codesList.push(newValue)
                                     console.log('CODES', codesList)
                                     this.setState({ codesList: codesList })
-                                  }
+                                  },
+                                  noResultsMessage: formatMessage({ id: 'global.dropdown.startTyping', defaultMessage: 'Start typing to add {typeName}.'}, { typeName: formatMessage({ id: 'global.aCode', defaultMessage: 'a code' }) })
                                 }}
 
                       />
@@ -563,19 +564,33 @@ class AddNewPopupEchoProduct extends React.Component {
                         </FormGroup>
                         <FormGroup widths='equal'>
                           <FormField>
+                            <Input label={formatMessage({ id: 'global.sdsPreparedBy', defaultMessage: 'SDS Prepared by' })}
+                                   name='sdsPreparedBy'
+                                   type='text' />
+                          </FormField>
+                        </FormGroup>
+                        <FormGroup widths='equal'>
+                          <FormField>
                             <DateInput
                               label={formatMessage({ id: 'global.sdsRevisionDate', defaultMessage: 'SDS Revision Date' })}
                               name='sdsRevisionDate'
                               inputProps={{ 'data-test': 'settings_product_popup_sdsRevisionDate_dtin', maxDate: moment() }} />
                           </FormField>
                         </FormGroup>
+                        <FormGroup widths='equal'>
+                          <FormField>
+                            <DateInput label={formatMessage({ id: 'global.sdsIssueDate', defaultMessage: 'SDS Issue Date' })}
+                                       name='sdsIssueDate'
+                                       inputProps={{ 'data-test': 'settings_product_popup_sdsIssueDate_dtin', maxDate: moment() }} />
+                          </FormField>
+                        </FormGroup>
                       </Grid.Column>
                       <Grid.Column width={8}>
                         <FormGroup widths='equal'>
                           <FormField>
-                            <label><FormattedMessage id='global.doc' defaultMessage='Document' /></label>
+                            <label><FormattedMessage id='global.sdsDocument' defaultMessage='SDS Document' /></label>
                             <UploadLot {...this.props}
-                                       attachments={values.attachments}
+                                       attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === 3)}
                                        edit={getSafe(() => popupValues.id, '')}
                                        name='attachments'
                                        type={3}
@@ -585,7 +600,92 @@ class AddNewPopupEchoProduct extends React.Component {
                                          `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
                                          {
                                            id: files.id,
-                                           name: files.name
+                                           name: files.name,
+                                           documentType: files.documentType
+                                         }
+                                       )}
+                                       data-test='settings_product_import_attachments'
+                                       emptyContent={(
+                                         <label>
+                                           <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+                                           <br />
+                                           <FormattedMessage id='addInventory.dragDropOr'
+                                                             defaultMessage={'or {link} to select from computer'}
+                                                             values={{
+                                                               link: (
+                                                                 <a>
+                                                                   <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                                                 </a>
+                                                               )
+                                                             }} />
+                                         </label>
+                                       )}
+                                       uploadedContent={(
+                                         <label>
+                                           <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+                                           <br />
+                                           <FormattedMessage id='addInventory.dragDropOr'
+                                                             defaultMessage={'or {link} to select from computer'}
+                                                             values={{
+                                                               link: (
+                                                                 <a>
+                                                                   <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                                                 </a>
+                                                               )
+                                                             }} />
+                                         </label>
+                                       )}
+                            />
+                          </FormField>
+                        </FormGroup>
+                      </Grid.Column>
+                      <Grid.Column width={8}>
+                        <FormGroup widths='equal'>
+                          <FormField>
+                            <Input label={formatMessage({ id: 'global.tdsVersionNumber', defaultMessage: 'TDS Version Number' })}
+                                   name='tdsVersionNumber'
+                                   type='text' />
+                          </FormField>
+                        </FormGroup>
+                        <FormGroup widths='equal'>
+                          <FormField>
+                            <Input label={formatMessage({ id: 'global.tdsPreparedBy', defaultMessage: 'TDS Prepared by' })}
+                                   name='tdsPreparedBy'
+                                   type='text' />
+                          </FormField>
+                        </FormGroup>
+                        <FormGroup widths='equal'>
+                          <FormField>
+                            <DateInput label={formatMessage({ id: 'global.tdsRevisionDate', defaultMessage: 'TDS Revision Date' })}
+                                       name='tdsRevisionDate'
+                                       inputProps={{ 'data-test': 'settings_product_popup_tdsRevisionDate_dtin', maxDate: moment() }} />
+                          </FormField>
+                        </FormGroup>
+                        <FormGroup widths='equal'>
+                          <FormField>
+                            <DateInput label={formatMessage({ id: 'global.tdsIssueDate', defaultMessage: 'TDS Issue Date' })}
+                                       name='tdsIssueDate'
+                                       inputProps={{ 'data-test': 'settings_product_popup_tdsIssueDate_dtin', maxDate: moment() }} />
+                          </FormField>
+                        </FormGroup>
+                      </Grid.Column>
+                      <Grid.Column width={8}>
+                        <FormGroup widths='equal'>
+                          <FormField>
+                            <label><FormattedMessage id='global.tdsDocument' defaultMessage='TDS Document' /></label>
+                            <UploadLot {...this.props}
+                                       attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === 11)}
+                                       edit={getSafe(() => popupValues.id, '')}
+                                       name='attachments'
+                                       type={11}
+                                       filesLimit={1}
+                                       fileMaxSize={20}
+                                       onChange={(files) => setFieldValue(
+                                         `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+                                         {
+                                           id: files.id,
+                                           name: files.name,
+                                           documentType: files.documentType
                                          }
                                        )}
                                        data-test='settings_product_import_attachments'
@@ -629,7 +729,7 @@ class AddNewPopupEchoProduct extends React.Component {
                     <Accordion.Title active={this.state.optionalOpened} onClick={this.handleOptionalAccordion} name='optionalValues' data-test='admin_popup_product_accordion_optional'>
                       <AccordionHeader as='h4'>
                         <Icon color={this.state.optionalOpened && 'blue'} name={this.state.optionalOpened ? 'chevron down' : 'chevron right'} />
-                        <FormattedMessage id='global.optional' defaultMessage='Optional' />
+                        <FormattedMessage id='global.moreAttributes' defaultMessage='More Attributes' />
                       </AccordionHeader>
                     </Accordion.Title>
                     <Accordion.Content active={this.state.optionalOpened}>
@@ -980,18 +1080,6 @@ class AddNewPopupEchoProduct extends React.Component {
                                  type='text' />
                         </FormField>
                         <FormField>
-                          <DateInput label={formatMessage({ id: 'global.sdsIssueDate', defaultMessage: 'SDS Issue Date' })}
-                                     name='sdsIssueDate'
-                                     inputProps={{ 'data-test': 'settings_product_popup_sdsIssueDate_dtin', maxDate: moment() }} />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.sdsPreparedBy', defaultMessage: 'SDS Prepared by' })}
-                                 name='sdsPreparedBy'
-                                 type='text' />
-                        </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <FormField>
                           <Input label={formatMessage({ id: 'global.sensitization', defaultMessage: 'Sensitization' })}
                                  name='sensitization'
                                  type='text' />
@@ -1001,13 +1089,13 @@ class AddNewPopupEchoProduct extends React.Component {
                                  name='signalWord'
                                  type='text' />
                         </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.skinContact', defaultMessage: 'Skin Contact' })}
                                  name='skinContact'
                                  type='text' />
                         </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.solubility', defaultMessage: 'Solubility' })}
                                  name='solubility'
@@ -1018,13 +1106,13 @@ class AddNewPopupEchoProduct extends React.Component {
                                  name='specificGravity'
                                  type='text' />
                         </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.stability', defaultMessage: 'Stability' })}
                                  name='stability'
                                  type='text' />
                         </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.stotRepeatedExposure', defaultMessage: 'STOT Repeated Exposure' })}
                                  name='stotRepeatedExposure'
@@ -1035,13 +1123,13 @@ class AddNewPopupEchoProduct extends React.Component {
                                  name='stotSingleExposure'
                                  type='text' />
                         </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.supplementalInformation', defaultMessage: 'Supplemental Information' })}
                                  name='supplementalInformation'
                                  type='text' />
                         </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.symptomsEffects', defaultMessage: 'Symptoms Effects' })}
                                  name='symptomsEffects'
@@ -1052,13 +1140,13 @@ class AddNewPopupEchoProduct extends React.Component {
                                  name='tdgHazardClass'
                                  type='text' />
                         </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.tdgProperShippingName', defaultMessage: 'TDG Proper Shipping Name' })}
                                  name='tdgProperShippingName'
                                  type='text' />
                         </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.tdgProperTechnicalName', defaultMessage: 'TDG Proper Technical Name' })}
                                  name='tdgProperTechnicalName'
@@ -1067,28 +1155,6 @@ class AddNewPopupEchoProduct extends React.Component {
                         <FormField>
                           <Input label={formatMessage({ id: 'global.tdgUnNumber', defaultMessage: 'TDG UN Number' })}
                                  name='tdgUnNumber'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <DateInput label={formatMessage({ id: 'global.tdsIssueDate', defaultMessage: 'TDS Issue Date' })}
-                                     name='tdsIssueDate'
-                                     inputProps={{ 'data-test': 'settings_product_popup_tdsIssueDate_dtin', maxDate: moment() }} />
-                        </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.tdsPreparedBy', defaultMessage: 'TDS Prepared by' })}
-                                 name='tdsPreparedBy'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <DateInput label={formatMessage({ id: 'global.tdsRevisionDate', defaultMessage: 'TDS Revision Date' })}
-                                     name='tdsRevisionDate'
-                                     inputProps={{ 'data-test': 'settings_product_popup_tdsRevisionDate_dtin', maxDate: moment() }} />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.tdsVersionNumber', defaultMessage: 'TDS Version Number' })}
-                                 name='tdsVersionNumber'
                                  type='text' />
                         </FormField>
                       </FormGroup>
