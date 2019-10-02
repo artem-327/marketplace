@@ -631,7 +631,7 @@ class AddInventoryForm extends Component {
           </TopMargedColumn>
 
           <GridColumn computer={6} data-test={`add_inventory_quantityFrom_${i}_inp`} >
-            <Input name={`pricingTiers[${i}].quantityFrom`} inputProps={{ type: 'number', min: 1, value: null, onChange: () => setFieldValue(`pricingTiers[${i}].manuallyModified`, 1) }} />
+            <Input name={`pricingTiers[${i}].quantityFrom`} inputProps={{ disabled: i === 0,  type: 'number', min: 1, value: null, onChange: () => setFieldValue(`pricingTiers[${i}].manuallyModified`, 1) }} />
           </GridColumn>
 
           <GridColumn computer={6} data-test={`add_inventory_price_${i}_inp`} >
@@ -1574,7 +1574,7 @@ class AddInventoryForm extends Component {
                                       options={listConditions}
                                       inputProps={{ 'data-test': 'new_inventory_condition_drpdn' }} />
                                   </FormField>
-                                  
+
                                   <FormField width={16}>
                                     <Dropdown
                                       label={formatMessage({ id: 'addInventory.grade', defaultMessage: 'Grade' })}
