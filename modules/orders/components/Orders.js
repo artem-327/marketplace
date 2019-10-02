@@ -27,11 +27,44 @@ class Orders extends Component {
       { name: 'cofA', title: <FormattedMessage id='order.cOfa' defaultMessage='C of A' />, width: 80 },
       { name: 'orderTotal', title: <FormattedMessage id='order.orderTotal' defaultMessage='Order Total' />, width: 160 }
     ],
-    LastEndpointType: ''
+    LastEndpointType: '',
+
+    filters: {
+      'All': {filters: []},
+      'Pending': {
+        filters: [
+          { operator: 'EQUALS', path: 'Order.globalStatus', values: [`Pending`] }
+          ]},
+      'In Transit': {
+        filters: [
+          { operator: 'EQUALS', path: 'Order.globalStatus', values: [`In Transit`] }
+          ]},
+      'Review': {
+        filters: [
+          { operator: 'EQUALS', path: 'Order.globalStatus', values: [`Review`] }
+          ]},
+      'Credit': {
+        filters: [
+          { operator: 'EQUALS', path: 'Order.globalStatus', values: [`Credit`] }
+          ]},
+      'Completed': {
+        filters: [
+          { operator: 'EQUALS', path: 'Order.globalStatus', values: [`Completed`] }
+          ]},
+      'Returned': {
+        filters: [
+          { operator: 'EQUALS', path: 'Order.globalStatus', values: [`Returned`] }
+          ]},
+      'Declined': {
+        filters: [
+          { operator: 'EQUALS', path: 'Order.globalStatus', values: [`Declined`] }
+          ]},
+    }
   }
 
   loadData(endpointType, filterData) {
     this.props.dispatch(actions.change('forms.filter.status', filterData.status))
+    this.props.datagrid.loadData(this.state.filters[filterData.status])
     this.props.loadData(endpointType, filterData)
   }
 
@@ -56,10 +89,15 @@ class Orders extends Component {
     this.props.datagrid.setFilter(filter)
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    if (this.state.LastEndpointType !== nextProps.endpointType) {
-      this.setState({LastEndpointType: nextProps.endpointType})
-      this.props.datagrid.setFilter({ filters: [] })
+  componentDidMount() {
+    const { endpointType, filterData } = this.props
+    this.props.loadData(endpointType, {status: 'All'})
+  }
+
+  componentDidUpdate(prevProps) {
+    const { endpointType } = this.props
+    if (prevProps.endpointType !== this.props.endpointType) {
+      this.props.loadData(endpointType, {status: 'All'})
     }
   }
 

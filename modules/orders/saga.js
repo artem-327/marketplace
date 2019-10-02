@@ -58,6 +58,7 @@ function* getOrders(action) {
             //status: !action.payload.filter || action.payload.filter.status === 'All' ? '' : action.payload.filter.status
           })
         }*/
+        /*
         if (action.payload.filter.status && action.payload.filter.status !== 'All') {
           filters.filters.push({
             operator: 'EQUALS',
@@ -65,6 +66,7 @@ function* getOrders(action) {
             values: [action.payload.filter.status]
           })
         }
+        */
         data = yield call(Api.getAll, action.payload.endpointType, filters)
       } else {
         data = yield call(Api.getAll, action.payload.endpointType, {})
@@ -119,7 +121,7 @@ function* reject(action) {
 }
 
 export default function* () {
-    yield takeLatest(AT.ORDERS_FETCH, getOrders)
+    yield takeLatest(AT.ORDERS_FETCH, getOrders)      // Not used in Orders menu any more
     yield takeEvery(AT.ORDERS_DETAIL_FETCH, getOrder)
     yield takeEvery(AT.ORDER_CONFIRM_FETCH, confirm)
     yield takeEvery(AT.ORDER_REJECT_FETCH, reject)

@@ -159,18 +159,15 @@ class UploadLot extends Component {
   }
 
   handleLinkFile = async (index, att) => {
-    let { linkAttachment, type, toastManager, lot } = this.props
+    let { type, toastManager, lot } = this.props
 
     await new Promise((resolve, reject) => {
-      // TODO: this.props.edit/id should be modified globally to id
-      linkAttachment(getSafe(() => lot, false), getSafe(() => this.props.edit, this.props.id), att.id).then((a) => {
-        this.onUploadSuccess(att)
-        this.removeDuplicateFile(index)
-        resolve()
-      }).catch(e => {
-        console.log('!!!! Error ', e);
-        reject()
-      })
+      this.onUploadSuccess(att)
+      this.removeDuplicateFile(index)
+      resolve()
+    }).catch(e => {
+      console.log('!!!! Error ', e);
+      reject()
     })
   }
 
