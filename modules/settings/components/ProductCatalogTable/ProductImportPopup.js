@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { Modal, Icon, Step, ModalContent, Button } from 'semantic-ui-react'
+import { Modal, Grid, Icon, Step, ModalContent, Button } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import {
@@ -104,18 +104,27 @@ class ProductImportPopup extends Component {
         </StyledModal>
         <Modal.Actions>
           {currentStep !== 'confirmation' && (
-            <div style={{ textAlign: 'right' }}>
-              <Button basic onClick={() => closeImportPopupCancel(csvFileId)} data-test='settings_product_import_cancel_btn'>
-                {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
-              </Button>
-              <Button
-                primary
-                onClick={this.submitHandler}
-                disabled={!csvFileId}
-                data-test='settings_product_import_submit_btn'>
-                {formatMessage({ id: `global.${currentStep === 'preview' ? 'save' : 'next'}`, defaultMessage: currentStep === 'preview' ? 'Save' : 'Next' })}
-              </Button>
-            </div>
+            <Grid>
+              <Grid.Column width={5} textAlign='left'>
+                {currentStep === 'preview' ? (
+                  <Button basic onClick={() => this.setState({ currentStep: 'map' })} data-text='settings_product_import_back_btn'>
+                    {formatMessage({ id: 'global.back', defaultMessage: 'Back' })}
+                  </Button>
+                ) : null}
+              </Grid.Column>
+              <Grid.Column width={11} textAlign='right'>
+                <Button basic onClick={() => closeImportPopupCancel(csvFileId)} data-test='settings_product_import_cancel_btn'>
+                  {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+                </Button>
+                <Button
+                  primary
+                  onClick={this.submitHandler}
+                  disabled={!csvFileId}
+                  data-test='settings_product_import_submit_btn'>
+                  {formatMessage({ id: `global.${currentStep === 'preview' ? 'save' : 'next'}`, defaultMessage: currentStep === 'preview' ? 'Save' : 'Next' })}
+                </Button>
+              </Grid.Column>
+            </Grid>
           )}
         </Modal.Actions>
       </Modal>
