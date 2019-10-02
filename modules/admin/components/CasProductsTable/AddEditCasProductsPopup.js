@@ -119,7 +119,7 @@ class AddEditCasProductsPopup extends React.Component {
     const unNumbersFiltered = this.props.unNumbersFiltered && this.props.unNumbersFiltered.length ? this.props.unNumbersFiltered : (unNumber ? [unNumber] : [])
 
     return (
-      <Modal open centered={false}>
+      <Modal closeIcon onClose={() => closeAddPopup()} open centered={false}>
         <Modal.Header><FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`}>{(text) => text}</FormattedMessage> {config.addEditText}</Modal.Header>
         <Modal.Content>
           <Form

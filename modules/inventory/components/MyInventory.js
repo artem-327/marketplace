@@ -7,6 +7,7 @@ import ProdexTable from '~/components/table'
 import { Broadcast } from '~/modules/broadcast'
 import { Filter } from '~/modules/filter'
 
+import SimpleEdit from '~/modules/inventory/components/SimpleEdit'
 
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
@@ -23,7 +24,7 @@ class MyInventory extends Component {
   state = {
     columns: [
       { name: 'productName', title: <FormattedMessage id='myInventory.productName' defaultMessage='Product Name'>{(text) => text}</FormattedMessage>, width: 250, sortPath: 'ProductOffer.product.productName' },
-      { name: 'productNumber', title: <FormattedMessage id='myInventory.productNumber' defaultMessage='Product Number'>{(text) => text}</FormattedMessage>, width: 160 },
+      { name: 'productNumber', title: <FormattedMessage id='global.productCode' defaultMessage='Product Code'>{(text) => text}</FormattedMessage>, width: 160 },
       { name: 'echoName', disabled: true },
       { name: 'echoCode', disabled: true },
       { name: 'warehouse', title: <FormattedMessage id='myInventory.warehouse' defaultMessage='Warehouse'>{(text) => text}</FormattedMessage>, width: 180, sortPath: 'ProductOffer.warehouse.warehouse' },
@@ -263,6 +264,7 @@ class MyInventory extends Component {
 
         </div>
         <Broadcast />
+        <SimpleEdit />
         <Filter
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}

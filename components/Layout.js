@@ -10,7 +10,6 @@ import MiniCart from './MiniCart'
 import PopUp from '~/src/components/PopUp'
 import { Messages } from '~/modules/messages'
 import Settings from '~/components/settings'
-import SimpleEdit from '~/modules/inventory/components/SimpleEdit'
 import { connect } from 'react-redux'
 import { withAuth } from '~/hocs'
 
@@ -160,8 +159,6 @@ class Layout extends Component {
             {children}
           </ContentContainer>
         </FlexContainer>
-
-        {auth && auth.identity && !auth.identity.isAdmin && <SimpleEdit />}
         <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
       </MainContainer>
     )

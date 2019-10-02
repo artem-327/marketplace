@@ -19,7 +19,7 @@ class ProductCatalogTable extends Component {
   state = {
     columns: [
       { name: 'intProductName', title: <FormattedMessage id='global.productName' defaultMessage='Product Name'>{(text) => text}</FormattedMessage>, sortPath: 'Product.productName' },
-      { name: 'intProductCode', title: <FormattedMessage id='global.productNumber' defaultMessage='Product Number'>{(text) => text}</FormattedMessage>, sortPath: 'Product.productCode' },
+      { name: 'intProductCode', title: <FormattedMessage id='global.productCode' defaultMessage='Product Code'>{(text) => text}</FormattedMessage>, sortPath: 'Product.productCode' },
       { name: 'externalProductName', title: <FormattedMessage id='global.externalProductName' defaultMessage='External Product Name!'>{(text) => text}</FormattedMessage> },
       { name: 'externalProductCode', title: <FormattedMessage id='global.externalProductCode' defaultMessage='External Product Code!'>{(text) => text}</FormattedMessage> },
       { name: 'packagingSizeFormatted', title: <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>{(text) => text}</FormattedMessage> },

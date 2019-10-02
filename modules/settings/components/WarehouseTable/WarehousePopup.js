@@ -163,7 +163,7 @@ class WarehousePopup extends React.Component {
       )
 
     return (
-      <Modal open centered={false}>
+      <Modal closeIcon onClose={() => closePopup()} open centered={false}>
         <Modal.Header>
           {modalTitle}
         </Modal.Header>

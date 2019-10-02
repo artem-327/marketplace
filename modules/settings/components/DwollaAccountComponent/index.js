@@ -101,7 +101,7 @@ class BankAccountsPopup extends React.Component {
     const { accordionActive } = this.state
 
     return (
-      <Modal open centered={false}>
+      <Modal closeIcon onClose={() => closeDwollaPopup()} open centered={false}>
         <Modal.Header>
           <FormattedMessage id='settings.registerDwollaAcc' defaultMessage='Register Dwolla Account' />
         </Modal.Header>

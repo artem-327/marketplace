@@ -156,7 +156,7 @@ export default class AddCart extends Component {
     // )
 
     let canProceed = !warning && price
-
+    console.log({ dropdownOptions, pricing: this.props.sidebar.pricing })
     return (
       <>
         <FlexContent basic>
@@ -221,7 +221,7 @@ export default class AddCart extends Component {
             <GridRow>
               <GridColumn computer={6}>
                 <FormattedMessage id='cart.productLocation' defaultMessage='Location:' />
-           </GridColumn>
+              </GridColumn>
               <GridColumn computer={10}>
                 {offer.locationStr}
               </GridColumn>
@@ -230,7 +230,7 @@ export default class AddCart extends Component {
             <GridRow>
               <GridColumn computer={6}>
                 <FormattedMessage id='cart.availableProduct' defaultMessage='Available Product:' />
-          </GridColumn>
+              </GridColumn>
               <GridColumn computer={10}>
                 <FormattedNumber minimumFractionDigits={0} value={pkgAmount} /> <UnitOfPackaging value={packagingType.name} /> / <FormattedUnit unit={nameAbbreviation} separator={' '} value={pkgAmount * packagingSize} />
               </GridColumn>
@@ -240,7 +240,7 @@ export default class AddCart extends Component {
             <GridRow>
               <GridColumn computer={6}>
                 <FormattedMessage id='cart.productForm' defaultMessage='Form:' />
-         </GridColumn>
+              </GridColumn>
               <GridColumn computer={10}>
                 {offer.productForm.name}
               </GridColumn>
@@ -249,7 +249,7 @@ export default class AddCart extends Component {
             <GridRow>
               <GridColumn computer={6}>
                 <FormattedMessage id='cart.packaging' defaultMessage='Packaging:' />
-          </GridColumn>
+              </GridColumn>
 
               <GridColumn company={10}>
                 <FormattedUnit unit={nameAbbreviation} separator={' '} value={packagingSize} /> <UnitOfPackaging value={packagingType.name} />
@@ -275,7 +275,7 @@ export default class AddCart extends Component {
             <CustomList selection>
               <ListHeader><FormattedMessage id='cart.pricingLevel' defaultMessage='Pricing Level:' /></ListHeader>
               {dropdownOptions.map((el) => (
-                <List.Item active={isEqual(el.value, this.props.sidebar.pricing)}>
+                <List.Item active={el.value.price === this.props.sidebar.pricing.price}>
                   <List.Content>
                     {el.text}
                   </List.Content>
@@ -341,7 +341,7 @@ export default class AddCart extends Component {
                   price && !isNaN(price) ? <><FormattedNumber
                     style='currency'
                     currency={currencyCode}
-                    value={price } /> {nameAbbreviation && `/ ${nameAbbreviation}`}</> : null
+                    value={price} /> {nameAbbreviation && `/ ${nameAbbreviation}`}</> : null
                 }
               </GridColumn>
             </GridRow>
@@ -361,7 +361,7 @@ export default class AddCart extends Component {
             <GridRow className='action' columns={2}>
               <GridColumn>
                 <Button fluid floated='right' onClick={() => this.props.sidebarChanged({ isOpen: false })}
-                        data-test='add_cart_cancel_btn'>
+                  data-test='add_cart_cancel_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage>
                 </Button>
               </GridColumn>
@@ -369,13 +369,13 @@ export default class AddCart extends Component {
               <GridColumn>
                 {!isEdit
                   ? <Button disabled={!canProceed} fluid floated='right' primary onClick={this.createOrder}
-                            data-test='add_cart_create_order_btn'>
+                    data-test='add_cart_create_order_btn'>
                     <FormattedMessage id='global.continue' defaultMessage='Continue'>{text => text}</FormattedMessage>
-              </Button>
+                  </Button>
                   : <Button disabled={!canProceed} fluid floated='right' primary onClick={this.editOrder}
-                            data-test='add_cart_edit_order_btn'>
+                    data-test='add_cart_edit_order_btn'>
                     <FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage>
-                </Button>
+                  </Button>
                 }
               </GridColumn>
             </GridRow>

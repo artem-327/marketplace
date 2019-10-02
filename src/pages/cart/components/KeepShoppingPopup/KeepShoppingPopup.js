@@ -8,7 +8,7 @@ export default class KeepShopping extends Component {
     let { handleClose, handleContinue, trigger, open } = this.props
 
     return (
-      <Modal size='small' onClose={handleClose} open={open} centered={false} trigger={trigger}>
+      <Modal closeIcon size='small' onClose={handleClose} open={open} centered={false} trigger={trigger}>
         <Modal.Header as='h1'>KEEP SHOPPING?</Modal.Header>
         <Modal.Content>
           <Modal.Description>

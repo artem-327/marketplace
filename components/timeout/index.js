@@ -74,7 +74,7 @@ export default class TimeoutWarning extends Component {
           debounce={10000}
           stopOnIdle={true}
         />
-        <Modal open={warningOpen} size="tiny" style={{ width: 400 }} centered={false}>
+        <Modal open={warningOpen} closeIcon onClose={() => Router.push(`/auth/logout`)} size="tiny" style={{ width: 400 }} centered={false}>
           <Modal.Header>
             <FormattedMessage id="auth.sessionTimeout.modalHeader" defaultMessage="SESSION TIMEOUT" />
           </Modal.Header>

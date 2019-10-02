@@ -104,3 +104,12 @@ export const removeEmpty = (obj) =>
             }
         }
     })
+
+
+export const getDesiredCasProductsProps = (casProducts) =>
+    casProducts.map((el) => ({
+        casIndexName: el.proprietary ? 'Proprietary' : getSafe(() => el.casProduct.casIndexName),
+        casIndexNumber: getSafe(() => el.casProduct.casNumber),
+        min: getSafe(() => el.assayMin, ''),
+        max: getSafe(() => el.assayMax, '')
+    }))

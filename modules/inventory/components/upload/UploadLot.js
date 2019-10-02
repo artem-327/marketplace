@@ -117,7 +117,7 @@ class UploadLot extends Component {
                 duplicateFiles.push({
                   id: parseInt(e.exceptionMessage),
                   name: files[j].name,
-                  documentType: {id: docType.value, name: docType.text},
+                  documentType: { id: docType.value, name: docType.text },
                   file: file,
                 })
               }
@@ -130,7 +130,7 @@ class UploadLot extends Component {
           })
         }).then(loop.bind(null, j + 1))
       })(0).then(() => {
-        this.setState({duplicateFiles: duplicateFiles})
+        this.setState({ duplicateFiles: duplicateFiles })
       })
     } else {
       onUploadSuccess(files)
@@ -140,14 +140,14 @@ class UploadLot extends Component {
   removeDuplicateFile = (index) => {
     let duplicateFiles = this.state.duplicateFiles.slice()
     duplicateFiles.splice(index, 1)
-    this.setState({duplicateFiles: duplicateFiles})
+    this.setState({ duplicateFiles: duplicateFiles })
   }
 
   handleConfirmFile = async (index, att) => {
     let { addAttachment, type, expiration } = this.props
 
     await new Promise((resolve, reject) => {
-      addAttachment(att.file.value, parseInt(type), {expiration, force: true}).then((a) => {
+      addAttachment(att.file.value, parseInt(type), { expiration, force: true }).then((a) => {
         this.onUploadSuccess(att)
         this.removeDuplicateFile(index)
         resolve()
@@ -159,18 +159,15 @@ class UploadLot extends Component {
   }
 
   handleLinkFile = async (index, att) => {
-    let { linkAttachment, type, toastManager, lot } = this.props
+    let { type, toastManager, lot } = this.props
 
     await new Promise((resolve, reject) => {
-      // TODO: this.props.edit/id should be modified globally to id
-      linkAttachment(getSafe(() => lot, false), getSafe(() => this.props.edit, this.props.id), att.id).then((a) => {
-        this.onUploadSuccess(att)
-        this.removeDuplicateFile(index)
-        resolve()
-      }).catch(e => {
-        console.log('!!!! Error ', e);
-        reject()
-      })
+      this.onUploadSuccess(att)
+      this.removeDuplicateFile(index)
+      resolve()
+    }).catch(e => {
+      console.log('!!!! Error ', e);
+      reject()
     })
   }
 
@@ -181,61 +178,62 @@ class UploadLot extends Component {
   renderDuplicateFilesModal = () => {
     return (
       this.state.duplicateFiles.length ?
-        (<Modal open centered={false} size='small'>
-            <Modal.Header>
-              <FormattedMessage id={'attachments.popup.header'}
-                                defaultMessage='Document Already Exists'>{(text) => text}
-              </FormattedMessage>
-            </Modal.Header>
-            <Modal.Content>
-              <div>
-                <Table className='table-fields'>
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.HeaderCell width={5}>
-                        <FormattedMessage id='attachments.popup.tableHeader1' defaultMessage='Document name' />
-                      </Table.HeaderCell>
-                      <Table.HeaderCell width={11}>
-                        <FormattedMessage id='attachments.popup.tableHeader2' defaultMessage='Select action' />
-                      </Table.HeaderCell>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {this.state.duplicateFiles.map((d, index) => {
-                      return (
-                        <Table.Row key={index}>
-                          <TableCell>
-                            {d.name}
-                          </TableCell>
-                          <TableCell>
-                            <div style={{'text-align': 'center'}} >
-                              <StyledButton type='button' data-test='attachments_duplicate_cancel_btn' onClick={() => this.handleCancelFile(index)}>
-                                <FormattedMessage id={'attachments.popup.button.cancel'}
-                                                  defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
-                              </StyledButton>
-                              <StyledButton type='button' primary data-test='attachments_duplicate_confirm_btn' onClick={() => this.handleConfirmFile(index, d)}>
-                                <FormattedMessage id={'attachments.popup.button.forceUpload'}
-                                                  defaultMessage='Upload (duplicate)'>{(text) => text}</FormattedMessage>
-                              </StyledButton>
-                              <StyledButton type='button' primary data-test='attachments_duplicate_link_btn' onClick={() => this.handleLinkFile(index, d)}>
-                                <FormattedMessage id={'attachments.popup.button.linkFile'}
-                                                  defaultMessage='Link to existing'>{(text) => text}</FormattedMessage>
-                              </StyledButton>
-                            </div>
-                          </TableCell>
-                        </Table.Row>
-                      )}
-                    )}
-                  </Table.Body>
-                </Table>
-              </div>
-              <Button type='button' data-test='attachments_duplicate_cancel_all_btn' floated='right' style={{ margin: '20px 0px 20px 10px' }} onClick={() => this.setState({duplicateFiles: []})}>
-                <FormattedMessage id={'attachments.popup.button.cancel'}
-                                  defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
-              </Button>
-            </Modal.Content>
+        (<Modal closeIcon onClose={() => this.setState({ duplicateFiles: [] })} open centered={false} size='small'>
+          <Modal.Header>
+            <FormattedMessage id={'attachments.popup.header'}
+              defaultMessage='Document Already Exists'>{(text) => text}
+            </FormattedMessage>
+          </Modal.Header>
+          <Modal.Content>
+            <div>
+              <Table className='table-fields'>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell width={5}>
+                      <FormattedMessage id='attachments.popup.tableHeader1' defaultMessage='Document name' />
+                    </Table.HeaderCell>
+                    <Table.HeaderCell width={11}>
+                      <FormattedMessage id='attachments.popup.tableHeader2' defaultMessage='Select action' />
+                    </Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {this.state.duplicateFiles.map((d, index) => {
+                    return (
+                      <Table.Row key={index}>
+                        <TableCell>
+                          {d.name}
+                        </TableCell>
+                        <TableCell>
+                          <div style={{ 'text-align': 'center' }} >
+                            <StyledButton type='button' data-test='attachments_duplicate_cancel_btn' onClick={() => this.handleCancelFile(index)}>
+                              <FormattedMessage id={'attachments.popup.button.cancel'}
+                                defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+                            </StyledButton>
+                            <StyledButton type='button' primary data-test='attachments_duplicate_confirm_btn' onClick={() => this.handleConfirmFile(index, d)}>
+                              <FormattedMessage id={'attachments.popup.button.forceUpload'}
+                                defaultMessage='Upload (duplicate)'>{(text) => text}</FormattedMessage>
+                            </StyledButton>
+                            <StyledButton type='button' primary data-test='attachments_duplicate_link_btn' onClick={() => this.handleLinkFile(index, d)}>
+                              <FormattedMessage id={'attachments.popup.button.linkFile'}
+                                defaultMessage='Link to existing'>{(text) => text}</FormattedMessage>
+                            </StyledButton>
+                          </div>
+                        </TableCell>
+                      </Table.Row>
+                    )
+                  }
+                  )}
+                </Table.Body>
+              </Table>
+            </div>
+            <Button type='button' data-test='attachments_duplicate_cancel_all_btn' floated='right' style={{ margin: '20px 0px 20px 10px' }} onClick={() => this.setState({ duplicateFiles: [] })}>
+              <FormattedMessage id={'attachments.popup.button.cancel'}
+                defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+            </Button>
+          </Modal.Content>
 
-          </Modal>
+        </Modal>
         )
         :
         null
@@ -332,7 +330,7 @@ class UploadLot extends Component {
               <div>
                 {this.props.emptyContent}
               </div>
-              </ReactDropzone>
+            </ReactDropzone>
             )}
         </div>
       </>

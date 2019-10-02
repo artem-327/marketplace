@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { string, object, bool, func } from "prop-types"
-import {FormField, Dropdown, Label, List, Popup} from 'semantic-ui-react'
+import { string, object, bool, func, oneOfType, node } from 'prop-types'
+import { FormField, Dropdown, Label, List, Popup } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 //import { InputMask } from 'react-input-mask'
-const InputMask = require("react-input-mask")
+const InputMask = require('react-input-mask')
 import get from 'lodash/get'
 
 const StyledDropdown = styled(Dropdown)`
@@ -50,7 +50,7 @@ function splitPhoneNumber(phone, phoneCountryCodes) {
     d.value === phone.slice(0, d.value.length)
   ))
 
-  let sorted = filtered.sort(function(a, b) {return b.value.length - a.value.length}) // sort by longest
+  let sorted = filtered.sort(function (a, b) { return b.value.length - a.value.length }) // sort by longest
 
   if (sorted.length > 0) {
     return {
@@ -112,8 +112,7 @@ export default class PhoneNumber extends Component {
     let {
       phoneCountryCodes,
       intl: { formatMessage },
-      label
-    } = this.props
+      label, error } = this.props
 
     let {
       phoneCountryCode,
@@ -121,9 +120,9 @@ export default class PhoneNumber extends Component {
     } = this.state
 
     return (
-      <FormField>
+      <FormField error={error}>
         <label>{label}</label>
-        <span style={{ display: 'flex'}}>
+        <span style={{ display: 'flex' }}>
           <StyledDropdown
             options={phoneCountryCodes}
             onChange={(e, data) => this.handleChange('phoneCountryCode', data.value)}
@@ -132,8 +131,8 @@ export default class PhoneNumber extends Component {
             value={phoneCountryCode}
           />
           <StyledInputMask
-            mask="999 999 9999"
-            maskChar=" "
+            mask='999 999 9999'
+            maskChar=' '
             compact
             type='text'
             value={phoneNumber}
@@ -141,6 +140,7 @@ export default class PhoneNumber extends Component {
             placeholder={formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
           />
         </span>
+        {error && <span className='sui-error-message'>{error}</span>}
       </FormField>
     )
   }
@@ -152,6 +152,7 @@ PhoneNumber.propTypes = {
   values: object,
   label: object,
   search: bool,
+  error: oneOfType([node, string])
 }
 
 PhoneNumber.defaultProps = {
@@ -159,5 +160,6 @@ PhoneNumber.defaultProps = {
   name: null,
   values: null,
   search: true,
-  label: 'Phone'
+  label: 'Phone',
+  error: null
 }

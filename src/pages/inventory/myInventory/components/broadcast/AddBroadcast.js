@@ -841,7 +841,7 @@ class AddBroadcast extends Component {
     )
 
     return (
-      <Modal open={true}>
+      <Modal closeIcon onClose={() => this.props.closeModal()} open={true}>
         <Modal.Header>Broadcast control</Modal.Header>
         <Modal.Content className='add-broadcast'>
           <Grid celled>

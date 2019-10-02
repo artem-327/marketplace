@@ -10,14 +10,24 @@ import { debounce } from 'lodash'
 import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
 import * as Yup from 'yup'
-
+import { CompanyProductMixtures } from '~/components/shared-components/'
 
 import { Datagrid } from '~/modules/datagrid'
-import { uniqueArrayByKey, getSafe, generateToastMarkup } from '~/utils/functions'
+import { uniqueArrayByKey, getSafe, generateToastMarkup, getDesiredCasProductsProps } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 
 import { getWarehouses } from '~/modules/purchase-order/actions'
 import { simpleEditTrigger, getAutocompleteData, addProductOffer } from '~/modules/inventory/actions'
+
+const BoldLabel = styled.label`
+  font-weight: bolder;
+`
+const EllipsisColumn = styled(GridColumn)`
+& input {
+  text-overflow: ellipsis !important;
+}
+`
+
 
 const { requiredMessage, mustBeNumber, minimum } = errorMessages
 
@@ -31,9 +41,6 @@ const validationSchema = Yup.object().shape({
 })
 
 
-const BottomUnpaddedRow = styled(GridRow)`
-  padding-bottom: 0px !important;
-`
 
 class SimpleEdit extends Component {
   state = {
@@ -42,8 +49,9 @@ class SimpleEdit extends Component {
   }
 
   componentDidMount() {
-    const { warehouses, getWarehouses } = this.props
-    if (warehouses.length === 0) getWarehouses()
+    const { warehouses, getWarehouses, isAdmin, takeover } = this.props
+
+    if (warehouses.length === 0 && (!isAdmin || takeover)) getWarehouses()
   }
 
 
@@ -72,25 +80,19 @@ class SimpleEdit extends Component {
       id: popupValues.warehouse.id
     })
 
-
     let initialValues = {
       packagingSize: getSafe(() => popupValues.companyProduct.packagingSize),
       product: getSafe(() => popupValues.companyProduct.id),
       uom: getSafe(() => popupValues.companyProduct.packagingUnit.nameAbbreviation),
       packaging: getSafe(() => popupValues.companyProduct.packagingType.name),
       casTradeName: getSafe(() => popupValues.companyProduct.echoProduct.name),
-      casProducts: getSafe(() => popupValues.companyProduct.echoProduct.elements, []).map((el) => ({
-        casIndexName: el.proprietary ? 'Proprietary' : getSafe(() => el.casProduct.casIndexName),
-        casIndexNumber: getSafe(() => el.casProduct.casNumber),
-        min: getSafe(() => el.assayMin, ''),
-        max: getSafe(() => el.assayMax, '')
-      })),
+      casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.companyProduct.echoProduct.elements, [])),
       // price: getSafe(() => popupValues.pricingTiers[0].price.amount),
       pricingTiers: getSafe(() => popupValues.pricingTiers.map((el) => ({
         quantityFrom: el.quantityFrom,
         price: el.price.amount
       })), [{ quantityFrom: 1, price: '' }]),
-      quantity: getSafe(() => popupValues.quantity / popupValues.companyProduct.packagingSize),
+      quantity: getSafe(() => popupValues.pkgAmount),
       warehouse: getSafe(() => popupValues.warehouse.id)
     }
 
@@ -143,13 +145,13 @@ class SimpleEdit extends Component {
         validationSchema={validationSchema}
         render={({ submitForm, values }) => {
           this.submitForm = submitForm
-          console.log({ values })
+
           return (
             <Modal
               closeIcon
               centered={false}
               size='small'
-              onClose={() => simpleEditTrigger(false)}
+              onClose={() => simpleEditTrigger({}, false)}
               open={open || simpleEditOpen}
               trigger={trigger && React.cloneElement(trigger, { onClick: () => this.setState({ open: false }) })}>
               <Modal.Header>
@@ -158,6 +160,7 @@ class SimpleEdit extends Component {
                   defaultMessage={`${popupValues.id ? 'Edit' : 'Add'} Listing`}
                 />
               </Modal.Header>
+
 
               <Modal.Content>
                 <Form loading={this.state.submitting}>
@@ -196,14 +199,14 @@ class SimpleEdit extends Component {
                         <GridRow columns={4}>
                           <GridColumn>
                             <Input
-                              label={<FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>{text => text}</FormattedMessage>}
+                              label={<BoldLabel><FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>{text => text}</FormattedMessage></BoldLabel>}
                               name='packagingSize'
                               inputProps={{ transparent: true, readOnly: true }}
                             />
                           </GridColumn>
                           <GridColumn>
                             <Input
-                              label={<FormattedMessage id='global.uom' defaultMessage='UOM'>{text => text}</FormattedMessage>}
+                              label={<BoldLabel><FormattedMessage id='global.uom' defaultMessage='UOM'>{text => text}</FormattedMessage></BoldLabel>}
                               name='uom'
                               inputProps={{ transparent: true, readOnly: true }}
                             />
@@ -211,85 +214,22 @@ class SimpleEdit extends Component {
 
                           <GridColumn>
                             <Input
-                              label={<FormattedMessage id='global.packaging' defaultMessage='Packaging'>{text => text}</FormattedMessage>}
+                              label={<BoldLabel><FormattedMessage id='global.packaging' defaultMessage='Packaging'>{text => text}</FormattedMessage></BoldLabel>}
                               name='packaging'
                               inputProps={{ transparent: true, readOnly: true }}
                             />
                           </GridColumn>
 
-                          <GridColumn>
+                          <EllipsisColumn>
                             <Input
-                              label={<FormattedMessage id='global.casTradeName' defaultMessage='CAS/Trade Name'>{text => text}</FormattedMessage>}
+                              label={<BoldLabel><FormattedMessage id='global.casTradeName' defaultMessage='CAS/Trade Name'>{text => text}</FormattedMessage></BoldLabel>}
                               name='casTradeName'
                               inputProps={{ transparent: true, readOnly: true }}
                             />
-                          </GridColumn>
+                          </EllipsisColumn>
                         </GridRow>
-                        {values.casProducts.length > 0 &&
-                          <>
-
-                            <Divider />
-
-                            <BottomUnpaddedRow columns={4}>
-                              <GridColumn>
-                                <label>
-                                  <FormattedMessage id='global.casIndexNumber' defaultMessage='CAS Index Number' />
-                                </label>
-                              </GridColumn>
-
-                              <GridColumn>
-                                <label>
-                                  <FormattedMessage id='global.casIndexName' defaultMessage='CAS Index Name' />
-                                </label>
-                              </GridColumn>
-
-                              <GridColumn>
-                                <label>
-                                  <FormattedMessage id='global.min' defaultMessage='Min' />
-                                </label>
-                              </GridColumn>
-
-                              <GridColumn>
-                                <label>
-                                  <FormattedMessage id='global.max' defaultMessage='Max' />
-                                </label>
-                              </GridColumn>
-                            </BottomUnpaddedRow>
-
-
-                            {values.casProducts.map((_, i) => (
-                              <GridRow columns={4}>
-                                <GridColumn>
-                                  <Input
-                                    name={`casProducts[${i}].casIndexName`}
-                                    inputProps={{ transparent: true, readOnly: true }}
-                                  />
-                                </GridColumn>
-
-                                <GridColumn>
-                                  <Input
-                                    name={`casProducts[${i}].casIndexNumber`}
-                                    inputProps={{ transparent: true, readOnly: true }}
-                                  />
-                                </GridColumn>
-
-                                <GridColumn>
-                                  <Input
-                                    name={`casProducts[${i}].min`}
-                                    inputProps={{ transparent: true, readOnly: true }}
-                                  />
-                                </GridColumn>
-
-                                <GridColumn>
-                                  <Input
-                                    name={`casProducts[${i}].max`}
-                                    inputProps={{ transparent: true, readOnly: true }}
-                                  />
-                                </GridColumn>
-                              </GridRow>
-                            ))}
-                          </>
-                        }
+                        <Divider />
+                        <CompanyProductMixtures casProducts={values.casProducts} />
                         <Divider />
                       </>
                     }
@@ -316,7 +256,7 @@ class SimpleEdit extends Component {
                             step: 1
                           }}
                           name='quantity'
-                          label={<FormattedMessage id='global.quantity' defaultMessage='Quantity'>{text => text}</FormattedMessage>}
+                          label={<FormattedMessage id='global.packagesAvailable' defaultMessage='Packages Available'>{text => text}</FormattedMessage>}
                         />
                       </GridColumn>
 
@@ -381,6 +321,8 @@ const mapStateToProps = ({ simpleAdd: {
   autocompleteData,
   autocompleteDataLoading,
   preferredCurrency: getSafe(() => auth.identity.preferredCurrency),
+  isAdmin: getSafe(() => auth.identity.isAdmin),
+  takeover: getSafe(() => auth.identity.company, false),
   owner: getSafe(() => auth.identity.id),
   warehouses: cart.warehouses,
   warehousesFetching: cart.warehousesFetching

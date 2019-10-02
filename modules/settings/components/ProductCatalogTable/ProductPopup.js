@@ -7,11 +7,12 @@ import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { Modal, Header, FormGroup, FormField, Search, Label, Icon, Accordion, Popup } from 'semantic-ui-react'
-import { DateInput } from '~/components/custom-formik'
-import { FieldArray } from 'formik'
+import { Modal, Header, FormGroup, FormField, Search, Label, Icon, Accordion, Popup, Grid, Divider } from 'semantic-ui-react'
+// import { DateInput } from '~/components/custom-formik'
+// import { FieldArray } from 'formik'
 
-import { generateToastMarkup, getSafe, uniqueArrayByKey } from '~/utils/functions'
+import { CompanyProductMixtures } from '~/components/shared-components/'
+import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
 import { DisabledButtonWrapped } from '~/utils/components'
 
 
@@ -122,6 +123,7 @@ class ProductPopup extends React.Component {
 
   handlerSubmit = async (values, actions) => {
     const { popupValues, reloadFilter, handleSubmitProductEditPopup, handleSubmitProductAddPopup, toastManager } = this.props
+    delete values.casProducts
 
     try {
       if (popupValues) {
@@ -195,9 +197,11 @@ class ProductPopup extends React.Component {
     return {
       ...initialValues,
       ...popupValues,
+      casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.echoProduct.elements), []),
       echoProduct: getSafe(() => popupValues.echoProduct.id),
     }
   }
+
 
   render() {
     const {
@@ -213,8 +217,10 @@ class ProductPopup extends React.Component {
     const { packagingTypesReduced } = this.state
     let editable = popupValues ? (popupValues.productOfferCount === 0 || !popupValues.productOfferCount) : true
 
+    let allEchoProducts = uniqueArrayByKey(echoProducts.concat(getSafe(() => popupValues.echoProduct) ? popupValues.echoProduct : []), 'id')
+
     return (
-      <Modal size='small' open centered={false}>
+      <Modal closeIcon onClose={() => closePopup()} size='small' open centered={false}>
         <Modal.Header>
           {popupValues
             ? <FormattedMessage id='settings.editProduct' defaultMessage='Edit Product' />
@@ -228,25 +234,40 @@ class ProductPopup extends React.Component {
             onReset={closePopup}
             onSubmit={this.handlerSubmit}
           >
-            {({ setFieldValue }) => {
+            {({ setFieldValue, values }) => {
+              let casProducts = getSafe(() => values.casProducts, [])
               return (
                 <>
                   <Dropdown
                     label={<FormattedMessage id='settings.associatedEchoProducts' defaultMessage='What is the Associated External Product that you would like to map to?' />}
-                    options={uniqueArrayByKey(echoProducts.concat(getSafe(() => popupValues.echoProduct) ? popupValues.echoProduct : []), 'id')
-                      .map((echo) => ({
-                        key: echo.id,
-                        text: echo.name,
-                        value: echo.id
-                      }))}
+                    options={allEchoProducts.map((echo) => ({
+                      key: echo.id,
+                      text: echo.name,
+                      value: echo.id
+                    }))}
+
                     inputProps={{
                       fluid: true, search: true,
                       clearable: true, selection: true,
                       loading: echoProductsFetching,
+                      onChange: (_, { value }) =>
+                        setFieldValue('casProducts',
+                          getDesiredCasProductsProps(
+                            getSafe(() => allEchoProducts.find((el) => el.id === value).elements, [])
+                          )
+                        ),
                       onSearchChange: (_, { searchQuery }) => this.handleSearchChange(searchQuery)
                     }}
                     name='echoProduct'
                   />
+                  {casProducts.length > 0 && <Divider />}
+                  <Grid>
+                    <CompanyProductMixtures
+                      casProducts={casProducts}
+                    />
+                  </Grid>
+                  {casProducts.length > 0 && <Divider />}
+
                   <FormGroup widths='equal' data-test='settings_product_popup_nameCodeInci_inp'>
                     <Input type='text' label={formatMessage({ id: 'global.productName', defaultMessage: 'Product Name' })} name='intProductName' />
                     <Input type='text' label={formatMessage({ id: 'global.productCode', defaultMessage: 'Product Code' })} name='intProductCode' />

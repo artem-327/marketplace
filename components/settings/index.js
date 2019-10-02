@@ -92,7 +92,7 @@ class Settings extends Component {
   )
 
   render() {
-    let { inputsInGroup, open, asModal } = this.props
+    let { inputsInGroup, open, asModal, triggerSystemSettingsModal } = this.props
     let { systemSettings, loading } = this.state
     let initialValues = {}
 
@@ -135,7 +135,10 @@ class Settings extends Component {
 
 
     return (
-      <Modal open={open} size='small' center={false}>
+      <Modal open={open} size='small' closeIcon onClose={(e) => {
+        e.stopPropagation()
+        triggerSystemSettingsModal(false)
+      }} center={false}>
         <Modal.Header><FormattedMessage id='settings.systemSettings' defaultMessage='System Settings' /></Modal.Header>
 
         <Modal.Content>

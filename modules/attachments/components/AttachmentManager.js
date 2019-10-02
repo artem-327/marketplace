@@ -23,7 +23,7 @@ const AttachmentModal = withDatagrid(class extends Component {
 
   returnSelectedRows = async () => {
     const { datagrid } = this.props
-    
+
     this.props.returnSelectedRows(this.state.selectedRows.map(srIndex => {
       return { ...datagrid.rows[srIndex], index: srIndex }
     }))
@@ -43,7 +43,7 @@ const AttachmentModal = withDatagrid(class extends Component {
 
     return (
       <>
-        <Modal centered={true} open={this.state.open}
+        <Modal closeIcon onClose={() => this.setState({ open: false })} centered={true} open={this.state.open}
           trigger={React.cloneElement(trigger, { onClick: () => this.setState({ open: true }) })}
           onClose={() => this.setState({ open: false })}>
           <CustomHeader>

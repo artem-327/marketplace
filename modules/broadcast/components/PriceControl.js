@@ -94,7 +94,7 @@ export default class PriceControl extends Component {
   }
 
 
-  calculateMinimum = (type = this.state.type) => type === 'multiplier' ? -99.9 : -1 * (this.props.offer.pricingTiers[this.props.offer.pricingTiers.length - 1].price) + 0.001
+  calculateMinimum = (type = this.state.type) => type === 'multiplier' ? -99.9 : -1 * (this.props.offer.pricingTiers[this.props.offer.pricingTiers.length - 1].price.amount) + 0.001
 
   getPrices = () => {
     const { offer, item, rootRule } = this.props
@@ -103,7 +103,7 @@ export default class PriceControl extends Component {
     const r = rule //rootRule || rule
     const calc = (p) => (p * (r.priceMultiplier + 100) / 100) + r.priceAddition
 
-    let high = calc(offer.pricingTiers[0].price), low = calc(offer.pricingTiers[offer.pricingTiers.length - 1].price)
+    let high = calc(offer.pricingTiers[0].price.amount), low = calc(offer.pricingTiers[offer.pricingTiers.length - 1].price.amount)
 
 
 

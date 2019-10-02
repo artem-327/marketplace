@@ -46,7 +46,7 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
     validateOnChange={false}
   >
     {({ handleReset, handleSubmit, isSubmitting }) => (
-      <Modal size='tiny' centered={false} open={show} onClose={dismiss}>
+      <Modal closeIcon onClose={() => dismiss()} size='tiny' centered={false} open={show} onClose={dismiss}>
         <Modal.Header>
           <FormattedMessage id='settings.finalizeVerification' defaultMessage='Finalize Verification' />
         </Modal.Header>

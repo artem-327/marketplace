@@ -72,7 +72,7 @@ class DocumentPopup extends Component {
       updateAttachment, onClose } = this.props
 
     return (
-      <Modal open>
+      <Modal closeIcon onClose={() => closePopup()} open>
         <Modal.Header>
           <FormattedMessage id={edit ? 'editDocument' : 'addDocument'} defaultMessage={edit ? 'Edit Document' : 'Add Document'} />
         </Modal.Header>

@@ -807,3 +807,11 @@ i.file {
  */
  // fix scrolling for big modals
 .page.modals.dimmer {overflow: auto;}
+
+
+.ui.modal > .close {
+  font-size: 2.5em;
+  top: 0rem;
+  right: 0.7rem;
+  color: #4e5157;
+}
