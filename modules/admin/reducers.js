@@ -610,6 +610,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_SEARCH_MANUFACTURERS_PENDING: {
+      return {
+        ...state,
+        searchedManufacturersLoading: true
+      }
+    }
+
     case AT.ADMIN_SEARCH_MANUFACTURERS_FULFILLED: {
       return {
         ...state,
