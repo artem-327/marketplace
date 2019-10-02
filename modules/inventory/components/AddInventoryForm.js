@@ -631,7 +631,12 @@ class AddInventoryForm extends Component {
           </TopMargedColumn>
 
           <GridColumn computer={6} data-test={`add_inventory_quantityFrom_${i}_inp`} >
-            <Input name={`pricingTiers[${i}].quantityFrom`} inputProps={{ disabled: i === 0,  type: 'number', min: 1, value: null, onChange: () => setFieldValue(`pricingTiers[${i}].manuallyModified`, 1) }} />
+            <Input name={`pricingTiers[${i}].quantityFrom`} inputProps={{
+              type: 'number', min: 1, value: null, onChange: (e, { value }) => {
+                setFieldValue(`pricingTiers[${i}].manuallyModified`, 1)
+                if(i === 0) setFieldValue('minimum', value)
+              }
+            }} />
           </GridColumn>
 
           <GridColumn computer={6} data-test={`add_inventory_price_${i}_inp`} >
