@@ -53,6 +53,11 @@ const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
 `
 
+const ScrollableSegment = styled(Segment)`
+  max-height: 90vh;
+  overflow-y: auto;
+`
+
 class Settings extends Component {
 
   state = {
@@ -155,9 +160,9 @@ class Settings extends Component {
       'delivery-addresses': <DeliveryAddressesTable />,
       'logistics': <LogisticsTable />,
       'system-settings': (
-        <Segment basic padded='very'>
+        <ScrollableSegment basic padded='very'>
           <SystemSettings asModal={false} inputsInGroup={3} role='company' />
-        </Segment>
+        </ScrollableSegment>
       ),
       'documents': <DocumentsTable />
     }
@@ -211,7 +216,7 @@ class Settings extends Component {
       // 'company-details': this.companyDetails(),
       'users': {
         url: `/prodex/api/users/datagrid`,
-        searchToFilter: v => v ?([
+        searchToFilter: v => v ? ([
           { operator: 'LIKE', path: 'User.name', values: [`%${v}%`] },
           { operator: 'LIKE', path: 'User.homeBranch.name', values: [`%${v}%`] },
           // { operator: 'LIKE', path: '', values: [`%${v}%`] }, // TODO here should be User.jobTitle but BE doesn't seem to have it as filterable field...

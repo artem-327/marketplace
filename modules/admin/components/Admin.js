@@ -6,6 +6,7 @@ import Tabs from './Tabs'
 import { withAuth } from '~/hocs'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
+import styled from 'styled-components'
 
 import DataTable from './DataTable/DataTable'
 import UnitOfMeasureTable from './UnitOfMeasureTable/UnitOfMeasureTable'
@@ -34,8 +35,11 @@ import { getSafe } from '~/utils/functions'
 
 import { DatagridProvider } from '~/modules/datagrid'
 import Settings from '~/components/settings'
-import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
+const ScrollableSegment = styled(Segment)`
+  max-height: 90vh;
+  overflow-y: auto;
+`
 
 const tables = {
   'Units of Measure': <UnitOfMeasureTable />,
@@ -50,9 +54,9 @@ const tables = {
   'Document Types': <DataTable />,
   'Market Segments': <DataTable />,
   'Admin Settings': (
-    <Segment basic padded='very'>
+    <ScrollableSegment basic padded='very'>
       <Settings inputsInGroup={3} asModal={false} role='admin' />
-    </Segment>
+    </ScrollableSegment>
   )
 }
 
