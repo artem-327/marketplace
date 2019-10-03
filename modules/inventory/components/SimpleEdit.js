@@ -92,7 +92,7 @@ class SimpleEdit extends Component {
         quantityFrom: el.quantityFrom,
         price: el.price.amount
       })), [{ quantityFrom: 1, price: '' }]),
-      quantity: getSafe(() => popupValues.pkgAmount),
+      quantity: getSafe(() => popupValues.pkgAvailable),
       warehouse: getSafe(() => popupValues.warehouse.id)
     }
 
@@ -108,7 +108,7 @@ class SimpleEdit extends Component {
             companyProduct: values.product,
             lots: [{
               lotNumber: '1',
-              pkgAmount: parseInt(values.quantity)
+              pkgAvailable: parseInt(values.quantity)
             }],
             tradeName: values.casTradeName,
             warehouse: values.warehouse

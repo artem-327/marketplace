@@ -29,7 +29,7 @@ class MyInventory extends Component {
       { name: 'echoCode', disabled: true },
       { name: 'warehouse', title: <FormattedMessage id='myInventory.warehouse' defaultMessage='Warehouse'>{(text) => text}</FormattedMessage>, width: 180, sortPath: 'ProductOffer.warehouse.warehouse' },
       { name: 'available', title: <FormattedMessage id='myInventory.available' defaultMessage='Available PKGs'>{(text) => text}</FormattedMessage>, width: 130, sortPath: 'ProductOffer.quantity' },
-      { name: 'pkgAmount', title: <FormattedMessage id='global.pkgSize' defaultMessage='Packaging Size'>{(text) => text}</FormattedMessage>, width: 130, sortPath: 'ProductOffer.pkgAmount' },
+      { name: 'pkgAmount', title: <FormattedMessage id='global.pkgSize' defaultMessage='Packaging Size'>{(text) => text}</FormattedMessage>, width: 130, sortPath: 'ProductOffer.pkgAvailable' },
       { name: 'packagingUnit', title: <FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit'>{text => text}</FormattedMessage>, width: 130, sortPath: 'ProductOffer.product.packagingUnit' },
       { name: 'packaging', title: <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>{(text) => text}</FormattedMessage>, width: 130, sortPath: 'ProductOffer.product.packagingType.name' },
       { name: 'quantity', title: <FormattedMessage id='myInventory.quantity' defaultMessage='Quantity'>{(text) => text}</FormattedMessage>, width: 130 },

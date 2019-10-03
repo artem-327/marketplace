@@ -62,7 +62,7 @@ export function addProductOffer(values, poId = false, simple = false) {
     if (values.lots.length === 0) {
       values.lots = [{
         lotNumber: '1',
-        pkgAmount: parseInt(values.pkgAmount)
+        pkgAvailable: parseInt(values.pkgAvailable)
       }]
     }
 
@@ -98,7 +98,7 @@ export function addProductOffer(values, poId = false, simple = false) {
           expirationDate: lot.expirationDate && getSafe(() => moment(lot.expirationDate).utc(lot.expirationDate).format()),
           lotNumber: lot.lotNumber,
           manufacturedDate: lot.manufacturedDate && getSafe(() => moment(lot.manufacturedDate).utc(lot.manufacturedDate).format()),
-          pkgAmount: getSafe(() => parseInt(lot.pkgAmount))
+          pkgAvailable: getSafe(() => parseInt(lot.pkgAvailable))
         }
       }) : null,
       manufacturer: getSafe(() => values.manufacturer),

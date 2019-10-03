@@ -117,7 +117,7 @@ const initValues = {
   inStock: true,
   lots: [{
     lotNumber: 'Lot #1',
-    pkgAmount: 1,
+    pkgAvailable: 1,
     manufacturedDate: '',
     expirationDate: ''
   }],
@@ -220,7 +220,7 @@ const validationScheme = val.object().shape({
   validityDate: val.string().matches(/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, { message: errorMessages.invalidDate }),
   lots: val.array().of(val.object().uniqueProperty('lotNumber', errorMessages.lotUnique).shape({
     lotNumber: val.string().nullable().required(errorMessages.requiredMessage),
-    pkgAmount: val
+    pkgAvailable: val
       .number()
       .nullable()
       .moreThan(0, errorMessages.greaterThan(0))
@@ -264,7 +264,7 @@ const validationScheme = val.object().shape({
 // validation array
 let tabs = []
 // 1st tab
-tabs.push(['inStock', 'product', 'processingTimeDays', 'doesExpire', 'pkgAmount', 'validityDate', 'minimumRequirement', 'minimum', 'splits', 'priceTiers', 'pricingTiers', 'warehouse'])
+tabs.push(['inStock', 'product', 'processingTimeDays', 'doesExpire', 'pkgAvailable', 'validityDate', 'minimumRequirement', 'minimum', 'splits', 'priceTiers', 'pricingTiers', 'warehouse'])
 // 2nd tab
 tabs.push(['costs', 'lots', 'origin', 'touchedLot'])
 // 3rd tab
@@ -340,10 +340,10 @@ class AddInventoryForm extends Component {
   }
 
   switchTab = (newTab, values, setFieldValue) => {
-    let lotAmount = values.lots.length === 0 ? parseInt(values.pkgAmount) : 0
+    let lotAmount = values.lots.length === 0 ? parseInt(values.pkgAvailable) : 0
     if (newTab === 1 && lotAmount > 0) {
       setFieldValue('lots[0].lotNumber', '1')
-      setFieldValue('lots[0].pkgAmount', lotAmount)
+      setFieldValue('lots[0].pkgAvailable', lotAmount)
       this.setState({
         activeTab: newTab
       })
@@ -787,10 +787,10 @@ class AddInventoryForm extends Component {
                         .then(r => {
                           // stop when errors found
                           if (Object.keys(r).length) {
-                            if (Object.keys(r).some(r => tab1.includes(r))) {
+                            if (Object.keys(r).some(r => tabs[0].includes(r))) {
                               this.switchTab(0, values, setFieldValue)
                             }
-                            if (Object.keys(r).some(r => tab2.includes(r))) {
+                            if (Object.keys(r).some(r => tabs[1].includes(r))) {
                               this.switchTab(1, values, setFieldValue)
                             }
                             toastManager.add(generateToastMarkup(
@@ -839,12 +839,12 @@ class AddInventoryForm extends Component {
           parseFloat(values.costs[i].cost / values.packagingSize) /
 
           (parseInt(values.costs[i].lot) > 0 ?
-            parseFloat(values.lots[parseInt(values.costs[i].lot) - 1].pkgAmount)
+            parseFloat(values.lots[parseInt(values.costs[i].lot) - 1].pkgAvailable)
             :
             (parseInt(values.costs[i].lot) < 0 ?
               0
               :
-              values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0)))
+              values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAvailable), 0)))
         ).toFixed(3))
     }
   }
@@ -914,8 +914,8 @@ class AddInventoryForm extends Component {
 
   getCostUOM = (values, index, value) => {
     let count = parseInt(values.costs[index].lot)
-      ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount)
-      : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0)
+      ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAvailable)
+      : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAvailable), 0)
 
     return (count / parseFloat(value)).toFixed(3)
   }
@@ -1236,11 +1236,11 @@ class AddInventoryForm extends Component {
                                         min='1'
                                         step='1'
                                         disabled={values.lots.length > 1}
-                                        onChange={(_, { value }) => setFieldValue('lots[0].pkgAmount', value)}
+                                        onChange={(_, { value }) => setFieldValue('lots[0].pkgAvailable', value)}
                                         value={
                                           values.lots.length > 1
-                                            ? values.lots.reduce((prev, curr) => parseInt(prev, 10) + parseInt(curr.pkgAmount), 0)
-                                            : parseInt(values.lots[0].pkgAmount, 10)
+                                            ? values.lots.reduce((prev, curr) => parseInt(prev, 10) + parseInt(curr.pkgAvailable), 0)
+                                            : parseInt(values.lots[0].pkgAvailable, 10)
                                         }
                                         name='quantity' />
                                     </GridColumn>
@@ -1612,7 +1612,7 @@ class AddInventoryForm extends Component {
                                 render={arrayHelpers => (
                                   <>
                                     <Message attached='top' className='header-table-fields'>
-                                      <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{ marginTop: '-0.5em' }} onClick={() => arrayHelpers.push({ lotNumber: null, pkgAmount: null, manufacturedDate: null, expirationDate: null })}
+                                      <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{ marginTop: '-0.5em' }} onClick={() => arrayHelpers.push({ lotNumber: null, pkgAvailable: null, manufacturedDate: null, expirationDate: null })}
                                         data-test='new_inventory_add_lot_btn'
                                       />
                                       <FormattedMessage id='addInventory.lotDetails.header' defaultMessage='Lot Details'>
@@ -1666,7 +1666,7 @@ class AddInventoryForm extends Component {
                                         {values.lots && values.lots.length ? values.lots.map((lot, index) => (
                                           <Table.Row key={index}>
                                             <TableCellBig data-test={`add_inventory_product_lotNumber_${index}_inp`} ><Input name={`lots[${index}].lotNumber`} inputProps={{ onClick: () => setFieldValue('touchedLot', true) }} /></TableCellBig>
-                                            <TableCellSmall data-test={`add_inventory_product_pkgAmount_${index}_inp`} ><Input name={`lots[${index}].pkgAmount`} inputProps={{
+                                            <TableCellSmall data-test={`add_inventory_product_pkgAvailable_${index}_inp`} ><Input name={`lots[${index}].pkgAvailable`} inputProps={{
                                               type: 'number',
                                               min: '1',
                                               step: '1',
@@ -1676,7 +1676,7 @@ class AddInventoryForm extends Component {
 
                                                 values.lots.forEach((lot, i) => {
                                                   if (i !== index) total += parseInt(value, 10)
-                                                  else total += parseInt(lot.pkgAmount, 10)
+                                                  else total += parseInt(lot.pkgAvailable, 10)
                                                 })
 
                                                 // setFieldValue('quantity', total)
@@ -1808,8 +1808,8 @@ class AddInventoryForm extends Component {
                                                         'data-test': `new_inventory_cost_${index}_drpdn`,
                                                         onChange: (e, { value }) => {
                                                           let count = parseInt(value)
-                                                            ? parseFloat(values.lots[value - 1].pkgAmount)
-                                                            : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0)
+                                                            ? parseFloat(values.lots[value - 1].pkgAvailable)
+                                                            : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAvailable), 0)
 
                                                           setFieldValue(`costs[${index}].costUom`, (parseFloat(values.costs[index].cost) / (count * values.product.packagingSize)).toFixed(3))
                                                         },
@@ -1823,8 +1823,8 @@ class AddInventoryForm extends Component {
                                                   <Input name={`costs[${index}].cost`} inputProps={{
                                                     type: 'number', step: '1', value: null, min: 0, disabled: !values.trackSubCosts, onChange: (e, { value }) => {
                                                       let count = parseInt(values.costs[index].lot)
-                                                        ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount)
-                                                        : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0)
+                                                        ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAvailable)
+                                                        : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAvailable), 0)
 
                                                       setFieldValue(`costs[${index}].costUom`, (parseFloat(value) / (count * values.product.packagingSize)).toFixed(3))
                                                     }

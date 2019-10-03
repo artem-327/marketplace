@@ -159,7 +159,7 @@ export default function reducer(state = initialState, action) {
             expirationDate: moment(el.expirationDate).format('YYYY-MM-DD')
           })) : [{
             lotNumber: 'Lot #1',
-            pkgAmount: 1,
+            pkgAvailable: 1,
             manufacturedDate: '',
             expirationDate: ''
           }],
@@ -250,7 +250,7 @@ export default function reducer(state = initialState, action) {
       //     minimum: data.minimum,
       //     multipleLots: true,
       //     origin: data.origin ? data.origin.id : null,
-      //     pkgAmount: data.pkgAmount,
+      //     pkgAvailable: data.pkgAvailable,
       //     priceTiers: data.pricingTiers.length,
       //     pricing: {
       //       price: data.pricing.price
