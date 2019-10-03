@@ -121,7 +121,7 @@ const mapStateToProps = (state, { datagrid }) => {
         packagingType: getSafe(() => product.packagingType.id),
         packagingSize: getSafe(() => product.packagingSize, 'N/A'),
         packagingSizeFormatted: product.packagingSize ? <FormattedNumber value={product.packagingSize} minimumFractionDigits={0} /> : 'N/A',
-        packagingGroup: getSafe(() => product.packagingGroup.id),
+        //packagingGroup: getSafe(() => product.packagingGroup.id),
         externalProductCode: getSafe(() => product.echoProduct.code, 'N/A'),
         externalProductName: getSafe(() => product.echoProduct.name, 'N/A'),
         unit: getSafe(() => product.packagingUnit.nameAbbreviation, 'N/A'),
