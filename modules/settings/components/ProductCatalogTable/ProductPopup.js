@@ -197,7 +197,7 @@ class ProductPopup extends React.Component {
     return {
       ...initialValues,
       ...popupValues,
-      casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.echoProduct.elements), []),
+      casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.echoProduct.elements, [])),
       echoProduct: getSafe(() => popupValues.echoProduct.id),
     }
   }
@@ -247,7 +247,8 @@ class ProductPopup extends React.Component {
                     }))}
 
                     inputProps={{
-                      fluid: true, search: true,
+                      fluid: true, 
+                      search: (val) => val,
                       clearable: true, selection: true,
                       loading: echoProductsFetching,
                       onChange: (_, { value }) =>
@@ -260,14 +261,17 @@ class ProductPopup extends React.Component {
                     }}
                     name='echoProduct'
                   />
-                  {casProducts.length > 0 && <Divider />}
-                  <Grid>
-                    <CompanyProductMixtures
-                      casProducts={casProducts}
-                    />
-                  </Grid>
-                  {casProducts.length > 0 && <Divider />}
-
+                  {casProducts.length > 0 &&
+                    <>
+                      <Divider />
+                      <Grid>
+                        <CompanyProductMixtures
+                          casProducts={casProducts}
+                        />
+                      </Grid>
+                      <Divider />
+                    </>
+                  }
                   <FormGroup widths='equal' data-test='settings_product_popup_nameCodeInci_inp'>
                     <Input type='text' label={formatMessage({ id: 'global.productName', defaultMessage: 'Product Name' })} name='intProductName' />
                     <Input type='text' label={formatMessage({ id: 'global.productCode', defaultMessage: 'Product Code' })} name='intProductCode' />
