@@ -52,6 +52,8 @@ const initialValues = {
   packagingUnit: '',
   packagingType: '',
   nmfcNumber: '',
+  stackable: false,
+  freezeProtect: false
 
 }
 
@@ -223,8 +225,8 @@ class ProductPopup extends React.Component {
       <Modal closeIcon onClose={() => closePopup()} size='small' open centered={false}>
         <Modal.Header>
           {popupValues
-            ? <FormattedMessage id='settings.editProduct' defaultMessage='Edit Product' />
-            : <FormattedMessage id='settings.addProduct' defaultMessage='Add Product' />
+            ? <FormattedMessage id='global.editCompanyProduct' defaultMessage='Edit Company Product' />
+            : <FormattedMessage id='global.addCompanyProduct' defaultMessage='Add Company Product' />
           }
         </Modal.Header>
         <Modal.Content>
@@ -247,7 +249,7 @@ class ProductPopup extends React.Component {
                     }))}
 
                     inputProps={{
-                      fluid: true, 
+                      fluid: true,
                       search: (val) => val,
                       clearable: true, selection: true,
                       loading: echoProductsFetching,
@@ -273,8 +275,8 @@ class ProductPopup extends React.Component {
                     </>
                   }
                   <FormGroup widths='equal' data-test='settings_product_popup_nameCodeInci_inp'>
-                    <Input type='text' label={formatMessage({ id: 'global.productName', defaultMessage: 'Product Name' })} name='intProductName' />
-                    <Input type='text' label={formatMessage({ id: 'global.productCode', defaultMessage: 'Product Code' })} name='intProductCode' />
+                    <Input type='text' label={formatMessage({ id: 'global.intProductName', defaultMessage: 'Internal Product Name' })} name='intProductName' />
+                    <Input type='text' label={formatMessage({ id: 'global.intProductCode', defaultMessage: 'Internal Product Code' })} name='intProductCode' />
                   </FormGroup>
 
                   <FormGroup data-test='settings_product_popup_packagingSize_inp'>
@@ -285,7 +287,7 @@ class ProductPopup extends React.Component {
                       type='text' label={formatMessage({ id: 'global.packagingSize', defaultMessage: 'Packaging Size' })} name='packagingSize' />
                     <Dropdown
                       fieldProps={{ width: 6 }}
-                      label={formatMessage({ id: 'global.unit', defaultMessage: 'Unit' })}
+                      label={formatMessage({ id: 'global.packagingUnit', defaultMessage: 'Unit' })}
                       name='packagingUnit'
                       options={productsUnitsType}
                       inputProps={{
@@ -344,11 +346,18 @@ class ProductPopup extends React.Component {
                         />
                       </FormGroup>
 
-                      <Checkbox
-                        label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })}
-                        name='stackable'
-                        inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }}
-                      />
+                      <FormGroup>
+                        <Checkbox
+                          fieldProps={{ width: 4 }}
+                          label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })}
+                          name='stackable'
+                          inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }}
+                        />
+                        <Checkbox
+                          fieldProps={{ width: 4 }}
+                          label={formatMessage({ id: 'global.freezeProtect', defaultMessage: 'Freeze Protect' })}
+                          name='freezeProtect' />
+                      </FormGroup>
 
 
                     </Accordion.Content>

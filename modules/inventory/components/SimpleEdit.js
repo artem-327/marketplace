@@ -206,7 +206,7 @@ class SimpleEdit extends Component {
                           </GridColumn>
                           <GridColumn>
                             <Input
-                              label={<BoldLabel><FormattedMessage id='global.uom' defaultMessage='UOM'>{text => text}</FormattedMessage></BoldLabel>}
+                              label={<BoldLabel><FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit'>{text => text}</FormattedMessage></BoldLabel>}
                               name='uom'
                               inputProps={{ transparent: true, readOnly: true }}
                             />
@@ -214,7 +214,7 @@ class SimpleEdit extends Component {
 
                           <GridColumn>
                             <Input
-                              label={<BoldLabel><FormattedMessage id='global.packaging' defaultMessage='Packaging'>{text => text}</FormattedMessage></BoldLabel>}
+                              label={<BoldLabel><FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>{text => text}</FormattedMessage></BoldLabel>}
                               name='packaging'
                               inputProps={{ transparent: true, readOnly: true }}
                             />

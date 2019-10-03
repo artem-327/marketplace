@@ -35,13 +35,13 @@ export default class CompanyProductMixtures extends Component {
 
           <GridColumn>
             <BoldLabel>
-              <FormattedMessage id='global.min' defaultMessage='Min' />
+              <FormattedMessage id='global.assayMin' defaultMessage='Assay Min' />
             </BoldLabel>
           </GridColumn>
 
           <GridColumn>
             <BoldLabel>
-              <FormattedMessage id='global.max' defaultMessage='Max' />
+              <FormattedMessage id='global.assayMax' defaultMessage='Assay Max' />
             </BoldLabel>
           </GridColumn>
         </BottomUnpaddedRow>
