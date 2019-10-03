@@ -61,10 +61,6 @@ context("Conditions CRUD", () => {
         cy.get("#field_input_val0").should('have.value', "Spilled")
     })
 
-    xit("Use a condition", () => {
-
-    })
-
     it("Checks error message", () => {
         cy.clickAdd()
 

@@ -69,10 +69,6 @@ context("Market Segments CRUD", () => {
         cy.get("#field_input_val0").should('have.value', "Great segment")
     })
 
-    xit("Use a market segment", () => {
-
-    })
-
     it("Checks error message", () => {
         cy.clickAdd()
 

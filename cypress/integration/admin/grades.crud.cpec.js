@@ -63,10 +63,6 @@ context("Grades CRUD", () => {
         cy.get("#field_input_val0").should('have.value', "Graceful")
     })
 
-    xit("Use a grade", () => {
-
-    })
-
     it("Checks error message", () => {
         cy.clickAdd()
 

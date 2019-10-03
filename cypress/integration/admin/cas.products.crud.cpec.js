@@ -175,10 +175,6 @@ context("CAS products CRUD", () => {
         })
     })
 
-    xit("Uses a CAS Product", () => {
-
-    })
-
     it("Deletes a product", () => {
         cy.get("[data-test=admin_table_search_inp]")
             .children("div")
