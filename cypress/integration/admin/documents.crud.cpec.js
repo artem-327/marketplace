@@ -69,10 +69,6 @@ context("Document types CRUD", () => {
         cy.get("#field_input_val0").should('have.value', "Best document")
     })
 
-    xit("Use a document type", () => {
-
-    })
-
     it("Checks error message", () => {
         cy.clickAdd()
 

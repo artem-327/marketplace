@@ -60,10 +60,6 @@ context("Form CRUD", () => {
         cy.get("#field_input_val0").should('have.value', "Finest")
     })
 
-    xit("Use a form", () => {
-
-    })
-
     it("Checks error message", () => {
         cy.clickAdd()
 

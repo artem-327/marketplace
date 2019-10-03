@@ -68,10 +68,6 @@ context("Manufacturers CRUD", () => {
         cy.get("#field_input_val0").should('have.value', "Artio")
     })
 
-    xit("Use a manufacturer", () => {
-
-    })
-
     it("Checks error message", () => {
         cy.clickAdd()
 

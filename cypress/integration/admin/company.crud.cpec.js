@@ -6,6 +6,8 @@ context("Company CRUD", () => {
         cy.server()
         cy.route("POST", '/prodex/api/cas-products/datagrid').as('loading')
         cy.route("POST", '/prodex/api/companies/datagrid').as('companiesLoad')
+        cy.route("POST", '/prodex/api/companies').as('companyCreate')
+        cy.route("GET", '/_next/static/webpack/').as('datagridLoad')
 
         cy.FElogin("admin@example.com", "echopass123")
 
@@ -27,15 +29,16 @@ context("Company CRUD", () => {
         cy.enterText('input[id="field_input_primaryBranch.name"]',"Main")
         cy.enterText('input[id="field_input_primaryBranch.contactName"]',"James Duckling")
         cy.enterText('input[id="field_input_primaryBranch.contactEmail"]',"james@duck.com")
-       /* cy.get('div[data-test="company_form_websiteUrlPhone_inp"]').within(($form) =>{
+
+        cy.get('div[data-test="admin_popup_company_primaryBranchNameEmailPhone_inp"]').within(($form) =>{
             cy.get('input[placeholder = "Phone Number"]').type('1234567895')
             cy.contains('+CCC').click()
             cy.contains('USA').click()
-        })*/
+        })
+
         cy.enterText("input[id='field_input_primaryBranch.address.streetAddress']","125 N G St")
         cy.enterText("input[id='field_input_primaryBranch.address.city']","Harlingen")
         cy.selectFromDropdown("div[id='field_dropdown_primaryBranch.address.country']","Bahamas")
-        //cy.selectFromDropdown("div[id='field_dropdown_primaryBranch.address.zip']","75000")
 
         cy.get("div[id='field_dropdown_primaryBranch.address.zip']")
             .children("input")
@@ -44,20 +47,22 @@ context("Company CRUD", () => {
 
         cy.wait(1000)
         cy.get("div[id='field_dropdown_primaryBranch.address.zip']").within(() => {
-            cy.get("div[class='selected item addition']").click({force: true})
+            cy.get("div[class='selected item']").click({force: true})
         })
 
         cy.waitForUI()
 
         cy.clickSave()
 
+        cy.wait('@companyCreate')
         cy.contains("Created Company")
+    })
 
-        cy.get("input[type=text]").type("Donald The Ducks",{force: true})
+    it("Edits a condition", () => {
+        cy.get("input[type=text]").type("Donald The Ducks")
+        cy.waitForUI()
 
         let filter = [{"operator":"LIKE","path":"Company.name","values":["%Donald%"]}]
-
-        cy.waitForUI()
 
         cy.getToken().then(token => {
             cy.getFirstCompanyWithFilter(token, filter).then(itemId => {
@@ -68,17 +73,6 @@ context("Company CRUD", () => {
                 companyId = itemId
             })
         })
-
-        cy.get("#field_input_name").should('have.value', "Donald The Ducks")
-    })
-
-    it("Edits a condition", () => {
-        cy.get("input[type=text]").type("Donald The Ducks")
-        cy.waitForUI()
-
-        cy.get('[data-test=action_' + companyId + ']').click()
-
-        cy.get('[data-test=action_' + companyId + '_0]').click()
 
         cy.get("#field_input_name")
             .clear()
@@ -109,6 +103,7 @@ context("Company CRUD", () => {
 
     it("Deletes a company", () => {
         cy.searchInList("Donald and Co.")
+        cy.waitForUI()
         cy.waitForUI()
 
         cy.get('[data-test=action_' + companyId + ']').click()
