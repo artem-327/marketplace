@@ -95,19 +95,19 @@ const validationScheme = Yup.object().shape({
     minAssay: Yup.number().min(0).max(100),
     maxAssay: Yup.number().min(0).max(100)
   })),
-  emergencyPhone: Yup.string().min(2, errorMessages.requiredMessage).required(errorMessages.requiredMessage),
-  hazardClass: Yup.number(errorMessages.requiredMessage).integer(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
-  hazardLabels: Yup.array().of(Yup.number().integer()).required(errorMessages.requiredMessage),
+  emergencyPhone: Yup.string().min(2, errorMessages.requiredMessage), // .required(errorMessages.requiredMessage),
+  // hazardClass: Yup.number(errorMessages.requiredMessage).integer(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
+  // hazardLabels: Yup.array().of(Yup.number().integer()).required(errorMessages.requiredMessage),
   manufacturer: Yup.number().integer().min(1).required(errorMessages.requiredMessage),
   name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
-  packagingGroup: Yup.number(errorMessages.requiredMessage).integer(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
+  packagingGroup: Yup.number(errorMessages.requiredMessage).integer(errorMessages.requiredMessage), //.required(errorMessages.requiredMessage),
   sdsIssuedDate: Yup.string().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }),
   sdsRevisionDate: Yup.string().trim().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }),
   sdsVersionNumber: Yup.string().trim(),
   tdsIssuedDate: Yup.string().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }),
   tdsRevisionDate: Yup.string().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }),
-  unNumber: Yup.number(errorMessages.requiredMessage).integer(errorMessages.requiredMessage).min(1, errorMessages.minLength(1, errorMessages.requiredMessage)).required(errorMessages.requiredMessage),
-  unShippingName: Yup.string().trim().required(errorMessages.requiredMessage)
+  // unNumber: Yup.number(errorMessages.requiredMessage).integer(errorMessages.requiredMessage).min(1, errorMessages.minLength(1, errorMessages.requiredMessage)).required(errorMessages.requiredMessage),
+  // unShippingName: Yup.string().trim().required(errorMessages.requiredMessage)
 })
 
 class AddNewPopupEchoProduct extends React.Component {
@@ -1247,6 +1247,26 @@ class AddNewPopupEchoProduct extends React.Component {
 
                       <FormGroup widths='equal'>
                         <FormField>
+                          <Input label={formatMessage({ id: 'global.iataPackagingGroup', defaultMessage: 'IATA Packaging Group' })}
+                            name='iataPackagingGroup'
+                            type='text' />
+                        </FormField>
+
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.imdgPackagingGroup', defaultMessage: 'IMD Packaging Group' })}
+                            name='imdgPackagingGroup'
+                            type='text' />
+                        </FormField>
+
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.tdgPackagingGroup', defaultMessage: 'TDG Packaging Group' })}
+                            name='tdgPackagingGroup'
+                            type='text' />
+                        </FormField>
+                      </FormGroup>
+
+                      <FormGroup widths='equal'>
+                        <FormField>
                           <Input label={formatMessage({ id: 'global.nfpaReactivityHazard', defaultMessage: 'NFPA Reactivity Hazard' })}
                             name='nfpaReactivityHazard'
                             type='text' />
@@ -1257,6 +1277,8 @@ class AddNewPopupEchoProduct extends React.Component {
                             type='text' />
                         </FormField>
                       </FormGroup>
+
+
                     </Accordion.Content>
                   </Accordion>
                 </Form>
