@@ -353,21 +353,21 @@ export function deleteProductName(productId, id) {
 export const deleteCompany = id => ({ type: AT.ADMIN_DELETE_COMPANIES, payload: api.deleteCompany(id) })
 
 export function createCompany(formData) {
-  return async dispatch => {
-    let response = await api.createCompany(formData)
-    await dispatch({
-      type: AT.ADMIN_CREATE_COMPANY,
-      response
-    })
+	return async dispatch => {
+		let response = await api.createCompany(formData)
+		await dispatch({
+			type: AT.ADMIN_CREATE_COMPANY,
+			response
+		})
 
     /* Called when uploaded logo
     Datagrid.clear()
     Datagrid.loadData()
     */
 
-    dispatch(closePopup())
-    return response
-  }
+		dispatch(closePopup())
+		return response
+	}
 }
 
 export function updateCompany(id, formData) {
@@ -398,10 +398,10 @@ export function openEditCompany(id, formData) {
 }
 
 export function searchUnNumber(pattern) {
-  return {
-    type: AT.ADMIN_SEARCH_UN_NUMBER,
-    payload: api.searchUnNumber(pattern)
-  }
+	return {
+		type: AT.ADMIN_SEARCH_UN_NUMBER,
+		payload: api.searchUnNumber(pattern)
+	}
 }
 
 export function getEchoProduct(id) {
@@ -420,9 +420,9 @@ export function putEchoProduct(id, values) {
 		type: AT.ADMIN_PUT_ECHO_PRODUCT,
 		async payload() {
 			const response = await api.putEchoProduct(id, values)
-      Datagrid.updateRow(id, () => response.data)
+			Datagrid.updateRow(id, () => response.data)
 			return response
-    }
+		}
 	}
 }
 
@@ -431,7 +431,7 @@ export function postEchoProduct(values) {
 		type: AT.ADMIN_POST_ECHO_PRODUCT,
 		async payload() {
 			const response = await api.postEchoProduct(values)
-      Datagrid.loadData()
+			Datagrid.loadData()
 			return response
 		}
 	}
@@ -442,73 +442,62 @@ export function deleteEchoProduct(echoProductId) {
 		type: AT.ADMIN_DELETE_ECHO_PRODUCT,
 		async payload() {
 			const response = await api.deleteEchoProduct(echoProductId)
-      Datagrid.removeRow(echoProductId)
+			Datagrid.removeRow(echoProductId)
 			return response
 		}
 	}
 }
 
 export function searchManufacturers(text, limit = false) {
-  return {
-    type: AT.ADMIN_SEARCH_MANUFACTURERS,
-    payload: api.searchManufacturers(text, limit)
-  }
+	return {
+		type: AT.ADMIN_SEARCH_MANUFACTURERS,
+		payload: api.searchManufacturers(text, limit)
+	}
 }
 
 export function newElementsIndex() {
-  return {
-    type: AT.ADMIN_CREATE_ELEMENTS_INDEX,
-    payload: {}
-  }
+	return {
+		type: AT.ADMIN_CREATE_ELEMENTS_INDEX,
+		payload: {}
+	}
 }
 
 export function removeElementsIndex(index) {
-  return {
-    type: AT.ADMIN_REMOVE_ELEMENTS_INDEX,
-    payload: {
-      index
-    }
-  }
+	return {
+		type: AT.ADMIN_REMOVE_ELEMENTS_INDEX,
+		payload: {
+			index
+		}
+	}
 }
 
 export function prepareSearchedCasProducts(elements) {
-  return {
-    type: AT.ADMIN_PREPARE_CAS_PRODUCTS,
-    payload: {
-      elements
-    }
-  }
+	return {
+		type: AT.ADMIN_PREPARE_CAS_PRODUCTS,
+		payload: {
+			elements
+		}
+	}
 }
 
-export function searchCasProduct(pattern, index) {
-  return {
-    type: AT.ADMIN_SEARCH_CAS_PRODUCT,
-    async payload() {
-      const dataResponse = await api.searchCasProduct(pattern)
-      return {
-        ...dataResponse,
-        index
-      }
-    }
-  }
-}
+export const searchCasProduct = (pattern, index) => ({ type: AT.ADMIN_SEARCH_CAS_PRODUCT, payload: api.searchCasProduct(pattern) })
 
 export function getProductsCatalogRequest() {
-  return (dispatch) => {
-    dispatch({
-      type: AT.ADMIN_GET_PRODUCTS_CATALOG_DATA,
-      async payload() {
-        const [hazardClasses, packagingGroups] = await Promise.all([
-          api.getHazardClasses(),
-          api.getPackagingGroups()
-        ])
-        return {
-          hazardClasses: hazardClasses,
-          packagingGroups: packagingGroups
-        }
-      }
-    })
-  }
+	return (dispatch) => {
+		dispatch({
+			type: AT.ADMIN_GET_PRODUCTS_CATALOG_DATA,
+			async payload() {
+				const [hazardClasses, packagingGroups] = await Promise.all([
+					api.getHazardClasses(),
+					api.getPackagingGroups()
+				])
+				return {
+					hazardClasses: hazardClasses,
+					packagingGroups: packagingGroups
+				}
+			}
+		})
+	}
 }
 
 export function openEditEchoProduct(id) {
@@ -519,13 +508,13 @@ export function openEditEchoProduct(id) {
 
 		// mark attachments as linked
 		if (formData.attachments) {
-      formData.attachments = formData.attachments.map(att => {
-        return {
-          ...att,
-          linked: true
-        }
-      })
-    }
+			formData.attachments = formData.attachments.map(att => {
+				return {
+					...att,
+					linked: true
+				}
+			})
+		}
 
 		// open popup with modified data
 		dispatch(openPopup(formData))
@@ -689,56 +678,56 @@ export function openEditEchoAltNamesPopup(value) {
 }
 
 export function loadFile(attachment) {
-  return {
-    type: AT.ADMIN_LOAD_FILE,
-    payload: api.loadFile(attachment)
-  }
+	return {
+		type: AT.ADMIN_LOAD_FILE,
+		payload: api.loadFile(attachment)
+	}
 }
 
 export function addAttachment(attachment, type, additionalParams = {}) {
-  return {
-    type: AT.ADMIN_ADD_ATTACHMENT,
-    async payload() {
-      const data = await api.addAttachment(attachment, type, additionalParams)
-      return data
-    }
-  }
+	return {
+		type: AT.ADMIN_ADD_ATTACHMENT,
+		async payload() {
+			const data = await api.addAttachment(attachment, type, additionalParams)
+			return data
+		}
+	}
 }
 
 export function linkAttachment(isLot, echoId, attachmentIds) {
-  return {
-    type: AT.ADMIN_LINK_ATTACHMENT,
-    async payload() {
-      if (Array.isArray(attachmentIds)) {
-        async function asyncForEach(array, callback) {
-          for (let index = 0; index < array.length; index++) {
-            await callback(array[index], index, array);
-          }
-        }
+	return {
+		type: AT.ADMIN_LINK_ATTACHMENT,
+		async payload() {
+			if (Array.isArray(attachmentIds)) {
+				async function asyncForEach(array, callback) {
+					for (let index = 0; index < array.length; index++) {
+						await callback(array[index], index, array);
+					}
+				}
 
-        await asyncForEach(attachmentIds, async (attachment, index) => {
-          await api.linkAttachment(echoId, attachment.id)
-        })
-      } else {
-        await api.linkAttachment(echoId, attachmentIds)
-      }
+				await asyncForEach(attachmentIds, async (attachment, index) => {
+					await api.linkAttachment(echoId, attachment.id)
+				})
+			} else {
+				await api.linkAttachment(echoId, attachmentIds)
+			}
 
-      return true
-    }
-  }
+			return true
+		}
+	}
 }
 
 export function removeAttachment(aId) {
-  return async dispatch => {
-    await dispatch({ type: AT.ADMIN_REMOVE_ATTACHMENT, payload: api.removeAttachment(aId) })
-  }
+	return async dispatch => {
+		await dispatch({ type: AT.ADMIN_REMOVE_ATTACHMENT, payload: api.removeAttachment(aId) })
+	}
 }
 
 export function removeAttachmentLink(isLot, echoId, aId) {
-  return {
-    type: AT.ADMIN_REMOVE_ATTACHMENT_LINK,
-    payload: api.removeAttachmentLink(echoId, aId)
-  }
+	return {
+		type: AT.ADMIN_REMOVE_ATTACHMENT_LINK,
+		payload: api.removeAttachmentLink(echoId, aId)
+	}
 }
 
 export const getDocumentTypes = () => ({ type: AT.ADMIN_GET_DOCUMENT_TYPES, payload: api.getDocumentTypes() })

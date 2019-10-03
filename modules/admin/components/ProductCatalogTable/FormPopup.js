@@ -6,32 +6,36 @@ import { Grid, Form, Modal, Segment, Header, FormGroup, FormField, Search, Label
 import { Formik, FieldArray } from 'formik'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import {
-  closePopup, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces,
-  getAddressSearchPrimaryBranch, getAddressSearchMailingBranch, removeEmpty, getProductsCatalogRequest,
+  // getAddressSearchPrimaryBranch, getAddressSearchMailingBranch, removeEmpty,
+  // updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces,
+  getProductsCatalogRequest, closePopup,
   searchCasProduct, prepareSearchedCasProducts, getDocumentTypes, newElementsIndex, removeElementsIndex, putEchoProduct,
   postEchoProduct, searchManufacturers, searchUnNumber, loadFile, addAttachment, linkAttachment, removeAttachmentLink,
   removeAttachment
 } from '~/modules/admin/actions'
-import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
-import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
+
+import { uniqueArrayByKey } from '~/utils/functions'
+
+// import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
+// import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
 import { Button, Input, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { DateInput } from '~/components/custom-formik'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import * as Yup from 'yup'
 
-import { cloneDeep } from 'lodash'
+// import { cloneDeep } from 'lodash'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 
 import { withToastManager } from 'react-toast-notifications'
 
-import { validationSchema } from '~/modules/company-form/constants'
+// import { validationSchema } from '~/modules/company-form/constants'
 import { errorMessages } from '~/constants/yupValidation'
 
-import { CompanyForm } from '~/modules/company-form/'
-import { AddressForm } from '~/modules/address-form/'
-import { addressValidationSchema } from '~/constants/yupValidation'
+// import { CompanyForm } from '~/modules/company-form/'
+// import { AddressForm } from '~/modules/address-form/'
+// import { addressValidationSchema } from '~/constants/yupValidation'
 
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
@@ -91,16 +95,16 @@ const validationScheme = Yup.object().shape({
     minAssay: Yup.number().min(0).max(100),
     maxAssay: Yup.number().min(0).max(100)
   })),
-  emergencyNumber: Yup.string().min(2, errorMessages.requiredMessage).required(errorMessages.requiredMessage),
+  emergencyPhone: Yup.string().min(2, errorMessages.requiredMessage).required(errorMessages.requiredMessage),
   hazardClass: Yup.number(errorMessages.requiredMessage).integer(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
   hazardLabels: Yup.array().of(Yup.number().integer()).required(errorMessages.requiredMessage),
   manufacturer: Yup.number().integer().min(1).required(errorMessages.requiredMessage),
   name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
   packagingGroup: Yup.number(errorMessages.requiredMessage).integer(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
-  sdsIssueDate: Yup.string().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }),
-  sdsRevisionDate: Yup.string().trim().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }).required(errorMessages.requiredMessage),
-  sdsVersionNumber: Yup.string().trim().required(errorMessages.requiredMessage),
-  tdsIssueDate: Yup.string().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }),
+  sdsIssuedDate: Yup.string().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }),
+  sdsRevisionDate: Yup.string().trim().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }),
+  sdsVersionNumber: Yup.string().trim(),
+  tdsIssuedDate: Yup.string().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }),
   tdsRevisionDate: Yup.string().matches(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/, { message: errorMessages.invalidDate }),
   unNumber: Yup.number(errorMessages.requiredMessage).integer(errorMessages.requiredMessage).min(1, errorMessages.minLength(1, errorMessages.requiredMessage)).required(errorMessages.requiredMessage),
   unShippingName: Yup.string().trim().required(errorMessages.requiredMessage)
@@ -120,11 +124,11 @@ class AddNewPopupEchoProduct extends React.Component {
   componentDidMount() {
     this.props.getProductsCatalogRequest()
 
-    if (getSafe(() => this.props.popupValues.elements.length, false)) {
-      this.props.prepareSearchedCasProducts(this.props.popupValues.elements)
-    } else {
-      this.props.newElementsIndex()
-    }
+    // if (getSafe(() => this.props.popupValues.elements.length, false)) {
+    //   this.props.prepareSearchedCasProducts(this.props.popupValues.elements)
+    // } else {
+    //   this.props.newElementsIndex()
+    // }
 
     const unNumber = getSafe(() => this.props.popupValues.unNumber, null)
 
@@ -144,6 +148,7 @@ class AddNewPopupEchoProduct extends React.Component {
 
   getInitialFormValues = () => {
     const { popupValues } = this.props
+    console.log({ popupValues })
     let initialValues = {
       attachments: [],
       description: '',
@@ -166,10 +171,10 @@ class AddNewPopupEchoProduct extends React.Component {
       hazardClass: getSafe(() => popupValues.hazardClass.id, ''),
       hazardLabels: getSafe(() => popupValues.hazardLabels.map(hL => hL.id), []),
       packagingGroup: getSafe(() => popupValues.packagingGroup.id, ''),
-      emergencyNumber: '' + getSafe(() => popupValues.emergencyNumber, ''),
-      sdsIssueDate: getSafe(() => popupValues.sdsIssueDate.substring(0, 10), ''),
+      emergencyPhone: '' + getSafe(() => popupValues.emergencyPhone, ''),
+      sdsIssuedDate: getSafe(() => popupValues.sdsIssuedDate.substring(0, 10), ''),
       sdsRevisionDate: getSafe(() => popupValues.sdsRevisionDate.substring(0, 10), ''),
-      tdsIssueDate: getSafe(() => popupValues.tdsIssueDate.substring(0, 10), ''),
+      tdsIssuedDate: getSafe(() => popupValues.tdsIssuedDate.substring(0, 10), ''),
       tdsRevisionDate: getSafe(() => popupValues.tdsRevisionDate.substring(0, 10), '')
     }
     if (initialValues.elements.length === 0) {
@@ -235,14 +240,22 @@ class AddNewPopupEchoProduct extends React.Component {
       searchedManufacturers,
       searchedManufacturersLoading,
       linkAttachment,
-      listDocumentTypes
+      listDocumentTypes,
+      // searchedCasProducts
     } = this.props
 
     let codesList = this.state.codesList
-    const stateUnNumber = this.state.unNumber
-    const casProduct = getSafe(() => popupValues.casProduct, null)
+    // const stateUnNumber = this.state.unNumber
+    // const casProduct = getSafe(() => popupValues.casProduct, null)
+    let initialCasProducts = []
+
+    getSafe(() => popupValues.elements, []).forEach(el => {
+      if (el.casProduct) initialCasProducts.push(el.casProduct)
+    })
+
     const unNumber = getSafe(() => popupValues.unNumber, null)
-    const searchedCasProducts = this.props.searchedCasProducts && this.props.searchedCasProducts.length ? this.props.searchedCasProducts : (casProduct ? [casProduct] : [])
+    // const searchedCasProducts = this.props.searchedCasProducts && this.props.searchedCasProducts.length ? this.props.searchedCasProducts : (casProduct ? [casProduct] : [])
+    let searchedCasProducts = this.props.searchedCasProducts.concat(initialCasProducts)
     const searchedUnNumbers = this.props.searchedUnNumbers && this.props.searchedUnNumbers.length ? this.props.searchedUnNumbers : (unNumber ? [unNumber] : [])
 
     return (
@@ -263,17 +276,17 @@ class AddNewPopupEchoProduct extends React.Component {
               assayMax: parseInt(element.assayMax),
               casProduct: parseInt(element.casProduct),
             })),
-            emergencyNumber: values.emergencyNumber,
+            emergencyPhone: values.emergencyPhone,
             hazardClass: values.hazardClass,
             hazardLabels: values.hazardLabels,
             manufacturer: values.manufacturer,
             mfrProductCodes: values.mfrProductCodes,
             name: values.name,
             packagingGroup: values.packagingGroup,
-            sdsIssueDate: values.sdsIssueDate ? values.sdsIssueDate + 'T00:00:00.00000Z' : '',
+            sdsIssuedDate: values.sdsIssuedDate ? values.sdsIssuedDate + 'T00:00:00.00000Z' : '',
             sdsRevisionDate: values.sdsRevisionDate ? values.sdsRevisionDate + 'T00:00:00.00000Z' : '',
             sdsVersionNumber: values.sdsVersionNumber,
-            tdsIssueDate: values.tdsIssueDate ? values.tdsIssueDate + 'T00:00:00.00000Z' : '',
+            tdsIssuedDate: values.tdsIssuedDate ? values.tdsIssuedDate + 'T00:00:00.00000Z' : '',
             tdsRevisionDate: values.tdsRevisionDate ? values.tdsRevisionDate + 'T00:00:00.00000Z' : '',
             unNumber: getSafe(() => values.unNumber, null),
             unShippingName: values.unShippingName
@@ -340,10 +353,10 @@ class AddNewPopupEchoProduct extends React.Component {
                       <label><FormattedMessage id='settings.associatedCasIndexes' defaultMessage='What are the associated CAS Index Numbers?' /></label>
                     </FormField>
                     <FormField width={3}>
-                      <label><FormattedMessage id='settings.minConcetration' defaultMessage='Min Concentration' /></label>
+                      <label><FormattedMessage id='global.assayMin' defaultMessage='Assay Min' /></label>
                     </FormField>
                     <FormField width={3}>
-                      <label><FormattedMessage id='settings.maxConcetration' defaultMessage='Max Concentration' /></label>
+                      <label><FormattedMessage id='global.assayMax' defaultMessage='Assay Max' /></label>
                     </FormField>
                     <FormField width={3}>
                       <label><FormattedMessage id='admin.proprietary' defaultMessage='Proprietary' /></label>
@@ -359,19 +372,18 @@ class AddNewPopupEchoProduct extends React.Component {
                                 <Input name={`elements[${index}].name`} defaultValue={''} inputProps={{ 'data-test': `admin_product_popup_element_${index}_name` }} />
                               ) : (
                                   <Dropdown name={`elements[${index}].casProduct`}
-                                    options={getSafe(() => searchedCasProducts[index].map(item => {
-                                      return {
-                                        key: item.id,
-                                        id: item.id,
-                                        text: item.casNumber + ' ' + item.chemicalName,
-                                        value: item.id,
-                                        content: <Header content={item.casNumber} subheader={item.chemicalName} style={{ fontSize: '1em' }} />
-                                      }
-                                    }), [])}
+                                    options={
+                                      getSafe(() => uniqueArrayByKey(searchedCasProducts.concat(initialCasProducts), 'id'), [])
+                                        .map((item) => ({
+                                          key: item.id,
+                                          id: item.id,
+                                          text: item.casNumber + ' ' + item.chemicalName,
+                                          value: item.id,
+                                          content: <Header content={item.casNumber} subheader={item.chemicalName} style={{ fontSize: '1em' }} />
+                                        }))}
                                     inputProps={{
                                       'data-test': `admin_product_popup_cas_${index}_drpdn`,
                                       size: 'large',
-                                      minCharacters: 3,
                                       icon: 'search',
                                       search: options => options,
                                       selection: true,
@@ -458,7 +470,7 @@ class AddNewPopupEchoProduct extends React.Component {
                       />
                     </FormField>
                   </FormGroup>
-                  <FormGroup>
+                  {/* <FormGroup>
                     <FormField width={5} error={errors.unNumber ? true : false}>
                       <label><FormattedMessage id='global.unNumber' defaultMessage='UN Number' /></label>
                       <Search isLoading={this.props.unNumbersFetching}
@@ -483,8 +495,8 @@ class AddNewPopupEchoProduct extends React.Component {
                         data-test='settings_product_popup_unNumberCode_inp'
                       />
                       <Input type='hidden' name='unNumber' inputProps={{ style: { position: 'absolute', top: '-30000px', left: '-30000px' } }} />
-                    </FormField>
-                    <FormField width={6} error={errors.unShippingName ? true : false} data-test='admin_product_popup_unShippingName_inp'>
+                    </FormField> */}
+                  {/* <FormField width={6} error={errors.unShippingName ? true : false} data-test='admin_product_popup_unShippingName_inp'>
                       <label><FormattedMessage id='global.unShippingName' defaultMessage='UN Shipping Name' /></label>
                       <Search isLoading={false}
                         onResultSelect={(e, { result }) => {
@@ -508,21 +520,11 @@ class AddNewPopupEchoProduct extends React.Component {
                         data-test='settings_product_popup_unNumberCode_inp'
                       />
                       <Input type='hidden' name='unShippingName' inputProps={{ style: { position: 'absolute', top: '-30000px', left: '-30000px' } }} />
-                    </FormField>
-                    <FormField width={5} data-test='admin_product_popup_emergencyPhone_inp' error={errors.emergencyNumber ? true : false}>
-                      <PhoneNumber
-                        label={formatMessage({ id: 'global.emergencyPhone', defaultMessage: 'Emergency Phone' })}
-                        name='emergencyNumber'
-                        values={values}
-                        setFieldValue={setFieldValue}
-                      />
-                      {errors.emergencyNumber ? (
-                        <span className='sui-error-message'>{errors.emergencyNumber}</span>
-                      ) : null}
-                    </FormField>
-                  </FormGroup>
-                  <FormGroup widths='equal'>
-                    <Dropdown
+                    </FormField> */}
+
+                  {/* </FormGroup> */}
+                  <FormGroup>
+                    {/* <Dropdown
                       label={formatMessage({ id: 'global.hazardClass', defaultMessage: 'Hazard Class' })}
                       name='hazardClass'
                       options={hazardClasses}
@@ -533,15 +535,28 @@ class AddNewPopupEchoProduct extends React.Component {
                         search: true,
                         clearable: true
                       }}
-                    />
-                    <Dropdown
-                      label={formatMessage({ id: 'global.packagingGroup', defaultMessage: 'Packaging Group' })}
-                      name='packagingGroup'
-                      options={packagingGroups}
-                      inputProps={{ 'data-test': 'settings_product_popup_packagingGroup_drpdn' }}
-                    />
+                    /> */}
+                    <FormField width={5} data-test='admin_product_popup_emergencyPhone_inp' error={errors.emergencyPhone ? true : false}>
+                      <PhoneNumber
+                        label={formatMessage({ id: 'global.emergencyPhone', defaultMessage: 'Emergency Phone' })}
+                        name='emergencyPhone'
+                        values={values}
+                        setFieldValue={setFieldValue}
+                      />
+                      {errors.emergencyPhone ? (
+                        <span className='sui-error-message'>{errors.emergencyPhone}</span>
+                      ) : null}
+                    </FormField>
+                    <FormField width={11}>
+                      <Dropdown
+                        label={formatMessage({ id: 'global.packagingGroup', defaultMessage: 'Packaging Group' })}
+                        name='packagingGroup'
+                        options={packagingGroups}
+                        inputProps={{ 'data-test': 'settings_product_popup_packagingGroup_drpdn' }}
+                      />
+                    </FormField>
                   </FormGroup>
-                  <FormGroup widths='equal'>
+                  {/* <FormGroup widths='equal'>
                     <Dropdown
                       label={formatMessage({ id: 'global.hazardLabels', defaultMessage: 'Hazard Labels' })}
                       name='hazardLabels'
@@ -554,7 +569,7 @@ class AddNewPopupEchoProduct extends React.Component {
                         clearable: true
                       }}
                     />
-                  </FormGroup>
+                  </FormGroup> */}
                   <Grid>
                     <Grid.Row>
                       <Grid.Column width={8}>
@@ -580,8 +595,8 @@ class AddNewPopupEchoProduct extends React.Component {
                         </FormGroup>
                         <FormGroup widths='equal'>
                           <FormField>
-                            <DateInput label={formatMessage({ id: 'global.sdsIssueDate', defaultMessage: 'SDS Issue Date' })}
-                              name='sdsIssueDate'
+                            <DateInput label={formatMessage({ id: 'global.sdsIssuedDate', defaultMessage: 'SDS Issued Date' })}
+                              name='sdsIssuedDate'
                               inputProps={{ 'data-test': 'settings_product_popup_sdsIssueDate_dtin', maxDate: moment() }} />
                           </FormField>
                         </FormGroup>
@@ -664,8 +679,8 @@ class AddNewPopupEchoProduct extends React.Component {
                         </FormGroup>
                         <FormGroup widths='equal'>
                           <FormField>
-                            <DateInput label={formatMessage({ id: 'global.tdsIssueDate', defaultMessage: 'TDS Issue Date' })}
-                              name='tdsIssueDate'
+                            <DateInput label={formatMessage({ id: 'global.tdsIssuedDate', defaultMessage: 'TDS Issued Date' })}
+                              name='tdsIssuedDate'
                               inputProps={{ 'data-test': 'settings_product_popup_tdsIssueDate_dtin', maxDate: moment() }} />
                           </FormField>
                         </FormGroup>
@@ -753,7 +768,7 @@ class AddNewPopupEchoProduct extends React.Component {
                       </FormGroup>
                       <FormGroup widths='equal'>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.boilingPointRange', defaultMessage: 'Boiling Point Range' })}
+                          <Input label={formatMessage({ id: 'global.boilingPointRange', defaultMessage: 'Boiling Point/Range' })}
                             name='boilingPointRange'
                             type='text' />
                         </FormField>
@@ -775,41 +790,41 @@ class AddNewPopupEchoProduct extends React.Component {
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.dotHazardClass', defaultMessage: 'Dot Hazard Class' })}
+                          <Input label={formatMessage({ id: 'global.dotHazardClass', defaultMessage: 'DOT Hazard Class' })}
                             name='dotHazardClass'
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.dotMarinePollutant', defaultMessage: 'Dot Marine Pollutant' })}
+                          <Input label={formatMessage({ id: 'global.dotMarinePollutant', defaultMessage: 'DOT Marine Pollutant' })}
                             name='dotMarinePollutant'
                             type='text' />
                         </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.dotProperShippingName', defaultMessage: 'Dot Proper Shipping Name' })}
+                          <Input label={formatMessage({ id: 'global.dotProperShippingName', defaultMessage: 'DOT Proper Shipping Name' })}
                             name='dotProperShippingName'
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.dotProperTechnicalName', defaultMessage: 'Dot Proper Technical Name' })}
+                          <Input label={formatMessage({ id: 'global.dotProperTechnicalName', defaultMessage: 'DOT Proper Technical Name' })}
                             name='dotProperTechnicalName'
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.dotReportableQuantity', defaultMessage: 'Dot Reportable Quantity' })}
+                          <Input label={formatMessage({ id: 'global.dotReportableQuantity', defaultMessage: 'DOT Reportable Quantity' })}
                             name='dotReportableQuantity'
                             type='text' />
                         </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.dotSevereMarinePollutant', defaultMessage: 'Dot Severe Marine Pollutant' })}
+                          <Input label={formatMessage({ id: 'global.dotSevereMarinePollutant', defaultMessage: 'DOT Severe Marine Pollutant' })}
                             name='dotSevereMarinePollutant'
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.dotUnNumber', defaultMessage: 'Dot UN Number' })}
+                          <Input label={formatMessage({ id: 'global.dotUnNumber', defaultMessage: 'DOT UN Number' })}
                             name='dotUnNumber'
                             type='text' />
                         </FormField>
@@ -848,7 +863,7 @@ class AddNewPopupEchoProduct extends React.Component {
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.flammabilitySolidGas', defaultMessage: 'Flammability Solid Gas' })}
+                          <Input label={formatMessage({ id: 'global.flammabilitySolidGas', defaultMessage: 'Flammability (solid, gas)' })}
                             name='flammabilitySolidGas'
                             type='text' />
                         </FormField>
@@ -911,24 +926,24 @@ class AddNewPopupEchoProduct extends React.Component {
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.imdgImoHazardClass', defaultMessage: 'IMDG IMO Hazard Class' })}
+                          <Input label={formatMessage({ id: 'global.imdgImoHazardClass', defaultMessage: 'IMDG/IMO Hazard Class' })}
                             name='imdgImoHazardClass'
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.imdgImoProperShippingName', defaultMessage: 'IMDG IMO Proper Shipping Name' })}
+                          <Input label={formatMessage({ id: 'global.imdgImoProperShippingName', defaultMessage: 'IMDG/IMO Proper Shipping Name' })}
                             name='imdgImoProperShippingName'
                             type='text' />
                         </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.imdgImoProperTechnicalName', defaultMessage: 'IMDG IMO Proper Technical Name' })}
+                          <Input label={formatMessage({ id: 'global.imdgImoProperTechnicalName', defaultMessage: 'IMDG/IMO Proper Technical Name' })}
                             name='imdgImoProperTechnicalName'
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.imdgImoUnNumber', defaultMessage: 'IMDG IMO UN Number' })}
+                          <Input label={formatMessage({ id: 'global.imdgImoUnNumber', defaultMessage: 'IMDG/IMO UN Number' })}
                             name='imdgImoUnNumber'
                             type='text' />
                         </FormField>
@@ -962,12 +977,12 @@ class AddNewPopupEchoProduct extends React.Component {
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.meltingPointRange', defaultMessage: 'Melting Point Range' })}
+                          <Input label={formatMessage({ id: 'global.meltingPointRange', defaultMessage: 'Melting Point/Range' })}
                             name='meltingPointRange'
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.mexicoGrade', defaultMessage: 'Mexico Grade' })}
+                          <Input label={formatMessage({ id: 'global.mexicoGrade', defaultMessage: 'Mexico-Grade' })}
                             name='mexicoGrade'
                             type='text' />
                         </FormField>
@@ -1115,12 +1130,12 @@ class AddNewPopupEchoProduct extends React.Component {
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.stotRepeatedExposure', defaultMessage: 'STOT Repeated Exposure' })}
+                          <Input label={formatMessage({ id: 'global.stotRepeatedExposure', defaultMessage: 'STOT- Repeated Exposure' })}
                             name='stotRepeatedExposure'
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.stotSingleExposure', defaultMessage: 'STOT Single Exposure' })}
+                          <Input label={formatMessage({ id: 'global.stotSingleExposure', defaultMessage: 'STOT- Single Exposure' })}
                             name='stotSingleExposure'
                             type='text' />
                         </FormField>
@@ -1132,7 +1147,7 @@ class AddNewPopupEchoProduct extends React.Component {
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.symptomsEffects', defaultMessage: 'Symptoms Effects' })}
+                          <Input label={formatMessage({ id: 'global.symptomsEffects', defaultMessage: 'Symptoms/Effects' })}
                             name='symptomsEffects'
                             type='text' />
                         </FormField>
@@ -1194,8 +1209,6 @@ class AddNewPopupEchoProduct extends React.Component {
                         </FormField>
                       </FormGroup>
 
-                      <Divider hidden />
-
                       <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.hmisChronicHealthHazard', defaultMessage: 'HMIS Chronic Health Hazard' })}
@@ -1207,23 +1220,19 @@ class AddNewPopupEchoProduct extends React.Component {
                             name='hmisFlammability'
                             type='text' />
                         </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.hmisHealthHazard', defaultMessage: 'Health Hazard' })}
                             name='hmisHealthHazard'
                             type='text' />
                         </FormField>
+
+                      </FormGroup>
+                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.hmisPhysicalHazard', defaultMessage: 'HMIS Physical Hazard' })}
                             name='hmisPhysicalHazard'
                             type='text' />
                         </FormField>
-                      </FormGroup>
-
-                      <Divider hidden />
-
-                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.nfpaFireHazard', defaultMessage: 'NFPA Fire Hazard' })}
                             name='nfpaFireHazard'
@@ -1235,6 +1244,7 @@ class AddNewPopupEchoProduct extends React.Component {
                             type='text' />
                         </FormField>
                       </FormGroup>
+
                       <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.nfpaReactivityHazard', defaultMessage: 'NFPA Reactivity Hazard' })}

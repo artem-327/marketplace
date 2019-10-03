@@ -1,5 +1,6 @@
 import * as AT from './action-types'
 import { config } from './config'
+import { uniqueArrayByKey } from '~/utils/functions'
 
 export const initialState = {
   editPopupBoolean: false,
@@ -542,48 +543,54 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_CREATE_ELEMENTS_INDEX: {
-      // ADD new array to casProducts
-      let { searchedCasProducts } = state
-      searchedCasProducts.push([])
+    // case AT.ADMIN_CREATE_ELEMENTS_INDEX: {
+    //   // ADD new array to casProducts
+    //   let { searchedCasProducts } = state
+    //   searchedCasProducts.push([])
 
-      return {
-        ...state,
-        searchedCasProducts
-      }
-    }
+    //   return {
+    //     ...state,
+    //     searchedCasProducts
+    //   }
+    // }
 
-    case AT.ADMIN_REMOVE_ELEMENTS_INDEX: {
-      // REMOVE array from casProducts
-      let { searchedCasProducts } = state
-      searchedCasProducts.splice(action.payload.index, 1)
+    // case AT.ADMIN_REMOVE_ELEMENTS_INDEX: {
+    //   // REMOVE array from casProducts
+    //   let { searchedCasProducts } = state
+    //   searchedCasProducts.splice(action.payload.index, 1)
 
-      return {
-        ...state,
-        searchedCasProducts
-      }
-    }
+    //   return {
+    //     ...state,
+    //     searchedCasProducts
+    //   }
+    // }
 
-    case AT.ADMIN_PREPARE_CAS_PRODUCTS: {
-      return {
-        ...state,
-        searchedCasProducts: action.payload.elements.map(element => {
-          return [element.casProduct]
-        })
-      }
-    }
+    // case AT.ADMIN_PREPARE_CAS_PRODUCTS: {
+    //   return {
+    //     ...state,
+    //     searchedCasProducts: action.payload.elements.map(element => {
+    //       return [element.casProduct]
+    //     })
+    //   }
+    // }
 
     case AT.ADMIN_SEARCH_CAS_PRODUCT_FULFILLED: {
+      console.log({ state: state.searchedCasProducts, payload })
       return {
         ...state,
-        searchedCasProducts: state.searchedCasProducts.map((list, listIndex) => {
-          if (listIndex === action.payload.index) {
-            return action.payload.data
-          } else {
-            return list
-          }
-        })
+        // searchedCasProducts: payload.concat(state.searchedCasProducts),
+        searchedCasProducts: uniqueArrayByKey(state.searchedCasProducts.concat(payload), 'id')
       }
+      // return {
+      //   ...state,
+      //   searchedCasProducts: state.searchedCasProducts.map((list, listIndex) => {
+      //     if (listIndex === action.payload.index) {
+      //       return action.payload.data
+      //     } else {
+      //       return list
+      //     }
+      //   })
+      // }
     }
 
     case AT.ADMIN_GET_PRODUCTS_CATALOG_DATA_FULFILLED: {
