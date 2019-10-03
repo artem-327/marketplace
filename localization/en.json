@@ -224,6 +224,7 @@
   "global.registerDwollaAcc": "Register Dwolla Account",
   "global.myProfile": "My Profile",
   "global.close": "Close",
+  "global.done": "Done",
   "global.returnToAdmin": "Return to Admin",
   "global.termsOfService": "Terms of Service",
   "global.logout": "Logout",
