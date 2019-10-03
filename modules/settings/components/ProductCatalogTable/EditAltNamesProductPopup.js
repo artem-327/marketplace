@@ -124,7 +124,7 @@ class EditAltNamesProductPopup extends React.Component {
                         <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{ marginTop: '-0.5em' }}
                           onClick={() => this.handleAddName(arrayHelpers)}
                           data-test='settings_product_alt_name_add_btn' />
-                        {`${popupValues.productCode} ${popupValues.productName}`}
+                        {`${popupValues.intProductCode} ${popupValues.intProductName}`}
                       </Message>
 
                       <Table attached='bottom' className='table-fields'>
@@ -215,6 +215,7 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
+  console.log('!!!!!!!! mapStateToProps popupValues', state.settings.popupValues)
   return {
     popupValues: state.settings.popupValues,
     productAltNames: state.settings.productAltNames,

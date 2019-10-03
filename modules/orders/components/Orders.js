@@ -13,9 +13,9 @@ class Orders extends Component {
   state = {
     columns: [
       { name: 'id', title: <FormattedMessage id='order.orderId' defaultMessage='Order ID' />, width: 120 },
-      { name: 'globalStatus', title: <FormattedMessage id='order.globalStatus' defaultMessage='Status' />, width: 120 },
-      { name: 'date', title: <FormattedMessage id='order.date' defaultMessage='Order Date' />, width: 120 },
-      { name: 'customerName', title: <FormattedMessage id='order.vendor' defaultMessage='Vendor' />, width: 120 },
+      { name: 'globalStatus', title: <FormattedMessage id='order.globalStatus' defaultMessage='Status' />, width: 120, sortPath: 'Order.globalStatus' },
+      { name: 'date', title: <FormattedMessage id='order.date' defaultMessage='Order Date' />, width: 120, sortPath: 'Order.orderDate' },
+      { name: 'customerName', title: <FormattedMessage id='order.vendor' defaultMessage='Vendor' />, width: 120, sortPath: 'Order.sellerCompanyName' },
       { name: 'productName', title: <FormattedMessage id='order.productName' defaultMessage='Product Name' />, width: 160 },
       { name: 'orderStatus', title: <FormattedMessage id='order' defaultMessage='Order' />, width: 120 },
       { name: 'shippingStatus', title: <FormattedMessage id='order.shipping' defaultMessage='Shipping' />, width: 120 },
@@ -25,7 +25,7 @@ class Orders extends Component {
       { name: 'bl', title: <FormattedMessage id='order.bl' defaultMessage='B/L' />, width: 80 },
       { name: 'sds', title: <FormattedMessage id='order.sds' defaultMessage='SDS' />, width: 80 },
       { name: 'cofA', title: <FormattedMessage id='order.cOfa' defaultMessage='C of A' />, width: 80 },
-      { name: 'orderTotal', title: <FormattedMessage id='order.orderTotal' defaultMessage='Order Total' />, width: 160 }
+      { name: 'orderTotal', title: <FormattedMessage id='order.orderTotal' defaultMessage='Order Total' />, width: 160, sortPath: 'Order.totalPrice' }
     ],
     LastEndpointType: '',
 

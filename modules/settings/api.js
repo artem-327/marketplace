@@ -57,6 +57,14 @@ export default {
     return await
       api.post(`/prodex/api/company-products/datagrid?unmappedOnly=${data.unmapped}`, data.body).then(response => response.data)
   },
+  getProductAltNames: (data) =>
+    api.get(`/prodex/api/company-products/alternative-names/${data}`).then(response => response.data),
+  postNewProductAltName: (data) =>
+    api.post('/prodex/api/company-products/alternative-names', data).then(response => response.data),
+  updateProductAltName: (id, value) =>
+    api.patch(`/prodex/api/company-products/alternative-names/id/${id}`, value).then(response => response.data),
+  deleteProductAltName: (id) =>
+    api.delete(`/prodex/api/company-products/alternative-names/id/${id}`),
   getProductTypes: async () => {
     return await
       api.get('/prodex/api/packaging-types').then(response => response.data)

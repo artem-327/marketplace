@@ -105,7 +105,7 @@ class BankAccountsUploadDocPopup extends React.Component {
                 </Grid>
                   <div style={{ textAlign: 'right' }}>
                     <Button.Reset onClick={closeUploadDocumentsPopup} data-test='settings_bank_account_upload_doc_popup_close_btn'>
-                      <FormattedMessage id='global.close' defaultMessage='Close'>{(text) => text}</FormattedMessage>
+                      <FormattedMessage id='global.done' defaultMessage='Done'>{(text) => text}</FormattedMessage>
                     </Button.Reset>
                   </div>
                 </>

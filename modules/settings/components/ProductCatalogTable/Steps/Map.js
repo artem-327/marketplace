@@ -21,6 +21,8 @@ import {
   selectSavedMap
 } from '../../../actions'
 
+import { getSafe } from '~/utils/functions'
+
 const mappingEchoProduct = [
   { text: <FormattedMessage id='global.alternativeNames' defaultMessage='Alternative Names' />, value: 'Alternative Names' },
   { text: <FormattedMessage id='global.appearance' defaultMessage='Appearance' />, value: 'Appearance' },
@@ -76,7 +78,7 @@ const mappingEchoProduct = [
   { text: <FormattedMessage id='global.manufacturer' defaultMessage='Manufacturer' />, value: 'Manufacturer' },
   { text: <FormattedMessage id='global.meltingPointRange' defaultMessage='Melting Point Range' />, value: 'Melting Point Range' },
   { text: <FormattedMessage id='global.mexicoGrade' defaultMessage='Mexico Grade' />, value: 'Mexico Grade' },
-  { text: <FormattedMessage id='global.mfrProductCodes' defaultMessage='MFR Product Codes' />, value: 'MFR Product Codes' },
+  { text: <FormattedMessage id='global.mfrProductCodes' defaultMessage='Manufacturer Product Codes' />, value: 'Manufacturer Product Codes' },
   { text: <FormattedMessage id='global.molecularFormula' defaultMessage='Molecular Formula' />, value: 'Molecular Formula' },
   { text: <FormattedMessage id='global.molecularWeight' defaultMessage='Molecular Weight' />, value: 'Molecular Weight' },
   { text: <FormattedMessage id='global.mostImportantSymptomsAndEffects' defaultMessage='Most Important Symptoms and Effects' />, value: 'Most Important Symptoms and Effects' },
@@ -205,7 +207,55 @@ class Map extends Component {
     let ar = []
     for (let i = 0; i < this.props.CSV.headerCSV.length; i++) ar.push(Array.from(a))
 
-    this.setState({ options: ar, values:  Array(this.props.CSV.headerCSV.length).fill('') })
+    // try to prefill dropdowns
+    let values = Array(this.props.CSV.headerCSV.length).fill('')
+    if (!this.props.mappedHeader) {
+      const newHeaders = this.props.CSV.headerCSV
+      values = values.map((value, vIndex) => {
+        const content = newHeaders[vIndex].content
+        const foundItem = ar[vIndex].find(option => option.value.toLowerCase() === content.toLowerCase())
+
+        if (foundItem) {
+          newHeaders[vIndex].header = foundItem.value
+          ar = this.removeValueFromOptions(ar, getSafe(() => foundItem.value, null), vIndex)
+        }
+
+        return getSafe(() => foundItem.value, '')
+      })
+
+      this.props.changeHeadersCSV(newHeaders)
+    } else {
+      values = values.map((value, vIndex) => {
+        const indexMap = this.props.mappedHeader[vIndex]
+
+        if (indexMap.header)
+          ar = this.removeValueFromOptions(ar, indexMap.header, vIndex)
+
+        return getSafe(() => indexMap.header, '')
+      })
+    }
+
+    this.setState({ options: ar, values: values })
+  }
+
+  removeValueFromOptions = (options, value, notIndex) => {
+    for (let i = 0; i < options.length; i++) {
+      if (i !== notIndex) {
+        // Remove new value from all dropdowns options
+        let indexRemove = options[i].findIndex(obj => obj.value === value)
+        if (indexRemove >= 0) options[i].splice(indexRemove, 1)
+        // Sort alphabetically
+        options[i].sort(function (a, b) {
+          let x = a.value.toLowerCase()
+          let y = b.value.toLowerCase()
+          if (x < y) { return -1 }
+          if (x > y) { return 1 }
+          return 0
+        })
+      }
+    }
+
+    return options
   }
 
   render() {
@@ -217,6 +267,8 @@ class Map extends Component {
         text: map.mapName,
         value: map.id
       }))
+
+    const { values } = this.state
 
     return (
       <React.Fragment>
@@ -250,9 +302,9 @@ class Map extends Component {
               <Table.HeaderCell><FormattedMessage id='settings.mapping' defaultMessage='Mapping' /></Table.HeaderCell>
             </Table.Row>
           </Table.Header>
-          {CSV && (
+          {CSV && values.length /* values.length is necessary for defaultValue */ && (
             <Table.Body>
-              {CSV.headerCSV.map((lineHeader) => (
+              {CSV.headerCSV.map((lineHeader, lineIndex) => (
                 <Table.Row key={lineHeader.columnNumber}>
                   <Table.Cell>{lineHeader.content}</Table.Cell>
                   <Table.Cell>
@@ -276,7 +328,9 @@ class Map extends Component {
                       }
                       disabled={!!this.props.selectedSavedMap}
                       onChange={this.selectMapping}
+                      selectOnBlur={false}
                       data-test='settings_product_import_csv_column_drpdn'
+                      defaultValue={getSafe(() => values[lineIndex], '')}
                     />
                   </Table.Cell>
                 </Table.Row>
@@ -341,6 +395,7 @@ class Map extends Component {
         })
       }
     }
+
     this.setState({ options: options, values:  values })
 
     this.props.changeHeadersCSV(newHeaders)

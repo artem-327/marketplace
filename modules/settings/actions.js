@@ -539,6 +539,43 @@ export function getProductsCatalogRequest(data) {
   }
 }
 
+export function getProductAltNames(value) {
+  return {
+    type: AT.SETTINGS_GET_PRODUCT_ALTERNATIVE_NAMES,
+    payload: null//api.getProductAltNames(value)
+  }
+}
+
+export function postNewProductAltName(productId, value) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SETTINGS_POST_NEW_PRODUCT_ALTERNATIVE_NAME,
+      payload: null//api.postNewProductAltName(value)
+    })
+    await dispatch(getProductAltNames(productId))
+  }
+}
+
+export function updateProductAltName(productId, id, value) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SETTINGS_UPDATE_PRODUCT_ALTERNATIVE_NAME,
+      payload: null//api.updateProductAltName(id, value)
+    })
+    await dispatch(getProductAltNames(productId))
+  }
+}
+
+export function deleteProductAltName(productId, id) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SETTINGS_DELETE_PRODUCT_ALTERNATIVE_NAME,
+      payload: null//api.deleteProductAltName(id)
+    })
+    await dispatch(getProductAltNames(productId))
+  }
+}
+
 export function getCurrencies() {
   return {
     type: AT.SETTINGS_GET_CURRENCIES,
