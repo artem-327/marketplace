@@ -32,7 +32,7 @@ class MyInventory extends Component {
       { name: 'pkgAmount', title: <FormattedMessage id='global.pkgSize' defaultMessage='Packaging Size'>{(text) => text}</FormattedMessage>, width: 130, sortPath: 'ProductOffer.pkgAvailable' },
       { name: 'packagingUnit', title: <FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit'>{text => text}</FormattedMessage>, width: 130, sortPath: 'ProductOffer.product.packagingUnit' },
       { name: 'packaging', title: <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>{(text) => text}</FormattedMessage>, width: 130, sortPath: 'ProductOffer.product.packagingType.name' },
-      { name: 'quantity', title: <FormattedMessage id='myInventory.quantity' defaultMessage='Quantity'>{(text) => text}</FormattedMessage>, width: 130 },
+      { name: 'quantity', title: <FormattedMessage id='myInventory.quantity' defaultMessage='Quantity'>{(text) => text}</FormattedMessage>, width: 130, sortPath: 'ProductOffer.quantity' },
       { name: 'cost', title: <FormattedMessage id='myInventory.cost' defaultMessage='Cost'>{(text) => text}</FormattedMessage>, width: 100 },
       { name: 'fobPrice', title: <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price'>{(text) => text}</FormattedMessage>, width: 180, sortPath: 'ProductOffer.pricingPrice' },
       { name: 'manufacturer', title: <FormattedMessage id='global.manufacturer' defaultMessage='Manufacturer'>{(text) => text}</FormattedMessage>, width: 220 },
