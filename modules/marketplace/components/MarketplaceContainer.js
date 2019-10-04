@@ -12,6 +12,7 @@ import { FormattedNumber } from 'react-intl'
 import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
 
 import { getSafe } from '~/utils/functions'
+import React from "react";
 
 function mapStateToProps(store, { datagrid }) {
 
@@ -28,11 +29,11 @@ function mapStateToProps(store, { datagrid }) {
         productName: po.companyProduct.echoProduct.name,
         productNumber: getSafe(() => po.companyProduct.echoProduct.code, 'Unmapped'),
         merchant: po.warehouse.warehouseName,
-        available: <FormattedNumber value={po.pkgAmount} minimumFractionDigits={0} />,
+        available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
         packagingType: getSafe(() => po.companyProduct.packagingType.name, ''),
         packagingUnit: getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, ''),
         packagingSize: getSafe(() => po.companyProduct.packagingSize, ''),
-        quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.pkgAmount * po.companyProduct.packagingSize} /> : 'N/A',
+        quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.pkgAvailable * po.companyProduct.packagingSize} /> : 'N/A',
         // qtyPart ? `${(parseInt(po.pkgAmount, 10) * parseInt(po.companyProduct.packagingSize, 10)).formatNumber()} ${qtyPart}` : 'N/A',
         fobPrice: po.pricingTiers.length > 1
           ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price.amount} /> -  <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price.amount} /> {qtyPart && (`/ ${qtyPart}`)} </>
@@ -42,12 +43,13 @@ function mapStateToProps(store, { datagrid }) {
         //     + ' - ' + '$' + po.pricingTiers[0].price.formatMoney(3))
         //   : po.pricing.price ? ('$' + po.pricing.price.formatMoney(3)) : 'N/A',
         //tradeName: '',  // ! ! ?? smazat?
-        manufacturer: getSafe(() => po.manufacturer.name, 'N/A'),
+        //?manufacturer: getSafe(() => po.manufacturer.name, 'N/A'),
+        manufacturer: getSafe(() => po.companyProduct.echoProduct.manufacturer.name, 'N/A'),
         origin: getSafe(() => po.origin.name),
         expiration: moment(po.expirationDate).format('MM/DD/YYYY'),
         assay: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
-        condition: getSafe(() => po.productCondition.name),
-        form: getSafe(() => po.productForm.name),
+        condition: getSafe(() => po.condition.name),
+        form: getSafe(() => po.form.name),
         location: getLocationString(po)
       }
     }),

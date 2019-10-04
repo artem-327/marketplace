@@ -35,7 +35,7 @@ class CartItemSummary extends Component {
       getHazardClassesDataRequest, getPackagingGroupsDataRequest, addUnNumber } = this.props
     let initialUnNumbers = []
     cartItems.forEach(item => {
-      let unNumber = getSafe(() => item.unNumber, item.productOffer.companyProduct.echoProduct.unNumber.unNumberCode || '')
+      let unNumber = '' // ! ! temporary removed  getSafe(() => item.unNumber, item.productOffer.companyProduct.echoProduct.unNumber.unNumberCode || '')
       if (unNumber && !initialUnNumbers.find((num) => num.id === unNumber.id)) {
         initialUnNumbers.push(unNumber)
       }
@@ -60,9 +60,9 @@ class CartItemSummary extends Component {
     let { productOffer: { companyProduct } } = item
 
     let initialValues = {
-      unCode: getSafe(() => item.unNumber.id, companyProduct.echoProduct.unNumber && companyProduct.echoProduct.unNumber.id || ''),
+      unCode: '', // ! ! temporary removed getSafe(() => item.unNumber.id, companyProduct.echoProduct.unNumber && companyProduct.echoProduct.unNumber.id || ''),
       packagingGroup: getSafe(() => item.packagingGroup.id, companyProduct.packagingGroup ? companyProduct.packagingGroup.id : ''),
-      hazardClasses: item.hazardClasses ? item.hazardClasses.map((c) => c.id) : companyProduct.hazardClasses.map((hazardClass) => hazardClass.id),
+      hazardClasses: '',// ! ! temporary removed item.hazardClasses ? item.hazardClasses.map((c) => c.id) : companyProduct.hazardClasses.map((hazardClass) => hazardClass.id),
       freightClass: getSafe(() => item.freightClass, companyProduct.freightClass || ''),
       nmfcNumber: getSafe(() => item.nmfcNumber, companyProduct.nmfcNumber || ''),
       stackable: getSafe(() => item.stackable, companyProduct.stackable || false),
@@ -357,7 +357,6 @@ class CartItemSummary extends Component {
 
   render() {
     let { cartItems, header } = this.props
-
 
     return (
       <Segment>

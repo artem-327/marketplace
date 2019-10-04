@@ -72,16 +72,16 @@ export default class AddCart extends Component {
   }
 
   handleQuantity = e => {
-    let { minimum, splits, pkgAmount } = this.props.offer
+    let { minPkg, splitPkg, pkgAvailable } = this.props.offer
     let quantity = parseInt(e.target.value, 10)
     let warning = null
 
-    if (quantity < minimum || !quantity) {
-      warning = `minimum is ${minimum}`
-    } else if (quantity > pkgAmount) {
-      warning = `maximum is ${pkgAmount}`
-    } else if (!(quantity % parseInt(splits, 10) === 0 || quantity === parseInt(minimum, 10))) {
-      warning = `split is ${splits}`
+    if (quantity < minPkg || !quantity) {
+      warning = `minimum is ${minPkg}`
+    } else if (quantity > pkgAvailable) {
+      warning = `maximum is ${pkgAvailable}`
+    } else if (!(quantity % parseInt(splitPkg, 10) === 0 || quantity === parseInt(minPkg, 10))) {
+      warning = `split is ${splitPkg}`
     }
 
     this.props.sidebarChanged({ warning, quantity })
@@ -91,7 +91,7 @@ export default class AddCart extends Component {
     let { offer, order, isEdit } = this.props
     let { quantity, pricing, warning } = this.props.sidebar
 
-    let { pkgAmount, pricingTiers } = offer
+    let { pkgAvailable, pricingTiers } = offer
 
     const price = pricing ? pricing.price : null
 
@@ -106,7 +106,7 @@ export default class AddCart extends Component {
 
     if (pricingTiers.length > 0) {
       pricingTiers.forEach((tier, i) => {
-        let quantityTo = (i + 1) >= pricingTiers.length ? pkgAmount : (tier.quantityFrom > pricingTiers[i + 1].quantityFrom ? tier.quantityFrom : pricingTiers[i + 1].quantityFrom - 1)
+        let quantityTo = (i + 1) >= pricingTiers.length ? pkgAvailable : (tier.quantityFrom > pricingTiers[i + 1].quantityFrom ? tier.quantityFrom : pricingTiers[i + 1].quantityFrom - 1)
 
 
         let text = <>
@@ -135,20 +135,20 @@ export default class AddCart extends Component {
         <ErrorLabel>
           {errorMessages.requiredMessage}
         </ErrorLabel>
-    else if (quantity < offer.minimum)
+    else if (quantity < offer.minPkg)
       error =
         <ErrorLabel>
-          <FormattedMessage id='validation.minimum' defaultMessage='Minimum is {min}' values={{ min: offer.minimum }} />
+          <FormattedMessage id='validation.minimum' defaultMessage='Minimum is {min}' values={{ min: offer.minPkg }} />
         </ErrorLabel>
-    else if (quantity > pkgAmount)
+    else if (quantity > pkgAvailable)
       error =
         <ErrorLabel>
-          <FormattedMessage id='validation.maximum' defaultMessage='Maximum is {max}' values={{ max: pkgAmount }} />
+          <FormattedMessage id='validation.maximum' defaultMessage='Maximum is {max}' values={{ max: pkgAvailable }} />
         </ErrorLabel>
-    else if (quantity % offer.splits !== 0)
+    else if (quantity % offer.splitPkg !== 0)
       error =
         <ErrorLabel>
-          <FormattedMessage id='validation.multiplyOfSplit' defaultMessage='Must be multiply of split ({split})' values={{ split: offer.splits }} />
+          <FormattedMessage id='validation.multiplyOfSplit' defaultMessage='Must be multiply of split ({split})' values={{ split: offer.splitPkg }} />
         </ErrorLabel>
 
     // let attachments = offer.attachments.map(att =>
@@ -232,17 +232,17 @@ export default class AddCart extends Component {
                 <FormattedMessage id='cart.availableProduct' defaultMessage='Available Product:' />
               </GridColumn>
               <GridColumn computer={10}>
-                <FormattedNumber minimumFractionDigits={0} value={pkgAmount} /> <UnitOfPackaging value={packagingType.name} /> / <FormattedUnit unit={nameAbbreviation} separator={' '} value={pkgAmount * packagingSize} />
+                <FormattedNumber minimumFractionDigits={0} value={pkgAvailable} /> <UnitOfPackaging value={packagingType.name} /> / <FormattedUnit unit={nameAbbreviation} separator={' '} value={pkgAvailable * packagingSize} />
               </GridColumn>
 
             </GridRow>
 
             <GridRow>
               <GridColumn computer={6}>
-                <FormattedMessage id='cart.productForm' defaultMessage='Form:' />
+                <FormattedMessage id='cart.form' defaultMessage='Form:' />
               </GridColumn>
               <GridColumn computer={10}>
-                {offer.productForm.name}
+                {offer.form.name}
               </GridColumn>
             </GridRow>
 
@@ -288,13 +288,13 @@ export default class AddCart extends Component {
               }
                 content={<FormattedMessage id='cart.minimumOrderQQ' defaultMessage='Minimum Order Quantity' />}
               />
-              <GridColumn>{offer.minimum}</GridColumn>
+              <GridColumn>{offer.minPkg}</GridColumn>
             </GridRow>
 
 
             <GridRow columns={2}>
               <GridColumn><FormattedMessage id='cart.split' defaultMessage='Split' />:</GridColumn>
-              <GridColumn>{offer.splits}</GridColumn>
+              <GridColumn>{offer.splitPkg}</GridColumn>
             </GridRow>
 
 
@@ -304,7 +304,7 @@ export default class AddCart extends Component {
               </GridColumn>
               <GridColumn data-test='add_cart_quantity_inp'>
                 <Input
-                  step={offer.splits}
+                  step={offer.splitPkg}
                   error={!!error}
                   value={this.props.sidebar.quantity}
                   onChange={this.handleQuantity} type='number' />

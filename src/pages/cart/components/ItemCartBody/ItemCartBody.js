@@ -74,15 +74,15 @@ export default class ItemCartBody extends Component {
             <div>
               <FormattedMessage
                 id='cart.condition'
-                defaultMessage={`Condition: ${productOffer.productCondition ? productOffer.productCondition.name : 'N/A'} `}
-                values={{ condition: productOffer.productCondition ? productOffer.productCondition.name : 'N/A' }}
+                defaultMessage={`Condition: ${productOffer.condition ? productOffer.condition.name : 'N/A'} `}
+                values={{ condition: productOffer.condition ? productOffer.condition.name : 'N/A' }}
               />
             </div>
             <div>
               <FormattedMessage
                 id='cart.form'
-                defaultMessage={`Form ${productOffer.productForm ? productOffer.productForm.name : 'N/A'} `}
-                values={{ form: productOffer.productForm ? productOffer.productForm.name : 'N/A' }}
+                defaultMessage={`Form ${productOffer.form ? productOffer.form.name : 'N/A'} `}
+                values={{ form: productOffer.form ? productOffer.form.name : 'N/A' }}
               />
             </div>
           </div>

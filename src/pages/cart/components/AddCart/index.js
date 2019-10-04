@@ -12,6 +12,7 @@ import { ArrayToMultiple } from '~/components/formatted-messages'
 function mapStateToProps(store) {
     let pricing = getPricing(store.cart.offerDetail, store.cart.sidebar.quantity)
     let offer = { ...store.cart.offerDetail, locationStr: store.cart.offerDetail ? getLocationString(store.cart.offerDetail) : '' }
+
     return {
         offer: offer,
         order: store.cart.orderDetail,

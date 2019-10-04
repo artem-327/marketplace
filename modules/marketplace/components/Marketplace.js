@@ -22,18 +22,18 @@ class Marketplace extends Component {
       { name: 'productName', disabled: true },
       { name: 'productNumber', disabled: true },
       // { name: 'merchant', title: 'Merchant', width: 250 },
-      { name: 'available', title: <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs'>{(text) => text}</FormattedMessage>, width: 140, sortPath: 'ProductOffer.pkgAmount' },
+      { name: 'available', title: <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs'>{(text) => text}</FormattedMessage>, width: 140, sortPath: 'ProductOffer.pkgAvailable' },
       { name: 'packaging', title: <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging'>{(text) => text}</FormattedMessage>, width: 140 },
-      { name: 'quantity', title: <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>{(text) => text}</FormattedMessage>, width: 140, sortPath: 'ProductOffer.companyProduct.packagingSize' },
+      { name: 'quantity', title: <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>{(text) => text}</FormattedMessage>, width: 140, sortPath: 'ProductOffer.quantity' },  // TODO: je 'sortPath: 'ProductOffer.quantity' ok? quantity se pocita na strane FE jako 'pkgAvailable * companyProduct.packagingSize'
       { name: 'fobPrice', title: <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>{(text) => text}</FormattedMessage>, width: 160, sortPath: 'ProductOffer.price' },
       //{ name: 'tradeName', title: <FormattedMessage id='marketplace.tradeName' defaultMessage='Trade Name'>{(text) => text}</FormattedMessage>, width: 140 },
-      { name: 'manufacturer', title: <FormattedMessage id='marketplace.mfr' defaultMessage='MFR.'>{(text) => text}</FormattedMessage>, width: 120, sortPath: 'ProductOffer.manufacturer.name' },
+      { name: 'manufacturer', title: <FormattedMessage id='marketplace.manufacturer' defaultMessage='Manufacturer'>{(text) => text}</FormattedMessage>, width: 220, sortPath: 'ProductOffer.companyProduct.echoProduct.manufacturer.name' },
       { name: 'origin', title: <FormattedMessage id='marketplace.origin' defaultMessage='Origin'>{(text) => text}</FormattedMessage>, width: 120, sortPath: 'ProductOffer.origin.name' },
-      { name: 'expiration', title: <FormattedMessage id='marketplace.expiration' defaultMessage='Expiration'>{(text) => text}</FormattedMessage>, width: 120, sortPath: 'ProductOffer.expirationDate' },
+      { name: 'expiration', title: <FormattedMessage id='marketplace.expirationDate' defaultMessage='Expiration Date'>{(text) => text}</FormattedMessage>, width: 120, sortPath: 'ProductOffer.expirationDate' },
       { name: 'assay', title: <FormattedMessage id='marketplace.assay' defaultMessage='Assay'>{(text) => text}</FormattedMessage>, width: 80 },
-      { name: 'condition', title: <FormattedMessage id='marketplace.condition' defaultMessage='Condition'>{(text) => text}</FormattedMessage>, width: 100, sortPath: 'ProductOffer.productCondition.name' },
+      { name: 'condition', title: <FormattedMessage id='marketplace.condition' defaultMessage='Condition'>{(text) => text}</FormattedMessage>, width: 100, sortPath: 'ProductOffer.condition.name' },
       { name: 'form', title: <FormattedMessage id='marketplace.form' defaultMessage='Form'>{(text) => text}</FormattedMessage>, width: 100, sortPath: 'ProductOffer.productForm.name' },
-      { name: 'location', title: <FormattedMessage id='marketplace.location' defaultMessage='Location'>{(text) => text}</FormattedMessage>, width: 160, sortPath: 'ProductOffer.warehouse.address.country.name' }
+      { name: 'location', title: <FormattedMessage id='marketplace.location' defaultMessage='Location'>{(text) => text}</FormattedMessage>, width: 160 }
     ],
     selectedRows: [],
     pageNumber: 0,
@@ -54,7 +54,6 @@ class Marketplace extends Component {
 
     return rows.map(r => ({
       ...r,
-      //packaging: <UnitOfPackaging value={r.packagingType} />, TODO: delete
       packaging: <>{`${r.packagingSize} ${r.packagingUnit} `}<CapitalizedText>{r.packagingType}</CapitalizedText> </>,
     }))
   }

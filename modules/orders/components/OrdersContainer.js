@@ -19,7 +19,7 @@ function mapStateToProps(state, {router, datagrid}) {
     orders.data = []
   }
   const { type } = query
-  //console.log(datagrid.rows)
+
   return {
     endpointType: query.type === 'sales' ? 'sale' : query.type,
     queryType: query.type,
@@ -32,7 +32,7 @@ function mapStateToProps(state, {router, datagrid}) {
       date: moment(r.orderDate).format('MM/DD/YYYY'),
       customerName: (type === 'sales' ? r.buyerCompanyName : r.sellerCompanyName),
       //productName: (typeof r.orderItems[0].productName !== 'undefined' ? r.orderItems[0].productName : 'N/A'),
-      productName: <ArrayToMultiple values={r.orderItems.map(d => (d.productName))} />,
+      productName: 'N/A', //! ! missing in response from BE <ArrayToMultiple values={r.orderItems.map(d => (d.productName))} />,
       orderStatus: OrdersHelper.getOrderStatus(r.orderStatus),
       shippingStatus: OrdersHelper.getShippingStatus(r.shippingStatus),
       reviewStatus: OrdersHelper.getReviewStatus(r.reviewStatus),

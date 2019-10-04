@@ -215,7 +215,6 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
-  console.log('!!!!!!!! mapStateToProps popupValues', state.settings.popupValues)
   return {
     popupValues: state.settings.popupValues,
     productAltNames: state.settings.productAltNames,
