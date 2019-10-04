@@ -1,14 +1,13 @@
 context("Prodex Bank Account CRUD", () => {
 
     beforeEach(function () {
+        cy.viewport(1200,800)
         cy.server()
         cy.route("POST",'/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.route("GET", '/prodex/api/payments/*').as('accountsLoading')
         cy.route("POST",'/prodex/api/payments/**').as('verifyLoading')
 
-        cy.login("user1@example.com", "echopass123")
-
-        cy.url().should("include", "inventory")
+        cy.FElogin("user1@example.com", "echopass123")
 
         cy.wait('@inventoryLoading')
         cy.contains("Settings").click()

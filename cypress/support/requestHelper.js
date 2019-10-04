@@ -100,6 +100,19 @@ Cypress.Commands.add("getFirstEchoProductIdWithFilter", (token, filter) => {
     })
 })
 
+Cypress.Commands.add("getFirstMarketName", (token, filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/product-offers/broadcasted/datagrid/',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {filters: filter,pageNumber: 0, pageSize: 50, "orOperator": true}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body[0].companyProduct.intProductName
+    })
+})
 
 Cypress.Commands.add("getFirstMarketId", (token) => {
     cy.request({
@@ -112,6 +125,21 @@ Cypress.Commands.add("getFirstMarketId", (token) => {
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].id
+    })
+})
+
+Cypress.Commands.add("getExpectedCartPrice", (token) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/product-offers/broadcasted/datagrid/',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: [], pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        let price = parseInt(response.body[0].pricingTiers[0].price.amount,10) + parseInt(response.body[0].companyProduct.packagingSize,10)
+        return price
     })
 })
 
