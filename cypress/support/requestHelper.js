@@ -93,7 +93,7 @@ Cypress.Commands.add("getFirstEchoProductIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {filters: filter,pageNumber: 0, pageSize: 50}
+        body: {filters: filter,pageNumber: 0, pageSize: 50, "orOperator": true}
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].id

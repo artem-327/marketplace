@@ -76,19 +76,6 @@ context("Units of packaging CRUD", () => {
         cy.get("#field_input_val0").should('have.value', "Best package")
     })
 
-    xit("Use a package unit", () => {
-        cy.get("input[type=text]").type("David Tester")
-
-        cy.get("i[class='ellipsis vertical large icon']").click()
-
-        cy.get("#field_input_val1")
-            .clear()
-            .type("test")
-            .should("have.value","test")
-
-        cy.clickSave()
-    })
-
     it("Checks error messages", () => {
         cy.clickAdd()
 

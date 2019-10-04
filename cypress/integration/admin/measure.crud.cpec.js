@@ -52,19 +52,6 @@ context("Units of measure CRUD", () => {
         cy.contains("Updated Unit of Measurement")
     })
 
-    xit("Use unit of measure", () => {
-        cy.get("input[type=text]").type("David Tester")
-
-        cy.get("i[class='ellipsis vertical large icon']").click()
-
-        cy.get("#field_input_val1")
-            .clear()
-            .type("test")
-            .should("have.value","test")
-
-        cy.clickSave()
-    })
-
     it("Checks error messages", () => {
         cy.clickAdd()
 

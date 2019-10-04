@@ -23,6 +23,8 @@ context("Document types CRUD", () => {
         cy.waitForUI()
         cy.get('[data-test="tabs_menu_item_9"]').click()
         cy.wait('@documents')
+
+        cy.waitForUI()
     })
 
     it("Creates a document type", () => {
@@ -49,7 +51,7 @@ context("Document types CRUD", () => {
     })
 
     it("Edits a document type", () => {
-        cy.get('[data-test=action_' + documentId + ']').click()
+        cy.get('[data-test=action_' + documentId + ']').click( )
 
         cy.get('[data-test=action_' + documentId + '_0]').click()
 
@@ -63,7 +65,7 @@ context("Document types CRUD", () => {
         cy.contains("Updated Document Type")
         cy.waitForUI()
 
-        cy.get('[data-test=action_' + documentId + ']').click()
+        cy.get('[data-test=action_' + documentId + ']').click( {force: true})
         cy.get('[data-test=action_' + documentId + '_0]').click()
 
         cy.get("#field_input_val0").should('have.value', "Best document")
