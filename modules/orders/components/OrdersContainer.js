@@ -1,9 +1,9 @@
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import Orders from './Orders'
 import * as OrdersHelper from '~/src/helpers/Orders'
 import * as Actions from '../actions'
-import {formatMoney} from '~/src/utils/functions'
+import { formatMoney } from '~/src/utils/functions'
 import moment from "moment/moment"
 import { withDatagrid } from '~/modules/datagrid'
 import { withRouter } from 'next/router'
@@ -11,9 +11,9 @@ import { applyFilter } from '~/modules/filter/actions'
 import { ArrayToMultiple } from '~/components/formatted-messages'
 import React from "react";
 
-function mapStateToProps(state, {router, datagrid}) {
+function mapStateToProps(state, { router, datagrid }) {
   const { orders } = state
-  const query = router ? router.query : {type: 'sales'}
+  const query = router ? router.query : { type: 'sales' }
 
   if (query.type !== orders.dataType) {
     orders.data = []
@@ -51,7 +51,7 @@ function mapStateToProps(state, {router, datagrid}) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({...Actions, dispatch, applyFilter}, dispatch)
+  return bindActionCreators({ ...Actions, dispatch, applyFilter }, dispatch)
 }
 
 export default withDatagrid(withRouter(connect(mapStateToProps, mapDispatchToProps)(Orders)))
