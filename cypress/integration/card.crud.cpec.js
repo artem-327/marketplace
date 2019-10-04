@@ -26,9 +26,17 @@ context("Shopping cart CRUD", () => {
                 cy.get('[data-test=action_' + itemId + ']').click({force: true})
                 cy.get('[data-test=action_' + itemId + '_0]').click()
 
+                cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
+                   cy.get('input[type="number"]').type("2")
+                })
+
                 cy.contains("Continue").click()
 
-                cy.get(".item-cart-body-section-name").should('contain', 'Dibromobenzoic')
+                cy.getToken().then(token => {
+                    cy.getFirstMarketName(token).then(itemName => {
+                        cy.get(".item-cart-body-section-name").should('contain', itemName)
+                    })
+                })
             })
         })
     })
