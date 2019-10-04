@@ -24,7 +24,7 @@ class Marketplace extends Component {
       // { name: 'merchant', title: 'Merchant', width: 250 },
       { name: 'available', title: <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs'>{(text) => text}</FormattedMessage>, width: 140, sortPath: 'ProductOffer.pkgAvailable' },
       { name: 'packaging', title: <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging'>{(text) => text}</FormattedMessage>, width: 140 },
-      { name: 'quantity', title: <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>{(text) => text}</FormattedMessage>, width: 140, sortPath: 'ProductOffer.quantity' },  // TODO: je 'sortPath: 'ProductOffer.quantity' ok? quantity se pocita na strane FE jako 'pkgAvailable * companyProduct.packagingSize'
+      { name: 'quantity', title: <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>{(text) => text}</FormattedMessage>, width: 140, sortPath: 'ProductOffer.quantity' },
       { name: 'fobPrice', title: <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>{(text) => text}</FormattedMessage>, width: 160, sortPath: 'ProductOffer.price' },
       //{ name: 'tradeName', title: <FormattedMessage id='marketplace.tradeName' defaultMessage='Trade Name'>{(text) => text}</FormattedMessage>, width: 140 },
       { name: 'manufacturer', title: <FormattedMessage id='marketplace.manufacturer' defaultMessage='Manufacturer'>{(text) => text}</FormattedMessage>, width: 220, sortPath: 'ProductOffer.companyProduct.echoProduct.manufacturer.name' },
