@@ -15,6 +15,7 @@ context("Echop Product CRUD", () => {
         cy.get('[data-test="tabs_menu_item_12"]').click()
 
         cy.wait('@echoLoading')
+        cy.waitForUI()
     })
 
     it("Creates a Echo Product", () => {
@@ -25,29 +26,12 @@ context("Echop Product CRUD", () => {
 
         cy.selectFromDropdown("[data-test='admin_product_popup_cas_0_drpdn']", "382-45-6")
         cy.selectFromDropdown("[data-test='new_inventory_manufacturer_drpdn']", "BASF")
-        cy.enterText('#field_input_unShippingName','TE21')
-
-        cy.get('#field_input_mfrProductCode').type("TTSS")
-        cy.contains('Add Code').click()
 
         cy.get('div[data-test="admin_product_popup_emergencyPhone_inp"]').within(($form) => {
             cy.get('input[placeholder = "Phone Number"]').type('1234567895')
             cy.contains('+CCC').click()
             cy.contains('USA').click()
-
         })
-
-        cy.get('input[class=prompt]').type('UN 2330')
-        cy.get('div[value=2330]').click()
-
-        cy.selectFromDropdown("#field_dropdown_hazardClass", "1.2: Explosive: Projection")
-        cy.selectFromDropdown("#field_dropdown_hazardLabels", "1.1: Explosive: Mass")
-
-        cy.get('#field_dropdown_packagingGroup').click()
-        cy.contains('II: Medium danger').click()
-
-        cy.enterText('#field_input_sdsVersionNumber', '1')
-        cy.enterText('#field_input_sdsRevisionDate', '20.09.2019')
 
         cy.clickSave()
 
@@ -55,11 +39,10 @@ context("Echop Product CRUD", () => {
 
         cy.waitForUI()
 
-        let filter = [{"operator":"LIKE","path":"EchoProduct.name","values":["%Test%"]},
-            {"operator":"LIKE","path":"EchoProduct.code","values":["%Test%"]}]
+        let filter = [{"operator":"LIKE","path":"EchoProduct.name","values":["%Test%"]},{"operator":"LIKE","path":"EchoProduct.code","values":["%Test%"]}]
 
         cy.getToken().then(token => {
-            cy.getFirstCasProductWithFilter(token, filter).then(itemId => {
+            cy.getFirstEchoProductIdWithFilter(token, filter).then(itemId => {
                 cy.get('[data-test=action_' + itemId + ']').click()
 
                 cy.get('[data-test=action_' + itemId + '_0]').click()
@@ -73,13 +56,6 @@ context("Echop Product CRUD", () => {
 
         cy.get("#field_input_code")
             .should("have.value","TEST-05")
-
-        cy.get("#field_input_chemicalName")
-            .should("have.value","Testinonium")
-
-        cy.contains("BASF")
-        cy.contains("20.09.2019")
-        cy.contains("382-45-6")
     })
 
     it("Edits an Echo product", () => {
@@ -102,11 +78,10 @@ context("Echop Product CRUD", () => {
 
         cy.get("#field_input_name").should("have.value", "Echoprod")
         cy.get("#field_input_code").should("have.value","TEST-06")
-
     })
 
     it("Creates a alternative name", () => {
-        cy.route("POST", "/prodex/api/echo-products/alternative-names/echo-product/").as("nameSaving")
+        cy.route("POST", "/prodex/api/echo-products/alternative-names/echo-product/**").as("nameSaving")
         cy.route("GET", "/prodex/api/echo-products/alternative-names/echo-product/**").as("nameGetting")
 
         cy.get('[data-test=action_' + productId + ']').click()
@@ -138,7 +113,7 @@ context("Echop Product CRUD", () => {
     })
 
     it("Deletes a alternative name", () => {
-        cy.route("POST", "/prodex/api/echo-products/alternative-names/echo-product/").as("nameSaving")
+        cy.route("DELETE", "/prodex/api/echo-products/alternative-names/id/**").as("nameDelete")
         cy.route("GET", "/prodex/api/echo-products/alternative-names/echo-product/**").as("nameGetting")
 
         cy.get('[data-test=action_' + productId + ']').click()
@@ -173,7 +148,7 @@ context("Echop Product CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",13)
+            .should("have.length",4)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)|(Field should have at least 2 characters)/i)
         })
@@ -183,7 +158,7 @@ context("Echop Product CRUD", () => {
         cy.get("[data-test=admin_table_search_inp]")
             .children("div")
             .children("input")
-            .type("Testerium")
+            .type("Echoprod")
 
         cy.waitForUI()
 

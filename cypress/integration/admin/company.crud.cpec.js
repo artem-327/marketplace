@@ -83,8 +83,13 @@ context("Company CRUD", () => {
 
         cy.contains("Updated Company")
 
-        cy.get('[data-test=action_' + companyId + ']').click()
-        cy.get('[data-test=action_' + companyId + '_0]').click()
+        cy.getToken().then(token => {
+            cy.getFirstCompanyWithFilter(token, filter).then(itemId => {
+                cy.get('[data-test=action_' + itemId + ']').click()
+
+                cy.get('[data-test=action_' + itemId + '_0]').click()
+            })
+        })
 
         cy.get("#field_input_name").should('have.value', "Donald and Co.")
     })
