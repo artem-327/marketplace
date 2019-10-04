@@ -23,154 +23,154 @@ import {
 
 import { getSafe } from '~/utils/functions'
 
-const mappingEchoProduct = [
-  { text: <FormattedMessage id='global.alternativeNames' defaultMessage='Alternative Names' />, value: 'Alternative Names' },
-  { text: <FormattedMessage id='global.appearance' defaultMessage='Appearance' />, value: 'Appearance' },
-  { text: <FormattedMessage id='global.aspirationHazard' defaultMessage='Aspiration Hazard' />, value: 'Aspiration Hazard' },
-  { text: <FormattedMessage id='global.autoIgnitionTemperature' defaultMessage='Auto Ignition Temperature' />, value: 'Auto Ignition Temperature' },
-  { text: <FormattedMessage id='global.boilingPointRange' defaultMessage='Boiling Point Range' />, value: 'Boiling Point Range' },
-  { text: <FormattedMessage id='global.code' defaultMessage='Code' />, value: 'Code' },
-  { text: <FormattedMessage id='global.conditionsToAvoid' defaultMessage='Conditions to Avoid' />, value: 'Conditions to Avoid' },
-  { text: <FormattedMessage id='global.decompositionTemperature' defaultMessage='Decomposition Temperature' />, value: 'Decomposition Temperature' },
-  { text: <FormattedMessage id='global.developmentalEffects' defaultMessage='Developmental Effects' />, value: 'Developmental Effects' },
-  { text: <FormattedMessage id='global.dotHazardClass' defaultMessage='DOT Hazard Class' />, value: 'DOT Hazard Class' },
-  { text: <FormattedMessage id='global.dotMarinePollutant' defaultMessage='DOT Marine Pollutant' />, value: 'DOT Marine Pollutant' },
-  { text: <FormattedMessage id='global.dotPackagingGroup' defaultMessage='DOT Packaging Group' />, value: 'DOT Packaging Group' },
-  { text: <FormattedMessage id='global.dotProperShippingName' defaultMessage='DOT Proper Shipping Name' />, value: 'DOT Proper Shipping Name' },
-  { text: <FormattedMessage id='global.dotProperTechnicalName' defaultMessage='DOT Proper Technical Name' />, value: 'DOT Proper Technical Name' },
-  { text: <FormattedMessage id='global.dotReportableQuantity' defaultMessage='DOT Reportable Quantity' />, value: 'DOT Reportable Quantity' },
-  { text: <FormattedMessage id='global.dotSevereMarinePollutant' defaultMessage='DOT Severe Marine Pollutant' />, value: 'DOT Severe Marine Pollutant' },
-  { text: <FormattedMessage id='global.dotUnNumber' defaultMessage='DOT UN Number' />, value: 'DOT UN Number' },
-  { text: <FormattedMessage id='global.elements' defaultMessage='Elements' />, value: 'Elements' },
-  { text: <FormattedMessage id='global.emergencyPhone' defaultMessage='Emergency Phone' />, value: 'Emergency Phone' },
-  { text: <FormattedMessage id='global.endocrineDisruptorInformation' defaultMessage='Endocrine Disruptor Information' />, value: 'Endocrine Disruptor Information' },
-  { text: <FormattedMessage id='global.evaporationPoint' defaultMessage='Evaporation Point' />, value: 'Evaporation Point' },
-  { text: <FormattedMessage id='global.eyeContact' defaultMessage='Eye Contact' />, value: 'Eye Contact' },
-  { text: <FormattedMessage id='global.flammabilityOrExplosiveLower' defaultMessage='Flammability or Explosive Lower' />, value: 'Flammability or Explosive Lower' },
-  { text: <FormattedMessage id='global.flammabilityOrExplosiveUpper' defaultMessage='Flammability or Explosive Upper' />, value: 'Flammability or Explosive Upper' },
-  { text: <FormattedMessage id='global.flammabilitySolidGas' defaultMessage='Flammability Solig Gas' />, value: 'Flammability Solig Gas' },
-  { text: <FormattedMessage id='global.flashPoint' defaultMessage='Flash Point' />, value: 'Flash Point' },
-  { text: <FormattedMessage id='global.generalAdvice' defaultMessage='General Advice' />, value: 'General Advice' },
-  { text: <FormattedMessage id='global.hazardStatement' defaultMessage='Hazard Statement' />, value: 'Hazard Statement' },
-  { text: <FormattedMessage id='global.hazardousDecompositionProducts' defaultMessage='Hazardous Decomposition Products' />, value: 'Hazardous Decomposition Products' },
-  { text: <FormattedMessage id='global.hazardousPolymerization' defaultMessage='Hazardous Polymerization' />, value: 'Hazardous Polymerization' },
-  { text: <FormattedMessage id='global.hazardousReactions' defaultMessage='Hazardous Reactions' />, value: 'Hazardous Reactions' },
-  { text: <FormattedMessage id='global.hmisChronicHealthHazard' defaultMessage='HMIS Chronic Health Hazard' />, value: 'HMIS Chronic Health Hazard' },
-  { text: <FormattedMessage id='global.hmisFlammability' defaultMessage='HMIS Flammability' />, value: 'HMIS Flammability' },
-  { text: <FormattedMessage id='global.hmisHealthHazard' defaultMessage='HMIS Health Hazard' />, value: 'HMIS Health Hazard' },
-  { text: <FormattedMessage id='global.hmisPhysicalHazard' defaultMessage='HMIS Physical Hazard' />, value: 'HMIS Physical Hazard' },
-  { text: <FormattedMessage id='global.hnoc' defaultMessage='HNOC' />, value: 'HNOC' },
-  { text: <FormattedMessage id='global.iataHazardClass' defaultMessage='IATA Hazard Class' />, value: 'IATA Hazard Class' },
-  { text: <FormattedMessage id='global.iataPackagingGroup' defaultMessage='IATA Packaging Group' />, value: 'IATA Packaging Group' },
-  { text: <FormattedMessage id='global.iataProperShippingName' defaultMessage='IATA Proper Shipping Name' />, value: 'IATA Proper Shipping Name' },
-  { text: <FormattedMessage id='global.iataProperTechnicalName' defaultMessage='IATA Proper Technical Name' />, value: 'IATA Proper Technical Name' },
-  { text: <FormattedMessage id='global.iataUnNumber' defaultMessage='IATA UN Number' />, value: 'IATA UN Number' },
-  { text: <FormattedMessage id='global.imdgImoHazardClass' defaultMessage='IMDG/IMO Hazard Class' />, value: 'IMDG/IMO Hazard Class' },
-  { text: <FormattedMessage id='global.imdgImoPackagingGroup' defaultMessage='IMDG/IMO Packaging Group' />, value: 'IMDG/IMO Packaging Group' },
-  { text: <FormattedMessage id='global.imdgImoProperShippingName' defaultMessage='IMDG/IMO Proper Shipping Name' />, value: 'IMDG/IMO Proper Shipping Name' },
-  { text: <FormattedMessage id='global.imdgImoProperTechnicalName' defaultMessage='IMDG/IMO Proper Technical Name' />, value: 'IMDG/IMO Proper Technical Name' },
-  { text: <FormattedMessage id='global.imdgImoUnNumber' defaultMessage='IMDG/IMO UN Number' />, value: 'IMDG/IMO UN Number' },
-  { text: <FormattedMessage id='global.incompatibleMaterials' defaultMessage='Incompatible Materials' />, value: 'Incompatible Materials' },
-  { text: <FormattedMessage id='global.ingestion' defaultMessage='Ingestion' />, value: 'Ingestion' },
-  { text: <FormattedMessage id='global.inhalation' defaultMessage='Inhalation' />, value: 'Inhalation' },
-  { text: <FormattedMessage id='global.irritation' defaultMessage='Irritation' />, value: 'Irritation' },
-  { text: <FormattedMessage id='global.labelElements' defaultMessage='Label Elements' />, value: 'Label Elements' },
-  { text: <FormattedMessage id='global.manufacturer' defaultMessage='Manufacturer' />, value: 'Manufacturer' },
-  { text: <FormattedMessage id='global.meltingPointRange' defaultMessage='Melting Point Range' />, value: 'Melting Point Range' },
-  { text: <FormattedMessage id='global.mexicoGrade' defaultMessage='Mexico Grade' />, value: 'Mexico Grade' },
-  { text: <FormattedMessage id='global.mfrProductCodes' defaultMessage='Manufaturer Product Codes' />, value: 'Manufaturer Product Codes' },
-  { text: <FormattedMessage id='global.molecularFormula' defaultMessage='Molecular Formula' />, value: 'Molecular Formula' },
-  { text: <FormattedMessage id='global.molecularWeight' defaultMessage='Molecular Weight' />, value: 'Molecular Weight' },
-  { text: <FormattedMessage id='global.mostImportantSymptomsAndEffects' defaultMessage='Most Important Symptoms and Effects' />, value: 'Most Important Symptoms and Effects' },
-  { text: <FormattedMessage id='global.mutagenicEffects' defaultMessage='Mutagenic Effects' />, value: 'Mutagenic Effects' },
-  { text: <FormattedMessage id='global.name' defaultMessage='Name' />, value: 'Name' },
-  { text: <FormattedMessage id='global.nfpaFireHazard' defaultMessage='NFPA Fire Hazard' />, value: 'NFPA Fire Hazard' },
-  { text: <FormattedMessage id='global.nfpaHealthHazard' defaultMessage='NFPA Health Hazard' />, value: 'NFPA Health Hazard' },
-  { text: <FormattedMessage id='global.nfpaReactivityHazard' defaultMessage='NFPA Reactivity Hazard' />, value: 'NFPA Reactivity Hazard' },
-  { text: <FormattedMessage id='global.nfpaSpecialHazard' defaultMessage='NFPA Special Hazard' />, value: 'NFPA Special Hazard' },
-  { text: <FormattedMessage id='global.notesToPhysician' defaultMessage='Notes to Physician' />, value: 'Notes to Physician' },
-  { text: <FormattedMessage id='global.odor' defaultMessage='Odor' />, value: 'Odor' },
-  { text: <FormattedMessage id='global.odorThreshold' defaultMessage='Odor Threshold' />, value: 'Odor Threshold' },
-  { text: <FormattedMessage id='global.oshaDefinedHazards' defaultMessage='OSHA Defined Hazards' />, value: 'OSHA Defined Hazards' },
-  { text: <FormattedMessage id='global.otherAdverseEffects' defaultMessage='Other Adverse Effects' />, value: 'Other Adverse Effects' },
-  { text: <FormattedMessage id='global.packagingGroup' defaultMessage='Packaging Group' />, value: 'Packaging Group' },
-  { text: <FormattedMessage id='global.partitionCoefficient' defaultMessage='Partition Coefficient' />, value: 'Partition Coefficient' },
-  { text: <FormattedMessage id='global.ph' defaultMessage='pH' />, value: 'pH' },
-  { text: <FormattedMessage id='global.physicalState' defaultMessage='Physical State' />, value: 'Physical State' },
-  { text: <FormattedMessage id='global.precautionaryStatements' defaultMessage='Precautionary Statements' />, value: 'Precautionary Statements' },
-  { text: <FormattedMessage id='global.productLc50Inhalation' defaultMessage='Product LC50 Inhalation' />, value: 'Product LC50 Inhalation' },
-  { text: <FormattedMessage id='global.productLd50Dermal' defaultMessage='Product LD50 Dermal' />, value: 'Product LD50 Dermal' },
-  { text: <FormattedMessage id='global.productLd50Oral' defaultMessage='Product LD50 Oral' />, value: 'Product LD50 Oral' },
-  { text: <FormattedMessage id='global.reactiveHazard' defaultMessage='Reative Hazard' />, value: 'Reative Hazard' },
-  { text: <FormattedMessage id='global.recommendedUse' defaultMessage='Recommended Use' />, value: 'Recommended Use' },
-  { text: <FormattedMessage id='global.reproductiveEffects' defaultMessage='Reproductive Effects' />, value: 'Reproductive Effects' },
-  { text: <FormattedMessage id='global.sdsIssuedDate' defaultMessage='SDS Issued Date' />, value: 'SDS Issued Date' },
-  { text: <FormattedMessage id='global.sdsPreparedBy' defaultMessage='SDS Prepared by' />, value: 'SDS Prepared by' },
-  { text: <FormattedMessage id='global.sdsRevisionDate' defaultMessage='SDS Revision Date' />, value: 'SDS Revision Date' },
-  { text: <FormattedMessage id='global.sdsVersionNumber' defaultMessage='SDS Version Number' />, value: 'SDS Version Number' },
-  { text: <FormattedMessage id='global.sensitization' defaultMessage='Sensitization' />, value: 'Sensitization' },
-  { text: <FormattedMessage id='global.signalWord' defaultMessage='Signal Word' />, value: 'Signal Word' },
-  { text: <FormattedMessage id='global.skinContact' defaultMessage='Skin Contact' />, value: 'Skin Contact' },
-  { text: <FormattedMessage id='global.solubility' defaultMessage='Solubility' />, value: 'Solubility' },
-  { text: <FormattedMessage id='global.specificGravity' defaultMessage='Specific Gravity' />, value: 'Specific Gravity' },
-  { text: <FormattedMessage id='global.stability' defaultMessage='Stability' />, value: 'Stability' },
-  { text: <FormattedMessage id='global.stotRepeatedExposure' defaultMessage='STOT Repeated Exposure' />, value: 'STOT Repeated Exposure' },
-  { text: <FormattedMessage id='global.stotSingleExposure' defaultMessage='STOT Single Exposure' />, value: 'STOT Single Exposure' },
-  { text: <FormattedMessage id='global.supplementalInformation' defaultMessage='Supplemental Information' />, value: 'Supplemental Information' },
-  { text: <FormattedMessage id='global.symptomsEffects' defaultMessage='Symptoms Effects' />, value: 'Symptoms Effects' },
-  { text: <FormattedMessage id='global.tdgHazardClass' defaultMessage='TDG Hazard Class' />, value: 'TDG Hazard Class' },
-  { text: <FormattedMessage id='global.tdgPackagingGroup' defaultMessage='TDG Packaging Group' />, value: 'TDG Packaging Group' },
-  { text: <FormattedMessage id='global.tdgProperShippingName' defaultMessage='TDG Proper Shipping Name' />, value: 'TDG Proper Shipping Name' },
-  { text: <FormattedMessage id='global.tdgProperTechnicalName' defaultMessage='TDG Proper Technical Name' />, value: 'TDG Proper Technical Name' },
-  { text: <FormattedMessage id='global.tdgUnNumber' defaultMessage='TDG UN Number' />, value: 'TDG UN Number' },
-  { text: <FormattedMessage id='global.tdsIssuedDate' defaultMessage='TDS Issued Date' />, value: 'TDS Issued Date' },
-  { text: <FormattedMessage id='global.tdsPreparedBy' defaultMessage='TDS Prepared by' />, value: 'TDS Prepared by' },
-  { text: <FormattedMessage id='global.tdsRevisionDate' defaultMessage='TDS Revision Date' />, value: 'TDS Revision Date' },
-  { text: <FormattedMessage id='global.tdsVersionNumber' defaultMessage='TDS Version Number' />, value: 'TDS Version Number' },
-  { text: <FormattedMessage id='global.teratogenicity' defaultMessage='Teratogenicity' />, value: 'Teratogenicity' },
-  { text: <FormattedMessage id='global.usesAdvisedAgainst' defaultMessage='Uses Advised against' />, value: 'Uses Advised against' },
-  { text: <FormattedMessage id='global.vaporDensity' defaultMessage='Vapor Density' />, value: 'Vapor Density' },
-  { text: <FormattedMessage id='global.vaporPressure' defaultMessage='Vapor Pressure' />, value: 'Vapor Pressure' },
-  { text: <FormattedMessage id='global.viscosity' defaultMessage='Viscosity' />, value: 'Viscosity' },
-  { text: <FormattedMessage id='global.wasteDisposalMethods' defaultMessage='Waste Disposal Methods' />, value: 'Waste Disposal Methods' }
+const simpleEchoProductList = [
+  "alternativeNamesMapper",
+  "appearanceMapper",
+  "aspirationHazardMapper",
+  "autoIgnitionTemperatureMapper",
+  "boilingPointRangeMapper",
+  "codeMapper",
+  "conditionsToAvoidMapper",
+  "decompositionTemperatureMapper",
+  "developmentalEffectsMapper",
+  "dotHazardClassMapper",
+  "dotMarinePollutantMapper",
+  "dotPackagingGroupMapper",
+  "dotProperShippingNameMapper",
+  "dotProperTechnicalNameMapper",
+  "dotReportableQuantityMapper",
+  "dotSevereMarinePollutantMapper",
+  "dotUnNumberMapper",
+  "elementsMapper",
+  "emergencyPhoneMapper",
+  "endocrineDisruptorInformationMapper",
+  "evaporationPointMapper",
+  "eyeContactMapper",
+  "flammabilityOrExplosiveLowerMapper",
+  "flammabilityOrExplosiveUpperMapper",
+  "flammabilitySolidGasMapper",
+  "flashPointMapper",
+  "generalAdviceMapper",
+  "hazardStatementMapper",
+  "hazardousDecompositionProductsMapper",
+  "hazardousPolymerizationMapper",
+  "hazardousReactionsMapper",
+  "hmisChronicHealthHazardMapper",
+  "hmisFlammabilityMapper",
+  "hmisHealthHazardMapper",
+  "hmisPhysicalHazardMapper",
+  "hnocMapper",
+  "iataHazardClassMapper",
+  "iataPackagingGroupMapper",
+  "iataProperShippingNameMapper",
+  "iataProperTechnicalNameMapper",
+  "iataUnNumberMapper",
+  "imdgImoHazardClassMapper",
+  "imdgImoPackagingGroupMapper",
+  "imdgImoProperShippingNameMapper",
+  "imdgImoProperTechnicalNameMapper",
+  "imdgImoUnNumberMapper",
+  "incompatibleMaterialsMapper",
+  "ingestionMapper",
+  "inhalationMapper",
+  "irritationMapper",
+  "labelElementsMapper",
+  "manufacturerMapper",
+  "meltingPointRangeMapper",
+  "mexicoGradeMapper",
+  "mfrProductCodesMapper",
+  "molecularFormulaMapper",
+  "molecularWeightMapper",
+  "mostImportantSymptomsAndEffectsMapper",
+  "mutagenicEffectsMapper",
+  "nameMapper",
+  "nfpaFireHazardMapper",
+  "nfpaHealthHazardMapper",
+  "nfpaReactivityHazardMapper",
+  "nfpaSpecialHazardMapper",
+  "notesToPhysicianMapper",
+  "odorMapper",
+  "odorThresholdMapper",
+  "oshaDefinedHazardsMapper",
+  "otherAdverseEffectsMapper",
+  "packagingGroupMapper",
+  "partitionCoefficientMapper",
+  "phMapper",
+  "physicalStateMapper",
+  "precautionaryStatementsMapper",
+  "productLc50InhalationMapper",
+  "productLd50DermalMapper",
+  "productLd50OralMapper",
+  "reactiveHazardMapper",
+  "recommendedUseMapper",
+  "reproductiveEffectsMapper",
+  "sdsIssuedDateMapper",
+  "sdsPreparedByMapper",
+  "sdsRevisionDateMapper",
+  "sdsVersionNumberMapper",
+  "sensitizationMapper",
+  "signalWordMapper",
+  "skinContactMapper",
+  "solubilityMapper",
+  "specificGravityMapper",
+  "stabilityMapper",
+  "stotRepeatedExposureMapper",
+  "stotSingleExposureMapper",
+  "supplementalInformationMapper",
+  "symptomsEffectsMapper",
+  "tdgHazardClassMapper",
+  "tdgPackagingGroupMapper",
+  "tdgProperShippingNameMapper",
+  "tdgProperTechnicalNameMapper",
+  "tdgUnNumberMapper",
+  "tdsIssuedDateMapper",
+  "tdsPreparedByMapper",
+  "tdsRevisionDateMapper",
+  "tdsVersionNumberMapper",
+  "teratogenicityMapper",
+  "usesAdvisedAgainstMapper",
+  "vaporDensityMapper",
+  "vaporPressureMapper",
+  "viscosityMapper",
+  "wasteDisposalMethodsMapper"
 ]
 
-const mappingProduct = [
-  { text: <FormattedMessage id='global.echoProduct' defaultMessage='Echo Product' />, value: 'Echo Product' },
-  { text: <FormattedMessage id='global.freezeProtect' defaultMessage='Freeze Protect' />, value: 'Freeze Protect' },
-  { text: <FormattedMessage id='global.freightClass' defaultMessage='Freight Class' />, value: 'Freight Class' },
-  { text: <FormattedMessage id='global.hazardous' defaultMessage='Hazardous' />, value: 'Hazardous' },
-  { text: <FormattedMessage id='global.inciName' defaultMessage='INCI Name' />, value: 'INCI Name' },
-  { text: <FormattedMessage id='global.intProductCode' defaultMessage='INT Product Code' />, value: 'INT Product Code' },
-  { text: <FormattedMessage id='global.intProductName' defaultMessage='INT Product Name' />, value: 'INT Product Name' },
-  { text: <FormattedMessage id='global.nmfcNumber' defaultMessage='NMFC Number' />, value: 'NMFC Number' },
-  { text: <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size' />, value: 'Packaging Size' },
-  { text: <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type' />, value: 'Packaging Type' },
-  { text: <FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit' />, value: 'Packaging Unit' },
-  { text: <FormattedMessage id='global.stackable' defaultMessage='Stackable' />, value: 'Stackable' }
+const simpleCompanyProductList = [
+  "echoProduct",
+  "freezeProtectMapper",
+  "freightClassMapper",
+  "hazardousMapper",
+  "inciNameMapper",
+  "intProductCodeMapper",
+  "intProductNameMapper",
+  "nmfcNumberMapper",
+  "packagingSizeMapper",
+  "packagingTypeMapper",
+  "packagingUnitMapper",
+  "stackableMapper",
 ]
 
-const mappingProductOffer = [
-  { text: <FormattedMessage id='global.anonymous' defaultMessage='Anonymous' />, value: 'Anonymous' },
-  { text: <FormattedMessage id='global.assayMax' defaultMessage='Assay Max' />, value: 'Assay Max' },
-  { text: <FormattedMessage id='global.assayMin' defaultMessage='Assay Min' />, value: 'Assay Min' },
-  { text: <FormattedMessage id='global.companyProduct' defaultMessage='Company Product' />, value: 'Company Product' },
-  { text: <FormattedMessage id='global.condition' defaultMessage='Condition' />, value: ' Condition' },
-  { text: <FormattedMessage id='global.costPerUom' defaultMessage='Cost per UOM' />, value: 'Cost per UOM' },
-  { text: <FormattedMessage id='global.currency' defaultMessage='Currency' />, value: 'Currency' },
-  { text: <FormattedMessage id='global.externalNotes' defaultMessage='External Notes' />, value: 'External Notes' },
-  { text: <FormattedMessage id='global.form' defaultMessage='Form' />, value: 'Form' },
-  { text: <FormattedMessage id='global.grades' defaultMessage='Grades' />, value: 'Grades' },
-  { text: <FormattedMessage id='global.inStock' defaultMessage='In Stock' />, value: 'In Stock' },
-  { text: <FormattedMessage id='global.internalNotes' defaultMessage='Internal Notes' />, value: 'Internal Notes' },
-  { text: <FormattedMessage id='global.lots' defaultMessage='Lots' />, value: 'Lots' },
-  { text: <FormattedMessage id='global.minPkg' defaultMessage='Min Package' />, value: 'Min Package' },
-  { text: <FormattedMessage id='global.origin' defaultMessage='Origin' />, value: 'Origin' },
-  { text: <FormattedMessage id='global.pricingTiers' defaultMessage='Pricing Tiers' />, value: 'Pricing Tiers' },
-  { text: <FormattedMessage id='global.processingTimeDays' defaultMessage='Processing Time-Days' />, value: 'Processing Time-Days' },
-  { text: <FormattedMessage id='global.splitPkg' defaultMessage='Split Package' />, value: 'Split Package' },
-  { text: <FormattedMessage id='global.validityDate' defaultMessage='Validity Date' />, value: 'Validity Date' },
-  { text: <FormattedMessage id='global.warehouseName' defaultMessage='Warehouse Name' />, value: 'Warehouse Name' }
+const simpleProductOfferList = [
+  "anonymousMapper",
+  "assayMaxMapper",
+  "assayMinMapper",
+  "companyProductMapper",
+  "conditionMapper",
+  "costPerUomMapper",
+  "currencyMapper",
+  "externalNotesMapper",
+  "formMapper",
+  "gradesMapper",
+  "inStockMapper",
+  "internalNotesMapper",
+  "lotsMapper",
+  "minPkgMapper",
+  "originMapper",
+  "pricingTiersMapper",
+  "processingTimeDaysMapper",
+  "splitPkgMapper",
+  "validityDateMapper",
+  "warehouseNameMapper"
 ]
 
 class Map extends Component {
@@ -178,20 +178,44 @@ class Map extends Component {
     newHeaders: null,
     isSavedMap: false,
     options: [],
-    values: []
+    values: [],
+    mapping: []
   }
 
-  componentDidMount() {
-    if (this.props.productOffer)
+  getMapping = (mapperList) => {
+    const { intl: { formatMessage }} = this.props
+
+    return mapperList.map(option => {
+      return {
+        text: formatMessage({ id: `global.${option.replace(/Mapper$/gi, '')}`, defaultMessage: option.replace(/Mapper$/gi, '') }),
+        value: option
+      }
+    })
+  }
+
+  componentDidMount = async() => {
+    const { intl: { formatMessage }} = this.props
+    let { mapping } = this.state
+    if (this.props.productOffer) {
       this.props.getCSVMapProductOffer()
-    if (this.props.echoProduct)
+      const mappingProductOffer = this.getMapping(simpleProductOfferList)
+      mapping = mappingProductOffer
+    }
+    else if (this.props.echoProduct) {
       this.props.getCSVMapEchoProduct()
+      const mappingEchoProduct = this.getMapping(simpleEchoProductList)
+      mapping = mappingEchoProduct
+    }
+    else {
+      const mappingCompanyProduct = this.getMapping(simpleCompanyProductList)
+      mapping = mappingCompanyProduct
+    }
 
-    this.setState({ newHeaders: this.props.CSV.headerCSV })
+    this.setState({ newHeaders: this.props.CSV.headerCSV, mapping: mapping })
 
-    let a = (this.props.productOffer ? mappingProductOffer : (this.props.echoProduct ?  mappingEchoProduct : mappingProduct)).sort(function (a, b) {
-      let x = a.value.toLowerCase()
-      let y = b.value.toLowerCase()
+    let a = (mapping).sort(function (a, b) {
+      let x = a.text.toLowerCase()
+      let y = b.text.toLowerCase()
       if (x < y) { return -1 }
       if (x > y) { return 1 }
       return 0
@@ -206,7 +230,7 @@ class Map extends Component {
       const newHeaders = this.props.CSV.headerCSV
       values = values.map((value, vIndex) => {
         const content = newHeaders[vIndex].content
-        const foundItem = ar[vIndex].find(option => option.value.toLowerCase() === content.toLowerCase())
+        const foundItem = ar[vIndex].find(option => option.value.toLowerCase() === content.toLowerCase() || option.text.toLowerCase() === content.toLowerCase())
 
         if (foundItem) {
           newHeaders[vIndex].header = foundItem.value
@@ -351,6 +375,7 @@ class Map extends Component {
   }
 
   selectMapping = (e, { column_number, value }) => {
+    const { mapping } = this.state
     const mappedHeader = this.props.mappedHeader
       ? this.props.mappedHeader
       : [...this.state.newHeaders]
@@ -368,7 +393,7 @@ class Map extends Component {
     let previousValue = values[column_number]
     values[column_number] = value
 
-    let opts = this.props.productOffer ? mappingProductOffer : (this.props.echoProduct ?  mappingEchoProduct : mappingProduct)
+    let opts = mapping
     let indexAdd = opts.findIndex(obj => obj.value === previousValue)
 
     for (let i = 0; i < options.length; i++) {
@@ -380,8 +405,8 @@ class Map extends Component {
         if (indexRemove >= 0) options[i].splice(indexRemove, 1)
         // Sort alphabetically
         options[i].sort(function (a, b) {
-          let x = a.value.toLowerCase()
-          let y = b.value.toLowerCase()
+          let x = a.text.toLowerCase()
+          let y = b.text.toLowerCase()
           if (x < y) { return -1 }
           if (x > y) { return 1 }
           return 0
