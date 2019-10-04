@@ -116,7 +116,7 @@ export function openEditPopup(rows) {
 }
 export function handlerSubmitUserEditPopup(payload, id) {
   return async dispatch => {
-    removeEmpty(payload)
+    //removeEmpty(payload)
     try {
       const response = await api.patchUser(id, payload)
       dispatch({
@@ -369,7 +369,7 @@ export function postNewWarehouseRequest(payload) {
 
 export function handleSubmitProductEditPopup(payload, id, reloadFilter) {
   return async dispatch => {
-    removeEmpty(payload)
+    //removeEmpty(payload)
     const response = await api.updateProduct(id, payload)
     dispatch({
       type: AT.SETTINGS_UPDATE_PRODUCT_CATALOG,
@@ -634,7 +634,7 @@ export function getStoredCSV(data) {
 
 export function postNewUserRequest(payload) {
   return async dispatch => {
-    removeEmpty(payload)
+    //removeEmpty(payload)
     await dispatch({
 
       type: AT.POST_NEW_USER_REQUEST,
@@ -669,7 +669,7 @@ export function userSwitchEnableDisable(id) {
 export function handleSubmitProductAddPopup(payload, reloadFilter) {
 
   return async dispatch => {
-    removeEmpty(payload)
+    //removeEmpty(payload)
     const newProd = await dispatch({
       type: AT.SETTINGS_POST_NEW_PRODUCT_REQUEST,
       payload: api.postNewProduct(payload)

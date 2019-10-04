@@ -326,6 +326,11 @@ class ProductPopup extends React.Component {
                           type='number'
                           name='nmfcNumber'
                         />
+                        <Input
+                          label={formatMessage({ id: 'global.inciName', defaultMessage: 'INCI Name' })}
+                          type='string'
+                          name='inciName'
+                        />
                         <Dropdown
                           label={formatMessage({ id: 'global.freightClass', defaultMessage: 'Freight Class' })}
                           name='freightClass'
@@ -347,6 +352,12 @@ class ProductPopup extends React.Component {
                       </FormGroup>
 
                       <FormGroup>
+                        <Checkbox
+                          fieldProps={{ width: 4 }}
+                          label={formatMessage({ id: 'global.hazardous', defaultMessage: 'Hazardous' })}
+                          name='hazardous'
+                          inputProps={{ 'data-test': 'settings_product_popup_hazardous_chckb' }}
+                        />
                         <Checkbox
                           fieldProps={{ width: 4 }}
                           label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })}
