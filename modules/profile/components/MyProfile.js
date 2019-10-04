@@ -71,64 +71,68 @@ class MyProfile extends Component {
             onReset={closePopup}
             onSubmit={async (values, { setSubmitting }) => {
               try {
-                await this.props.updateMyProfile({ ...values, language: languages.find((lan) => lan.language === values.language) })
+                let { name, phone, preferredCurrency, preferredLanguage } = values
+
+                let payload = { name, phone, preferredCurrency, preferredLanguage }
+                await this.props.updateMyProfile({ ...payload, preferredLanguage: languages.find((lan) => lan.language === values.language).language })
               }
-              catch{ }
+              catch (e) { console.error(e) }
               finally { setSubmitting(false) }
 
             }}
-            data-test='my_profile_userData_inp'
-          >
-            {({ values, setFieldValue }) => (
-            <>
-              <Input
-                type='text'
-                label={formatMessage({ id: 'global.email', defaultMessage: 'E-mail' })}
-                name='email' inputProps={{ readOnly: true }} />
-              <Input
-                type='text'
-                label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
-                name='name' />
-              <PhoneNumber
-                label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='phone'
-                values={values} setFieldValue={setFieldValue}
-              />
-              <Input
-                type='text'
-                label={formatMessage({ id: 'global.title', defaultMessage: 'Title' })}
-                name='jobTitle'
-                inputProps={{ readOnly: true }} />
-              <Dropdown
-                label={formatMessage({ id: 'global.currency', defaultMessage: 'Currency' })}
-                name='preferredCurrency'
-                options={currencies}
-                inputProps={{ 'data-test': 'my_profile_currency_drpdn' }} />
+            data-test='my_profile_userData_inp'>
+            {({ values, setFieldValue, errors }) => (
+              <>
+               
+                <Input
+                  type='text'
+                  label={formatMessage({ id: 'global.email', defaultMessage: 'E-mail' })}
+                  name='email' inputProps={{ readOnly: true }} />
+                <Input
+                  type='text'
+                  label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
+                  name='name' />
+                <PhoneNumber
+                  error={errors.phone}
+                  label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='phone'
+                  values={values} setFieldValue={setFieldValue}
+                />
+                <Input
+                  type='text'
+                  label={formatMessage({ id: 'global.title', defaultMessage: 'Title' })}
+                  name='jobTitle'
+                  inputProps={{ readOnly: true }} />
+                <Dropdown
+                  label={formatMessage({ id: 'global.currency', defaultMessage: 'Currency' })}
+                  name='preferredCurrency'
+                  options={currencies}
+                  inputProps={{ 'data-test': 'my_profile_currency_drpdn' }} />
 
-            <Dropdown
-              label={formatMessage({ id: 'global.language', defaultMessage: 'Language' })}
-              name='language'
-              inputProps={{
-                loading: languagesFetching
-              }}
-              options={languages.map((lang) => ({
-                key: lang.languageAbbreviation,
-                text: lang.language,
-                value: lang.language
-              }))}
-            />
+                <Dropdown
+                  label={formatMessage({ id: 'global.language', defaultMessage: 'Language' })}
+                  name='language'
+                  inputProps={{
+                    loading: languagesFetching
+                  }}
+                  options={languages.map((lang) => ({
+                    key: lang.languageAbbreviation,
+                    text: lang.language,
+                    value: lang.language
+                  }))}
+                />
 
-            <FormattedMessage id='profile.lastLoginAt' defaultMessage='Last login at:' /> {popupValues && popupValues.lastLoginAt}
+                <FormattedMessage id='profile.lastLoginAt' defaultMessage='Last login at:' /> {popupValues && popupValues.lastLoginAt}
 
-            <div style={{ textAlign: 'right' }}>
-              <Button style={{ 'margin-bottom': '10px' }} onClick={this.handleChangePassword} data-test='my_profile_change_password_btn'>
-                <FormattedMessage id='password.change' defaultMessage='Change Password'>{text => text}</FormattedMessage>
-              </Button>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <Button.Reset data-test='my_profile_reset_btn'><FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage></Button.Reset>
-              <Button.Submit data-test='my_profile_submit_btn'><FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage></Button.Submit>
-            </div>
-            </>)}
+                <div style={{ textAlign: 'right' }}>
+                  <Button style={{ 'margin-bottom': '10px' }} onClick={this.handleChangePassword} data-test='my_profile_change_password_btn'>
+                    <FormattedMessage id='password.change' defaultMessage='Change Password'>{text => text}</FormattedMessage>
+                  </Button>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <Button.Reset data-test='my_profile_reset_btn'><FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage></Button.Reset>
+                  <Button.Submit data-test='my_profile_submit_btn'><FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage></Button.Submit>
+                </div>
+              </>)}
           </Form>
         </Modal.Content>
       </Modal>

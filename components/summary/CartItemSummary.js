@@ -33,9 +33,10 @@ class CartItemSummary extends Component {
     const {
       hazardClasses, packagingGroups, cartItems,
       getHazardClassesDataRequest, getPackagingGroupsDataRequest, addUnNumber } = this.props
+
     let initialUnNumbers = []
     cartItems.forEach(item => {
-      let unNumber = '' // ! ! temporary removed  getSafe(() => item.unNumber, item.productOffer.companyProduct.echoProduct.unNumber.unNumberCode || '')
+      let unNumber = getSafe(() => item.unNumber)
       if (unNumber && !initialUnNumbers.find((num) => num.id === unNumber.id)) {
         initialUnNumbers.push(unNumber)
       }
@@ -44,7 +45,6 @@ class CartItemSummary extends Component {
     if (initialUnNumbers.length !== 0) await addUnNumber(initialUnNumbers)
     if (hazardClasses.length === 0) getHazardClassesDataRequest()
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
-
   }
 
   handleUnNumberChange = debounce((_, { searchQuery }) => {
@@ -60,16 +60,16 @@ class CartItemSummary extends Component {
     let { productOffer: { companyProduct } } = item
 
     let initialValues = {
-      unCode: '', // ! ! temporary removed getSafe(() => item.unNumber.id, companyProduct.echoProduct.unNumber && companyProduct.echoProduct.unNumber.id || ''),
+      unCode: getSafe(() => item.unNumber.id, companyProduct.echoProduct.unNumber && companyProduct.echoProduct.unNumber.id || ''),
       packagingGroup: getSafe(() => item.packagingGroup.id, companyProduct.packagingGroup ? companyProduct.packagingGroup.id : ''),
-      hazardClasses: '',// ! ! temporary removed item.hazardClasses ? item.hazardClasses.map((c) => c.id) : companyProduct.hazardClasses.map((hazardClass) => hazardClass.id),
+      hazardClass: getSafe(() => item.hazardClass.id),
+      // item.hazardClasses ? item.hazardClasses.map((c) => c.id) : companyProduct.hazardClasses.map((hazardClass) => hazardClass.id),
       freightClass: getSafe(() => item.freightClass, companyProduct.freightClass || ''),
       nmfcNumber: getSafe(() => item.nmfcNumber, companyProduct.nmfcNumber || ''),
       stackable: getSafe(() => item.stackable, companyProduct.stackable || false),
     }
 
     let disabled = !this.state.edittingHazmatInfo
-
 
     return (
       <Form
@@ -166,8 +166,8 @@ class CartItemSummary extends Component {
                       value: hazardClass.id,
                       text: `${hazardClass.classCode} - ${hazardClass.description}`
                     }))}
-                    inputProps={{ disabled, search: true, multiple: true }}
-                    name='hazardClasses' label={formatMessage({ id: 'cart.hazardClass', defaultMessage: 'Hazard Class' })} />
+                    inputProps={{ disabled, search: true }}
+                    name='hazardClass' label={formatMessage({ id: 'cart.hazardClass', defaultMessage: 'Hazard Class' })} />
                 </GridColumn>
               </GridRow>
 
@@ -235,7 +235,7 @@ class CartItemSummary extends Component {
                   productOffer.companyProduct.echoProduct.elements.map(d => {
                     return d.proprietary
                       ? d.displayName
-                      :  d.displayName + ' - ' + d.casProduct.casNumber
+                      : d.displayName + ' - ' + d.casProduct.casNumber
                   })
                 } />
               </GridColumn>

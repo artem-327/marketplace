@@ -105,13 +105,13 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
 
   return (
     <Modal
-     open={open} 
-     closeIcon 
-     onClose={onClose}
-     centered={false} 
-     style={{ width: modalWidth }}
-     
-     >
+      open={open}
+      closeIcon
+      onClose={onClose}
+      centered={false}
+      style={{ width: modalWidth }}
+
+    >
       <Modal.Content>
         <Form
           initialValues={columns.reduce((acc, c) => { acc[c.name] = hiddenColumnNames.indexOf(c.name) === -1; return acc }, {})}
@@ -465,7 +465,7 @@ class _Table extends Component {
     const column = columns.find(c => c.name === s.columnName)
 
     this.handleColumnsSettings({ sorting })
-
+    
     onSortingChange && onSortingChange({
       sortPath: column ? column.sortPath : s.columnName,
       sortDirection: s.direction.toUpperCase()
