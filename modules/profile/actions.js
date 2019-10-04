@@ -64,19 +64,7 @@ export function getCurrencies() {
   }
 }
 
-export function updateMyProfile(data) {
-  return async dispatch => {
-    let payload = {
-      name: data.name,
-      phone: data.phone,
-      preferredCurrency: data.preferredCurrency
-    }
-    await dispatch(setPreferredLanguage(data.language))
-    let response = await dispatch({ type: AT.PROFILE_UPDATE_MY_PROFILE, payload: api.updateMyProfile(payload) })
-    return response
-  }
-
-}
+export const updateMyProfile = payload => ({ type: AT.PROFILE_UPDATE_MY_PROFILE, payload: api.updateMyProfile(payload) })
 
 export function changePassword(data) {
   return {
