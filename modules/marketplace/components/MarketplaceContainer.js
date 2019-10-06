@@ -33,17 +33,11 @@ function mapStateToProps(store, { datagrid }) {
         packagingType: getSafe(() => po.companyProduct.packagingType.name, ''),
         packagingUnit: getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, ''),
         packagingSize: getSafe(() => po.companyProduct.packagingSize, ''),
-        quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.pkgAvailable * po.companyProduct.packagingSize} /> : 'N/A',
+        quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.quantity} /> : 'N/A',
         // qtyPart ? `${(parseInt(po.pkgAmount, 10) * parseInt(po.companyProduct.packagingSize, 10)).formatNumber()} ${qtyPart}` : 'N/A',
         fobPrice: po.pricingTiers.length > 1
           ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price.amount} /> -  <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price.amount} /> {qtyPart && (`/ ${qtyPart}`)} </>
           : <> <FormattedNumber style='currency' currency={currency} value={getSafe(() => po.pricing.pricingTiers[0].price.amount, 0)} /> {qtyPart && (`/ ${qtyPart}`)} </>,
-        // fobPrice: po.pricingTiers.length > 1 ?
-        //   ('$' + po.pricingTiers[po.pricingTiers.length - 1].price.formatMoney(3)
-        //     + ' - ' + '$' + po.pricingTiers[0].price.formatMoney(3))
-        //   : po.pricing.price ? ('$' + po.pricing.price.formatMoney(3)) : 'N/A',
-        //tradeName: '',  // ! ! ?? smazat?
-        //?manufacturer: getSafe(() => po.manufacturer.name, 'N/A'),
         manufacturer: getSafe(() => po.companyProduct.echoProduct.manufacturer.name, 'N/A'),
         origin: getSafe(() => po.origin.name),
         expiration: moment(po.expirationDate).format('MM/DD/YYYY'),

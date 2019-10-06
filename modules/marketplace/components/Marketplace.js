@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Button, MenuItem, Popup, List } from 'semantic-ui-react'
+import { Container, Menu, Header, Button, Popup, List } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { ShippingQuotes } from '~/modules/shipping'
 import SubMenu from '~/src/components/SubMenu'
@@ -8,8 +8,6 @@ import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
-
-//import { UnitOfPackaging } from '~/components/formatted-messages'
 import styled from "styled-components";
 
 const CapitalizedText = styled.span`
@@ -130,12 +128,20 @@ class Marketplace extends Component {
               <Menu.Item>
                 <FilterTags filters={datagrid.filters} onClick={this.removeFilter} data-test='marketplace_remove_filter' />
               </Menu.Item>
-              {selectedRows.length === 0 ? null :
-                <Button primary onClick={() => this.setState({ open: true })} data-test='marketplace_shipping_quote_btn'>
-                  <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>{(text) => text}</FormattedMessage>
-                </Button>
-
-              }
+              <Popup
+                wide='very'
+                data-test='array_to_multiple_list'
+                content={<FormattedMessage id='marketplace.shippingQuoteTooltip' defaultMessage='Select one or more ProudctOffers to calculate a Shipping Quote. Multiple ProductOffers can be choosed only if they are at the same Location.' />}
+                disabled={selectedRows.length !== 0}
+                position='bottom right'
+                trigger={
+                  <div>
+                    <Button disabled={selectedRows.length === 0} primary onClick={() => this.setState({ open: true })} data-test='marketplace_shipping_quote_btn'>
+                      <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>{(text) => text}</FormattedMessage>
+                    </Button>
+                  </div>
+                }
+              />
               <Menu.Item>
                 <SubMenu />
               </Menu.Item>

@@ -80,7 +80,7 @@ export default class ItemCartBody extends Component {
             </div>
             <div>
               <FormattedMessage
-                id='cart.form'
+                id='cart.formVal'
                 defaultMessage={`Form ${productOffer.form ? productOffer.form.name : 'N/A'} `}
                 values={{ form: productOffer.form ? productOffer.form.name : 'N/A' }}
               />

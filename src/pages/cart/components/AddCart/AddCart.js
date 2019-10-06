@@ -104,6 +104,7 @@ export default class AddCart extends Component {
     let dropdownOptions = []
     let currencyCode = offer.pricingTiers[0].price.currency.code || 'USD'
 
+
     if (pricingTiers.length > 0) {
       pricingTiers.forEach((tier, i) => {
         let quantityTo = (i + 1) >= pricingTiers.length ? pkgAvailable : (tier.quantityFrom > pricingTiers[i + 1].quantityFrom ? tier.quantityFrom : pricingTiers[i + 1].quantityFrom - 1)
@@ -155,7 +156,7 @@ export default class AddCart extends Component {
     //   <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
     // )
 
-    let canProceed = !warning && price
+    let canProceed = !warning && price && quantity > 0
     console.log({ dropdownOptions, pricing: this.props.sidebar.pricing })
     return (
       <>
@@ -306,6 +307,7 @@ export default class AddCart extends Component {
                 <Input
                   step={offer.splitPkg}
                   error={!!error}
+                  min={1}
                   value={this.props.sidebar.quantity}
                   onChange={this.handleQuantity} type='number' />
               </GridColumn>
