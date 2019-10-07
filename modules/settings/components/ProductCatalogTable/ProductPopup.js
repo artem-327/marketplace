@@ -339,18 +339,6 @@ class ProductPopup extends React.Component {
                         />
                       </FormGroup>
 
-                      <FormGroup widths='equal'>
-                        <Input
-                          label={<FormattedMessage id='global.' defaultMessage='Manufacturer Product Name' />}
-                          name='mfrProductName'
-                        />
-
-                        <Input
-                          label={<FormattedMessage id='global.' defaultMessage='Manufacturer Product Code' />}
-                          name='mfrProductCode'
-                        />
-                      </FormGroup>
-
                       <FormGroup>
                         <Checkbox
                           fieldProps={{ width: 4 }}

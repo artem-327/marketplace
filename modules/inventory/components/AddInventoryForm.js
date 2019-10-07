@@ -1042,15 +1042,15 @@ class AddInventoryForm extends Component {
                                                 content={<>
                                                   <FormattedMessage
                                                     id='addInventory.enterProductInfo1'
-                                                    defaultMessage='Enter any product name, product number, or trade name from your product catalog for the product offer that you would like to list. Once you do the data related to that product name/umber will populate in the right hand column.' />
+                                                    defaultMessage='Enter product name or number from your product catalog for the product offer that you want to list. Once you do that, the data related to specified product will populate in the right hand column.' />
                                                   <br /><br />
                                                   <FormattedMessage
                                                     id='addInventory.enterProductInfo2'
-                                                    defaultMessage='If you do not see the product that you would like to list then check in Settings/Product Catalog that it is entered and mapped to a CAS Index Name/Number and then return to this page.' />
+                                                    defaultMessage='If you do not see the product that you want to list, then make sure in Settings/Product Catalog that the product exists and then return to this page.' />
                                                   <br /><br />
                                                   <FormattedMessage
                                                     id='addInventory.enterProductInfo3'
-                                                    defaultMessage='Entering a product name and number and mapping to a CAS Index Name and Number is required first before entering a product offer.' />
+                                                    defaultMessage='Mapping a product from product catalog is required before entering a product offer.' />
                                                 </>
                                                 }
                                                 trigger={<Icon name='info circle' color='blue' />}
