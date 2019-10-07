@@ -150,7 +150,8 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
-  const popupValues = state.profile.usersMe
+  const popupValues = state.auth.identity
+  
   return {
     popupValues: popupValues ? {
       email: popupValues.email,
@@ -158,7 +159,7 @@ const mapStateToProps = state => {
       phone: popupValues.phone,
       jobTitle: popupValues.jobTitle,
       preferredCurrency: popupValues.preferredCurrency && popupValues.preferredCurrency.id,
-      language: getSafe(() => state.auth.identity.preferredLanguage.language),
+      language: getSafe(() => popupValues.preferredLanguage.language),
       lastLoginAt: <FormattedDateTime dateTime={getSafe(() => state.auth.identity.lastLoginAt, null)} />
     } : null,
     currencies: state.profile.currency && state.profile.currency.map(d => {

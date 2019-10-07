@@ -6,6 +6,7 @@ import { getSafe } from '~/utils/functions'
 import { ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '~/modules/admin/action-types'
 import { SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '~/modules/settings/action-types'
 import { SET_PREFERRED_LANGUAGE_FULFILLED } from '~/modules/settings/action-types'
+import { PROFILE_UPDATE_MY_PROFILE_FULFILLED } from '~/modules/profile/action-types'
 
 const getAccessRights = (roles) => {
   let accessRights = {}
@@ -117,8 +118,8 @@ export default function reducer(state = initialState, action) {
       return initialState
     }
 
+    case PROFILE_UPDATE_MY_PROFILE_FULFILLED:
     case AT.UPDATE_IDENTITY: {
-
       return {
         ...state,
         identity: { ...payload, ...getAccessRights(payload.roles) }
