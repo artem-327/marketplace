@@ -14,7 +14,7 @@ const RuleItem = (props) => {
     offer,
     item: { model: { name, rule } }
   } = props
-  
+
   const handleChange = (propertyName, e) => {
     e.preventDefault()
     e.stopPropagation()
@@ -44,12 +44,13 @@ const RuleItem = (props) => {
   if (item.hasChildren()) {
     var all = item.all(n => !n.hasChildren()).length
     var broadcasted = item.all(n => !n.hasChildren() && n.model.rule.broadcast === 1).length
+    let { broadcast } = item.model.rule
 
     anyChildBroadcasting = broadcasted > 0
     allChildrenBroadcasting = all !== 0 && broadcasted !== 0 && all === broadcasted
 
-    if (allChildrenBroadcasting) item.model.rule.broadcast = 1
-    else if (!anyChildBroadcasting) item.model.rule.broadcast = 0
+    if (allChildrenBroadcasting) broadcast = 1
+    else if (!anyChildBroadcasting && broadcast !== 1) broadcast = 0
   }
 
   const broadcastedParents = nodePath.reverse().slice(1).filter(n => n.model.rule.broadcast === 1)

@@ -301,9 +301,6 @@ class Broadcast extends Component {
                     ...values
                   }
 
-
-                  console.log('submit')
-
                   if (templates.some((el) => el.name === values.name)) {
                     let { name, id } = this.state.selectedTemplate
 
