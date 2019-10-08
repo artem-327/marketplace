@@ -485,7 +485,7 @@ class Filter extends Component {
     if (autocompleteDataLoading) noResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
 
     let dropdownProps = {
-      search: true,
+      search: val => val,
       selection: true,
       multiple: true,
       fluid: true,
