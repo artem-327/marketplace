@@ -248,7 +248,7 @@ class Detail extends Component {
                           <GridDataColumn width={4}><strong><FormattedMessage id='order.productNumber' defaultMessage='Product Number' /></strong></GridDataColumn>
                           <GridDataColumn width={12}>{order.productCode}</GridDataColumn>
                           <GridDataColumn width={4}><strong><FormattedMessage id='order.packaging' defaultMessage='Packaging' /></strong></GridDataColumn>
-                          <GridDataColumn width={12}>{order.size}#{order.packaging}</GridDataColumn>
+                          <GridDataColumn width={12}>{order.packaging}</GridDataColumn>
                           <GridDataColumn width={4}><strong><FormattedMessage id='order.totalPkg' defaultMessage='Total PKG' /></strong></GridDataColumn>
                           <GridDataColumn width={12}>{order.totalPkg}</GridDataColumn>
                           <GridDataColumn width={4}><strong><FormattedMessage id='order.quantityOrdered' defaultMessage='Quantity Ordered' /></strong></GridDataColumn>

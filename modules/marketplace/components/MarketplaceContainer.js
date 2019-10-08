@@ -23,7 +23,7 @@ function mapStateToProps(store, { datagrid }) {
     appliedFilter: store.filter.filter.appliedFilter,
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
-      let currency = getSafe(() => po.cost.currency.code, 'USD')
+      let currency = getSafe(() => po.pricingTiers[0].price.currency.code, 'USD')
       return {
         id: po.id,
         productName: po.companyProduct.echoProduct.name,
@@ -34,7 +34,6 @@ function mapStateToProps(store, { datagrid }) {
         packagingUnit: getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, ''),
         packagingSize: getSafe(() => po.companyProduct.packagingSize, ''),
         quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.quantity} /> : 'N/A',
-        // qtyPart ? `${(parseInt(po.pkgAmount, 10) * parseInt(po.companyProduct.packagingSize, 10)).formatNumber()} ${qtyPart}` : 'N/A',
         fobPrice: po.pricingTiers.length > 1
           ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price.amount} /> -  <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price.amount} /> {qtyPart && (`/ ${qtyPart}`)} </>
           : <> <FormattedNumber style='currency' currency={currency} value={getSafe(() => po.pricing.pricingTiers[0].price.amount, 0)} /> {qtyPart && (`/ ${qtyPart}`)} </>,

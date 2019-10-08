@@ -70,7 +70,7 @@ export default class ShippingQuotes extends Component {
 
           <Input
             name='destination.quantity' type='number' label='Shipping Quantity'
-            inputProps={{ onChange: (_, { value }) => this.setState({ quantity: value }) }} />
+            inputProps={{ type: 'number', step: 1, min: 1, onChange: (_, { value }) => this.setState({ quantity: value }) }} />
           <Dropdown name='destination.zip' label='Zip Code' inputProps={{ search: true }} options={zipCodes} data-test='ShippingQuotes_zip_drpdn' />
 
           <Dropdown
