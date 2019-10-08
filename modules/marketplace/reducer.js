@@ -39,8 +39,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         autocompleteDataLoading: false,
         autocompleteData: uniqueArrayByKey(payload, 'id').map((el) => {
-          const productCode = getSafe(() => el.mfrProductCode, '')
-          const productName = getSafe(() => el.mfrProductName, '')
+          const productCode = getSafe(() => el.intProductCode, '')
+          const productName = getSafe(() => el.intProductName, '')
           return {
             ...el,
             key: el.id,
