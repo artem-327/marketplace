@@ -76,21 +76,30 @@ class MyInventory extends Component {
     let title = ''
 
     return rows.map(r => {
-      switch (r.status.toLowerCase()) {
-        case 'broadcasting':
-          title = <FormattedMessage id='myInventory.broadcasting.active' defaultMessage='Broadcasting now, switch off to stop broadcasting.' />
-          break
-        case 'not broadcasting':
-          title = <FormattedMessage id='myInventory.broadcasting.inactive' defaultMessage='Not Broadcasting now, switch on to start broadcasting.' />
-          break
-        case 'incomplete':
-          title = <FormattedMessage id='myInventory.broadcasting.incomplete' defaultMessage='Incomplete, please enter all required values first.' />
-          break
-        case 'unmapped':
-          title = <FormattedMessage id='myInventory.broadcasting.unmapped' defaultMessage='Unmapped, please make sure related Product is mapped first.' />
-          break
-        default:
-          title = ''
+      if (this.props.sellEligible) {
+        switch (r.status.toLowerCase()) {
+          case 'broadcasting':
+            title = <FormattedMessage id='myInventory.broadcasting.active'
+                                      defaultMessage='Broadcasting now, switch off to stop broadcasting.'/>
+            break
+          case 'not broadcasting':
+            title = <FormattedMessage id='myInventory.broadcasting.inactive'
+                                      defaultMessage='Not Broadcasting now, switch on to start broadcasting.'/>
+            break
+          case 'incomplete':
+            title = <FormattedMessage id='myInventory.broadcasting.incomplete'
+                                      defaultMessage='Incomplete, please enter all required values first.'/>
+            break
+          case 'unmapped':
+            title = <FormattedMessage id='myInventory.broadcasting.unmapped'
+                                      defaultMessage='Unmapped, please make sure related Product is mapped first.'/>
+            break
+          default:
+            title = ''
+        }
+      } else {
+        title = <FormattedMessage id='myInventory.broadcasting.noSellEligible'
+                                  defaultMessage='Your company is not eligible for broadcasting yet. Make sure to finalize your set-up.' />
       }
 
       return {
@@ -103,7 +112,7 @@ class MyInventory extends Component {
                   data-test='my_inventory_broadcast_chckb'
                   toggle
                   defaultChecked={r.status.toLowerCase() === 'broadcasting' && this.props.sellEligible !== false}
-                  className={cn({ error: r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped' })}
+                  className={cn({ error: this.props.sellEligible && (r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped') })}
                   disabled={!this.props.sellEligible || r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
                   onChange={(e, data) => {
                     e.preventDefault()
