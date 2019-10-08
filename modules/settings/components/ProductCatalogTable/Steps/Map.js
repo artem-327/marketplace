@@ -22,6 +22,7 @@ import {
 } from '../../../actions'
 
 import { getSafe } from '~/utils/functions'
+import _invert from 'lodash/invert'
 
 const simpleEchoProductList = [
   "alternativeNamesMapper",
@@ -238,7 +239,7 @@ class Map extends Component {
 
         if (foundItem) {
           newHeaders[vIndex].header = foundItem.value
-          ar = this.removeValueFromOptions(ar, getSafe(() => foundItem.value, null), vIndex)
+          ar = this.modifyOptionLists(ar, getSafe(() => foundItem.value, null), vIndex)
         }
 
         return getSafe(() => foundItem.value, '')
@@ -250,7 +251,7 @@ class Map extends Component {
         const indexMap = this.props.mappedHeader[vIndex]
 
         if (indexMap.header)
-          ar = this.removeValueFromOptions(ar, indexMap.header, vIndex)
+          ar = this.modifyOptionLists(ar, indexMap.header, vIndex)
 
         return getSafe(() => indexMap.header, '')
       })
@@ -259,9 +260,12 @@ class Map extends Component {
     this.setState({ options: ar, values: values })
   }
 
-  removeValueFromOptions = (options, value, notIndex) => {
+  modifyOptionLists = (options, value, notIndex, indexAdd) => {
+    const opts = this.state.mapping
     for (let i = 0; i < options.length; i++) {
       if (i !== notIndex) {
+        // Add previous value to all dropdowns options
+        if (indexAdd >= 0) options[i].push(opts[indexAdd])
         // Remove new value from all dropdowns options
         let indexRemove = options[i].findIndex(obj => obj.value === value)
         if (indexRemove >= 0) options[i].splice(indexRemove, 1)
@@ -347,11 +351,10 @@ class Map extends Component {
                       options={
                         this.state.options[lineHeader.columnNumber]
                       }
-                      disabled={!!this.props.selectedSavedMap}
                       onChange={this.selectMapping}
                       selectOnBlur={false}
                       data-test='settings_product_import_csv_column_drpdn'
-                      defaultValue={getSafe(() => values[lineIndex], '')}
+                      value={getSafe(() => values[lineIndex], '')}
                     />
                   </Table.Cell>
                 </Table.Row>
@@ -364,10 +367,29 @@ class Map extends Component {
   }
 
   selectSavedMap = (e, { value }) => {
-    const selectedMap = this.props.maps.filter(map => {
-      return map.id === value
+    const selectedMap = this.props.maps.find(map => map.id === value)
+    this.props.selectSavedMap(selectedMap)
+
+    let { options, values, mapping } = this.state
+    const invSelectedMap = _invert(selectedMap)
+    let newHeaders = this.props.mappedHeader
+
+    values = values.map((value, vIndex) => {
+      const content = newHeaders[vIndex].content
+      const mapper = invSelectedMap[content]
+
+      if (mapper) {
+        let indexAdd = mapping.findIndex(obj => obj.value === newHeaders[vIndex].header)
+        newHeaders[vIndex].header = mapper
+        options = this.modifyOptionLists(options, mapper, vIndex, indexAdd)
+      }
+
+      return getSafe(() => newHeaders[vIndex].header, '')
     })
-    this.props.selectSavedMap(selectedMap[0])
+
+    this.props.changeHeadersCSV(newHeaders)
+
+    this.setState({ options: options, values: values })
   }
 
   inputMapName = e => {
@@ -400,23 +422,8 @@ class Map extends Component {
     let opts = mapping
     let indexAdd = opts.findIndex(obj => obj.value === previousValue)
 
-    for (let i = 0; i < options.length; i++) {
-      if (i !== column_number) {
-        // Add previous value to all dropdowns options
-        if (indexAdd >= 0) options[i].push(opts[indexAdd])
-        // Remove new value from all dropdowns options
-        let indexRemove = options[i].findIndex(obj => obj.value === value)
-        if (indexRemove >= 0) options[i].splice(indexRemove, 1)
-        // Sort alphabetically
-        options[i].sort(function (a, b) {
-          let x = a.text.toLowerCase()
-          let y = b.text.toLowerCase()
-          if (x < y) { return -1 }
-          if (x > y) { return 1 }
-          return 0
-        })
-      }
-    }
+    // add to or remove from option lists
+    options = this.modifyOptionLists(options, value, column_number, indexAdd)
 
     this.setState({ options: options, values:  values })
 
