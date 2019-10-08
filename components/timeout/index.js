@@ -72,7 +72,8 @@ export default class TimeoutWarning extends Component {
           onIdle={this.handleIdle}
           onAction={this.handleAction}
           // debounce={10000}
-          throttle={15 * (60 * 1000)}
+          // throttle={15 * (60 * 1000)}
+          debounce={15 * (60 * 1000)}
           stopOnIdle={true}
         />
         <Modal open={warningOpen} closeIcon onClose={() => Router.push(`/auth/logout`)} size='tiny' style={{ width: 400 }} centered={false}>
