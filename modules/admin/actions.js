@@ -249,7 +249,7 @@ export function postNewProductName(productId, value) {
 	return async dispatch => {
 		await dispatch({
 			type: AT.ADMIN_POST_NEW_PRODUCT_NAME,
-			payload: api.postNewProductName(value)
+			payload: api.postNewProductName(productId, value)
 		})
 		await dispatch(getAlternativeProductNames(productId))
 	}

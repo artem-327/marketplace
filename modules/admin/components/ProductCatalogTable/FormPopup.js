@@ -795,12 +795,17 @@ class AddNewPopupEchoProduct extends React.Component {
                             type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.dotMarinePollutant', defaultMessage: 'DOT Marine Pollutant' })}
-                            name='dotMarinePollutant'
-                            type='text' />
+                          <Input label={formatMessage({ id: 'global.dotHazardLabel', defaultMessage: 'DOT Hazard Label' })}
+                                 name='dotHazardLabel'
+                                 type='text' />
                         </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.dotMarinePollutant', defaultMessage: 'DOT Marine Pollutant' })}
+                                 name='dotMarinePollutant'
+                                 type='text' />
+                        </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.dotPackagingGroup', defaultMessage: 'DOT Packaging Group' })}
                                  name='dotPackagingGroup'
@@ -811,13 +816,13 @@ class AddNewPopupEchoProduct extends React.Component {
                             name='dotProperShippingName'
                             type='text' />
                         </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.dotProperTechnicalName', defaultMessage: 'DOT Proper Technical Name' })}
-                            name='dotProperTechnicalName'
-                            type='text' />
-                        </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.dotProperTechnicalName', defaultMessage: 'DOT Proper Technical Name' })}
+                                 name='dotProperTechnicalName'
+                                 type='text' />
+                        </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.dotReportableQuantity', defaultMessage: 'DOT Reportable Quantity' })}
                                  name='dotReportableQuantity'
@@ -828,13 +833,13 @@ class AddNewPopupEchoProduct extends React.Component {
                             name='dotSevereMarinePollutant'
                             type='text' />
                         </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.dotUnNumber', defaultMessage: 'DOT UN Number' })}
-                            name='dotUnNumber'
-                            type='text' />
-                        </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.dotUnNumber', defaultMessage: 'DOT UN Number' })}
+                                 name='dotUnNumber'
+                                 type='text' />
+                        </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.endocrineDisruptorInformation', defaultMessage: 'Endocrine Disruptor Information' })}
                                  name='endocrineDisruptorInformation'
@@ -845,13 +850,13 @@ class AddNewPopupEchoProduct extends React.Component {
                             name='evaporationPoint'
                             type='text' />
                         </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.eyeContact', defaultMessage: 'Eye Contact' })}
-                            name='eyeContact'
-                            type='text' />
-                        </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.eyeContact', defaultMessage: 'Eye Contact' })}
+                                 name='eyeContact'
+                                 type='text' />
+                        </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.flashPoint', defaultMessage: 'Flash Point' })}
                                  name='flashPoint'
@@ -862,13 +867,13 @@ class AddNewPopupEchoProduct extends React.Component {
                             name='flammabilityOrExplosiveLower'
                             type='text' />
                         </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.flammabilityOrExplosiveUpper', defaultMessage: 'Flammability or Explosive Upper' })}
-                            name='flammabilityOrExplosiveUpper'
-                            type='text' />
-                        </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.flammabilityOrExplosiveUpper', defaultMessage: 'Flammability or Explosive Upper' })}
+                                 name='flammabilityOrExplosiveUpper'
+                                 type='text' />
+                        </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.flammabilitySolidGas', defaultMessage: 'Flammability (solid, gas)' })}
                                  name='flammabilitySolidGas'
@@ -879,13 +884,13 @@ class AddNewPopupEchoProduct extends React.Component {
                             name='generalAdvice'
                             type='text' />
                         </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.hazardStatement', defaultMessage: 'Hazard Statement' })}
-                            name='hazardStatement'
-                            type='text' />
-                        </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.hazardStatement', defaultMessage: 'Hazard Statement' })}
+                                 name='hazardStatement'
+                                 type='text' />
+                        </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.hazardousDecompositionProducts', defaultMessage: 'Hazardous Decomposition Products' })}
                                  name='hazardousDecompositionProducts'
@@ -896,30 +901,64 @@ class AddNewPopupEchoProduct extends React.Component {
                             name='hazardousPolymerization'
                             type='text' />
                         </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.hazardousReactions', defaultMessage: 'Hazardous Reactions' })}
-                            name='hazardousReactions'
-                            type='text' />
+                                 name='hazardousReactions'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.hmisChronicHealthHazard', defaultMessage: 'HMIS Chronic Health Hazard' })}
+                                 name='hmisChronicHealthHazard'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.hmisFlammability', defaultMessage: 'HMIS Flammability' })}
+                                 name='hmisFlammability'
+                                 type='text' />
                         </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.hmisHealthHazard', defaultMessage: 'HMIS Health Hazard' })}
+                                 name='hmisHealthHazard'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.hmisPhysicalHazard', defaultMessage: 'HMIS Physical Hazard' })}
+                                 name='hmisPhysicalHazard'
+                                 type='text' />
+                        </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.hnoc', defaultMessage: 'HNOC' })}
                                  name='hnoc'
                                  type='text' />
                         </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.iataHazardClass', defaultMessage: 'IATA Hazard Class' })}
-                            name='iataHazardClass'
-                            type='text' />
+                                 name='iataHazardClass'
+                                 type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.iataProperShippingName', defaultMessage: 'IATA Proper Shipping Name' })}
-                            name='iataProperShippingName'
-                            type='text' />
+                          <Input label={formatMessage({ id: 'global.iataHazardLabel', defaultMessage: 'IATA Hazard Label' })}
+                                 name='iataHazardLabel'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.iataPackagingGroup', defaultMessage: 'IATA Packaging Group' })}
+                                 name='iataPackagingGroup'
+                                 type='text' />
                         </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.iataProperShippingName', defaultMessage: 'IATA Proper Shipping Name' })}
+                                 name='iataProperShippingName'
+                                 type='text' />
+                        </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.iataProperTechnicalName', defaultMessage: 'IATA Proper Technical Name' })}
                                  name='iataProperTechnicalName'
@@ -930,10 +969,22 @@ class AddNewPopupEchoProduct extends React.Component {
                             name='iataUnNumber'
                             type='text' />
                         </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.imdgImoHazardClass', defaultMessage: 'IMDG/IMO Hazard Class' })}
-                            name='imdgImoHazardClass'
-                            type='text' />
+                                 name='imdgImoHazardClass'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.imdgImoHazardLabel', defaultMessage: 'IMDG/IMO Hazard Label' })}
+                                 name='imdgImoHazardLabel'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.imdgImoPackagingGroup', defaultMessage: 'IMDG/IMO Packaging Group' })}
+                                 name='imdgImoPackagingGroup'
+                                 type='text' />
                         </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
@@ -944,13 +995,13 @@ class AddNewPopupEchoProduct extends React.Component {
                         </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.imdgImoProperTechnicalName', defaultMessage: 'IMDG/IMO Proper Technical Name' })}
-                            name='imdgImoProperTechnicalName'
-                            type='text' />
+                                 name='imdgImoProperTechnicalName'
+                                 type='text' />
                         </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.imdgImoUnNumber', defaultMessage: 'IMDG/IMO UN Number' })}
-                            name='imdgImoUnNumber'
-                            type='text' />
+                                 name='imdgImoUnNumber'
+                                 type='text' />
                         </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
@@ -961,13 +1012,13 @@ class AddNewPopupEchoProduct extends React.Component {
                         </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.ingestion', defaultMessage: 'Ingestion' })}
-                            name='ingestion'
-                            type='text' />
+                                 name='ingestion'
+                                 type='text' />
                         </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.inhalation', defaultMessage: 'Inhalation' })}
-                            name='inhalation'
-                            type='text' />
+                                 name='inhalation'
+                                 type='text' />
                         </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
@@ -978,13 +1029,13 @@ class AddNewPopupEchoProduct extends React.Component {
                         </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.labelElements', defaultMessage: 'Label Elements' })}
-                            name='labelElements'
-                            type='text' />
+                                 name='labelElements'
+                                 type='text' />
                         </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.meltingPointRange', defaultMessage: 'Melting Point/Range' })}
-                            name='meltingPointRange'
-                            type='text' />
+                                 name='meltingPointRange'
+                                 type='text' />
                         </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
@@ -995,13 +1046,13 @@ class AddNewPopupEchoProduct extends React.Component {
                         </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.molecularFormula', defaultMessage: 'Molecular Formula' })}
-                            name='molecularFormula'
-                            type='text' />
+                                 name='molecularFormula'
+                                 type='text' />
                         </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.molecularWeight', defaultMessage: 'Molecular Weight' })}
-                            name='molecularWeight'
-                            type='text' />
+                                 name='molecularWeight'
+                                 type='text' />
                         </FormField>
                       </FormGroup>
                       <FormGroup widths='equal'>
@@ -1012,239 +1063,15 @@ class AddNewPopupEchoProduct extends React.Component {
                         </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.mutagenicEffects', defaultMessage: 'Mutagenic Effects' })}
-                            name='mutagenicEffects'
-                            type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.notesToPhysician', defaultMessage: 'Notes to Physician' })}
-                            name='notesToPhysician'
-                            type='text' />
-                        </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.odor', defaultMessage: 'Odor' })}
-                                 name='odor'
+                                 name='mutagenicEffects'
                                  type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.odorThreshold', defaultMessage: 'Odor Threshold' })}
-                            name='odorThreshold'
-                            type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.oshaDefinedHazards', defaultMessage: 'OSHA Defined Hazards' })}
-                            name='oshaDefinedHazards'
-                            type='text' />
-                        </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.otherAdverseEffects', defaultMessage: 'Other Adverse Effects' })}
-                                 name='otherAdverseEffects'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.partitionCoefficient', defaultMessage: 'Partition Coefficient' })}
-                            name='partitionCoefficient'
-                            type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.ph', defaultMessage: 'pH' })}
-                            name='ph'
-                            type='text' />
-                        </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.physicalState', defaultMessage: 'Physical State' })}
-                                 name='physicalState'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.precautionaryStatements', defaultMessage: 'Precautionary Statements' })}
-                            name='precautionaryStatements'
-                            type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.productLc50Inhalation', defaultMessage: 'Product LC50 Inhalation' })}
-                            name='productLc50Inhalation'
-                            type='text' />
-                        </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.productLd50Dermal', defaultMessage: 'Product LD50 Dermal' })}
-                                 name='productLd50Dermal'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.productLd50Oral', defaultMessage: 'Product LD50 Oral' })}
-                            name='productLd50Oral'
-                            type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.reactiveHazard', defaultMessage: 'Reactive Hazard' })}
-                            name='reactiveHazard'
-                            type='text' />
-                        </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.recommendedUse', defaultMessage: 'Recommended Use' })}
-                                 name='recommendedUse'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.reproductiveEffects', defaultMessage: 'Reproductive Effects' })}
-                            name='reproductiveEffects'
-                            type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.sensitization', defaultMessage: 'Sensitization' })}
-                            name='sensitization'
-                            type='text' />
-                        </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.signalWord', defaultMessage: 'Signal Word' })}
-                                 name='signalWord'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.skinContact', defaultMessage: 'Skin Contact' })}
-                            name='skinContact'
-                            type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.solubility', defaultMessage: 'Solubility' })}
-                            name='solubility'
-                            type='text' />
-                        </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.specificGravity', defaultMessage: 'Specific Gravity' })}
-                                 name='specificGravity'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.stability', defaultMessage: 'Stability' })}
-                            name='stability'
-                            type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.stotRepeatedExposure', defaultMessage: 'STOT- Repeated Exposure' })}
-                            name='stotRepeatedExposure'
-                            type='text' />
-                        </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.stotSingleExposure', defaultMessage: 'STOT- Single Exposure' })}
-                                 name='stotSingleExposure'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.supplementalInformation', defaultMessage: 'Supplemental Information' })}
-                            name='supplementalInformation'
-                            type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.symptomsEffects', defaultMessage: 'Symptoms/Effects' })}
-                            name='symptomsEffects'
-                            type='text' />
-                        </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.tdgHazardClass', defaultMessage: 'TDG Hazard Class' })}
-                                 name='tdgHazardClass'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.tdgProperShippingName', defaultMessage: 'TDG Proper Shipping Name' })}
-                            name='tdgProperShippingName'
-                            type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.tdgProperTechnicalName', defaultMessage: 'TDG Proper Technical Name' })}
-                            name='tdgProperTechnicalName'
-                            type='text' />
-                        </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.tdgUnNumber', defaultMessage: 'TDG UN Number' })}
-                                 name='tdgUnNumber'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.teratogenicity', defaultMessage: 'Teratogenicity' })}
-                            name='teratogenicity'
-                            type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.usesAdvisedAgainst', defaultMessage: 'Uses Advised against' })}
-                            name='usesAdvisedAgainst'
-                            type='text' />
-                        </FormField>
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.vaporDensity', defaultMessage: 'Vapor Density' })}
-                                 name='vaporDensity'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.vaporPressure', defaultMessage: 'Vapor Pressure' })}
-                            name='vaporPressure'
-                            type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.viscosity', defaultMessage: 'Viscosity' })}
-                            name='viscosity'
-                            type='text' />
-                        </FormField>
-                      </FormGroup>
-
-                      <FormGroup widths='equal'>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.wasteDisposalMethods', defaultMessage: 'Waste Disposal Methods' })}
-                                 name='wasteDisposalMethods'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.hmisChronicHealthHazard', defaultMessage: 'HMIS Chronic Health Hazard' })}
-                            name='hmisChronicHealthHazard'
-                            type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.hmisFlammability', defaultMessage: 'HMIS Flammability' })}
-                            name='hmisFlammability'
-                            type='text' />
-                        </FormField>
-                      </FormGroup>
-
-                      <FormGroup widths='equal'>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.hmisHealthHazard', defaultMessage: 'Health Hazard' })}
-                                 name='hmisHealthHazard'
-                                 type='text' />
-                        </FormField>
-                        <FormField>
-                          <Input label={formatMessage({ id: 'global.hmisPhysicalHazard', defaultMessage: 'HMIS Physical Hazard' })}
-                            name='hmisPhysicalHazard'
-                            type='text' />
                         </FormField>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.nfpaFireHazard', defaultMessage: 'NFPA Fire Hazard' })}
-                            name='nfpaFireHazard'
-                            type='text' />
+                                 name='nfpaFireHazard'
+                                 type='text' />
                         </FormField>
                       </FormGroup>
-
                       <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.nfpaHealthHazard', defaultMessage: 'NFPA Health Hazard' })}
@@ -1262,7 +1089,159 @@ class AddNewPopupEchoProduct extends React.Component {
                                  type='text' />
                         </FormField>
                       </FormGroup>
-
+                      <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.notesToPhysician', defaultMessage: 'Notes to Physician' })}
+                                 name='notesToPhysician'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.odor', defaultMessage: 'Odor' })}
+                                 name='odor'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.odorThreshold', defaultMessage: 'Odor Threshold' })}
+                                 name='odorThreshold'
+                                 type='text' />
+                        </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.oshaDefinedHazards', defaultMessage: 'OSHA Defined Hazards' })}
+                                 name='oshaDefinedHazards'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.otherAdverseEffects', defaultMessage: 'Other Adverse Effects' })}
+                                 name='otherAdverseEffects'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.partitionCoefficient', defaultMessage: 'Partition Coefficient' })}
+                                 name='partitionCoefficient'
+                                 type='text' />
+                        </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.ph', defaultMessage: 'pH' })}
+                                 name='ph'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.physicalState', defaultMessage: 'Physical State' })}
+                                 name='physicalState'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.precautionaryStatements', defaultMessage: 'Precautionary Statements' })}
+                                 name='precautionaryStatements'
+                                 type='text' />
+                        </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.productLc50Inhalation', defaultMessage: 'Product LC50 Inhalation' })}
+                                 name='productLc50Inhalation'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.productLd50Dermal', defaultMessage: 'Product LD50 Dermal' })}
+                                 name='productLd50Dermal'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.productLd50Oral', defaultMessage: 'Product LD50 Oral' })}
+                                 name='productLd50Oral'
+                                 type='text' />
+                        </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.reactiveHazard', defaultMessage: 'Reactive Hazard' })}
+                                 name='reactiveHazard'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.recommendedUse', defaultMessage: 'Recommended Use' })}
+                                 name='recommendedUse'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.reproductiveEffects', defaultMessage: 'Reproductive Effects' })}
+                                 name='reproductiveEffects'
+                                 type='text' />
+                        </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.sensitization', defaultMessage: 'Sensitization' })}
+                                 name='sensitization'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.signalWord', defaultMessage: 'Signal Word' })}
+                                 name='signalWord'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.skinContact', defaultMessage: 'Skin Contact' })}
+                                 name='skinContact'
+                                 type='text' />
+                        </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.solubility', defaultMessage: 'Solubility' })}
+                                 name='solubility'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.specificGravity', defaultMessage: 'Specific Gravity' })}
+                                 name='specificGravity'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.stability', defaultMessage: 'Stability' })}
+                                 name='stability'
+                                 type='text' />
+                        </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.stotRepeatedExposure', defaultMessage: 'STOT- Repeated Exposure' })}
+                                 name='stotRepeatedExposure'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.stotSingleExposure', defaultMessage: 'STOT- Single Exposure' })}
+                                 name='stotSingleExposure'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.supplementalInformation', defaultMessage: 'Supplemental Information' })}
+                                 name='supplementalInformation'
+                                 type='text' />
+                        </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.symptomsEffects', defaultMessage: 'Symptoms/Effects' })}
+                                 name='symptomsEffects'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.tdgHazardClass', defaultMessage: 'TDG Hazard Class' })}
+                                 name='tdgHazardClass'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.tdgHazardLabel', defaultMessage: 'TDG Hazard Label' })}
+                                 name='tdgHazardLabel'
+                                 type='text' />
+                        </FormField>
+                      </FormGroup>
                       <FormGroup widths='equal'>
                         <FormField>
                           <Input label={formatMessage({ id: 'global.tdgPackagingGroup', defaultMessage: 'TDG Packaging Group' })}
@@ -1270,15 +1249,58 @@ class AddNewPopupEchoProduct extends React.Component {
                                  type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.iataPackagingGroup', defaultMessage: 'IATA Packaging Group' })}
-                                 name='iataPackagingGroup'
+                          <Input label={formatMessage({ id: 'global.tdgProperShippingName', defaultMessage: 'TDG Proper Shipping Name' })}
+                                 name='tdgProperShippingName'
                                  type='text' />
                         </FormField>
                         <FormField>
-                          <Input label={formatMessage({ id: 'global.imdgImoPackagingGroup', defaultMessage: 'IMDG/IMO Packaging Group' })}
-                                 name='imdgImoPackagingGroup'
+                          <Input label={formatMessage({ id: 'global.tdgProperTechnicalName', defaultMessage: 'TDG Proper Technical Name' })}
+                                 name='tdgProperTechnicalName'
                                  type='text' />
                         </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.tdgUnNumber', defaultMessage: 'TDG UN Number' })}
+                                 name='tdgUnNumber'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.teratogenicity', defaultMessage: 'Teratogenicity' })}
+                                 name='teratogenicity'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.usesAdvisedAgainst', defaultMessage: 'Uses Advised against' })}
+                                 name='usesAdvisedAgainst'
+                                 type='text' />
+                        </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.vaporDensity', defaultMessage: 'Vapor Density' })}
+                                 name='vaporDensity'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.vaporPressure', defaultMessage: 'Vapor Pressure' })}
+                                 name='vaporPressure'
+                                 type='text' />
+                        </FormField>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.viscosity', defaultMessage: 'Viscosity' })}
+                                 name='viscosity'
+                                 type='text' />
+                        </FormField>
+                      </FormGroup>
+                      <FormGroup widths='equal'>
+                        <FormField>
+                          <Input label={formatMessage({ id: 'global.wasteDisposalMethods', defaultMessage: 'Waste Disposal Methods' })}
+                                 name='wasteDisposalMethods'
+                                 type='text' />
+                        </FormField>
+                        <FormField></FormField>
+                        <FormField></FormField>
                       </FormGroup>
 
 

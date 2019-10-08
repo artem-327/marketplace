@@ -2,7 +2,8 @@ import axios from 'axios'
 import Cookie from 'js-cookie'
 import Router from 'next/router'
 
-axios.defaults.baseURL = process.env.REACT_APP_API_URL // 'https://test.echoexchange.net/'
+// axios.defaults.baseURL = process.env.REACT_APP_API_URL
+
 axios.defaults.validateStatus = (status) => {
   return status < 400
 }
@@ -10,9 +11,9 @@ axios.defaults.validateStatus = (status) => {
 axios.interceptors.request.use(function (config) {
   // Do something before request is sent
   const auth = Cookie.getJSON('auth')
-  
+
   if (auth && !config.headers['Authorization']) config.headers['Authorization'] = 'Bearer ' + auth.access_token
-  
+
   return config
 }, function (error) {
   // Do something with request error

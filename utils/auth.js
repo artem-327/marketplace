@@ -55,8 +55,8 @@ export async function refreshToken() {
   const auth = Cookie.getJSON('auth')
   if (!auth) return
 
-  if (auth.expires - 60000 > new Date().getTime()) return
-
+  // if (auth.expires - 60000 > new Date().getTime()) return
+  
   const { data } = await api.post('/prodex/oauth/token',
     `grant_type=refresh_token&refresh_token=${auth.refresh_token}`,
     {

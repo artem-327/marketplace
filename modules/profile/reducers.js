@@ -11,7 +11,7 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-  const {payload} = action
+  const { payload } = action
 
   switch (action.type) {
 
@@ -67,7 +67,7 @@ export default function reducer(state = initialState, action) {
     case AT.PROFILE_GET_USERS_ME_FULFILLED: {
       return {
         ...state,
-        usersMe: action.payload,
+        usersMe: payload,
         loading: false
       }
     }
@@ -75,7 +75,7 @@ export default function reducer(state = initialState, action) {
     case AT.PROFILE_GET_CURRENCIES_FULFILLED: {
       return {
         ...state,
-        currency: action.payload,
+        currency: payload,
         loading: false
       }
     }

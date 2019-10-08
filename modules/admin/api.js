@@ -3,7 +3,7 @@ import axios from "axios"
 import { generateQueryString } from '~/utils/functions'
 
 export async function getAlternativeProductNames(value) {
-  const { data } = await api.get(`/prodex/api/cas-products/alternative-names/${value}`)
+  const { data } = await api.get(`/prodex/api/cas-products/alternative-names/cas-product/${value}`)
   return data
 }
 
@@ -126,8 +126,8 @@ export async function updateCompany(id, formData) {
 
 export const deleteCompany = (id) => api.delete(`/prodex/api/companies/id/${id}`).then(() => id)
 
-export async function postNewProductName(value) {
-  const { data } = await api.post('/prodex/api/cas-products/alternative-names', value)
+export async function postNewProductName(productId, value) {
+  const { data } = await api.post(`/prodex/api/cas-products/alternative-names/cas-product/${productId}`, value)
   return data
 }
 

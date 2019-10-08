@@ -71,19 +71,20 @@ export default class TimeoutWarning extends Component {
           timeout={IDLE_TIMEOUT - WARNING_OFFSET}
           onIdle={this.handleIdle}
           onAction={this.handleAction}
-          debounce={10000}
+          // debounce={10000}
+          throttle={15 * (60 * 1000)}
           stopOnIdle={true}
         />
-        <Modal open={warningOpen} closeIcon onClose={() => Router.push(`/auth/logout`)} size="tiny" style={{ width: 400 }} centered={false}>
+        <Modal open={warningOpen} closeIcon onClose={() => Router.push(`/auth/logout`)} size='tiny' style={{ width: 400 }} centered={false}>
           <Modal.Header>
-            <FormattedMessage id="auth.sessionTimeout.modalHeader" defaultMessage="SESSION TIMEOUT" />
+            <FormattedMessage id='auth.sessionTimeout.modalHeader' defaultMessage='SESSION TIMEOUT' />
           </Modal.Header>
           <Modal.Content>
-            <h4><FormattedMessage id="auth.sessionTimeout.title" defaultMessage="Your session will timeout in: " /></h4>
+            <h4><FormattedMessage id='auth.sessionTimeout.title' defaultMessage='Your session will timeout in: ' /></h4>
             <TimeTitle>{this.getRemainingTimeString()}</TimeTitle>
             <p>
-              <FormattedMessage 
-                id="auth.sessionTimeout.note" 
+              <FormattedMessage
+                id='auth.sessionTimeout.note'
                 defaultMessage={`
                   If you'd like to keep working press "Keep Working" below,
                   to log out press "Log Out". By doing nothing you will automatically be
@@ -93,11 +94,11 @@ export default class TimeoutWarning extends Component {
             </p>
           </Modal.Content>
           <Modal.Actions>
-            <Button basic data-test='logout_timeout_logout_btn' color="blue" onClick={() => Router.push(`/auth/logout`)}>
-              <FormattedMessage id="auth.sessionTimeout.buttonLogOut" defaultMessage="Log Out" />
+            <Button basic data-test='logout_timeout_logout_btn' color='blue' onClick={() => Router.push(`/auth/logout`)}>
+              <FormattedMessage id='auth.sessionTimeout.buttonLogOut' defaultMessage='Log Out' />
             </Button>
             <Button primary data-test='logout_timeout_keep_working_btn' onClick={this.resetIdleTimer}>
-              <FormattedMessage id="auth.sessionTimeout.buttonKeepWorking" defaultMessage="Keep Working" />
+              <FormattedMessage id='auth.sessionTimeout.buttonKeepWorking' defaultMessage='Keep Working'>{text => text}</FormattedMessage>
             </Button>
           </Modal.Actions>
         </Modal>
