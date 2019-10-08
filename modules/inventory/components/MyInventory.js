@@ -102,9 +102,9 @@ class MyInventory extends Component {
                 <Checkbox
                   data-test='my_inventory_broadcast_chckb'
                   toggle
-                  defaultChecked={r.status.toLowerCase() === 'broadcasting'}
+                  defaultChecked={r.status.toLowerCase() === 'broadcasting' && this.props.sellEligible !== false}
                   className={cn({ error: r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped' })}
-                  disabled={r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
+                  disabled={!this.props.sellEligible || r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
                   onChange={(e, data) => {
                     e.preventDefault()
                     this.props.patchBroadcast(data.checked, r.id, r.status)

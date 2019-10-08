@@ -179,8 +179,7 @@ export const websiteValidation = () => (
     .required(errorMessages.requiredMessage)
 )
 
-
-function validURL(str) {
+export const validURL = (str) => {
   const pattern = new RegExp(/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/)
-  return !!pattern.test(str)
+  return !!pattern.test(str.trim())
 }

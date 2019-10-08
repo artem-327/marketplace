@@ -10,6 +10,7 @@ import { withRouter } from 'next/router'
 import { applyFilter } from '~/modules/filter/actions'
 import { ArrayToMultiple } from '~/components/formatted-messages'
 import React from "react";
+import { FormattedNumber } from "react-intl";
 
 function mapStateToProps(state, { router, datagrid }) {
   const { orders } = state
@@ -19,6 +20,7 @@ function mapStateToProps(state, { router, datagrid }) {
     orders.data = []
   }
   const { type } = query
+  let currency = 'USD'  // ! ! Temporary
 
   return {
     endpointType: query.type === 'sales' ? 'sale' : query.type,
@@ -31,8 +33,7 @@ function mapStateToProps(state, { router, datagrid }) {
       globalStatus: r.globalStatus,
       date: moment(r.orderDate).format('MM/DD/YYYY'),
       customerName: (type === 'sales' ? r.buyerCompanyName : r.sellerCompanyName),
-      //productName: (typeof r.orderItems[0].productName !== 'undefined' ? r.orderItems[0].productName : 'N/A'),
-      productName: 'N/A', //! ! missing in response from BE <ArrayToMultiple values={r.orderItems.map(d => (d.productName))} />,
+      productName: <ArrayToMultiple values={r.orderItems.map(d => (d.productName ? d.productName : 'N/A'))} />,
       orderStatus: OrdersHelper.getOrderStatus(r.orderStatus),
       shippingStatus: OrdersHelper.getShippingStatus(r.shippingStatus),
       reviewStatus: OrdersHelper.getReviewStatus(r.reviewStatus),
@@ -41,10 +42,7 @@ function mapStateToProps(state, { router, datagrid }) {
       bl: '',
       sds: '',
       cofA: '',
-      orderTotal: "$" +
-        r.totalPriceWithShipping
-        ? r.totalPriceWithShipping.formatMoney(2)
-        : r.totalPrice.formatMoney(2)
+      orderTotal: <FormattedNumber style='currency' currency={currency} value={r.totalPriceWithShipping ? r.totalPriceWithShipping : r.totalPrice} />
     })),
     activeStatus: orders.statusFilter
   }

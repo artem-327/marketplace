@@ -19,6 +19,7 @@ import moment from 'moment/moment'
 function mapStateToProps(store, { datagrid }) {
   return {
     ...store.simpleAdd,
+    sellEligible: getSafe(() => store.auth.identity.company.sellEligible, false),
     appliedFilter: store.filter.filter.appliedFilter,
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
