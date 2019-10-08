@@ -251,7 +251,7 @@ class Broadcast extends Component {
       offer, templates, updateTemplate, mode,
       saveTemplate, filter, loading, intl: { formatMessage },
       treeData, toastManager, additionalGridProps,
-      asModal
+      asModal, hideFobPrice
     } = this.props
 
 
@@ -408,15 +408,20 @@ class Broadcast extends Component {
                 <Rule.Toggle>
                   <FormattedMessage id='broadcast.include' defaultMessage='Include' />
                 </Rule.Toggle>
-                <Rule.Toggle>
-                  <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
-                </Rule.Toggle>
-                <Rule.Toggle>
-                  <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />
-                </Rule.Toggle>
+                {!hideFobPrice &&
+                  <>
+                    <Rule.Toggle>
+                      <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
+                    </Rule.Toggle>
+                    <Rule.Toggle>
+                      <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />
+                    </Rule.Toggle>
+                  </>
+                }
               </Rule.Header>
               <Rule.Content>
                 <RuleItem
+                  hideFobPrice={hideFobPrice}
                   item={this.state.tree}
                   mode={mode}
                   offer={offer}
@@ -501,12 +506,14 @@ class Broadcast extends Component {
 
 Broadcast.propTypes = {
   asModal: bool,
-  additionalGridProps: object
+  additionalGridProps: object,
+  hideFobPrice: bool
 }
 
 Broadcast.defaultProps = {
   asModal: true,
-  additionalGridProps: {}
+  additionalGridProps: {},
+  hideFobPrice: false
 }
 
 export default injectIntl(withToastManager(connect(({ broadcast: { data, filter, ...rest } }) => {

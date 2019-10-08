@@ -13,7 +13,8 @@ const RuleItem = (props) => {
     onRowClick,
     item,
     offer,
-    item: { model: { name, rule } }
+    item: { model: { name, rule } },
+    hideFobPrice
   } = props
 
   const handleChange = (propertyName, e) => {
@@ -78,6 +79,7 @@ const RuleItem = (props) => {
   // const toggleDisabled = !!parentBroadcasted
   // const priceDisabled = rule.broadcast === 0 //!(rule.broadcast === 1 && !parentBroadcasted) //allChildrenBroadcasting || rule.broadcast !== 1 || toggleDisabled
 
+  console.log({ hideFobPrice })
 
   return (
     <>
@@ -94,24 +96,27 @@ const RuleItem = (props) => {
             toggle
             fitted
             indeterminate={rule.broadcast === 2}
-            checked={nodeBroadcast === 1 || ( getSafe(() => item.parent.model.rule.broadcast === 1, false) && !item.hasChildren())}
+            checked={nodeBroadcast === 1 || (getSafe(() => item.parent.model.rule.broadcast === 1, false) && !item.hasChildren())}
             // disabled={toggleDisabled}
             onClick={(e) => handleChange('broadcast', e)}
           />
         </Rule.Toggle>
-        <PriceControl
-          data-test='broadcast_price_control'
-          offer={offer}
-          disabled={rule.broadcast === 0}
-          rootRule={parentBroadcasted ? parentBroadcasted.model.rule : null}
-          rule={rule}
-          item={item}
-          onChange={onPriceChange}
-        />
+        {!hideFobPrice &&
+          <PriceControl
+            data-test='broadcast_price_control'
+            offer={offer}
+            disabled={rule.broadcast === 0}
+            rootRule={parentBroadcasted ? parentBroadcasted.model.rule : null}
+            rule={rule}
+            item={item}
+            onChange={onPriceChange}
+          />
+        }
       </Rule.Row>
 
       {(item.model.expanded || rule.type === 'root') && item.children.map((i, idx) => (
         <RuleItem
+          hideFobPrice={hideFobPrice}
           data-test={`broadcast_rule_item_${i}`}
           key={idx}
           item={i}
