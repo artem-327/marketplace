@@ -575,6 +575,7 @@
   "myInventory.allocatedPkg": "Allocated PKG",
   "myInventory.offerExpiration": "Expiration Date",
   "filter.warehouse": "Warehouse",
+  "filter.chemicalProductName": "Chemical/Product Name",
   "filter.saved": "Saved",
   "filter.searchWarehouse": "Search Warehouse",
   "filter.noFiltersApplied": "No Filters Applied",

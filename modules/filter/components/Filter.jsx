@@ -554,7 +554,7 @@ class Filter extends Component {
       <Accordion>
         <Segment basic>
           <AccordionItem>
-            {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalType' />)}
+            {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalProductName' />)}
             <AccordionContent active={!this.state.inactiveAccordion.chemicalType}>
               <BottomMargedDropdown {...dropdownProps} />
             </AccordionContent>
