@@ -23,20 +23,23 @@ export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', as
   let productOffers = await getAllProductOffers()
   let data = await api.loadGeneralRules()
   let pricingTiers = []
+  let min = 0, max = 0
+  if (productOffers.length > 0) {
 
-  productOffers.forEach(po => {
-    let first = po.pricingTiers[0], last = po.pricingTiers[po.pricingTiers.length - 1]
-    if (getSafe(() => first.price.amount, -1) > 0 && getSafe(() => last.price.amount, -1) > 0) {
-      pricingTiers.push({ low: first, high: last })
-    }
-  })
+    productOffers.forEach(po => {
+      let first = po.pricingTiers[0], last = po.pricingTiers[po.pricingTiers.length - 1]
+      if (getSafe(() => first.price.amount, -1) > 0 && getSafe(() => last.price.amount, -1) > 0) {
+        pricingTiers.push({ low: first, high: last })
+      }
+    })
 
-  let min = pricingTiers[0].low, max = pricingTiers[0].high
-  pricingTiers.forEach(tier => {
-    if (tier.low.price.amount < min.price.amount && tier.low.price.amount > 0) min = tier.low
-    if (tier.high.price.amount > max.price.amount && tier.high.price.amount > 0) max = tier.high
-  })
-  
+    min = pricingTiers[0].low, max = pricingTiers[0].high
+    pricingTiers.forEach(tier => {
+      if (tier.low.price.amount < min.price.amount && tier.low.price.amount > 0) min = tier.low
+      if (tier.high.price.amount > max.price.amount && tier.high.price.amount > 0) max = tier.high
+    })
+  }
+
   return {
     data,
     id: null,
@@ -44,7 +47,6 @@ export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', as
       id: null,
       pricingTiers: [max, min],
       currency: getSafe(() => productOffers[0].cost.currency.code, 'USD'),
-
     }
   }
 })
