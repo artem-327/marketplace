@@ -12,13 +12,16 @@ import {
   clearDataOfCSV,
   closeImportPopupCancel,
   postImportEchoProductCSV,
-  postImportProductOfferCSV
+  postImportProductOfferCSV,
+  handleSaveMapCSV
 } from '../../actions'
 
 import Upload from './Steps/UploadCSV'
 import Map from './Steps/Map'
 import Preview from './Steps/Preview'
 import ConfirmationPage from './Steps/ConfirmationPage'
+import _invert from 'lodash/invert'
+import confirm from '~/src/components/Confirmable/confirm'
 
 const StyledModal = styled(ModalContent)`
   height: 500px;
@@ -132,7 +135,7 @@ class ProductImportPopup extends Component {
   }
 
   submitHandler = () => {
-    const { mappedDataHeaderCSV, csvFileId } = this.props
+    const { isSaveMapCSV, mappedDataHeaderCSV, mappedHeaders, csvFileId, intl: { formatMessage }} = this.props
     const { currentStep } = this.state
 
     switch (currentStep) {
@@ -140,7 +143,32 @@ class ProductImportPopup extends Component {
         this.setState({ currentStep: 'map', isFinishUpload: true })
         break
       case 'map':
-        this.setState({ currentStep: 'preview', isFinishMap: true })
+        const { selectedSavedMap } = this.props // mapper (header): csvHeader (content)
+        if (selectedSavedMap && !isSaveMapCSV) {
+          const invertedSavedMap = _invert(selectedSavedMap) // csvHeader (content): mapper (header)
+          const foundModification = mappedHeaders.find(mapHead => {
+            if (!mapHead.header) {
+              return !!invertedSavedMap[mapHead.content]
+            }
+            return (mapHead.content !== selectedSavedMap[mapHead.header] || mapHead.header !== invertedSavedMap[mapHead.content])
+          })
+          if (foundModification) {
+            confirm(
+              formatMessage({ id: 'confirm.selectedMapChange', defaultMessage: 'Possible Map Modification' }),
+              formatMessage(
+                { id: 'confirm.selectedMapChanged.description', defaultMessage: `Mapped header do not properly correspond to selected map '${selectedSavedMap.mapName}'. Would you like to save changes to this map?` },
+                { mapName: selectedSavedMap.mapName })
+            ).then(() => {
+              this.props.handleSaveMapCSV()
+            }).finally(() => {
+              this.setState({ currentStep: 'preview', isFinishMap: true })
+            })
+          } else {
+            this.setState({ currentStep: 'preview', isFinishMap: true })
+          }
+        } else {
+          this.setState({ currentStep: 'preview', isFinishMap: true })
+        }
         break
       case 'preview':
         this.props.productOffer
@@ -162,17 +190,21 @@ const mapDispatchToProps = {
   clearDataOfCSV,
   closeImportPopupCancel,
   postImportEchoProductCSV,
-  postImportProductOfferCSV
+  postImportProductOfferCSV,
+  handleSaveMapCSV
 }
 
 const mapStateToProps = state => {
   return {
     csvFileId: state.settings.fileCSVId,
-    mappedDataHeaderCSV: state.settings.dataHeaderCSV
+    isSaveMapCSV: state.settings.isSaveMapCSV,
+    mappedDataHeaderCSV: state.settings.dataHeaderCSV,
+    mappedHeaders: state.settings.mappedHeaders,
+    selectedSavedMap: state.settings.selectedSavedMap
   }
 }
 
 export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProductImportPopup))
+)(injectIntl(ProductImportPopup)))

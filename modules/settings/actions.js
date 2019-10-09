@@ -708,10 +708,24 @@ export function postCSVMapEchoProduct(payload) {
   }
 }
 
+export function putCSVMapEchoProduct(mapId, data) {
+  return {
+    type: AT.PUT_CSV_MAP_ECHO_PRODUCT,
+    payload: api.putCSVMapEchoProduct(mapId, data)
+  }
+}
+
 export function postCSVMapProductOffer(payload) {
   return {
     type: AT.POST_CSV_MAP_PRODUCT_OFFER,
     payload: api.postCSVMapProductOffer(payload)
+  }
+}
+
+export function putCSVMapProductOffer(mapId, data) {
+  return {
+    type: AT.PUT_CSV_MAP_PRODUCT_OFFER,
+    payload: api.putCSVMapProductOffer(mapId, data)
   }
 }
 

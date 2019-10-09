@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { Table } from 'semantic-ui-react'
 
-import { dataHeaderCSV, postCSVMapEchoProduct, postCSVMapProductOffer } from '../../../actions'
+import { dataHeaderCSV, postCSVMapEchoProduct, putCSVMapEchoProduct, postCSVMapProductOffer, putCSVMapProductOffer } from '../../../actions'
 import _invert from 'lodash/invert'
 
 class Preview extends Component {
@@ -30,14 +30,24 @@ class Preview extends Component {
 
     super(props)
     this.state = {
-      filteredHeader: filteredHeaderMap || filteredHeader || null
+      // commented filteredHeaderMap - not found reason to use it - broken data when saving changed map
+      filteredHeader: /*filteredHeaderMap ||*/ filteredHeader || null
     }
   }
 
   componentDidMount() {
-    if (this.props.selectedSavedMap) {
+    if (this.props.selectedSavedMap && !this.props.isSaveMapCSV) {
       (this.props.productOffer || this.props.echoProduct) &&
         this.props.dataHeaderCSV(this.props.selectedSavedMap)
+
+      if (this.props.echoProduct)
+        this.props.isSaveMapCSV &&
+        data &&
+        this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
+          ...data,
+          mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+        })
+
     } else {
       const data =
         this.state.filteredHeader &&
@@ -53,21 +63,41 @@ class Preview extends Component {
         )
       data && this.props.dataHeaderCSV(data)
 
-      if (this.props.echoProduct)
-        this.props.isSaveMapCSV &&
+      if (this.props.selectedSavedMap) {
+        // save edited maps
+        if (this.props.echoProduct)
+          this.props.isSaveMapCSV &&
+          data &&
+          this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
+            ...data,
+            mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+          })
+
+        if (this.props.productOffer)
+          this.props.isSaveMapCSV &&
+          data &&
+          this.props.putCSVMapProductOffer(this.props.selectedSavedMap.id, {
+            ...data,
+            mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+          })
+      } else {
+        // save new maps
+        if (this.props.echoProduct)
+          this.props.isSaveMapCSV &&
           data &&
           this.props.postCSVMapEchoProduct({
             ...data,
             mapName: this.props.mapName
           })
 
-      if (this.props.productOffer)
-        this.props.isSaveMapCSV &&
-        data &&
-        this.props.postCSVMapProductOffer({
-          ...data,
-          mapName: this.props.mapName
-        })
+        if (this.props.productOffer)
+          this.props.isSaveMapCSV &&
+          data &&
+          this.props.postCSVMapProductOffer({
+            ...data,
+            mapName: this.props.mapName
+          })
+      }
     }
   }
 
@@ -114,7 +144,9 @@ class Preview extends Component {
 const mapDispatchToProps = {
   dataHeaderCSV,
   postCSVMapEchoProduct,
-  postCSVMapProductOffer
+  putCSVMapEchoProduct,
+  postCSVMapProductOffer,
+  putCSVMapProductOffer
 }
 
 const mapStateToProps = state => {

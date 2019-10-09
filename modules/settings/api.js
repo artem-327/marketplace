@@ -136,10 +136,14 @@ export default {
     api.get('/prodex/api/imports/echo-products/import-maps').then(response => response.data),
   postCSVMapEchoProduct: data =>
     api.post('/prodex/api/imports/echo-products/import-maps', data),
+  putCSVMapEchoProduct: (mapId, data) =>
+    api.put(`/prodex/api/imports/echo-products/import-maps/${mapId}`, data),
   getCSVMapProductOffer: () =>
     api.get('/prodex/api/imports/product-offers/import-maps').then(response => response.data),
   postCSVMapProductOffer: data =>
     api.post('/prodex/api/imports/product-offers/import-maps', data),
+  putCSVMapProductOffer: (mapId, data) =>
+    api.put(`/prodex/api/imports/product-offers/import-maps/${mapId}`, data),
   putWarehouse: (branchId, body) =>
     api.put(`/prodex/api/branches/${branchId}`, body).then((r) => r.data),
   // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
