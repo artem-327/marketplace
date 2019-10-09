@@ -72,7 +72,6 @@ class ProductCatalogTable extends Component {
       rows,
       // filterValue,
       openPopup,
-      openPopup2,
       deleteProduct,
       intl,
       datagrid,
@@ -93,7 +92,6 @@ class ProductCatalogTable extends Component {
           style={{ marginTop: '5px' }}
           rowActions={[
             { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row) },
-            { text: formatMessage({ id: 'settings.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }), callback: (row) => openPopup2(row) },
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row => {

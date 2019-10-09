@@ -174,7 +174,7 @@ class WarehousePopup extends React.Component {
             enableReinitialize
             onReset={closePopup}
             onSubmit={this.submitHandler} >
-            {({ setFieldValue, values }) => (
+            {({ setFieldValue, values, errors }) => (
               <>
                 <FormGroup widths='equal' data-test='settings_warehouse_popup_name_inp'>
                   <Input type='text' label={name} name='name' />
@@ -189,6 +189,7 @@ class WarehousePopup extends React.Component {
                 </FormGroup>
                 <FormGroup widths='equal' data-test='settings_warehouse_popup_phoneEmail_inp'>
                   <PhoneNumber
+                    error={errors}
                     name='contactPhone'
                     values={values}
                     label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}

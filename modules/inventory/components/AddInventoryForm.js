@@ -671,7 +671,7 @@ class AddInventoryForm extends Component {
     let defaultMessage = values.product ? 'N/A' : ''
     const blendMessage = formatMessage({ id: 'global.blend', defaultMessage: 'Blend' })
     let product = autocompleteData.find((el) => el.id === values.product)
-    let casProducts = getSafe(() => product.echoProduct.elements, '')
+    let casProducts = getSafe(() => product.echoProduct.elements, [])
 
     return (
       <Grid className='product-details' centered>
@@ -699,16 +699,16 @@ class AddInventoryForm extends Component {
                   <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.productName.internal' defaultMessage='Internal Product Name' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.intProductName, defaultMessage)}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.productNumber.internal' defaultMessage='Internal Product Number' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.productCode.internal' defaultMessage='Internal Product Code' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.intProductCode, defaultMessage)}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.measurement' defaultMessage='Measurement' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.packagingSize' defaultMessage='Packaging Size' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.packagingSize, defaultMessage)}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.um' defaultMessage='U/M' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.packagingUnit' defaultMessage='Packaging Unit' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.packagingUnit.name, defaultMessage)}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.up' defaultMessage='U/P' /></GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.packagingType' defaultMessage='Packaging Type' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.packagingType.name, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={16} mobile={16}>
@@ -732,21 +732,17 @@ class AddInventoryForm extends Component {
                     <Divider />
                   </GridColumn>
 
-                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.hazaardous' defaultMessage='Hazaardous' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && (getSafe(() => product.hazaardous.toString(), false) ? 'Yes' : 'No')}</GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.hazardous' defaultMessage='Hazardous' /></GridColumn>
+                  <GridColumn computer={8} mobile={16}>{values.product && (getSafe(() => product.hazardous.toString(), false) ? 'Yes' : 'No')}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.unCode' defaultMessage='UN Code' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.echoProduct.unNumber.unNumberCode, defaultMessage)}</GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.unNumber' defaultMessage='UN Number' /></GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.echoProduct.cfUnNumber, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.packGrp' defaultMessage='Packaging Group' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.echoProduct.packagingGroup.groupCode, defaultMessage)}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.echoProduct.cfPackagingGroup, defaultMessage)}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.hazaardousClass' defaultMessage='Hazaardous Class' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{
-                    getSafe(() => product.echoProduct.hazardClasses.length > 0, false)
-                      ? product.echoProduct.hazardClasses.map(hClass => (<Popup content={hClass.description} trigger={<Label>{hClass.classCode}</Label>} />)) : defaultMessage}
-                  </Label.Group>
-                  </GridColumn>
+                  <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.hazardClass' defaultMessage='Hazard Class' /></GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.echoProduct.cfHazardClass, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.stackable' defaultMessage='Stackable' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.stackable) ? 'Yes' : 'No'}</GridColumn>

@@ -10,7 +10,7 @@ import { getLanguages } from '~/modules/settings/actions'
 import { getSafe } from '~/utils/functions'
 
 import { FormattedDateTime } from '~/components/formatted-messages/'
-import { errorMessages, phoneValidation } from '~/constants/yupValidation'
+import { errorMessages } from '~/constants/yupValidation'
 import { PhoneNumber } from '~/modules/phoneNumber'
 
 import {
@@ -34,8 +34,7 @@ const initialFormValues = {
 const formValidation = Yup.object().shape({
   name: Yup.string().trim()
     .min(3, errorMessages.minLength(3))
-    .required(errorMessages.requiredMessage),
-  phone: phoneValidation()
+    .required(errorMessages.requiredMessage)
 })
 
 class MyProfile extends Component {

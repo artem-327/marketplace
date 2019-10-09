@@ -197,6 +197,13 @@ class SimpleEdit extends Component {
                     {values.product &&
                       <>
                         <GridRow columns={4}>
+                          <EllipsisColumn>
+                            <Input
+                              label={<BoldLabel><FormattedMessage id='global.externalProductName' defaultMessage='External Product Name'>{text => text}</FormattedMessage></BoldLabel>}
+                              name='casTradeName'
+                              inputProps={{ transparent: true, readOnly: true }}
+                            />
+                          </EllipsisColumn>
                           <GridColumn>
                             <Input
                               label={<BoldLabel><FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>{text => text}</FormattedMessage></BoldLabel>}
@@ -211,7 +218,6 @@ class SimpleEdit extends Component {
                               inputProps={{ transparent: true, readOnly: true }}
                             />
                           </GridColumn>
-
                           <GridColumn>
                             <Input
                               label={<BoldLabel><FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>{text => text}</FormattedMessage></BoldLabel>}
@@ -219,14 +225,6 @@ class SimpleEdit extends Component {
                               inputProps={{ transparent: true, readOnly: true }}
                             />
                           </GridColumn>
-
-                          <EllipsisColumn>
-                            <Input
-                              label={<BoldLabel><FormattedMessage id='global.casTradeName' defaultMessage='CAS/Trade Name'>{text => text}</FormattedMessage></BoldLabel>}
-                              name='casTradeName'
-                              inputProps={{ transparent: true, readOnly: true }}
-                            />
-                          </EllipsisColumn>
                         </GridRow>
                         <Divider />
                         <CompanyProductMixtures casProducts={values.casProducts} />

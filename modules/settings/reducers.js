@@ -12,7 +12,6 @@ export const initialState = {
   popupLoading: false,
   popupValues: null,
   isOpenPopup: false,
-  isOpenPopup2: false,
   isOpenUploadDocumentsPopup: null,
   usersRows: [],
   userEditRoles: false,
@@ -23,7 +22,6 @@ export const initialState = {
   creditCardsRows: [],
   bankAccountsRows: [],
   productsCatalogRows: [],
-  productAltNames: [],
   productsPackagingType: null,
   packagingTypes: [],
   productsUnitsType: [],
@@ -44,7 +42,7 @@ export const initialState = {
   systemSettingsModalOpen: false,
   sysSettingsUpdating: false,
   tabsNames: defaultTabs,
-  currentTab: defaultTabs[0],
+  currentTab: defaultTabs[1],
   isOpenImportPopup: false,
   isDwollaOpenPopup: false,
   currentEditForm: null,
@@ -114,16 +112,6 @@ export default function reducer(state = initialState, action) {
         ...state,
         loaded: false,
         isOpenPopup: true,
-        isOpenPopup2: false,
-        popupValues: action.payload
-      }
-    }
-    case AT.OPEN_POPUP2: {
-      return {
-        ...state,
-        loaded: false,
-        isOpenPopup: false,
-        isOpenPopup2: true,
         popupValues: action.payload
       }
     }
@@ -131,7 +119,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isOpenPopup: false,
-        isOpenPopup2: false,
         popupValues: null
       }
     }
@@ -659,13 +646,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         editPopupSearchProducts
-      }
-    }
-
-    case AT.SETTINGS_GET_PRODUCT_ALTERNATIVE_NAMES_FULFILLED: {
-      return {
-        ...state,
-        productAltNames: action.payload,
       }
     }
 
