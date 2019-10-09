@@ -408,16 +408,15 @@ class Broadcast extends Component {
                 <Rule.Toggle>
                   <FormattedMessage id='broadcast.include' defaultMessage='Include' />
                 </Rule.Toggle>
-                {!hideFobPrice &&
-                  <>
-                    <Rule.Toggle>
-                      <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
-                    </Rule.Toggle>
-                    <Rule.Toggle>
-                      <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />
-                    </Rule.Toggle>
-                  </>
-                }
+
+                <Rule.Toggle>
+                  <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
+                </Rule.Toggle>
+                <Rule.Toggle>
+                  {!hideFobPrice &&
+                    <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />
+                  }
+                </Rule.Toggle>
               </Rule.Header>
               <Rule.Content>
                 <RuleItem

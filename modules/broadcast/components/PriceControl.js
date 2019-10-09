@@ -117,7 +117,7 @@ export default class PriceControl extends Component {
 
 
   render() {
-    const { disabled, offer } = this.props
+    const { disabled, offer, hideFobPrice } = this.props
     const { type, value } = this.state
     const prices = this.getPrices()
 
@@ -139,10 +139,12 @@ export default class PriceControl extends Component {
           <Radio disabled={disabled} label='%' checked={type === 'multiplier'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'multiplier' })} data-test='broadcast_price_control_multiplier_rad' />
           <Radio disabled={disabled} label='$' checked={type === 'addition'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'addition' })} data-test='broadcast_price_control_addition_rad' />
         </ControlBox>
-        <ControlBox>
-          <FobPrice disabled={disabled}>{prices.lowStr} -</FobPrice>
-          <FobPrice disabled={disabled}>{prices.highStr}</FobPrice>
-        </ControlBox>
+        {!hideFobPrice &&
+          <ControlBox>
+            <FobPrice disabled={disabled}>{prices.lowStr} -</FobPrice>
+            <FobPrice disabled={disabled}>{prices.highStr}</FobPrice>
+          </ControlBox>
+        }
       </Box>
     )
   }

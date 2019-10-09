@@ -43,7 +43,7 @@ class ControllerForm extends Component {
             )}</FormattedMessage>
           } name='dwollaController.ssn' />
           <Input inputProps={{ fluid: true }} label={formatMessage({ id: 'global.title', defaultMessage: 'Title' })} name='dwollaController.jobTitle' />
-          <DateInput
+          <Input
             inputProps={{ fluid: true }}
             label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
             name='dwollaController.dateOfBirth' />
