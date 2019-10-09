@@ -53,10 +53,14 @@ class Broadcast extends Component {
   }
 
   componentWillReceiveProps(props) {
-    this.setState({
-      filterSearch: props.filter.search,
-      tree: this.getFilteredTree(props.treeData, props.filter)
-    })
+    let tree = this.getFilteredTree(props.treeData, props.filter)
+    if (tree.hasChildren()) {
+      tree.walk((node) => {
+        if (getSafe(() => node.parent.model.rule.broadcast === 1, false)) node.model.rule.broadcast = 1
+      })
+    }
+
+    this.setState({ filterSearch: props.filter.search, tree })
   }
 
   handlePriceChange = (node) => {
@@ -88,7 +92,9 @@ class Broadcast extends Component {
     this.props.treeData.walk((node) => {
       if (!node.isRoot() &&
         (!node.hasChildren() || node.all((n) => n.model.type === 'company' || n.model.type === 'branch')) &&
-        node.model.type === 'state' && node.model.broadcast !== 0) broadcastingTo++
+        node.model.type === 'state') {
+        if (node.model.broadcast !== 0 || node.parent.model.broadcast === 1) broadcastingTo++
+      }
     })
 
     if (this.state.broadcastingTo !== broadcastingTo) this.setState({ broadcastingTo })
@@ -245,7 +251,7 @@ class Broadcast extends Component {
       offer, templates, updateTemplate, mode,
       saveTemplate, filter, loading, intl: { formatMessage },
       treeData, toastManager, additionalGridProps,
-      asModal
+      asModal, hideFobPrice
     } = this.props
 
 
@@ -402,15 +408,20 @@ class Broadcast extends Component {
                 <Rule.Toggle>
                   <FormattedMessage id='broadcast.include' defaultMessage='Include' />
                 </Rule.Toggle>
-                <Rule.Toggle>
-                  <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
-                </Rule.Toggle>
-                <Rule.Toggle>
-                  <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />
-                </Rule.Toggle>
+                {!hideFobPrice &&
+                  <>
+                    <Rule.Toggle>
+                      <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
+                    </Rule.Toggle>
+                    <Rule.Toggle>
+                      <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />
+                    </Rule.Toggle>
+                  </>
+                }
               </Rule.Header>
               <Rule.Content>
                 <RuleItem
+                  hideFobPrice={hideFobPrice}
                   item={this.state.tree}
                   mode={mode}
                   offer={offer}
@@ -495,12 +506,14 @@ class Broadcast extends Component {
 
 Broadcast.propTypes = {
   asModal: bool,
-  additionalGridProps: object
+  additionalGridProps: object,
+  hideFobPrice: bool
 }
 
 Broadcast.defaultProps = {
   asModal: true,
-  additionalGridProps: {}
+  additionalGridProps: {},
+  hideFobPrice: false
 }
 
 export default injectIntl(withToastManager(connect(({ broadcast: { data, filter, ...rest } }) => {

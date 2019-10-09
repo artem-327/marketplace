@@ -140,15 +140,23 @@ class DwollaRegister extends Component {
                   <GridRow>
                     <GridColumn computer={16}>
                       <Header as='h2'>
-                        <FormattedMessage id='dwolla.paymentPoweredBy' defaultMessage='Echo Global Chemical Exchange payment gateway is powered by:' />
+                        <FormattedMessage id='dwolla.thanksForJoining' defaultMessage='Thank you for joining the Echo Marketplace.' />
                       </Header>
                     </GridColumn>
                   </GridRow>
 
                   <GridRow>
-                    {/* <GridColumn>
-                      LOGO
-                </GridColumn> */}
+                    <GridColumn>
+                      <FormattedMessage
+                        id='dwolla.registrationProcess.description'
+                        values={{
+                          dwollaWhitePaper: <a href='https://www.dwolla.com/p/infosec-white-paper/' target='_blank'>https://www.dwolla.com/p/infosec-white-paper/</a>,
+                          dwollaSecurity: <a href='https://www.dwolla.com/security/' target='_blank'>https://www.dwolla.com/security/</a>,
+                          email: <a href='mailto:support@echoexchange.zendesk.com' target='_blank'>support@echoexchange.zendesk.com</a>,
+                          number: <a href='tel:(833)321-3246' target='_blank'>(833)321-3246</a>
+                        }}
+                      />
+                    </GridColumn>
                   </GridRow>
 
                 </Grid>
@@ -159,8 +167,8 @@ class DwollaRegister extends Component {
               <FormColumn computer={5} tablet={8}>
                 <Segment padded>
 
-                  <Header as='h4'><FormattedMessage id='dwolla.dwolla.confirmAcc' defaultMessage='Confirm Dwolla Account Admin Information' /></Header>
-                  <Header as='h5'><FormattedMessage id='global.step' defaultMessage='Step' /> {' '} {this.state.step} / {numberOfSteps}</Header>
+                  <Header as='h4'><FormattedMessage id='dwolla.dwolla.confirmAcc' defaultMessage='Confirm Account Administrator Information' /></Header>
+                  {/* <Header as='h5'><FormattedMessage id='global.step' defaultMessage='Step' /> {' '} {this.state.step} / {numberOfSteps}</Header> */}
                   <Input label={<FormattedMessage id='global.legalFirstName' defaultMessage='Legal First Name' />} inputProps={{ fluid: true }} name='firstName' />
                   <Input label={<FormattedMessage id='global.legalLastName' defaultMessage='Legal Last Name' />} inputProps={{ fluid: true }} name='lastName' />
                   <Input label={<FormattedMessage id='global.email' defaultMessage='E-Mail' />} inputProps={{ fluid: true }} name='email' />
@@ -168,12 +176,12 @@ class DwollaRegister extends Component {
 
                   <RightAlignedDiv>
                     <Button onClick={() => this.nextStep(formikProps)} primary>
-                    <FormattedMessage id='global.saveAndContinue' defaultMessage='Save and Continue'>{text => text}</FormattedMessage>
-                  </Button>
+                      <FormattedMessage id='global.saveAndContinue' defaultMessage='Save and Continue'>{text => text}</FormattedMessage>
+                    </Button>
                   </RightAlignedDiv>
                 </Segment>
               </FormColumn>
-          </GridRow>
+            </GridRow>
           </>
         )
       }
@@ -378,7 +386,7 @@ class DwollaRegister extends Component {
               </Segment>
 
             </GridColumn>
-            <GridColumn computer={1} only='computer'/>
+            <GridColumn computer={1} only='computer' />
 
             <FormColumn computer={6} tablet={8}>
               <Segment padded>
@@ -563,7 +571,7 @@ class DwollaRegister extends Component {
           }),
           province: getSafe(() => primaryBranch.address.province.id),
           zip: getSafe(() => primaryBranch.address.zip.zip, false),
-          city: getSafe(() => primaryBranch.address.city,'')
+          city: getSafe(() => primaryBranch.address.city, '')
         },
         businessClassification: '9ed35a3b-7d6f-11e3-83c8-5404a6144203',
         industryClassification: '9ed38136-7d6f-11e3-bd75-5404a6144203',
