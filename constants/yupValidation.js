@@ -43,7 +43,8 @@ export const errorMessages = {
   moreThanOrdered: <FormattedMessage id='validation.moreThanOrdered' defaultMessage='More than ordered' />,
   oneOf: (arr) => <FormattedMessage id='validation.oneOf' defaultMessage={`Must be one of ${arr.toString()}`} values={{ values: arr.toString() }} />,
   aboveAge: age => <FormattedMessage id='validation.aboveAge' defaultMessage={`Must be at least ${age} years old`} values={{ age }} />,
-  invalidWebsite: <FormattedMessage id='validation.invalidURL' defaultMessage='Invalid Website URL' />
+  invalidWebsite: <FormattedMessage id='validation.invalidURL' defaultMessage='Invalid Website URL' />,
+  invalidWebsiteHttp: <FormattedMessage id='validation.invalidURLHttp' defaultMessage='Invalid Website URL (make sure to include http:// or https://)' />
 }
 
 export const provinceObjectRequired = (hasProvinces) => (
@@ -175,11 +176,16 @@ export const dunsValidation = () => {
 
 export const websiteValidation = () => (
   Yup.string(errorMessages.requiredMessage)
-    .test('website', errorMessages.invalidWebsite, (val) => val ? validURL(val) : true)
-    .required(errorMessages.requiredMessage)
+    .test('website', errorMessages.invalidWebsiteHttp, (val) => val ? validURLHttp(val) : false)
+    .test('website', errorMessages.invalidWebsite, (val) => val ? validURL(val) : false)
 )
 
-export const validURL = (str) => {
+function validURLHttp(str) {
+  const pattern = new RegExp(/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)/)
+  return !!pattern.test(str.trim())
+}
+
+function validURL(str) {
   const pattern = new RegExp(/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/)
   return !!pattern.test(str.trim())
 }

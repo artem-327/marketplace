@@ -1,4 +1,5 @@
 export const defaultTabs = [
+  { name: 'Company Settings', id: 14, type: 'system-settings', hideHandler: true },
   { name: 'Users', id: 1, type: 'users' },
   { name: 'Branches', id: 2, type: 'branches' },
   { name: 'Warehouses', id: 3, type: 'warehouses' },
@@ -8,7 +9,6 @@ export const defaultTabs = [
   { name: 'Bank Accounts', id: 8, type: 'bank-accounts' },
   { name: 'Delivery Addresses', id: 12, type: 'delivery-addresses' },
   { name: 'Logistics', id: 13, type: 'logistics' },
-  { name: 'Company Settings', id: 14, type: 'system-settings', hideHandler: true },
   { name: 'Documents', id: 15, type: 'documents' }
 ]
 

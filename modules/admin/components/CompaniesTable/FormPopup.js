@@ -27,7 +27,7 @@ import { provinceObjectRequired, errorMessages } from '~/constants/yupValidation
 
 import { CompanyForm } from '~/modules/company-form/'
 import { AddressForm } from '~/modules/address-form/'
-import { addressValidationSchema, phoneValidation, validURL } from '~/constants/yupValidation'
+import { addressValidationSchema, phoneValidation, websiteValidation } from '~/constants/yupValidation'
 
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
@@ -115,7 +115,7 @@ class AddNewPopupCasProducts extends React.Component {
 
     let validation = Yup.object().shape({
       name: Yup.string().trim().min(2, minLength).required(minLength),
-      website: Yup.string().trim().test('website', errorMessages.invalidWebsite, (val) => val ? validURL(val) : true),
+      website: websiteValidation(),
 
       mailingBranch: Yup.lazy(() => {
         if (mailingBranchRequired) return Yup.object().shape({

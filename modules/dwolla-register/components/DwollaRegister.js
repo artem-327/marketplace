@@ -91,7 +91,7 @@ class DwollaRegister extends Component {
         firstName: commonValidations.basicString,
         lastName: commonValidations.basicString,
         email: commonValidations.email,
-        website: websiteValidation()
+        website: websiteValidation().required(requiredMessage)
       },
       {
         businessName: commonValidations.basicString,
