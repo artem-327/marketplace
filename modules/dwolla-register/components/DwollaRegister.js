@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, GridColumn, GridRow, Segment, Header, Form, Button, List } from 'semantic-ui-react'
+import { Grid, GridColumn, GridRow, Segment, Header, Form, Button, Icon, Popup } from 'semantic-ui-react'
 import styled from 'styled-components'
 import { Formik } from 'formik'
 import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
@@ -48,7 +48,10 @@ const RightAlignedDiv = styled.div`
   text-align: right;
   margin-top: 20px;
 `
-
+// const StyledIcon = styled(Icon)`
+//   font-size: 1em !important;
+//   margin-left: 5px !important;
+// `
 
 const numberOfSteps = 7
 
@@ -135,7 +138,7 @@ class DwollaRegister extends Component {
         return (
           <>
             <GridRow>
-              <GridColumn computer={9} tablet={8}>
+              <GridColumn computer={8} tablet={8}>
                 <Grid textAlign='center'>
                   <GridRow>
                     <GridColumn computer={16}>
@@ -164,7 +167,7 @@ class DwollaRegister extends Component {
 
               <GridColumn computer={2} only='computer' />
 
-              <FormColumn computer={5} tablet={8}>
+              <FormColumn largeScreen={6} computer={5} tablet={9} mobile={10}>
                 <Segment padded>
 
                   <Header as='h4'><FormattedMessage id='dwolla.dwolla.confirmAcc' defaultMessage='Confirm Account Administrator Information' /></Header>
@@ -191,11 +194,12 @@ class DwollaRegister extends Component {
         return (
           <>
             <GridRow>
-              <GridColumn computer={10} tablet={3} mobile={2} />
-              <FormColumn largeScreen={6} computer={8} tablet={9} mobile={10}>
+              <GridColumn computer={8} tablet={8} />
+              <GridColumn computer={2} only='computer' />
+              <FormColumn largeScreen={6} computer={5} tablet={9} mobile={10}>
                 <Segment padded>
                   <Header as='h4'><FormattedMessage id='dwolla.confirmCompanyInfo' defaultMessage='Confirm Company Information' /></Header>
-                  <Header as='h5'><FormattedMessage id='global.step' defaultMessage='Step' /> {' '} {this.state.step} / {numberOfSteps}</Header>
+                  {/* <Header as='h5'><FormattedMessage id='global.step' defaultMessage='Step' /> {' '} {this.state.step} / {numberOfSteps}</Header> */}
                   <Input label={<FormattedMessage id='global.businessName' defaultMessage='Business Name' />} inputProps={{ fluid: true }} name='businessName' />
                   <Dropdown
                     loading={this.props.businessTypes.loading}
@@ -355,65 +359,77 @@ class DwollaRegister extends Component {
       case 5: {
         return (
           <>
-            <GridColumn computer={9} tablet={8}>
-              <Segment padded>
-                <Grid>
+            <GridRow>
+
+
+              <GridColumn computer={8} tablet={8}>
+                <Segment padded>
+                  <Grid>
+                    <GridRow verticalAlign='middle'>
+                      <GridColumn>
+                        <Header as='h2'><FormattedMessage id='dwolla.controller' defaultMessage='Controller'>{text => (
+                          <>
+                            {text}
+                            <Popup
+                              // Cant use styled-components as it doesn't trigger popup...
+                              trigger={<Icon style={{ fontSize: '1em', marginLeft: '5px' }} size='small' name='info circle' color='blue' />}
+                              content={<FormattedMessage id='dwolla.controllerTitlePopupasdasda' defaultMessage='Please read below for the definition of Controller in this context.'>{text => text}</FormattedMessage>} />
+                          </>
+                        )}</FormattedMessage></Header>
+                      </GridColumn>
+                    </GridRow>
+
+                    <GridRow>
+                      <BiggerTextColumn>
+                        <FormattedMessage id='dwolla.controllerDesc1' defaultMessage='To assure compliance with US financial institution policies, Echo must collect the information of at least one individual with significant responsibility for managing the legal entity listed above, such as:' />
+                      </BiggerTextColumn>
+                    </GridRow>
+                    <GridRow>
+                      <BiggerTextColumn>
+                        <FormattedMessage id='dwolla.controllerDesc2' defaultMessage='* An executive officer or senior manager (e.g., Chief Executive Officer, Chief Financial Officer, Chief Operating Officer, Managing Member, General Partner, President, Vice President, Treasurer); or' />
+                      </BiggerTextColumn>
+                    </GridRow>
+
+                    <GridRow>
+                      <BiggerTextColumn>
+                        <FormattedMessage id='dwolla.controllerDesc3' defaultMessage='* Any other individual who regularly performs similar functions.' />
+                      </BiggerTextColumn>
+
+                    </GridRow>
+
+                  </Grid>
+                </Segment>
+
+              </GridColumn>
+              <GridColumn computer={2} only='computer' />
+
+              <FormColumn largeScreen={6} computer={5} tablet={9} mobile={10}>
+                <Segment padded>
                   <GridRow>
                     <GridColumn>
-                      <Header as='h2'><FormattedMessage id='dwolla.controller' defaultMessage='Controller' /></Header>
+                      <Header as='h2'><FormattedMessage id='global.controllerInfo' defaultMessage='Controller Information' /></Header>
                     </GridColumn>
                   </GridRow>
+                  <ControllerForm setFieldValue={setFieldValue} values={values} />
+                  <GridRow>
+                    <GridColumn>
+                      <RightAlignedDiv>
+                        <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
+                          <FormattedMessage id='global.back' defaultMessage='Back'>{text => text}</FormattedMessage>
+                        </Button>
 
-                  <GridRow>
-                    <BiggerTextColumn>
-                      <FormattedMessage id='dwolla.controllerDesc1' defaultMessage='To assure compliance with US financial institution policies, Echo must collect the information of at least one individual with significant responsibility for managing the legal entity listed above, such as:' />
-                    </BiggerTextColumn>
-                  </GridRow>
-                  <GridRow>
-                    <BiggerTextColumn>
-                      <FormattedMessage id='dwolla.controllerDesc2' defaultMessage='* An executive officer or senior manager (e.g., Chief Executive Officer, Chief Financial Officer, Chief Operating Officer, Managing Member, General Partner, President, Vice President, Treasurer); or' />
-                    </BiggerTextColumn>
-                  </GridRow>
+                        <Button onClick={() => this.nextStep(formikProps)} primary>
+                          <FormattedMessage id='global.saveAndContinue' defaultMessage='Save and Continue'>{text => text}</FormattedMessage>
+                        </Button>
 
-                  <GridRow>
-                    <BiggerTextColumn>
-                      <FormattedMessage id='dwolla.controllerDesc3' defaultMessage='* Any other individual who regularly performs similar functions.' />
-                    </BiggerTextColumn>
+                      </RightAlignedDiv>
+                    </GridColumn>
 
                   </GridRow>
+                </Segment>
 
-                </Grid>
-              </Segment>
-
-            </GridColumn>
-            <GridColumn computer={1} only='computer' />
-
-            <FormColumn computer={6} tablet={8}>
-              <Segment padded>
-                <GridRow>
-                  <GridColumn>
-                    <Header as='h2'><FormattedMessage id='global.controllerInfo' defaultMessage='Controller Information' /></Header>
-                  </GridColumn>
-                </GridRow>
-                <ControllerForm setFieldValue={setFieldValue} values={values} />
-                <GridRow>
-                  <GridColumn>
-                    <RightAlignedDiv>
-                      <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
-                        <FormattedMessage id='global.back' defaultMessage='Back'>{text => text}</FormattedMessage>
-                      </Button>
-
-                      <Button onClick={() => this.nextStep(formikProps)} primary>
-                        <FormattedMessage id='global.saveAndContinue' defaultMessage='Save and Continue'>{text => text}</FormattedMessage>
-                      </Button>
-
-                    </RightAlignedDiv>
-                  </GridColumn>
-
-                </GridRow>
-              </Segment>
-
-            </FormColumn>
+              </FormColumn>
+            </GridRow>
           </>
         )
       }
@@ -503,15 +519,22 @@ class DwollaRegister extends Component {
 
                     <GridRow>
                       <BiggerTextColumn>
-                        <FormattedMessage id='dwolla.registrationCompleteDesc1' defaultMessage='Thanks for registering for your Dwolla Account. The verification process can take 24-48 hours. In the meantime you can add your Products, Warehouses, Branches, and other information in the Settings section of (web app name).' />
+                        <FormattedMessage
+                          id='dwolla.registrationCompleteDesc'
+                          values={{
+                            mail: <a href='mailto:support@echoexchange.net' target='_blank'>support@echoexchange.net</a>,
+                            tel: <a href='tel:(833) 321 3246' target='_blank'>(833) 321 3246</a>
+                          }}
+                        />
+                        {/* <FormattedMessage id='dwolla.registrationCompleteDesc1' defaultMessage='Thanks for registering for your Dwolla Account. The verification process can take 24-48 hours. In the meantime you can add your Products, Warehouses, Branches, and other information in the Settings section of (web app name).' /> */}
                       </BiggerTextColumn>
                     </GridRow>
 
-                    <GridRow>
+                    {/* <GridRow>
                       <BiggerTextColumn>
                         <FormattedMessage id='dwolla.registrationCompleteDesc2' defaultMessage='Once Dwolla sends you the verification e-mail you can then add your Bank Accounts and Logisitics details. If you don’t receive a verification e-mail please contact support@echoexchange.net or call (833) 321 3246.' />
                       </BiggerTextColumn>
-                    </GridRow>
+                    </GridRow> */}
 
                     <GridRow>
                       <GridColumn>
