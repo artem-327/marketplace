@@ -25,7 +25,6 @@ import { getSafe } from '~/utils/functions'
 import _invert from 'lodash/invert'
 
 const simpleEchoProductList = [
-  "alternativeNamesMapper",
   "appearanceMapper",
   "aspirationHazardMapper",
   "autoIgnitionTemperatureMapper",
@@ -307,6 +306,8 @@ class Map extends Component {
                   clearable
                   //disabled={!optionMaps}
                   onChange={this.selectSavedMap}
+                  search={true}
+                  selectOnBlur={false}
                   data-test='settings_product_import_select_map'
                 />
               </Grid.Column>
@@ -351,6 +352,7 @@ class Map extends Component {
                       options={
                         this.state.options[lineHeader.columnNumber]
                       }
+                      search={true}
                       onChange={this.selectMapping}
                       selectOnBlur={false}
                       data-test='settings_product_import_csv_column_drpdn'
@@ -379,6 +381,13 @@ class Map extends Component {
       const mapper = invSelectedMap[content]
 
       if (mapper) {
+        values.forEach(function(value2, v2Index) {
+          if (v2Index !== vIndex && mapper === value2) {
+            let indexAdd = mapping.findIndex(obj => obj.value === newHeaders[v2Index].header)
+            newHeaders[v2Index].header = ''
+            options = this.modifyOptionLists(options, '', v2Index, indexAdd)
+          }
+        }.bind(this))
         let indexAdd = mapping.findIndex(obj => obj.value === newHeaders[vIndex].header)
         newHeaders[vIndex].header = mapper
         options = this.modifyOptionLists(options, mapper, vIndex, indexAdd)

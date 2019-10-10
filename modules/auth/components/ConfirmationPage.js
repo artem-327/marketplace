@@ -115,7 +115,7 @@ class ConfirmationPage extends Component {
         }}
         className='flex stretched'
         style={{ padding: '20px' }}>
-        {({ values, setFieldValue, validateForm, submitForm }) => {
+        {({ values, setFieldValue, validateForm, submitForm, setFieldTouched, errors, touched, isSubmitting }) => {
           return (
             <ConfirmSegment raised compact>
               <Segment padded='very' style={{ position: 'static', paddingTop: '0' }}>
@@ -182,6 +182,8 @@ class ConfirmationPage extends Component {
                         label={formatMessage({ id: 'laststep.admin.phone', defaultMessage: 'Phone *' })}
                         name='companyAdminUser.phone'
                         values={values} setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched} errors={errors}
+                        touched={touched} isSubmitting={isSubmitting}
                       />
                     </Grid.Column>
                     <Grid.Column data-test='auth_confirm_adminEmail_inp'>

@@ -57,7 +57,7 @@ class ShippingEdit extends Component {
     )
   }
 
-  markup = ({ setFieldValue, values }) => {
+  markup = ({ setFieldValue, values, setFieldTouched, errors, touched, isSubmitting }) => {
     return (
       <>
         <FormGroup widths='equal' data-test='purchase_order_shipping_edit_name_inp' >
@@ -77,6 +77,10 @@ class ShippingEdit extends Component {
             values={values}
             label={<FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />}
             setFieldValue={setFieldValue}
+            setFieldTouched={setFieldTouched}
+            errors={errors}
+            touched={touched}
+            isSubmitting={isSubmitting}
           />
 
         </FormGroup>

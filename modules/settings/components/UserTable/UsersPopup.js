@@ -136,7 +136,7 @@ class UsersPopup extends React.Component {
             onReset={userEditRoles ? closeRolesPopup : closePopup}
             onSubmit={userEditRoles ? this.submitRoles : this.submitUser}
           >
-            {({ values, setFieldValue }) => (
+            {({ values, setFieldValue, setFieldTouched, errors, touched, isSubmitting }) => (
               <>
                 {userEditRoles ? (
                   roles.map((role, i) => (
@@ -170,6 +170,8 @@ class UsersPopup extends React.Component {
                           values={values}
                           label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
                           setFieldValue={setFieldValue}
+                          setFieldTouched={setFieldTouched} errors={errors}
+                          touched={touched} isSubmitting={isSubmitting}
                         />
                       </FormGroup>
                       <FormGroup>

@@ -116,7 +116,7 @@ class DeliveryAddressesPopup extends React.Component {
 
             }}
           >
-            {({ values, errors, setFieldValue }) => {
+            {({ values, setFieldValue, setFieldTouched, errors, touched, isSubmitting }) => {
               return (
                 <>
                   {/* {AddressSuggestInput} */}
@@ -155,6 +155,10 @@ class DeliveryAddressesPopup extends React.Component {
                       values={values}
                       label={<FormattedMessage id='settings.contactPhone' defaultMessage='Contact Phone' />}
                       setFieldValue={setFieldValue}
+                      setFieldTouched={setFieldTouched}
+                      errors={errors}
+                      touched={touched}
+                      isSubmitting={isSubmitting}
                     />
                   </FormGroup>
                   <div style={{ textAlign: 'right' }}>

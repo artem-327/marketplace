@@ -6,6 +6,7 @@ import styled from 'styled-components'
 //import { InputMask } from 'react-input-mask'
 const InputMask = require('react-input-mask')
 import get from 'lodash/get'
+import { getSafe } from '~/utils/functions'
 
 const StyledDropdown = styled(Dropdown)`
   min-width: 80px !important;
@@ -96,7 +97,7 @@ export default class PhoneNumber extends Component {
   }
 
   handleChange = async (fieldName, value) => {
-    const { name, setFieldValue } = this.props
+    const { name, setFieldValue, setFieldTouched } = this.props
 
     if (fieldName === 'phoneNumber') value = value.replace(/\s+/g, '')
 
@@ -106,18 +107,26 @@ export default class PhoneNumber extends Component {
     this.setState({ [fieldName]: value, phoneFull })
 
     setFieldValue(name, phone.phoneCountryCode ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber)
+    setFieldTouched(name, true, true)
   }
 
   render() {
     let {
       phoneCountryCodes,
       intl: { formatMessage },
-      label, error } = this.props
+      label,
+      errors,
+      name,
+      touched,
+      isSubmitting
+    } = this.props
 
     let {
       phoneCountryCode,
       phoneNumber,
     } = this.state
+
+    let error = (getSafe(() => touched[name], null) || isSubmitting) && getSafe(() => errors[name], null)
 
     return (
       <FormField error={error}>
@@ -148,18 +157,24 @@ export default class PhoneNumber extends Component {
 
 PhoneNumber.propTypes = {
   setFieldValue: func,
+  setFieldTouched: func,
   name: string.isRequired,
   values: object,
   label: object,
   search: bool,
-  error: oneOfType([node, string])
+  errors: object,
+  isSubmitting: bool,
+  touched: object
 }
 
 PhoneNumber.defaultProps = {
   setFieldValue: () => console.warn('setFieldValue not supplied in PhoneNumber!'),
+  setFieldTouched: () => console.warn('setFieldTouched not supplied in PhoneNumber!'),
   name: null,
   values: null,
   search: true,
   label: 'Phone',
-  error: null
+  errors: {},
+  isSubmitting: false,
+  touched: {}
 }
