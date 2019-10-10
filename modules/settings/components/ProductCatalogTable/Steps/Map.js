@@ -25,6 +25,7 @@ import { getSafe } from '~/utils/functions'
 import _invert from 'lodash/invert'
 
 const simpleEchoProductList = [
+  "alternativeNamesMapper",
   "appearanceMapper",
   "aspirationHazardMapper",
   "autoIgnitionTemperatureMapper",
@@ -155,9 +156,9 @@ const simpleCompanyProductList = [
 ]
 
 const simpleProductOfferList = [
-  "anonymousMapper",
   "assayMaxMapper",
   "assayMinMapper",
+  "broadcastMapper",
   "companyProductMapper",
   "conditionMapper",
   "costPerUomMapper",
