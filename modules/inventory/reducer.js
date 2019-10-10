@@ -178,7 +178,7 @@ export default function reducer(state = initialState, action) {
             id: pt.id,
             price: pt.price.amount,
             quantityFrom: pt.quantityFrom
-          })) : [{ price: 0.001, quantityFrom: 1 }],
+          })) : [{ price: null, quantityFrom: 1 }],
           origin: getSafe(() => data.origin.id),
           tradeName: data.tradeName,
           productCondition: getSafe(() => data.productCondition.id),
@@ -344,7 +344,7 @@ export default function reducer(state = initialState, action) {
           ...action.payload.data,
           pricingTiers: [{
             quantityFrom: 1,
-            price: 0.001,
+            price: null,
             manuallyModified: 0
           }]
         }

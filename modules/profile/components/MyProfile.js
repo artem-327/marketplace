@@ -72,8 +72,12 @@ class MyProfile extends Component {
               try {
                 let { name, phone, preferredCurrency, preferredLanguage } = values
 
-                let payload = { name, phone, preferredCurrency, preferredLanguage }
-                await this.props.updateMyProfile({ ...payload, preferredLanguage: languages.find((lan) => lan.language === values.language).language })
+                let payload = { name, phone, preferredCurrency }
+
+                if (values.language) payload.preferredLanguage = languages.find((lan) => lan.language === values.language).language
+
+
+                await this.props.updateMyProfile(payload)
               }
               catch (e) { console.error(e) }
               finally { setSubmitting(false) }
@@ -82,7 +86,7 @@ class MyProfile extends Component {
             data-test='my_profile_userData_inp'>
             {({ values, setFieldValue, setFieldTouched, errors, touched, isSubmitting }) => (
               <>
-               
+
                 <Input
                   type='text'
                   label={formatMessage({ id: 'global.email', defaultMessage: 'E-mail' })}
@@ -150,7 +154,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   const popupValues = state.auth.identity
-  
+
   return {
     popupValues: popupValues ? {
       email: popupValues.email,
