@@ -335,7 +335,7 @@ class AddNewPopupEchoProduct extends React.Component {
         }}
         onReset={closePopup}
         render={props => {
-          let { setFieldValue, values, isSubmitting, errors } = props
+          let { setFieldValue, values, isSubmitting, setFieldTouched, errors, touched } = props
 
           return (
             <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
@@ -536,16 +536,15 @@ class AddNewPopupEchoProduct extends React.Component {
                         clearable: true
                       }}
                     /> */}
-                    <FormField width={5} data-test='admin_product_popup_emergencyPhone_inp' error={errors.emergencyPhone ? true : false}>
+                    <FormField width={5} data-test='admin_product_popup_emergencyPhone_inp'>
                       <PhoneNumber
                         label={formatMessage({ id: 'global.emergencyPhone', defaultMessage: 'Emergency Phone' })}
                         name='emergencyPhone'
                         values={values}
                         setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched} errors={errors}
+                        touched={touched} isSubmitting={isSubmitting}
                       />
-                      {errors.emergencyPhone ? (
-                        <span className='sui-error-message'>{errors.emergencyPhone}</span>
-                      ) : null}
                     </FormField>
                     <FormField width={11}>
                       <Dropdown

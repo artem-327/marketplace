@@ -17,7 +17,16 @@ export default class ArrayToMultiple extends Component {
           <Popup
             wide='very'
             data-test='array_to_multiple_list'
-            content={<List items={values} />}
+            content={
+              <List>
+                {values.map((text) => (
+                  <List.Item>
+                    <List.Content>
+                      {text}
+                    </List.Content>
+                  </List.Item>
+                ))}
+              </List>}
             trigger={<Label><FormattedMessage id='global.multiple' defaultMessage='Multiple' /></Label>}
           />
         </div>

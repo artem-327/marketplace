@@ -75,7 +75,7 @@ class CompanyForm extends Component {
   }
 
   render() {
-    let { intl, loading, data, setFieldValue, values } = this.props
+    let { intl, loading, data, setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = this.props
     let { selectLogo, removeLogo } = this
 
     const { formatMessage } = intl
@@ -124,6 +124,8 @@ class CompanyForm extends Component {
           <PhoneNumber
             label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='phone'
             values={values} setFieldValue={setFieldValue}
+            setFieldTouched={setFieldTouched} errors={errors}
+            touched={touched} isSubmitting={isSubmitting}
           />
         </FormGroup>
 

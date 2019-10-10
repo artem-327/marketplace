@@ -354,7 +354,7 @@ class AddNewPopupCasProducts extends React.Component {
         }}
         onReset={closePopup}
         render={props => {
-          let { setFieldValue, values, isSubmitting, errors } = props
+          let { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = props
           return (
             <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
 
@@ -381,9 +381,10 @@ class AddNewPopupCasProducts extends React.Component {
                             <FormGroup widths='equal' data-test='admin_popup_company_primaryUserTitlePhone_inp'>
                               <Input label={<FormattedMessage id='global.jobTitle' defaultMessage='Job Title' />} name='primaryUser.jobTitle' />
                               <PhoneNumber
-                                error={getSafe(() => errors.primaryUser.phone)}
                                 label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='primaryUser.phone'
                                 values={values} setFieldValue={setFieldValue}
+                                setFieldTouched={setFieldTouched} errors={errors}
+                                touched={touched} isSubmitting={isSubmitting}
                               />
                             </FormGroup>
                           </Accordion.Content>
@@ -408,10 +409,11 @@ class AddNewPopupCasProducts extends React.Component {
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='primaryBranch.contactName' />
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />} name='primaryBranch.contactEmail' />
                             <PhoneNumber
-                              error={getSafe(() => errors.primaryBranch.contactPhone)}
                               label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />}
                               name='primaryBranch.contactPhone'
                               values={values} setFieldValue={setFieldValue}
+                              setFieldTouched={setFieldTouched} errors={errors}
+                              touched={touched} isSubmitting={isSubmitting}
                             />
                           </FormGroup>
                           <FormGroup widths='equal'>
@@ -435,10 +437,11 @@ class AddNewPopupCasProducts extends React.Component {
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact Email' />} name='mailingBranch.contactEmail' />
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='mailingBranch.contactName' />
                             <PhoneNumber
-                              error={getSafe(() => errors.mailingBranch.contactPhone)}
                               label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />}
                               name='mailingBranch.contactPhone'
                               values={values} setFieldValue={setFieldValue}
+                              setFieldTouched={setFieldTouched} errors={errors}
+                              touched={touched} isSubmitting={isSubmitting}
                             />
                           </FormGroup>
                           <FormGroup widths='equal'>

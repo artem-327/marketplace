@@ -80,7 +80,7 @@ class MyProfile extends Component {
 
             }}
             data-test='my_profile_userData_inp'>
-            {({ values, setFieldValue, errors }) => (
+            {({ values, setFieldValue, setFieldTouched, errors, touched, isSubmitting }) => (
               <>
                
                 <Input
@@ -92,9 +92,9 @@ class MyProfile extends Component {
                   label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
                   name='name' />
                 <PhoneNumber
-                  error={errors.phone}
                   label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='phone'
                   values={values} setFieldValue={setFieldValue}
+                  setFieldTouched={setFieldTouched} errors={errors} touched={touched} isSubmitting={isSubmitting}
                 />
                 <Input
                   type='text'

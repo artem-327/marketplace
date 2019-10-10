@@ -197,28 +197,28 @@ class SimpleEdit extends Component {
                     {values.product &&
                       <>
                         <GridRow columns={4}>
-                          <EllipsisColumn>
+                          <EllipsisColumn width={6}>
                             <Input
                               label={<BoldLabel><FormattedMessage id='global.externalProductName' defaultMessage='External Product Name'>{text => text}</FormattedMessage></BoldLabel>}
                               name='casTradeName'
                               inputProps={{ transparent: true, readOnly: true }}
                             />
                           </EllipsisColumn>
-                          <GridColumn>
+                          <GridColumn width={3}>
                             <Input
                               label={<BoldLabel><FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>{text => text}</FormattedMessage></BoldLabel>}
                               name='packagingSize'
                               inputProps={{ transparent: true, readOnly: true }}
                             />
                           </GridColumn>
-                          <GridColumn>
+                          <GridColumn width={3}>
                             <Input
                               label={<BoldLabel><FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit'>{text => text}</FormattedMessage></BoldLabel>}
                               name='uom'
                               inputProps={{ transparent: true, readOnly: true }}
                             />
                           </GridColumn>
-                          <GridColumn>
+                          <GridColumn width={4}>
                             <Input
                               label={<BoldLabel><FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>{text => text}</FormattedMessage></BoldLabel>}
                               name='packaging'
