@@ -28,7 +28,7 @@ install:
   stage: build
 
   script:
-    - npm ci
+    - npm install
     # show where the Cypress test runner binaries are cached
     - $(npm bin)/cypress cache path
     # show all installed versions of Cypress binary
