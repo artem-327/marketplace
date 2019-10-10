@@ -1,45 +1,6 @@
-# Docker images provided by https://github.com/cypress-io/cypress-docker-images
-# this example mostly follows the GitLab example in
-# https://github.com/cypress-io/cypress-example-kitchensink
+before_script:
+  - docker -D info
 
-# first, install Cypress, then run all tests (in parallel)
-stages:
-  - build
-  - test
-
-# to cache both npm modules and Cypress binary we use environment variables
-# to point at the folders we can list as paths in "cache" job settings
-variables:
-  npm_config_cache: "$CI_PROJECT_DIR/.npm"
-  CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
-
-# cache using branch name
-# https://gitlab.com/help/ci/caching/index.md
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - .npm
-    - cache/Cypress
-    - node_modules
-
-# this job installs NPM dependencies and Cypress
-install:
-  image: cypress/included:3.2.0
-  stage: build
-
+test:
   script:
-    - $(npm bin)/cypress verify
-
-# two jobs that run after "install" job finishes
-# NPM dependencies and Cypress binary should be already installed
-cypress-e2e:
-  image: cypress/included:3.2.0
-  stage: test
-  script:
-    - $(npm bin)/cypress run
-  artifacts:
-    expire_in: 1 week
-    when: always
-    paths:
-      - cypress/screenshots
-      - cypress/videos
+    - docker run -v $PWD:/e2e -w /e2e cypress/included:3.2.0
