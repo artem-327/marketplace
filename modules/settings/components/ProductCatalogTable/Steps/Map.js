@@ -234,8 +234,8 @@ class Map extends Component {
     if (!this.props.mappedHeader) {
       const newHeaders = this.props.CSV.headerCSV
       values = values.map((value, vIndex) => {
-        const content = newHeaders[vIndex].content.toLowerCase()
-        const foundItem = ar[vIndex].find(option => option.value.toLowerCase() === content || option.text.toLowerCase() === content)
+        const content = this.simplifyText(newHeaders[vIndex].content)
+        const foundItem = ar[vIndex].find(option => this.simplifyText(option.value) === content || this.simplifyText(option.text) === content)
 
         if (foundItem) {
           newHeaders[vIndex].header = foundItem.value
@@ -281,6 +281,11 @@ class Map extends Component {
     }
 
     return options
+  }
+
+  simplifyText = (text) => {
+    // simplify text to compare
+    return text.toLowerCase().replace(/[^0-9a-z]/gi, '').replace(/mapper$/gi, '').replace(/s$/gi, '')
   }
 
   render() {
