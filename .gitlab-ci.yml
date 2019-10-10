@@ -1,0 +1,6 @@
+before_script:
+  - docker info
+
+test:
+  script:
+    - docker run -it -v $PWD:/e2e -w /e2e cypress/included:3.2.0

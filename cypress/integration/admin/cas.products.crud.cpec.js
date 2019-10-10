@@ -16,13 +16,14 @@ context("CAS products CRUD", () => {
         cy.get("button[class='ui large primary button']").eq(0).click({force: true})
 
         cy.enterText("#field_input_casIndexName", "testinonium")
-        cy.enterText("#field_input_casNumber", "100-95")
+        cy.enterText("#field_input_casNumber", "100-95-521")
         cy.enterText("#field_input_chemicalName", "Testinonium")
 
         cy.get("#field_dropdown_hazardClassesId").click()
         cy.get("#field_dropdown_hazardClassesId").within(() => {
             cy.contains("Explosive: Division Not Specified").click()
         })
+        cy.waitForUI()
 
         cy.clickSave()
 
