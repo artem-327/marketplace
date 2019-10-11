@@ -42,9 +42,9 @@ const RuleItem = (props) => {
       })
     }
 
-    // let path = item.getPath()
-    // path.pop()
-    // path.forEach(n => setBroadcast(n))
+    let path = item.getPath()
+    path.pop()
+    path.forEach(n => setBroadcast(n))
 
     onChange(item)
   }
