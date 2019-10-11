@@ -39,24 +39,27 @@ class Broadcast extends Component {
     selectedTemplate: { name: null, id: null },
     broadcastingTo: 0,
     change: false,
-    saved: false
+    saved: false,
+    initialize: true
   }
 
   constructor(props) {
     super(props)
 
-    this.handleFilterChange = _.debounce(this.handleFilterChange, 250)
+    // this.handleFilterChange = _.debounce(this.handleFilterChange, 250)
   }
 
   componentDidMount() {
     this.props.getTemplates()
   }
 
-  componentWillReceiveProps(props) {
+  componentWillReceiveProps(props, next) {
     let tree = this.getFilteredTree(props.treeData, props.filter)
-    if (tree.hasChildren()) {
+
+    if (this.state.initialize && tree.hasChildren()) {
       tree.walk((node) => {
-        if (getSafe(() => node.parent.model.rule.broadcast === 1, false)) node.model.rule.broadcast = 1
+        // this.setBroadcast(node)
+        // if (getSafe(() => node.parent.model.rule.broadcast === 1, false)) node.model.rule.broadcast = 1
       })
     }
 
@@ -91,9 +94,10 @@ class Broadcast extends Component {
 
     this.props.treeData.walk((node) => {
       if (!node.isRoot() &&
-        (!node.hasChildren() || node.all((n) => n.model.type === 'company' || n.model.type === 'branch')) &&
-        node.model.type === 'state') {
-        if (node.model.broadcast !== 0 || node.parent.model.broadcast === 1) broadcastingTo++
+        (!node.hasChildren() || node.all((n) => n.model.type === 'company' || n.model.type === 'branch'))) {
+        if (node.model.type === (this.props.filter.category === 'branch' ? 'branch' : 'state')) {
+          if (node.model.broadcast !== 0 || node.parent.model.broadcast === 1) broadcastingTo++
+        }
       }
     })
 
@@ -120,6 +124,13 @@ class Broadcast extends Component {
 
   handleChange = (node) => {
     this.setState({ tree: this.state.tree, change: true, saved: false })
+
+
+
+    let path = getSafe(() => this.props.treeData.first((n) => (n.model.id === node.model.rule.id && n.model.type === node.model.rule.type)).getPath(), [])
+
+    for (let i = path.length - 2; i >= 0; i--) this.setBroadcast(path[i])
+
   }
 
   handleRowClick = (node) => {
@@ -214,7 +225,22 @@ class Broadcast extends Component {
       tree.walk(n => n.model.expanded = true)
     }
 
+    this.normalizeTree(tree)
+    this.setState({ tree: this.state.tree })
     return tree
+  }
+
+
+  normalizeTree = tree => {
+    tree.walk((node) => {
+      // this.setBroadcast(node)
+      if (getSafe(() => node.parent.model.rule.broadcast === 1, false)) node.model.rule.broadcast = 1
+    })
+    tree.walk((n) => {
+      if (n.hasChildren()) {
+        this.setBroadcast(n)
+      }
+    })
   }
 
 
@@ -254,8 +280,7 @@ class Broadcast extends Component {
       asModal, hideFobPrice
     } = this.props
 
-
-    let total = treeData.all(n => n.model.type === 'state').length
+    let total = treeData.all(n => n.model.type === (this.props.filter.category === 'branch' ? 'branch' : 'state')).length
 
 
     return (
@@ -420,6 +445,7 @@ class Broadcast extends Component {
               </Rule.Header>
               <Rule.Content>
                 <RuleItem
+                  filter={filter}
                   hideFobPrice={hideFobPrice}
                   item={this.state.tree}
                   mode={mode}
@@ -465,11 +491,17 @@ class Broadcast extends Component {
     )
   }
 
+
+
+
   saveBroadcastRules = async () => {
-    const { saveRules, id, treeData, toastManager } = this.props
+    const { saveRules, id, treeData, toastManager, filter } = this.props
+    this.setState({ initialize: false })
 
     await saveRules(id, treeData.model)
-    this.setState({ saved: true })
+
+    this.setState({ saved: true, initialize: true })
+
     toastManager.add(generateToastMarkup(
       'Saved successfully!',
       'New broadcast rules have been saved.'
@@ -479,10 +511,46 @@ class Broadcast extends Component {
 
   }
 
+  // TODO - dont repeat yourself
+  getNodeStatus = item => {
+    let allChildrenBroadcasting = false, anyChildBroadcasting = false
+
+    if (item.hasChildren()) {
+      var all = item.all(n => !n.hasChildren()).length
+      var broadcasted = item.all(n => !n.hasChildren() && getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1).length
+      anyChildBroadcasting = !!item.first((n) => {
+        return (getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 && getSafe(() => n.model.rule.id, n.model.id) !== item.model.id)
+      })
+
+      allChildrenBroadcasting = (all !== 0 && broadcasted !== 0) && all === broadcasted
+
+    }
+
+    return { allChildrenBroadcasting, anyChildBroadcasting }
+
+  }
+
+  setBroadcast = node => {
+    let { allChildrenBroadcasting, anyChildBroadcasting } = this.getNodeStatus(node)
+
+    let broadcast = 0
+    if (allChildrenBroadcasting) broadcast = 1
+    else if (anyChildBroadcasting) broadcast = 2
+
+    getSafe(() => node.model.rule.broadcast, null) !== null ? node.model.rule.broadcast = broadcast : node.model.broadcast = broadcast
+
+    return broadcast
+  }
+
+
   render() {
     const { open, closeBroadcast, asModal, isPrepared } = this.props
 
+
+
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
+
+
     if (!asModal) {
       if (!isPrepared) return null
       return this.getContent()
