@@ -58,11 +58,11 @@ class CartItemSummary extends Component {
       unNumbersFetching, updateHazmatInfo,
       toastManager } = this.props
     let { productOffer: { companyProduct } } = item
-
+    
     let initialValues = {
-      unCode: getSafe(() => item.unNumber.id, companyProduct.echoProduct.unNumber && companyProduct.echoProduct.unNumber.id || ''),
-      packagingGroup: getSafe(() => item.packagingGroup.id, companyProduct.packagingGroup ? companyProduct.packagingGroup.id : ''),
-      hazardClass: getSafe(() => item.hazardClass.id),
+      unCode: getSafe(() => item.unNumber.id, companyProduct.echoProduct.cfUnNumber),
+      packagingGroup: getSafe(() => item.packagingGroup.id, companyProduct.cfPackagingGroup),
+      hazardClass: getSafe(() => item.hazardClass.id, companyProduct.echoProduct.cfHazardClass),
       // item.hazardClasses ? item.hazardClasses.map((c) => c.id) : companyProduct.hazardClasses.map((hazardClass) => hazardClass.id),
       freightClass: getSafe(() => item.freightClass, companyProduct.freightClass || ''),
       nmfcNumber: getSafe(() => item.nmfcNumber, companyProduct.nmfcNumber || ''),
