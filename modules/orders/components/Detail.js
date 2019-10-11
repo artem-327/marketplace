@@ -106,7 +106,7 @@ class Detail extends Component {
   }
 
   render() {
-    const { router, order, action, isDetailFetching, openedAssignLots, openedReinitiateTransfer, cancelPayment, toastManager } = this.props
+    const { router, order, action, isDetailFetching, openedAssignLots, openedReinitiateTransfer, cancelPayment, toastManager, isPaymentCancellable } = this.props
     const { activeIndexes } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
 
@@ -164,7 +164,7 @@ class Detail extends Component {
                   <List.Content>
                     <List.Header as='label'><FormattedMessage id='order.paymentStatus' defaultMessage='Payment Status' /></List.Header>
                     <List.Description as='span'>
-                      <Label circular empty color={order.paymentStatus === 'Failed' ? 'red' : (order.paymentStatus !== 'N/A' ? 'blue' : false)}></Label> {order.orderType === 'Purchase' && order.paymentStatus === 'Pending' && moment().isBefore(orderDate.add(1, 'days')) ? (
+                      <Label circular empty color={order.paymentStatus === 'Failed' ? 'red' : (order.paymentStatus !== 'N/A' ? 'blue' : false)}></Label> {order.orderType === 'Purchase' && order.paymentStatus === 'Pending' && isPaymentCancellable ? (
                         <Popup content={<FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />}
                                trigger={
                                  <a onClick={() => confirm(
