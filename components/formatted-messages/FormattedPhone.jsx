@@ -10,13 +10,13 @@ import get from "lodash/get";
 
 function splitPhoneNumber(phone, phoneCountryCodes) {
   let filtered = phoneCountryCodes.filter(d => (    // filter possible country codes
-    d.phoneCode === phone.slice(0, d.phoneCode.length)
+    d.phoneCode === phone.replace('+', '').slice(0, d.phoneCode.length)
   ))
 
   let sorted = filtered.sort(function(a, b) {return b.phoneCode.length - a.phoneCode.length}) // sort by longest
 
   if (sorted.length > 0) {
-    const p = phone.slice(sorted[0].phoneCode.length)
+    const p = phone.replace('+', '').slice(sorted[0].phoneCode.length)
     const phoneNumber =
       p.substr(0, 3) + ' ' +
       p.substr(3, 3) + ' ' +

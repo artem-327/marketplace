@@ -72,6 +72,8 @@ export default class PhoneNumber extends Component {
   }
 
   componentDidMount = async () => {
+    const { name, setFieldValue, setFieldTouched } = this.props
+
     if (!this.props.phoneCountryCodes.length) await this.props.getCountryCodes()
 
     let phone = get(this.props.values, this.props.name, '').replace('+', '')
@@ -79,8 +81,11 @@ export default class PhoneNumber extends Component {
     this.setState({
       phoneCountryCode: phone.phoneCountryCode,
       phoneNumber: phone.phoneNumber,
-      phoneFull: phone.phoneCountryCode ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
+      phoneFull: phone.phoneCountryCode.length ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
     })
+
+    setFieldValue(name, phone.phoneCountryCode.length ? ('+' + phone.phoneCountryCode + phone.phoneNumber) : phone.phoneNumber)
+    setFieldTouched(name, true, true)
   }
 
   componentDidUpdate(prevProps, nextProps, snapshot) {
@@ -88,25 +93,25 @@ export default class PhoneNumber extends Component {
 
     if (phone !== this.state.phoneFull) {
       phone = splitPhoneNumber(phone, this.props.phoneCountryCodes)
+
       this.setState({
         phoneCountryCode: phone.phoneCountryCode,
         phoneNumber: phone.phoneNumber,
-        phoneFull: phone.phoneCountryCode ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
+        phoneFull: phone.phoneCountryCode.length ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
       })
     }
   }
 
   handleChange = async (fieldName, value) => {
     const { name, setFieldValue, setFieldTouched } = this.props
-
     if (fieldName === 'phoneNumber') value = value.replace(/\s+/g, '')
 
     const phone = { ...this.state, ...{ [fieldName]: value } }
-    const phoneFull = phone.phoneCountryCode ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
+    const phoneFull = phone.phoneCountryCode.length ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
 
     this.setState({ [fieldName]: value, phoneFull })
 
-    setFieldValue(name, phone.phoneCountryCode ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber)
+    setFieldValue(name, phone.phoneCountryCode.length ? ('+' + phone.phoneCountryCode + phone.phoneNumber) : phone.phoneNumber)
     setFieldTouched(name, true, true)
   }
 
@@ -126,10 +131,10 @@ export default class PhoneNumber extends Component {
       phoneNumber,
     } = this.state
 
-    let error = (getSafe(() => touched[name], null) || isSubmitting) && getSafe(() => errors[name], null)
+    let error = (get(touched, name, null) || isSubmitting) && get(errors, name, null)
 
     return (
-      <FormField error={error}>
+      <FormField error={!!error}>
         <label>{label}</label>
         <span style={{ display: 'flex' }}>
           <StyledDropdown

@@ -516,15 +516,15 @@ class Filter extends Component {
           text = warehouse.text
           :
           text = warehouse.name +
-          (warehouse.address ?
-            ', ' + warehouse.address.streetAddress +
-            ', ' + warehouse.address.city +
-            ', ' + warehouse.address.zip.zip +
+          (warehouse.deliveryAddress ?
+            ', ' + warehouse.deliveryAddress.address.streetAddress +
+            ', ' + warehouse.deliveryAddress.address.city +
+            ', ' + warehouse.deliveryAddress.address.zip.zip +
             (
-              warehouse.address.province ?
-                ', ' + warehouse.address.province.name : ''
+              warehouse.deliveryAddress.address.province ?
+                ', ' + warehouse.deliveryAddress.address.province.name : ''
             ) +
-            ', ' + warehouse.address.country.name
+            ', ' + warehouse.deliveryAddress.address.country.name
             :
             ''
           )

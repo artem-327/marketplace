@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Container, Segment, Grid, GridRow, GridColumn, Radio, Divider, Header, FormGroup } from 'semantic-ui-react'
-import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
+import { Form, Input, Button, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { bool, func, object } from 'prop-types'
 
 import * as Yup from 'yup'
@@ -31,6 +31,11 @@ const initialValues = {
     province: '',
     country: ''
   },
+  readyTime: '',
+  closeTime: '',
+  liftGate: false,
+  forkLift: false,
+  deliveryNotes: '',
 }
 
 class ShippingEdit extends Component {
@@ -58,6 +63,8 @@ class ShippingEdit extends Component {
   }
 
   markup = ({ setFieldValue, values, setFieldTouched, errors, touched, isSubmitting }) => {
+    const { intl: { formatMessage } } = this.props
+
     return (
       <>
         <FormGroup widths='equal' data-test='purchase_order_shipping_edit_name_inp' >
@@ -82,7 +89,38 @@ class ShippingEdit extends Component {
             touched={touched}
             isSubmitting={isSubmitting}
           />
-
+        </FormGroup>
+        <Header as='h3'><FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' /></Header>
+        <FormGroup data-test='settings_delivery_address_notes_inp' style={{ alignItems: 'center' }}>
+          <Input
+            fieldProps={{ width: 5 }}
+            type='text'
+            label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
+            name='readyTime'
+          />
+          <Input
+            fieldProps={{ width: 5 }}
+            type='text' label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
+            name='closeTime'
+          />
+          <Checkbox
+            fieldProps={{ width: 3 }}
+            label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
+            name='liftGate'
+            inputProps={{ 'data-test': 'settings_delivery_address_liftGate_inp' }}
+          />
+          <Checkbox
+            fieldProps={{ width: 3 }}
+            label={formatMessage({ id: 'global.forkLift', defaultMessage: 'fork Lift' })}
+            name='forkLift'
+            inputProps={{ 'data-test': 'settings_delivery_address_forklift_inp' }}
+          />
+        </FormGroup>
+        <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
+                    <TextArea
+                      name='deliveryNotes'
+                      label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
+                    />
         </FormGroup>
       </>
     )
@@ -90,7 +128,7 @@ class ShippingEdit extends Component {
 
 
   handleSubmit = async (values, { setSubmitting }) => {
-    let { email, name, phoneNumber } = values
+    let { email, name, phoneNumber, readyTime, closeTime, liftGate, forkLift, deliveryNotes } = values
     let { isNewAddress } = this.props
 
     const { postNewDeliveryAddress, updateDeliveryAddress, toastManager } = this.props
@@ -101,6 +139,7 @@ class ShippingEdit extends Component {
         country: JSON.parse(values.address.country).countryId
       },
       email, name, phoneNumber,
+      readyTime, closeTime, liftGate, forkLift, deliveryNotes,
     }
 
     try {
@@ -116,8 +155,6 @@ class ShippingEdit extends Component {
         <FormattedMessage id={`notifications.address${status}.header`} />,
         <FormattedMessage id={`notifications.address${status}.content`} values={{ name }} />
       ), { appearance: 'success' })
-
-
     }
     catch (e) { console.error(e) }
     finally { setSubmitting(false) }

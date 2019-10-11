@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Modal, FormGroup, Header } from 'semantic-ui-react'
+import {Modal, FormGroup, Header } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
 
 import {
@@ -12,7 +12,7 @@ import {
   getAddressSearch
 } from '../../actions'
 
-import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import Router from 'next/router'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -34,7 +34,12 @@ const initialFormValues = {
     province: '',
     streetAddress: '',
     zip: '',
-  }
+  },
+  readyTime: '',
+  closeTime: '',
+  liftGate: false,
+  forkLift: false,
+  deliveryNotes: '',
 }
 
 
@@ -97,7 +102,6 @@ class DeliveryAddressesPopup extends React.Component {
                 }
               }
               try {
-
                 if (values.address.province === '') delete payload.address['province']
                 if (popupValues) await updateDeliveryAddresses(rowId, payload, reloadFilter)
                 else await createDeliveryAddress(payload, reloadFilter)
@@ -161,6 +165,39 @@ class DeliveryAddressesPopup extends React.Component {
                       isSubmitting={isSubmitting}
                     />
                   </FormGroup>
+
+                  <Header as='h3'><FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' /></Header>
+                  <FormGroup data-test='settings_delivery_address_notes_inp' style={{ alignItems: 'center' }}>
+                    <Input
+                      fieldProps={{ width: 5 }}
+                      type='text'
+                      label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
+                      name='readyTime'
+                    />
+                    <Input
+                      fieldProps={{ width: 5 }}
+                      type='text' label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
+                      name='closeTime'
+                    />
+                    <Checkbox
+                      fieldProps={{ width: 3 }}
+                      label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
+                      name='liftGate'
+                      inputProps={{ 'data-test': 'settings_delivery_address_liftGate_inp' }}
+                    />
+                    <Checkbox
+                      fieldProps={{ width: 3 }}
+                      label={formatMessage({ id: 'global.forkLift', defaultMessage: 'fork Lift' })}
+                      name='forkLift'
+                      inputProps={{ 'data-test': 'settings_delivery_address_forklift_inp' }}
+                    />
+                  </FormGroup>
+                  <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
+                    <TextArea
+                      name='deliveryNotes'
+                      label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
+                    />
+                  </FormGroup>
                   <div style={{ textAlign: 'right' }}>
                     <Button.Reset data-test='settings_delivery_address_reset_btn'>
                       <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
@@ -200,7 +237,6 @@ const mapStateToProps = state => {
   //   a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
   // ))
 
-
   return {
     // AddressSuggestInput: prepareAddressSuggest(AddressSuggestOptions),
     // AddressSuggestOptions: AddressSuggestOptions,
@@ -220,7 +256,12 @@ const mapStateToProps = state => {
         streetAddress: address.streetAddress,
         zip: address.zip.zip
 
-      }
+      },
+      readyTime: getSafe(() => popupValues.readyTime, ''),
+      closeTime: getSafe(() => popupValues.closeTime, ''),
+      liftGate: getSafe(() => popupValues.liftGate, false),
+      forkLift: getSafe(() => popupValues.forkLift, false),
+      deliveryNotes: getSafe(() => popupValues.deliveryNotes, ''),
     } : null,
     countriesDropDown: state.settings.countriesDropDown,
     provincesDropDown: state.settings.provincesDropDown,

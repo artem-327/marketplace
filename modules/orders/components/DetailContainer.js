@@ -47,7 +47,7 @@ function prepareDetail(data, type) {
       orderStatus: OrdersHelper.getOrderStatus(data.orderStatus),
       orderType: type === 'sales' ? 'Sales' : 'Purchase',
       other: '$0.000',
-      packaging: <ArrayToMultiple values={orderItems.map(d => ((d.packagingSize && d.packagingType) ? d.packagingSize + ' ' + d.packagingType : 'N/A'))} />,
+      packaging: <ArrayToMultiple values={orderItems.map(d => ((d.packagingSize && d.packagingType) ? d.packagingSize + ' ' + d.packagingType.name : 'N/A'))} />,
       paymentInitiationDate: (typeof data.paymentInitiationDate !== 'undefined' ? moment(data.paymentInitiationDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
       paymentReceivedDate: (typeof data.paymentReceivedDate !== 'undefined' ? moment(data.paymentReceivedDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
       paymentSendDate: (typeof data.paymentSendDate !== 'undefined' ? moment(data.paymentSendDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
@@ -75,7 +75,7 @@ function prepareDetail(data, type) {
       terms: 'N/A',
       total: <FormattedNumber style='currency' currency={currency} value={totalPriceWithShipping} />, //"$" + totalPriceWithShipping.formatMoney(2),
       totalPkg: <ArrayToMultiple values={orderItems.map(d => (d.pkgAmount ? d.pkgAmount : 'N/A'))} />,
-      unit: <ArrayToMultiple values={orderItems.map(d => (d.packagingUnit ? d.packagingUnit : 'N/A'))} />,
+      unit: <ArrayToMultiple values={orderItems.map(d => (d.packagingUnit ? d.packagingUnit.name : 'N/A'))} />,
       unitCost: <FormattedNumber style='currency' currency={currency} value={0} />, //"$" + parseInt(0).formatMoney(2),
       unitPrice: <ArrayToMultiple values={orderItems.map(d => (
         <div><FormattedNumber style='currency' currency={currency} value={d.price} /></div>
