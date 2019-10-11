@@ -278,6 +278,12 @@ class SimpleEdit extends Component {
               </Modal.Content>
 
               <Modal.Actions>
+                <Button onClick={() => {
+                  simpleEditTrigger({}, false)
+                  this.setState({ open: false })
+                }}>
+                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage>
+                </Button>
                 <Button basic primary onClick={() => Router.push(`/inventory/${popupValues.id ? `edit?id=${popupValues.id}` : 'add'}`)}>
                   <FormattedMessage id='global.advanced' defaultMessage='Advanced'>{text => text}</FormattedMessage>
                 </Button>
