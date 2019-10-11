@@ -57,6 +57,7 @@ export const initialState = {
   fileCSVId: null,
   CSV: null,
   mappedHeaders: null,
+  missingRequired: [],
   dataHeaderCSV: null,
   loading: false,
   isSaveMapCSV: false,
@@ -687,7 +688,8 @@ export default function reducer(state = initialState, action) {
     case AT.CHANGE_HEADERS_CSV: {
       return {
         ...state,
-        mappedHeaders: action.payload
+        mappedHeaders: action.payload.mappedHeaders,
+        missingRequired: action.payload.missingRequired
       }
     }
 
@@ -726,6 +728,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         fileCSVId: null,
         mappedHeaders: null,
+        missingRequired: [],
         dataHeaderCSV: null,
         isOpenImportPopup: false,
         isSaveMapCSV: false,
@@ -739,6 +742,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         fileCSVId: null,
         mappedHeaders: null,
+        missingRequired: [],
         dataHeaderCSV: null,
         isSaveMapCSV: false,
         mapName: null,

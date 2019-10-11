@@ -1150,6 +1150,8 @@
   "notifications.productOffer.created.content": "Product Offer successfully listed.",
   "notifications.productOffer.edited.header": "Product Offer Edited",
   "notifications.productOffer.edited.content": "Product Offer successfully edited.",
+  "notifications.importMissingRequired.header": "Required Options",
+  "notifications.importMissingRequired.content": "First, you have to select all the required options: {missingRequired}",
   "laststep.address.city": "City *",
   "laststep.address.country": "Country *",
   "laststep.address.duns": "DUNS Number",

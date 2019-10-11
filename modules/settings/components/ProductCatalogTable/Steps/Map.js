@@ -24,159 +24,171 @@ import {
 import { getSafe } from '~/utils/functions'
 import _invert from 'lodash/invert'
 
-const simpleEchoProductList = [
-  "alternativeNamesMapper",
-  "appearanceMapper",
-  "aspirationHazardMapper",
-  "autoIgnitionTemperatureMapper",
-  "boilingPointRangeMapper",
-  "codeMapper",
-  "conditionsToAvoidMapper",
-  "decompositionTemperatureMapper",
-  "developmentalEffectsMapper",
-  "dotHazardClassMapper",
-  "dotHazardLabelMapper",
-  "dotMarinePollutantMapper",
-  "dotPackagingGroupMapper",
-  "dotProperShippingNameMapper",
-  "dotProperTechnicalNameMapper",
-  "dotReportableQuantityMapper",
-  "dotSevereMarinePollutantMapper",
-  "dotUnNumberMapper",
-  "elementsMapper",
-  "emergencyPhoneMapper",
-  "endocrineDisruptorInformationMapper",
-  "evaporationPointMapper",
-  "eyeContactMapper",
-  "flammabilityOrExplosiveLowerMapper",
-  "flammabilityOrExplosiveUpperMapper",
-  "flammabilitySolidGasMapper",
-  "flashPointMapper",
-  "generalAdviceMapper",
-  "hazardStatementMapper",
-  "hazardousDecompositionProductsMapper",
-  "hazardousPolymerizationMapper",
-  "hazardousReactionsMapper",
-  "hmisChronicHealthHazardMapper",
-  "hmisFlammabilityMapper",
-  "hmisHealthHazardMapper",
-  "hmisPhysicalHazardMapper",
-  "hnocMapper",
-  "iataHazardClassMapper",
-  "iataHazardLabelMapper",
-  "iataPackagingGroupMapper",
-  "iataProperShippingNameMapper",
-  "iataProperTechnicalNameMapper",
-  "iataUnNumberMapper",
-  "imdgImoHazardClassMapper",
-  "imdgImoHazardLabelMapper",
-  "imdgImoPackagingGroupMapper",
-  "imdgImoProperShippingNameMapper",
-  "imdgImoProperTechnicalNameMapper",
-  "imdgImoUnNumberMapper",
-  "incompatibleMaterialsMapper",
-  "ingestionMapper",
-  "inhalationMapper",
-  "irritationMapper",
-  "labelElementsMapper",
-  "manufacturerMapper",
-  "meltingPointRangeMapper",
-  "mexicoGradeMapper",
-  "mfrProductCodesMapper",
-  "molecularFormulaMapper",
-  "molecularWeightMapper",
-  "mostImportantSymptomsAndEffectsMapper",
-  "mutagenicEffectsMapper",
-  "nameMapper",
-  "nfpaFireHazardMapper",
-  "nfpaHealthHazardMapper",
-  "nfpaReactivityHazardMapper",
-  "nfpaSpecialHazardMapper",
-  "notesToPhysicianMapper",
-  "odorMapper",
-  "odorThresholdMapper",
-  "oshaDefinedHazardsMapper",
-  "otherAdverseEffectsMapper",
-  "packagingGroupMapper",
-  "partitionCoefficientMapper",
-  "phMapper",
-  "physicalStateMapper",
-  "precautionaryStatementsMapper",
-  "productLc50InhalationMapper",
-  "productLd50DermalMapper",
-  "productLd50OralMapper",
-  "reactiveHazardMapper",
-  "recommendedUseMapper",
-  "reproductiveEffectsMapper",
-  "sdsIssuedDateMapper",
-  "sdsPreparedByMapper",
-  "sdsRevisionDateMapper",
-  "sdsVersionNumberMapper",
-  "sensitizationMapper",
-  "signalWordMapper",
-  "skinContactMapper",
-  "solubilityMapper",
-  "specificGravityMapper",
-  "stabilityMapper",
-  "stotRepeatedExposureMapper",
-  "stotSingleExposureMapper",
-  "supplementalInformationMapper",
-  "symptomsEffectsMapper",
-  "tdgHazardClassMapper",
-  "tdgHazardLabelMapper",
-  "tdgPackagingGroupMapper",
-  "tdgProperShippingNameMapper",
-  "tdgProperTechnicalNameMapper",
-  "tdgUnNumberMapper",
-  "tdsIssuedDateMapper",
-  "tdsPreparedByMapper",
-  "tdsRevisionDateMapper",
-  "tdsVersionNumberMapper",
-  "teratogenicityMapper",
-  "usesAdvisedAgainstMapper",
-  "vaporDensityMapper",
-  "vaporPressureMapper",
-  "viscosityMapper",
-  "wasteDisposalMethodsMapper"
-]
+const simpleEchoProductList = {
+  required: [
+    "codeMapper",
+    "elementsMapper",
+    "manufacturerMapper",
+    "nameMapper",
+  ],
+  optional: [
+    "alternativeNamesMapper",
+    "appearanceMapper",
+    "aspirationHazardMapper",
+    "autoIgnitionTemperatureMapper",
+    "boilingPointRangeMapper",
+    "conditionsToAvoidMapper",
+    "decompositionTemperatureMapper",
+    "developmentalEffectsMapper",
+    "dotHazardClassMapper",
+    "dotHazardLabelMapper",
+    "dotMarinePollutantMapper",
+    "dotPackagingGroupMapper",
+    "dotProperShippingNameMapper",
+    "dotProperTechnicalNameMapper",
+    "dotReportableQuantityMapper",
+    "dotSevereMarinePollutantMapper",
+    "dotUnNumberMapper",
+    "emergencyPhoneMapper",
+    "endocrineDisruptorInformationMapper",
+    "evaporationPointMapper",
+    "eyeContactMapper",
+    "flammabilityOrExplosiveLowerMapper",
+    "flammabilityOrExplosiveUpperMapper",
+    "flammabilitySolidGasMapper",
+    "flashPointMapper",
+    "generalAdviceMapper",
+    "hazardStatementMapper",
+    "hazardousDecompositionProductsMapper",
+    "hazardousPolymerizationMapper",
+    "hazardousReactionsMapper",
+    "hmisChronicHealthHazardMapper",
+    "hmisFlammabilityMapper",
+    "hmisHealthHazardMapper",
+    "hmisPhysicalHazardMapper",
+    "hnocMapper",
+    "iataHazardClassMapper",
+    "iataHazardLabelMapper",
+    "iataPackagingGroupMapper",
+    "iataProperShippingNameMapper",
+    "iataProperTechnicalNameMapper",
+    "iataUnNumberMapper",
+    "imdgImoHazardClassMapper",
+    "imdgImoHazardLabelMapper",
+    "imdgImoPackagingGroupMapper",
+    "imdgImoProperShippingNameMapper",
+    "imdgImoProperTechnicalNameMapper",
+    "imdgImoUnNumberMapper",
+    "incompatibleMaterialsMapper",
+    "ingestionMapper",
+    "inhalationMapper",
+    "irritationMapper",
+    "labelElementsMapper",
+    "meltingPointRangeMapper",
+    "mexicoGradeMapper",
+    "mfrProductCodesMapper",
+    "molecularFormulaMapper",
+    "molecularWeightMapper",
+    "mostImportantSymptomsAndEffectsMapper",
+    "mutagenicEffectsMapper",
+    "nfpaFireHazardMapper",
+    "nfpaHealthHazardMapper",
+    "nfpaReactivityHazardMapper",
+    "nfpaSpecialHazardMapper",
+    "notesToPhysicianMapper",
+    "odorMapper",
+    "odorThresholdMapper",
+    "oshaDefinedHazardsMapper",
+    "otherAdverseEffectsMapper",
+    "packagingGroupMapper",
+    "partitionCoefficientMapper",
+    "phMapper",
+    "physicalStateMapper",
+    "precautionaryStatementsMapper",
+    "productLc50InhalationMapper",
+    "productLd50DermalMapper",
+    "productLd50OralMapper",
+    "reactiveHazardMapper",
+    "recommendedUseMapper",
+    "reproductiveEffectsMapper",
+    "sdsIssuedDateMapper",
+    "sdsPreparedByMapper",
+    "sdsRevisionDateMapper",
+    "sdsVersionNumberMapper",
+    "sensitizationMapper",
+    "signalWordMapper",
+    "skinContactMapper",
+    "solubilityMapper",
+    "specificGravityMapper",
+    "stabilityMapper",
+    "stotRepeatedExposureMapper",
+    "stotSingleExposureMapper",
+    "supplementalInformationMapper",
+    "symptomsEffectsMapper",
+    "tdgHazardClassMapper",
+    "tdgHazardLabelMapper",
+    "tdgPackagingGroupMapper",
+    "tdgProperShippingNameMapper",
+    "tdgProperTechnicalNameMapper",
+    "tdgUnNumberMapper",
+    "tdsIssuedDateMapper",
+    "tdsPreparedByMapper",
+    "tdsRevisionDateMapper",
+    "tdsVersionNumberMapper",
+    "teratogenicityMapper",
+    "usesAdvisedAgainstMapper",
+    "vaporDensityMapper",
+    "vaporPressureMapper",
+    "viscosityMapper",
+    "wasteDisposalMethodsMapper"
+  ]
+}
 
-const simpleCompanyProductList = [
-  "echoProduct",
-  "freezeProtectMapper",
-  "freightClassMapper",
-  "hazardousMapper",
-  "inciNameMapper",
-  "intProductCodeMapper",
-  "intProductNameMapper",
-  "nmfcNumberMapper",
-  "packagingSizeMapper",
-  "packagingTypeMapper",
-  "packagingUnitMapper",
-  "stackableMapper",
-]
+const simpleCompanyProductList = {
+  required: [
+    "echoProduct",
+    "intProductCodeMapper",
+    "intProductNameMapper",
+    "packagingSizeMapper",
+    "packagingTypeMapper",
+    "packagingUnitMapper"
+  ],
+  optional: [
+    "freezeProtectMapper",
+    "freightClassMapper",
+    "hazardousMapper",
+    "inciNameMapper",
+    "nmfcNumberMapper",
+    "stackableMapper"
+  ]
+}
 
-const simpleProductOfferList = [
-  "assayMaxMapper",
-  "assayMinMapper",
-  "broadcastMapper",
-  "companyProductMapper",
-  "conditionMapper",
-  "costPerUomMapper",
-  "currencyMapper",
-  "externalNotesMapper",
-  "formMapper",
-  "gradesMapper",
-  "inStockMapper",
-  "internalNotesMapper",
-  "lotsMapper",
-  "minPkgMapper",
-  "originMapper",
-  "pricingTiersMapper",
-  "processingTimeDaysMapper",
-  "splitPkgMapper",
-  "validityDateMapper",
-  "warehouseNameMapper"
-]
+const simpleProductOfferList = {
+  required: [
+    "companyProductMapper",
+    "pricingTiersMapper",
+    "warehouseNameMapper"
+  ],
+  optional: [
+    "assayMaxMapper",
+    "assayMinMapper",
+    "broadcastMapper",
+    "conditionMapper",
+    "costPerUomMapper",
+    "currencyMapper",
+    "externalNotesMapper",
+    "formMapper",
+    "gradesMapper",
+    "inStockMapper",
+    "internalNotesMapper",
+    "lotsMapper",
+    "minPkgMapper",
+    "originMapper",
+    "processingTimeDaysMapper",
+    "splitPkgMapper",
+    "validityDateMapper"
+  ]
+}
 
 class Map extends Component {
   state = {
@@ -190,12 +202,18 @@ class Map extends Component {
   getMapping = (mapperList) => {
     const { intl: { formatMessage }} = this.props
 
-    return mapperList.map(option => {
+    return mapperList.required.map(option => {
+      return {
+        text: formatMessage({ id: `global.${option.replace(/Mapper$/gi, '')}`, defaultMessage: option.replace(/Mapper$/gi, '') }),
+        value: option,
+        required: true
+      }
+    }).concat(mapperList.optional.map(option => {
       return {
         text: formatMessage({ id: `global.${option.replace(/Mapper$/gi, '')}`, defaultMessage: option.replace(/Mapper$/gi, '') }),
         value: option
       }
-    })
+    }))
   }
 
   componentDidMount = async() => {
@@ -245,7 +263,9 @@ class Map extends Component {
         return getSafe(() => foundItem.value, '')
       })
 
-      this.props.changeHeadersCSV(newHeaders)
+      const missingRequired = this.findNotSelectedRequired(values, mapping)
+
+      this.props.changeHeadersCSV(newHeaders, missingRequired)
     } else {
       values = values.map((value, vIndex) => {
         const indexMap = this.props.mappedHeader[vIndex]
@@ -374,6 +394,25 @@ class Map extends Component {
     )
   }
 
+  findNotSelectedRequired = (values, mapping) => {
+    if (!mapping)
+      mapping = this.state.mapping
+    const { intl: { formatMessage }} = this.props
+
+    const required = mapping.reduce((requiredFields, mapField) => {
+      if (mapField.required)
+        requiredFields.push(mapField.value)
+
+      return requiredFields
+    }, [])
+
+    const requiredMissing = required.filter(function(field) {return values.indexOf(field) < 0;});
+    return requiredMissing.map(reqM => {
+      const field = reqM.replace(/Mapper$/gi, '')
+      return formatMessage({ id: `global.${field}`, defaultMessage: field })
+    })
+  }
+
   selectSavedMap = (e, { value }) => {
     const selectedMap = this.props.maps.find(map => map.id === value)
     this.props.selectSavedMap(selectedMap)
@@ -402,7 +441,9 @@ class Map extends Component {
       return getSafe(() => newHeaders[vIndex].header, '')
     })
 
-    this.props.changeHeadersCSV(newHeaders)
+    const missingRequired = this.findNotSelectedRequired(values)
+
+    this.props.changeHeadersCSV(newHeaders, missingRequired)
 
     this.setState({ options: options, values: values })
   }
@@ -440,9 +481,11 @@ class Map extends Component {
     // add to or remove from option lists
     options = this.modifyOptionLists(options, value, column_number, indexAdd)
 
-    this.setState({ options: options, values:  values })
+    const missingRequired = this.findNotSelectedRequired(values)
 
-    this.props.changeHeadersCSV(newHeaders)
+    this.setState({ options: options, values: values })
+
+    this.props.changeHeadersCSV(newHeaders, missingRequired)
   }
 }
 
