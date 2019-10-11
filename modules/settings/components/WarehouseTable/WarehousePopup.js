@@ -11,12 +11,12 @@ import {
   getAddressSearch,
   removeEmpty
 } from '../../actions'
-import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import Router from 'next/router'
 
 import { generateToastMarkup } from '~/utils/functions'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { addressValidationSchema, errorMessages } from '~/constants/yupValidation'
 
@@ -33,7 +33,9 @@ const formValidation = () => Yup.object().shape({
   contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
   contactPhone: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
   contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
-  address: addressValidationSchema()
+  deliveryAddress: Yup.object().shape({
+    address: addressValidationSchema()
+  })
 })
 
 class WarehousePopup extends React.Component {
@@ -44,41 +46,57 @@ class WarehousePopup extends React.Component {
   submitHandler = async (values, actions) => {
     let { toastManager, popupValues, currentTab } = this.props
     const { handlerSubmitWarehouseEditPopup, postNewWarehouseRequest } = this.props
-    let country = JSON.parse(values.address.country).countryId
+    let country = JSON.parse(values.deliveryAddress.address.country).countryId
 
     let requestData = {
       ...values,
-      address: {
-        ...values.address,
-        country
+      deliveryAddress: {
+        ...values.deliveryAddress,
+        address: {
+          ...values.deliveryAddress.address,
+          country
+        },
       },
       warehouse: currentTab.type !== 'branches',
     }
 
-    if (popupValues) {
-      await handlerSubmitWarehouseEditPopup({
-        ...requestData,
-        company: this.props.company
-      },
-        popupValues.branchId
-      )
-    } else {
-      await postNewWarehouseRequest(requestData)
+    try {
+      if (popupValues) {
+        await handlerSubmitWarehouseEditPopup({
+            ...requestData,
+            company: this.props.company
+          },
+          popupValues.branchId
+        )
+      } else {
+        await postNewWarehouseRequest({
+          ...requestData,
+          deliveryAddress: {
+            ...requestData.deliveryAddress,
+            email: requestData.contactEmail,
+            name: requestData.contactName,
+            phoneNumber: requestData.contactPhone,
+          }
+        })
+      }
+
+      let status = currentTab === 'branches' ? 'branch' : 'warehouse'
+
+      status += popupValues ? 'Updated' : 'Created'
+
+      toastManager.add(generateToastMarkup(
+        <FormattedMessage id={`notifications.${status}.header`}/>,
+        <FormattedMessage id={`notifications.${status}.content`} values={{name: values.name}}/>
+        ),
+        {
+          appearance: 'success'
+        })
+
     }
-
-    let status = currentTab === 'branches' ? 'branch' : 'warehouse'
-
-    status += popupValues ? 'Updated' : 'Created'
-
-    toastManager.add(generateToastMarkup(
-      <FormattedMessage id={`notifications.${status}.header`} />,
-      <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
-    ),
-      {
-        appearance: 'success'
-      })
-
-    actions.setSubmitting(false)
+    catch { }
+    finally {
+      actions.setSubmitting(false)
+    }
   }
 
   getInitialFormValues = () => {
@@ -89,13 +107,24 @@ class WarehousePopup extends React.Component {
       contactName: '',
       contactPhone: '',
       contactEmail: '',
-      address: {
-        streetAddress: '',
-        city: '',
-        country: '',
-        zip: '',
-        province: '',
-      },
+      deliveryAddress: {
+        address: {
+          streetAddress: '',
+          city: '',
+          country: '',
+          zip: '',
+          province: '',
+        },
+        readyTime: '',
+        closeTime: '',
+        liftGate: false,
+        forkLift: false,
+        deliveryNotes: '',
+        email: '',
+        phoneNumber: '',
+        name: '',
+        callAhead: false,
+      }
     })
 
 
@@ -144,7 +173,7 @@ class WarehousePopup extends React.Component {
     // } = this.props
 
 
-    const { closePopup, popupValues, country, currentTab, provincesDropDown } = this.props
+    const { closePopup, popupValues, country, currentTab, provincesDropDown, intl: { formatMessage } } = this.props
 
     const name = currentTab.type === 'branches'
       ? <FormattedMessage id='settings.branchName' defaultMessage='Branch Name' />
@@ -180,6 +209,7 @@ class WarehousePopup extends React.Component {
                   <Input type='text' label={name} name='name' />
                 </FormGroup>
                 <AddressForm
+                  prefix={'deliveryAddress'}
                   setFieldValue={setFieldValue}
                   values={values} />
 
@@ -198,6 +228,38 @@ class WarehousePopup extends React.Component {
                     touched={touched} isSubmitting={isSubmitting}
                   />
                   <Input type='text' label='Email' name='contactEmail' />
+                </FormGroup>
+                <Header as='h3'><FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' /></Header>
+                <FormGroup data-test='settings_delivery_address_notes_inp' style={{ alignItems: 'center' }}>
+                  <Input
+                    fieldProps={{ width: 5 }}
+                    type='text'
+                    label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
+                    name='deliveryAddress.readyTime'
+                  />
+                  <Input
+                    fieldProps={{ width: 5 }}
+                    type='text' label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
+                    name='deliveryAddress.closeTime'
+                  />
+                  <Checkbox
+                    fieldProps={{ width: 3 }}
+                    label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
+                    name='deliveryAddress.liftGate'
+                    inputProps={{ 'data-test': 'settings_delivery_address_liftGate_inp' }}
+                  />
+                  <Checkbox
+                    fieldProps={{ width: 3 }}
+                    label={formatMessage({ id: 'global.forkLift', defaultMessage: 'fork Lift' })}
+                    name='deliveryAddress.forkLift'
+                    inputProps={{ 'data-test': 'settings_delivery_address_forklift_inp' }}
+                  />
+                </FormGroup>
+                <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
+                    <TextArea
+                      name='deliveryAddress.deliveryNotes'
+                      label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
+                    />
                 </FormGroup>
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset onClick={closePopup} data-test='settings_warehouse_popup_reset_btn'>
@@ -249,7 +311,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
+export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(withToastManager(WarehousePopup))
+)(withToastManager(WarehousePopup)))

@@ -139,42 +139,51 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state, { datagrid }) => {
 
-
   return {
     rows: datagrid.rows.map(r => {
-      let countryId = getSafe(() => r.address.country.id),
-        hasProvinces = getSafe(() => r.address.country.hasProvinces, false),
-        zip = getSafe(() => r.address.zip.zip),
-        provinceId = getSafe(() => r.address.province.id),
-        zipID = getSafe(() => r.address.zip.id)
-
+      let countryId = getSafe(() => r.deliveryAddress.address.country.id),
+        hasProvinces = getSafe(() => r.deliveryAddress.address.country.hasProvinces, false),
+        zip = getSafe(() => r.deliveryAddress.address.zip.zip),
+        provinceId = getSafe(() => r.deliveryAddress.address.province.id),
+        zipID = getSafe(() => r.deliveryAddress.address.zip.id)
 
       return {
         name: r.name,
-        addressName: r.address && r.address.streetAddress + ", " + r.address.city,
+        streetAddress: getSafe(() => r.deliveryAddress.address.streetAddress),
+        city: getSafe(() => r.deliveryAddress.address.city),
         popupValues: {
           initialValues: {
             name: r.name,
-            address: {
-              streetAddress: getSafe(() => r.address.streetAddress),
-              city: getSafe(() => r.address.city),
-              province: provinceId,
-              country: JSON.stringify({ countryId, hasProvinces }),
-              zip,
-            },
             contactName: r.contactName,
             contactPhone: r.contactPhone,
-            contactEmail: r.contactEmail
+            contactEmail: r.contactEmail,
+            deliveryAddress: {
+              address: {
+                streetAddress: getSafe(() => r.deliveryAddress.address.streetAddress),
+                city: getSafe(() => r.deliveryAddress.address.city),
+                province: provinceId,
+                country: JSON.stringify({countryId, hasProvinces}),
+                zip,
+              },
+              readyTime: getSafe(() => r.deliveryAddress.readyTime, ''),
+              closeTime: getSafe(() => r.deliveryAddress.closeTime, ''),
+              liftGate: getSafe(() => r.deliveryAddress.liftGate, false),
+              forkLift: getSafe(() => r.deliveryAddress.forkLift, false),
+              deliveryNotes: getSafe(() => r.deliveryAddress.deliveryNotes, ''),
+              name: getSafe(() => r.deliveryAddress.name, ''),
+              phoneNumber: getSafe(() => r.deliveryAddress.phoneNumber, ''),
+              email: getSafe(() => r.deliveryAddress.email, ''),
+            },
           },
           zipID,
           countryId,
           hasProvinces,
           branchId: r.id,
         },
-        countryName: getSafe(() => r.address.country.name),
+        countryName: getSafe(() => r.deliveryAddress.address.country.name),
         countryId,
         hasProvinces,
-        provinceName: getSafe(() => r.address.province.name),
+        provinceName: getSafe(() => r.deliveryAddress.address.province.name),
         provinceId,
         zip,
         zipID,

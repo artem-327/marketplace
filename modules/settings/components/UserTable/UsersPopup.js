@@ -67,6 +67,7 @@ class UsersPopup extends React.Component {
       postNewUserRequest,
     } = this.props
 
+
     if (popupValues) {
       await handlerSubmitUserEditPopup(values, popupValues.id)
     } else {

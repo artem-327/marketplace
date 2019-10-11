@@ -183,7 +183,7 @@ class PurchaseOrder extends Component {
           </Container>
         </div>
 
-        <RelaxedForm initialValues={initialValues} className='purchase-order' render={({ values }) => {
+        <RelaxedForm initialValues={initialValues} className='purchase-order' render={({ values, isSubmitting }) => {
           return (
             <Grid centered>
               <GridColumn computer={8}>
