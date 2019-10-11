@@ -248,8 +248,6 @@ class Settings extends Component {
         searchToFilter: v => v ? ([
           { operator: 'LIKE', path: 'CompanyProduct.intProductName', values: [`%${v}%`] },
           { operator: 'LIKE', path: 'CompanyProduct.intProductCode', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'CompanyProduct.mfrProductName', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'CompanyProduct.mfrProductCode', values: [`%${v}%`] },
           { operator: 'LIKE', path: 'CompanyProduct.echoProduct.name', values: [`%${v}%`] },
           { operator: 'LIKE', path: 'CompanyProduct.echoProduct.code', values: [`%${v}%`] },
         ]) : [],

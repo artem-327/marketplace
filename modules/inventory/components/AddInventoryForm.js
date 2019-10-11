@@ -634,7 +634,7 @@ class AddInventoryForm extends Component {
             <Input name={`pricingTiers[${i}].quantityFrom`} inputProps={{
               type: 'number', min: 1, value: null, onChange: (e, { value }) => {
                 setFieldValue(`pricingTiers[${i}].manuallyModified`, 1)
-                if(i === 0) setFieldValue('minimum', value)
+                if (i === 0) setFieldValue('minimum', value)
               }
             }} />
           </GridColumn>
@@ -745,7 +745,7 @@ class AddInventoryForm extends Component {
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.echoProduct.cfHazardClass, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.stackable' defaultMessage='Stackable' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{getSafe(() => product.stackable) ? 'Yes' : 'No'}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{product && typeof product.stackable === 'boolean' ? (product.stackable ? 'Yes' : 'No') : ''}</GridColumn>
 
                   <GridColumn computer={8} mobile={16} className='key'><FormattedMessage id='addInventory.freightClass' defaultMessage='Freight Class' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{getSafe(() => product.freightClass, defaultMessage)}</GridColumn>
@@ -937,7 +937,7 @@ class AddInventoryForm extends Component {
     } = this.props
 
     let { formatMessage } = intl
-
+    console.log({ initValues, initialState })
     return (
       <div id='page' className='flex stretched'>
         <Dimmer active={loading} inverted>
@@ -973,7 +973,7 @@ class AddInventoryForm extends Component {
         >
           {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
             this.submitForm = submitForm
-
+            console.log({ values })
             return (
               <>
                 <Modal closeIcon onClose={this.resetForm} open={this.props.poCreated} size='tiny'>

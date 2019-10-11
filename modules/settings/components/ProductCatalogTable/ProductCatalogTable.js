@@ -18,13 +18,13 @@ class ProductCatalogTable extends Component {
 
   state = {
     columns: [
-      { name: 'intProductName', title: <FormattedMessage id='global.intProductName' defaultMessage='Internal Product Name'>{(text) => text}</FormattedMessage>, sortPath: 'Product.productName' },
-      { name: 'intProductCode', title: <FormattedMessage id='global.intProductCode' defaultMessage='Internal Product Code'>{(text) => text}</FormattedMessage>, sortPath: 'Product.productCode' },
-      { name: 'externalProductName', title: <FormattedMessage id='global.externalProductName' defaultMessage='External Product Name!'>{(text) => text}</FormattedMessage> },
-      { name: 'externalProductCode', title: <FormattedMessage id='global.externalProductCode' defaultMessage='External Product Code!'>{(text) => text}</FormattedMessage> },
-      { name: 'packagingSizeFormatted', title: <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>{(text) => text}</FormattedMessage> },
-      { name: 'unit', title: <FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit'>{text => text}</FormattedMessage> },
-      { name: 'packagingTypeName', title: <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>{(text) => text}</FormattedMessage> }
+      { name: 'intProductName', title: <FormattedMessage id='global.intProductName' defaultMessage='Internal Product Name'>{(text) => text}</FormattedMessage>, sortPath: 'CompanyProduct.intProductName' },
+      { name: 'intProductCode', title: <FormattedMessage id='global.intProductCode' defaultMessage='Internal Product Code'>{(text) => text}</FormattedMessage>, sortPath: 'CompanyProduct.intProductCode' },
+      { name: 'externalProductName', title: <FormattedMessage id='global.externalProductName' defaultMessage='External Product Name!'>{(text) => text}</FormattedMessage>, sortPath: 'CompanyProduct.echoProduct.name' },
+      { name: 'externalProductCode', title: <FormattedMessage id='global.externalProductCode' defaultMessage='External Product Code!'>{(text) => text}</FormattedMessage>, sortPath: 'CompanyProduct.echoProduct.code' },
+      { name: 'packagingSizeFormatted', title: <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>{(text) => text}</FormattedMessage>, sortPath: 'CompanyProduct.packagingSize' },
+      { name: 'unit', title: <FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit'>{text => text}</FormattedMessage>, sortPath: 'CompanyProduct.packagingUnit.nameAbbreviation'},
+      { name: 'packagingTypeName', title: <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>{(text) => text}</FormattedMessage>, sortPath: 'CompanyProduct.packagingType.name' }
     ],
     echoProducts: []
   }

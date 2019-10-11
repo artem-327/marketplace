@@ -5,6 +5,7 @@ import { Table } from 'semantic-ui-react'
 
 import { dataHeaderCSV, postCSVMapEchoProduct, putCSVMapEchoProduct, postCSVMapProductOffer, putCSVMapProductOffer } from '../../../actions'
 import _invert from 'lodash/invert'
+import { FormattedMessage } from 'react-intl'
 
 class Preview extends Component {
   constructor(props) {
@@ -112,7 +113,7 @@ class Preview extends Component {
             {filteredHeader &&
               filteredHeader.map(column => (
                 <Table.HeaderCell key={column.columnNumber}>
-                  {column.header}
+                  <FormattedMessage id={`global.${column.header.replace(/Mapper$/gi, '')}`} defaultMessage={column.content} />
                 </Table.HeaderCell>
               ))}
           </Table.Row>
