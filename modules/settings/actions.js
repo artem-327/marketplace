@@ -173,10 +173,10 @@ export function closeAddPopup() {
   }
 }
 
-export function changeHeadersCSV(payload) {
+export function changeHeadersCSV(mappedHeaders, missingRequired) {
   return {
     type: AT.CHANGE_HEADERS_CSV,
-    payload
+    payload: { mappedHeaders, missingRequired }
   }
 }
 
