@@ -22,6 +22,8 @@ import Preview from './Steps/Preview'
 import ConfirmationPage from './Steps/ConfirmationPage'
 import _invert from 'lodash/invert'
 import confirm from '~/src/components/Confirmable/confirm'
+import { generateToastMarkup } from '~/utils/functions'
+import { withToastManager } from 'react-toast-notifications'
 
 const StyledModal = styled(ModalContent)`
   height: 500px;
@@ -135,7 +137,7 @@ class ProductImportPopup extends Component {
   }
 
   submitHandler = () => {
-    const { isSaveMapCSV, mappedDataHeaderCSV, mappedHeaders, csvFileId, intl: { formatMessage }} = this.props
+    const { isSaveMapCSV, mappedDataHeaderCSV, mappedHeaders, missingRequired, csvFileId, intl: { formatMessage }, toastManager} = this.props
     const { currentStep } = this.state
 
     switch (currentStep) {
@@ -144,6 +146,13 @@ class ProductImportPopup extends Component {
         break
       case 'map':
         const { selectedSavedMap } = this.props // mapper (header): csvHeader (content)
+        if (missingRequired.length) {
+          toastManager.add(generateToastMarkup(
+            formatMessage({ id: 'notifications.importMissingRequired.header', defaultMessage: 'Required Options' }),
+            formatMessage({ id: 'notifications.importMissingRequired.content', defaultMessage: `First, you have to select all the required options: ${missingRequired.join(', ')}` }, { missingRequired: missingRequired.join(', ') })
+          ), { appearance: 'error' })
+          return false
+        }
         if (selectedSavedMap && !isSaveMapCSV) {
           const invertedSavedMap = _invert(selectedSavedMap) // csvHeader (content): mapper (header)
           const foundModification = mappedHeaders.find(mapHead => {
@@ -200,6 +209,7 @@ const mapStateToProps = state => {
     isSaveMapCSV: state.settings.isSaveMapCSV,
     mappedDataHeaderCSV: state.settings.dataHeaderCSV,
     mappedHeaders: state.settings.mappedHeaders,
+    missingRequired: state.settings.missingRequired,
     selectedSavedMap: state.settings.selectedSavedMap
   }
 }
@@ -207,4 +217,4 @@ const mapStateToProps = state => {
 export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(injectIntl(ProductImportPopup)))
+)(injectIntl(withToastManager(ProductImportPopup))))
