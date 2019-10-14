@@ -231,6 +231,7 @@
   "global.description": "Description",
   "global.registerDwollaAcc": "Register Dwolla Account",
   "global.myProfile": "My Profile",
+  "global.supportChat": "Support Chat",
   "global.close": "Close",
   "global.done": "Done",
   "global.returnToAdmin": "Return to Admin",

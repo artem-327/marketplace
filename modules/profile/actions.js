@@ -20,7 +20,12 @@ const removeEmpty = (obj) =>
   })
 
 
-
+export function toggleSupportChat() {
+  return {
+    type: AT.PROFILE_TOGGLE_SUPPORT_CHAT,
+    payload: null
+  }
+}
 
 export function openProfilePopup() {
   return {

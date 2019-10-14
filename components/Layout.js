@@ -14,7 +14,7 @@ import { connect } from 'react-redux'
 import { withAuth } from '~/hocs'
 
 import { takeOverCompanyFinish } from '~/modules/admin/actions'
-import { openProfilePopup } from '~/modules/profile/actions'
+import { openProfilePopup, toggleSupportChat } from '~/modules/profile/actions'
 import { agreeWithTOS } from '~/modules/auth/actions'
 import { triggerSystemSettingsModal } from '~/modules/settings/actions'
 
@@ -76,13 +76,66 @@ const MenuLink = withRouter(({ router: { pathname }, to, children, }) => (
 class Layout extends Component {
   componentDidMount() {
     if (!this.props.phoneCountryCodes.length) this.props.getCountryCodes()
+
+    if (typeof window.$zopim === 'undefined') {
+      var script = document.createElement("script")
+      script.type = "text/javascript"
+
+      if (script.readyState) {  //IE
+        script.onreadystatechange = () => {
+          if (script.readyState == "loaded" ||
+            script.readyState == "complete") {
+            script.onreadystatechange = null
+            this.scriptLoaded()
+          }
+        };
+      } else {  //Others
+        script.onload = () => {
+          this.scriptLoaded()
+        };
+      }
+
+      script.async = true
+      script.id = "ze-snippet"
+      script.src = "https://static.zdassets.com/ekr/snippet.js?key=c9ecb4b1-1c91-482b-bce2-aac2a343619b"
+      document.getElementsByTagName("head")[0].appendChild(script)
+    }
+  }
+
+  scriptLoaded = () => {
+    const name = getSafe(() => this.props.auth.identity.name, '')
+    const email = getSafe(() => this.props.auth.identity.email, '')
+    const lang = getSafe(() => this.props.auth.identity.preferredLanguage.languageAbbreviation, 'us')
+
+    // Working API: https://api.zopim.com/files/meshim/widget/controllers/LiveChatAPI-js.html
+    // Not 100% working API: https://developer.zendesk.com/embeddables/docs/widget/api#ze.identify
+
+    zE(function() {
+      $zopim(function() {
+        $zopim.livechat.setLanguage(lang);
+        $zopim.livechat.setName(name);
+        $zopim.livechat.setEmail(email);
+        $zopim.livechat.window.hide();
+      });
+    })
+
+    /*
+    if (!this.props.profile.supportChatEnabled) {
+      zE(function () {
+        $zopim(function() {
+          $zopim.livechat.window.hide()
+        });
+      })
+    }
+    */
+
   }
 
   render() {
     const {
       children, router: { pathname }, title = 'Echo exchange',
       auth, takeOverCompanyFinish, triggerSystemSettingsModal,
-      profile, openProfilePopup, cartItems, takeover,
+      profile, openProfilePopup, toggleSupportChat, cartItems, takeover,
       intl: { formatMessage }, isOpen, agreeWithTOS
     } = this.props
 
@@ -90,7 +143,7 @@ class Layout extends Component {
       <MainContainer fluid>
         <PopUp />
         <Head>
-          <title>{formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo echange' })} / {title}</title>
+          <title>{formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo exchange' })} / {title}</title>
         </Head>
         <TopMenu fixed='top' inverted size='large' borderless>
 
@@ -112,6 +165,11 @@ class Layout extends Component {
                       id: 'global.myProfile',
                       defaultMessage: 'My Profile'
                     })}</Dropdown.Item>
+                  <Dropdown.Item as={Menu.Item} onClick={() => toggleSupportChat()}
+                                 data-test='navigation_menu_user_support_chat_drpdn'>{formatMessage({
+                    id: 'global.supportChat',
+                    defaultMessage: 'Support Chat'
+                  })}</Dropdown.Item>
                   {getSafe(() => auth.identity.isAdmin, false) && takeover &&
                     <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()}
                       data-test='navigation_menu_user_return_to_admin_drpdn'>{formatMessage({
@@ -169,6 +227,7 @@ class Layout extends Component {
 const mapDispatchToProps = {
   takeOverCompanyFinish,
   openProfilePopup,
+  toggleSupportChat,
   triggerSystemSettingsModal,
   agreeWithTOS,
   getCountryCodes
