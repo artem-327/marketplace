@@ -8,6 +8,7 @@ import { Broadcast } from '~/modules/broadcast'
 import { Filter } from '~/modules/filter'
 
 import SimpleEdit from '~/modules/inventory/components/SimpleEdit'
+import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
 
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
@@ -160,7 +161,8 @@ class MyInventory extends Component {
       datagrid,
       openImportPopup,
       isOpenImportPopup,
-      simpleEditTrigger
+      simpleEditTrigger,
+      sidebarDetailTrigger
     } = this.props
     const { columns, selectedRows } = this.state
 
@@ -186,6 +188,15 @@ class MyInventory extends Component {
             ) : null}
 
             <Menu.Menu position='right'>
+              <Menu.Item>
+                <Button
+                  size='large'
+                  primary
+                  onClick={() => sidebarDetailTrigger(null, true)}
+                  data-test='my_inventory_new_btn'>
+                  <FormattedMessage id='global.newInventory' defaultMessage='New Inventory'>{text => text}</FormattedMessage>
+                </Button>
+              </Menu.Item>
               <Menu.Item>
                 <Button
                   size='large'
@@ -277,6 +288,7 @@ class MyInventory extends Component {
         </div>
         <Broadcast />
         <SimpleEdit />
+        <DetailSidebar />
         <Filter
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}

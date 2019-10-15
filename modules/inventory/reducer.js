@@ -26,6 +26,8 @@ export const initialState = {
   documentTypesFetching: false,
   simpleEditOpen: false,
   popupValues: {},
+  sidebarDetailOpen: false,
+  sidebarValues: {},
   product: null
 }
 
@@ -326,7 +328,7 @@ export default function reducer(state = initialState, action) {
         warehousesList: action.payload.data.map((warehouse) => {
           return {
             ...warehouse,
-            text: warehouse.name,
+            text: warehouse.deliveryAddress.addressName,
             value: warehouse.id
           }
         })
@@ -448,6 +450,17 @@ export default function reducer(state = initialState, action) {
         ...state,
         simpleEditOpen,
         popupValues: payload.popupValues
+      }
+    }
+
+    case AT.SIDEBAR_DETAIL_TRIGGER_FULFILLED: {
+      let sidebarDetailOpen = !state.sidebarDetailOpen
+      if (payload.force !== null) sidebarDetailOpen = payload.force
+
+      return {
+        ...state,
+        sidebarDetailOpen,
+        sidebarValues: payload.sidebarValues
       }
     }
 

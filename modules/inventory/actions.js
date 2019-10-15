@@ -364,3 +364,19 @@ export const getAutocompleteData = ({ searchUrl }) => ({ type: AT.GET_AUTOCOMPLE
 export const getAllProductOffers = () => ({ type: AT.GET_ALL_PRODUCT_OFFERS, payload: api.getAllProductOffers() })
 
 export const simpleEditTrigger = (popupValues = {}, force = null) => ({ type: AT.SIMPLE_EDIT_TRIGGER, payload: { popupValues, force } })
+
+export const sidebarDetailTrigger = (poId = null, force = null) => {
+  return {
+    type: AT.SIDEBAR_DETAIL_TRIGGER,
+    async payload() {
+      let sidebarValues = {}
+      if (poId)
+        sidebarValues = await api.getProductOffer(poId)
+
+      return {
+        sidebarValues,
+        force
+      }
+    }
+  }
+}
