@@ -21,9 +21,10 @@ import { addressValidationSchema } from '~/constants/yupValidation'
 import { generateToastMarkup } from '~/utils/functions'
 
 const initialValues = {
-  name: '',
-  email: '',
-  phoneNumber: '',
+  addressName: '',
+  contactPhone: '',
+  contactName: '',
+  contactEmail: '',
   address: {
     zip: '',
     city: '',
@@ -53,10 +54,11 @@ class ShippingEdit extends Component {
 
     return (
       Yup.object().shape({
-        name: Yup.string(invalidString).required(requiredMessage),
+        contactName: Yup.string(invalidString).required(requiredMessage),
+        addressName: Yup.string(invalidString).required(requiredMessage),
         // lastName: Yup.string(invalidString).required(requiredMessage),
-        email: Yup.string().email(invalidEmail).required(requiredMessage),
-        phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
+        contactEmail: Yup.string().email(invalidEmail).required(requiredMessage),
+        contactPhone: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
         address: addressValidationSchema()
       })
     )
@@ -69,18 +71,22 @@ class ShippingEdit extends Component {
       <>
         <FormGroup widths='equal' data-test='purchase_order_shipping_edit_name_inp' >
           <Input
-            label={<FormattedMessage id='global.name' default='Name' />}
-            name='name' />
+            label={<FormattedMessage id='global.contactName' default='Contact Name' />}
+            name='contactName' />
+
+          <Input
+            label={<FormattedMessage id='global.addressName' defaultMessage='Address Name' />}
+            name='addressName' />
         </FormGroup>
         <AddressForm displayHeader={false} values={values} setFieldValue={setFieldValue} />
 
         <FormGroup widths='equal' data-test='purchase_order_shipping_edit_emailPhone_inp'>
           <Input
             label={<FormattedMessage id='global.email' defaultMessage='E-mail Address' />}
-            name='email' />
+            name='contactEmail' />
 
           <PhoneNumber
-            name='phoneNumber'
+            name='contactPhone'
             values={values}
             label={<FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />}
             setFieldValue={setFieldValue}
@@ -117,10 +123,10 @@ class ShippingEdit extends Component {
           />
         </FormGroup>
         <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
-                    <TextArea
-                      name='deliveryNotes'
-                      label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
-                    />
+          <TextArea
+            name='deliveryNotes'
+            label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
+          />
         </FormGroup>
       </>
     )
@@ -128,18 +134,16 @@ class ShippingEdit extends Component {
 
 
   handleSubmit = async (values, { setSubmitting }) => {
-    let { email, name, phoneNumber, readyTime, closeTime, liftGate, forkLift, deliveryNotes } = values
     let { isNewAddress } = this.props
-
+    
     const { postNewDeliveryAddress, updateDeliveryAddress, toastManager } = this.props
 
     let payload = {
+      ...values,
       address: {
         ...values.address,
         country: JSON.parse(values.address.country).countryId
       },
-      email, name, phoneNumber,
-      readyTime, closeTime, liftGate, forkLift, deliveryNotes,
     }
 
     try {
@@ -153,7 +157,7 @@ class ShippingEdit extends Component {
 
       toastManager.add(generateToastMarkup(
         <FormattedMessage id={`notifications.address${status}.header`} />,
-        <FormattedMessage id={`notifications.address${status}.content`} values={{ name }} />
+        <FormattedMessage id={`notifications.address${status}.content`} values={{ name: payload.contactName }} />
       ), { appearance: 'success' })
     }
     catch (e) { console.error(e) }
@@ -185,7 +189,7 @@ class ShippingEdit extends Component {
         <Form
           onSubmit={this.handleSubmit}
           enableReinitialize
-          initialValues={this.props.initialValues ? { ...this.props.initialValues } : initialValues}
+          initialValues={this.props.initialValues ? { ...initialValues, ...this.props.initialValues } : initialValues}
           validationSchema={this.validationSchema}>
 
           {props => {
@@ -223,9 +227,12 @@ class ShippingEdit extends Component {
                           </Button>
                         </GridColumn>
                         <GridColumn computer={4}>
-                          <Button.Submit loading={this.props.isFetching} primary fluid type='submit' data-test='purchase_order_shipping_edit_submit_btn'>
+                          <Button onClick={(e) => {
+                            props.submitForm()
+                            e.stopPropagation()
+                          }} loading={this.props.isFetching} primary fluid type='submit' data-test='purchase_order_shipping_edit_submit_btn'>
                             <FormattedMessage id={`global.${!isNewAddress ? 'edit' : 'addNew'}`} defaultMessage={!isNewAddress ? 'Edit' : 'Add New'}>{(text) => text}</FormattedMessage>
-                          </Button.Submit>
+                          </Button>
                         </GridColumn>
                       </Grid>
                     </GridColumn>
