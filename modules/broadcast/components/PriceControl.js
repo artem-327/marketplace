@@ -59,7 +59,7 @@ export default class PriceControl extends Component {
 
     if (name === 'type' && item.hasChildren()) {
       item.walk((n) => {
-        if (!n.model.rule.priceOverride && !n.hasChildren()) {
+        if (!n.model.rule.priceOverride) {
           n.model.rule.priceType = value
         }
       })
@@ -101,7 +101,7 @@ export default class PriceControl extends Component {
     const { model: { rule } } = item
 
     const r = rule //rootRule || rule
-    const calc = (p) => (p * (r.priceMultiplier + 100) / 100) + r.priceAddition
+    const calc = (p) => (p + (p * (r.priceMultiplier / 100))) + r.priceAddition
 
     let high = calc(offer.pricingTiers[0].price.amount), low = calc(offer.pricingTiers[offer.pricingTiers.length - 1].price.amount)
 

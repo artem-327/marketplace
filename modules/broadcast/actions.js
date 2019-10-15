@@ -64,3 +64,4 @@ export const getTemplates = createAsyncAction('GET_TEMPLATES', () => api.getTemp
 export const closeBroadcast = createAction('BROADCAST_CLOSE')
 export const updateFilter = createAction('BROADCAST_FILTER_UPDATE', filter => filter)
 export const switchMode = createAction('BROADCAST_SWITCH_MODE', (mode) => mode)
+export const loadingChanged = createAction('BROADCAST_LOADING', (force = null) => force)

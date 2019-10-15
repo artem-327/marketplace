@@ -19,7 +19,7 @@ import { getSafe } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 
 import confirm from '~/src/components/Confirmable/confirm'
-
+import { setBroadcast, normalizeTree, getBroadcast } from '~/modules/broadcast/utils'
 
 const templateInitialValues = {
   name: ''
@@ -53,16 +53,9 @@ class Broadcast extends Component {
     this.props.getTemplates()
   }
 
+
   componentWillReceiveProps(props, next) {
     let tree = this.getFilteredTree(props.treeData, props.filter)
-
-    if (this.state.initialize && tree.hasChildren()) {
-      tree.walk((node) => {
-        // this.setBroadcast(node)
-        // if (getSafe(() => node.parent.model.rule.broadcast === 1, false)) node.model.rule.broadcast = 1
-      })
-    }
-
     this.setState({ filterSearch: props.filter.search, tree })
   }
 
@@ -123,14 +116,29 @@ class Broadcast extends Component {
   }
 
   handleChange = (node) => {
+
+    const findInData = node => getSafe(() => this.props.treeData.first((n) => (n.model.id === node.model.rule.id && n.model.type === node.model.rule.type)), null)
+
+    let found = findInData(node)
+    let path = getSafe(() => found.getPath(), [])
+
+    // Hotfix - Changes were not applied to data structure when clicking on nodes with childs with 'By Company' filter applied
+    // This fixes it, but causes a delay when clicking on root as it iterates through every node and it's path in data structure
+
+    if (node.hasChildren() && this.props.filter.category === 'branch') {
+      this.props.loadingChanged(true)
+      node.walk((n) => {
+        let childPath = getSafe(() => findInData(n).getPath(), [])
+
+        for (let i = childPath.length - 2; i >= 0; i--) setBroadcast(childPath[i])
+
+      })
+    } else {
+      for (let i = path.length - 2; i >= 0; i--) setBroadcast(path[i])
+
+    }
+
     this.setState({ tree: this.state.tree, change: true, saved: false })
-
-
-
-    let path = getSafe(() => this.props.treeData.first((n) => (n.model.id === node.model.rule.id && n.model.type === node.model.rule.type)).getPath(), [])
-
-    for (let i = path.length - 2; i >= 0; i--) this.setBroadcast(path[i])
-
   }
 
   handleRowClick = (node) => {
@@ -180,7 +188,7 @@ class Broadcast extends Component {
       region: () => new TreeModel().parse({
         // name: 'By region',
         name: formatMessage({ id: 'broadcast.byRegion', defaultMessage: 'By Region' }),
-        rule: treeData.model,
+        rule: treeData.model, // { ...treeData.model, broadcast: getBroadcast(treeData) },
         depth: 1,
         children: treeData.children.filter(n => searchParentFn(n)).map(n1 => ({
           name: n1.model.name,
@@ -219,28 +227,15 @@ class Broadcast extends Component {
     }
 
     let tree = presets[filter.category]()
-
     // expand when search is active
     if (fs.length > 0) {
       tree.walk(n => n.model.expanded = true)
     }
 
-    this.normalizeTree(tree)
+    normalizeTree(tree)
     this.setState({ tree: this.state.tree })
+
     return tree
-  }
-
-
-  normalizeTree = tree => {
-    tree.walk((node) => {
-      // this.setBroadcast(node)
-      if (getSafe(() => node.parent.model.rule.broadcast === 1, false)) node.model.rule.broadcast = 1
-    })
-    tree.walk((n) => {
-      if (n.hasChildren()) {
-        this.setBroadcast(n)
-      }
-    })
   }
 
 
@@ -511,36 +506,7 @@ class Broadcast extends Component {
 
   }
 
-  // TODO - dont repeat yourself
-  getNodeStatus = item => {
-    let allChildrenBroadcasting = false, anyChildBroadcasting = false
 
-    if (item.hasChildren()) {
-      var all = item.all(n => !n.hasChildren()).length
-      var broadcasted = item.all(n => !n.hasChildren() && getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1).length
-      anyChildBroadcasting = !!item.first((n) => {
-        return (getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 && getSafe(() => n.model.rule.id, n.model.id) !== item.model.id)
-      })
-
-      allChildrenBroadcasting = (all !== 0 && broadcasted !== 0) && all === broadcasted
-
-    }
-
-    return { allChildrenBroadcasting, anyChildBroadcasting }
-
-  }
-
-  setBroadcast = node => {
-    let { allChildrenBroadcasting, anyChildBroadcasting } = this.getNodeStatus(node)
-
-    let broadcast = 0
-    if (allChildrenBroadcasting) broadcast = 1
-    else if (anyChildBroadcasting) broadcast = 2
-
-    getSafe(() => node.model.rule.broadcast, null) !== null ? node.model.rule.broadcast = broadcast : node.model.broadcast = broadcast
-
-    return broadcast
-  }
 
 
   render() {
