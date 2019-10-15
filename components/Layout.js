@@ -14,7 +14,7 @@ import { connect } from 'react-redux'
 import { withAuth } from '~/hocs'
 
 import { takeOverCompanyFinish } from '~/modules/admin/actions'
-import { openProfilePopup } from '~/modules/profile/actions'
+import { openProfilePopup, toggleSupportChat } from '~/modules/profile/actions'
 import { agreeWithTOS } from '~/modules/auth/actions'
 import { triggerSystemSettingsModal } from '~/modules/settings/actions'
 
@@ -25,6 +25,8 @@ import { getSafe } from '~/utils/functions'
 import { injectIntl } from 'react-intl'
 import { AgreementModal } from '~/components/modals'
 import { getCountryCodes } from '~/modules/phoneNumber/actions'
+
+import { createChatWidget } from '~/utils/chatWidget'
 
 const TopMenu = styled(Menu)`
   background-color: #33373e !important;
@@ -76,13 +78,14 @@ const MenuLink = withRouter(({ router: { pathname }, to, children, }) => (
 class Layout extends Component {
   componentDidMount() {
     if (!this.props.phoneCountryCodes.length) this.props.getCountryCodes()
+    createChatWidget(this.props)
   }
 
   render() {
     const {
       children, router: { pathname }, title = 'Echo exchange',
       auth, takeOverCompanyFinish, triggerSystemSettingsModal,
-      profile, openProfilePopup, cartItems, takeover,
+      profile, openProfilePopup, toggleSupportChat, cartItems, takeover,
       intl: { formatMessage }, isOpen, agreeWithTOS
     } = this.props
 
@@ -90,7 +93,7 @@ class Layout extends Component {
       <MainContainer fluid>
         <PopUp />
         <Head>
-          <title>{formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo echange' })} / {title}</title>
+          <title>{formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo exchange' })} / {title}</title>
         </Head>
         <TopMenu fixed='top' inverted size='large' borderless>
 
@@ -112,6 +115,11 @@ class Layout extends Component {
                       id: 'global.myProfile',
                       defaultMessage: 'My Profile'
                     })}</Dropdown.Item>
+                  <Dropdown.Item as={Menu.Item} onClick={() => toggleSupportChat()}
+                                 data-test='navigation_menu_user_support_chat_drpdn'>{formatMessage({
+                    id: 'global.supportChat',
+                    defaultMessage: 'Support Chat'
+                  })}</Dropdown.Item>
                   {getSafe(() => auth.identity.isAdmin, false) && takeover &&
                     <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()}
                       data-test='navigation_menu_user_return_to_admin_drpdn'>{formatMessage({
@@ -169,6 +177,7 @@ class Layout extends Component {
 const mapDispatchToProps = {
   takeOverCompanyFinish,
   openProfilePopup,
+  toggleSupportChat,
   triggerSystemSettingsModal,
   agreeWithTOS,
   getCountryCodes
