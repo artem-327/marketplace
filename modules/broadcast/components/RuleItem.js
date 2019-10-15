@@ -1,7 +1,7 @@
 import { Icon, Checkbox } from 'semantic-ui-react'
 import PriceControl from './PriceControl'
 import { Rule } from './Broadcast.style'
-
+import { getNodeStatus, setBroadcast } from '~/modules/broadcast/utils'
 
 const EmptyIconSpace = () => <span style={{ width: '1.18em', display: 'inline-block', marginRight: '0.25rem' }}>&nbsp;</span>
 
@@ -16,7 +16,7 @@ const RuleItem = (props) => {
     item: { model: { name, rule } },
     hideFobPrice,
     filter,
-    tree
+    // tree,
   } = props
 
   const handleChange = (propertyName, e) => {
@@ -26,26 +26,19 @@ const RuleItem = (props) => {
     const value = rule[propertyName]
     const newValue = value === 1 ? 0 : 1
 
-    const setBroadcast = node => {
-      let { allChildrenBroadcasting, anyChildBroadcasting } = getNodeStatus(node)
-
-      if (allChildrenBroadcasting) node.model.rule.broadcast = 1
-      else if (anyChildBroadcasting) node.model.rule.broadcast = 2
-      else node.model.rule.broadcast = 0
-    }
 
     rule[propertyName] = newValue
 
     if (item.hasChildren()) {
       item.walk((node) => {
         node.model.rule.broadcast = newValue
+  
       })
     }
 
     let path = item.getPath()
     path.pop()
     path.forEach(n => setBroadcast(n))
-
     onChange(item)
   }
 
@@ -53,23 +46,9 @@ const RuleItem = (props) => {
     onRowClick(i)
   }
 
-  const getNodeStatus = item => {
-    let allChildrenBroadcasting = false, anyChildBroadcasting = false
-
-    if (item.hasChildren()) {
-      var all = item.all(n => !n.hasChildren()).length
-      var broadcasted = item.all(n => !n.hasChildren() && n.model.rule.broadcast === 1).length
-
-      anyChildBroadcasting = broadcasted > 0
-      allChildrenBroadcasting = (all !== 0 && broadcasted !== 0 && all === broadcasted)
-    }
-
-    return { allChildrenBroadcasting, anyChildBroadcasting }
-
-  }
 
   const nodePath = item.getPath()
-  let { allChildrenBroadcasting } = getNodeStatus(item)
+  let { allChildrenBroadcasting, anyChildBroadcasting } = getNodeStatus(item)
 
   const broadcastedParents = nodePath.reverse().slice(1).filter(n => n.model.rule.broadcast === 1)
   const parentBroadcasted = broadcastedParents.reverse()[0]
@@ -93,8 +72,8 @@ const RuleItem = (props) => {
             data-test='broadcast_rule_toggle_chckb'
             toggle
             fitted
-            indeterminate={rule.broadcast === 2}
-            checked={rule.broadcast === 1}
+            indeterminate={!allChildrenBroadcasting && anyChildBroadcasting}
+            checked={rule.broadcast === 1 || allChildrenBroadcasting}
             // disabled={toggleDisabled}
             onClick={(e) => handleChange('broadcast', e)}
           />

@@ -22,14 +22,14 @@ import { FormattedPhone } from '~/components/formatted-messages/'
 class WarehouseTable extends Component {
   state = {
     columns: [
-      { name: 'name', title: <FormattedMessage id='global.warehouseName' defaultMessage='Warehouse Name'>{(text) => text}</FormattedMessage> },
+      { name: 'addressName', title: <FormattedMessage id='global.warehouseName' defaultMessage='Warehouse Name'>{(text) => text}</FormattedMessage> },
       { name: 'streetAddress', title: <FormattedMessage id='global.streetAddress' defaultMessage='Street Address'>{(text) => text}</FormattedMessage> },
       { name: 'city', title: <FormattedMessage id='global.city' defaultMessage='City'>{(text) => text}</FormattedMessage> },
       { name: 'provinceName', title: <FormattedMessage id='global.stateProvince' defaultMessage='State/Province'>{(text) => text}</FormattedMessage> },
       { name: 'countryName', title: <FormattedMessage id='global.country' defaultMessage='Country'>{(text) => text}</FormattedMessage> },
       { name: 'contactName', title: <FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name'>{(text) => text}</FormattedMessage> },
       { name: 'phoneFormatted', title: <FormattedMessage id='global.phone' defaultMessage='Phone'>{(text) => text}</FormattedMessage> },
-      { name: 'email', title: <FormattedMessage id='global.email' defaultMessage='E-mail'>{(text) => text}</FormattedMessage> }
+      { name: 'contactEmail', title: <FormattedMessage id='global.email' defaultMessage='E-mail'>{(text) => text}</FormattedMessage> }
     ],
     tab: ''
   }
@@ -148,15 +148,11 @@ const mapStateToProps = (state, { datagrid }) => {
         zipID = getSafe(() => r.deliveryAddress.address.zip.id)
 
       return {
-        name: r.name,
         streetAddress: getSafe(() => r.deliveryAddress.address.streetAddress),
         city: getSafe(() => r.deliveryAddress.address.city),
         popupValues: {
           initialValues: {
-            name: r.name,
-            contactName: r.contactName,
-            contactPhone: r.contactPhone,
-            contactEmail: r.contactEmail,
+            //name: r.name,
             deliveryAddress: {
               address: {
                 streetAddress: getSafe(() => r.deliveryAddress.address.streetAddress),
@@ -170,9 +166,10 @@ const mapStateToProps = (state, { datagrid }) => {
               liftGate: getSafe(() => r.deliveryAddress.liftGate, false),
               forkLift: getSafe(() => r.deliveryAddress.forkLift, false),
               deliveryNotes: getSafe(() => r.deliveryAddress.deliveryNotes, ''),
-              name: getSafe(() => r.deliveryAddress.name, ''),
-              phoneNumber: getSafe(() => r.deliveryAddress.phoneNumber, ''),
-              email: getSafe(() => r.deliveryAddress.email, ''),
+              addressName: getSafe(() => r.deliveryAddress.addressName, ''),
+              contactName: getSafe(() => r.deliveryAddress.contactName, ''),
+              contactPhone: getSafe(() => r.deliveryAddress.contactPhone, ''),
+              contactEmail: getSafe(() => r.deliveryAddress.contactEmail, ''),
             },
           },
           zipID,
@@ -187,10 +184,11 @@ const mapStateToProps = (state, { datagrid }) => {
         provinceId,
         zip,
         zipID,
-        contactName: r.contactName,
-        phone: r.contactPhone,
-        phoneFormatted: <FormattedPhone value={r.contactPhone} />,
-        email: r.contactEmail,
+        addressName: getSafe(() => r.deliveryAddress.addressName, ''),
+        contactName: getSafe(() => r.deliveryAddress.contactName, ''),
+        contactEmail: getSafe(() => r.deliveryAddress.contactEmail, ''),
+        contactPhone: getSafe(() => r.deliveryAddress.contactPhone, ''),
+        phoneFormatted: <FormattedPhone value={getSafe(() => r.deliveryAddress.contactPhone, '')} />,
         branchId: r.id,
         id: r.id,
         warehouse: r.warehouse

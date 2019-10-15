@@ -1,5 +1,5 @@
 import * as AT from "./action-types"
-
+import { chatWidgetHide, chatWidgetShow } from '~/utils/chatWidget'
 
 export const initialState = {
   usersMe: null,
@@ -31,18 +31,12 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.PROFILE_TOGGLE_SUPPORT_CHAT: {
-      zE(function() {
-        $zopim(function () {
-          state.supportChatEnabled ? $zopim.livechat.window.hide() : $zopim.livechat.window.show()
-        });
-      })// ! ! $zopim.livechat.window.toggle(); Not working!
-
+      state.supportChatEnabled ? chatWidgetHide() : chatWidgetShow()
       return {
         ...state,
         supportChatEnabled: !state.supportChatEnabled
       }
     }
-
 
     case AT.PROFILE_CHANGE_PASSWORD_PENDING:
     case AT.PROFILE_GET_CURRENCIES_PENDING:

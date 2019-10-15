@@ -26,6 +26,8 @@ import { injectIntl } from 'react-intl'
 import { AgreementModal } from '~/components/modals'
 import { getCountryCodes } from '~/modules/phoneNumber/actions'
 
+import { createChatWidget } from '~/utils/chatWidget'
+
 const TopMenu = styled(Menu)`
   background-color: #33373e !important;
   position: fixed;
@@ -76,59 +78,7 @@ const MenuLink = withRouter(({ router: { pathname }, to, children, }) => (
 class Layout extends Component {
   componentDidMount() {
     if (!this.props.phoneCountryCodes.length) this.props.getCountryCodes()
-
-    if (typeof window.$zopim === 'undefined') {
-      var script = document.createElement("script")
-      script.type = "text/javascript"
-
-      if (script.readyState) {  //IE
-        script.onreadystatechange = () => {
-          if (script.readyState == "loaded" ||
-            script.readyState == "complete") {
-            script.onreadystatechange = null
-            this.scriptLoaded()
-          }
-        };
-      } else {  //Others
-        script.onload = () => {
-          this.scriptLoaded()
-        };
-      }
-
-      script.async = true
-      script.id = "ze-snippet"
-      script.src = "https://static.zdassets.com/ekr/snippet.js?key=c9ecb4b1-1c91-482b-bce2-aac2a343619b"
-      document.getElementsByTagName("head")[0].appendChild(script)
-    }
-  }
-
-  scriptLoaded = () => {
-    const name = getSafe(() => this.props.auth.identity.name, '')
-    const email = getSafe(() => this.props.auth.identity.email, '')
-    const lang = getSafe(() => this.props.auth.identity.preferredLanguage.languageAbbreviation, 'us')
-
-    // Working API: https://api.zopim.com/files/meshim/widget/controllers/LiveChatAPI-js.html
-    // Not 100% working API: https://developer.zendesk.com/embeddables/docs/widget/api#ze.identify
-
-    zE(function() {
-      $zopim(function() {
-        $zopim.livechat.setLanguage(lang);
-        $zopim.livechat.setName(name);
-        $zopim.livechat.setEmail(email);
-        $zopim.livechat.window.hide();
-      });
-    })
-
-    /*
-    if (!this.props.profile.supportChatEnabled) {
-      zE(function () {
-        $zopim(function() {
-          $zopim.livechat.window.hide()
-        });
-      })
-    }
-    */
-
+    createChatWidget(this.props)
   }
 
   render() {

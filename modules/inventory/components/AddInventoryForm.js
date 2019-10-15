@@ -937,7 +937,7 @@ class AddInventoryForm extends Component {
     } = this.props
 
     let { formatMessage } = intl
-    console.log({ initValues, initialState })
+    
     return (
       <div id='page' className='flex stretched'>
         <Dimmer active={loading} inverted>
@@ -1360,7 +1360,7 @@ class AddInventoryForm extends Component {
                                                 let pricingTiers = values.pricingTiers.slice()
                                                 let difference = value - pricingTiers.length
                                                 if (difference < 0) pricingTiers.splice(pricingTiers.length - value)
-                                                else for (let i = 0; i < difference; i++) pricingTiers.push({ price: 0.001, quantityFrom: 1 })
+                                                else for (let i = 0; i < difference; i++) pricingTiers.push({ price: null, quantityFrom: 1 })
                                                 setFieldValue('pricingTiers', pricingTiers)
                                               }
                                             }}
@@ -1644,12 +1644,12 @@ class AddInventoryForm extends Component {
                                           <TableHeaderCell><FormattedMessage id='addInventory.available' defaultMessage='Available' /></TableHeaderCell>
                                           <TableHeaderCell><FormattedMessage id='addInventory.allocated' defaultMessage='Allocated' /></TableHeaderCell>
                                           <Popup
-                                            content={<FormattedMessage id='addInventory.mfg.description' defaultMessage='What is the MFG?' />}
+                                            content={<FormattedMessage id='addInventory.mfg.description' defaultMessage='Date when specified product Lot was manufactured' />}
                                             trigger={
                                               <TableHeaderCell><FormattedMessage id='addInventory.mfg.header' defaultMessage='MFG Date' /></TableHeaderCell>
                                             } />
                                           <Popup
-                                            content={<FormattedMessage id='addInventory.expiration.description' defaultMessage='What is the expiration?' />}
+                                            content={<FormattedMessage id='addInventory.expiration.description' defaultMessage='Expiration date for products in specified Lot' />}
                                             trigger={
                                               <TableHeaderCell><FormattedMessage id='addInventory.expiration.header' defaultMessage='Expiration Date' /></TableHeaderCell>
                                             } />
