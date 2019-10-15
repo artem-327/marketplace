@@ -1360,7 +1360,7 @@ class AddInventoryForm extends Component {
                                                 let pricingTiers = values.pricingTiers.slice()
                                                 let difference = value - pricingTiers.length
                                                 if (difference < 0) pricingTiers.splice(pricingTiers.length - value)
-                                                else for (let i = 0; i < difference; i++) pricingTiers.push({ price: 0.001, quantityFrom: 1 })
+                                                else for (let i = 0; i < difference; i++) pricingTiers.push({ price: null, quantityFrom: 1 })
                                                 setFieldValue('pricingTiers', pricingTiers)
                                               }
                                             }}
