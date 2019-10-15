@@ -25,9 +25,10 @@ import { PhoneNumber } from '~/modules/phoneNumber'
 
 
 const initialFormValues = {
-  name: '',
-  email: '',
-  phoneNumber: '',
+  addressName: '',
+  contactName: '',
+  contactEmail: '',
+  contactPhone: '',
   address: {
     city: '',
     country: '',
@@ -46,13 +47,16 @@ const initialFormValues = {
 
 const formValidation = () => Yup.lazy((values) => (
   Yup.object().shape({
-    name: Yup.string().trim()
+    addressName: Yup.string().trim()
       .min(3, errorMessages.minLength(3))
       .required(errorMessages.requiredMessage),
-    email: Yup.string().trim()
+    contactName: Yup.string().trim()
+      .min(3, errorMessages.minLength(3))
+      .required(errorMessages.requiredMessage),
+    contactEmail: Yup.string().trim()
       .email(errorMessages.invalidEmail)
       .required(errorMessages.requiredMessage),
-    phoneNumber: Yup.string().trim()
+    contactPhone: Yup.string().trim()
       .min(3, errorMessages.minLength(3))
       .required(errorMessages.requiredMessage),
     address: Yup.object().shape({
@@ -110,7 +114,7 @@ class DeliveryAddressesPopup extends React.Component {
 
                 toastManager.add(generateToastMarkup(
                   <FormattedMessage id={`notifications.${status}.header`} />,
-                  <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
+                  <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.addressName }} />
                 ), { appearance: 'success' })
               }
               catch { }
@@ -124,38 +128,19 @@ class DeliveryAddressesPopup extends React.Component {
               return (
                 <>
                   {/* {AddressSuggestInput} */}
+                  <FormGroup data-test='settings_delivery_address_name_inp'>
+                    <Input type='text' label={formatMessage({ id: 'global.addressName', defaultMessage: 'Address Name' })} name='addressName' fieldProps={{ width: 16 }} />
+                  </FormGroup>
                   <Header as='h3'><FormattedMessage id='global.address' defaultMessage='Address' /></Header>
                   <AddressForm values={values} displayHeader={false} setFieldValue={setFieldValue} />
-                  {/* <FormGroup widths='equal' data-test='settings_delivery_address_streetCity_inp' >
-                    <Input
-                      inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
-                      type='text' label='Street Address' name='address.streetAddress' />
-                    <Input
-                      inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
-                      type='text' label='City' name='address.city' />
-                  </FormGroup>
-                  <FormGroup widths='equal' data-test='settings_delivery_address_zipCountry_inp' >
-                    <Input
-                      inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
-                      type='text' label='Zip' name='address.zip' />
-                    <Dropdown label='Country' name='address.country' options={countriesDropDown}
-                      inputProps={{
-                        'data-test': 'settings_delivery_address_country_drpdn',
-                        search: true, onChange: (e, d) => {
-                          setFieldValue('address.province', ''); this.handleCountry(e, d)
-                        }
-                      }} />
-                    <Dropdown label='State/Province' name='address.province' options={provincesDropDown}
-                      inputProps={{ search: true, disabled: !this.state.hasProvinces, 'data-test': 'settings_delivery_address_province_drpdn', }} />
-                  </FormGroup> */}
                   <Header as='h3'><FormattedMessage id='settings.contactInfo' defaultMessage='Contact Info' /></Header>
-                  <FormGroup data-test='settings_delivery_address_name_inp'>
-                    <Input type='text' label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })} name='name' fieldProps={{ width: 8 }} />
+                  <FormGroup data-test='settings_delivery_address_contact_inp'>
+                    <Input type='text' label={formatMessage({ id: 'global.contactName', defaultMessage: 'Contact Name' })} name='contactName' fieldProps={{ width: 8 }} />
                   </FormGroup>
                   <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
-                    <Input type='text' label={formatMessage({ id: 'settings.contactEmail', defaultMessage: 'Contact Email' })} name='email' />
+                    <Input type='text' label={formatMessage({ id: 'settings.contactEmail', defaultMessage: 'Contact Email' })} name='contactEmail' />
                     <PhoneNumber
-                      name='phoneNumber'
+                      name='contactPhone'
                       values={values}
                       label={<FormattedMessage id='settings.contactPhone' defaultMessage='Contact Phone' />}
                       setFieldValue={setFieldValue}
@@ -244,11 +229,10 @@ const mapStateToProps = state => {
     rowId: getSafe(() => popupValues.id),
     // hasProvinces: getSafe(() => address.country.hasProvinces, false),
     popupValues: popupValues && address ? {
-      // firstName: popupValues.firstName,
-      // lastName: popupValues.lastName,
-      name: popupValues.name,
-      email: popupValues.email,
-      phoneNumber: popupValues.phoneNumber,
+      addressName: popupValues.addressName,
+      contactName: popupValues.contactName,
+      contactEmail: popupValues.contactEmail,
+      contactPhone: popupValues.contactPhone,
       address: {
         city: address.city,
         country: JSON.stringify({ countryId: getSafe(() => address.country.id), hasProvinces: getSafe(() => address.country.hasProvinces, false) }),

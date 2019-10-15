@@ -29,12 +29,12 @@ import { PhoneNumber } from '~/modules/phoneNumber'
 const minLength = errorMessages.minLength(3)
 
 const formValidation = () => Yup.object().shape({
-  name: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
-  contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
-  contactPhone: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
-  contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
   deliveryAddress: Yup.object().shape({
-    address: addressValidationSchema()
+    address: addressValidationSchema(),
+    addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+    contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+    contactPhone: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+    contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
   })
 })
 
@@ -71,12 +71,6 @@ class WarehousePopup extends React.Component {
       } else {
         await postNewWarehouseRequest({
           ...requestData,
-          deliveryAddress: {
-            ...requestData.deliveryAddress,
-            email: requestData.contactEmail,
-            name: requestData.contactName,
-            phoneNumber: requestData.contactPhone,
-          }
         })
       }
 
@@ -86,7 +80,7 @@ class WarehousePopup extends React.Component {
 
       toastManager.add(generateToastMarkup(
         <FormattedMessage id={`notifications.${status}.header`}/>,
-        <FormattedMessage id={`notifications.${status}.content`} values={{name: values.name}}/>
+        <FormattedMessage id={`notifications.${status}.content`} values={{name: values.addressName}}/>
         ),
         {
           appearance: 'success'
@@ -103,10 +97,6 @@ class WarehousePopup extends React.Component {
     let { popupValues } = this.props
 
     return getSafe(() => popupValues.initialValues, {
-      name: '',
-      contactName: '',
-      contactPhone: '',
-      contactEmail: '',
       deliveryAddress: {
         address: {
           streetAddress: '',
@@ -120,52 +110,16 @@ class WarehousePopup extends React.Component {
         liftGate: false,
         forkLift: false,
         deliveryNotes: '',
-        email: '',
-        phoneNumber: '',
-        name: '',
+        addressName: '',
+        contactName: '',
+        contactPhone: '',
+        contactEmail: '',
         callAhead: false,
       }
     })
 
 
   }
-
-  // handleCountry = (e, d) => {
-  //   let country = this.props.countries.find(obj => obj.id === d.value);
-  //   if (country.hasProvinces) {
-  //     this.props.getProvinces(country.id)
-  //   }
-  //   this.setState({ hasProvinces: country.hasProvinces })
-  // }
-
-  // handleAddressSelect = (d, name, values, setFieldValue) => {
-  //   const i = this.props.AddressSuggestOptions.indexOf(d.value)
-
-  //   if (i >= 0) {
-  //     setFieldValue('address.streetAddress', this.props.AddressSuggestData[i].streetAddress)
-  //     setFieldValue('address.city', this.props.AddressSuggestData[i].city)
-  //     setFieldValue('address.zip', this.props.AddressSuggestData[i].zip && this.props.AddressSuggestData[i].zip.zip)
-  //     setFieldValue('address.country', this.props.AddressSuggestData[i].country.id)
-  //     setFieldValue('address.province', this.props.AddressSuggestData[i].province ? this.props.AddressSuggestData[i].province.id : '')
-  //     this.setState({ hasProvinces: this.props.AddressSuggestData[i].country.hasProvinces })
-  //     if (this.props.AddressSuggestData[i].country.hasProvinces) this.props.getProvinces(this.props.AddressSuggestData[i].country.id)
-  //   }
-
-  //   else {
-  //     let newValues = { ...values, address: { ...values.address, [name]: d.value } }
-  //     const body = {
-  //       city: getSafe(() => newValues.address.city),
-  //       countryId: getSafe(() => JSON.parse(newValues.address.country).countryId),
-  //       provinceId: getSafe(() => newValues.address.province),
-  //       streetAddress: getSafe(() => newValues.address.streetAddress),
-  //       zip: newValues.address.zip
-  //     }
-
-  //     removeEmpty(body)
-  //     if (Object.entries(body).length === 0) return
-  //     this.props.getAddressSearch(body)
-  //   }
-  // }
 
   render() {
     // const {
@@ -206,7 +160,7 @@ class WarehousePopup extends React.Component {
             {({ setFieldValue, values, setFieldTouched, errors, touched, isSubmitting }) => (
               <>
                 <FormGroup widths='equal' data-test='settings_warehouse_popup_name_inp'>
-                  <Input type='text' label={name} name='name' />
+                  <Input type='text' label={name} name='deliveryAddress.addressName' />
                 </FormGroup>
                 <AddressForm
                   prefix={'deliveryAddress'}
@@ -215,11 +169,11 @@ class WarehousePopup extends React.Component {
 
                 <Header as='h3'><FormattedMessage id='settings.contactInfo' defaultMessage='Contact Info' /></Header>
                 <FormGroup data-test='settings_warehouse_popup_contactName_inp'>
-                  <Input type='text' label='Contact Name' name='contactName' fieldProps={{ width: 8 }} />
+                  <Input type='text' label='Contact Name' name='deliveryAddress.contactName' fieldProps={{ width: 8 }} />
                 </FormGroup>
                 <FormGroup widths='equal' data-test='settings_warehouse_popup_phoneEmail_inp'>
                   <PhoneNumber
-                    name='contactPhone'
+                    name='deliveryAddress.contactPhone'
                     values={values}
                     label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
                     setFieldValue={setFieldValue}
@@ -227,7 +181,7 @@ class WarehousePopup extends React.Component {
                     setFieldTouched={setFieldTouched} errors={errors}
                     touched={touched} isSubmitting={isSubmitting}
                   />
-                  <Input type='text' label='Email' name='contactEmail' />
+                  <Input type='text' label='Email' name='deliveryAddress.contactEmail' />
                 </FormGroup>
                 <Header as='h3'><FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' /></Header>
                 <FormGroup data-test='settings_delivery_address_notes_inp' style={{ alignItems: 'center' }}>
@@ -296,6 +250,7 @@ const mapStateToProps = state => {
   //   a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
   // ))
 
+  console.log('!!!!!!! mapStateToProps state.settings.popupValues', state.settings.popupValues)
   return {
     // AddressSuggestInput: prepareAddressSuggest(AddressSuggestOptions),
     // AddressSuggestOptions,
