@@ -21,6 +21,7 @@ import { checkToken } from '../../../src/utils/auth'
 import { withToastManager } from 'react-toast-notifications'
 
 import { generateToastMarkup } from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 
 import '../styles/PurchaseOrder.scss'
 
@@ -142,13 +143,15 @@ class PurchaseOrder extends Component {
   }
 
   render() {
+    //console.log('!!!!!! PurchaseOrder Render props', this.props)
     const { dispatch, postNewDeliveryAddress, updateDeliveryAddress, preferredBankAccountId, intl: { formatMessage } } = this.props
     let { cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shipping } = this.props
 
     if (cartIsFetching) return <Spinner />
     if (cart.cartItems.length === 0) Router.push('/cart')
 
-    let currency = cart.cartItems[0].productOffer.pricingTiers[0].price.currency.code
+    //let currency = cart.cartItems[0].productOffer.pricingTiers[0].price.currency.code
+    let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, 'USD')  // ! !
 
 
     let payment = null
@@ -293,7 +296,7 @@ class PurchaseOrder extends Component {
                   }
                   logisticsAccount={this.props.logisticsAccount}
                   cart={cart}
-                  totalPrice={this.props.cart.totalPrice}
+                  totalPrice={this.props.cart.cfFullPriceTotal}
                 />
 
               </GridColumn>

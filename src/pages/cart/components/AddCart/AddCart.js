@@ -102,7 +102,7 @@ export default class AddCart extends Component {
     let error = null
 
     let dropdownOptions = []
-    let currencyCode = offer.pricingTiers[0].price.currency.code || 'USD'
+    let currencyCode = offer.pricingTiers[0].pricePerUOM.currency.code || 'USD'
 
 
     if (pricingTiers.length > 0) {
@@ -112,11 +112,11 @@ export default class AddCart extends Component {
 
         let text = <>
           <FormattedUnit unit='' separator=' - ' value={tier.quantityFrom} /><FormattedUnit unit='' value={quantityTo} />
-          <FormattedNumber style='currency' value={tier.price.amount} currency={currencyCode} />
+          <FormattedNumber style='currency' value={tier.pricePerUOM.amount} currency={currencyCode} />
         </>
         dropdownOptions.push({
           key: i,
-          value: { quantityFrom: tier.quantityFrom, price: tier.price.amount },
+          value: { quantityFrom: tier.quantityFrom, price: tier.pricePerUOM.amount },
           text
         })
       })

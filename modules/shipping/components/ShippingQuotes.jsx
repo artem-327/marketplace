@@ -6,6 +6,8 @@ import { bool, objectOf, func } from 'prop-types'
 import { Modal, Button, Segment, Divider, FormGroup, FormField, Table, Checkbox } from 'semantic-ui-react'
 import { Form, Button as FButton, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import Router from 'next/router'
+import * as Yup from "yup";
+import { errorMessages } from '~/constants/yupValidation'
 
 
 const initialValues = {
@@ -16,11 +18,21 @@ const initialValues = {
   }
 }
 
+const formValidation = () => Yup.object().shape({
+  destination: Yup.object().shape({
+    zip: Yup.string().trim()
+      .min(3, errorMessages.minLength(3))
+      .required(errorMessages.requiredMessage),
+    quantity: Yup.string()
+      .required(errorMessages.requiredMessage),
+  })
+})
+
 export default class ShippingQuotes extends Component {
   state = {
     selectedIndex: null,
     sQuote: null,
-    quantity: 0
+    quantity: ''
   }
 
   componentDidMount() {
@@ -50,7 +62,6 @@ export default class ShippingQuotes extends Component {
       quantity: parseInt(inputs.destination.quantity),
       maxTransitDays: inputs.destination.maxTransit
     }
-
     getShipingQuotes(params)
   }
 
@@ -62,6 +73,7 @@ export default class ShippingQuotes extends Component {
         enableReinitialize
         ignoreLoading
         initialValues={initialValues}
+        validationSchema={formValidation}
         onSubmit={(values, actions) => {
           this.getShipingQuotes(values)
         }}
@@ -88,13 +100,13 @@ export default class ShippingQuotes extends Component {
           />
           <FormField>
             <label>&nbsp;</label>
-            <Button type='submit' fluid loading={loading} data-test='ShippingQuotes_calculate'>Calculate</Button>
+            <Button type='submit' fluid loading={loading}
+                    data-test='ShippingQuotes_calculate'>Calculate</Button>
           </FormField>
         </FormGroup>
-
-        <Divider />
-
-        {this.renderShipingQuotes()}
+        <div>
+          {this.renderShipingQuotes()}
+        </div>
       </Form>
     )
   }
@@ -181,7 +193,7 @@ export default class ShippingQuotes extends Component {
 
     return (
       <Modal closeIcon onClose={closeModal} centered={false} {...this.props.modalProps}>
-        <Modal.Header>Shiping Quote</Modal.Header>
+        <Modal.Header>Shipping Quote</Modal.Header>
         <Modal.Content>
           {this.renderForm()}
         </Modal.Content>

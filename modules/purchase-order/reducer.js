@@ -190,14 +190,14 @@ export default function reducer(state = initialState, action) {
         let { cartItems } = payload
         cartItems.forEach(item => {
           item.locationStr = getLocationString(item.productOffer)
-          item.pricing = getPricing(item.productOffer, item.quantity)
-          item.productOffer = addFirstTier(item.productOffer)
+          //! !item.pricing = {price: item.cfPricePerUOM} // ! ! getPricing(item.productOffer, item.quantity)
+          //! ! item.productOffer = addFirstTier(item.productOffer)
         })
       }
-
       return {
         ...state,
-        cart: calculateTotalPrice(payload),
+        //cart: calculateTotalPrice(payload),
+        cart: payload,
         cartIsFetching: false
       }
     }

@@ -10,10 +10,12 @@ import { getCart, getProductOffer, deleteCart, deleteCartItem } from '~/modules/
 function mapStateToProps(store) {
   let { cart } = store.cart
   if (cart.cartItems) {
-    cart.cartItems.forEach(item => {
-      item.pricing = getPricing(item.productOffer, item.quantity)
-      item.locationStr = getLocationString(item.productOffer)
-    })
+
+    //console.log('!!!!!!!!!!!! mapStateToProps cart', cart);
+    //cart.cartItems.forEach(item => {
+      //item.pricing = getPricing(item.productOffer, item.quantity)
+      //item.locationStr = getLocationString(item.productOffer)
+    //})
   }
 
   return {

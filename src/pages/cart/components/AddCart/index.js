@@ -24,7 +24,12 @@ function mapStateToProps(store) {
               ? d.displayName
               :  d.displayName + ' - ' + d.casProduct.casNumber
         })} />,
-        casProductsCasNumbers: <ArrayToMultiple values={getSafe(() => offer.product.casProducts, []).map(d => (d.casProduct.casNumber))} />,
+        casProductsCasNumbers: <ArrayToMultiple values={getSafe(() => offer.companyProduct.echoProduct.elements, []).map(d => {
+            return d.casProduct
+            ? d.casProduct.casNumber
+            : null
+            })} />,
+        // ! ! osetrit 'proprietary'
     }
 }
 

@@ -10,7 +10,6 @@ export default class ItemCartBody extends Component {
   render() {
     let { cartItem, deleteCartItem, casNumberChemName } = this.props
     let { productOffer } = cartItem
-
     let unitName = productOffer.companyProduct.packagingUnit.nameAbbreviation
 
     return (
@@ -44,8 +43,8 @@ export default class ItemCartBody extends Component {
               <FormattedNumber
                 id='cart.pricePer'
                 style='currency'
-                currency={cartItem.productOffer.pricingTiers[0].price.currency.code}
-                value={cartItem.productOffer.pricingTiers[0].price.amount}
+                currency={'USD' /* // ! ! cartItem.productOffer.pricingTiers[0].price.currency.code*/}
+                value={cartItem.cfPricePerUOM}
               />
             </div>
             <div>

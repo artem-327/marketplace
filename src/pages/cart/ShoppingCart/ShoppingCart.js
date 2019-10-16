@@ -49,7 +49,9 @@ export default class ShoppingCart extends Component {
 
   render() {
     const { cart, deleteCartItem, history, cartIsFetching, sidebarChanged } = this.props
-    let { cartItems, totalPrice } = cart
+    let { cartItems, cfFullPriceTotal } = cart
+
+    //console.log('!!!!!! ShoppingCart Render props', this.props)
 
     if (cartIsFetching) return <Spinner />
     const itemContent = cart.cartItems && cart.cartItems.map(cartItem => {
@@ -110,7 +112,7 @@ export default class ShoppingCart extends Component {
             </div>
             <div>
 
-              <Summary cart={this.props.cart} totalPrice={totalPrice} />
+              <Summary cart={this.props.cart} totalPrice={cfFullPriceTotal} />
 
               {cartItems.length > 0 ?
                 <MargedButton fluid primary data-test="shopping_cart_continue" onClick={this.handleContinue}>

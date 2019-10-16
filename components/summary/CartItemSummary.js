@@ -323,7 +323,7 @@ class CartItemSummary extends Component {
                   style='currency'
                   currency={currency}
                   id='cart.packs'
-                  value={item.pricing.price}
+                  value={item.cfPricePerUOM}
                 />
               </GridColumn>
             </RelaxedRow>
@@ -341,7 +341,7 @@ class CartItemSummary extends Component {
                 <FormattedNumber
                   style='currency'
                   currency={currency}
-                  value={item.price}
+                  value={item.cfFullPrice}
                 />
               </GridColumn>
             </HeaderTextRow>
@@ -357,6 +357,7 @@ class CartItemSummary extends Component {
 
   render() {
     let { cartItems, header } = this.props
+    //console.log('!!!!!! CartItemSummary Render props', this.props)
 
     return (
       <Segment>
