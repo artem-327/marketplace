@@ -7,7 +7,9 @@ export const IDLE_TIMEOUT = 30 * (60 * 1000)
 
 export const setAuth = (auth) => {
   let now = new Date()
-  now.setTime(now.getTime() + (IDLE_TIMEOUT + (60*1000)))
+  now.setTime(now.getTime() + (IDLE_TIMEOUT + (60 * 1000)))
+
+  window.localStorage.setItem('ttl', now.getTime())
 
   Cookie.set('auth',
     { ...auth, expires: now.getTime() },
@@ -56,7 +58,7 @@ export async function refreshToken() {
   if (!auth) return
 
   // if (auth.expires - 60000 > new Date().getTime()) return
-  
+
   const { data } = await api.post('/prodex/oauth/token',
     `grant_type=refresh_token&refresh_token=${auth.refresh_token}`,
     {
