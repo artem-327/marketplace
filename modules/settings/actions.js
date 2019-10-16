@@ -544,10 +544,12 @@ export function getBankAccountsDataRequest() {
     dispatch({
       type: AT.GET_BANK_ACCOUNTS_DATA,
       async payload() {
-        const [bankAccountsData, country, currency] = await Promise.all([
+        const [bankAccountsData, country,
+          // currency
+          ] = await Promise.all([
           api.getBankAccountsData(),
           api.getCountry(),
-          api.getCurrencies(),
+          // api.getCurrencies(),
         ])
         const newCountryFormat = country.map(country => {
           return {
@@ -555,13 +557,15 @@ export function getBankAccountsDataRequest() {
             value: country.id
           }
         })
-        const newCurrencyFormat = currency.map(currency => {
-          return {
-            text: currency.code,
-            value: currency.id
-          }
-        })
-        return { bankAccountsData, newCountryFormat, newCurrencyFormat }
+        // const newCurrencyFormat = currency.map(currency => {
+        //   return {
+        //     text: currency.code,
+        //     value: currency.id
+        //   }
+        // })
+        return { bankAccountsData, newCountryFormat, 
+          // newCurrencyFormat
+         }
       }
     })
   }

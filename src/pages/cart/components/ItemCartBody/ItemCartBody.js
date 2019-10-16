@@ -5,6 +5,7 @@ import { FormattedMessage, FormattedNumber } from 'react-intl'
 
 import { Button } from 'semantic-ui-react'
 import { FormattedUnit } from '~/components/formatted-messages'
+import { currency } from '~/constants/index'
 
 export default class ItemCartBody extends Component {
   render() {
@@ -43,7 +44,7 @@ export default class ItemCartBody extends Component {
               <FormattedNumber
                 id='cart.pricePer'
                 style='currency'
-                currency={'USD' /* // ! ! cartItem.productOffer.pricingTiers[0].price.currency.code*/}
+                currency={currency}
                 value={cartItem.cfPricePerUOM}
               />
             </div>

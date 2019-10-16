@@ -4,6 +4,8 @@ import { string, array, func, number, node } from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { getSafe } from '~/utils/functions'
 import { RelaxedRow, HeaderTextRow } from './styledComponents'
+import { currency } from '~/constants/index'
+
 
 import './styles.scss'
 
@@ -24,7 +26,7 @@ export default class Summary extends Component {
     }
 
     let shipping = cart.selectedShipping ? cart.selectedShipping.quote.estimatedPrice : 0
-    let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, 'USD')  // ! !
+    // let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, 'USD')  // ! !
 
     //let pricePerUnit = (totalPrice + shipping) / totalWeight
     

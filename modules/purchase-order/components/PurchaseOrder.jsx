@@ -22,6 +22,7 @@ import { withToastManager } from 'react-toast-notifications'
 
 import { generateToastMarkup } from '~/utils/functions'
 import { getSafe } from '~/utils/functions'
+import { currency } from '~/constants/index'
 
 import '../styles/PurchaseOrder.scss'
 
@@ -151,7 +152,7 @@ class PurchaseOrder extends Component {
     if (cart.cartItems.length === 0) Router.push('/cart')
 
     //let currency = cart.cartItems[0].productOffer.pricingTiers[0].price.currency.code
-    let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, 'USD')  // ! !
+    let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, currency)  // ! !
 
 
     let payment = null

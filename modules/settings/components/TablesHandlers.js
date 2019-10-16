@@ -4,11 +4,11 @@ import get from 'lodash/get'
 import { Header, Menu, Button, Checkbox, Input, Dropdown } from 'semantic-ui-react'
 import * as Actions from '../actions'
 import { openGlobalBroadcast } from '~/modules/broadcast/actions'
-import Router from 'next/router'
 import { debounce } from 'lodash'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
+import { currency } from '~/constants/index'
 
 const textsTable = {
   'users': {
@@ -212,7 +212,7 @@ const mapStateToProps = (state) => {
     productsFilter: state.settings.productsFilter,
     filterValue: state.settings.filterValue,
     dwollaAccBalance: state.settings.dwollaAccBalance ?
-      state.settings.dwollaAccBalance.balance : { value: '', currency: 'USD' },
+      state.settings.dwollaAccBalance.balance : { value: '', currency },
   }
 }
 

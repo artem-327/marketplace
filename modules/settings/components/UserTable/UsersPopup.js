@@ -16,7 +16,7 @@ import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
-
+import { currency } from '~/constants/index'
 import { PhoneNumber } from '~/modules/phoneNumber'
 
 const userFormValidation = () => Yup.object().shape({
@@ -102,7 +102,7 @@ class UsersPopup extends React.Component {
       name = '',
       email = '',
       homeBranch = undefined,
-      preferredCurrency = undefined,
+      preferredCurrency = currency,
       additionalBranches = [],
       jobTitle = '',
       phone = '',
@@ -193,12 +193,12 @@ class UsersPopup extends React.Component {
                             multiple: true
                           }}
                         />
-                        <Dropdown
+                        {/* <Dropdown
                           label={formatMessage({ id: 'global.currency', defaultMessage: 'Currency' })}
                           name='preferredCurrency'
                           options={currencies}
                           fieldProps={{ width: 2 }}
-                          inputProps={{ 'data-test': 'settings_users_popup_preferredCurrency_drpdn' }} />
+                          inputProps={{ 'data-test': 'settings_users_popup_preferredCurrency_drpdn' }} /> */}
                       </FormGroup>
                       {/* <pre>
                         {JSON.stringify(values, null, 2)}
@@ -242,13 +242,13 @@ const mapStateToProps = state => {
     branchesAll: state.settings.branchesAll,
     roles: state.settings.roles,
     userEditRoles: state.settings.userEditRoles,
-    currencies: state.settings.currency.map(d => {
-      return {
-        id: d.id,
-        text: d.code,
-        value: d.id
-      }
-    }),
+    // currencies: state.settings.currency.map(d => {
+    //   return {
+    //     id: d.id,
+    //     text: d.code,
+    //     value: d.id
+    //   }
+    // }),
   }
 }
 

@@ -10,7 +10,8 @@ import { withRouter } from 'next/router'
 import { applyFilter } from '~/modules/filter/actions'
 import { ArrayToMultiple } from '~/components/formatted-messages'
 import React from "react";
-import { FormattedNumber } from "react-intl";
+import { FormattedNumber } from "react-intl"
+import { currency } from '~/constants/index'
 
 function mapStateToProps(state, { router, datagrid }) {
   const { orders } = state
@@ -20,7 +21,7 @@ function mapStateToProps(state, { router, datagrid }) {
     orders.data = []
   }
   const { type } = query
-  let currency = 'USD'  // ! ! Temporary
+
 
   return {
     endpointType: query.type === 'sales' ? 'sale' : query.type,

@@ -13,6 +13,7 @@ import "./PurchaseOrder.scss"
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { checkToken } from "../../../utils/auth"
 import Router from 'next/router'
+import { currency } from '~/constants/index'
 
 import CartItemSummary from '~/components/summary/CartItemSummary'
 import Summary from '~/components/summary/Summary'
@@ -190,8 +191,7 @@ class PurchaseOrder extends Component {
                 </GridRow>
 
                 <ShippingQuote
-                  //TODO, change when backend provides this info
-                  currency={{ code: 'USD' }}
+                  currency={{ code: currency}}
                   selectedShippingQuote={this.props.cart.selectedShipping}
                   handleQuoteSelect={this.handleQuoteSelect}
                   selectedAddress={shipping.selectedAddress}

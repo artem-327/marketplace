@@ -11,6 +11,7 @@ import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
 import * as Yup from 'yup'
 import { CompanyProductMixtures } from '~/components/shared-components/'
+import { currency } from '~/constants/index'
 
 import { Datagrid } from '~/modules/datagrid'
 import { uniqueArrayByKey, getSafe, generateToastMarkup, getDesiredCasProductsProps } from '~/utils/functions'
@@ -238,7 +239,7 @@ class SimpleEdit extends Component {
                             type: 'number',
                             step: 0.001,
                             min: 0.001,
-                            label: getSafe(() => preferredCurrency.symbol, 'US$'),
+                            label: getSafe(() => preferredCurrency.symbol, '$'),
                             fluid: true
                           }}
                           name='pricingTiers[0].price'
@@ -324,7 +325,7 @@ const mapStateToProps = ({ simpleAdd: {
   popupValues,
   autocompleteData,
   autocompleteDataLoading,
-  preferredCurrency: getSafe(() => auth.identity.preferredCurrency),
+  preferredCurrency: getSafe(() => auth.identity.preferredCurrency, currency),
   isAdmin: getSafe(() => auth.identity.isAdmin),
   takeover: getSafe(() => auth.identity.company, false),
   owner: getSafe(() => auth.identity.id),

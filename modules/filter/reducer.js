@@ -5,6 +5,7 @@ import typeToReducer from 'type-to-reducer'
 import { uniqueArrayByKey, mapAutocompleteData } from '~/utils/functions'
 
 import { datagridValues, paths } from './constants/filter'
+import { currency } from '~/constants/index'
 
 const asignFiltersDescription = (filter, params) => {
   let datagridKeys = Object.keys(datagridValues)
@@ -46,7 +47,7 @@ export const initialState = {
   savedFilterUpdating: false,
   savedAutocompleteData: [],
   params: {
-    currencyCode: 'USD'
+    currencyCode: currency
   }
 }
 

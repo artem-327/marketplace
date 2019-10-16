@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 import { defaultTabs } from "./contants"
 
+import { currency } from '~/constants/index'
 import { FormattedMessage } from 'react-intl'
 
 export const initialState = {
@@ -325,7 +326,8 @@ export default function reducer(state = initialState, action) {
               : null
             : null,
             */
-          preferredCurrency: (user.preferredCurrency || {}).id || 0,
+          // preferredCurrency: (user.preferredCurrency || {}).id || 0,
+          preferredCurrency: currency,
           homeBranch: user.homeBranch.name,
           permissions: user.roles ? user.roles.name : "", // ! ! array?
           id: user.id,
@@ -488,7 +490,7 @@ export default function reducer(state = initialState, action) {
       const {
         bankAccountsData,
         newCountryFormat,
-        newCurrencyFormat
+        // newCurrencyFormat
       } = action.payload
 
 
@@ -497,7 +499,7 @@ export default function reducer(state = initialState, action) {
         loading: false,
         bankAccountsRows: bankAccountsData,
         country: newCountryFormat,
-        currency: newCurrencyFormat
+        // currency: newCurrencyFormat
       }
     }
 

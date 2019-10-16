@@ -10,10 +10,9 @@ import Router from 'next/router'
 import { FormattedNumber, FormattedMessage } from 'react-intl'
 import { FormattedUnit, UnitOfPackaging } from '~/components/formatted-messages'
 import { errorMessages } from '~/constants/yupValidation'
-import { getPricing } from "~/src/utils/functions"
 
-import { isEqual } from 'lodash'
-
+import { currency } from '~/constants/index'
+import { getSafe } from '~/utils/functions'
 
 const CapitalizedColumn = styled(GridColumn)`
   text-transform: capitalize;
@@ -102,7 +101,7 @@ export default class AddCart extends Component {
     let error = null
 
     let dropdownOptions = []
-    let currencyCode = offer.pricingTiers[0].pricePerUOM.currency.code || 'USD'
+    let currencyCode = getSafe(() => offer.pricingTiers[0].pricePerUOM.currency.code, currency)
 
 
     if (pricingTiers.length > 0) {

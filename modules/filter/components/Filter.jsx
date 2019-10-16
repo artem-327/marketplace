@@ -548,7 +548,7 @@ class Filter extends Component {
     if (!autocompleteDataLoading) dropdownProps.icon = null
     if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
 
-    let currencySymbol = this.props.preferredCurrency ? this.props.preferredCurrency.symbol : null
+    let currencySymbol = getSafe(() => this.props.preferredCurrency.symbol, '$')
 
     return (
       <Accordion>

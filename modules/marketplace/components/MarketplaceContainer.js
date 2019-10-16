@@ -10,7 +10,7 @@ import { applyFilter } from '~/modules/filter/actions'
 import { FormattedNumber } from 'react-intl'
 
 import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
-
+import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 import React from "react";
 
@@ -23,7 +23,7 @@ function mapStateToProps(store, { datagrid }) {
     appliedFilter: store.filter.filter.appliedFilter,
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
-      let currency = getSafe(() => po.pricingTiers[0].pricePerUOM.currency.code, 'USD')
+ 
       return {
         id: po.id,
         productName: po.companyProduct.echoProduct.name,

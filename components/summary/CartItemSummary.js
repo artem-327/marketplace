@@ -12,7 +12,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { connect } from 'react-redux'
 import { debounce } from 'lodash'
 import * as Yup from 'yup'
-
+import { currency } from '~/constants/index'
 import { getPackagingGroupsDataRequest, getHazardClassesDataRequest, getUnNumbersByString, addUnNumber } from '~/modules/admin/actions'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { nmfcValidation, freightClassValidation } from '~/constants/yupValidation'
@@ -58,7 +58,7 @@ class CartItemSummary extends Component {
       unNumbersFetching, updateHazmatInfo,
       toastManager } = this.props
     let { productOffer: { companyProduct } } = item
-    
+
     let initialValues = {
       unCode: getSafe(() => item.unNumber.id, companyProduct.echoProduct.cfUnNumber),
       packagingGroup: getSafe(() => item.packagingGroup.id, companyProduct.cfPackagingGroup),
@@ -201,7 +201,7 @@ class CartItemSummary extends Component {
   renderItem = ({ item, lastChild }) => {
     let { productOffer } = item
     let { deleteCart } = this.props
-    let currency = this.props.currency
+    // let currency = this.props.currency
 
     return (
       <>
@@ -383,12 +383,12 @@ CartItemSummary.propTypes = {
   cartItems: array,
   deleteCart: func,
   header: string,
-  currency: string
+  // currency: string
 }
 
 CartItemSummary.defaultProps = {
   header: <FormattedMessage id='cart.yourOrder' defaultMessage='YOUR ORDER' />,
-  currency: 'USD'
+  // currency: 'USD'
 }
 
 

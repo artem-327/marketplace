@@ -8,6 +8,7 @@ import moment from "moment/moment"
 import { getSafe } from "~/utils/functions"
 import { FormattedNumber } from "react-intl";
 import { ArrayToMultiple } from '~/components/formatted-messages'
+import { currency } from '~/constants/index'
 
 function actionRequired(data) {
   // return statuses code
@@ -21,7 +22,7 @@ function prepareDetail(data, type) {
   const totalPrice = getSafe(() => data.totalPrice, 0)
   const totalPriceWithShipping = getSafe(() => data.totalPriceWithShipping, getSafe(() => data.totalPrice, 0))
   const orderItems = getSafe(() => data.orderItems, [])
-  let currency = 'USD'  // ! ! Temporary
+
 
   return {
     acceptanceDate: (typeof data.acceptanceDate !== 'undefined' ? moment(data.acceptanceDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),

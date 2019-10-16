@@ -4,6 +4,7 @@ import { setAuth, unsetAuth, authorize } from '~/utils/auth'
 import Router from 'next/router'
 import { ROLES_ENUM } from '~/src/utils/constants'
 import { getSafe } from '~/utils/functions'
+import { currency } from '~/constants/index'
 
 export function getIdentity() {
   return {
@@ -27,7 +28,7 @@ export function login(username, password) {
         const identity = await api.getIdentity()
 
         let company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
-        const preferredCurrency = identity.preferredCurrency
+        const preferredCurrency = getSafe(() => identity.preferredCurrency, currency)
 
 
         const authPayload = {
