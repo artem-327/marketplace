@@ -70,7 +70,7 @@ class DocumentPopup extends Component {
       intl: { formatMessage }, documentTypesFetching,
       edit, toastManager, addAttachment,
       updateAttachment, onClose } = this.props
-
+      
     return (
       <Modal closeIcon onClose={() => closePopup()} open>
         <Modal.Header>
@@ -143,8 +143,8 @@ class DocumentPopup extends Component {
                       label={<FormattedMessage id='global.othersPermissions' defaultMessage='Others Permissions'>{text => text}</FormattedMessage>}
                       options={otherPermissions.map((perm, i) => ({
                         id: i,
-                        text: perm,
-                        value: perm
+                        text: perm.text,
+                        value: perm.value
                       }))}
                     />
                     <Dropdown
@@ -155,8 +155,8 @@ class DocumentPopup extends Component {
                       label={<FormattedMessage id='global.sharedTo' defaultMessage='Shared To'>{text => text}</FormattedMessage>}
                       options={sharedTo.map((s, i) => ({
                         id: i,
-                        text: s,
-                        value: s
+                        text: s.text,
+                        value: s.value
                       }))} />
                   </FormGroup>
 

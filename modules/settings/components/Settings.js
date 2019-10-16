@@ -38,7 +38,7 @@ import PriceBook from './PriceBook'
 
 import Router from 'next/router'
 
-import { addTab, tabChanged, resetSettings, loadLogo, openPopup } from '../actions'
+import { addTab, tabChanged, resetSettings, loadLogo } from '../actions'
 
 
 import { updateCompany } from '~/modules/auth/actions'
