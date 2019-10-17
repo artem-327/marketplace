@@ -104,12 +104,12 @@ export function addProductOffer(values, poId = false, simple = false) {
       manufacturer: getSafe(() => values.manufacturer),
       minimum: parseInt(values.minimum),
       origin: getSafe(() => values.origin),
-      pricingTiers: values.pricingTiers.map((tier, index) => {
+      pricingTiers: getSafe(() => values.pricingTiers.map((tier, index) => {
         return {
           price: parseFloat(tier.price),
           quantityFrom: parseInt(!index ? values.minimum : tier.quantityFrom)
         }
-      }),
+      }), []),
       processingTimeDays: parseInt(values.processingTimeDays),
       productCondition: getSafe(() => parseInt(values.productCondition)),
       productForm: getSafe(() => parseInt(values.productForm)),
