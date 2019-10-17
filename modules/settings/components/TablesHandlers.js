@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import get from 'lodash/get'
-import { Header, Menu, Button, Checkbox, Input, Dropdown } from 'semantic-ui-react'
+import { Header, Menu, Button, Checkbox, Input, Dropdown, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import * as Actions from '../actions'
 import { openGlobalBroadcast } from '~/modules/broadcast/actions'
 import { debounce } from 'lodash'
@@ -86,7 +86,13 @@ class TablesHandlers extends Component {
     this.handleFiltersValue(value)
   }
 
-  render() {
+  renderHeader = () => (
+    <GridColumn widescreen={2} computer={3} tablet={3}>
+      <Header as='h1' size='medium'>{this.props.currentTab.name}</Header>
+    </GridColumn>
+  )
+
+  renderHandler = () => {
     const {
       currentTab,
       openPopup,
@@ -103,98 +109,107 @@ class TablesHandlers extends Component {
 
     const { filterValue } = this.state
     const bankAccTab = currentTab.type === 'bank-accounts'
-
     return (
-      <Menu secondary>
-        <Menu.Item header>
-          <Header as="h1" size="medium">
-            {currentTab.name}
-          </Header>
-        </Menu.Item>
-        {!currentTab.hideHandler &&
-          <Menu.Menu position="right">
-            {!currentTab.hideSearch && (!bankAccTab || bankAccounts.searchField) &&
-              <Menu.Item data-test='settings_table_search_inp' >
-                <Input
-                  style={{ width: 340 }}
-                  size="large"
-                  icon="search"
-                  value={filterValue}
-                  placeholder={formatMessage({
-                    id: textsTable[currentTab.type].SearchText,
-                    defaultMessage: 'Select Credit Card'
-                  })}
-                  onChange={this.handleFilterChange}
-                />
-              </Menu.Item>
-            }
-            <Menu.Item>
-              {currentTab.type === 'products' && (
-                <Checkbox
-                  label={formatMessage({ id: 'settings.tables.products.unmappedOnly', defaultMessage: 'Unmapped only' })}
-                  defaultChecked={productCatalogUnmappedValue}
-                  onChange={(e, { checked }) => Datagrid.setQuery({ unmappedOnly: checked })}
-                  data-test='settings_dwolla_unmapped_only_chckb'
-                />
-              )}
-              {(bankAccTab && bankAccounts.registerButton) && (
-                <Button
-                  size="large"
-                  style={{ marginLeft: 10 }}
-                  primary
-                  onClick={() => openDwollaPopup()}
-                  data-test='settings_dwolla_open_popup_btn'
-                >
-                  <FormattedMessage id='settings.tables.bankAccounts.registerDwolla' defaultMessage='Register Dwolla Account' >{(text) => text}</FormattedMessage>
-                </Button>
-              )}
-              {(bankAccTab && bankAccounts.uploadDocumentsButton) && (
-                <Button
-                  size="large"
-                  style={{ marginLeft: 10 }}
-                  primary
-                  onClick={() => openUploadDocumentsPopup()}
-                  data-test='settings_dwolla_upload_documents_btn'
-                >
-                  <FormattedMessage id='settings.tables.bankAccounts.uploadDoc' defaultMessage='Upload Documents' >{(text) => text}</FormattedMessage>
-                </Button>
-              )}
-              {(bankAccTab && bankAccounts.dwollaBalance) && (
-                <>
-                  &nbsp;<FormattedMessage id='settings.dwollaAccBalance' defaultMessage='Dwolla Balance: ' />&nbsp;
-                  <FormattedNumber style='currency' currency={dwollaAccBalance.currency} value={dwollaAccBalance.value} />
-                </>
-              )}
-              {!currentTab.hideButtons && (
-                <>
-                  {(!bankAccTab || bankAccounts.addButton) && (
-                    <Button
-                      size="large"
-                      style={{ marginLeft: 10 }}
-                      primary
-                      onClick={() => openPopup()}
-                      data-test='settings_open_popup_btn'
-                    >
-                      <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{(text) => text}</FormattedMessage>
-                    </Button>
-                  )}
-                  {currentTab.type === 'products' && (
-                    <Button
-                      size="large"
-                      style={{ marginLeft: 10 }}
-                      primary
-                      onClick={() => openImportPopup()}
-                      data-test='settings_open_import_popup_btn'
-                    >
-                      <FormattedMessage id={textsTable[currentTab.type].BtnImportText}>{(text) => text}</FormattedMessage>
-                    </Button>
-                  )}
-                </>
-              )}
-            </Menu.Item>
-          </Menu.Menu>
+      <>
+        <GridColumn floated='right' widescreen={7} computer={5} tablet={4}>
+          <Input
+            fluid
+            icon='search'
+            value={filterValue}
+            placeholder={formatMessage({
+              id: textsTable[currentTab.type].SearchText,
+              defaultMessage: 'Select Credit Card'
+            })}
+            onChange={this.handleFilterChange}
+          />
+        </GridColumn>
+
+
+        {
+          currentTab.type === 'products' && (
+            <GridColumn computer={2} tablet={3}>
+              <Checkbox
+                label={formatMessage({ id: 'settings.tables.products.unmappedOnly', defaultMessage: 'Unmapped only' })}
+                defaultChecked={productCatalogUnmappedValue}
+                onChange={(e, { checked }) => Datagrid.setQuery({ unmappedOnly: checked })}
+                data-test='settings_dwolla_unmapped_only_chckb'
+              />
+            </GridColumn>
+          )
         }
-      </Menu>
+        {
+          (bankAccTab && bankAccounts.registerButton) && (
+            <GridColumn>
+              <Button
+                primary
+                onClick={() => openDwollaPopup()}
+                data-test='settings_dwolla_open_popup_btn'
+              >
+                <FormattedMessage id='settings.tables.bankAccounts.registerDwolla' defaultMessage='Register Dwolla Account' >{(text) => text}</FormattedMessage>
+              </Button>
+            </GridColumn>
+          )
+        }
+        {
+          (bankAccTab && bankAccounts.uploadDocumentsButton) && (
+            <GridColumn>
+              <Button
+                primary
+                onClick={() => openUploadDocumentsPopup()}
+                data-test='settings_dwolla_upload_documents_btn'>
+                <FormattedMessage id='settings.tables.bankAccounts.uploadDoc' defaultMessage='Upload Documents' >{(text) => text}</FormattedMessage>
+              </Button>
+            </GridColumn>
+          )
+        }
+        {
+          (bankAccTab && bankAccounts.dwollaBalance) && (
+            <GridColumn computer={2}>
+              <FormattedMessage id='settings.dwollaAccBalance' defaultMessage='Dwolla Balance: ' />
+        <FormattedNumber style='currency' currency={dwollaAccBalance.currency} value={dwollaAccBalance.value} />
+            </GridColumn>
+          )
+        }
+        {
+          !currentTab.hideButtons && (
+            <>
+              {(!bankAccTab || bankAccounts.addButton) && (
+                <GridColumn widescreen={2} computer={3} tablet={3}>
+                  <Button
+                    fluid
+                    primary
+                    onClick={() => openPopup()}
+                    data-test='settings_open_popup_btn'>
+                    <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{(text) => text}</FormattedMessage>
+                  </Button>
+                </GridColumn>
+              )}
+              {currentTab.type === 'products' && (
+                <GridColumn widescreen={2} computer={3} tablet={3}>
+                  <Button
+                    fluid
+                    primary
+                    onClick={() => openImportPopup()}
+                    data-test='settings_open_import_popup_btn'>
+                    <FormattedMessage id={textsTable[currentTab.type].BtnImportText}>{(text) => text}</FormattedMessage>
+                  </Button>
+                </GridColumn>
+              )}
+            </>
+          )
+        }
+      </>
+    )
+  }
+
+  render() {
+    return (
+      <Grid as={Menu} secondary verticalAlign='middle'>
+        <GridRow>
+          {this.renderHeader()}
+          {!this.props.currentTab.hideHandler && this.renderHandler()}
+        </GridRow>
+      </Grid>
     )
   }
 }

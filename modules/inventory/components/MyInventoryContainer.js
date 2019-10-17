@@ -17,6 +17,7 @@ import { getSafe } from '~/utils/functions'
 import moment from 'moment/moment'
 
 function mapStateToProps(store, { datagrid }) {
+  console.log({ rows: datagrid.rows })
   return {
     ...store.simpleAdd,
     sellEligible: getSafe(() => store.auth.identity.company.sellEligible, false),
@@ -25,11 +26,18 @@ function mapStateToProps(store, { datagrid }) {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
       let currency = getSafe(() => po.price.currency.code, 'USD')
       let fobPrice = null
-      if (!po.pricingTiers[0]) fobPrice = 'N/A'
-      else if (po.pricingTiers.length > 1) fobPrice = <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price.amount} /> - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price.amount} /> {qtyPart && (`/ ${qtyPart}`)} </>
-      else fobPrice = <> <FormattedNumber style='currency' currency={currency} value={getSafe(() => po.pricingTiers[0].price.amount)} /> {qtyPart && (`/ ${qtyPart}`)} </>
+
+      try {
+        if (!po.pricingTiers[0]) fobPrice = 'N/A'
+        else if (po.pricingTiers.length > 1) fobPrice = <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price.amount} /> - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price.amount} /> {qtyPart && (`/ ${qtyPart}`)} </>
+        else fobPrice = <> <FormattedNumber style='currency' currency={currency} value={getSafe(() => po.pricingTiers[0].price.amount)} /> {qtyPart && (`/ ${qtyPart}`)} </>
+      } catch(e) {
+        console.error(e)
+        fobPrice = 'N/A'
+      }
 
       return {
+        ...po,
         id: po.id,
         product: po.product,
         productName: getSafe(() => po.companyProduct.intProductName),
@@ -52,7 +60,6 @@ function mapStateToProps(store, { datagrid }) {
         manufacturer: getSafe(() => po.companyProduct.echoProduct.manufacturer.name, 'N/A'),
         broadcasted: po.broadcasted,
         lotNumber: <ArrayToMultiple values={po.lots.map(d => (d.lotNumber))} />,
-        status: po.status,// new broadcasted
         minOrderQuantity: getSafe(() => po.minimum, ''),
         splits: getSafe(() => po.splits, ''),
         condition: getSafe(() => po.productCondition.name, ''),

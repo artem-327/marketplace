@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import '~/src/pages/inventory/addInventory/AddInventory.scss'
 import Spinner from '~/src/components/Spinner/Spinner'
-import { Grid, Segment, Accordion, Table, List, Label, Button, Icon, Divider, Header, Popup } from 'semantic-ui-react'
+import { Grid, Segment, Accordion, Table, List, Label, Button, Icon, Divider, Header, Popup, GridRow } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
@@ -116,77 +116,81 @@ class Detail extends Component {
       <div id='page' className='scrolling'>
         <PerfectScrollbar>
           <Divider hidden />
-          <Grid verticalAlign='middle' columns='equal' style={{ padding: '0 32px' }}>
-            <Grid.Column width={6}>
-              <div className='header-top clean left detail-align'>
-                <Header as='h1' className='header inv-header' style={{ marginBottom: '0.5rem', textTransform: 'uppercase', fontSize: '1.14285714em', fontWeight: '500' }}>{ordersType} <FormattedMessage id='order' defaultMessage='Order' /> {isDetailFetching ? '' : '# ' + order.id}</Header>
-                <a onClick={() => this.downloadOrder()} style={{ fontSize: '1.14285714em', cursor: 'pointer' }} data-test='orders_detail_download_order'><Icon name='download' style={{ verticalAlign: 'top' }} color='blue' />
-                  <FormattedMessage id='order.downloadOrder' defaultMessage={`Download ${order.orderType} Order`} values={{ orderType: order.orderType }} />
-                </a>
-              </div>
-            </Grid.Column>
-            <Grid.Column>
-              <List divided relaxed horizontal size='large' floated='right' style={{ whiteSpace: 'nowrap' }}>
-                <List.Item>
-                  <List.Content>
-                    <List.Header as='label'>
-                      <FormattedMessage id='order.orderStatus' defaultMessage='Order Status' />
-                    </List.Header>
-                    <List.Description as='span'>
-                      <Label circular empty color={order.orderStatus === 'Declined' || order.orderStatus === 'Rejected' ? 'red' : (order.orderStatus === 'Confirmed' ? 'green' : false)}></Label> {order.orderStatus}</List.Description>
-                  </List.Content>
-                </List.Item>
-                <List.Item>
-                  <List.Content>
-                    <List.Header as='label'><FormattedMessage id='order.shippingStatus' defaultMessage='Shipping Status' /></List.Header>
-                    <List.Description as='span'><Label circular empty color={order.shippingStatus !== 'N/A' ? 'blue' : false}></Label> {order.shippingStatus}</List.Description>
-                  </List.Content>
-                </List.Item>
-                <List.Item>
-                  <List.Content>
-                    <List.Header as='label'><FormattedMessage id='order.reviewStatus' defaultMessage='Review Status' /></List.Header>
-                    <List.Description as='span'><Label circular empty color={order.reviewStatus !== 'N/A' ? 'blue' : false}></Label> {order.reviewStatus}</List.Description>
-                  </List.Content>
-                </List.Item>
-                <List.Item>
-                  <List.Content>
-                    <List.Header as='label'><FormattedMessage id='order.creditStatus' defaultMessage='Credit Status' /></List.Header>
-                    <List.Description as='span'><Label circular empty color={order.creditStatus !== 'N/A' ? 'blue' : false}></Label> {order.creditStatus}</List.Description>
-                  </List.Content>
-                </List.Item>
-                <List.Item>
-                  <List.Content>
-                    <List.Header as='label'><FormattedMessage id='order.returnStatus' defaultMessage='Return Status' /></List.Header>
-                    <List.Description as='span'><Label circular empty color={order.returnStatus !== 'N/A' ? 'blue' : false}></Label> {order.returnStatus}</List.Description>
-                  </List.Content>
-                </List.Item>
-                <List.Item>
-                  <List.Content>
-                    <List.Header as='label'><FormattedMessage id='order.paymentStatus' defaultMessage='Payment Status' /></List.Header>
-                    <List.Description as='span'>
-                      <Label circular empty color={order.paymentStatus === 'Failed' ? 'red' : (order.paymentStatus !== 'N/A' ? 'blue' : false)}></Label> {order.orderType === 'Purchase' && order.paymentStatus === 'Pending' && isPaymentCancellable ? (
-                        <Popup content={<FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />}
-                               trigger={
-                                 <a onClick={() => confirm(
-                                   <FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />,
-                                   <FormattedMessage id='confirm.cancelPayment.content' defaultMessage='Do you really want to Cancel Payment for Order #{orderId}' values={{ orderId: order.id }} />
-                                 ).then(() => { cancelPayment(order.id).then(r => {
-                                   toastManager.add(generateToastMarkup(
-                                     <FormattedMessage id='order.cancelTransfer.success.header' defaultMessage='Canceled Payment' />,
-                                     <FormattedMessage id='order.cancelTransfer.success.content' defaultMessage='Payment transfer for order #{orderId} was canceled successfully' values={{ orderId: order.id }} />,
-                                   ), {
-                                     appearance: 'success'
-                                   })
-                                 }) })}>
-                                   {order.paymentStatus}
-                                 </a>
-                               } />
-                      ) : order.paymentStatus}
-                    </List.Description>
-                  </List.Content>
-                </List.Item>
-              </List>
-            </Grid.Column>
+          <Grid verticalAlign='middle' style={{ padding: '0 32px' }}>
+            <GridRow>
+              <Grid.Column width={3}>
+                <div className='header-top clean left detail-align'>
+                  <Header as='h1' className='header inv-header' style={{ marginBottom: '0.5rem', textTransform: 'uppercase', fontSize: '1.14285714em', fontWeight: '500' }}>{ordersType} <FormattedMessage id='order' defaultMessage='Order' /> {isDetailFetching ? '' : '# ' + order.id}</Header>
+                  <a onClick={() => this.downloadOrder()} style={{ fontSize: '1.14285714em', cursor: 'pointer' }} data-test='orders_detail_download_order'><Icon name='download' style={{ verticalAlign: 'top' }} color='blue' />
+                    <FormattedMessage id='order.downloadOrder' defaultMessage={`Download ${order.orderType} Order`} values={{ orderType: order.orderType }} />
+                  </a>
+                </div>
+              </Grid.Column>
+              <Grid.Column width={12}>
+                <List divided relaxed horizontal size='large' floated='right'>
+                  <List.Item>
+                    <List.Content>
+                      <List.Header as='label'>
+                        <FormattedMessage id='order.orderStatus' defaultMessage='Order Status' />
+                      </List.Header>
+                      <List.Description as='span'>
+                        <Label circular empty color={order.orderStatus === 'Declined' || order.orderStatus === 'Rejected' ? 'red' : (order.orderStatus === 'Confirmed' ? 'green' : false)}></Label> {order.orderStatus}</List.Description>
+                    </List.Content>
+                  </List.Item>
+                  <List.Item>
+                    <List.Content>
+                      <List.Header as='label'><FormattedMessage id='order.shippingStatus' defaultMessage='Shipping Status' /></List.Header>
+                      <List.Description as='span'><Label circular empty color={order.shippingStatus !== 'N/A' ? 'blue' : false}></Label> {order.shippingStatus}</List.Description>
+                    </List.Content>
+                  </List.Item>
+                  <List.Item>
+                    <List.Content>
+                      <List.Header as='label'><FormattedMessage id='order.reviewStatus' defaultMessage='Review Status' /></List.Header>
+                      <List.Description as='span'><Label circular empty color={order.reviewStatus !== 'N/A' ? 'blue' : false}></Label> {order.reviewStatus}</List.Description>
+                    </List.Content>
+                  </List.Item>
+                  <List.Item>
+                    <List.Content>
+                      <List.Header as='label'><FormattedMessage id='order.creditStatus' defaultMessage='Credit Status' /></List.Header>
+                      <List.Description as='span'><Label circular empty color={order.creditStatus !== 'N/A' ? 'blue' : false}></Label> {order.creditStatus}</List.Description>
+                    </List.Content>
+                  </List.Item>
+                  <List.Item>
+                    <List.Content>
+                      <List.Header as='label'><FormattedMessage id='order.returnStatus' defaultMessage='Return Status' /></List.Header>
+                      <List.Description as='span'><Label circular empty color={order.returnStatus !== 'N/A' ? 'blue' : false}></Label> {order.returnStatus}</List.Description>
+                    </List.Content>
+                  </List.Item>
+                  <List.Item>
+                    <List.Content>
+                      <List.Header as='label'><FormattedMessage id='order.paymentStatus' defaultMessage='Payment Status' /></List.Header>
+                      <List.Description as='span'>
+                        <Label circular empty color={order.paymentStatus === 'Failed' ? 'red' : (order.paymentStatus !== 'N/A' ? 'blue' : false)}></Label> {order.orderType === 'Purchase' && order.paymentStatus === 'Pending' && isPaymentCancellable ? (
+                          <Popup content={<FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />}
+                            trigger={
+                              <a onClick={() => confirm(
+                                <FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />,
+                                <FormattedMessage id='confirm.cancelPayment.content' defaultMessage='Do you really want to Cancel Payment for Order #{orderId}' values={{ orderId: order.id }} />
+                              ).then(() => {
+                                cancelPayment(order.id).then(r => {
+                                  toastManager.add(generateToastMarkup(
+                                    <FormattedMessage id='order.cancelTransfer.success.header' defaultMessage='Canceled Payment' />,
+                                    <FormattedMessage id='order.cancelTransfer.success.content' defaultMessage='Payment transfer for order #{orderId} was canceled successfully' values={{ orderId: order.id }} />,
+                                  ), {
+                                    appearance: 'success'
+                                  })
+                                })
+                              })}>
+                                {order.paymentStatus}
+                              </a>
+                            } />
+                        ) : order.paymentStatus}
+                      </List.Description>
+                    </List.Content>
+                  </List.Item>
+                </List>
+              </Grid.Column>
+            </GridRow>
           </Grid>
           {isDetailFetching ? <Spinner /> : (
             <>
