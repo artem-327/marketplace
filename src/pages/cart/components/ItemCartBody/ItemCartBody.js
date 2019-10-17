@@ -48,13 +48,13 @@ export default class ItemCartBody extends Component {
                 value={cartItem.cfPricePerUOM}
               />
             </div>
-            <div>
+            {/*<div>
               <FormattedMessage id='global.totalWeight' defaultMessage='Total Weight' />:{' '}
               <FormattedUnit
                 value={cartItem.quantity * productOffer.companyProduct.packagingSize}
                 unit={unitName} separator=''
               />
-            </div>
+            </div>*/}
           </div>
           <div className='item-cart-body-section'>
             <div>

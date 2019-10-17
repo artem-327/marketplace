@@ -19,14 +19,14 @@ function prepareDetail(data, type) {
   if (typeof data.id === 'undefined')
     return {}
 
-  const totalPrice = getSafe(() => data.totalPrice, 0)
-  const totalPriceWithShipping = getSafe(() => data.totalPriceWithShipping, getSafe(() => data.totalPrice, 0))
+  const subtotal = getSafe(() => data.cfPriceSubtotal, 0)
+  const totalPriceWithShipping = getSafe(() => data.cfPriceTotal, getSafe(() => data.cfPriceSubtotal, 0))
   const orderItems = getSafe(() => data.orderItems, [])
 
 
   return {
     acceptanceDate: (typeof data.acceptanceDate !== 'undefined' ? moment(data.acceptanceDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
-    amount: <FormattedNumber style='currency' currency={currency} value={data.totalPrice ? data.totalPrice : 0} />,
+    amount: <FormattedNumber style='currency' currency={currency} value={subtotal} />,
     buyerRejectionDate: (typeof data.buyerRejectionDate !== 'undefined' ? moment(data.buyerRejectionDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
     carrier: data.shippingMethod ? data.shippingMethod : 'N/A',
     chemicalName: <ArrayToMultiple values={orderItems.map(d => (d.chemicalName ? d.chemicalName : 'N/A'))} />,
@@ -38,7 +38,7 @@ function prepareDetail(data, type) {
     deliveryCost: <FormattedNumber style='currency' currency={currency} value={data.deliveryCost ? data.deliveryCost : 0} />,
     deliveryDate: (typeof data.deliveryDate !== 'undefined' ? moment(data.deliveryDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
     deliveryTotal: <FormattedNumber style='currency' currency={currency} value={data.deliveryTotal ? data.deliveryTotal : 0} />,
-    feesAmount: <FormattedNumber style='currency' currency={currency} value={totalPrice * (0 / 100)} />,
+    feesAmount: <FormattedNumber style='currency' currency={currency} value={subtotal * (0 / 100)} />,
     feesPercent: 0,
     freight: <FormattedNumber style='currency' currency={currency} value={data.shippingPrice ? data.shippingPrice : 0} />,
     grossProfit: <FormattedNumber style='currency' currency={currency} value={data.totalPriceWithShipping ? data.totalPriceWithShipping : 0} />, // ! !
@@ -72,14 +72,14 @@ function prepareDetail(data, type) {
     shipTo: data.buyerCompanyName,
     shipToAddress: data.buyerCompanyAddressStreet + ', ' + data.buyerCompanyAddressCity + ', ' + data.buyerCompanyAddressZip + ', ' + data.buyerCompanyAddressCountry,
     //! !size: getSafe(() => data.orderItems[0].packagingSize, 'N/A'),
-    subtotal: <FormattedNumber style='currency' currency={currency} value={totalPrice} />, //"$" + totalPrice.formatMoney(2),
+    subtotal: <FormattedNumber style='currency' currency={currency} value={subtotal} />, //"$" + totalPrice.formatMoney(2),
     terms: 'N/A',
     total: <FormattedNumber style='currency' currency={currency} value={totalPriceWithShipping} />, //"$" + totalPriceWithShipping.formatMoney(2),
     totalPkg: <ArrayToMultiple values={orderItems.map(d => (d.pkgAmount ? d.pkgAmount : 'N/A'))} />,
     unit: <ArrayToMultiple values={orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A'))} />,
     unitCost: <FormattedNumber style='currency' currency={currency} value={0} />, //"$" + parseInt(0).formatMoney(2),
     unitPrice: <ArrayToMultiple values={orderItems.map(d => (
-      <div><FormattedNumber style='currency' currency={currency} value={d.price} /></div>
+      <div><FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} /></div>
     ))} />,
       //<FormattedNumber style='currency' currency={currency} value={0} />, //"$" + getSafe(() => data.orderItems[0].price, 0).formatMoney(2),
     // Vendor or Customer

@@ -171,7 +171,7 @@ export default function reducer(state = initialState, action) {
         let { cartItems } = payload
         cartItems.forEach(item => {
           item.locationStr = getLocationString(item.productOffer)
-          item.pricing = getPricing(item.productOffer, item.quantity)
+          item.pricing = getPricing(item.productOffer, item.pkgAmount)
         })
       }
 

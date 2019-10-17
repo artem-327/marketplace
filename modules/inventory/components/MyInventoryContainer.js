@@ -10,6 +10,7 @@ import { openImportPopup } from '~/modules/settings/actions'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import { applyFilter } from '~/modules/filter/actions'
 import { FormattedNumber } from 'react-intl'
+import { currency } from '~/constants/index'
 
 
 import { FormattedUnit, UnitOfPackaging, ArrayToMultiple, FormattedAssay } from '~/components/formatted-messages'
@@ -23,11 +24,11 @@ function mapStateToProps(store, { datagrid }) {
     appliedFilter: store.filter.filter.appliedFilter,
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
-      let currency = getSafe(() => po.price.currency.code, 'USD')
       let fobPrice = null
       if (!po.pricingTiers[0]) fobPrice = 'N/A'
-      else if (po.pricingTiers.length > 1) fobPrice = <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price.amount} /> - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price.amount} /> {qtyPart && (`/ ${qtyPart}`)} </>
-      else fobPrice = <> <FormattedNumber style='currency' currency={currency} value={getSafe(() => po.pricingTiers[0].price.amount)} /> {qtyPart && (`/ ${qtyPart}`)} </>
+      //! ! else if (po.pricingTiers.length > 1) fobPrice = <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].pricePerUOM.amount} /> - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price.amount} /> {qtyPart && (`/ ${qtyPart}`)} </>
+      //! ! else fobPrice = <> <FormattedNumber style='currency' currency={currency} value={getSafe(() => po.pricingTiers[0].pricePerUOM.amount)} /> {qtyPart && (`/ ${qtyPart}`)} </>
+      else fobPrice = 'N/A*' // ! ! need BE update
 
       return {
         id: po.id,
@@ -45,20 +46,20 @@ function mapStateToProps(store, { datagrid }) {
         //qtyPart ? `${po.product.packagingSize} ${qtyPart}` : 'N/A',
         packagingUnit: getSafe(() => po.companyProduct.packagingUnit.name),
         quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.quantity} /> : 'N/A',
-        cost: po.cost ? <FormattedNumber style='currency' currency={currency} value={po.cost.amount} /> : 'N/A',
+        cost: po.costPerUOM ? <FormattedNumber style='currency' currency={currency} value={po.costPerUOM.amount} /> : 'N/A',
         pricingTiers: po.pricingTiers,
         //pricing: po.pricing,
         fobPrice,
         manufacturer: getSafe(() => po.companyProduct.echoProduct.manufacturer.name, 'N/A'),
         broadcasted: po.broadcasted,
         lotNumber: <ArrayToMultiple values={po.lots.map(d => (d.lotNumber))} />,
-        status: po.status,// new broadcasted
-        minOrderQuantity: getSafe(() => po.minimum, ''),
-        splits: getSafe(() => po.splits, ''),
-        condition: getSafe(() => po.productCondition.name, ''),
-        grade: po.productGrades && po.productGrades.length ? <ArrayToMultiple values={po.productGrades.map(d => (d.name))} /> : '',
+        status: po.cfStatus,// new broadcasted
+        minOrderQuantity: getSafe(() => po.minPkg, ''),
+        splits: getSafe(() => po.splitPkg, ''),
+        condition: getSafe(() => po.condition.name, ''),
+        grade: po.grades && po.grades.length ? <ArrayToMultiple values={po.grades.map(d => (d.name))} /> : '',
         origin: getSafe(() => po.origin.name, ''),
-        form: getSafe(() => po.productForm.name, ''),
+        form: getSafe(() => po.form.name, ''),
         assay: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
         mfgDate: getSafe(() => moment(po.manufacturedDate).format('MM/DD/YYYY'), ''),
         expDate: getSafe(() => moment(po.expirationDate).format('MM/DD/YYYY'), ''),

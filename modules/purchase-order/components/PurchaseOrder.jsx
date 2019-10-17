@@ -152,8 +152,7 @@ class PurchaseOrder extends Component {
     if (cart.cartItems.length === 0) Router.push('/cart')
 
     //let currency = cart.cartItems[0].productOffer.pricingTiers[0].price.currency.code
-    let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, currency)  // ! !
-
+    //let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, currency)  // ! !
 
     let payment = null
     if (payments.length === 1) payment = payments[0].id
@@ -297,7 +296,7 @@ class PurchaseOrder extends Component {
                   }
                   logisticsAccount={this.props.logisticsAccount}
                   cart={cart}
-                  totalPrice={this.props.cart.cfFullPriceTotal}
+                  totalPrice={this.props.cart.cfPriceSubtotal}
                 />
 
               </GridColumn>

@@ -19,11 +19,13 @@ export default class Summary extends Component {
 
     //console.log('!!!!!! Summary Render props', this.props)
 
-    let totalWeight = 0
+    //let totalWeight = 0
+    /*
     for (let i = 0; i < cartItems.length; i++) {
       //subtotal += (cartItems[i].quantity * cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].pricing.price)
       totalWeight += cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].quantity
     }
+    */
 
     let shipping = cart.selectedShipping ? cart.selectedShipping.quote.estimatedPrice : 0
     // let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, 'USD')  // ! !
@@ -93,13 +95,14 @@ export default class Summary extends Component {
                   <FormattedNumber
                     style='currency'
                     currency={currency}
-                    value={cart.cfFullPriceTotal}
+                    value={cart.cfPriceSubtotal}
                   />
 
                 </GridColumn>
               </RelaxedRow>
 
 
+              {/*
               <RelaxedRow columns={2}>
                 <GridColumn>
                   <FormattedMessage
@@ -117,6 +120,7 @@ export default class Summary extends Component {
 
                 </GridColumn>
               </RelaxedRow>
+              */}
 
               <HeaderTextRow columns={2}>
                 <GridColumn>
