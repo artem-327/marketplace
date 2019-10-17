@@ -76,6 +76,9 @@ context("Grades CRUD", () => {
     })
 
     it("Deletes a grade", () => {
+        cy.get("input[type=text]").type("Graceful")
+        cy.waitForUI()
+
         cy.get('[data-test=action_' + gradeId + ']').click()
         cy.get('[data-test=action_' + gradeId + '_1]').click()
 

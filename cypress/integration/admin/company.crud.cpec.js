@@ -24,14 +24,16 @@ context("Company CRUD", () => {
         cy.clickAdd()
 
         cy.enterText("#field_input_name","Donald The Ducks")
+        cy.enterText("#field_input_website","https://www.donald.com/")
+
         cy.enterText('input[id="field_input_primaryUser.name"]',"Donal Duck")
         cy.enterText('input[id="field_input_primaryUser.email"]',"duck@duck.com")
+
         cy.enterText('input[id="field_input_primaryBranch.name"]',"Main")
         cy.enterText('input[id="field_input_primaryBranch.contactName"]',"James Duckling")
         cy.enterText('input[id="field_input_primaryBranch.contactEmail"]',"james@duck.com")
-
         cy.get('div[data-test="admin_popup_company_primaryBranchNameEmailPhone_inp"]').within(($form) =>{
-            cy.get('input[placeholder = "Phone Number"]').type('1234567895')
+            cy.get('input[placeholder = "Phone Number"]').type('2025550156')
             cy.contains('+CCC').click()
             cy.contains('USA').click()
         })
