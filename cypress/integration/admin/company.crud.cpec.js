@@ -1,4 +1,4 @@
-context("Company CRUD", () => {
+context("Companies CRUD", () => {
 
     let companyId = null
 

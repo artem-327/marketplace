@@ -1,4 +1,4 @@
-context("Echop Product CRUD", () => {
+context("Echo Product CRUD", () => {
 
     let productId = null
 
