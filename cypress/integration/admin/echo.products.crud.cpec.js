@@ -129,7 +129,7 @@ context("Echop Product CRUD", () => {
         cy.get("input[id='field_input_productAltNames[0].tradeName']")
             .should("not.exist")
 
-        cy.get("[data-test=admin_popup_alt_cas_name_close_btn]").click()
+        cy.get("[data-test=settings_product_alt_name_reset_btn]").click()
 
         cy.waitForUI()
 

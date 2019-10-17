@@ -42,6 +42,8 @@ context("Form CRUD", () => {
     })
 
     it("Edits a form", () => {
+        cy.waitForUI()
+
         cy.get('[data-test=action_' + formId + ']').click()
         cy.get('[data-test=action_' + formId + '_0]').click()
 
@@ -53,6 +55,7 @@ context("Form CRUD", () => {
         cy.clickSave()
 
         cy.contains("Updated Form")
+        cy.waitForUI()
 
         cy.get('[data-test=action_' + formId + ']').click()
         cy.get('[data-test=action_' + formId + '_0]').click()
@@ -73,6 +76,8 @@ context("Form CRUD", () => {
     })
 
     it("Deletes a form", () => {
+        cy.waitForUI()
+
         cy.get('[data-test=action_' + formId + ']').click()
         cy.get('[data-test=action_' + formId + '_1]').click()
 

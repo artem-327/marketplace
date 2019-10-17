@@ -53,7 +53,7 @@ context("CAS products CRUD", () => {
             .should("have.value","testinonium")
 
         cy.get("#field_input_casNumber")
-            .should("have.value","100-95")
+            .should("have.value","100-95-521")
 
         cy.get("#field_input_chemicalName")
             .should("have.value","Testinonium")
@@ -89,7 +89,7 @@ context("CAS products CRUD", () => {
     })
 
     it("Creates a alternative name", () => {
-        cy.route("POST", "/prodex/api/cas-products/alternative-names").as("nameSaving")
+        cy.route("POST", "/prodex/api/cas-products/alternative-names/**").as("nameSaving")
         cy.route("GET", "/prodex/api/cas-products/alternative-names/**").as("nameGetting")
 
         cy.get("[data-test=admin_table_search_inp]")
