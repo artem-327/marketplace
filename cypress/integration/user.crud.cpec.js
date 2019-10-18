@@ -3,15 +3,15 @@ context("Prodex User CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.route("GET", '/prodex/api/payments/bank-accounts').as('settingsLoading')
-        cy.route("GET", '/prodex/api/users').as('usersLogin')
+        cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.route("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")
+        cy.route("GET", "/prodex/api/users").as("usersLogin")
 
         cy.login("user1@example.com", "echopass123")
 
         cy.url().should("include", "inventory")
 
-        cy.wait('@inventoryLoading')
+        cy.wait("@inventoryLoading")
         cy.contains("Settings").click()
 
         cy.wait("@usersLogin")

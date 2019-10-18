@@ -4,14 +4,14 @@ context("Company Documents CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.route("POST", '/prodex/api/attachments/datagrid/').as('documentsLoading')
+        cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.route("POST", "/prodex/api/attachments/datagrid/").as("documentsLoading")
 
         cy.login("user1@example.com", "echopass123")
 
         cy.url().should("include", "inventory")
 
-        cy.wait('@inventoryLoading')
+        cy.wait("@inventoryLoading")
         cy.contains("Settings").click()
 
         cy.contains("DOCUMENTS").click()
@@ -24,8 +24,8 @@ context("Company Documents CRUD", () => {
         cy.clickAdd()
 
         //TODO Fix after FE adjustments
-        cy.fixture('cy.png', 'base64').then(fileContent => {
-            cy.get("input[type='file']").upload({ fileContent, fileName: 'cy.png', mimeType: 'image/png' });
+        cy.fixture("cy.png", "base64").then(fileContent => {
+            cy.get("input[type='file']").upload({ fileContent, fileName: "cy.png", mimeType: "image/png" });
         });
 
         cy.enterText("#field_input_customName", "Cypress")

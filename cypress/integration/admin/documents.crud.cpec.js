@@ -4,25 +4,25 @@ context("Document types CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("GET", '/prodex/api/packaging-groups').as('loading')
-        cy.route("POST", '/prodex/api/document-types/datagrid').as('documents')
+        cy.route("GET", "/prodex/api/packaging-groups").as("loading")
+        cy.route("POST", "/prodex/api/document-types/datagrid").as("documents")
 
         cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
-        cy.wait('@loading')
+        cy.wait("@loading")
 
         cy.get('[data-test="tabs_menu_item_9"]').click()
 
-        cy.wait('@documents')
+        cy.wait("@documents")
         cy.waitForUI()
 
         //TODO Workaroud, list won't load
         cy.get('[data-test="tabs_menu_item_2"]').click()
         cy.waitForUI()
         cy.get('[data-test="tabs_menu_item_9"]').click()
-        cy.wait('@documents')
+        cy.wait("@documents")
 
         cy.waitForUI()
     })
@@ -40,20 +40,20 @@ context("Document types CRUD", () => {
 
         cy.getToken().then(token => {
             cy.getFirstDocumentTypeWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
+                cy.get("[data-test=action_" + itemId + "]").click()
 
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.get("[data-test=action_" + itemId + "_0]").click()
 
                 documentId = itemId
             })
         })
-        cy.get("#field_input_val0").should('have.value', "Test document")
+        cy.get("#field_input_val0").should("have.value", "Test document")
     })
 
     it("Edits a document type", () => {
-        cy.get('[data-test=action_' + documentId + ']').click( )
+        cy.get("[data-test=action_" + documentId + "]").click( )
 
-        cy.get('[data-test=action_' + documentId + '_0]').click()
+        cy.get("[data-test=action_" + documentId + "_0]").click()
 
         cy.get("#field_input_val0")
             .clear()
@@ -65,10 +65,10 @@ context("Document types CRUD", () => {
         cy.contains("Updated Document Type")
         cy.waitForUI()
 
-        cy.get('[data-test=action_' + documentId + ']').click( {force: true})
-        cy.get('[data-test=action_' + documentId + '_0]').click()
+        cy.get("[data-test=action_" + documentId + "]").click( {force: true})
+        cy.get("[data-test=action_" + documentId + "_0]").click()
 
-        cy.get("#field_input_val0").should('have.value', "Best document")
+        cy.get("#field_input_val0").should("have.value", "Best document")
     })
 
     it("Checks error message", () => {
@@ -84,11 +84,11 @@ context("Document types CRUD", () => {
     })
 
     it("Deletes a document type", () => {
-        cy.get('[data-test=action_' + documentId + ']').click()
-        cy.get('[data-test=action_' + documentId + '_1]').click()
+        cy.get("[data-test=action_" + documentId + "]").click()
+        cy.get("[data-test=action_" + documentId + "_1]").click()
 
         cy.contains("Yes").click()
 
-        cy.get('[data-test=action_' + documentId + ']').should('not.exist')
+        cy.get("[data-test=action_" + documentId + "]").should("not.exist")
     })
 })

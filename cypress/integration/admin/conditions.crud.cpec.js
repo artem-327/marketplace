@@ -4,18 +4,18 @@ context("Conditions CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", '/prodex/api/cas-products/datagrid').as('loading')
-        cy.route("POST", '/prodex/api/product-conditions/datagrid').as('formsLoad')
+        cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
+        cy.route("POST", "/prodex/api/product-conditions/datagrid").as("formsLoad")
 
         cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
-        cy.wait('@loading')
+        cy.wait("@loading")
 
-        cy.get('[data-test="tabs_menu_item_6"]').click()
+        cy.get("[data-test='tabs_menu_item_6']").click()
 
-        cy.wait('@formsLoad')
+        cy.wait("@formsLoad")
     })
 
     it("Creates a condition", () => {
@@ -31,20 +31,20 @@ context("Conditions CRUD", () => {
 
         cy.getToken().then(token => {
             cy.getFirstConditionWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
+                cy.get("[data-test=action_" + itemId + "]").click()
 
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.get("[data-test=action_" + itemId + "_0]").click()
 
                 conditionId = itemId
             })
         })
-        cy.get("#field_input_val0").should('have.value', "Half")
+        cy.get("#field_input_val0").should("have.value", "Half")
     })
 
     it("Edits a condition", () => {
-        cy.get('[data-test=action_' + conditionId + ']').click()
+        cy.get("[data-test=action_" + conditionId + "]").click()
 
-        cy.get('[data-test=action_' + conditionId + '_0]').click()
+        cy.get("[data-test=action_" + conditionId + "_0]").click()
 
         cy.get("#field_input_val0")
             .clear()
@@ -55,10 +55,10 @@ context("Conditions CRUD", () => {
 
         cy.contains("Updated Condition")
 
-        cy.get('[data-test=action_' + conditionId + ']').click()
-        cy.get('[data-test=action_' + conditionId + '_0]').click()
+        cy.get("[data-test=action_" + conditionId + "]").click()
+        cy.get("[data-test=action_" + conditionId + "_0]").click()
 
-        cy.get("#field_input_val0").should('have.value', "Spilled")
+        cy.get("#field_input_val0").should("have.value", "Spilled")
     })
 
     it("Checks error message", () => {
@@ -74,11 +74,11 @@ context("Conditions CRUD", () => {
     })
 
     it("Deletes a condition", () => {
-        cy.get('[data-test=action_' + conditionId + ']').click()
-        cy.get('[data-test=action_' + conditionId + '_1]').click()
+        cy.get("[data-test=action_" + conditionId + "]").click()
+        cy.get("[data-test=action_" + conditionId + "_1]").click()
 
         cy.contains("Yes").click()
 
-        cy.get('[data-test=action_' + conditionId + ']').should('not.exist')
+        cy.get("[data-test=action_" + conditionId + "]").should("not.exist")
     })
 })

@@ -3,13 +3,13 @@ context("Prodex Bank Account CRUD", () => {
     beforeEach(function () {
         cy.viewport(1200,800)
         cy.server()
-        cy.route("POST",'/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.route("GET", '/prodex/api/payments/*').as('accountsLoading')
-        cy.route("POST",'/prodex/api/payments/**').as('verifyLoading')
+        cy.route("POST","/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.route("GET", "/prodex/api/payments/*").as("accountsLoading")
+        cy.route("POST","/prodex/api/payments/**").as("verifyLoading")
 
         cy.FElogin("user1@example.com", "echopass123")
 
-        cy.wait('@inventoryLoading')
+        cy.wait("@inventoryLoading")
         cy.contains("Settings").click()
 
         cy.contains("BANK ACCOUNTS").click()
@@ -64,9 +64,9 @@ context("Prodex Bank Account CRUD", () => {
         cy.get("#field_input_amount2").type("0.04")
 
         cy.get("[data-test='settings_bank_account_confirm_btn']").click()
-        cy.wait('@verifyLoading')
+        cy.wait("@verifyLoading")
 
-        cy.contains('Verified')
+        cy.contains("Verified")
     })
 
     it("Checks error messages", () => {

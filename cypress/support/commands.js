@@ -82,3 +82,9 @@ Cypress.Commands.add('login', (username, password) =>{
     cy.visit('/inventory/my')
 })
 
+Cypress.Commands.add("openElement", (elementId, dropdownOption) => {
+    cy.waitForUI()
+
+    cy.get("[data-test=action_" + elementId + "]").click()
+    cy.get("[data-test=action_" + elementId + "_" + dropdownOption + "]").click()
+})

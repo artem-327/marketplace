@@ -3,12 +3,12 @@ context("Prodex Branches CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.route("POST", '/prodex/api/branches/datagrid').as('branchesLoading')
+        cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.route("POST", "/prodex/api/branches/datagrid").as("branchesLoading")
 
         cy.FElogin("user1@example.com", "echopass123")
 
-        cy.wait('@inventoryLoading', {timeout: 10000})
+        cy.wait("@inventoryLoading", {timeout: 10000})
         cy.contains("Settings").click()
 
         cy.contains("BRANCHES").click()
@@ -29,10 +29,10 @@ context("Prodex Branches CRUD", () => {
         cy.selectFromDropdown("div[id='field_dropdown_address.zip']","75000")
 
         cy.enterText("input[id='field_input_contactName']","David Cameron")
-        cy.get('div[data-test="settings_warehouse_popup_phoneEmail_inp"]').within(($form) => {
-            cy.get('input[placeholder = "Phone Number"]').type('1234567895')
-            cy.contains('+CCC').click()
-            cy.contains('USA').click()
+        cy.get("div[data-test='settings_warehouse_popup_phoneEmail_inp']").within(($form) => {
+            cy.get("input[placeholder = 'Phone Number']").type("1234567895")
+            cy.contains("+CCC").click()
+            cy.contains("USA").click()
         })
         cy.enterText("input[id='field_input_contactEmail']","test@central.com")
 
@@ -63,8 +63,8 @@ context("Prodex Branches CRUD", () => {
         cy.get("#field_input_contactPhone")
             .should("have.value","123456789")
 
-        cy.get('div[data-test="settings_warehouse_popup_phoneEmail_inp"]').within(($form) => {
-            cy.get('input[placeholder = "Phone Number"]') .should("have.value","123 456 789")
+        cy.get("div[data-test='settings_warehouse_popup_phoneEmail_inp']").within(($form) => {
+            cy.get("input[placeholder = 'Phone Number']") .should("have.value","123 456 789")
         })
 
         cy.get("#field_input_contactEmail")

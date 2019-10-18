@@ -3,14 +3,14 @@ context("Company Product Catalog CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.route("POST", '/prodex/api/company-products/datagrid').as('productLoading')
+        cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.route("POST", "/prodex/api/company-products/datagrid").as("productLoading")
 
         cy.login("user1@example.com", "echopass123")
 
         cy.url().should("include", "inventory")
 
-        cy.wait('@inventoryLoading')
+        cy.wait("@inventoryLoading")
         cy.contains("Settings").click()
 
         cy.contains("PRODUCT CATALOG").click()

@@ -4,18 +4,18 @@ context("Grades CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", '/prodex/api/cas-products/datagrid').as('loading')
-        cy.route("POST", '/prodex/api/product-grades/datagrid').as('gradesLoad')
+        cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
+        cy.route("POST", "/prodex/api/product-grades/datagrid").as("gradesLoad")
 
         cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
-        cy.wait('@loading')
+        cy.wait("@loading")
 
-        cy.get('[data-test="tabs_menu_item_4"]').click()
+        cy.get("[data-test='tabs_menu_item_4']").click()
 
-        cy.wait('@gradesLoad')
+        cy.wait("@gradesLoad")
     })
 
     it("Creates a grade", () => {
@@ -38,7 +38,7 @@ context("Grades CRUD", () => {
                 gradeId = itemId
             })
         })
-        cy.get("#field_input_val0").should('have.value', "Test grade")
+        cy.get("#field_input_val0").should("have.value", "Test grade")
     })
 
     it("Edits a grade", () => {
@@ -60,7 +60,7 @@ context("Grades CRUD", () => {
         cy.get('[data-test=action_' + gradeId + ']').click()
         cy.get('[data-test=action_' + gradeId + '_0]').click({force: true})
 
-        cy.get("#field_input_val0").should('have.value', "Graceful")
+        cy.get("#field_input_val0").should("have.value", "Graceful")
     })
 
     it("Checks error message", () => {
@@ -84,6 +84,6 @@ context("Grades CRUD", () => {
 
         cy.contains("Yes").click()
 
-        cy.get('[data-test=action_' + gradeId + ']').should('not.exist')
+        cy.get("[data-test=action_" + gradeId + "]").should("not.exist")
     })
 })
