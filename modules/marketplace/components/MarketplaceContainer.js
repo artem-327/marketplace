@@ -15,7 +15,7 @@ import { getSafe } from '~/utils/functions'
 import React from "react";
 
 function mapStateToProps(store, { datagrid }) {
-  console.log({ rows: datagrid.rows })
+
   return {
     ...store.marketplace,
     // rows: store.marketplace.broadcastedProductOffers.map(po => {
