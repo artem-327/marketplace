@@ -1,5 +1,5 @@
 {
-  "baseUrl": "http://stage.echoexchange.net",
+  "baseUrl": "http://localhost:3000",
   "reporter": "junit",
   "reporterOptions": {
     "mochaFile": "cypress/results/results-[hash].xml",

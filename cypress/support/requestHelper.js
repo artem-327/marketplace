@@ -380,3 +380,18 @@ Cypress.Commands.add("getFirstCompanyProductWithFilter", (token,filter) => {
         return response.body[0].id
     })
 })
+
+Cypress.Commands.add("getFirstAttachmentWithFilter", (token,filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/attachments/datagrid/',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: filter, pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body[0].id
+    })
+})
+
