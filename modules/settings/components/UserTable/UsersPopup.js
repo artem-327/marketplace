@@ -67,23 +67,31 @@ class UsersPopup extends React.Component {
       postNewUserRequest,
     } = this.props
 
-
-    if (popupValues) {
-      await handlerSubmitUserEditPopup(values, popupValues.id)
-    } else {
-      await postNewUserRequest(values)
+    const data = {
+      additionalBranches: values.additionalBranches,
+      email: values.email,
+      homeBranch: values.homeBranch,
+      jobTitle: values.jobTitle,
+      name: values.name,
+      phone: values.phone,
+      preferredCurrency: values.preferredCurrency,
     }
 
-    const status = popupValues ? 'userUpdated' : 'userCreated'
+    try {
+      if (popupValues) {
+        await handlerSubmitUserEditPopup(data, popupValues.id)
+      } else {
+        await postNewUserRequest(data)
+      }
+      const status = popupValues ? 'userUpdated' : 'userCreated'
 
-    toastManager.add(generateToastMarkup(
-      <FormattedMessage id={`notifications.${status}.header`} />,
-      <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
-    ), { appearance: 'success' })
-
+      toastManager.add(generateToastMarkup(
+        <FormattedMessage id={`notifications.${status}.header`} />,
+        <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
+      ), { appearance: 'success' })
+    } catch { }
     actions.setSubmitting(false)
   }
-
 
   render() {
     const {

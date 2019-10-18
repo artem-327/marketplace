@@ -8,15 +8,7 @@ import { Form, Button as FButton, Input, Dropdown } from 'formik-semantic-ui-fix
 import Router from 'next/router'
 import * as Yup from "yup";
 import { errorMessages } from '~/constants/yupValidation'
-
-
-const initialValues = {
-  destination: {
-    quantity: '',
-    zip: '',
-    maxTransit: 0
-  }
-}
+import { getSafe } from '~/utils/functions'
 
 const formValidation = () => Yup.object().shape({
   destination: Yup.object().shape({
@@ -32,12 +24,26 @@ export default class ShippingQuotes extends Component {
   state = {
     selectedIndex: null,
     sQuote: null,
-    quantity: ''
+    quantity: '',
+    initialValues: {
+      destination: {
+        quantity: '',
+        zip: '',
+        maxTransit: 0
+      }
+    }
   }
 
   componentDidMount() {
-    const { initShipingForm } = this.props
+    const { initShipingForm, defaultZip } = this.props
 
+    this.setState({initialValues: {
+      ...this.state.initialValues,
+      destination: {
+        ...this.state.initialValues.destination,
+        zip: defaultZip
+      }}
+    })
     initShipingForm()
   }
 
@@ -67,6 +73,7 @@ export default class ShippingQuotes extends Component {
 
   renderForm() {
     const { loading, zipCodes } = this.props
+    const { initialValues } = this.state
 
     return (
       <Form

@@ -21,6 +21,7 @@ function mapStateToProps(store, { datagrid }) {
     // rows: store.marketplace.broadcastedProductOffers.map(po => {
     ...datagrid,
     appliedFilter: store.filter.filter.appliedFilter,
+    defaultZip: getSafe(() => store.auth.identity.homeBranch.deliveryAddress.address.zip.zip, ''),
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
  

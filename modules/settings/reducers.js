@@ -446,7 +446,7 @@ export default function reducer(state = initialState, action) {
       const branches = action.payload.map(branch => {
         return {
           value: branch.id,
-          text: branch.name
+          text: branch.deliveryAddress.addressName
         }
       })
       return {
