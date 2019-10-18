@@ -286,10 +286,10 @@ class Settings extends Component {
     return (
       <DatagridProvider apiConfig={this.getApiConfig()}>
         <Container fluid className='flex stretched'>
-          <Container fluid style={{ padding: '0 32px' }}>
+          <Container fluid style={{ padding: '0 1.5vh' }}>
             <TablesHandlers currentTab={currentTab} />
           </Container>
-          <Grid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
+          <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
             <Grid.Row>
               <Grid.Column width={3}>
                 <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />
