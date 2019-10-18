@@ -59,12 +59,12 @@ export function addProductOffer(values, poId = false, simple = false) {
 
   if (!simple) {
 
-    if (values.lots.length === 0) {
+    /*if (values.lots.length === 0) {
       values.lots = [{
         lotNumber: '1',
         pkgAvailable: parseInt(values.pkgAvailable)
       }]
-    }
+    }*/
 
     const attachments = values.attachments && values.attachments.length ? values.attachments.map(att => {
       return att.id
@@ -87,10 +87,12 @@ export function addProductOffer(values, poId = false, simple = false) {
         }
       }) : null,
       companyProduct: parseInt(values.product),
-      conditionNotes: getSafe(() => values.conditionNotes),
+      conditionNotes: getSafe(() => values.conditionNotes, null),
+      costPerUOM: getSafe(() => values.costPerUOM, null),
       externalNotes: getSafe(() => values.externalNotes),
       inStock: values.inStock,
       internalNotes: getSafe(() => values.internalNotes),
+      leadTime: getSafe(() => values.leadTime),
       lots: values.lots ? values.lots.map(lot => {
         return {
           lotNumber: lot.lotNumber,
@@ -106,6 +108,7 @@ export function addProductOffer(values, poId = false, simple = false) {
       // ! ! otestovat manufacturer: getSafe(() => values.manufacturer),
       minPkg: parseInt(values.minimum),
       origin: getSafe(() => values.origin),
+      pkgAvailable: getSafe(() => values.pkgAvailable, 10),
       pricingTiers: getSafe(() => values.pricingTiers.map((tier, index) => {
         return {
           pricePerUOM: parseFloat(tier.price),

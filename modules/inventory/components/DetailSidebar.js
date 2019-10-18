@@ -59,7 +59,7 @@ const initValues = {
     lotNumber: '',
     lotExpDate: '',
     lotMfgDate: '',
-    pkgsAvailable: 1,
+    pkgAvailable: 1,
     warehouse: '',
     productGrades: [],
     productForm: '',
@@ -303,22 +303,22 @@ class DetailSidebar extends Component {
       editValues = {
         edit: {
           conditionNotes: getSafe(() => sidebarValues.conditionNotes, null),
-          cost: getSafe(() => sidebarValues.costPerUOM, null),
+          costPerUOM: getSafe(() => sidebarValues.costPerUOM, null),
           externalNotes: getSafe(() => sidebarValues.externalNotes, ''),
-          fobPrice: getSafe(() => sidebarValues.pricingTiers[0].price, null),
+          fobPrice: getSafe(() => sidebarValues.pricingTiers[0].pricePerUOM, null),
           inStock: getSafe(() => sidebarValues.inStock, false),
           internalNotes: getSafe(() => sidebarValues.internalNotes, ''),
-          leadTime: getSafe(() => sidebarValues.processingTimeDays, 1),
-          lotNumber: getSafe(() => sidebarValues.lots[0].lotNumber, null),
-          lotExpDate: getSafe(() => sidebarValues.lots[0].expirationDate, ''),
-          lotMfgDate: getSafe(() => sidebarValues.lots[0].manufacturedDate, ''),
+          leadTime: getSafe(() => sidebarValues.leadTime, 1),
+          lotNumber: getSafe(() => sidebarValues.lotNumber, null),
+          lotExpDate: getSafe(() => sidebarValues.expirationDate, ''),
+          lotMfgDate: getSafe(() => sidebarValues.manufacturedDate, ''),
           minimum: getSafe(() => sidebarValues.minPkg, ''),
-          origin: getSafe(() => sidebarValues.origin, ''),
-          pkgsAvailable: getSafe(() => sidebarValues.lots[0].pkgAvailable, ''),
+          origin: getSafe(() => sidebarValues.origin.id, null),
+          pkgAvailable: getSafe(() => sidebarValues.pkgAvailable, ''),
           product: getSafe(() => sidebarValues.companyProduct.id, null),
-          productCondition: getSafe(() => sidebarValues.condition, null),
-          productForm: getSafe(() => sidebarValues.form, null),
-          productGrades: getSafe(() => sidebarValues.grades, null),
+          productCondition: getSafe(() => sidebarValues.condition.id, null),
+          productForm: getSafe(() => sidebarValues.form.id, null),
+          productGrades: getSafe(() => sidebarValues.grades.map(grade => grade.id), null),
           splits: getSafe(() => sidebarValues.splitPkg, ''),
           offerExpire: getSafe(() => sidebarValues.validityDate.length > 0, false),
           expirationDate: getSafe(() => sidebarValues.validityDate, ''),
@@ -349,20 +349,18 @@ class DetailSidebar extends Component {
             case 0:
               props = {
                 ...values.edit,
-                processingTimeDays: values.edit.leadTime,
-                lots: [{
-                  expirationDate: values.edit.lotExpDate,
-                  lotNumber: values.edit.lotNumber,
-                  manufacturedDate: values.edit.lotMfgDate,
-                  pkgAvailable: values.edit.pkgsAvailable
-                }]
+                leadTime: values.edit.leadTime,
+                expirationDate: values.edit.lotExpDate,
+                //lotNumber: values.edit.lotNumber,
+                manufacturedDate: values.edit.lotMfgDate,
+                pkgAvailable: values.edit.pkgAvailable,
+                pricingTiers: values.priceTiers.pricingTiers.length ?
+                  values.priceTiers.pricingTiers :
+                  [{
+                    quantityFrom: values.edit.minimum,
+                    price: values.edit.fobPrice
+                  }]
               }
-              props.pricingTiers = values.priceTiers.pricingTiers.length ?
-                values.priceTiers.pricingTiers :
-                [{
-                  quantityFrom: values.edit.minimum,
-                  price: values.edit.fobPrice
-                }]
               break;
             case 2:
               props = values.priceTiers
@@ -516,27 +514,16 @@ class DetailSidebar extends Component {
                                    </GridRow>
                                    <GridRow>
                                      <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.totalPackages' defaultMessage='Pkgs Available'>
-                                         {text => (
-                                           <>
-                                             {text}
-                                           </>
-                                         )}
-                                       </FormattedMessage>
+                                       <FormattedMessage id='addInventory.pkgsAvailable' defaultMessage='Pkgs Available'>{text => text}</FormattedMessage>
                                      </GridColumn>
                                      <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <SemanticInput
-                                         type='number'
-                                         min='1'
-                                         step='1'
-                                         //onChange={(_, { value }) => setFieldValue('edit.lots[0].pkgAvailable', value)}
-                                         //value={parseInt(values.edit.pkgsAvailable, 10)}
-                                         name='pkgsAvailable' />
+                                       <Input type='text'
+                                              name='edit.pkgAvailable' />
                                      </GridColumn>
                                    </GridRow>
                                    <GridRow>
                                      <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='global.warehouse' defaultMessage='Warehouse' />
+                                       <FormattedMessage id='global.warehouse' defaultMessage='Warehouse'>{text => text}</FormattedMessage>
                                      </GridColumn>
                                      <GridColumn mobile={rightWidth} computer={rightWidth}>
                                        <Dropdown
@@ -748,7 +735,7 @@ class DetailSidebar extends Component {
                              ),
                              pane: (
                                <Tab.Pane key='priceBook' style={{ padding: '18px' }}>
-                                 <Broadcast />
+                                 {false ? (<Broadcast />) : null}
                                </Tab.Pane>
                              )
                            },

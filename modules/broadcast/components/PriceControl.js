@@ -104,7 +104,7 @@ export default class PriceControl extends Component {
     const r = rule //rootRule || rule
     const calc = (p) => (p + (p * (r.priceMultiplier / 100))) + r.priceAddition
 
-    let high = calc(offer.pricingTiers[0].price.amount), low = calc(offer.pricingTiers[offer.pricingTiers.length - 1].pricePerUOM)
+    let high = calc(offer.pricingTiers[0].pricePerUOM), low = calc(offer.pricingTiers[offer.pricingTiers.length - 1].pricePerUOM)
 
 
 
