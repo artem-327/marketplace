@@ -4,11 +4,11 @@ context("CAS products CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", '/prodex/api/cas-products/datagrid').as('loading')
+        cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
 
         cy.FElogin("admin@example.com", "echopass123")
 
-        cy.wait('@loading')
+        cy.wait("@loading")
         cy.url().should("include", "admin")
     })
 
@@ -36,27 +36,25 @@ context("CAS products CRUD", () => {
 
         cy.waitForUI()
 
-        let filter = [{"operator":"LIKE","path":"CasProduct.chemicalName","values":["%Testinonium%"]},
-            {"operator":"LIKE","path":"CasProduct.casNumber","values":["%Testinonium%"]}]
+        let filter = [{"operator": "LIKE", "path": "CasProduct.chemicalName", "values": ["%Testinonium%"]},
+            {"operator": "LIKE", "path": "CasProduct.casNumber", "values": ["%Testinonium%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstCasProductWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.openElement(itemId, 0)
 
                 productId = itemId
             })
         })
 
         cy.get("#field_input_casIndexName")
-            .should("have.value","testinonium")
+            .should("have.value", "testinonium")
 
         cy.get("#field_input_casNumber")
-            .should("have.value","100-95-521")
+            .should("have.value", "100-95-521")
 
         cy.get("#field_input_chemicalName")
-            .should("have.value","Testinonium")
+            .should("have.value", "Testinonium")
 
         cy.contains("1")
     })
@@ -69,23 +67,19 @@ context("CAS products CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get('[data-test=action_' + productId + ']').click()
-
-        cy.get('[data-test=action_' + productId + '_0]').click()
+        cy.openElement(productId, 0)
 
         cy.get("#field_input_chemicalName")
             .clear()
             .type("Testerium")
-            .should("have.value","Testerium")
+            .should("have.value", "Testerium")
 
         cy.clickSave()
 
-        cy.get('[data-test=action_' + productId + ']').click()
-
-        cy.get('[data-test=action_' + productId + '_0]').click()
+        cy.openElement(productId, 0)
 
         cy.get("#field_input_chemicalName")
-            .should("have.value","Testerium")
+            .should("have.value", "Testerium")
     })
 
     it("Creates a alternative name", () => {
@@ -99,16 +93,14 @@ context("CAS products CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get('[data-test=action_' + productId + ']').click()
-
-        cy.get('[data-test=action_' + productId + '_1]').click()
+        cy.openElement(productId, 1)
 
         cy.get("[data-test=admin_popup_alt_cas_name_add_btn]")
             .click()
 
         cy.get("input[id='field_input_casAlternativeNames[0].alternativeName']")
             .type("QAonium")
-            .should("have.value","QAonium")
+            .should("have.value", "QAonium")
 
         cy.get("[data-test=admin_popup_alt_cas_name_0_save]").click()
 
@@ -116,15 +108,12 @@ context("CAS products CRUD", () => {
 
         cy.get("[data-test=admin_popup_alt_cas_name_close_btn]").click()
 
-        cy.waitForUI()
-
-        cy.get('[data-test=action_' + productId + ']').click()
-        cy.get('[data-test=action_' + productId + '_1]').click()
+        cy.openElement(productId, 1)
 
         cy.wait("@nameGetting")
 
         cy.get("input[id='field_input_casAlternativeNames[0].alternativeName']")
-            .should("have.value","QAonium")
+            .should("have.value", "QAonium")
     })
 
     it("Deletes a alternative name", () => {
@@ -138,11 +127,10 @@ context("CAS products CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get('[data-test=action_' + productId + ']').click()
-        cy.get('[data-test=action_' + productId + '_1]').click()
+        cy.openElement(productId, 1)
 
         cy.get("input[id='field_input_casAlternativeNames[0].alternativeName']")
-            .should("have.value","QAonium")
+            .should("have.value", "QAonium")
 
         cy.get("[data-test=admin_popup_alt_cas_name_0_delete]").click()
 
@@ -155,8 +143,7 @@ context("CAS products CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get('[data-test=action_' + productId + ']').click()
-        cy.get('[data-test=action_' + productId + '_1]').click()
+        cy.openElement(productId, 1)
 
         cy.wait("@nameGetting")
 
@@ -170,7 +157,7 @@ context("CAS products CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",3)
+            .should("have.length", 3)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
@@ -184,9 +171,7 @@ context("CAS products CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get('[data-test=action_' + productId + ']').click()
-
-        cy.get('[data-test=action_' + productId + '_2]').click()
+        cy.openElement(productId, 2)
 
         cy.clickSave()
 

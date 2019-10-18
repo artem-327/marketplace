@@ -4,18 +4,18 @@ context("Market Segments CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("GET", '/prodex/api/packaging-groups').as('loading')
-        cy.route("POST", '/prodex/api/market-segments/datagrid').as('segments')
+        cy.route("GET", "/prodex/api/packaging-groups").as("loading")
+        cy.route("POST", "/prodex/api/market-segments/datagrid").as("segments")
 
         cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
-        cy.wait('@loading')
+        cy.wait("@loading")
 
-        cy.get('[data-test="tabs_menu_item_10"]').click()
+        cy.get("[data-test='tabs_menu_item_10']").click()
 
-        cy.wait('@segments')
+        cy.wait("@segments")
     })
 
     it("Creates a market segment", () => {
@@ -41,7 +41,7 @@ context("Market Segments CRUD", () => {
                 documentId = itemId
             })
         })
-        cy.get("#field_input_val0").should('have.value', "Test segment")
+        cy.get("#field_input_val0").should("have.value", "Test segment")
     })
 
     it("Edits a market segment", () => {
@@ -66,7 +66,7 @@ context("Market Segments CRUD", () => {
         cy.get('[data-test=action_' + documentId + ']').click()
         cy.get('[data-test=action_' + documentId + '_0]').click()
 
-        cy.get("#field_input_val0").should('have.value', "Great segment")
+        cy.get("#field_input_val0").should("have.value", "Great segment")
     })
 
     it("Checks error message", () => {
@@ -90,6 +90,6 @@ context("Market Segments CRUD", () => {
 
         cy.contains("Yes").click()
 
-        cy.get('[data-test=action_' + documentId + ']').should('not.exist')
+        cy.get("[data-test=action_" + documentId + "]").should("not.exist")
     })
 })

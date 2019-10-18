@@ -4,18 +4,18 @@ context("Form CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", '/prodex/api/cas-products/datagrid').as('loading')
-        cy.route("POST", '/prodex/api/product-forms/datagrid').as('formsLoad')
+        cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
+        cy.route("POST", "/prodex/api/product-forms/datagrid").as("formsLoad")
 
         cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
-        cy.wait('@loading')
+        cy.wait("@loading")
 
-        cy.get('[data-test="tabs_menu_item_5"]').click()
+        cy.get("[data-test='tabs_menu_item_5']").click()
 
-        cy.wait('@formsLoad')
+        cy.wait("@formsLoad")
     })
 
     it("Creates a form", () => {
@@ -38,7 +38,7 @@ context("Form CRUD", () => {
                 formId = itemId
             })
         })
-        cy.get("#field_input_val0").should('have.value', "Liquor")
+        cy.get("#field_input_val0").should("have.value", "Liquor")
     })
 
     it("Edits a form", () => {
@@ -60,7 +60,7 @@ context("Form CRUD", () => {
         cy.get('[data-test=action_' + formId + ']').click()
         cy.get('[data-test=action_' + formId + '_0]').click()
 
-        cy.get("#field_input_val0").should('have.value', "Finest")
+        cy.get("#field_input_val0").should("have.value", "Finest")
     })
 
     it("Checks error message", () => {
@@ -83,6 +83,6 @@ context("Form CRUD", () => {
 
         cy.contains("Yes").click()
 
-        cy.get('[data-test=action_' + formId + ']').should('not.exist')
+        cy.get("[data-test=action_" + formId + "]").should("not.exist")
     })
 })

@@ -4,17 +4,17 @@ context("Echo Product CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", '/prodex/api/cas-products/datagrid').as('loading')
-        cy.route("POST", '/prodex/api/echo-products/datagrid').as('echoLoading')
+        cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
+        cy.route("POST", "/prodex/api/echo-products/datagrid").as("echoLoading")
 
         cy.FElogin("admin@example.com", "echopass123")
 
-        cy.wait('@loading')
+        cy.wait("@loading")
         cy.url().should("include", "admin")
 
-        cy.get('[data-test="tabs_menu_item_12"]').click()
+        cy.get("[data-test='tabs_menu_item_12']").click()
 
-        cy.wait('@echoLoading')
+        cy.wait("@echoLoading")
         cy.waitForUI()
     })
 
@@ -27,10 +27,10 @@ context("Echo Product CRUD", () => {
         cy.selectFromDropdown("[data-test='admin_product_popup_cas_0_drpdn']", "382-45-6")
         cy.selectFromDropdown("[data-test='new_inventory_manufacturer_drpdn']", "BASF")
 
-        cy.get('div[data-test="admin_product_popup_emergencyPhone_inp"]').within(($form) => {
-            cy.get('input[placeholder = "Phone Number"]').type('1234567895')
-            cy.contains('+CCC').click()
-            cy.contains('USA').click()
+        cy.get("div[data-test='admin_product_popup_emergencyPhone_inp']").within(($form) => {
+            cy.get("input[placeholder = 'Phone Number']").type("1234567895")
+            cy.contains("+CCC").click()
+            cy.contains("USA").click()
         })
 
         cy.clickSave()

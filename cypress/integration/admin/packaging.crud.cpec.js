@@ -4,21 +4,21 @@ context("Units of packaging CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("GET", '/prodex/api/packaging-groups').as('loading')
-        cy.route("POST", '/prodex/api/packaging-types/datagrid').as('packaging')
+        cy.route("GET", "/prodex/api/packaging-groups").as("loading")
+        cy.route("POST", "/prodex/api/packaging-types/datagrid").as("packaging")
 
         cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
-        cy.wait('@loading')
+        cy.wait("@loading")
         //TODO Workaroud, list won't load
         cy.get('[data-test="tabs_menu_item_9"]').click()
         cy.waitForUI()
 
         cy.get('[data-test="tabs_menu_item_2"]').click()
 
-        cy.wait('@packaging')
+        cy.wait("@packaging")
     })
 
     it("Creates a package unit", () => {
@@ -47,8 +47,8 @@ context("Units of packaging CRUD", () => {
                 packageId = itemId
             })
         })
-        cy.get("#field_input_val0").should('have.value', "Test package")
-        cy.contains('volume')
+        cy.get("#field_input_val0").should("have.value", "Test package")
+        cy.contains("volume")
     })
 
     it("Edits a package unit", () => {
@@ -73,7 +73,7 @@ context("Units of packaging CRUD", () => {
         cy.get('[data-test=action_' + packageId + ']').click()
         cy.get('[data-test=action_' + packageId + '_0]').click()
 
-        cy.get("#field_input_val0").should('have.value', "Best package")
+        cy.get("#field_input_val0").should("have.value", "Best package")
     })
 
     it("Checks error messages", () => {
@@ -97,6 +97,6 @@ context("Units of packaging CRUD", () => {
 
         cy.contains("Yes").click()
 
-        cy.get('[data-test=action_' + packageId + ']').should('not.exist')
+        cy.get("[data-test=action_" + packageId + "]").should("not.exist")
     })
 })

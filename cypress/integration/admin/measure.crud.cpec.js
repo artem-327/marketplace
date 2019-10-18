@@ -2,22 +2,22 @@ context("Units of measure CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("GET", '/prodex/api/packaging-groups').as('loading')
-        cy.route("POST", '/prodex/api/units/datagrid').as('unitLoad')
+        cy.route("GET", "/prodex/api/packaging-groups").as("loading")
+        cy.route("POST", "/prodex/api/units/datagrid").as("unitLoad")
 
         cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
-        cy.wait('@loading')
+        cy.wait("@loading")
 
         //TODO Workaroud, list won't load
-        cy.get('[data-test="tabs_menu_item_9"]').click()
+        cy.get("[data-test='tabs_menu_item_9']").click()
         cy.waitForUI()
 
-        cy.get('[data-test="tabs_menu_item_1"]').click()
+        cy.get("[data-test='tabs_menu_item_1']").click()
 
-        cy.wait('@unitLoad')
+        cy.wait("@unitLoad")
     })
 
     it("Creates an unit of measure", () => {

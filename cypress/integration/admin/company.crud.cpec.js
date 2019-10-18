@@ -4,20 +4,20 @@ context("Companies CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", '/prodex/api/cas-products/datagrid').as('loading')
-        cy.route("POST", '/prodex/api/companies/datagrid').as('companiesLoad')
-        cy.route("POST", '/prodex/api/companies').as('companyCreate')
-        cy.route("GET", '/_next/static/webpack/').as('datagridLoad')
+        cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
+        cy.route("POST", "/prodex/api/companies/datagrid").as("companiesLoad")
+        cy.route("POST", "/prodex/api/companies").as("companyCreate")
+        cy.route("GET", "/_next/static/webpack/").as("datagridLoad")
 
         cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
-        cy.wait('@loading')
+        cy.wait("@loading")
 
         cy.get('[data-test="tabs_menu_item_8"]').click()
 
-        cy.wait('@companiesLoad')
+        cy.wait("@companiesLoad")
     })
 
     it("Creates a company", () => {
@@ -33,9 +33,9 @@ context("Companies CRUD", () => {
         cy.enterText('input[id="field_input_primaryBranch.contactName"]',"James Duckling")
         cy.enterText('input[id="field_input_primaryBranch.contactEmail"]',"james@duck.com")
         cy.get('div[data-test="admin_popup_company_primaryBranchNameEmailPhone_inp"]').within(($form) =>{
-            cy.get('input[placeholder = "Phone Number"]').type('2025550156')
-            cy.contains('+CCC').click()
-            cy.contains('USA').click()
+            cy.get('input[placeholder = "Phone Number"]').type("2025550156")
+            cy.contains("+CCC").click()
+            cy.contains("USA").click()
         })
 
         cy.enterText("input[id='field_input_primaryBranch.address.streetAddress']","125 N G St")
@@ -56,7 +56,7 @@ context("Companies CRUD", () => {
 
         cy.clickSave()
 
-        cy.wait('@companyCreate')
+        cy.wait("@companyCreate")
         cy.contains("Created Company")
     })
 
@@ -68,9 +68,9 @@ context("Companies CRUD", () => {
 
         cy.getToken().then(token => {
             cy.getFirstCompanyWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
+                cy.get("[data-test=action_" + itemId + "]").click()
 
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.get("[data-test=action_" + itemId + "_0]").click()
 
                 companyId = itemId
             })
@@ -87,13 +87,13 @@ context("Companies CRUD", () => {
 
         cy.getToken().then(token => {
             cy.getFirstCompanyWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
+                cy.get("[data-test=action_" + itemId + "]").click()
 
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.get("[data-test=action_" + itemId + "_0]").click()
             })
         })
 
-        cy.get("#field_input_name").should('have.value', "Donald and Co.")
+        cy.get("#field_input_name").should("have.value", "Donald and Co.")
     })
 
     it("Checks error message", () => {
@@ -113,11 +113,11 @@ context("Companies CRUD", () => {
         cy.waitForUI()
         cy.waitForUI()
 
-        cy.get('[data-test=action_' + companyId + ']').click()
-        cy.get('[data-test=action_' + companyId + '_1]').click()
+        cy.get("[data-test=action_" + companyId + "]").click()
+        cy.get("[data-test=action_" + companyId + "_1]").click()
 
         cy.contains("Yes").click()
 
-        cy.get('[data-test=action_' + companyId + ']').should('not.exist')
+        cy.get("[data-test=action_" + companyId + "]").should("not.exist")
     })
 })

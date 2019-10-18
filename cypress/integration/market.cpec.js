@@ -2,14 +2,14 @@ context("Market place tests",() => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST",'/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
+        cy.route("POST","/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.route("POST", "/prodex/api/product-offers/broadcasted/datagrid/").as("marketplaceLoading")
 
         cy.login("user1@example.com", "echopass123")
 
         cy.url().should("include","inventory")
 
-        cy.wait('@inventoryLoading')
+        cy.wait("@inventoryLoading")
         cy.contains("Marketplace").click()
         cy.get("[data-test=navigation_menu_marketplace_drpdn]").within(() => {
             cy.contains("Marketplace").click()
@@ -18,9 +18,9 @@ context("Market place tests",() => {
         cy.wait("@marketplaceLoading")
     })
 
-    it('Filter marketplace', () =>{
+    it("Filter marketplace", () =>{
         cy.server()
-        cy.route("GET",'/prodex/api/products/broadcasted/search?**').as('search')
+        cy.route("GET","/prodex/api/products/broadcasted/search?**").as("search")
 
         cy.get(".submenu-filter").click()
 
@@ -30,7 +30,7 @@ context("Market place tests",() => {
             .children("input")
             .type("Monomethyl",{force: true} )
 
-        cy.wait('@search')
+        cy.wait("@search")
 
         cy.contains("Monomethyl (3052-50-4)").click()
 
@@ -40,7 +40,7 @@ context("Market place tests",() => {
 
         cy.getToken().then(token => {
             cy.getFirstMarketIdWithFilter(token,filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']')
+                cy.get("[data-test=action_" + itemId + "]")
             })
         })
 

@@ -4,18 +4,18 @@ context("Manufacturers CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", '/prodex/api/cas-products/datagrid').as('loading')
-        cy.route("POST", '/prodex/api/manufacturers/datagrid').as('manufacturersLoad')
+        cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
+        cy.route("POST", "/prodex/api/manufacturers/datagrid").as("manufacturersLoad")
 
         cy.FElogin("admin@example.com", "echopass123")
 
         cy.url().should("include", "admin")
 
-        cy.wait('@loading')
+        cy.wait("@loading")
 
-        cy.get('[data-test="tabs_menu_item_3"]').click()
+        cy.get("[data-test='tabs_menu_item_3']").click()
 
-        cy.wait('@manufacturersLoad')
+        cy.wait("@manufacturersLoad")
     })
 
     it("Creates a manufacturer", () => {
@@ -40,7 +40,7 @@ context("Manufacturers CRUD", () => {
                 manufacturerId = itemId
             })
         })
-        cy.get("#field_input_val0").should('have.value', "Test manufacturer")
+        cy.get("#field_input_val0").should("have.value", "Test manufacturer")
     })
 
     it("Edits a manufacturer", () => {
@@ -65,7 +65,7 @@ context("Manufacturers CRUD", () => {
         cy.get('[data-test=action_' + manufacturerId + ']').click()
         cy.get('[data-test=action_' + manufacturerId + '_0]').click({force: true})
 
-        cy.get("#field_input_val0").should('have.value', "Artio")
+        cy.get("#field_input_val0").should("have.value", "Artio")
     })
 
     it("Checks error message", () => {
@@ -88,6 +88,6 @@ context("Manufacturers CRUD", () => {
 
         cy.contains("Yes").click()
 
-        cy.get('[data-test=action_' + manufacturerId + ']').should('not.exist')
+        cy.get("[data-test=action_" + manufacturerId + "]").should("not.exist")
     })
 })
