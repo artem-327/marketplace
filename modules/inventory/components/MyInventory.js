@@ -260,6 +260,10 @@ class MyInventory extends Component {
                   // Router.push({ pathname: '/inventory/edit', query: { id: row.id } })
                   simpleEditTrigger(datagrid.rows.find((r) => r.id === row.id), true)
               },
+              {
+                text: formatMessage({ id: 'global.editSidebar', defaultMessage: 'Edit Sidebar' }), callback: (row) =>
+                  sidebarDetailTrigger(row.id, true)
+              },
               { text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
               {
                 text: formatMessage({ id: 'inventory.delete', defaultMessage: 'Delete Listing' }), callback: (row) => {

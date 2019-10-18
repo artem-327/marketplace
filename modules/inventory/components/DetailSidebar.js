@@ -54,7 +54,11 @@ export const GraySegment = styled(Segment)`
 const initValues = {
   edit: {
     product: null,
-    fobPrice: '',
+    fobPrice: null,
+    cost: null,
+    lotNumber: '',
+    lotExpDate: '',
+    lotMfgDate: '',
     pkgsAvailable: 1,
     warehouse: '',
     productGrades: [],
@@ -66,13 +70,10 @@ const initValues = {
     leadTime: '',
     offerExpire: false,
     expirationDate: '',
-    minPkg: 1,
-    splitPkg: 1,
+    minimum: 1, // minPkg
+    splits: 1, // splitPkg
     externalNotes: '',
     internalNotes: '',
-    lots: [{
-      pkgAvailable: 0
-    }]
   },
   priceTiers: {
     priceTiers: 1,
@@ -105,6 +106,8 @@ val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
 
 const validationScheme = val.object().shape({
   edit: val.object().shape({
+    fobPrice: val.number().typeError(errorMessages.mustBeNumber).nullable().required(errorMessages.requiredMessage),
+    lotNumber: val.string().required(errorMessages.requiredMessage),
     inStock: val.bool().required(errorMessages.requiredMessage),
     warehouse: val.number(errorMessages.requiredMessage)
       .nullable(errorMessages.required)
@@ -166,6 +169,51 @@ class DetailSidebar extends Component {
 
     return priceTiers
   }
+
+  handleQuantities = (setFieldValue, values, splits, quantity = 0) => {
+    // be sure that splits is integer and larger than 0
+    splits = parseInt(splits)
+    if (splits < 1 || isNaN(splits)) return false
+
+    // correct quantity before anchor calculation
+    if (quantity > 0) quantity -= splits
+
+    const prices = values.pricingTiers
+
+    for (let i = 0; i < prices.length; i++) {
+      const qtyFrom = parseInt(prices[i].quantityFrom)
+
+      // get level quantity (must be larger than previous level quantity)
+      let anchor = Math.max(qtyFrom, ++quantity)
+      if (!parseInt(values.pricingTiers[i].manuallyModified)) {
+        // if not manually modified then change quantity value
+        quantity = Math.ceil(anchor / splits) * splits
+        setFieldValue(`pricingTiers[${i}].quantityFrom`, quantity)
+      } else {
+        // if manually modified or loaded from BE then do not change already set value - just remember largest anchor
+        quantity = Math.max(qtyFrom, quantity)
+      }
+    }
+  }
+
+  onSplitsChange = debounce(async (value, values, setFieldValue, validateForm) => {
+    value = parseInt(value)
+    const minimum = parseInt(values.minimum)
+
+    this.handleQuantities(setFieldValue, values, value)
+
+    if (isNaN(value) || isNaN(minimum))
+      return false
+
+    if (values.minimumRequirement) {
+      if (minimum !== value && ((minimum % value) !== 0)) {
+        await setFieldValue('minimum', value)
+      }
+    } else {
+      await setFieldValue('minimum', value)
+    }
+    validateForm()
+  }, 250)
 
   renderPricingTiers = (count, setFieldValue) => {
     let tiers = []
@@ -232,6 +280,7 @@ class DetailSidebar extends Component {
       listForms,
       listGrades,
       sidebarDetailOpen,
+      sidebarValues,
       searchedManufacturers,
       searchedManufacturersLoading,
       searchedOrigins,
@@ -249,17 +298,71 @@ class DetailSidebar extends Component {
       toggleFilter
     } = this.props
 
+    let editValues = {}
+    if (sidebarValues.id) {
+      editValues = {
+        edit: {
+          conditionNotes: getSafe(() => sidebarValues.conditionNotes, null),
+          cost: getSafe(() => sidebarValues.costPerUOM, null),
+          externalNotes: getSafe(() => sidebarValues.externalNotes, ''),
+          fobPrice: getSafe(() => sidebarValues.pricingTiers[0].price, null),
+          inStock: getSafe(() => sidebarValues.inStock, false),
+          internalNotes: getSafe(() => sidebarValues.internalNotes, ''),
+          leadTime: getSafe(() => sidebarValues.processingTimeDays, 1),
+          lotNumber: getSafe(() => sidebarValues.lots[0].lotNumber, null),
+          lotExpDate: getSafe(() => sidebarValues.lots[0].expirationDate, ''),
+          lotMfgDate: getSafe(() => sidebarValues.lots[0].manufacturedDate, ''),
+          minimum: getSafe(() => sidebarValues.minPkg, ''),
+          origin: getSafe(() => sidebarValues.origin, ''),
+          pkgsAvailable: getSafe(() => sidebarValues.lots[0].pkgAvailable, ''),
+          product: getSafe(() => sidebarValues.companyProduct.id, null),
+          productCondition: getSafe(() => sidebarValues.condition, null),
+          productForm: getSafe(() => sidebarValues.form, null),
+          productGrades: getSafe(() => sidebarValues.grades, null),
+          splits: getSafe(() => sidebarValues.splitPkg, ''),
+          offerExpire: getSafe(() => sidebarValues.validityDate.length > 0, false),
+          expirationDate: getSafe(() => sidebarValues.validityDate, ''),
+          warehouse: getSafe(() => sidebarValues.warehouse.id, null)
+        },
+        priceTiers: {
+          priceTiers: getSafe(() => sidebarValues.pricingTiers.length, 0),
+          pricingTiers: getSafe(() => sidebarValues.pricingTiers.map(priceTier => ({
+            price: priceTier.pricePerUOM,
+            quantityFrom: priceTier.quantityFrom
+          })), [])
+        }
+      }
+    }
+
     return (
       <Form
         enableReinitialize={true}
-        initialValues={initValues}
+        initialValues={{
+          ...initValues,
+          ...editValues
+        }}
         validateOnChange={false}
         validationSchema={validationScheme}
         onSubmit={async (values, { setSubmitting }) => {
           let props = {}
           switch (this.state.activeTab) {
             case 0:
-              props = values.edit
+              props = {
+                ...values.edit,
+                processingTimeDays: values.edit.leadTime,
+                lots: [{
+                  expirationDate: values.edit.lotExpDate,
+                  lotNumber: values.edit.lotNumber,
+                  manufacturedDate: values.edit.lotMfgDate,
+                  pkgAvailable: values.edit.pkgsAvailable
+                }]
+              }
+              props.pricingTiers = values.priceTiers.pricingTiers.length ?
+                values.priceTiers.pricingTiers :
+                [{
+                  quantityFrom: values.edit.minimum,
+                  price: values.edit.fobPrice
+                }]
               break;
             case 2:
               props = values.priceTiers
@@ -364,15 +467,59 @@ class DetailSidebar extends Component {
                                    </GridRow>
                                    <GridRow>
                                      <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                       <FormattedMessage id='global.cost' defaultMessage='Cost'>{text => text}</FormattedMessage>
+                                     </GridColumn>
+                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                       <FormField width={16} data-test='detail_sidebar_cost' >
+                                         <Input
+                                           name='edit.cost'
+                                           inputProps={{ type: 'number' }} />
+                                       </FormField>
+                                     </GridColumn>
+                                   </GridRow>
+                                   <GridRow>
+                                     <GridColumn>
+                                       <Segment style={{ margin: '0 -1em' }}>
+                                         <Header as='h3'><FormattedMessage id='global.lot' defaultMessage='Lot' /></Header>
+                                         <Grid>
+                                           <GridRow>
+                                             <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                               <FormattedMessage id='global.lotNumber' defaultMessage='Lot #'>{text => text}</FormattedMessage>
+                                             </GridColumn>
+                                             <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                               <Input type="text" name="edit.lotNumber" />
+                                             </GridColumn>
+                                           </GridRow>
+                                           <GridRow>
+                                             <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                               <FormattedMessage id='global.expDate' defaultMessage='Exp Date'>{text => text}</FormattedMessage>
+                                             </GridColumn>
+                                             <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                               <DateInput
+                                                 inputProps={{ 'data-test': 'sidebar_detail_lot_exp_date' }}
+                                                 name='edit.lotExpDate' />
+                                             </GridColumn>
+                                           </GridRow>
+                                           <GridRow>
+                                             <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                               <FormattedMessage id='global.mfgDate' defaultMessage='Mfg Date'>{text => text}</FormattedMessage>
+                                             </GridColumn>
+                                             <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                               <DateInput
+                                                 inputProps={{ 'data-test': 'sidebar_detail_lot_mfg_date' }}
+                                                 name='edit.lotMfgDate' />
+                                             </GridColumn>
+                                           </GridRow>
+                                         </Grid>
+                                       </Segment>
+                                     </GridColumn>
+                                   </GridRow>
+                                   <GridRow>
+                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
                                        <FormattedMessage id='addInventory.totalPackages' defaultMessage='Pkgs Available'>
                                          {text => (
                                            <>
-                                             {text} {0 /*values.lots.length*/ > 1 && (
-                                             <Popup trigger={<Icon name='info circle' color='blue' />}
-                                                    content={
-                                                      <FormattedMessage id='addInventory.multipleLots' defaultMessage='This value can not be edited as you have specified multiple lots.' />
-                                                    } />
-                                           )}
+                                             {text}
                                            </>
                                          )}
                                        </FormattedMessage>
@@ -382,14 +529,9 @@ class DetailSidebar extends Component {
                                          type='number'
                                          min='1'
                                          step='1'
-                                         disabled={0 /*values.lots.length*/ > 1}
-                                         onChange={(_, { value }) => setFieldValue('edit.lots[0].pkgAvailable', value)}
-                                         value={
-                                           0 /*values.lots.length*/ > 1
-                                             ? values.lots.reduce((prev, curr) => parseInt(prev, 10) + parseInt(curr.pkgAvailable), 0)
-                                             : parseInt(values.edit.lots[0].pkgAvailable, 10)
-                                         }
-                                         name='quantity' />
+                                         //onChange={(_, { value }) => setFieldValue('edit.lots[0].pkgAvailable', value)}
+                                         //value={parseInt(values.edit.pkgsAvailable, 10)}
+                                         name='pkgsAvailable' />
                                      </GridColumn>
                                    </GridRow>
                                    <GridRow>
@@ -519,7 +661,7 @@ class DetailSidebar extends Component {
                                    </GridRow>
                                    <GridRow>
                                      <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.expirationDate' defaultMessage='Expiration Date'>{text => text}</FormattedMessage>
+                                       <FormattedMessage id='addInventory.offerExpirationDate' defaultMessage='Offer Expiration Date'>{text => text}</FormattedMessage>
                                      </GridColumn>
                                      <GridColumn mobile={rightWidth} computer={rightWidth}>
                                        <DateInput
@@ -533,9 +675,8 @@ class DetailSidebar extends Component {
                                      </GridColumn>
                                      <GridColumn mobile={rightWidth} computer={rightWidth} data-test='add_inventory_product_minimumOQ_inp'>
                                        <Input
-                                         name='edit.minPkg'
+                                         name='edit.minimum'
                                          inputProps={{
-                                           disabled: !values.minimumRequirement,
                                            type: 'number',
                                            min: 1,
                                            onChange: (e, { value }) => {
@@ -555,7 +696,7 @@ class DetailSidebar extends Component {
                                      </GridColumn>
                                      <GridColumn mobile={rightWidth} computer={rightWidth} data-test='add_inventory_product_splits_inp' >
                                        <Input
-                                         name='edit.splitPkg'
+                                         name='edit.splits'
                                          inputProps={{
                                            type: 'number',
                                            min: 1,
@@ -704,6 +845,17 @@ class DetailSidebar extends Component {
                 <Grid>
                   <GridRow>
                     <GridColumn computer={6} textAlign='left'>
+                      <Button
+                        size='large'
+                        inputProps={{ type: 'button' }}
+                        onClick={() => {
+                          this.props.sidebarDetailTrigger(null, false)
+                        }}
+                        data-test='sidebar_inventory_cancel'>
+                        {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+                      </Button>
+                    </GridColumn>
+                    <GridColumn computer={10} textAlign='right'>
                       <Button.Submit
                         size='large'
                         inputProps={{ type: 'button' }}

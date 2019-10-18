@@ -87,11 +87,13 @@ export function addProductOffer(values, poId = false, simple = false) {
         }
       }) : null,
       companyProduct: parseInt(values.product),
+      conditionNotes: getSafe(() => values.conditionNotes),
       externalNotes: getSafe(() => values.externalNotes),
       inStock: values.inStock,
       internalNotes: getSafe(() => values.internalNotes),
       lots: values.lots ? values.lots.map(lot => {
         return {
+          lotNumber: lot.lotNumber,
           attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
             return att.id
           }) : null,
@@ -370,11 +372,12 @@ export const sidebarDetailTrigger = (poId = null, force = null) => {
     type: AT.SIDEBAR_DETAIL_TRIGGER,
     async payload() {
       let sidebarValues = {}
+
       if (poId)
         sidebarValues = await api.getProductOffer(poId)
 
       return {
-        sidebarValues,
+        sidebarValues: getSafe(() => sidebarValues.data, {}),
         force
       }
     }
