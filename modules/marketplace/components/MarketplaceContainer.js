@@ -21,6 +21,7 @@ function mapStateToProps(store, { datagrid }) {
     // rows: store.marketplace.broadcastedProductOffers.map(po => {
     ...datagrid,
     appliedFilter: store.filter.filter.appliedFilter,
+    defaultZip: getSafe(() => store.auth.identity.homeBranch.deliveryAddress.address.zip.zip, ''),
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
  
@@ -28,7 +29,7 @@ function mapStateToProps(store, { datagrid }) {
         id: po.id,
         productName: po.companyProduct.echoProduct.name,
         productNumber: getSafe(() => po.companyProduct.echoProduct.code, 'Unmapped'),
-        merchant: getSafe(() => po.warehouse.warehouseName, ''),
+        //! ! delete? merchant: getSafe(() => po.warehouse.warehouseName, ''),
         available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
         packagingType: getSafe(() => po.companyProduct.packagingType.name, ''),
         packagingUnit: getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, ''),

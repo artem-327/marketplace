@@ -285,7 +285,7 @@ class CartItemSummary extends Component {
                 <FormattedUnit
                   unit={productOffer.companyProduct.packagingType.name}
                   separator=' '
-                  value={item.quantity}
+                  value={item.pkgAmount}
                 />
               </GridColumn>
             </RelaxedRow>
@@ -304,7 +304,7 @@ class CartItemSummary extends Component {
                 <FormattedUnit
                   separator=''
                   unit={productOffer.companyProduct.packagingUnit.nameAbbreviation}
-                  value={item.quantity * productOffer.companyProduct.packagingSize}
+                  value={item.pkgAmount * productOffer.companyProduct.packagingSize}
                 />
               </GridColumn>
             </RelaxedRow>
@@ -341,7 +341,7 @@ class CartItemSummary extends Component {
                 <FormattedNumber
                   style='currency'
                   currency={currency}
-                  value={item.cfFullPrice}
+                  value={item.cfPriceSubtotal}
                 />
               </GridColumn>
             </HeaderTextRow>

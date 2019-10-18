@@ -10,6 +10,7 @@ import { withDatagrid } from '~/modules/datagrid'
 // import { TablePopUp } from '~/components/tablePopup'
 import confirm from '~/src/components/Confirmable/confirm'
 import { currency } from '~/constants/index'
+import { getSafe } from '~/utils/functions'
 
 import {
   getUsersDataRequest,
@@ -183,7 +184,7 @@ const userEnableDisableStatus = (r, currentUserId) => {
         enabled: user.enabled,
         // preferredCurrency: (user.preferredCurrency || {}).id || undefined,
         preferredCurrency: currency,
-        homeBranchName: user.homeBranch && user.homeBranch.name,
+        homeBranchName: getSafe(() => user.homeBranch.deliveryAddress.addressName, ''),
         permissions: user.roles ? user.roles.name : '', // ! ! array?
         id: user.id,
         allUserRoles: user.roles || [],
