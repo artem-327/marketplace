@@ -366,3 +366,17 @@ Cypress.Commands.add("getFirstCompanyWithFilter", (token,filter) => {
         return response.body[0].id
     })
 })
+
+Cypress.Commands.add("getFirstCompanyProductWithFilter", (token,filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/company-products/datagrid',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: filter, pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body[0].id
+    })
+})
