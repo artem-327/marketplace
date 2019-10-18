@@ -36,7 +36,7 @@ class MyInventory extends Component {
       { name: 'cost', title: <FormattedMessage id='myInventory.cost' defaultMessage='Cost'>{(text) => text}</FormattedMessage>, width: 100 },
       { name: 'fobPrice', title: <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price'>{(text) => text}</FormattedMessage>, width: 180, sortPath: 'ProductOffer.price' },
       { name: 'manufacturer', title: <FormattedMessage id='global.manufacturer' defaultMessage='Manufacturer'>{(text) => text}</FormattedMessage>, width: 220 },
-      { name: 'lotNumber', title: <FormattedMessage id='myInventory.lot' defaultMessage='Lot #'>{(text) => text}</FormattedMessage>, width: 70 },
+      // { name: 'lotNumber', title: <FormattedMessage id='myInventory.lot' defaultMessage='Lot #'>{(text) => text}</FormattedMessage>, width: 70 },
       { name: 'broadcast', title: <FormattedMessage id='myInventory.broadcast' defaultMessage='Broadcast'>{(text) => text}</FormattedMessage>, width: 130, align: 'right', sortPath: 'ProductOffer.broadcasted' },
       { name: 'minOrderQuantity', title: <FormattedMessage id='myInventory.minOrderQuantity' defaultMessage='Min Order Q.'>{(text) => text}</FormattedMessage>, width: 100 },
       { name: 'splits', title: <FormattedMessage id='myInventory.splits' defaultMessage='Splits'>{(text) => text}</FormattedMessage>, width: 100 },
