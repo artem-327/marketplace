@@ -10,7 +10,7 @@ import { applyFilter } from '~/modules/filter/actions'
 import { FormattedNumber } from 'react-intl'
 
 import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
-
+import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 import React from "react";
 
@@ -21,22 +21,23 @@ function mapStateToProps(store, { datagrid }) {
     // rows: store.marketplace.broadcastedProductOffers.map(po => {
     ...datagrid,
     appliedFilter: store.filter.filter.appliedFilter,
+    defaultZip: getSafe(() => store.auth.identity.homeBranch.deliveryAddress.address.zip.zip, ''),
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
-      let currency = getSafe(() => po.pricingTiers[0].price.currency.code, 'USD')
+ 
       return {
         id: po.id,
         productName: po.companyProduct.echoProduct.name,
         productNumber: getSafe(() => po.companyProduct.echoProduct.code, 'Unmapped'),
-        merchant: po.warehouse.warehouseName,
+        //! ! delete? merchant: getSafe(() => po.warehouse.warehouseName, ''),
         available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
         packagingType: getSafe(() => po.companyProduct.packagingType.name, ''),
         packagingUnit: getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, ''),
         packagingSize: getSafe(() => po.companyProduct.packagingSize, ''),
         quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.quantity} /> : 'N/A',
         fobPrice: po.pricingTiers.length > 1
-          ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price.amount} /> -  <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price.amount} /> {qtyPart && (`/ ${qtyPart}`)} </>
-          : <> <FormattedNumber style='currency' currency={currency} value={getSafe(() => po.pricing.pricingTiers[0].price.amount, 0)} /> {qtyPart && (`/ ${qtyPart}`)} </>,
+          ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].pricePerUOM.amount} /> -  <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].pricePerUOM.amount} /> {qtyPart && (`/ ${qtyPart}`)} </>
+          : <> <FormattedNumber style='currency' currency={currency} value={getSafe(() => po.pricing.pricingTiers[0].pricePerUOM.amount, 0)} /> {qtyPart && (`/ ${qtyPart}`)} </>,
         manufacturer: getSafe(() => po.companyProduct.echoProduct.manufacturer.name, 'N/A'),
         origin: getSafe(() => po.origin.name),
         expiration: moment(po.expirationDate).format('MM/DD/YYYY'),

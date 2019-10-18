@@ -35,6 +35,7 @@ const chatWidgetScriptLoaded = (props) => {
 
   // Working API: https://api.zopim.com/files/meshim/widget/controllers/LiveChatAPI-js.html
   // Not 100% working API: https://developer.zendesk.com/embeddables/docs/widget/api#ze.identify
+  // https://support.zendesk.com/hc/en-us/articles/115000566208-Web-Widget-Chat-advanced-customization
 
   zE(function() {
     $zopim(function() {
@@ -42,6 +43,8 @@ const chatWidgetScriptLoaded = (props) => {
       $zopim.livechat.setName(name);
       $zopim.livechat.setEmail(email);
       $zopim.livechat.window.hide();
+      $zopim.livechat.setStatus('online');
+      $zopim.livechat.setOnUnreadMsgs(	chatWidgetShow)
     });
   })
 
@@ -64,7 +67,7 @@ export const chatWidgetHide = () => {
       $zopim(function () {
         $zopim.livechat.window.hide()
       });
-    })// ! ! $zopim.livechat.window.toggle(); Not working
+    })
   }
 }
 
@@ -74,10 +77,25 @@ export const chatWidgetShow = () => {
       $zopim(function () {
         $zopim.livechat.window.show()
       });
-    })// ! ! $zopim.livechat.window.toggle(); Not working
+    })
+  }
+}
+
+export const chatWidgetToggle = () => {
+  if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
+    zE(function () {
+      $zopim(function () {
+        //console.log('!!!!! ', $zopim.livechat.window.getDisplay())
+        $zopim.livechat.window.getDisplay() // after 3rd call returns true even the window is hidden (?)
+          ? $zopim.livechat.window.hide()
+          : $zopim.livechat.window.show()
+      });
+    })// ! ! $zopim.livechat.window.toggle(); Not working at all
   }
 }
 
 export const chatWidgetTerminate = () => {
+  // odhlasit se
+  // jak se pak prihlasit??
   chatWidgetHide()
 }

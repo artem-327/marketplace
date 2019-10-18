@@ -4,6 +4,8 @@ import { string, array, func, number, node } from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { getSafe } from '~/utils/functions'
 import { RelaxedRow, HeaderTextRow } from './styledComponents'
+import { currency } from '~/constants/index'
+
 
 import './styles.scss'
 
@@ -15,16 +17,20 @@ export default class Summary extends Component {
 
     if (cartItems.length === 0) return null
 
-    let subtotal = 0, totalWeight = 0
+    //console.log('!!!!!! Summary Render props', this.props)
+
+    //let totalWeight = 0
+    /*
     for (let i = 0; i < cartItems.length; i++) {
-      subtotal += (cartItems[i].quantity * cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].pricing.price)
+      //subtotal += (cartItems[i].quantity * cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].pricing.price)
       totalWeight += cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].quantity
     }
+    */
 
     let shipping = cart.selectedShipping ? cart.selectedShipping.quote.estimatedPrice : 0
-    let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].price.currency.code, 'USD')
+    // let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, 'USD')  // ! !
 
-    let pricePerUnit = (totalPrice + shipping) / totalWeight
+    //let pricePerUnit = (totalPrice + shipping) / totalWeight
     
     return (
       <Segment>
@@ -49,7 +55,7 @@ export default class Summary extends Component {
                   <FormattedNumber
                     style='currency'
                     currency={currency}
-                    value={subtotal}
+                    value={totalPrice}
                   />
 
                 </GridColumn>
@@ -89,13 +95,14 @@ export default class Summary extends Component {
                   <FormattedNumber
                     style='currency'
                     currency={currency}
-                    value={subtotal}
+                    value={cart.cfPriceSubtotal}
                   />
 
                 </GridColumn>
               </RelaxedRow>
 
 
+              {/*
               <RelaxedRow columns={2}>
                 <GridColumn>
                   <FormattedMessage
@@ -108,11 +115,12 @@ export default class Summary extends Component {
                   <FormattedNumber
                     style='currency'
                     currency={currency}
-                    value={pricePerUnit}
+                    value={cart.cfPricePerUomTotal}
                   />
 
                 </GridColumn>
               </RelaxedRow>
+              */}
 
               <HeaderTextRow columns={2}>
                 <GridColumn>

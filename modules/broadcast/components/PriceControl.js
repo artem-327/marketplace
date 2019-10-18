@@ -4,6 +4,7 @@ import { Input, Radio } from 'semantic-ui-react'
 import styled from 'styled-components'
 import _ from 'lodash'
 import { FormattedNumber } from 'react-intl'
+import { currency } from '~/constants/index'
 
 export default class PriceControl extends Component {
 
@@ -108,8 +109,8 @@ export default class PriceControl extends Component {
 
 
     return {
-      highStr: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={high ? high : 0} />,
-      lowStr: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={low ? low : 0} />,
+      highStr: <FormattedNumber style='currency' currency={currency} value={high ? high : 0} />,
+      lowStr: <FormattedNumber style='currency' currency={currency} value={low ? low : 0} />,
       low,
       high
     }

@@ -11,6 +11,7 @@ import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
 import * as Yup from 'yup'
 import { CompanyProductMixtures } from '~/components/shared-components/'
+import { currency } from '~/constants/index'
 
 import { Datagrid } from '~/modules/datagrid'
 import { uniqueArrayByKey, getSafe, generateToastMarkup, getDesiredCasProductsProps } from '~/utils/functions'
@@ -75,8 +76,11 @@ class SimpleEdit extends Component {
 
 
     if (popupValues.id && popupValues.companyProduct) productOptions.push(popupValues.companyProduct)
-    if (getSafe(() => popupValues.warehouse.id)) warehouseOptions.push({
-      name: popupValues.warehouse.warehouseName,
+    if (getSafe(() => popupValues.warehouse.warehouseName)) warehouseOptions.push({
+      deliveryAddress: {
+        addressName: popupValues.warehouse.warehouseName
+      },
+      //! !name: popupValues.warehouse.warehouseName,
       id: popupValues.warehouse.id
     })
 
@@ -90,7 +94,7 @@ class SimpleEdit extends Component {
       // price: getSafe(() => popupValues.pricingTiers[0].price.amount),
       pricingTiers: getSafe(() => popupValues.pricingTiers.map((el) => ({
         quantityFrom: el.quantityFrom,
-        price: el.price.amount
+        price: el.pricePerUOM.amount  // ! !
       })), [{ quantityFrom: 1, price: '' }]),
       quantity: getSafe(() => popupValues.pkgAvailable),
       warehouse: getSafe(() => popupValues.warehouse.id)
@@ -238,7 +242,7 @@ class SimpleEdit extends Component {
                             type: 'number',
                             step: 0.001,
                             min: 0.001,
-                            label: getSafe(() => preferredCurrency.symbol, 'US$'),
+                            label: getSafe(() => preferredCurrency.symbol, '$'),
                             fluid: true
                           }}
                           name='pricingTiers[0].price'
@@ -265,7 +269,7 @@ class SimpleEdit extends Component {
                           }}
                           options={uniqueArrayByKey(warehouseOptions, 'id').map((wh) => ({
                             key: wh.id,
-                            text: wh.name,
+                            text: wh.deliveryAddress.addressName,
                             value: wh.id
                           }))}
                           name='warehouse'
@@ -324,7 +328,7 @@ const mapStateToProps = ({ simpleAdd: {
   popupValues,
   autocompleteData,
   autocompleteDataLoading,
-  preferredCurrency: getSafe(() => auth.identity.preferredCurrency),
+  preferredCurrency: getSafe(() => auth.identity.preferredCurrency, currency),
   isAdmin: getSafe(() => auth.identity.isAdmin),
   takeover: getSafe(() => auth.identity.company, false),
   owner: getSafe(() => auth.identity.id),

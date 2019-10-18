@@ -3,6 +3,8 @@ import { array, string, func } from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { Grid, GridRow, GridColumn, Header, Segment, Divider } from 'semantic-ui-react'
 import styled from 'styled-components'
+import { currency } from '~/constants/index'
+import { getSafe } from '~/utils/functions'
 
 const RelaxedSegment = styled(Segment)`
   margin-top: 0px !important;
@@ -30,7 +32,7 @@ export default class CartItemSummary extends Component {
   renderItem = (item, i, lastChild) => {
     let { productOffer } = item
 
-    let currency = productOffer.pricing.price.currency.code
+    let currency = getSafe(() => productOffer.pricing.price.currency.code, currency)
 
     return (
       <>
@@ -168,14 +170,14 @@ export default class CartItemSummary extends Component {
   render() {
     let { cartItems, header } = this.props
 
-   
+
     return (
       <RelaxedSegment className='cart-item-summary'>
         <Grid>
           <Title className='header'>
-           
-              <Header>{header}</Header>
-           
+
+            <Header>{header}</Header>
+
           </Title>
           {
             cartItems.map((item, i) => this.renderItem(item, i, (cartItems.length - 1) === i))

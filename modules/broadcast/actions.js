@@ -1,7 +1,7 @@
 import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
 import * as api from './api'
 import { getAllProductOffers } from '~/modules/inventory/api'
-
+import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 
 export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (offer) => {
@@ -13,7 +13,7 @@ export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (offer) =
     offer: {
       id: offer.id,
       pricingTiers: offer.pricingTiers,
-      currency: getSafe(() => offer.cost.currency.code, 'USD')
+      currency: getSafe(() => offer.cost.currency.code, currency)
     }
   }
 })
@@ -46,7 +46,7 @@ export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', as
     offer: {
       id: null,
       pricingTiers: [max, min],
-      currency: getSafe(() => productOffers[0].cost.currency.code, 'USD'),
+      currency: getSafe(() => productOffers[0].cost.currency.code, currency),
     }
   }
 })

@@ -9,7 +9,8 @@ import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 // import { TablePopUp } from '~/components/tablePopup'
 import confirm from '~/src/components/Confirmable/confirm'
-
+import { currency } from '~/constants/index'
+import { getSafe } from '~/utils/functions'
 
 import {
   getUsersDataRequest,
@@ -181,8 +182,9 @@ const userEnableDisableStatus = (r, currentUserId) => {
         homeBranch: user.homeBranch && user.homeBranch.id,
         additionalBranches: user.additionalBranches && user.additionalBranches.map(b => b.id),
         enabled: user.enabled,
-        preferredCurrency: (user.preferredCurrency || {}).id || undefined,
-        homeBranchName: user.homeBranch && user.homeBranch.name,
+        // preferredCurrency: (user.preferredCurrency || {}).id || undefined,
+        preferredCurrency: currency,
+        homeBranchName: getSafe(() => user.homeBranch.deliveryAddress.addressName, ''),
         permissions: user.roles ? user.roles.name : '', // ! ! array?
         id: user.id,
         allUserRoles: user.roles || [],

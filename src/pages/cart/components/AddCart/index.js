@@ -10,7 +10,7 @@ import React from 'react'
 import { ArrayToMultiple } from '~/components/formatted-messages'
 
 function mapStateToProps(store) {
-    let pricing = getPricing(store.cart.offerDetail, store.cart.sidebar.quantity)
+    let pricing = getPricing(store.cart.offerDetail, store.cart.sidebar.pkgAmount)
     let offer = { ...store.cart.offerDetail, locationStr: store.cart.offerDetail ? getLocationString(store.cart.offerDetail) : '' }
 
     return {
@@ -24,7 +24,12 @@ function mapStateToProps(store) {
               ? d.displayName
               :  d.displayName + ' - ' + d.casProduct.casNumber
         })} />,
-        casProductsCasNumbers: <ArrayToMultiple values={getSafe(() => offer.product.casProducts, []).map(d => (d.casProduct.casNumber))} />,
+        casProductsCasNumbers: <ArrayToMultiple values={getSafe(() => offer.companyProduct.echoProduct.elements, []).map(d => {
+            return d.casProduct
+            ? d.casProduct.casNumber
+            : null
+            })} />,
+        // ! ! osetrit 'proprietary'
     }
 }
 

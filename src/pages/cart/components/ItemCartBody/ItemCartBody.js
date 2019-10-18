@@ -5,12 +5,12 @@ import { FormattedMessage, FormattedNumber } from 'react-intl'
 
 import { Button } from 'semantic-ui-react'
 import { FormattedUnit } from '~/components/formatted-messages'
+import { currency } from '~/constants/index'
 
 export default class ItemCartBody extends Component {
   render() {
     let { cartItem, deleteCartItem, casNumberChemName } = this.props
     let { productOffer } = cartItem
-
     let unitName = productOffer.companyProduct.packagingUnit.nameAbbreviation
 
     return (
@@ -44,17 +44,17 @@ export default class ItemCartBody extends Component {
               <FormattedNumber
                 id='cart.pricePer'
                 style='currency'
-                currency={cartItem.productOffer.pricingTiers[0].price.currency.code}
-                value={cartItem.productOffer.pricingTiers[0].price.amount}
+                currency={currency}
+                value={cartItem.cfPricePerUOM}
               />
             </div>
-            <div>
+            {/*<div>
               <FormattedMessage id='global.totalWeight' defaultMessage='Total Weight' />:{' '}
               <FormattedUnit
                 value={cartItem.quantity * productOffer.companyProduct.packagingSize}
                 unit={unitName} separator=''
               />
-            </div>
+            </div>*/}
           </div>
           <div className='item-cart-body-section'>
             <div>

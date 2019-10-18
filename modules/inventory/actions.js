@@ -101,27 +101,27 @@ export function addProductOffer(values, poId = false, simple = false) {
           pkgAvailable: getSafe(() => parseInt(lot.pkgAvailable))
         }
       }) : null,
-      manufacturer: getSafe(() => values.manufacturer),
-      minimum: parseInt(values.minimum),
+      // ! ! otestovat manufacturer: getSafe(() => values.manufacturer),
+      minPkg: parseInt(values.minimum),
       origin: getSafe(() => values.origin),
       pricingTiers: getSafe(() => values.pricingTiers.map((tier, index) => {
         return {
-          price: parseFloat(tier.price),
+          pricePerUOM: parseFloat(tier.price),
           quantityFrom: parseInt(!index ? values.minimum : tier.quantityFrom)
         }
       }), []),
       processingTimeDays: parseInt(values.processingTimeDays),
-      productCondition: getSafe(() => parseInt(values.productCondition)),
-      productForm: getSafe(() => parseInt(values.productForm)),
-      productGrades: values.productGrades,
-      splits: parseInt(values.splits),
-      tradeName: getSafe(() => values.tradeName),
+      condition: getSafe(() => parseInt(values.productCondition)),
+      form: getSafe(() => parseInt(values.productForm)),
+      grades: values.productGrades,
+      splitPkg: parseInt(values.splits),
+      // ! ! otestovat tradeName: getSafe(() => values.tradeName),
       validityDate: values.expirationDate ? moment(values.expirationDate).utc(values.expirationDate).format() : null,
       warehouse: parseInt(values.warehouse)
     }
 
   } else {
-    params = values
+    params = values // ! ! az bude BE vracet pricingTiers, tak predelat zkombinovat tento radek s vytvarenim objektu vyse (prejmenovane / chybejici atributy)
   }
 
   if (poId) {

@@ -16,7 +16,7 @@ class Orders extends Component {
       { name: 'globalStatus', title: <FormattedMessage id='order.globalStatus' defaultMessage='Status' />, width: 120, sortPath: 'Order.globalStatus' },
       { name: 'date', title: <FormattedMessage id='order.date' defaultMessage='Order Date' />, width: 120, sortPath: 'Order.orderDate' },
       { name: 'customerName', title: <FormattedMessage id='order.vendor' defaultMessage='Vendor' />, width: 120, sortPath: 'Order.sellerCompanyName' },
-      { name: 'productName', title: <FormattedMessage id='order.productName' defaultMessage='Product Name' />, width: 160 },
+      //{ name: 'productName', title: <FormattedMessage id='order.productName' defaultMessage='Product Name' />, width: 160 },
       { name: 'orderStatus', title: <FormattedMessage id='order' defaultMessage='Order' />, width: 120 },
       { name: 'shippingStatus', title: <FormattedMessage id='order.shipping' defaultMessage='Shipping' />, width: 120 },
       { name: 'reviewStatus', title: <FormattedMessage id='order.review' defaultMessage='Review' />, width: 120 },

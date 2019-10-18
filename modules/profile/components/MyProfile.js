@@ -28,7 +28,7 @@ const initialFormValues = {
   'email': '',
   'phone': '',
   'jobTitle': '',
-  'preferredCurrency': '',
+  // 'preferredCurrency': '',
 }
 
 const formValidation = Yup.object().shape({
@@ -41,7 +41,7 @@ class MyProfile extends Component {
 
   componentDidMount() {
     this.props.getUserMeData()
-    this.props.getCurrencies()
+    // this.props.getCurrencies()
     this.props.getLanguages()
   }
 
@@ -52,7 +52,7 @@ class MyProfile extends Component {
   render() {
     const {
       closePopup,
-      currencies,
+      // currencies,
       popupValues,
       intl: { formatMessage },
       languages,
@@ -70,9 +70,13 @@ class MyProfile extends Component {
             onReset={closePopup}
             onSubmit={async (values, { setSubmitting }) => {
               try {
-                let { name, phone, preferredCurrency, preferredLanguage } = values
+                let { name, phone, 
+                  // preferredCurrency, preferredLanguage
+                 } = values
 
-                let payload = { name, phone, preferredCurrency }
+                let payload = { name, phone,
+                  //  preferredCurrency 
+                  }
 
                 if (values.language) payload.preferredLanguage = languages.find((lan) => lan.language === values.language).language
 
@@ -105,11 +109,11 @@ class MyProfile extends Component {
                   label={formatMessage({ id: 'global.title', defaultMessage: 'Title' })}
                   name='jobTitle'
                   inputProps={{ readOnly: true }} />
-                <Dropdown
+                {/* <Dropdown
                   label={formatMessage({ id: 'global.currency', defaultMessage: 'Currency' })}
                   name='preferredCurrency'
                   options={currencies}
-                  inputProps={{ 'data-test': 'my_profile_currency_drpdn' }} />
+                  inputProps={{ 'data-test': 'my_profile_currency_drpdn' }} /> */}
 
                 <Dropdown
                   label={formatMessage({ id: 'global.language', defaultMessage: 'Language' })}
@@ -161,17 +165,17 @@ const mapStateToProps = state => {
       name: popupValues.name,
       phone: popupValues.phone,
       jobTitle: popupValues.jobTitle,
-      preferredCurrency: popupValues.preferredCurrency && popupValues.preferredCurrency.id,
+      // preferredCurrency: popupValues.preferredCurrency && popupValues.preferredCurrency.id,
       language: getSafe(() => popupValues.preferredLanguage.language),
       lastLoginAt: <FormattedDateTime dateTime={getSafe(() => state.auth.identity.lastLoginAt, null)} />
     } : null,
-    currencies: state.profile.currency && state.profile.currency.map(d => {
-      return {
-        id: d.id,
-        text: d.code,
-        value: d.id
-      }
-    }),
+    // currencies: state.profile.currency && state.profile.currency.map(d => {
+    //   return {
+    //     id: d.id,
+    //     text: d.code,
+    //     value: d.id
+    //   }
+    // }),
     changePasswordPopup: state.profile.changePasswordPopup,
     languages: state.settings.languages,
     languagesFetching: state.settings.languagesFetching,

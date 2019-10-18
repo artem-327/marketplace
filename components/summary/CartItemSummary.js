@@ -12,7 +12,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { connect } from 'react-redux'
 import { debounce } from 'lodash'
 import * as Yup from 'yup'
-
+import { currency } from '~/constants/index'
 import { getPackagingGroupsDataRequest, getHazardClassesDataRequest, getUnNumbersByString, addUnNumber } from '~/modules/admin/actions'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { nmfcValidation, freightClassValidation } from '~/constants/yupValidation'
@@ -58,7 +58,7 @@ class CartItemSummary extends Component {
       unNumbersFetching, updateHazmatInfo,
       toastManager } = this.props
     let { productOffer: { companyProduct } } = item
-    
+
     let initialValues = {
       unCode: getSafe(() => item.unNumber.id, companyProduct.echoProduct.cfUnNumber),
       packagingGroup: getSafe(() => item.packagingGroup.id, companyProduct.cfPackagingGroup),
@@ -201,7 +201,7 @@ class CartItemSummary extends Component {
   renderItem = ({ item, lastChild }) => {
     let { productOffer } = item
     let { deleteCart } = this.props
-    let currency = this.props.currency
+    // let currency = this.props.currency
 
     return (
       <>
@@ -285,7 +285,7 @@ class CartItemSummary extends Component {
                 <FormattedUnit
                   unit={productOffer.companyProduct.packagingType.name}
                   separator=' '
-                  value={item.quantity}
+                  value={item.pkgAmount}
                 />
               </GridColumn>
             </RelaxedRow>
@@ -304,7 +304,7 @@ class CartItemSummary extends Component {
                 <FormattedUnit
                   separator=''
                   unit={productOffer.companyProduct.packagingUnit.nameAbbreviation}
-                  value={item.quantity * productOffer.companyProduct.packagingSize}
+                  value={item.pkgAmount * productOffer.companyProduct.packagingSize}
                 />
               </GridColumn>
             </RelaxedRow>
@@ -323,7 +323,7 @@ class CartItemSummary extends Component {
                   style='currency'
                   currency={currency}
                   id='cart.packs'
-                  value={item.pricing.price}
+                  value={item.cfPricePerUOM}
                 />
               </GridColumn>
             </RelaxedRow>
@@ -341,7 +341,7 @@ class CartItemSummary extends Component {
                 <FormattedNumber
                   style='currency'
                   currency={currency}
-                  value={item.price}
+                  value={item.cfPriceSubtotal}
                 />
               </GridColumn>
             </HeaderTextRow>
@@ -357,6 +357,7 @@ class CartItemSummary extends Component {
 
   render() {
     let { cartItems, header } = this.props
+    //console.log('!!!!!! CartItemSummary Render props', this.props)
 
     return (
       <Segment>
@@ -382,12 +383,12 @@ CartItemSummary.propTypes = {
   cartItems: array,
   deleteCart: func,
   header: string,
-  currency: string
+  // currency: string
 }
 
 CartItemSummary.defaultProps = {
   header: <FormattedMessage id='cart.yourOrder' defaultMessage='YOUR ORDER' />,
-  currency: 'USD'
+  // currency: 'USD'
 }
 
 

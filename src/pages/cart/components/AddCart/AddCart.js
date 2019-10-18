@@ -10,10 +10,9 @@ import Router from 'next/router'
 import { FormattedNumber, FormattedMessage } from 'react-intl'
 import { FormattedUnit, UnitOfPackaging } from '~/components/formatted-messages'
 import { errorMessages } from '~/constants/yupValidation'
-import { getPricing } from "~/src/utils/functions"
 
-import { isEqual } from 'lodash'
-
+import { currency } from '~/constants/index'
+import { getSafe } from '~/utils/functions'
 
 const CapitalizedColumn = styled(GridColumn)`
   text-transform: capitalize;
@@ -56,40 +55,41 @@ export default class AddCart extends Component {
     if (checkToken(this.props)) return
     const { addCartItem } = this.props
     let { sidebar } = this.props
-    let { quantity, id } = sidebar
+    let { pkgAmount, id } = sidebar
 
-    await addCartItem({ productOffer: id, quantity })
+    await addCartItem({ productOffer: id, quantity: pkgAmount })
     Router.push('/cart')
   }
 
   editOrder = async () => {
     const { updateCartItem } = this.props
     let { sidebar } = this.props
-    let { quantity } = sidebar
+    let { pkgAmount } = sidebar
 
 
-    await updateCartItem({ cartItemId: sidebar.id, quantity })
+    await updateCartItem({ cartItemId: sidebar.id, quantity: pkgAmount })
   }
 
   handleQuantity = e => {
     let { minPkg, splitPkg, pkgAvailable } = this.props.offer
-    let quantity = parseInt(e.target.value, 10)
+    let pkgAmount = parseInt(e.target.value, 10)
     let warning = null
 
-    if (quantity < minPkg || !quantity) {
+    if (pkgAmount < minPkg || !pkgAmount) {
       warning = `minimum is ${minPkg}`
-    } else if (quantity > pkgAvailable) {
+    } else if (pkgAmount > pkgAvailable) {
       warning = `maximum is ${pkgAvailable}`
-    } else if (!(quantity % parseInt(splitPkg, 10) === 0 || quantity === parseInt(minPkg, 10))) {
+    } else if (!(pkgAmount % parseInt(splitPkg, 10) === 0 || pkgAmount === parseInt(minPkg, 10))) {
       warning = `split is ${splitPkg}`
     }
 
-    this.props.sidebarChanged({ warning, quantity })
+    this.props.sidebarChanged({ warning, pkgAmount })
   }
 
   getCartMarkup = () => {
+    //console.log('!!!!!!!!!!!!!!!!!! this.props', this.props)
     let { offer, order, isEdit } = this.props
-    let { quantity, pricing, warning } = this.props.sidebar
+    let { pkgAmount, pricing, warning } = this.props.sidebar
 
     let { pkgAvailable, pricingTiers } = offer
 
@@ -98,11 +98,12 @@ export default class AddCart extends Component {
     let { packagingUnit, packagingSize, packagingType } = offer.companyProduct
     let nameAbbreviation = packagingUnit ? packagingUnit.nameAbbreviation : null
 
-    let totalPrice = (quantity && price) ? price * quantity * packagingSize : null
+    let totalPrice = (pkgAmount && price) ? price * pkgAmount * packagingSize : null
     let error = null
 
     let dropdownOptions = []
-    let currencyCode = offer.pricingTiers[0].price.currency.code || 'USD'
+    //let currencyCode = getSafe(() => offer.pricingTiers[0].pricePerUOM.currency.code, currency)
+    let currencyCode = currency // ! ! getSafe(() => offer.pricingTiers[0].pricePerUOM.currency.code, currency)
 
 
     if (pricingTiers.length > 0) {
@@ -112,11 +113,11 @@ export default class AddCart extends Component {
 
         let text = <>
           <FormattedUnit unit='' separator=' - ' value={tier.quantityFrom} /><FormattedUnit unit='' value={quantityTo} />
-          <FormattedNumber style='currency' value={tier.price.amount} currency={currencyCode} />
+          <FormattedNumber style='currency' value={tier.pricePerUOM.amount} currency={currencyCode} />
         </>
         dropdownOptions.push({
           key: i,
-          value: { quantityFrom: tier.quantityFrom, price: tier.price.amount },
+          value: { quantityFrom: tier.quantityFrom, price: tier.pricePerUOM.amount },
           text
         })
       })
@@ -131,22 +132,22 @@ export default class AddCart extends Component {
       })
     }
 
-    if (isNaN(quantity))
+    if (isNaN(pkgAmount))
       error =
         <ErrorLabel>
           {errorMessages.requiredMessage}
         </ErrorLabel>
-    else if (quantity < offer.minPkg)
+    else if (pkgAmount < offer.minPkg)
       error =
         <ErrorLabel>
           <FormattedMessage id='validation.minimum' defaultMessage='Minimum is {min}' values={{ min: offer.minPkg }} />
         </ErrorLabel>
-    else if (quantity > pkgAvailable)
+    else if (pkgAmount > pkgAvailable)
       error =
         <ErrorLabel>
           <FormattedMessage id='validation.maximum' defaultMessage='Maximum is {max}' values={{ max: pkgAvailable }} />
         </ErrorLabel>
-    else if (quantity % offer.splitPkg !== 0)
+    else if (pkgAmount % offer.splitPkg !== 0)
       error =
         <ErrorLabel>
           <FormattedMessage id='validation.multiplyOfSplit' defaultMessage='Must be multiply of split ({split})' values={{ split: offer.splitPkg }} />
@@ -156,7 +157,7 @@ export default class AddCart extends Component {
     //   <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
     // )
 
-    let canProceed = !warning && price && quantity > 0
+    let canProceed = !warning && price && pkgAmount > 0
     console.log({ dropdownOptions, pricing: this.props.sidebar.pricing })
     return (
       <>
@@ -308,7 +309,7 @@ export default class AddCart extends Component {
                   step={offer.splitPkg}
                   error={!!error}
                   min={1}
-                  value={this.props.sidebar.quantity}
+                  value={this.props.sidebar.pkgAmount}
                   onChange={this.handleQuantity} type='number' />
               </GridColumn>
             </GridRow>
@@ -331,8 +332,8 @@ export default class AddCart extends Component {
             <GridRow>
               <GridColumn computer={6}><FormattedMessage id='cart.totalQuantity' defaultMessage='Total Quantity:' /></GridColumn>
               <GridColumn computer={10}>
-                {(quantity && quantity > 0 ? <> <FormattedNumber minimumFractionDigits={0} value={quantity} />  <UnitOfPackaging value={packagingType.name} /> </> : null)
-                  || (isEdit && <> <FormattedNumber minimumFractionDigits={0} value={order.quantity} />  <UnitOfPackaging value={packagingType.name} /> </>)}
+                {(pkgAmount && pkgAmount > 0 ? <> <FormattedNumber minimumFractionDigits={0} value={pkgAmount} />  <UnitOfPackaging value={packagingType.name} /> </> : null)
+                  || (isEdit && <> <FormattedNumber minimumFractionDigits={0} value={order.pkgAmount} />  <UnitOfPackaging value={packagingType.name} /> </>)}
               </GridColumn>
             </GridRow>
 
@@ -410,7 +411,7 @@ AddCart.propTypes = {
   casProductsChemNames: object,
   casProductsCasNumbers: object,
   // id: number,
-  // quantity: number,
+  // pkgAmount: number,
   // pricing: object,
   // warning: string
 }
