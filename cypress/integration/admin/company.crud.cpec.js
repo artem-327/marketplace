@@ -111,10 +111,8 @@ context("Companies CRUD", () => {
     it("Deletes a company", () => {
         cy.searchInList("Donald and Co.")
         cy.waitForUI()
-        cy.waitForUI()
 
-        cy.get("[data-test=action_" + companyId + "]").click()
-        cy.get("[data-test=action_" + companyId + "_1]").click()
+        cy.openElement(companyId, 1)
 
         cy.contains("Yes").click()
 

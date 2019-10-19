@@ -34,8 +34,6 @@ context("CAS products CRUD", () => {
             .children("input")
             .type("Testinonium")
 
-        cy.waitForUI()
-
         let filter = [{"operator": "LIKE", "path": "CasProduct.chemicalName", "values": ["%Testinonium%"]},
             {"operator": "LIKE", "path": "CasProduct.casNumber", "values": ["%Testinonium%"]}]
 
@@ -65,8 +63,6 @@ context("CAS products CRUD", () => {
             .children("input")
             .type("Testinonium")
 
-        cy.waitForUI()
-
         cy.openElement(productId, 0)
 
         cy.get("#field_input_chemicalName")
@@ -90,8 +86,6 @@ context("CAS products CRUD", () => {
             .children("div")
             .children("input")
             .type("Testerium")
-
-        cy.waitForUI()
 
         cy.openElement(productId, 1)
 
@@ -125,8 +119,6 @@ context("CAS products CRUD", () => {
             .children("input")
             .type("Testerium")
 
-        cy.waitForUI()
-
         cy.openElement(productId, 1)
 
         cy.get("input[id='field_input_casAlternativeNames[0].alternativeName']")
@@ -140,8 +132,6 @@ context("CAS products CRUD", () => {
             .should("not.exist")
 
         cy.get("[data-test=admin_popup_alt_cas_name_close_btn]").click()
-
-        cy.waitForUI()
 
         cy.openElement(productId, 1)
 
@@ -168,8 +158,6 @@ context("CAS products CRUD", () => {
             .children("div")
             .children("input")
             .type("Testerium")
-
-        cy.waitForUI()
 
         cy.openElement(productId, 2)
 

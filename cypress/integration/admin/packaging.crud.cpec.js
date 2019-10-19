@@ -12,10 +12,6 @@ context("Units of packaging CRUD", () => {
         cy.url().should("include", "admin")
 
         cy.wait("@loading")
-        //TODO Workaroud, list won't load
-        cy.get('[data-test="tabs_menu_item_9"]').click()
-        cy.waitForUI()
-
         cy.get('[data-test="tabs_menu_item_2"]').click()
 
         cy.wait("@packaging")
@@ -24,7 +20,7 @@ context("Units of packaging CRUD", () => {
     it("Creates a package unit", () => {
         cy.clickAdd()
 
-        cy.enterText("#field_input_val0","Test package")
+        cy.enterText("#field_input_val0", "Test package")
 
         cy.get("#field_dropdown_val1").click()
         cy.get("#2").click()
@@ -36,13 +32,11 @@ context("Units of packaging CRUD", () => {
         cy.get("input[type=text]").type("Test")
         cy.waitForUI()
 
-        let filter = [{"operator":"LIKE","path":"PackagingType.name","values":["%Test%"]}]
+        let filter = [{"operator": "LIKE", "path": "PackagingType.name", "values": ["%Test%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstPackagingUnitWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.openElement(itemId, 0)
 
                 packageId = itemId
             })
@@ -53,25 +47,21 @@ context("Units of packaging CRUD", () => {
 
     it("Edits a package unit", () => {
         cy.get("input[type=text]").type("Test")
-        cy.waitForUI()
 
-        cy.get('[data-test=action_' + packageId + ']').click()
-        cy.get('[data-test=action_' + packageId + '_0]').click()
+        cy.openElement(packageId, 0)
 
         cy.get("#field_input_val0")
             .clear()
             .type("Best package")
-            .should("have.value","Best package")
+            .should("have.value", "Best package")
 
         cy.clickSave()
 
         cy.contains("Updated Unit of Packaging")
 
         cy.get("input[type=text]").clear().type("Best")
-        cy.waitForUI()
 
-        cy.get('[data-test=action_' + packageId + ']').click()
-        cy.get('[data-test=action_' + packageId + '_0]').click()
+        cy.openElement(packageId, 0)
 
         cy.get("#field_input_val0").should("have.value", "Best package")
     })
@@ -82,7 +72,7 @@ context("Units of packaging CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",2)
+            .should("have.length", 2)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
@@ -90,10 +80,8 @@ context("Units of packaging CRUD", () => {
 
     it("Deletes a package unit", () => {
         cy.get("input[type=text]").type("Best")
-        cy.waitForUI()
 
-        cy.get('[data-test=action_' + packageId + ']').click()
-        cy.get('[data-test=action_' + packageId + '_1]').click()
+        cy.openElement(packageId, 1)
 
         cy.contains("Yes").click()
 

@@ -21,19 +21,17 @@ context("Conditions CRUD", () => {
     it("Creates a condition", () => {
         cy.clickAdd()
 
-        cy.enterText("#field_input_val0","Half")
+        cy.enterText("#field_input_val0", "Half")
 
         cy.clickSave()
 
         cy.contains("Condition created")
 
-        let filter = [{"operator":"LIKE","path":"ProductCondition.name","values":["%Half%"]}]
+        let filter = [{"operator": "LIKE", "path": "ProductCondition.name", "values": ["%Half%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstConditionWithFilter(token, filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]").click()
-
-                cy.get("[data-test=action_" + itemId + "_0]").click()
+                cy.openElement(itemId, 0)
 
                 conditionId = itemId
             })
@@ -42,21 +40,18 @@ context("Conditions CRUD", () => {
     })
 
     it("Edits a condition", () => {
-        cy.get("[data-test=action_" + conditionId + "]").click()
-
-        cy.get("[data-test=action_" + conditionId + "_0]").click()
+        cy.openElement(conditionId, 0)
 
         cy.get("#field_input_val0")
             .clear()
             .type("Spilled")
-            .should("have.value","Spilled")
+            .should("have.value", "Spilled")
 
         cy.clickSave()
 
         cy.contains("Updated Condition")
 
-        cy.get("[data-test=action_" + conditionId + "]").click()
-        cy.get("[data-test=action_" + conditionId + "_0]").click()
+        cy.openElement(conditionId, 0)
 
         cy.get("#field_input_val0").should("have.value", "Spilled")
     })
@@ -67,15 +62,14 @@ context("Conditions CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",1)
+            .should("have.length", 1)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
     })
 
     it("Deletes a condition", () => {
-        cy.get("[data-test=action_" + conditionId + "]").click()
-        cy.get("[data-test=action_" + conditionId + "_1]").click()
+        cy.openElement(conditionId, 1)
 
         cy.contains("Yes").click()
 

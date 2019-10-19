@@ -10,11 +10,6 @@ context("Units of measure CRUD", () => {
         cy.url().should("include", "admin")
 
         cy.wait("@loading")
-
-        //TODO Workaroud, list won't load
-        cy.get("[data-test='tabs_menu_item_9']").click()
-        cy.waitForUI()
-
         cy.get("[data-test='tabs_menu_item_1']").click()
 
         cy.wait("@unitLoad")
@@ -23,8 +18,8 @@ context("Units of measure CRUD", () => {
     it("Creates an unit of measure", () => {
         cy.clickAdd()
 
-        cy.enterText("#field_input_val0","Test measure")
-        cy.enterText("#field_input_val1","tmr")
+        cy.enterText("#field_input_val0", "Test measure")
+        cy.enterText("#field_input_val1", "tmr")
 
         cy.get("#field_dropdown_val2").click()
         cy.get("#2").click()
@@ -45,7 +40,7 @@ context("Units of measure CRUD", () => {
         cy.get("#field_input_val1")
             .clear()
             .type("test")
-            .should("have.value","test")
+            .should("have.value", "test")
 
         cy.clickSave()
 
@@ -58,7 +53,7 @@ context("Units of measure CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",3)
+            .should("have.length", 3)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

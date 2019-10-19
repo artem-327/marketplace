@@ -21,19 +21,17 @@ context("Grades CRUD", () => {
     it("Creates a grade", () => {
         cy.clickAdd()
 
-        cy.enterText("#field_input_val0","Test grade")
+        cy.enterText("#field_input_val0", "Test grade")
 
         cy.clickSave()
 
         cy.contains("Grade created")
 
-        let filter = [{"operator":"LIKE","path":"ProductGrade.name","values":["%Test%"]}]
+        let filter = [{"operator": "LIKE", "path": "ProductGrade.name", "values": ["%Test%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstGradeWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.openElement(itemId, 0)
 
                 gradeId = itemId
             })
@@ -44,21 +42,18 @@ context("Grades CRUD", () => {
     it("Edits a grade", () => {
         cy.get("input[type=text]").type("Test")
 
-        cy.get('[data-test=action_' + gradeId + ']').click()
-
-        cy.get('[data-test=action_' + gradeId + '_0]').click({force: true})
+        cy.openElement(gradeId, 0)
 
         cy.get("#field_input_val0")
             .clear()
             .type("Graceful")
-            .should("have.value","Graceful")
+            .should("have.value", "Graceful")
 
         cy.clickSave()
 
         cy.contains("Updated Grade")
 
-        cy.get('[data-test=action_' + gradeId + ']').click()
-        cy.get('[data-test=action_' + gradeId + '_0]').click({force: true})
+        cy.openElement(gradeId, 0)
 
         cy.get("#field_input_val0").should("have.value", "Graceful")
     })
@@ -69,7 +64,7 @@ context("Grades CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",1)
+            .should("have.length", 1)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
@@ -77,10 +72,7 @@ context("Grades CRUD", () => {
 
     it("Deletes a grade", () => {
         cy.get("input[type=text]").type("Graceful")
-        cy.waitForUI()
-
-        cy.get('[data-test=action_' + gradeId + ']').click()
-        cy.get('[data-test=action_' + gradeId + '_1]').click()
+        cy.openElement(gradeId, 1)
 
         cy.contains("Yes").click()
 

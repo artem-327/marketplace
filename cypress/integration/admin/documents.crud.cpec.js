@@ -17,32 +17,21 @@ context("Document types CRUD", () => {
 
         cy.wait("@documents")
         cy.waitForUI()
-
-        //TODO Workaroud, list won't load
-        cy.get('[data-test="tabs_menu_item_2"]').click()
-        cy.waitForUI()
-        cy.get('[data-test="tabs_menu_item_9"]').click()
-        cy.wait("@documents")
-
-        cy.waitForUI()
     })
 
     it("Creates a document type", () => {
         cy.clickAdd()
 
-        cy.enterText("#field_input_val0","Test document")
-
+        cy.enterText("#field_input_val0", "Test document")
         cy.clickSave()
 
         cy.contains("Document Type created")
 
-        let filter = [{"operator":"LIKE","path":"DocumentType.name","values":["%Test%"]}]
+        let filter = [{"operator": "LIKE", "path": "DocumentType.name", "values": ["%Test%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstDocumentTypeWithFilter(token, filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]").click()
-
-                cy.get("[data-test=action_" + itemId + "_0]").click()
+                cy.openElement(itemId, 0)
 
                 documentId = itemId
             })
@@ -51,22 +40,18 @@ context("Document types CRUD", () => {
     })
 
     it("Edits a document type", () => {
-        cy.get("[data-test=action_" + documentId + "]").click( )
-
-        cy.get("[data-test=action_" + documentId + "_0]").click()
+        cy.openElement(documentId, 0)
 
         cy.get("#field_input_val0")
             .clear()
             .type("Best document")
-            .should("have.value","Best document")
+            .should("have.value", "Best document")
 
         cy.clickSave()
 
         cy.contains("Updated Document Type")
-        cy.waitForUI()
 
-        cy.get("[data-test=action_" + documentId + "]").click( {force: true})
-        cy.get("[data-test=action_" + documentId + "_0]").click()
+        cy.openElement(documentId, 0)
 
         cy.get("#field_input_val0").should("have.value", "Best document")
     })
@@ -77,15 +62,14 @@ context("Document types CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",1)
+            .should("have.length", 1)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
     })
 
     it("Deletes a document type", () => {
-        cy.get("[data-test=action_" + documentId + "]").click()
-        cy.get("[data-test=action_" + documentId + "_1]").click()
+        cy.openElement(documentId, 1)
 
         cy.contains("Yes").click()
 

@@ -21,7 +21,7 @@ context("Market Segments CRUD", () => {
     it("Creates a market segment", () => {
         cy.clickAdd()
 
-        cy.enterText("#field_input_val0","Test segment")
+        cy.enterText("#field_input_val0", "Test segment")
 
         cy.clickSave()
 
@@ -30,13 +30,11 @@ context("Market Segments CRUD", () => {
         cy.get("input[type=text]").type("Test")
         cy.waitForUI()
 
-        let filter = [{"operator":"LIKE","path":"MarketSegment.name","values":["%Test%"]}]
+        let filter = [{"operator": "LIKE", "path": "MarketSegment.name", "values": ["%Test%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstMarketSegmentWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.openElement(itemId, 0)
 
                 documentId = itemId
             })
@@ -46,25 +44,21 @@ context("Market Segments CRUD", () => {
 
     it("Edits a market segment", () => {
         cy.get("input[type=text]").type("Test")
-        cy.waitForUI()
 
-        cy.get('[data-test=action_' + documentId + ']').click()
-        cy.get('[data-test=action_' + documentId + '_0]').click()
+        cy.openElement(documentId, 0)
 
         cy.get("#field_input_val0")
             .clear()
             .type("Great segment")
-            .should("have.value","Great segment")
+            .should("have.value", "Great segment")
 
         cy.clickSave()
 
         cy.contains("Updated Market Segment")
 
         cy.get("input[type=text]").clear().type("Great")
-        cy.waitForUI()
 
-        cy.get('[data-test=action_' + documentId + ']').click()
-        cy.get('[data-test=action_' + documentId + '_0]').click()
+        cy.openElement(documentId, 0)
 
         cy.get("#field_input_val0").should("have.value", "Great segment")
     })
@@ -75,7 +69,7 @@ context("Market Segments CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",1)
+            .should("have.length", 1)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
@@ -83,10 +77,8 @@ context("Market Segments CRUD", () => {
 
     it("Deletes a market segment", () => {
         cy.searchInList("Great")
-        cy.waitForUI()
 
-        cy.get('[data-test=action_' + documentId + ']').click()
-        cy.get('[data-test=action_' + documentId + '_1]').click()
+        cy.openElement(documentId, 1)
 
         cy.contains("Yes").click()
 
