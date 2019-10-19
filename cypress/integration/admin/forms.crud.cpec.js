@@ -21,19 +21,17 @@ context("Form CRUD", () => {
     it("Creates a form", () => {
         cy.clickAdd()
 
-        cy.enterText("#field_input_val0","Liquor")
+        cy.enterText("#field_input_val0", "Liquor")
 
         cy.clickSave()
 
         cy.contains("Form created")
 
-        let filter = [{"operator":"LIKE","path":"ProductForm.name","values":["%Liquor%"]}]
+        let filter = [{"operator": "LIKE", "path": "ProductForm.name", "values": ["%Liquor%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstFormWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.openElement(itemId, 0)
 
                 formId = itemId
             })
@@ -42,23 +40,18 @@ context("Form CRUD", () => {
     })
 
     it("Edits a form", () => {
-        cy.waitForUI()
-
-        cy.get('[data-test=action_' + formId + ']').click()
-        cy.get('[data-test=action_' + formId + '_0]').click()
+        cy.openElement(formId, 0)
 
         cy.get("#field_input_val0")
             .clear()
             .type("Finest")
-            .should("have.value","Finest")
+            .should("have.value", "Finest")
 
         cy.clickSave()
 
         cy.contains("Updated Form")
-        cy.waitForUI()
 
-        cy.get('[data-test=action_' + formId + ']').click()
-        cy.get('[data-test=action_' + formId + '_0]').click()
+        cy.openElement(formId, 0)
 
         cy.get("#field_input_val0").should("have.value", "Finest")
     })
@@ -69,17 +62,14 @@ context("Form CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",1)
+            .should("have.length", 1)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
     })
 
     it("Deletes a form", () => {
-        cy.waitForUI()
-
-        cy.get('[data-test=action_' + formId + ']').click()
-        cy.get('[data-test=action_' + formId + '_1]').click()
+        cy.openElement(formId, 1)
 
         cy.contains("Yes").click()
 

@@ -19,7 +19,7 @@ context("Echo Product CRUD", () => {
     })
 
     it("Creates a Echo Product", () => {
-        cy.get("button[data-test='admin_table_add_btn']").click()
+        cy.get("[data-test=admin_table_add_btn]").click()
 
         cy.get("#field_input_name").type("TestoEchoprod")
         cy.get("#field_input_code").type("TEST-05")
@@ -39,29 +39,29 @@ context("Echo Product CRUD", () => {
 
         cy.waitForUI()
 
-        let filter = [{"operator":"LIKE","path":"EchoProduct.name","values":["%Test%"]},{"operator":"LIKE","path":"EchoProduct.code","values":["%Test%"]}]
+        let filter = [{"operator": "LIKE", "path": "EchoProduct.name", "values": ["%Test%"]}, {
+            "operator": "LIKE",
+            "path": "EchoProduct.code",
+            "values": ["%Test%"]
+        }]
 
         cy.getToken().then(token => {
             cy.getFirstEchoProductIdWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.openElement(itemId, 0)
 
                 productId = itemId
             })
         })
 
         cy.get("#field_input_name")
-            .should("have.value","TestoEchoprod")
+            .should("have.value", "TestoEchoprod")
 
         cy.get("#field_input_code")
-            .should("have.value","TEST-05")
+            .should("have.value", "TEST-05")
     })
 
     it("Edits an Echo product", () => {
-        cy.get('[data-test=action_' + productId + ']').click()
-
-        cy.get('[data-test=action_' + productId + '_0]').click()
+        cy.openElement(productId, 0)
 
         cy.get("#field_input_name").clear().type("Echoprod")
         cy.get("#field_input_code").clear().type("TEST-06")
@@ -70,30 +70,24 @@ context("Echo Product CRUD", () => {
 
         cy.contains("Updated Echo Product")
 
-        cy.waitForUI()
-
-        cy.get('[data-test=action_' + productId + ']').click()
-
-        cy.get('[data-test=action_' + productId + '_0]').click()
+        cy.openElement(productId, 0)
 
         cy.get("#field_input_name").should("have.value", "Echoprod")
-        cy.get("#field_input_code").should("have.value","TEST-06")
+        cy.get("#field_input_code").should("have.value", "TEST-06")
     })
 
     it("Creates a alternative name", () => {
         cy.route("POST", "/prodex/api/echo-products/alternative-names/echo-product/**").as("nameSaving")
         cy.route("GET", "/prodex/api/echo-products/alternative-names/echo-product/**").as("nameGetting")
 
-        cy.get('[data-test=action_' + productId + ']').click()
-
-        cy.get('[data-test=action_' + productId + '_1]').click()
+        cy.openElement(productId, 1)
 
         cy.get("[data-test=settings_product_alt_name_add_btn]")
             .click()
 
         cy.get("input[id='field_input_productAltNames[0].alternativeName']")
             .type("QAonium")
-            .should("have.value","QAonium")
+            .should("have.value", "QAonium")
 
         cy.get("[data-test=settings_product_alt_name_save_0_btn]").click()
 
@@ -101,26 +95,22 @@ context("Echo Product CRUD", () => {
 
         cy.get("[data-test=settings_product_alt_name_reset_btn]").click()
 
-        cy.waitForUI()
-
-        cy.get('[data-test=action_' + productId + ']').click()
-        cy.get('[data-test=action_' + productId + '_1]').click()
+        cy.openElement(productId, 1)
 
         cy.wait("@nameGetting")
 
         cy.get("input[id='field_input_productAltNames[0].alternativeName']")
-            .should("have.value","QAonium")
+            .should("have.value", "QAonium")
     })
 
     it("Deletes a alternative name", () => {
         cy.route("DELETE", "/prodex/api/echo-products/alternative-names/id/**").as("nameDelete")
         cy.route("GET", "/prodex/api/echo-products/alternative-names/echo-product/**").as("nameGetting")
 
-        cy.get('[data-test=action_' + productId + ']').click()
-        cy.get('[data-test=action_' + productId + '_1]').click()
+        cy.openElement(productId, 1)
 
         cy.get("input[id='field_input_productAltNames[0].alternativeName']")
-            .should("have.value","QAonium")
+            .should("have.value", "QAonium")
 
         cy.get("[data-test=settings_product_alt_name_delete_0_btn]").click()
 
@@ -131,10 +121,7 @@ context("Echo Product CRUD", () => {
 
         cy.get("[data-test=settings_product_alt_name_reset_btn]").click()
 
-        cy.waitForUI()
-
-        cy.get('[data-test=action_' + productId + ']').click()
-        cy.get('[data-test=action_' + productId + '_1]').click()
+        cy.openElement(productId, 1)
 
         cy.wait("@nameGetting")
 
@@ -148,7 +135,7 @@ context("Echo Product CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",4)
+            .should("have.length", 4)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)|(Field should have at least 2 characters)/i)
         })
@@ -160,12 +147,7 @@ context("Echo Product CRUD", () => {
             .children("input")
             .type("Echoprod")
 
-        cy.waitForUI()
-
-        cy.get('[data-test=action_' + productId + ']').click()
-
-        cy.get('[data-test=action_' + productId + '_2]').click()
-
+        cy.openElement(productId, 2)
         cy.clickSave()
 
         cy.contains("Testinonium").should("not.exist")

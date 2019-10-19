@@ -21,7 +21,7 @@ context("Manufacturers CRUD", () => {
     it("Creates a manufacturer", () => {
         cy.clickAdd()
 
-        cy.enterText("#field_input_val0","Test manufacturer")
+        cy.enterText("#field_input_val0", "Test manufacturer")
 
         cy.clickSave()
 
@@ -29,13 +29,11 @@ context("Manufacturers CRUD", () => {
 
         cy.get("input[type=text]").type("Test")
 
-        let filter = [{"operator":"LIKE","path":"Manufacturer.name","values":["%Test%"]}]
+        let filter = [{"operator": "LIKE", "path": "Manufacturer.name", "values": ["%Test%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstManufacturerWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.openElement(itemId, 0)
 
                 manufacturerId = itemId
             })
@@ -46,14 +44,12 @@ context("Manufacturers CRUD", () => {
     it("Edits a manufacturer", () => {
         cy.get("input[type=text]").type("Test")
 
-        cy.get('[data-test=action_' + manufacturerId + ']').click()
-
-        cy.get('[data-test=action_' + manufacturerId + '_0]').click({force: true})
+        cy.openElement(manufacturerId, 0)
 
         cy.get("#field_input_val0")
             .clear()
             .type("Artio")
-            .should("have.value","Artio")
+            .should("have.value", "Artio")
 
         cy.clickSave()
 
@@ -62,8 +58,7 @@ context("Manufacturers CRUD", () => {
 
         cy.get("input[type=text]").clear().type("Artio")
 
-        cy.get('[data-test=action_' + manufacturerId + ']').click()
-        cy.get('[data-test=action_' + manufacturerId + '_0]').click({force: true})
+        cy.openElement(manufacturerId, 0)
 
         cy.get("#field_input_val0").should("have.value", "Artio")
     })
@@ -74,7 +69,7 @@ context("Manufacturers CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",1)
+            .should("have.length", 1)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
@@ -83,8 +78,7 @@ context("Manufacturers CRUD", () => {
     it("Deletes a market segment", () => {
         cy.searchInList("Artio")
 
-        cy.get('[data-test=action_' + manufacturerId + ']').click()
-        cy.get('[data-test=action_' + manufacturerId + '_1]').click()
+        cy.openElement(manufacturerId, 1)
 
         cy.contains("Yes").click()
 
