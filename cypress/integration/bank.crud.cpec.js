@@ -19,7 +19,7 @@ context("Prodex Bank Account CRUD", () => {
     })
 
     it("Creates a bank account", () => {
-        cy.clickAdd()
+        cy.get("[data-test='settings_open_popup_btn']").click()
 
         let accountNumber = new Date().getTime()
         cy.get("#field_input_accountNumber")
