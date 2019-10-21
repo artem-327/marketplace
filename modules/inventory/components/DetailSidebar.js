@@ -111,7 +111,9 @@ const validationScheme = val.object().shape({
     fobPrice: val.number().typeError(errorMessages.mustBeNumber).nullable().required(errorMessages.requiredMessage),
     lotNumber: val.string().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
     inStock: val.bool().required(errorMessages.requiredMessage),
+    minimum: val.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage),
     pkgAvailable: val.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage),
+    splits: val.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage),
     warehouse: val.number(errorMessages.requiredMessage)
       .nullable(errorMessages.requiredMessage)
       .moreThan(0, errorMessages.requiredMessage)
@@ -320,14 +322,14 @@ class DetailSidebar extends Component {
         lotNumber: getSafe(() => sidebarValues.lotNumber, null),
         lotExpirationDate: getSafe(() => sidebarValues.lotExpirationDate.substring(0, 10), ''),
         lotManufacturedDate: getSafe(() => sidebarValues.lotManufacturedDate.substring(0, 10), ''),
-        minimum: getSafe(() => sidebarValues.minPkg, ''),
+        minimum: getSafe(() => sidebarValues.minPkg, 1),
         origin: getSafe(() => sidebarValues.origin.id, null),
         pkgAvailable: getSafe(() => sidebarValues.pkgAvailable, ''),
         product: getSafe(() => sidebarValues.companyProduct.id, null),
         productCondition: getSafe(() => sidebarValues.condition.id, null),
         productForm: getSafe(() => sidebarValues.form.id, null),
         productGrades: getSafe(() => sidebarValues.grades.map(grade => grade.id), []),
-        splits: getSafe(() => sidebarValues.splitPkg, ''),
+        splits: getSafe(() => sidebarValues.splitPkg, 1),
         doesExpire: getSafe(() => sidebarValues.validityDate.length > 0, false),
         expirationDate: getSafe(() => sidebarValues.validityDate.substring(0, 10), ''),
         warehouse: getSafe(() => sidebarValues.warehouse.id, null)
