@@ -145,7 +145,7 @@ const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,
     country: state.settings.country,
-    currency: gettSafe(() => state.settings.currency, currency),
+    currency: currency,
     currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
       state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
   }

@@ -3,9 +3,9 @@ import api from '~/api'
 
 export const getCart = () => api.get('/prodex/api/cart').then(response => response.data)
 export const deleteCart = () => api.delete(`/prodex/api/cart`)
-export const addCartItem = ({ productOffer, quantity }) => api.post('/prodex/api/cart/items', { productOffer, quantity }).then(response => response.data)
+export const addCartItem = ({ productOffer, pkgAmount }) => api.post('/prodex/api/cart/items', { productOffer, pkgAmount }).then(response => response.data)
 export const deleteCartItem = (cartItemId) => api.delete(`/prodex/api/cart/items/${cartItemId}`)
-export const updateCartItem = ({ cartItemId, quantity }) => api.patch(`/prodex/api/cart/items/${cartItemId}?quantity=${quantity}`).then(response => response.data)
+export const updateCartItem = ({ cartItemId, pkgAmount }) => api.patch(`/prodex/api/cart/items/${cartItemId}?pkgAmount=${pkgAmount}`).then(response => response.data)
 export const getCartItem = (cartItemId) => api.get(`/prodex/api/cart/items/${cartItemId}`)
 export const getProductOffer = (id) => api.get(`/prodex/api/product-offers/${id}/applyrules`).then(response => response.data)
 export const postNewDeliveryAddress = (address) => api.post('/prodex/api/delivery-addresses', address).then(response => response.data)

@@ -34,7 +34,7 @@ function mapStateToProps(state, { router, datagrid }) {
       globalStatus: r.cfGlobalStatus,
       date: moment(r.orderDate).format('MM/DD/YYYY'),
       customerName: (type === 'sales' ? r.buyerCompanyName : r.sellerCompanyName),
-      //productName: <ArrayToMultiple values={r.orderItems.map(d => (d.productName ? d.productName : 'N/A'))} />,
+      productName: <ArrayToMultiple values={r.orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))} />,
       orderStatus: OrdersHelper.getOrderStatus(r.orderStatus),
       shippingStatus: OrdersHelper.getShippingStatus(r.shippingStatus),
       reviewStatus: OrdersHelper.getReviewStatus(r.reviewStatus),

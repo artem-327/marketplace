@@ -99,7 +99,7 @@ export function getAbbreviation(word) {
 
 export function getPricing(offerDetail, quantity) {
   if (offerDetail.pricingTiers) {
-    let tiers = offerDetail.pricingTiers.length > 0 ? offerDetail.pricingTiers : offerDetail.pricingTiers[0].pricePerUOM.amount
+    let tiers = offerDetail.pricingTiers.length > 0 ? offerDetail.pricingTiers : offerDetail.pricingTiers[0].pricePerUOM
 
     if (tiers instanceof Array) {
       let sortedTiers = tiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
@@ -109,10 +109,10 @@ export function getPricing(offerDetail, quantity) {
           index = i
         } else break
       }
-      return { quantityFrom: offerDetail.minPkg, price: sortedTiers[index].pricePerUOM.amount }
+      return { quantityFrom: offerDetail.minPkg, price: sortedTiers[index].pricePerUOM }
     }
 
-    return { quantityFrom: offerDetail.minPkg, price: tiers[0].pricePerUOM.amount }
+    return { quantityFrom: offerDetail.minPkg, price: tiers[0].pricePerUOM }
   }
 }
 

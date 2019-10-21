@@ -57,7 +57,7 @@ export default class AddCart extends Component {
     let { sidebar } = this.props
     let { pkgAmount, id } = sidebar
 
-    await addCartItem({ productOffer: id, quantity: pkgAmount })
+    await addCartItem({ productOffer: id, pkgAmount })
     Router.push('/cart')
   }
 
@@ -67,7 +67,7 @@ export default class AddCart extends Component {
     let { pkgAmount } = sidebar
 
 
-    await updateCartItem({ cartItemId: sidebar.id, quantity: pkgAmount })
+    await updateCartItem({ cartItemId: sidebar.id, pkgAmount })
   }
 
   handleQuantity = e => {
@@ -113,11 +113,11 @@ export default class AddCart extends Component {
 
         let text = <>
           <FormattedUnit unit='' separator=' - ' value={tier.quantityFrom} /><FormattedUnit unit='' value={quantityTo} />
-          <FormattedNumber style='currency' value={tier.pricePerUOM.amount} currency={currencyCode} />
+          <FormattedNumber style='currency' value={tier.pricePerUOM} currency={currencyCode} />
         </>
         dropdownOptions.push({
           key: i,
-          value: { quantityFrom: tier.quantityFrom, price: tier.pricePerUOM.amount },
+          value: { quantityFrom: tier.quantityFrom, price: tier.pricePerUOM },
           text
         })
       })

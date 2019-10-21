@@ -249,7 +249,7 @@ class Detail extends Component {
                           <GridDataColumn width={12}>{order.chemicalName}</GridDataColumn>
                           <GridDataColumn width={4}><strong><FormattedMessage id='order.productName' defaultMessage='Product Name' /></strong></GridDataColumn>
                           <GridDataColumn width={12}>{order.productName}</GridDataColumn>
-                          <GridDataColumn width={4}><strong><FormattedMessage id='order.productNumber' defaultMessage='Product Number' /></strong></GridDataColumn>
+                          <GridDataColumn width={4}><strong><FormattedMessage id='order.productCode' defaultMessage='Product Code' /></strong></GridDataColumn>
                           <GridDataColumn width={12}>{order.productCode}</GridDataColumn>
                           <GridDataColumn width={4}><strong><FormattedMessage id='order.packaging' defaultMessage='Packaging' /></strong></GridDataColumn>
                           <GridDataColumn width={12}>{order.packaging}</GridDataColumn>

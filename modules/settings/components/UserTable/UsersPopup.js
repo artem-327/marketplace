@@ -16,7 +16,8 @@ import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
-import { currency } from '~/constants/index'
+//import { currency } from '~/constants/index'
+import { currencyId } from '~/constants/index'
 import { PhoneNumber } from '~/modules/phoneNumber'
 
 const userFormValidation = () => Yup.object().shape({
@@ -74,7 +75,7 @@ class UsersPopup extends React.Component {
       jobTitle: values.jobTitle,
       name: values.name,
       phone: values.phone,
-      preferredCurrency: values.preferredCurrency,
+      preferredCurrency: currencyId, //values.preferredCurrency,
     }
 
     try {
@@ -110,7 +111,7 @@ class UsersPopup extends React.Component {
       name = '',
       email = '',
       homeBranch = undefined,
-      preferredCurrency = currency,
+      preferredCurrency = currencyId,
       additionalBranches = [],
       jobTitle = '',
       phone = '',

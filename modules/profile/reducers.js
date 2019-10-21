@@ -40,6 +40,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.PROFILE_SHOW_SUPPORT_CHAT: {
+      console.log('!!!!!! reducer showSupportChat')
       chatWidgetShow()
       return {
         ...state,

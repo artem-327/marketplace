@@ -55,7 +55,7 @@ function prepareDetail(data, type) {
     paymentStatus: OrdersHelper.getPaymentStatus(data.paymentStatus),
     pickUpAddress: data.sellerCompanyAddressStreet + ', ' + data.sellerCompanyAddressCity + ', ' + data.sellerCompanyAddressZip + ', ' + data.sellerCompanyAddressCountry,
     productCode: <ArrayToMultiple values={orderItems.map(d => (d.productCode ? d.productCode : 'N/A'))} />,
-    productName: <ArrayToMultiple values={orderItems.map(d => (d.productName ? d.productName : 'N/A'))} />,
+    productName: <ArrayToMultiple values={orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))} />,
     productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
     proNumber: 'N/A',
     quantityOrdered: <ArrayToMultiple values={orderItems.map(d => ((d.pkgAmount && d.packagingSize) ? d.pkgAmount * d.packagingSize : 'N/A'))} />,
@@ -77,7 +77,7 @@ function prepareDetail(data, type) {
     total: <FormattedNumber style='currency' currency={currency} value={totalPriceWithShipping} />, //"$" + totalPriceWithShipping.formatMoney(2),
     totalPkg: <ArrayToMultiple values={orderItems.map(d => (d.pkgAmount ? d.pkgAmount : 'N/A'))} />,
     unit: <ArrayToMultiple values={orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A'))} />,
-    unitCost: <FormattedNumber style='currency' currency={currency} value={0} />, //"$" + parseInt(0).formatMoney(2),
+    unitCost: <FormattedNumber style='currency' currency={currency} value={0} />, //"$" + parseInt(0).formatMoney(2), // ! ! ? Smazat toto?
     unitPrice: <ArrayToMultiple values={orderItems.map(d => (
       <div><FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} /></div>
     ))} />,

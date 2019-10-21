@@ -19,7 +19,7 @@ class Marketplace extends Component {
     columns: [
       { name: 'productName', disabled: true },
       { name: 'productNumber', disabled: true },
-      //{ name: 'merchant', title: 'Merchant', width: 250 },
+      { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
       { name: 'available', title: <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs'>{(text) => text}</FormattedMessage>, width: 140, sortPath: 'ProductOffer.pkgAvailable' },
       { name: 'packaging', title: <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging'>{(text) => text}</FormattedMessage>, width: 140 },
       { name: 'quantity', title: <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>{(text) => text}</FormattedMessage>, width: 140, sortPath: 'ProductOffer.quantity' },

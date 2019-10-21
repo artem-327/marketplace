@@ -1,4 +1,5 @@
 import { getSafe } from '~/utils/functions'
+import { showSupportChat } from '~/modules/profile/actions'
 
 export const createChatWidget = (props) => {
   if (typeof window.$zopim === 'undefined') {
@@ -44,10 +45,16 @@ const chatWidgetScriptLoaded = (props) => {
       $zopim.livechat.setEmail(email);
       $zopim.livechat.window.hide();
       $zopim.livechat.setStatus('online');
-      $zopim.livechat.setOnUnreadMsgs(	chatWidgetShow)
+      $zopim.livechat.setOnUnreadMsgs(function(cnt) {
+        unreadMessages(cnt)
+      })
     });
   })
 
+  // ! ! ! !! !
+  // Jak zjistim pocet neprectenych zprav po prihlaseni??? ! ! !
+  // https://develop.zendesk.com/hc/en-us/articles/360001075368-Using-the-Chat-SDK-APIs-to-show-the-number-of-unread-messages-iOS-
+  // po prihlaseni vzdy ukazuje pocet unread messages = 0, i kdyz predchozi zpravy nebyly zobrazene, proc?
   /*
   if (!this.props.profile.supportChatEnabled) {
     zE(function () {
@@ -59,6 +66,14 @@ const chatWidgetScriptLoaded = (props) => {
   setOnUnreadMsgs
   https://gist.github.com/kylejmhudson/216dab3c2f158dba8b5727568c95f07b
   */
+}
+
+const unreadMessages = (cnt) => {
+  console.log('!!!!!! chatWidget unread messages', cnt)
+
+  showSupportChat(cnt)
+
+  //chatWidgetShow()
 }
 
 export const chatWidgetHide = () => {
@@ -90,12 +105,25 @@ export const chatWidgetToggle = () => {
           ? $zopim.livechat.window.hide()
           : $zopim.livechat.window.show()
       });
-    })// ! ! $zopim.livechat.window.toggle(); Not working at all
+    })// ! ! $zopim.livechat.window.toggle(); // Not working at all, why?
+  }
+}
+
+export const chatWidgetEndSession = () => {
+  if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
+    zE(function () {
+      $zopim(function () {
+        $zopim.livechat.endChat()
+      });
+    })
   }
 }
 
 export const chatWidgetTerminate = () => {
   // odhlasit se
+  chatWidgetEndSession()
   // jak se pak prihlasit??
+  //  - ve skutecnosti se neodhlasi -> na strane operatora vypada odhlaseny, ale operator ho muze znovu pripojit a poslat userovi zpravu.
+
   chatWidgetHide()
 }
