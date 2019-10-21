@@ -11,5 +11,5 @@ export const sharedTo = [
   { value: 'COMPANY_SHARING', id: 'COMPANY_SHARING', text: 'Company Sharing' }]
 
 
-  export const currency = 'USD'
-  export const currencyId = 1
+export const currency = 'USD'
+export const currencyId = 1

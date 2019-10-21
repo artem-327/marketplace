@@ -153,7 +153,7 @@ export default function reducer(state = initialState, action) {
         initialState: {
           attachments: filteredAttachments,
           additional: filteredAdditional,
-          lots: data.lots.length > 0 ? data.lots.map((el) => ({
+          lots: getSafe(() => data.lots, []).length > 0 ? data.lots.map((el) => ({
             ...el,
             manufacturedDate: moment(el.manufacturedDate).format('YYYY-MM-DD'),
             expirationDate: moment(el.expirationDate).format('YYYY-MM-DD')
