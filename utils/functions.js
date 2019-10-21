@@ -63,12 +63,13 @@ export const mapAutocompleteData = autocomplateData => autocomplateData.map((pro
 })
 
 export const deepSearch = (obj, searchFn) => {
-    let found = false
-    Object.entries(obj).forEach(([key, val]) => {
-        if (val && typeof val === 'object') deepSearch(val, searchFn)
+    var found = false
+    Object.entries(obj)
+        .forEach(([key, val]) => {
+            if (val && typeof val === 'object') found = deepSearch(val, searchFn)
 
-        else if (searchFn(val, key)) found = true
-    })
+            else if (searchFn(val, key)) found = true
+        })
 
     return found
 }

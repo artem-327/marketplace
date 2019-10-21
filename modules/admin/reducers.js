@@ -575,7 +575,7 @@ export default function reducer(state = initialState, action) {
     // }
 
     case AT.ADMIN_SEARCH_CAS_PRODUCT_FULFILLED: {
-      console.log({ state: state.searchedCasProducts, payload })
+      
       return {
         ...state,
         // searchedCasProducts: payload.concat(state.searchedCasProducts),
