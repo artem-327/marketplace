@@ -112,7 +112,7 @@ export function putEditedDataRequest(config, id, values) {
 		const editedItem = await api.putEditedDataRequest(config, values, id)
 
 		dispatch({
-			type: config.api.put.typeRequest,
+			type: config.api.update.typeRequest,
 			payload: editedItem,
 		})
 		Datagrid.updateRow(id, () => (editedItem))

@@ -28,11 +28,12 @@ class EditPopup1Parameter extends React.Component {
       toastManager
     } = this.props
 
-    const { id } = popupValues;
+    const { id, editable = true } = popupValues
 
     const initialFormValues = {
       val0: popupValues[config.edit[0].name],
     }
+
 
     return (
       <Modal closeIcon onClose={() => closeEditPopup()} open centered={false}>
@@ -69,7 +70,7 @@ class EditPopup1Parameter extends React.Component {
               <Button.Reset data-test={`admin_edit_${config.formattedMessageName}_cancel_btn`}>
                 <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage>
               </Button.Reset>
-              <Button.Submit data-test={`admin_edit_${config.formattedMessageName}_save_btn`}>
+              <Button.Submit disabled={!editable} data-test={`admin_edit_${config.formattedMessageName}_save_btn`}>
                 <FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage>
               </Button.Submit>
             </div>

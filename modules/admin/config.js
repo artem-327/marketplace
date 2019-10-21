@@ -78,7 +78,7 @@ export const config = {
         typeRequest: 'ADMIN_POST_UNITS_OF_MEASURE_DATA',
         apiCall: '/prodex/api/units',
       },
-      put: {
+      update: {
         typeRequest: 'ADMIN_PUT_UNITS_OF_MEASURE_DATA',
         apiCall: '/prodex/api/units/',
       },
@@ -129,7 +129,7 @@ export const config = {
         typeRequest: 'ADMIN_POST_UNITS_OF_PACKAGING_DATA',
         apiCall: '/prodex/api/packaging-types',
       },
-      put: {
+      update: {
         typeRequest: 'ADMIN_PUT_UNITS_OF_PACKAGING_DATA',
         apiCall: '/prodex/api/packaging-types/',
       },
@@ -178,7 +178,7 @@ export const config = {
         typeRequest: 'ADMIN_POST_MANUFACTURERS_DATA',
         apiCall: '/prodex/api/manufacturers',
       },
-      put: {
+      update: {
         typeRequest: 'ADMIN_PUT_MANUFACTURERS_DATA',
         apiCall: '/prodex/api/manufacturers/id/',
       },
@@ -213,7 +213,7 @@ export const config = {
         typeRequest: 'ADMIN_POST_GRADES_DATA',
         apiCall: '/prodex/api/product-grades',
       },
-      put: {
+      update: {
         typeRequest: 'ADMIN_PUT_GRADES_DATA',
         apiCall: '/prodex/api/product-grades/',
       },
@@ -248,7 +248,7 @@ export const config = {
         typeRequest: 'ADMIN_POST_FORMS_DATA',
         apiCall: '/prodex/api/product-forms',
       },
-      put: {
+      update: {
         typeRequest: 'ADMIN_PUT_FORMS_DATA',
         apiCall: '/prodex/api/product-forms/',
       },
@@ -283,7 +283,7 @@ export const config = {
         typeRequest: 'ADMIN_POST_CONDITIONS_DATA',
         apiCall: '/prodex/api/product-conditions',
       },
-      put: {
+      update: {
         typeRequest: 'ADMIN_PUT_CONDITIONS_DATA',
         apiCall: '/prodex/api/product-conditions/',
       },
@@ -318,7 +318,8 @@ export const config = {
         typeRequest: 'ADMIN_POST_DOCUMENT_TYPES_DATA',
         apiCall: '/prodex/api/document-types',
       },
-      put: {
+      update: {
+        method: 'patch',
         typeRequest: 'ADMIN_PUT_DOCUMENT_TYPES_DATA',
         apiCall: '/prodex/api/document-types/id/',
       },
@@ -353,7 +354,7 @@ export const config = {
         typeRequest: 'ADMIN_POST_MARKET_SEGMENTS_DATA',
         apiCall: '/prodex/api/market-segments',
       },
-      put: {
+      update: {
         typeRequest: 'ADMIN_PUT_MARKET_SEGMENTS_DATA',
         apiCall: '/prodex/api/market-segments/id/',
       },
