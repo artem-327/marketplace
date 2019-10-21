@@ -82,6 +82,24 @@ const initValues = {
   }
 }
 
+val.addMethod(val.number, 'divisibleBy', function (ref, message) {
+  return this.test({
+    name: 'divisibleBy',
+    exclusive: false,
+    message: message || '${path} must be divisible by ${reference}',
+    params: {
+      reference: ref.path
+    },
+    test: function (value) {
+      const divisedBy = parseInt(this.resolve(ref))
+      if (!divisedBy || isNaN(divisedBy))
+        return false
+
+      return !(value % divisedBy)
+    }
+  })
+})
+
 val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
   return this.test('unique', message, function (value) {
     if (!value || !value[propertyName]) {
@@ -111,7 +129,7 @@ const validationScheme = val.object().shape({
     fobPrice: val.number().typeError(errorMessages.mustBeNumber).nullable().required(errorMessages.requiredMessage),
     lotNumber: val.string().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
     inStock: val.bool().required(errorMessages.requiredMessage),
-    minimum: val.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage),
+    minimum: val.number().typeError(errorMessages.mustBeNumber).divisibleBy(val.ref('splits'), <FormattedMessage id='inventory.notDivisibleBySplits' defaultMessage='Value is not divisible by Splits' />).required(errorMessages.requiredMessage),
     pkgAvailable: val.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage),
     splits: val.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage),
     warehouse: val.number(errorMessages.requiredMessage)
@@ -188,17 +206,17 @@ class DetailSidebar extends Component {
     // correct quantity before anchor calculation
     if (quantity > 0) quantity -= splits
 
-    const prices = getSafe(() => values.pricingTiers, [])
+    const prices = getSafe(() => values.priceTiers.pricingTiers, [])
 
     for (let i = 0; i < prices.length; i++) {
       const qtyFrom = parseInt(prices[i].quantityFrom)
 
       // get level quantity (must be larger than previous level quantity)
       let anchor = Math.max(qtyFrom, ++quantity)
-      if (!parseInt(values.pricingTiers[i].manuallyModified)) {
+      if (!parseInt(values.priceTiers.pricingTiers[i].manuallyModified)) {
         // if not manually modified then change quantity value
         quantity = Math.ceil(anchor / splits) * splits
-        setFieldValue(`pricingTiers[${i}].quantityFrom`, quantity)
+        setFieldValue(`priceTiers.pricingTiers[${i}].quantityFrom`, quantity)
       } else {
         // if manually modified or loaded from BE then do not change already set value - just remember largest anchor
         quantity = Math.max(qtyFrom, quantity)
@@ -208,20 +226,17 @@ class DetailSidebar extends Component {
 
   onSplitsChange = debounce(async (value, values, setFieldValue, validateForm) => {
     value = parseInt(value)
-    const minimum = parseInt(values.minimum)
+    const minimum = parseInt(values.edit.minimum)
 
     this.handleQuantities(setFieldValue, values, value)
 
     if (isNaN(value) || isNaN(minimum))
       return false
 
-    if (values.minimumRequirement) {
-      if (minimum !== value && ((minimum % value) !== 0)) {
-        await setFieldValue('minimum', value)
-      }
-    } else {
-      await setFieldValue('minimum', value)
+    if (minimum !== value && ((minimum % value) !== 0)) {
+      await setFieldValue('edit.minimum', value)
     }
+
     validateForm()
   }, 250)
 
@@ -680,8 +695,8 @@ class DetailSidebar extends Component {
                                              value = parseInt(value)
                                              if (value > 1 && !isNaN(value)) {
                                                setFieldValue('minimumRequirement', true)
-                                               setFieldValue('pricingTiers[0].quantityFrom', value)
-                                               //this.handleQuantities(setFieldValue, values, values.splits, (data.value ? data.value : 0))
+                                               setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
+                                               //this.handleQuantities(setFieldValue, values, values.edit.splits, (data.value ? data.value : 0))
                                              }
                                            }
                                          }} />
