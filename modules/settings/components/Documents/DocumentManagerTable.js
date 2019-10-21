@@ -71,7 +71,8 @@ const mapStateToProps = (store, { datagrid }) => {
     rows: datagrid.rows.map((row) => ({
       ...row,
       documentTypeName: getSafe(() => row.documentType.name, ''),
-      expirationDate: row.expirationDate && moment(row.expirationDate).format('YYYY-MM-DD')
+      expirationDate: row.expirationDate && moment(row.expirationDate).format('YYYY-MM-DD'),
+      customName: getSafe(() => row.customName, row.name)
     }))
   }
 }
