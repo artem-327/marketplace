@@ -8,6 +8,7 @@ import { Broadcast } from '~/modules/broadcast'
 import { Filter } from '~/modules/filter'
 
 import SimpleEdit from '~/modules/inventory/components/SimpleEdit'
+import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
 
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
@@ -160,7 +161,8 @@ class MyInventory extends Component {
       datagrid,
       openImportPopup,
       isOpenImportPopup,
-      simpleEditTrigger
+      simpleEditTrigger,
+      sidebarDetailTrigger
     } = this.props
     const { columns, selectedRows } = this.state
 
@@ -190,11 +192,22 @@ class MyInventory extends Component {
                 <Button
                   size='large'
                   primary
-                  onClick={() => simpleEditTrigger({}, true)}
+                  onClick={() => sidebarDetailTrigger(null, true)}
                   data-test='my_inventory_add_btn'>
                   <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>{text => text}</FormattedMessage>
                 </Button>
               </Menu.Item>
+              {false ? (
+                <Menu.Item>
+                  <Button
+                    size='large'
+                    primary
+                    onClick={() => simpleEditTrigger({}, true)}
+                    data-test='my_inventory_add_btn'>
+                    <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>{text => text}</FormattedMessage>
+                  </Button>
+                </Menu.Item>
+              ) : null}
               <Menu.Item>
                 <Button
                   size='large'
@@ -244,10 +257,14 @@ class MyInventory extends Component {
             }}
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
             rowActions={[
-              {
+              /*{
                 text: formatMessage({ id: 'inventory.edit', defaultMessage: 'Edit Listing' }), callback: (row) =>
                   // Router.push({ pathname: '/inventory/edit', query: { id: row.id } })
                   simpleEditTrigger(datagrid.rows.find((r) => r.id === row.id), true)
+              },*/
+              {
+                text: formatMessage({ id: 'inventory.edit', defaultMessage: 'Edit Listing' }), callback: (row) =>
+                  sidebarDetailTrigger(row.id, true)
               },
               { text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
               {
@@ -277,6 +294,7 @@ class MyInventory extends Component {
         </div>
         <Broadcast />
         <SimpleEdit />
+        <DetailSidebar />
         <Filter
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}

@@ -28,7 +28,7 @@ function mapStateToProps(store, { datagrid }) {
       let fobPrice = 'N/A'
 
       try {
-        if (po.pricingTiers.length > 1) fobPrice = <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price.amount} /> - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].pricePerUOM} /> {qtyPart && (`/ ${qtyPart}`)} </>
+        if (po.pricingTiers.length > 1) fobPrice = <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].pricePerUOM} /> - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].pricePerUOM} /> {qtyPart && (`/ ${qtyPart}`)} </>
         else fobPrice = <> <FormattedNumber style='currency' currency={currency} value={getSafe(() => po.pricingTiers[0].pricePerUOM)} /> {qtyPart && (`/ ${qtyPart}`)} </>
       } catch (e) { console.error(e) }
 
