@@ -193,19 +193,21 @@ class MyInventory extends Component {
                   size='large'
                   primary
                   onClick={() => sidebarDetailTrigger(null, true)}
-                  data-test='my_inventory_new_btn'>
-                  <FormattedMessage id='global.newInventory' defaultMessage='New Inventory'>{text => text}</FormattedMessage>
-                </Button>
-              </Menu.Item>
-              <Menu.Item>
-                <Button
-                  size='large'
-                  primary
-                  onClick={() => simpleEditTrigger({}, true)}
                   data-test='my_inventory_add_btn'>
                   <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>{text => text}</FormattedMessage>
                 </Button>
               </Menu.Item>
+              {false ? (
+                <Menu.Item>
+                  <Button
+                    size='large'
+                    primary
+                    onClick={() => simpleEditTrigger({}, true)}
+                    data-test='my_inventory_add_btn'>
+                    <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>{text => text}</FormattedMessage>
+                  </Button>
+                </Menu.Item>
+              ) : null}
               <Menu.Item>
                 <Button
                   size='large'
@@ -255,13 +257,13 @@ class MyInventory extends Component {
             }}
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
             rowActions={[
-              {
+              /*{
                 text: formatMessage({ id: 'inventory.edit', defaultMessage: 'Edit Listing' }), callback: (row) =>
                   // Router.push({ pathname: '/inventory/edit', query: { id: row.id } })
                   simpleEditTrigger(datagrid.rows.find((r) => r.id === row.id), true)
-              },
+              },*/
               {
-                text: formatMessage({ id: 'global.editSidebar', defaultMessage: 'Edit Sidebar' }), callback: (row) =>
+                text: formatMessage({ id: 'inventory.edit', defaultMessage: 'Edit Listing' }), callback: (row) =>
                   sidebarDetailTrigger(row.id, true)
               },
               { text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },

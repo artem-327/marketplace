@@ -17,6 +17,7 @@ import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import * as val from 'yup'
 import { errorMessages, dateValidation } from '~/constants/yupValidation'
+import moment from "moment"
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -73,7 +74,7 @@ const initValues = {
     minimum: 1, // minPkg
     splits: 1, // splitPkg
     externalNotes: '',
-    internalNotes: '',
+    internalNotes: ''
   },
   priceTiers: {
     priceTiers: 1,
@@ -135,7 +136,7 @@ class DetailSidebar extends Component {
   }
 
   componentDidUpdate = (oldProps) => {
-    if (this.props.sidebarDetailOpen && (oldProps.sidebarDetailOpen !== this.props.sidebarDetailOpen)) {
+    if (getSafe(() => this.props.sidebarValues.id, false) && (oldProps.sidebarValues !== this.props.sidebarValues)) {
       this.props.getDocumentTypes()
       this.props.getProductConditions()
       this.props.getProductForms()
@@ -143,8 +144,10 @@ class DetailSidebar extends Component {
       this.props.getWarehouses()
       this.props.searchManufacturers('', 200)
       this.props.searchOrigins('', 200)
+      if (this.props.sidebarValues.companyProduct)
+        this.searchProducts(this.props.sidebarValues.companyProduct.intProductName)
 
-      this.props.openBroadcast(this.props.sidebarValues)
+      //this.props.openBroadcast(this.props.sidebarValues)
     }
   }
 
@@ -287,6 +290,7 @@ class DetailSidebar extends Component {
       searchedOriginsLoading,
       searchedProducts,
       searchedProductsLoading,
+      searchOrigins,
       warehousesList,
       intl: { formatMessage }
     } = this.props
@@ -299,38 +303,36 @@ class DetailSidebar extends Component {
     } = this.props
 
     let editValues = {}
-    if (sidebarValues.id) {
-      editValues = {
-        edit: {
-          conditionNotes: getSafe(() => sidebarValues.conditionNotes, null),
-          costPerUOM: getSafe(() => sidebarValues.costPerUOM, null),
-          externalNotes: getSafe(() => sidebarValues.externalNotes, ''),
-          fobPrice: getSafe(() => sidebarValues.pricingTiers[0].pricePerUOM, null),
-          inStock: getSafe(() => sidebarValues.inStock, false),
-          internalNotes: getSafe(() => sidebarValues.internalNotes, ''),
-          leadTime: getSafe(() => sidebarValues.leadTime, 1),
-          lotNumber: getSafe(() => sidebarValues.lotNumber, null),
-          lotExpDate: getSafe(() => sidebarValues.expirationDate, ''),
-          lotMfgDate: getSafe(() => sidebarValues.manufacturedDate, ''),
-          minimum: getSafe(() => sidebarValues.minPkg, ''),
-          origin: getSafe(() => sidebarValues.origin.id, null),
-          pkgAvailable: getSafe(() => sidebarValues.pkgAvailable, ''),
-          product: getSafe(() => sidebarValues.companyProduct.id, null),
-          productCondition: getSafe(() => sidebarValues.condition.id, null),
-          productForm: getSafe(() => sidebarValues.form.id, null),
-          productGrades: getSafe(() => sidebarValues.grades.map(grade => grade.id), null),
-          splits: getSafe(() => sidebarValues.splitPkg, ''),
-          offerExpire: getSafe(() => sidebarValues.validityDate.length > 0, false),
-          expirationDate: getSafe(() => sidebarValues.validityDate, ''),
-          warehouse: getSafe(() => sidebarValues.warehouse.id, null)
-        },
-        priceTiers: {
-          priceTiers: getSafe(() => sidebarValues.pricingTiers.length, 0),
-          pricingTiers: getSafe(() => sidebarValues.pricingTiers.map(priceTier => ({
-            price: priceTier.pricePerUOM,
-            quantityFrom: priceTier.quantityFrom
-          })), [])
-        }
+    editValues = {
+      edit: {
+        conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
+        costPerUOM: getSafe(() => sidebarValues.costPerUOM, ''),
+        externalNotes: getSafe(() => sidebarValues.externalNotes, ''),
+        fobPrice: getSafe(() => sidebarValues.pricingTiers[0].pricePerUOM, ''),
+        inStock: getSafe(() => sidebarValues.inStock, false),
+        internalNotes: getSafe(() => sidebarValues.internalNotes, ''),
+        leadTime: getSafe(() => sidebarValues.leadTime, 1),
+        lotNumber: getSafe(() => sidebarValues.lotNumber, null),
+        lotExpirationDate: getSafe(() => sidebarValues.lotExpirationDate.substring(0, 10), ''),
+        lotManufacturedDate: getSafe(() => sidebarValues.lotManufacturedDate.substring(0, 10), ''),
+        minimum: getSafe(() => sidebarValues.minPkg, ''),
+        origin: getSafe(() => sidebarValues.origin.id, null),
+        pkgAvailable: getSafe(() => sidebarValues.pkgAvailable, ''),
+        product: getSafe(() => sidebarValues.companyProduct.id, null),
+        productCondition: getSafe(() => sidebarValues.condition.id, null),
+        productForm: getSafe(() => sidebarValues.form.id, null),
+        productGrades: getSafe(() => sidebarValues.grades.map(grade => grade.id), null),
+        splits: getSafe(() => sidebarValues.splitPkg, ''),
+        doesExpire: getSafe(() => sidebarValues.validityDate.length > 0, false),
+        expirationDate: getSafe(() => sidebarValues.validityDate.substring(0, 10), ''),
+        warehouse: getSafe(() => sidebarValues.warehouse.id, null)
+      },
+      priceTiers: {
+        priceTiers: getSafe(() => sidebarValues.pricingTiers.length, 0),
+        pricingTiers: getSafe(() => sidebarValues.pricingTiers.map(priceTier => ({
+          price: priceTier.pricePerUOM,
+          quantityFrom: priceTier.quantityFrom
+        })), [])
       }
     }
 
@@ -349,10 +351,11 @@ class DetailSidebar extends Component {
             case 0:
               props = {
                 ...values.edit,
+                expirationDate: values.edit.doesExpire ? values.edit.expirationDate+'T00:00:00.000Z' : null,
                 leadTime: values.edit.leadTime,
-                expirationDate: values.edit.lotExpDate,
-                //lotNumber: values.edit.lotNumber,
-                manufacturedDate: values.edit.lotMfgDate,
+                lotExpirationDate: values.edit.lotExpirationDate+'T00:00:00.000Z',
+                lotNumber: values.edit.lotNumber,
+                lotManufacturedDate: values.edit.lotManufacturedDate+'T00:00:00.000Z',
                 pkgAvailable: values.edit.pkgAvailable,
                 pricingTiers: values.priceTiers.pricingTiers.length ?
                   values.priceTiers.pricingTiers :
@@ -470,7 +473,7 @@ class DetailSidebar extends Component {
                                      <GridColumn mobile={rightWidth} computer={rightWidth}>
                                        <FormField width={16} data-test='detail_sidebar_cost' >
                                          <Input
-                                           name='edit.cost'
+                                           name='edit.costPerUOM'
                                            inputProps={{ type: 'number' }} />
                                        </FormField>
                                      </GridColumn>
@@ -495,7 +498,7 @@ class DetailSidebar extends Component {
                                              <GridColumn mobile={rightWidth} computer={rightWidth}>
                                                <DateInput
                                                  inputProps={{ 'data-test': 'sidebar_detail_lot_exp_date' }}
-                                                 name='edit.lotExpDate' />
+                                                 name='edit.lotExpirationDate' />
                                              </GridColumn>
                                            </GridRow>
                                            <GridRow>
@@ -504,8 +507,8 @@ class DetailSidebar extends Component {
                                              </GridColumn>
                                              <GridColumn mobile={rightWidth} computer={rightWidth}>
                                                <DateInput
-                                                 inputProps={{ 'data-test': 'sidebar_detail_lot_mfg_date' }}
-                                                 name='edit.lotMfgDate' />
+                                                 inputProps={{ 'data-test': 'sidebar_detail_lot_mfg_date', maxDate: moment() }}
+                                                 name='edit.lotManufacturedDate' />
                                              </GridColumn>
                                            </GridRow>
                                          </Grid>
@@ -575,7 +578,6 @@ class DetailSidebar extends Component {
                                            selection: true,
                                            clearable: true,
                                            loading: searchedOriginsLoading,
-                                           onChange: (e, { value }) => { value ? console.log(value) : searchOrigins('') },
                                            onSearchChange: debounce((e, { searchQuery }) => searchOrigins(searchQuery), 250)
                                          }}
                                        />
@@ -599,8 +601,8 @@ class DetailSidebar extends Component {
                                      <GridColumn mobile={rightWidth} computer={rightWidth}>
                                        <FormField width={16} data-test='detail_sidebar_condition_notes' >
                                          <Input
-                                           name='edit.conditionNotes'
-                                           inputProps={{ type: 'text' }} />
+                                           type='text'
+                                           name='edit.conditionNotes' />
                                        </FormField>
                                      </GridColumn>
                                    </GridRow>
@@ -638,10 +640,10 @@ class DetailSidebar extends Component {
                                      <GridColumn mobile={rightWidth} computer={rightWidth}>
                                        <Grid>
                                          <GridColumn computer={5} tablet={8}>
-                                           <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='edit.offerExpire' data-test='add_inventory_expire_no_rad' />
+                                           <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='edit.doesExpire' data-test='add_inventory_expire_no_rad' />
                                          </GridColumn>
                                          <GridColumn computer={5} tablet={8}>
-                                           <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='edit.offerExpire' data-test='add_inventory_expire_yes_rad' />
+                                           <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='edit.doesExpire' data-test='add_inventory_expire_yes_rad' />
                                          </GridColumn>
                                        </Grid>
                                      </GridColumn>
@@ -652,7 +654,7 @@ class DetailSidebar extends Component {
                                      </GridColumn>
                                      <GridColumn mobile={rightWidth} computer={rightWidth}>
                                        <DateInput
-                                         inputProps={{ disabled: !values.doesExpire, 'data-test': 'sidebar_detail_expiration_date' }}
+                                         inputProps={{ disabled: !values.edit.doesExpire, 'data-test': 'sidebar_detail_expiration_date' }}
                                          name='edit.expirationDate' />
                                      </GridColumn>
                                    </GridRow>
@@ -744,7 +746,6 @@ class DetailSidebar extends Component {
                                <Menu.Item key='priceTiers' onClick={() => {
                                  validateForm()
                                    .then(r => {
-                                     console.log('validated', r)
                                      // stop when errors found
                                      /*if (Object.keys(r).length && Object.keys(r).some(r => tabs[this.state.activeTab].includes(r))) {
                                        console.log('but errors')
@@ -752,7 +753,6 @@ class DetailSidebar extends Component {
                                        return false
                                      }*/
 
-                                     console.log('switch to tab 2')
                                      // if validation is correct - switch tabs
                                      this.switchTab(2)
                                    })

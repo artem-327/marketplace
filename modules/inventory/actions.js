@@ -93,7 +93,10 @@ export function addProductOffer(values, poId = false, simple = false) {
       inStock: values.inStock,
       internalNotes: getSafe(() => values.internalNotes),
       leadTime: getSafe(() => values.leadTime),
-      lots: values.lots ? values.lots.map(lot => {
+      lotExpirationDate: getSafe(() => values.lotExpirationDate, null),
+      lotManufacturedDate: getSafe(() => values.lotManufacturedDate, null),
+      lotNumber: getSafe(() => values.lotNumber, null),
+      /*lots: values.lots ? values.lots.map(lot => {
         return {
           lotNumber: lot.lotNumber,
           attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
@@ -104,7 +107,7 @@ export function addProductOffer(values, poId = false, simple = false) {
           manufacturedDate: lot.manufacturedDate && getSafe(() => moment(lot.manufacturedDate).utc(lot.manufacturedDate).format()),
           pkgAvailable: getSafe(() => parseInt(lot.pkgAvailable))
         }
-      }) : null,
+      }) : null,*/
       // ! ! otestovat manufacturer: getSafe(() => values.manufacturer),
       minPkg: parseInt(values.minimum),
       origin: getSafe(() => values.origin),
@@ -373,16 +376,14 @@ export const simpleEditTrigger = (popupValues = {}, force = null) => ({ type: AT
 export const sidebarDetailTrigger = (poId = null, force = null) => {
   return {
     type: AT.SIDEBAR_DETAIL_TRIGGER,
+    meta: { force: force },
     async payload() {
       let sidebarValues = {}
 
       if (poId)
         sidebarValues = await api.getProductOffer(poId)
 
-      return {
-        sidebarValues: getSafe(() => sidebarValues.data, {}),
-        force
-      }
+      return getSafe(() => sidebarValues.data, {})
     }
   }
 }
