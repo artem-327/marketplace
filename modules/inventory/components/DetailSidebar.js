@@ -415,10 +415,10 @@ class DetailSidebar extends Component {
                                  validateForm()
                                    .then(r => {
                                      // stop when errors found
-                                     /*if (Object.keys(r).length && Object.keys(r).some(r => tabs[this.state.activeTab].includes(r))) {
+                                     if (Object.keys(r).length) {
                                        submitForm() // show errors
                                        return false
-                                     }*/
+                                     }
 
                                      // if validation is correct - switch tabs
                                      this.switchTab(0)
@@ -727,10 +727,10 @@ class DetailSidebar extends Component {
                                  validateForm()
                                    .then(r => {
                                      // stop when errors found
-                                     /*if (Object.keys(r).length && Object.keys(r).some(r => tabs[this.state.activeTab].includes(r))) {
+                                     if (Object.keys(r).length) {
                                        submitForm() // show errors
                                        return false
-                                     }*/
+                                     }
 
                                      // if validation is correct - switch tabs
                                      this.switchTab(1)
@@ -755,11 +755,10 @@ class DetailSidebar extends Component {
                                  validateForm()
                                    .then(r => {
                                      // stop when errors found
-                                     /*if (Object.keys(r).length && Object.keys(r).some(r => tabs[this.state.activeTab].includes(r))) {
-                                       console.log('but errors')
+                                     if (Object.keys(r).length) {
                                        submitForm() // show errors
                                        return false
-                                     }*/
+                                     }
 
                                      // if validation is correct - switch tabs
                                      this.switchTab(2)
