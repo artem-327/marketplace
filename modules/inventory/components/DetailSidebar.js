@@ -107,11 +107,13 @@ val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
 
 const validationScheme = val.object().shape({
   edit: val.object().shape({
+    product: val.number().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
     fobPrice: val.number().typeError(errorMessages.mustBeNumber).nullable().required(errorMessages.requiredMessage),
-    lotNumber: val.string().required(errorMessages.requiredMessage),
+    lotNumber: val.string().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
     inStock: val.bool().required(errorMessages.requiredMessage),
+    pkgAvailable: val.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage),
     warehouse: val.number(errorMessages.requiredMessage)
-      .nullable(errorMessages.required)
+      .nullable(errorMessages.requiredMessage)
       .moreThan(0, errorMessages.requiredMessage)
       .required(errorMessages.requiredMessage)
   }),
@@ -135,13 +137,16 @@ class DetailSidebar extends Component {
     activeTab: 0
   }
 
+  componentDidMount = () => {
+    this.props.getProductConditions()
+    this.props.getProductForms()
+    this.props.getProductGrades()
+    this.props.getWarehouses()
+  }
+
   componentDidUpdate = (oldProps) => {
     if (getSafe(() => this.props.sidebarValues.id, false) && (oldProps.sidebarValues !== this.props.sidebarValues)) {
       this.props.getDocumentTypes()
-      this.props.getProductConditions()
-      this.props.getProductForms()
-      this.props.getProductGrades()
-      this.props.getWarehouses()
       this.props.searchManufacturers('', 200)
       this.props.searchOrigins('', 200)
       if (this.props.sidebarValues.companyProduct)
@@ -181,7 +186,7 @@ class DetailSidebar extends Component {
     // correct quantity before anchor calculation
     if (quantity > 0) quantity -= splits
 
-    const prices = values.pricingTiers
+    const prices = getSafe(() => values.pricingTiers, [])
 
     for (let i = 0; i < prices.length; i++) {
       const qtyFrom = parseInt(prices[i].quantityFrom)
@@ -321,7 +326,7 @@ class DetailSidebar extends Component {
         product: getSafe(() => sidebarValues.companyProduct.id, null),
         productCondition: getSafe(() => sidebarValues.condition.id, null),
         productForm: getSafe(() => sidebarValues.form.id, null),
-        productGrades: getSafe(() => sidebarValues.grades.map(grade => grade.id), null),
+        productGrades: getSafe(() => sidebarValues.grades.map(grade => grade.id), []),
         splits: getSafe(() => sidebarValues.splitPkg, ''),
         doesExpire: getSafe(() => sidebarValues.validityDate.length > 0, false),
         expirationDate: getSafe(() => sidebarValues.validityDate.substring(0, 10), ''),
@@ -353,16 +358,17 @@ class DetailSidebar extends Component {
                 ...values.edit,
                 expirationDate: values.edit.doesExpire ? values.edit.expirationDate+'T00:00:00.000Z' : null,
                 leadTime: values.edit.leadTime,
-                lotExpirationDate: values.edit.lotExpirationDate+'T00:00:00.000Z',
+                lotExpirationDate: values.edit.lotExpirationDate ? values.edit.lotExpirationDate+'T00:00:00.000Z' : null,
                 lotNumber: values.edit.lotNumber,
-                lotManufacturedDate: values.edit.lotManufacturedDate+'T00:00:00.000Z',
-                pkgAvailable: values.edit.pkgAvailable,
+                lotManufacturedDate: values.edit.lotManufacturedDate ? values.edit.lotManufacturedDate+'T00:00:00.000Z' : null,
+                pkgAvailable: parseInt(values.edit.pkgAvailable),
                 pricingTiers: values.priceTiers.pricingTiers.length ?
                   values.priceTiers.pricingTiers :
                   [{
                     quantityFrom: values.edit.minimum,
                     price: values.edit.fobPrice
-                  }]
+                  }],
+                productGrades: values.edit.productGrades.length ? values.edit.productGrades : []
               }
               break;
             case 2:
