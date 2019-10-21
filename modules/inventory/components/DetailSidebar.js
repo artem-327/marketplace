@@ -168,20 +168,12 @@ class DetailSidebar extends Component {
     if (getSafe(() => this.props.sidebarValues.id, false) && (oldProps.sidebarValues !== this.props.sidebarValues)) {
       this.props.getDocumentTypes()
       this.props.searchManufacturers('', 200)
-      this.props.searchOrigins('', 200)
+      this.props.searchOrigins(getSafe(() => this.props.sidebarValues.origin.name, ''), 200)
       if (this.props.sidebarValues.companyProduct)
         this.searchProducts(this.props.sidebarValues.companyProduct.intProductName)
 
       //this.props.openBroadcast(this.props.sidebarValues)
     }
-  }
-
-  formEdit = () => {
-    return (
-      <>
-
-      </>
-    )
   }
 
   getPriceTiers = (max) => {
@@ -696,7 +688,6 @@ class DetailSidebar extends Component {
                                              if (value > 1 && !isNaN(value)) {
                                                setFieldValue('minimumRequirement', true)
                                                setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
-                                               //this.handleQuantities(setFieldValue, values, values.edit.splits, (data.value ? data.value : 0))
                                              }
                                            }
                                          }} />
