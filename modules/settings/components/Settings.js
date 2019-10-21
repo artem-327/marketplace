@@ -200,7 +200,7 @@ class Settings extends Component {
         {isOpenPopup && popupForm[currentTab.type]}
         {isOpenImportPopup && importForm[currentTab.type]}
         {isOpenUploadDocumentsPopup && uploadDocForms[currentTab.type]}
-        {isDwollaOpenPopup && addDwollaForms[currentTab.type] && Router.push('/dwolla-register')}
+        {/* {isDwollaOpenPopup && addDwollaForms[currentTab.type] && Router.push('/dwolla-register')} */}
         {tables[currentTab.type] || <p>This page is still under construction</p>}
       </>
     )
