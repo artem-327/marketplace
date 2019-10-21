@@ -24,6 +24,7 @@ function mapStateToProps(store, { datagrid }) {
     defaultZip: getSafe(() => store.auth.identity.homeBranch.deliveryAddress.address.zip.zip, ''),
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
+
       return {
         id: po.id,
         productName: po.companyProduct.echoProduct.name,
