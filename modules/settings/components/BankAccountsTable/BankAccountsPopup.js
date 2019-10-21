@@ -16,7 +16,7 @@ import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { currency } from '~/constants/index'
-import { generateToastMarkup } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 
 const initialFormValues = {
@@ -145,7 +145,7 @@ const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,
     country: state.settings.country,
-    currency: currency,
+    currency: getSafe(() => state.settings.currency, currency),
     currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
       state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
   }

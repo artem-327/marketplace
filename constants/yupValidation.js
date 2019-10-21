@@ -67,8 +67,7 @@ export const passwordValidation = () => (
 export const phoneValidation = () => (
   Yup.string()
     .trim()
-    .test('phone-validation', errorMessages.invalidPhoneNumber, (val) => val && validator.isMobilePhone(val))
-    // .matches(/^[0-9\(\)\-\+\s]+$/, errorMessages.invalidPhoneNumber)
+    .test('phone-validation', errorMessages.invalidPhoneNumber, (val) => val && validator.isMobilePhone(val + '', null, { strictMode: true }))
 )
 
 export const dateValidation = (required = true) => {

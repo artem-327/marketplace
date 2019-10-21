@@ -85,7 +85,7 @@ export default class PhoneNumber extends Component {
     })
 
     setFieldValue(name, phone.phoneCountryCode.length ? ('+' + phone.phoneCountryCode + phone.phoneNumber) : phone.phoneNumber)
-    setFieldTouched(name, true, true)
+    // setFieldTouched(name, true, true)
   }
 
   componentDidUpdate(prevProps, nextProps, snapshot) {

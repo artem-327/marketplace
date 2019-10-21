@@ -1,6 +1,6 @@
 import api from '~/api'
 import axios from "axios"
-import { generateQueryString } from '~/utils/functions'
+import { getSafe, generateQueryString } from '~/utils/functions'
 
 export async function getAlternativeProductNames(value) {
   const { data } = await api.get(`/prodex/api/cas-products/alternative-names/cas-product/${value}`)
@@ -70,7 +70,7 @@ export async function deleteItem(config, id) {
 }
 
 export async function putEditedDataRequest(config, values, id) {
-  const { data } = await api.put(config.api.put.apiCall + id, values)
+  const { data } = await api[getSafe(() => config.api.update.method, 'put')](config.api.update.apiCall + id, values)
   return data
 }
 

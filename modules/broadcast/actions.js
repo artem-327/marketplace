@@ -24,19 +24,20 @@ export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', as
   let data = await api.loadGeneralRules()
   let pricingTiers = []
   let min = 0, max = 0
+  
   if (productOffers.length > 0) {
 
     productOffers.forEach(po => {
       let first = po.pricingTiers[0], last = po.pricingTiers[po.pricingTiers.length - 1]
-      if (getSafe(() => first.price.amount, -1) > 0 && getSafe(() => last.price.amount, -1) > 0) {
+      if (getSafe(() => first.pricePerUOM, -1) > 0 && getSafe(() => last.pricePerUOM, -1) > 0) {
         pricingTiers.push({ low: first, high: last })
       }
     })
 
     min = pricingTiers[0].low, max = pricingTiers[0].high
     pricingTiers.forEach(tier => {
-      if (tier.low.price.amount < min.price.amount && tier.low.price.amount > 0) min = tier.low
-      if (tier.high.price.amount > max.price.amount && tier.high.price.amount > 0) max = tier.high
+      if (tier.low.pricePerUOM < min.pricePerUOM && tier.low.pricePerUOM > 0) min = tier.low
+      if (tier.high.pricePerUOM > max.pricePerUOM && tier.high.pricePerUOM > 0) max = tier.high
     })
   }
 

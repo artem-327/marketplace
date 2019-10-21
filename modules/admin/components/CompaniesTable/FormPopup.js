@@ -29,7 +29,7 @@ import { CompanyForm } from '~/modules/company-form/'
 import { AddressForm } from '~/modules/address-form/'
 import { addressValidationSchema, phoneValidation, websiteValidation } from '~/constants/yupValidation'
 
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe, generateToastMarkup, deepSearch } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
 import { PhoneNumber } from '~/modules/phoneNumber'
 
@@ -50,33 +50,37 @@ const initialFormValues = {
   },
   website: '',
   mailingBranch: {
-    name: '',
-    accessorials: [],
-    address: {
-      city: '',
-      country: '',
-      province: '',
-      streetAddress: '',
-      zip: ''
+    deliveryAddress: {
+      addressName: '',
+      accessorials: [],
+      address: {
+        city: '',
+        country: '',
+        province: '',
+        streetAddress: '',
+        zip: ''
+      },
+      contactEmail: '',
+      contactName: '',
+      contactPhone: '',
     },
-    contactEmail: '',
-    contactName: '',
-    contactPhone: '',
     warehouse: true
   },
   primaryBranch: {
-    name: '',
-    accessorials: [],
-    address: {
-      city: '',
-      country: '',
-      province: '',
-      streetAddress: '',
-      zip: ''
+    deliveryAddress: {
+      addressName: '',
+      accessorials: [],
+      address: {
+        city: '',
+        country: '',
+        province: '',
+        streetAddress: '',
+        zip: ''
+      },
+      contactEmail: '',
+      contactName: '',
+      contactPhone: '',
     },
-    contactEmail: '',
-    contactName: '',
-    contactPhone: '',
     warehouse: true
   },
   primaryUser: {
@@ -106,10 +110,11 @@ class AddNewPopupCasProducts extends React.Component {
 
   formValidationNew = () => (Yup.lazy(values => {
     // let primaryUserRequired = values.primaryUser.email !== '' || values.primaryUser.name !== ''
-    let mailingBranchRequired = values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
-      values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
-      values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
-      values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''
+    // let mailingBranchRequired = values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
+    //   values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
+    //   values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
+    //   values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''
+    let mailingBranchRequired = deepSearch(values.mailingBranch.deliveryAddress, (val) => val !== '')
 
     let minLength = errorMessages.minLength(2)
 
@@ -129,12 +134,13 @@ class AddNewPopupCasProducts extends React.Component {
       }),
 
       primaryBranch: Yup.object().shape({
-        name: Yup.string().trim().min(2, minLength).required(minLength),
-        contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-        contactName: Yup.string().trim().min(2, minLength).required(minLength),
-        // contactPhone: Yup.string().trim().required(errorMessages.enterPhoneNumber),
-        contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),
-        address: addressValidationSchema()
+        deliveryAddress: Yup.object().shape({
+          addressName: Yup.string().trim().min(2, minLength).required(minLength),
+          contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
+          contactName: Yup.string().trim().min(2, minLength).required(minLength),
+          contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),
+          address: addressValidationSchema()
+        })
       }),
       primaryUser: Yup.lazy(() => {
         // if (primaryUserRequired) 
@@ -241,13 +247,13 @@ class AddNewPopupCasProducts extends React.Component {
       popupValues,
       updateCompany,
       createCompany,
-      countriesDropDown,
-      primaryBranchProvinces,
-      mailingBranchProvinces,
+      // countriesDropDown,
+      // primaryBranchProvinces,
+      // mailingBranchProvinces,
       config,
       intl,
-      AddressSuggestPrimaryBranchInput,
-      AddressSuggestMailingBranchInput,
+      // AddressSuggestPrimaryBranchInput,
+      // AddressSuggestMailingBranchInput,
       toastManager,
       postCompanyLogo,
       deleteCompanyLogo
@@ -299,12 +305,15 @@ class AddNewPopupCasProducts extends React.Component {
 
             }
             else {
-              if (values.mailingBranch && !(values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
-                values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
-                values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
-                values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''))
-                delete values['mailingBranch']
+              // Really ??
+              // if (values.mailingBranch && !(values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
+              //   values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
+              //   values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
+              //   values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''))
+              //   delete values['mailingBranch']
 
+              if(!values.deliveryAddress || !deepSearch(values.mailingBranch.deliveryAddress, (val) => val !== '')) delete values['mailingBranch']
+              
               let branches = ['primaryBranch', 'mailingBranch']
 
 
@@ -313,8 +322,8 @@ class AddNewPopupCasProducts extends React.Component {
               let payload = cloneDeep(values)
 
               branches.forEach(branch => {
-                let country = getSafe(() => JSON.parse(payload[branch].address.country).countryId)
-                if (country) payload[branch].address.country = country
+                let country = getSafe(() => JSON.parse(payload[branch].deliveryAddress.address.country).countryId)
+                if (country) payload[branch].deliveryAddress.address.country = country
               })
 
               if (this.state.companyLogo) {
@@ -364,7 +373,7 @@ class AddNewPopupCasProducts extends React.Component {
                   <Accordion exclusive={false}>
                     <Modal.Content>
                       <CompanyForm admin={true} selectLogo={selectLogo} removeLogo={removeLogo} companyLogo={companyLogo} values={values} setFieldValue={setFieldValue}
-                                   setFieldTouched={setFieldTouched} errors={errors} touched={touched} isSubmitting={isSubmitting}/>
+                        setFieldTouched={setFieldTouched} errors={errors} touched={touched} isSubmitting={isSubmitting} />
                       {!popupValues && (
                         <>
                           <Divider />
@@ -404,14 +413,14 @@ class AddNewPopupCasProducts extends React.Component {
                         </Accordion.Title>
                         <Accordion.Content active={accordionActive.billingAddress}>
                           <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchName_inp' >
-                            <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='primaryBranch.name' />
+                            <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='primaryBranch.deliveryAddress.addressName' />
                           </FormGroup>
                           <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchNameEmailPhone_inp' >
-                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='primaryBranch.contactName' />
-                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />} name='primaryBranch.contactEmail' />
+                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='primaryBranch.deliveryAddress.contactName' />
+                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />} name='primaryBranch.deliveryAddress.contactEmail' />
                             <PhoneNumber
                               label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />}
-                              name='primaryBranch.contactPhone'
+                              name='primaryBranch.deliveryAddress.contactPhone'
                               values={values} setFieldValue={setFieldValue}
                               setFieldTouched={setFieldTouched} errors={errors}
                               touched={touched} isSubmitting={isSubmitting}
@@ -420,7 +429,7 @@ class AddNewPopupCasProducts extends React.Component {
                           <FormGroup widths='equal'>
                             <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='primaryBranch.warehouse' inputProps={{ 'data-test': 'admin_popup_company_primaryBranch_warehouse_chckb' }} />
                           </FormGroup>
-                          <AddressForm values={values} setFieldValue={setFieldValue} prefix='primaryBranch' />
+                          <AddressForm values={values} setFieldValue={setFieldValue} prefix='primaryBranch.deliveryAddress' />
                         </Accordion.Content>
                         <Divider />
 
@@ -432,23 +441,23 @@ class AddNewPopupCasProducts extends React.Component {
                         </Accordion.Title>
                         <Accordion.Content active={accordionActive.mailingAddress}>
                           <FormGroup widths='equal' data-test='admin_popup_company_mailingBranchNameEmailPhone_inp'>
-                            <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='mailingBranch.name' />
+                            <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='mailingBranch.deliveryAddress.addressName' />
                           </FormGroup>
                           <FormGroup widths='equal'>
-                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact Email' />} name='mailingBranch.contactEmail' />
-                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='mailingBranch.contactName' />
+                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact Email' />} name='mailingBranch.deliveryAddress.contactEmail' />
+                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='mailingBranch.deliveryAddress.contactName' />
                             <PhoneNumber
                               label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />}
-                              name='mailingBranch.contactPhone'
+                              name='mailingBranch.deliveryAddress.contactPhone'
                               values={values} setFieldValue={setFieldValue}
                               setFieldTouched={setFieldTouched} errors={errors}
                               touched={touched} isSubmitting={isSubmitting}
                             />
                           </FormGroup>
                           <FormGroup widths='equal'>
-                            <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='mailingBranch.warehouse' inputProps={{ 'data-test': 'admin_popup_company_mailingBranch_warehouse_chckb' }} />
+                            <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='mailingBranch.deliveryAddress.warehouse' inputProps={{ 'data-test': 'admin_popup_company_mailingBranch_warehouse_chckb' }} />
                           </FormGroup>
-                          <AddressForm values={values} setFieldValue={setFieldValue} prefix='mailingBranch' datalistName='mailingAddresses' />
+                          <AddressForm values={values} setFieldValue={setFieldValue} prefix='mailingBranch.deliveryAddress' datalistName='mailingAddresses.deliveryAddress' />
                         </Accordion.Content>
                       </>}
                     </Modal.Content>

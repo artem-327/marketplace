@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import get from 'lodash/get'
 import { Header, Menu, Button, Checkbox, Input, Dropdown, Grid, GridRow, GridColumn } from 'semantic-ui-react'
+import { debounce } from 'lodash'
+import Router from 'next/router'
+
 import * as Actions from '../actions'
 import { openGlobalBroadcast } from '~/modules/broadcast/actions'
-import { debounce } from 'lodash'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
@@ -142,7 +144,7 @@ class TablesHandlers extends Component {
             <GridColumn>
               <Button
                 primary
-                onClick={() => openDwollaPopup()}
+                onClick={() => Router.push('/dwolla-register')}
                 data-test='settings_dwolla_open_popup_btn'
               >
                 <FormattedMessage id='settings.tables.bankAccounts.registerDwolla' defaultMessage='Register Dwolla Account' >{(text) => text}</FormattedMessage>
@@ -166,7 +168,7 @@ class TablesHandlers extends Component {
           (bankAccTab && bankAccounts.dwollaBalance) && (
             <GridColumn computer={2}>
               <FormattedMessage id='settings.dwollaAccBalance' defaultMessage='Dwolla Balance: ' />
-        <FormattedNumber style='currency' currency={dwollaAccBalance.currency} value={dwollaAccBalance.value} />
+              <FormattedNumber style='currency' currency={dwollaAccBalance.currency} value={dwollaAccBalance.value} />
             </GridColumn>
           )
         }

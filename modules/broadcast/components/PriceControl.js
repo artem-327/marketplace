@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import _ from 'lodash'
 import { FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
+import { getSafe } from '~/utils/functions'
 
 export default class PriceControl extends Component {
 
@@ -95,18 +96,16 @@ export default class PriceControl extends Component {
   }
 
 
-  calculateMinimum = (type = this.state.type) => type === 'multiplier' ? -99.9 : -1 * (this.props.offer.pricingTiers[this.props.offer.pricingTiers.length - 1].price.amount) + 0.001
+  calculateMinimum = (type = this.state.type) => type === 'multiplier' ? -99.9 : -1 * (this.props.offer.pricingTiers[this.props.offer.pricingTiers.length - 1].pricePerUOM) + 0.001
 
   getPrices = () => {
     const { offer, item, rootRule } = this.props
     const { model: { rule } } = item
 
     const r = rule //rootRule || rule
-    const calc = (p) => (p + (p * (r.priceMultiplier / 100))) + r.priceAddition
+    const calc = (p) => (p + (p * (getSafe(() => r.priceMultiplier, 0) / 100))) + getSafe(() => r.priceAddition, 0)
 
-    let high = calc(offer.pricingTiers[0].price.amount), low = calc(offer.pricingTiers[offer.pricingTiers.length - 1].price.amount)
-
-
+    let high = calc(offer.pricingTiers[0].pricePerUOM), low = calc(offer.pricingTiers[offer.pricingTiers.length - 1].pricePerUOM)
 
     return {
       highStr: <FormattedNumber style='currency' currency={currency} value={high ? high : 0} />,
