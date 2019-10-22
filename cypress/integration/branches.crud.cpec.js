@@ -40,6 +40,7 @@ context("Prodex Branches CRUD", () => {
 
         cy.contains("Created Warehouse")
 
+        //TODO Fix filter
         let filter = [{"operator": "LIKE", "path": "Branch.displayName", "values": ["%Central%"]}]
 
         cy.getToken().then(token => {

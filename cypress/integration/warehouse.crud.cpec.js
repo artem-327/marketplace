@@ -6,7 +6,7 @@ context("Prodex Warehouse CRUD", () => {
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("POST", "/prodex/api/branches/warehouses/datagrid").as("warehouseLoading")
 
-        cy.login("user1@example.com", "echopass123")
+        cy.FElogin("user1@example.com", "echopass123")
 
         cy.url().should("include", "inventory")
 
@@ -20,66 +20,64 @@ context("Prodex Warehouse CRUD", () => {
     })
 
     it("Creates a warehouse", () => {
-        cy.clickAdd()
+        cy.get("[data-test='settings_open_popup_btn']").click()
 
-        cy.enterText("#field_input_name", "Central branch")
-        cy.enterText("input[id='field_input_address.streetAddress']", "125 N G St")
-        cy.enterText("input[id='field_input_address.city']", "Harlingen")
+        cy.enterText("input[name='deliveryAddress.addressName']", "Central branch")
+        cy.enterText("input[id='field_input_deliveryAddress.address.streetAddress']", "125 N G St")
+        cy.enterText("input[id='field_input_deliveryAddress.address.city']", "Harlingen")
 
-        cy.selectFromDropdown("div[id='field_dropdown_address.country']","Bahamas")
+        cy.selectFromDropdown("div[id='field_dropdown_deliveryAddress.address.country']","Bahamas")
         cy.waitForUI()
-        cy.selectFromDropdown("div[id='field_dropdown_address.zip']","75000")
+        cy.selectFromDropdown("div[id='field_dropdown_deliveryAddress.address.zip']","75000")
 
-        cy.enterText("input[id='field_input_contactName']","David Cameron")
-        cy.enterText("input[id='field_input_contactPhone']","123456789")
-        cy.enterText("input[id='field_input_contactEmail']","test@central.com")
+        cy.enterText("input[id='field_input_deliveryAddress.contactName']","David Cameron")
+        cy.get("div[data-test='settings_warehouse_popup_phoneEmail_inp']").within(($form) =>{
+            cy.get("input[placeholder = 'Phone Number']").type("2025550156")
+            cy.contains("+CCC").click()
+            cy.contains("USA").click()
+        })
+        cy.enterText("input[id='field_input_deliveryAddress.contactEmail']","test@central.com")
 
         cy.clickSave()
 
         cy.contains("Created Warehouse")
 
-        let filter = [{"operator":"LIKE","path":"Branch.name","values":["%Central%"]},
-            {"operator":"LIKE","path":"Branch.address.streetAddress","values":["%Central%"]},
-            {"operator":"LIKE","path":"Branch.contactName","values":["%Central%"]}]
+        //TODO Fix filter
+        let filter = [{"operator":"LIKE","path":"Branch.addressName","values":["%Central%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstBranchIdWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.openElement(itemId, 0)
 
                 branchId = itemId
             })
         })
 
-        cy.get("input[id='field_input_address.city']")
+        cy.get("input[id='field_input_deliveryAddress.address.city']")
             .should("have.value","Harlingen")
 
-        cy.get("#field_input_contactName")
+        cy.get("input[id='field_input_deliveryAddress.contactName']")
             .should("have.value","David Cameron")
 
-        cy.get("#field_input_contactPhone")
-            .should("have.value","123456789")
+        cy.contains("202 555 0156")
 
-        cy.get("#field_input_contactEmail")
+        cy.get("input[id='field_input_deliveryAddress.contactEmail']")
             .should("have.value","test@central.com")
     })
 
     it("Edits a warehouse", () => {
-        cy.get('[data-test=action_' + branchId + ']').click({force: true})
-        cy.get('[data-test=action_' + branchId + '_0]').click({force: true})
+        cy.openElement(branchId, 0)
 
-        cy.get("#field_input_contactName")
+        cy.get("input[id='field_input_deliveryAddress.contactName']")
             .clear()
             .type("Arnold Schwarzenegger")
             .should("have.value","Arnold Schwarzenegger")
 
         cy.clickSave()
 
-        cy.get('[data-test=action_' + branchId + ']').click({force: true})
-        cy.get('[data-test=action_' + branchId + '_0]').click({force: true})
+        cy.openElement(branchId, 0)
 
-        cy.get("#field_input_contactName")
+        cy.get("input[id='field_input_deliveryAddress.contactName']")
             .should("have.value","Arnold Schwarzenegger")
     })
 
@@ -96,8 +94,7 @@ context("Prodex Warehouse CRUD", () => {
     })
 
     it("Deletes a warehouse", () => {
-        cy.get('[data-test=action_' + branchId + ']').click({force: true})
-        cy.get('[data-test=action_' + branchId + '_1]').click({force: true})
+        cy.openElement(branchId, 1)
 
         cy.clickSave()
 

@@ -27,7 +27,7 @@ context("Company Documents CRUD", () => {
             cy.get("input[type='file']").upload({fileContent, fileName: "cy.png", mimeType: "image/png"})
         })
 
-        cy.enterText("#field_input_customName", "Cypress")
+        cy.enterText("#field_input_description", "Cypress")
         cy.get("div[id='field_dropdown_documentType.id']").click()
         cy.contains("Certificate of Origin").click()
 
@@ -45,7 +45,7 @@ context("Company Documents CRUD", () => {
             })
         })
 
-        cy.get("#field_input_customName")
+        cy.get("#field_input_description")
             .should("have.value", "Cypress")
 
         cy.contains("Certificate of Origin")
@@ -54,16 +54,16 @@ context("Company Documents CRUD", () => {
     it("Edits a document", () => {
         cy.openElement(attachmentId, 0)
 
-        cy.get("#field_input_customName")
+        cy.get("#field_input_description")
             .clear()
-            .type("Cypress")
-            .should("have.value", "Cypress")
+            .type("Testing")
+            .should("have.value", "Testing")
 
         cy.clickSave()
 
         cy.openElement(attachmentId, 0)
-        cy.get("#field_input_customName")
-            .should("have.value", "Cypress")
+        cy.get("#field_input_description")
+            .should("have.value", "Testing")
     })
 
     it("Checks error messages", () => {
