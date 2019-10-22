@@ -35,7 +35,7 @@ export const FlexTabs = styled.div`
   text-align: left;
   border-bottom: 1px solid #f0f0f0;
   padding: 10px 0 15px 0;
-  font-weight: bold;
+  font-weight: 400;
   font-size: 1.1rem;
 `
 
@@ -127,7 +127,7 @@ const validationScheme = val.object().shape({
   edit: val.object().shape({
     product: val.number().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
     fobPrice: val.number().typeError(errorMessages.mustBeNumber).nullable().required(errorMessages.requiredMessage),
-    lotNumber: val.string().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
+    lotNumber: val.string().typeError(errorMessages.invalidString).nullable(),
     inStock: val.bool().required(errorMessages.requiredMessage),
     minimum: val.number().typeError(errorMessages.mustBeNumber).divisibleBy(val.ref('splits'), <FormattedMessage id='inventory.notDivisibleBySplits' defaultMessage='Value is not divisible by Splits' />).required(errorMessages.requiredMessage),
     pkgAvailable: val.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage),
@@ -290,6 +290,20 @@ class DetailSidebar extends Component {
     })
   }
 
+  switchToErrors = (tabs) => {
+    switch (tabs[0]) {
+      case 'edit':
+        this.switchTab(0)
+        break
+      case 'priceBook':
+        this.switchTab(1)
+        break
+      case 'priceTiers':
+        this.switchTab(2)
+        break
+    }
+  }
+
   render() {
     let {
       addProductOffer,
@@ -312,6 +326,26 @@ class DetailSidebar extends Component {
     const leftWidth = 6
     const rightWidth = 10
 
+    const optionsYesNo = [{
+      key: 1,
+      text: <FormattedMessage id='global.yes' defaultMessage='Yes' />,
+      value: true
+    }, {
+      key: 0,
+      text: <FormattedMessage id='global.no' defaultMessage='No' />,
+      value: false
+    }]
+
+    const listConforming = [{
+      key: 1,
+      text: <FormattedMessage id='global.conforming' defaultMessage='Conforming' />,
+      value: true
+    }, {
+      key: 0,
+      text: <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />,
+      value: false
+    }]
+
     const {
       toggleFilter
     } = this.props
@@ -319,14 +353,16 @@ class DetailSidebar extends Component {
     let editValues = {}
     editValues = {
       edit: {
+        condition: getSafe(() => sidebarValues.condition, null),
         conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
+        conforming: getSafe(() => sidebarValues.conforming, null),
         costPerUOM: getSafe(() => sidebarValues.costPerUOM, ''),
         externalNotes: getSafe(() => sidebarValues.externalNotes, ''),
         fobPrice: getSafe(() => sidebarValues.pricingTiers[0].pricePerUOM, ''),
         inStock: getSafe(() => sidebarValues.inStock, false),
         internalNotes: getSafe(() => sidebarValues.internalNotes, ''),
         leadTime: getSafe(() => sidebarValues.leadTime, 1),
-        lotNumber: getSafe(() => sidebarValues.lotNumber, null),
+        lotNumber: getSafe(() => sidebarValues.lotNumber, ''),
         lotExpirationDate: getSafe(() => sidebarValues.lotExpirationDate.substring(0, 10), ''),
         lotManufacturedDate: getSafe(() => sidebarValues.lotManufacturedDate.substring(0, 10), ''),
         minimum: getSafe(() => sidebarValues.minPkg, 1),
@@ -424,6 +460,7 @@ class DetailSidebar extends Component {
                                      // stop when errors found
                                      if (Object.keys(r).length) {
                                        submitForm() // show errors
+                                       this.switchToErrors(Object.keys(r))
                                        return false
                                      }
 
@@ -467,6 +504,30 @@ class DetailSidebar extends Component {
                                            onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && this.searchProducts(searchQuery)
                                          }}
                                        />
+                                     </GridColumn>
+                                   </GridRow>
+                                   <GridRow>
+                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                       <FormattedMessage id='addInventory.pkgsAvailable' defaultMessage='Pkgs Available'>{text => text}</FormattedMessage>
+                                     </GridColumn>
+                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                       <Input type='text'
+                                              name='edit.pkgAvailable' />
+                                     </GridColumn>
+                                   </GridRow>
+                                   <GridRow>
+                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                       <FormattedMessage id='global.warehouse' defaultMessage='Warehouse'>{text => text}</FormattedMessage>
+                                     </GridColumn>
+                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                       <Dropdown
+                                         name='edit.warehouse'
+                                         options={warehousesList}
+                                         inputProps={{
+                                           selection: true,
+                                           value: 0,
+                                           'data-test': 'new_inventory_warehouse_drpdn'
+                                         }} />
                                      </GridColumn>
                                    </GridRow>
                                    <GridRow>
@@ -532,30 +593,6 @@ class DetailSidebar extends Component {
                                    </GridRow>
                                    <GridRow>
                                      <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.pkgsAvailable' defaultMessage='Pkgs Available'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <Input type='text'
-                                              name='edit.pkgAvailable' />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='global.warehouse' defaultMessage='Warehouse'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <Dropdown
-                                         name='edit.warehouse'
-                                         options={warehousesList}
-                                         inputProps={{
-                                           selection: true,
-                                           value: 0,
-                                           'data-test': 'new_inventory_warehouse_drpdn'
-                                         }} />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
                                        <FormattedMessage id='addInventory.grades' defaultMessage='Grades'>{text => text}</FormattedMessage>
                                      </GridColumn>
                                      <GridColumn mobile={rightWidth} computer={rightWidth}>
@@ -604,6 +641,17 @@ class DetailSidebar extends Component {
                                      </GridColumn>
                                      <GridColumn mobile={rightWidth} computer={rightWidth}>
                                        <Dropdown
+                                         name='edit.conforming'
+                                         options={listConforming}
+                                         inputProps={{ 'data-test': 'new_inventory_conforming_drpdn' }} />
+                                     </GridColumn>
+                                   </GridRow>
+                                   <GridRow style={{ position: 'absolute', top: '-20000px', left: '-20000px' }}>
+                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                       <FormattedMessage id='addInventory.condition' defaultMessage='Condition'>{text => text}</FormattedMessage>
+                                     </GridColumn>
+                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                       <Dropdown
                                          name='edit.productCondition'
                                          options={listConditions}
                                          inputProps={{ 'data-test': 'new_inventory_condition_drpdn' }} />
@@ -625,15 +673,10 @@ class DetailSidebar extends Component {
                                      <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
                                        <FormattedMessage id='global.inStock' defaultMessage='In Stock'>{text => text}</FormattedMessage>
                                      </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <Grid>
-                                         <GridColumn computer={5} tablet={8}>
-                                           <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='edit.inStock' data-test='add_inventory_instock_no_rad' />
-                                         </GridColumn>
-                                         <GridColumn computer={5} tablet={8}>
-                                           <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='edit.inStock' data-test='add_inventory_instock_yes_rad' />
-                                         </GridColumn>
-                                       </Grid>
+                                     <GridColumn mobile={rightWidth - 5} computer={rightWidth - 5}>
+                                       <Dropdown name='edit.inStock'
+                                                 options={optionsYesNo}
+                                                 inputProps={{ 'data-test': 'add_inventory_instock' }} />
                                      </GridColumn>
                                    </GridRow>
                                    <GridRow>
@@ -652,15 +695,10 @@ class DetailSidebar extends Component {
                                      <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
                                        <FormattedMessage id='global.offerExpiration' defaultMessage='Offer Expiration'>{text => text}</FormattedMessage>
                                      </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <Grid>
-                                         <GridColumn computer={5} tablet={8}>
-                                           <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='edit.doesExpire' data-test='add_inventory_expire_no_rad' />
-                                         </GridColumn>
-                                         <GridColumn computer={5} tablet={8}>
-                                           <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='edit.doesExpire' data-test='add_inventory_expire_yes_rad' />
-                                         </GridColumn>
-                                       </Grid>
+                                     <GridColumn mobile={rightWidth - 5} computer={rightWidth - 5}>
+                                       <Dropdown name='edit.doesExpire'
+                                                 options={optionsYesNo}
+                                                 inputProps={{ 'data-test': 'add_inventory_doesExpire' }} />
                                      </GridColumn>
                                    </GridRow>
                                    <GridRow>
@@ -735,6 +773,7 @@ class DetailSidebar extends Component {
                                      // stop when errors found
                                      if (Object.keys(r).length) {
                                        submitForm() // show errors
+                                       this.switchToErrors(Object.keys(r))
                                        return false
                                      }
 
@@ -763,6 +802,7 @@ class DetailSidebar extends Component {
                                      // stop when errors found
                                      if (Object.keys(r).length) {
                                        submitForm() // show errors
+                                       this.switchToErrors(Object.keys(r))
                                        return false
                                      }
 
@@ -856,12 +896,19 @@ class DetailSidebar extends Component {
                       </Button>
                     </GridColumn>
                     <GridColumn computer={10} textAlign='right'>
-                      <Button.Submit
+                      <Button
+                        primary
                         size='large'
                         inputProps={{ type: 'button' }}
+                        onClick={() => validateForm().then(r => {
+                          if (Object.keys(r).length)
+                            this.switchToErrors(Object.keys(r))
+
+                          submitForm()
+                        })}
                         data-test='sidebar_inventory_save_new'>
                         {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-                      </Button.Submit>
+                      </Button>
                     </GridColumn>
                   </GridRow>
                 </Grid>

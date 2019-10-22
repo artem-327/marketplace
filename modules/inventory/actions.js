@@ -59,13 +59,6 @@ export function addProductOffer(values, poId = false, simple = false) {
 
   if (!simple) {
 
-    /*if (values.lots.length === 0) {
-      values.lots = [{
-        lotNumber: '1',
-        pkgAvailable: parseInt(values.pkgAvailable)
-      }]
-    }*/
-
     const attachments = values.attachments && values.attachments.length ? values.attachments.map(att => {
       return att.id
     }) : []
@@ -88,6 +81,7 @@ export function addProductOffer(values, poId = false, simple = false) {
       }) : null,
       companyProduct: parseInt(values.product),
       conditionNotes: getSafe(() => values.conditionNotes, null),
+      conforming: getSafe(() => values.conforming, null),
       costPerUOM: getSafe(() => values.costPerUOM, null),
       externalNotes: getSafe(() => values.externalNotes),
       inStock: values.inStock,
@@ -96,18 +90,6 @@ export function addProductOffer(values, poId = false, simple = false) {
       lotExpirationDate: getSafe(() => values.lotExpirationDate, null),
       lotManufacturedDate: getSafe(() => values.lotManufacturedDate, null),
       lotNumber: getSafe(() => values.lotNumber, null),
-      /*lots: values.lots ? values.lots.map(lot => {
-        return {
-          lotNumber: lot.lotNumber,
-          attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
-            return att.id
-          }) : null,
-          expirationDate: lot.expirationDate && getSafe(() => moment(lot.expirationDate).utc(lot.expirationDate).format()),
-          lotNumber: lot.lotNumber,
-          manufacturedDate: lot.manufacturedDate && getSafe(() => moment(lot.manufacturedDate).utc(lot.manufacturedDate).format()),
-          pkgAvailable: getSafe(() => parseInt(lot.pkgAvailable))
-        }
-      }) : null,*/
       // ! ! otestovat manufacturer: getSafe(() => values.manufacturer),
       minPkg: parseInt(values.minimum),
       origin: getSafe(() => values.origin),
@@ -132,15 +114,23 @@ export function addProductOffer(values, poId = false, simple = false) {
     params = values // ! ! az bude BE vracet pricingTiers, tak predelat zkombinovat tento radek s vytvarenim objektu vyse (prejmenovane / chybejici atributy)
   }
 
+  let paramsCleaned = {}
+  const paramKeys = Object.keys(params)
+  for (let i = 0; i < paramKeys.length; i++) {
+    if ((Array.isArray(params[paramKeys[i]]) && params[paramKeys[i]].length > 0) || (!Array.isArray(params[paramKeys[i]]) && !!params[paramKeys[i]]) || (params[paramKeys[i]] === false)) {
+      paramsCleaned[paramKeys[i]] = params[paramKeys[i]]
+    }
+  }
+
   if (poId) {
     return {
       type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
-      payload: api.updateProductOffer(poId, params)
+      payload: api.updateProductOffer(poId, paramsCleaned)
     }
   } else {
     return {
       type: AT.INVENTORY_ADD_PRODUCT_OFFER,
-      payload: api.addProductOffer(params)
+      payload: api.addProductOffer(paramsCleaned)
     }
   }
 }
