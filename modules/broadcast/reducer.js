@@ -4,7 +4,7 @@ import {
   saveRules, switchMode, saveTemplate,
   getTemplates, getTemplate, updateTemplate,
   deleteTemplate, initGlobalBroadcast,
-  loadingChanged
+  loadingChanged, treeDataChanged
 } from './actions'
 
 const initialState = {
@@ -182,5 +182,9 @@ export default typeToReducer({
     ...state,
     loading: typeof payload === 'boolean' ? payload : !state.loading
   }),
+  [treeDataChanged]: (state, { payload }) => ({
+    ...state,
+    data: payload
+  })
 
 }, initialState)

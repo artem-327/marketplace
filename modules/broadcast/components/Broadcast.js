@@ -40,7 +40,8 @@ class Broadcast extends Component {
     broadcastingTo: 0,
     change: false,
     saved: false,
-    initialize: true
+    initialize: true,
+    loading: false
   }
 
   constructor(props) {
@@ -56,7 +57,11 @@ class Broadcast extends Component {
 
   componentWillReceiveProps(props, next) {
     let tree = this.getFilteredTree(props.treeData, props.filter)
-    this.setState({ filterSearch: props.filter.search, tree })
+    
+    if (!_.isEqual(tree, this.state.tree)) {
+      this.setState({ tree })
+    }
+
   }
 
   handlePriceChange = (node) => {
@@ -115,30 +120,28 @@ class Broadcast extends Component {
     this.calculateBroadcastingCnt()
   }
 
-  handleChange = (node) => {
 
+  handleChange = (node) => {
     const findInData = node => getSafe(() => this.props.treeData.first((n) => (n.model.id === node.model.rule.id && n.model.type === node.model.rule.type)), null)
 
-    let found = findInData(node)
-    let path = getSafe(() => found.getPath(), [])
+    let path = getSafe(() => findInData(node).getPath(), [])
+    for (let i = path.length - 2; i >= 0; i--) setBroadcast(path[i])
 
+    this.setState({ tree: this.state.tree, change: true, saved: false })
     // Hotfix - Changes were not applied to data structure when clicking on nodes with childs with 'By Company' filter applied
     // This fixes it, but causes a delay when clicking on root as it iterates through every node and it's path in data structure
 
     if (node.hasChildren() && this.props.filter.category === 'branch') {
-      this.props.loadingChanged(true)
       node.walk((n) => {
+
         let childPath = getSafe(() => findInData(n).getPath(), [])
 
-        for (let i = childPath.length - 2; i >= 0; i--) setBroadcast(childPath[i])
+        for (let i = childPath.length - 2; i >= 0; i--)  setBroadcast(childPath[i])
 
       })
-    } else {
-      for (let i = path.length - 2; i >= 0; i--) setBroadcast(path[i])
-
     }
 
-    this.setState({ tree: this.state.tree, change: true, saved: false })
+
   }
 
   handleRowClick = (node) => {
@@ -233,7 +236,7 @@ class Broadcast extends Component {
     }
 
     normalizeTree(tree)
-    this.setState({ tree: this.state.tree })
+    // this.setState({ tree: this.state.tree })
 
     return tree
   }
@@ -276,7 +279,6 @@ class Broadcast extends Component {
     } = this.props
 
     let total = treeData.all(n => n.model.type === (this.props.filter.category === 'branch' ? 'branch' : 'state')).length
-
 
     return (
       <StretchedGrid className='flex stretched' {...additionalGridProps}>
@@ -440,6 +442,7 @@ class Broadcast extends Component {
               </Rule.Header>
               <Rule.Content>
                 <RuleItem
+                  loadingChanged={this.props.loadingChanged}
                   filter={filter}
                   hideFobPrice={hideFobPrice}
                   item={this.state.tree}
@@ -450,7 +453,7 @@ class Broadcast extends Component {
                   onChange={this.handleChange}
                   data-test='broadcast_modal_rule_action'
                 />
-                {loading && <Dimmer active inverted><Loader active /></Dimmer>}
+                <Dimmer active={loading} inverted><Loader active={loading} /></Dimmer>
               </Rule.Content>
             </Rule.Root>
             {!asModal &&
@@ -511,7 +514,6 @@ class Broadcast extends Component {
 
   render() {
     const { open, closeBroadcast, asModal, isPrepared } = this.props
-
 
 
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
