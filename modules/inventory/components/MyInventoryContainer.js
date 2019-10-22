@@ -18,7 +18,7 @@ import { getSafe } from '~/utils/functions'
 import moment from 'moment/moment'
 
 function mapStateToProps(store, { datagrid }) {
- 
+
   return {
     ...store.simpleAdd,
     sellEligible: getSafe(() => store.auth.identity.company.sellEligible, false),
@@ -41,7 +41,7 @@ function mapStateToProps(store, { datagrid }) {
         echoName: getSafe(() => po.companyProduct.echoProduct.name, ''),
         echoCode: getSafe(() => po.companyProduct.echoProduct.code, 'Unmapped'),
         chemicalName: getSafe(() => po.product.casProduct.chemicalName, po.companyProduct.intProductName),
-        warehouse: getSafe(() => po.warehouse.address.country.name, ),
+        warehouse: getSafe(() => po.warehouse.deliveryAddress.addressName),
         productId: getSafe(() => po.product.casProduct.id, 0),
         available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
         packaging: getSafe(() => po.companyProduct.packagingType.name) ? <UnitOfPackaging value={po.companyProduct.packagingType.name} /> : 'N/A',
