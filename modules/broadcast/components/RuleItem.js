@@ -16,10 +16,13 @@ const RuleItem = (props) => {
     item: { model: { name, rule } },
     hideFobPrice,
     filter,
+    loadingChanged
     // tree,
   } = props
 
   const handleChange = (propertyName, e) => {
+    // loadingChanged(true)
+
     e.preventDefault()
     e.stopPropagation()
 
@@ -32,13 +35,13 @@ const RuleItem = (props) => {
     if (item.hasChildren()) {
       item.walk((node) => {
         node.model.rule.broadcast = newValue
-  
+
       })
     }
 
-    let path = item.getPath()
-    path.pop()
-    path.forEach(n => setBroadcast(n))
+    // let path = item.getPath()
+    // path.pop()
+    // path.forEach(n => setBroadcast(n))
     onChange(item)
   }
 
@@ -94,6 +97,7 @@ const RuleItem = (props) => {
 
       {(item.model.expanded || rule.type === 'root') && item.children.map((i, idx) => (
         <RuleItem
+          loadingChanged={loadingChanged}
           filter={filter}
           hideFobPrice={hideFobPrice}
           data-test={`broadcast_rule_item_${i}`}
