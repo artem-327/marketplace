@@ -125,12 +125,24 @@ export function addProductOffer(values, poId = false, simple = false) {
   if (poId) {
     return {
       type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
-      payload: api.updateProductOffer(poId, paramsCleaned)
+      async payload() {
+        const response = await api.updateProductOffer(poId, paramsCleaned)
+        // TODO: if response will contain PO data - modify datagrid row instead of loading new data
+        // Datagrid.updateRow(poId, () => (response.data))
+        Datagrid.loadData()
+        // TODO: if response will contain PO data - return them and fill sidebarValues
+        return response
+      }
     }
   } else {
     return {
       type: AT.INVENTORY_ADD_PRODUCT_OFFER,
-      payload: api.addProductOffer(paramsCleaned)
+      async payload() {
+        const response = await api.addProductOffer(paramsCleaned)
+        Datagrid.loadData()
+        // TODO: if response will contain PO data - return them and fill sidebarValues
+        return response
+      }
     }
   }
 }

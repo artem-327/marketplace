@@ -3,11 +3,11 @@ import {connect} from "react-redux"
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Form, Button, Input, TextArea, Checkbox as FormikCheckbox, Dropdown, Radio } from 'formik-semantic-ui-fixed-validation'
 import { DateInput } from '~/components/custom-formik'
-import { getSafe } from '~/utils/functions'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
 import styled from "styled-components"
-import { Sidebar, Segment, Tab, Menu, Grid, GridRow, GridColumn, Header, Icon, Popup, FormField, Input as SemanticInput } from 'semantic-ui-react'
+import { Sidebar, Segment, Dimmer, Loader, Tab, Menu, Grid, GridRow, GridColumn, Header, Icon, Popup, FormField, Input as SemanticInput } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
 import {
   sidebarDetailTrigger, getAutocompleteData, getWarehouses, addProductOffer, getProductGrades,
@@ -310,6 +310,7 @@ class DetailSidebar extends Component {
       listConditions,
       listForms,
       listGrades,
+      loading,
       sidebarDetailOpen,
       sidebarValues,
       searchedManufacturers,
@@ -320,7 +321,8 @@ class DetailSidebar extends Component {
       searchedProductsLoading,
       searchOrigins,
       warehousesList,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      toastManager
     } = this.props
 
     const leftWidth = 6
@@ -423,8 +425,16 @@ class DetailSidebar extends Component {
 
           try {
             await addProductOffer(props, getSafe(() => this.props.sidebarValues.id, null))
+            toastManager.add(generateToastMarkup(
+              <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
+              <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Product Offer was successfully saved.' />,
+            ), {
+              appearance: 'success'
+            })
           } catch (e) { console.error(e) }
-          finally { setSubmitting(false) }
+          finally {
+            setSubmitting(false)
+          }
         }}>
         {({values, setFieldValue, validateForm, submitForm}) => {
 
@@ -444,6 +454,9 @@ class DetailSidebar extends Component {
                   console.error(e)
                 }
               }}>
+              <Dimmer inverted active={loading}>
+                <Loader />
+              </Dimmer>
               <FlexContent>
                 <Segment basic>
                   <FlexTabs>
@@ -941,6 +954,7 @@ const mapStateToProps = ({ simpleAdd: {
   listConditions,
   listForms,
   listGrades,
+  loading,
   sidebarDetailOpen,
   sidebarValues,
   searchedManufacturers,
@@ -956,6 +970,7 @@ const mapStateToProps = ({ simpleAdd: {
   listConditions,
   listForms,
   listGrades,
+  loading,
   sidebarDetailOpen,
   sidebarValues,
   searchedManufacturers,

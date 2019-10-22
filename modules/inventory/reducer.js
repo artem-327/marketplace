@@ -130,8 +130,6 @@ export default function reducer(state = initialState, action) {
       let { data } = action.payload
       let expirationDate = getSafe(() => data.validityDate)
 
-
-
       let filteredAttachments = data.attachments.reduce(function (filtered, att) {
         if (att.documentType.id === 2) {
           var returnedAtt = { id: att.id, name: att.name, linked: true, documentType: { ...att.documentType } }
