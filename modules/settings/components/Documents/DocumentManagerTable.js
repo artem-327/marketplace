@@ -25,6 +25,7 @@ const columns = [ // TODO - check en.json for those ids
   { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage> },
   { name: 'documentTypeName', title: <FormattedMessage id='global.docType' defaultMessage='Document Type'>{text => text}</FormattedMessage> },
   { name: 'linkCount', title: <FormattedMessage id='global.linkCount' defaultMessage='Links Count'>{text => text}</FormattedMessage> },
+  { name: 'expirationDate', title: <FormattedMessage id='global.expirationDate' defaultMessage='Expiration Date'>{text => text}</FormattedMessage> }
 ]
 
 class DocumentManager extends Component {
@@ -72,7 +73,7 @@ const mapStateToProps = (store, { datagrid }) => {
       ...row,
       documentTypeName: getSafe(() => row.documentType.name, ''),
       expirationDate: row.expirationDate && moment(row.expirationDate).format('YYYY-MM-DD'),
-      customName: getSafe(() => row.customName, row.name)
+      customName: getSafe(() => row.customName, row.name),
     }))
   }
 }
