@@ -39,6 +39,8 @@ import {
   DropdownFormatterProvider
 } from './providers'
 
+const isFirefox = typeof InstallTrigger !== 'undefined'
+
 const GlobalTableOverrideStyle = createGlobalStyle`
   .dx-g-bs4-table {
     margin-bottom: 0 !important;
@@ -48,9 +50,12 @@ const GlobalTableOverrideStyle = createGlobalStyle`
       padding: .5rem;
     }
   }
-  .bootstrapiso > .flex-column {
-    flex: 0 0 auto !important;
-  }
+  ${isFirefox &&
+    `
+    .bootstrapiso > .flex-column {
+      flex: 0 0 auto !important;
+    }
+  `}
   .group-row {
     position: relative;
     background: #EEE;
