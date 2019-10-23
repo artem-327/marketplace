@@ -2,17 +2,22 @@ import React from 'react'
 import { Dropdown, Icon } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
 
+
+const getDropdownItems = (actions = [], row) => (
+  actions.map((a, i) => 'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
+    <Dropdown.Item
+      data-test={`action_${row.id}_${i}`}
+      key={i}
+      text={typeof a.text !== 'function' ? a.text : a.text(row)}
+      disabled={getSafe(() => a.disabled(row), false)}
+      onClick={() => a.callback(row)}
+    />
+  ))
+)
+
 export function rowActionsCellFormatter({ column: { actions }, row }) {
-  const dropdownItems =
-    actions.map((a, i) => 'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
-        <Dropdown.Item
-          data-test={`action_${row.id}_${i}`}
-          key={i}
-          text={typeof a.text !== 'function' ? a.text : a.text(row)}
-          disabled={getSafe(() => a.disabled(row), false)}
-          onClick={() => a.callback(row)}
-        />
-      ))
+  const dropdownItems = getDropdownItems(actions, row)
+
 
   // Don't display if all dropdownItems are null
   const displayMenu = dropdownItems.findIndex(p => p !== null) >= 0
@@ -20,16 +25,16 @@ export function rowActionsCellFormatter({ column: { actions }, row }) {
   return (
     displayMenu
       ?
-        (<Dropdown
-          icon=""
-          trigger={<Icon data-test={`action_${row.id}`} name="ellipsis vertical" size="large" />}
-        >
-          <Dropdown.Menu>
-            {dropdownItems}
-          </Dropdown.Menu>
-        </Dropdown>)
+      (<Dropdown
+        icon=""
+        trigger={<Icon data-test={`action_${row.id}`} name="ellipsis vertical" size="large" />}
+      >
+        <Dropdown.Menu>
+          {dropdownItems}
+        </Dropdown.Menu>
+      </Dropdown>)
       :
-        null
+      null
   )
 }
 

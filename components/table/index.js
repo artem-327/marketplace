@@ -8,7 +8,7 @@ import { Form, Checkbox, Button } from 'formik-semantic-ui-fixed-validation'
 import _ from 'lodash'
 import GroupCell from './GroupCell'
 import { FormattedMessage, injectIntl } from 'react-intl'
-
+import { rowActionsCellFormatter } from './formatters'
 import {
   SearchState,
   IntegratedFiltering,
@@ -465,7 +465,7 @@ class _Table extends Component {
     const column = columns.find(c => c.name === s.columnName)
 
     this.handleColumnsSettings({ sorting })
-    
+
     onSortingChange && onSortingChange({
       sortPath: column ? column.sortPath : s.columnName,
       sortDirection: s.direction.toUpperCase()
@@ -510,6 +510,7 @@ class _Table extends Component {
       tableName,
       showColumnsWhenGrouped = false,
       lockSelection,
+      groupActions,
       ...restProps
     } = this.props
 
@@ -569,9 +570,10 @@ class _Table extends Component {
             }
             {groupBy &&
               getChildGroups
-              ? <CustomGrouping
-                getChildGroups={getChildGroups}
-              />
+              ? (
+                <CustomGrouping
+                  getChildGroups={getChildGroups}
+                />)
               : <IntegratedGrouping />
             }
 
@@ -643,7 +645,7 @@ class _Table extends Component {
               iconComponent={({ expanded }) => <Icon style={{ float: 'right' }} size='large' color='blue' name={expanded ? 'chevron down' : 'chevron right'} />}
               contentComponent={({ column, row, children, ...restProps }) => (
                 renderGroupLabel
-                  ? renderGroupLabel({ column, row })
+                  ? renderGroupLabel({ column, row, restProps, children: groupActions ? rowActionsCellFormatter({ column: { actions: groupActions(row) }, row }) : null })
                   : (
                     <span {...restProps}>
                       <strong>{column.title || column.name}:{' '}</strong>
