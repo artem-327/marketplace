@@ -118,7 +118,7 @@ export function getPricing(offerDetail, quantity) {
 
 export function getLocationString(productOffer) {
   try {
-    var location = productOffer.warehouse.address
+    var location = productOffer.warehouse.deliveryAddress.address
   } catch (e) {
     return ''
   }
