@@ -45,6 +45,7 @@ import locationsSaga from "~/src/saga/locations"
 import broadcastSaga from "~/src/saga/broadcast"
 import productOffersSaga from "~/src/saga/productOffers"
 import shippingQuotesSaga from "~/src/saga/shippingQuotes"
+import chatWidget from '~/modules/chatWidget/reducer'
 
 // Simple Add/Edit Inventory
 import simpleAdd from '~/modules/inventory/reducer'
@@ -117,6 +118,7 @@ const reducer = combineReducers({
   profile,
   broadcast,
   phoneNumber,
+  chatWidget,
 })
 
 const rootReducer = (state, action) => {

@@ -80,12 +80,13 @@ export default function reducer(state = initialState, action) {
       }
     }
     case AT.LOGIN_FULFILLED: {
-      let address = getSafe(() => payload.identity.homeBranch.address, null)
+      let address = getSafe(() => payload.identity.homeBranch.deliveryAddress.address, null)
+
       return {
         ...state,
         confirmationForm: getSafe(() => payload.identity.company.reviewRequested, false) ? {
           address: {
-            city: payload.identity.homeBranch.address.city,
+            city: address.city,
             country: JSON.stringify({ countryId: address.country.id, hasProvinces: address.country.hasProvinces }),
             province: address.province ? address.province.id : null,
             streetAddress: address.streetAddress,
@@ -93,11 +94,11 @@ export default function reducer(state = initialState, action) {
           },
           companyAdminUser: {
             name: payload.identity.name,
-            jobTitle: undefined,
+            jobTitle: payload.identity.jobTitle,
             phone: payload.identity.phone,
             email: payload.identity.email
           },
-          dba: '',
+          dba: payload.identity.company.dba,
           dunsNumber: payload.identity.company.dunsNumber,
           name: payload.identity.company.name,
           tin: payload.identity.company.tin

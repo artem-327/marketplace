@@ -1,5 +1,4 @@
 import * as AT from "./action-types"
-import { chatWidgetHide, chatWidgetShow, chatWidgetToggle } from '~/utils/chatWidget'
 
 export const initialState = {
   usersMe: null,
@@ -7,7 +6,6 @@ export const initialState = {
   loading: false,
   profilePopup: false,
   changePasswordPopup: false,
-  supportChatEnabled: false,
 }
 
 export default function reducer(state = initialState, action) {
@@ -27,32 +25,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         profilePopup: false
-      }
-    }
-
-    case AT.PROFILE_TOGGLE_SUPPORT_CHAT: {
-      state.supportChatEnabled ? chatWidgetHide() : chatWidgetShow()
-      //chatWidgetToggle()
-      return {
-        ...state,
-        supportChatEnabled: !state.supportChatEnabled
-      }
-    }
-
-    case AT.PROFILE_SHOW_SUPPORT_CHAT: {
-      console.log('!!!!!! reducer showSupportChat')
-      chatWidgetShow()
-      return {
-        ...state,
-        supportChatEnabled: true
-      }
-    }
-
-    case AT.PROFILE_HIDE_SUPPORT_CHAT: {
-      chatWidgetHide()
-      return {
-        ...state,
-        supportChatEnabled: false
       }
     }
 

@@ -24,7 +24,6 @@ class Marketplace extends Component {
       { name: 'packaging', title: <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging'>{(text) => text}</FormattedMessage>, width: 140 },
       { name: 'quantity', title: <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>{(text) => text}</FormattedMessage>, width: 140, sortPath: 'ProductOffer.quantity' },
       { name: 'fobPrice', title: <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>{(text) => text}</FormattedMessage>, width: 160, sortPath: 'ProductOffer.price' },
-      //{ name: 'tradeName', title: <FormattedMessage id='marketplace.tradeName' defaultMessage='Trade Name'>{(text) => text}</FormattedMessage>, width: 140 },
       { name: 'manufacturer', title: <FormattedMessage id='marketplace.manufacturer' defaultMessage='Manufacturer'>{(text) => text}</FormattedMessage>, width: 220, sortPath: 'ProductOffer.companyProduct.echoProduct.manufacturer.name' },
       { name: 'origin', title: <FormattedMessage id='marketplace.origin' defaultMessage='Origin'>{(text) => text}</FormattedMessage>, width: 120, sortPath: 'ProductOffer.origin.name' },
       { name: 'expiration', title: <FormattedMessage id='marketplace.expirationDate' defaultMessage='Expiration Date'>{(text) => text}</FormattedMessage>, width: 120, sortPath: 'ProductOffer.expirationDate' },

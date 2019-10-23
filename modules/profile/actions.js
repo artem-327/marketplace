@@ -19,28 +19,6 @@ const removeEmpty = (obj) =>
     }
   })
 
-
-export function toggleSupportChat() {
-  return {
-    type: AT.PROFILE_TOGGLE_SUPPORT_CHAT,
-    payload: null
-  }
-}
-
-export function showSupportChat() {
-  return {
-    type: AT.PROFILE_SHOW_SUPPORT_CHAT,
-    payload: null
-  }
-}
-
-export function hideSupportChat() {
-  return {
-    type: AT.PROFILE_HIDE_SUPPORT_CHAT,
-    payload: null
-  }
-}
-
 export function openProfilePopup() {
   return {
     type: AT.PROFILE_OPEN_POPUP,

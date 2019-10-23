@@ -1,8 +1,10 @@
 import { getSafe } from '~/utils/functions'
-import { showSupportChat } from '~/modules/profile/actions'
+import { chatUnreadMessages } from '../actions'
 
-export const createChatWidget = (props) => {
+export const ChatWidget_create = (identity) => {
   if (typeof window.$zopim === 'undefined') {
+    console.log('!!!!!!!! Loading script')
+
     var script = document.createElement("script")
     script.type = "text/javascript"
 
@@ -11,12 +13,14 @@ export const createChatWidget = (props) => {
         if (script.readyState == "loaded" ||
           script.readyState == "complete") {
           script.onreadystatechange = null
-          chatWidgetScriptLoaded(props)
+          chatWidget_scriptLoaded(identity)
+          chatWidget_addCallBack(chatUnreadMessages)
         }
       };
     } else {  //Others
       script.onload = () => {
-        chatWidgetScriptLoaded(props)
+        chatWidget_scriptLoaded(identity)
+        chatWidget_addCallBack(chatUnreadMessages)
       };
     }
 
@@ -25,36 +29,30 @@ export const createChatWidget = (props) => {
     script.src = "https://static.zdassets.com/ekr/snippet.js?key=c9ecb4b1-1c91-482b-bce2-aac2a343619b"
     document.getElementsByTagName("head")[0].appendChild(script)
   } else {
-    chatWidgetScriptLoaded(props)
+    console.log('!!!!!!!! Script already loaded')
+    chatWidget_scriptLoaded(identity) // In case user chas hanged
   }
 }
 
-const chatWidgetScriptLoaded = (props) => {
-  const name = getSafe(() => props.auth.identity.name, '')
-  const email = getSafe(() => props.auth.identity.email, '')
-  const lang = getSafe(() => props.auth.identity.preferredLanguage.languageAbbreviation, 'us')
-
+const chatWidget_scriptLoaded = (identity) => {
   // Working API: https://api.zopim.com/files/meshim/widget/controllers/LiveChatAPI-js.html
   // Not 100% working API: https://developer.zendesk.com/embeddables/docs/widget/api#ze.identify
   // https://support.zendesk.com/hc/en-us/articles/115000566208-Web-Widget-Chat-advanced-customization
 
   zE(function() {
     $zopim(function() {
-      $zopim.livechat.setLanguage(lang);
-      $zopim.livechat.setName(name);
-      $zopim.livechat.setEmail(email);
+      $zopim.livechat.setLanguage(identity.lang);
+      $zopim.livechat.setName(identity.name);
+      $zopim.livechat.setEmail(identity.email);
       $zopim.livechat.window.hide();
       $zopim.livechat.setStatus('online');
-      $zopim.livechat.setOnUnreadMsgs(function(cnt) {
-        unreadMessages(cnt)
-      })
     });
   })
 
   // ! ! ! !! !
   // Jak zjistim pocet neprectenych zprav po prihlaseni??? ! ! !
   // https://develop.zendesk.com/hc/en-us/articles/360001075368-Using-the-Chat-SDK-APIs-to-show-the-number-of-unread-messages-iOS-
-  // po prihlaseni vzdy ukazuje pocet unread messages = 0, i kdyz predchozi zpravy nebyly zobrazene, proc?
+  // po prihlaseni nekdy ukazuje pocet unread messages = 0, i kdyz predchozi zpravy nebyly zobrazene, proc?
   /*
   if (!this.props.profile.supportChatEnabled) {
     zE(function () {
@@ -68,15 +66,17 @@ const chatWidgetScriptLoaded = (props) => {
   */
 }
 
-const unreadMessages = (cnt) => {
-  console.log('!!!!!! chatWidget unread messages', cnt)
-
-  showSupportChat(cnt)
-
-  //chatWidgetShow()
+const chatWidget_addCallBack = (callBack) => {
+  zE(function () {
+    $zopim(function () {
+      $zopim.livechat.setOnUnreadMsgs(function (cnt) {
+        callBack(cnt)
+      })
+    });
+  })
 }
 
-export const chatWidgetHide = () => {
+export const chatWidget_hide = () => {
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
     zE(function () {
       $zopim(function () {
@@ -86,7 +86,7 @@ export const chatWidgetHide = () => {
   }
 }
 
-export const chatWidgetShow = () => {
+export const chatWidget_show = () => {
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
     zE(function () {
       $zopim(function () {
@@ -96,7 +96,7 @@ export const chatWidgetShow = () => {
   }
 }
 
-export const chatWidgetToggle = () => {
+export const chatWidget_toggle = () => {
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
     zE(function () {
       $zopim(function () {
@@ -109,7 +109,7 @@ export const chatWidgetToggle = () => {
   }
 }
 
-export const chatWidgetEndSession = () => {
+export const chatWidget_EndSession = () => {
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
     zE(function () {
       $zopim(function () {
@@ -117,13 +117,4 @@ export const chatWidgetEndSession = () => {
       });
     })
   }
-}
-
-export const chatWidgetTerminate = () => {
-  // odhlasit se
-  chatWidgetEndSession()
-  // jak se pak prihlasit??
-  //  - ve skutecnosti se neodhlasi -> na strane operatora vypada odhlaseny, ale operator ho muze znovu pripojit a poslat userovi zpravu.
-
-  chatWidgetHide()
 }
