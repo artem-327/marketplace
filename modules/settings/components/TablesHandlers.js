@@ -176,7 +176,7 @@ class TablesHandlers extends Component {
           !currentTab.hideButtons && (
             <>
               {(!bankAccTab || bankAccounts.addButton) && (
-                <GridColumn widescreen={2} computer={3} tablet={3}>
+                <GridColumn widescreen={2} computer={2} tablet={3}>
                   <Button
                     fluid
                     primary
@@ -187,7 +187,7 @@ class TablesHandlers extends Component {
                 </GridColumn>
               )}
               {currentTab.type === 'products' && (
-                <GridColumn widescreen={2} computer={3} tablet={3}>
+                <GridColumn widescreen={2} computer={2} tablet={3}>
                   <Button
                     fluid
                     primary

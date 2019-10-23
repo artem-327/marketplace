@@ -34,9 +34,8 @@ export const getNodeStatus = item => {
     anyChildBroadcasting = !!item.first((n) => {
       return (getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 && getSafe(() => n.model.rule.id, n.model.id) !== item.model.id)
     })
-
+    
     allChildrenBroadcasting = (all !== 0 && broadcasted !== 0) && all === broadcasted
-
   }
 
   return { allChildrenBroadcasting, anyChildBroadcasting }

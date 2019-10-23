@@ -26,6 +26,8 @@ export const initialState = {
   documentTypesFetching: false,
   simpleEditOpen: false,
   popupValues: {},
+  sidebarDetailOpen: false,
+  sidebarValues: {},
   product: null
 }
 
@@ -128,8 +130,6 @@ export default function reducer(state = initialState, action) {
       let { data } = action.payload
       let expirationDate = getSafe(() => data.validityDate)
 
-
-
       let filteredAttachments = data.attachments.reduce(function (filtered, att) {
         if (att.documentType.id === 2) {
           var returnedAtt = { id: att.id, name: att.name, linked: true, documentType: { ...att.documentType } }
@@ -153,7 +153,7 @@ export default function reducer(state = initialState, action) {
         initialState: {
           attachments: filteredAttachments,
           additional: filteredAdditional,
-          lots: data.lots.length > 0 ? data.lots.map((el) => ({
+          lots: getSafe(() => data.lots, []).length > 0 ? data.lots.map((el) => ({
             ...el,
             manufacturedDate: moment(el.manufacturedDate).format('YYYY-MM-DD'),
             expirationDate: moment(el.expirationDate).format('YYYY-MM-DD')
@@ -449,6 +449,30 @@ export default function reducer(state = initialState, action) {
         ...state,
         simpleEditOpen,
         popupValues: payload.popupValues
+      }
+    }
+
+    case AT.SIDEBAR_DETAIL_TRIGGER_PENDING: {
+      let sidebarDetailOpen = !state.sidebarDetailOpen
+      if (action.meta.force !== null) sidebarDetailOpen = action.meta.force
+
+      if (!sidebarDetailOpen)
+        return {
+          ...state,
+          sidebarDetailOpen,
+          sidebarValues: {}
+        }
+      else
+        return {
+          ...state,
+          sidebarDetailOpen
+        }
+    }
+
+    case AT.SIDEBAR_DETAIL_TRIGGER_FULFILLED: {
+      return {
+        ...state,
+        sidebarValues: payload
       }
     }
 

@@ -59,13 +59,6 @@ export function addProductOffer(values, poId = false, simple = false) {
 
   if (!simple) {
 
-    if (values.lots.length === 0) {
-      values.lots = [{
-        lotNumber: '1',
-        pkgAvailable: parseInt(values.pkgAvailable)
-      }]
-    }
-
     const attachments = values.attachments && values.attachments.length ? values.attachments.map(att => {
       return att.id
     }) : []
@@ -87,29 +80,26 @@ export function addProductOffer(values, poId = false, simple = false) {
         }
       }) : null,
       companyProduct: parseInt(values.product),
+      conditionNotes: getSafe(() => values.conditionNotes, null),
+      conforming: getSafe(() => values.conforming, null),
+      costPerUOM: getSafe(() => values.costPerUOM, null),
       externalNotes: getSafe(() => values.externalNotes),
       inStock: values.inStock,
       internalNotes: getSafe(() => values.internalNotes),
-      lots: values.lots ? values.lots.map(lot => {
-        return {
-          attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
-            return att.id
-          }) : null,
-          expirationDate: lot.expirationDate && getSafe(() => moment(lot.expirationDate).utc(lot.expirationDate).format()),
-          lotNumber: lot.lotNumber,
-          manufacturedDate: lot.manufacturedDate && getSafe(() => moment(lot.manufacturedDate).utc(lot.manufacturedDate).format()),
-          pkgAvailable: getSafe(() => parseInt(lot.pkgAvailable))
-        }
-      }) : null,
+      leadTime: getSafe(() => values.leadTime),
+      lotExpirationDate: getSafe(() => values.lotExpirationDate, null),
+      lotManufacturedDate: getSafe(() => values.lotManufacturedDate, null),
+      lotNumber: getSafe(() => values.lotNumber, null),
       // ! ! otestovat manufacturer: getSafe(() => values.manufacturer),
       minPkg: parseInt(values.minimum),
       origin: getSafe(() => values.origin),
-      pricingTiers: values.pricingTiers.map((tier, index) => {
+      pkgAvailable: getSafe(() => values.pkgAvailable, 10),
+      pricingTiers: getSafe(() => values.pricingTiers.map((tier, index) => {
         return {
           pricePerUOM: parseFloat(tier.price),
           quantityFrom: parseInt(!index ? values.minimum : tier.quantityFrom)
         }
-      }),
+      }), []),
       processingTimeDays: parseInt(values.processingTimeDays),
       condition: getSafe(() => parseInt(values.productCondition)),
       form: getSafe(() => parseInt(values.productForm)),
@@ -124,15 +114,35 @@ export function addProductOffer(values, poId = false, simple = false) {
     params = values // ! ! az bude BE vracet pricingTiers, tak predelat zkombinovat tento radek s vytvarenim objektu vyse (prejmenovane / chybejici atributy)
   }
 
+  let paramsCleaned = {}
+  const paramKeys = Object.keys(params)
+  for (let i = 0; i < paramKeys.length; i++) {
+    if ((Array.isArray(params[paramKeys[i]]) && params[paramKeys[i]].length > 0) || (!Array.isArray(params[paramKeys[i]]) && !!params[paramKeys[i]]) || (params[paramKeys[i]] === false)) {
+      paramsCleaned[paramKeys[i]] = params[paramKeys[i]]
+    }
+  }
+
   if (poId) {
     return {
       type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
-      payload: api.updateProductOffer(poId, params)
+      async payload() {
+        const response = await api.updateProductOffer(poId, paramsCleaned)
+        // TODO: if response will contain PO data - modify datagrid row instead of loading new data
+        // Datagrid.updateRow(poId, () => (response.data))
+        Datagrid.loadData()
+        // TODO: if response will contain PO data - return them and fill sidebarValues
+        return response
+      }
     }
   } else {
     return {
       type: AT.INVENTORY_ADD_PRODUCT_OFFER,
-      payload: api.addProductOffer(params)
+      async payload() {
+        const response = await api.addProductOffer(paramsCleaned)
+        Datagrid.loadData()
+        // TODO: if response will contain PO data - return them and fill sidebarValues
+        return response
+      }
     }
   }
 }
@@ -364,3 +374,18 @@ export const getAutocompleteData = ({ searchUrl }) => ({ type: AT.GET_AUTOCOMPLE
 export const getAllProductOffers = () => ({ type: AT.GET_ALL_PRODUCT_OFFERS, payload: api.getAllProductOffers() })
 
 export const simpleEditTrigger = (popupValues = {}, force = null) => ({ type: AT.SIMPLE_EDIT_TRIGGER, payload: { popupValues, force } })
+
+export const sidebarDetailTrigger = (poId = null, force = null) => {
+  return {
+    type: AT.SIDEBAR_DETAIL_TRIGGER,
+    meta: { force: force },
+    async payload() {
+      let sidebarValues = {}
+
+      if (poId)
+        sidebarValues = await api.getProductOffer(poId)
+
+      return getSafe(() => sidebarValues.data, {})
+    }
+  }
+}

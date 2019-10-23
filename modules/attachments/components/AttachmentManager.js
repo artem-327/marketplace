@@ -1,17 +1,24 @@
 import React, { Component } from 'react'
-import { Modal, Input, Button, Grid, GridRow, GridColumn, Header } from 'semantic-ui-react'
-import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
+import { Modal, Input, Button, Grid, GridRow, GridColumn, Header, Icon } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import { debounce } from 'lodash'
-
-import ProdexTable from '~/components/table'
-import DocumentManagerPopup from '~/modules/settings/components/Documents/DocumentManagerPopup'
+import moment from 'moment'
 import { node, object } from 'prop-types'
+
+import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
+import ProdexTable from '~/components/table'
+
+import DocumentManagerPopup from '~/modules/settings/components/Documents/DocumentManagerPopup'
 
 const CustomHeader = styled.div`
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+  margin-right: 25px;
+`
+
+const PaddedIcon = styled(Icon)`
+  padding-top: 1.1rem !important;
 `
 
 const AttachmentModal = withDatagrid(class extends Component {
@@ -43,7 +50,7 @@ const AttachmentModal = withDatagrid(class extends Component {
 
     return (
       <>
-        <Modal closeIcon onClose={() => this.setState({ open: false })} centered={true} open={this.state.open}
+        <Modal closeIcon={<PaddedIcon name='close icon' />} onClose={() => this.setState({ open: false })} centered={true} open={this.state.open}
           trigger={React.cloneElement(trigger, { onClick: () => this.setState({ open: true }) })}
           onClose={() => this.setState({ open: false })}>
           <CustomHeader>
@@ -74,12 +81,15 @@ const AttachmentModal = withDatagrid(class extends Component {
               rows={datagrid.rows.map(r => ({
                 id: r.id,
                 name: r.name,
-                documentType: r.documentType.name
+                documentType: r.documentType.name,
+                expirationDate: r.expirationDate && moment(r.expirationDate).format('MM/DD/YYYY')
               }))}
-              tableName="attachements"
+              tableName='attachements'
               columns={[
-                { name: "name", title: "File Name", width: 400 },
-                { name: "documentType", title: "Type", width: 200 },
+                { name: 'name', title: 'File Name', width: 400 },
+                { name: 'documentType', title: 'Type', width: 200 },
+                { name: 'expirationDate', title: 'Expiration Date', width: 200 }
+
               ]}
               rowSelection
               lockSelection={lockSelection}
@@ -127,7 +137,7 @@ class AttachmentManager extends Component {
     searchToFilter: v => v ? ([
       { operator: 'LIKE', path: 'Attachment.name', values: [`%${v}%`] },
       { operator: 'LIKE', path: 'Attachment.customName', values: [`%${v}%`] },
-      { operator: 'LIKE', path: 'Attachment.documentType.name', values: [`%${v}%`] }
+      { operator: 'LIKE', path: 'Attachment.documentType.name', values: [`%${v}%`] },
     ]) : [],
     params: {
       orOperator: true
