@@ -6,7 +6,7 @@ context("Company Product Catalog CRUD", () => {
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("POST", "/prodex/api/company-products/datagrid").as("productLoading")
 
-        cy.login("user1@example.com", "echopass123")
+        cy.FElogin("user1@example.com", "echopass123")
 
         cy.url().should("include", "inventory")
 
@@ -20,7 +20,7 @@ context("Company Product Catalog CRUD", () => {
     })
 
     it("Creates a product", () => {
-        cy.clickAdd()
+        cy.get("[data-test='settings_open_popup_btn']").click()
 
         cy.enterText("#field_input_intProductName", "Our product")
         cy.enterText("#field_input_intProductCode", "OURPR")
@@ -38,9 +38,7 @@ context("Company Product Catalog CRUD", () => {
 
         cy.getToken().then(token => {
             cy.getFirstCompanyProductWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.openElement(itemId, 0)
 
                 productId = itemId
             })
@@ -61,8 +59,7 @@ context("Company Product Catalog CRUD", () => {
     })
 
     it("Edits a product", () => {
-        cy.get('[data-test=action_' + productId + ']').click({force: true})
-        cy.get('[data-test=action_' + productId + '_0]').click({force: true})
+        cy.openElement(productId, 0)
 
         cy.get("#field_input_intProductName")
             .clear()
@@ -71,8 +68,7 @@ context("Company Product Catalog CRUD", () => {
 
         cy.clickSave()
 
-        cy.get('[data-test=action_' + productId + ']').click({force: true})
-        cy.get('[data-test=action_' + productId + '_0]').click({force: true})
+        cy.openElement(productId, 0)
 
         cy.get("#field_input_intProductName")
             .should("have.value","My product")
@@ -91,8 +87,7 @@ context("Company Product Catalog CRUD", () => {
     })
 
     it("Deletes a product", () => {
-        cy.get('[data-test=action_' + productId + ']').click({force: true})
-        cy.get('[data-test=action_' + productId + '_1]').click({force: true})
+        cy.openElement(productId, 1)
 
         cy.clickSave()
 

@@ -7,7 +7,7 @@ context("Prodex User CRUD", () => {
         cy.route("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")
         cy.route("GET", "/prodex/api/users").as("usersLogin")
 
-        cy.login("user1@example.com", "echopass123")
+        cy.FElogin("user1@example.com", "echopass123")
 
         cy.url().should("include", "inventory")
 
@@ -22,7 +22,7 @@ context("Prodex User CRUD", () => {
     })
 
     it("Creates a user", () => {
-        cy.clickAdd()
+        cy.get("[data-test='settings_open_popup_btn']").click()
 
         cy.enterText("#field_input_name", "John Automator")
         cy.enterText("#field_input_jobTitle", "Automatior")
@@ -46,9 +46,7 @@ context("Prodex User CRUD", () => {
 
         cy.getToken().then(token => {
             cy.getFirstUserIdWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.openElement(itemId, 0)
 
                 userID = itemId
             })
@@ -69,8 +67,7 @@ context("Prodex User CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get('[data-test=action_' + userID + ']').click()
-        cy.get('[data-test=action_' + userID + '_0]').click()
+        cy.openElement(userID, 0)
 
         cy.get("#field_input_name")
             .clear()
@@ -79,9 +76,7 @@ context("Prodex User CRUD", () => {
 
         cy.clickSave()
 
-        cy.get('[data-test=action_' + userID + ']').click()
-
-        cy.get('[data-test=action_' + userID + '_0]').click()
+        cy.openElement(userID, 0)
 
         cy.get("#field_input_name")
             .should("have.value", "Jen Automator")
@@ -90,8 +85,7 @@ context("Prodex User CRUD", () => {
     it("Edit user roles a user", () => {
         cy.waitForUI()
 
-        cy.get('[data-test=action_' + userID + ']').click()
-        cy.get('[data-test=action_' + userID + '_1]').click()
+        cy.openElement(userID, 1)
 
         cy.get("#field_checkbox_roles_3")
             .click({force: true})
@@ -101,8 +95,7 @@ context("Prodex User CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get('[data-test=action_' + userID + ']').click()
-        cy.get('[data-test=action_' + userID + '_1]').click()
+        cy.openElement(userID, 1)
 
         cy.get("#field_checkbox_roles_3")
             .should("not.selected")
@@ -121,10 +114,7 @@ context("Prodex User CRUD", () => {
     })
 
     it("Deletes a user", () => {
-        cy.waitForUI()
-
-        cy.get('[data-test=action_' + userID + ']').click()
-        cy.get('[data-test=action_' + userID + '_2]').click()
+        cy.openElement(userID, 2)
 
         cy.clickSave()
 
