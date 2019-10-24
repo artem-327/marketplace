@@ -1,106 +1,130 @@
-context("Prodex Warehouse CRUD", () => {
+context("Prodex Global Price", () => {
     let branchId = null
 
     beforeEach(function () {
         cy.server()
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.route("POST", '/prodex/api/branches/warehouses/datagrid').as('warehouseLoading')
+        cy.route("GET", '/prodex/api/broadcast-rules/general').as('rulesLoading')
+        cy.route("POST", '/prodex/api/broadcast-rules/general').as('rulesSaving')
+        cy.viewport(1280, 800)
 
-        cy.login("user1@example.com", "echopass123")
+        cy.FElogin("user1@example.com", "echopass123")
 
         cy.url().should("include", "inventory")
 
         cy.wait('@inventoryLoading')
         cy.contains("Settings").click()
-
-        cy.contains("WAREHOUSES").click()
-
-        cy.wait("@warehouseLoading")
-        cy.waitForUI()
     })
 
-    it("Creates a warehouse", () => {
-        cy.clickAdd()
-
-        cy.enterText("#field_input_name", "Central branch")
-        cy.enterText("input[id='field_input_address.streetAddress']", "125 N G St")
-        cy.enterText("input[id='field_input_address.city']", "Harlingen")
-
-        cy.selectFromDropdown("div[id='field_dropdown_address.country']","Bahamas")
-        cy.waitForUI()
-        cy.selectFromDropdown("div[id='field_dropdown_address.zip']","75000")
-
-        cy.enterText("input[id='field_input_contactName']","David Cameron")
-        cy.enterText("input[id='field_input_contactPhone']","123456789")
-        cy.enterText("input[id='field_input_contactEmail']","test@central.com")
-
-        cy.clickSave()
-
-        cy.contains("Created Warehouse")
-
-        let filter = [{"operator":"LIKE","path":"Branch.name","values":["%Central%"]},
-            {"operator":"LIKE","path":"Branch.address.streetAddress","values":["%Central%"]},
-            {"operator":"LIKE","path":"Branch.contactName","values":["%Central%"]}]
-
+    it("Turns on the broadcasting", () => {
         cy.getToken().then(token => {
-            cy.getFirstBranchIdWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-
-                cy.get('[data-test=action_' + itemId + '_0]').click()
-
-                branchId = itemId
-            })
+            cy.turnOffGlobalBroadcasting(token)
         })
 
-        cy.get("input[id='field_input_address.city']")
-            .should("have.value","Harlingen")
+        cy.contains("GLOBAL PRICE BOOK").click()
 
-        cy.get("#field_input_contactName")
-            .should("have.value","David Cameron")
+        cy.wait("@rulesLoading")
+        cy.waitForUI()
 
-        cy.get("#field_input_contactPhone")
-            .should("have.value","123456789")
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(0)
+            .should("have.class", "ui fitted toggle checkbox")
+            .click()
+        cy.get("[data-test='broadcast_modal_save_btn']").click()
 
-        cy.get("#field_input_contactEmail")
-            .should("have.value","test@central.com")
+        cy.wait("@rulesSaving")
+        cy.contains("Saved successfully!")
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(0)
+            .should("have.class", "ui checked fitted toggle checkbox")
     })
 
-    it("Edits a warehouse", () => {
-        cy.get('[data-test=action_' + branchId + ']').click({force: true})
-        cy.get('[data-test=action_' + branchId + '_0]').click({force: true})
-
-        cy.get("#field_input_contactName")
-            .clear()
-            .type("Arnold Schwarzenegger")
-            .should("have.value","Arnold Schwarzenegger")
-
-        cy.clickSave()
-
-        cy.get('[data-test=action_' + branchId + ']').click({force: true})
-        cy.get('[data-test=action_' + branchId + '_0]').click({force: true})
-
-        cy.get("#field_input_contactName")
-            .should("have.value","Arnold Schwarzenegger")
-    })
-
-    it("Checks error messages", () => {
-        cy.clickAdd()
-
-        cy.clickSave()
-
-        cy.get(".error")
-            .should("have.length",8)
-            .find(".sui-error-message").each((element) => {
-            expect(element.text()).to.match(/(Required)/i)
+    it("Turns off the broadcasting", () => {
+        cy.getToken().then(token => {
+            cy.turnOnGlobalBroadcasting(token)
         })
+
+        cy.contains("GLOBAL PRICE BOOK").click()
+
+        cy.wait("@rulesLoading")
+        cy.waitForUI()
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(0)
+            .should("have.class", "ui checked fitted toggle checkbox")
+            .click()
+        cy.get("[data-test='broadcast_modal_save_btn']").click()
+
+        cy.wait("@rulesSaving")
+        cy.contains("Saved successfully!")
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(0)
+            .should("have.class", "ui fitted toggle checkbox")
     })
 
-    it("Deletes a warehouse", () => {
-        cy.get('[data-test=action_' + branchId + ']').click({force: true})
-        cy.get('[data-test=action_' + branchId + '_1]').click({force: true})
+    it("Turns on the broadcasting for Albreta and USA only", () => {
+        cy.getToken().then(token => {
+            cy.turnOffGlobalBroadcasting(token)
+        })
 
-        cy.clickSave()
+        cy.contains("GLOBAL PRICE BOOK").click()
 
-        cy.contains("Central branch").should("not.exist")
+        cy.wait("@rulesLoading")
+        cy.waitForUI()
+
+        cy.contains("Canada").click()
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(1)
+            .should("have.class", "ui fitted toggle checkbox")
+            .click()
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(3)
+            .should("have.class", "ui fitted toggle checkbox")
+            .click()
+
+        cy.get("[data-test='broadcast_modal_save_btn']").click()
+
+        cy.wait("@rulesSaving")
+        cy.contains("Saved successfully!")
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(1)
+            .should("have.class", "ui checked fitted toggle checkbox")
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(2)
+            .should("have.class", "ui indeterminate fitted toggle checkbox")
+
+    })
+
+    it("Switch to company broadcasting", () => {
+        cy.getToken().then(token => {
+            cy.turnOffGlobalBroadcasting(token)
+        })
+
+        cy.contains("GLOBAL PRICE BOOK").click()
+
+        cy.wait("@rulesLoading")
+        cy.waitForUI()
+
+        cy.get("[data-test=broadcast_modal_category_drpdn]").click()
+        cy.contains("By Company").click()
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(0)
+            .should("have.class", "ui fitted toggle checkbox")
+            .click()
+        cy.get("[data-test='broadcast_modal_save_btn']").click()
+
+        cy.wait("@rulesSaving")
+        cy.contains("Saved successfully!")
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(0)
+            .should("have.class", "ui checked fitted toggle checkbox")
     })
 })

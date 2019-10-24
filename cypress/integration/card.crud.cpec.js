@@ -5,7 +5,7 @@ context("Shopping cart CRUD", () => {
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
 
-        cy.login("user1@example.com", "echopass123")
+        cy.FElogin("user1@example.com", "echopass123")
 
         cy.url().should("include", "inventory")
 

@@ -395,3 +395,28 @@ Cypress.Commands.add("getFirstAttachmentWithFilter", (token,filter) => {
     })
 })
 
+Cypress.Commands.add("turnOnGlobalBroadcasting", (token) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/broadcast-rules/general',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {anonymous: 0, broadcast: 1, priceAddition: 5, priceMultiplier: 0, priceOverride: 0, type: "root"}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+    })
+})
+
+Cypress.Commands.add("turnOffGlobalBroadcasting", (token) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/broadcast-rules/general',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {anonymous: 0, broadcast: 0, priceAddition: 5, priceMultiplier: 0, priceOverride: 0, type: "root"}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+    })
+})
