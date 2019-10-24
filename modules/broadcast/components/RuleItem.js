@@ -17,7 +17,7 @@ const RuleItem = (props) => {
     hideFobPrice,
     filter,
     loadingChanged,
-    narrow
+    asSidebar
     // tree,
   } = props
 
@@ -64,8 +64,8 @@ const RuleItem = (props) => {
 
   return (
     <>
-      <Rule.Row depth={nodePath.length} type={rule.type} onClick={() => rule.type !== 'root' && handleRowClick(item)} data-test='broadcast_rule_row_click' style={narrow ? { 'flex-wrap': 'wrap', 'justify-content': 'flex-end' } : {}}>
-        <Rule.RowContent style={narrow ? { flex: '1 1 100%', width: '100%' } : {}}>
+      <Rule.Row depth={nodePath.length} type={rule.type} onClick={() => rule.type !== 'root' && handleRowClick(item)} data-test='broadcast_rule_row_click' style={asSidebar ? { 'flex-wrap': 'wrap', 'justify-content': 'flex-end' } : {}}>
+        <Rule.RowContent style={asSidebar ? { flex: '1 1 100%', width: '100%' } : {}}>
           {(item.children.length > 0 && rule.type !== 'root') ? <Icon name={`chevron ${item.model.expanded ? 'down' : 'right'}`} /> : <EmptyIconSpace />}
           <span>{name}</span>
         </Rule.RowContent>
@@ -109,7 +109,7 @@ const RuleItem = (props) => {
           onRowClick={onRowClick}
           onPriceChange={onPriceChange}
           onChange={onChange}
-          narrow={narrow}
+          asSidebar={asSidebar}
         />
       ))}
     </>

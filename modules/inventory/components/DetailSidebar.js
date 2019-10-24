@@ -31,7 +31,7 @@ export const FlexSidebar = styled(Sidebar)`
 `
 
 export const FlexTabs = styled.div`
-  margin: 0 15px 0 0;
+  margin: 0;
   text-align: left;
   border-bottom: 1px solid #f0f0f0;
   padding: 10px 0 15px 0;
@@ -156,7 +156,9 @@ class DetailSidebar extends Component {
 
   state = {
     activeTab: 0,
-    broadcastLoading: true
+    broadcastLoading: true,
+    saveBroadcast: 0,
+    changedForm: false
   }
 
   componentDidMount = () => {
@@ -175,9 +177,13 @@ class DetailSidebar extends Component {
         this.searchProducts(this.props.sidebarValues.companyProduct.intProductName)
     }
 
-    if (this.props.sidebarActiveTab > 0 && oldProps.sidebarActiveTab !== this.props.sidebarActiveTab) {
+    if (this.props.sidebarActiveTab > -1 && oldProps.sidebarActiveTab !== this.props.sidebarActiveTab) {
       this.switchTab(this.props.sidebarActiveTab)
     }
+  }
+
+  changedForm = () => {
+    this.setState({ changedForm: true })
   }
 
   getPriceTiers = (max) => {
@@ -284,6 +290,10 @@ class DetailSidebar extends Component {
     )
   }
 
+  saveBroadcastRules = async () => {
+    this.setState({ saveBroadcast: this.state.saveBroadcast+1 })
+  }
+
   searchProducts = debounce((text) => {
     this.props.getAutocompleteData({ searchUrl: `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false` })
   }, 250)
@@ -292,6 +302,12 @@ class DetailSidebar extends Component {
     this.setState({
       activeTab: newTab
     })
+
+    if (newTab === 1) {
+      this.props.openBroadcast(this.props.sidebarRow).then(async () => {
+        this.setState({ broadcastLoading: false })
+      })
+    }
   }
 
   switchToErrors = (tabs) => {
@@ -424,20 +440,31 @@ class DetailSidebar extends Component {
                 productGrades: values.edit.productGrades.length ? values.edit.productGrades : []
               }
               break;
+            case 1:
+              this.saveBroadcastRules()
+              setSubmitting(false)
+              setTouched({})
+              this.setState({ changedForm: false })
+              break;
           }
 
-          try {
-            await addProductOffer(props, getSafe(() => this.props.sidebarValues.id, null))
-            toastManager.add(generateToastMarkup(
-              <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
-              <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Product Offer was successfully saved.' />,
-            ), {
-              appearance: 'success'
-            })
-          } catch (e) { console.error(e) }
-          finally {
-            setSubmitting(false)
-            setTouched({})
+          if (Object.keys(props).length) {
+            try {
+              await addProductOffer(props, getSafe(() => this.props.sidebarValues.id, null))
+              toastManager.add(generateToastMarkup(
+                <FormattedMessage id='addInventory.success' defaultMessage='Success'/>,
+                <FormattedMessage id='addInventory.poDataSaved'
+                                  defaultMessage='Product Offer was successfully saved.'/>,
+              ), {
+                appearance: 'success'
+              })
+            } catch (e) {
+              console.error(e)
+            }
+            finally {
+              setSubmitting(false)
+              setTouched({})
+            }
           }
         }}>
         {({values, touched, setFieldValue, validateForm, submitForm}) => {
@@ -472,7 +499,7 @@ class DetailSidebar extends Component {
                            {
                              menuItem: (
                                <Menu.Item key='edit' onClick={() => {
-                                 if (Object.keys(touched).length) {
+                                 if (Object.keys(touched).length || this.state.changedForm) {
                                    toastManager.add(generateToastMarkup(
                                      <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
                                      <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Due to form changes you have to save the tab first' />,
@@ -794,7 +821,7 @@ class DetailSidebar extends Component {
                            {
                              menuItem: (
                                <Menu.Item key='priceBook' onClick={() => {
-                                 if (Object.keys(touched).length) {
+                                 if (Object.keys(touched).length || this.state.changedForm) {
                                    toastManager.add(generateToastMarkup(
                                      <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
                                      <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Due to form changes you have to save the tab first' />,
@@ -814,9 +841,6 @@ class DetailSidebar extends Component {
 
                                      // if validation is correct - switch tabs
                                      this.switchTab(1)
-                                     openBroadcast(this.props.sidebarRow).then(async () => {
-                                       this.setState({ broadcastLoading: false })
-                                     })
                                    })
                                    .catch(e => {
                                      console.log('CATCH', e)
@@ -828,14 +852,14 @@ class DetailSidebar extends Component {
                              ),
                              pane: (
                                <Tab.Pane key='priceBook' style={{ padding: '18px' }}>
-                                 <Broadcast isPrepared={!this.state.broadcastLoading} asModal={false} narrow={true} />
+                                 <Broadcast isPrepared={!this.state.broadcastLoading} asModal={false} asSidebar={true} saveBroadcast={this.state.saveBroadcast} changedForm={this.changedForm} />
                                </Tab.Pane>
                              )
                            },
                            {
                              menuItem: (
                                <Menu.Item key='priceTiers' onClick={() => {
-                                 if (Object.keys(touched).length) {
+                                 if (Object.keys(touched).length || this.state.changedForm) {
                                    toastManager.add(generateToastMarkup(
                                      <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
                                      <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Due to form changes you have to save the tab first' />,

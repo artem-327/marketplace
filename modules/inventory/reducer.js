@@ -455,7 +455,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.SIDEBAR_DETAIL_TRIGGER_PENDING: {
-      let sidebarActiveTab = action.meta.activeTab
       let sidebarDetailOpen = !state.sidebarDetailOpen
       if (action.meta.force !== null) sidebarDetailOpen = action.meta.force
 
@@ -465,21 +464,24 @@ export default function reducer(state = initialState, action) {
           sidebarDetailOpen,
           sidebarRow: action.meta.row,
           sidebarValues: {},
-          sidebarActiveTab
+          sidebarActiveTab: -1
         }
       else
         return {
           ...state,
           sidebarDetailOpen,
           sidebarRow: action.meta.row,
-          sidebarActiveTab
+          sidebarActiveTab: -1
         }
     }
 
     case AT.SIDEBAR_DETAIL_TRIGGER_FULFILLED: {
+      let sidebarActiveTab = action.meta.activeTab
+
       return {
         ...state,
-        sidebarValues: payload
+        sidebarValues: payload,
+        sidebarActiveTab
       }
     }
 
