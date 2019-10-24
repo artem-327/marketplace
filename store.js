@@ -66,12 +66,13 @@ import broadcast from '~/modules/broadcast/reducer'
 import messages from '~/modules/messages/reducer'
 import phoneNumber from '~/modules/phoneNumber/reducer'
 
-
+import companyProductInfo from '~/modules/company-product-info/reducer'
 
 const reducer = combineReducers({
   auth,
   admin,
   businessTypes,
+  companyProductInfo,
   identity,
   brcRules,
   companies,

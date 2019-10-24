@@ -13,6 +13,8 @@ import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import cn from 'classnames'
+import { CompanyProductInfo } from '~/modules/company-product-info'
+import { tabs } from '~/modules/company-product-info/constants'
 
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
@@ -20,6 +22,17 @@ const defaultHiddenColumns = [
   'minOrderQuantity', 'splits', 'condition', 'grade', 'origin', 'form', 'assay',
   'mfgDate', 'expDate', 'allocatedPkg', 'offerExpiration', 'lotNumber'
 ]
+
+// Todo - Move this somewhere else as this will be used in Marketplace as well
+const groupActions = (rows, companyProductId, callback) => {
+  let companyProduct = rows.find((el) => el.companyProduct.id == companyProductId)
+
+  if (!companyProduct) return []
+
+  return tabs.map((tab, i) => ({
+    text: tab.text, callback: () => callback(companyProduct, i)
+  }))
+}
 
 class MyInventory extends Component {
   state = {
@@ -162,12 +175,14 @@ class MyInventory extends Component {
       openImportPopup,
       isOpenImportPopup,
       simpleEditTrigger,
-      sidebarDetailTrigger
+      sidebarDetailTrigger,
+      openPopup
     } = this.props
     const { columns, selectedRows } = this.state
 
     return (
       <>
+        <CompanyProductInfo />
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
 
         <Container fluid style={{ padding: '0 32px' }}>
@@ -240,22 +255,37 @@ class MyInventory extends Component {
             getChildGroups={rows =>
               _(rows)
                 .groupBy('echoName')
-                .map(v => ({
-                  key: `${v[0].echoName}_${v[0].echoCode}_${v.length}`,
-                  childRows: v
-                }))
+                .map(v => {
+                  return ({
+                    key: `${v[0].echoName}_${v[0].echoCode}_${v.length}_${v[0].companyProduct.id}`,
+                    childRows: v.map((e) => ({ ...e, test: 'abcd' })),
+                  })
+                })
                 .value()
             }
-            renderGroupLabel={({ row: { value } }) => {
+            renderGroupLabel={({ row, children = null, }) => {
+              let { value } = row
               const [name, number, count] = value.split('_')
               const numberArray = number.split(' & ')
+
               return (
                 <span>
-                  <span style={{ color: '#2599d5' }}>{numberArray.length > 1 ? (<Popup content={<List items={numberArray.map(n => { return n })} />} trigger={<span>Blend</span>} />) : number}</span>&nbsp;&nbsp; {name} <span className='right'>Product offerings: {count}</span>
+                  {children}
+                  <span style={{ color: '#2599d5' }}>
+                    {numberArray.length > 1
+                      ? (<Popup content={<List items={numberArray.map(n => { return n })} />} trigger={<span>Blend</span>} />)
+                      : number}
+                  </span>
+                  &nbsp;&nbsp; {name}
+                  <span className='right'>Product offerings: {count}</span>
                 </span>
               )
             }}
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
+            groupActions={(row) => {
+              let values = row.key.split('_')
+              return groupActions(rows, values[values.length - 1], openPopup).map((a) => ({ ...a, text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage> }))
+            }}
             rowActions={[
               /*{
                 text: formatMessage({ id: 'inventory.edit', defaultMessage: 'Edit Listing' }), callback: (row) =>

@@ -23,11 +23,23 @@ const getAccessRights = (roles) => {
 export const initialState = {
   confirmationForm: {
     address: {
-      city: '',
-      country: '',
-      province: '',
-      streetAddress: '',
-      zip: ''
+      address: {
+        city: '',
+        country: '',
+        province: '',
+        streetAddress: '',
+        zip: ''
+      },
+      addressName: '',
+      callAhead: false,
+      closeTime: '',
+      contactEmail: '',
+      contactName: '',
+      contactPhone: '',
+      deliveryNotes: '',
+      forkLift: false,
+      liftGate: false,
+      readyTime: '',
     },
     companyAdminUser: {
       name: '',
@@ -80,17 +92,30 @@ export default function reducer(state = initialState, action) {
       }
     }
     case AT.LOGIN_FULFILLED: {
+      let deliveryAddress = getSafe(() => payload.identity.homeBranch.deliveryAddress, null)
       let address = getSafe(() => payload.identity.homeBranch.deliveryAddress.address, null)
 
       return {
         ...state,
         confirmationForm: getSafe(() => payload.identity.company.reviewRequested, false) ? {
           address: {
-            city: address.city,
-            country: JSON.stringify({ countryId: address.country.id, hasProvinces: address.country.hasProvinces }),
-            province: address.province ? address.province.id : null,
-            streetAddress: address.streetAddress,
-            zip: address.zip.zip,
+            address: {
+              city: address.city,
+              country: JSON.stringify({countryId: address.country.id, hasProvinces: address.country.hasProvinces}),
+              province: address.province ? address.province.id : null,
+              streetAddress: address.streetAddress,
+              zip: address.zip.zip,
+            },
+            addressName: deliveryAddress.addressName || '',
+            callAhead: !!deliveryAddress.callAhead,
+            closeTime: deliveryAddress.closeTime || '',
+            contactEmail: deliveryAddress.contactEmail || '',
+            contactName: deliveryAddress.contactName || '',
+            contactPhone: deliveryAddress.contactPhone || '',
+            deliveryNotes: deliveryAddress.deliveryNotes || '',
+            forkLift: !!deliveryAddress.forkLift,
+            liftGate: !!deliveryAddress.liftGate,
+            readyTime: deliveryAddress.readyTime || '',
           },
           companyAdminUser: {
             name: payload.identity.name,

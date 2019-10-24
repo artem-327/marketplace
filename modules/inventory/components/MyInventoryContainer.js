@@ -9,6 +9,8 @@ import { withDatagrid } from '~/modules/datagrid'
 import { openImportPopup } from '~/modules/settings/actions'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import { applyFilter } from '~/modules/filter/actions'
+import { openPopup } from '~/modules/company-product-info/actions'
+
 import { FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
 
@@ -18,7 +20,7 @@ import { getSafe } from '~/utils/functions'
 import moment from 'moment/moment'
 
 function mapStateToProps(store, { datagrid }) {
-
+  
   return {
     ...store.simpleAdd,
     sellEligible: getSafe(() => store.auth.identity.company.sellEligible, false),
@@ -31,7 +33,7 @@ function mapStateToProps(store, { datagrid }) {
         if (po.pricingTiers.length > 1) fobPrice = <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].pricePerUOM} /> - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].pricePerUOM} /> {qtyPart && (`/ ${qtyPart}`)} </>
         else fobPrice = <> <FormattedNumber style='currency' currency={currency} value={getSafe(() => po.pricingTiers[0].pricePerUOM)} /> {qtyPart && (`/ ${qtyPart}`)} </>
       } catch (e) { console.error(e) }
-
+     
       return {
         ...po,
         id: po.id,
@@ -76,6 +78,6 @@ function mapStateToProps(store, { datagrid }) {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions, openImportPopup, openBroadcast, applyFilter })(MyInventory))
+export default withDatagrid(connect(mapStateToProps, { ...Actions, openPopup, openImportPopup, openBroadcast, applyFilter })(MyInventory))
 
 

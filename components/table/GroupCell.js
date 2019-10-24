@@ -22,7 +22,7 @@ const Cell = ({
   indeterminate,
   ...restProps
 }) => {
-  
+
   const handleClick = () => onToggle()
   const groupCheckboxClick = (e) => onSelectionChange(row.key, !checked)
 
@@ -34,6 +34,7 @@ const Cell = ({
       onClick={handleClick}
       {...restProps}
     >
+
       {rowSelection && (
         <GroupCheckbox
           checked={checked}
@@ -45,8 +46,7 @@ const Cell = ({
       )}
       <Content
         column={column}
-        row={row}
-      >
+        row={row}>
         {children}
       </Content>
       <Icon

@@ -3,7 +3,7 @@ import { chatUnreadMessages } from '../actions'
 
 export const ChatWidget_create = (identity) => {
   if (typeof window.$zopim === 'undefined') {
-    console.log('!!!!!!!! Loading script')
+    //console.log('!!!!!!!! Loading script')
 
     var script = document.createElement("script")
     script.type = "text/javascript"
@@ -29,7 +29,7 @@ export const ChatWidget_create = (identity) => {
     script.src = "https://static.zdassets.com/ekr/snippet.js?key=c9ecb4b1-1c91-482b-bce2-aac2a343619b"
     document.getElementsByTagName("head")[0].appendChild(script)
   } else {
-    console.log('!!!!!!!! Script already loaded')
+    //console.log('!!!!!!!! Script already loaded')
     chatWidget_scriptLoaded(identity) // In case user chas hanged
   }
 }
