@@ -139,9 +139,10 @@ export function addProductOffer(values, poId = false, simple = false) {
       type: AT.INVENTORY_ADD_PRODUCT_OFFER,
       async payload() {
         const response = await api.addProductOffer(paramsCleaned)
+        const newPo = await api.getProductOffer(response.data)
         Datagrid.loadData()
         // TODO: if response will contain PO data - return them and fill sidebarValues
-        return response
+        return newPo.data
       }
     }
   }

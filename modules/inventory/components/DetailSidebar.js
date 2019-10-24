@@ -378,7 +378,7 @@ class DetailSidebar extends Component {
       edit: {
         condition: getSafe(() => sidebarValues.condition, null),
         conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
-        conforming: getSafe(() => sidebarValues.conforming, null),
+        conforming: getSafe(() => sidebarValues.conforming, true),
         costPerUOM: getSafe(() => sidebarValues.costPerUOM, ''),
         externalNotes: getSafe(() => sidebarValues.externalNotes, ''),
         fobPrice: getSafe(() => sidebarValues.pricingTiers[0].pricePerUOM, ''),
@@ -525,7 +525,7 @@ class DetailSidebar extends Component {
                                    })
                                }}
                                           data-test='detail_inventory_tab_edit'>
-                                 {formatMessage({ id: 'global.edit', defaultMessage: 'Edit' })}
+                                 {formatMessage({ id: sidebarValues.id ? 'global.edit' : 'global.add', defaultMessage: sidebarValues.id ? 'Edit' : 'Add' })}
                                </Menu.Item>
                              ),
                              pane: (
@@ -591,7 +591,13 @@ class DetailSidebar extends Component {
                                        <FormField width={16} data-test='detail_sidebar_fob_price' >
                                          <Input
                                            name='edit.fobPrice'
-                                           inputProps={{ type: 'number' }} />
+                                           inputProps={{ type: 'number', onChange: (e, {value}) => {
+                                               if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
+                                                 setFieldValue(`priceTiers.pricingTiers[0].price`, value)
+                                               }
+                                             }
+                                           }}
+                                         />
                                        </FormField>
                                      </GridColumn>
                                    </GridRow>

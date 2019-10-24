@@ -48,7 +48,9 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         poCreated: true,
-        loading: false
+        loading: false,
+        sidebarValues: payload,
+        sidebarRow: payload
       }
     }
 
