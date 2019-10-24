@@ -67,7 +67,8 @@ export const passwordValidation = () => (
 export const phoneValidation = () => (
   Yup.string()
     .trim()
-    .test('phone-validation', errorMessages.invalidPhoneNumber, (val) => val && validator.isMobilePhone(val + '', null, { strictMode: true }))
+    //.test('phone-validation', errorMessages.invalidPhoneNumber, (val) => val && validator.isMobilePhone(val + '', null, { strictMode: true })) // tohle nejak nefunguje
+    .test('phone-validation', errorMessages.invalidPhoneNumber, (val) => !val || val[0] === '+' && val.length > 5)  // Delka vcetne '+' a predcisli, '+' povinne (tzn. bylo zvolene predcisli)
 )
 
 export const dateValidation = (required = true) => {
@@ -166,7 +167,7 @@ export const dunsValidation = () => {
   return (
     Yup.string(errorMessages.requiredMessage)
       .test('duns', errorMessages.invalidValueFormat('123456789'), (val) => {
-        if (!val) return false
+        if (!val) return true
         // if (val.includes('-')) return /^[0-9]{2}\-[0-9]{3}\-[0-9]{4}$/.test(val)
         else return /^[0-9]{9}$/.test(val)
       })

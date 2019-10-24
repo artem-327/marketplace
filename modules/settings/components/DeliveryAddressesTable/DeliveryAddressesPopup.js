@@ -172,7 +172,7 @@ class DeliveryAddressesPopup extends React.Component {
                     />
                     <Checkbox
                       fieldProps={{ width: 3 }}
-                      label={formatMessage({ id: 'global.forkLift', defaultMessage: 'fork Lift' })}
+                      label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
                       name='forkLift'
                       inputProps={{ 'data-test': 'settings_delivery_address_forklift_inp' }}
                     />
