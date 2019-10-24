@@ -304,7 +304,7 @@ class DetailSidebar extends Component {
     })
 
     if (newTab === 1) {
-      this.props.openBroadcast(this.props.sidebarRow).then(async () => {
+      this.props.openBroadcast(this.props.sidebarValues).then(async () => {
         this.setState({ broadcastLoading: false })
       })
     }
@@ -561,7 +561,7 @@ class DetailSidebar extends Component {
                                    </GridRow>
                                    <GridRow>
                                      <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.pkgsAvailable' defaultMessage='Pkgs Available'>{text => text}</FormattedMessage>
+                                       <FormattedMessage id='addInventory.pkgsAvailable' defaultMessage='PKGs Available'>{text => text}</FormattedMessage>
                                      </GridColumn>
                                      <GridColumn mobile={rightWidth} computer={rightWidth}>
                                        <Input type='text'
@@ -1021,7 +1021,6 @@ const mapStateToProps = ({ simpleAdd: {
   loading,
   sidebarActiveTab,
   sidebarDetailOpen,
-  sidebarRow,
   sidebarValues,
   searchedManufacturers,
   searchedManufacturersLoading,
@@ -1039,7 +1038,6 @@ const mapStateToProps = ({ simpleAdd: {
   loading,
   sidebarActiveTab,
   sidebarDetailOpen,
-  sidebarRow,
   sidebarValues,
   searchedManufacturers,
   searchedManufacturersLoading,
