@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import { debounce } from 'lodash'
 import moment from 'moment'
-import { node, object } from 'prop-types'
+import { node, object, bool } from 'prop-types'
 
 import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
@@ -45,8 +45,48 @@ const AttachmentModal = withDatagrid(class extends Component {
   }, 250)
 
 
+  getContent = () => {
+    const { datagrid, lockSelection, tableProps, selectable } = this.props
+    console.log({ datagrid, tableProps })
+    return (
+      <ProdexTable
+        {...datagrid.tableProps}
+        {...tableProps}
+        rows={datagrid.rows.map(r => ({
+          id: r.id,
+          name: r.name,
+          documentType: r.documentType.name,
+          expirationDate: r.expirationDate && moment(r.expirationDate).format('MM/DD/YYYY')
+        }))}
+        tableName='attachements'
+        columns={[
+          { name: 'name', title: 'File Name', width: 400 },
+          { name: 'documentType', title: 'Type', width: 200 },
+          { name: 'expirationDate', title: 'Expiration Date', width: 200 }
+
+        ]}
+        rowSelection={selectable}
+        lockSelection={false}
+        showSelectAll={false}
+        onSelectionChange={selectedRows => this.setState({ selectedRows })}
+        getChildGroups={rows =>
+          _(rows)
+            .groupBy('name')
+            .map(v => ({
+              key: `${v[0].name}_${v[0].documentType}_${v.length}`,
+              childRows: v
+            }))
+            .value()
+        }
+      />
+    )
+  }
+
+
   render() {
-    const { datagrid, lockSelection, trigger, tableProps } = this.props
+    const { trigger, asModal } = this.props
+
+    if (!asModal) return this.getContent()
 
     return (
       <>
@@ -75,36 +115,7 @@ const AttachmentModal = withDatagrid(class extends Component {
 
           </CustomHeader>
           <Modal.Content scrolling>
-            <ProdexTable
-              {...datagrid.tableProps}
-              {...tableProps}
-              rows={datagrid.rows.map(r => ({
-                id: r.id,
-                name: r.name,
-                documentType: r.documentType.name,
-                expirationDate: r.expirationDate && moment(r.expirationDate).format('MM/DD/YYYY')
-              }))}
-              tableName='attachements'
-              columns={[
-                { name: 'name', title: 'File Name', width: 400 },
-                { name: 'documentType', title: 'Type', width: 200 },
-                { name: 'expirationDate', title: 'Expiration Date', width: 200 }
-
-              ]}
-              rowSelection
-              lockSelection={lockSelection}
-              showSelectAll={false}
-              onSelectionChange={selectedRows => this.setState({ selectedRows })}
-              getChildGroups={rows =>
-                _(rows)
-                  .groupBy('name')
-                  .map(v => ({
-                    key: `${v[0].name}_${v[0].documentType}_${v.length}`,
-                    childRows: v
-                  }))
-                  .value()
-              }
-            />
+            {this.getContent()}
           </Modal.Content>
 
 
@@ -123,12 +134,16 @@ const AttachmentModal = withDatagrid(class extends Component {
 
 AttachmentModal.propTypes = {
   trigger: node,
-  tableProps: object
+  tableProps: object,
+  asModal: bool,
+  selectable: bool
 }
 
 AttachmentModal.defaultProps = {
   trigger: <Button basic type='button'><FormattedMessage id='global.documentManager' defaultMessage='Document Manager'>{text => text}</FormattedMessage></Button>,
-  tableProps: {}
+  tableProps: {},
+  asModal: true,
+  selectable: true
 }
 
 class AttachmentManager extends Component {
