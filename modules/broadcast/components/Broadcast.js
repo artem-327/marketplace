@@ -272,7 +272,7 @@ class Broadcast extends Component {
 
   getContent = () => {
     let {
-      offer, templates, updateTemplate, mode,
+      offer, templates, updateTemplate, mode, narrow,
       saveTemplate, filter, loading, intl: { formatMessage },
       treeData, toastManager, additionalGridProps,
       asModal, hideFobPrice
@@ -283,7 +283,7 @@ class Broadcast extends Component {
     return (
       <StretchedGrid className='flex stretched' {...additionalGridProps}>
         <Grid.Row divided className='flex stretched'>
-          <Grid.Column width={6}>
+          <Grid.Column width={narrow ? 16 : 6}>
             <div>
               <Message info size='large' style={{ padding: '6px 15px' }}>
                 <Popup trigger={
@@ -421,10 +421,10 @@ class Broadcast extends Component {
               </Formik>
             </div>
           </Grid.Column>
-          <Grid.Column width={10} stretched>
+          <Grid.Column width={narrow ? 16 : 10} stretched style={narrow ? { padding: '0', 'box-shadow': '0 0 0 transparent' } : null}>
             <Rule.Root>
-              <Rule.Header>
-                <Rule.RowContent>
+              <Rule.Header style={narrow ? { 'flex-wrap': 'wrap', 'justify-content': 'flex-end' } : {}}>
+                <Rule.RowContent style={narrow ? { flex: '1 1 100%', width: '100%' } : {}}>
                   <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region select' />
                 </Rule.RowContent>
                 <Rule.Toggle>
@@ -452,6 +452,7 @@ class Broadcast extends Component {
                   onPriceChange={this.handlePriceChange}
                   onChange={this.handleChange}
                   data-test='broadcast_modal_rule_action'
+                  narrow={narrow}
                 />
                 <Dimmer active={loading} inverted><Loader active={loading} /></Dimmer>
               </Rule.Content>
@@ -542,13 +543,15 @@ class Broadcast extends Component {
 Broadcast.propTypes = {
   asModal: bool,
   additionalGridProps: object,
-  hideFobPrice: bool
+  hideFobPrice: bool,
+  narrow: bool
 }
 
 Broadcast.defaultProps = {
   asModal: true,
   additionalGridProps: {},
-  hideFobPrice: false
+  hideFobPrice: false,
+  narrow: false
 }
 
 export default injectIntl(withToastManager(connect(({ broadcast: { data, filter, ...rest } }) => {

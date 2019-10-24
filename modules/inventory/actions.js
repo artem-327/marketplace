@@ -375,15 +375,15 @@ export const getAllProductOffers = () => ({ type: AT.GET_ALL_PRODUCT_OFFERS, pay
 
 export const simpleEditTrigger = (popupValues = {}, force = null) => ({ type: AT.SIMPLE_EDIT_TRIGGER, payload: { popupValues, force } })
 
-export const sidebarDetailTrigger = (poId = null, force = null) => {
+export const sidebarDetailTrigger = (row = {}, force = null, activeTab = 0) => {
   return {
     type: AT.SIDEBAR_DETAIL_TRIGGER,
-    meta: { force: force },
+    meta: { force: force, activeTab: activeTab, row: row },
     async payload() {
       let sidebarValues = {}
 
-      if (poId)
-        sidebarValues = await api.getProductOffer(poId)
+      if (getSafe(() => row.id, false))
+        sidebarValues = await api.getProductOffer(row.id)
 
       return getSafe(() => sidebarValues.data, {})
     }
