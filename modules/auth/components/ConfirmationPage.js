@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import * as Actions from '../actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Grid, Header, Segment, Image, Divider } from 'semantic-ui-react'
-import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import styled from 'styled-components'
 import * as val from 'yup'
 import Router from 'next/router'
@@ -38,11 +38,23 @@ const LogoImage = styled(Image)`
 
 const initValues = {
   address: {
-    city: '',
-    country: '',
-    province: '',
-    streetAddress: '',
-    zip: ''
+    address: {
+      city: '',
+      country: '',
+      province: '',
+      streetAddress: '',
+      zip: ''
+    },
+    addressName: '',
+    callAhead: false,
+    closeTime: '',
+    contactEmail: '',
+    contactName: '',
+    contactPhone: '',
+    deliveryNotes: '',
+    forkLift: false,
+    liftGate: false,
+    readyTime: '',
   },
   companyAdminUser: {
     name: '',
@@ -57,11 +69,17 @@ const initValues = {
 }
 
 const validationScheme = val.object().shape({
-  address: addressValidationSchema(),
+  address: val.object().shape({
+    address: addressValidationSchema(),
+    addressName: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
+    contactName: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
+    contactEmail: val.string(errorMessages.invalidEmail).email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
+    contactPhone: phoneValidation().required(errorMessages.requiredMessage),
+  }),
   companyAdminUser: val.object().shape({
     name: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
     jobTitle: val.string(),
-    phone: phoneValidation().concat(val.string().required(errorMessages.requiredMessage)),
+    phone: phoneValidation(),
     email: val.string(errorMessages.invalidEmail).email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
   }),
   dba: val.string(),
@@ -104,14 +122,22 @@ class ConfirmationPage extends Component {
             ...values,
             address: {
               ...values.address,
-              country: JSON.parse(values.address.country).countryId
+              address: {
+                ...values.address.address,
+                country: JSON.parse(values.address.address.country).countryId
+              }
             }
           }
 
-          await reviewCompany(payload)
-          actions.setSubmitting(false)
-          Router.push('/dwolla-register')
-
+          try {
+            await reviewCompany(payload)
+            actions.setSubmitting(false)
+            Router.push('/dwolla-register')
+          }
+          catch { }
+          finally {
+            actions.setSubmitting(false)
+          }
         }}
         className='flex stretched'
         style={{ padding: '20px' }}>
@@ -148,7 +174,8 @@ class ConfirmationPage extends Component {
                 <Header as='h3'>
                   <FormattedMessage id='laststep.address.header' defaultMessage='Company Primary Address' />
                 </Header>
-                <AddressForm setFieldValue={setFieldValue} values={values} displayHeader={false} />
+                <AddressForm setFieldValue={setFieldValue} values={values} displayHeader={false} prefix='address' />
+
                 <Grid>
                   <Grid.Row columns={2}>
                     <Grid.Column data-test='auth_confirm_addressEIN_inp' >
@@ -161,6 +188,77 @@ class ConfirmationPage extends Component {
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
+
+                <Header as='h3'>
+                  <FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' />
+                </Header>
+
+                <Grid>
+                  <Grid.Row columns={2}>
+                    <Grid.Column data-test='auth_confirm_addressAddressName_inp' >
+                      <Input label={formatMessage({ id: 'laststep.address.addressName', defaultMessage: 'Address Name *' })}
+                             name='address.addressName' />
+                    </Grid.Column>
+                    <Grid.Column data-test='auth_confirm_addressContactName_inp'>
+                      <Input label={formatMessage({ id: 'laststep.address.contactName', defaultMessage: 'Contact Name *' })}
+                             name='address.contactName' />
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+
+                <Grid>
+                  <Grid.Row columns={2}>
+                    <Grid.Column data-test='auth_confirm_addressContactPhone_inp' >
+                      <PhoneNumber
+                        label={formatMessage({ id: 'laststep.address.contactPhone', defaultMessage: 'Contact Phone *' })}
+                        name='address.contactPhone'
+                        values={values} setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched} errors={errors}
+                        touched={touched} isSubmitting={isSubmitting}
+                      />
+                    </Grid.Column>
+                    <Grid.Column data-test='auth_confirm_addressContactEmail_inp'>
+                      <Input label={formatMessage({ id: 'laststep.address.contactEmail', defaultMessage: 'Contact E-Mail *' })}
+                             name='address.contactEmail' />
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+
+                <Grid>
+                  <Grid.Row columns={2}>
+                    <Grid.Column data-test='auth_confirm_addressReadyTime_inp' >
+                      <Input label={formatMessage({ id: 'laststep.address.readyTime', defaultMessage: 'Ready Time' })}
+                             name='address.readyTime' />
+                    </Grid.Column>
+                    <Grid.Column data-test='auth_confirm_addressCloseTime_inp'>
+                      <Input label={formatMessage({ id: 'laststep.address.closeTime', defaultMessage: 'Close Time' })}
+                             name='address.closeTime' />
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+
+                <Grid>
+                  <Grid.Row columns={3}>
+                    <Grid.Column data-test='auth_confirm_addressCallAhead_inp' >
+                      <Checkbox label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
+                             name='address.callAhead' />
+                    </Grid.Column>
+                    <Grid.Column data-test='auth_confirm_addressForkLift_inp'>
+                      <Checkbox label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
+                             name='address.forkLift' />
+                    </Grid.Column>
+                    <Grid.Column data-test='auth_confirm_addressLiftGate_inp'>
+                      <Checkbox label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
+                                name='address.liftGate' />
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+
+                <TextArea
+                  name='address.deliveryNotes'
+                  label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
+                  data-test='auth_confirm_addressDeliveryNotes_textArea'
+                />
 
                 <Header as='h3'>
                   <FormattedMessage id='laststep.admin.header' defaultMessage='Company Admin Profile' />
@@ -179,7 +277,7 @@ class ConfirmationPage extends Component {
                   <Grid.Row columns={2}>
                     <Grid.Column data-test='auth_confirm_adminPhone_inp'>
                       <PhoneNumber
-                        label={formatMessage({ id: 'laststep.admin.phone', defaultMessage: 'Phone *' })}
+                        label={formatMessage({ id: 'laststep.admin.phone', defaultMessage: 'Phone' })}
                         name='companyAdminUser.phone'
                         values={values} setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched} errors={errors}

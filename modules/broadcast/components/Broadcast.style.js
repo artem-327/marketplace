@@ -56,6 +56,7 @@ const RowContent = styled.div`
 const Toggle = styled.div`
   flex: 0 0 110px;
   display: flex;
+  flex-flow: column;
   justify-content: center;
   align-items: center;
 `

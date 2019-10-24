@@ -292,11 +292,10 @@ class MyInventory extends Component {
                   // Router.push({ pathname: '/inventory/edit', query: { id: row.id } })
                   simpleEditTrigger(datagrid.rows.find((r) => r.id === row.id), true)
               },*/
-              {
-                text: formatMessage({ id: 'inventory.edit', defaultMessage: 'Edit Listing' }), callback: (row) =>
-                  sidebarDetailTrigger(row.id, true)
-              },
-              { text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
+              { text: formatMessage({ id: 'inventory.edit', defaultMessage: 'Edit Listing' }), callback: (row) => sidebarDetailTrigger(row, true, 0) },
+              //{ text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
+              { text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => sidebarDetailTrigger(row, true, 1) },
+              { text: formatMessage({ id: 'inventory.pricingTiers', defaultMessage: 'Pricing Tiers' }), callback: (row) => sidebarDetailTrigger(row, true, 2) },
               {
                 text: formatMessage({ id: 'inventory.delete', defaultMessage: 'Delete Listing' }), callback: (row) => {
                   confirm(
@@ -322,8 +321,12 @@ class MyInventory extends Component {
 
 
         </div>
-        <Broadcast />
-        <SimpleEdit />
+        { false ? (
+          <>
+            <Broadcast />
+            <SimpleEdit />
+          </>
+        ) : null }
         <DetailSidebar />
         <Filter
           onApply={this.handleFilterApply}

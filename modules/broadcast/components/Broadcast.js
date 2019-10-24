@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import pt, { node, bool, object } from 'prop-types'
+import pt, { node, bool, number, object } from 'prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import * as Actions from '../actions'
@@ -64,6 +64,11 @@ class Broadcast extends Component {
 
   }
 
+  formChanged = () => {
+    if (this.props.changedForm)
+      this.props.changedForm()
+  }
+
   handlePriceChange = (node) => {
     if (node.hasChildren()) {
       node.walk((n) => {
@@ -85,6 +90,8 @@ class Broadcast extends Component {
     }
 
     this.setState({ tree: this.state.tree, change: true, saved: false })
+
+    this.formChanged()
   }
 
   calculateBroadcastingCnt = () => {
@@ -116,8 +123,12 @@ class Broadcast extends Component {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(oldProps) {
     this.calculateBroadcastingCnt()
+
+    if (oldProps.saveBroadcast !== this.props.saveBroadcast && this.props.saveBroadcast) {
+      this.saveBroadcastRules()
+    }
   }
 
 
@@ -141,7 +152,7 @@ class Broadcast extends Component {
       })
     }
 
-
+    this.formChanged()
   }
 
   handleRowClick = (node) => {
@@ -272,7 +283,7 @@ class Broadcast extends Component {
 
   getContent = () => {
     let {
-      offer, templates, updateTemplate, mode,
+      offer, templates, updateTemplate, mode, asSidebar,
       saveTemplate, filter, loading, intl: { formatMessage },
       treeData, toastManager, additionalGridProps,
       asModal, hideFobPrice
@@ -281,9 +292,9 @@ class Broadcast extends Component {
     let total = treeData.all(n => n.model.type === (this.props.filter.category === 'branch' ? 'branch' : 'state')).length
 
     return (
-      <StretchedGrid className='flex stretched' {...additionalGridProps}>
+      <StretchedGrid className='flex stretched' {...additionalGridProps} style={asSidebar ? { 'height': 'auto' } : null}>
         <Grid.Row divided className='flex stretched'>
-          <Grid.Column width={6}>
+          <Grid.Column width={asSidebar ? 16 : 6}>
             <div>
               <Message info size='large' style={{ padding: '6px 15px' }}>
                 <Popup trigger={
@@ -371,12 +382,14 @@ class Broadcast extends Component {
                         <GridRow>
                           <GridColumn computer={11}>
                             <Dropdown
+                              selectOnBlur={false}
                               data-test='broadcast_modal_template_drpdn'
                               fluid selection
                               value={this.state.selectedTemplate.id}
                               onChange={(e, data) => {
                                 this.onTemplateSelected(e, data, props.setFieldValue)
                                 this.setState({ selectedTemplate: { id: data.value, name: data.options.find((el) => el.value === data.value).text } })
+                                this.formChanged()
                               }}
                               options={templates.map((template) => ({
                                 key: template.id,
@@ -421,10 +434,10 @@ class Broadcast extends Component {
               </Formik>
             </div>
           </Grid.Column>
-          <Grid.Column width={10} stretched>
+          <Grid.Column width={asSidebar ? 16 : 10} stretched style={asSidebar ? { padding: '0', 'box-shadow': '0 0 0 transparent' } : null}>
             <Rule.Root>
-              <Rule.Header>
-                <Rule.RowContent>
+              <Rule.Header style={asSidebar ? { 'flex-wrap': 'wrap', 'justify-content': 'flex-end' } : {}}>
+                <Rule.RowContent style={asSidebar ? { flex: '1 1 100%', width: '100%' } : {}}>
                   <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region select' />
                 </Rule.RowContent>
                 <Rule.Toggle>
@@ -440,7 +453,7 @@ class Broadcast extends Component {
                   }
                 </Rule.Toggle>
               </Rule.Header>
-              <Rule.Content>
+              <Rule.Content style={asSidebar ? { flex: '1 0 auto', 'overflow-y': 'hidden' } : null}>
                 <RuleItem
                   loadingChanged={this.props.loadingChanged}
                   filter={filter}
@@ -452,6 +465,7 @@ class Broadcast extends Component {
                   onPriceChange={this.handlePriceChange}
                   onChange={this.handleChange}
                   data-test='broadcast_modal_rule_action'
+                  asSidebar={asSidebar}
                 />
                 <Dimmer active={loading} inverted><Loader active={loading} /></Dimmer>
               </Rule.Content>
@@ -470,7 +484,8 @@ class Broadcast extends Component {
   getButtons = () => {
     const {
       intl: { formatMessage }, closeBroadcast,
-      asModal
+      asModal,
+      asSidebar
     } = this.props
 
     return (
@@ -480,11 +495,13 @@ class Broadcast extends Component {
             {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
           </Button >
         }
-        <Button primary
-          onClick={() => this.saveBroadcastRules()}
-          data-test='broadcast_modal_save_btn'>
-          {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-        </Button>
+        {!asSidebar &&
+          <Button primary
+                  onClick={() => this.saveBroadcastRules()}
+                  data-test='broadcast_modal_save_btn'>
+            {formatMessage({id: 'global.save', defaultMessage: 'Save'})}
+          </Button>
+        }
       </>
     )
   }
@@ -542,13 +559,17 @@ class Broadcast extends Component {
 Broadcast.propTypes = {
   asModal: bool,
   additionalGridProps: object,
-  hideFobPrice: bool
+  hideFobPrice: bool,
+  asSidebar: bool,
+  saveSidebar: number
 }
 
 Broadcast.defaultProps = {
   asModal: true,
   additionalGridProps: {},
-  hideFobPrice: false
+  hideFobPrice: false,
+  asSidebar: false,
+  saveSidebar: 0
 }
 
 export default injectIntl(withToastManager(connect(({ broadcast: { data, filter, ...rest } }) => {

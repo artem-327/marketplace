@@ -26,7 +26,9 @@ export const initialState = {
   documentTypesFetching: false,
   simpleEditOpen: false,
   popupValues: {},
+  sidebarRow: {},
   sidebarDetailOpen: false,
+  sidebarActiveTab: -1,
   sidebarValues: {},
   product: null
 }
@@ -460,19 +462,26 @@ export default function reducer(state = initialState, action) {
         return {
           ...state,
           sidebarDetailOpen,
-          sidebarValues: {}
+          sidebarRow: action.meta.row,
+          sidebarValues: {},
+          sidebarActiveTab: -1
         }
       else
         return {
           ...state,
-          sidebarDetailOpen
+          sidebarDetailOpen,
+          sidebarRow: action.meta.row,
+          sidebarActiveTab: -1
         }
     }
 
     case AT.SIDEBAR_DETAIL_TRIGGER_FULFILLED: {
+      let sidebarActiveTab = action.meta.activeTab
+
       return {
         ...state,
-        sidebarValues: payload
+        sidebarValues: payload,
+        sidebarActiveTab
       }
     }
 
