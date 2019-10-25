@@ -266,17 +266,13 @@ class MyInventory extends Component {
             renderGroupLabel={({ row, children = null, }) => {
               let { value } = row
               const [name, number, count] = value.split('_')
-              const numberArray = number.split(' & ')
 
               return (
                 <span>
                   {children}
                   <span style={{ color: '#2599d5' }}>
-                    {numberArray.length > 1
-                      ? (<Popup content={<List items={numberArray.map(n => { return n })} />} trigger={<span>Blend</span>} />)
-                      : number}
+                    {name}
                   </span>
-                  &nbsp;&nbsp; {name}
                   <span className='right'>Product offerings: {count}</span>
                 </span>
               )

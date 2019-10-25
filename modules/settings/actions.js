@@ -981,3 +981,7 @@ export const getLanguages = () => ({ type: AT.GET_LANGUAGES, payload: api.getLan
 export const setPreferredLanguage = (lang) => ({ type: AT.SET_PREFERRED_LANGUAGE, payload: api.setPreferredLanguage(lang) })
 
 export const searchEchoProducts = (searchQuery, limit = 30) => ({ type: AT.SEARCH_ECHO_PRODUCTS, payload: api.searchEchoProducts(searchQuery, limit) })
+
+export const getNmfcNumbersByString = (value) => ({ type: AT.SEARCH_NMFC_NUMBERS, payload: api.getNmfcNumbersByString(value) })
+
+export const addNmfcNumber = value => ({ type: AT.ADD_NMFC_NUMBERS, payload: value })

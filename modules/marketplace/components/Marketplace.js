@@ -167,10 +167,9 @@ class Marketplace extends Component {
             }
             renderGroupLabel={({ row: { value } }) => {
               const [name, number, count] = value.split('_')
-              const numberArray = number.split(' & ')
               return (
                 <span>
-                  <span style={{ color: '#2599d5' }}>{numberArray.length > 1 ? (<Popup content={<List items={numberArray.map(n => { return n })} />} trigger={<span>Blend</span>} />) : number}</span>&nbsp;&nbsp; {name} <span className='right'>Product offerings: {count}</span>
+                  <span style={{ color: '#2599d5' }}>{name}</span> <span className='right'>Product offerings: {count}</span>
                 </span>
               )
             }}

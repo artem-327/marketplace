@@ -244,7 +244,7 @@ export default class AddCart extends Component {
                 <FormattedMessage id='cart.form' defaultMessage='Form:' />
               </GridColumn>
               <GridColumn computer={10}>
-                {offer.form.name}
+                {offer.form ? offer.form.name : 'N/A'}
               </GridColumn>
             </GridRow>
 

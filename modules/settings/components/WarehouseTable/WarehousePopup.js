@@ -184,29 +184,33 @@ class WarehousePopup extends React.Component {
                   <Input type='text' label='Email' name='deliveryAddress.contactEmail' />
                 </FormGroup>
                 <Header as='h3'><FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' /></Header>
-                <FormGroup data-test='settings_delivery_address_notes_inp' style={{ alignItems: 'center' }}>
+                <FormGroup widths='equal' data-test='settings_delivery_address_notes_inp' style={{ alignItems: 'center' }}>
                   <Input
-                    fieldProps={{ width: 5 }}
                     type='text'
                     label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
                     name='deliveryAddress.readyTime'
                   />
                   <Input
-                    fieldProps={{ width: 5 }}
-                    type='text' label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
+                    type='text'
+                    label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
                     name='deliveryAddress.closeTime'
                   />
+                </FormGroup>
+                <FormGroup widths='equal'>
                   <Checkbox
-                    fieldProps={{ width: 3 }}
                     label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
                     name='deliveryAddress.liftGate'
                     inputProps={{ 'data-test': 'settings_delivery_address_liftGate_inp' }}
                   />
                   <Checkbox
-                    fieldProps={{ width: 3 }}
-                    label={formatMessage({ id: 'global.forkLift', defaultMessage: 'fork Lift' })}
+                    label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
                     name='deliveryAddress.forkLift'
                     inputProps={{ 'data-test': 'settings_delivery_address_forklift_inp' }}
+                  />
+                  <Checkbox
+                    label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
+                    name='deliveryAddress.callAhead'
+                    inputProps={{ 'data-test': 'settings_delivery_address_callAhead_inp' }}
                   />
                 </FormGroup>
                 <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
