@@ -304,7 +304,7 @@ class DetailSidebar extends Component {
     })
 
     if (newTab === 1) {
-      this.props.openBroadcast(this.props.sidebarRow).then(async () => {
+      this.props.openBroadcast(this.props.sidebarValues).then(async () => {
         this.setState({ broadcastLoading: false })
       })
     }
@@ -378,7 +378,7 @@ class DetailSidebar extends Component {
       edit: {
         condition: getSafe(() => sidebarValues.condition, null),
         conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
-        conforming: getSafe(() => sidebarValues.conforming, null),
+        conforming: getSafe(() => sidebarValues.conforming, true),
         costPerUOM: getSafe(() => sidebarValues.costPerUOM, ''),
         externalNotes: getSafe(() => sidebarValues.externalNotes, ''),
         fobPrice: getSafe(() => sidebarValues.pricingTiers[0].pricePerUOM, ''),
@@ -525,7 +525,7 @@ class DetailSidebar extends Component {
                                    })
                                }}
                                           data-test='detail_inventory_tab_edit'>
-                                 {formatMessage({ id: 'global.edit', defaultMessage: 'Edit' })}
+                                 {formatMessage({ id: sidebarValues.id ? 'global.edit' : 'global.add', defaultMessage: sidebarValues.id ? 'Edit' : 'Add' })}
                                </Menu.Item>
                              ),
                              pane: (
@@ -561,7 +561,7 @@ class DetailSidebar extends Component {
                                    </GridRow>
                                    <GridRow>
                                      <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.pkgsAvailable' defaultMessage='Pkgs Available'>{text => text}</FormattedMessage>
+                                       <FormattedMessage id='addInventory.pkgsAvailable' defaultMessage='PKGs Available'>{text => text}</FormattedMessage>
                                      </GridColumn>
                                      <GridColumn mobile={rightWidth} computer={rightWidth}>
                                        <Input type='text'
@@ -591,7 +591,13 @@ class DetailSidebar extends Component {
                                        <FormField width={16} data-test='detail_sidebar_fob_price' >
                                          <Input
                                            name='edit.fobPrice'
-                                           inputProps={{ type: 'number' }} />
+                                           inputProps={{ type: 'number', onChange: (e, {value}) => {
+                                               if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
+                                                 setFieldValue(`priceTiers.pricingTiers[0].price`, value)
+                                               }
+                                             }
+                                           }}
+                                         />
                                        </FormField>
                                      </GridColumn>
                                    </GridRow>
@@ -1015,7 +1021,6 @@ const mapStateToProps = ({ simpleAdd: {
   loading,
   sidebarActiveTab,
   sidebarDetailOpen,
-  sidebarRow,
   sidebarValues,
   searchedManufacturers,
   searchedManufacturersLoading,
@@ -1033,7 +1038,6 @@ const mapStateToProps = ({ simpleAdd: {
   loading,
   sidebarActiveTab,
   sidebarDetailOpen,
-  sidebarRow,
   sidebarValues,
   searchedManufacturers,
   searchedManufacturersLoading,

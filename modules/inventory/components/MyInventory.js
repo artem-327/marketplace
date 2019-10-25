@@ -118,6 +118,11 @@ class MyInventory extends Component {
 
       return {
         ...r,
+        condition: r.condition ? (
+          <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
+        ) : (
+          <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+        ),
         broadcast: (
           <div style={{ float: 'right' }}>
             <Popup id={r.id}

@@ -26,7 +26,6 @@ export const initialState = {
   documentTypesFetching: false,
   simpleEditOpen: false,
   popupValues: {},
-  sidebarRow: {},
   sidebarDetailOpen: false,
   sidebarActiveTab: -1,
   sidebarValues: {},
@@ -48,7 +47,8 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         poCreated: true,
-        loading: false
+        loading: false,
+        sidebarValues: payload
       }
     }
 
@@ -70,7 +70,8 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         poCreated: true,
-        loading: false
+        loading: false,
+        sidebarValues: payload
       }
     }
 
@@ -462,7 +463,6 @@ export default function reducer(state = initialState, action) {
         return {
           ...state,
           sidebarDetailOpen,
-          sidebarRow: action.meta.row,
           sidebarValues: {},
           sidebarActiveTab: -1
         }
@@ -470,7 +470,7 @@ export default function reducer(state = initialState, action) {
         return {
           ...state,
           sidebarDetailOpen,
-          sidebarRow: action.meta.row,
+          sidebarValues: action.meta.row, // immediate data from table for price book
           sidebarActiveTab: -1
         }
     }
@@ -480,7 +480,7 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
-        sidebarValues: payload,
+        sidebarValues: payload, // newest data from db
         sidebarActiveTab
       }
     }
