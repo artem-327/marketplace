@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import styled from 'styled-components'
+
+import { CompanyProductInfo } from '~/modules/company-product-info'
 import { ShippingQuotes } from '~/modules/shipping'
 import SubMenu from '~/src/components/SubMenu'
 import { Filter } from '~/modules/filter'
@@ -8,7 +11,7 @@ import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
-import styled from "styled-components";
+import { groupActions } from '~/modules/company-product-info/constants'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -54,8 +57,8 @@ class Marketplace extends Component {
       condition: r.condition ? (
         <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
       ) : (
-        <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
-      ),
+          <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+        ),
       packaging: <>{`${r.packagingSize} ${r.packagingUnit} `}<CapitalizedText>{r.packagingType}</CapitalizedText> </>,
     }))
   }
@@ -96,7 +99,7 @@ class Marketplace extends Component {
 
 
   render() {
-    const { datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading } = this.props
+    const { datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading, openPopup } = this.props
     const { columns, selectedRows } = this.state
     const rows = this.getRows()
 
@@ -104,6 +107,7 @@ class Marketplace extends Component {
 
     return (
       <>
+        <CompanyProductInfo />
         <Container fluid style={{ padding: '0 32px' }}>
 
           <ShippingQuotes
@@ -154,27 +158,32 @@ class Marketplace extends Component {
         </Container>
         <div class='flex stretched' style={{ padding: '10px 32px' }}>
           <ProdexGrid
+            groupActions={(row) => {
+              let values = row.key.split('_')
+              return groupActions(rows, values[values.length - 1], openPopup).map((a) => ({ ...a, text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage> }))
+            }}
             tableName='marketplace_grid'
             {...datagrid.tableProps}
             rows={rows}
             columns={columns}
             rowSelection
             groupBy={['productNumber']}
-            sameGroupSelectionOnly
+            // sameGroupSelectionOnly
             getChildGroups={rows =>
               _(rows)
                 .groupBy('productName')
                 .map(v => ({
-                  key: `${v[0].productName}_${v[0].productNumber}_${v.length}`,
+                  key: `${v[0].productName}_${v[0].productNumber}_${v.length}_${v[0].companyProduct.id}`,
                   childRows: v
                 }))
                 .value()
             }
-            renderGroupLabel={({ row: { value } }) => {
+            renderGroupLabel={({ row: { value }, children = null }) => {
               const [name, number, count] = value.split('_')
               const numberArray = number.split(' & ')
               return (
                 <span>
+                  {children}
                   <span style={{ color: '#2599d5' }}>{numberArray.length > 1 ? (<Popup content={<List items={numberArray.map(n => { return n })} />} trigger={<span>Blend</span>} />) : number}</span>&nbsp;&nbsp; {name} <span className='right'>Product offerings: {count}</span>
                 </span>
               )

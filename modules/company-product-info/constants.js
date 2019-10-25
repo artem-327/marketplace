@@ -99,3 +99,14 @@ export const echoProductGrouping = [
   { key: 'tdg', text: <FormattedMessage id='global.tdg' defaultMessage='!TDG' />, value: 'tdg' },
   { key: 'imdgImo', text: <FormattedMessage id='global.imdgImo' defaultMessage='!IMDG/IMO' />, value: 'imdgImo' }
 ]
+
+
+export const groupActions = (rows, companyProductId, callback) => {
+  let companyProduct = rows.find((el) => el.companyProduct.id == companyProductId)
+
+  if (!companyProduct) return []
+
+  return tabs.map((tab, i) => ({
+    text: tab.text, callback: () => callback(companyProduct, i)
+  }))
+}
