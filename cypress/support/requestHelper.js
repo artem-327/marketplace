@@ -114,7 +114,33 @@ Cypress.Commands.add("getFirstMarketName", (token, filter) => {
     })
 })
 
-Cypress.Commands.add("getFirstMarketId", (token) => {
+Cypress.Commands.add("getItemBody", (token, itemId) => {
+    cy.request({
+        method: 'GET',
+        url: '/prodex/api/product-offers/'+itemId,
+        headers: {
+            authorization: "Bearer " + token
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body
+    })
+})
+
+Cypress.Commands.add("getCartBody", (token) => {
+    cy.request({
+        method: 'GET',
+        url: '/prodex/api/cart',
+        headers: {
+            authorization: "Bearer " + token
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body
+    })
+})
+
+Cypress.Commands.add("getMarketPlaceDatagridBody", (token) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/product-offers/broadcasted/datagrid/',
@@ -124,7 +150,7 @@ Cypress.Commands.add("getFirstMarketId", (token) => {
         body: {pageNumber: 0, filters: [], pageSize: 50}
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body
     })
 })
 
@@ -418,5 +444,18 @@ Cypress.Commands.add("turnOffGlobalBroadcasting", (token) => {
         body: {anonymous: 0, broadcast: 0, priceAddition: 5, priceMultiplier: 0, priceOverride: 0, type: "root"}
     }).then((response) => {
         expect(response.status).to.eq(200)
+    })
+})
+
+Cypress.Commands.add("getDeliveryAddresses", (token) => {
+    cy.request({
+        method: 'GET',
+        url: '/prodex/api/delivery-addresses/',
+        headers: {
+            authorization: "Bearer " + token
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body
     })
 })
