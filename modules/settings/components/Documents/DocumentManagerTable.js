@@ -10,6 +10,7 @@ import { withDatagrid } from '~/modules/datagrid'
 import { openPopup } from '~/modules/settings/actions'
 import { removeAttachment } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
+import { bool } from 'prop-types'
 
 const BasicLink = styled.a`
   color: black !important;
@@ -32,7 +33,14 @@ class DocumentManager extends Component {
 
 
   render() {
-    const { datagrid, rows, openPopup, removeAttachment, loading } = this.props
+    const {
+      datagrid, rows,
+      openPopup, removeAttachment,
+      edit, download, deletable,
+      loading } = this.props
+
+
+
 
     return (
       <ProdexGrid
@@ -43,27 +51,39 @@ class DocumentManager extends Component {
         loading={datagrid.loading || loading}
         style={{ marginTop: '5px' }}
         rowActions={[
-          {
+          ...edit ? [{
             text: <FormattedMessage id='global.edit' defaultMessage='Edit'>{text => text}</FormattedMessage>,
             callback: row => openPopup(row)
-          },
-          {
+          }] : [],
+          ...download ? [{
             text: row => <BasicLink target='_blank' href={`/download/attachments/${row.id}`}>
               <FormattedMessage id='global.download' defaultMessage='Download'>{text => text}</FormattedMessage>
             </BasicLink>,
             callback: () => { }
-          },
-          {
+          }] : [],
+          ...deletable ? [{
             text: <FormattedMessage id='global.delete' defaultMessage='Delete'>{text => text}</FormattedMessage>, callback: async row => {
               await removeAttachment(row.id)
               datagrid.removeRow(row.id)
             }
-          },
+          }] : [],
         ]}
       />
 
     )
   }
+}
+
+DocumentManager.propTypes = {
+  edit: bool,
+  download: bool,
+  delete: bool
+}
+
+DocumentManager.defaultProps = {
+  edit: true,
+  download: true,
+  deletable: true
 }
 
 const mapStateToProps = (store, { datagrid }) => {

@@ -31,7 +31,7 @@ export const FlexSidebar = styled(Sidebar)`
 `
 
 export const FlexTabs = styled.div`
-  margin: 0 15px 0 0;
+  margin: 0;
   text-align: left;
   border-bottom: 1px solid #f0f0f0;
   padding: 10px 0 15px 0;
@@ -155,7 +155,10 @@ const validationScheme = val.object().shape({
 class DetailSidebar extends Component {
 
   state = {
-    activeTab: 0
+    activeTab: 0,
+    broadcastLoading: true,
+    saveBroadcast: 0,
+    changedForm: false
   }
 
   componentDidMount = () => {
@@ -172,9 +175,15 @@ class DetailSidebar extends Component {
       this.props.searchOrigins(getSafe(() => this.props.sidebarValues.origin.name, ''), 200)
       if (this.props.sidebarValues.companyProduct)
         this.searchProducts(this.props.sidebarValues.companyProduct.intProductName)
-
-      //this.props.openBroadcast(this.props.sidebarValues)
     }
+
+    if (this.props.sidebarActiveTab > -1 && oldProps.sidebarActiveTab !== this.props.sidebarActiveTab) {
+      this.switchTab(this.props.sidebarActiveTab)
+    }
+  }
+
+  changedForm = () => {
+    this.setState({ changedForm: true })
   }
 
   getPriceTiers = (max) => {
@@ -245,7 +254,7 @@ class DetailSidebar extends Component {
           </TopMargedColumn>
 
           <TopMargedColumn computer={2}>
-            <Icon name='greater than equal' />
+            <Icon className='greater than equal' />
           </TopMargedColumn>
 
           <GridColumn computer={5} data-test={`add_inventory_quantityFrom_${i}_inp`} >
@@ -281,6 +290,10 @@ class DetailSidebar extends Component {
     )
   }
 
+  saveBroadcastRules = async () => {
+    this.setState({ saveBroadcast: this.state.saveBroadcast+1 })
+  }
+
   searchProducts = debounce((text) => {
     this.props.getAutocompleteData({ searchUrl: `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false` })
   }, 250)
@@ -289,6 +302,12 @@ class DetailSidebar extends Component {
     this.setState({
       activeTab: newTab
     })
+
+    if (newTab === 1) {
+      this.props.openBroadcast(this.props.sidebarValues).then(async () => {
+        this.setState({ broadcastLoading: false })
+      })
+    }
   }
 
   switchToErrors = (tabs) => {
@@ -312,6 +331,7 @@ class DetailSidebar extends Component {
       listForms,
       listGrades,
       loading,
+      openBroadcast,
       sidebarDetailOpen,
       sidebarValues,
       searchedManufacturers,
@@ -358,7 +378,7 @@ class DetailSidebar extends Component {
       edit: {
         condition: getSafe(() => sidebarValues.condition, null),
         conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
-        conforming: getSafe(() => sidebarValues.conforming, null),
+        conforming: getSafe(() => sidebarValues.conforming, true),
         costPerUOM: getSafe(() => sidebarValues.costPerUOM, ''),
         externalNotes: getSafe(() => sidebarValues.externalNotes, ''),
         fobPrice: getSafe(() => sidebarValues.pricingTiers[0].pricePerUOM, ''),
@@ -398,10 +418,11 @@ class DetailSidebar extends Component {
         }}
         validateOnChange={false}
         validationSchema={validationScheme}
-        onSubmit={async (values, { setSubmitting }) => {
+        onSubmit={async (values, { setSubmitting, setTouched }) => {
           let props = {}
           switch (this.state.activeTab) {
             case 0:
+            case 2:
               props = {
                 ...values.edit,
                 expirationDate: values.edit.doesExpire ? values.edit.expirationDate+'T00:00:00.000Z' : null,
@@ -419,25 +440,34 @@ class DetailSidebar extends Component {
                 productGrades: values.edit.productGrades.length ? values.edit.productGrades : []
               }
               break;
-            case 2:
-              props = values.priceTiers
+            case 1:
+              this.saveBroadcastRules()
+              setSubmitting(false)
+              setTouched({})
+              this.setState({ changedForm: false })
               break;
           }
 
-          try {
-            await addProductOffer(props, getSafe(() => this.props.sidebarValues.id, null))
-            toastManager.add(generateToastMarkup(
-              <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
-              <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Product Offer was successfully saved.' />,
-            ), {
-              appearance: 'success'
-            })
-          } catch (e) { console.error(e) }
-          finally {
-            setSubmitting(false)
+          if (Object.keys(props).length) {
+            try {
+              await addProductOffer(props, getSafe(() => this.props.sidebarValues.id, null))
+              toastManager.add(generateToastMarkup(
+                <FormattedMessage id='addInventory.success' defaultMessage='Success'/>,
+                <FormattedMessage id='addInventory.poDataSaved'
+                                  defaultMessage='Product Offer was successfully saved.'/>,
+              ), {
+                appearance: 'success'
+              })
+            } catch (e) {
+              console.error(e)
+            }
+            finally {
+              setSubmitting(false)
+              setTouched({})
+            }
           }
         }}>
-        {({values, setFieldValue, validateForm, submitForm}) => {
+        {({values, touched, setFieldValue, validateForm, submitForm}) => {
 
           return (
             <FlexSidebar
@@ -469,6 +499,15 @@ class DetailSidebar extends Component {
                            {
                              menuItem: (
                                <Menu.Item key='edit' onClick={() => {
+                                 if (Object.keys(touched).length || this.state.changedForm) {
+                                   toastManager.add(generateToastMarkup(
+                                     <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
+                                     <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Due to form changes you have to save the tab first' />,
+                                   ), {
+                                     appearance: 'warning'
+                                   })
+                                   return false
+                                 }
                                  validateForm()
                                    .then(r => {
                                      // stop when errors found
@@ -486,7 +525,7 @@ class DetailSidebar extends Component {
                                    })
                                }}
                                           data-test='detail_inventory_tab_edit'>
-                                 {formatMessage({ id: 'global.edit', defaultMessage: 'Edit' })}
+                                 {formatMessage({ id: sidebarValues.id ? 'global.edit' : 'global.add', defaultMessage: sidebarValues.id ? 'Edit' : 'Add' })}
                                </Menu.Item>
                              ),
                              pane: (
@@ -522,7 +561,7 @@ class DetailSidebar extends Component {
                                    </GridRow>
                                    <GridRow>
                                      <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.pkgsAvailable' defaultMessage='Pkgs Available'>{text => text}</FormattedMessage>
+                                       <FormattedMessage id='addInventory.pkgsAvailable' defaultMessage='PKGs Available'>{text => text}</FormattedMessage>
                                      </GridColumn>
                                      <GridColumn mobile={rightWidth} computer={rightWidth}>
                                        <Input type='text'
@@ -552,7 +591,13 @@ class DetailSidebar extends Component {
                                        <FormField width={16} data-test='detail_sidebar_fob_price' >
                                          <Input
                                            name='edit.fobPrice'
-                                           inputProps={{ type: 'number' }} />
+                                           inputProps={{ type: 'number', onChange: (e, {value}) => {
+                                               if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
+                                                 setFieldValue(`priceTiers.pricingTiers[0].price`, value)
+                                               }
+                                             }
+                                           }}
+                                         />
                                        </FormField>
                                      </GridColumn>
                                    </GridRow>
@@ -782,6 +827,15 @@ class DetailSidebar extends Component {
                            {
                              menuItem: (
                                <Menu.Item key='priceBook' onClick={() => {
+                                 if (Object.keys(touched).length || this.state.changedForm) {
+                                   toastManager.add(generateToastMarkup(
+                                     <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
+                                     <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Due to form changes you have to save the tab first' />,
+                                   ), {
+                                     appearance: 'warning'
+                                   })
+                                   return false
+                                 }
                                  validateForm()
                                    .then(r => {
                                      // stop when errors found
@@ -804,13 +858,22 @@ class DetailSidebar extends Component {
                              ),
                              pane: (
                                <Tab.Pane key='priceBook' style={{ padding: '18px' }}>
-                                 {false ? (<Broadcast />) : null}
+                                 <Broadcast isPrepared={!this.state.broadcastLoading} asModal={false} asSidebar={true} saveBroadcast={this.state.saveBroadcast} changedForm={this.changedForm} />
                                </Tab.Pane>
                              )
                            },
                            {
                              menuItem: (
                                <Menu.Item key='priceTiers' onClick={() => {
+                                 if (Object.keys(touched).length || this.state.changedForm) {
+                                   toastManager.add(generateToastMarkup(
+                                     <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
+                                     <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Due to form changes you have to save the tab first' />,
+                                   ), {
+                                     appearance: 'warning'
+                                   })
+                                   return false
+                                 }
                                  validateForm()
                                    .then(r => {
                                      // stop when errors found
@@ -956,6 +1019,7 @@ const mapStateToProps = ({ simpleAdd: {
   listForms,
   listGrades,
   loading,
+  sidebarActiveTab,
   sidebarDetailOpen,
   sidebarValues,
   searchedManufacturers,
@@ -972,6 +1036,7 @@ const mapStateToProps = ({ simpleAdd: {
   listForms,
   listGrades,
   loading,
+  sidebarActiveTab,
   sidebarDetailOpen,
   sidebarValues,
   searchedManufacturers,

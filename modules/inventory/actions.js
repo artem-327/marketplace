@@ -128,10 +128,10 @@ export function addProductOffer(values, poId = false, simple = false) {
       async payload() {
         const response = await api.updateProductOffer(poId, paramsCleaned)
         // TODO: if response will contain PO data - modify datagrid row instead of loading new data
-        // Datagrid.updateRow(poId, () => (response.data))
-        Datagrid.loadData()
-        // TODO: if response will contain PO data - return them and fill sidebarValues
-        return response
+        const newPo = await api.getProductOffer(response.data)
+        Datagrid.updateRow(poId, () => (newPo.data))
+
+        return newPo.data
       }
     }
   } else {
@@ -139,9 +139,11 @@ export function addProductOffer(values, poId = false, simple = false) {
       type: AT.INVENTORY_ADD_PRODUCT_OFFER,
       async payload() {
         const response = await api.addProductOffer(paramsCleaned)
+        const newPo = await api.getProductOffer(response.data)
         Datagrid.loadData()
+
         // TODO: if response will contain PO data - return them and fill sidebarValues
-        return response
+        return newPo.data
       }
     }
   }
@@ -375,15 +377,15 @@ export const getAllProductOffers = () => ({ type: AT.GET_ALL_PRODUCT_OFFERS, pay
 
 export const simpleEditTrigger = (popupValues = {}, force = null) => ({ type: AT.SIMPLE_EDIT_TRIGGER, payload: { popupValues, force } })
 
-export const sidebarDetailTrigger = (poId = null, force = null) => {
+export const sidebarDetailTrigger = (row = {}, force = null, activeTab = 0) => {
   return {
     type: AT.SIDEBAR_DETAIL_TRIGGER,
-    meta: { force: force },
+    meta: { force: force, activeTab: activeTab, row: row },
     async payload() {
       let sidebarValues = {}
 
-      if (poId)
-        sidebarValues = await api.getProductOffer(poId)
+      if (getSafe(() => row.id, false))
+        sidebarValues = await api.getProductOffer(row.id)
 
       return getSafe(() => sidebarValues.data, {})
     }

@@ -51,6 +51,11 @@ class Marketplace extends Component {
 
     return rows.map(r => ({
       ...r,
+      condition: r.condition ? (
+        <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
+      ) : (
+        <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+      ),
       packaging: <>{`${r.packagingSize} ${r.packagingUnit} `}<CapitalizedText>{r.packagingType}</CapitalizedText> </>,
     }))
   }

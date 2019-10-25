@@ -61,7 +61,7 @@ function mapStateToProps(store, { datagrid }) {
         status: po.cfStatus,// new broadcasted
         minOrderQuantity: getSafe(() => po.minPkg, ''),
         splits: getSafe(() => po.splitPkg, ''),
-        condition: getSafe(() => po.condition.name, ''),
+        condition: getSafe(() => po.conforming, ''),
         grade: po.grades && po.grades.length ? <ArrayToMultiple values={po.grades.map(d => (d.name))} /> : '',
         origin: getSafe(() => po.origin.name, ''),
         form: getSafe(() => po.form.name, ''),
