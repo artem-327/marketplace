@@ -14,8 +14,8 @@ import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import cn from 'classnames'
 import { CompanyProductInfo } from '~/modules/company-product-info'
-import { tabs } from '~/modules/company-product-info/constants'
 
+import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
 const defaultHiddenColumns = [
@@ -23,16 +23,6 @@ const defaultHiddenColumns = [
   'mfgDate', 'expDate', 'allocatedPkg', 'offerExpiration', 'lotNumber'
 ]
 
-// Todo - Move this somewhere else as this will be used in Marketplace as well
-const groupActions = (rows, companyProductId, callback) => {
-  let companyProduct = rows.find((el) => el.companyProduct.id == companyProductId)
-
-  if (!companyProduct) return []
-
-  return tabs.map((tab, i) => ({
-    text: tab.text, callback: () => callback(companyProduct, i)
-  }))
-}
 
 class MyInventory extends Component {
   state = {
@@ -118,6 +108,11 @@ class MyInventory extends Component {
 
       return {
         ...r,
+        condition: r.condition ? (
+          <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
+        ) : (
+            <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+          ),
         broadcast: (
           <div style={{ float: 'right' }}>
             <Popup id={r.id}
@@ -258,7 +253,7 @@ class MyInventory extends Component {
                 .map(v => {
                   return ({
                     key: `${v[0].echoName}_${v[0].echoCode}_${v.length}_${v[0].companyProduct.id}`,
-                    childRows: v.map((e) => ({ ...e, test: 'abcd' })),
+                    childRows: v,
                   })
                 })
                 .value()
@@ -322,8 +317,12 @@ class MyInventory extends Component {
 
 
         </div>
-        <Broadcast />
-        <SimpleEdit />
+        {false ? (
+          <>
+            <Broadcast />
+            <SimpleEdit />
+          </>
+        ) : null}
         <DetailSidebar />
         <Filter
           onApply={this.handleFilterApply}

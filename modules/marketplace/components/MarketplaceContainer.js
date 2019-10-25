@@ -9,6 +9,8 @@ import { withDatagrid } from '~/modules/datagrid'
 import { applyFilter } from '~/modules/filter/actions'
 import { FormattedNumber } from 'react-intl'
 
+import { openPopup } from '~/modules/company-product-info/actions'
+
 import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
@@ -26,6 +28,7 @@ function mapStateToProps(store, { datagrid }) {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
 
       return {
+        ...po,
         id: po.id,
         productName: po.companyProduct.echoProduct.name,
         productNumber: getSafe(() => po.companyProduct.echoProduct.code, 'Unmapped'),
@@ -51,4 +54,4 @@ function mapStateToProps(store, { datagrid }) {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions, sidebarChanged, getProductOffer, applyFilter })(Marketplace))
+export default withDatagrid(connect(mapStateToProps, { ...Actions, sidebarChanged, openPopup, getProductOffer, applyFilter })(Marketplace))
