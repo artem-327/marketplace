@@ -326,12 +326,6 @@ class MyInventory extends Component {
 
 
         </div>
-        { false ? (
-          <>
-            <Broadcast />
-            <SimpleEdit />
-          </>
-        ) : null }
         <DetailSidebar />
         <Filter
           onApply={this.handleFilterApply}

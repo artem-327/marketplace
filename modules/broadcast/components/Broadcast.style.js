@@ -51,6 +51,13 @@ const Content = styled.div`
 
 const RowContent = styled.div`
   flex: 1 1 auto;
+  display: flex;
+  padding: 12px 0;
+  line-height: 21px;
+  
+  > *:first-child {
+    flex: 0 0 1.18em;
+  }
 `
 
 const Toggle = styled.div`
