@@ -51,3 +51,62 @@ export const regulatoryFilter = {
   },
 }
 
+export const dropdownOptions = {
+  epa: {
+    epaSection302EhsTPQ: {
+      options: ['10', '500', '500/10000', '1000', '1000/10000', '10000', 'NA']
+    },
+    epaSection304EhsRQ: {
+      options: ['1', '10', '100', '500', '1000', '5000', 'NA']
+    },
+    epaTsca: {
+      options: ['Active', 'Inactive', 'NA']
+    }
+  },
+  dhs: {
+    dhsReleaseMinimumConcentration: {
+      options: ['1', 'ACG', '80', '37', '50', '20', 'NA']
+    },
+    dhsReleaseScreeningThresholdQuantitie: {
+      options: ['1', '10', '100', '500', '1000', '2500', '5000', 'NA']
+    },
+    dhsTheftScreeningThresholdQuantities: {
+      options: ['45', '500', 'NA']
+    },
+    dhsSabotageMinimumConcentration: {
+      options: ['ACG', 'NA']
+    },
+    dhsSabotageScreeningThresholdQuantities: {
+      options: ['APA', 'NA']
+    }
+  },
+  ca65Prop: {
+    caprop65TypeofToxicity: {
+      options: ['Developmental', 'Cancer', 'Female', 'Male'],
+      inputProps: { multiple: true }
+    },
+    caprop65ListingMechanism: {
+      options: ['FR', 'AB', 'SQE', 'LC']
+    }
+  }
+}
+
+// DOT, IATA, TDG, IMDG/IMO
+
+export const echoProductGrouping = [
+  { key: 'dot', text: <FormattedMessage id='global.dot' defaultMessage='!DOT' />, value: 'dot' },
+  { key: 'iata', text: <FormattedMessage id='global.iata' defaultMessage='!IATA' />, value: 'iata' },
+  { key: 'tdg', text: <FormattedMessage id='global.tdg' defaultMessage='!TDG' />, value: 'tdg' },
+  { key: 'imdgImo', text: <FormattedMessage id='global.imdgImo' defaultMessage='!IMDG/IMO' />, value: 'imdgImo' }
+]
+
+
+export const groupActions = (rows, companyProductId, callback) => {
+  let companyProduct = rows.find((el) => el.companyProduct.id == companyProductId)
+
+  if (!companyProduct) return []
+
+  return tabs.map((tab, i) => ({
+    text: tab.text, callback: () => callback(companyProduct, i)
+  }))
+}
