@@ -160,7 +160,6 @@ class PurchaseOrder extends Component {
       let payload = {
         destinationCountryId: selectedAddress.address.country.id,
         destinationZIP: selectedAddress.address.zip.zip,
-        hazardClassId: ''
       }
       requestManualShipment(payload)
     }
