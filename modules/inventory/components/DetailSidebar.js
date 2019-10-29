@@ -826,6 +826,7 @@ class DetailSidebar extends Component {
                                    </GridRow>
                                    <GridRow>
                                      <GridColumn>
+                                       <label><FormattedMessage id='inventory.certOfAnalysis' defaultMessage='Certification of Analysis' /></label>
                                        <UploadLot {...this.props}
                                                   attachments={values.edit.attachments}
                                                   name='edit.attachments'

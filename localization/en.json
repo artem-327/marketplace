@@ -1265,6 +1265,7 @@
   "inventory.broadcast": "Price Book",
   "inventory.delete": "Delete Listing",
   "inventory.edit": "Edit Listing",
+  "inventory.certOfAnalysis": "Certification of Analysis",
   "marketplace.buy": "Buy Product Offer",
   "marketplace.shippingQuoteTooltip": "Select one or more Product Offers to calculate a Shipping Quote. Multiple ProductOffers can be choosed only if they are at the same Location.",
   "orders.detail": "Detail",
