@@ -11,13 +11,15 @@ import { Sidebar, Segment, Dimmer, Loader, Tab, Menu, Grid, GridRow, GridColumn,
 import { withToastManager } from 'react-toast-notifications'
 import {
   sidebarDetailTrigger, getAutocompleteData, getWarehouses, addProductOffer, getProductGrades,
-  searchOrigins, getProductForms, getProductConditions, searchManufacturers, getDocumentTypes
+  searchOrigins, getProductForms, getProductConditions, searchManufacturers, getDocumentTypes,
+  addAttachment, loadFile, removeAttachmentLink, removeAttachment
 } from '../actions'
 import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import * as val from 'yup'
 import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import moment from "moment"
+import UploadLot from './upload/UploadLot'
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -376,6 +378,7 @@ class DetailSidebar extends Component {
     let editValues = {}
     editValues = {
       edit: {
+        attachments: getSafe(() => sidebarValues.attachments, []),
         condition: getSafe(() => sidebarValues.condition, null),
         conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
         conforming: getSafe(() => sidebarValues.conforming, true),
@@ -807,18 +810,68 @@ class DetailSidebar extends Component {
                                    </GridRow>
                                    <GridRow>
                                      <GridColumn mobile={leftWidth + rightWidth} computer={leftWidth + rightWidth}>
-                                  <TextArea
-                                    name='edit.externalNotes'
-                                    label={formatMessage({ id: 'addInventory.externalNotes', defaultMessage: 'External Notes' })}
-                                  />
+                                      <TextArea
+                                        name='edit.externalNotes'
+                                        label={formatMessage({ id: 'addInventory.externalNotes', defaultMessage: 'External Notes' })}
+                                      />
                                      </GridColumn>
                                    </GridRow>
                                    <GridRow>
                                      <GridColumn mobile={leftWidth + rightWidth} computer={leftWidth + rightWidth}>
-                                  <TextArea
-                                    name='edit.internalNotes'
-                                    label={formatMessage({ id: 'addInventory.internalNotes', defaultMessage: 'Internal Notes' })}
-                                  />
+                                      <TextArea
+                                        name='edit.internalNotes'
+                                        label={formatMessage({ id: 'addInventory.internalNotes', defaultMessage: 'Internal Notes' })}
+                                      />
+                                     </GridColumn>
+                                   </GridRow>
+                                   <GridRow>
+                                     <GridColumn>
+                                       <UploadLot {...this.props}
+                                                  attachments={values.edit.attachments}
+                                                  name='edit.attachments'
+                                                  type={1}
+                                                  filesLimit={1}
+                                                  fileMaxSize={20}
+                                                  onChange={(files) =>
+                                                    setFieldValue(`edit.attachments`, values.edit.attachments.concat([{
+                                                      id: files.id,
+                                                      name: files.name,
+                                                      documentType: files.documentType
+                                                    }])
+
+                                                  )}
+                                                  data-test='new_inventory_attachments_drop'
+                                                  emptyContent={(
+                                                    <>
+                                                      {formatMessage({ id: 'addInventory.dragDrop' })}
+                                                      <br />
+                                                      <FormattedMessage id='addInventory.dragDropOr'
+                                                                        defaultMessage={'or {link} to select from computer'}
+                                                                        values={{
+                                                                          link: (
+                                                                            <a>
+                                                                              <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                                                            </a>
+                                                                          )
+                                                                        }} />
+                                                    </>
+                                                  )}
+                                                  uploadedContent={(
+                                                    <label>
+                                                      <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+                                                      <br />
+                                                      <FormattedMessage id='addInventory.dragDropOr'
+                                                                        defaultMessage={'or {link} to select from computer'}
+                                                                        values={{
+                                                                          link: (
+                                                                            <a>
+                                                                              <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                                                            </a>
+                                                                          )
+                                                                        }} />
+                                                    </label>
+                                                  )}
+                                       />
                                      </GridColumn>
                                    </GridRow>
                                  </Grid>
@@ -1010,7 +1063,11 @@ const mapDispatchToProps = {
   getWarehouses,
   searchManufacturers,
   searchOrigins,
-  openBroadcast
+  openBroadcast,
+  addAttachment,
+  loadFile,
+  removeAttachmentLink,
+  removeAttachment
 }
 
 const mapStateToProps = ({ simpleAdd: {
