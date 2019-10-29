@@ -27,7 +27,9 @@ class Shipping extends Component {
     let addresses = this.props.otherAddresses ? deliveryAddresses : warehouses // branches
 
     let dropdownOptions = addresses.map(i => ({
-      text: `${i.address.streetAddress}, ${i.address.city}`,
+      text: this.props.otherAddresses
+        ? `${i.address.streetAddress}, ${i.address.city}`
+        : `${i.deliveryAddress.address.streetAddress}, ${i.deliveryAddress.address.city}`,
       value: i.id,
       key: i.id
     }))

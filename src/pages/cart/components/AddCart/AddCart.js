@@ -158,7 +158,7 @@ export default class AddCart extends Component {
     // )
 
     let canProceed = !warning && price && pkgAmount > 0
-    console.log({ dropdownOptions, pricing: this.props.sidebar.pricing })
+    
     return (
       <>
         <FlexContent basic>

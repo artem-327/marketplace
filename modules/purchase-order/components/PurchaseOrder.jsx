@@ -55,6 +55,7 @@ class PurchaseOrder extends Component {
     let { deliveryAddresses, warehouses, branches } = this.props
     let addresses = this.state.otherAddresses ? deliveryAddresses : warehouses //branches
     let selectedAddress = addresses.find(i => i.id === selectedAddressId)
+    if (selectedAddress.deliveryAddress) selectedAddress = { ...selectedAddress, address: selectedAddress.deliveryAddress.address }
 
     this.setState({ addressId: this.state.otherAddresses ? 'deliveryAddressId' : 'warehouseId' })
     this.props.shippingChanged({ selectedAddress })
@@ -70,7 +71,7 @@ class PurchaseOrder extends Component {
   getShippingQuotes = (selectedAddress) => {
     let { address } = selectedAddress
 
-    this.props.getShippingQuotes(address.country.id, address.zip.zip);
+    this.props.getShippingQuotes(address.country.id, address.zip.zip)
   }
 
 
@@ -131,10 +132,10 @@ class PurchaseOrder extends Component {
       toastManager.add(generateToastMarkup(
         <FormattedMessage id='notifications.purchaseOrderError.header' defaultMessage='Order Error' />,
         <FormattedMessage id='notifications.purchaseOrderError.contentWithText'
-                          defaultMessage='Error occurred while placing an order:'
-                          values={{ clientMessage: e.clientMessage, exceptionMessage: e.exceptionMessage }}
+          defaultMessage='Error occurred while placing an order:'
+          values={{ clientMessage: e.clientMessage, exceptionMessage: e.exceptionMessage }}
         >
-          {(text) => text.split('\n').map ((item, i) => <p key={i}>{item}</p>)}
+          {(text) => text.split('\n').map((item, i) => <p key={i}>{item}</p>)}
         </FormattedMessage>,
       ), {
         appearance: 'error'
@@ -144,7 +145,7 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    //console.log('!!!!!! PurchaseOrder Render props', this.props)
+    // console.log('!!!!!! PurchaseOrder Render props', this.props)
     const { dispatch, postNewDeliveryAddress, updateDeliveryAddress, preferredBankAccountId, intl: { formatMessage } } = this.props
     let { cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shipping } = this.props
 

@@ -7,7 +7,10 @@ import { getSafe } from '~/utils/functions'
 function mapStateToProps(store) {
   let preferredBankAccountId = getSafe(() => store.auth.identity.company.preferredBankAccountId)
   let { selectedAddress } = store.cart.shipping
-  if (selectedAddress) var { address } = selectedAddress
+  if (selectedAddress) {
+    if(selectedAddress.deliveryAddress) var { address } = selectedAddress.deliveryAddress
+    else var { address } = selectedAddress
+  }
   return {
     ...store.cart,
     selectedAddressId: store.forms.cart.selectedAddressId,
