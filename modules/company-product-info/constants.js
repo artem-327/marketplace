@@ -91,8 +91,6 @@ export const dropdownOptions = {
   }
 }
 
-// DOT, IATA, TDG, IMDG/IMO
-
 export const echoProductGrouping = [
   { key: 'dot', text: <FormattedMessage id='global.dot' defaultMessage='!DOT' />, value: 'dot' },
   { key: 'iata', text: <FormattedMessage id='global.iata' defaultMessage='!IATA' />, value: 'iata' },
@@ -104,7 +102,7 @@ export const echoProductGrouping = [
 export const groupActions = (rows, companyProductId, callback) => {
   let companyProduct = rows.find((el) => el.companyProduct.id == companyProductId)
 
-  if (!companyProduct) return []
+  if (!companyProduct || companyProduct.cfStatus === 'Unmapped') return []
 
   return tabs.map((tab, i) => ({
     text: tab.text, callback: () => callback(companyProduct, i)

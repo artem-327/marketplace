@@ -216,11 +216,11 @@ class CompanyProductInfo extends Component {
             {this.getInput({ id: 'global.specificVolume', defaultMessage: 'Specific Volume', name: 'specificVolume' })}
             {this.getInput({ id: 'global.recommendedUse', defaultMessage: 'Recommended Uses', name: 'recommendedUse' })}
             {this.getInput({ id: 'global.usesAdvisedAgainst', defaultMessage: 'Uses Advised Against', name: 'usesAdvisedAgainst' })}
-            {this.getInput({ id: 'global.criticalTemperature', defaultMessage: 'Critical Temperature', name: 'criticalTemperature' })} 
-            {this.getInput({ id: 'global.gasDensity', defaultMessage: 'Gas Density', name: 'gasDensity' })} 
-            {this.getInput({ id: 'global.relativeDensity', defaultMessage: 'Relative Density', name: 'relativeDensity' })} 
-            {this.getInput({ id: 'global.flowTime', defaultMessage: 'Flow Time (ISO 2431)', name: 'flowTimeISO2431' })} 
-            {this.getInput({ id: 'global.heatOfCombustion', defaultMessage: 'Heat of Combustion', name: 'heatOfCombustion' })} 
+            {this.getInput({ id: 'global.criticalTemperature', defaultMessage: 'Critical Temperature', name: 'criticalTemperature' })}
+            {this.getInput({ id: 'global.gasDensity', defaultMessage: 'Gas Density', name: 'gasDensity' })}
+            {this.getInput({ id: 'global.relativeDensity', defaultMessage: 'Relative Density', name: 'relativeDensity' })}
+            {this.getInput({ id: 'global.flowTime', defaultMessage: 'Flow Time (ISO 2431)', name: 'flowTimeISO2431' })}
+            {this.getInput({ id: 'global.heatOfCombustion', defaultMessage: 'Heat of Combustion', name: 'heatOfCombustion' })}
           </Grid>
           // {this.getInput({ id: 'global.', defaultMessage: '!', name: '' })}
         )
@@ -326,6 +326,7 @@ class CompanyProductInfo extends Component {
       popupValues, isOpen,
       activeIndex, closePopup,
       tabChanged, intl: { formatMessage } } = this.props
+
     try {
       var { companyProduct: { echoProduct } } = popupValues
     } catch (e) {

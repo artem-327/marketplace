@@ -8,10 +8,12 @@ const initialState = {
 }
 
 export default typeToReducer({
-  [openPopup]: (state, { payload }) => {
+  [openPopup]: (state, { payload: { companyProduct, activeIndex } }) => {
     return {
       ...state,
-      isOpen: true
+      isOpen: true,
+      popupValues: companyProduct,
+      activeIndex
     }
   },
 
