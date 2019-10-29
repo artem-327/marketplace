@@ -64,13 +64,13 @@ const RuleItem = (props) => {
 
   return (
     <>
-      <Rule.Row depth={nodePath.length} type={rule.type} onClick={() => rule.type !== 'root' && handleRowClick(item)} data-test='broadcast_rule_row_click' style={asSidebar ? { 'flex-wrap': 'wrap', 'justify-content': 'flex-end' } : {}}>
-        <Rule.RowContent style={asSidebar ? { flex: '1 1 100%', width: '100%' } : {}}>
+      <Rule.Row depth={nodePath.length} type={rule.type} onClick={() => rule.type !== 'root' && handleRowClick(item)} data-test='broadcast_rule_row_click' style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
+        <Rule.RowContent>
           {(item.children.length > 0 && rule.type !== 'root') ? <Icon name={`chevron ${item.model.expanded ? 'down' : 'right'}`} /> : <EmptyIconSpace />}
           <span>{name}</span>
         </Rule.RowContent>
 
-        <Rule.Toggle>
+        <Rule.Toggle style={asSidebar ? { 'flex': '0 0 60px' } : null}>
           <Checkbox
             className={(rule.priceOverride && nodeBroadcast === 1) && 'independent'}
             data-test='broadcast_rule_toggle_chckb'

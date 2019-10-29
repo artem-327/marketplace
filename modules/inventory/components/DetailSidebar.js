@@ -473,6 +473,7 @@ class DetailSidebar extends Component {
             <FlexSidebar
               visible={sidebarDetailOpen}
               width='very wide'
+              style={{ 'width': '500px' }}
               direction='right'
               animation='overlay'
               onHide={(e) => {
@@ -525,7 +526,7 @@ class DetailSidebar extends Component {
                                    })
                                }}
                                           data-test='detail_inventory_tab_edit'>
-                                 {formatMessage({ id: sidebarValues.id ? 'global.edit' : 'global.add', defaultMessage: sidebarValues.id ? 'Edit' : 'Add' })}
+                                 {formatMessage({ id: getSafe(() => sidebarValues.id, false) ? 'global.edit' : 'global.add', defaultMessage: getSafe(() => sidebarValues.id, false) ? 'Edit' : 'Add' })}
                                </Menu.Item>
                              ),
                              pane: (
