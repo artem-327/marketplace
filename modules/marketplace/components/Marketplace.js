@@ -180,11 +180,12 @@ class Marketplace extends Component {
             }
             renderGroupLabel={({ row: { value }, children = null }) => {
               const [name, number, count] = value.split('_')
-              const numberArray = number.split(' & ')
+              // const numberArray = number.split(' & ')
               return (
                 <span>
                   {children}
-                  <span style={{ color: '#2599d5' }}>{name}</span> <span className='right'>Product offerings: {count}</span>
+                  <span style={{ color: '#2599d5' }}>{name ? name : 'Unmapped'}</span>
+                  <span className='right'>Product offerings: {count}</span>
                 </span>
               )
             }}
