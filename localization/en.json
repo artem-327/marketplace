@@ -190,6 +190,7 @@
   "global.properTechnicalName": "Proper Technical Name",
   "global.reportableQuantity": "Reportable Quantity",
   "global.enviromentalHazards": "Enviromental Hazards",
+  
   "global.manufacturerProductCode": "Manufacturer Product Code",
   "global.emergencyNumber": "Emergency Number",
   "global.esin": "ESIN",
@@ -992,6 +993,10 @@
   "namesSynonyms.synonyms": "Synonyms",
   "operators": "Operators",
   "operators.login": "Login",
+  "cart.weightLimitExceeded": "Your order weight exceeds weight limit of XXX lbs for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.",
+  "cart.quoteReceived": "If you already received the shipping quote and agree, please type in the provided Quote Id and continue with Checkout.",
+  "cart.requestShippingQuote": "Request Shipping Quote",
+  "cart.shipmentQuote": "Shipment Quote",
   "cart.InfoHeader": "1. Product Information",
   "cart.productName": "Product Name:",
   "cart.productCode": "Product Code:",
