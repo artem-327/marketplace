@@ -10,6 +10,8 @@ import * as Yup from "yup";
 import { errorMessages } from '~/constants/yupValidation'
 import { getSafe } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import { currency } from '~/constants/index'
+import { FormattedNumber } from 'react-intl'
 
 const formValidation = () => Yup.object().shape({
   destination: Yup.object().shape({
@@ -46,6 +48,15 @@ export default class ShippingQuotes extends Component {
       }}
     })
     initShipingForm()
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (!prevProps.modalProps.open && this.props.modalProps.open) {
+      console.log('!!!!! componentDidUpdate prevProps', prevProps)
+      console.log('!!!!! componentDidUpdate this.props', this.props)
+      this.setState({ selectedIndex: null, sQuote: null })
+      this.props.clearShippingQuotes()
+    }
   }
 
   createOrder = async () => {
@@ -155,38 +166,18 @@ export default class ShippingQuotes extends Component {
                   <Table.Cell>{sQuote.shipmentRate.carrierName}</Table.Cell>
                   <Table.Cell>{etd + (etd == 1 ? ' Day' : ' Days')}</Table.Cell>
                   <Table.Cell>{sQuote.shipmentRate.serviceType}</Table.Cell>
-                  <Table.Cell><NumberFormat
-                    value={sQuote.shipmentRate.fobPricePerLb}
-                    displayType={'text'}
-                    prefix={'$'}
-                    thousandSeparator={','}
-                    decimalSeparator={'.'}
-                    decimalScale={2}
-                    fixedDecimalScale={true} /></Table.Cell>
-                  <Table.Cell><NumberFormat
-                    value={sQuote.shipmentRate.freightPricePerLb}
-                    displayType={'text'}
-                    prefix={'$'}
-                    thousandSeparator={','}
-                    decimalSeparator={'.'}
-                    decimalScale={2}
-                    fixedDecimalScale={true} /></Table.Cell>
-                  <Table.Cell><NumberFormat
-                    value={sQuote.shipmentRate.totalPricePerLb}
-                    displayType={'text'}
-                    prefix={'$'}
-                    thousandSeparator={','}
-                    decimalSeparator={'.'}
-                    decimalScale={2}
-                    fixedDecimalScale={true} /></Table.Cell>
-                  <Table.Cell className='a-right'><NumberFormat
-                    value={sQuote.shipmentRate.estimatedPrice}
-                    displayType={'text'}
-                    prefix={'$'}
-                    thousandSeparator={','}
-                    decimalSeparator={'.'}
-                    decimalScale={2}
-                    fixedDecimalScale={true} /></Table.Cell>
+                  <Table.Cell>
+                    <FormattedNumber style='currency' currency={currency} value={getSafe(() => sQuote.shipmentRate.fobPricePerLb, 0)} />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <FormattedNumber style='currency' currency={currency} value={getSafe(() => sQuote.shipmentRate.freightPricePerLb, 0)} />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <FormattedNumber style='currency' currency={currency} value={getSafe(() => sQuote.shipmentRate.totalPricePerLb, 0)} />
+                  </Table.Cell>
+                  <Table.Cell className='a-right'>
+                    <FormattedNumber style='currency' currency={currency} value={getSafe(() => sQuote.shipmentRate.estimatedPrice, 0)} />
+                  </Table.Cell>
                 </Table.Row>
               )
             })}
