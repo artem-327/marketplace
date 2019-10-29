@@ -14,11 +14,12 @@ import { debounce } from 'lodash'
 import * as Yup from 'yup'
 import { currency } from '~/constants/index'
 import { getPackagingGroupsDataRequest, getHazardClassesDataRequest, getUnNumbersByString, addUnNumber } from '~/modules/admin/actions'
+import { getNmfcNumbersByString, addNmfcNumber } from '~/modules/settings/actions'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { nmfcValidation, freightClassValidation } from '~/constants/yupValidation'
 
 const validationSchema = Yup.object().shape({
-  nmfcNumber: nmfcValidation(),
+  //nmfcNumber: nmfcValidation(),
   freightClass: freightClassValidation()
 })
 
@@ -35,11 +36,20 @@ class CartItemSummary extends Component {
       getHazardClassesDataRequest, getPackagingGroupsDataRequest, addUnNumber } = this.props
 
     let initialUnNumbers = []
+    let initialNmfcNumbers = []
+
     cartItems.forEach(item => {
       let unNumber = getSafe(() => item.unNumber)
       if (unNumber && !initialUnNumbers.find((num) => num.id === unNumber.id)) {
         initialUnNumbers.push(unNumber)
       }
+
+      /*
+      let nmfcNumber = getSafe(() => item.nmfcNumber)
+      if (nmfcNumber && !initialNmfcNumbers.find((num) => num.id === nmfcNumber.id)) {
+        initialNmfcNumbers.push(nmfcNumber)
+      }
+      */
     })
 
     if (initialUnNumbers.length !== 0) await addUnNumber(initialUnNumbers)
@@ -51,12 +61,18 @@ class CartItemSummary extends Component {
     this.props.getUnNumbersByString(searchQuery)
   }, 250)
 
+  handleSearchNmfcNumberChange = debounce(searchQuery => {
+    this.props.getNmfcNumbersByString(searchQuery)
+  }, 250)
+
   hazmatMarkup = (item) => {
     const {
       intl: { formatMessage }, hazardClasses,
       packagingGroups, unNumbersFiltered,
       unNumbersFetching, updateHazmatInfo,
-      toastManager } = this.props
+      toastManager,
+      nmfcNumbersFetching, nmfcNumbersFiltered
+    } = this.props
     let { productOffer: { companyProduct } } = item
 
     let initialValues = {
@@ -179,7 +195,19 @@ class CartItemSummary extends Component {
 
               <GridRow>
                 <GridColumn data-test='shopping_cart_nmfcNumber_inp'>
-                  <Input inputProps={{ disabled }} name='nmfcNumber' label={formatMessage({ id: 'cart.nmfcNumber', defaultMessage: 'NMFC Number' })} />
+                  <Dropdown
+                    label={<FormattedMessage id='cart.nmfcNumber' defaultMessage='NMFC Number'>{text => text}</FormattedMessage>}
+                    options={nmfcNumbersFiltered}
+                    inputProps={{
+                      disabled,
+                      fluid: true,
+                      search: (val) => val,
+                      clearable: true, selection: true,
+                      loading: nmfcNumbersFetching,
+                      onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery)
+                    }}
+                    name='nmfcNumber'
+                  />
                 </GridColumn>
               </GridRow>
 
@@ -392,6 +420,27 @@ CartItemSummary.defaultProps = {
 }
 
 
-export default withToastManager(connect(({ admin: { packagingGroups, hazardClasses, unNumbersFiltered, unNumbersFetching } }) =>
-  ({ packagingGroups, hazardClasses, unNumbersFiltered, unNumbersFetching }),
-  { getHazardClassesDataRequest, getPackagingGroupsDataRequest, getUnNumbersByString, addUnNumber })(injectIntl(CartItemSummary)))
+export default withToastManager(connect(
+  ({
+     admin: { packagingGroups, hazardClasses, unNumbersFiltered, unNumbersFetching },
+    settings: { nmfcNumbersFetching, nmfcNumbersFiltered }
+
+   }) =>
+  ({
+    packagingGroups, hazardClasses, unNumbersFiltered, unNumbersFetching,
+    nmfcNumbersFetching, nmfcNumbersFiltered : nmfcNumbersFiltered.map(d => {
+      return {
+        key: d.id,
+        text: d.code,
+        value: d.code,
+        content: <>
+          <strong>{d.code}</strong>
+          <div>{d.description}</div>
+        </>
+      }
+    })
+  })
+
+  ,
+  { getHazardClassesDataRequest, getPackagingGroupsDataRequest, getUnNumbersByString, addUnNumber,
+    getNmfcNumbersByString, addNmfcNumber })(injectIntl(CartItemSummary)))

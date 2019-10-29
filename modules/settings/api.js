@@ -206,5 +206,6 @@ export default {
   getVerificationDocumentTypes: () => api.get('/prodex/api/payments/dwolla/documents/types').then(response => response.data),
   getLanguages: () => api.get('/prodex/api/cms/languages/').then(response => response.data),
   setPreferredLanguage: language => api.patch(`/prodex/api/users/me/preferred-language?language=${language.language}`).then(() => language),
-  searchEchoProducts: (searchQuery, limit) => api.get(`/prodex/api/echo-products/search?pattern=${searchQuery}&limit=${limit}`).then(response => response.data)
+  searchEchoProducts: (searchQuery, limit) => api.get(`/prodex/api/echo-products/search?pattern=${searchQuery}&limit=${limit}`).then(response => response.data),
+  getNmfcNumbersByString: (pattern) => api.get(`/prodex/api/nmfc-numbers/search?limit=5&pattern=${pattern}`).then(response => response.data),
 }

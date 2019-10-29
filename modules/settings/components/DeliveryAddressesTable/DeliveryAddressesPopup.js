@@ -40,6 +40,7 @@ const initialFormValues = {
   closeTime: '',
   liftGate: false,
   forkLift: false,
+  callAhead: false,
   deliveryNotes: '',
 }
 
@@ -152,29 +153,33 @@ class DeliveryAddressesPopup extends React.Component {
                   </FormGroup>
 
                   <Header as='h3'><FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' /></Header>
-                  <FormGroup data-test='settings_delivery_address_notes_inp' style={{ alignItems: 'center' }}>
+                  <FormGroup widths='equal' data-test='settings_delivery_address_notes_inp' style={{ alignItems: 'center' }}>
                     <Input
-                      fieldProps={{ width: 5 }}
                       type='text'
                       label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
                       name='readyTime'
                     />
                     <Input
-                      fieldProps={{ width: 5 }}
-                      type='text' label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
+                      type='text'
+                      label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
                       name='closeTime'
                     />
+                  </FormGroup>
+                  <FormGroup widths='equal'>
                     <Checkbox
-                      fieldProps={{ width: 3 }}
                       label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
                       name='liftGate'
                       inputProps={{ 'data-test': 'settings_delivery_address_liftGate_inp' }}
                     />
                     <Checkbox
-                      fieldProps={{ width: 3 }}
                       label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
                       name='forkLift'
                       inputProps={{ 'data-test': 'settings_delivery_address_forklift_inp' }}
+                    />
+                    <Checkbox
+                      label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
+                      name='callAhead'
+                      inputProps={{ 'data-test': 'settings_delivery_address_callAhead_inp' }}
                     />
                   </FormGroup>
                   <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
@@ -245,6 +250,7 @@ const mapStateToProps = state => {
       closeTime: getSafe(() => popupValues.closeTime, ''),
       liftGate: getSafe(() => popupValues.liftGate, false),
       forkLift: getSafe(() => popupValues.forkLift, false),
+      callAhead: getSafe(() => popupValues.callAhead, false),
       deliveryNotes: getSafe(() => popupValues.deliveryNotes, ''),
     } : null,
     countriesDropDown: state.settings.countriesDropDown,

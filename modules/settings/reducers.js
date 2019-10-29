@@ -102,7 +102,9 @@ export const initialState = {
   languages: [],
   languagesFetching: false,
   echoProducts: [],
-  echoProductsFetching: false
+  echoProductsFetching: false,
+  nmfcNumbersFiltered: [],
+  nmfcNumbersFetching: false,
 }
 
 export default function reducer(state = initialState, action) {
@@ -1348,6 +1350,46 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         echoProductsFetching: false
+      }
+    }
+
+    case AT.SEARCH_NMFC_NUMBERS_PENDING:
+    case AT.GET_NMFC_NUMBERS_PENDING: {
+      return {
+        ...state,
+        nmfcNumbersFetching: true,
+      }
+    }
+
+    case AT.SEARCH_NMFC_NUMBERS_REJECTED:
+    case AT.GET_NMFC_NUMBERS_REJECTED: {
+      return {
+        ...state,
+        nmfcNumbersFetching: false,
+      }
+    }
+
+    case AT.SEARCH_NMFC_NUMBERS_FULFILLED:
+    case AT.GET_NMFC_NUMBERS_FULFILLED: {
+      return {
+        ...state,
+        nmfcNumbersFetching: false,
+        nmfcNumbersFiltered: action.payload
+      }
+    }
+
+    case AT.ADD_NMFC_NUMBERS: {
+      let copy = state.nmfcNumbersFiltered.slice()
+      let payloadNew = payload
+      if (!(payload instanceof Array)) payloadNew = [payload]
+
+      payloadNew.forEach(element => {
+        if (!copy.find((e) => e.id === element.id)) copy.push(element)
+      })
+
+      return {
+        ...state,
+        nmfcNumbersFiltered: copy
       }
     }
 

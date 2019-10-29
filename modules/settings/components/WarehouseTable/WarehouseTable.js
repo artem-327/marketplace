@@ -165,6 +165,7 @@ const mapStateToProps = (state, { datagrid }) => {
               closeTime: getSafe(() => r.deliveryAddress.closeTime, ''),
               liftGate: getSafe(() => r.deliveryAddress.liftGate, false),
               forkLift: getSafe(() => r.deliveryAddress.forkLift, false),
+              callAhead: getSafe(() => r.deliveryAddress.callAhead, false),
               deliveryNotes: getSafe(() => r.deliveryAddress.deliveryNotes, ''),
               addressName: getSafe(() => r.deliveryAddress.addressName, ''),
               contactName: getSafe(() => r.deliveryAddress.contactName, ''),

@@ -30,6 +30,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SHIPPING_CLEAR_QUOTES: {
+      return { ...state,
+        loading: false,
+        quotes: []
+      }
+    }
+
     case AT.SHIPING_GET_QUOTES_REJECTED: {
       return {...state,
         loading: false,

@@ -23,7 +23,9 @@ import {
   handleSubmitProductAddPopup,
   searchUnNumber,
   getDocumentTypes,
-  searchEchoProducts
+  searchEchoProducts,
+  getNmfcNumbersByString,
+  addNmfcNumber
 } from '../../actions'
 import { Form, Input, Button, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
@@ -71,10 +73,10 @@ const formValidation = Yup.object().shape({
     .required(errorMessages.requiredMessage),
   packagingType: Yup.number(errorMessages.invalidNumber)
     .required(errorMessages.requiredMessage),
-  nmfcNumber: Yup.number()
+  /*nmfcNumber: Yup.number()
     .typeError(errorMessages.mustBeNumber)
     .test('len', errorMessages.exactLength(5), val => val ? getSafe(() => val.toString().length, 0) === 5 : true)
-    .nullable(),
+    .nullable(),*/
 })
 
 class ProductPopup extends React.Component {
@@ -83,6 +85,8 @@ class ProductPopup extends React.Component {
   }
   componentDidMount() {
     this.props.getProductsCatalogRequest()
+
+    if (this.props.popupValues && this.props.popupValues.nmfcNumber) this.props.addNmfcNumber(this.props.popupValues.nmfcNumber)
 
     if (this.props.documentTypes.length === 0)
       this.props.getDocumentTypes()
@@ -194,6 +198,10 @@ class ProductPopup extends React.Component {
     this.setState({ unNumber: result })
   }
 
+  handleSearchNmfcNumberChange = debounce(searchQuery => {
+    this.props.getNmfcNumbersByString(searchQuery)
+  }, 250)
+
   getInitialFormValues = () => {
     const { popupValues } = this.props
     return {
@@ -201,6 +209,7 @@ class ProductPopup extends React.Component {
       ...popupValues,
       casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.echoProduct.elements, [])),
       echoProduct: getSafe(() => popupValues.echoProduct.id),
+      nmfcNumber: getSafe(() => popupValues.nmfcNumber.id, null)
     }
   }
 
@@ -213,10 +222,15 @@ class ProductPopup extends React.Component {
       freightClasses,
       intl: { formatMessage },
       echoProducts,
-      echoProductsFetching
+      echoProductsFetching,
+      nmfcNumbersFetching,
+      nmfcNumbersFiltered
     } = this.props
 
-    const { packagingTypesReduced } = this.state
+    const {
+      packagingTypesReduced,
+    } = this.state
+
     let editable = popupValues ? (popupValues.productOfferCount === 0 || !popupValues.productOfferCount) : true
 
     let allEchoProducts = uniqueArrayByKey(echoProducts.concat(getSafe(() => popupValues.echoProduct) ? popupValues.echoProduct : []), 'id')
@@ -238,6 +252,10 @@ class ProductPopup extends React.Component {
           >
             {({ setFieldValue, values }) => {
               let casProducts = getSafe(() => values.casProducts, [])
+
+              console.log('!!!!!! values', values)
+              console.log('!!!!!! nmfcNumbersFiltered', nmfcNumbersFiltered)
+
               return (
                 <>
                   <Dropdown
@@ -321,9 +339,16 @@ class ProductPopup extends React.Component {
 
                     <Accordion.Content active={this.state.advanced}>
                       <FormGroup widths='equal'>
-                        <Input
-                          label={formatMessage({ id: 'global.nmfcCode', defaultMessage: 'NMFC Code' })}
-                          type='number'
+                        <Dropdown
+                          label={<FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code'>{text => text}</FormattedMessage>}
+                          options={nmfcNumbersFiltered}
+                          inputProps={{
+                            fluid: true,
+                            search: (val) => val,
+                            clearable: true, selection: true,
+                            loading: nmfcNumbersFetching,
+                            onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery)
+                          }}
                           name='nmfcNumber'
                         />
                         <Input
@@ -396,7 +421,9 @@ const mapDispatchToProps = {
   handleSubmitProductAddPopup,
   searchUnNumber,
   getDocumentTypes,
-  searchEchoProducts
+  searchEchoProducts,
+  getNmfcNumbersByString,
+  addNmfcNumber
 }
 const mapStateToProps = ({ settings }) => {
   return {
@@ -420,7 +447,19 @@ const mapStateToProps = ({ settings }) => {
       },
       value: settings.filterValue
     },
-    documentTypes: settings.documentTypes
+    documentTypes: settings.documentTypes,
+    nmfcNumbersFetching: settings.nmfcNumbersFetching,
+    nmfcNumbersFiltered: settings.nmfcNumbersFiltered.map(d => {
+      return {
+        key: d.id,
+        text: d.code,
+        value: d.id,
+        content: <>
+          <strong>{d.code}</strong>
+          <div>{d.description}</div>
+        </>
+      }
+    }),
   }
 }
 

@@ -16,3 +16,8 @@ export const getShipingQuotes = (params) => ({
   type: AT.SHIPING_GET_QUOTES,
   payload: api.getQuotes(params)
 })
+
+export const clearShippingQuotes = (params) => ({
+  type: AT.SHIPPING_CLEAR_QUOTES,
+  payload: null
+})
