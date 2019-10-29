@@ -166,25 +166,28 @@ const simpleCompanyProductList = {
 const simpleProductOfferList = {
   required: [
     "companyProductMapper",
+    "pkgAvailableMapper",
     "pricingTiersMapper",
     "warehouseNameMapper"
   ],
   optional: [
     "assayMaxMapper",
     "assayMinMapper",
-    "broadcastMapper",
-    "conditionMapper",
+    "broadcastedMapper",
+    "conformingMapper", // condition removed, conformin instead of it
+    "conditionNotesMapper",
     "costPerUomMapper",
+    "costRecordsMapper",
     "currencyMapper",
     "externalNotesMapper",
     "formMapper",
     "gradesMapper",
     "inStockMapper",
     "internalNotesMapper",
-    "lotsMapper",
+    "leadTimeMapper",
+    "lotNumberMapper",
     "minPkgMapper",
     "originMapper",
-    "processingTimeDaysMapper",
     "splitPkgMapper",
     "validityDateMapper"
   ]

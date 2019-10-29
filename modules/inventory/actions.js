@@ -58,7 +58,6 @@ export function addProductOffer(values, poId = false, simple = false) {
   let params = {}
 
   if (!simple) {
-
     const attachments = values.attachments && values.attachments.length ? values.attachments.map(att => {
       return att.id
     }) : []
