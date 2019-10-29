@@ -285,7 +285,7 @@ class PurchaseOrder extends Component {
                         }
 
                         {
-                          shipping.selectedAddress && shippingQuotes.length === 0 && !shippingQuotesAreFetching &&
+                          shipping.selectedAddress && shippingQuotes.length === 0 && !shippingQuotesAreFetching || cart.weightLimitExceed &&
                           <GridRow>
                             <GridColumn computer={8}>
                               <Input name='shipmentQuoteId' label={<FormattedMessage id='cart.shipmentQuote' defaultMessage='Shipment Quote' />} />
