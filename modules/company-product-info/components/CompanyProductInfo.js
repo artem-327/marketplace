@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { object, bool, number } from 'prop-types'
-import { Tab, Segment, GridRow, Grid, GridColumn, Button, Dropdown } from 'semantic-ui-react'
+import { Segment, GridRow, Grid, GridColumn, Button, Dropdown, Menu } from 'semantic-ui-react'
 import { FlexSidebar, GraySegment, FlexContent } from '~/modules/inventory/components/DetailSidebar'
 import { Form, Input, Dropdown as FormikDropdown } from 'formik-semantic-ui-fixed-validation'
 import { injectIntl, FormattedMessage } from 'react-intl'
@@ -8,9 +8,10 @@ import styled from 'styled-components'
 import moment from 'moment'
 
 import { tabs, regulatoryFilter, dropdownOptions, echoProductGrouping } from '../constants'
-import { DatagridProvider } from '~/modules/datagrid'
+
 import DocumentManager from '~/modules/settings/components/Documents/DocumentManagerTable'
 import { getSafe } from '~/utils/functions'
+import { EchoProductResponse } from '~/constants/backendObjects'
 
 const WiderSidebar = styled(FlexSidebar)`
   min-width: 545px !important;
@@ -38,7 +39,7 @@ class CompanyProductInfo extends Component {
       </GridColumn>
 
       <GridColumn width={10}>
-        <Input inputProps={{ readOnly: this.props.readOnly }} name={name} />
+        <Input inputProps={{ readOnly: this.props.readOnly, id: name }} name={name} />
       </GridColumn>
     </GridRow>
   )
@@ -56,7 +57,6 @@ class CompanyProductInfo extends Component {
           name={name}
           {...props}
           options={props.options.map((el) => ({ key: el, text: el, value: el }))}
-        // inputProps={{ disabled: this.props.readOnly }}
         />
       </GridColumn>
     </GridRow>
@@ -68,10 +68,11 @@ class CompanyProductInfo extends Component {
     let casProducts = getSafe(() => popupValues.companyProduct.echoProduct.elements, [])
 
     let markup = [
-      this.getInput({ id: 'global.casIndexName', defaultMessage: '!Cas Index Name', name: 'casProduct.casProduct.casIndexName' })
+      this.getInput({ id: 'global.casIndexName', defaultMessage: 'Cas Index Name', name: 'casProduct.casProduct.casIndexName' })
     ]
 
     let { epa, dhs, dot, caProp65, rightToKnow, dea, international, all } = regulatoryFilter
+
 
     let dontBreak = this.state.regulatoryFilter === all.key
     switch (this.state.regulatoryFilter) {
@@ -97,11 +98,11 @@ class CompanyProductInfo extends Component {
       case all.key:
       case rightToKnow.key: {
         markup.push(
-          this.getInput({ id: 'casProduct.rtkMassachusettes', defaultMessage: '!Massachusettes', name: 'casProduct.casProduct.rtkMassachusettes' }),
-          this.getInput({ id: 'casProduct.rtkNewJersey', defaultMessage: '!New Jersey', name: 'casProduct.casProduct.rtkNewJersey' }),
-          this.getInput({ id: 'casProduct.rtkPennslyvania', defaultMessage: '!Pennslyvania', name: 'casProduct.casProduct.rtkPennslyvania' }),
-          this.getInput({ id: 'casProduct.rtkIllinois', defaultMessage: '!Illinois', name: 'casProduct.casProduct.rtkIllinois' }),
-          this.getInput({ id: 'casProduct.rtkRhodeIsland', defaultMessage: '!Rhode Island', name: 'casProduct.casProduct.rtkRhodeIsland' })
+          this.getInput({ id: 'casProduct.rtkMassachusettes', defaultMessage: 'Massachusettes', name: 'casProduct.casProduct.rtkMassachusettes' }),
+          this.getInput({ id: 'casProduct.rtkNewJersey', defaultMessage: 'New Jersey', name: 'casProduct.casProduct.rtkNewJersey' }),
+          this.getInput({ id: 'casProduct.rtkPennslyvania', defaultMessage: 'Pennslyvania', name: 'casProduct.casProduct.rtkPennslyvania' }),
+          this.getInput({ id: 'casProduct.rtkIllinois', defaultMessage: 'Illinois', name: 'casProduct.casProduct.rtkIllinois' }),
+          this.getInput({ id: 'casProduct.rtkRhodeIsland', defaultMessage: 'Rhode Island', name: 'casProduct.casProduct.rtkRhodeIsland' })
         )
         if (!dontBreak)
           break
@@ -110,19 +111,19 @@ class CompanyProductInfo extends Component {
       case all.key:
       case dhs.key: {
         markup.push(
-          this.getDropdown({ id: 'casProduct.dhsReleaseMinimumConcentration', defaultMessage: '!Release: Minimum Concentration (%)', name: 'casProduct.casProduct.dhsReleaseMinimumConcentration', props: dropdownOptions.dhs.dhsReleaseMinimumConcentration }),
-          this.getDropdown({ id: 'casProduct.dhsReleaseScreeningThresholdQuantitie', defaultMessage: '!Release: Screening Threshold Quantitiees (in pounds)', name: 'casProduct.casProduct.dhsReleaseScreeningThresholdQuantitie', props: dropdownOptions.dhs.dhsReleaseScreeningThresholdQuantitie }),
-          this.getInput({ id: 'casProduct.dhsTheftMinimumConcentration', defaultMessage: '!Theft: Minimum Concentration (%)', name: 'casProduct.casProduct.dhsTheftMinimumConcentration', }),
-          this.getDropdown({ id: 'casProduct.dhsTheftScreeningThresholdQuantities', defaultMessage: '!Theft: Screening Threshold Quantitie', name: 'casProduct.casProduct.dhsTheftScreeningThresholdQuantities', props: dropdownOptions.dhs.dhsTheftScreeningThresholdQuantities }),
-          this.getDropdown({ id: 'casProduct.dhsSabotageMinimumConcentration', defaultMessage: '!Sabotage: Minimum Concentration (%)', name: 'casProduct.casProduct.dhsSabotageMinimumConcentration', props: dropdownOptions.dhs.dhsSabotageMinimumConcentration }),
-          this.getDropdown({ id: 'casProduct.dhsSabotageScreeningThresholdQuantities', defaultMessage: '!Sabotage: Screening Threshold Quantities', name: 'casProduct.casProduct.dhsSabotageScreeningThresholdQuantities', props: dropdownOptions.dhs.dhsSabotageScreeningThresholdQuantities }),
-          this.getInput({ id: 'casProduct.dhsSecurityIssueReleaseToxic', defaultMessage: '!Security Issue: Release - Toxic', name: 'casProduct.casProduct.dhsSecurityIssueReleaseToxic' }),
-          this.getInput({ id: 'casProduct.dhsSecurityIssueReleaseFlammables', defaultMessage: '!Security Issue: Release - Flammables', name: 'casProduct.casProduct.dhsSecurityIssueReleaseFlammables' }),
-          this.getInput({ id: 'casProduct.dhsSecurityIssueReleaseExplosives', defaultMessage: '!Security Issue: Release - Explosives', name: 'casProduct.casProduct.dhsSecurityIssueReleaseExplosives' }),
-          this.getInput({ id: 'casProduct.dhsSecurityIssueTheftCWCWP', defaultMessage: '!Security Issue: Theft - CW/CWP', name: 'casProduct.casProduct.dhsSecurityIssueTheftCWCWP' }),
-          this.getInput({ id: 'casProduct.dhsSecurityIssueTheftWME', defaultMessage: '!Security Issue: Theft - WME', name: 'casProduct.casProduct.dhsSecurityIssueTheftWME' }),
-          this.getInput({ id: 'casProduct.dhsSecurityIssueTheftEXPIEDP', defaultMessage: '!Security Issue: Theft - EXP/IEDP', name: 'casProduct.casProduct.dhsSecurityIssueTheftEXPIEDP' }),
-          this.getInput({ id: 'casProduct.dhsSecurityIssueSabotageContamination', defaultMessage: '!Security Issue: Sabotage/Contamination', name: 'casProduct.casProduct.dhsSecurityIssueSabotageContamination' })
+          this.getDropdown({ id: 'casProduct.dhsReleaseMinimumConcentration', defaultMessage: 'Release: Minimum Concentration (%)', name: 'casProduct.casProduct.dhsReleaseMinimumConcentration', props: dropdownOptions.dhs.dhsReleaseMinimumConcentration }),
+          this.getDropdown({ id: 'casProduct.dhsReleaseScreeningThresholdQuantitie', defaultMessage: 'Release: Screening Threshold Quantitiees (in pounds)', name: 'casProduct.casProduct.dhsReleaseScreeningThresholdQuantitie', props: dropdownOptions.dhs.dhsReleaseScreeningThresholdQuantitie }),
+          this.getInput({ id: 'casProduct.dhsTheftMinimumConcentration', defaultMessage: 'Theft: Minimum Concentration (%)', name: 'casProduct.casProduct.dhsTheftMinimumConcentration', }),
+          this.getDropdown({ id: 'casProduct.dhsTheftScreeningThresholdQuantities', defaultMessage: 'Theft: Screening Threshold Quantitie', name: 'casProduct.casProduct.dhsTheftScreeningThresholdQuantities', props: dropdownOptions.dhs.dhsTheftScreeningThresholdQuantities }),
+          this.getDropdown({ id: 'casProduct.dhsSabotageMinimumConcentration', defaultMessage: 'Sabotage: Minimum Concentration (%)', name: 'casProduct.casProduct.dhsSabotageMinimumConcentration', props: dropdownOptions.dhs.dhsSabotageMinimumConcentration }),
+          this.getDropdown({ id: 'casProduct.dhsSabotageScreeningThresholdQuantities', defaultMessage: 'Sabotage: Screening Threshold Quantities', name: 'casProduct.casProduct.dhsSabotageScreeningThresholdQuantities', props: dropdownOptions.dhs.dhsSabotageScreeningThresholdQuantities }),
+          this.getInput({ id: 'casProduct.dhsSecurityIssueReleaseToxic', defaultMessage: 'Security Issue: Release - Toxic', name: 'casProduct.casProduct.dhsSecurityIssueReleaseToxic' }),
+          this.getInput({ id: 'casProduct.dhsSecurityIssueReleaseFlammables', defaultMessage: 'Security Issue: Release - Flammables', name: 'casProduct.casProduct.dhsSecurityIssueReleaseFlammables' }),
+          this.getInput({ id: 'casProduct.dhsSecurityIssueReleaseExplosives', defaultMessage: 'Security Issue: Release - Explosives', name: 'casProduct.casProduct.dhsSecurityIssueReleaseExplosives' }),
+          this.getInput({ id: 'casProduct.dhsSecurityIssueTheftCWCWP', defaultMessage: 'Security Issue: Theft - CW/CWP', name: 'casProduct.casProduct.dhsSecurityIssueTheftCWCWP' }),
+          this.getInput({ id: 'casProduct.dhsSecurityIssueTheftWME', defaultMessage: 'Security Issue: Theft - WME', name: 'casProduct.casProduct.dhsSecurityIssueTheftWME' }),
+          this.getInput({ id: 'casProduct.dhsSecurityIssueTheftEXPIEDP', defaultMessage: 'Security Issue: Theft - EXP/IEDP', name: 'casProduct.casProduct.dhsSecurityIssueTheftEXPIEDP' }),
+          this.getInput({ id: 'casProduct.dhsSecurityIssueSabotageContamination', defaultMessage: 'Security Issue: Sabotage/Contamination', name: 'casProduct.casProduct.dhsSecurityIssueSabotageContamination' })
         )
         if (!dontBreak)
           break
@@ -222,15 +223,13 @@ class CompanyProductInfo extends Component {
             {this.getInput({ id: 'global.flowTime', defaultMessage: 'Flow Time (ISO 2431)', name: 'flowTimeISO2431' })}
             {this.getInput({ id: 'global.heatOfCombustion', defaultMessage: 'Heat of Combustion', name: 'heatOfCombustion' })}
           </Grid>
-          // {this.getInput({ id: 'global.', defaultMessage: '!', name: '' })}
+          // {this.getInput({ id: 'global.', defaultMessage: '', name: '' })}
         )
       }
 
       case 2: { // Documents
         return (
-          <DatagridProvider apiConfig={this.getApiConfig()}>
-            <DocumentManager edit={false} deletable={false} />
-          </DatagridProvider>
+          <DocumentManager items={values.attachments} edit={false} deletable={false} />
         )
       }
 
@@ -239,7 +238,16 @@ class CompanyProductInfo extends Component {
           <Grid verticalAlign='middle'>
             <GridRow>
               <GridColumn computer={8}>
-                <label><FormattedMessage id='global.filter' defaultMessage='!Filter' /></label>
+                <label><FormattedMessage id='global.casProduct' defaultMessage='CAS Product' /></label>
+                <Dropdown
+                  fluid selection
+                  value={values.casProduct.id}
+                  options={casProducts.map((cp) => ({ key: cp.id, text: cp.displayName, value: cp.id }))}
+                  onChange={(_, { value }) => this.setState({ casProductIndex: value })} />
+              </GridColumn>
+
+              <GridColumn computer={8}>
+                <label><FormattedMessage id='global.filter' defaultMessage='Filter' /></label>
                 <Dropdown
                   fluid selection
                   value={this.state.regulatoryFilter}
@@ -247,14 +255,6 @@ class CompanyProductInfo extends Component {
                   onChange={(_, { value }) => this.setState({ regulatoryFilter: value })} />
               </GridColumn>
 
-              <GridColumn computer={8}>
-                <label><FormattedMessage id='global.casProduct' defaultMessage='!CAS Product' /></label>
-                <Dropdown
-                  fluid selection
-                  value={values.casProduct.id}
-                  options={casProducts.map((cp) => ({ key: cp.id, text: cp.displayName, value: cp.id }))}
-                  onChange={(_, { value }) => this.setState({ casProductIndex: value })} />
-              </GridColumn>
             </GridRow>
 
             {markup.map((el) => el)}
@@ -268,7 +268,7 @@ class CompanyProductInfo extends Component {
           <Grid verticalAlign='middle'>
             <GridRow>
               <GridColumn computer={6}>
-                <FormattedMessage id='global.filter' defaultMessage='!Filter' />
+                <FormattedMessage id='global.filter' defaultMessage='Filter' />
               </GridColumn>
               <GridColumn computer={10}>
                 <Dropdown
@@ -280,32 +280,29 @@ class CompanyProductInfo extends Component {
               </GridColumn>
             </GridRow>
             {this.getInput({ id: 'global.unNumber', defaultMessage: 'UN Number', name: `${this.state.echoProductGroup}UnNumber` })}
-            {this.getInput({ id: 'global.properShippingName', defaultMessage: '!Proper Shipping Name', name: `${this.state.echoProductGroup}ProperShippingName` })}
-            {this.getInput({ id: 'global.properTechnicalName', defaultMessage: '!Proper Technical Name', name: `${this.state.echoProductGroup}ProperTechnicalName` })}
+            {this.getInput({ id: 'global.properShippingName', defaultMessage: 'Proper Shipping Name', name: `${this.state.echoProductGroup}ProperShippingName` })}
+            {this.getInput({ id: 'global.properTechnicalName', defaultMessage: 'Proper Technical Name', name: `${this.state.echoProductGroup}ProperTechnicalName` })}
             {this.getInput({ id: 'global.hazardClass', defaultMessage: 'Hazard Class', name: `${this.state.echoProductGroup}HazardClass` })}
             {this.getInput({ id: 'global.packagingGroup', defaultMessage: 'Packaging Group', name: `${this.state.echoProductGroup}PackagingGroup` })}
             {this.getInput({ id: 'global.reportableQuantity', defaultMessage: 'Reportable Quantity', name: `${this.state.echoProductGroup}ReportableQuantity` })}
-            {this.getInput({ id: 'global.enviromentalHazards', defaultMessage: '!Enviromental Hazards', name: `${this.state.echoProductGroup}EnviromentalHazards` })} {/* ?? */}
-            {this.getInput({ id: 'global.emsNumbers', defaultMessage: '!Ems Numbers', name: `${this.state.echoProductGroup}EmsNumbers` })} {/* ?? */}
-            {this.getInput({ id: 'global.exceptions', defaultMessage: '!Exceptions', name: `${this.state.echoProductGroup}Exceptions` })} {/* ?? */}
-            {this.getInput({ id: 'global.specialPrecautionForUser', defaultMessage: '!Special Precautions For User', name: `${this.state.echoProductGroup}SpecialPrecautionsForUser` })} {/* ?? */}
-            {this.getInput({ id: 'global.marinePollutant', defaultMessage: '!Marine Pollutant', name: `${this.state.echoProductGroup}MarinePollutant` })}
-            {this.getInput({ id: 'global.severeMarinePollutant', defaultMessage: '!Severe Marine Pollutant', name: `${this.state.echoProductGroup}SevereMarinePollutant` })}
-            {this.getInput({ id: 'global.packagingExceptions', defaultMessage: '!Packaging Exceptions', name: `${this.state.echoProductGroup}PackagingExceptions` })} {/* ?? */}
-            {this.getInput({ id: 'global.packagingNonBulk', defaultMessage: '!Packaging Non Bulk', name: `${this.state.echoProductGroup}PackagingNonBulk` })} {/* ?? */}
-            {this.getInput({ id: 'global.packagingBulk', defaultMessage: '!Packaging Bulk', name: `${this.state.echoProductGroup}PackagingBulk` })} {/* ?? */}
-            {this.getInput({ id: 'global.quantityLimitationsPassengerAircraftRail', defaultMessage: '!Quantity Limitations Passenger Aircraft/Rail', name: `${this.state.echoProductGroup}QuantityLimitationsPassengerAircraftRail` })} {/* ?? */}
-            {this.getInput({ id: 'global.quantityLimitationsCargoAircraftOnly', defaultMessage: '!Quantity Limitations Cargo Aircraft Only', name: `${this.state.echoProductGroup}QuantityLimitationsCargoAircraftOnly` })} {/* ?? */}
-            {this.getInput({ id: 'global.vesselStowageLocation', defaultMessage: '!Vessel Stowage Location', name: `${this.state.echoProductGroup}VesselStowageLocation` })} {/* ?? */}
-            {this.getInput({ id: 'global.vesselStowageOther', defaultMessage: '!Vessel Stowage Other', name: `${this.state.echoProductGroup}VesselStowageOther` })} {/* ?? */}
+            {this.getInput({ id: 'global.enviromentalHazards', defaultMessage: 'Enviromental Hazards', name: `${this.state.echoProductGroup}EnviromentalHazards` })} {/* ?? */}
+            {this.getInput({ id: 'global.emsNumbers', defaultMessage: 'Ems Numbers', name: `${this.state.echoProductGroup}EmsNumbers` })} {/* ?? */}
+            {this.getInput({ id: 'global.exceptions', defaultMessage: 'Exceptions', name: `${this.state.echoProductGroup}Exceptions` })} {/* ?? */}
+            {this.getInput({ id: 'global.specialPrecautionForUser', defaultMessage: 'Special Precautions For User', name: `${this.state.echoProductGroup}SpecialPrecautionsForUser` })} {/* ?? */}
+            {this.getInput({ id: 'global.marinePollutant', defaultMessage: 'Marine Pollutant', name: `${this.state.echoProductGroup}MarinePollutant` })}
+            {this.getInput({ id: 'global.severeMarinePollutant', defaultMessage: 'Severe Marine Pollutant', name: `${this.state.echoProductGroup}SevereMarinePollutant` })}
+            {this.getInput({ id: 'global.packagingExceptions', defaultMessage: 'Packaging Exceptions', name: `${this.state.echoProductGroup}PackagingExceptions` })} {/* ?? */}
+            {this.getInput({ id: 'global.packagingNonBulk', defaultMessage: 'Packaging Non Bulk', name: `${this.state.echoProductGroup}PackagingNonBulk` })} {/* ?? */}
+            {this.getInput({ id: 'global.packagingBulk', defaultMessage: 'Packaging Bulk', name: `${this.state.echoProductGroup}PackagingBulk` })} {/* ?? */}
+            {this.getInput({ id: 'global.quantityLimitationsPassengerAircraftRail', defaultMessage: 'Quantity Limitations Passenger Aircraft/Rail', name: `${this.state.echoProductGroup}QuantityLimitationsPassengerAircraftRail` })} {/* ?? */}
+            {this.getInput({ id: 'global.quantityLimitationsCargoAircraftOnly', defaultMessage: 'Quantity Limitations Cargo Aircraft Only', name: `${this.state.echoProductGroup}QuantityLimitationsCargoAircraftOnly` })} {/* ?? */}
+            {this.getInput({ id: 'global.vesselStowageLocation', defaultMessage: 'Vessel Stowage Location', name: `${this.state.echoProductGroup}VesselStowageLocation` })} {/* ?? */}
+            {this.getInput({ id: 'global.vesselStowageOther', defaultMessage: 'Vessel Stowage Other', name: `${this.state.echoProductGroup}VesselStowageOther` })} {/* ?? */}
           </Grid>
         )
       }
 
       default: return null
-
-
-
     }
   }
 
@@ -327,20 +324,25 @@ class CompanyProductInfo extends Component {
       activeIndex, closePopup,
       tabChanged, intl: { formatMessage } } = this.props
 
+    let { companyProduct } = popupValues
+
     try {
-      var { companyProduct: { echoProduct } } = popupValues
+      var { echoProduct } = companyProduct
     } catch (e) {
       console.error(e)
       return null
     }
 
     let initialValues = {
+      ...EchoProductResponse,
+      ...companyProduct,
       ...echoProduct,
+      attachments: companyProduct.attachments.concat(popupValues.attachments, echoProduct.attachments),
       productName: getSafe(() => echoProduct.name, ''),
       manufacturer: getSafe(() => echoProduct.manufacturer.name, ''),
       manufacturerProductCode: getSafe(() => echoProduct.mfrProductCodes.toString().replace(' ', ', '), ''),
       sdsRevisionDate: echoProduct && echoProduct.sdsRevisionDate ? moment(echoProduct.sdsRevisionDate).format('MM/DD/YYYY') : null,
-      casProduct: getSafe(() => echoProduct.elements[this.state.casProductIndex], null)
+      casProduct: getSafe(() => echoProduct.elements[this.state.casProductIndex], null),
     }
 
     return (
@@ -352,13 +354,17 @@ class CompanyProductInfo extends Component {
               initialValues={initialValues}
               render={(formikProps) => {
                 return (
-                  <Tab
-                    activeIndex={activeIndex}
-                    onTabChange={(_, { activeIndex }) => tabChanged(activeIndex)}
-                    panes={tabs.map((tab) => ({
-                      menuItem: formatMessage(tab.text),
-                      render: () => <Segment basic>{this.getContent(formikProps)}</Segment>
-                    }))} />
+                  <>
+                    <Menu pointing secondary>
+                      {tabs.map((tab, i) => (
+                        <Menu.Item
+                          onClick={() => tabChanged(i)}
+                          active={activeIndex === i}
+                        >{formatMessage(tab.text)}</Menu.Item>
+                      ))}
+                    </Menu>
+                    <Segment basic>{this.getContent(formikProps)}</Segment>
+                  </>
                 )
               }}
             />
@@ -368,7 +374,7 @@ class CompanyProductInfo extends Component {
         <GraySegment>
           <RightAlignedDiv>
             <Button onClick={closePopup}>
-              <FormattedMessage id='global.close' defaultMessage='!Close'>{text => text}</FormattedMessage>
+              <FormattedMessage id='global.close' defaultMessage='Close'>{text => text}</FormattedMessage>
             </Button>
           </RightAlignedDiv>
         </GraySegment>

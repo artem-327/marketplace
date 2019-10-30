@@ -10,7 +10,7 @@ import { withDatagrid } from '~/modules/datagrid'
 import { openPopup } from '~/modules/settings/actions'
 import { removeAttachment } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { bool } from 'prop-types'
+import { bool, array } from 'prop-types'
 
 const BasicLink = styled.a`
   color: black !important;
@@ -30,16 +30,23 @@ const columns = [ // TODO - check en.json for those ids
 ]
 
 class DocumentManager extends Component {
-
+  getRows = data => (
+    data.map((row) => ({
+      ...row,
+      documentTypeName: getSafe(() => row.documentType.name, ''),
+      expirationDate: row.expirationDate && moment(row.expirationDate).format('YYYY-MM-DD'),
+      customName: getSafe(() => row.customName, row.name),
+    }))
+  )
 
   render() {
     const {
-      datagrid, rows,
+      datagrid,
       openPopup, removeAttachment,
       edit, download, deletable,
       loading } = this.props
 
-
+    let rows = this.getRows(this.props.items ? this.props.items : this.props.rows)
 
 
     return (
@@ -77,24 +84,20 @@ class DocumentManager extends Component {
 DocumentManager.propTypes = {
   edit: bool,
   download: bool,
-  delete: bool
+  delete: bool,
+  items: array
 }
 
 DocumentManager.defaultProps = {
   edit: true,
   download: true,
-  deletable: true
+  deletable: true,
 }
 
 const mapStateToProps = (store, { datagrid }) => {
   return {
     loading: store.settings.loading,
-    rows: datagrid.rows.map((row) => ({
-      ...row,
-      documentTypeName: getSafe(() => row.documentType.name, ''),
-      expirationDate: row.expirationDate && moment(row.expirationDate).format('YYYY-MM-DD'),
-      customName: getSafe(() => row.customName, row.name),
-    }))
+    rows: datagrid.rows
   }
 }
 
