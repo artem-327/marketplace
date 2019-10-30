@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {connect} from "react-redux"
+import { connect } from "react-redux"
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Form, Button, Input, TextArea, Checkbox as FormikCheckbox, Dropdown, Radio } from 'formik-semantic-ui-fixed-validation'
 import { DateInput } from '~/components/custom-formik'
@@ -293,7 +293,7 @@ class DetailSidebar extends Component {
   }
 
   saveBroadcastRules = async () => {
-    this.setState({ saveBroadcast: this.state.saveBroadcast+1 })
+    this.setState({ saveBroadcast: this.state.saveBroadcast + 1 })
   }
 
   searchProducts = debounce((text) => {
@@ -428,11 +428,11 @@ class DetailSidebar extends Component {
             case 2:
               props = {
                 ...values.edit,
-                expirationDate: values.edit.doesExpire ? values.edit.expirationDate+'T00:00:00.000Z' : null,
+                expirationDate: values.edit.doesExpire ? values.edit.expirationDate + 'T00:00:00.000Z' : null,
                 leadTime: values.edit.leadTime,
-                lotExpirationDate: values.edit.lotExpirationDate ? values.edit.lotExpirationDate+'T00:00:00.000Z' : null,
+                lotExpirationDate: values.edit.lotExpirationDate ? values.edit.lotExpirationDate + 'T00:00:00.000Z' : null,
                 lotNumber: values.edit.lotNumber,
-                lotManufacturedDate: values.edit.lotManufacturedDate ? values.edit.lotManufacturedDate+'T00:00:00.000Z' : null,
+                lotManufacturedDate: values.edit.lotManufacturedDate ? values.edit.lotManufacturedDate + 'T00:00:00.000Z' : null,
                 pkgAvailable: parseInt(values.edit.pkgAvailable),
                 pricingTiers: values.priceTiers.pricingTiers.length ?
                   values.priceTiers.pricingTiers :
@@ -455,9 +455,9 @@ class DetailSidebar extends Component {
             try {
               await addProductOffer(props, getSafe(() => this.props.sidebarValues.id, null))
               toastManager.add(generateToastMarkup(
-                <FormattedMessage id='addInventory.success' defaultMessage='Success'/>,
+                <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
                 <FormattedMessage id='addInventory.poDataSaved'
-                                  defaultMessage='Product Offer was successfully saved.'/>,
+                  defaultMessage='Product Offer was successfully saved.' />,
               ), {
                 appearance: 'success'
               })
@@ -470,7 +470,7 @@ class DetailSidebar extends Component {
             }
           }
         }}>
-        {({values, touched, setFieldValue, validateForm, submitForm}) => {
+        {({ values, touched, setFieldValue, validateForm, submitForm }) => {
 
           return (
             <FlexSidebar
@@ -496,520 +496,311 @@ class DetailSidebar extends Component {
                 <Segment basic>
                   <FlexTabs>
                     <Tab className='inventory-sidebar tab-menu flex stretched'
-                         menu={{ secondary: true, pointing: true }}
-                         renderActiveOnly={false}
-                         activeIndex={this.state.activeTab}
-                         panes={[
-                           {
-                             menuItem: (
-                               <Menu.Item key='edit' onClick={() => {
-                                 if (Object.keys(touched).length || this.state.changedForm) {
-                                   toastManager.add(generateToastMarkup(
-                                     <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
-                                     <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Due to form changes you have to save the tab first' />,
-                                   ), {
-                                     appearance: 'warning'
-                                   })
-                                   return false
-                                 }
-                                 validateForm()
-                                   .then(r => {
-                                     // stop when errors found
-                                     if (Object.keys(r).length) {
-                                       submitForm() // show errors
-                                       this.switchToErrors(Object.keys(r))
-                                       return false
-                                     }
+                      menu={{ secondary: true, pointing: true }}
+                      renderActiveOnly={false}
+                      activeIndex={this.state.activeTab}
+                      panes={[
+                        {
+                          menuItem: (
+                            <Menu.Item key='edit' onClick={() => {
+                              if (Object.keys(touched).length || this.state.changedForm) {
+                                toastManager.add(generateToastMarkup(
+                                  <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
+                                  <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Due to form changes you have to save the tab first' />,
+                                ), {
+                                  appearance: 'warning'
+                                })
+                                return false
+                              }
+                              validateForm()
+                                .then(r => {
+                                  // stop when errors found
+                                  if (Object.keys(r).length) {
+                                    submitForm() // show errors
+                                    this.switchToErrors(Object.keys(r))
+                                    return false
+                                  }
 
-                                     // if validation is correct - switch tabs
-                                     this.switchTab(0)
-                                   })
-                                   .catch(e => {
-                                     console.log('CATCH', e)
-                                   })
-                               }}
-                                          data-test='detail_inventory_tab_edit'>
-                                 {formatMessage({ id: getSafe(() => sidebarValues.id, false) ? 'global.edit' : 'global.add', defaultMessage: getSafe(() => sidebarValues.id, false) ? 'Edit' : 'Add' })}
-                               </Menu.Item>
-                             ),
-                             pane: (
-                               <Tab.Pane key='edit' style={{ padding: '18px' }}>
-                                 <Grid>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.companyProduct' defaultMessage='Company Product'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <Dropdown
-                                         name='edit.product'
-                                         options={this.props.autocompleteData.map((el) => ({
-                                           key: el.id,
-                                           text: `${getSafe(() => el.intProductCode, '')} ${getSafe(() => el.intProductName, '')}`,
-                                           value: el.id
-                                         }))}
-                                         inputProps={{
-                                           placeholder: <FormattedMessage id='global.startTypingToSearch' defaultMessage='Start typing to begin search' />,
-                                           loading: this.props.autocompleteDataLoading,
-                                           'data-test': 'new_inventory_product_search_drpdn',
-                                           style: { width: '300px' },
-                                           size: 'large',
-                                           minCharacters: 3,
-                                           icon: 'search',
-                                           search: options => options,
-                                           selection: true,
-                                           clearable: true,
-                                           onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && this.searchProducts(searchQuery)
-                                         }}
-                                       />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.pkgsAvailable' defaultMessage='PKGs Available'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <Input type='text'
-                                              name='edit.pkgAvailable' />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='global.warehouse' defaultMessage='Warehouse'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <Dropdown
-                                         name='edit.warehouse'
-                                         options={warehousesList}
-                                         inputProps={{
-                                           selection: true,
-                                           value: 0,
-                                           'data-test': 'new_inventory_warehouse_drpdn'
-                                         }} />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='global.fobPrice' defaultMessage='FOB Price'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <FormField width={16} data-test='detail_sidebar_fob_price' >
-                                         <Input
-                                           name='edit.fobPrice'
-                                           inputProps={{ type: 'number', onChange: (e, {value}) => {
-                                               if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
-                                                 setFieldValue(`priceTiers.pricingTiers[0].price`, value)
-                                               }
-                                             }
-                                           }}
-                                         />
-                                       </FormField>
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='global.cost' defaultMessage='Cost'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <FormField width={16} data-test='detail_sidebar_cost' >
-                                         <Input
-                                           name='edit.costPerUOM'
-                                           inputProps={{ type: 'number' }} />
-                                       </FormField>
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn>
-                                       <Segment style={{ margin: '0 -1em' }}>
-                                         <Header as='h3'><FormattedMessage id='global.lot' defaultMessage='Lot' /></Header>
-                                         <Grid>
-                                           <GridRow>
-                                             <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                               <FormattedMessage id='global.lotNumber' defaultMessage='Lot #'>{text => text}</FormattedMessage>
-                                             </GridColumn>
-                                             <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                               <Input type="text" name="edit.lotNumber" />
-                                             </GridColumn>
-                                           </GridRow>
-                                           <GridRow>
-                                             <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                               <FormattedMessage id='global.expDate' defaultMessage='Exp Date'>{text => text}</FormattedMessage>
-                                             </GridColumn>
-                                             <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                               <DateInput
-                                                 inputProps={{ 'data-test': 'sidebar_detail_lot_exp_date' }}
-                                                 name='edit.lotExpirationDate' />
-                                             </GridColumn>
-                                           </GridRow>
-                                           <GridRow>
-                                             <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                               <FormattedMessage id='global.mfgDate' defaultMessage='Mfg Date'>{text => text}</FormattedMessage>
-                                             </GridColumn>
-                                             <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                               <DateInput
-                                                 inputProps={{ 'data-test': 'sidebar_detail_lot_mfg_date', maxDate: moment() }}
-                                                 name='edit.lotManufacturedDate' />
-                                             </GridColumn>
-                                           </GridRow>
-                                         </Grid>
-                                       </Segment>
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.grades' defaultMessage='Grades'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <Dropdown
-                                         name='edit.productGrades'
-                                         options={listGrades}
-                                         inputProps={{ 'data-test': 'new_inventory_grade_drpdn', selection: true, multiple: true }} />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.form' defaultMessage='Form'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <Dropdown
-                                         name='edit.productForm'
-                                         options={listForms}
-                                         inputProps={{ 'data-test': 'new_inventory_form_drpdn' }} />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.origin' defaultMessage='Origin'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <Dropdown
-                                         name='edit.origin'
-                                         options={searchedOrigins}
-                                         inputProps={{
-                                           'data-test': 'new_inventory_origin_drpdn',
-                                           size: 'large',
-                                           minCharacters: 0,
-                                           icon: 'search',
-                                           search: true,
-                                           selection: true,
-                                           clearable: true,
-                                           loading: searchedOriginsLoading,
-                                           onSearchChange: debounce((e, { searchQuery }) => searchOrigins(searchQuery), 250)
-                                         }}
-                                       />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.condition' defaultMessage='Condition'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <Dropdown
-                                         name='edit.conforming'
-                                         options={listConforming}
-                                         inputProps={{ 'data-test': 'new_inventory_conforming_drpdn' }} />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow style={{ position: 'absolute', top: '-20000px', left: '-20000px' }}>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.condition' defaultMessage='Condition'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <Dropdown
-                                         name='edit.productCondition'
-                                         options={listConditions}
-                                         inputProps={{ 'data-test': 'new_inventory_condition_drpdn' }} />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.conditionNotes' defaultMessage='Condition Notes'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <FormField width={16} data-test='detail_sidebar_condition_notes' >
-                                         <Input
-                                           type='text'
-                                           name='edit.conditionNotes' />
-                                       </FormField>
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='global.inStock' defaultMessage='In Stock'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth - 5} computer={rightWidth - 5}>
-                                       <Dropdown name='edit.inStock'
-                                                 options={optionsYesNo}
-                                                 inputProps={{ 'data-test': 'add_inventory_instock' }} />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='global.leadTime' defaultMessage='Lead Time'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth - 5} computer={rightWidth - 5}>
-                                       <Input name='edit.leadTime'
-                                              inputProps={{ type: 'number' }} />
-                                     </GridColumn>
-                                     <GridColumn mobile={5} computer={5} verticalAlign='middle'>
-                                       <FormattedMessage id='global.days' defaultMessage='Days'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='global.offerExpiration' defaultMessage='Offer Expiration'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth - 5} computer={rightWidth - 5}>
-                                       <Dropdown name='edit.doesExpire'
-                                                 options={optionsYesNo}
-                                                 inputProps={{ 'data-test': 'add_inventory_doesExpire' }} />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='addInventory.offerExpirationDate' defaultMessage='Offer Expiration Date'>{text => text}</FormattedMessage>
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                       <DateInput
-                                         inputProps={{ disabled: !values.edit.doesExpire, 'data-test': 'sidebar_detail_expiration_date' }}
-                                         name='edit.expirationDate' />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='global.minimumPkgs' defaultMessage='Minimum PKGs' />
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth} data-test='add_inventory_product_minimumOQ_inp'>
-                                       <Input
-                                         name='edit.minimum'
-                                         inputProps={{
-                                           type: 'number',
-                                           min: 1,
-                                           onChange: (e, { value }) => {
-                                             value = parseInt(value)
-                                             if (value > 1 && !isNaN(value)) {
-                                               setFieldValue('minimumRequirement', true)
-                                               setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
-                                             }
-                                           }
-                                         }} />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                       <FormattedMessage id='global.splitPkgs' defaultMessage='Split PKGs' />
-                                     </GridColumn>
-                                     <GridColumn mobile={rightWidth} computer={rightWidth} data-test='add_inventory_product_splits_inp' >
-                                       <Input
-                                         name='edit.splits'
-                                         inputProps={{
-                                           type: 'number',
-                                           min: 1,
-                                           onChange: (e, { value }) => this.onSplitsChange(value, values, setFieldValue, validateForm)
-                                         }} />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth + rightWidth} computer={leftWidth + rightWidth}>
-                                      <TextArea
-                                        name='edit.externalNotes'
-                                        label={formatMessage({ id: 'addInventory.externalNotes', defaultMessage: 'External Notes' })}
+                                  // if validation is correct - switch tabs
+                                  this.switchTab(0)
+                                })
+                                .catch(e => {
+                                  console.log('CATCH', e)
+                                })
+                            }}
+                              data-test='detail_inventory_tab_edit'>
+                              {formatMessage({ id: getSafe(() => sidebarValues.id, false) ? 'global.edit' : 'global.add', defaultMessage: getSafe(() => sidebarValues.id, false) ? 'Edit' : 'Add' })}
+                            </Menu.Item>
+                          ),
+                          pane: (
+                            <Tab.Pane key='edit' style={{ padding: '18px' }}>
+                              <Grid>
+                                <GridRow>
+                                  <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                    <FormattedMessage id='addInventory.companyProduct' defaultMessage='Company Product'>{text => text}</FormattedMessage>
+                                  </GridColumn>
+                                  <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                    <Dropdown
+                                      name='edit.product'
+                                      options={this.props.autocompleteData.map((el) => ({
+                                        key: el.id,
+                                        text: `${getSafe(() => el.intProductCode, '')} ${getSafe(() => el.intProductName, '')}`,
+                                        value: el.id
+                                      }))}
+                                      inputProps={{
+                                        placeholder: <FormattedMessage id='global.startTypingToSearch' defaultMessage='Start typing to begin search' />,
+                                        loading: this.props.autocompleteDataLoading,
+                                        'data-test': 'new_inventory_product_search_drpdn',
+                                        style: { width: '300px' },
+                                        size: 'large',
+                                        minCharacters: 3,
+                                        icon: 'search',
+                                        search: options => options,
+                                        selection: true,
+                                        clearable: true,
+                                        onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && this.searchProducts(searchQuery)
+                                      }}
+                                    />
+                                  </GridColumn>
+                                </GridRow>
+                                <GridRow>
+                                  <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                    <FormattedMessage id='addInventory.pkgsAvailable' defaultMessage='PKGs Available'>{text => text}</FormattedMessage>
+                                  </GridColumn>
+                                  <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                    <Input type='text'
+                                      name='edit.pkgAvailable' />
+                                  </GridColumn>
+                                </GridRow>
+                                <GridRow>
+                                  <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                    <FormattedMessage id='global.warehouse' defaultMessage='Warehouse'>{text => text}</FormattedMessage>
+                                  </GridColumn>
+                                  <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                    <Dropdown
+                                      name='edit.warehouse'
+                                      options={warehousesList}
+                                      inputProps={{
+                                        selection: true,
+                                        value: 0,
+                                        'data-test': 'new_inventory_warehouse_drpdn'
+                                      }} />
+                                  </GridColumn>
+                                </GridRow>
+                                <GridRow>
+                                  <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                    <FormattedMessage id='global.fobPrice' defaultMessage='FOB Price'>{text => text}</FormattedMessage>
+                                  </GridColumn>
+                                  <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                    <FormField width={16} data-test='detail_sidebar_fob_price' >
+                                      <Input
+                                        name='edit.fobPrice'
+                                        inputProps={{
+                                          type: 'number', onChange: (e, { value }) => {
+                                            if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
+                                              setFieldValue(`priceTiers.pricingTiers[0].price`, value)
+                                            }
+                                          }
+                                        }}
                                       />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn mobile={leftWidth + rightWidth} computer={leftWidth + rightWidth}>
-                                      <TextArea
-                                        name='edit.internalNotes'
-                                        label={formatMessage({ id: 'addInventory.internalNotes', defaultMessage: 'Internal Notes' })}
-                                      />
-                                     </GridColumn>
-                                   </GridRow>
-                                   <GridRow>
-                                     <GridColumn>
-                                       <label><FormattedMessage id='inventory.certOfAnalysis' defaultMessage='Certification of Analysis' /></label>
-                                       <UploadLot {...this.props}
-                                                  attachments={values.edit.attachments}
-                                                  name='edit.attachments'
-                                                  type={1}
-                                                  filesLimit={1}
-                                                  fileMaxSize={20}
-                                                  onChange={(files) =>
-                                                    setFieldValue(`edit.attachments`, values.edit.attachments.concat([{
-                                                      id: files.id,
-                                                      name: files.name,
-                                                      documentType: files.documentType
-                                                    }])
+                                    </FormField>
+                                  </GridColumn>
+                                </GridRow>
 
-                                                  )}
-                                                  data-test='new_inventory_attachments_drop'
-                                                  emptyContent={(
-                                                    <>
-                                                      {formatMessage({ id: 'addInventory.dragDrop' })}
-                                                      <br />
-                                                      <FormattedMessage id='addInventory.dragDropOr'
-                                                                        defaultMessage={'or {link} to select from computer'}
-                                                                        values={{
-                                                                          link: (
-                                                                            <a>
-                                                                              <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                                                                            </a>
-                                                                          )
-                                                                        }} />
-                                                    </>
-                                                  )}
-                                                  uploadedContent={(
-                                                    <label>
-                                                      <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-                                                      <br />
-                                                      <FormattedMessage id='addInventory.dragDropOr'
-                                                                        defaultMessage={'or {link} to select from computer'}
-                                                                        values={{
-                                                                          link: (
-                                                                            <a>
-                                                                              <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                                                                            </a>
-                                                                          )
-                                                                        }} />
-                                                    </label>
-                                                  )}
-                                       />
-                                     </GridColumn>
-                                   </GridRow>
-                                 </Grid>
-                               </Tab.Pane>
-                             )
-                           },
-                           {
-                             menuItem: (
-                               <Menu.Item key='priceBook' onClick={() => {
-                                 if (Object.keys(touched).length || this.state.changedForm) {
-                                   toastManager.add(generateToastMarkup(
-                                     <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
-                                     <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Due to form changes you have to save the tab first' />,
-                                   ), {
-                                     appearance: 'warning'
-                                   })
-                                   return false
-                                 }
-                                 validateForm()
-                                   .then(r => {
-                                     // stop when errors found
-                                     if (Object.keys(r).length) {
-                                       submitForm() // show errors
-                                       this.switchToErrors(Object.keys(r))
-                                       return false
-                                     }
+                                <GridRow>
+                                  <GridColumn mobile={leftWidth + rightWidth} computer={leftWidth + rightWidth}>
+                                    <TextArea
+                                      name='edit.internalNotes'
+                                      label={formatMessage({ id: 'addInventory.internalNotes', defaultMessage: 'Internal Notes' })}
+                                    />
+                                  </GridColumn>
+                                </GridRow>
+                                <GridRow>
+                                  <GridColumn>
+                                    <label><FormattedMessage id='inventory.certOfAnalysis' defaultMessage='Certification of Analysis' /></label>
+                                    <UploadLot {...this.props}
+                                      attachments={values.edit.attachments}
+                                      name='edit.attachments'
+                                      type={1}
+                                      filesLimit={1}
+                                      fileMaxSize={20}
+                                      onChange={(files) =>
+                                        setFieldValue(`edit.attachments`, values.edit.attachments.concat([{
+                                          id: files.id,
+                                          name: files.name,
+                                          documentType: files.documentType
+                                        }])
 
-                                     // if validation is correct - switch tabs
-                                     this.switchTab(1)
-                                   })
-                                   .catch(e => {
-                                     console.log('CATCH', e)
-                                   })
-                               }}
-                                          data-test='detail_inventory_tab_priceBook'>
-                                 {formatMessage({ id: 'global.priceBook', defaultMessage: 'Price Book' })}
-                               </Menu.Item>
-                             ),
-                             pane: (
-                               <Tab.Pane key='priceBook' style={{ padding: '18px' }}>
-                                 <Broadcast isPrepared={!this.state.broadcastLoading} asModal={false} asSidebar={true} saveBroadcast={this.state.saveBroadcast} changedForm={this.changedForm} />
-                               </Tab.Pane>
-                             )
-                           },
-                           {
-                             menuItem: (
-                               <Menu.Item key='priceTiers' onClick={() => {
-                                 if (Object.keys(touched).length || this.state.changedForm) {
-                                   toastManager.add(generateToastMarkup(
-                                     <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
-                                     <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Due to form changes you have to save the tab first' />,
-                                   ), {
-                                     appearance: 'warning'
-                                   })
-                                   return false
-                                 }
-                                 validateForm()
-                                   .then(r => {
-                                     // stop when errors found
-                                     if (Object.keys(r).length) {
-                                       submitForm() // show errors
-                                       this.switchToErrors(Object.keys(r))
-                                       return false
-                                     }
+                                        )}
+                                      data-test='new_inventory_attachments_drop'
+                                      emptyContent={(
+                                        <>
+                                          {formatMessage({ id: 'addInventory.dragDrop' })}
+                                          <br />
+                                          <FormattedMessage id='addInventory.dragDropOr'
+                                            defaultMessage={'or {link} to select from computer'}
+                                            values={{
+                                              link: (
+                                                <a>
+                                                  <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                                </a>
+                                              )
+                                            }} />
+                                        </>
+                                      )}
+                                      uploadedContent={(
+                                        <label>
+                                          <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+                                          <br />
+                                          <FormattedMessage id='addInventory.dragDropOr'
+                                            defaultMessage={'or {link} to select from computer'}
+                                            values={{
+                                              link: (
+                                                <a>
+                                                  <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                                </a>
+                                              )
+                                            }} />
+                                        </label>
+                                      )}
+                                    />
+                                  </GridColumn>
+                                </GridRow>
+                              </Grid>
+                            </Tab.Pane>
+                          )
+                        },
+                        {
+                          menuItem: (
+                            <Menu.Item key='priceBook' onClick={() => {
+                              if (Object.keys(touched).length || this.state.changedForm) {
+                                toastManager.add(generateToastMarkup(
+                                  <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
+                                  <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Due to form changes you have to save the tab first' />,
+                                ), {
+                                  appearance: 'warning'
+                                })
+                                return false
+                              }
+                              validateForm()
+                                .then(r => {
+                                  // stop when errors found
+                                  if (Object.keys(r).length) {
+                                    submitForm() // show errors
+                                    this.switchToErrors(Object.keys(r))
+                                    return false
+                                  }
 
-                                     // if validation is correct - switch tabs
-                                     this.switchTab(2)
-                                   })
-                                   .catch(e => {
-                                     console.log('CATCH', e)
-                                   })
-                               }}
-                                          data-test='detail_inventory_tab_priceTiers'>
-                                 {formatMessage({ id: 'global.priceTiers', defaultMessage: 'Price Tiers' })}
-                               </Menu.Item>
-                             ),
-                             pane: (
-                               <Tab.Pane key='priceTiers' style={{ padding: '18px' }}>
-                                 <Header as='h3'>
-                                   <FormattedMessage id='addInventory.pricesCount' defaultMessage='How many price tiers would you like to offer?'>
-                                     {(text) => (
-                                       <>
-                                         {text}
-                                         <Popup content={<>
-                                           <FormattedMessage id='addInventory.pricesCount.description1' defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.' />
-                                           <br /> <br />
-                                           <FormattedMessage id='addInventory.pricesCount.description2' defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.' />
-                                           <br /> <br />
-                                           <FormattedMessage id='addInventory.pricesCount.description3' defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.' />
-                                         </>
-                                         }
-                                                trigger={<Icon name='info circle' color='blue' />}
-                                                wide />
-                                       </>
-                                     )}
-                                   </FormattedMessage>
-                                 </Header>
-                                 <Dropdown
-                                   label={formatMessage({ id: 'addInventory.priceTiers', defaultMessage: 'Price Tiers' })}
-                                   name='priceTiers.priceTiers'
-                                   options={this.getPriceTiers(10)}
-                                   inputProps={{
-                                     'data-test': 'new_inventory_price_tiers_drpdn',
-                                     fluid: true,
-                                     onChange: (e, { value }) => {
-                                       let pricingTiers = values.priceTiers.pricingTiers.slice()
-                                       let difference = value - pricingTiers.length
-                                       if (difference < 0) pricingTiers.splice(pricingTiers.length - value)
-                                       else for (let i = 0; i < difference; i++) pricingTiers.push({ price: 0.001, quantityFrom: 1 })
-                                       setFieldValue('pricingTiers', pricingTiers)
-                                     }
-                                   }}
-                                 />
-                                 <Header as='h3'>
-                                   <FormattedMessage id='addInventory.fobPrice.header' defaultMessage='What is the FOB price for each tier?'>
-                                     {(text) => (
-                                       <>
-                                         {text}
-                                         <Popup
-                                           content={
-                                             <FormattedMessage
-                                               id='addInventory.fobPrice.description'
-                                               defaultMessage='FOB stands for free on board and freight on board and designates that the buyer is responsible for shipping costs. It also represents that ownership and liability is passed from seller to the buyer when the good are loaded at the originating location.' />
-                                           }
-                                           trigger={<Icon name='info circle' color='blue' />}
-                                           wide />
-                                       </>
-                                     )}
-                                   </FormattedMessage>
-                                 </Header>
-                                 {/* <Grid> */}
-                                 {this.renderPricingTiers(values.priceTiers.priceTiers, setFieldValue)}
-                                 {/* </Grid> */}
-                               </Tab.Pane>
-                             )
-                           }
-                         ]} />
+                                  // if validation is correct - switch tabs
+                                  this.switchTab(1)
+                                })
+                                .catch(e => {
+                                  console.log('CATCH', e)
+                                })
+                            }}
+                              data-test='detail_inventory_tab_priceBook'>
+                              {formatMessage({ id: 'global.priceBook', defaultMessage: 'Price Book' })}
+                            </Menu.Item>
+                          ),
+                          pane: (
+                            <Tab.Pane key='priceBook' style={{ padding: '18px' }}>
+                              <Broadcast isPrepared={!this.state.broadcastLoading} asModal={false} asSidebar={true} saveBroadcast={this.state.saveBroadcast} changedForm={this.changedForm} />
+                            </Tab.Pane>
+                          )
+                        },
+                        {
+                          menuItem: (
+                            <Menu.Item key='priceTiers' onClick={() => {
+                              if (Object.keys(touched).length || this.state.changedForm) {
+                                toastManager.add(generateToastMarkup(
+                                  <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
+                                  <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Due to form changes you have to save the tab first' />,
+                                ), {
+                                  appearance: 'warning'
+                                })
+                                return false
+                              }
+                              validateForm()
+                                .then(r => {
+                                  // stop when errors found
+                                  if (Object.keys(r).length) {
+                                    submitForm() // show errors
+                                    this.switchToErrors(Object.keys(r))
+                                    return false
+                                  }
+
+                                  // if validation is correct - switch tabs
+                                  this.switchTab(2)
+                                })
+                                .catch(e => {
+                                  console.log('CATCH', e)
+                                })
+                            }}
+                              data-test='detail_inventory_tab_priceTiers'>
+                              {formatMessage({ id: 'global.priceTiers', defaultMessage: 'Price Tiers' })}
+                            </Menu.Item>
+                          ),
+                          pane: (
+                            <Tab.Pane key='priceTiers' style={{ padding: '18px' }}>
+                              <Header as='h3'>
+                                <FormattedMessage id='addInventory.pricesCount' defaultMessage='How many price tiers would you like to offer?'>
+                                  {(text) => (
+                                    <>
+                                      {text}
+                                      <Popup content={<>
+                                        <FormattedMessage id='addInventory.pricesCount.description1' defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.' />
+                                        <br /> <br />
+                                        <FormattedMessage id='addInventory.pricesCount.description2' defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.' />
+                                        <br /> <br />
+                                        <FormattedMessage id='addInventory.pricesCount.description3' defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.' />
+                                      </>
+                                      }
+                                        trigger={<Icon name='info circle' color='blue' />}
+                                        wide />
+                                    </>
+                                  )}
+                                </FormattedMessage>
+                              </Header>
+                              <Dropdown
+                                label={formatMessage({ id: 'addInventory.priceTiers', defaultMessage: 'Price Tiers' })}
+                                name='priceTiers.priceTiers'
+                                options={this.getPriceTiers(10)}
+                                inputProps={{
+                                  'data-test': 'new_inventory_price_tiers_drpdn',
+                                  fluid: true,
+                                  onChange: (e, { value }) => {
+                                    let pricingTiers = values.priceTiers.pricingTiers.slice()
+                                    let difference = value - pricingTiers.length
+                                    if (difference < 0) pricingTiers.splice(pricingTiers.length - value)
+                                    else for (let i = 0; i < difference; i++) pricingTiers.push({ price: 0.001, quantityFrom: 1 })
+                                    setFieldValue('pricingTiers', pricingTiers)
+                                  }
+                                }}
+                              />
+                              <Header as='h3'>
+                                <FormattedMessage id='addInventory.fobPrice.header' defaultMessage='What is the FOB price for each tier?'>
+                                  {(text) => (
+                                    <>
+                                      {text}
+                                      <Popup
+                                        content={
+                                          <FormattedMessage
+                                            id='addInventory.fobPrice.description'
+                                            defaultMessage='FOB stands for free on board and freight on board and designates that the buyer is responsible for shipping costs. It also represents that ownership and liability is passed from seller to the buyer when the good are loaded at the originating location.' />
+                                        }
+                                        trigger={<Icon name='info circle' color='blue' />}
+                                        wide />
+                                    </>
+                                  )}
+                                </FormattedMessage>
+                              </Header>
+                              {/* <Grid> */}
+                              {this.renderPricingTiers(values.priceTiers.priceTiers, setFieldValue)}
+                              {/* </Grid> */}
+                            </Tab.Pane>
+                          )
+                        }
+                      ]} />
                   </FlexTabs>
                 </Segment>
               </FlexContent>
