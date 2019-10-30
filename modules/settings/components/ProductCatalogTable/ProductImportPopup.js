@@ -79,8 +79,8 @@ class ProductImportPopup extends Component {
 
     return (
       <Modal closeIcon onClose={() => closeImportPopupCancel(csvFileId)} open centered={false}>
-        <Modal.Header><FormattedMessage id='global.csvMapping' defaultMessage='.CSV Mapping' /></Modal.Header>
-        <StyledModal>
+        <Modal.Header>
+          <FormattedMessage id='global.csvMapping' defaultMessage='.CSV Mapping' />
           <Step.Group widths={3}>
             <Step active={currentStep === 'upload'} completed={isFinishUpload}>
               <Icon name='upload' />
@@ -105,6 +105,8 @@ class ProductImportPopup extends Component {
               </Step.Content>
             </Step>
           </Step.Group>
+        </Modal.Header>
+        <StyledModal>
           {this.steps[currentStep]}
         </StyledModal>
         <Modal.Actions>
@@ -113,7 +115,7 @@ class ProductImportPopup extends Component {
               <Grid.Column width={5} textAlign='left'>
                 {currentStep === 'preview' ? (
                   <Button basic onClick={() => this.setState({ currentStep: 'map' })} data-text='settings_product_import_back_btn'>
-                    {formatMessage({ id: 'global.back', defaultMessage: 'Back' })}
+                    {formatMessage({ id: 'settings.previous', defaultMessage: 'Previous' })}
                   </Button>
                 ) : null}
               </Grid.Column>
@@ -126,7 +128,7 @@ class ProductImportPopup extends Component {
                   onClick={this.submitHandler}
                   disabled={!csvFileId}
                   data-test='settings_product_import_submit_btn'>
-                  {formatMessage({ id: `global.${currentStep === 'preview' ? 'save' : 'next'}`, defaultMessage: currentStep === 'preview' ? 'Save' : 'Next' })}
+                  {formatMessage({ id: `global.${currentStep === 'preview' ? 'import' : 'next'}`, defaultMessage: currentStep === 'preview' ? 'Import' : 'Next' })}
                 </Button>
               </Grid.Column>
             </Grid>
