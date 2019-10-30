@@ -12,20 +12,20 @@ import { actions } from 'react-redux-form'
 class Orders extends Component {
   state = {
     columns: [
-      { name: 'id', title: <FormattedMessage id='order.orderId' defaultMessage='Order ID' />, width: 120 },
-      { name: 'globalStatus', title: <FormattedMessage id='order.globalStatus' defaultMessage='Status' />, width: 120, sortPath: 'Order.cfGlobalStatus' },
-      { name: 'date', title: <FormattedMessage id='order.date' defaultMessage='Order Date' />, width: 120, sortPath: 'Order.orderDate' },
-      { name: 'customerName', title: <FormattedMessage id='order.vendor' defaultMessage='Vendor' />, width: 120, sortPath: 'Order.sellerCompanyName' }, // ! ! ? seller vs purchaser
-      { name: 'productName', title: <FormattedMessage id='order.productName' defaultMessage='Product Name' />, width: 160 },
-      { name: 'orderStatus', title: <FormattedMessage id='order' defaultMessage='Order' />, width: 120 },
-      { name: 'shippingStatus', title: <FormattedMessage id='order.shipping' defaultMessage='Shipping' />, width: 120 },
-      { name: 'reviewStatus', title: <FormattedMessage id='order.review' defaultMessage='Review' />, width: 120 },
-      { name: 'creditStatus', title: <FormattedMessage id='order.credit' defaultMessage='Credit' />, width: 120 },
-      { name: 'paymentStatus', title: <FormattedMessage id='order.payment' defaultMessage='Payment' />, width: 120 },
-      { name: 'bl', title: <FormattedMessage id='order.bl' defaultMessage='B/L' />, width: 80 },
-      { name: 'sds', title: <FormattedMessage id='order.sds' defaultMessage='SDS' />, width: 80 },
-      { name: 'cofA', title: <FormattedMessage id='order.cOfa' defaultMessage='C of A' />, width: 80 },
-      { name: 'orderTotal', title: <FormattedMessage id='order.orderTotal' defaultMessage='Order Total' />, width: 160, sortPath: 'Order.cfPriceSubtotal' }
+      { name: 'id', title: <FormattedMessage id='order.orderId' defaultMessage='Order ID'>{text => text}</FormattedMessage>, width: 120 },
+      { name: 'globalStatus', title: <FormattedMessage id='order.cfGlobalStatus' defaultMessage='Status'>{text => text}</FormattedMessage>, width: 120, sortPath: 'Order.cfGlobalStatus' },
+      { name: 'date', title: <FormattedMessage id='order.date' defaultMessage='Order Date'>{text => text}</FormattedMessage>, width: 120, sortPath: 'Order.orderDate' },
+      { name: 'customerName', title: <FormattedMessage id='order.vendor' defaultMessage='Vendor'>{text => text}</FormattedMessage>, width: 120, sortPath: 'Order.sellerCompanyName' }, // ! ! ? seller vs purchaser
+      { name: 'productName', title: <FormattedMessage id='order.productName' defaultMessage='Product Name'>{text => text}</FormattedMessage>, width: 160 },
+      { name: 'orderStatus', title: <FormattedMessage id='order' defaultMessage='Order'>{text => text}</FormattedMessage>, width: 120 },
+      { name: 'shippingStatus', title: <FormattedMessage id='order.shipping' defaultMessage='Shipping'>{text => text}</FormattedMessage>, width: 120 },
+      { name: 'reviewStatus', title: <FormattedMessage id='order.review' defaultMessage='Review'>{text => text}</FormattedMessage>, width: 120 },
+      { name: 'creditStatus', title: <FormattedMessage id='order.credit' defaultMessage='Credit'>{text => text}</FormattedMessage>, width: 120 },
+      { name: 'paymentStatus', title: <FormattedMessage id='order.payment' defaultMessage='Payment'>{text => text}</FormattedMessage>, width: 120 },
+      { name: 'bl', title: <FormattedMessage id='order.bl' defaultMessage='B/L'>{text => text}</FormattedMessage>, width: 80 },
+      { name: 'sds', title: <FormattedMessage id='order.sds' defaultMessage='SDS'>{text => text}</FormattedMessage>, width: 80 },
+      { name: 'cofA', title: <FormattedMessage id='order.cOfa' defaultMessage='C of A'>{text => text}</FormattedMessage>, width: 80 },
+      { name: 'orderTotal', title: <FormattedMessage id='order.orderTotal' defaultMessage='Order Total'>{text => text}</FormattedMessage>, width: 160, sortPath: 'Order.cfPriceSubtotal' }
     ],
     LastEndpointType: '',
 
@@ -33,31 +33,31 @@ class Orders extends Component {
       'All': {filters: []},
       'Pending': {
         filters: [
-          { operator: 'EQUALS', path: 'Order.globalStatus', values: [`Pending`] }
+          { operator: 'EQUALS', path: 'Order.cfGlobalStatus', values: [`Pending`] }
           ]},
       'In Transit': {
         filters: [
-          { operator: 'EQUALS', path: 'Order.globalStatus', values: [`In Transit`] }
+          { operator: 'EQUALS', path: 'Order.cfGlobalStatus', values: [`In Transit`] }
           ]},
       'Review': {
         filters: [
-          { operator: 'EQUALS', path: 'Order.globalStatus', values: [`Review`] }
+          { operator: 'EQUALS', path: 'Order.cfGlobalStatus', values: [`Review`] }
           ]},
       'Credit': {
         filters: [
-          { operator: 'EQUALS', path: 'Order.globalStatus', values: [`Credit`] }
+          { operator: 'EQUALS', path: 'Order.cfGlobalStatus', values: [`Credit`] }
           ]},
       'Completed': {
         filters: [
-          { operator: 'EQUALS', path: 'Order.globalStatus', values: [`Completed`] }
+          { operator: 'EQUALS', path: 'Order.cfGlobalStatus', values: [`Completed`] }
           ]},
       'Returned': {
         filters: [
-          { operator: 'EQUALS', path: 'Order.globalStatus', values: [`Returned`] }
+          { operator: 'EQUALS', path: 'Order.cfGlobalStatus', values: [`Returned`] }
           ]},
       'Declined': {
         filters: [
-          { operator: 'EQUALS', path: 'Order.globalStatus', values: [`Declined`] }
+          { operator: 'EQUALS', path: 'Order.cfGlobalStatus', values: [`Declined`] }
           ]},
     }
   }
