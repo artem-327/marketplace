@@ -149,7 +149,7 @@ class ProductImportPopup extends Component {
         if (missingRequired.length) {
           toastManager.add(generateToastMarkup(
             formatMessage({ id: 'notifications.importMissingRequired.header', defaultMessage: 'Required Options' }),
-            formatMessage({ id: 'notifications.importMissingRequired.content', defaultMessage: `First, you have to select all the required options: ${missingRequired.join(', ')}` }, { missingRequired: missingRequired.join(', ') })
+            formatMessage({ id: 'notifications.importMissingRequired.content', defaultMessage: `To continue, you need to apply all required attribute mappings: ${missingRequired.join(', ')}` }, { missingRequired: missingRequired.join(', ') })
           ), { appearance: 'error' })
           return false
         }

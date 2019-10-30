@@ -254,7 +254,6 @@ const mapStateToProps = state => {
   //   a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
   // ))
 
-  //console.log('!!!!!!! mapStateToProps state.settings.popupValues', state.settings.popupValues)
   return {
     // AddressSuggestInput: prepareAddressSuggest(AddressSuggestOptions),
     // AddressSuggestOptions,

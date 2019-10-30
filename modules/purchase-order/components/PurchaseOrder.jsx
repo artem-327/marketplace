@@ -168,7 +168,6 @@ class PurchaseOrder extends Component {
 
 
   render() {
-    // console.log('!!!!!! PurchaseOrder Render props', this.props)
     const { dispatch, postNewDeliveryAddress, updateDeliveryAddress, preferredBankAccountId, intl: { formatMessage } } = this.props
     let { cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shippingQuotesAreFetching, shipping } = this.props
 

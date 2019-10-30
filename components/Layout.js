@@ -79,7 +79,6 @@ const MenuLink = withRouter(({ router: { pathname }, to, children, }) => (
 class Layout extends Component {
   componentDidMount() {
     if (!this.props.phoneCountryCodes.length) this.props.getCountryCodes()
-    //console.log('!!!!!! Layout componentDidMount', this.props.auth.identity)
     chatWidgetCreate({
       name: getSafe(() => this.props.auth.identity.name, ''),
       email: getSafe(() => this.props.auth.identity.email, ''),

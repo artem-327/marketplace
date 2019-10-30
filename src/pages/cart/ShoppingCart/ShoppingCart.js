@@ -51,8 +51,6 @@ export default class ShoppingCart extends Component {
     const { cart, deleteCartItem, history, cartIsFetching, sidebarChanged } = this.props
     let { cartItems, cfPriceSubtotal } = cart
 
-    //console.log('!!!!!! ShoppingCart Render props', this.props)
-
     if (cartIsFetching) return <Spinner />
     const itemContent = cart.cartItems && cart.cartItems.map(cartItem => {
       return (

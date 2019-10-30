@@ -253,9 +253,6 @@ class ProductPopup extends React.Component {
             {({ setFieldValue, values }) => {
               let casProducts = getSafe(() => values.casProducts, [])
 
-              console.log('!!!!!! values', values)
-              console.log('!!!!!! nmfcNumbersFiltered', nmfcNumbersFiltered)
-
               return (
                 <>
                   <Dropdown

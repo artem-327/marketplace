@@ -120,6 +120,7 @@ class ConfirmationPage extends Component {
 
           let payload = {
             ...values,
+            dunsNumber: values.dunsNumber ? parseInt(values.dunsNumber, 10) : null,
             address: {
               ...values.address,
               address: {
