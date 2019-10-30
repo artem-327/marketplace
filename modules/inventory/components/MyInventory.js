@@ -284,7 +284,7 @@ class MyInventory extends Component {
               { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: (row) => sidebarDetailTrigger(row, true, 0) },
               //{ text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
               { text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => sidebarDetailTrigger(row, true, 1) },
-              { text: formatMessage({ id: 'inventory.pricingTiers', defaultMessage: 'Pricing Tiers' }), callback: (row) => sidebarDetailTrigger(row, true, 2) },
+              { text: formatMessage({ id: 'inventory.priceTiers', defaultMessage: 'Price Tiers' }), callback: (row) => sidebarDetailTrigger(row, true, 2) },
               {
                 text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }), callback: (row) => {
                   confirm(

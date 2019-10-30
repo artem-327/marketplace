@@ -561,7 +561,7 @@
   "global.inStock": "In Stock",
   "global.lots": "Lots",
   "global.origin": "Origin",
-  "global.pricingTiers": "Pricing",
+  "global.priceTiers": "Price Tiers",
   "global.processingTimeDays": "Lead Time (Days)",
   "global.validityDate": "Validity Date",
   "global.tdgHazardLabel": "TDG Hazard Label",
