@@ -363,7 +363,7 @@ class PurchaseOrder extends Component {
                                 !(shipping.selectedAddress && (this.props.cart.selectedShipping || values.shipmentQuoteId))}
                               loading={this.state.submitting}
                               fluid primary
-                              onClick={() => { this.handlePurchase(shipping, this.props.cart.selectedShipping.quote.quoteId || values.shipmentQuoteId) }}
+                              onClick={() => { this.handlePurchase(shipping, getSafe(() => this.props.cart.selectedShipping.quote.quoteId, values.shipmentQuoteId)) }}
                               data-test='purchase_order_place_order_btn'>
                               {/* <FormattedMessage id='cart.placeOrder' defaultMessage='Place Order1' /> */}
                               {formatMessage({ id: 'cart.placeOrder', defaultMessage: 'Place Order' })}
