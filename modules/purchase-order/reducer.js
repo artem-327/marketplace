@@ -25,6 +25,9 @@ export const initialState = {
   warehouses: [],
   // TODO remove shippingQuotes, keep them in shipping obj only
   shippingQuotes: [],
+  manualShipmentRequested: false,
+  manualShipmentPending: false,
+  manualShipmentError: false,
   sidebar: {
     isOpen: false,
     pricing: null,
@@ -450,6 +453,34 @@ export default function reducer(state = initialState, action) {
         cart: { ...state.cart, ...action.payload, cartItems }
       }
     }
+
+    /* REQUEST_MANUAL_SHIPMENT */
+
+    case AT.REQUEST_MANUAL_SHIPMENT_PENDING: {
+      return {
+        ...state,
+        manualShipmentPending: true,
+        manualShipmentRequested: true
+      }
+    }
+
+    case AT.REQUEST_MANUAL_SHIPMENT_FULFILLED: {
+      return {
+        ...state,
+        manualShipmentPending: false
+      }
+    }
+
+    case AT.REQUEST_MANUAL_SHIPMENT_REJECTED: {
+      return {
+        ...state,
+        manualShipmentPending: false,
+        manualShipmentError: true
+      }
+    }
+
+
+
 
     default: {
       return state

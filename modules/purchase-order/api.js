@@ -24,3 +24,5 @@ export const getWarehouses = () => api.get('/prodex/api/branches/warehouses').th
 
 export const updateHazmatInfo = (cartItemId, payload) => api.patch(`/prodex/api/cart/items/${cartItemId}/hazard-info`, payload).then(response => response.data)
 export const postPurchaseOrder = (data) => api.post('/prodex/api/purchase-orders', data).then(response => response.data)
+
+export const requestManualShipment = queryString => api.post(`/prodex/api/shipment/manual-quote${queryString}`)

@@ -1,5 +1,6 @@
 import * as AT from './action-types'
 import * as api from './api'
+import { generateQueryString } from '~/utils/functions'
 
 export const getProductOffer = (id, isEdit = false) => ({
   type: AT.OFFER_FETCH, async payload() {
@@ -55,3 +56,5 @@ export const getWarehouses = () => ({ type: AT.GET_WAREHOUSES, payload: api.getW
 export const updateHazmatInfo = (cartItemId, payload) => ({ type: AT.UPDATE_HAZMAT_INFO, payload: api.updateHazmatInfo(cartItemId, payload) })
 
 export const postPurchaseOrder = (values) => ({ type: AT.POST_PURCHASE_ORDER, payload: api.postPurchaseOrder(values) })
+
+export const requestManualShipment = params => ({ type: AT.REQUEST_MANUAL_SHIPMENT, payload: api.requestManualShipment(generateQueryString(params)) })

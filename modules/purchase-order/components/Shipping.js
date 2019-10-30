@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import PropTypes, { bool } from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { Grid, Segment, GridRow, GridColumn, Dropdown, Divider, Header, Button } from 'semantic-ui-react'
+import { Grid, Segment, GridRow, GridColumn, Divider, Header, Button } from 'semantic-ui-react'
+import { Dropdown } from 'formik-semantic-ui-fixed-validation'
+
 import ShippingAddress from './ShippingAddress'
 
 
@@ -35,71 +37,73 @@ class Shipping extends Component {
     }))
 
     return (
-      <Segment>
-        <Grid className='bottom-padded'>
-          <GridRow columns={2} className='header'>
-            <GridColumn>
-              <Header as='h2'>
-                <FormattedMessage
-                  id='cart.1shipping'
-                  defaultMessage='1. Shipping'
-                />
-              </Header>
-
-            </GridColumn>
-            {
-              this.props.otherAddresses && (
-                <GridColumn floated='right'>
-                  <span
-                    className='headerAddtext'
-                    onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !selectedAddress })}
-                    data-test='purchase_order_edit_address'>
-                    <FormattedMessage id='global.edit' defaultMessage='Edit'>{(text) => text}</FormattedMessage>
-                  </span>
-                </GridColumn>
-              )
-            }
-          </GridRow>
-          <GridRow>
-            <GridColumn textAlign='center' computer={8}>
-              <Button.Group>
-                <Button
-                  type='button'
-                  disabled={this.props.shippingQuotesAreFetching}
-                  onClick={() => this.handleToggleChange(true)}
-                  active={this.props.otherAddresses}
-                  data-test='purchase_order_address_btn'>
-                  <FormattedMessage id='cart.addresses' defaultMessage='Addresses'>{(text) => text}</FormattedMessage></Button>
-                <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
-                <Button
-                  type='button'
-                  disabled={this.props.shippingQuotesAreFetching}
-                  onClick={() => this.handleToggleChange(false)}
-                  active={!this.props.otherAddresses}
-                  data-test='purchase_order_branches_btn'>
-                  <FormattedMessage id='cart.warehouses' defaultMessage='Warehouses'>{(text) => text}</FormattedMessage></Button>
-              </Button.Group>
-            </GridColumn>
-          </GridRow>
-          <GridRow>
-            <GridColumn computer={8}>
-              <Dropdown
-                fluid
-                selection
-                disabled={this.props.shippingQuotesAreFetching}
-                options={dropdownOptions}
-                onChange={(e, { value }) => getAddress(value)}
-                value={selectedAddress ? selectedAddress.id : null}
-                placeholder={<FormattedMessage id='global.selectLocation' defaultMessage='Select Location' />}
-                data-test='purchase_order_location_drpdn'
+      <>
+        <GridRow columns={2} className='header'>
+          <GridColumn>
+            <Header as='h2'>
+              <FormattedMessage
+                id='cart.1shipping'
+                defaultMessage='1. Shipping'
               />
-            </GridColumn>
-          </GridRow>
-          {selectedAddress && <Divider />}
+            </Header>
 
-          <ShippingAddress selectedAddress={selectedAddress} />
-        </Grid>
-      </Segment>
+          </GridColumn>
+          {
+            this.props.otherAddresses && (
+              <GridColumn floated='right'>
+                <span
+                  className='headerAddtext'
+                  onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !selectedAddress })}
+                  data-test='purchase_order_edit_address'>
+                  <FormattedMessage id='global.edit' defaultMessage='Edit'>{(text) => text}</FormattedMessage>
+                </span>
+              </GridColumn>
+            )
+          }
+        </GridRow>
+        <GridRow>
+          <GridColumn textAlign='center' computer={8}>
+            <Button.Group>
+              <Button
+                type='button'
+                disabled={this.props.shippingQuotesAreFetching}
+                onClick={() => this.handleToggleChange(true)}
+                active={this.props.otherAddresses}
+                data-test='purchase_order_address_btn'>
+                <FormattedMessage id='cart.addresses' defaultMessage='Addresses'>{(text) => text}</FormattedMessage></Button>
+              <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
+              <Button
+                type='button'
+                disabled={this.props.shippingQuotesAreFetching}
+                onClick={() => this.handleToggleChange(false)}
+                active={!this.props.otherAddresses}
+                data-test='purchase_order_branches_btn'>
+                <FormattedMessage id='cart.warehouses' defaultMessage='Warehouses'>{(text) => text}</FormattedMessage></Button>
+            </Button.Group>
+          </GridColumn>
+        </GridRow>
+        <GridRow>
+          <GridColumn computer={8}>
+            <Dropdown
+              name='address'
+              fluid
+              selection
+              inputProps={{
+                disabled: this.props.shippingQuotesAreFetching,
+                placeholder: <FormattedMessage id='global.selectLocation' defaultMessage='Select Location' />,
+                onChange: (_, { value }) => getAddress(value)
+              }}
+              options={dropdownOptions}
+              // value={selectedAddress ? selectedAddress.id : null}
+
+              data-test='purchase_order_location_drpdn'
+            />
+          </GridColumn>
+        </GridRow>
+        {selectedAddress && <Divider />}
+
+        <ShippingAddress selectedAddress={selectedAddress} />
+      </>
 
     )
   }
