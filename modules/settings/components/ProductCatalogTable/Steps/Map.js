@@ -9,7 +9,8 @@ import {
   Grid,
   Input,
   Select,
-  Checkbox
+  Checkbox,
+  Button
 } from 'semantic-ui-react'
 
 import {
@@ -18,11 +19,16 @@ import {
   handleChangeMapCSVName,
   getCSVMapEchoProduct,
   getCSVMapProductOffer,
-  selectSavedMap
+  selectSavedMap,
+  postCSVMapEchoProduct,
+  putCSVMapEchoProduct,
+  postCSVMapProductOffer,
+  putCSVMapProductOffer
 } from '../../../actions'
 
-import { getSafe } from '~/utils/functions'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
 import _invert from 'lodash/invert'
+import { withToastManager } from 'react-toast-notifications'
 
 const simpleEchoProductList = {
   required: [
@@ -312,7 +318,7 @@ class Map extends Component {
   }
 
   render() {
-    const { CSV, intl: { formatMessage } } = this.props
+    const { CSV, selectedSavedMap, intl: { formatMessage }, toastManager } = this.props
 
     const optionMaps =
       this.props.maps &&
@@ -331,6 +337,8 @@ class Map extends Component {
               <Grid.Column textAlign='center'>
                 <Select
                   placeholder={formatMessage({ id: 'settings.selectSavedMap', defaultMessage: 'Select your saved map' })}
+                  noResultsMessage={formatMessage({ id: 'settings.noSavedMaps', defaultMessage: 'There are no saved Maps yet.' })}
+                  defaultValue={getSafe(() => selectedSavedMap.id, '')}
                   options={optionMaps}
                   clearable
                   //disabled={!optionMaps}
@@ -338,13 +346,87 @@ class Map extends Component {
                   search={true}
                   selectOnBlur={false}
                   data-test='settings_product_import_select_map'
+                  style={{ width: '100%' }}
                 />
               </Grid.Column>
               <Grid.Column textAlign='center' data-test='settings_product_import_csv_name_inp'>
-                <Input placeholder={formatMessage({ id: 'settings.', defaultMessage: 'Map Name' })} onChange={this.inputMapName} />
+                <Input placeholder={formatMessage({ id: 'settings.', defaultMessage: 'Map Name' })} onChange={this.inputMapName}
+                       style={{ width: '100%' }} />
               </Grid.Column>
               <Grid.Column textAlign='center' verticalAlign='middle'>
-                <Checkbox label={formatMessage({ id: 'settings.saveMyMap', defaultMessage: 'Save my map' })} onChange={this.checkboxChange} data-test='settings_product_import_csv_save_chckb' />
+                <Button type='button'
+                        onClick={async () => {
+                          const missingRequired = this.findNotSelectedRequired(values, this.state.mapping)
+                          if (missingRequired.length) {
+                            toastManager.add(generateToastMarkup(
+                              formatMessage({ id: 'notifications.importMissingRequired.header', defaultMessage: 'Required Options' }),
+                              formatMessage({ id: 'notifications.importMissingRequired.content', defaultMessage: `To continue, you need to apply all required attribute mappings: ${missingRequired.join(', ')}` }, { missingRequired: missingRequired.join(', ') })
+                            ), { appearance: 'error' })
+
+                            return false
+                          }
+
+                          const data =
+                            this.state.newHeaders &&
+                            this.state.newHeaders.reduce(
+                              (prev, next) => {
+                                if (next.header && next.content)
+                                  prev[next.header] = next.content
+
+                                return prev
+                              },
+                              {
+                                headerLine: true,
+                                mapName: this.props.mapName || 'Uno'
+                              }
+                            )
+                          let mapName = ''
+
+                          if (this.props.echoProduct) {
+                            if (this.props.selectedSavedMap) {
+                              mapName = this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+                              await this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
+                                ...data,
+                                mapName: mapName
+                              })
+                            } else {
+                              mapName = this.props.mapName
+                              await this.props.postCSVMapEchoProduct({
+                                ...data,
+                                mapName: mapName
+                              })
+                            }
+
+                            this.props.getCSVMapEchoProduct()
+                          }
+                          if (this.props.productOffer) {
+                            if (this.props.selectedSavedMap) {
+                              mapName = this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+                              await this.props.putCSVMapProductOffer(this.props.selectedSavedMap.id, {
+                                ...data,
+                                mapName: mapName
+                              })
+                            } else {
+                              mapName = this.props.mapName
+                              await this.props.postCSVMapProductOffer({
+                                ...data,
+                                mapName: mapName
+                              })
+                            }
+
+                            this.props.getCSVMapProductOffer()
+                          }
+
+                          toastManager.add(generateToastMarkup(
+                            <FormattedMessage id='notifications.mapCreated.header' />,
+                            <FormattedMessage id='notifications.mapCreated.content' values={{ name: mapName }} />
+                          ), {
+                            appearance: 'success'
+                          })
+                        }}
+                        style={{ width: '100%' }}>
+                  <FormattedMessage id='settings.saveMap' defaultMessage='Save Map' />
+                </Button>
               </Grid.Column>
             </Grid.Row>
           </Grid>
@@ -498,7 +580,11 @@ const mapDispatchToProps = {
   handleChangeMapCSVName,
   getCSVMapEchoProduct,
   getCSVMapProductOffer,
-  selectSavedMap
+  selectSavedMap,
+  postCSVMapEchoProduct,
+  putCSVMapEchoProduct,
+  postCSVMapProductOffer,
+  putCSVMapProductOffer
 }
 
 const mapStateToProps = state => {
@@ -507,6 +593,7 @@ const mapStateToProps = state => {
     CSV: state.settings.CSV,
     mappedHeader: state.settings.mappedHeaders,
     maps: state.settings.maps,
+    mapName: state.settings.mapName,
     selectedSavedMap: state.settings.selectedSavedMap
   }
 }
@@ -514,4 +601,4 @@ const mapStateToProps = state => {
 export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Map))
+)(withToastManager(Map)))
