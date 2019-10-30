@@ -19,7 +19,6 @@ import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { nmfcValidation, freightClassValidation } from '~/constants/yupValidation'
 
 const validationSchema = Yup.object().shape({
-  //nmfcNumber: nmfcValidation(),
   freightClass: freightClassValidation()
 })
 
@@ -35,26 +34,30 @@ class CartItemSummary extends Component {
       hazardClasses, packagingGroups, cartItems,
       getHazardClassesDataRequest, getPackagingGroupsDataRequest, addUnNumber } = this.props
 
+    /* ! ! moved to onHazmatPopup() to reload every time popup is open
     let initialUnNumbers = []
-    let initialNmfcNumbers = []
 
     cartItems.forEach(item => {
       let unNumber = getSafe(() => item.unNumber)
       if (unNumber && !initialUnNumbers.find((num) => num.id === unNumber.id)) {
         initialUnNumbers.push(unNumber)
       }
-
-      /*
-      let nmfcNumber = getSafe(() => item.nmfcNumber)
-      if (nmfcNumber && !initialNmfcNumbers.find((num) => num.id === nmfcNumber.id)) {
-        initialNmfcNumbers.push(nmfcNumber)
-      }
-      */
     })
 
     if (initialUnNumbers.length !== 0) await addUnNumber(initialUnNumbers)
+    */
     if (hazardClasses.length === 0) getHazardClassesDataRequest()
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
+  }
+
+  onHazmatPopup = async (item) => {
+    const { addUnNumber, addNmfcNumber } = this.props
+
+    let nmfcNumber = getSafe(() => item.nmfcNumber, getSafe(() => item.productOffer.companyProduct.nmfcNumber, null))
+    let unNumber = getSafe(() => item.unNumber)
+
+    if (nmfcNumber) await addNmfcNumber([nmfcNumber])
+    if (unNumber) await addUnNumber([unNumber])
   }
 
   handleUnNumberChange = debounce((_, { searchQuery }) => {
@@ -76,12 +79,12 @@ class CartItemSummary extends Component {
     let { productOffer: { companyProduct } } = item
 
     let initialValues = {
-      unCode: getSafe(() => item.unNumber.id, companyProduct.echoProduct.cfUnNumber),
+      unNumber: getSafe(() => item.unNumber.id, companyProduct.echoProduct.cfUnNumber),
       packagingGroup: getSafe(() => item.packagingGroup.id, companyProduct.cfPackagingGroup),
       hazardClass: getSafe(() => item.hazardClass.id, companyProduct.echoProduct.cfHazardClass),
       // item.hazardClasses ? item.hazardClasses.map((c) => c.id) : companyProduct.hazardClasses.map((hazardClass) => hazardClass.id),
       freightClass: getSafe(() => item.freightClass, companyProduct.freightClass || ''),
-      nmfcNumber: getSafe(() => item.nmfcNumber, companyProduct.nmfcNumber || ''),
+      nmfcNumber: getSafe(() => item.nmfcNumber.id, getSafe(() => companyProduct.nmfcNumber.id, null)),
       stackable: getSafe(() => item.stackable, companyProduct.stackable || false),
     }
 
@@ -134,7 +137,7 @@ class CartItemSummary extends Component {
               </GridRow>
 
               <GridRow>
-                <GridColumn data-test='shopping_cart_unCode_inp'>
+                <GridColumn data-test='shopping_cart_unNumber_inp'>
                   <Dropdown
                     options={unNumbersFiltered.map((num) => ({
                       id: num.id,
@@ -149,7 +152,7 @@ class CartItemSummary extends Component {
                       selection: true,
                       onSearchChange: this.handleUnNumberChange
                     }}
-                    name='unCode'
+                    name='unNumber'
                     label={formatMessage({ id: 'global.unNumber', defaultMessage: 'UN Number' })} />
                 </GridColumn>
               </GridRow>
@@ -289,6 +292,7 @@ class CartItemSummary extends Component {
 
               <WiderPopup
                 wide
+                onOpen={() => this.onHazmatPopup(item)}
                 onClose={() => this.setState({ edittingHazmatInfo: false })}
                 position='left center'
                 on='click'
@@ -385,7 +389,6 @@ class CartItemSummary extends Component {
 
   render() {
     let { cartItems, header } = this.props
-    //console.log('!!!!!! CartItemSummary Render props', this.props)
 
     return (
       <Segment>
@@ -432,7 +435,7 @@ export default withToastManager(connect(
       return {
         key: d.id,
         text: d.code,
-        value: d.code,
+        value: d.id,
         content: <>
           <strong>{d.code}</strong>
           <div>{d.description}</div>

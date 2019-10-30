@@ -52,8 +52,8 @@ export default class ShippingQuotes extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (!prevProps.modalProps.open && this.props.modalProps.open) {
-      console.log('!!!!! componentDidUpdate prevProps', prevProps)
-      console.log('!!!!! componentDidUpdate this.props', this.props)
+      //console.log('!!!!! componentDidUpdate prevProps', prevProps)
+      //console.log('!!!!! componentDidUpdate this.props', this.props)
       this.setState({ selectedIndex: null, sQuote: null })
       this.props.clearShippingQuotes()
     }

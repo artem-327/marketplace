@@ -87,7 +87,6 @@ export default class AddCart extends Component {
   }
 
   getCartMarkup = () => {
-    //console.log('!!!!!!!!!!!!!!!!!! this.props', this.props)
     let { offer, order, isEdit } = this.props
     let { pkgAmount, pricing, warning } = this.props.sidebar
 

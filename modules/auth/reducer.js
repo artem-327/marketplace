@@ -104,7 +104,7 @@ export default function reducer(state = initialState, action) {
               country: JSON.stringify({countryId: address.country.id, hasProvinces: address.country.hasProvinces}),
               province: address.province ? address.province.id : null,
               streetAddress: address.streetAddress,
-              zip: address.zip.zip,
+              zip: address.zip.zip
             },
             addressName: deliveryAddress.addressName || '',
             callAhead: !!deliveryAddress.callAhead,
@@ -115,7 +115,7 @@ export default function reducer(state = initialState, action) {
             deliveryNotes: deliveryAddress.deliveryNotes || '',
             forkLift: !!deliveryAddress.forkLift,
             liftGate: !!deliveryAddress.liftGate,
-            readyTime: deliveryAddress.readyTime || '',
+            readyTime: deliveryAddress.readyTime || ''
           },
           companyAdminUser: {
             name: payload.identity.name,
