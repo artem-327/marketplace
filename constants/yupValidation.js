@@ -4,6 +4,7 @@ import moment from 'moment'
 import { getSafe, deepSearch } from '~/utils/functions'
 import { isValid } from 'ein-validator'
 import validator from 'validator'
+import React from "react";
 
 const allowedFreightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500]
 
@@ -44,7 +45,8 @@ export const errorMessages = {
   oneOf: (arr) => <FormattedMessage id='validation.oneOf' defaultMessage={`Must be one of ${arr.toString()}`} values={{ values: arr.toString() }} />,
   aboveAge: age => <FormattedMessage id='validation.aboveAge' defaultMessage={`Must be at least ${age} years old`} values={{ age }} />,
   invalidWebsite: <FormattedMessage id='validation.invalidURL' defaultMessage='Invalid Website URL' />,
-  invalidWebsiteHttp: <FormattedMessage id='validation.invalidURLHttp' defaultMessage='Invalid Website URL (make sure to include http:// or https://)' />
+  invalidWebsiteHttp: <FormattedMessage id='validation.invalidURLHttp' defaultMessage='Invalid Website URL (make sure to include http:// or https://)' />,
+  invalidSplit: (split) => <FormattedMessage id='validation.multiplyOfSplit' defaultMessage='Must be multiply of split ({split})' values={{ split }} />
 }
 
 export const provinceObjectRequired = (hasProvinces) => (
@@ -189,3 +191,10 @@ function validURL(str) {
   const pattern = new RegExp(/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/)
   return !!pattern.test(str.trim())
 }
+
+export const quantityValidation = (min = 1, split = 1) => (
+  Yup.number()
+    .typeError(errorMessages.mustBeNumber)
+    .min(min, errorMessages.minimum(min))
+    .test('v', errorMessages.invalidSplit(split), (v) => v % split === 0)
+)
