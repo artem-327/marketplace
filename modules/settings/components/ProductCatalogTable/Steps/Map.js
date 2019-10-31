@@ -22,8 +22,10 @@ import {
   selectSavedMap,
   postCSVMapEchoProduct,
   putCSVMapEchoProduct,
+  deleteCSVMapEchoProduct,
   postCSVMapProductOffer,
-  putCSVMapProductOffer
+  putCSVMapProductOffer,
+  deleteCSVMapProductOffer
 } from '../../../actions'
 
 import { getSafe, generateToastMarkup } from '~/utils/functions'
@@ -333,12 +335,12 @@ class Map extends Component {
       <React.Fragment>
         {(this.props.productOffer || this.props.echoProduct) && (
           <Grid centered padded>
-            <Grid.Row verticalAlign='middle' columns={3}>
-              <Grid.Column textAlign='center'>
+            <Grid.Row verticalAlign='middle'>
+              <Grid.Column width={5} textAlign='center'>
                 <Select
                   placeholder={formatMessage({ id: 'settings.selectSavedMap', defaultMessage: 'Select your saved map' })}
                   noResultsMessage={formatMessage({ id: 'settings.noSavedMaps', defaultMessage: 'There are no saved Maps yet.' })}
-                  defaultValue={getSafe(() => selectedSavedMap.id, '')}
+                  value={getSafe(() => selectedSavedMap.id, '')}
                   options={optionMaps}
                   clearable
                   //disabled={!optionMaps}
@@ -349,11 +351,34 @@ class Map extends Component {
                   style={{ width: '100%' }}
                 />
               </Grid.Column>
-              <Grid.Column textAlign='center' data-test='settings_product_import_csv_name_inp'>
+              <Grid.Column width={3} textAlign='center' verticalAlign='middle'>
+                {this.props.echoProduct || this.props.productOffer ? (
+                  <Button type='button'
+                          color='red'
+                          disabled={getSafe(() => !this.props.selectedSavedMap.id, true)}
+                          onClick={async () => {
+                            const mapName = this.props.selectedSavedMap.name
+                            if (this.props.echoProduct)
+                              await this.props.deleteCSVMapEchoProduct(this.props.selectedSavedMap.id)
+
+                            if (this.props.productOffer)
+                              await this.props.deleteCSVMapProductOffer(this.props.selectedSavedMap.id)
+
+                            toastManager.add(generateToastMarkup(
+                              formatMessage({ id: 'notifications.deleteMapSuccess.header', defaultMessage: 'Map deleted' }),
+                              formatMessage({ id: 'notifications.deleteMapSuccess.content', defaultMessage: `Map {name} successfully deleted.` }, { name: mapName })
+                            ), { appearance: 'success' })
+                          }}
+                          style={{ width: '100%' }}>
+                    <FormattedMessage id='settings.deleteMap' defaultMessage='Delete Map'>{text => text}</FormattedMessage>
+                  </Button>
+                ) : null}
+              </Grid.Column>
+              <Grid.Column width={5} textAlign='center' data-test='settings_product_import_csv_name_inp'>
                 <Input placeholder={formatMessage({ id: 'settings.', defaultMessage: 'Map Name' })} onChange={this.inputMapName}
                        style={{ width: '100%' }} />
               </Grid.Column>
-              <Grid.Column textAlign='center' verticalAlign='middle'>
+              <Grid.Column width={3} textAlign='center' verticalAlign='middle'>
                 <Button type='button'
                         onClick={async () => {
                           const missingRequired = this.findNotSelectedRequired(values, this.state.mapping)
@@ -435,7 +460,7 @@ class Map extends Component {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell><FormattedMessage id='settings.csvColumns' defaultMessage='CSV Columns' /></Table.HeaderCell>
-              <Table.HeaderCell><FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' /></Table.HeaderCell>
+              <Table.HeaderCell colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}><FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' /></Table.HeaderCell>
               <Table.HeaderCell><FormattedMessage id='settings.mapping' defaultMessage='Mapping' /></Table.HeaderCell>
             </Table.Row>
           </Table.Header>
@@ -444,16 +469,14 @@ class Map extends Component {
               {CSV.headerCSV.map((lineHeader, lineIndex) => (
                 <Table.Row key={lineHeader.columnNumber}>
                   <Table.Cell>{lineHeader.content}</Table.Cell>
-                  <Table.Cell>
-                    {CSV.bodyCSV.map(line => {
-                      return line.columns.map(lineBody => {
-                        return (
-                          lineHeader.columnNumber === lineBody.columnNumber &&
-                          lineBody.content + ' '
-                        )
-                      })
-                    })}
-                  </Table.Cell>
+                  {CSV.bodyCSV.map(line => {
+                    return line.columns.map(lineBody => {
+                      return (
+                        lineHeader.columnNumber === lineBody.columnNumber &&
+                        <Table.Cell>{lineBody.content}</Table.Cell>
+                      )
+                    })
+                  })}
                   <Table.Cell>
                     <Dropdown
                       placeholder={formatMessage({ id: 'settings.selectColumn', defaultMessage: 'Select Column' })}
@@ -583,8 +606,10 @@ const mapDispatchToProps = {
   selectSavedMap,
   postCSVMapEchoProduct,
   putCSVMapEchoProduct,
+  deleteCSVMapEchoProduct,
   postCSVMapProductOffer,
-  putCSVMapProductOffer
+  putCSVMapProductOffer,
+  deleteCSVMapProductOffer
 }
 
 const mapStateToProps = state => {

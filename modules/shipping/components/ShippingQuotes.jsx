@@ -7,19 +7,22 @@ import { Modal, Button, Segment, Divider, FormGroup, FormField, Table, Checkbox 
 import { Form, Button as FButton, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import Router from 'next/router'
 import * as Yup from "yup";
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages, quantityValidation } from '~/constants/yupValidation'
 import { getSafe } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { currency } from '~/constants/index'
 import { FormattedNumber } from 'react-intl'
 
-const formValidation = () => Yup.object().shape({
+const formValidation = (min, split) => Yup.object().shape({
   destination: Yup.object().shape({
     zip: Yup.string().trim()
       .min(3, errorMessages.minLength(3))
       .required(errorMessages.requiredMessage),
+    /*
     quantity: Yup.string()
       .required(errorMessages.requiredMessage),
+    */
+    quantity: quantityValidation(min, split)
   })
 })
 
@@ -27,10 +30,12 @@ export default class ShippingQuotes extends Component {
   state = {
     selectedIndex: null,
     sQuote: null,
-    quantity: '',
+    quantity: 1,
+    min: 1,
+    split: 1,
     initialValues: {
       destination: {
-        quantity: '',
+        quantity: 1,
         zip: '',
         maxTransit: 0
       }
@@ -54,7 +59,7 @@ export default class ShippingQuotes extends Component {
     if (!prevProps.modalProps.open && this.props.modalProps.open) {
       //console.log('!!!!! componentDidUpdate prevProps', prevProps)
       //console.log('!!!!! componentDidUpdate this.props', this.props)
-      this.setState({ selectedIndex: null, sQuote: null })
+      this.setState({ selectedIndex: null, sQuote: null, min: 1, split: 1 })
       this.props.clearShippingQuotes()
     }
   }
@@ -83,54 +88,74 @@ export default class ShippingQuotes extends Component {
     getShipingQuotes(params)
   }
 
+  handleQuoteSelect = async (i, sQuote, validateForm) => {
+    const { productOffersSelected } = this.props
+    const po =  productOffersSelected[i] // ! ! mozna najit index z sQuote v productOffersSelected ?
+
+    await this.setState({
+      selectedIndex: i,
+      sQuote,
+      split: po.split,
+      min: po.min
+    })
+
+    validateForm()
+  }
+
   renderForm() {
     const { loading, zipCodes } = this.props
-    const { initialValues } = this.state
+    const { initialValues, min, split } = this.state
 
     return (
       <Form
         enableReinitialize
         ignoreLoading
         initialValues={initialValues}
-        validationSchema={formValidation}
+        validationSchema={formValidation(min, split)}
         onSubmit={(values, actions) => {
           this.getShipingQuotes(values)
         }}
       >
-        <FormGroup widths='equal' data-test='ShippingQuotes_quantity_inp'>
 
-          <Input
-            name='destination.quantity' type='number' label={<FormattedMessage id='shippingQuote.shippingQuantity' defaultMessage='Shipping Quantity'>{(text) => text}</FormattedMessage>}
-            inputProps={{ type: 'number', step: 1, min: 1, onChange: (_, { value }) => this.setState({ quantity: value }) }} />
-          <Dropdown name='destination.zip' label={<FormattedMessage id='shippingQuote.zipCode' defaultMessage='Zip Code'>{(text) => text}</FormattedMessage>}
-                    inputProps={{ search: true }} options={zipCodes} data-test='ShippingQuotes_zip_drpdn' />
-          <Dropdown
-            name='destination.maxTransit'
-            label={<FormattedMessage id='shippingQuote.maxTransitTime' defaultMessage='Max Transit Time'>{(text) => text}</FormattedMessage>}
-            options={[
-              { value: 0, text: <FormattedMessage id='shippingQuote.noLimit' defaultMessage='No limit'>{(text) => text}</FormattedMessage> },
-              { value: 2, text: <FormattedMessage id='shippingQuote.2Days' defaultMessage='2 days'>{(text) => text}</FormattedMessage> },
-              { value: 3, text: <FormattedMessage id='shippingQuote.3Days' defaultMessage='3 days'>{(text) => text}</FormattedMessage> },
-              { value: 5, text: <FormattedMessage id='shippingQuote.5Days' defaultMessage='5 days'>{(text) => text}</FormattedMessage> },
-              { value: 7, text: <FormattedMessage id='shippingQuote.7Days' defaultMessage='7 days'>{(text) => text}</FormattedMessage> },
-              { value: 14, text: <FormattedMessage id='shippingQuote.14Days' defaultMessage='14 days'>{(text) => text}</FormattedMessage> }
-            ]}
-            data-test='ShippingQuotes_maxTransit_drpdn'
-          />
-          <FormField>
-            <label>&nbsp;</label>
-            <Button type='submit' fluid disabled={loading}
-                    data-test='ShippingQuotes_calculate'><FormattedMessage id='shippingQuote.calculate' defaultMessage='Calculate'>{(text) => text}</FormattedMessage></Button>
-          </FormField>
-        </FormGroup>
-        <div>
-          {this.renderShipingQuotes()}
-        </div>
+        {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
+          return (
+          <>
+            <FormGroup widths='equal' data-test='ShippingQuotes_quantity_inp'>
+
+              <Input
+                name='destination.quantity' type='number' label={<FormattedMessage id='shippingQuote.shippingQuantity' defaultMessage='Shipping Quantity'>{(text) => text}</FormattedMessage>}
+                inputProps={{ type: 'number', step: 1, min: 1, onChange: (_, { value }) => this.setState({ quantity: value }) }} />
+              <Dropdown name='destination.zip' label={<FormattedMessage id='shippingQuote.zipCode' defaultMessage='Zip Code'>{(text) => text}</FormattedMessage>}
+                        inputProps={{ search: true }} options={zipCodes} data-test='ShippingQuotes_zip_drpdn' />
+              <Dropdown
+                name='destination.maxTransit'
+                label={<FormattedMessage id='shippingQuote.maxTransitTime' defaultMessage='Max Transit Time'>{(text) => text}</FormattedMessage>}
+                options={[
+                  { value: 0, text: <FormattedMessage id='shippingQuote.noLimit' defaultMessage='No limit'>{(text) => text}</FormattedMessage> },
+                  { value: 2, text: <FormattedMessage id='shippingQuote.2Days' defaultMessage='2 days'>{(text) => text}</FormattedMessage> },
+                  { value: 3, text: <FormattedMessage id='shippingQuote.3Days' defaultMessage='3 days'>{(text) => text}</FormattedMessage> },
+                  { value: 5, text: <FormattedMessage id='shippingQuote.5Days' defaultMessage='5 days'>{(text) => text}</FormattedMessage> },
+                  { value: 7, text: <FormattedMessage id='shippingQuote.7Days' defaultMessage='7 days'>{(text) => text}</FormattedMessage> },
+                  { value: 14, text: <FormattedMessage id='shippingQuote.14Days' defaultMessage='14 days'>{(text) => text}</FormattedMessage> }
+                ]}
+                data-test='ShippingQuotes_maxTransit_drpdn'
+              />
+              <FormField>
+                <label>&nbsp;</label>
+                <Button type='submit' fluid disabled={loading}
+                        data-test='ShippingQuotes_calculate'><FormattedMessage id='shippingQuote.calculate' defaultMessage='Calculate'>{(text) => text}</FormattedMessage></Button>
+              </FormField>
+            </FormGroup>
+            <div>
+              {this.renderShipingQuotes(validateForm)}
+            </div>
+          </>
+        )}}
       </Form>
     )
   }
 
-  renderShipingQuotes() {
+  renderShipingQuotes(validateForm) {
     const { loading } = this.props
 
     return (
@@ -158,7 +183,7 @@ export default class ShippingQuotes extends Component {
                     <Checkbox
                       radio
                       checked={this.state.selectedIndex === i}
-                      onChange={() => this.setState({ selectedIndex: i, sQuote })}
+                      onChange={() => this.handleQuoteSelect(i, sQuote, validateForm)}
                       value={i}
                       data-test={`ShippingQuotes_row_${i}_chckb`}
                     />

@@ -336,18 +336,6 @@ class Detail extends Component {
                                       <Table.Cell><strong><FormattedMessage id='order.freight' defaultMessage='Freight' /></strong></Table.Cell>
                                       <Table.Cell textAlign='right'>{order.freight}</Table.Cell>
                                     </Table.Row>
-                                    <Table.Row>
-                                      <Table.Cell><strong><FormattedMessage id='order.other' defaultMessage='Other' /></strong></Table.Cell>
-                                      <Table.Cell textAlign='right'>{order.other}</Table.Cell>
-                                    </Table.Row>
-                                    <Table.Row>
-                                      <Table.Cell><strong><FormattedMessage id='order.deliveryCost' defaultMessage='Delivery Cost' /></strong></Table.Cell>
-                                      <Table.Cell textAlign='right'>{order.deliveryCost}</Table.Cell>
-                                    </Table.Row>
-                                    <Table.Row>
-                                      <Table.Cell><strong><FormattedMessage id='order.deliveryTotal' defaultMessage='Delivery Total' /></strong></Table.Cell>
-                                      <Table.Cell textAlign='right'>{order.deliveryTotal}</Table.Cell>
-                                    </Table.Row>
                                   </Table.Body>
                                   <Table.Footer>
                                     <Table.Row>

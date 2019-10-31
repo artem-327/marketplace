@@ -742,6 +742,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.SETTINGS_CLEAR_DATA_OF_CSV: {
+      delete state.csvImportError
       return {
         ...state,
         fileCSVId: null,
@@ -1390,6 +1391,15 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         nmfcNumbersFiltered: payloadNew
+      }
+    }
+
+    case AT.DELETE_CSV_MAP_PRODUCT_OFFER_FULFILLED:
+    case AT.DELETE_CSV_MAP_ECHO_PRODUCT_FULFILLED: {
+      return {
+        ...state,
+        selectedSavedMap: null,
+        maps: state.maps.filter(map => map.id !== action.meta)
       }
     }
 

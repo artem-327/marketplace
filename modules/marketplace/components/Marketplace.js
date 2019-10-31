@@ -121,6 +121,15 @@ class Marketplace extends Component {
               }
               return filtered
             }, [])}
+            productOffersSelected={rows.reduce(function (filtered, row, rowIndex) {
+              if (selectedRows.includes(rowIndex)) {
+                filtered.push({
+                  id: row.id,
+                  min: row.minPkg,
+                  split: row.splitPkg
+                })}
+              return filtered
+            }, [])}
             removePopup={this.props.removePopup}
             {...this.props}
           />

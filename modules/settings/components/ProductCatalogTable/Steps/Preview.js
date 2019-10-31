@@ -48,7 +48,56 @@ class Preview extends Component {
           ...data,
           mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
         })
+    } else {
+      const data =
+        this.state.filteredHeader &&
+        this.state.filteredHeader.reduce(
+          (prev, next) => {
+            prev[next.header] = next.content
+            return prev
+          },
+          {
+            headerLine: true,
+            mapName: this.props.mapName || 'Uno'
+          }
+        )
+      data && this.props.dataHeaderCSV(data)
 
+      if (this.props.selectedSavedMap) {
+        // save edited maps
+        if (this.props.echoProduct)
+          this.props.isSaveMapCSV &&
+          data &&
+          this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
+            ...data,
+            mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+          })
+
+        if (this.props.productOffer)
+          this.props.isSaveMapCSV &&
+          data &&
+          this.props.putCSVMapProductOffer(this.props.selectedSavedMap.id, {
+            ...data,
+            mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+          })
+      } else {
+        // save new maps
+        if (this.props.echoProduct)
+          this.props.isSaveMapCSV &&
+          data &&
+          this.props.postCSVMapEchoProduct({
+            ...data,
+            mapName: this.props.mapName
+          })
+
+        if (this.props.productOffer)
+          this.props.isSaveMapCSV &&
+          data &&
+          this.props.postCSVMapProductOffer({
+            ...data,
+            mapName: this.props.mapName
+          })
+      }
     }
   }
 

@@ -35,19 +35,16 @@ function prepareDetail(data, type) {
     contactNumber: data.sellerCompanyContactPhone ? data.sellerCompanyContactPhone : 'N/A',
     createdBy: data.buyerName ? data.buyerName : 'N/A',
     creditStatus: OrdersHelper.getCreditStatus(data.creditStatus),
-    deliveryCost: <FormattedNumber style='currency' currency={currency} value={data.deliveryCost ? data.deliveryCost : 0} />, // ! ! neexistuje, zobrazit?
     deliveryDate: (typeof data.deliveryDate !== 'undefined' ? moment(data.deliveryDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
-    deliveryTotal: <FormattedNumber style='currency' currency={currency} value={data.deliveryTotal ? data.deliveryTotal : 0} />,  // ! ! neexistuje, zobrazit?
-    feesAmount: <FormattedNumber style='currency' currency={currency} value={subtotal * (0 / 100)} />,  // ! ! co tady zobrazit?
-    feesPercent: 0, // ! ! co tady zobrazit?
+    feesAmount: <FormattedNumber style='currency' currency={currency} value={subtotal * (0 / 100)} />,  // ! ! TBD
+    feesPercent: 0, // ! ! TBD
     freight: <FormattedNumber style='currency' currency={currency} value={data.shippingPrice ? data.shippingPrice : 0} />,
-    grossProfit: <FormattedNumber style='currency' currency={currency} value={data.totalPriceWithShipping ? data.totalPriceWithShipping : 0} />, // ! !
+    grossProfit: <FormattedNumber style='currency' currency={currency} value={data.totalPriceWithShipping ? data.totalPriceWithShipping : 0} />, // ! ! TBD
     id: data.id,
-    incoterms: 'N/A', // ! ! co tady zobrazit?
+    incoterms: 'N/A', // ! ! TBD
     orderDate: moment(data.orderDate).format('MMM Do, YYYY h:mm:ss A'),
     orderStatus: OrdersHelper.getOrderStatus(data.orderStatus),
     orderType: type === 'sales' ? 'Sales' : 'Purchase',
-    other: '$0.000',  // ! ! co tady zobrazit?
     packaging: <ArrayToMultiple values={orderItems.map(d => ((d.packagingSize && d.packagingType && d.packagingUnit) ? d.packagingSize + ' ' + d.packagingUnit.name.toLowerCase() + ' ' + d.packagingType.name : 'N/A'))} />,
     paymentInitiationDate: (typeof data.paymentInitiationDate !== 'undefined' ? moment(data.paymentInitiationDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
     paymentReceivedDate: (typeof data.paymentReceivedDate !== 'undefined' ? moment(data.paymentReceivedDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
@@ -57,7 +54,7 @@ function prepareDetail(data, type) {
     productCode: <ArrayToMultiple values={orderItems.map(d => (d.intProductCode ? d.intProductCode : 'N/A'))} />,
     productName: <ArrayToMultiple values={orderItems.map(d => (d.intProductName ? d.intProductName : 'N/A'))} />,
     productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
-    proNumber: 'N/A',// ! ! co tady zobrazit?
+    proNumber: 'N/A',// ! ! TBD
     quantityOrdered: <ArrayToMultiple values={orderItems.map(d => ((d.pkgAmount && d.packagingSize) ? d.pkgAmount * d.packagingSize : 'N/A'))} />,
     refundDate: (typeof data.refundDate !== 'undefined' ? moment(data.refundDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
     returnDeliveryDate: (typeof data.returnDeliveryDate !== 'undefined' ? moment(data.returnDeliveryDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
@@ -65,19 +62,18 @@ function prepareDetail(data, type) {
     returnStatus: OrdersHelper.getReturnStatus(data.returnStatus),
     reviewStatus: OrdersHelper.getReviewStatus(data.reviewStatus),
     sellerRejectionDate: (typeof data.sellerRejectionDate !== 'undefined' ? moment(data.sellerRejectionDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
-    service: 'N/A', // ! ! co tady zobrazit?
+    service: 'N/A', // ! ! TBD
     shipDate: (typeof data.shipDate !== 'undefined' ? moment(data.shipDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
     shippingContact: data.sellerCompanyContactName ? data.sellerCompanyContactName : 'N/A',
     shippingStatus: OrdersHelper.getShippingStatus(data.shippingStatus),
     shipTo: data.buyerCompanyName,
     shipToAddress: data.buyerCompanyAddressStreet + ', ' + data.buyerCompanyAddressCity + ', ' + data.buyerCompanyAddressZip + ', ' + data.buyerCompanyAddressCountry,
-    //! !size: getSafe(() => data.orderItems[0].packagingSize, 'N/A'),
     subtotal: <FormattedNumber style='currency' currency={currency} value={subtotal} />, //"$" + totalPrice.formatMoney(2),
-    terms: 'N/A',// ! ! co tady zobrazit?
+    terms: 'N/A',// ! ! TBD
     total: <FormattedNumber style='currency' currency={currency} value={totalPriceWithShipping} />, //"$" + totalPriceWithShipping.formatMoney(2),
     totalPkg: <ArrayToMultiple values={orderItems.map(d => (d.pkgAmount ? d.pkgAmount : 'N/A'))} />,
     unit: <ArrayToMultiple values={orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A'))} />,
-    unitCost: <FormattedNumber style='currency' currency={currency} value={0} />, //"$" + parseInt(0).formatMoney(2), // ! ! co tady zobrazit?
+    unitCost: <ArrayToMultiple values={orderItems.map(d => (d.pricePerUOM ? <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} /> : 'N/A'))} />,
     unitPrice: <ArrayToMultiple values={orderItems.map(d => (
       <div><FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} /></div>
     ))} />,
