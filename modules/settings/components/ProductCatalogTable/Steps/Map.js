@@ -460,7 +460,7 @@ class Map extends Component {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell><FormattedMessage id='settings.csvColumns' defaultMessage='CSV Columns' /></Table.HeaderCell>
-              <Table.HeaderCell><FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' /></Table.HeaderCell>
+              <Table.HeaderCell colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}><FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' /></Table.HeaderCell>
               <Table.HeaderCell><FormattedMessage id='settings.mapping' defaultMessage='Mapping' /></Table.HeaderCell>
             </Table.Row>
           </Table.Header>
@@ -469,16 +469,14 @@ class Map extends Component {
               {CSV.headerCSV.map((lineHeader, lineIndex) => (
                 <Table.Row key={lineHeader.columnNumber}>
                   <Table.Cell>{lineHeader.content}</Table.Cell>
-                  <Table.Cell>
-                    {CSV.bodyCSV.map(line => {
-                      return line.columns.map(lineBody => {
-                        return (
-                          lineHeader.columnNumber === lineBody.columnNumber &&
-                          lineBody.content + ' '
-                        )
-                      })
-                    })}
-                  </Table.Cell>
+                  {CSV.bodyCSV.map(line => {
+                    return line.columns.map(lineBody => {
+                      return (
+                        lineHeader.columnNumber === lineBody.columnNumber &&
+                        <Table.Cell>{lineBody.content}</Table.Cell>
+                      )
+                    })
+                  })}
                   <Table.Cell>
                     <Dropdown
                       placeholder={formatMessage({ id: 'settings.selectColumn', defaultMessage: 'Select Column' })}
