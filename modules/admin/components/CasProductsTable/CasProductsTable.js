@@ -44,7 +44,7 @@ class CasProductsTable extends Component {
           columns={columns}
           rows={rows}
           rowActions={[
-            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: (row) => openPopup(row) },
+            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: ({ hazardClassesLabeled, ...rest }) => openPopup(rest) },
             { text: formatMessage({ id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }), callback: (row) => openEditAltNamesCasPopup(row) },
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -83,7 +83,7 @@ const transformHazardClasses = classes => (
 
 const mapStateToProps = (state, { datagrid }) => {
   let cfg = state.admin.config[state.admin.currentTab.name]
-
+  console.log({ rows: datagrid.rows })
   return {
     config: cfg,
     filterCasIds: state.admin.filterCasIds,
@@ -92,22 +92,8 @@ const mapStateToProps = (state, { datagrid }) => {
     casListDataRequest: state.admin.casListDataRequest,
     rows: datagrid.rows.map(d => {
       return {
-        id: d.id,
-        casIndexName: d.casIndexName,
-        casNumber: d.casNumber,
-        chemicalName: d.chemicalName,
-        packagingGroup: !!d.packagingGroup ? d.packagingGroup.groupCode : '',
-        unNumberCode: !!d.unNumber ? d.unNumber.unNumberCode : '',
-        unNumberId: !!d.unNumber ? d.unNumber.id : '',
-        unNumber: !!d.unNumber ? {
-          id: d.unNumber.id,
-          title: d.unNumber.unNumberCode,
-          description: d.unNumber.description
-        } : null,
-        hazardClasses: transformHazardClasses(d.hazardClasses),
-        // Prepare initial values for editing form
-        packagingGroupId: !!d.packagingGroup ? d.packagingGroup.id : '',
-        hazardClassesId: !!d.hazardClasses ? (d.hazardClasses.map(a => a.id)) : [],
+        ...d,
+        hazardClassesLabeled: transformHazardClasses(d.hazardClasses),
       }
     }),
     confirmMessage: state.admin.confirmMessage,

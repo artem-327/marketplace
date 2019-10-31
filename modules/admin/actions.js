@@ -218,7 +218,7 @@ export function getUnNumbersByString(value) {
 	}
 }
 
-export function postNewCasProductRequest(values, reloadFilter) {
+export function postNewCasProductRequest(values) {
 	return async dispatch => {
 		await dispatch({
 			type: AT.ADMIN_POST_NEW_CAS_PRODUCT,
@@ -227,11 +227,11 @@ export function postNewCasProductRequest(values, reloadFilter) {
 		Datagrid.loadData()
 		dispatch(closePopup())
 		// Reload CAS Product list using filters
-		dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
+		// dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
 	}
 }
 
-export function updateCasProductRequest(id, values, reloadFilter) {
+export function updateCasProductRequest(id, values) {
 	return async dispatch => {
 		const editedCasProduct = await api.updateCasProduct(id, values)
 		await dispatch({
@@ -241,7 +241,7 @@ export function updateCasProductRequest(id, values, reloadFilter) {
 		dispatch(closePopup())
 		Datagrid.updateRow(id, () => (editedCasProduct))
 		// Reload CAS Product list using filters
-		dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
+		// dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
 	}
 }
 

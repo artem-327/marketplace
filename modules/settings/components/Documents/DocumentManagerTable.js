@@ -44,9 +44,9 @@ class DocumentManager extends Component {
       datagrid,
       openPopup, removeAttachment,
       edit, download, deletable,
-      loading } = this.props
+      loading, items } = this.props
 
-    let rows = this.getRows(this.props.items ? this.props.items : this.props.rows)
+    let rows = this.getRows(items ? items : this.props.rows)
 
 
     return (
@@ -55,7 +55,7 @@ class DocumentManager extends Component {
         {...datagrid.tableProps}
         columns={columns}
         rows={rows}
-        loading={datagrid.loading || loading}
+        loading={items ? false : (loading || datagrid.loading)}
         style={{ marginTop: '5px' }}
         rowActions={[
           ...edit ? [{

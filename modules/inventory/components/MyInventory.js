@@ -19,7 +19,7 @@ import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
 const defaultHiddenColumns = [
-  'minOrderQuantity', 'splits', 'condition', 'grade', 'origin', 'form', 'assay',
+  'minOrderQuantity', 'splits', 'condition', 'grade', 'origin', 'form', 'assayString',
   'mfgDate', 'expDate', 'allocatedPkg', 'offerExpiration', 'lotNumber'
 ]
 
@@ -48,7 +48,7 @@ class MyInventory extends Component {
       { name: 'grade', title: <FormattedMessage id='myInventory.grade' defaultMessage='Grade'>{(text) => text}</FormattedMessage>, width: 80 },
       { name: 'origin', title: <FormattedMessage id='myInventory.origin' defaultMessage='Origin'>{(text) => text}</FormattedMessage>, width: 100 },
       { name: 'form', title: <FormattedMessage id='myInventory.form' defaultMessage='Form'>{(text) => text}</FormattedMessage>, width: 120 },
-      { name: 'assay', title: <FormattedMessage id='myInventory.assay' defaultMessage='Assay'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'assayString', title: <FormattedMessage id='myInventory.assay' defaultMessage='Assay'>{(text) => text}</FormattedMessage>, width: 100 },
       { name: 'mfgDate', title: <FormattedMessage id='myInventory.mfgDate' defaultMessage='MFG Date'>{(text) => text}</FormattedMessage>, width: 100 },
       { name: 'expDate', title: <FormattedMessage id='myInventory.expDate' defaultMessage='EXP Date'>{(text) => text}</FormattedMessage>, width: 100 },
       { name: 'allocatedPkg', title: <FormattedMessage id='myInventory.allocatedPkg' defaultMessage='Allocated PKG'>{(text) => text}</FormattedMessage>, width: 120 },
@@ -242,6 +242,7 @@ class MyInventory extends Component {
           <ProdexTable
             defaultHiddenColumns={defaultHiddenColumns}
             {...datagrid.tableProps}
+            loading={false}
             tableName='my_inventory_grid'
             columns={columns}
             rows={this.getRows(rows)}
