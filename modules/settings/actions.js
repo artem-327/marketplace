@@ -719,6 +719,14 @@ export function putCSVMapEchoProduct(mapId, data) {
   }
 }
 
+export function deleteCSVMapEchoProduct(mapId) {
+  return {
+    type: AT.DELETE_CSV_MAP_ECHO_PRODUCT,
+    meta: mapId,
+    payload: api.deleteCSVMapEchoProduct(mapId)
+  }
+}
+
 export function postCSVMapProductOffer(payload) {
   return {
     type: AT.POST_CSV_MAP_PRODUCT_OFFER,
@@ -730,6 +738,14 @@ export function putCSVMapProductOffer(mapId, data) {
   return {
     type: AT.PUT_CSV_MAP_PRODUCT_OFFER,
     payload: api.putCSVMapProductOffer(mapId, data)
+  }
+}
+
+export function deleteCSVMapProductOffer(mapId) {
+  return {
+    type: AT.DELETE_CSV_MAP_PRODUCT_OFFER,
+    meta: mapId,
+    payload: api.deleteCSVMapProductOffer(mapId)
   }
 }
 
