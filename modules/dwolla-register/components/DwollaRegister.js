@@ -574,7 +574,7 @@ class DwollaRegister extends Component {
     const { identity, postDwollaAccount, companyId } = this.props
 
     if (identity && identity.company) {
-      const { primaryBranch } = identity.company
+      const { deliveryAddress } = identity.company.primaryBranch
 
       let [firstName, ...lastName] = identity.name ? identity.name.split(' ') : getSafe(() => identity.company.name.split(' '))
 
@@ -587,14 +587,14 @@ class DwollaRegister extends Component {
         businessName: getSafe(() => identity.company.name),
         businessType: getSafe(() => identity.company.businessType.id),
         address: {
-          streetAddress: getSafe(() => primaryBranch.address.streetAddress, ''),
+          streetAddress: getSafe(() => deliveryAddress.address.streetAddress, ''),
           country: JSON.stringify({
-            countryId: getSafe(() => primaryBranch.address.country.id),
-            hasProvinces: getSafe(() => primaryBranch.address.country.hasProvinces)
+            countryId: getSafe(() => deliveryAddress.address.country.id),
+            hasProvinces: getSafe(() => deliveryAddress.address.country.hasProvinces)
           }),
-          province: getSafe(() => primaryBranch.address.province.id),
-          zip: getSafe(() => primaryBranch.address.zip.zip, false),
-          city: getSafe(() => primaryBranch.address.city, '')
+          province: getSafe(() => deliveryAddress.address.province.id),
+          zip: getSafe(() => deliveryAddress.address.zip.zip, false),
+          city: getSafe(() => deliveryAddress.address.city, '')
         },
         businessClassification: '9ed35a3b-7d6f-11e3-83c8-5404a6144203',
         industryClassification: '9ed38136-7d6f-11e3-bd75-5404a6144203',

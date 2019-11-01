@@ -1,7 +1,6 @@
 import * as AT from "./action-types"
 import { ChatWidget_create, chatWidget_hide, chatWidget_show, chatWidget_EndSession } from './components/chatWidgetFunctions'
 
-
 export function chatWidgetCreate(identity) {
   //console.log('!!!!!! chatWidget actions SUPPORT_CHAT_CREATE', identity)
   ChatWidget_create(identity)
@@ -52,7 +51,7 @@ export function chatWidgetHide() {
 }
 
 export function chatUnreadMessages(cnt) {
-  console.log('!!!!!! chatWidget actions ', cnt)
+  //console.log('!!!!!! chatWidget actions ', cnt)
   return {
       type: AT.SUPPORT_CHAT_UNREAD_MESSAGES,
       payload: cnt

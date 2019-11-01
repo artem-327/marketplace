@@ -225,42 +225,6 @@ class ConfirmationPage extends Component {
                   </Grid.Row>
                 </Grid>
 
-                <Grid>
-                  <Grid.Row columns={2}>
-                    <Grid.Column data-test='auth_confirm_addressReadyTime_inp' >
-                      <Input label={formatMessage({ id: 'laststep.address.readyTime', defaultMessage: 'Ready Time' })}
-                             name='address.readyTime' />
-                    </Grid.Column>
-                    <Grid.Column data-test='auth_confirm_addressCloseTime_inp'>
-                      <Input label={formatMessage({ id: 'laststep.address.closeTime', defaultMessage: 'Close Time' })}
-                             name='address.closeTime' />
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
-
-                <Grid>
-                  <Grid.Row columns={3}>
-                    <Grid.Column data-test='auth_confirm_addressCallAhead_inp' >
-                      <Checkbox label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
-                             name='address.callAhead' />
-                    </Grid.Column>
-                    <Grid.Column data-test='auth_confirm_addressForkLift_inp'>
-                      <Checkbox label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
-                             name='address.forkLift' />
-                    </Grid.Column>
-                    <Grid.Column data-test='auth_confirm_addressLiftGate_inp'>
-                      <Checkbox label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
-                                name='address.liftGate' />
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
-
-                <TextArea
-                  name='address.deliveryNotes'
-                  label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
-                  data-test='auth_confirm_addressDeliveryNotes_textArea'
-                />
-
                 <Header as='h3'>
                   <FormattedMessage id='laststep.admin.header' defaultMessage='Company Admin Profile' />
                 </Header>
