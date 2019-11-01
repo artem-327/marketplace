@@ -1,17 +1,19 @@
 import React, { Component } from 'react'
-import { object, bool, number } from 'prop-types'
-import { Segment, GridRow, Grid, GridColumn, Button, Dropdown, Menu } from 'semantic-ui-react'
+import { object, bool, number, node, func, array } from 'prop-types'
+import { Segment, GridRow, Grid, GridColumn, Button, Dropdown, Menu, Sidebar } from 'semantic-ui-react'
 import { FlexSidebar, GraySegment, FlexContent } from '~/modules/inventory/components/DetailSidebar'
 import { Form, Input, Dropdown as FormikDropdown } from 'formik-semantic-ui-fixed-validation'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import moment from 'moment'
+import * as Yup from 'yup'
 
-import { tabs, regulatoryFilter, dropdownOptions, echoProductGrouping } from '../constants'
+import { tabs, regulatoryFilter, dropdownOptions, echoProductGrouping, yesNoOptions } from '../constants'
+import { errorMessages } from '~/constants/yupValidation'
 
 import DocumentManager from '~/modules/settings/components/Documents/DocumentManagerTable'
-import { getSafe } from '~/utils/functions'
-import { EchoProductResponse } from '~/constants/backendObjects'
+import { getSafe, formatAssay } from '~/utils/functions'
+import { EchoProductResponse, CasProductResponse } from '~/constants/backendObjects'
 
 const WiderSidebar = styled(FlexSidebar)`
   min-width: 545px !important;
@@ -21,7 +23,12 @@ const RightAlignedDiv = styled.div`
   text-align: right;
 `
 
-
+const validationSchema = Yup.object().shape({
+  casProduct: Yup.object().shape({
+    casNumber: Yup.string().required(errorMessages.requiredMessage),
+    casIndexName: Yup.string().required(errorMessages.requiredMessage)
+  })
+})
 
 
 class CompanyProductInfo extends Component {
@@ -56,23 +63,62 @@ class CompanyProductInfo extends Component {
           fluid
           name={name}
           {...props}
-          options={props.options.map((el) => ({ key: el, text: el, value: el }))}
+          inputProps={{ disabled: this.props.readOnly }}
+          options={props.options.map((el) => typeof el === 'object' ? el : ({ key: el, text: el, value: el }))}
         />
       </GridColumn>
     </GridRow>
   )
 
-  getContent = ({ values }) => {
-    let { activeIndex, popupValues } = this.props
+
+
+  getSharedContent = (prefix = '') => (
+    <>
+      {this.getInput({ id: 'global.physicalState', defaultMessage: 'Physical State', name: `${prefix}physicalState` })}
+      {this.getInput({ id: 'global.appearance', defaultMessage: 'Appearance', name: `${prefix}appearance` })}
+      {this.getInput({ id: 'global.odor', defaultMessage: 'Odor', name: `${prefix}odor` })}
+      {this.getInput({ id: 'global.odorThreshold', defaultMessage: 'Odor Threshold', name: `${prefix}odorThreshold` })}
+      {this.getInput({ id: 'global.ph', defaultMessage: 'pH', name: `${prefix}ph` })}
+      {this.getInput({ id: 'global.meltingPointRange', defaultMessage: 'Melting Point/Range', name: `${prefix}meltingPointRange` })}
+      {this.getInput({ id: 'global.boilingPointRange', defaultMessage: 'Boiling Point/Range', name: `${prefix}boilingPointRange` })}
+      {this.getInput({ id: 'global.flashPoint', defaultMessage: 'Flash Point', name: `${prefix}flashPoint` })}
+      {this.getInput({ id: 'global.evaporationPoint', defaultMessage: 'Evaporation Point', name: `${prefix}evaporationPoint` })}
+      {this.getInput({ id: 'global.flammabilitySolidGas', defaultMessage: 'Flammability (solid, gas)', name: `${prefix}flammabilitySolidGas` })}
+      {this.getInput({ id: 'global.flammabilityOrExplosiveUpper', defaultMessage: 'Flammability or Explosive Upper', name: `${prefix}flammabilityOrExplosiveUpper` })}
+      {this.getInput({ id: 'global.flammabilityOrExplosiveLower', defaultMessage: 'Flammability or Explosive Lower', name: `${prefix}flammabilityOrExplosiveLower` })}
+      {this.getInput({ id: 'global.vaporPressure', defaultMessage: 'Vapor Pressure', name: `${prefix}vaporPressure` })}
+      {this.getInput({ id: 'global.vaporDensity', defaultMessage: 'Vapor Density', name: `${prefix}vaporDensity` })}
+      {this.getInput({ id: 'global.specificGravity', defaultMessage: 'Specific Gravity', name: `${prefix}specificGravity` })}
+      {this.getInput({ id: 'global.solubility', defaultMessage: 'Solubility', name: `${prefix}solubility` })}
+      {this.getInput({ id: 'global.partitionCoefficient', defaultMessage: 'Partition Coefficient', name: `${prefix}partitionCoefficient` })}
+      {this.getInput({ id: 'global.autoIgnitionTemperature', defaultMessage: 'Auto Ignition Temperature', name: `${prefix}autoIgnitionTemperature` })}
+      {this.getInput({ id: 'global.decompositionTemperature', defaultMessage: 'Decomposition Temperature', name: `${prefix}decompositionTemperature` })}
+      {this.getInput({ id: 'global.viscosity', defaultMessage: 'Viscosity', name: `${prefix}viscosity` })}
+      {this.getInput({ id: 'global.molecularFormula', defaultMessage: 'Molecular Formula', name: `${prefix}molecularFormula` })}
+      {this.getInput({ id: 'global.molecularWeight', defaultMessage: 'Molecular Weight', name: `${prefix}molecularWeight` })}
+      {this.getInput({ id: 'global.specificVolume', defaultMessage: 'Specific Volume', name: `${prefix}specificVolume` })}
+      {this.getInput({ id: 'global.recommendedUse', defaultMessage: 'Recommended Uses', name: `${prefix}recommendedUse` })}
+      {this.getInput({ id: 'global.usesAdvisedAgainst', defaultMessage: 'Uses Advised Against', name: `${prefix}usesAdvisedAgainst` })}
+      {this.getInput({ id: 'global.criticalTemperature', defaultMessage: 'Critical Temperature', name: `${prefix}criticalTemperature` })}
+      {this.getInput({ id: 'global.gasDensity', defaultMessage: 'Gas Density', name: `${prefix}gasDensity` })}
+      {this.getInput({ id: 'global.relativeDensity', defaultMessage: 'Relative Density', name: `${prefix}relativeDensity` })}
+      {this.getInput({ id: 'global.flowTime', defaultMessage: 'Flow Time (ISO 2431)', name: `${prefix}flowTimeISO2431` })}
+      {this.getInput({ id: 'global.heatOfCombustion', defaultMessage: 'Heat of Combustion', name: `${prefix}heatOfCombustion` })}
+    </>
+  )
+
+
+  renderCasProduct = (values) => {
+    let { popupValues, readOnly } = this.props
 
     let casProducts = getSafe(() => popupValues.companyProduct.echoProduct.elements, [])
+  
 
     let markup = [
-      this.getInput({ id: 'global.casIndexName', defaultMessage: 'Cas Index Name', name: 'casProduct.casProduct.casIndexName' })
+      this.getInput({ id: 'global.casIndexName', defaultMessage: 'Cas Index Name', name: 'casProduct.casIndexName' })
     ]
 
     let { epa, dhs, dot, caProp65, rightToKnow, dea, international, all } = regulatoryFilter
-
 
     let dontBreak = this.state.regulatoryFilter === all.key
     switch (this.state.regulatoryFilter) {
@@ -80,15 +126,15 @@ class CompanyProductInfo extends Component {
       case all.key:
       case epa.key: {
         markup.push(
-          this.getDropdown({ id: 'casProduct.epaSection302EhsTPQ', defaultMessage: 'Section 302 (EHS) TPQ', name: 'casProduct.casProduct.epaSection302EhsTPQ', props: dropdownOptions.epa.epaSection302EhsTPQ }),
-          this.getDropdown({ id: 'casProduct.epaSection304EhsRQ', defaultMessage: 'Section 304 (EHS) RQ', name: 'casProduct.casProduct.epaSection304EhsRQ', props: dropdownOptions.epa.epaSection304EhsRQ }),
-          this.getInput({ id: 'casProduct.epaCerclaRq', defaultMessage: 'CERCLA RQ', name: 'casProduct.casProduct.epaCerclaRq' }),
-          this.getInput({ id: 'casProduct.epaSection313Tri', defaultMessage: 'Section 313 (TRI)', name: 'casProduct.casProduct.epaSection313Tri' }),
-          this.getInput({ id: 'casProduct.epaCaa112TTq', defaultMessage: 'CAA 112(r) TQ', name: 'casProduct.casProduct.epaCaa112TTq' }),
-          this.getInput({ id: 'casProduct.epaFifra', defaultMessage: 'FIFRA', name: 'casProduct.casProduct.epaFifra' }),
-          this.getDropdown({ id: 'casProduct.epaTsca', defaultMessage: 'TSCA', name: 'casProduct.casProduct.epaTsca', props: dropdownOptions.epa.epaTsca }),
-          this.getInput({ id: 'casProduct.epaTsca12b', defaultMessage: 'TSCA 12(b)', name: 'casProduct.casProduct.epaTsca12b' }),
-          this.getInput({ id: 'casProduct.epaSaferChoice', defaultMessage: 'Safer Choice', name: 'casProduct.casProduct.epaSaferChoice' })
+          this.getDropdown({ id: 'casProduct.epaSection302EhsTPQ', defaultMessage: 'Section 302 (EHS) TPQ', name: 'casProduct.epaSection302EhsTPQ', props: dropdownOptions.epa.epaSection302EhsTPQ }),
+          this.getDropdown({ id: 'casProduct.epaSection304EhsRQ', defaultMessage: 'Section 304 (EHS) RQ', name: 'casProduct.epaSection304EhsRQ', props: dropdownOptions.epa.epaSection304EhsRQ }),
+          this.getInput({ id: 'casProduct.epaCerclaRq', defaultMessage: 'CERCLA RQ', name: 'casProduct.epaCerclaRq' }),
+          this.getDropdown({ id: 'casProduct.epaSection313Tri', defaultMessage: 'Section 313 (TRI)', name: 'casProduct.epaSection313Tri', props: yesNoOptions }),
+          this.getInput({ id: 'casProduct.epaCaa112TTq', defaultMessage: 'CAA 112(r) TQ', name: 'casProduct.epaCaa112TTq' }),
+          this.getDropdown({ id: 'casProduct.epaFifra', defaultMessage: 'FIFRA', name: 'casProduct.epaFifra', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.epaTsca', defaultMessage: 'TSCA', name: 'casProduct.epaTsca', props: dropdownOptions.epa.epaTsca }),
+          this.getDropdown({ id: 'casProduct.epaTsca12b', defaultMessage: 'TSCA 12(b)', name: 'casProduct.epaTsca12b', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.epaSaferChoice', defaultMessage: 'Safer Choice', name: 'casProduct.epaSaferChoice', props: yesNoOptions })
         )
 
         if (!dontBreak)
@@ -98,11 +144,11 @@ class CompanyProductInfo extends Component {
       case all.key:
       case rightToKnow.key: {
         markup.push(
-          this.getInput({ id: 'casProduct.rtkMassachusettes', defaultMessage: 'Massachusettes', name: 'casProduct.casProduct.rtkMassachusettes' }),
-          this.getInput({ id: 'casProduct.rtkNewJersey', defaultMessage: 'New Jersey', name: 'casProduct.casProduct.rtkNewJersey' }),
-          this.getInput({ id: 'casProduct.rtkPennslyvania', defaultMessage: 'Pennslyvania', name: 'casProduct.casProduct.rtkPennslyvania' }),
-          this.getInput({ id: 'casProduct.rtkIllinois', defaultMessage: 'Illinois', name: 'casProduct.casProduct.rtkIllinois' }),
-          this.getInput({ id: 'casProduct.rtkRhodeIsland', defaultMessage: 'Rhode Island', name: 'casProduct.casProduct.rtkRhodeIsland' })
+          this.getDropdown({ id: 'casProduct.rtkMassachusettes', defaultMessage: 'Massachusettes', name: 'casProduct.rtkMassachusettes', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.rtkNewJersey', defaultMessage: 'New Jersey', name: 'casProduct.rtkNewJersey', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.rtkPennslyvania', defaultMessage: 'Pennslyvania', name: 'casProduct.rtkPennslyvania', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.rtkIllinois', defaultMessage: 'Illinois', name: 'casProduct.rtkIllinois', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.rtkRhodeIsland', defaultMessage: 'Rhode Island', name: 'casProduct.rtkRhodeIsland', props: yesNoOptions })
         )
         if (!dontBreak)
           break
@@ -111,19 +157,19 @@ class CompanyProductInfo extends Component {
       case all.key:
       case dhs.key: {
         markup.push(
-          this.getDropdown({ id: 'casProduct.dhsReleaseMinimumConcentration', defaultMessage: 'Release: Minimum Concentration (%)', name: 'casProduct.casProduct.dhsReleaseMinimumConcentration', props: dropdownOptions.dhs.dhsReleaseMinimumConcentration }),
-          this.getDropdown({ id: 'casProduct.dhsReleaseScreeningThresholdQuantitie', defaultMessage: 'Release: Screening Threshold Quantitiees (in pounds)', name: 'casProduct.casProduct.dhsReleaseScreeningThresholdQuantitie', props: dropdownOptions.dhs.dhsReleaseScreeningThresholdQuantitie }),
-          this.getInput({ id: 'casProduct.dhsTheftMinimumConcentration', defaultMessage: 'Theft: Minimum Concentration (%)', name: 'casProduct.casProduct.dhsTheftMinimumConcentration', }),
-          this.getDropdown({ id: 'casProduct.dhsTheftScreeningThresholdQuantities', defaultMessage: 'Theft: Screening Threshold Quantitie', name: 'casProduct.casProduct.dhsTheftScreeningThresholdQuantities', props: dropdownOptions.dhs.dhsTheftScreeningThresholdQuantities }),
-          this.getDropdown({ id: 'casProduct.dhsSabotageMinimumConcentration', defaultMessage: 'Sabotage: Minimum Concentration (%)', name: 'casProduct.casProduct.dhsSabotageMinimumConcentration', props: dropdownOptions.dhs.dhsSabotageMinimumConcentration }),
-          this.getDropdown({ id: 'casProduct.dhsSabotageScreeningThresholdQuantities', defaultMessage: 'Sabotage: Screening Threshold Quantities', name: 'casProduct.casProduct.dhsSabotageScreeningThresholdQuantities', props: dropdownOptions.dhs.dhsSabotageScreeningThresholdQuantities }),
-          this.getInput({ id: 'casProduct.dhsSecurityIssueReleaseToxic', defaultMessage: 'Security Issue: Release - Toxic', name: 'casProduct.casProduct.dhsSecurityIssueReleaseToxic' }),
-          this.getInput({ id: 'casProduct.dhsSecurityIssueReleaseFlammables', defaultMessage: 'Security Issue: Release - Flammables', name: 'casProduct.casProduct.dhsSecurityIssueReleaseFlammables' }),
-          this.getInput({ id: 'casProduct.dhsSecurityIssueReleaseExplosives', defaultMessage: 'Security Issue: Release - Explosives', name: 'casProduct.casProduct.dhsSecurityIssueReleaseExplosives' }),
-          this.getInput({ id: 'casProduct.dhsSecurityIssueTheftCWCWP', defaultMessage: 'Security Issue: Theft - CW/CWP', name: 'casProduct.casProduct.dhsSecurityIssueTheftCWCWP' }),
-          this.getInput({ id: 'casProduct.dhsSecurityIssueTheftWME', defaultMessage: 'Security Issue: Theft - WME', name: 'casProduct.casProduct.dhsSecurityIssueTheftWME' }),
-          this.getInput({ id: 'casProduct.dhsSecurityIssueTheftEXPIEDP', defaultMessage: 'Security Issue: Theft - EXP/IEDP', name: 'casProduct.casProduct.dhsSecurityIssueTheftEXPIEDP' }),
-          this.getInput({ id: 'casProduct.dhsSecurityIssueSabotageContamination', defaultMessage: 'Security Issue: Sabotage/Contamination', name: 'casProduct.casProduct.dhsSecurityIssueSabotageContamination' })
+          this.getDropdown({ id: 'casProduct.dhsReleaseMinimumConcentration', defaultMessage: 'Release: Minimum Concentration (%)', name: 'casProduct.dhsReleaseMinimumConcentration', props: dropdownOptions.dhs.dhsReleaseMinimumConcentration }),
+          this.getDropdown({ id: 'casProduct.dhsReleaseScreeningThresholdQuantitie', defaultMessage: 'Release: Screening Threshold Quantitiees (in pounds)', name: 'casProduct.dhsReleaseScreeningThresholdQuantitie', props: dropdownOptions.dhs.dhsReleaseScreeningThresholdQuantitie }),
+          this.getInput({ id: 'casProduct.dhsTheftMinimumConcentration', defaultMessage: 'Theft: Minimum Concentration (%)', name: 'casProduct.dhsTheftMinimumConcentration', }),
+          this.getDropdown({ id: 'casProduct.dhsTheftScreeningThresholdQuantities', defaultMessage: 'Theft: Screening Threshold Quantitie', name: 'casProduct.dhsTheftScreeningThresholdQuantities', props: dropdownOptions.dhs.dhsTheftScreeningThresholdQuantities }),
+          this.getDropdown({ id: 'casProduct.dhsSabotageMinimumConcentration', defaultMessage: 'Sabotage: Minimum Concentration (%)', name: 'casProduct.dhsSabotageMinimumConcentration', props: dropdownOptions.dhs.dhsSabotageMinimumConcentration }),
+          this.getDropdown({ id: 'casProduct.dhsSabotageScreeningThresholdQuantities', defaultMessage: 'Sabotage: Screening Threshold Quantities', name: 'casProduct.dhsSabotageScreeningThresholdQuantities', props: dropdownOptions.dhs.dhsSabotageScreeningThresholdQuantities }),
+          this.getDropdown({ id: 'casProduct.dhsSecurityIssueReleaseToxic', defaultMessage: 'Security Issue: Release - Toxic', name: 'casProduct.dhsSecurityIssueReleaseToxic', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.dhsSecurityIssueReleaseFlammables', defaultMessage: 'Security Issue: Release - Flammables', name: 'casProduct.dhsSecurityIssueReleaseFlammables', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.dhsSecurityIssueReleaseExplosives', defaultMessage: 'Security Issue: Release - Explosives', name: 'casProduct.dhsSecurityIssueReleaseExplosives', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.dhsSecurityIssueTheftCWCWP', defaultMessage: 'Security Issue: Theft - CW/CWP', name: 'casProduct.dhsSecurityIssueTheftCWCWP', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.dhsSecurityIssueTheftWME', defaultMessage: 'Security Issue: Theft - WME', name: 'casProduct.dhsSecurityIssueTheftWME', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.dhsSecurityIssueTheftEXPIEDP', defaultMessage: 'Security Issue: Theft - EXP/IEDP', name: 'casProduct.dhsSecurityIssueTheftEXPIEDP', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.dhsSecurityIssueSabotageContamination', defaultMessage: 'Security Issue: Sabotage/Contamination', name: 'casProduct.dhsSecurityIssueSabotageContamination', props: yesNoOptions })
         )
         if (!dontBreak)
           break
@@ -132,10 +178,10 @@ class CompanyProductInfo extends Component {
       case all.key:
       case caProp65.key: {
         markup.push(
-          this.getDropdown({ id: 'casProduct.caprop65TypeofToxicity', defaultMessage: 'Type of Toxicity', name: 'casProduct.casProduct.caprop65TypeofToxicity', props: dropdownOptions.ca65Prop.caprop65TypeofToxicity }),
-          this.getDropdown({ id: 'casProduct.caprop65ListingMechanism', defaultMessage: 'Listing Mechanism', name: 'casProduct.casProduct.', props: dropdownOptions.ca65Prop.caprop65ListingMechanism }),
-          this.getInput({ id: 'casProduct.caprop65DateListed', defaultMessage: 'Date Listed', name: 'casProduct.casProduct.caprop65DateListed' }),
-          this.getInput({ id: 'casProduct.caprop65NSRLorMADL', defaultMessage: 'NSRL or MADL (µg/day)', name: 'casProduct.casProduct.caprop65NSRLorMADL' }),
+          this.getDropdown({ id: 'casProduct.caprop65TypeofToxicity', defaultMessage: 'Type of Toxicity', name: 'casProduct.caprop65TypeofToxicity', props: dropdownOptions.ca65Prop.caprop65TypeofToxicity }),
+          this.getDropdown({ id: 'casProduct.caprop65ListingMechanism', defaultMessage: 'Listing Mechanism', name: 'casProduct.', props: dropdownOptions.ca65Prop.caprop65ListingMechanism }),
+          this.getInput({ id: 'casProduct.caprop65DateListed', defaultMessage: 'Date Listed', name: 'casProduct.caprop65DateListed' }),
+          this.getInput({ id: 'casProduct.caprop65NSRLorMADL', defaultMessage: 'NSRL or MADL (µg/day)', name: 'casProduct.caprop65NSRLorMADL' }),
         )
 
         if (!dontBreak)
@@ -145,8 +191,8 @@ class CompanyProductInfo extends Component {
       case all.key:
       case dea.key: {
         markup.push(
-          this.getInput({ id: 'casProduct.deaListII', defaultMessage: 'List II', name: 'casProduct.casProduct.deaListII' }),
-          this.getInput({ id: 'casProduct.deaDeaCode', defaultMessage: 'DEA Code', name: 'casProduct.casProduct.deaDeaCode' })
+          this.getDropdown({ id: 'casProduct.deaListII', defaultMessage: 'List II', name: 'casProduct.deaListII', props: yesNoOptions }),
+          this.getInput({ id: 'casProduct.deaDeaCode', defaultMessage: 'DEA Code', name: 'casProduct.deaDeaCode' })
         )
 
         if (!dontBreak)
@@ -156,19 +202,62 @@ class CompanyProductInfo extends Component {
       case all.key:
       case international.key: {
         markup.push(
-          this.getInput({ id: 'casProduct.internationalDSL', defaultMessage: 'DSL', name: 'casProduct.casProduct.internationalDSL' }),
-          this.getInput({ id: 'casProduct.internationalNDSL', defaultMessage: 'NDSL', name: 'casProduct.casProduct.internationalNDSL' }),
-          this.getInput({ id: 'casProduct.internationalEINECS', defaultMessage: 'EINECS', name: 'casProduct.casProduct.internationalEINECS' }),
-          this.getInput({ id: 'casProduct.internationalPICCS', defaultMessage: 'PICCS', name: 'casProduct.casProduct.internationalPICCS' }),
-          this.getInput({ id: 'casProduct.internationalENCS', defaultMessage: 'ENCS', name: 'casProduct.casProduct.internationalENCS' }),
-          this.getInput({ id: 'casProduct.internationalAICS', defaultMessage: 'AICS', name: 'casProduct.casProduct.internationalAICS' }),
-          this.getInput({ id: 'casProduct.internationalIECSC', defaultMessage: 'IECSC', name: 'casProduct.casProduct.internationalIECSC' }),
-          this.getInput({ id: 'casProduct.internationalKECL', defaultMessage: 'KECL', name: 'casProduct.casProduct.internationalKECL' }),
+          this.getDropdown({ id: 'casProduct.internationalDSL', defaultMessage: 'DSL', name: 'casProduct.internationalDSL', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.internationalNDSL', defaultMessage: 'NDSL', name: 'casProduct.internationalNDSL', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.internationalEINECS', defaultMessage: 'EINECS', name: 'casProduct.internationalEINECS', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.internationalPICCS', defaultMessage: 'PICCS', name: 'casProduct.internationalPICCS', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.internationalENCS', defaultMessage: 'ENCS', name: 'casProduct.internationalENCS', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.internationalAICS', defaultMessage: 'AICS', name: 'casProduct.internationalAICS', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.internationalIECSC', defaultMessage: 'IECSC', name: 'casProduct.internationalIECSC', props: yesNoOptions }),
+          this.getDropdown({ id: 'casProduct.internationalKECL', defaultMessage: 'KECL', name: 'casProduct.internationalKECL', props: yesNoOptions }),
         )
         if (!dontBreak)
           break
       }
     }
+
+    return (
+      <>
+        <GridRow>
+          <GridColumn computer={8}>
+            {readOnly
+              ?
+              <>
+                <label><FormattedMessage id='global.casProduct' defaultMessage='CAS Product' /></label>
+                <Dropdown
+                  fluid selection
+                  value={getSafe(() => values.casProduct.id)}
+                  options={casProducts.map((cp) => ({
+                    key: cp.id,
+                    text: `${cp.casProduct.casNumber} ${cp.casProduct.casIndexName} ${formatAssay(values.assayMin, values.assayMax)}`,
+                    value: cp.id
+                  }))}
+                  onChange={(_, { value }) => this.setState({ casProductIndex: value })} />
+              </>
+              : this.getInput({ id: 'global.casNumber', defaultMessage: 'CAS Number', name: 'casProduct.casNumber' })
+            }
+          </GridColumn>
+
+          <GridColumn computer={8}>
+            <label><FormattedMessage id='global.filter' defaultMessage='Filter' /></label>
+            <Dropdown
+              fluid selection
+              value={this.state.regulatoryFilter}
+              options={Object.keys(regulatoryFilter).map((key) => regulatoryFilter[key])}
+              onChange={(_, { value }) => this.setState({ regulatoryFilter: value })} />
+          </GridColumn>
+
+        </GridRow>
+        {markup.map((el) => el)}
+        {this.getSharedContent('casProduct.')}
+      </>
+    )
+  }
+
+  getContent = ({ values }) => {
+    let { activeIndex } = this.props
+
+
 
     switch (activeIndex) {
       case 0: { // Info
@@ -179,7 +268,7 @@ class CompanyProductInfo extends Component {
             {this.getInput({ id: 'global.manufacturerProductCode', defaultMessage: 'Manufacturer Product Code', name: 'manufactureProductCode' })}
             {this.getInput({ id: 'global.emergencyNumber', defaultMessage: 'Emergency Number', name: 'emergencyNumber' })}
             {this.getInput({ id: 'global.esin', defaultMessage: 'ESIN', name: 'esin' })}
-            {this.getInput({ id: 'global.recommendedUse', defaultMessage: 'Recommended Use', name: 'recommendedUse' })}
+            {this.getInput({ id: 'global.recommendedUse', defaultMessage: 'Recommended Uses', name: 'recommendedUses' })}
             {this.getInput({ id: 'global.recommendedRestrictions', defaultMessage: 'Recommended Restrictions', name: 'recommendedRestrictions' })}
             {this.getInput({ id: 'global.version', defaultMessage: 'Version', name: 'sdsVersionNumber' })}
             {this.getInput({ id: 'global.revisionDate', defaultMessage: 'Revision Date', name: 'sdsRevisionDate' })}
@@ -192,38 +281,8 @@ class CompanyProductInfo extends Component {
       case 1: { // Properties
         return (
           <Grid verticalAlign='middle'>
-            {this.getInput({ id: 'global.physicalState', defaultMessage: 'Physical State', name: 'physicalState' })}
-            {this.getInput({ id: 'global.appearance', defaultMessage: 'Appearance', name: 'appearance' })}
-            {this.getInput({ id: 'global.odor', defaultMessage: 'Odor', name: 'odor' })}
-            {this.getInput({ id: 'global.odorThreshold', defaultMessage: 'Odor Threshold', name: 'odorThreshold' })}
-            {this.getInput({ id: 'global.ph', defaultMessage: 'pH', name: 'ph' })}
-            {this.getInput({ id: 'global.meltingPointRange', defaultMessage: 'Melting Point/Range', name: 'meltingPointRange' })}
-            {this.getInput({ id: 'global.boilingPointRange', defaultMessage: 'Boiling Point/Range', name: 'boilingPointRange' })}
-            {this.getInput({ id: 'global.flashPoint', defaultMessage: 'Flash Point', name: 'flashPoint' })}
-            {this.getInput({ id: 'global.evaporationPoint', defaultMessage: 'Evaporation Point', name: 'evaporationPoint' })}
-            {this.getInput({ id: 'global.flammabilitySolidGas', defaultMessage: 'Flammability (solid, gas)', name: 'flammabilitySolidGas' })}
-            {this.getInput({ id: 'global.flammabilityOrExplosiveUpper', defaultMessage: 'Flammability or Explosive Upper', name: 'flammabilityOrExplosiveUpper' })}
-            {this.getInput({ id: 'global.flammabilityOrExplosiveLower', defaultMessage: 'Flammability or Explosive Lower', name: 'flammabilityOrExplosiveLower' })}
-            {this.getInput({ id: 'global.vaporPressure', defaultMessage: 'Vapor Pressure', name: 'vaporPressure' })}
-            {this.getInput({ id: 'global.vaporDensity', defaultMessage: 'Vapor Density', name: 'vaporDensity' })}
-            {this.getInput({ id: 'global.specificGravity', defaultMessage: 'Specific Gravity', name: 'specificGravity' })}
-            {this.getInput({ id: 'global.solubility', defaultMessage: 'Solubility', name: 'solubility' })}
-            {this.getInput({ id: 'global.partitionCoefficient', defaultMessage: 'Partition Coefficient', name: 'partitionCoefficient' })}
-            {this.getInput({ id: 'global.autoIgnitionTemperature', defaultMessage: 'Auto Ignition Temperature', name: 'autoIgnitionTemperature' })}
-            {this.getInput({ id: 'global.decompositionTemperature', defaultMessage: 'Decomposition Temperature', name: 'decompositionTemperature' })}
-            {this.getInput({ id: 'global.viscosity', defaultMessage: 'Viscosity', name: 'viscosity' })}
-            {this.getInput({ id: 'global.molecularFormula', defaultMessage: 'Molecular Formula', name: 'molecularFormula' })}
-            {this.getInput({ id: 'global.molecularWeight', defaultMessage: 'Molecular Weight', name: 'molecularWeight' })}
-            {this.getInput({ id: 'global.specificVolume', defaultMessage: 'Specific Volume', name: 'specificVolume' })}
-            {this.getInput({ id: 'global.recommendedUse', defaultMessage: 'Recommended Uses', name: 'recommendedUse' })}
-            {this.getInput({ id: 'global.usesAdvisedAgainst', defaultMessage: 'Uses Advised Against', name: 'usesAdvisedAgainst' })}
-            {this.getInput({ id: 'global.criticalTemperature', defaultMessage: 'Critical Temperature', name: 'criticalTemperature' })}
-            {this.getInput({ id: 'global.gasDensity', defaultMessage: 'Gas Density', name: 'gasDensity' })}
-            {this.getInput({ id: 'global.relativeDensity', defaultMessage: 'Relative Density', name: 'relativeDensity' })}
-            {this.getInput({ id: 'global.flowTime', defaultMessage: 'Flow Time (ISO 2431)', name: 'flowTimeISO2431' })}
-            {this.getInput({ id: 'global.heatOfCombustion', defaultMessage: 'Heat of Combustion', name: 'heatOfCombustion' })}
+            {this.getSharedContent()}
           </Grid>
-          // {this.getInput({ id: 'global.', defaultMessage: '', name: '' })}
         )
       }
 
@@ -236,30 +295,8 @@ class CompanyProductInfo extends Component {
       case 3: { // Regulatory
         return (
           <Grid verticalAlign='middle'>
-            <GridRow>
-              <GridColumn computer={8}>
-                <label><FormattedMessage id='global.casProduct' defaultMessage='CAS Product' /></label>
-                <Dropdown
-                  fluid selection
-                  value={values.casProduct.id}
-                  options={casProducts.map((cp) => ({ key: cp.id, text: cp.displayName, value: cp.id }))}
-                  onChange={(_, { value }) => this.setState({ casProductIndex: value })} />
-              </GridColumn>
-
-              <GridColumn computer={8}>
-                <label><FormattedMessage id='global.filter' defaultMessage='Filter' /></label>
-                <Dropdown
-                  fluid selection
-                  value={this.state.regulatoryFilter}
-                  options={Object.keys(regulatoryFilter).map((key) => regulatoryFilter[key])}
-                  onChange={(_, { value }) => this.setState({ regulatoryFilter: value })} />
-              </GridColumn>
-
-            </GridRow>
-
-            {markup.map((el) => el)}
+            {this.renderCasProduct(values)}
           </Grid>
-
         )
       }
 
@@ -306,96 +343,158 @@ class CompanyProductInfo extends Component {
     }
   }
 
-  getApiConfig = () => ({
-    url: '/prodex/api/attachments/datagrid/',
-    searchToFilter: v => v ? ([
-      { operator: 'LIKE', path: 'Attachment.name', values: [`%${v}%`] },
-      { operator: 'LIKE', path: 'Attachment.customName', values: [`%${v}%`] },
-      { operator: 'LIKE', path: 'Attachment.documentType.name', values: [`%${v}%`] },
-    ]) : [],
-    params: {
-      orOperator: true
-    }
-  })
-
-  render() {
+  renderForm() {
     let {
-      popupValues, isOpen,
-      activeIndex, closePopup,
-      tabChanged, intl: { formatMessage } } = this.props
+      popupValues, casProduct,
+      activeIndex, tabChanged,
+      intl: { formatMessage },
+      hiddenTabs, readOnly,
+      handleSubmit, casProductOnly } = this.props
 
     let { companyProduct } = popupValues
+
 
     try {
       var { echoProduct } = companyProduct
     } catch (e) {
-      console.error(e)
-      return null
+      var echoProduct = {}
     }
+
+    let additionalFormProps = {}
+    if (!readOnly) additionalFormProps.validationSchema = validationSchema
+    if (handleSubmit) additionalFormProps.onSubmit = handleSubmit
+
+
+    let { id, ...rest } = getSafe(() => echoProduct.elements[this.state.casProductIndex].casProduct, {})
 
     let initialValues = {
       ...EchoProductResponse,
       ...companyProduct,
       ...echoProduct,
-      attachments: companyProduct.attachments.concat(popupValues.attachments, echoProduct.attachments),
+      attachments: companyProduct && companyProduct.attachments.concat(popupValues.attachments, echoProduct.attachments),
       productName: getSafe(() => echoProduct.name, ''),
       manufacturer: getSafe(() => echoProduct.manufacturer.name, ''),
       manufacturerProductCode: getSafe(() => echoProduct.mfrProductCodes.toString().replace(' ', ', '), ''),
       sdsRevisionDate: echoProduct && echoProduct.sdsRevisionDate ? moment(echoProduct.sdsRevisionDate).format('MM/DD/YYYY') : null,
-      casProduct: getSafe(() => echoProduct.elements[this.state.casProductIndex], null),
+      casProduct: {
+        ...CasProductResponse,
+        ...getSafe(() => echoProduct.elements[this.state.casProductIndex], {}),
+        ...rest,
+        ...casProduct
+      },
+      ...popupValues
     }
 
+
     return (
-      <WiderSidebar visible={isOpen} direction='right' width='very wide'>
-        <FlexContent>
-          <Segment basic>
-            <Form
-              enableReinitialize
-              initialValues={initialValues}
-              render={(formikProps) => {
-                return (
-                  <>
-                    <Menu pointing secondary>
-                      {tabs.map((tab, i) => (
+      <Form
+        enableReinitialize
+        initialValues={initialValues}
+        {...additionalFormProps}
+        render={(formikProps) => {
+          let { submitForm, values } = formikProps
+          this.submitForm = submitForm
+
+          return (
+            casProductOnly
+              ? <Grid verticalAlign='middle'>{this.renderCasProduct(values)}</Grid>
+              : (
+                <>
+                  <Menu pointing secondary>
+                    {tabs.map((tab, i) => (
+                      hiddenTabs.findIndex((val) => val === i) !== -1 ? null :
                         <Menu.Item
                           onClick={() => tabChanged(i)}
                           active={activeIndex === i}
                         >{formatMessage(tab.text)}</Menu.Item>
-                      ))}
-                    </Menu>
-                    <Segment basic>{this.getContent(formikProps)}</Segment>
-                  </>
-                )
-              }}
-            />
-          </Segment>
-        </FlexContent>
+                    ))}
+                  </Menu>
+                  <Segment basic>{this.getContent(formikProps)}</Segment>
+                </>
+              )
+          )
+        }}
+      />
+    )
+  }
 
+  renderActions = () => {
+    let { closePopup, onClose, handleSubmit } = this.props
+
+
+    return (
+      <>
+        <Button onClick={() => {
+          closePopup()
+          onClose()
+        }}>
+          <FormattedMessage id='global.close' defaultMessage='Close'>{text => text}</FormattedMessage>
+        </Button>
+        {handleSubmit && <Button primary onClick={() => this.submitForm()}>
+          <FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage>
+        </Button>}
+      </>
+    )
+  }
+
+
+
+
+  render() {
+    let { isOpen } = this.props
+
+    const contentWrapper = children => React.cloneElement(this.props.contentWrapper
+      ? this.props.contentWrapper(children)
+      : <FlexContent><Segment basic>{children}</Segment></FlexContent>)
+
+    const actionsWrapper = children => React.cloneElement(this.props.actionsWrapper
+      ? this.props.actionsWrapper(children)
+      : (
         <GraySegment>
           <RightAlignedDiv>
-            <Button onClick={closePopup}>
-              <FormattedMessage id='global.close' defaultMessage='Close'>{text => text}</FormattedMessage>
-            </Button>
+            {children}
           </RightAlignedDiv>
         </GraySegment>
+      ))
 
-      </WiderSidebar>
+
+    const Content = React.cloneElement(this.props.wrapper
+      ? this.props.wrapper
+      : <WiderSidebar visible={isOpen} direction='right' width='very wide' />, {},
+      <>
+        {this.props.header && this.props.header}
+        {contentWrapper(this.renderForm())}
+        {actionsWrapper(this.renderActions())}
+      </>
     )
+
+    return Content
   }
 }
 
 CompanyProductInfo.propTypes = {
   popupValues: object,
+  casProduct: object,
   isOpen: bool,
   activeIndex: number,
-  readOnly: bool
+  readOnly: bool,
+  wrapper: node,
+  contentWrapper: func,
+  actionsWrapper: func,
+  onClose: func,
+  hiddenTabs: array,
+  casProductOnly: bool
 }
 
 CompanyProductInfo.defaultProps = {
   popupValues: {},
+  casProduct: {},
   isOpen: false,
   activeIndex: 0,
-  readOnly: true
+  readOnly: true,
+  onClose: () => { },
+  hiddenTabs: [],
+  casProductOnly: false
 }
 
 export default injectIntl(CompanyProductInfo)

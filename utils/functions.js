@@ -98,7 +98,14 @@ export const removeEmpty = (obj) =>
             // if (Object.entries(val).length === 0) delete obj[key]
         }
         else {
-            if (val == null) delete obj[key]
+            if (val == null) {
+                try {
+                    delete obj[key]
+                } catch (e) {
+                    console.error(e)
+                    console.error('tried to delete', { obj, key })
+                }
+            }
             else if (typeof val === 'string') {
                 if (val.trim() === '') delete obj[key]
                 else obj[key] = val.trim()
@@ -114,3 +121,10 @@ export const getDesiredCasProductsProps = (casProducts) =>
         min: getSafe(() => el.assayMin, ''),
         max: getSafe(() => el.assayMax, '')
     }))
+
+
+export const formatAssay = (min = null, max = null, delimiter = '/') => (
+    min ?
+        max ? `${min}${delimiter}${max}` : `> ${min}`
+        : max ? `< ${max}` : ''
+)

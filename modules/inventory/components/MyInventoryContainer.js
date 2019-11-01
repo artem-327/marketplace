@@ -20,7 +20,7 @@ import { getSafe } from '~/utils/functions'
 import moment from 'moment/moment'
 
 function mapStateToProps(store, { datagrid }) {
-  
+
   return {
     ...store.simpleAdd,
     sellEligible: getSafe(() => store.auth.identity.company.sellEligible, false),
@@ -33,7 +33,6 @@ function mapStateToProps(store, { datagrid }) {
         if (po.pricingTiers.length > 1) fobPrice = <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].pricePerUOM} /> - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].pricePerUOM} /> {qtyPart && (`/ ${qtyPart}`)} </>
         else fobPrice = <> <FormattedNumber style='currency' currency={currency} value={getSafe(() => po.pricingTiers[0].pricePerUOM)} /> {qtyPart && (`/ ${qtyPart}`)} </>
       } catch (e) { console.error(e) }
-     
       return {
         ...po,
         id: po.id,
@@ -65,7 +64,7 @@ function mapStateToProps(store, { datagrid }) {
         grade: po.grades && po.grades.length ? <ArrayToMultiple values={po.grades.map(d => (d.name))} /> : '',
         origin: getSafe(() => po.origin.name, ''),
         form: getSafe(() => po.form.name, ''),
-        assay: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
+        assayString: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
         mfgDate: getSafe(() => moment(po.manufacturedDate).format('MM/DD/YYYY'), ''),
         expDate: getSafe(() => moment(po.expirationDate).format('MM/DD/YYYY'), ''),
         allocatedPkg: po.pkgAllocated,

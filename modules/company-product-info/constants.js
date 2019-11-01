@@ -108,3 +108,10 @@ export const groupActions = (rows, companyProductId, callback) => {
     text: tab.text, callback: () => callback(companyProduct, i)
   }))
 }
+
+export const yesNoOptions = {
+  options: [
+    { key: 'yes', text: <FormattedMessage id='global.yes' defaultMessage='Yes' />, value: true },
+    { key: 'no', text: <FormattedMessage id='global.no' defaultMessage='No' />, value: false },
+  ]
+}
