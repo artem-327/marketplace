@@ -251,7 +251,7 @@ class CompanyProductInfo extends Component {
           </GridColumn>
 
           <GridColumn computer={8}>
-            <label><FormattedMessage id='global.filter' defaultMessage='Filter' /></label>
+            <label><FormattedMessage id='global.propsFilter' defaultMessage='Properties Filter' /></label>
             <Dropdown
               fluid selection
               value={this.state.regulatoryFilter}
