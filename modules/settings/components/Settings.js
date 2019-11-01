@@ -214,7 +214,7 @@ class Settings extends Component {
         url: `/prodex/api/users/datagrid`,
         searchToFilter: v => v ? ([
           { operator: 'LIKE', path: 'User.name', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'User.homeBranch.name', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'User.homeBranch.deliveryAddress.contactName', values: [`%${v}%`] },
           // { operator: 'LIKE', path: '', values: [`%${v}%`] }, // TODO here should be User.jobTitle but BE doesn't seem to have it as filterable field...
         ]) : [],
         params: {
@@ -224,9 +224,9 @@ class Settings extends Component {
       'branches': {
         url: `/prodex/api/branches/datagrid`,
         searchToFilter: v => v ? ([
-          { operator: 'LIKE', path: 'Branch.name', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'Branch.address.streetAddress', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'Branch.contactName', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Branch.deliveryAddress.addressName', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Branch.deliveryAddress.address.streetAddress', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Branch.deliveryAddress.contactName', values: [`%${v}%`] },
         ]) : [],
         params: {
           orOperator: true
@@ -235,9 +235,9 @@ class Settings extends Component {
       'warehouses': {
         url: `/prodex/api/branches/warehouses/datagrid`,
         searchToFilter: v => v ? ([
-          { operator: 'LIKE', path: 'Branch.name', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'Branch.address.streetAddress', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'Branch.contactName', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Branch.deliveryAddress.addressName', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Branch.deliveryAddress.address.streetAddress', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Branch.deliveryAddress.contactName', values: [`%${v}%`] },
         ]) : [],
         params: {
           orOperator: true
