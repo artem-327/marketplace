@@ -1,8 +1,12 @@
 import MarketplaceContainer from './components/MarketplaceContainer'
 import { DatagridProvider } from '~/modules/datagrid'
+import { CompanyProductInfo } from '~/modules/company-product-info'
 
 export const Marketplace = () => (
-  <DatagridProvider apiConfig={{ url: '/prodex/api/product-offers/broadcasted/datagrid/' }}>
-    <MarketplaceContainer />
-  </DatagridProvider>
+  <>
+    <CompanyProductInfo />
+    <DatagridProvider apiConfig={{ url: '/prodex/api/product-offers/broadcasted/datagrid/' }}>
+      <MarketplaceContainer />
+    </DatagridProvider>
+  </>
 )

@@ -1,10 +1,14 @@
 import MyInventoryContainer from './components/MyInventoryContainer'
 import { DatagridProvider } from '~/modules/datagrid'
+import { CompanyProductInfo } from '~/modules/company-product-info'
 
 const MyInventory = () => (
-  <DatagridProvider apiConfig={{ url: '/prodex/api/product-offers/own/datagrid/' }}>
-    <MyInventoryContainer />
-  </DatagridProvider>
+  <>
+    <CompanyProductInfo />
+    <DatagridProvider apiConfig={{ url: '/prodex/api/product-offers/own/datagrid/' }}>
+      <MyInventoryContainer />
+    </DatagridProvider>
+  </>
 )
 
 export {

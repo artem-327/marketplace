@@ -13,7 +13,7 @@ import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import cn from 'classnames'
-import { CompanyProductInfo } from '~/modules/company-product-info'
+
 
 import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
@@ -177,7 +177,7 @@ class MyInventory extends Component {
 
     return (
       <>
-        <CompanyProductInfo />
+      
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
 
         <Container fluid style={{ padding: '0 32px' }}>
@@ -242,7 +242,6 @@ class MyInventory extends Component {
           <ProdexTable
             defaultHiddenColumns={defaultHiddenColumns}
             {...datagrid.tableProps}
-            loading={false}
             tableName='my_inventory_grid'
             columns={columns}
             rows={this.getRows(rows)}

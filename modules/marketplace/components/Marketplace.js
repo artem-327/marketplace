@@ -3,7 +3,6 @@ import { Container, Menu, Header, Button, Popup, List } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 
-import { CompanyProductInfo } from '~/modules/company-product-info'
 import { ShippingQuotes } from '~/modules/shipping'
 import SubMenu from '~/src/components/SubMenu'
 import { Filter } from '~/modules/filter'
@@ -107,9 +106,7 @@ class Marketplace extends Component {
 
     return (
       <>
-        <CompanyProductInfo />
         <Container fluid style={{ padding: '0 32px' }}>
-
           <ShippingQuotes
             modalProps={{
               open: this.state.open,

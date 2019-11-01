@@ -34,7 +34,7 @@ const validationSchema = Yup.object().shape({
 class CompanyProductInfo extends Component {
 
   state = {
-    regulatoryFilter: regulatoryFilter.epa.value,
+    regulatoryFilter: regulatoryFilter.casChemicalProps.value,
     casProductIndex: 0,
     echoProductGroup: echoProductGrouping[0].value
   }
@@ -107,22 +107,26 @@ class CompanyProductInfo extends Component {
     </>
   )
 
+  componentDidUpdate() {
+    // When you switch different Products and previous product had casProductIndex bigger value than new product casProducts count, set index to 0 so dropdown value is correctly displayed
+    if (this.props.readOnly)
+      if ((this.state.casProductIndex + 1) > getSafe(() => this.props.popupValues.companyProduct.echoProduct.elements.length, 0)) this.setState({ casProductIndex: 0 })
+  }
 
   renderCasProduct = (values) => {
     let { popupValues, readOnly } = this.props
 
     let casProducts = getSafe(() => popupValues.companyProduct.echoProduct.elements, [])
-  
+
 
     let markup = [
       this.getInput({ id: 'global.casIndexName', defaultMessage: 'Cas Index Name', name: 'casProduct.casIndexName' })
     ]
 
-    let { epa, dhs, dot, caProp65, rightToKnow, dea, international, all } = regulatoryFilter
+    let { casChemicalProps, epa, dhs, dot, caProp65, rightToKnow, dea, international, all } = regulatoryFilter
 
     let dontBreak = this.state.regulatoryFilter === all.key
     switch (this.state.regulatoryFilter) {
-
       case all.key:
       case epa.key: {
         markup.push(
@@ -227,12 +231,20 @@ class CompanyProductInfo extends Component {
                 <Dropdown
                   fluid selection
                   value={getSafe(() => values.casProduct.id)}
-                  options={casProducts.map((cp) => ({
-                    key: cp.id,
-                    text: `${cp.casProduct.casNumber} ${cp.casProduct.casIndexName} ${formatAssay(values.assayMin, values.assayMax)}`,
-                    value: cp.id
-                  }))}
-                  onChange={(_, { value }) => this.setState({ casProductIndex: value })} />
+                  options={casProducts.map((cp) => {
+                    try {
+                      var text = `${cp.casProduct.casNumber} ${cp.casProduct.casIndexName}`
+                    } catch {
+                      var text = cp.displayName
+                    }
+
+                    return ({
+                      key: cp.id,
+                      text: `${text} ${formatAssay(values.assayMin, values.assayMax)}`,
+                      value: cp.id
+                    })
+                  })}
+                  onChange={(_, data) => this.setState({ casProductIndex: data.options.findIndex((el) => el.value === data.value) })} />
               </>
               : this.getInput({ id: 'global.casNumber', defaultMessage: 'CAS Number', name: 'casProduct.casNumber' })
             }
@@ -249,14 +261,13 @@ class CompanyProductInfo extends Component {
 
         </GridRow>
         {markup.map((el) => el)}
-        {this.getSharedContent('casProduct.')}
+        {(this.state.regulatoryFilter === all.key || this.state.regulatoryFilter === casChemicalProps.key) && this.getSharedContent('casProduct.')}
       </>
     )
   }
 
   getContent = ({ values }) => {
     let { activeIndex } = this.props
-
 
 
     switch (activeIndex) {
@@ -366,6 +377,7 @@ class CompanyProductInfo extends Component {
 
 
     let { id, ...rest } = getSafe(() => echoProduct.elements[this.state.casProductIndex].casProduct, {})
+    console.log({ rest, echoProduct, index: this.state.casProductIndex })
 
     let initialValues = {
       ...EchoProductResponse,
@@ -379,8 +391,8 @@ class CompanyProductInfo extends Component {
       casProduct: {
         ...CasProductResponse,
         ...getSafe(() => echoProduct.elements[this.state.casProductIndex], {}),
-        ...rest,
-        ...casProduct
+        ...casProduct,
+        ...rest
       },
       ...popupValues
     }
@@ -394,6 +406,7 @@ class CompanyProductInfo extends Component {
         render={(formikProps) => {
           let { submitForm, values } = formikProps
           this.submitForm = submitForm
+          console.log({ values })
 
           return (
             casProductOnly

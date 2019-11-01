@@ -9,44 +9,49 @@ export const tabs = [
 ]
 
 export const regulatoryFilter = {
+  casChemicalProps: {
+    key: 'casChemicalProps',
+    text: <FormattedMessage id='global.casChemicalProps' defaultMessage='CAS Chemical Properties'>{text => text}</FormattedMessage>,
+    value: 'casChemicalProps'
+  },
   epa: {
     key: 'epa',
-    text: <FormattedMessage id='global.epa' defaultMessage='!EPA'>{text => text}</FormattedMessage>,
+    text: <FormattedMessage id='global.regulatoryEpa' defaultMessage='Regulatory - EPA'>{text => text}</FormattedMessage>,
     value: 'epa'
   },
   dhs: {
     key: 'dhs',
-    text: <FormattedMessage id='global.dhs' defaultMessage='!DHS'>{text => text}</FormattedMessage>,
+    text: <FormattedMessage id='global.regulatoryDhs' defaultMessage='Regulatory - DHS'>{text => text}</FormattedMessage>,
     value: 'dhs'
   },
   dot: {
     key: 'dot',
-    text: <FormattedMessage id='global.dot' defaultMessage='!DOT'>{text => text}</FormattedMessage>,
+    text: <FormattedMessage id='global.regulatoryDot' defaultMessage='Regulatory - DOT'>{text => text}</FormattedMessage>,
     value: 'dot'
   },
   caProp65: {
     key: 'caProp65',
-    text: <FormattedMessage id='global.caProp65' defaultMessage='!CA Prop 65'>{text => text}</FormattedMessage>,
+    text: <FormattedMessage id='global.regulatoryCaProp65' defaultMessage='Regulatory - CA Prop 65'>{text => text}</FormattedMessage>,
     value: 'caProp65'
   },
   rightToKnow: {
     key: 'rightToKnow',
-    text: <FormattedMessage id='global.rightToKnow' defaultMessage='!Right to Know'>{text => text}</FormattedMessage>,
+    text: <FormattedMessage id='global.regulatoryRightToKnow' defaultMessage='Regulatory - Right to Know'>{text => text}</FormattedMessage>,
     value: 'rightToKnow'
   },
   dea: {
     key: 'dea',
-    text: <FormattedMessage id='global.dea' defaultMessage='!DEA'>{text => text}</FormattedMessage>,
+    text: <FormattedMessage id='global.regulatoryDea' defaultMessage='Regulatory - DEA'>{text => text}</FormattedMessage>,
     value: 'dea'
   },
   international: {
     key: 'international',
-    text: <FormattedMessage id='global.international' defaultMessage='!International'>{text => text}</FormattedMessage>,
+    text: <FormattedMessage id='global.regulatoryInternational' defaultMessage='Regulatory - International'>{text => text}</FormattedMessage>,
     value: 'international'
   },
   all: {
     key: 'all',
-    text: <FormattedMessage id='global.all' defaultMessage='!All'>{text => text}</FormattedMessage>,
+    text: <FormattedMessage id='global.all' defaultMessage='All'>{text => text}</FormattedMessage>,
     value: 'all'
   },
 }
@@ -92,10 +97,10 @@ export const dropdownOptions = {
 }
 
 export const echoProductGrouping = [
-  { key: 'dot', text: <FormattedMessage id='global.dot' defaultMessage='!DOT' />, value: 'dot' },
-  { key: 'iata', text: <FormattedMessage id='global.iata' defaultMessage='!IATA' />, value: 'iata' },
-  { key: 'tdg', text: <FormattedMessage id='global.tdg' defaultMessage='!TDG' />, value: 'tdg' },
-  { key: 'imdgImo', text: <FormattedMessage id='global.imdgImo' defaultMessage='!IMDG/IMO' />, value: 'imdgImo' }
+  { key: 'dot', text: <FormattedMessage id='global.dot' defaultMessage='DOT' />, value: 'dot' },
+  { key: 'iata', text: <FormattedMessage id='global.iata' defaultMessage='IATA' />, value: 'iata' },
+  { key: 'tdg', text: <FormattedMessage id='global.tdg' defaultMessage='TDG' />, value: 'tdg' },
+  { key: 'imdgImo', text: <FormattedMessage id='global.imdgImo' defaultMessage='IMDG/IMO' />, value: 'imdgImo' }
 ]
 
 
