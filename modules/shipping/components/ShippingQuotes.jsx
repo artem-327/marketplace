@@ -18,10 +18,6 @@ const formValidation = (min, split) => Yup.object().shape({
     zip: Yup.string().trim()
       .min(3, errorMessages.minLength(3))
       .required(errorMessages.requiredMessage),
-    /*
-    quantity: Yup.string()
-      .required(errorMessages.requiredMessage),
-    */
     quantity: quantityValidation(min, split)
   })
 })
@@ -57,8 +53,6 @@ export default class ShippingQuotes extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (!prevProps.modalProps.open && this.props.modalProps.open) {
-      //console.log('!!!!! componentDidUpdate prevProps', prevProps)
-      //console.log('!!!!! componentDidUpdate this.props', this.props)
       this.setState({ selectedIndex: null, sQuote: null, min: 1, split: 1 })
       this.props.clearShippingQuotes()
     }
@@ -66,7 +60,7 @@ export default class ShippingQuotes extends Component {
 
   createOrder = async () => {
     let payload = {
-      pkgAmount: this.state.quantity,
+      pkgAmount: Number(this.state.quantity),
       productOffer: this.state.sQuote.productOfferId
     }
 
@@ -76,7 +70,7 @@ export default class ShippingQuotes extends Component {
     } catch { }
   }
 
-  getShipingQuotes(inputs) {
+  getShipingQuotes = async (inputs, setFieldTouched) => {
     const { productOfferIds, getShipingQuotes } = this.props
     const params = {
       productOfferIds: productOfferIds,
@@ -86,9 +80,11 @@ export default class ShippingQuotes extends Component {
       maxTransitDays: inputs.destination.maxTransit
     }
     getShipingQuotes(params)
+    await this.setState({ selectedIndex: null, sQuote: null, min: 1, split: 1 })
+    setFieldTouched('destination.quantity', true, true)
   }
 
-  handleQuoteSelect = async (i, sQuote, validateForm) => {
+  handleQuoteSelect = async (i, sQuote, setFieldTouched) => {
     const { productOffersSelected } = this.props
     const po =  productOffersSelected[i] // ! ! mozna najit index z sQuote v productOffersSelected ?
 
@@ -98,13 +94,13 @@ export default class ShippingQuotes extends Component {
       split: po.split,
       min: po.min
     })
-
-    validateForm()
+    setFieldTouched('destination.quantity', true, true)
   }
 
   renderForm() {
     const { loading, zipCodes } = this.props
     const { initialValues, min, split } = this.state
+    const { closeModal } = this.props.modalProps
 
     return (
       <Form
@@ -113,11 +109,14 @@ export default class ShippingQuotes extends Component {
         initialValues={initialValues}
         validationSchema={formValidation(min, split)}
         onSubmit={(values, actions) => {
-          this.getShipingQuotes(values)
+          //this.getShipingQuotes(values)
         }}
       >
 
-        {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
+        {({ values, errors, setFieldValue, validateForm, setFieldTouched, submitForm }) => {
+          let quantity = Number(values.destination.quantity)
+          let disableCalcButton = loading || (errors.destination && errors.destination.zip) || !quantity || !Number.isInteger(quantity)
+
           return (
           <>
             <FormGroup widths='equal' data-test='ShippingQuotes_quantity_inp'>
@@ -142,12 +141,13 @@ export default class ShippingQuotes extends Component {
               />
               <FormField>
                 <label>&nbsp;</label>
-                <Button type='submit' fluid disabled={loading}
+                <Button type='button' fluid disabled={disableCalcButton}
+                        onClick={() => this.getShipingQuotes(values, setFieldTouched)}
                         data-test='ShippingQuotes_calculate'><FormattedMessage id='shippingQuote.calculate' defaultMessage='Calculate'>{(text) => text}</FormattedMessage></Button>
               </FormField>
             </FormGroup>
             <div>
-              {this.renderShipingQuotes(validateForm)}
+              {this.renderShipingQuotes(setFieldTouched)}
             </div>
           </>
         )}}
@@ -155,7 +155,7 @@ export default class ShippingQuotes extends Component {
     )
   }
 
-  renderShipingQuotes(validateForm) {
+  renderShipingQuotes(setFieldTouched) {
     const { loading } = this.props
 
     return (
@@ -183,7 +183,7 @@ export default class ShippingQuotes extends Component {
                     <Checkbox
                       radio
                       checked={this.state.selectedIndex === i}
-                      onChange={() => this.handleQuoteSelect(i, sQuote, validateForm)}
+                      onChange={() => this.handleQuoteSelect(i, sQuote, setFieldTouched)}
                       value={i}
                       data-test={`ShippingQuotes_row_${i}_chckb`}
                     />
@@ -214,6 +214,11 @@ export default class ShippingQuotes extends Component {
 
   render() {
     const { closeModal } = this.props.modalProps
+    const { min, split } = this.state
+
+    let quantity = Number(this.state.quantity)
+    let disableSubmitButton = !(quantity && this.state.sQuote && Number.isInteger(quantity)
+      && quantity >= min && quantity % split === 0)
 
     return (
       <Modal closeIcon onClose={closeModal} centered={false} {...this.props.modalProps}>
@@ -225,7 +230,7 @@ export default class ShippingQuotes extends Component {
           <Button onClick={closeModal} data-test='ShippingQuotes_closeModal'>
             <FormattedMessage id='global.close' defaultMessage='Close'>{(text) => text}</FormattedMessage>
           </Button>
-          <Button loading={this.props.isPurchasing} disabled={!(this.state.quantity && this.state.sQuote)} primary onClick={this.createOrder} data-test='ShippingQuotes_createOrder'>
+          <Button loading={this.props.isPurchasing} disabled={disableSubmitButton} primary onClick={this.createOrder} data-test='ShippingQuotes_createOrder'>
             <FormattedMessage id='shippingQuote.purchase' defaultMessage='Purchase'>{(text) => text}</FormattedMessage>
           </Button>
         </Modal.Actions>

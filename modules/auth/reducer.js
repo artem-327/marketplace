@@ -92,8 +92,10 @@ export default function reducer(state = initialState, action) {
       }
     }
     case AT.LOGIN_FULFILLED: {
-      let deliveryAddress = getSafe(() => payload.identity.homeBranch.deliveryAddress, null)
-      let address = getSafe(() => payload.identity.homeBranch.deliveryAddress.address, null)
+      let deliveryAddress = getSafe(() => payload.identity.company.primaryBranch.deliveryAddress, null)
+      let address = getSafe(() => payload.identity.company.primaryBranch.deliveryAddress.address, null)
+
+      console.log('!!!!!!! identity', getSafe(() => payload.identity))
 
       return {
         ...state,
