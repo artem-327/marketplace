@@ -29,26 +29,26 @@ context("Companies CRUD", () => {
         cy.enterText('input[id="field_input_primaryUser.name"]',"Donal Duck")
         cy.enterText('input[id="field_input_primaryUser.email"]',"duck@duck.com")
 
-        cy.enterText('input[id="field_input_primaryBranch.name"]',"Main")
-        cy.enterText('input[id="field_input_primaryBranch.contactName"]',"James Duckling")
-        cy.enterText('input[id="field_input_primaryBranch.contactEmail"]',"james@duck.com")
+        cy.enterText('input[id="field_input_primaryBranch.deliveryAddress.addressName"]',"Main")
+        cy.enterText('input[id="field_input_primaryBranch.deliveryAddress.contactName"]',"James Duckling")
+        cy.enterText('input[id="field_input_primaryBranch.deliveryAddress.contactEmail"]',"james@duck.com")
         cy.get('div[data-test="admin_popup_company_primaryBranchNameEmailPhone_inp"]').within(($form) =>{
             cy.get('input[placeholder = "Phone Number"]').type("2025550156")
             cy.contains("+CCC").click()
             cy.contains("USA").click()
         })
 
-        cy.enterText("input[id='field_input_primaryBranch.address.streetAddress']","125 N G St")
-        cy.enterText("input[id='field_input_primaryBranch.address.city']","Harlingen")
-        cy.selectFromDropdown("div[id='field_dropdown_primaryBranch.address.country']","Bahamas")
+        cy.enterText("input[id='field_input_primaryBranch.deliveryAddress.address.streetAddress']","125 N G St")
+        cy.enterText("input[id='field_input_primaryBranch.deliveryAddress.address.city']","Harlingen")
+        cy.selectFromDropdown("div[id='field_dropdown_primaryBranch.deliveryAddress.address.country']","Bahamas")
 
-        cy.get("div[id='field_dropdown_primaryBranch.address.zip']")
+        cy.get("div[id='field_dropdown_primaryBranch.deliveryAddress.address.zip']")
             .children("input")
             .type("75000")
             .should("have.value","75000")
 
         cy.wait(1000)
-        cy.get("div[id='field_dropdown_primaryBranch.address.zip']").within(() => {
+        cy.get("div[id='field_dropdown_primaryBranch.deliveryAddress.address.zip']").within(() => {
             cy.get("div[class='selected item']").click({force: true})
         })
 
@@ -68,9 +68,7 @@ context("Companies CRUD", () => {
 
         cy.getToken().then(token => {
             cy.getFirstCompanyWithFilter(token, filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]").click()
-
-                cy.get("[data-test=action_" + itemId + "_0]").click()
+                cy.openElement(itemId, 0)
 
                 companyId = itemId
             })
@@ -87,9 +85,7 @@ context("Companies CRUD", () => {
 
         cy.getToken().then(token => {
             cy.getFirstCompanyWithFilter(token, filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]").click()
-
-                cy.get("[data-test=action_" + itemId + "_0]").click()
+                cy.openElement(itemId, 0)
             })
         })
 
@@ -102,14 +98,15 @@ context("Companies CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",11)
+            .should("have.length",12)
             .find(".sui-error-message").each((element) => {
-            expect(element.text()).to.match(/(Required)|(Field should have at least 2 characters)|(Invalid e-mail address)/i)
+            expect(element.text()).to.match(/(Required)|(Field should have at least 2 characters)|(Invalid e-mail address)|(Invalid Website URL (make sure to include http:\/\/ or https:\/\/))/i)
         })
     })
 
     it("Deletes a company", () => {
         cy.searchInList("Donald and Co.")
+        cy.waitForUI()
         cy.waitForUI()
 
         cy.openElement(companyId, 1)
