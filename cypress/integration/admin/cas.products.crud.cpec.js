@@ -15,16 +15,8 @@ context("CAS products CRUD", () => {
     it("Creates a CAS product", () => {
         cy.get("button[class='ui large primary button']").eq(0).click({force: true})
 
-        cy.enterText("#field_input_casIndexName", "testinonium")
-        cy.enterText("#field_input_casNumber", "100-95-521")
-        cy.enterText("#field_input_chemicalName", "Testinonium")
-
-        cy.get("#field_dropdown_hazardClassesId").click()
-        cy.get("#field_dropdown_hazardClassesId").within(() => {
-            cy.contains("Explosive: Division Not Specified").click()
-        })
-        cy.waitForUI()
-
+        cy.enterText("[name='casProduct.casNumber']", "100-95-521")
+        cy.enterText("[name='casProduct.casIndexName']", "Testinonium")
         cy.clickSave()
 
         cy.contains("Created CAS Product")
@@ -45,16 +37,11 @@ context("CAS products CRUD", () => {
             })
         })
 
-        cy.get("#field_input_casIndexName")
-            .should("have.value", "testinonium")
-
-        cy.get("#field_input_casNumber")
+        cy.get("[name='casProduct.casNumber']")
             .should("have.value", "100-95-521")
 
-        cy.get("#field_input_chemicalName")
+        cy.get("[name='casProduct.casIndexName']")
             .should("have.value", "Testinonium")
-
-        cy.contains("1")
     })
 
     it("Edits a CAS product", () => {
@@ -65,7 +52,7 @@ context("CAS products CRUD", () => {
 
         cy.openElement(productId, 0)
 
-        cy.get("#field_input_chemicalName")
+        cy.get("[name='casProduct.casIndexName']")
             .clear()
             .type("Testerium")
             .should("have.value", "Testerium")
@@ -74,7 +61,7 @@ context("CAS products CRUD", () => {
 
         cy.openElement(productId, 0)
 
-        cy.get("#field_input_chemicalName")
+        cy.get("[name='casProduct.casIndexName']")
             .should("have.value", "Testerium")
     })
 
@@ -147,7 +134,7 @@ context("CAS products CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length", 3)
+            .should("have.length", 2)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
@@ -163,6 +150,6 @@ context("CAS products CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Testinonium").should("not.exist")
+        cy.contains("Testerium").should("not.exist")
     })
 })

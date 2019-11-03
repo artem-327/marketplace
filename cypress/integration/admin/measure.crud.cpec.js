@@ -10,6 +10,8 @@ context("Units of measure CRUD", () => {
         cy.url().should("include", "admin")
 
         cy.wait("@loading")
+        cy.waitForUI()
+
         cy.get("[data-test='tabs_menu_item_1']").click()
 
         cy.wait("@unitLoad")
