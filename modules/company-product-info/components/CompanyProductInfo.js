@@ -109,7 +109,7 @@ class CompanyProductInfo extends Component {
 
   componentDidUpdate() {
     // When you switch different Products and previous product had casProductIndex bigger value than new product casProducts count, set index to 0 so dropdown value is correctly displayed
-    if (this.props.readOnly)
+    if (this.props.readOnly && this.props.isOpen)
       if ((this.state.casProductIndex + 1) > getSafe(() => this.props.popupValues.companyProduct.echoProduct.elements.length, 0)) this.setState({ casProductIndex: 0 })
   }
 
@@ -377,7 +377,7 @@ class CompanyProductInfo extends Component {
 
 
     let { id, ...rest } = getSafe(() => echoProduct.elements[this.state.casProductIndex].casProduct, {})
-    console.log({ rest, echoProduct, index: this.state.casProductIndex })
+    console.log({ rest, echoProduct, index: this.state.casProductIndex, companyProduct, popupValues, echoProduct })
 
     let initialValues = {
       ...EchoProductResponse,
