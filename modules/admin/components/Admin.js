@@ -64,77 +64,77 @@ const tables = {
 const datagridConfig = {
   'CAS Products': {
     url: '/prodex/api/cas-products/datagrid',
-    searchToFilter: v => ([
-      { operator: 'LIKE', path: 'CasProduct.chemicalName', values: [`%${v}%`] },
+    searchToFilter: v => v ? ([
+      { operator: 'LIKE', path: 'CasProduct.casIndexName', values: [`%${v}%`] },
       { operator: 'LIKE', path: 'CasProduct.casNumber', values: [`%${v}%`] }
-    ]),
+    ]) : [],
     params: {
       orOperator: true
     }
   },
   'Companies': {
     url: '/prodex/api/companies/datagrid',
-    searchToFilter: v => ([
+    searchToFilter: v => v ? ([
       { operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] }
-    ])
+    ]) : []
   },
   'Product Catalog': {
     url: '/prodex/api/echo-products/datagrid',
-    searchToFilter: v => ([
+    searchToFilter: v => v ? ([
       { operator: 'LIKE', path: 'EchoProduct.name', values: [`%${v}%`] },
       { operator: 'LIKE', path: 'EchoProduct.code', values: [`%${v}%`] }
-    ]),
+    ]) : [],
     params: {
       orOperator: true
     }
   },
   'Conditions': {
     url: '/prodex/api/product-conditions/datagrid',
-    searchToFilter: v => ([
+    searchToFilter: v => v ? ([
       { operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v}%`] }
-    ])
+    ]) : []
   },
   'Document Types': {
     url: 'prodex/api/document-types/datagrid',
-    searchToFilter: v => ([
+    searchToFilter: v => v ? ([
       { operator: 'LIKE', path: 'DocumentType.name', values: [`%${v}%`] }
-    ])
+    ]) : []
   },
   'Forms': {
     url: '/prodex/api/product-forms/datagrid',
-    searchToFilter: v => ([
+    searchToFilter: v => v ? ([
       { operator: 'LIKE', path: 'ProductForm.name', values: [`%${v}%`] }
-    ])
+    ]) : []
   },
   'Grades': {
     url: '/prodex/api/product-grades/datagrid',
-    searchToFilter: v => ([
+    searchToFilter: v => v ? ([
       { operator: 'LIKE', path: 'ProductGrade.name', values: [`%${v}%`] }
-    ])
+    ]) : []
   },
   'Manufacturers': {
     url: '/prodex/api/manufacturers/datagrid',
-    searchToFilter: v => ([
+    searchToFilter: v => v ? ([
       { operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v}%`] }
-    ])
+    ]) : []
   },
   'Market Segments': {
     url: '/prodex/api/market-segments/datagrid',
-    searchToFilter: v => ([
+    searchToFilter: v => v ? ([
       { operator: 'LIKE', path: 'MarketSegment.name', values: [`%${v}%`] }
-    ])
+    ]) : []
   },
   'Units of Packaging': {
     url: '/prodex/api/packaging-types/datagrid',
-    searchToFilter: v => ([
+    searchToFilter: v => v ? ([
       { operator: 'LIKE', path: 'PackagingType.name', values: [`%${v}%`] }
-    ])
+    ]) : []
   },
   'Units of Measure': {
     url: '/prodex/api/units/datagrid',
-    searchToFilter: v => ([
+    searchToFilter: v => v ? ([
       { operator: 'LIKE', path: 'Unit.name', values: [`%${v}%`] }
-    ])
+    ]) : []
   }
 }
 
