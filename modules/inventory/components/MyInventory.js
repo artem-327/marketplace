@@ -59,6 +59,10 @@ class MyInventory extends Component {
   }
 
 
+  componentDidMount() {
+    // Because of #31767
+    this.props.getIdentity()
+  }
 
   filterInventory = async (filter) => {
     let productIds = []
