@@ -18,6 +18,8 @@ import cn from 'classnames'
 import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
+import { getSafe } from '~/utils/functions'
+
 const defaultHiddenColumns = [
   'minOrderQuantity', 'splits', 'condition', 'grade', 'origin', 'form', 'assayString',
   'mfgDate', 'expDate', 'allocatedPkg', 'offerExpiration', 'lotNumber'
@@ -175,6 +177,7 @@ class MyInventory extends Component {
       isOpenImportPopup,
       simpleEditTrigger,
       sidebarDetailTrigger,
+      sidebarValues,
       openPopup
     } = this.props
     const { columns, selectedRows } = this.state
@@ -314,7 +317,7 @@ class MyInventory extends Component {
 
 
         </div>
-        <DetailSidebar />
+        <DetailSidebar key={getSafe(() => sidebarValues.id, 0)} />
         <Filter
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}
