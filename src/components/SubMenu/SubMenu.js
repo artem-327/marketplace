@@ -1,7 +1,7 @@
 import './submenu.scss'
 
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import { arrayOf, shape, string, bool } from 'prop-types'
 import filterIconClose from '../../images/subMenu/filter-icon-transparent.png'
 import filterIconOpen from '../../images/subMenu/filter-icon-transparent-active.png'
 import classNames from 'classnames'
@@ -10,7 +10,7 @@ import classNames from 'classnames'
 export default class SubMenu extends Component {
 
   toggleFilter = () => {
-    this.props.toggleFilter(!this.props.filterOpen)
+    this.props.toggleFilter(null, this.props.filterType)
   }
 
   renderFilterButton() {
@@ -34,15 +34,20 @@ export default class SubMenu extends Component {
 }
 
 SubMenu.propTypes = {
-  links: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string,
-      url: PropTypes.string,
-      class: PropTypes.string,
-      exact: PropTypes.bool,
+  links: arrayOf(
+    shape({
+      label: string,
+      url: string,
+      class: string,
+      exact: bool,
     })
   ),
-  search: PropTypes.bool,
-  filter: PropTypes.bool
+  search: bool,
+  filter: bool,
+  filterType: string
+}
+
+SubMenu.defaultProps = {
+  filterType: null
 }
 
