@@ -383,7 +383,8 @@ class CompanyProductInfo extends Component {
       ...EchoProductResponse,
       ...companyProduct,
       ...echoProduct,
-      attachments: companyProduct && companyProduct.attachments.concat(popupValues.attachments, echoProduct.attachments),
+      ...popupValues,
+      attachments: companyProduct && companyProduct.attachments.concat(echoProduct.attachments),
       productName: getSafe(() => echoProduct.name, ''),
       manufacturer: getSafe(() => echoProduct.manufacturer.name, ''),
       manufacturerProductCode: getSafe(() => echoProduct.mfrProductCodes.toString().replace(' ', ', '), ''),
@@ -394,7 +395,6 @@ class CompanyProductInfo extends Component {
         ...casProduct,
         ...rest
       },
-      ...popupValues
     }
 
 
