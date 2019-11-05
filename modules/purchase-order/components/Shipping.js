@@ -22,6 +22,12 @@ class Shipping extends Component {
     }
   }
 
+  componentDidMount() {
+    if (this.props.selectedAddress && this.props.formikProps) {
+      this.props.formikProps.setFieldValue('address', this.props.selectedAddress.id)
+    }
+  }
+
   render() {
     let { deliveryAddresses, branches, warehouses, getAddress, selectedAddress, intl } = this.props
     let { formatMessage } = intl
@@ -94,7 +100,7 @@ class Shipping extends Component {
                 onChange: (_, { value }) => getAddress(value)
               }}
               options={dropdownOptions}
-              // value={selectedAddress ? selectedAddress.id : null}
+              value={selectedAddress ? selectedAddress.id : null}
 
               data-test='purchase_order_location_drpdn'
             />
