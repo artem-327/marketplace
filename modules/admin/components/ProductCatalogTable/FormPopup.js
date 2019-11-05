@@ -377,9 +377,9 @@ class AddNewPopupEchoProduct extends React.Component {
                                         .map((item) => ({
                                           key: item.id,
                                           id: item.id,
-                                          text: item.casNumber + ' ' + item.chemicalName,
+                                          text: item.casNumber + ' ' + item.casIndexName,
                                           value: item.id,
-                                          content: <Header content={item.casNumber} subheader={item.chemicalName} style={{ fontSize: '1em' }} />
+                                          content: <Header content={item.casNumber} subheader={item.casIndexName} style={{ fontSize: '1em' }} />
                                         }))}
                                     inputProps={{
                                       'data-test': `admin_product_popup_cas_${index}_drpdn`,

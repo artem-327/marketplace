@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { withRouter } from 'next/router'
 import { Container, Menu, Image, Dropdown, Icon, Label } from 'semantic-ui-react'
 import styled from 'styled-components'
-import Logo from '~/assets/images/nav/inventory.png'
+import Logo from '~/assets/images/nav/logo-echo.png'
 // import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
@@ -30,7 +30,7 @@ import { chatWidgetCreate, chatWidgetToggle } from '~/modules/chatWidget/actions
 import ChatWidget from '~/modules/chatWidget/components/ChatWidgetContainer'
 
 const TopMenu = styled(Menu)`
-  background-color: #33373e !important;
+  background-color: #1b3454 !important;
   position: fixed;
   height: 49px;
   top: 0; right: 0; bottom: 0; left: 0;
@@ -56,8 +56,8 @@ const FlexContainer = styled.div`
   flex: 1 1 auto;
 `
 const LogoImage = styled(Image)`
-  margin: 9px 10px 4px 0;
-  height: 23.78px;
+  height: 30px;
+  margin: 8px 10px 4px 0;
 `
 const CircularLabel = styled(Label)`
   position: absolute;
@@ -99,6 +99,16 @@ class Layout extends Component {
         <PopUp />
         <Head>
           <title>{formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo exchange' })} / {title}</title>
+
+          <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png" />
+          <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png" />
+          <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png" />
+          <link rel="manifest" href="/static/site.webmanifest" />
+          <link rel="shortcut icon" href="/static/favicon.ico" />
+          <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#1b3454" />
+          <meta name="msapplication-TileColor" content="#1b3454" />
+          <meta name="msapplication-config" content="/static/browserconfig.xml" />
+          <meta name="theme-color" content="#1b3454" />
         </Head>
         <TopMenu fixed='top' inverted size='large' borderless>
 

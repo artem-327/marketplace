@@ -94,12 +94,13 @@ export default function reducer(state = initialState, action) {
     case AT.LOGIN_FULFILLED: {
       let deliveryAddress = getSafe(() => payload.identity.company.primaryBranch.deliveryAddress, null)
       let address = getSafe(() => payload.identity.company.primaryBranch.deliveryAddress.address, null)
+      let primaryUser = getSafe(() => payload.identity.company.primaryUser, null)
 
-      console.log('!!!!!!! identity', getSafe(() => payload.identity))
+      //console.log('!!!!!!! identity', getSafe(() => payload.identity))
 
       return {
         ...state,
-        confirmationForm: getSafe(() => payload.identity.company.reviewRequested, false) ? {
+        confirmationForm: getSafe(() => payload.identity.company.reviewRequested, false) && primaryUser ? {
           address: {
             address: {
               city: address.city,
@@ -111,9 +112,9 @@ export default function reducer(state = initialState, action) {
             addressName: deliveryAddress.addressName || '',
             callAhead: !!deliveryAddress.callAhead,
             closeTime: deliveryAddress.closeTime || '',
-            contactEmail: deliveryAddress.contactEmail || '',
-            contactName: deliveryAddress.contactName || '',
-            contactPhone: deliveryAddress.contactPhone || '',
+            contactEmail: primaryUser.email || '',
+            contactName: primaryUser.name || '',
+            contactPhone: primaryUser.phone || '',
             deliveryNotes: deliveryAddress.deliveryNotes || '',
             forkLift: !!deliveryAddress.forkLift,
             liftGate: !!deliveryAddress.liftGate,
