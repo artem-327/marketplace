@@ -448,13 +448,13 @@ class DetailSidebar extends Component {
                   }],
                 productGrades: values.edit.productGrades.length ? values.edit.productGrades : []
               }
-              break;
+              break
             case 1:
               this.saveBroadcastRules()
               setSubmitting(false)
               setTouched({})
               this.setState({ changedForm: false })
-              break;
+              break
           }
 
           if (Object.keys(props).length) {
@@ -1033,11 +1033,16 @@ class DetailSidebar extends Component {
                           this.props.sidebarDetailTrigger(null, false)
                         }}
                         data-test='sidebar_inventory_cancel'>
-                        {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+                        {
+                          (Object.keys(touched).length || this.state.changedForm) ? 
+                            formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' }) : 
+                            formatMessage({ id: 'global.close', defaultMessage: 'Close' })
+                        }
                       </Button>
                     </GridColumn>
                     <GridColumn computer={10} textAlign='right'>
                       <Button
+                        disabled={!(Object.keys(touched).length || this.state.changedForm)}
                         primary
                         size='large'
                         inputProps={{ type: 'button' }}
