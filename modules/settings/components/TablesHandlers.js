@@ -66,63 +66,6 @@ const textsTable = {
     SearchText: 'settings.tables.documents.search'
   }
 }
-const listDocumentTypes = [
-  {
-    id: 10,
-    name: 'Bill of Lading',
-    editable: false
-  },
-  {
-    id: 1,
-    name: 'Certificate of Analysis',
-    editable: false
-  },
-  {
-    id: 5,
-    name: 'Certificate of Origin',
-    editable: false
-  },
-  {
-    id: 9,
-    name: 'Corporate Audit',
-    editable: false
-  },
-  {
-    id: 6,
-    name: 'Kosher Certificate',
-    editable: false
-  },
-  {
-    id: 7,
-    name: 'Non GMO',
-    editable: false
-  },
-  {
-    id: 8,
-    name: 'Product Audit',
-    editable: false
-  },
-  {
-    id: 4,
-    name: 'Product Image',
-    editable: false
-  },
-  {
-    id: 3,
-    name: 'Safety Data Sheet',
-    editable: false
-  },
-  {
-    id: 2,
-    name: 'Specification Sheet',
-    editable: false
-  },
-  {
-    id: 11,
-    name: 'Technical Data Sheet',
-    editable: false
-  }
-]
 
 class TablesHandlers extends Component {
   constructor(props) {
@@ -148,14 +91,12 @@ class TablesHandlers extends Component {
 
   handleFiltersValue = value => {
     const { handleFiltersValue } = this.props
-
     if (Datagrid.isReady()) Datagrid.setSearch(value)
     else handleFiltersValue(value)
   }
 
   handleFilterChange = (e, { value }) => {
     this.setState({ filterValue: value })
-
     this.handleFiltersValue(value)
   }
 
@@ -201,10 +142,10 @@ class TablesHandlers extends Component {
                 this.props.documentTypes.map(document => ({
                   key: document.key,
                   text: document.text,
-                  value: document.value
+                  value: document.text
                 }))
               }
-              onChange={this.handleFiltersValue}
+              onChange={this.handleFilterChange}
             />
           </GridColumn>
         )}
