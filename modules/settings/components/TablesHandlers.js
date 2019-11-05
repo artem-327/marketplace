@@ -14,6 +14,7 @@ import {
 } from 'semantic-ui-react'
 import { debounce } from 'lodash'
 import Router from 'next/router'
+import styled from 'styled-components'
 
 import * as Actions from '../actions'
 import { openGlobalBroadcast } from '~/modules/broadcast/actions'
@@ -22,6 +23,11 @@ import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
 import { currency } from '~/constants/index'
 import { SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP_FULFILLED } from '../action-types'
+
+const PositionHeaderSettings = styled.div`
+  position: relative;
+  z-index: 602;
+`
 
 const textsTable = {
   users: {
@@ -100,6 +106,10 @@ class TablesHandlers extends Component {
     this.handleFiltersValue(value)
   }
 
+  handleFilterChangeDocumentType = (e, { value }) => {
+    this.handleFiltersValue(value)
+  }
+
   renderHeader = () => (
     <GridColumn widescreen={2} computer={3} tablet={3}>
       <Header as='h1' size='medium'>
@@ -145,7 +155,7 @@ class TablesHandlers extends Component {
                   value: document.text
                 }))
               }
-              onChange={this.handleFilterChange}
+              onChange={this.handleFilterChangeDocumentType}
             />
           </GridColumn>
         )}
@@ -255,12 +265,14 @@ class TablesHandlers extends Component {
 
   render() {
     return (
-      <Grid as={Menu} secondary verticalAlign='middle'>
-        <GridRow>
-          {this.renderHeader()}
-          {!this.props.currentTab.hideHandler && this.renderHandler()}
-        </GridRow>
-      </Grid>
+      <PositionHeaderSettings>
+        <Grid as={Menu} secondary verticalAlign='middle'>
+          <GridRow>
+            {this.renderHeader()}
+            {!this.props.currentTab.hideHandler && this.renderHandler()}
+          </GridRow>
+        </Grid>
+      </PositionHeaderSettings>
     )
   }
 }
