@@ -30,7 +30,7 @@ const columns = [ // TODO - check en.json for those ids
 ]
 
 class DocumentManager extends Component {
-  getRows = data => (
+  getRows = (data = []) => (
     data.map((row) => ({
       ...row,
       documentTypeName: getSafe(() => row.documentType.name, ''),

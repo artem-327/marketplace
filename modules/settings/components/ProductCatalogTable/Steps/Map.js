@@ -33,6 +33,7 @@ import _invert from 'lodash/invert'
 import { withToastManager } from 'react-toast-notifications'
 
 const simpleEchoProductList = {
+  constant: 'global',
   required: [
     "codeMapper",
     "elementsMapper",
@@ -153,6 +154,7 @@ const simpleEchoProductList = {
 }
 
 const simpleCompanyProductList = {
+  constant: 'global',
   required: [
     "echoProduct",
     "intProductCodeMapper",
@@ -172,6 +174,7 @@ const simpleCompanyProductList = {
 }
 
 const simpleProductOfferList = {
+  constant: 'import',
   required: [
     "companyProductMapper",
     "pkgAvailableMapper",
@@ -193,6 +196,8 @@ const simpleProductOfferList = {
     "inStockMapper",
     "internalNotesMapper",
     "leadTimeMapper",
+    "lotExpirationDateMapper",
+    "lotManufacturedDateMapper",
     "lotNumberMapper",
     "minPkgMapper",
     "originMapper",
@@ -207,7 +212,8 @@ class Map extends Component {
     isSavedMap: false,
     options: [],
     values: [],
-    mapping: []
+    mapping: [],
+    constant: ''
   }
 
   getMapping = (mapperList) => {
@@ -215,13 +221,13 @@ class Map extends Component {
 
     return mapperList.required.map(option => {
       return {
-        text: formatMessage({ id: `global.${option.replace(/Mapper$/gi, '')}`, defaultMessage: option.replace(/Mapper$/gi, '') }),
+        text: formatMessage({ id: `${mapperList.constant}.${option.replace(/Mapper$/gi, '')}`, defaultMessage: option.replace(/Mapper$/gi, '') }),
         value: option,
         required: true
       }
     }).concat(mapperList.optional.map(option => {
       return {
-        text: formatMessage({ id: `global.${option.replace(/Mapper$/gi, '')}`, defaultMessage: option.replace(/Mapper$/gi, '') }),
+        text: formatMessage({ id: `${mapperList.constant}.${option.replace(/Mapper$/gi, '')}`, defaultMessage: option.replace(/Mapper$/gi, '') }),
         value: option
       }
     }))
@@ -230,22 +236,26 @@ class Map extends Component {
   componentDidMount = async() => {
     const { intl: { formatMessage }} = this.props
     let { mapping } = this.state
+    let constant = ''
     if (this.props.productOffer) {
       this.props.getCSVMapProductOffer()
       const mappingProductOffer = this.getMapping(simpleProductOfferList)
+      constant = simpleProductOfferList.constant
       mapping = mappingProductOffer
     }
     else if (this.props.echoProduct) {
       this.props.getCSVMapEchoProduct()
       const mappingEchoProduct = this.getMapping(simpleEchoProductList)
+      constant = simpleEchoProductList.constant
       mapping = mappingEchoProduct
     }
     else {
       const mappingCompanyProduct = this.getMapping(simpleCompanyProductList)
+      constant = simpleCompanyProductList.constant
       mapping = mappingCompanyProduct
     }
 
-    this.setState({ newHeaders: this.props.CSV.headerCSV, mapping: mapping })
+    this.setState({ newHeaders: this.props.CSV.headerCSV, mapping: mapping, constant: constant })
 
     let a = (mapping).sort(function (a, b) {
       let x = a.text.toLowerCase()
@@ -274,7 +284,7 @@ class Map extends Component {
         return getSafe(() => foundItem.value, '')
       })
 
-      const missingRequired = this.findNotSelectedRequired(values, mapping)
+      const missingRequired = this.findNotSelectedRequired(values, mapping, constant)
 
       this.props.changeHeadersCSV(newHeaders, missingRequired)
     } else {
@@ -502,9 +512,13 @@ class Map extends Component {
     )
   }
 
-  findNotSelectedRequired = (values, mapping) => {
+  findNotSelectedRequired = (values, mapping, constant) => {
+    if (!constant)
+      constant = this.state.constant
+
     if (!mapping)
       mapping = this.state.mapping
+
     const { intl: { formatMessage }} = this.props
 
     const required = mapping.reduce((requiredFields, mapField) => {
@@ -517,7 +531,7 @@ class Map extends Component {
     const requiredMissing = required.filter(function(field) {return values.indexOf(field) < 0;});
     return requiredMissing.map(reqM => {
       const field = reqM.replace(/Mapper$/gi, '')
-      return formatMessage({ id: `global.${field}`, defaultMessage: field })
+      return formatMessage({ id: `${constant}.${field}`, defaultMessage: field })
     })
   }
 

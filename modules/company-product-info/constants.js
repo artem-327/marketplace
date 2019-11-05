@@ -24,11 +24,11 @@ export const regulatoryFilter = {
     text: <FormattedMessage id='global.regulatoryDhs' defaultMessage='Regulatory - DHS'>{text => text}</FormattedMessage>,
     value: 'dhs'
   },
-  dot: {
-    key: 'dot',
-    text: <FormattedMessage id='global.regulatoryDot' defaultMessage='Regulatory - DOT'>{text => text}</FormattedMessage>,
-    value: 'dot'
-  },
+  // dot: {
+  //   key: 'dot',
+  //   text: <FormattedMessage id='global.regulatoryDot' defaultMessage='Regulatory - DOT'>{text => text}</FormattedMessage>,
+  //   value: 'dot'
+  // },
   caProp65: {
     key: 'caProp65',
     text: <FormattedMessage id='global.regulatoryCaProp65' defaultMessage='Regulatory - CA Prop 65'>{text => text}</FormattedMessage>,
