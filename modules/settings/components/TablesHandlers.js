@@ -127,7 +127,6 @@ const listDocumentTypes = [
 class TablesHandlers extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
       filterFieldCurrentValue: 'None',
       filterValue: ''
@@ -196,11 +195,15 @@ class TablesHandlers extends Component {
               })}
               fluid
               selection
-              options={listDocumentTypes.map(document => ({
-                key: document.id,
-                text: document.name,
-                value: document.id
-              }))}
+              options={
+                this.props &&
+                this.props.documentTypes.length > 0 &&
+                this.props.documentTypes.map(document => ({
+                  key: document.key,
+                  text: document.text,
+                  value: document.value
+                }))
+              }
               onChange={this.handleFiltersValue}
             />
           </GridColumn>
@@ -327,6 +330,7 @@ const mapStateToProps = state => {
   //const dwollaAccountStatus = 'document'
 
   return {
+    documentTypes: state.settings.documentTypes,
     bankAccounts: bankAccountsConfig[dwollaAccountStatus],
     currentTab: state.settings.currentTab,
     productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
