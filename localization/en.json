@@ -590,6 +590,7 @@
   "import.costPerUom": "Cost per UOM",
   "import.costRecords": "Cost Records",
   "import.currency": "Currency",
+  "import.errorAtLine": "Error at line {lineNumber}: {errorCause}",
   "import.externalNotes": "External Notes",
   "import.form": "Form",
   "import.grades": "Grades",
