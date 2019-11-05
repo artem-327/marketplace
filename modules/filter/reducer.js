@@ -4,8 +4,9 @@ import typeToReducer from 'type-to-reducer'
 
 import { uniqueArrayByKey, mapAutocompleteData } from '~/utils/functions'
 
-import { datagridValues, paths } from './constants/filter'
+import { datagridValues, paths, filterPresets } from './constants/filter'
 import { currency } from '~/constants/index'
+
 
 const asignFiltersDescription = (filter, params) => {
   let datagridKeys = Object.keys(datagridValues)
@@ -16,7 +17,7 @@ const asignFiltersDescription = (filter, params) => {
     filters.forEach(filter => {
       datagridKeys.forEach(key => {
         let datagrid = datagridValues[key]
-        
+
         if (datagrid.paths.includes(filter.path) && datagrid.operator === filter.operator) {
           filter.description = datagrid.description
           filter.valuesDescription = datagridValues[key].valuesDescription(filter.values, params)
@@ -37,6 +38,7 @@ const asignFiltersDescription = (filter, params) => {
 
 export const initialState = {
   isOpen: false,
+  ordersIsOpen: false,
   isFilterSaving: false,
   isFilterApplying: false,
   autocompleteWarehouse: [],
@@ -63,10 +65,15 @@ export default typeToReducer({
 
   /* TOGGLE_FILTER */
 
-  [a.toggleFilter]: (state, { payload: value }) => ({
-    ...state,
-    isOpen: typeof value === 'boolean' ? value : !state.isOpen
-  }),
+  [a.toggleFilter]: (state, { payload: { value, type } }) => {
+    let propName = 'isOpen'
+    if (type === filterPresets.ORDERS) propName = 'ordersIsOpen'
+
+    return ({
+      ...state,
+      [propName]: typeof value === 'boolean' ? value : !state[propName]
+    })
+  },
 
   /* FILTER_SAVING */
 

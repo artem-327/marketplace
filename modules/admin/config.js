@@ -10,10 +10,10 @@ export const config = {
       columns: [
         { name: 'casIndexName', title: <FormattedMessage id='global.indexName' defaultMessage='Index Name'>{text => text}</FormattedMessage>, width: 375, sortPath: 'CasProduct.casIndexName' },
         { name: 'casNumber', title: <FormattedMessage id='global.casNumber' defaultMessage='CAS Number'>{text => text}</FormattedMessage>, width: 150, sortPath: 'CasProduct.casNumber' },
-        { name: 'chemicalName', title: <FormattedMessage id='global.chemicalName' defaultMessage='Chemical Name'>{text => text}</FormattedMessage>, width: 375, sortPath: 'CasProduct.chemicalName' },
-        { name: 'unNumberCode', title: <FormattedMessage id='global.unNumber' defaultMessage='UN Number'>{text => text}</FormattedMessage>, width: 150, sortPath: 'CasProduct.unNumber.unNumberCode' },
-        { name: 'packagingGroup', title: <FormattedMessage id='global.packagingGroup' defaultMessage='Packaging Group'>{text => text}</FormattedMessage>, width: 150, sortPath: 'CasProduct.packagingGroup.groupCode' },
-        { name: 'hazardClassesLabeled', title: <FormattedMessage id='global.hazardClasses' defaultMessage='Hazard Classes'>{text => text}</FormattedMessage>, width: 150 },
+        // { name: 'chemicalName', title: <FormattedMessage id='global.chemicalName' defaultMessage='Chemical Name'>{text => text}</FormattedMessage>, width: 375, sortPath: 'CasProduct.chemicalName' },
+        // { name: 'unNumberCode', title: <FormattedMessage id='global.unNumber' defaultMessage='UN Number'>{text => text}</FormattedMessage>, width: 150, sortPath: 'CasProduct.unNumber.unNumberCode' },
+        // { name: 'packagingGroup', title: <FormattedMessage id='global.packagingGroup' defaultMessage='Packaging Group'>{text => text}</FormattedMessage>, width: 150, sortPath: 'CasProduct.packagingGroup.groupCode' },
+        // { name: 'hazardClassesLabeled', title: <FormattedMessage id='global.hazardClasses' defaultMessage='Hazard Classes'>{text => text}</FormattedMessage>, width: 150 },
       ],
     },
   },
@@ -25,9 +25,9 @@ export const config = {
     display: {
       columns: [
         { name: 'displayName', title: <FormattedMessage id='global.companyName' defaultMessage='Company Name'>{text => text}</FormattedMessage>, sortPath: 'Company.name' },
-        { name: 'primaryBranchAddress', title: <FormattedMessage id='global.headquaterAddress' defaultMessage='Headquarters Address'>{text => text}</FormattedMessage>, sortPath: 'Company.primaryBranch.address.streetAddress' },
-        { name: 'primaryContact', title: <FormattedMessage id='global.primaryContact' defaultMessage='Primary Contact'>{text => text}</FormattedMessage>, sortPath: 'ClientCompany.primaryBranch.contactName' },
-        { name: 'contactEmail', title: <FormattedMessage id='global.contactEmail' defaultMessage='Contact E-mail'>{text => text}</FormattedMessage>, sortPath: 'ClientCompany.primaryBranch.contactEmail' },
+        { name: 'primaryBranchAddress', title: <FormattedMessage id='global.headquaterAddress' defaultMessage='Headquarters Address'>{text => text}</FormattedMessage>, sortPath: 'Company.primaryBranch.deliveryAddress.address.streetAddress' },
+        { name: 'primaryContact', title: <FormattedMessage id='global.primaryContact' defaultMessage='Primary Contact'>{text => text}</FormattedMessage>, sortPath: 'ClientCompany.primaryBranch.deliveryAddress.contactName' },
+        { name: 'contactEmail', title: <FormattedMessage id='global.contactEmail' defaultMessage='Contact E-mail'>{text => text}</FormattedMessage>, sortPath: 'ClientCompany.primaryBranch.deliveryAddress.contactEmail' },
         { name: 'hasDwollaAccount', title: <FormattedMessage id='global.dwollaAccount' defaultMessage='Dwolla Account'>{text => text}</FormattedMessage> },
         { name: 'hasLogisticsAccounts', title: <FormattedMessage id='global.logisticAccounts' defaultMessage='Logistics Accounts'>{text => text}</FormattedMessage> },
         { name: 'reviewRequested', title: <FormattedMessage id='global.reviewRequested' defaultMessage='Review Requested'>{text => text}</FormattedMessage> }

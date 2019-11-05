@@ -13,8 +13,14 @@ export const operators = {
 
 export const filterTypes = {
   INVENTORY: 'inventory',
-  MARKETPLACE: 'marketplace'
+  MARKETPLACE: 'marketplace',
+  PURCHASE_ORDERS: 'PURCHASE_ORDERS',
+  SALES_ORDERS: 'SALES_ORDERS'
+}
 
+export const filterPresets = {
+  INVENTORY_MARKETPLACE: 'INVENTORY_MARKETPLACE',
+  ORDERS: 'ORDERS'
 }
 
 export const paths = {
@@ -31,6 +37,11 @@ export const paths = {
     assayTo: 'ProductOffer.assayMax',
     manufacturedDate: 'ProductOffer.manufacturedDate',
     warehouseId: 'ProductOffer.warehouse.id',
+  },
+  orders: {
+    orderDate: 'Order.orderDate',
+    vendorPurchase: 'Order.sellerCompanyName',
+    vendorSales: 'Order.buyerCompanyName'
   },
   casProduct: {
     id: 'CasProduct.id'

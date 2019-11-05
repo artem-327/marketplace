@@ -762,7 +762,7 @@ class Filter extends Component {
                     )}
                 </Segment>
               </FlexContent>
-              <GraySegment basic style={{ position: 'relative', overflow: 'visible', height: '4.57142858em', margin: '0' }}>
+              <GraySegment basic>
                 <Transition visible={this.state.openedSaveFilter} animation='fade down' duration={500}>
                   <WhiteSegment basic>
                     {this.formSaveFilter(props)}

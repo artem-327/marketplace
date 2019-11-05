@@ -316,6 +316,22 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+
+    /* SET_COMPANY_SELL_ELLIGIBLE */
+
+    case AT.SET_COMPANY_SELL_ELLIGIBLE: {
+      return {
+        ...state,
+        identity: {
+          ...state.identity,
+          company: {
+            ...state.identity.company,
+            sellEligible: payload
+          }
+        }
+      }
+    }
+
     default: {
       return state
     }

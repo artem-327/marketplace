@@ -10,7 +10,7 @@ import { openImportPopup } from '~/modules/settings/actions'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import { applyFilter } from '~/modules/filter/actions'
 import { openPopup } from '~/modules/company-product-info/actions'
-import { getIdentity } from '~/modules/auth/actions'
+import { setCompanyElligible } from '~/modules/auth/actions'
 import { FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
 
@@ -77,6 +77,6 @@ function mapStateToProps(store, { datagrid }) {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions, openPopup, openImportPopup, openBroadcast, applyFilter, getIdentity })(MyInventory))
+export default withDatagrid(connect(mapStateToProps, { ...Actions, openPopup, openImportPopup, openBroadcast, applyFilter, setCompanyElligible })(MyInventory))
 
 
