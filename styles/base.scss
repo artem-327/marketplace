@@ -23,6 +23,15 @@ a.ui.button {
   }
 }
 
+.ui.button.primary {
+  background: #84C225;
+
+  &:hover,
+  &:focus {
+    background: #6fad11;
+  }
+}
+
 .flex {
   display: flex !important;
   flex-direction: column;
