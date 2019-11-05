@@ -30,7 +30,6 @@ export function login(username, password) {
         let company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
         const preferredCurrency = getSafe(() => identity.preferredCurrency, currency)
 
-
         const authPayload = {
           ...auth,
           identity: {

@@ -64,6 +64,7 @@ class PurchaseOrder extends Component {
 
     this.setState({ addressId: this.state.otherAddresses ? 'deliveryAddressId' : 'warehouseId' })
     this.props.shippingChanged({ selectedAddress })
+
     this.getShippingQuotes(selectedAddress)
   }
 
@@ -77,6 +78,22 @@ class PurchaseOrder extends Component {
     let { address } = selectedAddress
 
     this.props.getShippingQuotes(address.country.id, address.zip.zip)
+  }
+
+  postNewDeliveryAddress = async payload => {
+    try {
+      const response = await this.props.postNewDeliveryAddress(payload)
+      this.getAddress(response.value.id)
+    }
+    catch (e) { console.error(e) }
+  }
+
+  updateDeliveryAddress = async payload => {
+    try {
+      const response = await this.props.updateDeliveryAddress(payload)
+      this.getAddress(response.value.id)
+    }
+    catch (e) { console.error(e) }
   }
 
 
@@ -227,8 +244,8 @@ class PurchaseOrder extends Component {
                       selectedAddress={shipping.selectedAddress}
                       isNewAddress={shipping.isNewAddress}
                       shippingChanged={this.props.shippingChanged}
-                      postNewDeliveryAddress={postNewDeliveryAddress}
-                      updateDeliveryAddress={updateDeliveryAddress}
+                      postNewDeliveryAddress={this.postNewDeliveryAddress}
+                      updateDeliveryAddress={this.updateDeliveryAddress}
                       getStates={this.props.getStates}
                       getProvinces={this.props.getProvinces}
                       states={this.props.states}
@@ -255,6 +272,7 @@ class PurchaseOrder extends Component {
                           warehouses={this.props.warehouses}
                           handleToggleChange={this.handleToggleChange}
                           shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
+                          formikProps={formikProps}
                         />
                         {cart.weightLimitExceed &&
                           <>
