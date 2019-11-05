@@ -54,7 +54,7 @@ export class DatagridProvider extends Component {
     this.setState(initialState)
   }
 
-  isReady = () => {W
+  isReady = () => {
     return this.state.ready && this.props.apiConfig
   }
 
