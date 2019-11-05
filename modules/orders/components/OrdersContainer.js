@@ -24,8 +24,8 @@ function mapStateToProps(state, { router, datagrid }) {
 
 
   return {
-    endpointType: query.type === 'sales' ? 'sale' : query.type,
-    queryType: query.type,
+    endpointType: type === 'sales' ? 'sale' : type,
+    queryType: type,
     ...orders,
     isOpen: state.isOpen,
     filterData: state.forms.filter,

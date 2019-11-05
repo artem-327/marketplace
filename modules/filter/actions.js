@@ -2,9 +2,9 @@ import * as api from './api'
 
 import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
 
-import { filterTypes, paths, operators } from './constants/filter'
+import { filterTypes, filterPresets } from './constants/filter'
 
-export const toggleFilter = createAction('TOGGLE_FILTER', (value = null) => value)
+export const toggleFilter = createAction('TOGGLE_FILTER', (value = null, type = filterPresets.INVENTORY_MARKETPLACE) => ({ value, type }))
 export const filterSaving = createAction('FILTER_SAVING', (isSaving = false) => isSaving)
 export const filterApplying = createAction('FILTER_APPLYING', (isApplying) => isApplying)
 export const applyFilter = createAction('APPLY_FILTER', (filter) => filter)

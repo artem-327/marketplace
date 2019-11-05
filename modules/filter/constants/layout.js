@@ -77,6 +77,10 @@ export const WhiteSegment = styled(Segment)`
 
 export const GraySegment = styled(Segment)`
   background-color: #ededed !important;
+  position: 'relative';
+  overflow: 'visible';
+  height: '4.57142858em';
+  margin: '0';
 `
 
 export const RelaxedRow = styled(GridRow)`

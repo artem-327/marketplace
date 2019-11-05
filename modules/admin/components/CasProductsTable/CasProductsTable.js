@@ -83,7 +83,7 @@ const transformHazardClasses = classes => (
 
 const mapStateToProps = (state, { datagrid }) => {
   let cfg = state.admin.config[state.admin.currentTab.name]
-  console.log({ rows: datagrid.rows })
+
   return {
     config: cfg,
     filterCasIds: state.admin.filterCasIds,

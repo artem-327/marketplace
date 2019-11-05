@@ -129,6 +129,15 @@ export const reviewCompany = (values) => {
   }
 }
 
+export const setCompanyElligible = () => ({
+  type: AT.SET_COMPANY_SELL_ELLIGIBLE,
+  payload: async () => {
+    let data = await api.getIdentity()
+    console.log({ data })
+    return getSafe(() => data.company.sellEligible, 'kkt :D')
+  }
+})
+
 export const searchCountries = (searchQuery) => ({ type: AT.AUTH_SEARCH_COUNTRIES, payload: api.searchCountries(searchQuery) })
 
 export const searchProvinces = (countryId) => ({ type: AT.AUTH_SEARCH_PROVINCES, payload: api.searchProvinces(countryId) })

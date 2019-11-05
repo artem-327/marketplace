@@ -49,8 +49,9 @@ class TablesHandlers extends Component {
   }
 
   handleChange = (value) => {
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
-    else this.props.handleFiltersValue(this.props, value)
+    Datagrid.setSearch(value)
+    // if (Datagrid.isReady()) Datagrid.setSearch(value)
+    // else this.props.handleFiltersValue(this.props, value)
   }
 
   render() {

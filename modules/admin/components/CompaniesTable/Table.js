@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
 import { Checkbox } from 'semantic-ui-react'
-import { generateToastMarkup } from '~/utils/functions'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
@@ -87,8 +87,8 @@ class CompaniesTable extends Component {
                   null,
                   value.clientMessage
                 ), {
-                    appearance: 'success'
-                  })
+                  appearance: 'success'
+                })
               },
               hidden: row => !row.reviewRequested || !row.primaryUser
             }
@@ -109,11 +109,11 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
       ...c,
       hasLogisticsAccounts: c.logisticsAccount ? 'Yes' : 'No',
       hasDwollaAccount: c.hasDwollaAccount ? 'Yes' : 'No',
-      primaryBranchAddress: c.primaryBranch && c.primaryBranch.address ?
-        c.primaryBranch.address.streetAddress + ', ' +
-        c.primaryBranch.address.city + ', ' +
-        (c.primaryBranch.address.province ? c.primaryBranch.address.province.name + ', ' : '') +
-        (c.primaryBranch.address.country ? c.primaryBranch.address.country.name : '')
+      primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false) ?
+        c.primaryBranch.deliveryAddress.address.streetAddress + ', ' +
+        c.primaryBranch.deliveryAddress.address.city + ', ' +
+        (c.primaryBranch.deliveryAddress.address.province ? c.primaryBranch.deliveryAddress.address.province.name + ', ' : '') +
+        (c.primaryBranch.deliveryAddress.address.country ? c.primaryBranch.deliveryAddress.address.country.name : '')
         : '',
       primaryContact: c.primaryUser ?
         c.primaryUser.name
