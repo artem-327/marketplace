@@ -61,7 +61,7 @@ class MyInventory extends Component {
 
   componentDidMount() {
     // Because of #31767
-    this.props.getIdentity()
+    this.props.setCompanyElligible()
   }
 
   filterInventory = async (filter) => {
