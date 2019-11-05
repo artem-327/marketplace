@@ -21,6 +21,7 @@ import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
 import { currency } from '~/constants/index'
+import { SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP_FULFILLED } from '../action-types'
 
 const textsTable = {
   users: {
@@ -65,6 +66,63 @@ const textsTable = {
     SearchText: 'settings.tables.documents.search'
   }
 }
+const listDocumentTypes = [
+  {
+    id: 10,
+    name: 'Bill of Lading',
+    editable: false
+  },
+  {
+    id: 1,
+    name: 'Certificate of Analysis',
+    editable: false
+  },
+  {
+    id: 5,
+    name: 'Certificate of Origin',
+    editable: false
+  },
+  {
+    id: 9,
+    name: 'Corporate Audit',
+    editable: false
+  },
+  {
+    id: 6,
+    name: 'Kosher Certificate',
+    editable: false
+  },
+  {
+    id: 7,
+    name: 'Non GMO',
+    editable: false
+  },
+  {
+    id: 8,
+    name: 'Product Audit',
+    editable: false
+  },
+  {
+    id: 4,
+    name: 'Product Image',
+    editable: false
+  },
+  {
+    id: 3,
+    name: 'Safety Data Sheet',
+    editable: false
+  },
+  {
+    id: 2,
+    name: 'Specification Sheet',
+    editable: false
+  },
+  {
+    id: 11,
+    name: 'Technical Data Sheet',
+    editable: false
+  }
+]
 
 class TablesHandlers extends Component {
   constructor(props) {
@@ -75,6 +133,11 @@ class TablesHandlers extends Component {
       filterValue: ''
     }
     this.handleFiltersValue = debounce(this.handleFiltersValue, 250)
+  }
+
+  async componentDidMount() {
+    const { documentTypes, getDocumentTypes } = this.props
+    if (!documentTypes || documentTypes.length === 0) await getDocumentTypes()
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -124,6 +187,24 @@ class TablesHandlers extends Component {
     const bankAccTab = currentTab.type === 'bank-accounts'
     return (
       <>
+        {currentTab.type === 'documents' && (
+          <GridColumn floated='right' computer={3} tablet={4}>
+            <Dropdown
+              placeholder={formatMessage({
+                id: 'settings.tables.documents.dropdown',
+                defaultMessage: 'Choose document type'
+              })}
+              fluid
+              selection
+              options={listDocumentTypes.map(document => ({
+                key: document.id,
+                text: document.name,
+                value: document.id
+              }))}
+              onChange={this.handleFiltersValue}
+            />
+          </GridColumn>
+        )}
         <GridColumn floated='right' widescreen={7} computer={5} tablet={4}>
           <Input
             fluid
