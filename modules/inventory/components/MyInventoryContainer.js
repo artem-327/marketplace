@@ -25,6 +25,7 @@ function mapStateToProps(store, { datagrid }) {
     ...store.simpleAdd,
     sellEligible: getSafe(() => store.auth.identity.company.sellEligible, false),
     appliedFilter: store.filter.filter.appliedFilter,
+    sidebarValues: store.simpleAdd.sidebarValues,
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
       let fobPrice = 'N/A'

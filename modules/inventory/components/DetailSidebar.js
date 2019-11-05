@@ -149,10 +149,10 @@ const validationScheme = val.object().shape({
   priceTiers: val.object().shape({
     priceTiers: val.number(),
     pricingTiers: val.array().of(val.object().uniqueProperty('quantityFrom', 'Quantity has to be unique').shape({
-      quantityFrom: val.number().typeError(errorMessages.mustBeNumber).nullable()
-        .moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage),
-      price: val.number().typeError(errorMessages.mustBeNumber).nullable()
-        .moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage).test('maxdec', errorMessages.maxDecimals(3), val => {
+      quantityFrom: val.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage)
+        .moreThan(0, errorMessages.greaterThan(0)),
+      price: val.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage)
+        .moreThan(0, errorMessages.greaterThan(0)).test('maxdec', errorMessages.maxDecimals(3), val => {
           return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
         }),
       manuallyModified: val.number().min(0).max(1)
@@ -778,7 +778,7 @@ class DetailSidebar extends Component {
                                   </GridColumn>
                                   <GridColumn mobile={rightWidth} computer={rightWidth}>
                                     <DateInput
-                                      inputProps={{ disabled: !values.edit.doesExpire, 'data-test': 'sidebar_detail_expiration_date' }}
+                                      inputProps={{ disabled: !values.edit.doesExpire, 'data-test': 'sidebar_detail_expiration_date', minDate: moment() }}
                                       name='edit.expirationDate' />
                                   </GridColumn>
                                 </GridRow>
@@ -990,8 +990,8 @@ class DetailSidebar extends Component {
                                     let pricingTiers = values.priceTiers.pricingTiers.slice()
                                     let difference = value - pricingTiers.length
                                     if (difference < 0) pricingTiers.splice(pricingTiers.length - value)
-                                    else for (let i = 0; i < difference; i++) pricingTiers.push({ price: 0.001, quantityFrom: 1 })
-                                    setFieldValue('pricingTiers', pricingTiers)
+                                    else for (let i = 0; i < difference; i++) pricingTiers.push({ price: '', quantityFrom: '' })
+                                    setFieldValue('priceTiers.pricingTiers', pricingTiers)
                                   }
                                 }}
                               />
