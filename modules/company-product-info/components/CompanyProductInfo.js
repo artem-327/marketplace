@@ -377,7 +377,6 @@ class CompanyProductInfo extends Component {
 
 
     let { id, ...rest } = getSafe(() => echoProduct.elements[this.state.casProductIndex].casProduct, {})
-    console.log({ rest, echoProduct, index: this.state.casProductIndex, companyProduct, popupValues, echoProduct })
 
     let initialValues = {
       ...EchoProductResponse,
