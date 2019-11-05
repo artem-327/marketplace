@@ -190,6 +190,7 @@ class TablesHandlers extends Component {
         {bankAccTab && bankAccounts.registerButton && (
           <GridColumn computer={3} tablet={4}>
             <Button
+              fluid
               primary
               onClick={() => Router.push('/dwolla-register')}
               data-test='settings_dwolla_open_popup_btn'>
