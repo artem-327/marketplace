@@ -25,13 +25,12 @@ Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
 
 class ProdexApp extends App {
-
   componentDidMount() {
     if (gtmId) {
-      console.log('GTM initialized, GTM ID: '+gtmId)
+      console.log('GTM initialized, GTM ID: ' + gtmId)
       TagManager.initialize(tagManagerArgs)
     } else {
-      console.log('GTM not initialized, GTM ID: '+gtmId)
+      console.log('GTM not initialized, GTM ID: ' + gtmId)
     }
   }
 
@@ -40,8 +39,14 @@ class ProdexApp extends App {
 
     return (
       <Container>
-        <IntlProvider locale="en" messages={EN} textComponent={({children}) => <label>{children}</label>}>
-          <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={10 * 1000}>
+        <IntlProvider
+          locale='en'
+          messages={EN}
+          textComponent={({ children }) => <>{children}</>}>
+          <ToastProvider
+            pauseOnHover
+            autoDismiss
+            autoDismissTimeout={10 * 1000}>
             <Provider store={store}>
               <Component {...pageProps} />
             </Provider>
