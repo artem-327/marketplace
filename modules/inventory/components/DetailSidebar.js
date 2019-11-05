@@ -33,12 +33,18 @@ export const FlexSidebar = styled(Sidebar)`
 `
 
 export const FlexTabs = styled.div`
+  height: 100%;
   margin: 0;
   text-align: left;
   border-bottom: 1px solid #f0f0f0;
   padding: 10px 0 15px 0;
   font-weight: 400;
   font-size: 1.1rem;
+  
+  > .tab-menu,
+  > .tab-menu > .tab {
+    height: 100%;
+  }
 `
 
 export const FlexContent = styled.div`
@@ -53,6 +59,10 @@ const TopMargedColumn = styled(GridColumn)`
 
 export const GraySegment = styled(Segment)`
   background-color: #ededed !important;
+`
+
+export const HighSegment = styled(Segment)`
+  height: 100%;
 `
 
 const initValues = {
@@ -384,7 +394,7 @@ class DetailSidebar extends Component {
     let editValues = {}
     editValues = {
       edit: {
-        attachments: getSafe(() => sidebarValues.attachments, []),
+        attachments: getSafe(() => sidebarValues.attachments.map(att => ({ ...att, linked: true })), []),
         condition: getSafe(() => sidebarValues.condition, null),
         conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
         conforming: getSafe(() => sidebarValues.conforming, true),
@@ -473,6 +483,7 @@ class DetailSidebar extends Component {
             finally {
               setSubmitting(false)
               setTouched({})
+              this.setState({ changedForm: false })
             }
           }
         }}>
@@ -499,7 +510,7 @@ class DetailSidebar extends Component {
                 <Loader />
               </Dimmer>
               <FlexContent>
-                <Segment basic>
+                <HighSegment basic>
                   <FlexTabs>
                     <Tab className='inventory-sidebar tab-menu flex stretched'
                       menu={{ secondary: true, pointing: true }}
@@ -837,19 +848,20 @@ class DetailSidebar extends Component {
                                 <GridRow>
                                   <GridColumn>
                                     <UploadLot {...this.props}
+                                      edit={getSafe(() => sidebarValues.id, 0)}
                                       attachments={values.edit.attachments}
                                       name='edit.attachments'
                                       type={1}
                                       filesLimit={1}
                                       fileMaxSize={20}
-                                      onChange={(files) =>
+                                      onChange={(files) => {
                                         setFieldValue(`edit.attachments`, values.edit.attachments.concat([{
                                           id: files.id,
                                           name: files.name,
                                           documentType: files.documentType
-                                        }])
-
-                                        )}
+                                        }]))
+                                        this.setState({ changedForm: true })
+                                      }}
                                       data-test='new_inventory_attachments_drop'
                                       emptyContent={(
                                         <>
@@ -1020,7 +1032,7 @@ class DetailSidebar extends Component {
                         }
                       ]} />
                   </FlexTabs>
-                </Segment>
+                </HighSegment>
               </FlexContent>
               <GraySegment basic style={{ position: 'relative', overflow: 'visible', height: '4.57142858em', margin: '0' }}>
                 <Grid>
