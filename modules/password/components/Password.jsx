@@ -38,7 +38,7 @@ class Password extends Component {
                 email: values.email,
                 newPassword: values.password,
                 securityCode: values.securityCode,
-                ...(values.termsOfAgreement && { approveTOS: true })
+                // ...(values.termsOfAgreement && { approveTOS: true })
               })
 
               toastManager.add(generateToastMarkup(
@@ -53,9 +53,7 @@ class Password extends Component {
             }
           }}
           enableReinitialize={true}>
-          {(props) => {
-            let { values } = props
-
+          {(_) => {
             return (
               <>
                 <Grid columns={1}>
@@ -78,26 +76,9 @@ class Password extends Component {
                 <Input inputProps={{ type: 'password' }} name='passwordConfirm' label={formatMessage({ id: 'verification.labels.passwordConfirm', defaultMessage: 'Password Confirmation' })} />
 
                 <Grid columns={1}>
-                  {!forgottenPassword &&
-                    <GridRow>
-                      <GridColumn computer={2}>
-                        <Checkbox name='termsOfAgreement' labelPosition='right' />
-                      </GridColumn>
-                      <GridColumn computer={14}>
-                        <FormattedMessage id='verification.termsOfAgreement' values={{
-                          echosTermsOfService: <a href='https://www.echoexchange.net/legal' target='_blank' >{formatMessage({ id: 'verification.termsOfService' })}</a>,
-                          echosTermsOfUse: <a href='https://www.echoexchange.net/legal' target='"_blank' >{formatMessage({ id: 'verification.termsOfUse' })}</a>,
-                          echosPrivacyPolicy: <a href='https://www.echoexchange.net/legal' target='_blank' >{formatMessage({ id: 'verification.privacyPolicy' })}</a>,
-                          dwollasTermsOfService: <a href='https://www.dwolla.com/legal/tos/' target='_blank'>{formatMessage({ id: 'verification.termsOfService' })}</a>,
-                          dwollasPrivacyPolicy: <a href='https://www.dwolla.com/legal/privacy/' target='_blank'>{formatMessage({ id: 'verification.privacyPolicy' })}</a>
-                        }} />
-                      </GridColumn>
-                    </GridRow>
-                  }
-
                   <GridRow>
                     <GridColumn>
-                      <Button.Submit disabled={!!!values.termsOfAgreement && !forgottenPassword} size='big' fluid>
+                      <Button.Submit size='big' fluid>
                         <FormattedMessage id='global.agreeAndContinue' defaultMessage='Agree and Continue'>{(text) => text}</FormattedMessage>
                       </Button.Submit>
                     </GridColumn>
