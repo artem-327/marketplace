@@ -570,12 +570,12 @@ class DetailSidebar extends Component {
                                         'data-test': 'new_inventory_product_search_drpdn',
                                         style: { width: '300px' },
                                         size: 'large',
-                                        minCharacters: 3,
+                                        minCharacters: 1,
                                         icon: 'search',
                                         search: options => options,
                                         selection: true,
                                         clearable: true,
-                                        onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && this.searchProducts(searchQuery)
+                                        onSearchChange: (e, { searchQuery }) => searchQuery.length > 0 && this.searchProducts(searchQuery)
                                       }}
                                     />
                                   </GridColumn>
