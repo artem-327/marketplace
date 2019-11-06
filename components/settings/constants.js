@@ -46,7 +46,12 @@ export const typeToComponent = (type, options = {}) => {
         step: 0.001,
         ...getSafe(() => options.inputProps, {})
       }} />
-    case 'LARGE_TEXT': return <TextArea {...getSafe(() => options.props, {})} />
+    case 'LARGE_TEXT': return <TextArea {...getSafe(() => options.props, {})}
+      inputProps={{
+        type: 'text',
+        ...getSafe(() => options.inputProps, {})
+      }}
+    />
     case 'TEXT': return <Input {...getSafe(() => options.props, {})}
       inputProps={{
         type: 'text',
@@ -69,7 +74,7 @@ export const typeToComponent = (type, options = {}) => {
 export const toYupSchema = validation => {
   const defaultOptions = {
     type: { value: defaultDataType },
-    required: { value: true }
+    required: { value: false }
   }
 
   let options = {

@@ -129,12 +129,15 @@ class Layout extends Component {
                     data-test='navigation_menu_user_my_profile_drpdn'>{formatMessage({
                       id: 'global.myProfile',
                       defaultMessage: 'My Profile'
-                    })}</Dropdown.Item>
+                    })}
+                  </Dropdown.Item>
                   <Dropdown.Item as={Menu.Item} onClick={() => chatWidgetToggle()}
-                                 data-test='navigation_menu_user_support_chat_drpdn'>{formatMessage({
-                    id: 'global.supportChat',
-                    defaultMessage: 'Support Chat'
-                  })}</Dropdown.Item>
+                    data-test='navigation_menu_user_support_chat_drpdn'>{formatMessage({
+                      id: 'global.supportChat',
+                      defaultMessage: 'Support Chat'
+                    })}
+                  </Dropdown.Item>
+
                   {getSafe(() => auth.identity.isAdmin, false) && takeover &&
                     <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()}
                       data-test='navigation_menu_user_return_to_admin_drpdn'>{formatMessage({
@@ -142,20 +145,15 @@ class Layout extends Component {
                         defaultMessage: 'Return To Admin'
                       })}</Dropdown.Item>
                   }
-                  {/* {getSafe(() => !auth.identity.isAdmin && !auth.identity.isCompanyAdmin, false) && (
-                <Menu.Item onClick={() => triggerSystemSettingsModal(true)}>
-                  {formatMessage({ id: 'settings.systemSettings', defaultMessage: 'System Settings' })}
-
-                </Menu.Item>
-              )} */}
-
-                  {!getSafe(() => auth.identity.isAdmin, false) || takeover &&
+                  {(!getSafe(() => auth.identity.isAdmin, false) || takeover || !getSafe(() => auth.identity.isCompanyAdmin, false)) && (
                     <Menu.Item onClick={() => triggerSystemSettingsModal(true)} data-test='navigation_menu_settings_lnk'>
                       <>
                         {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
                         <Settings role='user' />
                       </>
-                    </Menu.Item>}
+                    </Menu.Item>
+                  )
+                  }
                   <Dropdown.Item as={Menu.Item}
                     onClick={() => window.open('https://www.echoexchange.net/legal')}
                     data-test='navigation_menu_user_terms_of_service_drpdn'>{formatMessage({

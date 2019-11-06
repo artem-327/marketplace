@@ -3,6 +3,8 @@ import { bool, oneOf } from 'prop-types'
 import { connect } from 'react-redux'
 import { Formik } from 'formik'
 import { Form, Modal, Button, Popup, Segment, Header, Icon } from 'semantic-ui-react'
+import { Checkbox } from 'formik-semantic-ui-fixed-validation'
+
 import { withToastManager } from 'react-toast-notifications'
 import * as Yup from 'yup'
 
@@ -10,9 +12,9 @@ import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { typeToComponent, toYupSchema } from './constants'
 
 import { triggerSystemSettingsModal } from '~/modules/settings/actions'
-import { FormattedMessage } from 'react-intl'
-import styled from 'styled-components'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
+import styled from 'styled-components'
 import api from '~/modules/settings/api'
 
 const RightAlignedDiv = styled.div`
@@ -56,8 +58,16 @@ class Settings extends Component {
 
   }
 
+
   handleSubmit = async ({ values }) => {
-    const { toastManager, triggerSystemSettingsModal } = this.props
+    // Original = false => value is inherited from above; no value is set at current level
+    // Globally, if !edit && !original then secretly send EMPTY_SETTING to BE
+    // Original = true => Value was set at current level or contains EMPTY_SETTING
+    // Original = true && value === 'EMPTY_SETTING' => No value is set on current level nor inherrited = send nothing
+    // Original = true && value !== 'EMPTY_SETTING' => User has value set at current level
+
+
+    const { toastManager, triggerSystemSettingsModal, role } = this.props
     this.setState({ loading: { [this.state.clickedButton]: true } })
 
 
@@ -66,16 +76,19 @@ class Settings extends Component {
     }
 
 
-    let group = values[this.state.clickedButton]
+    let group = values[role][this.state.clickedButton]
 
     Object.keys(group)
       .forEach(key => {
         let el = group[key]
-        if (el.changeable) payload.settings.push({ id: el.id, value: el.value })
+        if (el.changeable) {
+          if (!el.edit) payload.settings.push({ id: el.id, value: 'EMPTY_SETTING' })
+          else payload.settings.push({ id: el.id, value: el.value })
+        }
       })
 
     try {
-      await api.updateSettings(this.props.role, payload)
+      await api.updateSettings(role, payload)
 
       toastManager.add(generateToastMarkup(
         <FormattedMessage id='notifications.systemSettingsUpdated.header' defaultMessage='System settings updated' />,
@@ -91,18 +104,25 @@ class Settings extends Component {
   }
 
   render() {
-    let { open, asModal, triggerSystemSettingsModal } = this.props
+    let { open, asModal, triggerSystemSettingsModal, intl: { formatMessage }, role } = this.props
     let { loading, systemSettings } = this.state
 
-    let initialValues = {}
+    let initialValues = { [role]: {} }
+
 
     systemSettings.forEach(el => {
-      initialValues[el.name] = {}
-      el.settings.forEach(setting => {
-        initialValues[el.name][setting.name] = { id: setting.id, value: setting.value, changeable: setting.changeable }
+      initialValues[role][el.name] = {}
+
+      el.settings.forEach((setting) => {
+        initialValues[role][el.name][setting.name] = {
+          id: setting.id,
+          original: setting.original,
+          value: setting.value,
+          changeable: setting.changeable,
+          edit: setting.changeable && setting.original && setting.value !== 'EMPTY_SETTING'
+        }
       })
     })
-
 
     let getMarkup = () => (
       <Formik
@@ -110,17 +130,17 @@ class Settings extends Component {
         enableReinitialize
         validationSchema={this.state.validationSchema}
         render={(formikProps) => {
-
+          let { values } = formikProps
           return (
             <Form>
               {systemSettings.map((group) => {
                 let allDisabled = group.settings.every((val) => !val.changeable)
                 return (
                   <>
-                    <Header as='h3'>{group.name}</Header>
+                    <Header size='medium' as='h2'>{group.name}</Header>
                     <StyledSegment>
                       <>
-                        {group.settings.map((el, i) => {
+                        {group.settings.map((el) => {
                           return (
                             <>
                               <Header as='h3'><>{el.name}
@@ -132,23 +152,32 @@ class Settings extends Component {
                               {React.cloneElement(typeToComponent(el.type, {
                                 props: getSafe(() => el.frontendConfig.props),
                                 inputProps: {
-                                  disabled: !el.changeable, ...getSafe(() => el.frontendConfig.inputProps, {})
+                                  disabled: !el.changeable || getSafe(() => !values[role][group.name][el.name].edit, false),
+                                  ...getSafe(() => el.frontendConfig.inputProps, {})
                                 }
                               }), {
-                                name: `${group.name}.${el.name}.value`
+                                name: `${role}.${group.name}.${el.name}.value`
                               })}
+                              {this.props.role !== 'admin' && <Checkbox
+                                inputProps={{
+                                  onChange: (e) => e.stopPropagation(),
+                                  onClick: (e) => e.stopPropagation()
+                                }}
+                                label={formatMessage({ id: 'global.edit', defaultMessage: 'Edit' })}
+                                name={`${role}.${group.name}.${el.name}.edit`} />}
                             </>
                           )
                         })}
                         <RightAlignedDiv>
                           <Popup trigger={
                             <Button loading={loading[group.name]} onClick={async () => {
-                              formikProps.resetForm(formikProps.values)
+                              formikProps.resetForm(values)
+
                               let errors = await formikProps.validateForm()
-                              let errorFields = Object.keys(getSafe(() => errors[group.name], {}))
+                              let errorFields = Object.keys(getSafe(() => errors[role][group.name], {}))
 
                               if (errorFields.length > 0) {
-                                errorFields.forEach(field => formikProps.setFieldTouched(`${group.name}.${field}.value`))
+                                errorFields.forEach(field => formikProps.setFieldTouched(`${role}${group.name}.${field}.value`))
                               } else {
                                 this.setState({ clickedButton: group.name }, () => !allDisabled && this.handleSubmit(formikProps))
                               }
@@ -222,4 +251,4 @@ export default connect(
       isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, null)
     }
   }),
-  { triggerSystemSettingsModal })(withToastManager(Settings))
+  { triggerSystemSettingsModal })(injectIntl(withToastManager(Settings)))
