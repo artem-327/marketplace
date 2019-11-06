@@ -377,13 +377,13 @@ class CompanyProductInfo extends Component {
 
 
     let { id, ...rest } = getSafe(() => echoProduct.elements[this.state.casProductIndex].casProduct, {})
-    console.log({ rest, echoProduct, index: this.state.casProductIndex, companyProduct, popupValues, echoProduct })
 
     let initialValues = {
       ...EchoProductResponse,
       ...companyProduct,
       ...echoProduct,
-      attachments: companyProduct && companyProduct.attachments.concat(popupValues.attachments, echoProduct.attachments),
+      ...popupValues,
+      attachments: companyProduct && companyProduct.attachments.concat(echoProduct.attachments),
       productName: getSafe(() => echoProduct.name, ''),
       manufacturer: getSafe(() => echoProduct.manufacturer.name, ''),
       manufacturerProductCode: getSafe(() => echoProduct.mfrProductCodes.toString().replace(' ', ', '), ''),
@@ -394,7 +394,6 @@ class CompanyProductInfo extends Component {
         ...casProduct,
         ...rest
       },
-      ...popupValues
     }
 
 

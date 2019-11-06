@@ -131,7 +131,6 @@ class Broadcast extends Component {
     }
   }
 
-
   handleChange = (node) => {
     const findInData = node => getSafe(() => this.props.treeData.first((n) => (n.model.id === node.model.rule.id && n.model.type === node.model.rule.type)), null)
 

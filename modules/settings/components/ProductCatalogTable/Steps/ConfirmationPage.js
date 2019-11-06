@@ -24,9 +24,9 @@ class ConfirmationPage extends Component {
             <React.Fragment>
               <Grid.Row><FormattedMessage id='settings.importFailed' defaultMessage='Import Failed' /></Grid.Row>
               {csvImportError.failedRecords.map((error, i) => (
-                <Grid.Row key={i}>{`In line ${error.csvLineNumber} error ${
-                  error.cause
-                  }`}</Grid.Row>
+                <Grid.Row key={i}>
+                  <FormattedMessage id='import.errorAtLine' defaultMessage={`Error at line ${error.csvLineNumber}: ${error.cause}`} values={{ lineNumber: error.csvLineNumber, errorCause: error.cause }} />
+                </Grid.Row>
               ))}
             </React.Fragment>
           ) : (

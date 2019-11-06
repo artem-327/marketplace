@@ -8,9 +8,10 @@ import styled from 'styled-components'
 
 
 const InnerGrid = styled(Grid)`
+  display: block !important;
+  width: 100%;
   height: 260px;
   overflow-y: auto;
-  padding-right: 5px !important;
 `
 
 const RelaxedColumn = styled(GridColumn)`
@@ -36,6 +37,9 @@ export default class ShippingQuote extends Component {
 
     return (
       <>
+        {index > 0 ? (
+          <Divider />
+        ) : null}
         <RelaxedRow key={index}>
           <GridColumn computer={1}><Radio checked={selectedShippingQuote && selectedShippingQuote.index === index} onChange={() => handleQuoteSelect(index)} data-test={`purchase_order_shipping_quote_${index}_rad`}/></GridColumn>
           <GridColumn computer={4}>{item.carrierName}</GridColumn>
@@ -44,7 +48,6 @@ export default class ShippingQuote extends Component {
           <GridColumn computer={2}>{daysLeft}</GridColumn>
           <GridColumn computer={3}>{item.serviceType}</GridColumn>
         </RelaxedRow>
-        <Divider />
       </>
     )
   }
