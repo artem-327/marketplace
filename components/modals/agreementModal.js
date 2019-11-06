@@ -4,7 +4,7 @@ import { func, oneOfType, string, node, bool, object } from 'prop-types'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-
+import { getSafe } from '~/utils/functions'
 import { logout } from '~/modules/auth/actions'
 import { triggerAgreementModal } from '~/modules/settings/actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -95,7 +95,7 @@ AgreementModal.defaultProps = {
 const mapStateToProps = ({ auth, settings }) => {
   return {
     ...settings.agreementModal,
-    isCompanyAdmin: auth.identity.isCompanyAdmin
+    isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, false)
   }
 }
 

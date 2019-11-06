@@ -56,6 +56,7 @@ export default class TimeoutWarning extends Component {
   resetIdleTimer = async () => {
     this.setState({ loading: true })
     await refreshToken()
+    
     this.idleTimer && this.idleTimer.reset()
     clearInterval(this.checkTimeInterval)
     this.setState({
