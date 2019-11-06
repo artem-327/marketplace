@@ -1092,7 +1092,7 @@
   "cart.pricePer": "Price per {unit}: ${price}",
   "cart.totalWeight": "Total Weight: {weight} {unit}",
   "cart.origin": "Origin: {origin}",
-  "cart.assay": "Assay: {first} - {second}",
+  "cart.assay": "Assay: ",
   "cart.condition": "Condition: {condition}",
   "cart.form": "Form:",
   "cart.formVal": "Form: {form}",

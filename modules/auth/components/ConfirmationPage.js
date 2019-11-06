@@ -45,7 +45,6 @@ const initValues = {
       streetAddress: '',
       zip: ''
     },
-    addressName: '',
     callAhead: false,
     closeTime: '',
     contactEmail: '',
@@ -71,7 +70,6 @@ const initValues = {
 const validationScheme = val.object().shape({
   address: val.object().shape({
     address: addressValidationSchema(),
-    addressName: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
     contactName: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
     contactEmail: val.string(errorMessages.invalidEmail).email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
     contactPhone: phoneValidation().required(errorMessages.requiredMessage),
@@ -195,11 +193,7 @@ class ConfirmationPage extends Component {
                 </Header>
 
                 <Grid>
-                  <Grid.Row columns={2}>
-                    <Grid.Column data-test='auth_confirm_addressAddressName_inp' >
-                      <Input label={formatMessage({ id: 'laststep.address.addressName', defaultMessage: 'Address Name *' })}
-                             name='address.addressName' />
-                    </Grid.Column>
+                  <Grid.Row columns={1}>
                     <Grid.Column data-test='auth_confirm_addressContactName_inp'>
                       <Input label={formatMessage({ id: 'laststep.address.contactName', defaultMessage: 'Contact Name *' })}
                              name='address.contactName' />

@@ -123,8 +123,16 @@ export const getDesiredCasProductsProps = (casProducts) =>
     }))
 
 
-export const formatAssay = (min = null, max = null, delimiter = '/') => (
-    min ?
-        max ? `${min}${delimiter}${max}` : `> ${min}`
-        : max ? `< ${max}` : ''
+export const formatAssay = (min = null, max = null, delimiter = ' - ') => (
+  min ?
+    max ?
+      min === max ?
+        `${min}%`
+        :
+        `${min}%${delimiter}${max}%`
+      :
+      `> ${min}%`
+    :
+    max ? `< ${max}%`
+      : ''
 )

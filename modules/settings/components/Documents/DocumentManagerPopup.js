@@ -86,7 +86,7 @@ class DocumentPopup extends Component {
             onSubmit={async (values, { setSubmitting }) => {
 
               let payload = {
-                customName: values.name,
+                customName: values.customName,
                 description: values.description,
                 expirationDate: values.expirationDate && getSafe(() => moment().utc(values.expirationDate).format(), null),
                 isTemporary: getSafe(() => values.isTemporary, false),
@@ -214,6 +214,7 @@ DocumentPopup.defaultProps = {
 }
 
 const mapStateToProps = ({ simpleAdd, settings }) => {
+  console.log('!!!!!!! popupValues', settings.popupValues)
   return {
     popupValues: settings.popupValues,
     documentTypes: simpleAdd.listDocumentTypes,

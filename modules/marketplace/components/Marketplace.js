@@ -29,7 +29,7 @@ class Marketplace extends Component {
       { name: 'manufacturer', title: <FormattedMessage id='marketplace.manufacturer' defaultMessage='Manufacturer'>{(text) => text}</FormattedMessage>, width: 220, sortPath: 'ProductOffer.companyProduct.echoProduct.manufacturer.name' },
       { name: 'origin', title: <FormattedMessage id='marketplace.origin' defaultMessage='Origin'>{(text) => text}</FormattedMessage>, width: 120, sortPath: 'ProductOffer.origin.name' },
       { name: 'expiration', title: <FormattedMessage id='marketplace.expirationDate' defaultMessage='Expiration Date'>{(text) => text}</FormattedMessage>, width: 120, sortPath: 'ProductOffer.lotExpirationDate' },
-      { name: 'assay', title: <FormattedMessage id='marketplace.assay' defaultMessage='Assay'>{(text) => text}</FormattedMessage>, width: 80 },
+      { name: 'assay', title: <FormattedMessage id='marketplace.assay' defaultMessage='Assay'>{(text) => text}</FormattedMessage>, width: 100 },
       { name: 'condition', title: <FormattedMessage id='marketplace.condition' defaultMessage='Condition'>{(text) => text}</FormattedMessage>, width: 100, sortPath: 'ProductOffer.condition.name' },
       { name: 'form', title: <FormattedMessage id='marketplace.form' defaultMessage='Form'>{(text) => text}</FormattedMessage>, width: 100, sortPath: 'ProductOffer.productForm.name' },
       { name: 'location', title: <FormattedMessage id='marketplace.location' defaultMessage='Location'>{(text) => text}</FormattedMessage>, width: 160 }
