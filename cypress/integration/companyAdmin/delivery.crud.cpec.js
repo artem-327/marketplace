@@ -4,11 +4,12 @@ context("Prodex Branches CRUD", () => {
     beforeEach(function () {
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.route("GET", "/prodex/api/delivery-addresses/datagrid").as("addressLoading")
         cy.route("POST", "/prodex/api/delivery-addresses/datagrid").as("addressLoading")
 
-        cy.login("user1@example.com", "echopass123")
+        cy.FElogin("user1@example.com", "echopass123")
 
-        cy.url().should("include", "inventory")
+        //cy.url().should("include", "inventory")
 
         cy.wait("@inventoryLoading")
         cy.contains("Settings").click()
@@ -21,6 +22,8 @@ context("Prodex Branches CRUD", () => {
 
     it("Creates a delivery address", () => {
         cy.clickAdd()
+
+        cy.enterText("#field_input_addressName", "Automatic")
 
         cy.enterText("input[id='field_input_address.streetAddress']", "125 N G St")
         cy.enterText("input[id='field_input_address.city']", "Harlingen")
@@ -59,7 +62,7 @@ context("Prodex Branches CRUD", () => {
             .should("have.value","Marie Currie")
 
         cy.get("#field_input_phoneNumber")
-            .should("have.value","987654321")
+            .should("have.value","987 654 321")
 
         cy.get("#field_input_email")
             .should("have.value","marie@address.com")
@@ -89,9 +92,9 @@ context("Prodex Branches CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",7)
+            .should("have.length",8)
             .find(".sui-error-message").each((element) => {
-            expect(element.text()).to.match(/(at least 2 characters)|(zip code)|(Required)|(is required)/i)
+            expect(element.text()).to.match(/(Required)/i)
         })
     })
 

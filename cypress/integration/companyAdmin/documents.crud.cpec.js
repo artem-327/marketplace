@@ -9,14 +9,14 @@ context("Company Documents CRUD", () => {
 
         cy.FElogin("user1@example.com", "echopass123")
 
-        cy.url().should("include", "inventory")
+        //cy.url().should("include", "inventory")
 
-        cy.wait("@inventoryLoading")
+        cy.wait("@inventoryLoading",{timeout: 100000})
         cy.contains("Settings").click()
 
         cy.contains("DOCUMENTS").click()
 
-        cy.wait("@documentsLoading")
+        cy.wait("@documentsLoading", {timeout: 100000})
         cy.waitForUI()
     })
 
@@ -29,7 +29,8 @@ context("Company Documents CRUD", () => {
 
         cy.enterText("#field_input_description", "Cypress")
         cy.get("div[id='field_dropdown_documentType.id']").click()
-        cy.contains("Certificate of Origin").click()
+        cy.waitForUI()
+        cy.get("div[rule='option']").eq(1).click()
 
         cy.clickSave()
 

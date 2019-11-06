@@ -4,16 +4,19 @@ context("Prodex Branches CRUD", () => {
     beforeEach(function () {
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.route("POST", "/prodex/api/branches/datagrid").as("branchesLoading")
+        cy.route("GET", "/prodex/api/branches").as("branchesLoading")
+        cy.route("POST", "/prodex/api/branches/datagrid").as("branchesLoadingPOST")
 
         cy.FElogin("user1@example.com", "echopass123")
 
-        cy.wait("@inventoryLoading", {timeout: 10000})
+        cy.wait("@inventoryLoading", {timeout: 100000})
         cy.contains("Settings").click()
+
+        cy.wait("@branchesLoading", {timeout: 100000})
 
         cy.contains("BRANCHES").click()
 
-        cy.wait("@branchesLoading")
+        cy.wait("@branchesLoadingPOST")
         cy.waitForUI()
     })
 
@@ -40,8 +43,9 @@ context("Prodex Branches CRUD", () => {
 
         cy.contains("Created Warehouse")
 
-        //TODO Fix filter
-        let filter = [{"operator": "LIKE", "path": "Branch.displayName", "values": ["%Central%"]}]
+        let filter = [{"operator":"LIKE","path":"Branch.deliveryAddress.addressName","values":["%Central%"]},
+            {"operator":"LIKE","path":"Branch.deliveryAddress.address.streetAddress","values":["%Central%"]},
+            {"operator":"LIKE","path":"Branch.deliveryAddress.contactName","values":["%Central%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstBranchIdWithFilter(token, filter).then(itemId => {
@@ -59,7 +63,7 @@ context("Prodex Branches CRUD", () => {
 
 
         cy.get("div[data-test='settings_warehouse_popup_phoneEmail_inp']").within(($form) => {
-            cy.get("input[placeholder = 'Phone Number']").should("have.value", "123 456 789")
+            cy.get("input[placeholder = 'Phone Number']").should("have.value", "123 456 7895")
         })
 
         cy.get("input[id='field_input_deliveryAddress.contactEmail']")
@@ -83,7 +87,7 @@ context("Prodex Branches CRUD", () => {
     })
 
     it("Checks error messages", () => {
-        cy.clickAdd()
+        cy.get("[data-test='settings_open_popup_btn']").click()
 
         cy.clickSave()
 

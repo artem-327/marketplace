@@ -4,7 +4,7 @@ Cypress.Commands.add("clickSave", () => {
 })
 
 Cypress.Commands.add("clickAdd", () => {
-    cy.get("button[class='ui large primary button']").click({force: true})
+    cy.get("[data-test='settings_open_popup_btn']").click({force: true})
 })
 
 Cypress.Commands.add("enterText", (selector,text) => {
