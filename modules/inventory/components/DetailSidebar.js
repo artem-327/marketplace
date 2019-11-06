@@ -33,12 +33,18 @@ export const FlexSidebar = styled(Sidebar)`
 `
 
 export const FlexTabs = styled.div`
+  height: 100%;
   margin: 0;
   text-align: left;
   border-bottom: 1px solid #f0f0f0;
   padding: 10px 0 15px 0;
   font-weight: 400;
   font-size: 1.1rem;
+  
+  > .tab-menu,
+  > .tab-menu > .tab {
+    height: 100%;
+  }
 `
 
 export const FlexContent = styled.div`
@@ -53,6 +59,10 @@ const TopMargedColumn = styled(GridColumn)`
 
 export const GraySegment = styled(Segment)`
   background-color: #ededed !important;
+`
+
+export const HighSegment = styled(Segment)`
+  height: 100%;
 `
 
 const initValues = {
@@ -149,10 +159,10 @@ const validationScheme = val.object().shape({
   priceTiers: val.object().shape({
     priceTiers: val.number(),
     pricingTiers: val.array().of(val.object().uniqueProperty('quantityFrom', 'Quantity has to be unique').shape({
-      quantityFrom: val.number().typeError(errorMessages.mustBeNumber).nullable()
-        .moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage),
-      price: val.number().typeError(errorMessages.mustBeNumber).nullable()
-        .moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage).test('maxdec', errorMessages.maxDecimals(3), val => {
+      quantityFrom: val.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage)
+        .moreThan(0, errorMessages.greaterThan(0)),
+      price: val.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage)
+        .moreThan(0, errorMessages.greaterThan(0)).test('maxdec', errorMessages.maxDecimals(3), val => {
           return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
         }),
       manuallyModified: val.number().min(0).max(1)
@@ -384,7 +394,7 @@ class DetailSidebar extends Component {
     let editValues = {}
     editValues = {
       edit: {
-        attachments: getSafe(() => sidebarValues.attachments, []),
+        attachments: getSafe(() => sidebarValues.attachments.map(att => ({ ...att, linked: true })), []),
         condition: getSafe(() => sidebarValues.condition, null),
         conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
         conforming: getSafe(() => sidebarValues.conforming, true),
@@ -473,6 +483,7 @@ class DetailSidebar extends Component {
             finally {
               setSubmitting(false)
               setTouched({})
+              this.setState({ changedForm: false })
             }
           }
         }}>
@@ -499,7 +510,7 @@ class DetailSidebar extends Component {
                 <Loader />
               </Dimmer>
               <FlexContent>
-                <Segment basic>
+                <HighSegment basic>
                   <FlexTabs>
                     <Tab className='inventory-sidebar tab-menu flex stretched'
                       menu={{ secondary: true, pointing: true }}
@@ -559,12 +570,12 @@ class DetailSidebar extends Component {
                                         'data-test': 'new_inventory_product_search_drpdn',
                                         style: { width: '300px' },
                                         size: 'large',
-                                        minCharacters: 3,
+                                        minCharacters: 1,
                                         icon: 'search',
                                         search: options => options,
                                         selection: true,
                                         clearable: true,
-                                        onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && this.searchProducts(searchQuery)
+                                        onSearchChange: (e, { searchQuery }) => searchQuery.length > 0 && this.searchProducts(searchQuery)
                                       }}
                                     />
                                   </GridColumn>
@@ -778,7 +789,7 @@ class DetailSidebar extends Component {
                                   </GridColumn>
                                   <GridColumn mobile={rightWidth} computer={rightWidth}>
                                     <DateInput
-                                      inputProps={{ disabled: !values.edit.doesExpire, 'data-test': 'sidebar_detail_expiration_date' }}
+                                      inputProps={{ disabled: !values.edit.doesExpire, 'data-test': 'sidebar_detail_expiration_date', minDate: moment() }}
                                       name='edit.expirationDate' />
                                   </GridColumn>
                                 </GridRow>
@@ -837,19 +848,20 @@ class DetailSidebar extends Component {
                                 <GridRow>
                                   <GridColumn>
                                     <UploadLot {...this.props}
+                                      edit={getSafe(() => sidebarValues.id, 0)}
                                       attachments={values.edit.attachments}
                                       name='edit.attachments'
                                       type={1}
                                       filesLimit={1}
                                       fileMaxSize={20}
-                                      onChange={(files) =>
+                                      onChange={(files) => {
                                         setFieldValue(`edit.attachments`, values.edit.attachments.concat([{
                                           id: files.id,
                                           name: files.name,
                                           documentType: files.documentType
-                                        }])
-
-                                        )}
+                                        }]))
+                                        this.setState({ changedForm: true })
+                                      }}
                                       data-test='new_inventory_attachments_drop'
                                       emptyContent={(
                                         <>
@@ -990,8 +1002,8 @@ class DetailSidebar extends Component {
                                     let pricingTiers = values.priceTiers.pricingTiers.slice()
                                     let difference = value - pricingTiers.length
                                     if (difference < 0) pricingTiers.splice(pricingTiers.length - value)
-                                    else for (let i = 0; i < difference; i++) pricingTiers.push({ price: 0.001, quantityFrom: 1 })
-                                    setFieldValue('pricingTiers', pricingTiers)
+                                    else for (let i = 0; i < difference; i++) pricingTiers.push({ price: '', quantityFrom: '' })
+                                    setFieldValue('priceTiers.pricingTiers', pricingTiers)
                                   }
                                 }}
                               />
@@ -1020,7 +1032,7 @@ class DetailSidebar extends Component {
                         }
                       ]} />
                   </FlexTabs>
-                </Segment>
+                </HighSegment>
               </FlexContent>
               <GraySegment basic style={{ position: 'relative', overflow: 'visible', height: '4.57142858em', margin: '0' }}>
                 <Grid>

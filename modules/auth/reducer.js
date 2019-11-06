@@ -96,7 +96,7 @@ export default function reducer(state = initialState, action) {
       let address = getSafe(() => payload.identity.company.primaryBranch.deliveryAddress.address, null)
       let primaryUser = getSafe(() => payload.identity.company.primaryUser, null)
 
-      //console.log('!!!!!!! identity', getSafe(() => payload.identity))
+      // console.log('!!!!!!! identity', getSafe(() => payload.identity))
 
       return {
         ...state,
@@ -109,12 +109,11 @@ export default function reducer(state = initialState, action) {
               streetAddress: address.streetAddress,
               zip: address.zip.zip
             },
-            addressName: deliveryAddress.addressName || '',
             callAhead: !!deliveryAddress.callAhead,
             closeTime: deliveryAddress.closeTime || '',
-            contactEmail: primaryUser.email || '',
-            contactName: primaryUser.name || '',
-            contactPhone: primaryUser.phone || '',
+            contactEmail: deliveryAddress.contactEmail || primaryUser.email || '',
+            contactName: deliveryAddress.contactName || primaryUser.name || '',
+            contactPhone: deliveryAddress.contactPhone || primaryUser.phone || '',
             deliveryNotes: deliveryAddress.deliveryNotes || '',
             forkLift: !!deliveryAddress.forkLift,
             liftGate: !!deliveryAddress.liftGate,

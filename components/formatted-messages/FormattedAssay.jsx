@@ -6,12 +6,16 @@ export default class FormattedAssay extends Component {
     let { min, max, delimiter } = this.props
 
     return (
-      min !== null ?
-        max !== null ? `${min}${delimiter}${max}`
+      min ?
+        max ?
+          min === max ?
+            `${min}%`
+            :
+            `${min}%${delimiter}${max}%`
           :
-          `> ${min}`
+          `> ${min}%`
         :
-        max !== null ? `< ${max}`
+        max ? `< ${max}%`
           : null
     )
   }
@@ -26,5 +30,5 @@ FormattedAssay.propTypes = {
 FormattedAssay.defaultProps = {
   min: null,
   max: null,
-  delimiter: '/'
+  delimiter: ' - '
 }

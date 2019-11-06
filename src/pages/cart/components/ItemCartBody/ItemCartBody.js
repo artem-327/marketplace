@@ -4,7 +4,7 @@ import confirm from '../../../../components/Confirmable/confirm'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 
 import { Button } from 'semantic-ui-react'
-import { FormattedUnit } from '~/components/formatted-messages'
+import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
 
 export default class ItemCartBody extends Component {
@@ -65,11 +65,8 @@ export default class ItemCartBody extends Component {
               />
             </div>
             <div>
-              <FormattedMessage
-                id='cart.assay'
-                defaultMessage={`Assay: ${productOffer.assayMin || ''} - ${productOffer.assayMax || ''} `}
-                values={{ first: productOffer.assayMin, second: productOffer.assayMax }}
-              />
+              <FormattedMessage id='cart.assay' defaultMessage='Assay :' />
+              <FormattedAssay min={productOffer.assayMin} max={productOffer.assayMax} />
             </div>
             <div>
               <FormattedMessage
