@@ -39,7 +39,7 @@ class AgreementModal extends Component {
                 <FormattedMessage id='agree.withTOS.companyAdmin'
                   values={{
                     echosTermsOfService: <a href='https://www.echoexchange.net/legal' target='_blank' >{formatMessage({ id: 'verification.echosTOS' })}</a>,
-                    echosTermsOfUse: <a href='https://www.echoexchange.net/legal' target='"_blank' >{formatMessage({ id: 'verification.termsOfUse' })}</a>,
+                    echosTermsOfUse: <a href='https://www.echoexchange.net/legal' target='_blank' >{formatMessage({ id: 'verification.termsOfUse' })}</a>,
                     echosPrivacyPolicy: <a href='https://www.echoexchange.net/legal' target='_blank' >{formatMessage({ id: 'verification.privacyPolicy' })}</a>,
                     dwollasTermsOfService: <a href='https://www.dwolla.com/legal/tos/' target='_blank'>{formatMessage({ id: 'verification.dwollasTOS' })}</a>,
                     dwollasPrivacyPolicy: <a href='https://www.dwolla.com/legal/privacy/' target='_blank'>{formatMessage({ id: 'verification.privacyPolicy' })}</a>
@@ -51,7 +51,7 @@ class AgreementModal extends Component {
                 <FormattedMessage id='agree.withTOS.nonCompanyAdmin'
                   values={{
                     echosTermsOfService: <a href='https://www.echoexchange.net/legal' target='_blank' >{formatMessage({ id: 'verification.echosTOS' })}</a>,
-                    echosTermsOfUse: <a href='https://www.echoexchange.net/legal' target='"_blank' >{formatMessage({ id: 'verification.termsOfUse' })}</a>,
+                    echosTermsOfUse: <a href='https://www.echoexchange.net/legal' target='_blank' >{formatMessage({ id: 'verification.termsOfUse' })}</a>,
                     echosPrivacyPolicy: <a href='https://www.echoexchange.net/legal' target='_blank' >{formatMessage({ id: 'verification.privacyPolicy' })}</a>,
                   }}
                 />
