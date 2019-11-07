@@ -438,6 +438,7 @@ class DetailSidebar extends Component {
         validateOnChange={false}
         validationSchema={validationScheme}
         onSubmit={async (values, { setSubmitting, setTouched }) => {
+          setSubmitting(false)
           let props = {}
           switch (this.state.activeTab) {
             case 0:
@@ -461,7 +462,6 @@ class DetailSidebar extends Component {
               break
             case 1:
               this.saveBroadcastRules()
-              setSubmitting(false)
               setTouched({})
               this.setState({ changedForm: false })
               break
@@ -481,7 +481,6 @@ class DetailSidebar extends Component {
               console.error(e)
             }
             finally {
-              setSubmitting(false)
               setTouched({})
               this.setState({ changedForm: false })
             }
