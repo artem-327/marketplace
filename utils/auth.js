@@ -7,7 +7,7 @@ export const setAuth = (auth) => {
   now.setTime(now.getTime() + (auth.expires_in * 1000))
 
   window.localStorage.setItem('ttl', now.getTime())
-  
+
   Cookie.set('auth',
     { ...auth, expires_in: now.getTime() }
   )
