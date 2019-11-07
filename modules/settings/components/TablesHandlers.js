@@ -168,7 +168,6 @@ class TablesHandlers extends Component {
               fluid
               selection
               options={this.state.options}
-              onAddItem={this.handleAddition}
               onChange={this.handleFilterChangeDocumentType}
             />
           </GridColumn>
