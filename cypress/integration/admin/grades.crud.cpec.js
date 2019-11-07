@@ -29,6 +29,8 @@ context("Grades CRUD", () => {
 
         let filter = [{"operator": "LIKE", "path": "ProductGrade.name", "values": ["%Test%"]}]
 
+        cy.get("input[type=text]").type("Test", {force: true})
+
         cy.getToken().then(token => {
             cy.getFirstGradeWithFilter(token, filter).then(itemId => {
                 cy.openElement(itemId, 0)

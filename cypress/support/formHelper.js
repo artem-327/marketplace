@@ -4,7 +4,7 @@ Cypress.Commands.add("clickSave", () => {
 })
 
 Cypress.Commands.add("clickAdd", () => {
-    cy.get("[data-test='settings_open_popup_btn']").click({force: true})
+    cy.get("[data-test='admin_table_add_btn']").click({force: true})
 })
 
 Cypress.Commands.add("enterText", (selector,text) => {

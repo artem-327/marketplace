@@ -49,7 +49,7 @@ context("Companies CRUD", () => {
 
         cy.wait(1000)
         cy.get("div[id='field_dropdown_primaryBranch.deliveryAddress.address.zip']").within(() => {
-            cy.get("div[class='selected item']").click({force: true})
+            cy.get("div[role='option']").eq(0).click({force: true})
         })
 
         cy.waitForUI()

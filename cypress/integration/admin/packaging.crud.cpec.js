@@ -12,6 +12,7 @@ context("Units of packaging CRUD", () => {
         cy.url().should("include", "admin")
 
         cy.wait("@loading")
+        cy.waitForUI()
         cy.get('[data-test="tabs_menu_item_2"]').click()
 
         cy.wait("@packaging")
