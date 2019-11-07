@@ -108,7 +108,7 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
     rows: datagrid.rows.map(c => ({
       ...c,
       hasLogisticsAccounts: c.logisticsAccount ? 'Yes' : 'No',
-      hasDwollaAccount: c.hasDwollaAccount ? 'Yes' : 'No',
+      hasDwollaAccount: c.dwollaAccountStatus === 'verified' ? 'Yes' : 'No',
       primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false) ?
         c.primaryBranch.deliveryAddress.address.streetAddress + ', ' +
         c.primaryBranch.deliveryAddress.address.city + ', ' +

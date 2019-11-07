@@ -51,7 +51,7 @@ const GlobalTableOverrideStyle = createGlobalStyle`
     }
   }
   ${isFirefox &&
-    `
+  `
     .bootstrapiso > .flex-column {
       flex: 0 0 auto !important;
     }
@@ -468,6 +468,7 @@ class _Table extends Component {
     const [s] = sorting
     const { onSortingChange, columns } = this.props
     const column = columns.find(c => c.name === s.columnName)
+    if (!column.sortPath) return
 
     this.handleColumnsSettings({ sorting })
 
