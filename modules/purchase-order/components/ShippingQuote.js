@@ -66,8 +66,6 @@ export default class ShippingQuote extends Component {
       )
     }
 
-
-    // "cart.noShippingQuotes": "There are no Shipping Quotes for selected shipping.",
     if (!selectedAddress) {
       return (
         <GridColumn computer={16}>
@@ -89,7 +87,7 @@ export default class ShippingQuote extends Component {
           <Grid>
             <GridRow>
               <GridColumn computer={16}>
-                <FormattedMessage id='cart.noShippingQuotes' defaultMessage='There are no Shipping Quotes for selected shipping.' />
+                <FormattedMessage id='cart.noShippingQuotes' defaultMessage='We are sorry, but not matching Shipping Quotes has been found.' />
               </GridColumn>
             </GridRow>
           </Grid>

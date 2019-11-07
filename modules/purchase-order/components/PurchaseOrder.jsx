@@ -203,8 +203,8 @@ class PurchaseOrder extends Component {
       address: '',
       shipmentQuoteId: ''
     }
-
-
+    
+    
     return (
       <div className="app-inner-main flex stretched">
         <div className="header-top" style={{ zIndex: 10, backgroundColor: '#FFF' }}>
@@ -280,6 +280,25 @@ class PurchaseOrder extends Component {
                                 <FormattedMessage id='cart.weightLimitExceeded' defaultMessage='Your order weight exceeds weight limit of XXX lbs for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.' />
                               </GridColumn>
                             </GridRow>
+                          </>
+                        }
+
+                        {shippingQuotes.length === 0 && shipping.selectedAddress && !shippingQuotesAreFetching &&
+                          <GridRow>
+                            <GridColumn computer={16}>
+                              <FormattedMessage id='cart.noShippingQuotes.processManually' defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`} />
+                            </GridColumn>
+                          </GridRow>
+                        }
+
+                        {
+                          shipping.selectedAddress && shippingQuotes.length === 0 && (!shippingQuotesAreFetching || cart.weightLimitExceed) &&
+                          <>
+                            <GridRow>
+                              <GridColumn computer={8}>
+                                <Input name='shipmentQuoteId' label={<FormattedMessage id='cart.shipmentQuote' defaultMessage='Shipment Quote' />} />
+                              </GridColumn>
+                            </GridRow>
 
                             <GridRow>
                               <GridColumn computer={16}>
@@ -299,15 +318,6 @@ class PurchaseOrder extends Component {
                               </GridColumn>
                             </GridRow>
                           </>
-                        }
-
-                        {
-                          shipping.selectedAddress && shippingQuotes.length === 0 && !shippingQuotesAreFetching || cart.weightLimitExceed &&
-                          <GridRow>
-                            <GridColumn computer={8}>
-                              <Input name='shipmentQuoteId' label={<FormattedMessage id='cart.shipmentQuote' defaultMessage='Shipment Quote' />} />
-                            </GridColumn>
-                          </GridRow>
                         }
                       </Grid>
                     </Segment>
