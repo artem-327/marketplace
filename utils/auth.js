@@ -1,19 +1,15 @@
-// import jwtDecode from 'jwt-decode'
-import Cookie from 'js-cookie'
-import ServerCookie from 'cookie'
-import api from '~/api'
 
-export const IDLE_TIMEOUT = 30 * (60 * 1000)
+import Cookie from 'js-cookie'
+import api from '~/api'
 
 export const setAuth = (auth) => {
   let now = new Date()
-  now.setTime(now.getTime() + (IDLE_TIMEOUT + (60 * 1000)))
+  now.setTime(now.getTime() + (auth.expires_in * 1000))
 
   window.localStorage.setItem('ttl', now.getTime())
-
+  
   Cookie.set('auth',
-    { ...auth, expires: now.getTime() },
-    { expires: now }
+    { ...auth, expires_in: now.getTime() }
   )
 }
 
