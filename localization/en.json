@@ -1587,6 +1587,7 @@
   "order.reinitiateTransfer.subtitle": "Please select another payment account and Transfer",
   "order.reinitiateTransfer.transfer": "Transfer",
   "order.related.table": "RELATED ORDERS",
+  "order.related.orderId": "Order ID: ",
   "order.related.documentNumber": "PO #",
   "order.related.type": "Type",
   "order.related.issuedAt": "Order Date",

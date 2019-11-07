@@ -17,8 +17,9 @@ import { getSafe } from '~/utils/functions'
 import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
 
-const PaddedIcon = styled(Icon)`
-  padding-top: 1.1rem !important;
+const TitleOrderId = styled.div`
+  font-size: larger;
+  font-weight: 500;
 `
 
 class Orders extends Component {
@@ -250,8 +251,7 @@ class Orders extends Component {
             defaultMessage='PO #'>
             {text => text}
           </FormattedMessage>
-        ),
-        width: 120
+        )
       },
       {
         name: 'type',
@@ -259,8 +259,7 @@ class Orders extends Component {
           <FormattedMessage id='order.cfGlobalStatus' defaultMessage='Status'>
             {text => text}
           </FormattedMessage>
-        ),
-        width: 120
+        )
       },
       {
         name: 'issuedAt',
@@ -268,8 +267,7 @@ class Orders extends Component {
           <FormattedMessage id='order.date' defaultMessage='Order Date'>
             {text => text}
           </FormattedMessage>
-        ),
-        width: 120
+        )
       },
       {
         name: 'issuerCompanyName',
@@ -277,8 +275,7 @@ class Orders extends Component {
           <FormattedMessage id='order.vendor' defaultMessage='Vendor'>
             {text => text}
           </FormattedMessage>
-        ),
-        width: 120
+        )
       }, // ! ! ? seller vs purchaser
       {
         name: 'cfPriceTotal',
@@ -288,8 +285,7 @@ class Orders extends Component {
             defaultMessage='Total'>
             {text => text}
           </FormattedMessage>
-        ),
-        width: 160
+        )
       }
     ]
   }
@@ -307,6 +303,7 @@ class Orders extends Component {
   }
 
   getRows = () => {
+    console.log(this.props)
     return this.props.rows.map(row => ({
       ...row,
       globalStatus:
@@ -322,7 +319,11 @@ class Orders extends Component {
       cofA: <Icon name='file' className='unknown' />,
       related: (
         <div onClick={() => this.openModalWindow(row.id)}>
-          <Icon name='file' className='unknown' />
+          <Icon
+            style={{ cursor: 'pointer' }}
+            name='file'
+            className='positive'
+          />
         </div>
       )
     }))
@@ -380,7 +381,14 @@ class Orders extends Component {
     }))
     return (
       <>
-        <div>{`Order ID: ${relatedOrders[0].relatedOrder}`}</div>
+        <TitleOrderId>
+          <FormattedMessage
+            id='order.related.orderId'
+            defaultMessage='Order ID: '>
+            {text => text}
+          </FormattedMessage>
+          {`${relatedOrders[0].relatedOrder}`}
+        </TitleOrderId>
         <ProdexGrid
           hideSettingsIcon={true}
           tableName='related_orders'
@@ -411,7 +419,8 @@ class Orders extends Component {
           this.props.relatedOrders &&
           this.props.relatedOrders.length > 0 && (
             <Modal
-              closeIcon={<PaddedIcon name='close' />}
+              size='small'
+              closeIcon
               onClose={() => this.setState({ openModal: false })}
               centered={true}
               open={this.state.openModal}
