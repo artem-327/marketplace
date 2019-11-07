@@ -46,6 +46,7 @@ export default class TimeoutWarning extends Component {
   }
 
   handleIdle = () => {
+    console.log('handleIdle')
     this.checkTimeInterval = setInterval(this.checkTime, 1000)
   }
 
@@ -56,14 +57,14 @@ export default class TimeoutWarning extends Component {
   resetIdleTimer = async () => {
     this.setState({ loading: true })
     await refreshToken()
-    
-    this.idleTimer && this.idleTimer.reset()
+
     clearInterval(this.checkTimeInterval)
     this.setState({
       remainingTime: WARNING_OFFSET,
       warningOpen: false
     })
     this.setIdleTimeout()
+    this.idleTimer && this.idleTimer.reset()
 
     this.setState({ loading: false })
   }
@@ -71,7 +72,7 @@ export default class TimeoutWarning extends Component {
   setIdleTimeout = () => {
     let ttl = window.localStorage.getItem('ttl')
     let date = new Date(parseInt(ttl, 10))
-
+    
     this.setState({ timeout: moment(date).diff(moment()) })
   }
 
@@ -84,8 +85,7 @@ export default class TimeoutWarning extends Component {
 
     if (!timeout) return null
 
-
-
+    
     return (
       <>
         <IdleTimer

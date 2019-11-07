@@ -16,7 +16,7 @@ export default class Payment extends Component {
     return (
       <>
         <GridRow>
-          <GridColumn {...columns}>
+          <GridColumn {...columns} tablet={16}>
             {
               payments.length === 0
                 ? <FormattedMessage
