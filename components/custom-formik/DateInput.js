@@ -16,6 +16,7 @@ class FormikInput extends Component {
 
   handleRef = (r) => {
     r && r.inputNode.setAttribute("autocomplete", "off")
+    r && r.inputNode.setAttribute("readonly", true)
   }
 
   render() {

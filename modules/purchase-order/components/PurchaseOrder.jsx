@@ -204,7 +204,6 @@ class PurchaseOrder extends Component {
       shipmentQuoteId: ''
     }
 
-    console.log(this.props.cart.selectedShipping)
 
     return (
       <div className="app-inner-main flex stretched">
@@ -237,7 +236,7 @@ class PurchaseOrder extends Component {
 
             return (
               <Grid centered>
-                <GridColumn computer={8}>
+                <GridColumn mobile={14} tablet={9} computer={8}>
                   {shipping.isShippingEdit &&
                     <ShippingEdit
                       savedShippingPreferences={shipping.savedShippingPreferences}
@@ -360,7 +359,7 @@ class PurchaseOrder extends Component {
 
                 </GridColumn>
 
-                <GridColumn computer={5}>
+                <GridColumn mobile={14} tablet={6} computer={5}>
                   <CartItemSummary
                     updateHazmatInfo={this.props.updateHazmatInfo}
                     currency={currency}

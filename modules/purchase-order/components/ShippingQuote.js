@@ -53,7 +53,7 @@ export default class ShippingQuote extends Component {
   }
 
   render() {
-    let { shippingQuotes, shippingQuotesAreFetching } = this.props
+    let { shippingQuotes, shippingQuotesAreFetching, selectedAddress } = this.props
 
 
     if (shippingQuotesAreFetching) {
@@ -67,7 +67,8 @@ export default class ShippingQuote extends Component {
     }
 
 
-    if (!shippingQuotes || shippingQuotes.length === 0) {
+    // "cart.noShippingQuotes": "There are no Shipping Quotes for selected shipping.",
+    if (!selectedAddress) {
       return (
         <GridColumn computer={16}>
           <Grid>
@@ -80,6 +81,23 @@ export default class ShippingQuote extends Component {
         </GridColumn>
       )
     }
+
+
+    if (!shippingQuotes || shippingQuotes.length === 0) {
+      return (
+        <GridColumn computer={16}>
+          <Grid>
+            <GridRow>
+              <GridColumn computer={16}>
+                <FormattedMessage id='cart.noShippingQuotes' defaultMessage='There are no Shipping Quotes for selected shipping.' />
+              </GridColumn>
+            </GridRow>
+          </Grid>
+        </GridColumn>
+      )
+    }
+
+
 
     return (
       <>

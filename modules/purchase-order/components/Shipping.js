@@ -68,7 +68,7 @@ class Shipping extends Component {
           }
         </GridRow>
         <GridRow>
-          <GridColumn textAlign='center' computer={8}>
+          <GridColumn textAlign='center' tablet={16} computer={8}>
             <Button.Group>
               <Button
                 type='button'
@@ -89,7 +89,7 @@ class Shipping extends Component {
           </GridColumn>
         </GridRow>
         <GridRow>
-          <GridColumn computer={8}>
+          <GridColumn tablet={16} computer={8}>
             <Dropdown
               name='address'
               fluid
