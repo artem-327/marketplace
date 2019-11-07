@@ -78,7 +78,8 @@ class TablesHandlers extends Component {
     super(props)
     this.state = {
       filterFieldCurrentValue: 'None',
-      filterValue: ''
+      filterValue: '',
+      options: []
     }
     this.handleFiltersValue = debounce(this.handleFiltersValue, 250)
   }
@@ -86,6 +87,26 @@ class TablesHandlers extends Component {
   async componentDidMount() {
     const { documentTypes, getDocumentTypes } = this.props
     if (!documentTypes || documentTypes.length === 0) await getDocumentTypes()
+    this.setState({
+      options: [
+        {
+          key: 'All document types',
+          text: (
+            <FormattedMessage
+              id='settings.tables.documents.dropdown.all.document.types'
+              defaultMessage='All document types'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          values: 'All document types'
+        },
+        ...this.props.documentTypes.map(document => ({
+          key: document.key,
+          text: document.text,
+          value: document.text
+        }))
+      ]
+    })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -146,20 +167,16 @@ class TablesHandlers extends Component {
               })}
               fluid
               selection
-              options={
-                this.props &&
-                this.props.documentTypes.length > 0 &&
-                this.props.documentTypes.map(document => ({
-                  key: document.key,
-                  text: document.text,
-                  value: document.text
-                }))
-              }
+              options={this.state.options}
               onChange={this.handleFilterChangeDocumentType}
             />
           </GridColumn>
         )}
-        <GridColumn floated='right' widescreen={7} computer={5} tablet={4}>
+        <GridColumn
+          floated={currentTab.type !== 'documents' && 'right'}
+          widescreen={7}
+          computer={5}
+          tablet={4}>
           <Input
             fluid
             icon='search'
