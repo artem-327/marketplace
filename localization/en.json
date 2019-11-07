@@ -1441,6 +1441,7 @@
   "settings.tables.documents.buttonAdd": "Add Document",
   "settings.tables.documents.search": "Search documents ...",
   "settings.tables.documents.dropdown": "Choose document type",
+  "settings.tables.documents.dropdown.all.document.types": "All document types",
   "settings.previous": "< Previous",
   "shippingQuote.header": "Shipping Quote",
   "shippingQuote.shippingQuantity": "Shipping Quantity",
