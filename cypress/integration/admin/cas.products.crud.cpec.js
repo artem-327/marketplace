@@ -26,8 +26,8 @@ context("CAS products CRUD", () => {
             .children("input")
             .type("Testinonium")
 
-        let filter = [{"operator": "LIKE", "path": "CasProduct.chemicalName", "values": ["%Testinonium%"]},
-            {"operator": "LIKE", "path": "CasProduct.casNumber", "values": ["%Testinonium%"]}]
+        let filter = [{"operator":"LIKE","path":"CasProduct.casIndexName","values":["%Testinonium%"]},
+            {"operator":"LIKE","path":"CasProduct.casNumber","values":["%Testinonium%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstCasProductWithFilter(token, filter).then(itemId => {

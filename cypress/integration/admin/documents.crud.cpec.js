@@ -14,9 +14,12 @@ context("Document types CRUD", () => {
         cy.wait("@loading")
 
         cy.get('[data-test="tabs_menu_item_9"]').click()
+        cy.wait("@documents")
+
+        cy.get('[data-test="tabs_menu_item_6"]').click()
+        cy.get('[data-test="tabs_menu_item_9"]').click()
 
         cy.wait("@documents")
-        cy.waitForUI()
     })
 
     it("Creates a document type", () => {
@@ -26,6 +29,11 @@ context("Document types CRUD", () => {
         cy.clickSave()
 
         cy.contains("Document Type created")
+
+        cy.get('[data-test="tabs_menu_item_6"]').click()
+        cy.get('[data-test="tabs_menu_item_9"]').click()
+
+        cy.wait("@documents")
 
         let filter = [{"operator": "LIKE", "path": "DocumentType.name", "values": ["%Test%"]}]
 
@@ -50,6 +58,11 @@ context("Document types CRUD", () => {
         cy.clickSave()
 
         cy.contains("Updated Document Type")
+
+        cy.get('[data-test="tabs_menu_item_6"]').click()
+        cy.get('[data-test="tabs_menu_item_9"]').click()
+
+        cy.wait("@documents")
 
         cy.openElement(documentId, 0)
 
