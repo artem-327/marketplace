@@ -303,7 +303,6 @@ class Orders extends Component {
   }
 
   getRows = () => {
-    console.log(this.props)
     return this.props.rows.map(row => ({
       ...row,
       globalStatus:
@@ -317,15 +316,30 @@ class Orders extends Component {
       bl: <Icon name='file' className='unknown' />, // unknown / positive / negative
       sds: <Icon name='file' className='unknown' />,
       cofA: <Icon name='file' className='unknown' />,
-      related: (
-        <div onClick={() => this.openModalWindow(row.id)}>
+      related:
+        row.accountingDocumentsCount > 0 ? (
+          <span onClick={() => this.openModalWindow(row.id)}>
+            <Icon
+              style={{
+                color: 'green',
+                fontSize: '1.45rem',
+                opacity: '0.7',
+                cursor: 'pointer',
+                lineHeight: 'normal'
+              }}
+              className='invoice file'
+            />
+          </span>
+        ) : (
           <Icon
-            style={{ cursor: 'pointer' }}
-            name='file'
-            className='positive'
+            style={{
+              fontSize: '1.45rem',
+              opacity: '0.7',
+              lineHeight: 'normal'
+            }}
+            className='invoice file'
           />
-        </div>
-      )
+        )
     }))
   }
 
@@ -428,9 +442,9 @@ class Orders extends Component {
               <Modal.Header>
                 <FormattedMessage
                   id='order.related.table'
-                  defaultMessage='RELATED ORDERS'
-                />
-                {text => text}
+                  defaultMessage='RELATED ORDERS'>
+                  {text => text}
+                </FormattedMessage>
               </Modal.Header>
               <Modal.Content scrolling>{this.getContent()}</Modal.Content>
             </Modal>
