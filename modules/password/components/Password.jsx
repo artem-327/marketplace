@@ -79,7 +79,7 @@ class Password extends Component {
                   <GridRow>
                     <GridColumn>
                       <Button.Submit size='big' fluid>
-                        <FormattedMessage id='global.agreeAndContinue' defaultMessage='Agree and Continue'>{(text) => text}</FormattedMessage>
+                        <FormattedMessage id='global.continue' defaultMessage='Continue'>{(text) => text}</FormattedMessage>
                       </Button.Submit>
                     </GridColumn>
                   </GridRow>
