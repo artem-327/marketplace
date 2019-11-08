@@ -278,12 +278,12 @@ class CompanyProductInfo extends Component {
             {this.getInput({ id: 'global.manufacturer', defaultMessage: 'Manufacturer', name: 'manufacturer' })}
             {this.getInput({ id: 'global.manufacturerProductCode', defaultMessage: 'Manufacturer Product Code', name: 'echoProduct.mfrProductCodes' })}
             {this.getInput({ id: 'global.emergencyNumber', defaultMessage: 'Emergency Number', name: 'echoProduct.emergencyPhone' })}
-            {/* {this.getInput({ id: 'global.esin', defaultMessage: 'ESIN', name: 'esin' })} {/* */ } 
+            {this.getInput({ id: 'global.esin', defaultMessage: 'ESIN', name: 'esin' })}
             {this.getInput({ id: 'global.recommendedUse', defaultMessage: 'Recommended Uses', name: 'echoProduct.recommendedUse' })}
-            {/* {this.getInput({ id: 'global.recommendedRestrictions', defaultMessage: 'Recommended Restrictions', name: 'recommendedRestrictions' })} */}
+            {this.getInput({ id: 'global.recommendedRestrictions', defaultMessage: 'Recommended Restrictions', name: 'echoProduct.recommendedRestrictions' })} */}
             {this.getInput({ id: 'global.version', defaultMessage: 'Version', name: 'echoProduct.sdsVersionNumber' })}
             {this.getInput({ id: 'global.revisionDate', defaultMessage: 'Revision Date', name: 'echoProduct.sdsRevisionDate' })}
-            {/* {this.getInput({ id: 'global.synonyms', defaultMessage: 'Synonyms', name: 'echoProduct.synonyms' })} */}
+            {this.getInput({ id: 'global.synonyms', defaultMessage: 'Synonyms', name: 'echoProduct.synonyms' })}
             {this.getInput({ id: 'global.formula', defaultMessage: 'Formula', name: 'echoProduct.molecularFormula' })}
             {this.getInput({ id: 'global.molecularWeight', defaultMessage: 'Molecular Weight', name: 'echoProduct.molecularWeight' })}
           </Grid>
