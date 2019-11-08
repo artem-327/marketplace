@@ -26,7 +26,8 @@ function mapStateToProps(store) {
     selectedCardId: store.forms.cart.selectedCardId,
     location: store.location,
     preferredBankAccountId,
-    logisticsAccount: getSafe(() => store.auth.identity.company.logisticsAccount, false)
+    logisticsAccount: getSafe(() => store.auth.identity.company.logisticsAccount, false),
+    billingInfo: getSafe(() => store.auth.identity.company.primaryBranch.deliveryAddress, null)
   }
 }
 
