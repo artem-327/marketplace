@@ -31,6 +31,11 @@ import {
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import _invert from 'lodash/invert'
 import { withToastManager } from 'react-toast-notifications'
+import styled from 'styled-components'
+
+const SmallerTableCell = styled(Table.Cell)`
+  font-size: 0.8em;
+`
 
 const simpleEchoProductList = {
   constant: 'global',
@@ -483,7 +488,7 @@ class Map extends Component {
                     return line.columns.map(lineBody => {
                       return (
                         lineHeader.columnNumber === lineBody.columnNumber &&
-                        <Table.Cell>{lineBody.content}</Table.Cell>
+                        <SmallerTableCell>{lineBody.content}</SmallerTableCell>
                       )
                     })
                   })}
