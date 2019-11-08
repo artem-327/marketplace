@@ -16,6 +16,7 @@ import {
 } from '../actions'
 import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
+import ProdexGrid from '~/components/table'
 import * as val from 'yup'
 import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import moment from "moment"
@@ -87,13 +88,21 @@ const initValues = {
     minimum: 1, // minPkg
     splits: 1, // splitPkg
     externalNotes: '',
-    internalNotes: ''
+    internalNotes: '',
+    documentType: ''
   },
   priceTiers: {
     priceTiers: 1,
     pricingTiers: []
   }
 }
+
+const columns = [ 
+  { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage> },
+  { name: 'documentTypeName', title: <FormattedMessage id='global.docType' defaultMessage='Document Type'>{text => text}</FormattedMessage> },
+  { name: 'otherPermissions', title: <FormattedMessage id='addInventory.documents.otherPermissions' defaultMessage='Other permissions'>{text => text}</FormattedMessage> },
+  { name: 'sharedTo', title: <FormattedMessage id='addInventory.documents.sharedTo' defaultMessage='Shared to'>{text => text}</FormattedMessage> }
+]
 
 val.addMethod(val.number, 'divisibleBy', function (ref, message) {
   return this.test({
@@ -155,6 +164,7 @@ const validationScheme = val.object().shape({
       is: false,
       then: val.string().required(errorMessages.requiredMessage)
     })
+    
   }),
   priceTiers: val.object().shape({
     priceTiers: val.number(),
@@ -176,7 +186,8 @@ class DetailSidebar extends Component {
     activeTab: 0,
     broadcastLoading: true,
     saveBroadcast: 0,
-    changedForm: false
+    changedForm: false,
+    documentType: 1
   }
 
   componentDidMount = () => {
@@ -184,6 +195,7 @@ class DetailSidebar extends Component {
     this.props.getProductForms()
     this.props.getProductGrades()
     this.props.getWarehouses()
+    this.props.getDocumentTypes()
   }
 
   componentDidUpdate = (oldProps) => {
@@ -242,6 +254,10 @@ class DetailSidebar extends Component {
         quantity = Math.max(qtyFrom, quantity)
       }
     }
+  }
+
+  handleChange = (e, name, value) => {
+    this.setState({documentType: value})
   }
 
   onSplitsChange = debounce(async (value, values, setFieldValue, validateForm) => {
@@ -363,10 +379,10 @@ class DetailSidebar extends Component {
       searchedProductsLoading,
       searchOrigins,
       warehousesList,
+      listDocumentTypes,
       intl: { formatMessage },
       toastManager
     } = this.props
-
     const leftWidth = 6
     const rightWidth = 10
 
@@ -397,7 +413,7 @@ class DetailSidebar extends Component {
     let editValues = {}
     editValues = {
       edit: {
-        attachments: getSafe(() => sidebarValues.attachments.map(att => ({ ...att, linked: true })), []),
+        
         condition: getSafe(() => sidebarValues.condition, null),
         conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
         conforming: getSafe(() => sidebarValues.conforming, true),
@@ -428,6 +444,10 @@ class DetailSidebar extends Component {
           price: priceTier.pricePerUOM,
           quantityFrom: priceTier.quantityFrom
         })), [])
+      },
+      documents: {
+        documentType: getSafe(() => sidebarValues.documentType, null),
+        attachments: getSafe(() => sidebarValues.attachments.map(att => ({ ...att, linked: true })), [])
       }
     }
 
@@ -445,7 +465,8 @@ class DetailSidebar extends Component {
           let props = {}
           switch (this.state.activeTab) {
             case 0:
-            case 2:
+            case 1:
+            case 3:
               props = {
                 ...values.edit,
                 expirationDate: values.edit.doesExpire ? values.edit.expirationDate + 'T00:00:00.000Z' : null,
@@ -463,7 +484,7 @@ class DetailSidebar extends Component {
                 productGrades: values.edit.productGrades.length ? values.edit.productGrades : []
               }
               break
-            case 1:
+            case 2:
               this.saveBroadcastRules()
               setTouched({})
               this.setState({ changedForm: false })
@@ -887,17 +908,35 @@ class DetailSidebar extends Component {
                           pane: (
                             <Tab.Pane key='documents' style={{ padding: '18px' }}>
                               <Grid>
+                              {listDocumentTypes.length &&
+                                <GridRow>
+                                  <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                    <FormattedMessage id='global.documentType' defaultMessage='Document type: '>{text => text}</FormattedMessage>
+                                  </GridColumn>
+                                  <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                    <Dropdown
+                                      name='documents.documentType'
+                                      closeOnChange
+                                      options={listDocumentTypes}
+                                      inputProps={{
+                                        placeholder: <FormattedMessage id='global.documentType.choose' defaultMessage='Choose document type'/>,
+                                        onChange: (e, {name, value}) => this.handleChange(e, name, value)
+                                      }} />
+                                  </GridColumn>
+                                </GridRow>
+                              }
+                              { values.documents.documentType &&
                                 <GridRow>
                                   <GridColumn>
                                     <UploadLot {...this.props}
                                       edit={getSafe(() => sidebarValues.id, 0)}
-                                      attachments={values.edit.attachments}
-                                      name='edit.attachments'
-                                      type={1}
+                                      attachments={values.documents.attachments}
+                                      name='documents.attachments'
+                                      type={this.state.documentType}
                                       filesLimit={1}
                                       fileMaxSize={20}
                                       onChange={(files) => {
-                                        setFieldValue(`edit.attachments`, values.edit.attachments.concat([{
+                                        setFieldValue(`documents.attachments`, values.documents.attachments.concat([{
                                           id: files.id,
                                           name: files.name,
                                           documentType: files.documentType
@@ -938,6 +977,19 @@ class DetailSidebar extends Component {
                                     />
                                   </GridColumn>
                                 </GridRow>  
+                              }
+                              { values.documents.attachments && 
+                                <GridRow>
+                                  <GridColumn>
+                                    <ProdexGrid
+                                      hideSettingsIcon
+                                      tableName='inventory_documents'
+                                      columns={columns}
+                                      rows={values.documents.attachments}
+                                    />
+                                  </GridColumn>
+                                </GridRow>
+                              }
                               </Grid>                          
                             </Tab.Pane>
                           )
@@ -1155,7 +1207,8 @@ const mapStateToProps = ({ simpleAdd: {
   searchedOriginsLoading,
   searchedProducts,
   searchedProductsLoading,
-  warehousesList
+  warehousesList,
+  listDocumentTypes
 } }) => ({
   autocompleteData,
   autocompleteDataLoading,
@@ -1172,7 +1225,8 @@ const mapStateToProps = ({ simpleAdd: {
   searchedOriginsLoading,
   searchedProducts,
   searchedProductsLoading,
-  warehousesList
+  warehousesList,
+  listDocumentTypes
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(DetailSidebar)))
