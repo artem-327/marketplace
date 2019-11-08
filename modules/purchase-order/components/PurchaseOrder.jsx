@@ -185,7 +185,8 @@ class PurchaseOrder extends Component {
 
 
   render() {
-    const { dispatch, postNewDeliveryAddress, updateDeliveryAddress, preferredBankAccountId, intl: { formatMessage } } = this.props
+
+    const { billingInfo, dispatch, postNewDeliveryAddress, updateDeliveryAddress, preferredBankAccountId, intl: { formatMessage } } = this.props
     let { cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shippingQuotesAreFetching, shipping } = this.props
 
     if (cartIsFetching) return <Spinner />
@@ -203,8 +204,8 @@ class PurchaseOrder extends Component {
       address: '',
       shipmentQuoteId: ''
     }
-    
-    
+
+
     return (
       <div className="app-inner-main flex stretched">
         <div className="header-top" style={{ zIndex: 10, backgroundColor: '#FFF' }}>
@@ -286,7 +287,9 @@ class PurchaseOrder extends Component {
                         {shippingQuotes.length === 0 && shipping.selectedAddress && !shippingQuotesAreFetching &&
                           <GridRow>
                             <GridColumn computer={16}>
-                              <FormattedMessage id='cart.noShippingQuotes.processManually' defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`} />
+                              <FormattedMessage
+                                id='cart.noShippingQuotes.processManually'
+                                defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`} />
                             </GridColumn>
                           </GridRow>
                         }
@@ -359,7 +362,7 @@ class PurchaseOrder extends Component {
 
                       <Payment
                         dispatch={dispatch}
-                        selectedAddress={shipping.selectedAddress}
+                        billingInfo={billingInfo}
                         selectedPayment={shipping.selectedPayment}
                         payments={payments}
                         getPayment={this.getPayment}
