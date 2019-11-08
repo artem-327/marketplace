@@ -570,6 +570,7 @@
   "global.lots": "Lots",
   "global.origin": "Country of Origin",
   "global.priceTiers": "Price Tiers",
+  "global.documents": "Documents",
   "global.casChemicalProps": "CAS Chemical Properties",
   "global.processingTimeDays": "Lead Time (Days)",
   "global.validityDate": "Offer Expiration Date",

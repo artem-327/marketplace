@@ -333,11 +333,14 @@ class DetailSidebar extends Component {
       case 'edit':
         this.switchTab(0)
         break
-      case 'priceBook':
+      case 'documents':
         this.switchTab(1)
         break
-      case 'priceTiers':
+      case 'priceBook':
         this.switchTab(2)
+        break
+      case 'priceTiers':
+        this.switchTab(3)
         break
     }
   }
@@ -844,6 +847,46 @@ class DetailSidebar extends Component {
                                     />
                                   </GridColumn>
                                 </GridRow>
+                                
+                              </Grid>
+                            </Tab.Pane>
+                          )
+                        },
+                        {
+                          menuItem: (
+                            <Menu.Item key='documents' onClick={() => {
+                              if (Object.keys(touched).length || this.state.changedForm) {
+                                toastManager.add(generateToastMarkup(
+                                  <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
+                                  <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Due to form changes you have to save the tab first' />,
+                                ), {
+                                  appearance: 'warning'
+                                })
+                                return false
+                              }
+                              validateForm()
+                                .then(r => {
+                                  // stop when errors found
+                                  if (Object.keys(r).length) {
+                                    submitForm() // show errors
+                                    this.switchToErrors(Object.keys(r))
+                                    return false
+                                  }
+
+                                  // if validation is correct - switch tabs
+                                  this.switchTab(1)
+                                })
+                                .catch(e => {
+                                  console.log('CATCH', e)
+                                })
+                            }}
+                              data-test='detail_inventory_tab_documents'>
+                              {formatMessage({ id: 'global.documents', defaultMessage: 'Documents' })}
+                            </Menu.Item>
+                          ),
+                          pane: (
+                            <Tab.Pane key='documents' style={{ padding: '18px' }}>
+                              <Grid>
                                 <GridRow>
                                   <GridColumn>
                                     <UploadLot {...this.props}
@@ -894,8 +937,8 @@ class DetailSidebar extends Component {
                                       )}
                                     />
                                   </GridColumn>
-                                </GridRow>
-                              </Grid>
+                                </GridRow>  
+                              </Grid>                          
                             </Tab.Pane>
                           )
                         },
@@ -921,7 +964,7 @@ class DetailSidebar extends Component {
                                   }
 
                                   // if validation is correct - switch tabs
-                                  this.switchTab(1)
+                                  this.switchTab(2)
                                 })
                                 .catch(e => {
                                   console.log('CATCH', e)
@@ -959,7 +1002,7 @@ class DetailSidebar extends Component {
                                   }
 
                                   // if validation is correct - switch tabs
-                                  this.switchTab(2)
+                                  this.switchTab(3)
                                 })
                                 .catch(e => {
                                   console.log('CATCH', e)
