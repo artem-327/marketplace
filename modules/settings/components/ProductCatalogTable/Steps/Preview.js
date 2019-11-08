@@ -6,6 +6,11 @@ import { Table } from 'semantic-ui-react'
 import { dataHeaderCSV, postCSVMapEchoProduct, putCSVMapEchoProduct, postCSVMapProductOffer, putCSVMapProductOffer } from '../../../actions'
 import _invert from 'lodash/invert'
 import { FormattedMessage } from 'react-intl'
+import styled from 'styled-components'
+
+const SmallerTableCell = styled(Table.Cell)`
+  font-size: 0.8em;
+`
 
 class Preview extends Component {
   constructor(props) {
@@ -126,9 +131,9 @@ class Preview extends Component {
                   filteredHeader.map(
                     header =>
                       header.columnNumber === cell.columnNumber && (
-                        <Table.Cell key={cell.columnNumber}>
+                        <SmallerTableCell key={cell.columnNumber}>
                           {cell.content}
-                        </Table.Cell>
+                        </SmallerTableCell>
                       )
                   )
                 )

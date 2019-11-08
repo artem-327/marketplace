@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { Modal, Grid, Icon, Step, ModalContent, Button } from 'semantic-ui-react'
+import { Header, Modal, Grid, Icon, Step, ModalContent, Button } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import {
@@ -28,6 +28,10 @@ import { withToastManager } from 'react-toast-notifications'
 const StyledModal = styled(ModalContent)`
   height: 500px;
   overflow: auto;
+`
+
+const StyledHeader = styled(Header)`
+  margin-bottom: 0;
 `
 
 class ProductImportPopup extends Component {
@@ -78,9 +82,15 @@ class ProductImportPopup extends Component {
     } = this.state
 
     return (
-      <Modal closeIcon onClose={() => closeImportPopupCancel(csvFileId)} open centered={false}>
+      <Modal closeIcon
+             onClose={() => closeImportPopupCancel(csvFileId)}
+             closeOnDimmerClick={false}
+             open
+             centered={false}>
         <Modal.Header>
-          <FormattedMessage id='global.csvMapping' defaultMessage='.CSV Mapping' />
+          <StyledHeader as='h2'>
+            <FormattedMessage id='global.importMapping' defaultMessage='Import Mapping' />
+          </StyledHeader>
           <Step.Group widths={3}>
             <Step active={currentStep === 'upload'} completed={isFinishUpload}>
               <Icon name='upload' />
