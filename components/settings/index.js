@@ -82,7 +82,7 @@ class Settings extends Component {
       .forEach(key => {
         let el = group[key]
         if (el.changeable) {
-          if (!el.edit) payload.settings.push({ id: el.id, value: 'EMPTY_SETTING' })
+          if (!el.edit && role !== 'admin') payload.settings.push({ id: el.id, value: 'EMPTY_SETTING' })
           else payload.settings.push({ id: el.id, value: el.value })
         }
       })
@@ -152,7 +152,7 @@ class Settings extends Component {
                               {React.cloneElement(typeToComponent(el.type, {
                                 props: getSafe(() => el.frontendConfig.props),
                                 inputProps: {
-                                  disabled: !el.changeable || getSafe(() => !values[role][group.name][el.name].edit, false),
+                                  disabled: !el.changeable || getSafe(() => !values[role][group.name][el.name].edit, false) && !(role === 'admin'),
                                   ...getSafe(() => el.frontendConfig.inputProps, {})
                                 }
                               }), {
