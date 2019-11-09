@@ -21,7 +21,7 @@ context("Prodex Branches CRUD", () => {
     })
 
     it("Creates a branch", () => {
-        cy.get("[data-test='settings_open_popup_btn']").click()
+        cy.settingsAdd()
 
         cy.enterText("input[id='field_input_deliveryAddress.addressName']", "Central branch")
         cy.enterText("input[id='field_input_deliveryAddress.address.streetAddress']", "125 N G St")
@@ -87,7 +87,7 @@ context("Prodex Branches CRUD", () => {
     })
 
     it("Checks error messages", () => {
-        cy.get("[data-test='settings_open_popup_btn']").click()
+        cy.settingsAdd()
 
         cy.clickSave()
 
@@ -102,6 +102,11 @@ context("Prodex Branches CRUD", () => {
         cy.openElement(branchId, 1)
 
         cy.clickSave()
+
+        cy.contains("Central branch").should("not.exist")
+
+        cy.reload()
+        cy.wait("@branchesLoadingPOST")
 
         cy.contains("Central branch").should("not.exist")
     })

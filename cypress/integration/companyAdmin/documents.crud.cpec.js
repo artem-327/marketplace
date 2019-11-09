@@ -21,7 +21,7 @@ context("Company Documents CRUD", () => {
     })
 
     it("Adds a document", () => {
-        cy.get("[data-test='settings_open_popup_btn']").click()
+        cy.settingsAdd()
 
         cy.fixture("cy.png", "base64").then(fileContent => {
             cy.get("input[type='file']").upload({fileContent, fileName: "cy.png", mimeType: "image/png"})
@@ -83,6 +83,11 @@ context("Company Documents CRUD", () => {
         cy.openElement(attachmentId, 1)
 
         cy.clickSave()
+
+        cy.contains("cy.png").should("not.exist")
+
+        cy.reload()
+        cy.wait("@documentsLoading")
 
         cy.contains("cy.png").should("not.exist")
     })
