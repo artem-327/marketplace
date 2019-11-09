@@ -7,6 +7,11 @@ Cypress.Commands.add("clickAdd", () => {
     cy.get("[data-test='admin_table_add_btn']").click({force: true})
 })
 
+Cypress.Commands.add("settingsAdd", () => {
+    cy.get("[data-test='settings_open_popup_btn']").click({force: true})
+})
+
+
 Cypress.Commands.add("enterText", (selector,text) => {
     cy.get(selector)
         .type(text)
@@ -25,7 +30,7 @@ Cypress.Commands.add("selectFromDropdown", (selector,value) => {
 
     cy.wait(1000)
     cy.get(selector).within(() => {
-        cy.get("div[class='selected item']").click({force: true})
+        cy.get("div[role='option']").eq(0).click({force: true})
     })
 })
 

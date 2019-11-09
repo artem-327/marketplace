@@ -4,14 +4,15 @@ context("Prodex Warehouse CRUD", () => {
     beforeEach(function () {
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.route("GET", "/prodex/api/users").as("settingsLoading")
         cy.route("POST", "/prodex/api/branches/warehouses/datagrid").as("warehouseLoading")
 
         cy.FElogin("user1@example.com", "echopass123")
 
-        cy.url().should("include", "inventory")
-
-        cy.wait("@inventoryLoading")
+        cy.wait("@inventoryLoading", {timeout: 100000})
         cy.contains("Settings").click()
+
+        cy.wait("@settingsLoading", {timeout: 100000})
 
         cy.contains("WAREHOUSES").click()
 
@@ -42,8 +43,9 @@ context("Prodex Warehouse CRUD", () => {
 
         cy.contains("Created Warehouse")
 
-        //TODO Fix filter
-        let filter = [{"operator":"LIKE","path":"Branch.addressName","values":["%Central%"]}]
+        let filter = [{"operator":"LIKE","path":"Branch.deliveryAddress.addressName","values":["%Central branch%"]},
+            {"operator":"LIKE","path":"Branch.deliveryAddress.address.streetAddress","values":["%Central branch%"]},
+            {"operator":"LIKE","path":"Branch.deliveryAddress.contactName","values":["%Central branch%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstBranchIdWithFilter(token, filter).then(itemId => {
@@ -97,6 +99,11 @@ context("Prodex Warehouse CRUD", () => {
         cy.openElement(branchId, 1)
 
         cy.clickSave()
+
+        cy.contains("Central branch").should("not.exist")
+
+        cy.reload()
+        cy.wait("@warehouseLoading")
 
         cy.contains("Central branch").should("not.exist")
     })

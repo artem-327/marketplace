@@ -9,8 +9,6 @@ context("Prodex Branches CRUD", () => {
 
         cy.FElogin("user1@example.com", "echopass123")
 
-        //cy.url().should("include", "inventory")
-
         cy.wait("@inventoryLoading")
         cy.contains("Settings").click()
 
@@ -21,7 +19,7 @@ context("Prodex Branches CRUD", () => {
     })
 
     it("Creates a delivery address", () => {
-        cy.clickAdd()
+        cy.settingsAdd()
 
         cy.enterText("#field_input_addressName", "Automatic")
 
@@ -32,9 +30,14 @@ context("Prodex Branches CRUD", () => {
         cy.waitForUI()
         cy.selectFromDropdown("div[id='field_dropdown_address.zip']","75000")
 
-        cy.enterText("#field_input_name","Marie Currie")
-        cy.enterText("#field_input_phoneNumber","987654321")
-        cy.enterText("#field_input_email","marie@address.com")
+        cy.enterText("#field_input_contactName","Marie Currie")
+        cy.get("div[data-test='settings_delivery_address_emailPhone_inp']").within(($form) => {
+            cy.get("input[placeholder = 'Phone Number']").type("1234567895")
+            cy.contains("+CCC").click()
+            cy.contains("USA").click()
+        })
+
+        cy.enterText("#field_input_contactEmail","marie@address.com")
 
         cy.clickSave()
 
@@ -62,9 +65,9 @@ context("Prodex Branches CRUD", () => {
             .should("have.value","Marie Currie")
 
         cy.get("#field_input_phoneNumber")
-            .should("have.value","987 654 321")
+            .should("have.value","123 456 7895")
 
-        cy.get("#field_input_email")
+        cy.get("#field_input_contactEmail")
             .should("have.value","marie@address.com")
     })
 
@@ -87,7 +90,7 @@ context("Prodex Branches CRUD", () => {
     })
 
     it("Checks error messages", () => {
-        cy.clickAdd()
+        cy.settingsAdd()
 
         cy.clickSave()
 
@@ -103,6 +106,11 @@ context("Prodex Branches CRUD", () => {
         cy.get('[data-test=action_' + addressId + '_1]').click({force: true})
 
         cy.clickSave()
+
+        cy.contains("125 N G St").should("not.exist")
+
+        cy.reload()
+        cy.wait("@addressLoading")
 
         cy.contains("125 N G St").should("not.exist")
     })

@@ -6,15 +6,14 @@ context("Prodex User CRUD", () => {
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")
         cy.route("GET", "/prodex/api/users").as("usersLogin")
+        cy.route("POST", "/prodex/api/users").as("usersSave")
 
         cy.FElogin("user1@example.com", "echopass123")
 
-        cy.url().should("include", "inventory")
-
-        cy.wait("@inventoryLoading")
+        cy.wait("@inventoryLoading", {timeout: 100000})
         cy.contains("Settings").click()
 
-        cy.wait("@usersLogin")
+        cy.wait("@usersLogin", {timeout: 100000})
 
         cy.contains("USERS").click()
 
@@ -22,7 +21,7 @@ context("Prodex User CRUD", () => {
     })
 
     it("Creates a user", () => {
-        cy.get("[data-test='settings_open_popup_btn']").click()
+        cy.settingsAdd()
 
         cy.enterText("#field_input_name", "John Automator")
         cy.enterText("#field_input_jobTitle", "Automatior")
@@ -36,13 +35,11 @@ context("Prodex User CRUD", () => {
 
         cy.clickSave()
 
+        cy.wait("@usersSave")
         cy.contains("User John Automator successfully created.")
 
-        let filter = [{"operator": "LIKE", "path": "User.name", "values": ["%john%"]}, {
-            "operator": "LIKE",
-            "path": "User.homeBranch.name",
-            "values": ["%john%"]
-        }]
+        let filter = [{"operator": "LIKE", "path": "User.name", "values": ["%John Automator%"]},
+            {"operator": "LIKE", "path": "User.homeBranch.deliveryAddress.contactName", "values": ["%John Automator%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstUserIdWithFilter(token, filter).then(itemId => {
@@ -102,12 +99,12 @@ context("Prodex User CRUD", () => {
     })
 
     it("Checks error messages", () => {
-        cy.clickAdd()
+        cy.settingsAdd()
 
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",3)
+            .should("have.length", 3)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
@@ -117,6 +114,11 @@ context("Prodex User CRUD", () => {
         cy.openElement(userID, 2)
 
         cy.clickSave()
+
+        cy.contains("Jen Automator").should("not.exist")
+
+        cy.reload()
+        cy.wait("@usersLogin")
 
         cy.contains("Jen Automator").should("not.exist")
     })
