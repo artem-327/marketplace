@@ -76,8 +76,24 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_OPEN_POPUP: {
       return {
         ...state,
-        [payload.data ? 'currentEditForm' : 'currentAddForm']: state.currentTab,
-        popupValues: payload.data
+        popupValues: payload.data,
+
+        //[payload.data ? 'currentEditForm' : 'currentAddForm']: state.currentTab,
+
+
+        ...(payload.data ?
+            {
+              currentAddForm: null,
+              currentEditForm: state.currentTab,
+            }
+            :
+            {
+              currentAddForm: state.currentTab,
+              currentEditForm: null,
+            }
+        ),
+        currentEdit2Form: null,
+        currentAddDwolla: null,
       }
     }
 
@@ -86,7 +102,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         currentAddForm: null,
         currentEditForm: null,
-        currentEdit2Form: null
+        currentEdit2Form: null,
+        currentAddDwolla: null,
       }
     }
 
@@ -132,6 +149,9 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentAddForm: state.currentTab,
+        currentEditForm: null,
+        currentEdit2Form: null,
+        currentAddDwolla: null,
         popupValues: action.payload
       }
     }
@@ -140,7 +160,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         currentAddForm: null,
         currentEditForm: null,
-        currentEdit2Form: null
+        currentEdit2Form: null,
+        currentAddDwolla: null,
       }
     }
 
@@ -148,6 +169,9 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentEditForm: state.currentTab,
+        currentAddForm: null,
+        currentEdit2Form: null,
+        currentAddDwolla: null,
         editPopupBoolean: state.editPopupBoolean === false ? true : false,
         popupValues: action.payload
       }
@@ -157,6 +181,9 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentEdit2Form: state.currentTab,
+        currentAddForm: null,
+        currentEditForm: null,
+        currentAddDwolla: null,
         editPopupBoolean: state.editPopupBoolean === false ? true : false,
         popupValues: action.payload
       }
@@ -165,8 +192,10 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_CLOSE_EDIT_POPUP: {
       return {
         ...state,
+        currentAddForm: null,
         currentEditForm: null,
-        currentEdit2Form: null
+        currentEdit2Form: null,
+        currentAddDwolla: null,
       }
     }
 
@@ -266,6 +295,7 @@ export default function reducer(state = initialState, action) {
         currentAddForm: null,
         currentEditForm: null,
         currentEdit2Form: null,
+        currentAddDwolla: null,
         filterCasIds: [],
       }
     }

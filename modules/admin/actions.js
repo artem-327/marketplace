@@ -500,11 +500,14 @@ export function getProductsCatalogRequest() {
 	}
 }
 
-export function openEditEchoProduct(id) {
+export function openEditEchoProduct(id, editTab) {
 	return async dispatch => {
 		// get newest data
 		const response = await dispatch(getEchoProduct(id))
-		let formData = response.value.data
+		let formData = {
+			...response.value.data,
+			editTab
+		}
 
 		// mark attachments as linked
 		if (formData.attachments) {
