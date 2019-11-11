@@ -19,17 +19,39 @@ export default class Error extends React.Component {
           <Background src={BackgroundImage} />
           <Message>
             <h1>
-              {this.props.statusCode
-                ? <FormattedMessage id="error.server" values={{ error: this.props.statusCode || 'unexpected' }} />
-                : <FormattedMessage id="error.client" />}<br />
-              <FormattedMessage id="error.apologize" />
-            </h1><br />
-            <Button size="massive" primary onClick={() => Router.push('/auth/login')} data-test='error_back_btn'>
-              <FormattedMessage id="error.backButtonText">{text => text}</FormattedMessage>
+              {this.props.statusCode ? (
+                <FormattedMessage
+                  id='error.server'
+                  values={{ error: this.props.statusCode || 'unexpected' }}
+                />
+              ) : (
+                <FormattedMessage id='error.client' />
+              )}
+              <br />
+              <FormattedMessage id='error.apologize' />
+            </h1>
+            <br />
+            <Button
+              size='massive'
+              primary
+              onClick={() => Router.push('/auth/login')}
+              data-test='error_back_btn'>
+              <FormattedMessage id='error.backButtonText'>
+                {text => text}
+              </FormattedMessage>
             </Button>
           </Message>
           <Footer>
-            <FormattedMessage id="error.footer" values={{ email: <a href="mailto:support@echoexchange.com">support@echoexchange.com</a> }} />
+            <FormattedMessage
+              id='error.footer'
+              values={{
+                email: (
+                  <a href='mailto:support@echosystem.com'>
+                    support@echosystem.com
+                  </a>
+                )
+              }}
+            />
           </Footer>
         </PageWrapper>
       </Layout>
@@ -40,7 +62,7 @@ export default class Error extends React.Component {
 const PageWrapper = styled.div`
   position: relative;
   min-height: 50vh;
-  color: #5B5E63;
+  color: #5b5e63;
 `
 const Message = styled.div`
   position: absolute;
@@ -51,7 +73,7 @@ const Message = styled.div`
 
   h1 {
     padding: 20px;
-    background-color: #FFF;
+    background-color: #fff;
     display: inline-block;
     font-weight: lighter;
   }

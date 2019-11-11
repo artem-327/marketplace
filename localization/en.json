@@ -117,7 +117,7 @@
   "dwolla.registrationComplete": "Registration Completed",
   "dwolla.registrationCompleteDesc": "Thank you for registering for Dwolla payment processor with Echo. The verification process can take 24-48 hours. In the meantime you can add your Products, Warehouses, Branches, and other information to the Settings section of Echo Exchange. Once you have received the verification e-mail, you will be able to add your Bank Accounts. You will be required to set up a Bank Account and Logistics account before you are able to make transactions. If you do not receive a verification e-mail within 48 hours, please contact {mail} or call {tel}.",
   "dwolla.registrationCompleteDesc1": "Thanks for registering for your Dwolla Account. The verification process can take 24-48 hours. In the meantime you can add your Products, Warehouses, Branches, and other information in the Settings section of (web app name).",
-  "dwolla.registrationCompleteDesc2": "Once Dwolla sends you the verification e-mail you can then add your Bank Accounts and Logisitics details. If you don’t receive a verification e-mail please contact support@echoexchange.net or call (833) 321 3246.",
+  "dwolla.registrationCompleteDesc2": "Once Dwolla sends you the verification e-mail you can then add your Bank Accounts and Logisitics details. If you don’t receive a verification e-mail please contact support@echosystem.com or call (833) 321 3246.",
   "dwolla.personOpeningAcc": "Person Opening the Account:",
   "dwolla.registrationStatus": "Dwolla Registration Status",
   "dwolla.registrationStatus.none": "none",

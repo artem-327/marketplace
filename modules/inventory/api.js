@@ -105,5 +105,3 @@ export function updateProductOffer(poId, values) {
 }
 
 export const getAutocompleteData = searchUrl => api.get(searchUrl).then(response => response.data)
-
-export const getAllProductOffers = () => api.get('/prodex/api/product-offers/own/all').then(response => response.data)
