@@ -738,24 +738,13 @@ class CompanyProductInfo extends Component {
       }
 
       case 2: {
-        // Documents
-        return (
-          <DocumentManager
-            items={values.attachments}
-            edit={false}
-            deletable={false}
-          />
-        )
-      }
-
-      case 3: {
         // Regulatory
         return (
           <Grid verticalAlign='middle'>{this.renderCasProduct(values)}</Grid>
         )
       }
 
-      case 4: {
+      case 3: {
         // Transportation
         return (
           <Grid verticalAlign='middle'>

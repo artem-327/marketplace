@@ -7,10 +7,6 @@ export const tabs = [
     key: 'properties'
   },
   {
-    text: { id: 'global.ep.documents', defaultMessage: 'Documents(EP)' },
-    key: 'documents'
-  },
-  {
     text: { id: 'global.ep.regulatory', defaultMessage: 'Regulatory(EP)' },
     key: 'regulatory'
   },
