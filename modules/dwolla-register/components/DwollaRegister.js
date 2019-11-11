@@ -574,12 +574,11 @@ class DwollaRegister extends Component {
     const { identity, postDwollaAccount, companyId } = this.props
 
     if (identity && identity.company) {
-      const { deliveryAddress } = identity.company.primaryBranch
+      const deliveryAddress = getSafe(() => identity.company.primaryBranch.deliveryAddress)
 
       let [firstName, ...lastName] = identity.name ? identity.name.split(' ') : getSafe(() => identity.company.name.split(' '))
 
       initialValues = {
-
         firstName,
         lastName: lastName.toString().replace(',', ' '),
         email: identity.email,

@@ -8,7 +8,7 @@ import Link from 'next/link'
 export default class Payment extends Component {
 
   render() {
-    let { payments, selectedAddress } = this.props
+    let { payments, billingInfo } = this.props
     let columns = payments.length === 0
       ? { computer: 16 }
       : { computer: 8 }
@@ -16,7 +16,7 @@ export default class Payment extends Component {
     return (
       <>
         <GridRow>
-          <GridColumn {...columns}>
+          <GridColumn {...columns} tablet={16}>
             {
               payments.length === 0
                 ? <FormattedMessage
@@ -46,7 +46,7 @@ export default class Payment extends Component {
 
         <Divider />
 
-        <ShippingAddress selectedAddress={selectedAddress} addressOnly={true} header={{ id: 'cart.billingInfo', defaultMessage: 'Billing Info' }} />
+        <ShippingAddress selectedAddress={billingInfo} addressOnly={true} header={{ id: 'cart.billingInfo', defaultMessage: 'Billing Info' }} />
       </>
     )
   }

@@ -276,23 +276,23 @@ class CompanyProductInfo extends Component {
           <Grid verticalAlign='middle'>
             {this.getInput({ id: 'global.productName', defaultMessage: 'Product Name', name: 'productName' })}
             {this.getInput({ id: 'global.manufacturer', defaultMessage: 'Manufacturer', name: 'manufacturer' })}
-            {this.getInput({ id: 'global.manufacturerProductCode', defaultMessage: 'Manufacturer Product Code', name: 'manufactureProductCode' })}
-            {this.getInput({ id: 'global.emergencyNumber', defaultMessage: 'Emergency Number', name: 'emergencyNumber' })}
+            {this.getInput({ id: 'global.manufacturerProductCode', defaultMessage: 'Manufacturer Product Code', name: 'echoProduct.mfrProductCodes' })}
+            {this.getInput({ id: 'global.emergencyNumber', defaultMessage: 'Emergency Number', name: 'echoProduct.emergencyPhone' })}
             {this.getInput({ id: 'global.esin', defaultMessage: 'ESIN', name: 'esin' })}
-            {this.getInput({ id: 'global.recommendedUse', defaultMessage: 'Recommended Uses', name: 'recommendedUses' })}
-            {this.getInput({ id: 'global.recommendedRestrictions', defaultMessage: 'Recommended Restrictions', name: 'recommendedRestrictions' })}
-            {this.getInput({ id: 'global.version', defaultMessage: 'Version', name: 'sdsVersionNumber' })}
-            {this.getInput({ id: 'global.revisionDate', defaultMessage: 'Revision Date', name: 'sdsRevisionDate' })}
-            {this.getInput({ id: 'global.synonyms', defaultMessage: 'Synonyms', name: 'synonyms' })}
-            {this.getInput({ id: 'global.formula', defaultMessage: 'Formula', name: 'molecularFormula' })}
-            {this.getInput({ id: 'global.molecularWeight', defaultMessage: 'Molecular Weight', name: 'molecularWeight' })}
+            {this.getInput({ id: 'global.recommendedUse', defaultMessage: 'Recommended Uses', name: 'echoProduct.recommendedUse' })}
+            {this.getInput({ id: 'global.recommendedRestrictions', defaultMessage: 'Recommended Restrictions', name: 'echoProduct.recommendedRestrictions' })} */}
+            {this.getInput({ id: 'global.version', defaultMessage: 'Version', name: 'echoProduct.sdsVersionNumber' })}
+            {this.getInput({ id: 'global.revisionDate', defaultMessage: 'Revision Date', name: 'echoProduct.sdsRevisionDate' })}
+            {this.getInput({ id: 'global.synonyms', defaultMessage: 'Synonyms', name: 'echoProduct.synonyms' })}
+            {this.getInput({ id: 'global.formula', defaultMessage: 'Formula', name: 'echoProduct.molecularFormula' })}
+            {this.getInput({ id: 'global.molecularWeight', defaultMessage: 'Molecular Weight', name: 'echoProduct.molecularWeight' })}
           </Grid>
         )
       }
       case 1: { // Properties
         return (
           <Grid verticalAlign='middle'>
-            {this.getSharedContent()}
+            {this.getSharedContent('echoProduct.')}
           </Grid>
         )
       }
@@ -327,25 +327,25 @@ class CompanyProductInfo extends Component {
                 />
               </GridColumn>
             </GridRow>
-            {this.getInput({ id: 'global.unNumber', defaultMessage: 'UN Number', name: `${this.state.echoProductGroup}UnNumber` })}
-            {this.getInput({ id: 'global.properShippingName', defaultMessage: 'Proper Shipping Name', name: `${this.state.echoProductGroup}ProperShippingName` })}
-            {this.getInput({ id: 'global.properTechnicalName', defaultMessage: 'Proper Technical Name', name: `${this.state.echoProductGroup}ProperTechnicalName` })}
-            {this.getInput({ id: 'global.hazardClass', defaultMessage: 'Hazard Class', name: `${this.state.echoProductGroup}HazardClass` })}
-            {this.getInput({ id: 'global.packagingGroup', defaultMessage: 'Packaging Group', name: `${this.state.echoProductGroup}PackagingGroup` })}
-            {this.getInput({ id: 'global.reportableQuantity', defaultMessage: 'Reportable Quantity', name: `${this.state.echoProductGroup}ReportableQuantity` })}
-            {this.getInput({ id: 'global.enviromentalHazards', defaultMessage: 'Enviromental Hazards', name: `${this.state.echoProductGroup}EnviromentalHazards` })} {/* ?? */}
-            {this.getInput({ id: 'global.emsNumbers', defaultMessage: 'Ems Numbers', name: `${this.state.echoProductGroup}EmsNumbers` })} {/* ?? */}
-            {this.getInput({ id: 'global.exceptions', defaultMessage: 'Exceptions', name: `${this.state.echoProductGroup}Exceptions` })} {/* ?? */}
-            {this.getInput({ id: 'global.specialPrecautionForUser', defaultMessage: 'Special Precautions For User', name: `${this.state.echoProductGroup}SpecialPrecautionsForUser` })} {/* ?? */}
-            {this.getInput({ id: 'global.marinePollutant', defaultMessage: 'Marine Pollutant', name: `${this.state.echoProductGroup}MarinePollutant` })}
-            {this.getInput({ id: 'global.severeMarinePollutant', defaultMessage: 'Severe Marine Pollutant', name: `${this.state.echoProductGroup}SevereMarinePollutant` })}
-            {this.getInput({ id: 'global.packagingExceptions', defaultMessage: 'Packaging Exceptions', name: `${this.state.echoProductGroup}PackagingExceptions` })} {/* ?? */}
-            {this.getInput({ id: 'global.packagingNonBulk', defaultMessage: 'Packaging Non Bulk', name: `${this.state.echoProductGroup}PackagingNonBulk` })} {/* ?? */}
-            {this.getInput({ id: 'global.packagingBulk', defaultMessage: 'Packaging Bulk', name: `${this.state.echoProductGroup}PackagingBulk` })} {/* ?? */}
-            {this.getInput({ id: 'global.quantityLimitationsPassengerAircraftRail', defaultMessage: 'Quantity Limitations Passenger Aircraft/Rail', name: `${this.state.echoProductGroup}QuantityLimitationsPassengerAircraftRail` })} {/* ?? */}
-            {this.getInput({ id: 'global.quantityLimitationsCargoAircraftOnly', defaultMessage: 'Quantity Limitations Cargo Aircraft Only', name: `${this.state.echoProductGroup}QuantityLimitationsCargoAircraftOnly` })} {/* ?? */}
-            {this.getInput({ id: 'global.vesselStowageLocation', defaultMessage: 'Vessel Stowage Location', name: `${this.state.echoProductGroup}VesselStowageLocation` })} {/* ?? */}
-            {this.getInput({ id: 'global.vesselStowageOther', defaultMessage: 'Vessel Stowage Other', name: `${this.state.echoProductGroup}VesselStowageOther` })} {/* ?? */}
+            {this.getInput({ id: 'global.unNumber', defaultMessage: 'UN Number', name: `echoProduct.${this.state.echoProductGroup}UnNumber` })}
+            {this.getInput({ id: 'global.properShippingName', defaultMessage: 'Proper Shipping Name', name: `echoProduct.${this.state.echoProductGroup}ProperShippingName` })}
+            {this.getInput({ id: 'global.properTechnicalName', defaultMessage: 'Proper Technical Name', name: `echoProduct.${this.state.echoProductGroup}ProperTechnicalName` })}
+            {this.getInput({ id: 'global.hazardClass', defaultMessage: 'Hazard Class', name: `echoProduct.${this.state.echoProductGroup}HazardClass` })}
+            {this.getInput({ id: 'global.packagingGroup', defaultMessage: 'Packaging Group', name: `echoProduct.${this.state.echoProductGroup}PackagingGroup` })}
+            {this.getInput({ id: 'global.reportableQuantity', defaultMessage: 'Reportable Quantity', name: `echoProduct.${this.state.echoProductGroup}ReportableQuantity` })}
+            {this.getInput({ id: 'global.enviromentalHazards', defaultMessage: 'Enviromental Hazards', name: `echoProduct.${this.state.echoProductGroup}EnviromentalHazards` })} {/* ?? */}
+            {this.getInput({ id: 'global.emsNumbers', defaultMessage: 'Ems Numbers', name: `echoProduct.${this.state.echoProductGroup}EmsNumbers` })} {/* ?? */}
+            {this.getInput({ id: 'global.exceptions', defaultMessage: 'Exceptions', name: `echoProduct.${this.state.echoProductGroup}Exceptions` })} {/* ?? */}
+            {this.getInput({ id: 'global.specialPrecautionForUser', defaultMessage: 'Special Precautions For User', name: `echoProduct.${this.state.echoProductGroup}SpecialPrecautionsForUser` })} {/* ?? */}
+            {this.getInput({ id: 'global.marinePollutant', defaultMessage: 'Marine Pollutant', name: `echoProduct.${this.state.echoProductGroup}MarinePollutant` })}
+            {this.getInput({ id: 'global.severeMarinePollutant', defaultMessage: 'Severe Marine Pollutant', name: `echoProduct.${this.state.echoProductGroup}SevereMarinePollutant` })}
+            {this.getInput({ id: 'global.packagingExceptions', defaultMessage: 'Packaging Exceptions', name: `echoProduct.${this.state.echoProductGroup}PackagingExceptions` })} {/* ?? */}
+            {this.getInput({ id: 'global.packagingNonBulk', defaultMessage: 'Packaging Non Bulk', name: `echoProduct.${this.state.echoProductGroup}PackagingNonBulk` })} {/* ?? */}
+            {this.getInput({ id: 'global.packagingBulk', defaultMessage: 'Packaging Bulk', name: `echoProduct.${this.state.echoProductGroup}PackagingBulk` })} {/* ?? */}
+            {this.getInput({ id: 'global.quantityLimitationsPassengerAircraftRail', defaultMessage: 'Quantity Limitations Passenger Aircraft/Rail', name: `echoProduct.${this.state.echoProductGroup}QuantityLimitationsPassengerAircraftRail` })} {/* ?? */}
+            {this.getInput({ id: 'global.quantityLimitationsCargoAircraftOnly', defaultMessage: 'Quantity Limitations Cargo Aircraft Only', name: `echoProduct.${this.state.echoProductGroup}QuantityLimitationsCargoAircraftOnly` })} {/* ?? */}
+            {this.getInput({ id: 'global.vesselStowageLocation', defaultMessage: 'Vessel Stowage Location', name: `echoProduct.${this.state.echoProductGroup}VesselStowageLocation` })} {/* ?? */}
+            {this.getInput({ id: 'global.vesselStowageOther', defaultMessage: 'Vessel Stowage Other', name: `echoProduct.${this.state.echoProductGroup}VesselStowageOther` })} {/* ?? */}
           </Grid>
         )
       }
@@ -379,9 +379,7 @@ class CompanyProductInfo extends Component {
     let { id, ...rest } = getSafe(() => echoProduct.elements[this.state.casProductIndex].casProduct, {})
 
     let initialValues = {
-      ...EchoProductResponse,
       ...companyProduct,
-      ...echoProduct,
       ...popupValues,
       attachments: companyProduct && companyProduct.attachments.concat(echoProduct.attachments),
       productName: getSafe(() => echoProduct.name, ''),
@@ -394,6 +392,11 @@ class CompanyProductInfo extends Component {
         ...casProduct,
         ...rest
       },
+      echoProduct: {
+        ...EchoProductResponse,
+        ...echoProduct,
+        mfrProductCodes: getSafe(() => echoProduct.mfrProductCodes.toString(), '')
+      },
     }
 
 
@@ -405,8 +408,6 @@ class CompanyProductInfo extends Component {
         render={(formikProps) => {
           let { submitForm, values } = formikProps
           this.submitForm = submitForm
-          console.log({ values })
-
           return (
             casProductOnly
               ? <Grid verticalAlign='middle'>{this.renderCasProduct(values)}</Grid>

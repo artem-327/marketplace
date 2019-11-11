@@ -10,15 +10,12 @@ export const LoginSegment = styled(Segment)`
 `
 
 export const LogoImage = styled(Image)`
-  width: ${width * 0.4}px;
-  position: absolute !important;
-  left: ${width / 2 - (width * 0.4) / 2}px;
-  top: ${-(width * 0.4 / 2)}px;
+  width: 40%;
   margin: auto;
 `
 
 export const StyledForm = styled(Form)`
-  margin-top:  ${(width * 0.4 / 2)}px;
+  margin-top: 0;
 `
 
 export const BottomMargedRow = styled(GridRow)`

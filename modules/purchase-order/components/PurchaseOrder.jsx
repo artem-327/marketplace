@@ -185,7 +185,8 @@ class PurchaseOrder extends Component {
 
 
   render() {
-    const { dispatch, postNewDeliveryAddress, updateDeliveryAddress, preferredBankAccountId, intl: { formatMessage } } = this.props
+
+    const { billingInfo, dispatch, postNewDeliveryAddress, updateDeliveryAddress, preferredBankAccountId, intl: { formatMessage } } = this.props
     let { cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shippingQuotesAreFetching, shipping } = this.props
 
     if (cartIsFetching) return <Spinner />
@@ -204,7 +205,6 @@ class PurchaseOrder extends Component {
       shipmentQuoteId: ''
     }
 
-    console.log(this.props.cart.selectedShipping)
 
     return (
       <div className="app-inner-main flex stretched">
@@ -237,7 +237,7 @@ class PurchaseOrder extends Component {
 
             return (
               <Grid centered>
-                <GridColumn computer={8}>
+                <GridColumn mobile={14} tablet={9} computer={8}>
                   {shipping.isShippingEdit &&
                     <ShippingEdit
                       savedShippingPreferences={shipping.savedShippingPreferences}
@@ -281,6 +281,27 @@ class PurchaseOrder extends Component {
                                 <FormattedMessage id='cart.weightLimitExceeded' defaultMessage='Your order weight exceeds weight limit of XXX lbs for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.' />
                               </GridColumn>
                             </GridRow>
+                          </>
+                        }
+
+                        {shippingQuotes.length === 0 && shipping.selectedAddress && !shippingQuotesAreFetching &&
+                          <GridRow>
+                            <GridColumn computer={16}>
+                              <FormattedMessage
+                                id='cart.noShippingQuotes.processManually'
+                                defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`} />
+                            </GridColumn>
+                          </GridRow>
+                        }
+
+                        {
+                          shipping.selectedAddress && shippingQuotes.length === 0 && (!shippingQuotesAreFetching || cart.weightLimitExceed) &&
+                          <>
+                            <GridRow>
+                              <GridColumn computer={8}>
+                                <Input name='shipmentQuoteId' label={<FormattedMessage id='cart.shipmentQuote' defaultMessage='Shipment Quote' />} />
+                              </GridColumn>
+                            </GridRow>
 
                             <GridRow>
                               <GridColumn computer={16}>
@@ -300,15 +321,6 @@ class PurchaseOrder extends Component {
                               </GridColumn>
                             </GridRow>
                           </>
-                        }
-
-                        {
-                          shipping.selectedAddress && shippingQuotes.length === 0 && !shippingQuotesAreFetching || cart.weightLimitExceed &&
-                          <GridRow>
-                            <GridColumn computer={8}>
-                              <Input name='shipmentQuoteId' label={<FormattedMessage id='cart.shipmentQuote' defaultMessage='Shipment Quote' />} />
-                            </GridColumn>
-                          </GridRow>
                         }
                       </Grid>
                     </Segment>
@@ -350,7 +362,7 @@ class PurchaseOrder extends Component {
 
                       <Payment
                         dispatch={dispatch}
-                        selectedAddress={shipping.selectedAddress}
+                        billingInfo={billingInfo}
                         selectedPayment={shipping.selectedPayment}
                         payments={payments}
                         getPayment={this.getPayment}
@@ -360,7 +372,7 @@ class PurchaseOrder extends Component {
 
                 </GridColumn>
 
-                <GridColumn computer={5}>
+                <GridColumn mobile={14} tablet={6} computer={5}>
                   <CartItemSummary
                     updateHazmatInfo={this.props.updateHazmatInfo}
                     currency={currency}

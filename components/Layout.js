@@ -99,16 +99,6 @@ class Layout extends Component {
         <PopUp />
         <Head>
           <title>{formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo exchange' })} / {title}</title>
-
-          <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png" />
-          <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png" />
-          <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png" />
-          <link rel="manifest" href="/static/site.webmanifest" />
-          <link rel="shortcut icon" href="/static/favicon.ico" />
-          <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#1b3454" />
-          <meta name="msapplication-TileColor" content="#1b3454" />
-          <meta name="msapplication-config" content="/static/browserconfig.xml" />
-          <meta name="theme-color" content="#1b3454" />
         </Head>
         <TopMenu fixed='top' inverted size='large' borderless>
 

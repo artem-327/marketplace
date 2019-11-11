@@ -4,13 +4,13 @@ import Orders from './Orders'
 import * as OrdersHelper from '~/src/helpers/Orders'
 import * as Actions from '../actions'
 import { formatMoney } from '~/src/utils/functions'
-import moment from "moment/moment"
+import moment from 'moment/moment'
 import { withDatagrid } from '~/modules/datagrid'
 import { withRouter } from 'next/router'
 import { applyFilter } from '~/modules/filter/actions'
 import { ArrayToMultiple } from '~/components/formatted-messages'
-import React from "react";
-import { FormattedNumber } from "react-intl"
+import React from 'react'
+import { FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
 
 function mapStateToProps(state, { router, datagrid }) {
@@ -22,7 +22,6 @@ function mapStateToProps(state, { router, datagrid }) {
   }
   const { type } = query
 
-
   return {
     endpointType: type === 'sales' ? 'sale' : type,
     queryType: type,
@@ -33,8 +32,14 @@ function mapStateToProps(state, { router, datagrid }) {
       id: r.id,
       globalStatus: r.cfGlobalStatus,
       date: moment(r.orderDate).format('MM/DD/YYYY'),
-      customerName: (type === 'sales' ? r.buyerCompanyName : r.sellerCompanyName),
-      productName: <ArrayToMultiple values={r.orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))} />,
+      customerName: type === 'sales' ? r.buyerCompanyName : r.sellerCompanyName,
+      productName: (
+        <ArrayToMultiple
+          values={r.orderItems.map(d =>
+            d.echoProductName ? d.echoProductName : 'N/A'
+          )}
+        />
+      ),
       orderStatus: OrdersHelper.getOrderStatus(r.orderStatus),
       shippingStatus: OrdersHelper.getShippingStatus(r.shippingStatus),
       reviewStatus: OrdersHelper.getReviewStatus(r.reviewStatus),
@@ -43,7 +48,14 @@ function mapStateToProps(state, { router, datagrid }) {
       bl: '',
       sds: '',
       cofA: '',
-      orderTotal: <FormattedNumber style='currency' currency={currency} value={r.cfPriceTotal} />
+      orderTotal: (
+        <FormattedNumber
+          style='currency'
+          currency={currency}
+          value={r.cfPriceTotal}
+        />
+      ),
+      accountingDocumentsCount: r.accountingDocumentsCount
     })),
     activeStatus: orders.statusFilter
   }
@@ -53,4 +65,11 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ ...Actions, dispatch, applyFilter }, dispatch)
 }
 
-export default withDatagrid(withRouter(connect(mapStateToProps, mapDispatchToProps)(Orders)))
+export default withDatagrid(
+  withRouter(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(Orders)
+  )
+)

@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { bool } from 'prop-types'
-import { Grid, GridRow, GridColumn, Header } from 'semantic-ui-react'
+import { Segment, Grid, GridRow, GridColumn, Header } from 'semantic-ui-react'
 
-import Logo from '~/assets/images/logos/logo-dark.png'
 import { Input, Button, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Link from 'next/link'
@@ -16,6 +15,8 @@ import { initialValues, validationSchema } from '../constants/validation'
 import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup } from '~/utils/functions'
 
+import Logo from '~/assets/images/login/logo_echo.png'
+
 class Password extends Component {
 
   render() {
@@ -26,7 +27,9 @@ class Password extends Component {
 
     return (
       <LoginSegment raised padded='very'>
-        <LogoImage src={Logo} />
+        <Segment basic textAlign='center'>
+          <LogoImage src={Logo} />
+        </Segment>
         <StyledForm
           validateOnChange={true}
           initialValues={initialValues(forgottenPassword)}
@@ -79,7 +82,7 @@ class Password extends Component {
                   <GridRow>
                     <GridColumn>
                       <Button.Submit size='big' fluid>
-                        <FormattedMessage id='global.agreeAndContinue' defaultMessage='Agree and Continue'>{(text) => text}</FormattedMessage>
+                        <FormattedMessage id='global.continue' defaultMessage='Continue'>{(text) => text}</FormattedMessage>
                       </Button.Submit>
                     </GridColumn>
                   </GridRow>
