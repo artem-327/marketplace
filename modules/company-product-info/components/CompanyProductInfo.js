@@ -63,6 +63,59 @@ class CompanyProductInfo extends Component {
     echoProductGroup: echoProductGrouping[0].value
   }
 
+  getElements = ({ id, defaultMessage, elements }) => {
+    return (
+      <>
+        <GridRow>
+          <GridColumn width={16}>
+            <FormattedMessage id={id} defaultMessage={defaultMessage} />
+          </GridColumn>
+        </GridRow>
+        {elements.map((element, index) => {
+          return (
+            <GridRow>
+              { element.proprietary ? (
+                <GridColumn width={10}>
+                  <Input
+                    inputProps={{ readOnly: this.props.readOnly }}
+                    name={`echoProduct.elements[${index}].name`}
+                  />
+                </GridColumn>
+              ) : (
+                <>
+                  <GridColumn width={6}>
+                    <Input
+                      inputProps={{ readOnly: this.props.readOnly }}
+                      name={`echoProduct.elements[${index}].casProduct.casIndexName`}
+                    />
+                  </GridColumn>
+                  <GridColumn width={4}>
+                    <Input
+                      inputProps={{ readOnly: this.props.readOnly }}
+                      name={`echoProduct.elements[${index}].casProduct.casNumber`}
+                    />
+                  </GridColumn>
+                </>
+              )}
+              <GridColumn width={3}>
+                <Input
+                  inputProps={{ readOnly: this.props.readOnly }}
+                  name={`echoProduct.elements[${index}].assayMin`}
+                />
+              </GridColumn>
+              <GridColumn width={3}>
+                <Input
+                  inputProps={{ readOnly: this.props.readOnly }}
+                  name={`echoProduct.elements[${index}].assayMax`}
+                />
+              </GridColumn>
+            </GridRow>
+          )
+        })}
+      </>
+    )
+  }
+
   getInput = ({ id, defaultMessage, name }) => (
     <GridRow>
       <GridColumn width={6}>
@@ -659,6 +712,8 @@ class CompanyProductInfo extends Component {
   getContent = ({ values }) => {
     let { activeIndex } = this.props
 
+    console.log('VALUES', values)
+
     switch (activeIndex) {
       case 0: {
         // Info
@@ -668,6 +723,11 @@ class CompanyProductInfo extends Component {
               id: 'global.productName',
               defaultMessage: 'Product Name',
               name: 'productName'
+            })}
+            {this.getElements({
+              id: 'global.mixtures',
+              defaultMessage: 'Mixtures',
+              elements: getSafe(() => values.companyProduct.echoProduct.elements, [])
             })}
             {this.getInput({
               id: 'global.manufacturer',
@@ -699,7 +759,6 @@ class CompanyProductInfo extends Component {
               defaultMessage: 'Recommended Restrictions',
               name: 'echoProduct.recommendedRestrictions'
             })}{' '}
-            */}
             {this.getInput({
               id: 'global.version',
               defaultMessage: 'Version',
@@ -934,6 +993,11 @@ class CompanyProductInfo extends Component {
       echoProduct: {
         ...EchoProductResponse,
         ...echoProduct,
+        elements: getSafe(() => echoProduct.elements.map(element => ({
+          ...element,
+          assayMin: element.assayMin ? element.assayMin : '',
+          assayMax: element.assayMax ? element.assayMax : ''
+        })), []),
         mfrProductCodes: getSafe(
           () => echoProduct.mfrProductCodes.toString(),
           ''
