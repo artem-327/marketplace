@@ -100,7 +100,7 @@ const initValues = {
 const columns = [ 
   { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage> },
   { name: 'documentTypeName', title: <FormattedMessage id='global.docType' defaultMessage='Document Type'>{text => text}</FormattedMessage> },
-  { name: 'otherPermissions', title: <FormattedMessage id='addInventory.documents.otherPermissions' defaultMessage='Other permissions'>{text => text}</FormattedMessage> },
+  { name: 'othersPermissions', title: <FormattedMessage id='addInventory.documents.otherPermissions' defaultMessage='Other permissions'>{text => text}</FormattedMessage> },
   { name: 'sharedTo', title: <FormattedMessage id='addInventory.documents.sharedTo' defaultMessage='Shared to'>{text => text}</FormattedMessage> }
 ]
 
@@ -187,7 +187,8 @@ class DetailSidebar extends Component {
     broadcastLoading: true,
     saveBroadcast: 0,
     changedForm: false,
-    documentType: 1
+    documentType: 1,
+    options: []
   }
 
   componentDidMount = () => {
@@ -196,6 +197,22 @@ class DetailSidebar extends Component {
     this.props.getProductGrades()
     this.props.getWarehouses()
     this.props.getDocumentTypes()
+    this.setState({
+      options: [
+        {
+          key: 0,
+          text: (
+            <FormattedMessage
+              id='addInventory.documentType.hideUpload'
+              defaultMessage='Hide upload document'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          values: 0
+        },
+        ...this.props.listDocumentTypes
+      ]
+    })
   }
 
   componentDidUpdate = (oldProps) => {
@@ -469,6 +486,7 @@ class DetailSidebar extends Component {
             case 3:
               props = {
                 ...values.edit,
+                ...values.documents,
                 expirationDate: values.edit.doesExpire ? values.edit.expirationDate + 'T00:00:00.000Z' : null,
                 leadTime: values.edit.leadTime,
                 lotExpirationDate: values.edit.lotExpirationDate ? values.edit.lotExpirationDate + 'T00:00:00.000Z' : null,
@@ -908,16 +926,16 @@ class DetailSidebar extends Component {
                           pane: (
                             <Tab.Pane key='documents' style={{ padding: '18px' }}>
                               <Grid>
-                              {listDocumentTypes.length &&
+                              {this.state.options.length &&
                                 <GridRow>
                                   <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                    <FormattedMessage id='global.documentType' defaultMessage='Document type: '>{text => text}</FormattedMessage>
+                                    <FormattedMessage id='global.uploadDocument' defaultMessage='Upload document: '>{text => text}</FormattedMessage>
                                   </GridColumn>
-                                  <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                  <GridColumn style={{zIndex: '501'}} mobile={rightWidth} computer={rightWidth}>
                                     <Dropdown
                                       name='documents.documentType'
                                       closeOnChange
-                                      options={listDocumentTypes}
+                                      options={this.state.options}
                                       inputProps={{
                                         placeholder: <FormattedMessage id='global.documentType.choose' defaultMessage='Choose document type'/>,
                                         onChange: (e, {name, value}) => this.handleChange(e, name, value)
@@ -925,8 +943,9 @@ class DetailSidebar extends Component {
                                   </GridColumn>
                                 </GridRow>
                               }
-                              { values.documents.documentType &&
-                                <GridRow>
+                              { values.documents.documentType ?
+                                (
+                                  <GridRow>
                                   <GridColumn>
                                     <UploadLot {...this.props}
                                       edit={getSafe(() => sidebarValues.id, 0)}
@@ -976,7 +995,8 @@ class DetailSidebar extends Component {
                                       )}
                                     />
                                   </GridColumn>
-                                </GridRow>  
+                                </GridRow> 
+                                ) : null
                               }
                               { values.documents.attachments && 
                                 <GridRow>
@@ -985,7 +1005,9 @@ class DetailSidebar extends Component {
                                       hideSettingsIcon
                                       tableName='inventory_documents'
                                       columns={columns}
-                                      rows={values.documents.attachments}
+                                      rows={values.documents.attachments.map(row => (
+                                        {...row, documentTypeName: row.documentType && row.documentType.name}
+                                      ))}
                                     />
                                   </GridColumn>
                                 </GridRow>
