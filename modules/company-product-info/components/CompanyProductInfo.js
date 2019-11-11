@@ -8,7 +8,8 @@ import {
   Button,
   Dropdown,
   Menu,
-  Sidebar
+  Sidebar,
+  Table
 } from 'semantic-ui-react'
 import {
   FlexSidebar,
@@ -71,47 +72,36 @@ class CompanyProductInfo extends Component {
             <FormattedMessage id={id} defaultMessage={defaultMessage} />
           </GridColumn>
         </GridRow>
-        {elements.map((element, index) => {
-          return (
-            <GridRow>
-              { element.proprietary ? (
-                <GridColumn width={10}>
-                  <Input
-                    inputProps={{ readOnly: this.props.readOnly }}
-                    name={`echoProduct.elements[${index}].name`}
-                  />
-                </GridColumn>
-              ) : (
-                <>
-                  <GridColumn width={6}>
-                    <Input
-                      inputProps={{ readOnly: this.props.readOnly }}
-                      name={`echoProduct.elements[${index}].casProduct.casIndexName`}
-                    />
-                  </GridColumn>
-                  <GridColumn width={4}>
-                    <Input
-                      inputProps={{ readOnly: this.props.readOnly }}
-                      name={`echoProduct.elements[${index}].casProduct.casNumber`}
-                    />
-                  </GridColumn>
-                </>
-              )}
-              <GridColumn width={3}>
-                <Input
-                  inputProps={{ readOnly: this.props.readOnly }}
-                  name={`echoProduct.elements[${index}].assayMin`}
-                />
-              </GridColumn>
-              <GridColumn width={3}>
-                <Input
-                  inputProps={{ readOnly: this.props.readOnly }}
-                  name={`echoProduct.elements[${index}].assayMax`}
-                />
-              </GridColumn>
-            </GridRow>
-          )
-        })}
+        <Table basic='very'>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>
+                <FormattedMessage id='global.elementName' defaultMessage='Element Name' />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <FormattedMessage id='global.casNumber' defaultMessage='CAS Number' />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <FormattedMessage id='global.assay' defaultMessage='Assay' />
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {elements.map((element, index) => (
+              <Table.Row>
+                <Table.Cell>
+                  {element.proprietary ? element.name : element.casProduct.casIndexName}
+                </Table.Cell>
+                <Table.Cell>
+                  {element.proprietary ? '' : element.casProduct.casNumber}
+                </Table.Cell>
+                <Table.Cell>
+                  {formatAssay(element.assayMin, element.assayMax)}
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
       </>
     )
   }
