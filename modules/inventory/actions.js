@@ -372,8 +372,6 @@ export function uploadDocuments(isLot, productOfferId, fileIds) {
 
 export const getAutocompleteData = ({ searchUrl }) => ({ type: AT.GET_AUTOCOMPLETE_DATA, payload: api.getAutocompleteData(searchUrl) })
 
-export const getAllProductOffers = () => ({ type: AT.GET_ALL_PRODUCT_OFFERS, payload: api.getAllProductOffers() })
-
 export const simpleEditTrigger = (popupValues = {}, force = null) => ({ type: AT.SIMPLE_EDIT_TRIGGER, payload: { popupValues, force } })
 
 export const sidebarDetailTrigger = (row = {}, force = null, activeTab = 0) => {
