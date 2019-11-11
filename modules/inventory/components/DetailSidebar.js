@@ -987,9 +987,14 @@ class DetailSidebar extends Component {
                                       hideSettingsIcon
                                       tableName='inventory_documents'
                                       columns={columns}
-                                      rows={values.documents.attachments.map(row => (
-                                        {...row, documentTypeName: row.documentType && row.documentType.name}
-                                      ))}
+                                      rows={values.documents.attachments
+                                        .map(row => (
+                                          {...row, documentTypeName: row.documentType && row.documentType.name}
+                                        ))
+                                        .sort((a,b) => (
+                                          a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0
+                                        ))
+                                      }
                                     />
                                   </GridColumn>
                                 </GridRow>
