@@ -99,9 +99,7 @@ const initValues = {
 
 const columns = [ 
   { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage> },
-  { name: 'documentTypeName', title: <FormattedMessage id='global.docType' defaultMessage='Document Type'>{text => text}</FormattedMessage> },
-  { name: 'othersPermissions', title: <FormattedMessage id='addInventory.documents.otherPermissions' defaultMessage='Other permissions'>{text => text}</FormattedMessage> },
-  { name: 'sharedTo', title: <FormattedMessage id='addInventory.documents.sharedTo' defaultMessage='Shared to'>{text => text}</FormattedMessage> }
+  { name: 'documentTypeName', title: <FormattedMessage id='global.docType' defaultMessage='Document Type'>{text => text}</FormattedMessage> }
 ]
 
 val.addMethod(val.number, 'divisibleBy', function (ref, message) {
@@ -197,22 +195,6 @@ class DetailSidebar extends Component {
     this.props.getProductGrades()
     this.props.getWarehouses()
     this.props.getDocumentTypes()
-    this.setState({
-      options: [
-        {
-          key: 0,
-          text: (
-            <FormattedMessage
-              id='addInventory.documentType.hideUpload'
-              defaultMessage='Hide upload document'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          values: 0
-        },
-        ...this.props.listDocumentTypes
-      ]
-    })
   }
 
   componentDidUpdate = (oldProps) => {
@@ -926,7 +908,7 @@ class DetailSidebar extends Component {
                           pane: (
                             <Tab.Pane key='documents' style={{ padding: '18px' }}>
                               <Grid>
-                              {this.state.options.length &&
+                              {listDocumentTypes.length &&
                                 <GridRow>
                                   <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
                                     <FormattedMessage id='global.uploadDocument' defaultMessage='Upload document: '>{text => text}</FormattedMessage>
@@ -935,7 +917,7 @@ class DetailSidebar extends Component {
                                     <Dropdown
                                       name='documents.documentType'
                                       closeOnChange
-                                      options={this.state.options}
+                                      options={listDocumentTypes}
                                       inputProps={{
                                         placeholder: <FormattedMessage id='global.documentType.choose' defaultMessage='Choose document type'/>,
                                         onChange: (e, {name, value}) => this.handleChange(e, name, value)
