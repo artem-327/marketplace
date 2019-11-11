@@ -7,7 +7,7 @@ export const addCartItem = ({ productOffer, pkgAmount }) => api.post('/prodex/ap
 export const deleteCartItem = (cartItemId) => api.delete(`/prodex/api/cart/items/${cartItemId}`)
 export const updateCartItem = ({ cartItemId, pkgAmount }) => api.patch(`/prodex/api/cart/items/${cartItemId}?pkgAmount=${pkgAmount}`).then(response => response.data)
 export const getCartItem = (cartItemId) => api.get(`/prodex/api/cart/items/${cartItemId}`)
-export const getProductOffer = (id) => api.get(`/prodex/api/product-offers/${id}/applyrules`).then(response => response.data)
+export const getProductOffer = (id) => api.get(`/prodex/api/product-offers/${id}/`).then(response => response.data)
 export const postNewDeliveryAddress = (address) => api.post('/prodex/api/delivery-addresses', address).then(response => response.data)
 export const updateDeliveryAddress = (address) => api.put(`/prodex/api/delivery-addresses/id/${address.id}`, address).then(response => response.data)
 export const getDeliveryAddresses = () => api.get('/prodex/api/delivery-addresses').then(response => response.data)
