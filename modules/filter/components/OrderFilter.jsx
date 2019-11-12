@@ -30,14 +30,13 @@ const initialValues = {
     operator: operators.GREATER_THAN_OR_EQUAL_TO,
     path: paths.orders.orderDate,
     value: '',
-    formatValue: formatDate
-
+    formatValue: (value) => [formatDate(value)]
   },
   orderTo: {
     operator: operators.LESS_THAN_OR_EQUAL_TO,
     path: paths.orders.orderDate,
     value: '',
-    formatValue: formatDate
+    formatValue: (value) => [formatDate(value)]
   },
 
 }
@@ -59,7 +58,7 @@ class OrderFilter extends Component {
 
     Object.keys(values)
       .forEach((key) => {
-        if (values[key].value) payload.filters.push({ operator: values[key].operator, path: values[key].path, values: values[key].formatValue ? values[key].formatValue([values[key].value]) : [values[key].value] })
+        if (values[key].value) payload.filters.push({ operator: values[key].operator, path: values[key].path, values: values[key].formatValue ? values[key].formatValue(values[key].value) : [values[key].value] })
       })
 
     if (!payload.sortDirection) delete payload.sortDirection
@@ -102,7 +101,7 @@ class OrderFilter extends Component {
           }
         }}
         render={({ values }) => {
-          
+
           return (
             <FlexSidebar
               visible={ordersIsOpen}
@@ -124,7 +123,7 @@ class OrderFilter extends Component {
                 <Accordion>
                   <Segment basic>
                     <AccordionItem>
-                      {this.accordionTitle('orderDate', <FormattedMessage id='filter.orderDate' defaultMessage='!Order Date'>{text => text}</FormattedMessage>)}
+                      {this.accordionTitle('orderDate', <FormattedMessage id='filter.orderDate' defaultMessage='Order Date'>{text => text}</FormattedMessage>)}
                       <AccordionContent active={!this.state.inactiveAccordion.orderDate}>
                         <FormGroup widths='equal' data-test='filter_assay_inp'>
                           <DateInput
