@@ -672,12 +672,12 @@ class CompanyProductInfo extends Component {
                 />
               </>
             ) : (
-              this.getInput({
-                id: 'global.casNumber',
-                defaultMessage: 'CAS Number',
-                name: 'casProduct.casNumber'
-              })
-            )}
+                this.getInput({
+                  id: 'global.casNumber',
+                  defaultMessage: 'CAS Number',
+                  name: 'casProduct.casNumber'
+                })
+              )}
           </GridColumn>
 
           <GridColumn computer={8}>
@@ -748,7 +748,7 @@ class CompanyProductInfo extends Component {
             {this.getInput({
               id: 'global.esin',
               defaultMessage: 'ESIN',
-              name: 'esin'
+              name: 'echoProduct.esin'
             })}
             {this.getInput({
               id: 'global.recommendedUse',
@@ -977,10 +977,6 @@ class CompanyProductInfo extends Component {
         companyProduct.attachments.concat(echoProduct.attachments),
       productName: getSafe(() => echoProduct.name, ''),
       manufacturer: getSafe(() => echoProduct.manufacturer.name, ''),
-      manufacturerProductCode: getSafe(
-        () => echoProduct.mfrProductCodes.toString().replace(' ', ', '),
-        ''
-      ),
       casProduct: {
         ...CasProductResponse,
         ...getSafe(() => echoProduct.elements[this.state.casProductIndex], {}),
@@ -1006,9 +1002,11 @@ class CompanyProductInfo extends Component {
         sdsRevisionDate:
           echoProduct && echoProduct.sdsRevisionDate
             ? moment(echoProduct.sdsRevisionDate).format('MM/DD/YYYY')
-            : null
+            : ''
       }
     }
+
+    console.log({ initialValues })
 
     return (
       <Form
@@ -1021,21 +1019,21 @@ class CompanyProductInfo extends Component {
           return casProductOnly ? (
             <Grid verticalAlign='middle'>{this.renderCasProduct(values)}</Grid>
           ) : (
-            <>
-              <Menu pointing secondary>
-                {tabs.map((tab, i) =>
-                  hiddenTabs.findIndex(val => val === i) !== -1 ? null : (
-                    <Menu.Item
-                      onClick={() => tabChanged(i)}
-                      active={activeIndex === i}>
-                      {formatMessage(tab.text)}
-                    </Menu.Item>
-                  )
-                )}
-              </Menu>
-              <Segment basic>{this.getContent(formikProps)}</Segment>
-            </>
-          )
+              <>
+                <Menu pointing secondary>
+                  {tabs.map((tab, i) =>
+                    hiddenTabs.findIndex(val => val === i) !== -1 ? null : (
+                      <Menu.Item
+                        onClick={() => tabChanged(i)}
+                        active={activeIndex === i}>
+                        {formatMessage(tab.text)}
+                      </Menu.Item>
+                    )
+                  )}
+                </Menu>
+                <Segment basic>{this.getContent(formikProps)}</Segment>
+              </>
+            )
         }}
       />
     )
@@ -1074,10 +1072,10 @@ class CompanyProductInfo extends Component {
         this.props.contentWrapper ? (
           this.props.contentWrapper(children)
         ) : (
-          <FlexContent>
-            <Segment basic>{children}</Segment>
-          </FlexContent>
-        )
+            <FlexContent>
+              <Segment basic>{children}</Segment>
+            </FlexContent>
+          )
       )
 
     const actionsWrapper = children =>
@@ -1085,18 +1083,18 @@ class CompanyProductInfo extends Component {
         this.props.actionsWrapper ? (
           this.props.actionsWrapper(children)
         ) : (
-          <GraySegment>
-            <RightAlignedDiv>{children}</RightAlignedDiv>
-          </GraySegment>
-        )
+            <GraySegment>
+              <RightAlignedDiv>{children}</RightAlignedDiv>
+            </GraySegment>
+          )
       )
 
     const Content = React.cloneElement(
       this.props.wrapper ? (
         this.props.wrapper
       ) : (
-        <WiderSidebar visible={isOpen} direction='right' width='very wide' />
-      ),
+          <WiderSidebar visible={isOpen} direction='right' width='very wide' />
+        ),
       {},
       <>
         {this.props.header && this.props.header}
@@ -1129,7 +1127,7 @@ CompanyProductInfo.defaultProps = {
   isOpen: false,
   activeIndex: 0,
   readOnly: true,
-  onClose: () => {},
+  onClose: () => { },
   hiddenTabs: [],
   casProductOnly: false
 }
