@@ -5,7 +5,7 @@ import {
   FormattedDate,
   FormattedNumber
 } from 'react-intl'
-import { Modal, Menu, Header, Container, Icon } from 'semantic-ui-react'
+import { Modal, Menu, Header, Container, Icon, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 import SubMenu from '~/src/components/SubMenu'
@@ -251,7 +251,8 @@ class Orders extends Component {
             defaultMessage='PO #'>
             {text => text}
           </FormattedMessage>
-        )
+        ),
+        width: 120
       },
       {
         name: 'type',
@@ -259,7 +260,8 @@ class Orders extends Component {
           <FormattedMessage id='order.cfGlobalStatus' defaultMessage='Status'>
             {text => text}
           </FormattedMessage>
-        )
+        ),
+        width: 90
       },
       {
         name: 'issuedAt',
@@ -267,7 +269,8 @@ class Orders extends Component {
           <FormattedMessage id='order.date' defaultMessage='Order Date'>
             {text => text}
           </FormattedMessage>
-        )
+        ),
+        width: 90
       },
       {
         name: 'issuerCompanyName',
@@ -275,7 +278,8 @@ class Orders extends Component {
           <FormattedMessage id='order.vendor' defaultMessage='Vendor'>
             {text => text}
           </FormattedMessage>
-        )
+        ),
+        width: 100
       }, // ! ! ? seller vs purchaser
       {
         name: 'cfPriceTotal',
@@ -285,9 +289,54 @@ class Orders extends Component {
             defaultMessage='Total'>
             {text => text}
           </FormattedMessage>
-        )
+        ),
+        width: 100
       }
     ]
+  }
+
+  getMimeType = documentName => {
+    const documentExtension = documentName.substr(
+      documentName.lastIndexOf('.') + 1
+    )
+
+    switch (documentExtension) {
+      case 'doc':
+        return 'application/msword'
+      case 'docx':
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      case 'ppt':
+        return 'application/vnd.ms-powerpoint'
+      case 'pptx':
+        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      case 'xls':
+        return 'application/vnd.ms-excel'
+      case 'xlsx':
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      case 'gif':
+        return 'image/gif'
+      case 'png':
+        return 'image/png'
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg'
+      case 'svg':
+        return 'image/svg'
+      case 'pdf':
+        return 'application/pdf'
+      case '7z':
+        return 'application/x-7z-compressed'
+      case 'zip':
+        return 'application/zip'
+      case 'tar':
+        return 'application/x-tar'
+      case 'rar':
+        return 'application/x-rar-compressed'
+      case 'xml':
+        return 'application/xml'
+      default:
+        return 'text/plain'
+    }
   }
 
   loadData(endpointType, filterData) {
@@ -375,10 +424,56 @@ class Orders extends Component {
     this.props.datagrid.setFilter({ filters: [] })
   }
 
+  downloadAttachment = async (documentName, documentId) => {
+    const element = await this.prepareLinkToAttachment(documentName, documentId)
+
+    element.download = documentName
+    document.body.appendChild(element) // Required for this to work in FireFox
+    element.click()
+  }
+
+  prepareLinkToAttachment = async (documentName, documentId) => {
+    let downloadedFile = await this.props.downloadAttachment(documentId)
+    const fileName = this.extractFileName(
+      downloadedFile.value.headers['content-disposition']
+    )
+    const mimeType = fileName && this.getMimeType(fileName)
+    const element = document.createElement('a')
+    const file = new Blob([downloadedFile.value.data], { type: mimeType })
+    let fileURL = URL.createObjectURL(file)
+
+    element.href = fileURL
+    return element
+  }
+
+  extractFileName = contentDispositionValue => {
+    var filename = ''
+    if (
+      contentDispositionValue &&
+      contentDispositionValue.indexOf('attachment') !== -1
+    ) {
+      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+      var matches = filenameRegex.exec(contentDispositionValue)
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, '')
+      }
+    }
+    return filename
+  }
+
   getContent = () => {
     const { relatedOrders } = this.props
     const rowsRelatedOrders = relatedOrders.map(order => ({
-      documentNumber: order.documentNumber,
+      documentNumber: (
+        <Button
+          as='a'
+          onClick={() =>
+            this.downloadAttachment(order.documentNumber, order.id)
+          }>
+          <Icon name='download' />
+          {order.documentNumber}
+        </Button>
+      ),
       type: order.type,
       issuedAt: getSafe(
         () => <FormattedDate value={order.issuedAt.split('T')[0]} />,
@@ -433,7 +528,7 @@ class Orders extends Component {
           this.props.relatedOrders &&
           this.props.relatedOrders.length > 0 && (
             <Modal
-              size='small'
+              size='tiny'
               closeIcon
               onClose={() => this.setState({ openModal: false })}
               centered={true}
