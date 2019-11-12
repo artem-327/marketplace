@@ -31,7 +31,8 @@ import {
   regulatoryFilter,
   dropdownOptions,
   echoProductGrouping,
-  yesNoOptions
+  yesNoOptions,
+  tabsMarketPlace
 } from '../constants'
 import { errorMessages } from '~/constants/yupValidation'
 
@@ -748,7 +749,7 @@ class CompanyProductInfo extends Component {
             {this.getInput({
               id: 'global.esin',
               defaultMessage: 'ESIN',
-              name: 'esin'
+              name: 'echoProduct.esin'
             })}
             {this.getInput({
               id: 'global.recommendedUse',
@@ -934,6 +935,17 @@ class CompanyProductInfo extends Component {
         )
       }
 
+      case 4: {
+        // Documents
+        return (
+          <DocumentManager
+            items={values.attachments}
+            edit={false}
+            deletable={false}
+          />
+        )
+      }
+
       default:
         return null
     }
@@ -977,10 +989,6 @@ class CompanyProductInfo extends Component {
         companyProduct.attachments.concat(echoProduct.attachments),
       productName: getSafe(() => echoProduct.name, ''),
       manufacturer: getSafe(() => echoProduct.manufacturer.name, ''),
-      manufacturerProductCode: getSafe(
-        () => echoProduct.mfrProductCodes.toString().replace(' ', ', '),
-        ''
-      ),
       casProduct: {
         ...CasProductResponse,
         ...getSafe(() => echoProduct.elements[this.state.casProductIndex], {}),
@@ -1006,9 +1014,11 @@ class CompanyProductInfo extends Component {
         sdsRevisionDate:
           echoProduct && echoProduct.sdsRevisionDate
             ? moment(echoProduct.sdsRevisionDate).format('MM/DD/YYYY')
-            : null
+            : ''
       }
     }
+
+    console.log({ initialValues })
 
     return (
       <Form
@@ -1023,15 +1033,25 @@ class CompanyProductInfo extends Component {
           ) : (
             <>
               <Menu pointing secondary>
-                {tabs.map((tab, i) =>
-                  hiddenTabs.findIndex(val => val === i) !== -1 ? null : (
-                    <Menu.Item
-                      onClick={() => tabChanged(i)}
-                      active={activeIndex === i}>
-                      {formatMessage(tab.text)}
-                    </Menu.Item>
-                  )
-                )}
+                {this.props.fromMarketPlace
+                  ? tabsMarketPlace.map((tab, i) =>
+                      hiddenTabs.findIndex(val => val === i) !== -1 ? null : (
+                        <Menu.Item
+                          onClick={() => tabChanged(i)}
+                          active={activeIndex === i}>
+                          {formatMessage(tab.text)}
+                        </Menu.Item>
+                      )
+                    )
+                  : tabs.map((tab, i) =>
+                      hiddenTabs.findIndex(val => val === i) !== -1 ? null : (
+                        <Menu.Item
+                          onClick={() => tabChanged(i)}
+                          active={activeIndex === i}>
+                          {formatMessage(tab.text)}
+                        </Menu.Item>
+                      )
+                    )}
               </Menu>
               <Segment basic>{this.getContent(formikProps)}</Segment>
             </>
