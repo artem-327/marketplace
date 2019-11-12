@@ -4,8 +4,9 @@ import { CompanyProductInfo } from '~/modules/company-product-info'
 
 export const Marketplace = () => (
   <>
-    <CompanyProductInfo />
-    <DatagridProvider apiConfig={{ url: '/prodex/api/product-offers/broadcasted/datagrid/' }}>
+    <CompanyProductInfo fromMarketPlace />
+    <DatagridProvider
+      apiConfig={{ url: '/prodex/api/product-offers/broadcasted/datagrid/' }}>
       <MarketplaceContainer />
     </DatagridProvider>
   </>
