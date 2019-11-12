@@ -8,7 +8,8 @@ import {
   Button,
   Dropdown,
   Menu,
-  Sidebar
+  Sidebar,
+  Table
 } from 'semantic-ui-react'
 import {
   FlexSidebar,
@@ -61,6 +62,48 @@ class CompanyProductInfo extends Component {
     regulatoryFilter: '',
     casProductIndex: 0,
     echoProductGroup: echoProductGrouping[0].value
+  }
+
+  getElements = ({ id, defaultMessage, elements }) => {
+    return (
+      <>
+        <GridRow>
+          <GridColumn width={16}>
+            <FormattedMessage id={id} defaultMessage={defaultMessage} />
+          </GridColumn>
+        </GridRow>
+        <Table basic='very'>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>
+                <FormattedMessage id='global.elementName' defaultMessage='Element Name' />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <FormattedMessage id='global.casNumber' defaultMessage='CAS Number' />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <FormattedMessage id='global.assay' defaultMessage='Assay' />
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {elements.map((element, index) => (
+              <Table.Row>
+                <Table.Cell>
+                  {element.proprietary ? element.name : element.casProduct.casIndexName}
+                </Table.Cell>
+                <Table.Cell>
+                  {element.proprietary ? '' : element.casProduct.casNumber}
+                </Table.Cell>
+                <Table.Cell>
+                  {formatAssay(element.assayMin, element.assayMax)}
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </>
+    )
   }
 
   getInput = ({ id, defaultMessage, name }) => (
@@ -659,6 +702,8 @@ class CompanyProductInfo extends Component {
   getContent = ({ values }) => {
     let { activeIndex } = this.props
 
+    console.log('VALUES', values)
+
     switch (activeIndex) {
       case 0: {
         // Info
@@ -668,6 +713,11 @@ class CompanyProductInfo extends Component {
               id: 'global.productName',
               defaultMessage: 'Product Name',
               name: 'productName'
+            })}
+            {this.getElements({
+              id: 'global.mixtures',
+              defaultMessage: 'Mixtures',
+              elements: getSafe(() => values.companyProduct.echoProduct.elements, [])
             })}
             {this.getInput({
               id: 'global.manufacturer',
@@ -929,6 +979,11 @@ class CompanyProductInfo extends Component {
       echoProduct: {
         ...EchoProductResponse,
         ...echoProduct,
+        elements: getSafe(() => echoProduct.elements.map(element => ({
+          ...element,
+          assayMin: element.assayMin ? element.assayMin : '',
+          assayMax: element.assayMax ? element.assayMax : ''
+        })), []),
         mfrProductCodes: getSafe(
           () => echoProduct.mfrProductCodes.toString(),
           ''
