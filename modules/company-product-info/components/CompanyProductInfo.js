@@ -699,7 +699,6 @@ class CompanyProductInfo extends Component {
               defaultMessage: 'Recommended Restrictions',
               name: 'echoProduct.recommendedRestrictions'
             })}{' '}
-            */}
             {this.getInput({
               id: 'global.version',
               defaultMessage: 'Version',
@@ -921,10 +920,6 @@ class CompanyProductInfo extends Component {
         () => echoProduct.mfrProductCodes.toString().replace(' ', ', '),
         ''
       ),
-      sdsRevisionDate:
-        echoProduct && echoProduct.sdsRevisionDate
-          ? moment(echoProduct.sdsRevisionDate).format('MM/DD/YYYY')
-          : null,
       casProduct: {
         ...CasProductResponse,
         ...getSafe(() => echoProduct.elements[this.state.casProductIndex], {}),
@@ -937,7 +932,11 @@ class CompanyProductInfo extends Component {
         mfrProductCodes: getSafe(
           () => echoProduct.mfrProductCodes.toString(),
           ''
-        )
+        ),
+        sdsRevisionDate:
+          echoProduct && echoProduct.sdsRevisionDate
+            ? moment(echoProduct.sdsRevisionDate).format('MM/DD/YYYY')
+            : null,
       }
     }
 

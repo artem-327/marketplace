@@ -26,7 +26,7 @@ import CasProductsTable from './CasProductsTable/CasProductsTable'
 import CompaniesTable from './CompaniesTable/Table'
 import CompaniesForm from './CompaniesTable/FormPopup'
 import CompaniesDwollaForm from './CompaniesDwolla/FormPopup'
-//import EchoProductForm from './ProductCatalogTable/FormPopup' // ! ! smazat az bude hotove nove edit okno (AddEditEchoProduct)
+import EchoProductForm from './ProductCatalogTable/FormPopup' // ! ! smazat az bude hotove nove edit okno (AddEditEchoProduct)
 import AddEditEchoProduct from './ProductCatalogTable/AddEditEchoProductContainer'
 
 import EditAltNamesEchoProductPopup from './ProductCatalogTable/EditAltNamesEchoProductPopup'
@@ -151,7 +151,7 @@ const editForms = {
   'Companies': <CompaniesForm />,
   'Document Types': <EditPopup1Parameter />,
   'Market Segments': <EditPopup1Parameter />,
-  //'Product Catalog': <AddEditEchoProduct />   // ! ! smazat az bude hotove nove edit okno (AddEditEchoProduct)
+  //'Product Catalog': <EchoProductForm />   // ! ! smazat az bude hotove nove edit okno (AddEditEchoProduct)
 }
 
 const edit2Forms = {
@@ -170,7 +170,7 @@ const addForms = {
   'Companies': <CompaniesForm />,
   'Document Types': <AddNewPopup1Parameter />,
   'Market Segments': <AddNewPopup1Parameter />,
-  //'Product Catalog': <AddEditEchoProduct />   // ! ! smazat az bude hotove nove edit okno (AddEditEchoProduct)
+  //'Product Catalog': <EchoProductForm />   // ! ! smazat az bude hotove nove edit okno (AddEditEchoProduct)
 }
 
 const importForm = {

@@ -1414,6 +1414,7 @@
   "settings.editProductAltNames": "Edit Product Alternative Names",
   "settings.altName": "Alternative Name",
   "settings.associatedCasIndexes": "What are the associated CAS Index Numbers?",
+  "settings.associatedCasIndex": "Associated CAS Index Number",
   "settings.minConcetration": "Min. Concetration",
   "settings.maxConcetration": "Max. Concentration",
   "settings.beneficialOwnerNum": "Beneficial owner #{num}",
