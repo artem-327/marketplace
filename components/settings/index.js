@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { bool, oneOf } from 'prop-types'
 import { connect } from 'react-redux'
 import { Formik } from 'formik'
-import { Form, Modal, Button, Popup, Segment, Header, Icon } from 'semantic-ui-react'
+import { Form, Modal, Button, Popup, Segment, Header, Icon, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import { Checkbox } from 'formik-semantic-ui-fixed-validation'
 
 import { withToastManager } from 'react-toast-notifications'
@@ -24,6 +24,19 @@ const RightAlignedDiv = styled.div`
 const StyledSegment = styled(Segment)`
   margin-bottom: 45px !important;
 `
+
+const BottomMargedRow = styled(GridRow)`
+  margin-bottom: 10px !important;
+`
+
+const IconContainer = styled.div`
+  padding-right: 0.5em !important;
+`
+
+const CustomPaddedColumn = styled(GridColumn)`
+  padding-right: 7px !important;
+`
+
 
 class Settings extends Component {
 
@@ -110,6 +123,9 @@ class Settings extends Component {
     let initialValues = { [role]: {} }
 
 
+
+
+
     systemSettings.forEach(el => {
       initialValues[role][el.name] = {}
 
@@ -143,12 +159,41 @@ class Settings extends Component {
                         {group.settings.map((el) => {
                           return (
                             <>
-                              <Header as='h3'><>{el.name}
-                                <Popup
-                                  trigger={<Icon color='blue' name='info circle' />}
-                                  content={el.description}
-                                />
-                              </></Header>
+                              <Grid>
+                                <BottomMargedRow>
+                                  <GridColumn width={10}>
+                                    <Header as='h3'><>{el.name}
+                                      <Popup
+                                        trigger={<Icon color='blue' name='info circle' />}
+                                        content={el.description}
+                                      />
+                                    </></Header>
+                                  </GridColumn>
+
+                                  <CustomPaddedColumn width={5} floated='right' textAlign='right'>
+                                    {this.props.role !== 'admin'
+                                      && <>
+                                        <Checkbox
+                                          inputProps={{
+                                            disabled: !el.changeable,
+                                            onChange: (e) => e.stopPropagation(),
+                                            onClick: (e) => e.stopPropagation()
+                                          }}
+                                          label={formatMessage({ id: 'global.override', defaultMessage: 'Override' })}
+                                          name={`${role}.${group.name}.${el.name}.edit`} />
+
+                                      </>}
+                                  </CustomPaddedColumn>
+                                  <Popup
+                                    trigger={<IconContainer><Icon color='blue' name='info circle' /></IconContainer>}
+                                    content={formatMessage({
+                                      id: `global.${el.changeable ? 'checkToOverride' : 'canNotOverride'}`,
+                                      defaultMessage: el.changeable ? 'Check this option if you wish to override this setting.' : 'This setting cannot be overridden at this level.'
+                                    })}
+                                  />
+                                </BottomMargedRow>
+                              </Grid>
+
                               {React.cloneElement(typeToComponent(el.type, {
                                 props: getSafe(() => el.frontendConfig.props),
                                 inputProps: {
@@ -158,13 +203,6 @@ class Settings extends Component {
                               }), {
                                 name: `${role}.${group.name}.${el.name}.value`
                               })}
-                              {this.props.role !== 'admin' && <Checkbox
-                                inputProps={{
-                                  onChange: (e) => e.stopPropagation(),
-                                  onClick: (e) => e.stopPropagation()
-                                }}
-                                label={formatMessage({ id: 'global.edit', defaultMessage: 'Edit' })}
-                                name={`${role}.${group.name}.${el.name}.edit`} />}
                             </>
                           )
                         })}

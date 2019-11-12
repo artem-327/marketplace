@@ -34,7 +34,7 @@ export const defaultValues = {
   "dotReportableQuantity": '',
   "dotSevereMarinePollutant": '',
   "dotUnNumber": '',
-  "elements": [],
+  "elements": [{ name: '', casProduct: '', assayMin: 100, assayMax: 100 }],
   "emergencyPhone": '',
   "endocrineDisruptorInformation": '',
   "evaporationPoint": '',

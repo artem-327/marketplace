@@ -109,6 +109,7 @@ export default function reducer(state = initialState, action) {
               streetAddress: address.streetAddress,
               zip: address.zip.zip
             },
+            addressName: deliveryAddress.cfName || '',
             callAhead: !!deliveryAddress.callAhead,
             closeTime: deliveryAddress.closeTime || '',
             contactEmail: deliveryAddress.contactEmail || primaryUser.email || '',

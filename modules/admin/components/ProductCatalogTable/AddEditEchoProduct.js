@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
 
+import { removeEmpty } from '~/modules/admin/actions'
+
 import { FlexSidebar, FlexTabs, FlexContent, TopMargedColumn, GraySegment, HighSegment } from '~/modules/inventory/components/DetailSidebar'
 
 import { DateInput } from '~/components/custom-formik'
@@ -10,37 +12,24 @@ import * as Yup from 'yup'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
+import { Form, Button, Dropdown as FormikDropdown, Input } from 'formik-semantic-ui-fixed-validation'
+import { Menu, Grid, GridRow, GridColumn, Segment, Header, Dropdown, Icon, Divider } from 'semantic-ui-react'
 
-import {
-  getProductsCatalogRequest, closePopup,
-  searchCasProduct, prepareSearchedCasProducts, getDocumentTypes, newElementsIndex, removeElementsIndex, putEchoProduct,
-  postEchoProduct, searchManufacturers, searchUnNumber, loadFile, addAttachment, linkAttachment, removeAttachmentLink,
-  removeAttachment
-} from '~/modules/admin/actions'
-
-
-import {Form, Button, Dropdown as FormikDropdown, Input} from 'formik-semantic-ui-fixed-validation'
-import {Menu, Grid, GridRow, GridColumn, Segment, Header, Dropdown} from 'semantic-ui-react'
+import { FieldArray } from 'formik'
 
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 
-
-//import { uniqueArrayByKey } from '~/utils/functions'
-//import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
 
 import { errorMessages, dateValidation } from '~/constants/yupValidation'
 
 import { getSafe, generateToastMarkup } from '~/utils/functions'
-//import { Datagrid } from '~/modules/datagrid'
-//import debounce from "lodash/debounce"
-//import escapeRegExp from "lodash/escapeRegExp"
-//import filter from "lodash/filter"
-
-
 
 import { tabs, defaultValues, transportationTypes } from "./constants";
 import styled from "styled-components";
+import debounce from "lodash/debounce";
+import { uniqueArrayByKey } from '~/utils/functions'
+import escapeRegExp from "lodash/escapeRegExp";
 
 
 
@@ -58,32 +47,66 @@ const validationScheme = Yup.object().shape({
   name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
   manufacturer: Yup.number().integer().min(1).required(errorMessages.requiredMessage),    // ! ! min 0 or 1 ?
   elements: Yup.array().of(Yup.object().uniqueProperty('casProduct', errorMessages.unique(<FormattedMessage id='admin.casProduct' name='CAS Product'>{text => text}</FormattedMessage>)).shape({
-    name: Yup.string().trim().test('requiredIfProprietary', errorMessages.requiredMessage, function (value) {
-      const { proprietary } = this.parent
-      if (proprietary) {
-        return value != null
-      }
-      return true
-    }),
-    casProduct: Yup.string().nullable().trim().test('requiredIfNotProprietary', errorMessages.requiredMessage, function (value) {
-      const { proprietary } = this.parent
-      if (!proprietary) {
-        return parseInt(value)
-      }
-      return true
-    }),
-    minAssay: Yup.number().min(0).max(100),
-    maxAssay: Yup.number().min(0).max(100)
+    name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
+    casProduct: Yup.number().integer().min(1).required(errorMessages.requiredMessage),    // ! ! min 0 or 1 ?,
+    assayMin: Yup.number().min(0).max(100),
+    assayMax: Yup.number().min(0).max(100)
   })),
 })
 
 
 class AddEditEchoProduct extends React.Component {
   state = {
+    isLoading: false,
+    casProduct: '',
     activeTab: 0,
     changedForm: false,
-    transportationType: transportationTypes[0].value
+    transportationType: transportationTypes[0].value,
+    codesList: [],
+  }
 
+  componentDidMount() {
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.visible) {
+      if (!prevProps.visible) { // Sidebar just opened
+        //console.log('!!!!!!!!!!!!!!!!!!!!! AddEditEchoProduct componentDidUpdate -> visible', this.props)
+        this.setInitialState( this.props.popupValues, { activeTab: this.props.editTab})
+        this.resetForm()
+      }
+
+      if (prevProps.editForm && !prevProps.addForm && this.props.addForm) { // Changed from Edit to Add form
+        //console.log('!!!!!!!!!!!!!!!!!!!!! AddEditEchoProduct componentDidUpdate EDIT -> ADD', this.props)
+        this.setState({ activeTab: 0, codesList: [], changedForm: false })
+        this.resetForm()
+      }
+
+      if (prevProps.addForm && !prevProps.editForm && this.props.editForm) { // Changed from Add to Edit form
+        //console.log('!!!!!!!!!!!!!!!!!!!!! AddEditEchoProduct componentDidUpdate ADD -> EDIT', this.props)
+        this.setInitialState( this.props.popupValues, { activeTab: this.props.editTab})
+        this.resetForm()
+      }
+
+      if (prevProps.editForm && this.props.editForm && prevProps.popupValues.id !== this.props.popupValues.id) { // Changed edit product
+        //console.log('!!!!!!!!!!!!!!!!!!!!! AddEditEchoProduct componentDidUpdate EDIT - changed product', this.props)
+        this.setInitialState( this.props.popupValues, { activeTab: this.props.editTab})
+        this.resetForm()
+      }
+    }
+  }
+
+  setInitialState = (popupValues, additionalStates) => {
+    let codesList = []
+    if (popupValues) {
+      codesList = popupValues.mfrProductCodes.map(code => ({
+        text: code,
+        value: code
+      }))
+      this.props.searchManufacturers(getSafe(() => this.props.popupValues.manufacturer.name, ''), 200)
+    }
+    this.setState( { codesList, changedForm: false , ...additionalStates })
+    //console.log('!!!!!!!!!!!!!!!!! ! ! new state', { codesList , ...additionalStates })
   }
 
   getInitialFormValues = () => {
@@ -111,11 +134,11 @@ class AddEditEchoProduct extends React.Component {
         dotSevereMarinePollutant: getSafe(() => popupValues.dotSevereMarinePollutant, ''),
         dotUnNumber: getSafe(() => popupValues.dotUnNumber, ''),
         elements: getSafe(() => popupValues.elements.map(element => ({
-          name: getSafe(() => element.displayName, ''),
+          name: getSafe(() => element.name, ''),
           casProduct: getSafe(() => element.casProduct.id, null),
-          assayMin: getSafe(() => element.assayMin, null),
-          assayMax: getSafe(() => element.assayMax, null),
-        })), []),
+          assayMin: getSafe(() => element.assayMin, 100),
+          assayMax: getSafe(() => element.assayMax, 100),
+        })), [{ name: '', casProduct: '', assayMin: 100, assayMax: 100 }]),
         emergencyPhone: getSafe(() => popupValues.emergencyPhone, ''),
         endocrineDisruptorInformation: getSafe(() => popupValues.endocrineDisruptorInformation, ''),
         evaporationPoint: getSafe(() => popupValues.evaporationPoint, ''),
@@ -154,7 +177,7 @@ class AddEditEchoProduct extends React.Component {
         manufacturer: getSafe(() => popupValues.manufacturer.id, null),
         meltingPointRange: getSafe(() => popupValues.meltingPointRange, ''),
         mexicoGrade: getSafe(() => popupValues.mexicoGrade, ''),
-        mfrProductCodes: getSafe(() => popupValues.mfrProductCodes, []),  // ! !
+        mfrProductCodes: getSafe(() => popupValues.mfrProductCodes, []),
         molecularFormula: getSafe(() => popupValues.molecularFormula, ''),
         molecularWeight: getSafe(() => popupValues.molecularWeight, ''),
         mostImportantSymptomsAndEffects: getSafe(() => popupValues.mostImportantSymptomsAndEffects, ''),
@@ -224,30 +247,89 @@ class AddEditEchoProduct extends React.Component {
     return initialValues
   }
 
-  componentDidMount() {
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.visible) {
-      if (!prevProps.visible) { // Sidebar just opened
-        this.setState({ activeTab: this.props.editTab})
-      }
-
-      if (prevProps.editForm && !prevProps.addForm && this.props.addForm) { // Changed from Edit to Add form
-        //console.log('!!!!!!!!!!!!!!!!!!!!! AddEditEchoProduct componentDidUpdate EDIT -> ADD', this.props)
-        this.setState({ activeTab: 0})
-      }
-
-      if (prevProps.addForm && !prevProps.editForm && this.props.editForm) { // Changed from Add to Edit form
-        //console.log('!!!!!!!!!!!!!!!!!!!!! AddEditEchoProduct componentDidUpdate ADD -> EDIT', this.props)
-        this.setState({ activeTab: this.props.editTab})
-      }
-    }
-  }
-
   tabChanged = (index) => {
     this.setState({ activeTab: index})
   }
+
+  handleSearchChange = debounce((e, { searchQuery, dataindex }) => {
+    this.setState({ isLoading: true, casProduct: searchQuery })
+
+    this.props.searchCasProduct(searchQuery, dataindex)
+
+    setTimeout(() => {
+      const re = new RegExp(escapeRegExp(this.state.casProduct), 'i')
+      const isMatch = result => re.test(result.casProduct)
+
+      this.setState({
+        isLoading: false
+      })
+    }, 250)
+  }, 500)
+
+  submitForm = debounce(async (values, setSubmitting, setTouched) => {
+    const { popupValues, putEchoProduct, postEchoProduct, closePopup, toastManager } = this.props
+
+    let formValues = {
+      ...values,
+      elements: values.elements.map(e => ({
+        name: e.name,
+        casProduct: e.casProduct,
+        assayMin: Number(e.assayMin),
+        assayMax: Number(e.assayMax),
+      }))
+    }
+    delete formValues.attachments
+
+    removeEmpty(formValues)
+
+    //console.log('!!!!!!!!!!!!!!! submitForm formValues', formValues)
+    //console.log('!!!!!!!!!!!!!!! submitForm elements', formValues.elements)
+
+
+    try {
+      let data = {}
+      if (popupValues)
+        data = await putEchoProduct(popupValues.id, formValues)
+      else
+        data = await postEchoProduct(formValues)
+
+      //console.log('!!!!!!!!!!!!!!! submitForm response', data)
+
+/*
+      let echoProduct = data.value.data
+      const notLinkedAttachments = values.attachments.filter(att => !getSafe(() => att.linked, false))
+      await linkAttachment(false, echoProduct.id, notLinkedAttachments)
+
+      const docType = listDocumentTypes.find(dt => dt.id === 3)
+      notLinkedAttachments.map(att => {
+        return {
+          id: att.id,
+          name: att.name,
+          documentType: docType,
+          linked: true
+        }
+      })
+
+      Datagrid.updateRow(echoProduct.id, () => ({
+        ...echoProduct,
+        attachments: echoProduct.attachments.concat(notLinkedAttachments)
+      }))
+*/
+
+      const status = popupValues ? 'echoProductUpdated' : 'echoProductCreated'
+      toastManager.add(generateToastMarkup(
+        <FormattedMessage id={`notifications.${status}.header`} />,
+        <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
+      ), {
+        appearance: 'success'
+      })
+
+      setSubmitting(false)
+      closePopup()
+    } catch (err) {
+      setSubmitting(false)
+    }
+  }, 250)
 
   RowInput = ({ name, readOnly=false, id, defaultMessage }) => (
     <GridRow>
@@ -342,15 +424,202 @@ class AddEditEchoProduct extends React.Component {
     </GridRow>
   )
 
+  renderMixtures = (formikProps) => {
+    const {
+      closePopup,
+      popupValues,
+      config,
+      intl: { formatMessage },
+      toastManager,
+      isLoading,
+      packagingGroups,
+      hazardClasses,
+      postEchoProduct,
+      putEchoProduct,
+      searchManufacturers,
+      searchedManufacturers,
+      searchedManufacturersLoading,
+      linkAttachment,
+      listDocumentTypes,
+      // searchedCasProducts
+    } = this.props
+
+    let { values } = formikProps
+
+    let initialCasProducts = []
+    getSafe(() => popupValues.elements, []).forEach(el => {
+      if (el.casProduct) initialCasProducts.push(el.casProduct)
+    })
+
+    let searchedCasProducts = this.props.searchedCasProducts.concat(initialCasProducts)
+
+
+    return (
+      <GridRow>
+        <GridColumn>
+          <Segment>
+            <Header as='h4'><FormattedMessage id='global.mixtures' defaultMessage='Mixtures' /></Header>
+              <FieldArray name='elements'
+                render={arrayHelpers => (
+                  <>
+                    {values.elements && values.elements.length ? values.elements.map((element, index) => (
+                      <Grid>
+                        <GridRow>
+                          <GridColumn width={6}>
+                            <FormattedMessage id='global.name' defaultMessage='Name' />
+                          </GridColumn>
+                          <GridColumn width={10}>
+                            <Input inputProps={{ id: index }} name={`elements[${index}].name`} />
+                          </GridColumn>
+                        </GridRow>
+
+                        <GridRow>
+                          <GridColumn width={6}>
+                            <FormattedMessage id='settings.associatedCasIndex' defaultMessage='Associated CAS Index Number' />
+                          </GridColumn>
+                          <GridColumn width={10}>
+                            <FormikDropdown
+                              name={`elements[${index}].casProduct`}
+                              options={
+                                getSafe(() => uniqueArrayByKey(searchedCasProducts.concat(initialCasProducts), 'id'), [])
+                                  .map((item) => ({
+                                    key: item.id,
+                                    id: item.id,
+                                    text: item.casNumber + ' ' + item.casIndexName,
+                                    value: item.id,
+                                    content: <Header content={item.casNumber} subheader={item.casIndexName} style={{ fontSize: '1em' }} />
+                                  }))}
+                              inputProps={{
+                                'data-test': `admin_product_popup_cas_${index}_drpdn`,
+                                size: 'large',
+                                icon: 'search',
+                                search: options => options,
+                                selection: true,
+                                clearable: true,
+                                loading: isLoading,
+                                onSearchChange: this.handleSearchChange,
+                                dataindex: index
+                              }}
+                              defaultValue={getSafe(() => element.casProduct.casNumber, false) ? element.casProduct.casNumber : null}
+                            />
+                          </GridColumn>
+                        </GridRow>
+
+                        <GridRow>
+                          <GridColumn width={6}>
+                            <FormattedMessage id='global.assayMin' defaultMessage='Assay Min' />
+                          </GridColumn>
+                          <GridColumn width={7}>
+                            <Input inputProps={{ id: index, type: 'number', min: 0, max: 100 }} name={`elements[${index}].assayMin`} />
+                          </GridColumn>
+                          <GridColumn width={3}>
+                            {index ? (
+                              <Button basic icon color='red' onClick={() => {
+                                arrayHelpers.remove(index)
+                                this.setState({ changedForm: true })
+                              }}
+                                      data-test={`settings_product_popup_remove_${index}_btn`}>
+                                <Icon name='minus' />
+                              </Button>
+                            ) : ''}
+                          </GridColumn>
+                        </GridRow>
+
+                        <GridRow>
+                          <GridColumn width={6}>
+                            <FormattedMessage id='global.assayMax' defaultMessage='Assay Max' />
+                          </GridColumn>
+                          <GridColumn width={7}>
+                            <Input inputProps={{ id: index, type: 'number', min: 0, max: 100 }} name={`elements[${index}].assayMax`} />
+                          </GridColumn>
+                          <GridColumn width={3}>
+                            {values.elements.length === (index + 1) ? (
+                              <Button basic icon color='green' onClick={() => {
+                                arrayHelpers.push({ name: '', casProduct: null, assayMin: 100, assayMax: 100 })
+                                this.setState({ changedForm: true })
+                              }}
+                                      data-test='settings_product_popup_add_btn'>
+                                <Icon name='plus' />
+                              </Button>
+                            ) : ''}
+                          </GridColumn>
+                        </GridRow>
+                        {values.elements.length !== (index + 1) ? (
+                          <Divider />
+                        ) : ''}
+                      </Grid>
+                    )) : ''}
+                  </>
+                )}
+              />
+          </Segment>
+        </GridColumn>
+      </GridRow>
+    )
+  }
+
   renderEdit = (formikProps) => {
+    let codesList = this.state.codesList
+    const {
+      intl: { formatMessage },
+      searchedManufacturers,
+      searchedManufacturersLoading,
+      searchManufacturers,
+    } = this.props
 
     return (
       <Grid verticalAlign='middle'>
         {this.RowInput({ name: 'name',              id: 'global.productName', defaultMessage: 'Product Name' })}
         {this.RowInput({ name: 'code',              id: 'global.productCode', defaultMessage: 'Product Code' })}
 
+        <GridRow>
+          <GridColumn width={6}>
+            <FormattedMessage id='global.manufacturer' defaultMessage='Manufacturer' />
+          </GridColumn>
+          <GridColumn width={10}>
+            <FormikDropdown
+              name='manufacturer'
+              options={searchedManufacturers}
+              inputProps={{
+                'data-test': 'TODO new_inventory_manufacturer_drpdn',
+                size: 'large',
+                minCharacters: 0,
+                icon: 'search',
+                search: true,
+                selection: true,
+                clearable: true,
+                loading: searchedManufacturersLoading,
+                onSearchChange: debounce((e, { searchQuery }) => searchManufacturers(searchQuery), 500)
+              }}
+            />
+          </GridColumn>
+        </GridRow>
 
+        {this.renderMixtures(formikProps)}
 
+        <GridRow>
+          <GridColumn width={6}>
+            <FormattedMessage id='global.mfrProductCodes' defaultMessage='Manufacturer Product Codes' />
+          </GridColumn>
+          <GridColumn width={10}>
+            <FormikDropdown name='mfrProductCodes'
+              options={codesList}
+              inputProps={{
+                allowAdditions: true,
+                additionLabel: formatMessage({ id: 'global.dropdown.add', defaultMessage: 'Add ' }),
+                search: true,
+                selection: true,
+                multiple: true,
+                onAddItem: (e, { value }) => {
+                  const newValue = { text: value, value: value }
+                  codesList.push(newValue)
+                  this.setState({ codesList: codesList })
+                },
+                noResultsMessage: formatMessage({ id: 'global.dropdown.startTyping', defaultMessage: 'Start typing to add {typeName}.' }, { typeName: formatMessage({ id: 'global.aCode', defaultMessage: 'a code' }) })
+              }}
+            />
+          </GridColumn>
+        </GridRow>
         {this.RowDropdown({ name: 'packagingGroup', id: 'global.packagingGroup', defaultMessage: 'Packaging Group', props: {
             options: this.props.packagingGroups
           }})
@@ -447,7 +716,9 @@ class AddEditEchoProduct extends React.Component {
     )
   }
 
-  renderDocuments = (formikProps, popupValues) => {
+  renderDocuments = (formikProps) => {
+    let { popupValues } = this.props
+
     return (
         <Grid verticalAlign='middle'>
           <GridRow>
@@ -544,8 +815,7 @@ class AddEditEchoProduct extends React.Component {
     }
   }
 
-
-  getContent = (formikProps, popupValues) => {
+  getContent = (formikProps) => {
     let { activeTab } = this.state
     switch (activeTab) {
       case 0: {   // Edit
@@ -555,7 +825,7 @@ class AddEditEchoProduct extends React.Component {
         return this.renderInfo(formikProps)
       }
       case 2: {   // Documents
-        return this.renderDocuments(formikProps, popupValues)
+        return this.renderDocuments(formikProps)
       }
       case 3: {   // Transportation
         return this.renderTransportation(formikProps)
@@ -565,18 +835,11 @@ class AddEditEchoProduct extends React.Component {
     }
   }
 
-
   render() {
     const {
       visible,
       closePopup,
       intl: {formatMessage},
-
-
-
-
-
-
       popupValues,
       config,
       toastManager,
@@ -603,9 +866,16 @@ class AddEditEchoProduct extends React.Component {
       <Form
         enableReinitialize
         initialValues={this.getInitialFormValues()}
+        validationSchema={validationScheme}
+
+        onSubmit={async (values, { setSubmitting, setTouched }) => {
+          this.submitForm(values, setSubmitting, setTouched)
+        }}
+
         render={(formikProps) => {
-          let { values, touched, setFieldValue, validateForm, submitForm } = formikProps
-          this.submitForm = submitForm
+          let { values, touched, setTouched, setFieldValue, validateForm, submitForm, resetForm, setSubmitting } = formikProps
+          //this.submitForm = submitForm
+          this.resetForm = resetForm
 
           return (
             <FlexSidebar
@@ -629,7 +899,7 @@ class AddEditEchoProduct extends React.Component {
               </div>
 
               <FlexContent>
-                <Segment basic>{this.getContent(formikProps, popupValues)}</Segment>
+                <Segment basic>{this.getContent(formikProps)}</Segment>
               </FlexContent>
 
               <GraySegment basic style={{ position: 'relative', overflow: 'visible', height: '4.57142858em', margin: '0' }}>
@@ -654,12 +924,12 @@ class AddEditEchoProduct extends React.Component {
                         primary
                         size='large'
                         inputProps={{ type: 'button' }}
-                        onClick={() => validateForm().then(r => {
-                          console.log('!!!!! save values', values)
-                          //if (Object.keys(r).length)
-                          //! !this.switchToErrors(Object.keys(r))
+                        onClick={() => validateForm(values).then(r => {
 
-                            //submitForm()
+                          //if (!Object.keys(r).length) {
+                            //this.switchToErrors(Object.keys(r))
+                            this.submitForm(values, setSubmitting, setTouched)
+                          //}
                         })}
                         data-test='sidebar_inventory_save_new'>
                         {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}

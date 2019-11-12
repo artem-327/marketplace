@@ -8,7 +8,8 @@ import {
   Button,
   Dropdown,
   Menu,
-  Sidebar
+  Sidebar,
+  Table
 } from 'semantic-ui-react'
 import {
   FlexSidebar,
@@ -58,9 +59,59 @@ const validationSchema = Yup.object().shape({
 
 class CompanyProductInfo extends Component {
   state = {
-    regulatoryFilter: '',
+    regulatoryFilter: regulatoryFilter.all.value,
     casProductIndex: 0,
     echoProductGroup: echoProductGrouping[0].value
+  }
+
+  getElements = ({ id, defaultMessage, elements }) => {
+    return (
+      <>
+        <GridRow>
+          <GridColumn width={16}>
+            <FormattedMessage id={id} defaultMessage={defaultMessage} />
+          </GridColumn>
+        </GridRow>
+        <Table basic='very'>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>
+                <FormattedMessage
+                  id='global.elementName'
+                  defaultMessage='Element Name'
+                />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <FormattedMessage
+                  id='global.casNumber'
+                  defaultMessage='CAS Number'
+                />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <FormattedMessage id='global.assay' defaultMessage='Assay' />
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {elements.map((element, index) => (
+              <Table.Row>
+                <Table.Cell>
+                  {element.proprietary
+                    ? element.name
+                    : element.casProduct.casIndexName}
+                </Table.Cell>
+                <Table.Cell>
+                  {element.proprietary ? '' : element.casProduct.casNumber}
+                </Table.Cell>
+                <Table.Cell>
+                  {formatAssay(element.assayMin, element.assayMax)}
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </>
+    )
   }
 
   getInput = ({ id, defaultMessage, name }) => (
@@ -621,12 +672,12 @@ class CompanyProductInfo extends Component {
                 />
               </>
             ) : (
-              this.getInput({
-                id: 'global.casNumber',
-                defaultMessage: 'CAS Number',
-                name: 'casProduct.casNumber'
-              })
-            )}
+                this.getInput({
+                  id: 'global.casNumber',
+                  defaultMessage: 'CAS Number',
+                  name: 'casProduct.casNumber'
+                })
+              )}
           </GridColumn>
 
           <GridColumn computer={8}>
@@ -659,6 +710,8 @@ class CompanyProductInfo extends Component {
   getContent = ({ values }) => {
     let { activeIndex } = this.props
 
+    console.log('VALUES', values)
+
     switch (activeIndex) {
       case 0: {
         // Info
@@ -668,6 +721,14 @@ class CompanyProductInfo extends Component {
               id: 'global.productName',
               defaultMessage: 'Product Name',
               name: 'productName'
+            })}
+            {this.getElements({
+              id: 'global.mixtures',
+              defaultMessage: 'Mixtures',
+              elements: getSafe(
+                () => values.companyProduct.echoProduct.elements,
+                []
+              )
             })}
             {this.getInput({
               id: 'global.manufacturer',
@@ -687,7 +748,7 @@ class CompanyProductInfo extends Component {
             {this.getInput({
               id: 'global.esin',
               defaultMessage: 'ESIN',
-              name: 'esin'
+              name: 'echoProduct.esin'
             })}
             {this.getInput({
               id: 'global.recommendedUse',
@@ -699,7 +760,6 @@ class CompanyProductInfo extends Component {
               defaultMessage: 'Recommended Restrictions',
               name: 'echoProduct.recommendedRestrictions'
             })}{' '}
-            */}
             {this.getInput({
               id: 'global.version',
               defaultMessage: 'Version',
@@ -917,14 +977,6 @@ class CompanyProductInfo extends Component {
         companyProduct.attachments.concat(echoProduct.attachments),
       productName: getSafe(() => echoProduct.name, ''),
       manufacturer: getSafe(() => echoProduct.manufacturer.name, ''),
-      manufacturerProductCode: getSafe(
-        () => echoProduct.mfrProductCodes.toString().replace(' ', ', '),
-        ''
-      ),
-      sdsRevisionDate:
-        echoProduct && echoProduct.sdsRevisionDate
-          ? moment(echoProduct.sdsRevisionDate).format('MM/DD/YYYY')
-          : null,
       casProduct: {
         ...CasProductResponse,
         ...getSafe(() => echoProduct.elements[this.state.casProductIndex], {}),
@@ -934,12 +986,27 @@ class CompanyProductInfo extends Component {
       echoProduct: {
         ...EchoProductResponse,
         ...echoProduct,
+        elements: getSafe(
+          () =>
+            echoProduct.elements.map(element => ({
+              ...element,
+              assayMin: element.assayMin ? element.assayMin : '',
+              assayMax: element.assayMax ? element.assayMax : ''
+            })),
+          []
+        ),
         mfrProductCodes: getSafe(
           () => echoProduct.mfrProductCodes.toString(),
           ''
-        )
+        ),
+        sdsRevisionDate:
+          echoProduct && echoProduct.sdsRevisionDate
+            ? moment(echoProduct.sdsRevisionDate).format('MM/DD/YYYY')
+            : ''
       }
     }
+
+    console.log({ initialValues })
 
     return (
       <Form
@@ -952,21 +1019,21 @@ class CompanyProductInfo extends Component {
           return casProductOnly ? (
             <Grid verticalAlign='middle'>{this.renderCasProduct(values)}</Grid>
           ) : (
-            <>
-              <Menu pointing secondary>
-                {tabs.map((tab, i) =>
-                  hiddenTabs.findIndex(val => val === i) !== -1 ? null : (
-                    <Menu.Item
-                      onClick={() => tabChanged(i)}
-                      active={activeIndex === i}>
-                      {formatMessage(tab.text)}
-                    </Menu.Item>
-                  )
-                )}
-              </Menu>
-              <Segment basic>{this.getContent(formikProps)}</Segment>
-            </>
-          )
+              <>
+                <Menu pointing secondary>
+                  {tabs.map((tab, i) =>
+                    hiddenTabs.findIndex(val => val === i) !== -1 ? null : (
+                      <Menu.Item
+                        onClick={() => tabChanged(i)}
+                        active={activeIndex === i}>
+                        {formatMessage(tab.text)}
+                      </Menu.Item>
+                    )
+                  )}
+                </Menu>
+                <Segment basic>{this.getContent(formikProps)}</Segment>
+              </>
+            )
         }}
       />
     )
@@ -1005,10 +1072,10 @@ class CompanyProductInfo extends Component {
         this.props.contentWrapper ? (
           this.props.contentWrapper(children)
         ) : (
-          <FlexContent>
-            <Segment basic>{children}</Segment>
-          </FlexContent>
-        )
+            <FlexContent>
+              <Segment basic>{children}</Segment>
+            </FlexContent>
+          )
       )
 
     const actionsWrapper = children =>
@@ -1016,18 +1083,18 @@ class CompanyProductInfo extends Component {
         this.props.actionsWrapper ? (
           this.props.actionsWrapper(children)
         ) : (
-          <GraySegment>
-            <RightAlignedDiv>{children}</RightAlignedDiv>
-          </GraySegment>
-        )
+            <GraySegment>
+              <RightAlignedDiv>{children}</RightAlignedDiv>
+            </GraySegment>
+          )
       )
 
     const Content = React.cloneElement(
       this.props.wrapper ? (
         this.props.wrapper
       ) : (
-        <WiderSidebar visible={isOpen} direction='right' width='very wide' />
-      ),
+          <WiderSidebar visible={isOpen} direction='right' width='very wide' />
+        ),
       {},
       <>
         {this.props.header && this.props.header}
@@ -1060,7 +1127,7 @@ CompanyProductInfo.defaultProps = {
   isOpen: false,
   activeIndex: 0,
   readOnly: true,
-  onClose: () => {},
+  onClose: () => { },
   hiddenTabs: [],
   casProductOnly: false
 }

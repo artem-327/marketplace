@@ -22,9 +22,9 @@ class ProductCatalogTable extends Component {
     return rows.map((row) => {
       return {
         ...row,
-        sds: row.attachments.length ? (<Button as='a' onClick={() => this.downloadAttachment(row.attachments[0].name, row.attachments[0].id)}><Icon name='download' />{row.attachments[0].name}</Button>) : '',
-        manufacturerName: row.manufacturer.name,
-        sdsRevisionDate: moment(row.sdsRevisionDate).format(formatMessage({ id: 'date.standardFormat', date: 'MM/DD/YYYY' }))
+        sds: row.attachments && row.attachments.length ? (<Button as='a' onClick={() => this.downloadAttachment(row.attachments[0].name, row.attachments[0].id)}><Icon name='download' />{row.attachments[0].name}</Button>) : '',
+        manufacturerName: row.manufacturer ? row.manufacturer.name : '',
+        sdsRevisionDate: row.sdsRevisionDate ? moment(row.sdsRevisionDate).format(formatMessage({ id: 'date.standardFormat', date: 'MM/DD/YYYY' })) : ''
       }
     })
   }

@@ -331,6 +331,58 @@ class DetailSidebar extends Component {
     this.props.getAutocompleteData({ searchUrl: `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false` })
   }, 250)
 
+  submitForm = debounce(async (values, setSubmitting, setTouched) => {
+    const { addProductOffer } = this.props
+
+    setSubmitting(false)
+    let props = {}
+    switch (this.state.activeTab) {
+      case 0:
+      case 2:
+        props = {
+          ...values.edit,
+          expirationDate: values.edit.doesExpire ? values.edit.expirationDate + 'T00:00:00.000Z' : null,
+          leadTime: values.edit.leadTime,
+          lotExpirationDate: values.edit.lotExpirationDate ? values.edit.lotExpirationDate + 'T00:00:00.000Z' : null,
+          lotNumber: values.edit.lotNumber,
+          lotManufacturedDate: values.edit.lotManufacturedDate ? values.edit.lotManufacturedDate + 'T00:00:00.000Z' : null,
+          pkgAvailable: parseInt(values.edit.pkgAvailable),
+          pricingTiers: values.priceTiers.pricingTiers.length ?
+            values.priceTiers.pricingTiers :
+            [{
+              quantityFrom: values.edit.minimum,
+              price: values.edit.fobPrice
+            }],
+          productGrades: values.edit.productGrades.length ? values.edit.productGrades : []
+        }
+        break
+      case 1:
+        this.saveBroadcastRules()
+        setTouched({})
+        this.setState({ changedForm: false })
+        break
+    }
+
+    if (Object.keys(props).length) {
+      try {
+        await addProductOffer(props, getSafe(() => this.props.sidebarValues.id, null))
+        toastManager.add(generateToastMarkup(
+          <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
+          <FormattedMessage id='addInventory.poDataSaved'
+                            defaultMessage='Product Offer was successfully saved.' />,
+        ), {
+          appearance: 'success'
+        })
+      } catch (e) {
+        console.error(e)
+      }
+      finally {
+        setTouched({})
+        this.setState({ changedForm: false })
+      }
+    }
+  }, 250)
+
   switchTab = (newTab) => {
     this.setState({
       activeTab: newTab
@@ -460,57 +512,9 @@ class DetailSidebar extends Component {
         validateOnChange={false}
         validationSchema={validationScheme}
         onSubmit={async (values, { setSubmitting, setTouched }) => {
-          setSubmitting(false)
-          let props = {}
-          switch (this.state.activeTab) {
-            case 0:
-            case 1:
-            case 3:
-              props = {
-                ...values.edit,
-                ...values.documents,
-                expirationDate: values.edit.doesExpire ? values.edit.expirationDate + 'T00:00:00.000Z' : null,
-                leadTime: values.edit.leadTime,
-                lotExpirationDate: values.edit.lotExpirationDate ? values.edit.lotExpirationDate + 'T00:00:00.000Z' : null,
-                lotNumber: values.edit.lotNumber,
-                lotManufacturedDate: values.edit.lotManufacturedDate ? values.edit.lotManufacturedDate + 'T00:00:00.000Z' : null,
-                pkgAvailable: parseInt(values.edit.pkgAvailable),
-                pricingTiers: values.priceTiers.pricingTiers.length ?
-                  values.priceTiers.pricingTiers :
-                  [{
-                    quantityFrom: values.edit.minimum,
-                    price: values.edit.fobPrice
-                  }],
-                productGrades: values.edit.productGrades.length ? values.edit.productGrades : []
-              }
-              break
-            case 2:
-              this.saveBroadcastRules()
-              setTouched({})
-              this.setState({ changedForm: false })
-              break
-          }
-
-          if (Object.keys(props).length) {
-            try {
-              await addProductOffer(props, getSafe(() => this.props.sidebarValues.id, null))
-              toastManager.add(generateToastMarkup(
-                <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
-                <FormattedMessage id='addInventory.poDataSaved'
-                  defaultMessage='Product Offer was successfully saved.' />,
-              ), {
-                appearance: 'success'
-              })
-            } catch (e) {
-              console.error(e)
-            }
-            finally {
-              setTouched({})
-              this.setState({ changedForm: false })
-            }
-          }
+          this.submitForm(values, setSubmitting, setTouched)
         }}>
-        {({ values, touched, setFieldValue, validateForm, submitForm }) => {
+        {({ values, touched, setTouched, setFieldValue, validateForm, submitForm, setSubmitting }) => {
 
           return (
             <FlexSidebar
@@ -1162,10 +1166,10 @@ class DetailSidebar extends Component {
                         size='large'
                         inputProps={{ type: 'button' }}
                         onClick={() => validateForm().then(r => {
-                          if (Object.keys(r).length)
+                          if (Object.keys(r).length && this.state.activeTab !== 1)
                             this.switchToErrors(Object.keys(r))
 
-                          submitForm()
+                          this.submitForm(values, setSubmitting, setTouched)
                         })}
                         data-test='sidebar_inventory_save_new'>
                         {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
