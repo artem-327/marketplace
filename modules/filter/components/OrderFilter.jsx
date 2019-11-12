@@ -23,7 +23,7 @@ const RightAlignedDiv = styled.div`
   text-align: right !important;
 `
 
-const formatDate = (date) => moment(date).utc().format()
+const formatDate = (date) => moment(date).toISOString()
 
 const initialValues = {
   orderFrom: {
