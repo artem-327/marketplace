@@ -425,14 +425,14 @@ class Orders extends Component {
   }
 
   downloadAttachment = async (documentName, documentId) => {
-    const element = await this.prepareLinkToAttachment(documentName, documentId)
+    const element = await this.prepareLinkToAttachment(documentId)
 
     element.download = documentName
     document.body.appendChild(element) // Required for this to work in FireFox
     element.click()
   }
 
-  prepareLinkToAttachment = async (documentName, documentId) => {
+  prepareLinkToAttachment = async documentId => {
     let downloadedFile = await this.props.downloadAttachment(documentId)
     const fileName = this.extractFileName(
       downloadedFile.value.headers['content-disposition']
@@ -441,8 +441,8 @@ class Orders extends Component {
     const element = document.createElement('a')
     const file = new Blob([downloadedFile.value.data], { type: mimeType })
     let fileURL = URL.createObjectURL(file)
-
     element.href = fileURL
+
     return element
   }
 
