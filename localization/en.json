@@ -675,6 +675,7 @@
   "login.login": "LOG IN",
   "login.logging": "Logging...",
   "login.incorrect": "Incorrect username or password",
+  "login.welcomeBack": "Welcome back!",
   "payments.notAvailableAddOne": "You have no Bank Account specified. To continue, please {addBankAccount} first.",
   "payments.addBankAccount": "Add Bank Account",
   "registration.header": "Header",
