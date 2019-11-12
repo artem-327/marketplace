@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'next/router'
-import { Segment, Image, Button, Message, Grid, GridRow, GridColumn } from 'semantic-ui-react'
+import { Segment, Image, Button, Message, Grid, GridRow, GridColumn, Header } from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
@@ -9,15 +9,34 @@ import { getSafe } from '~/utils/functions'
 import * as val from 'yup'
 import { errorMessages } from '~/constants/yupValidation'
 
-import Logo from '~/assets/images/login/logo_echo.png'
+import Logo from '~/assets/images/login/logo-login.png'
 
 const LoginSegment = styled(Segment)`
+  position: relative;
   width: 400px;
-  margin: auto !important;
+  margin: 100px auto 0 !important;
+  border: 0 none !important;
+  padding: 40px !important;
+  box-shadow: 0 0 0 3000px #1B3454 !important;
 `
+
+const LogoWrapper = styled(Segment)`
+  position: absolute !important;
+  top: -125px;
+  left: 26px;
+  right: 26px;
+  width: 348px;
+  max-width: 348px;
+  margin: 0 !important;
+  border: 0 none !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: 0 0 0 0 transparent !important;
+`
+
 const LogoImage = styled(Image)`
-  width: 40%;
-  margin: auto;
+  width: 100%;
+  height: auto;
 `
 
 const StyledForm = styled(Form)`
@@ -33,6 +52,35 @@ const InstructionsDiv = styled.div`
   margin-bottom: 15px;
   text-align: justify;
   font-size: 0.9rem;
+`
+
+const LoginHeader = styled.div`
+  position: relative;
+  margin: -31px 0 1.8571429rem -40px;
+  padding: 0 0 4px 40px;
+  text-decoration: none !important;
+  font-size: 1.7857143em;
+  font-weight: 400;
+  line-height: 2.44;
+  
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: block;
+    width: 103px;
+    height: 4px;
+    background: #1B3454;
+  }
+`
+
+const LoginField = styled(Form.Field)`
+  margin-bottom:  1rem !important;
+`
+
+const LoginButton = styled(Button)`
+  margin-top: 40px !important;
 `
 
 const validationScheme = val.object().shape({
@@ -97,9 +145,13 @@ class LoginForm extends Component {
           </>
         ) : (
             <LoginSegment loading={isLoading} raised padded='very'>
-              <Segment basic textAlign='center'>
+              <LogoWrapper>
                 <LogoImage src={Logo} />
-              </Segment>
+              </LogoWrapper>
+
+              <LoginHeader as='h1'>
+                <FormattedMessage id='login.welcomeBack' defaultMessage='Welcome back!' />
+              </LoginHeader>
 
               <StyledForm 
               initialValues={initialValues}
@@ -133,22 +185,22 @@ class LoginForm extends Component {
                         {this.state.resetPassword && <FormattedMessage id='auth.resetPasswordInstructions' />}
                       </InstructionsDiv>
 
-                      <Form.Field error={usernameError} data-test="login_username_inp">
+                      <LoginField error={usernameError} data-test="login_username_inp">
                         <label><FormattedMessage id='auth.username' defaultMessage='Username' /></label>
                         <Input name='username' inputProps={{ placeholder: formatMessage({ id: 'auth.username', defaultMessage: 'Password' }) }} />
-                      </Form.Field>
+                      </LoginField>
                       {
                         !this.state.resetPassword &&
-                        <Form.Field error={passwordError} data-test="login_password_inp">
+                        <LoginField error={passwordError} data-test="login_password_inp">
                           <label><FormattedMessage id='auth.password' defaultMessage='Password' /></label>
                           <Input name='password' inputProps={{ placeholder: formatMessage({ id: 'auth.password', defaultMessage: 'Password' }), type: 'password' }} />
-                        </Form.Field>
+                        </LoginField>
                       }
-                      <Button type='submit' primary fluid size='large' data-test="login_submit_btn">
+                      <LoginButton type='submit' primary fluid size='large' data-test="login_submit_btn">
                         {this.state.resetPassword
                           ? <FormattedMessage id='auth.resetPassword' defaultMessage='Reset Password'>{(text) => text}</FormattedMessage>
                           : <FormattedMessage id='auth.login' defaultMessage='Log in'>{(text) => text}</FormattedMessage>}
-                      </Button>
+                      </LoginButton>
                     </>
                   )
                 }}
