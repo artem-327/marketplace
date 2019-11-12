@@ -119,7 +119,7 @@ export default class PriceControl extends Component {
   render() {
     const { disabled, offer, hideFobPrice } = this.props
     const { type, value } = this.state
-    const prices = this.getPrices()
+    const prices = hideFobPrice ? null : this.getPrices()
 
     return (
       <Box>
@@ -127,7 +127,7 @@ export default class PriceControl extends Component {
           disabled={disabled}
           name='value'
           type='number'
-          min={this.calculateMinimum()}
+          min={hideFobPrice ? null : this.calculateMinimum()}
           value={value}
           step={type === 'multiplier' ? 0.1 : 0.001}
           onClick={e => { e.stopPropagation() }}
