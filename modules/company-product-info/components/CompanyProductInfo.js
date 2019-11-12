@@ -59,7 +59,7 @@ const validationSchema = Yup.object().shape({
 
 class CompanyProductInfo extends Component {
   state = {
-    regulatoryFilter: '',
+    regulatoryFilter: regulatoryFilter.all.value,
     casProductIndex: 0,
     echoProductGroup: echoProductGrouping[0].value
   }
@@ -76,10 +76,16 @@ class CompanyProductInfo extends Component {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>
-                <FormattedMessage id='global.elementName' defaultMessage='Element Name' />
+                <FormattedMessage
+                  id='global.elementName'
+                  defaultMessage='Element Name'
+                />
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <FormattedMessage id='global.casNumber' defaultMessage='CAS Number' />
+                <FormattedMessage
+                  id='global.casNumber'
+                  defaultMessage='CAS Number'
+                />
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <FormattedMessage id='global.assay' defaultMessage='Assay' />
@@ -90,7 +96,9 @@ class CompanyProductInfo extends Component {
             {elements.map((element, index) => (
               <Table.Row>
                 <Table.Cell>
-                  {element.proprietary ? element.name : element.casProduct.casIndexName}
+                  {element.proprietary
+                    ? element.name
+                    : element.casProduct.casIndexName}
                 </Table.Cell>
                 <Table.Cell>
                   {element.proprietary ? '' : element.casProduct.casNumber}
@@ -717,7 +725,10 @@ class CompanyProductInfo extends Component {
             {this.getElements({
               id: 'global.mixtures',
               defaultMessage: 'Mixtures',
-              elements: getSafe(() => values.companyProduct.echoProduct.elements, [])
+              elements: getSafe(
+                () => values.companyProduct.echoProduct.elements,
+                []
+              )
             })}
             {this.getInput({
               id: 'global.manufacturer',
@@ -979,11 +990,15 @@ class CompanyProductInfo extends Component {
       echoProduct: {
         ...EchoProductResponse,
         ...echoProduct,
-        elements: getSafe(() => echoProduct.elements.map(element => ({
-          ...element,
-          assayMin: element.assayMin ? element.assayMin : '',
-          assayMax: element.assayMax ? element.assayMax : ''
-        })), []),
+        elements: getSafe(
+          () =>
+            echoProduct.elements.map(element => ({
+              ...element,
+              assayMin: element.assayMin ? element.assayMin : '',
+              assayMax: element.assayMax ? element.assayMax : ''
+            })),
+          []
+        ),
         mfrProductCodes: getSafe(
           () => echoProduct.mfrProductCodes.toString(),
           ''
@@ -991,7 +1006,7 @@ class CompanyProductInfo extends Component {
         sdsRevisionDate:
           echoProduct && echoProduct.sdsRevisionDate
             ? moment(echoProduct.sdsRevisionDate).format('MM/DD/YYYY')
-            : null,
+            : null
       }
     }
 
