@@ -14,7 +14,7 @@ import Logo from '~/assets/images/login/logo-login.png'
 const LoginSegment = styled(Segment)`
   position: relative;
   width: 400px;
-  margin: 151px auto 0 !important;
+  margin: 100px auto 0 !important;
   border: 0 none !important;
   padding: 40px !important;
   box-shadow: 0 0 0 3000px #1B3454 !important;
@@ -76,7 +76,7 @@ const LoginHeader = styled.div`
 `
 
 const LoginField = styled(Form.Field)`
-  margin-bottom:  1.8571429rem !important;
+  margin-bottom:  1rem !important;
 `
 
 const LoginButton = styled(Button)`

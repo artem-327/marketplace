@@ -9,13 +9,13 @@ import Router from 'next/router'
 
 import { setPassword } from '../api'
 
-import { LoginSegment, LogoImage, StyledForm, BottomMargedRow } from '../constants/layout'
+import { LoginSegment, LogoWrapper, LoginHeader, LogoImage, StyledForm, BottomMargedRow, LoginField, LoginButton } from '../constants/layout'
 import { initialValues, validationSchema } from '../constants/validation'
 
 import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup } from '~/utils/functions'
 
-import Logo from '~/assets/images/login/logo_echo.png'
+import Logo from '~/assets/images/login/logo-login.png'
 
 class Password extends Component {
 
@@ -27,9 +27,14 @@ class Password extends Component {
 
     return (
       <LoginSegment raised padded='very'>
-        <Segment basic textAlign='center'>
+        <LogoWrapper>
           <LogoImage src={Logo} />
-        </Segment>
+        </LogoWrapper>
+
+        <LoginHeader as='h1'>
+          {hello}
+        </LoginHeader>
+
         <StyledForm
           validateOnChange={true}
           initialValues={initialValues(forgottenPassword)}
@@ -60,12 +65,6 @@ class Password extends Component {
             return (
               <>
                 <Grid columns={1}>
-                  <GridRow>
-                    <GridColumn textAlign='center'>
-                      <Header as='h2'>{hello}</Header>
-                    </GridColumn>
-                  </GridRow>
-
                   <BottomMargedRow>
                     <GridColumn textAlign='center'>
                       <Header as='h3'>{header}</Header>
@@ -73,20 +72,22 @@ class Password extends Component {
                   </BottomMargedRow>
                 </Grid>
 
-                <Input name='securityCode' label={formatMessage({ id: 'verification.labels.securityCode', defaultMessage: 'Security Code' })} />
-                <Input name='email' label={formatMessage({ id: 'verification.labels.email', defaultMessage: 'E-mail Address' })} />
-                <Input inputProps={{ type: 'password' }} name='password' label={formatMessage({ id: 'verification.labels.password', defaultMessage: 'Password' })} />
-                <Input inputProps={{ type: 'password' }} name='passwordConfirm' label={formatMessage({ id: 'verification.labels.passwordConfirm', defaultMessage: 'Password Confirmation' })} />
+                <LoginField>
+                  <Input name='securityCode' label={formatMessage({ id: 'verification.labels.securityCode', defaultMessage: 'Security Code' })} />
+                </LoginField>
+                <LoginField>
+                  <Input name='email' label={formatMessage({ id: 'verification.labels.email', defaultMessage: 'E-mail Address' })} />
+                </LoginField>
+                <LoginField>
+                  <Input inputProps={{ type: 'password' }} name='password' label={formatMessage({ id: 'verification.labels.password', defaultMessage: 'Password' })} />
+                </LoginField>
+                <LoginField>
+                  <Input inputProps={{ type: 'password' }} name='passwordConfirm' label={formatMessage({ id: 'verification.labels.passwordConfirm', defaultMessage: 'Password Confirmation' })} />
+                </LoginField>
 
-                <Grid columns={1}>
-                  <GridRow>
-                    <GridColumn>
-                      <Button.Submit size='big' fluid>
-                        <FormattedMessage id='global.continue' defaultMessage='Continue'>{(text) => text}</FormattedMessage>
-                      </Button.Submit>
-                    </GridColumn>
-                  </GridRow>
-                </Grid>
+                <LoginButton size='big' fluid>
+                  <FormattedMessage id='global.continue' defaultMessage='Continue'>{(text) => text}</FormattedMessage>
+                </LoginButton>
               </>
             )
           }}
