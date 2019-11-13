@@ -115,6 +115,11 @@ class ProductCatalogTable extends Component {
           {...datagrid.tableProps}
           tableName='admin_companies'
           columns={columns}
+          defaultSorting={{
+            columnName: 'name',
+            sortPath: 'EchoProduct.name',
+            direction: 'DESC'
+          }}
           rows={this.getRows(rows)}
           rowActions={[
             ...echoRowActions((row, i) => openEditEchoProduct(row.id, i)),

@@ -101,9 +101,9 @@ const getSettingColumn = (columns, formatMessage, columnWidth) => {
               typeof c.title === 'string'
                 ? c.title
                 : formatMessage({
-                    id: c.title.props.id,
-                    defaultMessage: c.title.props.defaultMessage
-                  })
+                  id: c.title.props.id,
+                  defaultMessage: c.title.props.defaultMessage
+                })
             }
             inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
           />
@@ -249,8 +249,8 @@ class PatchedTableSelection extends React.PureComponent {
           rowSelectionEnabled(props.tableRow.row) ? (
             <TableSelection.Cell {...props} />
           ) : (
-            <Table.StubCell {...props} />
-          )
+              <Table.StubCell {...props} />
+            )
         }
         {...restProps}
       />
@@ -305,7 +305,12 @@ class _Table extends Component {
     onScrollToEnd: pt.func,
     onRowClick: pt.func,
     onSortingChange: pt.func,
-    onTableReady: pt.func
+    onTableReady: pt.func,
+    defaultSorting: pt.shape({
+      columnName: pt.string,
+      sortPath: pt.string,
+      direction: pt.oneOf(['ASC', 'asc', 'DESC', 'desc'])
+    })
   }
 
   static defaultProps = {
@@ -321,9 +326,10 @@ class _Table extends Component {
     groupBy: [],
     defaultHiddenColumns: [],
     singleSelection: false,
-    onSelectionChange: () => {},
-    onScrollToEnd: () => {},
-    onTableReady: () => {}
+    onSelectionChange: () => { },
+    onScrollToEnd: () => { },
+    onTableReady: () => { },
+    defaultSorting: null
   }
 
   constructor(props) {
@@ -449,9 +455,9 @@ class _Table extends Component {
 
     return rowActions
       ? [
-          { name: '__actions', title: ' ', width: 45, actions: rowActions },
-          ...columns
-        ]
+        { name: '__actions', title: ' ', width: 45, actions: rowActions },
+        ...columns
+      ]
       : columns
   }
 
@@ -465,7 +471,8 @@ class _Table extends Component {
   }
 
   loadColumnsSettings = () => {
-    const { tableName, columns, rowActions, defaultHiddenColumns } = this.props
+    const { tableName, columns, rowActions, defaultHiddenColumns, defaultSorting } = this.props
+    
     // get column names from current table settings
     let colNames = columns.map(column => {
       return column.name
@@ -477,16 +484,17 @@ class _Table extends Component {
       // if saved table settings exists then compare it with current settings
       let savedSettings = JSON.parse(localStorage[tableName])
 
+
       let invalidItems =
         savedSettings.order.length === colNames.length
-          ? savedSettings.order.filter(col => {
-              if (colNames.indexOf(col) > -1) {
-                return false
-              } else {
-                return true
-              }
-            })
+          ? savedSettings.order.filter(col => !(colNames.indexOf(col) > -1))
           : true
+
+      if ((!savedSettings.sorting || savedSettings.sorting.length === 0) && defaultSorting) {
+        savedSettings.sorting = [defaultSorting]
+        this.setState({ columnsSettings: savedSettings },
+          () => localStorage[tableName] = JSON.stringify(this.state.columnsSettings))
+      }
 
       // if number of columns is different or any column uses different name then remove saved settings
       if (invalidItems === true || invalidItems.length) {
@@ -505,6 +513,7 @@ class _Table extends Component {
         {
           columnsSettings: {
             ...this.state.columnsSettings,
+            sorting: defaultSorting ? [defaultSorting] : this.state.columnsSettings.sorting,
             hiddenColumnNames: defaultHiddenColumns
           }
         },
@@ -525,24 +534,35 @@ class _Table extends Component {
     } = this.state
     const column = s ? columns.find(c => c.name === s.columnName) : {}
     this.setState({ selection: defaultSelection })
+
     onTableReady({
-      sortPath: column.sortPath,
+      sortPath: column && column.sortPath,
       sortDirection: s && s.direction.toUpperCase()
     })
   }
 
   handleSortingChange = sorting => {
     const [s] = sorting
+    
+    let sortDirection = s.direction.toUpperCase()
     const { onSortingChange, columns } = this.props
     const column = columns.find(c => c.name === s.columnName)
+
     if (!column.sortPath) return
+
+
+    if (this.state.columnsSettings.sorting[0].direction.toUpperCase() === sortDirection) {
+      if (sortDirection === 'ASC') sortDirection = 'DESC'
+      else sortDirection = 'ASC'
+      s.direction = sortDirection
+    }
 
     this.handleColumnsSettings({ sorting })
 
     onSortingChange &&
       onSortingChange({
         sortPath: column ? column.sortPath : s.columnName,
-        sortDirection: s.direction.toUpperCase()
+        sortDirection
       })
   }
 
@@ -675,8 +695,8 @@ class _Table extends Component {
             {groupBy && getChildGroups ? (
               <CustomGrouping getChildGroups={getChildGroups} />
             ) : (
-              <IntegratedGrouping />
-            )}
+                <IntegratedGrouping />
+              )}
 
             {columnReordering && <DragDropProvider />}
             {rowSelection && (
@@ -689,8 +709,8 @@ class _Table extends Component {
             {rowSelection && lockSelection ? (
               <PatchedIntegratedSelection lockSelection={lockSelection} />
             ) : (
-              rowSelection && <IntegratedSelection />
-            )}
+                rowSelection && <IntegratedSelection />
+              )}
 
             <SearchState value={filterValue} />
             <IntegratedFiltering />
@@ -704,11 +724,11 @@ class _Table extends Component {
                 rowComponent={props => <Row onClick={onRowClick} {...props} />}
               />
             ) : (
-              <Table
-                columnExtensions={this.getColumnsExtension()}
-                messages={MESSAGES}
-              />
-            )}
+                <Table
+                  columnExtensions={this.getColumnsExtension()}
+                  messages={MESSAGES}
+                />
+              )}
 
             <TableColumnResizing
               onColumnWidthsChange={widths =>
@@ -734,7 +754,7 @@ class _Table extends Component {
               <TableColumnReordering
                 onOrderChange={order => this.handleColumnsSettings({ order })}
                 order={columnsSettings.order}
-                // defaultOrder={columns.map(c => c.name)}
+              // defaultOrder={columns.map(c => c.name)}
               />
             )}
 
@@ -745,13 +765,13 @@ class _Table extends Component {
                 lockSelection={lockSelection}
               />
             ) : (
-              rowSelection && (
-                <TableSelection
-                  showSelectAll={showSelectAll && !sameGroupSelectionOnly}
-                  selectByRowClick={selectByRowClick}
-                />
-              )
-            )}
+                rowSelection && (
+                  <TableSelection
+                    showSelectAll={showSelectAll && !sameGroupSelectionOnly}
+                    selectByRowClick={selectByRowClick}
+                  />
+                )
+              )}
             <DropdownFormatterProvider
               for={columns.filter(c => c.options).map(c => c.name)}
             />
@@ -775,17 +795,17 @@ class _Table extends Component {
                       restProps,
                       children: groupActions
                         ? rowActionsCellFormatter({
-                            column: { actions: groupActions(row) },
-                            row
-                          })
+                          column: { actions: groupActions(row) },
+                          row
+                        })
                         : null
                     })
                   ) : (
-                    <span {...restProps}>
-                      <strong>{column.title || column.name}: </strong>
-                      {children || String(row.value)}
-                    </span>
-                  )
+                      <span {...restProps}>
+                        <strong>{column.title || column.name}: </strong>
+                        {children || String(row.value)}
+                      </span>
+                    )
                 }
                 cellComponent={props => (
                   <GroupCell
