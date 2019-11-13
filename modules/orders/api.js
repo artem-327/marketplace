@@ -46,5 +46,7 @@ export default {
     api.patch(`/prodex/api/payments/dwolla/transfer/${orderId}/cancel`),
   loadBankAccounts: () => api.get(`/prodex/api/payments/bank-accounts`),
   getRelatedOrders: orderId =>
-    api.get(`/prodex/api/accounting-documents/order/${orderId}`)
+    api.get(`/prodex/api/accounting-documents/order/${orderId}`),
+  cancelOrder: orderId =>
+    api.patch(`/prodex/api/purchase-orders/${orderId}/cancel`)
 }
