@@ -1150,7 +1150,7 @@
   "validation.maximum": "Maximum is {max}",
   "validation.greaterThan": "Must be greater than {value}",
   "validation.maxDecimals": "There can be maximally {max} decimal places",
-  "validation.mustBeNumber": "Must be an number",
+  "validation.mustBeNumber": "Must be a number",
   "validation.lostHasToBeSelected": "Lot has to be selected",
   "validation.lotUnique": "Lot has to be unique",
   "validation.lessThan": "Must be less than {value}",

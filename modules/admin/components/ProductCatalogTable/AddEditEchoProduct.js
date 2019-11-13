@@ -12,8 +12,20 @@ import * as Yup from 'yup'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { Form, Button, Dropdown as FormikDropdown, Input } from 'formik-semantic-ui-fixed-validation'
-import { Menu, Grid, GridRow, GridColumn, Segment, Header, Dropdown, Icon, Divider } from 'semantic-ui-react'
+import { Form, Button, Dropdown as FormikDropdown, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
+import {
+  Menu,
+  Grid,
+  GridRow,
+  GridColumn,
+  Segment,
+  Header,
+  Dropdown,
+  Icon,
+  Divider,
+  Table,
+  FormField, FormGroup
+} from 'semantic-ui-react'
 
 import { FieldArray } from 'formik'
 
@@ -30,7 +42,7 @@ import styled from "styled-components";
 import debounce from "lodash/debounce";
 import { uniqueArrayByKey } from '~/utils/functions'
 import escapeRegExp from "lodash/escapeRegExp";
-
+import { Datagrid } from '~/modules/datagrid'
 
 
 export const MyContainer = styled.div`
@@ -47,10 +59,52 @@ const validationScheme = Yup.object().shape({
   name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
   manufacturer: Yup.number().integer().min(1).required(errorMessages.requiredMessage),    // ! ! min 0 or 1 ?
   elements: Yup.array().of(Yup.object().uniqueProperty('casProduct', errorMessages.unique(<FormattedMessage id='admin.casProduct' name='CAS Product'>{text => text}</FormattedMessage>)).shape({
-    name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
-    casProduct: Yup.number().integer().min(1).required(errorMessages.requiredMessage),    // ! ! min 0 or 1 ?,
-    assayMin: Yup.number().min(0).max(100),
-    assayMax: Yup.number().min(0).max(100)
+    name: Yup.string().trim().test('requiredIfProprietary', errorMessages.requiredMessage, function (value) {
+      const { proprietary } = this.parent
+      if (proprietary) {
+        return (value !== null && value !== '')
+      }
+      return true
+    }),
+    casProduct: Yup.string().nullable().trim().test('requiredIfNotProprietary', errorMessages.requiredMessage, function (value) {
+      const { proprietary } = this.parent
+      if (!proprietary) {
+        return parseInt(value)
+      }
+      return true
+    }),
+    assayMin: Yup.string()
+      .test('v', errorMessages.minUpToMax, function(v) {
+        const { assayMax: v2 } = this.parent
+        if (v === null || v === '' || isNaN(v)) return true      // No number value - can not be tested
+        if (v2 === null || v2 === '' || isNaN(v2)) return true    // No max limit value - can not be tested
+        return (Number(v) <= v2)
+      })
+      .test('v', errorMessages.minimum(0), function(v) {
+        if (v === null || v === '' || isNaN(v)) return true      // No number value - can not be tested
+        return (Number(v) >= 0)
+      })
+      .test('v', errorMessages.maximum(100), function(v) {
+        if (v === null || v === '' || isNaN(v)) return true      // No number value - can not be tested
+        return (Number(v) <= 100)
+      })
+      .test('v', errorMessages.mustBeNumber, function(v) { return (v === null || v === '' || !isNaN(v))}),
+    assayMax: Yup.string()
+      .test('v', errorMessages.minUpToMax, function(v) {
+        const { assayMin: v2 } = this.parent
+        if (v === null || v === '' || isNaN(v)) return true      // No number value - can not be tested
+        if (v2 === null || v2 === '' || isNaN(v2)) return true    // No min limit value - can not be tested
+        return (Number(v) >= v2)
+      })
+      .test('v', errorMessages.minimum(0), function(v) {
+        if (v === null || v === '' || isNaN(v)) return true      // No number value - can not be tested
+        return (Number(v) >= 0)
+      })
+      .test('v', errorMessages.maximum(100), function(v) {
+        if (v === null || v === '' || isNaN(v)) return true      // No number value - can not be tested
+        return (Number(v) <= 100)
+      })
+      .test('v', errorMessages.mustBeNumber, function(v) { return (v === null || v === '' || !isNaN(v))}),
   })),
 })
 
@@ -138,7 +192,8 @@ class AddEditEchoProduct extends React.Component {
           casProduct: getSafe(() => element.casProduct.id, null),
           assayMin: getSafe(() => element.assayMin, 100),
           assayMax: getSafe(() => element.assayMax, 100),
-        })), [{ name: '', casProduct: '', assayMin: 100, assayMax: 100 }]),
+          proprietary: getSafe(() => element.proprietary, false),
+        })), [{ name: '', casProduct: '', assayMin: 100, assayMax: 100, proprietary: false }]),
         emergencyPhone: getSafe(() => popupValues.emergencyPhone, ''),
         endocrineDisruptorInformation: getSafe(() => popupValues.endocrineDisruptorInformation, ''),
         evaporationPoint: getSafe(() => popupValues.evaporationPoint, ''),
@@ -174,7 +229,7 @@ class AddEditEchoProduct extends React.Component {
         inhalation: getSafe(() => popupValues.inhalation, ''),
         irritation: getSafe(() => popupValues.irritation, ''),
         labelElements: getSafe(() => popupValues.labelElements, ''),
-        manufacturer: getSafe(() => popupValues.manufacturer.id, null),
+        manufacturer: getSafe(() => popupValues.manufacturer.id, ''),
         meltingPointRange: getSafe(() => popupValues.meltingPointRange, ''),
         mexicoGrade: getSafe(() => popupValues.mexicoGrade, ''),
         mfrProductCodes: getSafe(() => popupValues.mfrProductCodes, []),
@@ -236,13 +291,13 @@ class AddEditEchoProduct extends React.Component {
       } : null)
     }
 
-    if (initialValues.sdsIssuedDate) initialValues.sdsIssuedDate = moment(initialValues.sdsIssuedDate).format('MM/DD/YYYY')
-    if (initialValues.sdsRevisionDate) initialValues.sdsRevisionDate = moment(initialValues.sdsRevisionDate).format('MM/DD/YYYY')
-    if (initialValues.tdsIssuedDate) initialValues.tdsIssuedDate = moment(initialValues.tdsIssuedDate).format('MM/DD/YYYY')
-    if (initialValues.tdsRevisionDate) initialValues.tdsRevisionDate = moment(initialValues.tdsRevisionDate).format('MM/DD/YYYY')
+    if (initialValues.sdsIssuedDate) initialValues.sdsIssuedDate = moment(initialValues.sdsIssuedDate).format('YYYY-MM-DD')
+    if (initialValues.sdsRevisionDate) initialValues.sdsRevisionDate = moment(initialValues.sdsRevisionDate).format('YYYY-MM-DD')
+    if (initialValues.tdsIssuedDate) initialValues.tdsIssuedDate = moment(initialValues.tdsIssuedDate).format('YYYY-MM-DD')
+    if (initialValues.tdsRevisionDate) initialValues.tdsRevisionDate = moment(initialValues.tdsRevisionDate).format('YYYY-MM-DD')
 
     if (initialValues.elements.length === 0) {
-      initialValues.elements = [{ name: '', casProduct: null, assayMin: 100, assayMax: 100 }]
+      initialValues.elements = [{ name: '', casProduct: null, assayMin: 100, assayMax: 100, proprietary: false }]
     }
     return initialValues
   }
@@ -266,25 +321,34 @@ class AddEditEchoProduct extends React.Component {
     }, 250)
   }, 500)
 
-  submitForm = debounce(async (values, setSubmitting, setTouched) => {
-    const { popupValues, putEchoProduct, postEchoProduct, closePopup, toastManager } = this.props
+  submitForm = async (values, setSubmitting, setTouched) => {
+    const { popupValues, putEchoProduct, postEchoProduct, closePopup, toastManager, linkAttachment, listDocumentTypes } = this.props
 
     let formValues = {
       ...values,
-      elements: values.elements.map(e => ({
-        name: e.name,
-        casProduct: e.casProduct,
-        assayMin: Number(e.assayMin),
-        assayMax: Number(e.assayMax),
-      }))
+      elements: values.elements.map(e => e.proprietary ? ({
+          name: e.name,
+          assayMin: (e.assayMin === null || e.assayMin === '') ? null : Number(e.assayMin),
+          assayMax: (e.assayMax === null || e.assayMax === '') ? null : Number(e.assayMax),
+        }) : ({
+          casProduct: e.casProduct,
+          assayMin: (e.assayMin === null || e.assayMin === '') ? null : Number(e.assayMin),
+          assayMax: (e.assayMax === null || e.assayMax === '') ? null : Number(e.assayMax),
+      })),
+      sdsIssuedDate: values.sdsIssuedDate ? values.sdsIssuedDate + 'T00:00:00.00000Z' : '',
+      sdsRevisionDate: values.sdsRevisionDate ? values.sdsRevisionDate + 'T00:00:00.00000Z' : '',
+      tdsIssuedDate: values.tdsIssuedDate ? values.tdsIssuedDate + 'T00:00:00.00000Z' : '',
+      tdsRevisionDate: values.tdsRevisionDate ? values.tdsRevisionDate + 'T00:00:00.00000Z' : '',
     }
     delete formValues.attachments
 
-    removeEmpty(formValues)
-
-    //console.log('!!!!!!!!!!!!!!! submitForm formValues', formValues)
-    //console.log('!!!!!!!!!!!!!!! submitForm elements', formValues.elements)
-
+    /*
+    console.log('!!!!!!!!!!!!!!! submitForm values', values)
+    console.log('!!!!!!!!!!!!!!! submitForm formValues', formValues)
+    console.log('!!!!!!!!!!!!!!! submitForm elements', formValues.elements)
+    setSubmitting(false)
+    return  // ! !
+    */
 
     try {
       let data = {}
@@ -293,9 +357,9 @@ class AddEditEchoProduct extends React.Component {
       else
         data = await postEchoProduct(formValues)
 
-      //console.log('!!!!!!!!!!!!!!! submitForm response', data)
+      console.log('!!!!!!!!!!!!!!! submitForm response', data)
 
-/*
+
       let echoProduct = data.value.data
       const notLinkedAttachments = values.attachments.filter(att => !getSafe(() => att.linked, false))
       await linkAttachment(false, echoProduct.id, notLinkedAttachments)
@@ -310,11 +374,14 @@ class AddEditEchoProduct extends React.Component {
         }
       })
 
+      console.log('!!!!!!!!!!!!!!! Datagrid 1', data)
+
       Datagrid.updateRow(echoProduct.id, () => ({
         ...echoProduct,
         attachments: echoProduct.attachments.concat(notLinkedAttachments)
       }))
-*/
+
+      console.log('!!!!!!!!!!!!!!! Datagrid 2', data)
 
       const status = popupValues ? 'echoProductUpdated' : 'echoProductCreated'
       toastManager.add(generateToastMarkup(
@@ -329,7 +396,7 @@ class AddEditEchoProduct extends React.Component {
     } catch (err) {
       setSubmitting(false)
     }
-  }, 250)
+  }
 
   RowInput = ({ name, readOnly=false, id, defaultMessage }) => (
     <GridRow>
@@ -355,35 +422,38 @@ class AddEditEchoProduct extends React.Component {
     </GridRow>
   )
 
-  RowDate = ({ name, readOnly=false, id, defaultMessage }) => (
+  RowDate = ({ name, readOnly=false, id, defaultMessage, clearable=true }) => (
     <GridRow>
       <GridColumn width={6}>
         <FormattedMessage id={id} defaultMessage={defaultMessage} />
       </GridColumn>
 
       <GridColumn width={10}>
-        <DateInput inputProps={{ maxDate: moment(), id: name }} name={name} />
+        <DateInput inputProps={{ maxDate: moment(), id: name, clearable: clearable }} name={name} />
       </GridColumn>
     </GridRow>
   )
 
-  RowDocument = (values, popupValues, documentType) => {
+  RowDocument = (formikProps, values, popupValues, documentType) => {
     return (
         <UploadLot {...this.props}
           attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === documentType)}
           edit={getSafe(() => popupValues.id, '')}
           name='attachments'
-          type={3}
+          type={documentType}
           filesLimit={1}
           fileMaxSize={20}
-          onChange={(files) => formikProps.setFieldValue(
+          onChange={(files) => {
+            formikProps.setFieldValue(
            `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
            {
              id: files.id,
              name: files.name,
              documentType: files.documentType
            }
-          )}
+          )
+            this.setState({ changedForm: true })
+          }}
           data-test='settings_product_import_attachments'
           emptyContent={(
             <label>
@@ -455,106 +525,101 @@ class AddEditEchoProduct extends React.Component {
 
 
     return (
-      <GridRow>
-        <GridColumn>
-          <Segment>
-            <Header as='h4'><FormattedMessage id='global.mixtures' defaultMessage='Mixtures' /></Header>
-              <FieldArray name='elements'
-                render={arrayHelpers => (
-                  <>
-                    {values.elements && values.elements.length ? values.elements.map((element, index) => (
-                      <Grid>
-                        <GridRow>
-                          <GridColumn width={6}>
-                            <FormattedMessage id='global.name' defaultMessage='Name' />
-                          </GridColumn>
-                          <GridColumn width={10}>
-                            <Input inputProps={{ id: index }} name={`elements[${index}].name`} />
-                          </GridColumn>
-                        </GridRow>
 
-                        <GridRow>
-                          <GridColumn width={6}>
-                            <FormattedMessage id='settings.associatedCasIndex' defaultMessage='Associated CAS Index Number' />
-                          </GridColumn>
-                          <GridColumn width={10}>
-                            <FormikDropdown
-                              name={`elements[${index}].casProduct`}
-                              options={
-                                getSafe(() => uniqueArrayByKey(searchedCasProducts.concat(initialCasProducts), 'id'), [])
-                                  .map((item) => ({
-                                    key: item.id,
-                                    id: item.id,
-                                    text: item.casNumber + ' ' + item.casIndexName,
-                                    value: item.id,
-                                    content: <Header content={item.casNumber} subheader={item.casIndexName} style={{ fontSize: '1em' }} />
-                                  }))}
-                              inputProps={{
-                                'data-test': `admin_product_popup_cas_${index}_drpdn`,
-                                size: 'large',
-                                icon: 'search',
-                                search: options => options,
-                                selection: true,
-                                clearable: true,
-                                loading: isLoading,
-                                onSearchChange: this.handleSearchChange,
-                                dataindex: index
-                              }}
-                              defaultValue={getSafe(() => element.casProduct.casNumber, false) ? element.casProduct.casNumber : null}
-                            />
-                          </GridColumn>
-                        </GridRow>
-
-                        <GridRow>
-                          <GridColumn width={6}>
-                            <FormattedMessage id='global.assayMin' defaultMessage='Assay Min' />
-                          </GridColumn>
-                          <GridColumn width={7}>
-                            <Input inputProps={{ id: index, type: 'number', min: 0, max: 100 }} name={`elements[${index}].assayMin`} />
-                          </GridColumn>
-                          <GridColumn width={3}>
-                            {index ? (
-                              <Button basic icon color='red' onClick={() => {
-                                arrayHelpers.remove(index)
-                                this.setState({ changedForm: true })
-                              }}
-                                      data-test={`settings_product_popup_remove_${index}_btn`}>
-                                <Icon name='minus' />
-                              </Button>
-                            ) : ''}
-                          </GridColumn>
-                        </GridRow>
-
-                        <GridRow>
-                          <GridColumn width={6}>
-                            <FormattedMessage id='global.assayMax' defaultMessage='Assay Max' />
-                          </GridColumn>
-                          <GridColumn width={7}>
-                            <Input inputProps={{ id: index, type: 'number', min: 0, max: 100 }} name={`elements[${index}].assayMax`} />
-                          </GridColumn>
-                          <GridColumn width={3}>
-                            {values.elements.length === (index + 1) ? (
-                              <Button basic icon color='green' onClick={() => {
-                                arrayHelpers.push({ name: '', casProduct: null, assayMin: 100, assayMax: 100 })
-                                this.setState({ changedForm: true })
-                              }}
-                                      data-test='settings_product_popup_add_btn'>
-                                <Icon name='plus' />
-                              </Button>
-                            ) : ''}
-                          </GridColumn>
-                        </GridRow>
-                        {values.elements.length !== (index + 1) ? (
-                          <Divider />
-                        ) : ''}
-                      </Grid>
-                    )) : ''}
-                  </>
-                )}
-              />
-          </Segment>
-        </GridColumn>
-      </GridRow>
+      <>
+        <GridRow>
+          <GridColumn width={16}>
+            <FormattedMessage id='global.mixtures' defaultMessage='Mixtures' />
+          </GridColumn>
+        </GridRow>
+        <GridRow style={{ alignItems: 'flex-end', 'padding-bottom': '0.5rem' }}>
+          <GridColumn width={3}>
+            <Header as='h5'><FormattedMessage id='admin.proprietary' defaultMessage='Proprietary?' /></Header>
+          </GridColumn>
+          <GridColumn width={5}>
+            <Header as='h5'><FormattedMessage id='global.elementNameaa' defaultMessage='Element Name / CAS Number' /></Header>
+          </GridColumn>
+          <GridColumn width={3}>
+            <Header as='h5'><FormattedMessage id='global.assayMin' defaultMessage='Assay Min?' /></Header>
+          </GridColumn>
+          <GridColumn width={3}>
+            <Header as='h5'><FormattedMessage id='global.assayMax' defaultMessage='Assay Max?' /></Header>
+          </GridColumn>
+          <GridColumn width={2}>
+          </GridColumn>
+        </GridRow>
+        <FieldArray name='elements'
+          render={arrayHelpers => (
+            <>
+              {values.elements && values.elements.length ? values.elements.map((element, index) => (
+                <GridRow style={{ alignItems: 'flex-end', 'padding-bottom': '0.5rem' }} >
+                  <GridColumn width={2} data-text='admin_product_popup_proprietary'>
+                    <Checkbox name={`elements[${index}].proprietary`} />
+                  </GridColumn>
+                  <GridColumn width={6}>
+                    {values.elements[index].proprietary ? (
+                      <Input name={`elements[${index}].name`} defaultValue={''} inputProps={{ 'data-test': `admin_product_popup_element_${index}_name` }} />
+                    ) : (
+                      <FormikDropdown name={`elements[${index}].casProduct`}
+                        options={
+                          getSafe(() => uniqueArrayByKey(searchedCasProducts.concat(initialCasProducts), 'id'), [])
+                            .map((item) => ({
+                              key: item.id,
+                              id: item.id,
+                              text: item.casNumber + ' ' + item.casIndexName,
+                              value: item.id,
+                              content: <Header content={item.casNumber} subheader={item.casIndexName} style={{ fontSize: '1em' }} />
+                            }))}
+                        inputProps={{
+                          'data-test': `admin_product_popup_cas_${index}_drpdn`,
+                          size: 'large',
+                          icon: 'search',
+                          search: options => options,
+                          selection: true,
+                          clearable: true,
+                          loading: isLoading,
+                          onSearchChange: this.handleSearchChange,
+                          dataindex: index
+                        }}
+                        defaultValue={getSafe(() => element.casProduct.casNumber, false) ? element.casProduct.casNumber : null}
+                      />
+                    )}
+                  </GridColumn>
+                  <GridColumn width={3} data-test='admin_product_popup_assayMin_inp'>
+                    <Input type='number' name={`elements[${index}].assayMin`} />
+                  </GridColumn>
+                  <GridColumn width={3} data-test='admin_product_popup_assayMax_inp'>
+                    <Input type='number' name={`elements[${index}].assayMax`} />
+                  </GridColumn>
+                  <GridColumn width={2}>
+                    {index ? (
+                      <Button basic icon color='red' onClick={() => {
+                        arrayHelpers.remove(index)
+                        this.setState({ changedForm: true })
+                      }}
+                              data-test={`settings_product_popup_remove_${index}_btn`}>
+                        <Icon name='minus' />
+                      </Button>
+                    ) : ''}
+                  </GridColumn>
+                </GridRow>
+              )) : ''}
+              <GridRow>
+                <GridColumn width={14}>
+                </GridColumn>
+                <GridColumn width={2}>
+                  <Button basic icon color='green' onClick={() => {
+                    arrayHelpers.push({ name: '', casProduct: null, assayMin: 100, assayMax: 100 })
+                    this.setState({ changedForm: true })
+                  }}
+                          data-test='settings_product_popup_add_btn'>
+                    <Icon name='plus' />
+                  </Button>
+                </GridColumn>
+              </GridRow>
+            </>
+          )} />
+      </>
     )
   }
 
@@ -723,11 +788,11 @@ class AddEditEchoProduct extends React.Component {
         <Grid verticalAlign='middle'>
           <GridRow>
           <label><FormattedMessage id='global.sdsDocument' defaultMessage='SDS Document' /></label>
-          {this.RowDocument(formikProps.values, popupValues, 3)}
+          {this.RowDocument(formikProps, formikProps.values, popupValues, 3)}
           </GridRow>
           <GridRow>
           <label><FormattedMessage id='global.tdsDocument' defaultMessage='TDS Document' /></label>
-          {this.RowDocument(formikProps.values, popupValues, 11)}
+          {this.RowDocument(formikProps, formikProps.values, popupValues, 11)}
           </GridRow>
         </Grid>
       )
@@ -867,7 +932,6 @@ class AddEditEchoProduct extends React.Component {
         enableReinitialize
         initialValues={this.getInitialFormValues()}
         validationSchema={validationScheme}
-
         onSubmit={async (values, { setSubmitting, setTouched }) => {
           this.submitForm(values, setSubmitting, setTouched)
         }}
@@ -919,21 +983,15 @@ class AddEditEchoProduct extends React.Component {
                       </Button>
                     </GridColumn>
                     <GridColumn computer={10} textAlign='right'>
-                      <Button
+                      <Button.Submit
                         disabled={!(Object.keys(touched).length || this.state.changedForm)}
                         primary
                         size='large'
                         inputProps={{ type: 'button' }}
-                        onClick={() => validateForm(values).then(r => {
 
-                          //if (!Object.keys(r).length) {
-                            //this.switchToErrors(Object.keys(r))
-                            this.submitForm(values, setSubmitting, setTouched)
-                          //}
-                        })}
                         data-test='sidebar_inventory_save_new'>
                         {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-                      </Button>
+                      </Button.Submit>
                     </GridColumn>
                   </GridRow>
                 </Grid>

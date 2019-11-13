@@ -44,6 +44,8 @@ const ScrollableSegment = styled(Segment)`
   overflow-y: auto;
 `
 
+const enableSideProductEdit = true
+
 const tables = {
   'Units of Measure': <UnitOfMeasureTable />,
   'Units of Packaging': <UnitOfPackagingTable />,
@@ -151,7 +153,7 @@ const editForms = {
   'Companies': <CompaniesForm />,
   'Document Types': <EditPopup1Parameter />,
   'Market Segments': <EditPopup1Parameter />,
-  //'Product Catalog': <EchoProductForm />   // ! ! smazat az bude hotove nove edit okno (AddEditEchoProduct)
+  'Product Catalog': enableSideProductEdit ? null : (<EchoProductForm />)  // ! ! smazat az bude hotove nove edit okno (AddEditEchoProduct)
 }
 
 const edit2Forms = {
@@ -170,7 +172,7 @@ const addForms = {
   'Companies': <CompaniesForm />,
   'Document Types': <AddNewPopup1Parameter />,
   'Market Segments': <AddNewPopup1Parameter />,
-  //'Product Catalog': <EchoProductForm />   // ! ! smazat az bude hotove nove edit okno (AddEditEchoProduct)
+  'Product Catalog': enableSideProductEdit ? null : (<EchoProductForm />)   // ! ! smazat az bude hotove nove edit okno (AddEditEchoProduct)
 }
 
 const importForm = {
@@ -231,7 +233,7 @@ class Admin extends Component {
             </Grid.Row>
           </Grid>
         </Container>
-        <AddEditEchoProduct tabName={'Product Catalog'}/>
+        {enableSideProductEdit && (<AddEditEchoProduct tabName={'Product Catalog'}/>)}
       </DatagridProvider>
     )
   }

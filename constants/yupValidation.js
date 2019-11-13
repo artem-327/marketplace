@@ -13,7 +13,7 @@ export const errorMessages = {
   invalidString: <FormattedMessage id='validation.invalidString' defaultMessage='Invalid value' />,
   invalidEmail: <FormattedMessage id='validation.invalidEmail' defaultMessage='Invalid e-mail address' />,
   invalidDate: <FormattedMessage id='validation.invalidDate' defaultMessage='Invalid date' />,
-  mustBeNumber: <FormattedMessage id='validation.mustBeNumber' defaultMessage='Must be an number' />,
+  mustBeNumber: <FormattedMessage id='validation.mustBeNumber' defaultMessage='Must be n number' />,
   lotHasToBeSelected: <FormattedMessage id='validation.lostHasToBeSelected' defaultMessage='Lot has to be selected' />,
   lotUnique: <FormattedMessage id='validation.lotUnique' defaultMessage='Lot has to be unique' />,
   requiredMessage: <FormattedMessage id='validation.required' defaultMessage='Required' />,
