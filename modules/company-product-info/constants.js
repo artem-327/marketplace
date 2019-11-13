@@ -16,6 +16,29 @@ export const tabs = [
       defaultMessage: 'Transportation(EP)'
     },
     key: 'transportation'
+  },
+  {
+    text: { id: 'global.ep.documents', defaultMessage: 'Documents(EP)' },
+    key: 'documents'
+  }
+]
+
+export const tabsMarketPlace = [
+  { text: { id: 'global.ep.info', defaultMessage: 'Info(EP)' }, key: 'info' },
+  {
+    text: { id: 'global.ep.properties', defaultMessage: 'Properties(EP)' },
+    key: 'properties'
+  },
+  {
+    text: { id: 'global.ep.regulatory', defaultMessage: 'Regulatory(EP)' },
+    key: 'regulatory'
+  },
+  {
+    text: {
+      id: 'global.ep.transportation',
+      defaultMessage: 'Transportation(EP)'
+    },
+    key: 'transportation'
   }
 ]
 
@@ -170,15 +193,27 @@ export const echoProductGrouping = [
   }
 ]
 
-export const groupActions = (rows, companyProductId, callback) => {
+export const groupActions = (
+  fromMarketPlace,
+  rows,
+  companyProductId,
+  callback
+) => {
   let companyProduct = rows.find(el => el.companyProduct.id == companyProductId)
 
   if (!companyProduct || companyProduct.cfStatus === 'Unmapped') return []
 
-  return tabs.map((tab, i) => ({
-    text: tab.text,
-    callback: () => callback(companyProduct, i)
-  }))
+  if (fromMarketPlace) {
+    return tabsMarketPlace.map((tab, i) => ({
+      text: tab.text,
+      callback: () => callback(companyProduct, i)
+    }))
+  } else {
+    return tabs.map((tab, i) => ({
+      text: tab.text,
+      callback: () => callback(companyProduct, i)
+    }))
+  }
 }
 
 export const yesNoOptions = {

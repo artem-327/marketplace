@@ -22,17 +22,125 @@ class Marketplace extends Component {
       { name: 'productName', disabled: true },
       { name: 'productNumber', disabled: true },
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
-      { name: 'available', title: <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs'>{(text) => text}</FormattedMessage>, width: 140, sortPath: 'ProductOffer.pkgAvailable' },
-      { name: 'packaging', title: <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging'>{(text) => text}</FormattedMessage>, width: 140 },
-      { name: 'quantity', title: <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>{(text) => text}</FormattedMessage>, width: 140, sortPath: 'ProductOffer.quantity' },
-      { name: 'fobPrice', title: <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>{(text) => text}</FormattedMessage>, width: 160, sortPath: 'ProductOffer.cfPricePerUOM' },
-      { name: 'manufacturer', title: <FormattedMessage id='marketplace.manufacturer' defaultMessage='Manufacturer'>{(text) => text}</FormattedMessage>, width: 220, sortPath: 'ProductOffer.companyProduct.echoProduct.manufacturer.name' },
-      { name: 'origin', title: <FormattedMessage id='marketplace.origin' defaultMessage='Origin'>{(text) => text}</FormattedMessage>, width: 120, sortPath: 'ProductOffer.origin.name' },
-      { name: 'expiration', title: <FormattedMessage id='marketplace.expirationDate' defaultMessage='Expiration Date'>{(text) => text}</FormattedMessage>, width: 120, sortPath: 'ProductOffer.lotExpirationDate' },
-      { name: 'assay', title: <FormattedMessage id='marketplace.assay' defaultMessage='Assay'>{(text) => text}</FormattedMessage>, width: 100 },
-      { name: 'condition', title: <FormattedMessage id='marketplace.condition' defaultMessage='Condition'>{(text) => text}</FormattedMessage>, width: 100, sortPath: 'ProductOffer.condition.name' },
-      { name: 'form', title: <FormattedMessage id='marketplace.form' defaultMessage='Form'>{(text) => text}</FormattedMessage>, width: 100, sortPath: 'ProductOffer.productForm.name' },
-      { name: 'location', title: <FormattedMessage id='marketplace.location' defaultMessage='Location'>{(text) => text}</FormattedMessage>, width: 160 }
+      {
+        name: 'available',
+        title: (
+          <FormattedMessage
+            id='marketplace.available'
+            defaultMessage='Available PKGs'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 140,
+        sortPath: 'ProductOffer.pkgAvailable'
+      },
+      {
+        name: 'packaging',
+        title: (
+          <FormattedMessage
+            id='marketplace.packaging'
+            defaultMessage='Packaging'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 140
+      },
+      {
+        name: 'quantity',
+        title: (
+          <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 140,
+        sortPath: 'ProductOffer.quantity'
+      },
+      {
+        name: 'fobPrice',
+        title: (
+          <FormattedMessage
+            id='marketplace.fobPrice'
+            defaultMessage='FOB Price'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160,
+        sortPath: 'ProductOffer.cfPricePerUOM'
+      },
+      {
+        name: 'manufacturer',
+        title: (
+          <FormattedMessage
+            id='marketplace.manufacturer'
+            defaultMessage='Manufacturer'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 220,
+        sortPath: 'ProductOffer.companyProduct.echoProduct.manufacturer.name'
+      },
+      {
+        name: 'origin',
+        title: (
+          <FormattedMessage id='marketplace.origin' defaultMessage='Origin'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120,
+        sortPath: 'ProductOffer.origin.name'
+      },
+      {
+        name: 'expiration',
+        title: (
+          <FormattedMessage
+            id='marketplace.expirationDate'
+            defaultMessage='Expiration Date'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120,
+        sortPath: 'ProductOffer.lotExpirationDate'
+      },
+      {
+        name: 'assay',
+        title: (
+          <FormattedMessage id='marketplace.assay' defaultMessage='Assay'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 100
+      },
+      {
+        name: 'condition',
+        title: (
+          <FormattedMessage
+            id='marketplace.condition'
+            defaultMessage='Condition'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 100,
+        sortPath: 'ProductOffer.condition.name'
+      },
+      {
+        name: 'form',
+        title: (
+          <FormattedMessage id='marketplace.form' defaultMessage='Form'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 100,
+        sortPath: 'ProductOffer.productForm.name'
+      },
+      {
+        name: 'location',
+        title: (
+          <FormattedMessage id='marketplace.location' defaultMessage='Location'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160
+      }
     ],
     selectedRows: [],
     pageNumber: 0,
@@ -56,33 +164,40 @@ class Marketplace extends Component {
       condition: r.condition ? (
         <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
       ) : (
-          <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
-        ),
-      packaging: <>{`${r.packagingSize} ${r.packagingUnit} `}<CapitalizedText>{r.packagingType}</CapitalizedText> </>,
+        <FormattedMessage
+          id='global.nonConforming'
+          defaultMessage='Non Conforming'
+        />
+      ),
+      packaging: (
+        <>
+          {`${r.packagingSize} ${r.packagingUnit} `}
+          <CapitalizedText>{r.packagingType}</CapitalizedText>{' '}
+        </>
+      )
     }))
   }
 
-  tableRowClicked = (clickedId) => {
+  tableRowClicked = clickedId => {
     const { getProductOffer, sidebarChanged } = this.props
     let { isOpen, id } = this.props.sidebar
     getProductOffer(clickedId)
 
-    if (id !== clickedId && id) sidebarChanged({ isOpen: true, id: clickedId, quantity: 1 })
+    if (id !== clickedId && id)
+      sidebarChanged({ isOpen: true, id: clickedId, quantity: 1 })
     else sidebarChanged({ isOpen: !isOpen, id: clickedId, quantity: 1 })
-
   }
 
   handleFilterApply = filter => {
     this.props.datagrid.setFilter(filter)
   }
 
-
   handleFilterClear = () => {
     this.props.applyFilter({ filters: [] })
     this.props.datagrid.setFilter({ filters: [] })
   }
 
-  removeFilter = (indexes) => {
+  removeFilter = indexes => {
     let { datagrid, appliedFilter } = this.props
 
     indexes.forEach((index, i) => {
@@ -90,15 +205,19 @@ class Marketplace extends Component {
       appliedFilter.filters.splice(index - i, 1)
     })
 
-
     this.props.applyFilter(appliedFilter)
     datagrid.setFilter(datagrid.filters)
   }
 
-
-
   render() {
-    const { datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading, openPopup } = this.props
+    const {
+      datagrid,
+      intl,
+      getAutocompleteData,
+      autocompleteData,
+      autocompleteDataLoading,
+      openPopup
+    } = this.props
     const { columns, selectedRows } = this.state
     const rows = this.getRows()
 
@@ -112,21 +231,27 @@ class Marketplace extends Component {
               open: this.state.open,
               closeModal: () => this.setState({ open: false })
             }}
-            productOfferIds={rows.reduce(function (filtered, row, rowIndex) {
+            productOfferIds={rows.reduce(function(filtered, row, rowIndex) {
               if (selectedRows.includes(rowIndex)) {
                 filtered.push(row.id)
               }
               return filtered
             }, [])}
-            productOffersSelected={rows.reduce(function (filtered, row, rowIndex) {
+            productOffersSelected={rows.reduce(function(
+              filtered,
+              row,
+              rowIndex
+            ) {
               if (selectedRows.includes(rowIndex)) {
                 filtered.push({
                   id: row.id,
                   min: row.minPkg,
                   split: row.splitPkg
-                })}
+                })
+              }
               return filtered
-            }, [])}
+            },
+            [])}
             removePopup={this.props.removePopup}
             {...this.props}
           />
@@ -134,24 +259,44 @@ class Marketplace extends Component {
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
-                <FormattedMessage id='allInventory.marketplace' defaultMessage='MARKETPLACE' />
+                <FormattedMessage
+                  id='allInventory.marketplace'
+                  defaultMessage='MARKETPLACE'
+                />
               </Header>
             </Menu.Item>
 
             <Menu.Menu position='right'>
               <Menu.Item>
-                <FilterTags filters={datagrid.filters} onClick={this.removeFilter} data-test='marketplace_remove_filter' />
+                <FilterTags
+                  filters={datagrid.filters}
+                  onClick={this.removeFilter}
+                  data-test='marketplace_remove_filter'
+                />
               </Menu.Item>
               <Popup
                 wide='very'
                 data-test='array_to_multiple_list'
-                content={<FormattedMessage id='marketplace.shippingQuoteTooltip' defaultMessage='Select one or more ProudctOffers to calculate a Shipping Quote. Multiple ProductOffers can be choosed only if they are at the same Location.' />}
+                content={
+                  <FormattedMessage
+                    id='marketplace.shippingQuoteTooltip'
+                    defaultMessage='Select one or more ProudctOffers to calculate a Shipping Quote. Multiple ProductOffers can be choosed only if they are at the same Location.'
+                  />
+                }
                 disabled={selectedRows.length !== 0}
                 position='bottom right'
                 trigger={
                   <div>
-                    <Button disabled={selectedRows.length === 0} primary onClick={() => this.setState({ open: true })} data-test='marketplace_shipping_quote_btn'>
-                      <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>{(text) => text}</FormattedMessage>
+                    <Button
+                      disabled={selectedRows.length === 0}
+                      primary
+                      onClick={() => this.setState({ open: true })}
+                      data-test='marketplace_shipping_quote_btn'>
+                      <FormattedMessage
+                        id='allInventory.shippingQuote'
+                        defaultMessage='Shipping Quote'>
+                        {text => text}
+                      </FormattedMessage>
                     </Button>
                   </div>
                 }
@@ -164,9 +309,21 @@ class Marketplace extends Component {
         </Container>
         <div class='flex stretched' style={{ padding: '10px 32px' }}>
           <ProdexGrid
-            groupActions={(row) => {
+            groupActions={row => {
               let values = row.key.split('_')
-              return groupActions(rows, values[values.length - 1], openPopup).map((a) => ({ ...a, text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage> }))
+              return groupActions(
+                true,
+                rows,
+                values[values.length - 1],
+                openPopup
+              ).map(a => ({
+                ...a,
+                text: (
+                  <FormattedMessage {...a.text}>
+                    {text => text}
+                  </FormattedMessage>
+                )
+              }))
             }}
             tableName='marketplace_grid'
             {...datagrid.tableProps}
@@ -190,7 +347,9 @@ class Marketplace extends Component {
               return (
                 <span>
                   {children}
-                  <span style={{ color: '#2599d5' }}>{name ? name : 'Unmapped'}</span>
+                  <span style={{ color: '#2599d5' }}>
+                    {name ? name : 'Unmapped'}
+                  </span>
                   <span className='right'>Product offerings: {count}</span>
                 </span>
               )
@@ -205,7 +364,13 @@ class Marketplace extends Component {
             }}*/
             data-test='marketplace_row_action'
             rowActions={[
-              { text: formatMessage({ id: 'marketplace.buy', defaultMessage: 'Buy Product Offer' }), callback: (row) => this.tableRowClicked(row.id) }
+              {
+                text: formatMessage({
+                  id: 'marketplace.buy',
+                  defaultMessage: 'Buy Product Offer'
+                }),
+                callback: row => this.tableRowClicked(row.id)
+              }
             ]}
           />
         </div>
@@ -217,7 +382,9 @@ class Marketplace extends Component {
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}
           savedUrl='/prodex/api/product-offers/broadcasted/datagrid/saved-filters'
-          searchUrl={(text) => `/prodex/api/company-products/broadcasted/search?pattern=${text}&onlyMapped=true`}
+          searchUrl={text =>
+            `/prodex/api/company-products/broadcasted/search?pattern=${text}&onlyMapped=true`
+          }
           apiUrl={datagrid.apiUrl}
           filters={datagrid.filters}
         />
