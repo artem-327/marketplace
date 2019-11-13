@@ -16,12 +16,11 @@ const StyledButton = styled(Button)`
 class ConfirmationPage extends Component {
   render() {
     const { csvImportError, reloadFilter } = this.props
-
     return (
       <Grid centered padded>
         {csvImportError &&
-        csvImportError.failedRecords &&
-        csvImportError.failedRecords.length > 0 ? (
+        csvImportError.failureReports &&
+        csvImportError.failureReports.length > 0 ? (
           <React.Fragment>
             <Grid.Row>
               <FormattedMessage
@@ -29,7 +28,7 @@ class ConfirmationPage extends Component {
                 defaultMessage='Import Failed'
               />
             </Grid.Row>
-            {csvImportError.failedRecords.map((error, i) => (
+            {csvImportError.failureReports.map((error, i) => (
               <Grid.Row key={i}>
                 <FormattedMessage
                   id='import.errorAtLine'
