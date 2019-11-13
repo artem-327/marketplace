@@ -27,10 +27,7 @@ Router.events.on('routeChangeError', () => NProgress.done())
 class ProdexApp extends App {
   componentDidMount() {
     if (gtmId) {
-      console.log('GTM initialized, GTM ID: ' + gtmId)
       TagManager.initialize(tagManagerArgs)
-    } else {
-      console.log('GTM not initialized, GTM ID: ' + gtmId)
     }
   }
 

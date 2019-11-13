@@ -40,9 +40,11 @@ import Router from 'next/router'
 
 import { addTab, tabChanged, resetSettings, loadLogo } from '../actions'
 
-
 import { updateCompany } from '~/modules/auth/actions'
-import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
+import {
+  postCompanyLogo,
+  deleteCompanyLogo
+} from '~/modules/company-form/actions'
 import { validationSchema } from '~/modules/company-form/constants'
 
 import { DatagridProvider } from '~/modules/datagrid'
@@ -59,7 +61,6 @@ const ScrollableSegment = styled(Segment)`
 `
 
 class Settings extends Component {
-
   state = {
     companyLogo: null
   }
@@ -69,23 +70,43 @@ class Settings extends Component {
   }
 
   componentDidMount() {
-    let { isCompanyAdmin, addTab, tabsNames, tabChanged, currentTab } = this.props
+    let {
+      isCompanyAdmin,
+      addTab,
+      tabsNames,
+      tabChanged,
+      currentTab
+    } = this.props
     if (isCompanyAdmin) addTab(companyDetailsTab)
-    let queryTab = (Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) : false) || (isCompanyAdmin ? companyDetailsTab : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
+    let queryTab =
+      (Router && Router.router
+        ? tabsNames.find(tab => tab.type === Router.router.query.type)
+        : false) ||
+      (isCompanyAdmin
+        ? companyDetailsTab
+        : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
 
     if (!queryTab.type !== currentTab.type) tabChanged(queryTab)
   }
 
-  companyUpdated = (name) => {
+  companyUpdated = name => {
     let { toastManager } = this.props
 
     toastManager.add(
       <div>
-        <strong><FormattedMessage id='notifications.companyUpdated' defaultMessage='Company updated' values={{ name }} /></strong>
-      </div>, { appearance: 'success', pauseOnHover: true })
+        <strong>
+          <FormattedMessage
+            id='notifications.companyUpdated'
+            defaultMessage='Company updated'
+            values={{ name }}
+          />
+        </strong>
+      </div>,
+      { appearance: 'success', pauseOnHover: true }
+    )
   }
 
-  selectLogo = (logo) => {
+  selectLogo = logo => {
     this.setState({ companyLogo: logo })
   }
 
@@ -107,30 +128,52 @@ class Settings extends Component {
               try {
                 const { updateCompany } = this.props
 
-                await updateCompany(values.id, { ...values, businessType: values.businessType.id })
+                await updateCompany(values.id, {
+                  ...values,
+                  businessType: values.businessType.id
+                })
                 if (companyLogo) {
                   await postCompanyLogo(values.id, companyLogo)
                 } else {
-                  if (values.hasLogo)
-                    await deleteCompanyLogo(values.id)
+                  if (values.hasLogo) await deleteCompanyLogo(values.id)
                 }
                 companyUpdated(values.name)
               } catch (err) {
                 console.error(err)
-              }
-              finally {
+              } finally {
                 setSubmitting(false)
               }
-            }}
-          >
-            {({ values, errors, setFieldValue, setFieldTouched, touched, isSubmitting }) => {
+            }}>
+            {({
+              values,
+              errors,
+              setFieldValue,
+              setFieldTouched,
+              touched,
+              isSubmitting
+            }) => {
               return (
                 <Segment basic>
-                  <CompanyForm selectLogo={selectLogo} removeLogo={removeLogo} companyLogo={this.state.companyLogo} values={values} setFieldValue={setFieldValue}
-                               setFieldTouched={setFieldTouched} errors={errors} touched={touched} isSubmitting={isSubmitting}/>
+                  <CompanyForm
+                    selectLogo={selectLogo}
+                    removeLogo={removeLogo}
+                    companyLogo={this.state.companyLogo}
+                    values={values}
+                    setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched}
+                    errors={errors}
+                    touched={touched}
+                    isSubmitting={isSubmitting}
+                  />
                   <Grid>
                     <GridColumn floated='right' computer={4}>
-                      <Button.Submit fluid data-test='company_details_submit_btn'><FormattedMessage id='global.save'>{(text) => text}</FormattedMessage></Button.Submit>
+                      <Button.Submit
+                        fluid
+                        data-test='company_details_submit_btn'>
+                        <FormattedMessage id='global.save'>
+                          {text => text}
+                        </FormattedMessage>
+                      </Button.Submit>
                     </GridColumn>
                   </Grid>
                 </Segment>
@@ -138,48 +181,51 @@ class Settings extends Component {
             }}
           </Form>
         </GridColumn>
-      </TopMargedGrid >
+      </TopMargedGrid>
     )
   }
 
   renderContent = () => {
-    const { action, actionId, currentTab,
-      isOpenPopup, isOpenImportPopup, isOpenUploadDocumentsPopup,
-      isDwollaOpenPopup } = this.props
-
-
+    const {
+      action,
+      actionId,
+      currentTab,
+      isOpenPopup,
+      isOpenImportPopup,
+      isOpenUploadDocumentsPopup,
+      isDwollaOpenPopup
+    } = this.props
 
     const tables = {
       'company-details': this.companyDetails(),
-      'users': <UsersTable />,
-      'branches': <WarehouseTable />,
-      'warehouses': <WarehouseTable />,
-      'products': <ProductCatalogTable />,
+      users: <UsersTable />,
+      branches: <WarehouseTable />,
+      warehouses: <WarehouseTable />,
+      products: <ProductCatalogTable />,
       'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
       'delivery-addresses': <DeliveryAddressesTable />,
-      'logistics': <LogisticsTable />,
+      logistics: <LogisticsTable />,
       'system-settings': (
         <ScrollableSegment basic padded='very'>
           <SystemSettings asModal={false} inputsInGroup={3} role='company' />
         </ScrollableSegment>
       ),
-      'documents': <DocumentsTable />
+      documents: <DocumentsTable />
     }
 
     const popupForm = {
-      'users': <EditUsersPopup />,
-      'branches': <EditWarehousePopup />,
-      'warehouses': <EditWarehousePopup />,
-      'products': <EditProductPopup />,
+      users: <EditUsersPopup />,
+      branches: <EditWarehousePopup />,
+      warehouses: <EditWarehousePopup />,
+      products: <EditProductPopup />,
       'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsPopup />,
       'credit-cards': <CreditCardsPopup />,
       'delivery-addresses': <DeliveryAddressesPopup />,
-      'logistics': <LogisticsPopup />,
-      'documents': <DocumentsPopup />
-
+      logistics: <LogisticsPopup />,
+      documents: <DocumentsPopup />
     }
 
     const importForm = {
@@ -194,14 +240,15 @@ class Settings extends Component {
       'bank-accounts': <BankAccountsUploadDocPopup />
     }
 
-
     return (
       <>
         {isOpenPopup && popupForm[currentTab.type]}
         {isOpenImportPopup && importForm[currentTab.type]}
         {isOpenUploadDocumentsPopup && uploadDocForms[currentTab.type]}
         {/* {isDwollaOpenPopup && addDwollaForms[currentTab.type] && Router.push('/dwolla-register')} */}
-        {tables[currentTab.type] || <p>This page is still under construction</p>}
+        {tables[currentTab.type] || (
+          <p>This page is still under construction</p>
+        )}
       </>
     )
   }
@@ -210,47 +257,103 @@ class Settings extends Component {
     const { currentTab } = this.props
     const datagridApiMap = {
       // 'company-details': this.companyDetails(),
-      'users': {
+      users: {
         url: `/prodex/api/users/datagrid`,
-        searchToFilter: v => v ? ([
-          { operator: 'LIKE', path: 'User.name', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'User.homeBranch.deliveryAddress.contactName', values: [`%${v}%`] },
-          // { operator: 'LIKE', path: '', values: [`%${v}%`] }, // TODO here should be User.jobTitle but BE doesn't seem to have it as filterable field...
-        ]) : [],
+        searchToFilter: v =>
+          v
+            ? [
+                { operator: 'LIKE', path: 'User.name', values: [`%${v}%`] },
+                {
+                  operator: 'LIKE',
+                  path: 'User.homeBranch.deliveryAddress.contactName',
+                  values: [`%${v}%`]
+                }
+                // { operator: 'LIKE', path: '', values: [`%${v}%`] }, // TODO here should be User.jobTitle but BE doesn't seem to have it as filterable field...
+              ]
+            : [],
         params: {
           orOperator: true
         }
       },
-      'branches': {
+      branches: {
         url: `/prodex/api/branches/datagrid`,
-        searchToFilter: v => v ? ([
-          { operator: 'LIKE', path: 'Branch.deliveryAddress.addressName', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'Branch.deliveryAddress.address.streetAddress', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'Branch.deliveryAddress.contactName', values: [`%${v}%`] },
-        ]) : [],
+        searchToFilter: v =>
+          v
+            ? [
+                {
+                  operator: 'LIKE',
+                  path: 'Branch.deliveryAddress.addressName',
+                  values: [`%${v}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'Branch.deliveryAddress.address.streetAddress',
+                  values: [`%${v}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'Branch.deliveryAddress.contactName',
+                  values: [`%${v}%`]
+                }
+              ]
+            : [],
         params: {
           orOperator: true
         }
       },
-      'warehouses': {
+      warehouses: {
         url: `/prodex/api/branches/warehouses/datagrid`,
-        searchToFilter: v => v ? ([
-          { operator: 'LIKE', path: 'Branch.deliveryAddress.addressName', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'Branch.deliveryAddress.address.streetAddress', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'Branch.deliveryAddress.contactName', values: [`%${v}%`] },
-        ]) : [],
+        searchToFilter: v =>
+          v
+            ? [
+                {
+                  operator: 'LIKE',
+                  path: 'Branch.deliveryAddress.addressName',
+                  values: [`%${v}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'Branch.deliveryAddress.address.streetAddress',
+                  values: [`%${v}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'Branch.deliveryAddress.contactName',
+                  values: [`%${v}%`]
+                }
+              ]
+            : [],
         params: {
           orOperator: true
         }
       },
-      'products': {
+      products: {
         url: `/prodex/api/company-products/datagrid`,
-        searchToFilter: v => v ? ([
-          { operator: 'LIKE', path: 'CompanyProduct.intProductName', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'CompanyProduct.intProductCode', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'CompanyProduct.echoProduct.name', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'CompanyProduct.echoProduct.code', values: [`%${v}%`] },
-        ]) : [],
+        searchToFilter: v =>
+          v
+            ? [
+                {
+                  operator: 'LIKE',
+                  path: 'CompanyProduct.intProductName',
+                  values: [`%${v}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'CompanyProduct.intProductCode',
+                  values: [`%${v}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'CompanyProduct.echoProduct.name',
+                  values: [`%${v}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'CompanyProduct.echoProduct.code',
+                  values: [`%${v}%`]
+                }
+              ]
+            : [],
         params: {
           orOperator: true
         }
@@ -259,18 +362,40 @@ class Settings extends Component {
       // 'credit-cards': null,
       'delivery-addresses': {
         url: '/prodex/api/delivery-addresses/datagrid',
-        searchToFilter: v => v ? ([
-          { operator: 'LIKE', path: 'DeliveryAddress.address.streetAddress', values: [`%${v}%`] }
-        ]) : []
+        searchToFilter: v =>
+          v
+            ? [
+                {
+                  operator: 'LIKE',
+                  path: 'DeliveryAddress.address.streetAddress',
+                  values: [`%${v}%`]
+                }
+              ]
+            : []
       },
 
-      'documents': {
+      documents: {
         url: '/prodex/api/attachments/datagrid/',
-        searchToFilter: v => v ? ([
-          { operator: 'LIKE', path: 'Attachment.name', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'Attachment.customName', values: [`%${v}%`] },
-          { operator: 'LIKE', path: 'Attachment.documentType.name', values: [`%${v}%`] }
-        ]) : [],
+        searchToFilter: v =>
+          v
+            ? [
+                {
+                  operator: 'LIKE',
+                  path: 'Attachment.name',
+                  values: [`%${v}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'Attachment.customName',
+                  values: [`%${v}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'Attachment.documentType.name',
+                  values: [`%${v}%`]
+                }
+              ]
+            : [],
         params: {
           orOperator: true
         }
@@ -289,12 +414,20 @@ class Settings extends Component {
           <Container fluid style={{ padding: '0 1.5vh' }}>
             <TablesHandlers currentTab={currentTab} />
           </Container>
-          <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
+          <Grid
+            columns='equal'
+            className='flex stretched'
+            style={{ padding: '0 1.5vh' }}>
             <Grid.Row>
               <Grid.Column width={3}>
-                <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />
+                <Tabs
+                  currentTab={currentTab}
+                  isCompanyAdmin={this.props.isCompanyAdmin}
+                />
               </Grid.Column>
-              <Grid.Column className='flex stretched' style={{ marginTop: '10px' }}>
+              <Grid.Column
+                className='flex stretched'
+                style={{ marginTop: '10px' }}>
                 {this.renderContent()}
               </Grid.Column>
             </Grid.Row>
@@ -306,15 +439,19 @@ class Settings extends Component {
 }
 
 const mapStateToProps = ({ settings, auth }) => {
-
   return {
     ...settings,
     isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
-    company: auth.identity ? auth.identity.company : null,
+    company: auth.identity ? auth.identity.company : null
   }
 }
 
-export default connect(
-  mapStateToProps,
-  { addTab, updateCompany, tabChanged, resetSettings, loadLogo, postCompanyLogo, deleteCompanyLogo }
-)(withToastManager(Settings))
+export default connect(mapStateToProps, {
+  addTab,
+  updateCompany,
+  tabChanged,
+  resetSettings,
+  loadLogo,
+  postCompanyLogo,
+  deleteCompanyLogo
+})(withToastManager(Settings))

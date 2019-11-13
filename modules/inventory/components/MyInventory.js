@@ -579,6 +579,7 @@ class MyInventory extends Component {
             groupActions={row => {
               let values = row.key.split('_')
               return groupActions(
+                false,
                 rows,
                 values[values.length - 1],
                 openPopup

@@ -172,22 +172,24 @@ class TablesHandlers extends Component {
             />
           </GridColumn>
         )}
-        <GridColumn
-          floated={currentTab.type !== 'documents' && 'right'}
-          widescreen={7}
-          computer={5}
-          tablet={4}>
-          <Input
-            fluid
-            icon='search'
-            value={filterValue}
-            placeholder={formatMessage({
-              id: textsTable[currentTab.type].SearchText,
-              defaultMessage: 'Select Credit Card'
-            })}
-            onChange={this.handleFilterChange}
-          />
-        </GridColumn>
+        {currentTab.type !== 'global-broadcast' && (
+          <GridColumn
+            floated={currentTab.type !== 'documents' && 'right'}
+            widescreen={7}
+            computer={5}
+            tablet={4}>
+            <Input
+              fluid
+              icon='search'
+              value={filterValue}
+              placeholder={formatMessage({
+                id: textsTable[currentTab.type].SearchText,
+                defaultMessage: 'Select Credit Card'
+              })}
+              onChange={this.handleFilterChange}
+            />
+          </GridColumn>
+        )}
 
         {currentTab.type === 'products' && (
           <GridColumn computer={2} tablet={3}>
@@ -315,8 +317,7 @@ const mapStateToProps = state => {
 }
 
 export default withDatagrid(
-  connect(
-    mapStateToProps,
-    { ...Actions, openGlobalBroadcast }
-  )(injectIntl(TablesHandlers))
+  connect(mapStateToProps, { ...Actions, openGlobalBroadcast })(
+    injectIntl(TablesHandlers)
+  )
 )
