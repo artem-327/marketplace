@@ -17,7 +17,6 @@ const asignFiltersDescription = (filter, params) => {
     filters.forEach(filter => {
       datagridKeys.forEach(key => {
         let datagrid = datagridValues[key]
-
         if (datagrid.paths.includes(filter.path) && datagrid.operator === filter.operator) {
           filter.description = datagrid.description
           filter.valuesDescription = datagridValues[key].valuesDescription(filter.values, params)

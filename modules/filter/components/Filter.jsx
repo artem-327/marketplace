@@ -36,7 +36,8 @@ import {
   WhiteSegment, GraySegment,
   Title, BottomMargedDropdown,
   LessPaddedRow, SaveFilterRow,
-  SaveFilterTitle, SaveFilterClose
+  SaveFilterTitle, SaveFilterClose,
+  StyledGrid, SmallerTextColumn
 } from '../constants/layout'
 
 class Filter extends Component {
@@ -104,7 +105,7 @@ class Filter extends Component {
     }
 
     let keys = Object.keys(inputs)
-
+    
     keys.forEach((key) => {
       if (inputs[key] && inputs[key] !== '' && Object.keys(inputs[key]).length > 0) {
 
@@ -167,7 +168,7 @@ class Filter extends Component {
 
     async function callback(id) {
       let requestData = self.generateRequestData(params)
-
+ 
       if (id) await self.props.updateFilter(id, requestData)
       else {
 
@@ -445,21 +446,28 @@ class Filter extends Component {
 
   getOptions = (options) => {
 
-    return options.map(option => ({
-      key: option.key,
-      text: option.text,
-      value: option.value,
-      // content: (
-      //   <Header style={{ fontSize: '1em' }}>
-      //     <Header.Content>
-      //       {`${option.content.productCode ? option.content.productCode : ''} ${option.content.productName ? option.content.productName : ''}`}
-      //       {option.content.casProducts.map(cp => (
-      //         <Header.Subheader>{`${getSafe(() => cp.casProduct.casNumber, '')} ${getSafe(() => cp.displayName, '')}`}</Header.Subheader>
-      //       ))}
-      //     </Header.Content>
-      //   </Header>
-      // )
-    }))
+    return options.map(option => {
+      let parsed = JSON.parse(option.value)
+
+      return ({
+        key: option.key,
+        text: option.text,
+        value: option.value,
+        content: (
+          <StyledGrid>
+            <GridRow>
+              <GridColumn computer={8}>
+                {parsed.name}
+              </GridColumn>
+
+              <SmallerTextColumn computer={8} textAlign='right'>
+                {parsed.casNumber}
+              </SmallerTextColumn>
+            </GridRow>
+          </StyledGrid>
+        )
+      })
+    })
 
   }
 
@@ -483,13 +491,13 @@ class Filter extends Component {
 
     if (this.state.searchQuery.length <= 1) noResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
     if (autocompleteDataLoading) noResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
-
+   
     let dropdownProps = {
       search: (val) => val,
       selection: true,
       multiple: true,
       fluid: true,
-      options: this.getOptions(uniqueArrayByKey(savedAutocompleteData.concat(autocompleteData), 'id')),
+      options: this.getOptions(uniqueArrayByKey(autocompleteData.concat(savedAutocompleteData), 'key')),
       loading: autocompleteDataLoading,
       name: 'search',
       placeholder: <FormattedMessage id='filter.searchProducts' defaultMessage='Search Products' />,
@@ -718,7 +726,6 @@ class Filter extends Component {
           this.submitForm = props.submitForm
           this.resetForm = props.resetForm
           this.setFieldValue = props.setFieldValue
-
           return (
             <FlexSidebar
               visible={isOpen}

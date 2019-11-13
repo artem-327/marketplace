@@ -119,7 +119,7 @@ export const datagridValues = {
     },
 
     toFormik: function ({ values }) {
-      return JSON.stringify({ id: parseInt(values[0].value), name: values[0].description, text: values[0].description})
+      return JSON.stringify({ id: parseInt(values[0].value), name: values[0].description, text: values[0].description })
     }
   },
 
@@ -129,7 +129,6 @@ export const datagridValues = {
     operator: operators.EQUALS,
 
     toFilter: function (values, filterType = filterTypes.INVENTORY) {
-
       let modifiedValues = values.map((val) => {
         let parsed = JSON.parse(val)
         return {
@@ -138,6 +137,7 @@ export const datagridValues = {
         }
       })
 
+     
 
       switch (filterType) {
         case filterTypes.INVENTORY: {
@@ -153,7 +153,7 @@ export const datagridValues = {
         default: break
 
       }
-      
+
       return {
         operator: this.operator,
         path,

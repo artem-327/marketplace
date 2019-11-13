@@ -421,11 +421,11 @@ export default function reducer(state = initialState, action) {
           return {
             ...el,
             key: el.id,
-            text: `${productCode} ${productName}`,
+            text: `${productName} ${productCode}`,
             value: JSON.stringify({
               id: el.id,
-              name: getSafe(() => el.echoProduct.elements[0].casProduct.chemicalName, ''),
-              casNumber: getSafe(() => el.echoProduct.elements[0].casProduct.casNumber, '')
+              name: productName,
+              casNumber: productCode
             }),
             content: {
               productCode: productCode,

@@ -41,11 +41,16 @@ export default function reducer(state = initialState, action) {
         autocompleteData: uniqueArrayByKey(payload, 'id').map((el) => {
           const productCode = getSafe(() => el.intProductCode, '')
           const productName = getSafe(() => el.intProductName, '')
+          
           return {
             ...el,
             key: el.id,
-            text: `${productCode} ${productName}`,
-            value: JSON.stringify({ id: el.id, name: el.echoProduct.elements[0].casProduct.chemicalName, casNumber: el.echoProduct.elements[0].casProduct.casNumber }),
+            text: `${productName} ${productCode} `,
+            value: JSON.stringify({
+              id: el.id,
+              name: productName,
+              casNumber: productCode
+            }),
             content: {
               productCode: productCode,
               productName: productName,
