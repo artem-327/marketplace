@@ -105,7 +105,7 @@ class Filter extends Component {
     }
 
     let keys = Object.keys(inputs)
-    
+
     keys.forEach((key) => {
       if (inputs[key] && inputs[key] !== '' && Object.keys(inputs[key]).length > 0) {
 
@@ -168,7 +168,7 @@ class Filter extends Component {
 
     async function callback(id) {
       let requestData = self.generateRequestData(params)
- 
+
       if (id) await self.props.updateFilter(id, requestData)
       else {
 
@@ -491,7 +491,7 @@ class Filter extends Component {
 
     if (this.state.searchQuery.length <= 1) noResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
     if (autocompleteDataLoading) noResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
-   
+
     let dropdownProps = {
       search: (val) => val,
       selection: true,
@@ -744,11 +744,19 @@ class Filter extends Component {
               }}
               {...additionalSidebarProps}>
               <FiltersContainer>
-                <Button onClick={() => this.toggleFilter(false)} primary={!this.state.savedFiltersActive} data-test='filter_set_filters'>
+                <Button
+                  type='button'
+                  onClick={() => this.toggleFilter(false)}
+                  primary={!this.state.savedFiltersActive}
+                  data-test='filter_set_filters'>
                   {formatMessage({ id: 'filter.setFilters', defaultMessage: 'SET FILTERS' })}
                 </Button>
 
-                <Button onClick={() => this.toggleFilter(true)} primary={this.state.savedFiltersActive} data-test='filter_saved_filters'>
+                <Button
+                  type='button'
+                  onClick={() => this.toggleFilter(true)}
+                  primary={this.state.savedFiltersActive}
+                  data-test='filter_saved_filters'>
                   {formatMessage({ id: 'filter.savedFilter', defaultMessage: 'SAVED FILTERS' })}
                 </Button>
               </FiltersContainer>
