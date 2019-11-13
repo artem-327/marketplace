@@ -21,6 +21,8 @@ import * as val from 'yup'
 import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import moment from "moment"
 import UploadLot from './upload/UploadLot'
+import { withDatagrid } from '~/modules/datagrid'
+
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -98,8 +100,8 @@ const initValues = {
 }
 
 const columns = [ 
-  { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage> },
-  { name: 'documentTypeName', title: <FormattedMessage id='global.docType' defaultMessage='Document Type'>{text => text}</FormattedMessage> }
+  { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, width: 100 },
+  { name: 'documentTypeName', title: <FormattedMessage id='global.docType' defaultMessage='Document Type'>{text => text}</FormattedMessage>, width: 100 }
 ]
 
 val.addMethod(val.number, 'divisibleBy', function (ref, message) {
@@ -432,7 +434,9 @@ class DetailSidebar extends Component {
       warehousesList,
       listDocumentTypes,
       intl: { formatMessage },
-      toastManager
+      toastManager,
+      datagrid, 
+      removeAttachment
     } = this.props
     const leftWidth = 6
     const rightWidth = 10
@@ -988,8 +992,8 @@ class DetailSidebar extends Component {
                                 <GridRow>
                                   <GridColumn>
                                     <ProdexGrid
-                                      hideSettingsIcon
                                       tableName='inventory_documents'
+                                      {...datagrid.tableProps}
                                       columns={columns}
                                       rows={values.documents.attachments
                                         .map(row => (
@@ -999,6 +1003,14 @@ class DetailSidebar extends Component {
                                           a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0
                                         ))
                                       }
+                                      rowActions={[ 
+                                        {
+                                        text: <FormattedMessage id='global.delete' defaultMessage='Delete'>{text => text}</FormattedMessage>, callback: async row => {
+                                          await removeAttachment(row.id)
+                                          datagrid.removeRow(row.id)
+                                          }
+                                        }
+                                      ]}
                                     />
                                   </GridColumn>
                                 </GridRow>
@@ -1242,5 +1254,5 @@ const mapStateToProps = ({ simpleAdd: {
   listDocumentTypes
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(DetailSidebar)))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(DetailSidebar))))
 
