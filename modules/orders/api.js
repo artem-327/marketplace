@@ -48,5 +48,9 @@ export default {
   getRelatedOrders: orderId =>
     api.get(`/prodex/api/accounting-documents/order/${orderId}`),
   cancelOrder: orderId =>
-    api.patch(`/prodex/api/purchase-orders/${orderId}/cancel`)
+    api.patch(`/prodex/api/purchase-orders/${orderId}/cancel`),
+  approveOrder: orderId =>
+    api.patch(`/prodex/api/purchase-orders/${orderId}/approve`),
+  disapproveOrder: orderId =>
+    api.patch(`/prodex/api/purchase-orders/${orderId}/disapprove`)
 }

@@ -593,6 +593,8 @@
   "global.sales": "Sales",
   "global.Purchase": "Purchase",
   "global.import": "Import",
+  "global.disapprove": "Disapprove",
+  "global.approve": "Approve",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",

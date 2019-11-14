@@ -120,3 +120,11 @@ export const getRelatedOrders = orderId => ({
   type: AT.RELATED_ORDERS,
   payload: Api.getRelatedOrders(orderId)
 })
+export const approveOrder = orderId => ({
+  type: AT.ORDER_APPROVE_ORDER,
+  payload: Api.approveOrder(orderId)
+})
+export const disapproveOrder = orderId => ({
+  type: AT.ORDER_DISAPPROVE_ORDER,
+  payload: Api.disapproveOrder(orderId)
+})

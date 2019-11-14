@@ -28,6 +28,14 @@ class ActionsRequired extends React.Component {
     this.props.cancelOrder(this.props.order.id)
   }
 
+  approveOrder = () => {
+    this.props.approveOrder(this.props.order.id)
+  }
+
+  disapproveOrder = () => {
+    this.props.disapproveOrder(this.props.order.id)
+  }
+
   renderSegment(color, columnWidth, title, description, buttons) {
     console.log(buttons)
     return (
@@ -94,10 +102,16 @@ class ActionsRequired extends React.Component {
                   'order.confirm.description',
                   [
                     {
+                      buttonType: 'primary',
+                      onClick: this.confirmOrder,
+                      dataTest: 'orders_detail_accept_btn',
+                      text: 'global.accept'
+                    },
+                    {
                       buttonType: 'basic',
-                      onClick: this.cancelOrder,
-                      dataTest: 'orders_detail_cancel_btn',
-                      text: 'global.cancel'
+                      onClick: this.rejectOrder,
+                      dataTest: 'orders_detail_decline_btn',
+                      text: 'global.decline'
                     }
                   ]
                 )
@@ -138,7 +152,46 @@ class ActionsRequired extends React.Component {
               : null}
           </>
         ) : (
+          //orderStatus === 'Purchase'
           <>
+            {action === '100'
+              ? this.renderSegment(
+                  null,
+                  13,
+                  null,
+                  'order.confirm.description',
+                  [
+                    {
+                      buttonType: 'basic',
+                      onClick: this.cancelOrder,
+                      dataTest: 'orders_detail_cancel_btn',
+                      text: 'global.cancel'
+                    }
+                  ]
+                )
+              : null}
+            {action === '400'
+              ? this.renderSegment(
+                  null,
+                  13,
+                  null,
+                  'order.confirm.description',
+                  [
+                    {
+                      buttonType: 'primary',
+                      onClick: this.approveOrder,
+                      dataTest: 'orders_detail_approve_btn',
+                      text: 'global.approve'
+                    },
+                    {
+                      buttonType: 'basic',
+                      onClick: this.disapproveOrder,
+                      dataTest: 'orders_detail_disapprove_btn',
+                      text: 'global.disapprove'
+                    }
+                  ]
+                )
+              : null}
             {(detail.paymentStatus === 5 || detail.paymentStatus === 4) &&
             moment().isBefore(repayUntil.add(3, 'days'))
               ? this.renderSegment(
