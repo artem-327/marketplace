@@ -102,15 +102,6 @@ class Marketplace extends Component {
         sortPath: 'ProductOffer.lotExpirationDate'
       },
       {
-        name: 'assay',
-        title: (
-          <FormattedMessage id='marketplace.assay' defaultMessage='Assay'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100
-      },
-      {
         name: 'condition',
         title: (
           <FormattedMessage
