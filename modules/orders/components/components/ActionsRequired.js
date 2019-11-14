@@ -173,7 +173,7 @@ class ActionsRequired extends React.Component {
             {action === '400'
               ? this.renderSegment(
                   null,
-                  13,
+                  11,
                   null,
                   'order.confirm.description',
                   [

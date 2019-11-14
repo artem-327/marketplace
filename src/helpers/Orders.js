@@ -9,7 +9,7 @@ export function getOrderStatus(orderStatus) {
     case 4:
       return 'Draft'
     case 5:
-      return 'Canceled'
+      return 'Cancelled'
     default:
       return 'N/A'
   }

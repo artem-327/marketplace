@@ -239,17 +239,17 @@ export default function(state = initialState, action) {
     case AT.ORDER_CANCEL_ORDER_FULFILLED:
       return {
         ...state,
-        data: action.payload.data
+        detail: action.payload.data
       }
     case AT.ORDER_APPROVE_ORDER_FULFILLED:
       return {
         ...state,
-        data: action.payload.data
+        detail: action.payload.data
       }
     case AT.ORDER_DISAPPROVE_ORDER_FULFILLED:
       return {
         ...state,
-        data: action.payload.data
+        detail: action.payload.data
       }
     default:
       return state
