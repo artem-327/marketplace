@@ -56,7 +56,7 @@ class ShippingEdit extends Component {
     return (
       Yup.object().shape({
         contactName: Yup.string(invalidString).required(requiredMessage),
-        addressName: Yup.string(invalidString).required(requiredMessage),
+        //addressName: Yup.string(invalidString).required(requiredMessage),
         // lastName: Yup.string(invalidString).required(requiredMessage),
         contactEmail: Yup.string().email(invalidEmail).required(requiredMessage),
         contactPhone: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),

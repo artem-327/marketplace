@@ -18,7 +18,7 @@ import Router from 'next/router'
 import { generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { addressValidationSchema, errorMessages } from '~/constants/yupValidation'
+import { addressValidationSchema, errorMessages, minOrZeroLength } from '~/constants/yupValidation'
 
 import { AddressForm } from '~/modules/address-form/'
 
@@ -31,7 +31,7 @@ const minLength = errorMessages.minLength(3)
 const formValidation = () => Yup.object().shape({
   deliveryAddress: Yup.object().shape({
     address: addressValidationSchema(),
-    addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+    addressName: minOrZeroLength(3),
     contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
     contactPhone: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
     contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),

@@ -18,7 +18,7 @@ import Router from 'next/router'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { generateToastMarkup, getSafe } from '~/utils/functions'
-import { errorMessages, provinceObjectRequired } from '~/constants/yupValidation'
+import { errorMessages, provinceObjectRequired, minOrZeroLength } from '~/constants/yupValidation'
 
 import { AddressForm } from '~/modules/address-form'
 import { PhoneNumber } from '~/modules/phoneNumber'
@@ -48,9 +48,7 @@ const initialFormValues = {
 
 const formValidation = () => Yup.lazy((values) => (
   Yup.object().shape({
-    addressName: Yup.string().trim()
-      .min(3, errorMessages.minLength(3))
-      .required(errorMessages.requiredMessage),
+    addressName: minOrZeroLength(3),
     contactName: Yup.string().trim()
       .min(3, errorMessages.minLength(3))
       .required(errorMessages.requiredMessage),
