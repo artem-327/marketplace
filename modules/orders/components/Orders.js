@@ -177,6 +177,15 @@ class Orders extends Component {
 
     filters: {
       All: { filters: [] },
+      Draft: {
+        filters: [
+          {
+            operator: 'EQUALS',
+            path: 'Order.cfGlobalStatus',
+            values: [`Draft`]
+          }
+        ]
+      },
       Pending: {
         filters: [
           {
@@ -237,6 +246,15 @@ class Orders extends Component {
             operator: 'EQUALS',
             path: 'Order.cfGlobalStatus',
             values: [`Declined`]
+          }
+        ]
+      },
+      Canceled: {
+        filters: [
+          {
+            operator: 'EQUALS',
+            path: 'Order.cfGlobalStatus',
+            values: [`Canceled`]
           }
         ]
       }
@@ -562,6 +580,20 @@ class Orders extends Component {
             />
             <Menu.Item
               name={formatMessage({
+                id: 'order.menu.draft',
+                defaultMessage: 'Draft'
+              })}
+              onClick={() =>
+                this.loadData(endpointType, {
+                  ...this.props.filterData,
+                  status: 'Draft'
+                })
+              }
+              active={activeStatus === 'Draft'}
+              data-test='menu_orders_draft'
+            />
+            <Menu.Item
+              name={formatMessage({
                 id: 'order.menu.pending',
                 defaultMessage: 'PENDING'
               })}
@@ -657,6 +689,20 @@ class Orders extends Component {
               }
               active={activeStatus === 'Declined'}
               data-test='menu_orders_declined'
+            />
+            <Menu.Item
+              name={formatMessage({
+                id: 'order.menu.canceled',
+                defaultMessage: 'Canceled'
+              })}
+              onClick={() =>
+                this.loadData(endpointType, {
+                  ...this.props.filterData,
+                  status: 'Canceled'
+                })
+              }
+              active={activeStatus === 'Canceled'}
+              data-test='menu_orders_canceled'
             />
             <Menu.Menu position='right'>
               <Menu.Item
