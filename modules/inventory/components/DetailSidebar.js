@@ -173,6 +173,11 @@ const validationScheme = val.object().shape({
 class DetailSidebar extends Component {
 
   state = {
+    tabs: [
+      'edit',
+      'priceBook',
+      'priceTiers'
+    ],
     activeTab: 0,
     broadcastLoading: true,
     saveBroadcast: 0,
@@ -262,6 +267,7 @@ class DetailSidebar extends Component {
 
   renderPricingTiers = (count, setFieldValue) => {
     let tiers = []
+    const { intl: { formatMessage }} = this.props
 
     for (let i = 0; i < count; i++) {
 
@@ -276,20 +282,32 @@ class DetailSidebar extends Component {
           </TopMargedColumn>
 
           <GridColumn computer={5} data-test={`add_inventory_quantityFrom_${i}_inp`} >
-            <Input name={`priceTiers.pricingTiers[${i}].quantityFrom`} inputProps={{
-              type: 'number', min: 1, value: null, onChange: (e, { value }) => {
-                setFieldValue(`tabs[2].pricingTiers[${i}].manuallyModified`, 1)
-                if (i === 0) setFieldValue('minimum', value)
-              }
+            <Input
+              name={`priceTiers.pricingTiers[${i}].quantityFrom`}
+              inputProps={{
+                type: 'number',
+                min: 1,
+                value: null,
+                onChange: (e, { value }) => {
+                  setFieldValue(`priceTiers.pricingTiers[${i}].manuallyModified`, 1)
+                  if (i === 0) setFieldValue('edit.minimum', value)
+                }
             }} />
           </GridColumn>
 
           <GridColumn computer={5} data-test={`add_inventory_price_${i}_inp`} >
-            <Input name={`priceTiers.pricingTiers[${i}].price`} inputProps={{ type: 'number', step: '0.001', min: 0.001, value: null }} />
+            <Input
+              name={`priceTiers.pricingTiers[${i}].price`}
+              inputProps={{
+                type: 'number',
+                step: '0.001',
+                min: 0.001,
+                value: null
+            }} />
           </GridColumn>
 
           <GridColumn computer={1} data-test={`add_inventory_manuallyModified_${i}_inp`} >
-            <Input name={`priceTiers.pricingTiers[%{i}].manuallyModified`} inputProps={{ type: 'hidden', value: 0 }} />
+            <Input name={`priceTiers.pricingTiers[${i}].manuallyModified`} inputProps={{ type: 'hidden', value: 0 }} />
           </GridColumn>
         </Grid>
       )
@@ -380,17 +398,32 @@ class DetailSidebar extends Component {
     }
   }
 
-  switchToErrors = (tabs) => {
-    switch (tabs[0]) {
-      case 'edit':
-        this.switchTab(0)
-        break
-      case 'priceBook':
-        this.switchTab(1)
-        break
-      case 'priceTiers':
-        this.switchTab(2)
-        break
+  switchToErrors = (errors) => {
+    const { toastManager } = this.props
+    const tabs = Object.keys(errors)
+
+    // switch tab only if there is no error on active tab
+    if (!tabs.includes(this.state.tabs[this.state.activeTab])) {
+      switch (tabs[0]) {
+        case 'edit':
+          this.switchTab(0)
+          document.getElementsByName('edit.'+Object.keys(errors.edit)[0])[0].focus()
+          break
+        case 'priceBook':
+          this.switchTab(1)
+          document.getElementsByName('priceBook.'+Object.keys(errors.priceBook)[0])[0].focus()
+          break
+        case 'priceTiers':
+          this.switchTab(2)
+          document.getElementsByName('priceTiers.'+Object.keys(errors.priceTiers)[0])[0].focus()
+          break
+      }
+      toastManager.add(generateToastMarkup(
+        <FormattedMessage id='addInventory.saveFirst' defaultMessage='Errors on activated Tab' />,
+        <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Basic properites are incomplete/non-validating, please fix the issues first' />,
+      ), {
+        appearance: 'warning'
+      })
     }
   }
 
@@ -539,7 +572,7 @@ class DetailSidebar extends Component {
                                   // stop when errors found
                                   if (Object.keys(r).length) {
                                     submitForm() // show errors
-                                    this.switchToErrors(Object.keys(r))
+                                    this.switchToErrors(r)
                                     return false
                                   }
 
@@ -922,7 +955,7 @@ class DetailSidebar extends Component {
                                   // stop when errors found
                                   if (Object.keys(r).length) {
                                     submitForm() // show errors
-                                    this.switchToErrors(Object.keys(r))
+                                    this.switchToErrors(r)
                                     return false
                                   }
 
@@ -960,7 +993,7 @@ class DetailSidebar extends Component {
                                   // stop when errors found
                                   if (Object.keys(r).length) {
                                     submitForm() // show errors
-                                    this.switchToErrors(Object.keys(r))
+                                    this.switchToErrors(r)
                                     return false
                                   }
 
@@ -1064,10 +1097,12 @@ class DetailSidebar extends Component {
                         size='large'
                         inputProps={{ type: 'button' }}
                         onClick={() => validateForm().then(r => {
-                          if (Object.keys(r).length && this.state.activeTab !== 1)
-                            this.switchToErrors(Object.keys(r))
-
-                          this.submitForm(values, setSubmitting, setTouched)
+                          if (Object.keys(r).length && this.state.activeTab !== 1) {
+                            this.switchToErrors(r)
+                            submitForm() // to show errors
+                          } else {
+                            this.submitForm(values, setSubmitting, setTouched)
+                          }
                         })}
                         data-test='sidebar_inventory_save_new'>
                         {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
