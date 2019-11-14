@@ -249,12 +249,12 @@ class Orders extends Component {
           }
         ]
       },
-      Canceled: {
+      Cancelled: {
         filters: [
           {
             operator: 'EQUALS',
             path: 'Order.cfGlobalStatus',
-            values: [`Canceled`]
+            values: [`Cancelled`]
           }
         ]
       }
@@ -692,17 +692,17 @@ class Orders extends Component {
             />
             <Menu.Item
               name={formatMessage({
-                id: 'order.menu.canceled',
-                defaultMessage: 'Canceled'
+                id: 'order.menu.cancelled',
+                defaultMessage: 'Cancelled'
               })}
               onClick={() =>
                 this.loadData(endpointType, {
                   ...this.props.filterData,
-                  status: 'Canceled'
+                  status: 'Cancelled'
                 })
               }
-              active={activeStatus === 'Canceled'}
-              data-test='menu_orders_canceled'
+              active={activeStatus === 'Cancelled'}
+              data-test='menu_orders_cancelled'
             />
             <Menu.Menu position='right'>
               <Menu.Item

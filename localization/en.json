@@ -1515,7 +1515,7 @@
   "order.menu.completed": "COMPLETED",
   "order.menu.returned": "RETURNED",
   "order.menu.declined": "DECLINED",
-  "order.menu.canceled": "CANCELED",
+  "order.menu.cancelled": "CANCELLED",
   "order.menu.draft": "DRAFT",
   "order.menu.filter": "Filter",
   "order.orders": "ORDERS",
