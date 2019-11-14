@@ -87,9 +87,6 @@ class ActionsRequired extends React.Component {
     } = this.props
     const repayUntil = moment(detail.orderDate)
 
-    console.log('**************', ordersType)
-    console.log('>>>>>>>>>>>>>>>>', action)
-
     return (
       <>
         {ordersType === 'Sales' ? (
