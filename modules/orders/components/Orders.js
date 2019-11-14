@@ -578,20 +578,22 @@ class Orders extends Component {
               active={!activeStatus || activeStatus === 'All'}
               data-test='menu_orders_all'
             />
-            <Menu.Item
-              name={formatMessage({
-                id: 'order.menu.draft',
-                defaultMessage: 'Draft'
-              })}
-              onClick={() =>
-                this.loadData(endpointType, {
-                  ...this.props.filterData,
-                  status: 'Draft'
-                })
-              }
-              active={activeStatus === 'Draft'}
-              data-test='menu_orders_draft'
-            />
+            {endpointType === 'purchase' && (
+              <Menu.Item
+                name={formatMessage({
+                  id: 'order.menu.draft',
+                  defaultMessage: 'Draft'
+                })}
+                onClick={() =>
+                  this.loadData(endpointType, {
+                    ...this.props.filterData,
+                    status: 'Draft'
+                  })
+                }
+                active={activeStatus === 'Draft'}
+                data-test='menu_orders_draft'
+              />
+            )}
             <Menu.Item
               name={formatMessage({
                 id: 'order.menu.pending',
