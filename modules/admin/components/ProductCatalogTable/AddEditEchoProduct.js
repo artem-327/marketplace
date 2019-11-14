@@ -357,9 +357,6 @@ class AddEditEchoProduct extends React.Component {
       else
         data = await postEchoProduct(formValues)
 
-      console.log('!!!!!!!!!!!!!!! submitForm response', data)
-
-
       let echoProduct = data.value.data
       const notLinkedAttachments = values.attachments.filter(att => !getSafe(() => att.linked, false))
       await linkAttachment(false, echoProduct.id, notLinkedAttachments)
@@ -374,14 +371,10 @@ class AddEditEchoProduct extends React.Component {
         }
       })
 
-      console.log('!!!!!!!!!!!!!!! Datagrid 1', data)
-
       Datagrid.updateRow(echoProduct.id, () => ({
         ...echoProduct,
         attachments: echoProduct.attachments.concat(notLinkedAttachments)
       }))
-
-      console.log('!!!!!!!!!!!!!!! Datagrid 2', data)
 
       const status = popupValues ? 'echoProductUpdated' : 'echoProductCreated'
       toastManager.add(generateToastMarkup(

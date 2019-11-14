@@ -184,7 +184,7 @@ const userEnableDisableStatus = (r, currentUserId) => {
         enabled: user.enabled,
         // preferredCurrency: (user.preferredCurrency || {}).id || undefined,
         preferredCurrency: currency,
-        homeBranchName: getSafe(() => user.homeBranch.deliveryAddress.addressName, ''),
+        homeBranchName: getSafe(() => user.homeBranch.deliveryAddress.cfName, ''),
         permissions: user.roles ? user.roles.name : '', // ! ! array?
         id: user.id,
         allUserRoles: user.roles || [],

@@ -269,7 +269,7 @@ class SimpleEdit extends Component {
                           }}
                           options={uniqueArrayByKey(warehouseOptions, 'id').map((wh) => ({
                             key: wh.id,
-                            text: wh.deliveryAddress.addressName,
+                            text: wh.deliveryAddress.cfName,
                             value: wh.id
                           }))}
                           name='warehouse'

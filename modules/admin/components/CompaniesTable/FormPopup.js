@@ -23,7 +23,7 @@ import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
 
 import { validationSchema } from '~/modules/company-form/constants'
-import { provinceObjectRequired, errorMessages } from '~/constants/yupValidation'
+import { provinceObjectRequired, errorMessages, minOrZeroLength } from '~/constants/yupValidation'
 
 import { CompanyForm } from '~/modules/company-form/'
 import { AddressForm } from '~/modules/address-form/'
@@ -114,7 +114,7 @@ class AddNewPopupCasProducts extends React.Component {
     //   values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
     //   values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
     //   values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''
-    let mailingBranchRequired = deepSearch(values.mailingBranch.deliveryAddress, (val) => val !== '')
+    let mailingBranchRequired = deepSearch(values.mailingBranch.deliveryAddress, (val) => val.trim() !== '')
 
     let minLength = errorMessages.minLength(2)
 
@@ -124,18 +124,20 @@ class AddNewPopupCasProducts extends React.Component {
 
       mailingBranch: Yup.lazy(() => {
         if (mailingBranchRequired) return Yup.object().shape({
-          name: Yup.string().trim().min(2, minLength).required(minLength),
-          contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-          contactName: Yup.string().trim().min(2, minLength).required(minLength),
-          contactPhone: Yup.string().trim().required(errorMessages.enterPhoneNumber),
-          address: addressValidationSchema()
+          deliveryAddress: Yup.object().shape({
+            addressName: minOrZeroLength(3),
+            contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
+            contactName: Yup.string().trim().min(2, minLength).required(minLength),
+            contactPhone: Yup.string().trim().required(errorMessages.enterPhoneNumber),
+            address: addressValidationSchema()
+          })
         })
         return Yup.mixed().notRequired()
       }),
 
       primaryBranch: Yup.object().shape({
         deliveryAddress: Yup.object().shape({
-          addressName: Yup.string().trim().min(2, minLength).required(minLength),
+          addressName: minOrZeroLength(3),
           contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
           contactName: Yup.string().trim().min(2, minLength).required(minLength),
           contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),

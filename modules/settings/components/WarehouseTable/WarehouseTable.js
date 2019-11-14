@@ -185,7 +185,7 @@ const mapStateToProps = (state, { datagrid }) => {
         provinceId,
         zip,
         zipID,
-        addressName: getSafe(() => r.deliveryAddress.addressName, ''),
+        addressName: getSafe(() => r.deliveryAddress.cfName, ''),
         contactName: getSafe(() => r.deliveryAddress.contactName, ''),
         contactEmail: getSafe(() => r.deliveryAddress.contactEmail, ''),
         contactPhone: getSafe(() => r.deliveryAddress.contactPhone, ''),
