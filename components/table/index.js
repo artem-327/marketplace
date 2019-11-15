@@ -460,7 +460,9 @@ class _Table extends Component {
             title: !hideSettingsIcon && (
               <ColumnsSetting
                 onClick={() =>
-                  this.setState({ columnSettingOpen: !columnSettingOpen })
+                  this.setState(prevState => ({
+                    columnSettingOpen: !prevState.columnSettingOpen
+                  }))
                 }
                 data-test='table_columns_setting_action'
               />
@@ -575,7 +577,7 @@ class _Table extends Component {
     const { onSortingChange, columns } = this.props
     const column = columns.find(c => c.name === s.columnName)
 
-    if (!column.sortPath) return
+    if (!column || !column.sortPath) return
 
     if (
       this.state.columnsSettings.sorting[0].direction.toUpperCase() ===
