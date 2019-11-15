@@ -3,9 +3,30 @@ import pt, { node, bool, number, object } from 'prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import * as Actions from '../actions'
-import { Modal, Grid, Icon, Button, Form, Input, Dropdown, Dimmer, Loader, Message, Menu, Divider, Header, GridRow, GridColumn, Popup } from 'semantic-ui-react'
+import {
+  Modal,
+  Grid,
+  Icon,
+  Button,
+  Form,
+  Input,
+  Dropdown,
+  Dimmer,
+  Loader,
+  Message,
+  Menu,
+  Divider,
+  Header,
+  GridRow,
+  GridColumn,
+  Popup
+} from 'semantic-ui-react'
 import { Formik } from 'formik'
-import { Input as FormikInput, Button as FormikButton, Dropdown as FormikDropdown } from 'formik-semantic-ui-fixed-validation'
+import {
+  Input as FormikInput,
+  Button as FormikButton,
+  Dropdown as FormikDropdown
+} from 'formik-semantic-ui-fixed-validation'
 import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup } from '~/utils/functions'
 import TreeModel from 'tree-model'
@@ -25,14 +46,12 @@ const templateInitialValues = {
   name: ''
 }
 
-const templateValidation = () => (
+const templateValidation = () =>
   Yup.object().shape({
     name: Yup.string().required(errorMessages.requiredMessage)
   })
-)
 
 class Broadcast extends Component {
-
   state = {
     filterSearch: '',
     tree: new TreeModel().parse({ model: { rule: {} } }),
@@ -51,31 +70,32 @@ class Broadcast extends Component {
   }
 
   componentDidMount() {
+    if (this.props.filter.category !== 'region') this.handleFilterChange(null, { name: 'category', value: 'region' })
     this.props.getTemplates()
   }
 
-
   componentWillReceiveProps(props, next) {
     let tree = this.getFilteredTree(props.treeData, props.filter)
-    
+
     if (!_.isEqual(tree, this.state.tree)) {
       this.setState({ tree })
     }
-
   }
 
   formChanged = () => {
-    if (this.props.changedForm)
-      this.props.changedForm()
+    if (this.props.changedForm) this.props.changedForm()
   }
 
-  handlePriceChange = (node) => {
+  handlePriceChange = node => {
     if (node.hasChildren()) {
-      node.walk((n) => {
+      node.walk(n => {
         let nodePath = n.getPath()
         let parent = nodePath[nodePath.length - 2]
 
-        if (!n.model.rule.priceOverride && (!getSafe(() => parent.model.rule.priceOverride, 0) || node.model.rule.id === parent.model.rule.id)) {
+        if (
+          !n.model.rule.priceOverride &&
+          (!getSafe(() => parent.model.rule.priceOverride, 0) || node.model.rule.id === parent.model.rule.id)
+        ) {
           n.model.rule.priceAddition = node.model.rule.priceAddition
           n.model.rule.priceMultiplier = node.model.rule.priceMultiplier
         }
@@ -94,45 +114,31 @@ class Broadcast extends Component {
     this.formChanged()
   }
 
-  calculateBroadcastingCnt = () => {
-    let broadcastingTo = 0
-
-    this.props.treeData.walk((node) => {
-      if (!node.isRoot() &&
-        (!node.hasChildren() || node.all((n) => n.model.type === 'company' || n.model.type === 'branch'))) {
-        if (node.model.type === (this.props.filter.category === 'branch' ? 'branch' : 'state')) {
-          if (node.model.broadcast !== 0 || node.parent.model.broadcast === 1) broadcastingTo++
-        }
-      }
-    })
-
-    if (this.state.broadcastingTo !== broadcastingTo) this.setState({ broadcastingTo })
-
-  }
-
   async componentWillUnmount() {
     if (this.state.change && !this.state.saved) {
       await confirm(
-        <FormattedMessage
-          id='confirm.broadcast.unsavedChanges.header'
-          defaultMessage='Unsaved changes' />,
+        <FormattedMessage id='confirm.broadcast.unsavedChanges.header' defaultMessage='Unsaved changes' />,
         <FormattedMessage
           id='confirm.broadcast.unsavedChanges.content'
-          defaultMessage={`You have unsaved broadcast rules changes. Do you wish to save them?`} />)
-        .then(async () => this.saveBroadcastRules())
+          defaultMessage={`You have unsaved broadcast rules changes. Do you wish to save them?`}
+        />
+      ).then(async () => this.saveBroadcastRules())
     }
   }
 
   componentDidUpdate(oldProps) {
-    this.calculateBroadcastingCnt()
-
     if (oldProps.saveBroadcast !== this.props.saveBroadcast && this.props.saveBroadcast) {
       this.saveBroadcastRules()
     }
   }
 
-  handleChange = (node) => {
-    const findInData = node => getSafe(() => this.props.treeData.first((n) => (n.model.id === node.model.rule.id && n.model.type === node.model.rule.type)), null)
+  handleChange = node => {
+    const { treeData } = this.props
+    const findInData = node =>
+      getSafe(
+        () => treeData.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type),
+        null
+      )
 
     let path = getSafe(() => findInData(node).getPath(), [])
     for (let i = path.length - 2; i >= 0; i--) setBroadcast(path[i])
@@ -141,23 +147,23 @@ class Broadcast extends Component {
     // Hotfix - Changes were not applied to data structure when clicking on nodes with childs with 'By Company' filter applied
     // This fixes it, but causes a delay when clicking on root as it iterates through every node and it's path in data structure
 
-    if (node.hasChildren() && this.props.filter.category === 'branch') {
-      node.walk((n) => {
+    if (this.props.filter.category === 'branch') {
+      if (node.hasChildren()) {
+        node.walk(n => {
+          let childPath = getSafe(() => findInData(n).getPath(), [])
 
-        let childPath = getSafe(() => findInData(n).getPath(), [])
-
-        for (let i = childPath.length - 2; i >= 0; i--)  setBroadcast(childPath[i])
-
-      })
+          for (let i = childPath.length - 2; i >= 0; i--) setBroadcast(childPath[i])
+        })
+      }
     }
 
     this.formChanged()
   }
 
-  handleRowClick = (node) => {
+  handleRowClick = node => {
     node.model.expanded = !node.model.expanded
 
-    if (!node.model.expanded) node.all(n => n.model.expanded = false)
+    if (!node.model.expanded) node.all(n => (n.model.expanded = false))
 
     this.setState({ tree: this.state.tree })
   }
@@ -168,8 +174,9 @@ class Broadcast extends Component {
     this.handleFilterChange(e, { name, value })
   }
 
-  handleFilterChange = (e, { name, value }) => {
+  handleFilterChange = (_, { name, value }) => {
     const { updateFilter, filter } = this.props
+
     updateFilter({
       ...filter,
       [name]: value
@@ -178,9 +185,11 @@ class Broadcast extends Component {
 
   getFilteredTree = (treeData, filter) => {
     const fs = filter.search.toLowerCase()
-    const { intl: { formatMessage } } = this.props
+    const {
+      intl: { formatMessage }
+    } = this.props
 
-    const searchFn = (n => {
+    const searchFn = n => {
       var found = false
       const name = n.model.name.toLowerCase()
 
@@ -189,60 +198,91 @@ class Broadcast extends Component {
       }
 
       name.split(' ').forEach(s => {
-        if (s.startsWith(fs)) { found = true; return }
+        if (s.startsWith(fs)) {
+          found = true
+          return
+        }
       })
 
       return found
-    })
+    }
 
-    const searchParentFn = (n => n.first(i => i.model.type !== 'company' && searchFn(i)))
+    const searchParentFn = n => n.first(i => i.model.type !== 'company' && searchFn(i))
 
     const presets = {
-      region: () => new TreeModel().parse({
-        // name: 'By region',
-        name: formatMessage({ id: 'broadcast.byRegion', defaultMessage: 'By Region' }),
-        rule: treeData.model, // { ...treeData.model, broadcast: getBroadcast(treeData) },
-        depth: 1,
-        children: treeData.children.filter(n => searchParentFn(n)).map(n1 => ({
-          name: n1.model.name,
-          rule: n1.model,
-          depth: 2,
-          children: n1.children.filter(n => searchFn(n) || searchParentFn(n)).map(n2 => ({
-            name: n2.model.name,
-            rule: n2.model,
-            depth: 3,
-            children: n2.all(n => n.model.type === 'branch' && searchFn(n)).map(n3 => ({
-              name: n3.model.name,
-              rule: n3.model,
-              depth: 4,
-              children: []
+      region: () =>
+        new TreeModel().parse({
+          // name: 'By region',
+          name: formatMessage({
+            id: 'broadcast.byRegion',
+            defaultMessage: 'By Region'
+          }),
+          // rule: treeData.model, // { ...treeData.model, broadcast: getBroadcast(treeData) },
+          rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
+          depth: 1,
+          children: treeData.children
+            .filter(n => searchParentFn(n))
+            .map(n1 => ({
+              name: n1.model.name,
+              // rule: n1.model,
+              rule: { ...n1.model, broadcast: getBroadcast(n1) },
+              depth: 2,
+              children: n1.children
+                .filter(n => searchFn(n) || searchParentFn(n))
+                .map(n2 => ({
+                  name: n2.model.name,
+                  rule: n2.model,
+                  depth: 3,
+                  children: n2
+                    .all(n => n.model.type === 'branch' && searchFn(n))
+                    .map(n3 => ({
+                      name: n3.model.name,
+                      rule: n3.model,
+                      // rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
+                      depth: 4,
+                      children: []
+                    }))
+                }))
             }))
-          }))
-        }))
-      }),
-      branch: () => new TreeModel().parse({
-        // name: 'By company',
-        name: formatMessage({ id: 'broadcast.byCompany', defaultMessage: 'By Company' }),
-        rule: treeData.model,
-        depth: 1,
-        children: _.uniqBy(treeData.all(n => n.model.type === 'company'), n => n.model.id).filter(searchFn).map(n1 => ({
-          name: n1.model.name,
-          rule: n1.model,
-          depth: 2,
-          children: treeData.all(n => n.model.type === 'branch' && n.parent.model.id === n1.model.id).map(n2 => ({
-            name: n2.model.name,
-            rule: n2.model,
-            depth: 3,
-            children: []
-          }))
-        }))
-      })
+        }),
+      branch: () =>
+        new TreeModel().parse({
+          // name: 'By company',
+          name: formatMessage({
+            id: 'broadcast.byCompany',
+            defaultMessage: 'By Company'
+          }),
+          // rule: treeData.model,
+          rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
+          depth: 1,
+          children: _.uniqBy(
+            treeData.all(n => n.model.type === 'company'),
+            n => n.model.id
+          )
+            .filter(searchFn)
+            .map(n1 => ({
+              name: n1.model.name,
+              // rule: n1.model,
+              rule: { ...n1.model, broadcast: getBroadcast(n1) },
+              depth: 2,
+              children: treeData
+                .all(n => n.model.type === 'branch' && n.parent.model.id === n1.model.id)
+                .map(n2 => ({
+                  name: n2.model.name,
+                  rule: n2.model,
+                  // rule: { ...n2.model, broadcast: getBroadcast(n2) },
+                  depth: 3,
+                  children: []
+                }))
+            }))
+        })
     }
 
     let tree = presets[filter.category]()
     // expand when search is active
+
     if (fs.length > 0) {
-      tree.walk(n => n.model.expanded = true)
+      tree.walk(n => (n.model.expanded = true))
     }
 
     normalizeTree(tree)
@@ -251,16 +291,15 @@ class Broadcast extends Component {
     return tree
   }
 
-
   onTemplateSelected = (_, data, setFieldValue) => {
-    let name = data.options.find((opt) => opt.value === data.value).text
+    let name = data.options.find(opt => opt.value === data.value).text
     setFieldValue('name', name)
     this.setState({ selectedTemplate: { name, id: data.value } })
 
     this.props.getTemplate(data.value)
   }
 
-  handleTemplateDelete = async (setFieldValue) => {
+  handleTemplateDelete = async setFieldValue => {
     const { deleteTemplate, toastManager, intl } = this.props
     const { formatMessage } = intl
     let { name, id } = this.state.selectedTemplate
@@ -273,40 +312,73 @@ class Broadcast extends Component {
 
     setFieldValue('name', '')
 
-    toastManager.add(generateToastMarkup(
-      <FormattedMessage id='notifications.templateDelete.header' />,
-      <FormattedMessage id='notifications.templateDelete.content' values={{ name }} />,
-    ), { appearance: 'success' })
+    toastManager.add(
+      generateToastMarkup(
+        <FormattedMessage id='notifications.templateDelete.header' />,
+        <FormattedMessage id='notifications.templateDelete.content' values={{ name }} />
+      ),
+      { appearance: 'success' }
+    )
   }
-
 
   getContent = () => {
     let {
-      offer, templates, updateTemplate, mode, asSidebar,
-      saveTemplate, filter, loading, intl: { formatMessage },
-      treeData, toastManager, additionalGridProps,
-      asModal, hideFobPrice
+      offer,
+      templates,
+      updateTemplate,
+      mode,
+      asSidebar,
+      saveTemplate,
+      filter,
+      loading,
+      intl: { formatMessage },
+      treeData,
+      toastManager,
+      additionalGridProps,
+      asModal,
+      hideFobPrice
     } = this.props
 
-    let total = treeData.all(n => n.model.type === (this.props.filter.category === 'branch' ? 'branch' : 'state')).length
+    // let total = treeData.all(n => this.props.filter.category === 'branch' || n.model.type === 'state').length
+
+    let total =
+      this.props.filter.category === 'region'
+        ? treeData.all(n => !n.hasChildren()).length
+        : treeData.all(n => !n.hasChildren() && n.model.type === 'branch').length
+
+    let broadcastingTo =
+      this.props.filter.category === 'region'
+        ? treeData.all(n => !n.hasChildren() && n.model.broadcast === 1).length
+        : treeData.all(n => !n.hasChildren() && n.model.broadcast === 1 && n.model.type === 'branch').length
 
     return (
-      <StretchedGrid className='flex stretched' {...additionalGridProps} style={asSidebar ? { 'height': 'auto' } : null}>
+      <StretchedGrid className='flex stretched' {...additionalGridProps} style={asSidebar ? { height: 'auto' } : null}>
         <Grid.Row divided className='flex stretched'>
           <Grid.Column width={asSidebar ? 16 : 6}>
             <div>
               <Message info size='large' style={{ padding: '6px 15px' }}>
-                <Popup trigger={
-                  <Icon name='info circle' />
-                } content={<FormattedMessage id='broadcast.broadcastingTooltip' defaultMessage='Shows number of company branches your are currently broadcasting to out of the total number of company branches.' />} />
-                <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Broadcasting To' />: <strong>{this.state.broadcastingTo}/{total}</strong>
+                <Popup
+                  trigger={<Icon name='info circle' />}
+                  content={
+                    <FormattedMessage
+                      id='broadcast.broadcastingTooltip'
+                      defaultMessage='Shows number of company branches your are currently broadcasting to out of the total number of company branches.'
+                    />
+                  }
+                />
+                <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Broadcasting To' />:{' '}
+                <strong>
+                  {broadcastingTo}/{total}
+                </strong>
               </Message>
               <Form>
                 {asSidebar ? (
                   <Grid>
                     <GridColumn mobile={8}>
                       <Form.Field>
-                        <label><FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' /></label>
+                        <label>
+                          <FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' />
+                        </label>
                         <Dropdown
                           data-test='broadcast_modal_category_drpdn'
                           selection
@@ -314,26 +386,41 @@ class Broadcast extends Component {
                           value={filter.category}
                           onChange={this.handleFilterChange}
                           options={[
-                            { key: 'region', text: 'By Region', value: 'region' },
-                            { key: 'branch', text: 'By Company', value: 'branch' },
+                            {
+                              key: 'region',
+                              text: 'By Region',
+                              value: 'region'
+                            },
+                            {
+                              key: 'branch',
+                              text: 'By Company',
+                              value: 'branch'
+                            }
                           ]}
                         />
                       </Form.Field>
                     </GridColumn>
                     <GridColumn mobile={8}>
                       <Form.Field data-test='broadcast_modal_search_inp'>
-                        <label><FormattedMessage id='broadcast.filter' defaultMessage='Filter' /></label>
+                        <label>
+                          <FormattedMessage id='broadcast.filter' defaultMessage='Filter' />
+                        </label>
                         <Input
-                          name='search' icon='search'
+                          name='search'
+                          icon='search'
                           iconPosition='left'
-                          value={this.state.filterSearch} onChange={this.handleSearchChange} />
+                          value={this.state.filterSearch}
+                          onChange={this.handleSearchChange}
+                        />
                       </Form.Field>
                     </GridColumn>
                   </Grid>
                 ) : (
                   <>
                     <Form.Field>
-                      <label><FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' /></label>
+                      <label>
+                        <FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' />
+                      </label>
                       <Dropdown
                         data-test='broadcast_modal_category_drpdn'
                         selection
@@ -342,16 +429,21 @@ class Broadcast extends Component {
                         onChange={this.handleFilterChange}
                         options={[
                           { key: 'region', text: 'By Region', value: 'region' },
-                          { key: 'branch', text: 'By Company', value: 'branch' },
+                          { key: 'branch', text: 'By Company', value: 'branch' }
                         ]}
                       />
                     </Form.Field>
                     <Form.Field data-test='broadcast_modal_search_inp'>
-                      <label><FormattedMessage id='broadcast.filter' defaultMessage='Filter' /></label>
+                      <label>
+                        <FormattedMessage id='broadcast.filter' defaultMessage='Filter' />
+                      </label>
                       <Input
-                        name='search' icon='search'
+                        name='search'
+                        icon='search'
                         iconPosition='left'
-                        value={this.state.filterSearch} onChange={this.handleSearchChange} />
+                        value={this.state.filterSearch}
+                        onChange={this.handleSearchChange}
+                      />
                     </Form.Field>
                   </>
                 )}
@@ -364,38 +456,41 @@ class Broadcast extends Component {
                 enableReinitialize
                 onSubmit={async (values, { setSubmitting, setFieldValue }) => {
                   let payload = {
-
                     mappedBroadcastRules: {
                       ...treeData.model
                     },
                     ...values
                   }
 
-                  if (templates.some((el) => el.name === values.name)) {
+                  if (templates.some(el => el.name === values.name)) {
                     let { name, id } = this.state.selectedTemplate
 
                     await confirm(
                       formatMessage({ id: 'broadcast.overwriteTemplate.header' }, { name }),
-                      formatMessage({ id: 'broadcast.overwriteTemplate.content' })
+                      formatMessage({
+                        id: 'broadcast.overwriteTemplate.content'
+                      })
                     )
 
                     await updateTemplate(id, payload)
-                  }
-                  else {
+                  } else {
                     let { value } = await saveTemplate(payload)
                     this.setState({ selectedTemplate: value })
                     setFieldValue('templates', value.id)
                   }
 
-
                   let status = values.name === name ? 'Updated' : 'Saved'
 
-                  toastManager.add(generateToastMarkup(
-                    <FormattedMessage id={`notifications.template${status}.header`} />,
-                    <FormattedMessage id={`notifications.template${status}.content`} values={{ name: getSafe(() => values.name, name) }} />
-                  ), { appearance: 'success' })
-
-
+                  toastManager.add(
+                    generateToastMarkup(
+                      <FormattedMessage id={`notifications.template${status}.header`} />,
+                      <FormattedMessage
+                        id={`notifications.template${status}.content`}
+                        values={{ name: getSafe(() => values.name, name) }}
+                      />
+                    ),
+                    { appearance: 'success' }
+                  )
 
                   setSubmitting(false)
                 }}
@@ -407,49 +502,77 @@ class Broadcast extends Component {
                       <Grid>
                         <BottomUnpaddedRow>
                           <GridColumn computer={16}>
-                            <Header as='h4'><FormattedMessage id='broadcast.templates' defaultMessage='Templates' /></Header>
+                            <Header as='h4'>
+                              <FormattedMessage id='broadcast.templates' defaultMessage='Templates' />
+                            </Header>
                           </GridColumn>
                         </BottomUnpaddedRow>
 
                         {asSidebar ? (
                           <GridRow>
                             <GridColumn computer={11}>
-                              <FormikDropdown name='templates'
-                                        data-text='broadcast_modal_template_drpdn_addtn'
-                                        options={templates.map((template) => ({
-                                          key: template.id,
-                                          text: template.name,
-                                          value: template.id
-                                        }))}
-                                        inputProps={{
-                                          style: {width: '100%'},
-                                          onChange: async (e, data) => {
-                                            const dataName = getSafe(() => templates.find((el) => el.id === data.value).name, null)
-                                            if (dataName) {
-                                              this.onTemplateSelected(e, { options: templates.map((template) => ({
-                                                key: template.id,
-                                                text: template.name,
-                                                value: template.id
-                                              })), value: data.value}, props.setFieldValue)
-                                              this.setState({selectedTemplate: {id: data.value, name: dataName}})
-                                              this.formChanged()
-                                            } else {
-                                              props.setFieldValue('name', data.value)
-                                              await this.submitForm()
-                                              this.formChanged()
-                                            }
-                                          },
-                                          allowAdditions: true,
-                                          additionLabel: formatMessage({
-                                            id: 'global.dropdown.add',
-                                            defaultMessage: 'Add '
-                                          }),
-                                          search: true,
-                                          selection: true,
-                                          selectOnBlur: false,
-                                          noResultsMessage: formatMessage({ id: 'global.dropdown.startTyping', defaultMessage: 'Start typing to add {typeName}.' }, { typeName: formatMessage({ id: 'global.aCode', defaultMessage: 'a code' })})
-                                        }}
-
+                              <FormikDropdown
+                                name='templates'
+                                data-text='broadcast_modal_template_drpdn_addtn'
+                                options={templates.map(template => ({
+                                  key: template.id,
+                                  text: template.name,
+                                  value: template.id
+                                }))}
+                                inputProps={{
+                                  style: { width: '100%' },
+                                  onChange: async (e, data) => {
+                                    const dataName = getSafe(
+                                      () => templates.find(el => el.id === data.value).name,
+                                      null
+                                    )
+                                    if (dataName) {
+                                      this.onTemplateSelected(
+                                        e,
+                                        {
+                                          options: templates.map(template => ({
+                                            key: template.id,
+                                            text: template.name,
+                                            value: template.id
+                                          })),
+                                          value: data.value
+                                        },
+                                        props.setFieldValue
+                                      )
+                                      this.setState({
+                                        selectedTemplate: {
+                                          id: data.value,
+                                          name: dataName
+                                        }
+                                      })
+                                      this.formChanged()
+                                    } else {
+                                      props.setFieldValue('name', data.value)
+                                      await this.submitForm()
+                                      this.formChanged()
+                                    }
+                                  },
+                                  allowAdditions: true,
+                                  additionLabel: formatMessage({
+                                    id: 'global.dropdown.add',
+                                    defaultMessage: 'Add '
+                                  }),
+                                  search: true,
+                                  selection: true,
+                                  selectOnBlur: false,
+                                  noResultsMessage: formatMessage(
+                                    {
+                                      id: 'global.dropdown.startTyping',
+                                      defaultMessage: 'Start typing to add {typeName}.'
+                                    },
+                                    {
+                                      typeName: formatMessage({
+                                        id: 'global.aCode',
+                                        defaultMessage: 'a code'
+                                      })
+                                    }
+                                  )
+                                }}
                               />
                             </GridColumn>
                             <GridColumn computer={5}>
@@ -458,8 +581,14 @@ class Broadcast extends Component {
                                 onClick={() => this.handleTemplateDelete(props.setFieldValue)}
                                 disabled={!this.state.selectedTemplate}
                                 loading={this.props.templateDeleting}
-                                type='button' basic fluid negative>
-                                {formatMessage({ id: 'global.delete', defaultMessage: 'Delete' })}
+                                type='button'
+                                basic
+                                fluid
+                                negative>
+                                {formatMessage({
+                                  id: 'global.delete',
+                                  defaultMessage: 'Delete'
+                                })}
                               </Button>
                             </GridColumn>
                           </GridRow>
@@ -469,19 +598,25 @@ class Broadcast extends Component {
                               <Dropdown
                                 selectOnBlur={false}
                                 data-test='broadcast_modal_template_drpdn'
-                                fluid selection
+                                fluid
+                                selection
                                 value={this.state.selectedTemplate.id}
                                 onChange={(e, data) => {
                                   this.onTemplateSelected(e, data, props.setFieldValue)
-                                  this.setState({ selectedTemplate: { id: data.value, name: data.options.find((el) => el.value === data.value).text } })
+                                  this.setState({
+                                    selectedTemplate: {
+                                      id: data.value,
+                                      name: data.options.find(el => el.value === data.value).text
+                                    }
+                                  })
                                   this.formChanged()
                                 }}
-                                options={templates.map((template) => ({
+                                options={templates.map(template => ({
                                   key: template.id,
                                   text: template.name,
                                   value: template.id
-                                }))
-                                } />
+                                }))}
+                              />
                             </GridColumn>
                             <GridColumn computer={5}>
                               <Button
@@ -489,44 +624,77 @@ class Broadcast extends Component {
                                 onClick={() => this.handleTemplateDelete(props.setFieldValue)}
                                 disabled={!this.state.selectedTemplate}
                                 loading={this.props.templateDeleting}
-                                type='button' basic fluid negative>
-                                {formatMessage({ id: 'global.delete', defaultMessage: 'Delete' })}
+                                type='button'
+                                basic
+                                fluid
+                                negative>
+                                {formatMessage({
+                                  id: 'global.delete',
+                                  defaultMessage: 'Delete'
+                                })}
                               </Button>
                             </GridColumn>
                           </GridRow>
                         )}
 
-                        <GridRow style={asSidebar ? { position: 'absolute', top: '-20000px', left: '-20000px' } : null}>
+                        <GridRow
+                          style={
+                            asSidebar
+                              ? {
+                                  position: 'absolute',
+                                  top: '-20000px',
+                                  left: '-20000px'
+                                }
+                              : null
+                          }>
                           <GridColumn computer={11}>
                             <FormikInput
                               inputProps={{
                                 fluid: true,
-                                placeholder: formatMessage({ id: 'broadcast.templateName', defaultMessage: 'Template Name' }),
+                                placeholder: formatMessage({
+                                  id: 'broadcast.templateName',
+                                  defaultMessage: 'Template Name'
+                                }),
                                 'data-test': 'broadcast_modal_templateName_inp'
-                              }} name='name' />
+                              }}
+                              name='name'
+                            />
                           </GridColumn>
 
                           <GridColumn computer={5}>
-                            <Button onClick={this.submitForm} type='button' loading={this.props.templateSaving} fluid positive basic data-test='broadcast_modal_submit_btn'>
-                              {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                            <Button
+                              onClick={this.submitForm}
+                              type='button'
+                              loading={this.props.templateSaving}
+                              fluid
+                              positive
+                              basic
+                              data-test='broadcast_modal_submit_btn'>
+                              {formatMessage({
+                                id: 'global.save',
+                                defaultMessage: 'Save'
+                              })}
                             </Button>
                           </GridColumn>
                         </GridRow>
                       </Grid>
                     </Form>
                   )
-                }
-                }>
-              </Formik>
+                }}></Formik>
             </div>
           </Grid.Column>
-          <Grid.Column width={asSidebar ? 16 : 10} stretched style={asSidebar ? { padding: '0', 'box-shadow': '0 0 0 transparent' } : null}>
+          <Grid.Column
+            width={asSidebar ? 16 : 10}
+            stretched
+            style={asSidebar ? { padding: '0', 'box-shadow': '0 0 0 transparent' } : null}>
             <Rule.Root>
               <Rule.Header style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
                 <Rule.RowContent>
-                  <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region select'>{text => text}</FormattedMessage>
+                  <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region select'>
+                    {text => text}
+                  </FormattedMessage>
                 </Rule.RowContent>
-                <Rule.Toggle style={asSidebar ? { 'flex': '0 0 60px' } : null}>
+                <Rule.Toggle style={asSidebar ? { flex: '0 0 60px' } : null}>
                   <FormattedMessage id='broadcast.include' defaultMessage='Include' />
                 </Rule.Toggle>
 
@@ -534,9 +702,7 @@ class Broadcast extends Component {
                   <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
                 </Rule.Toggle>
                 <Rule.Toggle>
-                  {!hideFobPrice &&
-                    <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />
-                  }
+                  {!hideFobPrice && <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />}
                 </Rule.Toggle>
               </Rule.Header>
               <Rule.Content style={asSidebar ? { flex: '1 0 auto', 'overflow-y': 'hidden' } : null}>
@@ -553,14 +719,12 @@ class Broadcast extends Component {
                   data-test='broadcast_modal_rule_action'
                   asSidebar={asSidebar}
                 />
-                <Dimmer active={loading} inverted><Loader active={loading} /></Dimmer>
+                <Dimmer active={loading} inverted>
+                  <Loader active={loading} />
+                </Dimmer>
               </Rule.Content>
             </Rule.Root>
-            {!asModal &&
-              <RightAlignedDiv>
-                {this.getButtons()}
-              </RightAlignedDiv>
-            }
+            {!asModal && <RightAlignedDiv>{this.getButtons()}</RightAlignedDiv>}
           </Grid.Column>
         </Grid.Row>
       </StretchedGrid>
@@ -569,31 +733,27 @@ class Broadcast extends Component {
 
   getButtons = () => {
     const {
-      intl: { formatMessage }, closeBroadcast,
+      intl: { formatMessage },
+      closeBroadcast,
       asModal,
       asSidebar
     } = this.props
 
     return (
       <>
-        {asModal &&
-          <Button onClick={() => closeBroadcast()} data-test='broadcast_modal_close_btn' >
+        {asModal && (
+          <Button onClick={() => closeBroadcast()} data-test='broadcast_modal_close_btn'>
             {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
-          </Button >
-        }
-        {!asSidebar &&
-          <Button primary
-                  onClick={() => this.saveBroadcastRules()}
-                  data-test='broadcast_modal_save_btn'>
-            {formatMessage({id: 'global.save', defaultMessage: 'Save'})}
           </Button>
-        }
+        )}
+        {!asSidebar && (
+          <Button primary onClick={() => this.saveBroadcastRules()} data-test='broadcast_modal_save_btn'>
+            {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+          </Button>
+        )}
       </>
     )
   }
-
-
-
 
   saveBroadcastRules = async () => {
     const { saveRules, id, treeData, toastManager, filter } = this.props
@@ -603,24 +763,15 @@ class Broadcast extends Component {
 
     this.setState({ saved: true, initialize: true })
 
-    toastManager.add(generateToastMarkup(
-      'Saved successfully!',
-      'New broadcast rules have been saved.'
-    ), {
+    toastManager.add(generateToastMarkup('Saved successfully!', 'New broadcast rules have been saved.'), {
       appearance: 'success'
     })
-
   }
-
-
-
 
   render() {
     const { open, closeBroadcast, asModal, isPrepared } = this.props
 
-
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
-
 
     if (!asModal) {
       if (!isPrepared) return null
@@ -629,18 +780,17 @@ class Broadcast extends Component {
 
     return (
       <Modal closeIcon open={open} onClose={closeBroadcast} centered={false} size='large'>
-        <Modal.Header><FormattedMessage id='inventory.broadcast' defaultMessage='Price Book' /></Modal.Header>
+        <Modal.Header>
+          <FormattedMessage id='inventory.broadcast' defaultMessage='Price Book' />
+        </Modal.Header>
         <Modal.Content scrolling style={{ minHeight: '70vh' }} className='flex stretched'>
           {this.getContent()}
         </Modal.Content>
-        <Modal.Actions>
-          {this.getButtons()}
-        </Modal.Actions>
-      </Modal >
+        <Modal.Actions>{this.getButtons()}</Modal.Actions>
+      </Modal>
     )
   }
 }
-
 
 Broadcast.propTypes = {
   asModal: bool,
@@ -658,15 +808,21 @@ Broadcast.defaultProps = {
   saveSidebar: 0
 }
 
-export default injectIntl(withToastManager(connect(({ broadcast: { data, filter, ...rest } }) => {
-  const treeData = data
-    ? new TreeModel({ childrenPropertyName: 'elements' }).parse(data)
-    : new TreeModel().parse({ model: { rule: {} } })
+export default injectIntl(
+  withToastManager(
+    connect(
+      ({ broadcast: { data, filter, ...rest } }) => {
+        const treeData = data
+          ? new TreeModel({ childrenPropertyName: 'elements' }).parse(data)
+          : new TreeModel().parse({ model: { rule: {} } })
 
-  return {
-    treeData,
-    filter,
-    ...rest,
-  }
-}, { ...Actions })(Broadcast)))
-
+        return {
+          treeData,
+          filter,
+          ...rest
+        }
+      },
+      { ...Actions }
+    )(Broadcast)
+  )
+)
