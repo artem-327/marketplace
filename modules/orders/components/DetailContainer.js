@@ -73,7 +73,9 @@ function prepareDetail(data, type) {
     total: <FormattedNumber style='currency' currency={currency} value={totalPriceWithShipping} />, //"$" + totalPriceWithShipping.formatMoney(2),
     totalPkg: <ArrayToMultiple values={orderItems.map(d => (d.pkgAmount ? d.pkgAmount : 'N/A'))} />,
     unit: <ArrayToMultiple values={orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A'))} />,
-    unitCost: <ArrayToMultiple values={orderItems.map(d => (d.pricePerUOM ? <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} /> : 'N/A'))} />,
+    unitCost: <ArrayToMultiple values={orderItems.map(d =>
+      (d.orderItemProductOffers && d.orderItemProductOffers.length && d.orderItemProductOffers[0].costPerUOM ? <FormattedNumber style='currency' currency={currency} value={d.orderItemProductOffers[0].costPerUOM} /> : 'N/A')
+    )} />,
     unitPrice: <ArrayToMultiple values={orderItems.map(d => (
       <div><FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} /></div>
     ))} />,
