@@ -67,6 +67,17 @@ export const GraySegment = styled(Segment)`
 export const HighSegment = styled(Segment)`
   height: 100%;
 `
+export const DivIcon = styled.div`
+  display: block; 
+  height: 20px; 
+  position: relative;
+`
+
+const CloceIcon = styled(Icon)`
+  position: absolute;
+  top: -10px; 
+  right: -10px;
+`
 
 const initValues = {
   edit: {
@@ -975,7 +986,11 @@ class DetailSidebar extends Component {
                                   <GridRow>
                                   <GridColumn>
                                     <UploadLot {...this.props}
-                                      header={<div style={{display: 'block', height: '20px', position: 'relative'}} onClick={() => this.setState((prevState) =>({openUploadLot: !prevState.openUploadLot}))}> <Icon corner='top right' name='close' color='grey' style={{position: 'absolute', top: '-10px', right: '-10px'}} /></div>}
+                                      header={(
+                                        <DivIcon onClick={() => this.setState((prevState) =>({openUploadLot: !prevState.openUploadLot}))}> 
+                                          <CloceIcon  name='close' color='grey' />
+                                        </DivIcon>)
+                                      }
                                       hideAttachments
                                       edit={getSafe(() => sidebarValues.id, 0)}
                                       attachments={values.documents.attachments}
