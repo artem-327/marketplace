@@ -457,7 +457,7 @@ class _Table extends Component {
       ? [
           {
             name: '__actions',
-            title: !hideSettingsIcon && (
+            title: !hideSettingsIcon ? (
               <ColumnsSetting
                 onClick={() =>
                   this.setState(prevState => ({
@@ -466,6 +466,8 @@ class _Table extends Component {
                 }
                 data-test='table_columns_setting_action'
               />
+            ) : (
+              ''
             ),
             width: 45,
             actions: rowActions
@@ -749,7 +751,10 @@ class _Table extends Component {
             ) : (
               <Table
                 columnExtensions={this.getColumnsExtension()}
+                height='auto'
+                cellComponent={TableCells}
                 messages={MESSAGES}
+                rowComponent={props => <Row onClick={onRowClick} {...props} />}
               />
             )}
 

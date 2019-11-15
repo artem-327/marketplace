@@ -100,8 +100,8 @@ const initValues = {
 }
 
 const columns = [ 
-  { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, width: 80 },
-  { name: 'documentTypeName', title: <FormattedMessage id='global.docType' defaultMessage='Document Type'>{text => text}</FormattedMessage>, width: 80 }
+  { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, width: 200 },
+  { name: 'documentTypeName', title: <FormattedMessage id='global.docType' defaultMessage='Document Type'>{text => text}</FormattedMessage>, width: 160 }
 ]
 
 val.addMethod(val.number, 'divisibleBy', function (ref, message) {
@@ -264,7 +264,7 @@ class DetailSidebar extends Component {
   }
 
   handleChange = (e, name, value) => {
-    this.setState((prevState) =>({openUploadLot: !prevState.openUploadLot, documentType: value}))
+    this.setState({openUploadLot: true, documentType: value})
   }
 
   onSplitsChange = debounce(async (value, values, setFieldValue, validateForm) => {
@@ -1031,6 +1031,7 @@ class DetailSidebar extends Component {
                                 <GridRow>
                                   <GridColumn>
                                     <ProdexGrid
+                                      virtual={false}
                                       tableName='inventory_documents'
                                       {...datagrid.tableProps}
                                       columns={columns}
