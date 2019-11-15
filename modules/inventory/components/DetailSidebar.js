@@ -100,8 +100,8 @@ const initValues = {
 }
 
 const columns = [ 
-  { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, width: 100 },
-  { name: 'documentTypeName', title: <FormattedMessage id='global.docType' defaultMessage='Document Type'>{text => text}</FormattedMessage>, width: 100 }
+  { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, width: 80 },
+  { name: 'documentTypeName', title: <FormattedMessage id='global.docType' defaultMessage='Document Type'>{text => text}</FormattedMessage>, width: 80 }
 ]
 
 val.addMethod(val.number, 'divisibleBy', function (ref, message) {
@@ -194,7 +194,7 @@ class DetailSidebar extends Component {
     saveBroadcast: 0,
     changedForm: false,
     documentType: 1,
-    options: []
+    openUploadLot: false
   }
 
   componentDidMount = () => {
@@ -264,7 +264,7 @@ class DetailSidebar extends Component {
   }
 
   handleChange = (e, name, value) => {
-    this.setState({documentType: value})
+    this.setState((prevState) =>({openUploadLot: !prevState.openUploadLot, documentType: value}))
   }
 
   onSplitsChange = debounce(async (value, values, setFieldValue, validateForm) => {
@@ -970,11 +970,13 @@ class DetailSidebar extends Component {
                                   </GridColumn>
                                 </GridRow>
                               }
-                              { values.documents.documentType ?
+                              { values.documents.documentType && this.state.openUploadLot ?
                                 (
                                   <GridRow>
                                   <GridColumn>
                                     <UploadLot {...this.props}
+                                      header={<div style={{display: 'block', height: '20px', position: 'relative'}} onClick={() => this.setState((prevState) =>({openUploadLot: !prevState.openUploadLot}))}> <Icon corner='top right' name='close' color='grey' style={{position: 'absolute', top: '-10px', right: '-10px'}} /></div>}
+                                      hideAttachments
                                       edit={getSafe(() => sidebarValues.id, 0)}
                                       attachments={values.documents.attachments}
                                       name='documents.attachments'
@@ -1006,7 +1008,7 @@ class DetailSidebar extends Component {
                                         </>
                                       )}
                                       uploadedContent={(
-                                        <label>
+                                        <label >
                                           <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
                                           <br />
                                           <FormattedMessage id='addInventory.dragDropOr'
