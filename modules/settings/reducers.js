@@ -718,6 +718,15 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_PENDING:
+    case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER_PENDING:
+    case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_PENDING: {
+      return {
+        ...state,
+        csvImportError: null
+      }
+    }
+
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_REJECTED:
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER_REJECTED:
     case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_REJECTED:
