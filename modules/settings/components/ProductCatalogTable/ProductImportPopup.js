@@ -73,7 +73,7 @@ class ProductImportPopup extends Component {
   }
 
   render() {
-    const { closeImportPopup, csvFileId, closeImportPopupCancel, intl: { formatMessage } } = this.props
+    const { closeImportPopup, csvFileId, CSV, closeImportPopupCancel, intl: { formatMessage } } = this.props
     const {
       currentStep,
       isFinishUpload,
@@ -136,7 +136,7 @@ class ProductImportPopup extends Component {
                 <Button
                   primary
                   onClick={this.submitHandler}
-                  disabled={!csvFileId}
+                  disabled={!csvFileId || !CSV}
                   data-test='settings_product_import_submit_btn'>
                   {formatMessage({ id: `global.${currentStep === 'preview' ? 'import' : 'next'}`, defaultMessage: currentStep === 'preview' ? 'Import' : 'Next' })}
                 </Button>
@@ -218,6 +218,7 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     csvFileId: state.settings.fileCSVId,
+    CSV: state.settings.CSV,
     isSaveMapCSV: state.settings.isSaveMapCSV,
     mappedDataHeaderCSV: state.settings.dataHeaderCSV,
     mappedHeaders: state.settings.mappedHeaders,

@@ -112,8 +112,19 @@ export const payOrder = (orderId, bankAccount) => ({
   type: AT.ORDER_PAY_ORDER,
   payload: Api.payOrder(orderId, bankAccount)
 })
-export const cancelOrder = () => ({ type: AT.ORDER_CANCEL_ORDER, payload: {} })
+export const cancelOrder = orderId => ({
+  type: AT.ORDER_CANCEL_ORDER,
+  payload: Api.cancelOrder(orderId)
+})
 export const getRelatedOrders = orderId => ({
   type: AT.RELATED_ORDERS,
   payload: Api.getRelatedOrders(orderId)
+})
+export const approveOrder = orderId => ({
+  type: AT.ORDER_APPROVE_ORDER,
+  payload: Api.approveOrder(orderId)
+})
+export const disapproveOrder = orderId => ({
+  type: AT.ORDER_DISAPPROVE_ORDER,
+  payload: Api.disapproveOrder(orderId)
 })

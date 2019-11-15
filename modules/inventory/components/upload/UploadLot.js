@@ -152,7 +152,6 @@ class UploadLot extends Component {
         this.removeDuplicateFile(index)
         resolve()
       }).catch(e => {
-        console.log('!!!! Error ', e);
         reject()
       })
     })
@@ -166,7 +165,6 @@ class UploadLot extends Component {
       this.removeDuplicateFile(index)
       resolve()
     }).catch(e => {
-      console.log('!!!! Error ', e);
       reject()
     })
   }
