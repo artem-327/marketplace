@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { FormattedNumber } from 'react-intl';
+import { FormattedNumber } from 'react-intl'
 
 export const operators = {
   CONTAINS: 'CONTAINS',
@@ -25,7 +25,7 @@ export const filterPresets = {
 
 export const paths = {
   productOffers: {
-    productId: 'ProductOffer.companyProduct.id',
+    productId: 'ProductOffer.companyProduct.echoProduct.id',
     quantity: 'ProductOffer.quantity',
     price: 'ProductOffer.price',
     packagingTypes: 'ProductOffer.companyProduct.packagingType.id',
@@ -36,7 +36,7 @@ export const paths = {
     assayFrom: 'ProductOffer.assayMin',
     assayTo: 'ProductOffer.assayMax',
     manufacturedDate: 'ProductOffer.manufacturedDate',
-    warehouseId: 'ProductOffer.warehouse.id',
+    warehouseId: 'ProductOffer.warehouse.id'
   },
   orders: {
     orderDate: 'Order.orderDate',
@@ -55,12 +55,18 @@ export const dateDropdownOptions = [
 
 export const dateFormat = 'YYYY-MM-DD'
 
-
-export const replaceAmbigiousCharacters = text => text.toLowerCase().replace(/ /g, '').replace(/\//g, '').replace(/-/g, '')
+export const replaceAmbigiousCharacters = text =>
+  text
+    .toLowerCase()
+    .replace(/ /g, '')
+    .replace(/\//g, '')
+    .replace(/-/g, '')
 
 const checkboxesToFormik = (values, checkboxes) => {
   let obj = {}
-  let tmp = values.map((val) => checkboxes.find((ch) => ch.id === parseInt(val.value)))
+  let tmp = values.map(val =>
+    checkboxes.find(ch => ch.id === parseInt(val.value))
+  )
 
   tmp.forEach(val => {
     try {
@@ -79,21 +85,31 @@ export const datagridValues = {
     description: 'Warehouse',
     operator: operators.EQUALS,
 
-    toFilter: function (values) {
+    toFilter: function(values) {
       let data
       if (Array.isArray(values)) {
-        data = values.map((val) => {
+        data = values.map(val => {
           let parsed = JSON.parse(val)
           return {
             value: parsed.id,
             //description: parsed.name
-            description: JSON.stringify({ name: parsed.name, text: parsed.text })
+            description: JSON.stringify({
+              name: parsed.name,
+              text: parsed.text
+            })
           }
         })
-      }
-      else {
+      } else {
         let parsed = JSON.parse(values)
-        data = [{ value: parsed.id, description: JSON.stringify({ name: parsed.name, text: parsed.text }) }]
+        data = [
+          {
+            value: parsed.id,
+            description: JSON.stringify({
+              name: parsed.name,
+              text: parsed.text
+            })
+          }
+        ]
       }
 
       return {
@@ -104,8 +120,8 @@ export const datagridValues = {
       }
     },
 
-    valuesDescription: function (values) {
-      return values.map((val) => {
+    valuesDescription: function(values) {
+      return values.map(val => {
         try {
           return JSON.parse(val.description).name
         } catch {
@@ -114,12 +130,16 @@ export const datagridValues = {
       })
     },
 
-    tagDescription: function (values) {
+    tagDescription: function(values) {
       return `Warehouse: ${this.valuesDescription(values)[0]}`
     },
 
-    toFormik: function ({ values }) {
-      return JSON.stringify({ id: parseInt(values[0].value), name: values[0].description, text: values[0].description})
+    toFormik: function({ values }) {
+      return JSON.stringify({
+        id: parseInt(values[0].value),
+        name: values[0].description,
+        text: values[0].description
+      })
     }
   },
 
@@ -128,16 +148,17 @@ export const datagridValues = {
     description: 'Chemical Name',
     operator: operators.EQUALS,
 
-    toFilter: function (values, filterType = filterTypes.INVENTORY) {
-
-      let modifiedValues = values.map((val) => {
+    toFilter: function(values, filterType = filterTypes.INVENTORY) {
+      let modifiedValues = values.map(val => {
         let parsed = JSON.parse(val)
         return {
           value: parsed.id,
-          description: JSON.stringify({ name: parsed.name, casNumberCombined: parsed.casNumber || null })
+          description: JSON.stringify({
+            name: parsed.name,
+            casNumberCombined: parsed.casNumber || null
+          })
         }
       })
-
 
       switch (filterType) {
         case filterTypes.INVENTORY: {
@@ -150,10 +171,10 @@ export const datagridValues = {
           break
         }
 
-        default: break
-
+        default:
+          break
       }
-      
+
       return {
         operator: this.operator,
         path,
@@ -162,35 +183,39 @@ export const datagridValues = {
       }
     },
 
-    valuesDescription: function (values, params) {
-      return values.map((val) => {
+    valuesDescription: function(values, params) {
+      return values.map(val => {
         let parsed = JSON.parse(val.description)
-        if (parsed.casNumberCombined) var text = `${parsed.name} (${parsed.casNumberCombined})`
+        if (parsed.casNumberCombined)
+          var text = `${parsed.name} (${parsed.casNumberCombined})`
         else var text = parsed.name
 
         return text
       })
     },
 
-    tagDescription: function (values) {
+    tagDescription: function(values) {
       return this.valuesDescription(values)
     },
 
-    toFormik: function ({ values }) {
-      return values.map((val) => {
+    toFormik: function({ values }) {
+      return values.map(val => {
         let parsed = JSON.parse(val.description)
-        return JSON.stringify({ id: val.value, name: parsed.name, casNumber: parsed.casNumberCombined || null })
+        return JSON.stringify({
+          id: val.value,
+          name: parsed.name,
+          casNumber: parsed.casNumberCombined || null
+        })
       })
     }
   },
-
 
   quantityFrom: {
     paths: [paths.productOffers.quantity],
     description: 'Quantity From',
     operator: operators.GREATER_THAN_OR_EQUAL_TO,
 
-    toFilter: function (values) {
+    toFilter: function(values) {
       return {
         operator: this.operator,
         path: this.paths[0],
@@ -199,39 +224,38 @@ export const datagridValues = {
       }
     },
 
-    tagDescription: (values) => `>= ${values[0].description} pckgs`,
+    tagDescription: values => `>= ${values[0].description} pckgs`,
 
-    valuesDescription: function (values) {
-      return values.map((val) => val.description)
+    valuesDescription: function(values) {
+      return values.map(val => val.description)
     },
 
-    toFormik: function ({ values }) {
+    toFormik: function({ values }) {
       return values[0].value.toString()
     }
   },
-
 
   quantityTo: {
     paths: [paths.productOffers.quantity],
     description: 'Quantity To',
     operator: operators.LESS_THAN_OR_EQUAL_TO,
 
-    toFilter: function (values) {
-      return ({
+    toFilter: function(values) {
+      return {
         operator: this.operator,
         path: this.paths[0],
         values: [{ value: values, description: values }],
         description: this.description
-      })
+      }
     },
 
-    tagDescription: (values) => `<= ${values[0].description} pckgs`,
+    tagDescription: values => `<= ${values[0].description} pckgs`,
 
-    valuesDescription: function (values) {
-      return values.map((val) => val.description)
+    valuesDescription: function(values) {
+      return values.map(val => val.description)
     },
 
-    toFormik: function ({ values }) {
+    toFormik: function({ values }) {
       return values[0].value.toString()
     }
   },
@@ -241,22 +265,33 @@ export const datagridValues = {
     description: 'Price From',
     operator: operators.GREATER_THAN_OR_EQUAL_TO,
 
-    toFilter: function (values) {
-      return ({
+    toFilter: function(values) {
+      return {
         operator: this.operator,
         path: this.paths[0],
         values: [{ value: values, description: values }],
         description: this.description
-      })
+      }
     },
 
-    tagDescription: (values, { currencyCode } = '$') => <label>{'>= '}{<FormattedNumber style='currency' currency={currencyCode} value={values[0].description} />}</label>,
+    tagDescription: (values, { currencyCode } = '$') => (
+      <label>
+        {'>= '}
+        {
+          <FormattedNumber
+            style='currency'
+            currency={currencyCode}
+            value={values[0].description}
+          />
+        }
+      </label>
+    ),
 
-    valuesDescription: function (values) {
-      return values.map((val) => val.description)
+    valuesDescription: function(values) {
+      return values.map(val => val.description)
     },
 
-    toFormik: function ({ values }) {
+    toFormik: function({ values }) {
       return values[0].value.toString()
     }
   },
@@ -265,22 +300,33 @@ export const datagridValues = {
     description: 'Price To',
     operator: operators.LESS_THAN_OR_EQUAL_TO,
 
-    toFilter: function (values) {
-      return ({
+    toFilter: function(values) {
+      return {
         operator: this.operator,
         path: this.paths[0],
         values: [{ value: values, description: values }],
         description: this.description
-      })
+      }
     },
 
-    tagDescription: (values, { currencyCode } = '$') => <label>{'<= '}{<FormattedNumber style='currency' currency={currencyCode} value={values[0].description} />}</label>,
+    tagDescription: (values, { currencyCode } = '$') => (
+      <label>
+        {'<= '}
+        {
+          <FormattedNumber
+            style='currency'
+            currency={currencyCode}
+            value={values[0].description}
+          />
+        }
+      </label>
+    ),
 
-    valuesDescription: function (values) {
-      return values.map((val) => val.description)
+    valuesDescription: function(values) {
+      return values.map(val => val.description)
     },
 
-    toFormik: function ({ values }) {
+    toFormik: function({ values }) {
       return values[0].value.toString()
     }
   },
@@ -289,23 +335,26 @@ export const datagridValues = {
     description: 'Packaging Types',
     operator: operators.EQUALS,
 
-    toFilter: function (values, valuesDescription) {
-      return ({
+    toFilter: function(values, valuesDescription) {
+      return {
         operator: this.operator,
         path: this.paths[0],
-        values: values.map((val, i) => ({ value: val, description: valuesDescription[i] }))
-      })
+        values: values.map((val, i) => ({
+          value: val,
+          description: valuesDescription[i]
+        }))
+      }
     },
 
-    valuesDescription: function (values) {
-      return values.map((val) => val.description)
+    valuesDescription: function(values) {
+      return values.map(val => val.description)
     },
 
-    tagDescription: function (values) {
+    tagDescription: function(values) {
       return this.valuesDescription(values)
     },
 
-    toFormik: function ({ values }, packagingTypes) {
+    toFormik: function({ values }, packagingTypes) {
       return checkboxesToFormik(values, packagingTypes)
     },
 
@@ -316,23 +365,26 @@ export const datagridValues = {
     description: 'Product Conditions',
     operator: operators.EQUALS,
 
-    toFilter: function (values, valuesDescription) {
+    toFilter: function(values, valuesDescription) {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: values.map((val, i) => ({ value: val, description: valuesDescription[i] }))
+        values: values.map((val, i) => ({
+          value: val,
+          description: valuesDescription[i]
+        }))
       }
     },
 
-    valuesDescription: function (values) {
-      return values.map((val) => val.description)
+    valuesDescription: function(values) {
+      return values.map(val => val.description)
     },
 
-    tagDescription: function (values) {
+    tagDescription: function(values) {
       return this.valuesDescription(values)
     },
 
-    toFormik: function ({ values }, productConditions) {
+    toFormik: function({ values }, productConditions) {
       return checkboxesToFormik(values, productConditions)
     },
 
@@ -343,23 +395,26 @@ export const datagridValues = {
     description: 'Product Grades',
     operator: operators.EQUALS,
 
-    toFilter: function (values, valuesDescription) {
+    toFilter: function(values, valuesDescription) {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: values.map((val, i) => ({ value: val, description: valuesDescription[i] }))
+        values: values.map((val, i) => ({
+          value: val,
+          description: valuesDescription[i]
+        }))
       }
     },
 
-    valuesDescription: function (values) {
-      return values.map((val) => val.description)
+    valuesDescription: function(values) {
+      return values.map(val => val.description)
     },
 
-    tagDescription: function (values) {
+    tagDescription: function(values) {
       return this.valuesDescription(values)
     },
 
-    toFormik: function ({ values }, productGrades) {
+    toFormik: function({ values }, productGrades) {
       return checkboxesToFormik(values, productGrades)
     },
 
@@ -370,24 +425,26 @@ export const datagridValues = {
     paths: [paths.productOffers.productForms],
     description: 'Product Forms',
 
-    toFilter: function (values, valuesDescription) {
+    toFilter: function(values, valuesDescription) {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: values.map((val, i) => ({ value: val, description: valuesDescription[i] }))
+        values: values.map((val, i) => ({
+          value: val,
+          description: valuesDescription[i]
+        }))
       }
     },
 
-    valuesDescription: function (values) {
-      return values.map((val) => val.description)
+    valuesDescription: function(values) {
+      return values.map(val => val.description)
     },
 
-    tagDescription: function (values) {
+    tagDescription: function(values) {
       return this.valuesDescription(values)
     },
 
-
-    toFormik: function ({ values }, productForms) {
+    toFormik: function({ values }, productForms) {
       return checkboxesToFormik(values, productForms)
     },
 
@@ -399,50 +456,48 @@ export const datagridValues = {
     paths: [paths.productOffers.expirationDate],
     description: 'Expiration From',
 
-    toFilter: function (values) {
+    toFilter: function(values) {
       let date = moment().add(values, 'days')
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{ value: date.format(), description: date.format(dateFormat) }],
+        values: [{ value: date.format(), description: date.format(dateFormat) }]
       }
     },
 
-    tagDescription: (values) => `Expires > ${values[0].description}`,
+    tagDescription: values => `Expires > ${values[0].description}`,
 
-    valuesDescription: function (values) {
-      return values.map((val) => val.description)
+    valuesDescription: function(values) {
+      return values.map(val => val.description)
     },
 
-    toFormik: function ({ values }) {
+    toFormik: function({ values }) {
       return moment(values[0].value.toString()).format(dateFormat)
     }
-
   },
   expirationTo: {
     operator: operators.LESS_THAN,
     paths: [paths.productOffers.expirationDate],
     description: 'Expiration To',
 
-    toFilter: function (values) {
+    toFilter: function(values) {
       let date = moment().add(values, 'days')
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{ value: date.format(), description: date.format(dateFormat) }],
+        values: [{ value: date.format(), description: date.format(dateFormat) }]
       }
     },
 
-    tagDescription: (values) => `Expires < ${values[0].description}`,
+    tagDescription: values => `Expires < ${values[0].description}`,
 
-    valuesDescription: function (values) {
-      return values.map((val) => val.description)
+    valuesDescription: function(values) {
+      return values.map(val => val.description)
     },
 
-    toFormik: function ({ values }) {
+    toFormik: function({ values }) {
       return moment(values[0].value.toString()).format(dateFormat)
     }
-
   },
 
   mfgFrom: {
@@ -450,25 +505,24 @@ export const datagridValues = {
     paths: [paths.productOffers.manufacturedDate],
     description: 'Manufactured Date From',
 
-    toFilter: function (values) {
+    toFilter: function(values) {
       let date = moment().subtract(values, 'days')
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{ value: date.format(), description: date.format(dateFormat) }],
+        values: [{ value: date.format(), description: date.format(dateFormat) }]
       }
     },
 
-    tagDescription: (values) => `Manufactured > ${values[0].description}`,
+    tagDescription: values => `Manufactured > ${values[0].description}`,
 
-    valuesDescription: function (values) {
-      return values.map((val) => val.description)
+    valuesDescription: function(values) {
+      return values.map(val => val.description)
     },
 
-    toFormik: function ({ values }) {
+    toFormik: function({ values }) {
       return moment(values[0].value.toString()).format(dateFormat)
     }
-
   },
 
   mfgTo: {
@@ -476,25 +530,24 @@ export const datagridValues = {
     paths: [paths.productOffers.manufacturedDate],
     description: 'Manufactured Date To',
 
-    toFilter: function (values) {
+    toFilter: function(values) {
       let date = moment().subtract(values, 'days')
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{ value: date.format(), description: date.format(dateFormat) }],
+        values: [{ value: date.format(), description: date.format(dateFormat) }]
       }
     },
 
-    tagDescription: (values) => `Manufactured < ${values[0].description}`,
+    tagDescription: values => `Manufactured < ${values[0].description}`,
 
-    valuesDescription: function (values) {
-      return values.map((val) => val.description)
+    valuesDescription: function(values) {
+      return values.map(val => val.description)
     },
 
-    toFormik: function ({ values }) {
+    toFormik: function({ values }) {
       return moment(values[0].value.toString()).format(dateFormat)
     }
-
   },
 
   assayFrom: {
@@ -502,7 +555,7 @@ export const datagridValues = {
     paths: [paths.productOffers.assayFrom],
     description: 'Assay Min.',
 
-    toFilter: function (values) {
+    toFilter: function(values) {
       return {
         operator: this.operator,
         path: this.paths[0],
@@ -510,24 +563,22 @@ export const datagridValues = {
       }
     },
 
-    valuesDescription: function (values) {
-      return values.map((val) => val.description)
+    valuesDescription: function(values) {
+      return values.map(val => val.description)
     },
 
-    tagDescription: (values) => `Assay Min. ${values[0].description}%`,
+    tagDescription: values => `Assay Min. ${values[0].description}%`,
 
-    toFormik: function ({ values }) {
+    toFormik: function({ values }) {
       return values[0].value.toString()
-    },
-
+    }
   },
   assayTo: {
     operator: operators.LESS_THAN_OR_EQUAL_TO,
     paths: [paths.productOffers.assayTo],
     description: 'Assay Max.',
 
-    toFilter: function (values) {
-
+    toFilter: function(values) {
       return {
         operator: this.operator,
         path: this.paths[0],
@@ -535,50 +586,70 @@ export const datagridValues = {
       }
     },
 
-    valuesDescription: function (values) {
-      return values.map((val) => val.description)
+    valuesDescription: function(values) {
+      return values.map(val => val.description)
     },
 
-    tagDescription: (values) => `Assay Max. ${values[0].description}%`,
+    tagDescription: values => `Assay Max. ${values[0].description}%`,
 
-    toFormik: function ({ values }) {
+    toFormik: function({ values }) {
       return values[0].value.toString()
     }
-  },
+  }
 }
 
-
-
 export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
-  let groups = [{
-    description: 'Quantity',
-    from: {
-      path: paths.productOffers.quantity, operator: operators.GREATER_THAN_OR_EQUAL_TO
+  let groups = [
+    {
+      description: 'Quantity',
+      from: {
+        path: paths.productOffers.quantity,
+        operator: operators.GREATER_THAN_OR_EQUAL_TO
+      },
+      to: {
+        path: paths.productOffers.quantity,
+        operator: operators.LESS_THAN_OR_EQUAL_TO
+      },
+      tagDescription: (from, to) => `${from} - ${to} pkgs`
     },
-    to: {
-      path: paths.productOffers.quantity, operator: operators.LESS_THAN_OR_EQUAL_TO
+    {
+      description: 'Price',
+      from: {
+        path: paths.productOffers.price,
+        operator: operators.GREATER_THAN_OR_EQUAL_TO
+      },
+      to: {
+        path: paths.productOffers.price,
+        operator: operators.LESS_THAN_OR_EQUAL_TO
+      },
+      tagDescription: (from, to) => (
+        <label>
+          <FormattedNumber
+            style='currency'
+            currency={currencyCode}
+            value={from}
+          />{' '}
+          -{' '}
+          <FormattedNumber
+            style='currency'
+            currency={currencyCode}
+            value={to}
+          />
+        </label>
+      )
     },
-    tagDescription: (from, to) => `${from} - ${to} pkgs`
-  }, {
-    description: 'Price',
-    from: {
-      path: paths.productOffers.price, operator: operators.GREATER_THAN_OR_EQUAL_TO
-    },
-    to: {
-      path: paths.productOffers.price, operator: operators.LESS_THAN_OR_EQUAL_TO
-    },
-    tagDescription: (from, to) => <label><FormattedNumber style='currency' currency={currencyCode} value={from} /> - <FormattedNumber style='currency' currency={currencyCode} value={to} /></label>
-    ,
-  }, {
-    description: 'Assay',
-    from: {
-      path: paths.productOffers.assayFrom, operator: operators.GREATER_THAN_OR_EQUAL_TO
-    },
-    to: {
-      path: paths.productOffers.assayTo, operator: operators.LESS_THAN_OR_EQUAL_TO
-    },
-    tagDescription: (from, to) => `${from}% - ${to}% `
-  },
+    {
+      description: 'Assay',
+      from: {
+        path: paths.productOffers.assayFrom,
+        operator: operators.GREATER_THAN_OR_EQUAL_TO
+      },
+      to: {
+        path: paths.productOffers.assayTo,
+        operator: operators.LESS_THAN_OR_EQUAL_TO
+      },
+      tagDescription: (from, to) => `${from}% - ${to}% `
+    }
 
     // {
     //   description: 'Expiration',
@@ -592,21 +663,32 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
     // },
   ]
 
-
   // Create copy so we dont mutate original filters
   let filters = appliedFilters.slice()
 
-  let results = [], indexes = []
+  let results = [],
+    indexes = []
 
   groups.forEach(group => {
-    let from = filters.findIndex((el) => el.operator === group.from.operator && el.path === group.from.path)
-    let to = filters.findIndex((el) => el.operator === group.to.operator && el.path === group.to.path)
+    let from = filters.findIndex(
+      el => el.operator === group.from.operator && el.path === group.from.path
+    )
+    let to = filters.findIndex(
+      el => el.operator === group.to.operator && el.path === group.to.path
+    )
 
     if (from !== -1 && to !== -1) {
       results.push({
         description: group.description,
-        valuesDescription: `${filters[from].valuesDescription.toString()} - ${filters[to].valuesDescription.toString()}`,
-        tagDescription: group.tagDescription(filters[from].valuesDescription.toString(), filters[to].valuesDescription.toString()),
+        valuesDescription: `${filters[
+          from
+        ].valuesDescription.toString()} - ${filters[
+          to
+        ].valuesDescription.toString()}`,
+        tagDescription: group.tagDescription(
+          filters[from].valuesDescription.toString(),
+          filters[to].valuesDescription.toString()
+        ),
         indexes: [from, to]
       })
       indexes.push(from, to)
@@ -626,6 +708,5 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
     }
   })
 
-
   return results
-} 
+}

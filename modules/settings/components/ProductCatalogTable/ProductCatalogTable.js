@@ -23,7 +23,7 @@ class ProductCatalogTable extends Component {
       { name: 'externalProductName', title: <FormattedMessage id='global.externalProductName' defaultMessage='External Product Name!'>{(text) => text}</FormattedMessage>, sortPath: 'CompanyProduct.echoProduct.name' },
       { name: 'externalProductCode', title: <FormattedMessage id='global.externalProductCode' defaultMessage='External Product Code!'>{(text) => text}</FormattedMessage>, sortPath: 'CompanyProduct.echoProduct.code' },
       { name: 'packagingSizeFormatted', title: <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>{(text) => text}</FormattedMessage>, sortPath: 'CompanyProduct.packagingSize' },
-      { name: 'unit', title: <FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit'>{text => text}</FormattedMessage>, sortPath: 'CompanyProduct.packagingUnit.nameAbbreviation'},
+      { name: 'unit', title: <FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit'>{text => text}</FormattedMessage>, sortPath: 'CompanyProduct.packagingUnit.nameAbbreviation' },
       { name: 'packagingTypeName', title: <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>{(text) => text}</FormattedMessage>, sortPath: 'CompanyProduct.packagingType.name' }
     ],
     echoProducts: []
@@ -90,6 +90,11 @@ class ProductCatalogTable extends Component {
           rows={rows}
           columns={columns}
           style={{ marginTop: '5px' }}
+          defaultSorting={{
+            columnName: 'intProductName',
+            sortPath: 'CompanyProduct.intProductName',
+            direction: 'desc'
+          }}
           rowActions={[
             { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row) },
             {

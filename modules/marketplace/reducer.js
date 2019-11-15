@@ -19,14 +19,13 @@ export const initialState = {
   warehousesList: [],
   loading: false,
   autocompleteData: [],
-  autocompleteDataLoading: false,
+  autocompleteDataLoading: false
 }
 
 export default function reducer(state = initialState, action) {
   const { type, payload } = action
 
   switch (type) {
-
     case AT.GET_AUTOCOMPLETE_DATA_MARKETPLACE_PENDING: {
       return {
         ...state,
@@ -38,14 +37,19 @@ export default function reducer(state = initialState, action) {
       const rVal = {
         ...state,
         autocompleteDataLoading: false,
-        autocompleteData: uniqueArrayByKey(payload, 'id').map((el) => {
-          const productCode = getSafe(() => el.intProductCode, '')
-          const productName = getSafe(() => el.intProductName, '')
+        autocompleteData: uniqueArrayByKey(payload, 'id').map(el => {
+          const productCode = getSafe(() => el.code, '')
+          const productName = getSafe(() => el.name, '')
+
           return {
             ...el,
             key: el.id,
-            text: `${productCode} ${productName}`,
-            value: JSON.stringify({ id: el.id, name: el.echoProduct.elements[0].casProduct.chemicalName, casNumber: el.echoProduct.elements[0].casProduct.casNumber }),
+            text: `${productName} ${productCode} `,
+            value: JSON.stringify({
+              id: el.id,
+              name: productName,
+              casNumber: productCode
+            }),
             content: {
               productCode: productCode,
               productName: productName,
@@ -60,10 +64,9 @@ export default function reducer(state = initialState, action) {
     case AT.GET_AUTOCOMPLETE_DATA_MARKETPLACE_REJECTED: {
       return {
         ...state,
-        autocompleteDataLoading: false,
+        autocompleteDataLoading: false
       }
     }
-
 
     default: {
       return state

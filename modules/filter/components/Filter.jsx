@@ -36,7 +36,8 @@ import {
   WhiteSegment, GraySegment,
   Title, BottomMargedDropdown,
   LessPaddedRow, SaveFilterRow,
-  SaveFilterTitle, SaveFilterClose
+  SaveFilterTitle, SaveFilterClose,
+  StyledGrid, SmallerTextColumn
 } from '../constants/layout'
 
 class Filter extends Component {
@@ -445,21 +446,28 @@ class Filter extends Component {
 
   getOptions = (options) => {
 
-    return options.map(option => ({
-      key: option.key,
-      text: option.text,
-      value: option.value,
-      // content: (
-      //   <Header style={{ fontSize: '1em' }}>
-      //     <Header.Content>
-      //       {`${option.content.productCode ? option.content.productCode : ''} ${option.content.productName ? option.content.productName : ''}`}
-      //       {option.content.casProducts.map(cp => (
-      //         <Header.Subheader>{`${getSafe(() => cp.casProduct.casNumber, '')} ${getSafe(() => cp.displayName, '')}`}</Header.Subheader>
-      //       ))}
-      //     </Header.Content>
-      //   </Header>
-      // )
-    }))
+    return options.map(option => {
+      let parsed = JSON.parse(option.value)
+
+      return ({
+        key: option.key,
+        text: option.text,
+        value: option.value,
+        content: (
+          <StyledGrid>
+            <GridRow>
+              <GridColumn computer={8}>
+                {parsed.name}
+              </GridColumn>
+
+              <SmallerTextColumn computer={8} textAlign='right'>
+                {parsed.casNumber}
+              </SmallerTextColumn>
+            </GridRow>
+          </StyledGrid>
+        )
+      })
+    })
 
   }
 
@@ -489,7 +497,7 @@ class Filter extends Component {
       selection: true,
       multiple: true,
       fluid: true,
-      options: this.getOptions(uniqueArrayByKey(savedAutocompleteData.concat(autocompleteData), 'id')),
+      options: this.getOptions(uniqueArrayByKey(autocompleteData.concat(savedAutocompleteData), 'key')),
       loading: autocompleteDataLoading,
       name: 'search',
       placeholder: <FormattedMessage id='filter.searchProducts' defaultMessage='Search Products' />,
@@ -718,7 +726,6 @@ class Filter extends Component {
           this.submitForm = props.submitForm
           this.resetForm = props.resetForm
           this.setFieldValue = props.setFieldValue
-
           return (
             <FlexSidebar
               visible={isOpen}
@@ -737,11 +744,19 @@ class Filter extends Component {
               }}
               {...additionalSidebarProps}>
               <FiltersContainer>
-                <Button onClick={() => this.toggleFilter(false)} primary={!this.state.savedFiltersActive} data-test='filter_set_filters'>
+                <Button
+                  type='button'
+                  onClick={() => this.toggleFilter(false)}
+                  primary={!this.state.savedFiltersActive}
+                  data-test='filter_set_filters'>
                   {formatMessage({ id: 'filter.setFilters', defaultMessage: 'SET FILTERS' })}
                 </Button>
 
-                <Button onClick={() => this.toggleFilter(true)} primary={this.state.savedFiltersActive} data-test='filter_saved_filters'>
+                <Button
+                  type='button'
+                  onClick={() => this.toggleFilter(true)}
+                  primary={this.state.savedFiltersActive}
+                  data-test='filter_saved_filters'>
                   {formatMessage({ id: 'filter.savedFilter', defaultMessage: 'SAVED FILTERS' })}
                 </Button>
               </FiltersContainer>

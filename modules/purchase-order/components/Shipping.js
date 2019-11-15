@@ -36,8 +36,8 @@ class Shipping extends Component {
 
     let dropdownOptions = addresses.map(i => ({
       text: this.props.otherAddresses
-        ? `${i.address.streetAddress}, ${i.address.city}`
-        : `${i.deliveryAddress.address.streetAddress}, ${i.deliveryAddress.address.city}`,
+        ? `${i.cfName}`
+        : `${i.deliveryAddress.cfName}`,
       value: i.id,
       key: i.id
     }))

@@ -175,9 +175,9 @@ export class DatagridProvider extends Component {
     })
   }
 
-  onTableReady = () => {
+  onTableReady = (params = {}) => {
     this.setState({ ready: true })
-    this.loadData()
+    this.loadData(params)
   }
 
   render() {

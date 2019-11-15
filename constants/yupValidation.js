@@ -198,3 +198,8 @@ export const quantityValidation = (min = 1, split = 1) => (
     .min(min, errorMessages.minimum(min))
     .test('v', errorMessages.invalidSplit(split), (v) => v % split === 0)
 )
+
+export const minOrZeroLength = (min) => (
+  Yup.string()
+    .test('v', errorMessages.minimum(min), (v) => v ? v.trim().length >= min : true)
+)

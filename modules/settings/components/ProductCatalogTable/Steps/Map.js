@@ -42,7 +42,6 @@ const simpleEchoProductList = {
   required: [
     "codeMapper",
     "elementsMapper",
-    "manufacturerMapper",
     "nameMapper",
   ],
   optional: [
@@ -98,6 +97,7 @@ const simpleEchoProductList = {
     "inhalationMapper",
     "irritationMapper",
     "labelElementsMapper",
+    "manufacturerMapper",
     "meltingPointRangeMapper",
     "mexicoGradeMapper",
     "mfrProductCodesMapper",

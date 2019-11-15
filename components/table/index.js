@@ -58,7 +58,7 @@ const GlobalTableOverrideStyle = createGlobalStyle`
     }
   }
   ${isFirefox &&
-  `
+    `
     .bootstrapiso > .flex-column {
       flex: 0 0 auto !important;
     }
@@ -305,7 +305,12 @@ class _Table extends Component {
     onScrollToEnd: pt.func,
     onRowClick: pt.func,
     onSortingChange: pt.func,
-    onTableReady: pt.func
+    onTableReady: pt.func,
+    defaultSorting: pt.shape({
+      columnName: pt.string,
+      sortPath: pt.string,
+      direction: pt.oneOf(['ASC', 'asc', 'DESC', 'desc'])
+    })
   }
 
   static defaultProps = {
@@ -323,7 +328,8 @@ class _Table extends Component {
     singleSelection: false,
     onSelectionChange: () => {},
     onScrollToEnd: () => {},
-    onTableReady: () => {}
+    onTableReady: () => {},
+    defaultSorting: null
   }
 
   constructor(props) {
@@ -445,11 +451,23 @@ class _Table extends Component {
   }
 
   getColumns = () => {
-    const { rowActions, columns } = this.props
+    const { rowActions, columns, hideSettingsIcon } = this.props
 
     return rowActions
       ? [
-          { name: '__actions', title: ' ', width: 45, actions: rowActions },
+          {
+            name: '__actions',
+            title: !hideSettingsIcon && (
+              <ColumnsSetting
+                onClick={() =>
+                  this.setState({ columnSettingOpen: !columnSettingOpen })
+                }
+                data-test='table_columns_setting_action'
+              />
+            ),
+            width: 45,
+            actions: rowActions
+          },
           ...columns
         ]
       : columns
@@ -465,7 +483,14 @@ class _Table extends Component {
   }
 
   loadColumnsSettings = () => {
-    const { tableName, columns, rowActions, defaultHiddenColumns } = this.props
+    const {
+      tableName,
+      columns,
+      rowActions,
+      defaultHiddenColumns,
+      defaultSorting
+    } = this.props
+
     // get column names from current table settings
     let colNames = columns.map(column => {
       return column.name
@@ -479,14 +504,22 @@ class _Table extends Component {
 
       let invalidItems =
         savedSettings.order.length === colNames.length
-          ? savedSettings.order.filter(col => {
-              if (colNames.indexOf(col) > -1) {
-                return false
-              } else {
-                return true
-              }
-            })
+          ? savedSettings.order.filter(col => !(colNames.indexOf(col) > -1))
           : true
+
+      if (
+        (!savedSettings.sorting || savedSettings.sorting.length === 0) &&
+        defaultSorting
+      ) {
+        savedSettings.sorting = [defaultSorting]
+        this.setState(
+          { columnsSettings: savedSettings },
+          () =>
+            (localStorage[tableName] = JSON.stringify(
+              this.state.columnsSettings
+            ))
+        )
+      }
 
       // if number of columns is different or any column uses different name then remove saved settings
       if (invalidItems === true || invalidItems.length) {
@@ -505,6 +538,9 @@ class _Table extends Component {
         {
           columnsSettings: {
             ...this.state.columnsSettings,
+            sorting: defaultSorting
+              ? [defaultSorting]
+              : this.state.columnsSettings.sorting,
             hiddenColumnNames: defaultHiddenColumns
           }
         },
@@ -525,24 +561,37 @@ class _Table extends Component {
     } = this.state
     const column = s ? columns.find(c => c.name === s.columnName) : {}
     this.setState({ selection: defaultSelection })
+
     onTableReady({
-      sortPath: column.sortPath,
+      sortPath: column && column.sortPath,
       sortDirection: s && s.direction.toUpperCase()
     })
   }
 
   handleSortingChange = sorting => {
     const [s] = sorting
+
+    let sortDirection = s.direction.toUpperCase()
     const { onSortingChange, columns } = this.props
     const column = columns.find(c => c.name === s.columnName)
+
     if (!column.sortPath) return
+
+    if (
+      this.state.columnsSettings.sorting[0].direction.toUpperCase() ===
+      sortDirection
+    ) {
+      if (sortDirection === 'ASC') sortDirection = 'DESC'
+      else sortDirection = 'ASC'
+      s.direction = sortDirection
+    }
 
     this.handleColumnsSettings({ sorting })
 
     onSortingChange &&
       onSortingChange({
         sortPath: column ? column.sortPath : s.columnName,
-        sortDirection: s.direction.toUpperCase()
+        sortDirection
       })
   }
 
@@ -632,14 +681,6 @@ class _Table extends Component {
             transition: 'opacity 0.2s'
           }}
           ref={c => c && (this.gridWrapper = c)}>
-          {!hideSettingsIcon && (
-            <ColumnsSetting
-              onClick={() =>
-                this.setState({ columnSettingOpen: !columnSettingOpen })
-              }
-              data-test='table_columns_setting_action'
-            />
-          )}
           <ColumnsSettingModal
             columns={columnsFiltered}
             open={columnSettingOpen}

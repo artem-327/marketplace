@@ -18,7 +18,7 @@ import Router from 'next/router'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { generateToastMarkup, getSafe } from '~/utils/functions'
-import { errorMessages, provinceObjectRequired } from '~/constants/yupValidation'
+import { errorMessages, provinceObjectRequired, minOrZeroLength } from '~/constants/yupValidation'
 
 import { AddressForm } from '~/modules/address-form'
 import { PhoneNumber } from '~/modules/phoneNumber'
@@ -48,9 +48,7 @@ const initialFormValues = {
 
 const formValidation = () => Yup.lazy((values) => (
   Yup.object().shape({
-    addressName: Yup.string().trim()
-      .min(3, errorMessages.minLength(3))
-      .required(errorMessages.requiredMessage),
+    addressName: minOrZeroLength(3),
     contactName: Yup.string().trim()
       .min(3, errorMessages.minLength(3))
       .required(errorMessages.requiredMessage),
@@ -107,15 +105,16 @@ class DeliveryAddressesPopup extends React.Component {
                 }
               }
               try {
+                let response
                 if (values.address.province === '') delete payload.address['province']
-                if (popupValues) await updateDeliveryAddresses(rowId, payload, reloadFilter)
-                else await createDeliveryAddress(payload, reloadFilter)
+                if (popupValues) response = await updateDeliveryAddresses(rowId, payload, reloadFilter)
+                else response = await createDeliveryAddress(payload, reloadFilter)
 
                 let status = popupValues ? 'deliveryAddressUpdated' : 'deliveryAddressCreated'
 
                 toastManager.add(generateToastMarkup(
                   <FormattedMessage id={`notifications.${status}.header`} />,
-                  <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.addressName }} />
+                  <FormattedMessage id={`notifications.${status}.content`} values={{ name: response.cfName }} />
                 ), { appearance: 'success' })
               }
               catch { }

@@ -245,15 +245,6 @@ class MyInventory extends Component {
         width: 120
       },
       {
-        name: 'assayString',
-        title: (
-          <FormattedMessage id='myInventory.assay' defaultMessage='Assay'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100
-      },
-      {
         name: 'mfgDate',
         title: (
           <FormattedMessage id='myInventory.mfgDate' defaultMessage='MFG Date'>

@@ -37,7 +37,7 @@ import { errorMessages, dateValidation } from '~/constants/yupValidation'
 
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 
-import { tabs, defaultValues, transportationTypes } from "./constants";
+import { tabs, defaultValues, transportationTypes, onErrorFieldTabs } from "./constants";
 import styled from "styled-components";
 import debounce from "lodash/debounce";
 import { uniqueArrayByKey } from '~/utils/functions'
@@ -57,7 +57,6 @@ export const MyContainer = styled.div`
 const validationScheme = Yup.object().shape({
   code: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
   name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
-  manufacturer: Yup.number().integer().min(1).required(errorMessages.requiredMessage),    // ! ! min 0 or 1 ?
   elements: Yup.array().of(Yup.object().uniqueProperty('casProduct', errorMessages.unique(<FormattedMessage id='admin.casProduct' name='CAS Product'>{text => text}</FormattedMessage>)).shape({
     name: Yup.string().trim().test('requiredIfProprietary', errorMessages.requiredMessage, function (value) {
       const { proprietary } = this.parent
@@ -119,31 +118,24 @@ class AddEditEchoProduct extends React.Component {
     codesList: [],
   }
 
-  componentDidMount() {
-  }
-
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.visible) {
       if (!prevProps.visible) { // Sidebar just opened
-        //console.log('!!!!!!!!!!!!!!!!!!!!! AddEditEchoProduct componentDidUpdate -> visible', this.props)
         this.setInitialState( this.props.popupValues, { activeTab: this.props.editTab})
         this.resetForm()
       }
 
       if (prevProps.editForm && !prevProps.addForm && this.props.addForm) { // Changed from Edit to Add form
-        //console.log('!!!!!!!!!!!!!!!!!!!!! AddEditEchoProduct componentDidUpdate EDIT -> ADD', this.props)
         this.setState({ activeTab: 0, codesList: [], changedForm: false })
         this.resetForm()
       }
 
       if (prevProps.addForm && !prevProps.editForm && this.props.editForm) { // Changed from Add to Edit form
-        //console.log('!!!!!!!!!!!!!!!!!!!!! AddEditEchoProduct componentDidUpdate ADD -> EDIT', this.props)
         this.setInitialState( this.props.popupValues, { activeTab: this.props.editTab})
         this.resetForm()
       }
 
       if (prevProps.editForm && this.props.editForm && prevProps.popupValues.id !== this.props.popupValues.id) { // Changed edit product
-        //console.log('!!!!!!!!!!!!!!!!!!!!! AddEditEchoProduct componentDidUpdate EDIT - changed product', this.props)
         this.setInitialState( this.props.popupValues, { activeTab: this.props.editTab})
         this.resetForm()
       }
@@ -160,7 +152,6 @@ class AddEditEchoProduct extends React.Component {
       this.props.searchManufacturers(getSafe(() => this.props.popupValues.manufacturer.name, ''), 200)
     }
     this.setState( { codesList, changedForm: false , ...additionalStates })
-    //console.log('!!!!!!!!!!!!!!!!! ! ! new state', { codesList , ...additionalStates })
   }
 
   getInitialFormValues = () => {
@@ -306,6 +297,11 @@ class AddEditEchoProduct extends React.Component {
     this.setState({ activeTab: index})
   }
 
+  switchToErrors = (err) => {
+    const errorTab = onErrorFieldTabs[err[0]]
+    this.tabChanged(errorTab !== undefined ? errorTab : 0)
+  }
+
   handleSearchChange = debounce((e, { searchQuery, dataindex }) => {
     this.setState({ isLoading: true, casProduct: searchQuery })
 
@@ -342,23 +338,12 @@ class AddEditEchoProduct extends React.Component {
     }
     delete formValues.attachments
 
-    /*
-    console.log('!!!!!!!!!!!!!!! submitForm values', values)
-    console.log('!!!!!!!!!!!!!!! submitForm formValues', formValues)
-    console.log('!!!!!!!!!!!!!!! submitForm elements', formValues.elements)
-    setSubmitting(false)
-    return  // ! !
-    */
-
     try {
       let data = {}
       if (popupValues)
         data = await putEchoProduct(popupValues.id, formValues)
       else
         data = await postEchoProduct(formValues)
-
-      console.log('!!!!!!!!!!!!!!! submitForm response', data)
-
 
       let echoProduct = data.value.data
       const notLinkedAttachments = values.attachments.filter(att => !getSafe(() => att.linked, false))
@@ -374,14 +359,10 @@ class AddEditEchoProduct extends React.Component {
         }
       })
 
-      console.log('!!!!!!!!!!!!!!! Datagrid 1', data)
-
       Datagrid.updateRow(echoProduct.id, () => ({
         ...echoProduct,
         attachments: echoProduct.attachments.concat(notLinkedAttachments)
       }))
-
-      console.log('!!!!!!!!!!!!!!! Datagrid 2', data)
 
       const status = popupValues ? 'echoProductUpdated' : 'echoProductCreated'
       toastManager.add(generateToastMarkup(
@@ -440,7 +421,7 @@ class AddEditEchoProduct extends React.Component {
           attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === documentType)}
           edit={getSafe(() => popupValues.id, '')}
           name='attachments'
-          type={documentType}
+          type={documentType.toString()}
           filesLimit={1}
           fileMaxSize={20}
           onChange={(files) => {
@@ -787,12 +768,16 @@ class AddEditEchoProduct extends React.Component {
     return (
         <Grid verticalAlign='middle'>
           <GridRow>
-          <label><FormattedMessage id='global.sdsDocument' defaultMessage='SDS Document' /></label>
-          {this.RowDocument(formikProps, formikProps.values, popupValues, 3)}
+            <GridColumn width={16}>
+              <label><FormattedMessage id='global.sdsDocument' defaultMessage='SDS Document' /></label>
+              {this.RowDocument(formikProps, formikProps.values, popupValues, 3)}
+            </GridColumn>
           </GridRow>
           <GridRow>
-          <label><FormattedMessage id='global.tdsDocument' defaultMessage='TDS Document' /></label>
-          {this.RowDocument(formikProps, formikProps.values, popupValues, 11)}
+            <GridColumn width={16}>
+              <label><FormattedMessage id='global.tdsDocument' defaultMessage='TDS Document' /></label>
+              {this.RowDocument(formikProps, formikProps.values, popupValues, 11)}
+            </GridColumn>
           </GridRow>
         </Grid>
       )
@@ -937,7 +922,7 @@ class AddEditEchoProduct extends React.Component {
         }}
 
         render={(formikProps) => {
-          let { values, touched, setTouched, setFieldValue, validateForm, submitForm, resetForm, setSubmitting } = formikProps
+          let { values, touched, setTouched, setFieldValue, setFieldTouched, validateForm, submitForm, resetForm, setSubmitting } = formikProps
           //this.submitForm = submitForm
           this.resetForm = resetForm
 
@@ -985,6 +970,11 @@ class AddEditEchoProduct extends React.Component {
                     <GridColumn computer={10} textAlign='right'>
                       <Button.Submit
                         disabled={!(Object.keys(touched).length || this.state.changedForm)}
+                        onClick={() => validateForm().then(err => {
+                          if (Object.keys(err).length) {
+                            this.switchToErrors(Object.keys(err))
+                          }
+                        })}
                         primary
                         size='large'
                         inputProps={{ type: 'button' }}

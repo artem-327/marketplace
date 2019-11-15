@@ -878,18 +878,21 @@ export function updateDeliveryAddresses(id, value, reloadFilter) {
     })
     dispatch(closePopup())
     Datagrid.updateRow(id, () => response.data)
+    return response.data
     //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
   }
 }
 
 export function createDeliveryAddress(value, reloadFilter) {
   return async dispatch => {
+    const response = await api.createDeliveryAddress(value)
     await dispatch({
       type: AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS,
-      payload: api.createDeliveryAddress(value)
+      payload: response
     })
     dispatch(closePopup())
     Datagrid.loadData()
+    return response.data
     //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
   }
 }

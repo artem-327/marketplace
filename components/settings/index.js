@@ -60,14 +60,14 @@ class Settings extends Component {
         if (el.frontendConfig) {
           let parsed = JSON.parse(el.frontendConfig)
           if (getSafe(() => parsed.validation, false)) {
-            tmp[el.name] = Yup.object().shape({ value: toYupSchema(parsed.validation) })
+            tmp[el.name] = Yup.object().shape({ value: Yup.object().shape({ visible: toYupSchema(parsed.validation) }) })
           }
         }
       })
       if (Object.keys(tmp).length > 0) validationSchema[group.name] = Yup.object().shape(tmp)
     })
 
-    this.setState({ fetching: false, systemSettings, validationSchema: Yup.object().shape(validationSchema) })
+    this.setState({ fetching: false, systemSettings, validationSchema: Yup.object({ [role]: Yup.object().shape(validationSchema) }) })
 
   }
 
@@ -96,7 +96,7 @@ class Settings extends Component {
         let el = group[key]
         if (el.changeable) {
           if (!el.edit && role !== 'admin') payload.settings.push({ id: el.id, value: 'EMPTY_SETTING' })
-          else payload.settings.push({ id: el.id, value: el.value })
+          else payload.settings.push({ id: el.id, value: el.value.visible })
         }
       })
 
@@ -116,6 +116,8 @@ class Settings extends Component {
     }
   }
 
+
+
   render() {
     let { open, asModal, triggerSystemSettingsModal, intl: { formatMessage }, role } = this.props
     let { loading, systemSettings } = this.state
@@ -133,7 +135,10 @@ class Settings extends Component {
         initialValues[role][el.name][setting.name] = {
           id: setting.id,
           original: setting.original,
-          value: setting.value,
+          value: {
+            actual: setting.value,
+            visible: setting.value === 'EMPTY_SETTING' ? '' : setting.value
+          },
           changeable: setting.changeable,
           edit: setting.changeable && setting.original && setting.value !== 'EMPTY_SETTING'
         }
@@ -201,7 +206,7 @@ class Settings extends Component {
                                   ...getSafe(() => el.frontendConfig.inputProps, {})
                                 }
                               }), {
-                                name: `${role}.${group.name}.${el.name}.value`
+                                name: `${role}.${group.name}.${el.name}.value.visible`
                               })}
                             </>
                           )

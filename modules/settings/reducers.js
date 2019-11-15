@@ -448,7 +448,7 @@ export default function reducer(state = initialState, action) {
       const branches = action.payload.map(branch => {
         return {
           value: branch.id,
-          text: branch.deliveryAddress.addressName
+          text: branch.deliveryAddress.cfName
         }
       })
       return {
@@ -718,6 +718,18 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_PENDING:
+    case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER_PENDING:
+    case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_PENDING: {
+      return {
+        ...state,
+        csvImportError: null
+      }
+    }
+
+    case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_REJECTED:
+    case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER_REJECTED:
+    case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_REJECTED:
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER_FULFILLED:
     case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_FULFILLED:
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_FULFILLED: {

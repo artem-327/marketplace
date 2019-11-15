@@ -161,48 +161,41 @@ const userEnableDisableStatus = (r, currentUserId) => {
       />
     </div>
   )
-      }
+}
 
-  const formatDateTime = dt => {
-    const s = dt.split('T')
-    return (
-      s[0] + ' ' + s[1].split('.')[0]
-    )
+const mapStateToProps = (state, { datagrid }) => {
+  const currentUserId = state.settings.currentUser && state.settings.currentUser.id
+  return {
+    rows: datagrid.rows.map(user => ({
+      name: user.name,
+      jobTitle: user.jobTitle || '',
+      email: user.email,
+      phone: user.phone || '',
+      phoneFormatted: <FormattedPhone value={user.phone} />,
+      homeBranch: user.homeBranch && user.homeBranch.id,
+      additionalBranches: user.additionalBranches && user.additionalBranches.map(b => b.id),
+      enabled: user.enabled,
+      // preferredCurrency: (user.preferredCurrency || {}).id || undefined,
+      preferredCurrency: currency,
+      homeBranchName: getSafe(() => user.homeBranch.deliveryAddress.cfName, ''),
+      permissions: user.roles ? user.roles.name : '', // ! ! array?
+      id: user.id,
+      allUserRoles: user.roles || [],
+      userRoles: user.roles && user.roles.map(rol => <Label size='small'>{rol.name}</Label>),
+      switchEnable: userEnableDisableStatus(user, currentUserId),
+      lastLoginAt: user.lastLoginAt ? <FormattedDateTime dateTime={user.lastLoginAt} /> : ''
+    })),
+    currentUserId,
+    addedItem: state.settings.addedItem,
+    editedItem: state.settings.editedItem,
+    filterValue: state.settings.filterValue,
+    confirmMessage: state.settings.confirmMessage,
+    deleteRowById: state.settings.deleteRowById,
+    currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
+      state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+    loading: state.settings.loading,
+    roles: state.settings.roles
   }
+}
 
-  const mapStateToProps = (state, { datagrid }) => {
-    const currentUserId = state.settings.currentUser && state.settings.currentUser.id
-    return {
-      rows: datagrid.rows.map(user => ({
-        name: user.name,
-        jobTitle: user.jobTitle || '',
-        email: user.email,
-        phone: user.phone || '',
-        phoneFormatted: <FormattedPhone value={user.phone} />,
-        homeBranch: user.homeBranch && user.homeBranch.id,
-        additionalBranches: user.additionalBranches && user.additionalBranches.map(b => b.id),
-        enabled: user.enabled,
-        // preferredCurrency: (user.preferredCurrency || {}).id || undefined,
-        preferredCurrency: currency,
-        homeBranchName: getSafe(() => user.homeBranch.deliveryAddress.addressName, ''),
-        permissions: user.roles ? user.roles.name : '', // ! ! array?
-        id: user.id,
-        allUserRoles: user.roles || [],
-        userRoles: user.roles && user.roles.map(rol => <Label size='small'>{rol.name}</Label>),
-        switchEnable: userEnableDisableStatus(user, currentUserId),
-        lastLoginAt: user.lastLoginAt ? <FormattedDateTime dateTime={user.lastLoginAt} /> : ''
-      })),
-      currentUserId,
-      addedItem: state.settings.addedItem,
-      editedItem: state.settings.editedItem,
-      filterValue: state.settings.filterValue,
-      confirmMessage: state.settings.confirmMessage,
-      deleteRowById: state.settings.deleteRowById,
-      currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-        state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
-      loading: state.settings.loading,
-      roles: state.settings.roles
-    }
-  }
-
-  export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(UsersTable))))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(UsersTable))))

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Sidebar, Accordion, Segment, GridRow, Icon, Popup, Dropdown } from 'semantic-ui-react'
+import { Sidebar, Accordion, Segment, GridRow, Icon, Popup, Dropdown, Grid, GridColumn } from 'semantic-ui-react'
 
 const popupWidth = 400
 
@@ -167,4 +167,12 @@ export const SaveFilterClose = styled(Icon)`
   right: 2rem;
   margin: 0 !important;
   cursor: pointer;
+`
+
+export const StyledGrid = styled(Grid)`
+  margin-bottom: 0px !important;
+`
+
+export const SmallerTextColumn = styled(GridColumn)`
+  font-size: 90%;
 `
