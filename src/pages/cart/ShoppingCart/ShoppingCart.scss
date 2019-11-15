@@ -77,7 +77,7 @@ $side-padding: 24px;
                         div {
                             opacity: 0.6;
                             padding: 3px 0;
-                            white-space: normal;
+                            white-space: nowrap;
 
                             &:first-child {
                                 padding-top: 2px;
@@ -111,14 +111,6 @@ $side-padding: 24px;
         }
         .shopping-cart-summary {
             grid-column: 2 / 3;
-        }
-    }
-
-    &.checkout {
-        grid-template-columns: auto 1208px auto;
-
-        .shopping-cart-body {
-            grid-template-columns: calc(100% - 338px) 321px;
         }
     }
 }

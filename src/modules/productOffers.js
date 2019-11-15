@@ -2,7 +2,9 @@ import axios from 'axios';
 import {transformRequestOptions, filterByUniqueProperty} from "../utils/functions";
 import api from '../api/productOffers'
 import {
-    PRODUCTOFFER_REMOVE_REQUESTED
+    PRODUCTOFFER_REMOVE_REQUESTED,
+    PRODUCTOFFER_REMOVE_FAILED,
+    PRODUCTOFFER_REMOVE_SUCCEEDED,
 } from "../constants/productOffers";
 import FormData from 'form-data'
 
@@ -31,7 +33,7 @@ const LINK_ATTACHMENT = 'LINK_ATTACHMENT';
 const ADD_PRODUCT_OFFER = 'ADD_PRODUCT_OFFER';
 const ADD_PRODUCT_OFFER_FULFILLED = 'ADD_PRODUCT_OFFER_FULFILLED';
 const RESET_PRODUCT_OFFER = 'RESET_PRODUCT_OFFER';
-//const SAVE_INCREMENTAL_PRICING = 'SAVE_INCREMENTAL_PRICING';
+const SAVE_INCREMENTAL_PRICING = 'SAVE_INCREMENTAL_PRICING';
 const DELETE_PRODUCT_OFFERS_LIST = 'DELETE_PRODUCT_OFFERS_LIST';
 const OFFER_BROADCAST = "OFFER_BROADCAST";
 const OFFER_BROADCAST_FULFILLED = "OFFER_BROADCAST_FULFILLED";
@@ -198,7 +200,7 @@ export function fetchProductOffer(id) {
 export function editProductOffer(id, inputs) {
     return {
         type: EDIT_PRODUCT_OFFER,
-        payload: axios.patch(`/prodex/api/product-offers/${id}`, inputs)
+        payload: axios.put(`/prodex/api/product-offers/${id}`, inputs)
     }
 }
 
@@ -287,7 +289,7 @@ export function getUnitOfPackaging(pack) {
 //     }
 // }
 
-export function deleteProductOffer(id, onSuccess) {
+export function removeProductOffer(id, onSuccess) {
     return {type: PRODUCTOFFER_REMOVE_REQUESTED, payload: {id, onSuccess}} //TODO: refactor all product offers to saga, then remove onSuccess
 }
 

@@ -12,6 +12,7 @@ class DataTable extends Component {
   }
 
   initDataTable() {
+    console.log(this.props.rows);
     //TODO::don't rewrite store if exists, but beware of filter (reload data)
     // if(!this.props.dataTable){
     let header = this.props.headerInit.map((item, index) => ({
@@ -91,7 +92,6 @@ class DataTable extends Component {
               addPopup={this.props.addPopup}
               removePopup={this.props.removePopup}
               history={this.props.history}
-              location={this.props.location}
               rows={this.props.rows}
               rowsOpns={this.props.dataTable.rowsOpns}
               selectable={this.props.selectableRows}

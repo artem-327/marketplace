@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Translate } from 'react-localize-redux';
 import inventory from '../../../images/nav/inventory.png';
 import '../nav.scss'
 import {Link} from 'react-router-dom'
@@ -28,7 +29,7 @@ class NavDropdown extends Component {
         return (
             <div className='nav-dropdown-wr' onMouseOver={this.showMenu} onMouseLeave={this.closeMenu}>
                 <div className="header-menu-item dropdown"> <img src={inventory} alt="Logo" /></div>
-                    <span>Inventory</span>
+                    <span><Translate id="topMenu.inventory" ></Translate></span>
                 {
                     this.state.showMenu
                     ? (

@@ -3,12 +3,10 @@ import {Switch, Route} from 'react-router-dom';
 
 import Dashboard from '../pages/dashboard'
 import Inventory from "../pages/inventory/InventoryHOC";
-import SaleOrders from "../pages/orders";
-import PurchaseOrders from "../pages/orders";
-import OrderDetail from "../pages/orders/detail";
+import Orders from "../pages/orders/Orders";
 import Clients from "../pages/clients/Clients";
 import Reports from "../pages/reports/Reports";
-import Settings from "../pages/settings/";
+import Settings from "../pages/settings/Settings";
 import Support from "../pages/support/Support";
 import AddInventory from "../pages/inventory/addInventory";
 import AllInventory from "../pages/inventory/allInventory";
@@ -42,10 +40,7 @@ class Main extends Component {
                     <Route exact path="/inventory/all-inventory" component={withAuth(Inventory(AllInventory))}/>
                     <Route exact path="/inventory/add-inventory" component={withAuth(Inventory(AddInventory))}/>
                     <Route exact path="/inventory/edit-inventory/:id" component={withAuth(Inventory(withEdit(AddInventory)))}/>
-                    <Route exact path="/orders/:type" component={withAuth(SaleOrders)}/>
-                    <Route exact path="/orders/:type/:id" component={withAuth(OrderDetail)}/>
-                    <Route exact path="/orders/:type" component={withAuth(PurchaseOrders)}/>
-                    <Route exact path="/orders/:type/:id" component={withAuth(OrderDetail)}/>
+                    <Route exact path="/orders" component={withAuth(Orders)}/>
                     <Route exact path="/clients" component={withAuth(Clients)}/>
                     <Route exact path="/reports" component={withAuth(Reports)}/>
                     <Route exact path="/settings" component={withAuth(Settings)}/>

@@ -8,9 +8,9 @@ import {
 } from "../constants/offices";
 import {COMPANY_FETCH_REQUESTED} from "../constants/companies";
 
-function* getOffice(action) {
+function* fetchOffice(action) {
     try {
-        const office = yield call(Api.getOffice, action.payload.id);
+        const office = yield call(Api.fetchOffice, action.payload.id);
         yield put({type: OFFICE_FETCH_SUCCEEDED, payload: office});
         yield call(action.payload.onSuccess);
     } catch (e) {
@@ -18,9 +18,9 @@ function* getOffice(action) {
     }
 }
 
-function* postNewOffice(action) {
+function* createOffice(action) {
     try {
-        yield call(Api.postNewOffice, action.payload.office);
+        yield call(Api.createOffice, action.payload.office);
         yield put({type: OFFICE_CREATE_SUCCEEDED});
         yield call(action.payload.onSuccess);
         //yield put({type: COMPANY_FETCH_REQUESTED, payload: action.payload.office.company});
@@ -29,9 +29,9 @@ function* postNewOffice(action) {
     }
 }
 
-function* deleteOffice(action) {
+function* removeOffice(action) {
     try {
-        yield call(Api.deleteOffice, action.payload.id);
+        yield call(Api.removeOffice, action.payload.id);
         yield put({type: OFFICE_REMOVE_SUCCEEDED});
         yield put({type: COMPANY_FETCH_REQUESTED, payload: action.payload.company});
     } catch (e) {
@@ -39,9 +39,9 @@ function* deleteOffice(action) {
     }
 }
 
-function* putOfficeEdit(action) {
+function* editOffice(action) {
     try {
-        yield call(Api.putOfficeEdit, action.payload.office);
+        yield call(Api.editOffice, action.payload.office);
         yield put({type: OFFICE_EDIT_SUCCEEDED});
         yield put({type: OFFICE_FETCH_REQUESTED, payload: action.payload.office});
     } catch (e) {
@@ -50,10 +50,10 @@ function* putOfficeEdit(action) {
 }
 
 function* officesSaga() {
-    yield takeEvery(OFFICE_FETCH_REQUESTED, getOffice);
-    yield takeEvery(OFFICE_CREATE_REQUESTED, postNewOffice);
-    yield takeEvery(OFFICE_REMOVE_REQUESTED, deleteOffice);
-    yield takeEvery(OFFICE_EDIT_REQUESTED, putOfficeEdit);
+    yield takeEvery(OFFICE_FETCH_REQUESTED, fetchOffice);
+    yield takeEvery(OFFICE_CREATE_REQUESTED, createOffice);
+    yield takeEvery(OFFICE_REMOVE_REQUESTED, removeOffice);
+    yield takeEvery(OFFICE_EDIT_REQUESTED, editOffice);
 }
 
 

@@ -6,8 +6,8 @@
     padding-left: 15px;
   }
   .checkmark {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     display: inline-block;
     background-color: white;
     margin: 1px 15px 0 0;
@@ -17,8 +17,8 @@
     left: 0;
     top: 0;
     &.small {
-      width: 14px;
-      height: 14px;
+      width: 17px;
+      height: 17px;
       &:after {
         left: 6px;
         top: 3px;
@@ -41,8 +41,8 @@
       }
     }
     &.big {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       &:after {
         left: 7px;
         top: 4px;
@@ -62,8 +62,8 @@
       content: '';
       position: absolute;
       display: none;
-      left: 5px;
-      top: 2px;
+      left: 7px;
+      top: 3px;
       width: 5px;
       height: 10px;
       border: solid $blue-color;

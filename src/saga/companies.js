@@ -11,18 +11,18 @@ import {
 } from "../constants/companies";
 
 
-function* getCompanies(action) {
+function* fetchCompanies(action) {
     try {
-        const companies = yield call(Api.getCompanies, action.payload.search);
+        const companies = yield call(Api.fetchCompanies, action.payload.search);
         yield put({type: COMPANIES_FETCH_SUCCEEDED, payload: companies});
     } catch (e) {
         yield put({type: COMPANIES_FETCH_FAILED, message: e.message});
     }
 }
 
-function* getCompany(action) {
+function* fetchCompany(action) {
     try {
-        const company = yield call(Api.getCompany, action.payload.id);
+        const company = yield call(Api.fetchCompany, action.payload.id);
         yield put({type: COMPANY_FETCH_SUCCEEDED, payload: company});
         action.resolve();
     } catch (e) {
@@ -30,9 +30,9 @@ function* getCompany(action) {
     }
 }
 
-function* postNewCompany(action) {
+function* createCompany(action) {
     try {
-        yield call(Api.postNewCompany, action.payload.name);
+        yield call(Api.createCompany, action.payload.name);
         yield put({type: COMPANY_CREATE_SUCCEEDED});
         yield call(action.payload.onSuccess);
         yield put({type: COMPANIES_FETCH_REQUESTED});
@@ -41,9 +41,9 @@ function* postNewCompany(action) {
     }
 }
 
-function* putCompanyEdit(action) {
+function* editCompany(action) {
     try {
-        yield call(Api.putCompanyEdit, action.payload.company);
+        yield call(Api.editCompany, action.payload.company);
         yield put({type: COMPANY_EDIT_SUCCEEDED});
         yield put({type: COMPANY_FETCH_REQUESTED, payload: action.payload.company});
     } catch (e) {
@@ -51,9 +51,9 @@ function* putCompanyEdit(action) {
     }
 }
 
-function* deleteCompany(action) {
+function* removeCompany(action) {
     try {
-        yield call(Api.deleteCompany, action.payload.id);
+        yield call(Api.removeCompany, action.payload.id);
         yield put({type: COMPANY_REMOVE_SUCCEEDED});
         yield put({type: COMPANIES_FETCH_REQUESTED});
     } catch (e) {
@@ -62,11 +62,11 @@ function* deleteCompany(action) {
 }
 
 function* companiesSaga() {
-    yield takeEvery(COMPANIES_FETCH_REQUESTED, getCompanies);
-    yield takeEvery(COMPANY_FETCH_REQUESTED, getCompany);
-    yield takeEvery(COMPANY_CREATE_REQUESTED, postNewCompany);
-    yield takeEvery(COMPANY_EDIT_REQUESTED, putCompanyEdit);
-    yield takeEvery(COMPANY_REMOVE_REQUESTED, deleteCompany);
+    yield takeEvery(COMPANIES_FETCH_REQUESTED, fetchCompanies);
+    yield takeEvery(COMPANY_FETCH_REQUESTED, fetchCompany);
+    yield takeEvery(COMPANY_CREATE_REQUESTED, createCompany);
+    yield takeEvery(COMPANY_EDIT_REQUESTED, editCompany);
+    yield takeEvery(COMPANY_REMOVE_REQUESTED, removeCompany);
 }
 
 

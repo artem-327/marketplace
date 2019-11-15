@@ -14,8 +14,8 @@ class OperatorEditation extends Component {
     }
 
     saveEditation = () => {
-        const {putOfficeEdit, office} = this.props;
-        putOfficeEdit({id: office.id, ...this.state}, this.props.toogleEditation())
+        const {editOffice, office} = this.props;
+        editOffice({id: office.id, ...this.state}, this.props.toogleEditation())
     }
 
     render() {
@@ -38,7 +38,7 @@ class OperatorEditation extends Component {
 }
 
 OperatorEditation.propTypes = {
-    putOperatorEdit: PropTypes.func,
+    editOperator: PropTypes.func,
     operator: PropTypes.object,
     toogleEditation: PropTypes.func
 };
