@@ -16,10 +16,13 @@ import {
 } from '../actions'
 import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
+import ProdexGrid from '~/components/table'
 import * as val from 'yup'
 import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import moment from "moment"
 import UploadLot from './upload/UploadLot'
+import { withDatagrid } from '~/modules/datagrid'
+
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -87,13 +90,19 @@ const initValues = {
     minimum: 1, // minPkg
     splits: 1, // splitPkg
     externalNotes: '',
-    internalNotes: ''
+    internalNotes: '',
+    documentType: ''
   },
   priceTiers: {
     priceTiers: 1,
     pricingTiers: []
   }
 }
+
+const columns = [ 
+  { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, width: 200 },
+  { name: 'documentTypeName', title: <FormattedMessage id='global.docType' defaultMessage='Document Type'>{text => text}</FormattedMessage>, width: 160 }
+]
 
 val.addMethod(val.number, 'divisibleBy', function (ref, message) {
   return this.test({
@@ -155,6 +164,7 @@ const validationScheme = val.object().shape({
       is: false,
       then: val.string().required(errorMessages.requiredMessage)
     })
+    
   }),
   priceTiers: val.object().shape({
     priceTiers: val.number(),
@@ -175,13 +185,16 @@ class DetailSidebar extends Component {
   state = {
     tabs: [
       'edit',
+      'documents',
       'priceBook',
       'priceTiers'
     ],
     activeTab: 0,
     broadcastLoading: true,
     saveBroadcast: 0,
-    changedForm: false
+    changedForm: false,
+    documentType: 1,
+    openUploadLot: false
   }
 
   componentDidMount = () => {
@@ -189,6 +202,7 @@ class DetailSidebar extends Component {
     this.props.getProductForms()
     this.props.getProductGrades()
     this.props.getWarehouses()
+    this.props.getDocumentTypes()
   }
 
   componentDidUpdate = (oldProps) => {
@@ -247,6 +261,10 @@ class DetailSidebar extends Component {
         quantity = Math.max(qtyFrom, quantity)
       }
     }
+  }
+
+  handleChange = (e, name, value) => {
+    this.setState({openUploadLot: true, documentType: value})
   }
 
   onSplitsChange = debounce(async (value, values, setFieldValue, validateForm) => {
@@ -341,9 +359,11 @@ class DetailSidebar extends Component {
     let props = {}
     switch (this.state.activeTab) {
       case 0:
-      case 2:
+        case 1:
+      case 3:
         props = {
           ...values.edit,
+          ...values.documents,
           expirationDate: values.edit.doesExpire ? values.edit.expirationDate + 'T00:00:00.000Z' : null,
           leadTime: values.edit.leadTime,
           lotExpirationDate: values.edit.lotExpirationDate ? values.edit.lotExpirationDate + 'T00:00:00.000Z' : null,
@@ -359,7 +379,7 @@ class DetailSidebar extends Component {
           productGrades: values.edit.productGrades.length ? values.edit.productGrades : []
         }
         break
-      case 1:
+      case 2:
         this.saveBroadcastRules()
         setTouched({})
         this.setState({ changedForm: false })
@@ -409,12 +429,16 @@ class DetailSidebar extends Component {
           this.switchTab(0)
           document.getElementsByName('edit.'+Object.keys(errors.edit)[0])[0].focus()
           break
+        case 'documents':
+            this.switchTab(1)
+            document.getElementsByName('documents.'+Object.keys(errors.priceBook)[0])[0].focus()
+            break
         case 'priceBook':
-          this.switchTab(1)
+          this.switchTab(2)
           document.getElementsByName('priceBook.'+Object.keys(errors.priceBook)[0])[0].focus()
           break
         case 'priceTiers':
-          this.switchTab(2)
+          this.switchTab(3)
           document.getElementsByName('priceTiers.'+Object.keys(errors.priceTiers)[0])[0].focus()
           break
       }
@@ -445,10 +469,12 @@ class DetailSidebar extends Component {
       searchedProductsLoading,
       searchOrigins,
       warehousesList,
+      listDocumentTypes,
       intl: { formatMessage },
-      toastManager
+      toastManager,
+      datagrid, 
+      removeAttachment
     } = this.props
-
     const leftWidth = 6
     const rightWidth = 10
 
@@ -479,7 +505,7 @@ class DetailSidebar extends Component {
     let editValues = {}
     editValues = {
       edit: {
-        attachments: getSafe(() => sidebarValues.attachments.map(att => ({ ...att, linked: true })), []),
+        
         condition: getSafe(() => sidebarValues.condition, null),
         conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
         conforming: getSafe(() => sidebarValues.conforming, true),
@@ -510,6 +536,10 @@ class DetailSidebar extends Component {
           price: priceTier.pricePerUOM,
           quantityFrom: priceTier.quantityFrom
         })), [])
+      },
+      documents: {
+        documentType: getSafe(() => sidebarValues.documentType, null),
+        attachments: getSafe(() => sidebarValues.attachments.map(att => ({ ...att, linked: true })), [])
       }
     }
 
@@ -883,17 +913,78 @@ class DetailSidebar extends Component {
                                     />
                                   </GridColumn>
                                 </GridRow>
+                                
+                              </Grid>
+                            </Tab.Pane>
+                          )
+                        },
+                        {
+                          menuItem: (
+                            <Menu.Item key='documents' onClick={() => {
+                              if (Object.keys(touched).length || this.state.changedForm) {
+                                toastManager.add(generateToastMarkup(
+                                  <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
+                                  <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Due to form changes you have to save the tab first' />,
+                                ), {
+                                  appearance: 'warning'
+                                })
+                                return false
+                              }
+                              validateForm()
+                                .then(r => {
+                                  // stop when errors found
+                                  if (Object.keys(r).length) {
+                                    submitForm() // show errors
+                                    this.switchToErrors(r)
+                                    return false
+                                  }
+
+                                  // if validation is correct - switch tabs
+                                  this.switchTab(1)
+                                })
+                                .catch(e => {
+                                  console.log('CATCH', e)
+                                })
+                            }}
+                              data-test='detail_inventory_tab_documents'>
+                              {formatMessage({ id: 'global.documents', defaultMessage: 'Documents' })}
+                            </Menu.Item>
+                          ),
+                          pane: (
+                            <Tab.Pane key='documents' style={{ padding: '18px' }}>
+                              <Grid>
+                              {listDocumentTypes.length &&
                                 <GridRow>
+                                  <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                    <FormattedMessage id='global.uploadDocument' defaultMessage='Upload document: '>{text => text}</FormattedMessage>
+                                  </GridColumn>
+                                  <GridColumn style={{zIndex: '501'}} mobile={rightWidth} computer={rightWidth}>
+                                    <Dropdown
+                                      name='documents.documentType'
+                                      closeOnChange
+                                      options={listDocumentTypes}
+                                      inputProps={{
+                                        placeholder: <FormattedMessage id='global.documentType.choose' defaultMessage='Choose document type'/>,
+                                        onChange: (e, {name, value}) => this.handleChange(e, name, value)
+                                      }} />
+                                  </GridColumn>
+                                </GridRow>
+                              }
+                              { values.documents.documentType && this.state.openUploadLot ?
+                                (
+                                  <GridRow>
                                   <GridColumn>
                                     <UploadLot {...this.props}
+                                      header={<div style={{display: 'block', height: '20px', position: 'relative'}} onClick={() => this.setState((prevState) =>({openUploadLot: !prevState.openUploadLot}))}> <Icon corner='top right' name='close' color='grey' style={{position: 'absolute', top: '-10px', right: '-10px'}} /></div>}
+                                      hideAttachments
                                       edit={getSafe(() => sidebarValues.id, 0)}
-                                      attachments={values.edit.attachments}
-                                      name='edit.attachments'
-                                      type={1}
+                                      attachments={values.documents.attachments}
+                                      name='documents.attachments'
+                                      type={this.state.documentType}
                                       filesLimit={1}
                                       fileMaxSize={20}
                                       onChange={(files) => {
-                                        setFieldValue(`edit.attachments`, values.edit.attachments.concat([{
+                                        setFieldValue(`documents.attachments`, values.documents.attachments.concat([{
                                           id: files.id,
                                           name: files.name,
                                           documentType: files.documentType
@@ -917,7 +1008,7 @@ class DetailSidebar extends Component {
                                         </>
                                       )}
                                       uploadedContent={(
-                                        <label>
+                                        <label >
                                           <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
                                           <br />
                                           <FormattedMessage id='addInventory.dragDropOr'
@@ -933,8 +1024,38 @@ class DetailSidebar extends Component {
                                       )}
                                     />
                                   </GridColumn>
+                                </GridRow> 
+                                ) : null
+                              }
+                              { values.documents.attachments && 
+                                <GridRow>
+                                  <GridColumn>
+                                    <ProdexGrid
+                                      virtual={false}
+                                      tableName='inventory_documents'
+                                      {...datagrid.tableProps}
+                                      columns={columns}
+                                      rows={values.documents.attachments
+                                        .map(row => (
+                                          {...row, documentTypeName: row.documentType && row.documentType.name}
+                                        ))
+                                        .sort((a,b) => (
+                                          a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0
+                                        ))
+                                      }
+                                      rowActions={[ 
+                                        {
+                                        text: <FormattedMessage id='global.delete' defaultMessage='Delete'>{text => text}</FormattedMessage>, callback: async row => {
+                                          await removeAttachment(row.id)
+                                          datagrid.removeRow(row.id)
+                                          }
+                                        }
+                                      ]}
+                                    />
+                                  </GridColumn>
                                 </GridRow>
-                              </Grid>
+                              }
+                              </Grid>                          
                             </Tab.Pane>
                           )
                         },
@@ -960,7 +1081,7 @@ class DetailSidebar extends Component {
                                   }
 
                                   // if validation is correct - switch tabs
-                                  this.switchTab(1)
+                                  this.switchTab(2)
                                 })
                                 .catch(e => {
                                   console.log('CATCH', e)
@@ -998,7 +1119,7 @@ class DetailSidebar extends Component {
                                   }
 
                                   // if validation is correct - switch tabs
-                                  this.switchTab(2)
+                                  this.switchTab(3)
                                 })
                                 .catch(e => {
                                   console.log('CATCH', e)
@@ -1153,7 +1274,8 @@ const mapStateToProps = ({ simpleAdd: {
   searchedOriginsLoading,
   searchedProducts,
   searchedProductsLoading,
-  warehousesList
+  warehousesList,
+  listDocumentTypes
 } }) => ({
   autocompleteData,
   autocompleteDataLoading,
@@ -1170,8 +1292,9 @@ const mapStateToProps = ({ simpleAdd: {
   searchedOriginsLoading,
   searchedProducts,
   searchedProductsLoading,
-  warehousesList
+  warehousesList,
+  listDocumentTypes
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(DetailSidebar)))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(DetailSidebar))))
 

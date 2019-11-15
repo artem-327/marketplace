@@ -599,17 +599,24 @@ class MyInventory extends Component {
               //{ text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
               {
                 text: formatMessage({
+                  id: 'global.documents',
+                  defaultMessage: 'Documents'
+                }),
+                callback: row => sidebarDetailTrigger(row, true, 1)
+              },
+              {
+                text: formatMessage({
                   id: 'inventory.broadcast',
                   defaultMessage: 'Price Book'
                 }),
-                callback: row => sidebarDetailTrigger(row, true, 1)
+                callback: row => sidebarDetailTrigger(row, true, 2)
               },
               {
                 text: formatMessage({
                   id: 'inventory.priceTiers',
                   defaultMessage: 'Price Tiers'
                 }),
-                callback: row => sidebarDetailTrigger(row, true, 2)
+                callback: row => sidebarDetailTrigger(row, true, 3)
               },
               {
                 text: formatMessage({
