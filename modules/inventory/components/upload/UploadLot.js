@@ -159,12 +159,12 @@ class UploadLot extends Component {
                     resolve()
                   })
                   .catch(e => {
-                    if (e.exceptionMessage) {
+                    if (e.clientMessage) {
                       const docType = listDocumentTypes.find(
                         x => x.value === type
                       )
                       duplicateFiles.push({
-                        id: parseInt(e.exceptionMessage),
+                        id: parseInt(e.clientMessage),
                         name: files[j].name,
                         documentType: { id: docType.value, name: docType.text },
                         file: file

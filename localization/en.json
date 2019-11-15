@@ -1305,7 +1305,7 @@
   "notifications.purchaseOrderSuccess.content": "Order has been successfully placed.",
   "notifications.purchaseOrderError.header": "Order Error",
   "notifications.purchaseOrderError.content": "Error occurred while placing an order.",
-  "notifications.purchaseOrderError.contentWithText": "Error occurred while placing an order: {clientMessage}\n{exceptionMessage}",
+  "notifications.purchaseOrderError.contentWithText": "Error occurred while placing an order: {clientMessage}",
   "notifications.bankAccountDocumentUpload.header": "Document(s) uploaded",
   "notifications.bankAccountDocumentUpload.content": "Document(s) successfully uploaded.",
   "notifications.productOffer.created.header": "Product Offer Listed",
