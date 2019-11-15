@@ -214,7 +214,6 @@ DocumentPopup.defaultProps = {
 }
 
 const mapStateToProps = ({ simpleAdd, settings }) => {
-  console.log('!!!!!!! popupValues', settings.popupValues)
   return {
     popupValues: settings.popupValues,
     documentTypes: simpleAdd.listDocumentTypes,

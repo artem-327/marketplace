@@ -15,6 +15,12 @@ export const transportationTypes = [
   { key: 'imdgImo', text: <FormattedMessage id='global.imdgImo' defaultMessage='IMDG/IMO' />, value: 'imdgImo' }
 ]
 
+export const onErrorFieldTabs = {
+  "name": 0,
+  "code": 0,
+  "elements": 0
+}
+
 export const defaultValues = {
   attachments: [],
   "appearance": '',
