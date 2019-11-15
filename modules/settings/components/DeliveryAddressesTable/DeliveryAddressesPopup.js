@@ -105,15 +105,16 @@ class DeliveryAddressesPopup extends React.Component {
                 }
               }
               try {
+                let response
                 if (values.address.province === '') delete payload.address['province']
-                if (popupValues) await updateDeliveryAddresses(rowId, payload, reloadFilter)
-                else await createDeliveryAddress(payload, reloadFilter)
+                if (popupValues) response = await updateDeliveryAddresses(rowId, payload, reloadFilter)
+                else response = await createDeliveryAddress(payload, reloadFilter)
 
                 let status = popupValues ? 'deliveryAddressUpdated' : 'deliveryAddressCreated'
 
                 toastManager.add(generateToastMarkup(
                   <FormattedMessage id={`notifications.${status}.header`} />,
-                  <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.addressName }} />
+                  <FormattedMessage id={`notifications.${status}.content`} values={{ name: response.cfName }} />
                 ), { appearance: 'success' })
               }
               catch { }
