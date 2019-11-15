@@ -666,6 +666,7 @@ class MyInventory extends Component {
           apiUrl={datagrid.apiUrl}
           filters={datagrid.filters}
           layout='MyInventory'
+          autocompleteDataLoading={this.props.autocompleteDataLoading}
           getAutocompleteData={this.props.getAutocompleteData}
           autocompleteData={this.props.autocompleteData}
         />
