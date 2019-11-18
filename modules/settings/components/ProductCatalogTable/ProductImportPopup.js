@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import { Header, Modal, Grid, Icon, Step, ModalContent, Button } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import Router from 'next/dist/client/router'
 
 import {
   closeImportPopup,
@@ -73,7 +74,16 @@ class ProductImportPopup extends Component {
   }
 
   render() {
-    const { closeImportPopup, csvFileId, CSV, closeImportPopupCancel, intl: { formatMessage } } = this.props
+    const {
+      closeImportPopup,
+      csvFileId,
+      CSV,
+      closeImportPopupCancel,
+      intl: { formatMessage },
+      csvImportError,
+      reloadFilter
+    } = this.props
+
     const {
       currentStep,
       isFinishUpload,
@@ -83,7 +93,11 @@ class ProductImportPopup extends Component {
 
     return (
       <Modal closeIcon
-             onClose={() => closeImportPopupCancel(csvFileId)}
+             onClose={() => {
+               (csvImportError && (csvImportError.recordsCreated || csvImportError.recordsUpdated ))
+                 ? closeImportPopup(reloadFilter)
+                 : closeImportPopupCancel(csvFileId)}
+             }
              closeOnDimmerClick={false}
              open
              centered={false}>
@@ -223,7 +237,20 @@ const mapStateToProps = state => {
     mappedDataHeaderCSV: state.settings.dataHeaderCSV,
     mappedHeaders: state.settings.mappedHeaders,
     missingRequired: state.settings.missingRequired,
-    selectedSavedMap: state.settings.selectedSavedMap
+    selectedSavedMap: state.settings.selectedSavedMap,
+    csvImportError: state.settings.csvImportError,
+    reloadFilter: {
+      props: {
+        currentTab:
+          Router && Router.router
+            ? state.settings.tabsNames.find(
+            tab => tab.type === Router.router.query.type
+            )
+            : state.settings.tabsNames[0],
+        productsFilter: state.settings.productsFilter
+      },
+      value: state.settings.filterValue
+    },
   }
 }
 

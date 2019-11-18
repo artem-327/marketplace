@@ -47,9 +47,11 @@ class UploadLot extends Component {
         )
         .then(() => {
           this.props.removeAttachment(file.id)
+          if (this.props.onRemoveFile) this.props.onRemoveFile(file.id)
         })
     } else {
       this.props.removeAttachment(file.id)
+      if (this.props.onRemoveFile) this.props.onRemoveFile(file.id)
     }
   }
 

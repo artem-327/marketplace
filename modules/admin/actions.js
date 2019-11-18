@@ -455,22 +455,6 @@ export function searchManufacturers(text, limit = false) {
 	}
 }
 
-export function newElementsIndex() {
-	return {
-		type: AT.ADMIN_CREATE_ELEMENTS_INDEX,
-		payload: {}
-	}
-}
-
-export function removeElementsIndex(index) {
-	return {
-		type: AT.ADMIN_REMOVE_ELEMENTS_INDEX,
-		payload: {
-			index
-		}
-	}
-}
-
 export function prepareSearchedCasProducts(elements) {
 	return {
 		type: AT.ADMIN_PREPARE_CAS_PRODUCTS,

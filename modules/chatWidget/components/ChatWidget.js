@@ -4,7 +4,6 @@ import { chatWidgetCreate, chatUnreadMessages } from '../actions'
 
 export default class ChatWidget extends Component { // currently not used (used only actions & reducer)
   componentDidMount() {
-    //console.log('!!!!!! ChatWidget componentDidMount')
     //chatWidgetCreate(this.props.identity)
   }
 

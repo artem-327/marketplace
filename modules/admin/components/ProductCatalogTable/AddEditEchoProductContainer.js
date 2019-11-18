@@ -3,13 +3,15 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import {
-  getProductsCatalogRequest, closePopup,
-  searchCasProduct, prepareSearchedCasProducts, getDocumentTypes, newElementsIndex, removeElementsIndex, putEchoProduct,
-  postEchoProduct, searchManufacturers, searchUnNumber, loadFile, addAttachment, linkAttachment, removeAttachmentLink,
+  closePopup,
+  searchCasProduct, putEchoProduct,
+  postEchoProduct, searchManufacturers, loadFile, addAttachment, linkAttachment, removeAttachmentLink,
   removeAttachment
 } from '~/modules/admin/actions'
 
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { Header } from 'semantic-ui-react'
+
+import { injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 
 const mapDispatchToProps = {
@@ -19,24 +21,16 @@ const mapDispatchToProps = {
   removeAttachment,
   removeAttachmentLink,
   closePopup,
-  getDocumentTypes,
-  getProductsCatalogRequest,
-  prepareSearchedCasProducts,
   searchCasProduct,
-  newElementsIndex,
-  removeElementsIndex,
   putEchoProduct,
   postEchoProduct,
   searchManufacturers,
-  searchUnNumber
 }
 
 const mapStateToProps = ({ admin }, props) => {
-  //console.log('!!!!!!!!!! AddEditEchoProduct mapStateToProps admin', admin)
   const currentTab = admin.currentTab.name === props.tabName
 
   return {
-    //...admin,
     visible: currentTab && (!!admin.currentAddForm || !!admin.currentEditForm),
     addForm: currentTab && !!admin.currentAddForm,
     editForm: currentTab && !!admin.currentEditForm,
@@ -46,18 +40,20 @@ const mapStateToProps = ({ admin }, props) => {
       return {
         key: id,
         text: pGroup.groupCode,
-        description: pGroup.description,
-        value: pGroup.id
+        //description: pGroup.description,
+        value: pGroup.id,
+        content: <Header
+          content={pGroup.groupCode}
+          subheader={pGroup.description}
+          style={{ fontSize: '1em' }}
+        />
       }
     }),
     searchedManufacturersLoading: admin.searchedManufacturersLoading,
     searchedManufacturers: admin.searchedManufacturers,
     searchedCasProducts: admin.searchedCasProducts,
+    isLoading: admin.loading,
 
-
-
-
-    isLoading: false,
     config: admin.config[admin.currentTab.name],
     listDocumentTypes: admin.documentTypes,
   }
