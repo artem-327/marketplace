@@ -26,7 +26,9 @@ import { injectIntl } from 'react-intl'
 import { AgreementModal } from '~/components/modals'
 import { getCountryCodes } from '~/modules/phoneNumber/actions'
 
-import { chatWidgetCreate, chatWidgetToggle } from '~/modules/chatWidget/actions'
+import { chatWidgetCreate, chatWidgetToggle, chatWidgetShow, chatUnreadMessages } from '~/modules/chatWidget/actions'
+import { withToastManager } from 'react-toast-notifications'
+
 import ChatWidget from '~/modules/chatWidget/components/ChatWidgetContainer'
 
 const TopMenu = styled(Menu)`
@@ -79,11 +81,14 @@ const MenuLink = withRouter(({ router: { pathname }, to, children, }) => (
 class Layout extends Component {
   componentDidMount() {
     if (!this.props.phoneCountryCodes.length) this.props.getCountryCodes()
-    chatWidgetCreate({
-      name: getSafe(() => this.props.auth.identity.name, ''),
-      email: getSafe(() => this.props.auth.identity.email, ''),
-      lang: getSafe(() => this.props.auth.identity.preferredLanguage.languageAbbreviation, 'us')
-    })
+    chatWidgetCreate(
+      {
+        name: getSafe(() => this.props.auth.identity.name, ''),
+        email: getSafe(() => this.props.auth.identity.email, ''),
+        lang: getSafe(() => this.props.auth.identity.preferredLanguage.languageAbbreviation, 'us')
+      },
+      this.props
+    )
   }
 
   render() {
@@ -121,7 +126,7 @@ class Layout extends Component {
                       defaultMessage: 'My Profile'
                     })}
                   </Dropdown.Item>
-                  <Dropdown.Item as={Menu.Item} onClick={() => chatWidgetToggle()}
+                  <Dropdown.Item as={Menu.Item} onClick={() => chatWidgetToggle(this.props)}
                     data-test='navigation_menu_user_support_chat_drpdn'>{formatMessage({
                       id: 'global.supportChat',
                       defaultMessage: 'Support Chat'
@@ -182,6 +187,8 @@ const mapDispatchToProps = {
   openProfilePopup,
   chatWidgetCreate,
   chatWidgetToggle,
+  chatWidgetShow,
+  chatUnreadMessages,
   triggerSystemSettingsModal,
   agreeWithTOS,
   getCountryCodes
@@ -198,4 +205,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withAuth(withRouter(injectIntl(connect(mapStateToProps, mapDispatchToProps)(Layout))))
+export default withAuth(withRouter(injectIntl(connect(mapStateToProps, mapDispatchToProps)(withToastManager(Layout)))))

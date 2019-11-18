@@ -3,7 +3,7 @@ import { getSafe } from '~/utils/functions'
 export const normalizeTree = tree => {
   initTree(tree)
 
-  tree.walk((n) => {
+  tree.walk(n => {
     if (n.hasChildren()) {
       setBroadcast(n)
     }
@@ -13,38 +13,39 @@ export const normalizeTree = tree => {
 }
 
 export const initTree = tree => {
-
-
-  tree.walk((node) => {
+  tree.walk(node => {
     if (getSafe(() => getSafe(() => node.parent.model.rule.broadcast, node.parent.model.broadcast) === 1, false)) {
-      node.model.rule ? node.model.rule.broadcast = 1 : node.model.broadcast = 1
+      node.model.rule ? (node.model.rule.broadcast = 1) : (node.model.broadcast = 1)
     }
   })
 
   return tree
 }
 
-
 export const getNodeStatus = item => {
-  let allChildrenBroadcasting = false, anyChildBroadcasting = false
+  let allChildrenBroadcasting = false,
+    anyChildBroadcasting = false
 
   if (item.hasChildren()) {
     var all = item.all(n => !n.hasChildren()).length
-    var broadcasted = item.all(n => !n.hasChildren() && getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1).length
-    anyChildBroadcasting = !!item.first((n) => {
-      return (getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 && getSafe(() => n.model.rule.id, n.model.id) !== item.model.id)
+    var broadcasted = item.all(n => !n.hasChildren() && getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1)
+      .length
+    anyChildBroadcasting = !!item.first(n => {
+      return (
+        getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 &&
+        getSafe(() => n.model.rule.id, n.model.id) !== item.model.id
+      )
     })
-    
-    allChildrenBroadcasting = (all !== 0 && broadcasted !== 0) && all === broadcasted
+
+    allChildrenBroadcasting = all !== 0 && broadcasted !== 0 && all === broadcasted
   }
 
   return { allChildrenBroadcasting, anyChildBroadcasting }
-
 }
 
 export const getBroadcast = node => {
   let { allChildrenBroadcasting, anyChildBroadcasting } = getNodeStatus(node)
-
+ 
   let broadcast = 0
   if (allChildrenBroadcasting) broadcast = 1
   else if (anyChildBroadcasting) broadcast = 2
@@ -55,7 +56,9 @@ export const getBroadcast = node => {
 export const setBroadcast = node => {
   let broadcast = getBroadcast(node)
 
-  getSafe(() => node.model.rule.broadcast, null) !== null ? node.model.rule.broadcast = broadcast : node.model.broadcast = broadcast
-  // console.log('set', node, 'to  broadcast: ', broadcast)
+  getSafe(() => node.model.rule.broadcast, null) !== null
+    ? (node.model.rule.broadcast = broadcast)
+    : (node.model.broadcast = broadcast)
+  
   return broadcast
 }

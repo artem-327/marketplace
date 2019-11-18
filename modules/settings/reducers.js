@@ -105,6 +105,7 @@ export const initialState = {
   echoProductsFetching: false,
   nmfcNumbersFiltered: [],
   nmfcNumbersFetching: false,
+  csvImportError: null,
 }
 
 export default function reducer(state = initialState, action) {
@@ -749,12 +750,12 @@ export default function reducer(state = initialState, action) {
         isOpenImportPopup: false,
         isSaveMapCSV: false,
         mapName: null,
-        selectedSavedMap: null
+        selectedSavedMap: null,
+        csvImportError: null
       }
     }
 
     case AT.SETTINGS_CLEAR_DATA_OF_CSV: {
-      delete state.csvImportError
       return {
         ...state,
         fileCSVId: null,
@@ -763,7 +764,8 @@ export default function reducer(state = initialState, action) {
         dataHeaderCSV: null,
         isSaveMapCSV: false,
         mapName: null,
-        selectedSavedMap: null
+        selectedSavedMap: null,
+        csvImportError: null
       }
     }
 

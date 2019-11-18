@@ -1,11 +1,8 @@
 import React, {Component} from 'react'
-import { connect } from 'react-redux'
+
 import moment from 'moment'
-
 import { removeEmpty } from '~/modules/admin/actions'
-
 import { FlexSidebar, FlexTabs, FlexContent, TopMargedColumn, GraySegment, HighSegment } from '~/modules/inventory/components/DetailSidebar'
-
 import { DateInput } from '~/components/custom-formik'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import * as Yup from 'yup'
@@ -22,28 +19,19 @@ import {
   Header,
   Dropdown,
   Icon,
-  Divider,
-  Table,
-  FormField, FormGroup
+  Dimmer, Loader,
 } from 'semantic-ui-react'
 
 import { FieldArray } from 'formik'
-
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
-
-import { withToastManager } from 'react-toast-notifications'
-
 import { errorMessages, dateValidation } from '~/constants/yupValidation'
-
 import { getSafe, generateToastMarkup } from '~/utils/functions'
-
 import { tabs, defaultValues, transportationTypes, onErrorFieldTabs } from "./constants";
 import styled from "styled-components";
 import debounce from "lodash/debounce";
 import { uniqueArrayByKey } from '~/utils/functions'
 import escapeRegExp from "lodash/escapeRegExp";
 import { Datagrid } from '~/modules/datagrid'
-
 
 export const MyContainer = styled.div`
   margin: 0 15px 0 0;
@@ -116,6 +104,7 @@ class AddEditEchoProduct extends React.Component {
     changedForm: false,
     transportationType: transportationTypes[0].value,
     codesList: [],
+    changedAttachments: false,
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -126,7 +115,8 @@ class AddEditEchoProduct extends React.Component {
       }
 
       if (prevProps.editForm && !prevProps.addForm && this.props.addForm) { // Changed from Edit to Add form
-        this.setState({ activeTab: 0, codesList: [], changedForm: false })
+        //this.setState({ activeTab: 0, codesList: [], changedForm: false })
+        this.setInitialState( null, { activeTab: 0, codesList: [], changedForm: false})
         this.resetForm()
       }
 
@@ -151,7 +141,7 @@ class AddEditEchoProduct extends React.Component {
       }))
       this.props.searchManufacturers(getSafe(() => this.props.popupValues.manufacturer.name, ''), 200)
     }
-    this.setState( { codesList, changedForm: false , ...additionalStates })
+    this.setState( { codesList, changedForm: false, changedAttachments: false, ...additionalStates })
   }
 
   getInitialFormValues = () => {
@@ -435,6 +425,9 @@ class AddEditEchoProduct extends React.Component {
           )
             this.setState({ changedForm: true })
           }}
+          onRemoveFile={(id) => {
+            this.setState({ changedForm: true, changedAttachments: true })
+          }}
           data-test='settings_product_import_attachments'
           emptyContent={(
             <label>
@@ -479,20 +472,8 @@ class AddEditEchoProduct extends React.Component {
     const {
       closePopup,
       popupValues,
-      config,
       intl: { formatMessage },
-      toastManager,
       isLoading,
-      packagingGroups,
-      hazardClasses,
-      postEchoProduct,
-      putEchoProduct,
-      searchManufacturers,
-      searchedManufacturers,
-      searchedManufacturersLoading,
-      linkAttachment,
-      listDocumentTypes,
-      // searchedCasProducts
     } = this.props
 
     let { values } = formikProps
@@ -555,10 +536,10 @@ class AddEditEchoProduct extends React.Component {
                           'data-test': `admin_product_popup_cas_${index}_drpdn`,
                           size: 'large',
                           icon: 'search',
-                          search: options => options,
+                          search: true,
                           selection: true,
                           clearable: true,
-                          loading: isLoading,
+                          loading: this.state.isLoading,
                           onSearchChange: this.handleSearchChange,
                           dataindex: index
                         }}
@@ -890,27 +871,12 @@ class AddEditEchoProduct extends React.Component {
       visible,
       closePopup,
       intl: {formatMessage},
-      popupValues,
-      config,
-      toastManager,
       isLoading,
-      packagingGroups,
-      hazardClasses,
-      postEchoProduct,
-      putEchoProduct,
-      searchManufacturers,
-      searchedManufacturers,
-      searchedManufacturersLoading,
-      linkAttachment,
-      listDocumentTypes,
-      // searchedCasProducts
     } = this.props
 
     const {
       activeTab
     } = this.state
-
-    //console.log('!!!!!!!!!! AddEditEchoProduct render props', this.props)
 
     return (
       <Form
@@ -922,8 +888,7 @@ class AddEditEchoProduct extends React.Component {
         }}
 
         render={(formikProps) => {
-          let { values, touched, setTouched, setFieldValue, setFieldTouched, validateForm, submitForm, resetForm, setSubmitting } = formikProps
-          //this.submitForm = submitForm
+          let { touched, validateForm, resetForm } = formikProps
           this.resetForm = resetForm
 
           return (
@@ -934,6 +899,9 @@ class AddEditEchoProduct extends React.Component {
               direction='right'
               animation='overlay'
             >
+              <Dimmer inverted active={isLoading}>
+                <Loader />
+              </Dimmer>
               <div>
                 <HighSegment basic>
                   <Menu pointing secondary>
@@ -958,7 +926,10 @@ class AddEditEchoProduct extends React.Component {
                       <Button
                         size='large'
                         inputProps={{ type: 'button' }}
-                        onClick={() => closePopup()}
+                        onClick={() => {
+                          if (this.state.changedAttachments) Datagrid.loadData()
+                          closePopup()
+                        }}
                         data-test='sidebar_inventory_cancel'>
                         {
                           (Object.keys(touched).length || this.state.changedForm) ?
@@ -986,7 +957,6 @@ class AddEditEchoProduct extends React.Component {
                   </GridRow>
                 </Grid>
               </GraySegment>
-
             </FlexSidebar>
           )
         }}

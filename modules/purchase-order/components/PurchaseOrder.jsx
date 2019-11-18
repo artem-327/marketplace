@@ -1,12 +1,22 @@
 import React, { Component } from 'react'
-import PropTypes from "prop-types"
+import PropTypes from 'prop-types'
 
-
-import Shipping from "./Shipping"
+import Shipping from './Shipping'
 import ShippingEdit from './ShippingEdit'
-import ShippingQuote from "./ShippingQuote"
+import ShippingQuote from './ShippingQuote'
 import Payment from './Payment'
-import { Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment, Popup } from 'semantic-ui-react'
+import {
+  Container,
+  Menu,
+  Header,
+  Button,
+  Icon,
+  Grid,
+  GridColumn,
+  GridRow,
+  Segment,
+  Popup
+} from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -38,7 +48,6 @@ const validationSchema = Yup.object().shape({
   address: Yup.number().required(errorMessages.requiredMessage)
 })
 
-
 class PurchaseOrder extends Component {
   state = {
     otherAddresses: true,
@@ -51,30 +60,36 @@ class PurchaseOrder extends Component {
     this.props.getPayments()
   }
 
-  handleQuoteSelect = (index) => {
+  handleQuoteSelect = index => {
     let { shippingQuoteSelected, shippingQuotes } = this.props
     shippingQuoteSelected({ index, quote: shippingQuotes[index] })
   }
 
-  getAddress = (selectedAddressId) => {
+  getAddress = selectedAddressId => {
     let { deliveryAddresses, warehouses, branches } = this.props
     let addresses = this.state.otherAddresses ? deliveryAddresses : warehouses //branches
     let selectedAddress = addresses.find(i => i.id === selectedAddressId)
-    if (selectedAddress.deliveryAddress) selectedAddress = { ...selectedAddress, address: selectedAddress.deliveryAddress.address }
+    if (selectedAddress.deliveryAddress)
+      selectedAddress = {
+        ...selectedAddress,
+        address: selectedAddress.deliveryAddress.address
+      }
 
-    this.setState({ addressId: this.state.otherAddresses ? 'deliveryAddressId' : 'warehouseId' })
+    this.setState({
+      addressId: this.state.otherAddresses ? 'deliveryAddressId' : 'warehouseId'
+    })
     this.props.shippingChanged({ selectedAddress })
 
     this.getShippingQuotes(selectedAddress)
   }
 
-  getPayment = (selectedPaymentId) => {
+  getPayment = selectedPaymentId => {
     const { payments } = this.props
     const selectedPayment = payments.find(i => i.id === selectedPaymentId)
     this.props.shippingChanged({ selectedPayment })
   }
 
-  getShippingQuotes = (selectedAddress) => {
+  getShippingQuotes = selectedAddress => {
     let { address } = selectedAddress
 
     this.props.getShippingQuotes(address.country.id, address.zip.zip)
@@ -84,26 +99,27 @@ class PurchaseOrder extends Component {
     try {
       const response = await this.props.postNewDeliveryAddress(payload)
       this.getAddress(response.value.id)
+    } catch (e) {
+      console.error(e)
     }
-    catch (e) { console.error(e) }
   }
 
   updateDeliveryAddress = async payload => {
     try {
       const response = await this.props.updateDeliveryAddress(payload)
       this.getAddress(response.value.id)
+    } catch (e) {
+      console.error(e)
     }
-    catch (e) { console.error(e) }
   }
 
-
-  handleToggleChange = (otherAddresses) => {
-    return new Promise((resolve) => {
+  handleToggleChange = otherAddresses => {
+    return new Promise(resolve => {
       this.setState({ otherAddresses }, resolve)
     })
   }
 
-  deleteCart = (id) => {
+  deleteCart = id => {
     if (checkToken(this.props)) return
     let { cart } = this.props
 
@@ -111,14 +127,15 @@ class PurchaseOrder extends Component {
 
     if (cart.cartItems.length === 1) {
       return confirm(
-        formatMessage(({
+        formatMessage({
           id: 'order.deleteHeader',
           defaultMessage: 'Delete Order'
-        })),
-        formatMessage(({
+        }),
+        formatMessage({
           id: 'order.deleteBody',
-          defaultMessage: 'You are about to delete last item of order. Doing so will redirect you to Shopping cart. Do you wish to continue?'
-        }))
+          defaultMessage:
+            'You are about to delete last item of order. Doing so will redirect you to Shopping cart. Do you wish to continue?'
+        })
       ).then(() => {
         this.props.deleteCart()
         Router.push('/cart')
@@ -141,53 +158,88 @@ class PurchaseOrder extends Component {
     try {
       await this.props.postPurchaseOrder(data)
 
-      toastManager.add(generateToastMarkup(
-        <FormattedMessage id='notifications.purchaseOrderSuccess.header' defaultMessage='Order Placed' />,
-        <FormattedMessage id='notifications.purchaseOrderSuccess.content' defaultMessage='Order has been successfully placed.' />,
-      ), {
-        appearance: 'success'
-      })
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage
+            id='notifications.purchaseOrderSuccess.header'
+            defaultMessage='Order Placed'
+          />,
+          <FormattedMessage
+            id='notifications.purchaseOrderSuccess.content'
+            defaultMessage='Order has been successfully placed.'
+          />
+        ),
+        {
+          appearance: 'success'
+        }
+      )
       Router.push('/orders?type=purchase')
     } catch (e) {
       console.error(e)
 
-      toastManager.add(generateToastMarkup(
-        <FormattedMessage id='notifications.purchaseOrderError.header' defaultMessage='Order Error' />,
-        <FormattedMessage id='notifications.purchaseOrderError.contentWithText'
-          defaultMessage='Error occurred while placing an order:'
-          values={{ clientMessage: e.clientMessage, exceptionMessage: e.exceptionMessage }}
-        >
-          {(text) => text.split('\n').map((item, i) => <p key={i}>{item}</p>)}
-        </FormattedMessage>,
-      ), {
-        appearance: 'error'
-      })
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage
+            id='notifications.purchaseOrderError.header'
+            defaultMessage='Order Error'
+          />,
+          <FormattedMessage
+            id='notifications.purchaseOrderError.contentWithText'
+            defaultMessage='Error occurred while placing an order:'
+            values={{ clientMessage: e.clientMessage }}>
+            {text => text.split('\n').map((item, i) => <p key={i}>{item}</p>)}
+          </FormattedMessage>
+        ),
+        {
+          appearance: 'error'
+        }
+      )
     }
     this.setState({ submitting: false })
   }
 
   handleManualShipment = formikProps => {
-    let { values, setSubmitting, errors, validateForm, setFieldTouched } = formikProps
-    let { requestManualShipment, shipping: { selectedAddress } } = this.props
+    let {
+      values,
+      setSubmitting,
+      errors,
+      validateForm,
+      setFieldTouched
+    } = formikProps
+    let {
+      requestManualShipment,
+      shipping: { selectedAddress }
+    } = this.props
     setFieldTouched('address')
     setSubmitting(false)
 
     if (values.address) {
-
       let payload = {
         destinationCountryId: selectedAddress.address.country.id,
-        destinationZIP: selectedAddress.address.zip.zip,
+        destinationZIP: selectedAddress.address.zip.zip
       }
       requestManualShipment(payload)
     }
-
   }
 
-
   render() {
-
-    const { billingInfo, dispatch, postNewDeliveryAddress, updateDeliveryAddress, preferredBankAccountId, intl: { formatMessage } } = this.props
-    let { cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shippingQuotesAreFetching, shipping } = this.props
+    const {
+      billingInfo,
+      dispatch,
+      postNewDeliveryAddress,
+      updateDeliveryAddress,
+      preferredBankAccountId,
+      intl: { formatMessage }
+    } = this.props
+    let {
+      cart,
+      deliveryAddresses,
+      payments,
+      cartIsFetching,
+      shippingQuotes,
+      shippingQuotesAreFetching,
+      shipping
+    } = this.props
 
     if (cartIsFetching) return <Spinner />
     if (cart.cartItems.length === 0) Router.push('/cart')
@@ -205,23 +257,36 @@ class PurchaseOrder extends Component {
       shipmentQuoteId: ''
     }
 
-
     return (
-      <div className="app-inner-main flex stretched">
-        <div className="header-top" style={{ zIndex: 10, backgroundColor: '#FFF' }}>
+      <div className='app-inner-main flex stretched'>
+        <div
+          className='header-top'
+          style={{ zIndex: 10, backgroundColor: '#FFF' }}>
           <Container fluid style={{ padding: '0 32px' }}>
             <Menu secondary>
               <Menu.Item header>
                 <Header as='h1' size='medium'>
-                  <FormattedMessage id='cart.checkout' defaultMessage='Checkout' />
+                  <FormattedMessage
+                    id='cart.checkout'
+                    defaultMessage='Checkout'
+                  />
                 </Header>
               </Menu.Item>
 
               <Menu.Menu position='right'>
                 <Menu.Item>
-                  <Button icon basic labelPosition='left' onClick={() => Router.push('/cart')} data-test='purchase_order_back_to_cart_btn'>
+                  <Button
+                    icon
+                    basic
+                    labelPosition='left'
+                    onClick={() => Router.push('/cart')}
+                    data-test='purchase_order_back_to_cart_btn'>
                     <Icon name='chevron left' />
-                    <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart'>{(text) => text}</FormattedMessage>
+                    <FormattedMessage
+                      id='cart.backToShoppingCart'
+                      defaultMessage='Back to Shopping Cart'>
+                      {text => text}
+                    </FormattedMessage>
                   </Button>
                 </Menu.Item>
               </Menu.Menu>
@@ -232,15 +297,18 @@ class PurchaseOrder extends Component {
         <RelaxedForm
           initialValues={initialValues}
           validationSchema={validationSchema}
-          className='purchase-order' render={(formikProps) => {
+          className='purchase-order'
+          render={formikProps => {
             let { values } = formikProps
 
             return (
               <Grid centered>
                 <GridColumn mobile={14} tablet={9} computer={8}>
-                  {shipping.isShippingEdit &&
+                  {shipping.isShippingEdit && (
                     <ShippingEdit
-                      savedShippingPreferences={shipping.savedShippingPreferences}
+                      savedShippingPreferences={
+                        shipping.savedShippingPreferences
+                      }
                       selectedAddress={shipping.selectedAddress}
                       isNewAddress={shipping.isNewAddress}
                       shippingChanged={this.props.shippingChanged}
@@ -253,8 +321,8 @@ class PurchaseOrder extends Component {
                       isFetching={this.props.isFetching}
                       initialValues={this.props.initialValues}
                     />
-                  }
-                  {!shipping.isShippingEdit &&
+                  )}
+                  {!shipping.isShippingEdit && (
                     <Segment>
                       <Grid className='bottom-padded'>
                         <Shipping
@@ -271,91 +339,124 @@ class PurchaseOrder extends Component {
                           warehousesFetching={this.props.warehousesFetching}
                           warehouses={this.props.warehouses}
                           handleToggleChange={this.handleToggleChange}
-                          shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
+                          shippingQuotesAreFetching={
+                            this.props.shippingQuotesAreFetching
+                          }
                           formikProps={formikProps}
                         />
-                        {cart.weightLimitExceed &&
+                        {cart.weightLimitExceed && (
                           <>
                             <GridRow>
                               <GridColumn computer={16}>
-                                <FormattedMessage id='cart.weightLimitExceeded' defaultMessage='Your order weight exceeds weight limit of XXX lbs for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.' />
+                                <FormattedMessage
+                                  id='cart.weightLimitExceeded'
+                                  defaultMessage='Your order weight exceeds weight limit of XXX lbs for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.'
+                                />
                               </GridColumn>
                             </GridRow>
                           </>
-                        }
+                        )}
 
-                        {shippingQuotes.length === 0 && shipping.selectedAddress && !shippingQuotesAreFetching &&
-                          <GridRow>
-                            <GridColumn computer={16}>
-                              <FormattedMessage
-                                id='cart.noShippingQuotes.processManually'
-                                defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`} />
-                            </GridColumn>
-                          </GridRow>
-                        }
-
-                        {
-                          shipping.selectedAddress && shippingQuotes.length === 0 && (!shippingQuotesAreFetching || cart.weightLimitExceed) &&
-                          <>
-                            <GridRow>
-                              <GridColumn computer={8}>
-                                <Input name='shipmentQuoteId' label={<FormattedMessage id='cart.shipmentQuote' defaultMessage='Shipment Quote' />} />
-                              </GridColumn>
-                            </GridRow>
-
+                        {shippingQuotes.length === 0 &&
+                          shipping.selectedAddress &&
+                          !shippingQuotesAreFetching && (
                             <GridRow>
                               <GridColumn computer={16}>
-                                <Button
-                                  loading={this.props.manualShipmentPending}
-                                  type='button'
-                                  onClick={() => this.handleManualShipment(formikProps)}>
-                                  <FormattedMessage id='cart.requestShippingQuote' defaultMessage='Request Shipping Quote'>
-                                    {text => text}
-                                  </FormattedMessage>
-                                </Button>
+                                <FormattedMessage
+                                  id='cart.noShippingQuotes.processManually'
+                                  defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
+                                />
                               </GridColumn>
                             </GridRow>
-                            <GridRow>
-                              <GridColumn computer={16}>
-                                <FormattedMessage id='cart.quoteReceived' defaultMessage='If you already received the shipping quote and agree, please type in the provided Quote Id and continue with Checkout.' />
-                              </GridColumn>
-                            </GridRow>
-                          </>
-                        }
+                          )}
+
+                        {shipping.selectedAddress &&
+                          shippingQuotes.length === 0 &&
+                          (!shippingQuotesAreFetching ||
+                            cart.weightLimitExceed) && (
+                            <>
+                              <GridRow>
+                                <GridColumn computer={8}>
+                                  <Input
+                                    name='shipmentQuoteId'
+                                    label={
+                                      <FormattedMessage
+                                        id='cart.shipmentQuote'
+                                        defaultMessage='Shipment Quote'
+                                      />
+                                    }
+                                  />
+                                </GridColumn>
+                              </GridRow>
+
+                              <GridRow>
+                                <GridColumn computer={16}>
+                                  <Button
+                                    loading={this.props.manualShipmentPending}
+                                    type='button'
+                                    onClick={() =>
+                                      this.handleManualShipment(formikProps)
+                                    }>
+                                    <FormattedMessage
+                                      id='cart.requestShippingQuote'
+                                      defaultMessage='Request Shipping Quote'>
+                                      {text => text}
+                                    </FormattedMessage>
+                                  </Button>
+                                </GridColumn>
+                              </GridRow>
+                              <GridRow>
+                                <GridColumn computer={16}>
+                                  <FormattedMessage
+                                    id='cart.quoteReceived'
+                                    defaultMessage='If you already received the shipping quote and agree, please type in the provided Quote Id and continue with Checkout.'
+                                  />
+                                </GridColumn>
+                              </GridRow>
+                            </>
+                          )}
                       </Grid>
                     </Segment>
-                  }
+                  )}
 
                   <Segment>
                     <Grid className='bottom-padded'>
                       <GridRow className='header'>
                         <GridColumn>
                           <Header as='h2'>
-                            <FormattedMessage id='cart.2freightSelection' defaultMessage='2. Freight Selection' />
+                            <FormattedMessage
+                              id='cart.2freightSelection'
+                              defaultMessage='2. Freight Selection'
+                            />
                           </Header>
                         </GridColumn>
                       </GridRow>
-                      {!cart.weightLimitExceed &&
+                      {!cart.weightLimitExceed && (
                         <ShippingQuote
                           currency={currency}
-                          selectedShippingQuote={this.props.cart.selectedShipping}
+                          selectedShippingQuote={
+                            this.props.cart.selectedShipping
+                          }
                           handleQuoteSelect={this.handleQuoteSelect}
                           selectedAddress={shipping.selectedAddress}
                           shippingQuotes={shippingQuotes}
-                          shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
+                          shippingQuotesAreFetching={
+                            this.props.shippingQuotesAreFetching
+                          }
                         />
-                      }
-
+                      )}
                     </Grid>
                   </Segment>
-
 
                   <Segment>
                     <Grid className='bottom-padded'>
                       <GridRow className='header'>
                         <GridColumn>
                           <Header as='h2'>
-                            <FormattedMessage id='cart.3payment' defaultMessage='3. Payment' />
+                            <FormattedMessage
+                              id='cart.3payment'
+                              defaultMessage='3. Payment'
+                            />
                           </Header>
                         </GridColumn>
                       </GridRow>
@@ -369,7 +470,6 @@ class PurchaseOrder extends Component {
                       />
                     </Grid>
                   </Segment>
-
                 </GridColumn>
 
                 <GridColumn mobile={14} tablet={6} computer={5}>
@@ -383,38 +483,62 @@ class PurchaseOrder extends Component {
                   <Summary
                     additionalContent={
                       <GridRow centered>
-                        <Popup trigger={
-                          <GridColumn>
-                            <Button
-                              disabled={
-                                this.state.submitting ||
-                                !values.payment ||
-                                !this.props.logisticsAccount ||
-                                !(shipping.selectedAddress && (this.props.cart.selectedShipping || values.shipmentQuoteId))}
-                              loading={this.state.submitting}
-                              fluid primary
-                              onClick={() => { this.handlePurchase(shipping, getSafe(() => this.props.cart.selectedShipping.quote.quoteId, values.shipmentQuoteId)) }}
-                              data-test='purchase_order_place_order_btn'>
-                              {/* <FormattedMessage id='cart.placeOrder' defaultMessage='Place Order1' /> */}
-                              {formatMessage({ id: 'cart.placeOrder', defaultMessage: 'Place Order' })}
-                            </Button>
-                          </GridColumn>
-                        } content={
-                          <FormattedMessage
-                            id='cart.purchaseOrder.logisticAccRequired'
-                            defaultMessage='To be able to complete Order, your Company needs to have Logistics account defined. This can be done in Settings.' />}
-                          disabled={this.props.logisticsAccount} />
+                        <Popup
+                          trigger={
+                            <GridColumn>
+                              <Button
+                                disabled={
+                                  this.state.submitting ||
+                                  !values.payment ||
+                                  !this.props.logisticsAccount ||
+                                  !(
+                                    shipping.selectedAddress &&
+                                    (this.props.cart.selectedShipping ||
+                                      values.shipmentQuoteId)
+                                  )
+                                }
+                                loading={this.state.submitting}
+                                fluid
+                                primary
+                                onClick={() => {
+                                  this.handlePurchase(
+                                    shipping,
+                                    getSafe(
+                                      () =>
+                                        this.props.cart.selectedShipping.quote
+                                          .quoteId,
+                                      values.shipmentQuoteId
+                                    )
+                                  )
+                                }}
+                                data-test='purchase_order_place_order_btn'>
+                                {/* <FormattedMessage id='cart.placeOrder' defaultMessage='Place Order1' /> */}
+                                {formatMessage({
+                                  id: 'cart.placeOrder',
+                                  defaultMessage: 'Place Order'
+                                })}
+                              </Button>
+                            </GridColumn>
+                          }
+                          content={
+                            <FormattedMessage
+                              id='cart.purchaseOrder.logisticAccRequired'
+                              defaultMessage='To be able to complete Order, your Company needs to have Logistics account defined. This can be done in Settings.'
+                            />
+                          }
+                          disabled={this.props.logisticsAccount}
+                        />
                       </GridRow>
                     }
                     logisticsAccount={this.props.logisticsAccount}
                     cart={cart}
                     totalPrice={this.props.cart.cfPriceSubtotal}
                   />
-
                 </GridColumn>
               </Grid>
             )
-          }} />
+          }}
+        />
       </div>
     )
   }

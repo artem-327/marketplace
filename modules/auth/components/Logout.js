@@ -5,7 +5,7 @@ import { chatWidgetTerminate } from '~/modules/chatWidget/actions'
 
 class Logout extends Component {
   componentDidMount() {
-    const { logout, router } = this.props
+    const { logout, router, chatWidgetTerminate } = this.props
 
     chatWidgetTerminate()
     logout(router.query.auto)
@@ -14,4 +14,4 @@ class Logout extends Component {
   render() { return null }
 }
 
-export default connect(() => ({}), { logout })(Logout)
+export default connect(() => ({}), { logout, chatWidgetTerminate })(Logout)

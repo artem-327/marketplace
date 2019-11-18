@@ -14,91 +14,96 @@ const StyledButton = styled(Button)`
 `
 
 class ConfirmationPage extends Component {
-
-  createReport = (result) => {
-    const exceptionMessage = result.exceptionMessage
+  createReport = result => {
+    const clientMessage = result.clientMessage
     const recordCount = result.recordCount || 0
     const recordsCreated = result.recordsCreated || 0
     const recordsUpdated = result.recordsUpdated || 0
     const recordsFailed = result.recordsFailed || 0
 
-    const status = recordsFailed ? ( recordsFailed === recordCount ? 'Failed' : 'SomeFailed') : 'Success'
+    const status = recordsFailed
+      ? recordsFailed === recordCount
+        ? 'Failed'
+        : 'SomeFailed'
+      : 'Success'
 
-    return (
-      exceptionMessage ? (
-        <React.Fragment>
-          <Grid.Row>
+    return clientMessage ? (
+      <React.Fragment>
+        <Grid.Row>
+          <FormattedMessage
+            id='settings.importFailed'
+            defaultMessage='Import Failed'
+          />
+        </Grid.Row>
+        <Grid.Row>{clientMessage}</Grid.Row>
+      </React.Fragment>
+    ) : (
+      <React.Fragment>
+        <Grid.Row style={{ 'padding-bottom': '1.25rem' }}>
+          <FormattedMessage
+            id={`settings.import${status}`}
+            defaultMessage={
+              status === 'Failed'
+                ? 'Import Failed'
+                : status === 'SomeFailed'
+                ? 'Some lines failed during import'
+                : 'Import success'
+            }
+          />
+        </Grid.Row>
+
+        <Grid.Row
+          style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }}>
+          <FormattedMessage
+            id='settings.importRecordCount'
+            defaultMessage={`Record lines found in imported file: ${recordCount}`}
+            values={{ value: recordCount }}
+          />
+        </Grid.Row>
+
+        <Grid.Row
+          style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }}>
+          <FormattedMessage
+            id='settings.importRecordsCreated'
+            defaultMessage={`Records created successfully: ${recordsCreated}`}
+            values={{ value: recordsCreated }}
+          />
+        </Grid.Row>
+
+        <Grid.Row
+          style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }}>
+          <FormattedMessage
+            id='settings.importRecordsUpdated'
+            defaultMessage={`Records updated successfully: ${recordsUpdated}`}
+            values={{ value: recordsUpdated }}
+          />
+        </Grid.Row>
+
+        <Grid.Row
+          style={{ 'padding-top': '0.25rem', 'padding-bottom': '1.25rem' }}>
+          <FormattedMessage
+            id='settings.importRecordsFailed'
+            defaultMessage={`Records import failed: ${recordsFailed}`}
+            values={{ value: recordsFailed }}
+          />
+        </Grid.Row>
+
+        {result.failureReports.map((error, i) => (
+          <Grid.Row
+            key={i}
+            style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }}>
             <FormattedMessage
-              id='settings.importFailed'
-              defaultMessage='Import Failed'
+              id='import.errorAtLine'
+              defaultMessage={`Error at line ${error.csvLineNumber}: ${error.cause}`}
+              values={{
+                lineNumber: error.csvLineNumber,
+                errorCause: error.cause
+              }}
             />
           </Grid.Row>
-          <Grid.Row>
-          {exceptionMessage}
-          </Grid.Row>
-        </React.Fragment>
-        ) : (
-        <React.Fragment>
-
-          <Grid.Row style={{ 'padding-bottom': '1.25rem' }} >
-            <FormattedMessage
-              id={`settings.import${status}`}
-              defaultMessage={ status === 'Failed' ? 'Import Failed'
-                : (
-                  status === 'SomeFailed' ? 'Some lines failed during import' : 'Import success'
-                )
-              }
-            />
-          </Grid.Row>
-
-          <Grid.Row style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }} >
-            <FormattedMessage
-              id='settings.importRecordCount'
-              defaultMessage={`Record lines found in imported file: ${recordCount}`}
-              values={{ value: recordCount }}
-            />
-          </Grid.Row>
-
-          <Grid.Row style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }} >
-            <FormattedMessage
-              id='settings.importRecordsCreated'
-              defaultMessage={`Records created successfully: ${recordsCreated}`}
-              values={{ value: recordsCreated }}
-            />
-          </Grid.Row>
-
-          <Grid.Row style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }} >
-            <FormattedMessage
-              id='settings.importRecordsUpdated'
-              defaultMessage={`Records updated successfully: ${recordsUpdated}`}
-              values={{ value: recordsUpdated }}
-            />
-          </Grid.Row>
-
-          <Grid.Row style={{ 'padding-top': '0.25rem', 'padding-bottom': '1.25rem' }} >
-            <FormattedMessage
-              id='settings.importRecordsFailed'
-              defaultMessage={`Records import failed: ${recordsFailed}`}
-              values={{ value: recordsFailed }}
-            />
-          </Grid.Row>
-
-          {result.failureReports.map((error, i) => (
-            <Grid.Row key={i} style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }} >
-              <FormattedMessage
-                id='import.errorAtLine'
-                defaultMessage={`Error at line ${error.csvLineNumber}: ${error.cause}`}
-                values={{
-                  lineNumber: error.csvLineNumber,
-                  errorCause: error.cause
-                }}
-              />
-            </Grid.Row>
-          ))}
-          <Grid.Row>
-          </Grid.Row>
-        </React.Fragment>
-      )
+        ))}
+        <Grid.Row></Grid.Row>
+      </React.Fragment>
     )
   }
 
