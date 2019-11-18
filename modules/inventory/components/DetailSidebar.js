@@ -22,6 +22,7 @@ import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import moment from "moment"
 import UploadLot from './upload/UploadLot'
 import { withDatagrid } from '~/modules/datagrid'
+import { AttachmentManager } from '~/modules/attachments'
 
 
 export const FlexSidebar = styled(Sidebar)`
@@ -460,6 +461,11 @@ class DetailSidebar extends Component {
         appearance: 'warning'
       })
     }
+  }
+
+  attachDocuments = (newDocuments, values, setFieldValue) => {
+    setFieldValue(`documents.attachments`, values.documents.attachments.concat(newDocuments))
+    this.setState({ changedForm: true })
   }
 
   render() {
@@ -981,6 +987,18 @@ class DetailSidebar extends Component {
                                   </GridColumn>
                                 </GridRow>
                               }
+                                <GridRow>
+                                  <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                    <FormattedMessage id='global.existingDocuments' defaultMessage='Existing documents: '>{text => text}</FormattedMessage>
+                                  </GridColumn>
+                                  <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                    <AttachmentManager 
+                                      asModal 
+                                      returnSelectedRows={(rows) => this.attachDocuments(rows, values, setFieldValue)}
+                                      />
+                                  </GridColumn>
+                                </GridRow>
+                              
                               { values.documents.documentType && this.state.openUploadLot ?
                                 (
                                   <GridRow>
