@@ -118,7 +118,7 @@ class ProductCatalogTable extends Component {
           defaultSorting={{
             columnName: 'name',
             sortPath: 'EchoProduct.name',
-            direction: 'DESC'
+            direction: 'ASC'
           }}
           rows={this.getRows(rows)}
           rowActions={[
