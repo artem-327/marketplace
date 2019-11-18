@@ -1,12 +1,21 @@
-import React, {Component} from 'react'
-import {Modal, Input, Button, Grid, GridRow, GridColumn, Header, Icon} from 'semantic-ui-react'
-import {FormattedMessage} from 'react-intl'
+import React, { Component } from 'react'
+import {
+  Modal,
+  Input,
+  Button,
+  Grid,
+  GridRow,
+  GridColumn,
+  Header,
+  Icon
+} from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
-import {debounce} from 'lodash'
+import { debounce } from 'lodash'
 import moment from 'moment'
-import {node, object, bool} from 'prop-types'
+import { node, object, bool } from 'prop-types'
 
-import {withDatagrid, DatagridProvider} from '~/modules/datagrid'
+import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
 
 import DocumentManagerPopup from '~/modules/settings/components/Documents/DocumentManagerPopup'
@@ -30,24 +39,24 @@ const AttachmentModal = withDatagrid(
     }
 
     returnSelectedRows = async () => {
-      const {datagrid} = this.props
+      const { datagrid } = this.props
 
       this.props.returnSelectedRows(
         this.state.selectedRows.map(srIndex => {
-          return {...datagrid.rows[srIndex], index: srIndex}
+          return { ...datagrid.rows[srIndex], index: srIndex }
         })
       )
-      this.setState({open: false})
+      this.setState({ open: false })
     }
 
-    handleSearch = debounce(({value}) => {
-      let {datagrid} = this.props
+    handleSearch = debounce(({ value }) => {
+      let { datagrid } = this.props
       datagrid.setSearch(value)
     }, 250)
 
     getContent = () => {
-      const {datagrid, lockSelection, tableProps, selectable} = this.props
-      console.log({datagrid, tableProps})
+      const { datagrid, lockSelection, tableProps, selectable } = this.props
+      console.log({ datagrid, tableProps })
       return (
         <ProdexTable
           {...datagrid.tableProps}
@@ -56,18 +65,19 @@ const AttachmentModal = withDatagrid(
             id: r.id,
             name: r.name,
             documentType: r.documentType.name,
-            expirationDate: r.expirationDate && moment(r.expirationDate).format('MM/DD/YYYY')
+            expirationDate:
+              r.expirationDate && moment(r.expirationDate).format('MM/DD/YYYY')
           }))}
           tableName='attachements'
           columns={[
-            {name: 'name', title: 'File Name', width: 400},
-            {name: 'documentType', title: 'Type', width: 200},
-            {name: 'expirationDate', title: 'Expiration Date', width: 200}
+            { name: 'name', title: 'File Name', width: 400 },
+            { name: 'documentType', title: 'Type', width: 200 },
+            { name: 'expirationDate', title: 'Expiration Date', width: 200 }
           ]}
           rowSelection={selectable}
           lockSelection={false}
           showSelectAll={false}
-          onSelectionChange={selectedRows => this.setState({selectedRows})}
+          onSelectionChange={selectedRows => this.setState({ selectedRows })}
           getChildGroups={rows =>
             _(rows)
               .groupBy('name')
@@ -82,7 +92,7 @@ const AttachmentModal = withDatagrid(
     }
 
     render() {
-      const {trigger, asModal} = this.props
+      const { trigger, asModal } = this.props
 
       if (!asModal) return this.getContent()
 
@@ -90,19 +100,21 @@ const AttachmentModal = withDatagrid(
         <>
           <Modal
             closeIcon={<PaddedIcon name='close icon' />}
-            onClose={() => this.setState({open: false})}
+            onClose={() => this.setState({ open: false })}
             centered={true}
             open={this.state.open}
             trigger={React.cloneElement(trigger, {
-              onClick: () => this.setState({open: true})
+              onClick: () => this.setState({ open: true })
             })}
-            onClose={() => this.setState({open: false})}>
+            onClose={() => this.setState({ open: false })}>
             <CustomHeader>
               <Grid verticalAlign='middle'>
                 <GridRow>
                   <GridColumn width={6}>
                     <Header as='h2'>
-                      <FormattedMessage id='global.documentManager' defaultMessage='Document Manager'>
+                      <FormattedMessage
+                        id='global.documentManager'
+                        defaultMessage='Document Manager'>
                         {text => text}
                       </FormattedMessage>
                     </Header>
@@ -124,7 +136,9 @@ const AttachmentModal = withDatagrid(
                       primary
                       disabled={!this.state.selectedRows.length}
                       onClick={this.returnSelectedRows}>
-                      <FormattedMessage id='attachments.attachSelected' defaultMessage='Attach Selected Files'>
+                      <FormattedMessage
+                        id='attachments.attachSelected'
+                        defaultMessage='Attach Selected Files'>
                         {text => text}
                       </FormattedMessage>
                     </Button>
@@ -135,17 +149,25 @@ const AttachmentModal = withDatagrid(
             <Modal.Content scrolling>{this.getContent()}</Modal.Content>
 
             <Modal.Actions>
-              <Button basic onClick={() => this.setState({open: false})}>
+              <Button basic onClick={() => this.setState({ open: false })}>
                 <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                   {text => text}
                 </FormattedMessage>
               </Button>
-              <Button primary onClick={() => this.setState({uploadOpen: true})}>
-                <FormattedMessage id='global.uploadAnother' defaultMessage='Upload Another'>
+              <Button
+                primary
+                onClick={() => this.setState({ uploadOpen: true })}>
+                <FormattedMessage
+                  id='global.uploadAnother'
+                  defaultMessage='Upload Another'>
                   {text => text}
                 </FormattedMessage>
               </Button>
-              {this.state.uploadOpen && <DocumentManagerPopup onClose={() => this.setState({uploadOpen: false})} />}
+              {this.state.uploadOpen && (
+                <DocumentManagerPopup
+                  onClose={() => this.setState({ uploadOpen: false })}
+                />
+              )}
             </Modal.Actions>
           </Modal>
         </>
@@ -164,7 +186,9 @@ AttachmentModal.propTypes = {
 AttachmentModal.defaultProps = {
   trigger: (
     <Button fluid type='button'>
-      <FormattedMessage id='global.documentManager' defaultMessage='Document Manager'>
+      <FormattedMessage
+        id='global.documentManager'
+        defaultMessage='Document Manager'>
         {text => text}
       </FormattedMessage>
     </Button>
@@ -180,7 +204,7 @@ class AttachmentManager extends Component {
     searchToFilter: v =>
       v
         ? [
-            {operator: 'LIKE', path: 'Attachment.name', values: [`%${v}%`]},
+            { operator: 'LIKE', path: 'Attachment.name', values: [`%${v}%`] },
             {
               operator: 'LIKE',
               path: 'Attachment.customName',
