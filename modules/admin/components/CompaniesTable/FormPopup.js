@@ -392,12 +392,12 @@ class AddNewPopupCasProducts extends React.Component {
                             </FormGroup>
                             <FormGroup widths='equal' data-test='admin_popup_company_primaryUserTitlePhone_inp'>
                               <Input label={<FormattedMessage id='global.jobTitle' defaultMessage='Job Title' />} name='primaryUser.jobTitle' />
-                              <PhoneNumber
+                              {/* <PhoneNumber
                                 label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='primaryUser.phone'
                                 values={values} setFieldValue={setFieldValue}
                                 setFieldTouched={setFieldTouched} errors={errors}
                                 touched={touched} isSubmitting={isSubmitting}
-                              />
+                              /> */}
                             </FormGroup>
                           </Accordion.Content>
                         </>
@@ -420,13 +420,13 @@ class AddNewPopupCasProducts extends React.Component {
                           <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchNameEmailPhone_inp' >
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='primaryBranch.deliveryAddress.contactName' />
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />} name='primaryBranch.deliveryAddress.contactEmail' />
-                            <PhoneNumber
+                            {/* <PhoneNumber
                               label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />}
                               name='primaryBranch.deliveryAddress.contactPhone'
                               values={values} setFieldValue={setFieldValue}
                               setFieldTouched={setFieldTouched} errors={errors}
                               touched={touched} isSubmitting={isSubmitting}
-                            />
+                            /> */}
                           </FormGroup>
                           <FormGroup widths='equal'>
                             <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='primaryBranch.warehouse' inputProps={{ 'data-test': 'admin_popup_company_primaryBranch_warehouse_chckb' }} />
@@ -448,13 +448,13 @@ class AddNewPopupCasProducts extends React.Component {
                           <FormGroup widths='equal'>
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact Email' />} name='mailingBranch.deliveryAddress.contactEmail' />
                             <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='mailingBranch.deliveryAddress.contactName' />
-                            <PhoneNumber
+                            {/* <PhoneNumber
                               label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />}
                               name='mailingBranch.deliveryAddress.contactPhone'
                               values={values} setFieldValue={setFieldValue}
                               setFieldTouched={setFieldTouched} errors={errors}
                               touched={touched} isSubmitting={isSubmitting}
-                            />
+                            /> */}
                           </FormGroup>
                           <FormGroup widths='equal'>
                             <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='mailingBranch.deliveryAddress.warehouse' inputProps={{ 'data-test': 'admin_popup_company_mailingBranch_warehouse_chckb' }} />

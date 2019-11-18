@@ -90,7 +90,7 @@ export default class PhoneNumber extends Component {
 
   componentDidUpdate(prevProps, nextProps, snapshot) {
     let phone = get(this.props.values, this.props.name, '').replace('+', '')
-
+    
     if (phone !== this.state.phoneFull) {
       phone = splitPhoneNumber(phone, this.props.phoneCountryCodes)
 
