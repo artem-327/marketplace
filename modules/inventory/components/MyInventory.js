@@ -1,14 +1,5 @@
 import React, { Component } from 'react'
-import {
-  Container,
-  Menu,
-  Header,
-  Checkbox,
-  Icon,
-  Popup,
-  List,
-  Button
-} from 'semantic-ui-react'
+import { Container, Menu, Header, Checkbox, Icon, Popup, List, Button } from 'semantic-ui-react'
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
@@ -49,9 +40,7 @@ class MyInventory extends Component {
       {
         name: 'productName',
         title: (
-          <FormattedMessage
-            id='global.intProductName'
-            defaultMessage='Product Name'>
+          <FormattedMessage id='global.intProductName' defaultMessage='Product Name'>
             {text => text}
           </FormattedMessage>
         ),
@@ -61,9 +50,7 @@ class MyInventory extends Component {
       {
         name: 'productNumber',
         title: (
-          <FormattedMessage
-            id='global.intProductCode'
-            defaultMessage='Product Code'>
+          <FormattedMessage id='global.intProductCode' defaultMessage='Product Code'>
             {text => text}
           </FormattedMessage>
         ),
@@ -75,9 +62,7 @@ class MyInventory extends Component {
       {
         name: 'warehouse',
         title: (
-          <FormattedMessage
-            id='myInventory.warehouse'
-            defaultMessage='Warehouse'>
+          <FormattedMessage id='myInventory.warehouse' defaultMessage='Warehouse'>
             {text => text}
           </FormattedMessage>
         ),
@@ -87,9 +72,7 @@ class MyInventory extends Component {
       {
         name: 'available',
         title: (
-          <FormattedMessage
-            id='myInventory.available'
-            defaultMessage='Available PKGs'>
+          <FormattedMessage id='myInventory.available' defaultMessage='Available PKGs'>
             {text => text}
           </FormattedMessage>
         ),
@@ -109,9 +92,7 @@ class MyInventory extends Component {
       {
         name: 'packagingUnit',
         title: (
-          <FormattedMessage
-            id='global.packagingUnit'
-            defaultMessage='Packaging Unit'>
+          <FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit'>
             {text => text}
           </FormattedMessage>
         ),
@@ -121,9 +102,7 @@ class MyInventory extends Component {
       {
         name: 'packaging',
         title: (
-          <FormattedMessage
-            id='global.packagingType'
-            defaultMessage='Packaging Type'>
+          <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>
             {text => text}
           </FormattedMessage>
         ),
@@ -152,9 +131,7 @@ class MyInventory extends Component {
       {
         name: 'fobPrice',
         title: (
-          <FormattedMessage
-            id='myInventory.fobPrice'
-            defaultMessage='FOB Price'>
+          <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price'>
             {text => text}
           </FormattedMessage>
         ),
@@ -164,9 +141,7 @@ class MyInventory extends Component {
       {
         name: 'manufacturer',
         title: (
-          <FormattedMessage
-            id='global.manufacturer'
-            defaultMessage='Manufacturer'>
+          <FormattedMessage id='global.manufacturer' defaultMessage='Manufacturer'>
             {text => text}
           </FormattedMessage>
         ),
@@ -176,9 +151,7 @@ class MyInventory extends Component {
       {
         name: 'broadcast',
         title: (
-          <FormattedMessage
-            id='myInventory.broadcast'
-            defaultMessage='Broadcast'>
+          <FormattedMessage id='myInventory.broadcast' defaultMessage='Broadcast'>
             {text => text}
           </FormattedMessage>
         ),
@@ -189,9 +162,7 @@ class MyInventory extends Component {
       {
         name: 'minOrderQuantity',
         title: (
-          <FormattedMessage
-            id='myInventory.minOrderQuantity'
-            defaultMessage='Min Order Q.'>
+          <FormattedMessage id='myInventory.minOrderQuantity' defaultMessage='Min Order Q.'>
             {text => text}
           </FormattedMessage>
         ),
@@ -209,9 +180,7 @@ class MyInventory extends Component {
       {
         name: 'condition',
         title: (
-          <FormattedMessage
-            id='myInventory.condition'
-            defaultMessage='Condition'>
+          <FormattedMessage id='myInventory.condition' defaultMessage='Condition'>
             {text => text}
           </FormattedMessage>
         ),
@@ -265,9 +234,7 @@ class MyInventory extends Component {
       {
         name: 'allocatedPkg',
         title: (
-          <FormattedMessage
-            id='myInventory.allocatedPkg'
-            defaultMessage='Allocated PKG'>
+          <FormattedMessage id='myInventory.allocatedPkg' defaultMessage='Allocated PKG'>
             {text => text}
           </FormattedMessage>
         ),
@@ -276,9 +243,7 @@ class MyInventory extends Component {
       {
         name: 'offerExpiration',
         title: (
-          <FormattedMessage
-            id='myInventory.offerExpiration'
-            defaultMessage='Offer EXP'>
+          <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer EXP'>
             {text => text}
           </FormattedMessage>
         ),
@@ -299,11 +264,7 @@ class MyInventory extends Component {
     if (filter.search) {
       let foundProducts = await this.props.findProducts(filter.search)
       foundProducts.value.data.reduce((filteredProducts, product) => {
-        if (
-          product.casProduct.chemicalName === filter.search ||
-          product.casProduct.casNumber === filter.search
-        )
-          productIds.push(product.id)
+        if (product.casProduct.chemicalName === filter.search || product.casProduct.casNumber === filter.search) productIds.push(product.id)
       }, [])
 
       if (productIds.length) {
@@ -320,35 +281,19 @@ class MyInventory extends Component {
       if (this.props.sellEligible) {
         switch (r.cfStatus.toLowerCase()) {
           case 'broadcasting':
-            title = (
-              <FormattedMessage
-                id='myInventory.broadcasting.active'
-                defaultMessage='Broadcasting now, switch off to stop broadcasting.'
-              />
-            )
+            title = <FormattedMessage id='myInventory.broadcasting.active' defaultMessage='Broadcasting now, switch off to stop broadcasting.' />
             break
           case 'not broadcasting':
             title = (
-              <FormattedMessage
-                id='myInventory.broadcasting.inactive'
-                defaultMessage='Not Broadcasting now, switch on to start broadcasting.'
-              />
+              <FormattedMessage id='myInventory.broadcasting.inactive' defaultMessage='Not Broadcasting now, switch on to start broadcasting.' />
             )
             break
           case 'incomplete':
-            title = (
-              <FormattedMessage
-                id='myInventory.broadcasting.incomplete'
-                defaultMessage='Incomplete, please enter all required values first.'
-              />
-            )
+            title = <FormattedMessage id='myInventory.broadcasting.incomplete' defaultMessage='Incomplete, please enter all required values first.' />
             break
           case 'unmapped':
             title = (
-              <FormattedMessage
-                id='myInventory.broadcasting.unmapped'
-                defaultMessage='Unmapped, please make sure related Product is mapped first.'
-              />
+              <FormattedMessage id='myInventory.broadcasting.unmapped' defaultMessage='Unmapped, please make sure related Product is mapped first.' />
             )
             break
           default:
@@ -366,15 +311,9 @@ class MyInventory extends Component {
       return {
         ...r,
         condition: r.condition ? (
-          <FormattedMessage
-            id='global.conforming'
-            defaultMessage='Conforming'
-          />
+          <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
-          <FormattedMessage
-            id='global.nonConforming'
-            defaultMessage='Non Conforming'
-          />
+          <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
         ),
         broadcast: (
           <div style={{ float: 'right' }}>
@@ -384,21 +323,11 @@ class MyInventory extends Component {
                 <Checkbox
                   data-test='my_inventory_broadcast_chckb'
                   toggle
-                  defaultChecked={
-                    r.cfStatus.toLowerCase() === 'broadcasting' &&
-                    this.props.sellEligible !== false
-                  }
+                  defaultChecked={r.cfStatus.toLowerCase() === 'broadcasting' && this.props.sellEligible !== false}
                   className={cn({
-                    error:
-                      this.props.sellEligible &&
-                      (r.cfStatus.toLowerCase() === 'incomplete' ||
-                        r.cfStatus.toLowerCase() === 'unmapped')
+                    error: this.props.sellEligible && (r.cfStatus.toLowerCase() === 'incomplete' || r.cfStatus.toLowerCase() === 'unmapped')
                   })}
-                  disabled={
-                    !this.props.sellEligible ||
-                    r.cfStatus.toLowerCase() === 'incomplete' ||
-                    r.cfStatus.toLowerCase() === 'unmapped'
-                  }
+                  disabled={!this.props.sellEligible || r.cfStatus.toLowerCase() === 'incomplete' || r.cfStatus.toLowerCase() === 'unmapped'}
                   onChange={(e, data) => {
                     e.preventDefault()
                     this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
@@ -457,10 +386,7 @@ class MyInventory extends Component {
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
-                <FormattedMessage
-                  id='myInventory.myInventory'
-                  defaultMessage='MY INVENTORY'
-                />
+                <FormattedMessage id='myInventory.myInventory' defaultMessage='MY INVENTORY' />
               </Header>
             </Menu.Item>
             {selectedRows.length > 0 ? (
@@ -468,9 +394,7 @@ class MyInventory extends Component {
                 <Header as='h3' size='small' color='grey'>
                   <FormattedMessage
                     id='myInventory.smallHeader'
-                    defaultMessage={
-                      selectedRows.length + ' products offerings selected'
-                    }
+                    defaultMessage={selectedRows.length + ' products offerings selected'}
                     values={{ number: selectedRows.length }}
                   />
                 </Header>
@@ -479,39 +403,23 @@ class MyInventory extends Component {
 
             <Menu.Menu position='right'>
               <Menu.Item>
-                <Button
-                  size='large'
-                  primary
-                  onClick={() => sidebarDetailTrigger(null, true)}
-                  data-test='my_inventory_add_btn'>
-                  <FormattedMessage
-                    id='global.addInventory'
-                    defaultMessage='Add Inventory'>
+                <Button size='large' primary onClick={() => sidebarDetailTrigger(null, true)} data-test='my_inventory_add_btn'>
+                  <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
                     {text => text}
                   </FormattedMessage>
                 </Button>
               </Menu.Item>
               {false ? (
                 <Menu.Item>
-                  <Button
-                    size='large'
-                    primary
-                    onClick={() => simpleEditTrigger({}, true)}
-                    data-test='my_inventory_add_btn'>
-                    <FormattedMessage
-                      id='global.addInventory'
-                      defaultMessage='Add Inventory'>
+                  <Button size='large' primary onClick={() => simpleEditTrigger({}, true)} data-test='my_inventory_add_btn'>
+                    <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
                       {text => text}
                     </FormattedMessage>
                   </Button>
                 </Menu.Item>
               ) : null}
               <Menu.Item>
-                <Button
-                  size='large'
-                  primary
-                  onClick={() => openImportPopup()}
-                  data-test='my_inventory_import_btn'>
+                <Button size='large' primary onClick={() => openImportPopup()} data-test='my_inventory_import_btn'>
                   {formatMessage({
                     id: 'myInventory.import',
                     defaultMessage: 'Import'
@@ -519,11 +427,7 @@ class MyInventory extends Component {
                 </Button>
               </Menu.Item>
               <Menu.Item>
-                <FilterTags
-                  filters={datagrid.filters}
-                  data-test='my_inventory_filter_btn'
-                  onClick={this.removeFilter}
-                />
+                <FilterTags filters={datagrid.filters} data-test='my_inventory_filter_btn' onClick={this.removeFilter} />
               </Menu.Item>
               <Menu.Item>
                 <SubMenu />
@@ -559,9 +463,7 @@ class MyInventory extends Component {
               return (
                 <span>
                   {children}
-                  <span style={{ color: '#2599d5' }}>
-                    {name ? name : 'Unmapped'}
-                  </span>
+                  <span style={{ color: '#2599d5' }}>{name ? name : 'Unmapped'}</span>
                   <span className='right'>Product offerings: {count}</span>
                 </span>
               )
@@ -569,18 +471,9 @@ class MyInventory extends Component {
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
             groupActions={row => {
               let values = row.key.split('_')
-              return groupActions(
-                false,
-                rows,
-                values[values.length - 1],
-                openPopup
-              ).map(a => ({
+              return groupActions(false, rows, values[values.length - 1], openPopup).map(a => ({
                 ...a,
-                text: (
-                  <FormattedMessage {...a.text}>
-                    {text => text}
-                  </FormattedMessage>
-                )
+                text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
               }))
             }}
             rowActions={[
@@ -657,12 +550,8 @@ class MyInventory extends Component {
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}
           savedUrl='/prodex/api/product-offers/own/datagrid/saved-filters'
-          searchUrl={text =>
-            `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`
-          }
-          searchWarehouseUrl={text =>
-            `/prodex/api/branches/warehouses/search?pattern=${text}`
-          }
+          searchUrl={text => `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`}
+          searchWarehouseUrl={text => `/prodex/api/branches/warehouses/search?pattern=${text}`}
           apiUrl={datagrid.apiUrl}
           filters={datagrid.filters}
           layout='MyInventory'
