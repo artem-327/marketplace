@@ -1,24 +1,24 @@
-import App, { Container } from 'next/app'
+import App, {Container} from 'next/app'
 import React from 'react'
 import withRedux from 'next-redux-wrapper'
-import { makeStore } from '~/store'
-import { Provider } from 'react-redux'
-import { IntlProvider, FormattedNumber } from 'react-intl'
+import {makeStore} from '~/store'
+import {Provider} from 'react-redux'
+import {IntlProvider, FormattedNumber} from 'react-intl'
 
 import EN from '../localization/en.json'
 import NProgress from 'nprogress'
-import Router, { withRouter } from 'next/router'
+import Router, {withRouter} from 'next/router'
 
 import '~/semantic/dist/semantic.css'
 import '~/styles/base.scss'
 import 'nprogress/nprogress.css'
 import shortid from 'shortid'
-import { ToastProvider } from 'react-toast-notifications'
+import {ToastProvider} from 'react-toast-notifications'
 import TagManager from 'react-gtm-module'
 
 const gtmId = process.env.REACT_APP_GTM_ID || 'GTM-MKSVRW4'
 
-const tagManagerArgs = { gtmId: gtmId }
+const tagManagerArgs = {gtmId: gtmId}
 
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
@@ -32,18 +32,12 @@ class ProdexApp extends App {
   }
 
   render() {
-    const { Component, pageProps, store } = this.props
+    const {Component, pageProps, store} = this.props
 
     return (
       <Container>
-        <IntlProvider
-          locale='en'
-          messages={EN}
-          textComponent={({ children }) => <>{children}</>}>
-          <ToastProvider
-            pauseOnHover
-            autoDismiss
-            autoDismissTimeout={10 * 1000}>
+        <IntlProvider locale='en' messages={EN} textComponent={({children}) => <>{children}</>}>
+          <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={10 * 1000}>
             <Provider store={store}>
               <Component {...pageProps} />
             </Provider>

@@ -1,1 +1,1 @@
-export { default as PurchaseOrder } from './components/PurchaseOrderContainer'
+export {default as PurchaseOrder} from './components/PurchaseOrderContainer'

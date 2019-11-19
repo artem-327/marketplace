@@ -1,11 +1,7 @@
-import React from "react";
+import React from 'react'
 
-const AdministrationContent = (props) => {
-  return (
-    <div className="administration-content">
-        {props.administrComponent}
-    </div>
-  );
-};
+const AdministrationContent = props => {
+  return <div className='administration-content'>{props.administrComponent}</div>
+}
 
-export default AdministrationContent;
+export default AdministrationContent

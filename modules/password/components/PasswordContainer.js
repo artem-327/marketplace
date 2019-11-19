@@ -1,3 +1,3 @@
 import Password from './Password'
 
-export default Password 
+export default Password

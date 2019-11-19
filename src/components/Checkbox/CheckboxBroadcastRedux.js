@@ -1,9 +1,9 @@
-import React from 'react';
-import { Control } from 'react-redux-form';
-import { Checkbox } from 'semantic-ui-react';
+import React from 'react'
+import {Control} from 'react-redux-form'
+import {Checkbox} from 'semantic-ui-react'
 
-const CheckboxBroadcastRedux = (props) => {
-  const { model, label, onClick, partlyanonym } = props;
+const CheckboxBroadcastRedux = props => {
+  const {model, label, onClick, partlyanonym} = props
   return (
     <Control.checkbox
       component={Checkbox}
@@ -12,7 +12,7 @@ const CheckboxBroadcastRedux = (props) => {
       onClick={e => onClick(e)}
       data-test='checkbox_broadcast_redux_chckb'
       mapProps={{
-        value: (props) => props.viewValue,
+        value: props => props.viewValue
       }}
       controlProps={{
         label: label,
@@ -20,12 +20,12 @@ const CheckboxBroadcastRedux = (props) => {
       }}
       {...props}
     />
-  );
-};
+  )
+}
 
-export default CheckboxBroadcastRedux;
+export default CheckboxBroadcastRedux
 
-const CheckboxBroadcast = (props) => {
+const CheckboxBroadcast = props => {
   return (
     <Checkbox />
     // <label className={"input-checkbox"}><p>{props.label}</p>
@@ -33,6 +33,5 @@ const CheckboxBroadcast = (props) => {
     //     {...props} />
     //   <span className={`checkmark ${props.partlyanonym ? "partlyanonym" : ""}`}></span>
     // </label>
-  );
-};
-
+  )
+}

@@ -1,4 +1,4 @@
-import { Grid, GridRow } from 'semantic-ui-react'
+import {Grid, GridRow} from 'semantic-ui-react'
 import styled from 'styled-components'
 
 const COLORS = {
@@ -21,13 +21,13 @@ const Row = styled.div`
   flex: 0 0 45px;
   line-height: 45px;
   border-bottom: 1px solid #e7e7e7;
-  padding-left: ${({ depth }) => (depth * 15)}px;
-  background-color: ${({ type }) => COLORS[type]};
-  font-weight: ${({ type }) => FONT_WEIGHT[type]};
+  padding-left: ${({depth}) => depth * 15}px;
+  background-color: ${({type}) => COLORS[type]};
+  font-weight: ${({type}) => FONT_WEIGHT[type]};
   cursor: pointer;
 
   &:hover {
-    background-color: #EEE;
+    background-color: #eee;
   }
 `
 
@@ -54,7 +54,7 @@ const RowContent = styled.div`
   display: flex;
   padding: 12px 0;
   line-height: 21px;
-  
+
   > *:first-child {
     flex: 0 0 1.18em;
   }
@@ -94,11 +94,7 @@ export const Rule = {
   Content,
   Header,
   Checkbox,
-  Toggle,
+  Toggle
 }
 
-export {
-  BottomUnpaddedRow,
-  RightAlignedDiv,
-  StretchedGrid,
-}
+export {BottomUnpaddedRow, RightAlignedDiv, StretchedGrid}

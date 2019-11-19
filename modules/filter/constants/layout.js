@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Sidebar, Accordion, Segment, GridRow, Icon, Popup, Dropdown, Grid, GridColumn } from 'semantic-ui-react'
+import {Sidebar, Accordion, Segment, GridRow, Icon, Popup, Dropdown, Grid, GridColumn} from 'semantic-ui-react'
 
 const popupWidth = 400
 
@@ -31,7 +31,7 @@ export const FiltersContainer = styled.div`
 export const Title = styled.div`
   font-size: 18px !important;
   font-weight: bold;
-  font-family: "Cabin", sans-serif !important;
+  font-family: 'Cabin', sans-serif !important;
   margin-top: 20px;
 `
 
@@ -55,11 +55,10 @@ export const AccordionContent = styled(Accordion.Content)`
   }
   span {
     font-size: 14px;
-    font-family: "Cabin", sans-serif !important;
+    font-family: 'Cabin', sans-serif !important;
   }
   & .field {
     padding-top: 0px;
-    
   }
   & > .field:last-child {
     padding-bottom: 15px;
@@ -98,7 +97,7 @@ export const FilterTag = styled.div`
   color: #979797;
   border-radius: 25px;
   cursor: pointer;
-  margin-right: 10px
+  margin-right: 10px;
 `
 
 export const SavedFiltersSegment = styled(Segment)`
@@ -134,7 +133,7 @@ export const PopupRow = styled(GridRow)`
 export const WiderPopup = styled(Popup)`
   min-width: ${popupWidth}px !important;
   ::before {
-    left: ${popupWidth * 0.5}px !important
+    left: ${popupWidth * 0.5}px !important;
   }
 `
 

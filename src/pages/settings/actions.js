@@ -1,4 +1,4 @@
-import * as AT from "./action-types"
+import * as AT from './action-types'
 
 export function openPopup(rows = null) {
   return {
@@ -125,7 +125,7 @@ export function closeToast() {
 export function handleActiveTab(tab) {
   return {
     type: AT.HANDLE_ACTIVE_TAB,
-    payload: { tab }
+    payload: {tab}
   }
 }
 

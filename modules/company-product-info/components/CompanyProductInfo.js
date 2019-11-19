@@ -1,47 +1,19 @@
-import React, { Component } from 'react'
-import { object, bool, number, node, func, array } from 'prop-types'
-import {
-  Segment,
-  GridRow,
-  Grid,
-  GridColumn,
-  Button,
-  Dropdown,
-  Menu,
-  Sidebar,
-  Table
-} from 'semantic-ui-react'
-import {
-  FlexSidebar,
-  GraySegment,
-  FlexContent
-} from '~/modules/inventory/components/DetailSidebar'
-import {
-  Form,
-  Input,
-  Dropdown as FormikDropdown
-} from 'formik-semantic-ui-fixed-validation'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import React, {Component} from 'react'
+import {object, bool, number, node, func, array} from 'prop-types'
+import {Segment, GridRow, Grid, GridColumn, Button, Dropdown, Menu, Sidebar, Table} from 'semantic-ui-react'
+import {FlexSidebar, GraySegment, FlexContent} from '~/modules/inventory/components/DetailSidebar'
+import {Form, Input, Dropdown as FormikDropdown} from 'formik-semantic-ui-fixed-validation'
+import {injectIntl, FormattedMessage} from 'react-intl'
 import styled from 'styled-components'
 import moment from 'moment'
 import * as Yup from 'yup'
 
-import {
-  tabs,
-  regulatoryFilter,
-  dropdownOptions,
-  echoProductGrouping,
-  yesNoOptions,
-  tabsMarketPlace
-} from '../constants'
-import { errorMessages } from '~/constants/yupValidation'
+import {tabs, regulatoryFilter, dropdownOptions, echoProductGrouping, yesNoOptions, tabsMarketPlace} from '../constants'
+import {errorMessages} from '~/constants/yupValidation'
 
 import DocumentManager from '~/modules/settings/components/Documents/DocumentManagerTable'
-import { getSafe, formatAssay } from '~/utils/functions'
-import {
-  EchoProductResponse,
-  CasProductResponse
-} from '~/constants/backendObjects'
+import {getSafe, formatAssay} from '~/utils/functions'
+import {EchoProductResponse, CasProductResponse} from '~/constants/backendObjects'
 
 const WiderSidebar = styled(FlexSidebar)`
   min-width: 545px !important;
@@ -65,7 +37,7 @@ class CompanyProductInfo extends Component {
     echoProductGroup: echoProductGrouping[0].value
   }
 
-  getElements = ({ id, defaultMessage, elements }) => {
+  getElements = ({id, defaultMessage, elements}) => {
     return (
       <>
         <GridRow>
@@ -77,16 +49,10 @@ class CompanyProductInfo extends Component {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>
-                <FormattedMessage
-                  id='global.elementName'
-                  defaultMessage='Element Name'
-                />
+                <FormattedMessage id='global.elementName' defaultMessage='Element Name' />
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <FormattedMessage
-                  id='global.casNumber'
-                  defaultMessage='CAS Number'
-                />
+                <FormattedMessage id='global.casNumber' defaultMessage='CAS Number' />
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <FormattedMessage id='global.assay' defaultMessage='Assay' />
@@ -96,17 +62,9 @@ class CompanyProductInfo extends Component {
           <Table.Body>
             {elements.map((element, index) => (
               <Table.Row>
-                <Table.Cell>
-                  {element.proprietary
-                    ? element.name
-                    : element.casProduct.casIndexName}
-                </Table.Cell>
-                <Table.Cell>
-                  {element.proprietary ? '' : element.casProduct.casNumber}
-                </Table.Cell>
-                <Table.Cell>
-                  {formatAssay(element.assayMin, element.assayMax)}
-                </Table.Cell>
+                <Table.Cell>{element.proprietary ? element.name : element.casProduct.casIndexName}</Table.Cell>
+                <Table.Cell>{element.proprietary ? '' : element.casProduct.casNumber}</Table.Cell>
+                <Table.Cell>{formatAssay(element.assayMin, element.assayMax)}</Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
@@ -115,22 +73,19 @@ class CompanyProductInfo extends Component {
     )
   }
 
-  getInput = ({ id, defaultMessage, name }) => (
+  getInput = ({id, defaultMessage, name}) => (
     <GridRow>
       <GridColumn width={6}>
         <FormattedMessage id={id} defaultMessage={defaultMessage} />
       </GridColumn>
 
       <GridColumn width={10}>
-        <Input
-          inputProps={{ readOnly: this.props.readOnly, id: name }}
-          name={name}
-        />
+        <Input inputProps={{readOnly: this.props.readOnly, id: name}} name={name} />
       </GridColumn>
     </GridRow>
   )
 
-  getDropdown = ({ id, defaultMessage, name, props }) => (
+  getDropdown = ({id, defaultMessage, name, props}) => (
     <GridRow>
       <GridColumn width={6}>
         <FormattedMessage id={id} defaultMessage={defaultMessage} />
@@ -142,10 +97,8 @@ class CompanyProductInfo extends Component {
           fluid
           name={name}
           {...props}
-          inputProps={{ disabled: this.props.readOnly }}
-          options={props.options.map(el =>
-            typeof el === 'object' ? el : { key: el, text: el, value: el }
-          )}
+          inputProps={{disabled: this.props.readOnly}}
+          options={props.options.map(el => (typeof el === 'object' ? el : {key: el, text: el, value: el}))}
         />
       </GridColumn>
     </GridRow>
@@ -307,22 +260,15 @@ class CompanyProductInfo extends Component {
     if (this.props.readOnly && this.props.isOpen)
       if (
         this.state.casProductIndex + 1 >
-        getSafe(
-          () =>
-            this.props.popupValues.companyProduct.echoProduct.elements.length,
-          0
-        )
+        getSafe(() => this.props.popupValues.companyProduct.echoProduct.elements.length, 0)
       )
-        this.setState({ casProductIndex: 0 })
+        this.setState({casProductIndex: 0})
   }
 
   renderCasProduct = values => {
-    let { popupValues, readOnly } = this.props
+    let {popupValues, readOnly} = this.props
 
-    let casProducts = getSafe(
-      () => popupValues.companyProduct.echoProduct.elements,
-      []
-    )
+    let casProducts = getSafe(() => popupValues.companyProduct.echoProduct.elements, [])
 
     let markup = [
       this.getInput({
@@ -332,15 +278,7 @@ class CompanyProductInfo extends Component {
       })
     ]
 
-    let {
-      epa,
-      dhs,
-      /*dot,*/ caProp65,
-      rightToKnow,
-      dea,
-      international,
-      all
-    } = regulatoryFilter
+    let {epa, dhs, /*dot,*/ caProp65, rightToKnow, dea, international, all} = regulatoryFilter
 
     let dontBreak = this.state.regulatoryFilter === all.key
     switch (this.state.regulatoryFilter) {
@@ -452,8 +390,7 @@ class CompanyProductInfo extends Component {
           }),
           this.getDropdown({
             id: 'casProduct.dhsReleaseScreeningThresholdQuantitie',
-            defaultMessage:
-              'Release: Screening Threshold Quantitiees (in pounds)',
+            defaultMessage: 'Release: Screening Threshold Quantitiees (in pounds)',
             name: 'casProduct.dhsReleaseScreeningThresholdQuantities',
             props: dropdownOptions.dhs.dhsReleaseScreeningThresholdQuantitie
           }),
@@ -638,10 +575,7 @@ class CompanyProductInfo extends Component {
             {readOnly ? (
               <>
                 <label>
-                  <FormattedMessage
-                    id='global.casProduct'
-                    defaultMessage='CAS Product'
-                  />
+                  <FormattedMessage id='global.casProduct' defaultMessage='CAS Product' />
                 </label>
                 <Dropdown
                   fluid
@@ -656,18 +590,13 @@ class CompanyProductInfo extends Component {
 
                     return {
                       key: cp.id,
-                      text: `${text} ${formatAssay(
-                        values.assayMin,
-                        values.assayMax
-                      )}`,
+                      text: `${text} ${formatAssay(values.assayMin, values.assayMax)}`,
                       value: cp.id
                     }
                   })}
                   onChange={(_, data) =>
                     this.setState({
-                      casProductIndex: data.options.findIndex(
-                        el => el.value === data.value
-                      )
+                      casProductIndex: data.options.findIndex(el => el.value === data.value)
                     })
                   }
                 />
@@ -683,33 +612,25 @@ class CompanyProductInfo extends Component {
 
           <GridColumn computer={8}>
             <label>
-              <FormattedMessage
-                id='global.propsFilter'
-                defaultMessage='Properties Filter'
-              />
+              <FormattedMessage id='global.propsFilter' defaultMessage='Properties Filter' />
             </label>
             <Dropdown
               fluid
               selection
               value={this.state.regulatoryFilter}
-              options={Object.keys(regulatoryFilter).map(
-                key => regulatoryFilter[key]
-              )}
-              onChange={(_, { value }) =>
-                this.setState({ regulatoryFilter: value })
-              }
+              options={Object.keys(regulatoryFilter).map(key => regulatoryFilter[key])}
+              onChange={(_, {value}) => this.setState({regulatoryFilter: value})}
             />
           </GridColumn>
         </GridRow>
         {markup.map(el => el)}
-        {this.state.regulatoryFilter === all.key &&
-          this.getSharedContent('casProduct.')}
+        {this.state.regulatoryFilter === all.key && this.getSharedContent('casProduct.')}
       </>
     )
   }
 
-  getContent = ({ values }) => {
-    let { activeIndex } = this.props
+  getContent = ({values}) => {
+    let {activeIndex} = this.props
 
     console.log('VALUES', values)
 
@@ -726,10 +647,7 @@ class CompanyProductInfo extends Component {
             {this.getElements({
               id: 'global.mixtures',
               defaultMessage: 'Mixtures',
-              elements: getSafe(
-                () => values.companyProduct.echoProduct.elements,
-                []
-              )
+              elements: getSafe(() => values.companyProduct.echoProduct.elements, [])
             })}
             {this.getInput({
               id: 'global.manufacturer',
@@ -791,18 +709,12 @@ class CompanyProductInfo extends Component {
       }
       case 1: {
         // Properties
-        return (
-          <Grid verticalAlign='middle'>
-            {this.getSharedContent('echoProduct.')}
-          </Grid>
-        )
+        return <Grid verticalAlign='middle'>{this.getSharedContent('echoProduct.')}</Grid>
       }
 
       case 2: {
         // Regulatory
-        return (
-          <Grid verticalAlign='middle'>{this.renderCasProduct(values)}</Grid>
-        )
+        return <Grid verticalAlign='middle'>{this.renderCasProduct(values)}</Grid>
       }
 
       case 3: {
@@ -819,9 +731,7 @@ class CompanyProductInfo extends Component {
                   fluid
                   options={echoProductGrouping}
                   value={this.state.echoProductGroup}
-                  onChange={(_, { value }) =>
-                    this.setState({ echoProductGroup: value })
-                  }
+                  onChange={(_, {value}) => this.setState({echoProductGroup: value})}
                 />
               </GridColumn>
             </GridRow>
@@ -937,13 +847,7 @@ class CompanyProductInfo extends Component {
 
       case 4: {
         // Documents
-        return (
-          <DocumentManager
-            items={values.attachments}
-            edit={false}
-            deletable={false}
-          />
-        )
+        return <DocumentManager items={values.attachments} edit={false} deletable={false} />
       }
 
       default:
@@ -957,17 +861,17 @@ class CompanyProductInfo extends Component {
       casProduct,
       activeIndex,
       tabChanged,
-      intl: { formatMessage },
+      intl: {formatMessage},
       hiddenTabs,
       readOnly,
       handleSubmit,
       casProductOnly
     } = this.props
 
-    let { companyProduct } = popupValues
+    let {companyProduct} = popupValues
 
     try {
-      var { echoProduct } = companyProduct
+      var {echoProduct} = companyProduct
     } catch (e) {
       var echoProduct = {}
     }
@@ -976,17 +880,12 @@ class CompanyProductInfo extends Component {
     if (!readOnly) additionalFormProps.validationSchema = validationSchema
     if (handleSubmit) additionalFormProps.onSubmit = handleSubmit
 
-    let { id, ...rest } = getSafe(
-      () => echoProduct.elements[this.state.casProductIndex].casProduct,
-      {}
-    )
+    let {id, ...rest} = getSafe(() => echoProduct.elements[this.state.casProductIndex].casProduct, {})
 
     let initialValues = {
       ...companyProduct,
       ...popupValues,
-      attachments:
-        companyProduct &&
-        companyProduct.attachments.concat(echoProduct.attachments),
+      attachments: companyProduct && companyProduct.attachments.concat(echoProduct.attachments),
       productName: getSafe(() => echoProduct.name, ''),
       manufacturer: getSafe(() => echoProduct.manufacturer.name, ''),
       casProduct: {
@@ -1007,18 +906,13 @@ class CompanyProductInfo extends Component {
             })),
           []
         ),
-        mfrProductCodes: getSafe(
-          () => echoProduct.mfrProductCodes.toString(),
-          ''
-        ),
+        mfrProductCodes: getSafe(() => echoProduct.mfrProductCodes.toString(), ''),
         sdsRevisionDate:
-          echoProduct && echoProduct.sdsRevisionDate
-            ? moment(echoProduct.sdsRevisionDate).format('MM/DD/YYYY')
-            : ''
+          echoProduct && echoProduct.sdsRevisionDate ? moment(echoProduct.sdsRevisionDate).format('MM/DD/YYYY') : ''
       }
     }
 
-    console.log({ initialValues })
+    console.log({initialValues})
 
     return (
       <Form
@@ -1026,7 +920,7 @@ class CompanyProductInfo extends Component {
         initialValues={initialValues}
         {...additionalFormProps}
         render={formikProps => {
-          let { submitForm, values } = formikProps
+          let {submitForm, values} = formikProps
           this.submitForm = submitForm
           return casProductOnly ? (
             <Grid verticalAlign='middle'>{this.renderCasProduct(values)}</Grid>
@@ -1036,18 +930,14 @@ class CompanyProductInfo extends Component {
                 {this.props.fromMarketPlace
                   ? tabsMarketPlace.map((tab, i) =>
                       hiddenTabs.findIndex(val => val === i) !== -1 ? null : (
-                        <Menu.Item
-                          onClick={() => tabChanged(i)}
-                          active={activeIndex === i}>
+                        <Menu.Item onClick={() => tabChanged(i)} active={activeIndex === i}>
                           {formatMessage(tab.text)}
                         </Menu.Item>
                       )
                     )
                   : tabs.map((tab, i) =>
                       hiddenTabs.findIndex(val => val === i) !== -1 ? null : (
-                        <Menu.Item
-                          onClick={() => tabChanged(i)}
-                          active={activeIndex === i}>
+                        <Menu.Item onClick={() => tabChanged(i)} active={activeIndex === i}>
                           {formatMessage(tab.text)}
                         </Menu.Item>
                       )
@@ -1062,7 +952,7 @@ class CompanyProductInfo extends Component {
   }
 
   renderActions = () => {
-    let { closePopup, onClose, handleSubmit } = this.props
+    let {closePopup, onClose, handleSubmit} = this.props
 
     return (
       <>
@@ -1087,7 +977,7 @@ class CompanyProductInfo extends Component {
   }
 
   render() {
-    let { isOpen } = this.props
+    let {isOpen} = this.props
 
     const contentWrapper = children =>
       React.cloneElement(
@@ -1112,11 +1002,7 @@ class CompanyProductInfo extends Component {
       )
 
     const Content = React.cloneElement(
-      this.props.wrapper ? (
-        this.props.wrapper
-      ) : (
-        <WiderSidebar visible={isOpen} direction='right' width='very wide' />
-      ),
+      this.props.wrapper ? this.props.wrapper : <WiderSidebar visible={isOpen} direction='right' width='very wide' />,
       {},
       <>
         {this.props.header && this.props.header}

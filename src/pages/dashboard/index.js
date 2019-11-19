@@ -1,4 +1,4 @@
-import {connect} from 'react-redux';
-import Dashboard from './Dashboard';
+import {connect} from 'react-redux'
+import Dashboard from './Dashboard'
 
-export default connect()(Dashboard);
+export default connect()(Dashboard)

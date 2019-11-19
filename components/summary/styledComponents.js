@@ -1,6 +1,5 @@
-import { Segment, GridRow, Popup, Button, Header } from 'semantic-ui-react'
+import {Segment, GridRow, Popup, Button, Header} from 'semantic-ui-react'
 import styled from 'styled-components'
-
 
 export const RelaxedSegment = styled(Segment)`
   margin-top: 0px !important;
@@ -30,7 +29,7 @@ export const WiderPopup = styled(Popup)`
 `
 
 export const CustomSpan = styled.span`
-  color: ${props => props.positive ? '#21BA45' : '#2599d5'};
+  color: ${props => (props.positive ? '#21BA45' : '#2599d5')};
   cursor: pointer;
 `
 

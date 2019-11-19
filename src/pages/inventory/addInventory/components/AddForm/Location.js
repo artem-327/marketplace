@@ -1,738 +1,687 @@
-import React, {Component} from 'react';
-import {Errors} from 'react-redux-form';
-import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
-import {messages, required} from "../../../../../utils/validation";
-import classnames from "classnames";
-import "./Location.scss"
-import {FormattedMessage, injectIntl} from 'react-intl';
-import RemoteComboBox from "../../../../../components/ComboBox/RemoteComboBox";
-import {checkToken} from "../../../../../utils/auth";
+import React, {Component} from 'react'
+import {Errors} from 'react-redux-form'
+import DropdownRedux from '../../../../../components/Dropdown/DropdownRedux'
+import {messages, required} from '../../../../../utils/validation'
+import classnames from 'classnames'
+import './Location.scss'
+import {FormattedMessage, injectIntl} from 'react-intl'
+import RemoteComboBox from '../../../../../components/ComboBox/RemoteComboBox'
+import {checkToken} from '../../../../../utils/auth'
 
 class Location extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      location: 'saved',
+      edit: false,
+      warehouseIndex: '',
+      warehouseName: '',
+      street: '',
+      city: '',
+      state: '',
+      zip: '',
+      contact: '',
+      phone: '',
+      email: '',
+      isSubmitted: false
+    }
+  }
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            location: 'saved',
-            edit: false,
-            warehouseIndex: '',
-            warehouseName: '',
-            street: '',
-            city: '',
-            state: '',
-            zip: '',
-            contact: '',
-            phone: '',
-            email: '',
-            isSubmitted: false,
-        }
+  componentDidMount() {
+    this.setInitialValue()
+  }
+
+  setInitialValue() {
+    if (this.props.edit) {
+      this.setState({
+        warehouseIndex: this.props.productOffer.warehouse.id,
+        street: this.props.productOffer.warehouse.address.streetAddress,
+        city: this.props.productOffer.warehouse.address.city,
+        state: this.props.productOffer.warehouse.address.province.id,
+        contact: this.props.productOffer.warehouse.contact.name,
+        phone: this.props.productOffer.warehouse.contact.phone,
+        email: this.props.productOffer.warehouse.contact.email,
+        zip: this.props.productOffer.warehouse.address.zip.zip
+      })
+    }
+  }
+
+  handleInputs(value, name) {
+    this.setState({[name]: value})
+  }
+
+  setLocation = value => {
+    let index
+
+    for (let i = 0; i < this.props.warehouse.length; i++) {
+      if (this.props.warehouse[i].id === value) {
+        index = i
+      }
     }
 
-    componentDidMount() {
-        this.setInitialValue()
+    this.setState({
+      edit: false,
+      warehouseIndex: value,
+      warehouseName: this.props.warehouse[index].name,
+      street: this.props.warehouse[index].address.streetAddress,
+      city: this.props.warehouse[index].address.city,
+      state:
+        typeof this.props.warehouse[index].address.province !== 'undefined'
+          ? this.props.warehouse[index].address.province.id
+          : 1,
+      /* TODO: modify it if there will be added something else (country/region id) */
+      contact: this.props.warehouse[index].contact.name,
+      phone: this.props.warehouse[index].contact.phone,
+      email: this.props.warehouse[index].contact.email,
+      zip: this.props.warehouse[index].address.zip.zip
+    })
+  }
+
+  changeMode(e) {
+    e.preventDefault()
+    if (this.state.warehouseIndex === '') return
+    this.setState({edit: !this.state.edit})
+  }
+
+  validateEmail() {
+    if (this.state.email === '') return true
+    let re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+    let test = re.test(String(this.state.email).toLowerCase())
+    return test
+  }
+
+  validateZip() {
+    if (this.state.zip === '') return true
+    let reUSA = /^(\d{5}([\-]\d{4})?)$/i
+    let reCanada = /^([A-Z][0-9][A-Z] [0-9][A-Z][0-9])$/
+    let test = reUSA.test(String(this.state.zip)) || reCanada.test(String(this.state.zip))
+    return test
+  }
+
+  validateForms() {
+    if (
+      this.state.street === '' ||
+      this.state.city === '' ||
+      this.state.state === '' ||
+      this.state.zip === '' ||
+      this.state.contact === '' ||
+      this.state.phone === '' ||
+      this.state.email === ''
+    ) {
+      return false
+    } else if (!this.validateEmail() && !this.validateZip()) {
+      return false
     }
+    return true
+  }
 
-    setInitialValue() {
-        if (this.props.edit) {
-            this.setState({
-                warehouseIndex: this.props.productOffer.warehouse.id,
-                street: this.props.productOffer.warehouse.address.streetAddress,
-                city: this.props.productOffer.warehouse.address.city,
-                state: this.props.productOffer.warehouse.address.province.id,
-                contact: this.props.productOffer.warehouse.contact.name,
-                phone: this.props.productOffer.warehouse.contact.phone,
-                email: this.props.productOffer.warehouse.contact.email,
-                zip: this.props.productOffer.warehouse.address.zip.zip,
-            })
-        }
-    }
+  saveLocation(e) {
+    e.preventDefault()
 
-    handleInputs(value, name) {
-        this.setState({[name]: value})
-    }
+    if (checkToken(this.props)) return
 
-    setLocation = (value) => {
-        let index;
+    let {warehouseName, street, city, state, zip, contact, phone, email} = this.state
 
-        for(let i = 0; i < this.props.warehouse.length; i++) {
-            if(this.props.warehouse[i].id === value) {
-                index = i;
-            }
-        }
+    this.setState({isSubmitted: true})
 
-        this.setState({
-            edit: false,
-            warehouseIndex: value,
-            warehouseName: this.props.warehouse[index].name,
-            street: this.props.warehouse[index].address.streetAddress,
-            city: this.props.warehouse[index].address.city,
-            state: (typeof this.props.warehouse[index].address.province !== 'undefined' ?
-                this.props.warehouse[index].address.province.id
-                : 1),
-                /* TODO: modify it if there will be added something else (country/region id) */
-            contact: this.props.warehouse[index].contact.name,
-            phone: this.props.warehouse[index].contact.phone,
-            email: this.props.warehouse[index].contact.email,
-            zip: this.props.warehouse[index].address.zip.zip,
+    if (!this.validateForms()) return
+
+    this.props.saveWarehouse(warehouseName, street, city, state, contact, phone, email, zip).then(() => {
+      this.props.fetchWarehouses().then(() => {
+        this.setState({edit: false}, () => this.changeLocation('saved'))
+      })
+    })
+  }
+
+  updateLocation(e) {
+    e.preventDefault()
+    let {warehouseIndex, warehouseName, street, city, state, zip, contact, phone, email} = this.state
+
+    this.setState({isSubmitted: true})
+
+    if (!this.validateForms()) return
+
+    this.props
+      .updateWarehouse(warehouseIndex, warehouseName, street, city, state, contact, phone, email, zip)
+      .then(() => {
+        this.props.fetchWarehouses().then(() => {
+          this.setState({edit: false})
         })
+      })
+  }
+
+  getCurrentItemById(id) {
+    if (id === '') return '' // 'Select'
+    for (let i = 0; i < this.props.locations.length; i++) {
+      if (this.props.locations[i].province && id === this.props.locations[i].province.id) {
+        return this.props.locations[i].province.name
+      } else if (this.props.locations[i].country && id === this.props.locations[i].country.id) {
+        return this.props.locations[i].country.name
+      }
     }
+    return ''
+    // return 'error'
+  }
 
-    changeMode(e) {
-        e.preventDefault();
-        if (this.state.warehouseIndex === '') return;
-        this.setState({edit: !this.state.edit})
-    }
+  renderSavedLocation() {
+    const disabled = this.state.warehouseIndex === ''
+    const button = this.state.edit ? (
+      <button
+        onClick={e => this.updateLocation(e)}
+        className='edit-location'
+        data-test='add_inventory_location_saved_save_btn'>
+        Save
+      </button>
+    ) : (
+      <button
+        className={'edit-location' + classnames({' disabled': disabled})}
+        onClick={e => this.changeMode(e)}
+        data-test='add_inventory_location_saved_edit_btn'>
+        Edit
+      </button>
+    )
 
-    validateEmail() {
-        if (this.state.email === "") return true;
-        let re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-        let test = re.test(String(this.state.email).toLowerCase());
-        return test;
-    }
+    const {formatMessage} = this.props.intl
 
-    validateZip() {
-        if (this.state.zip === "") return true;
-        let reUSA = /^(\d{5}([\-]\d{4})?)$/i;
-        let reCanada = /^([A-Z][0-9][A-Z] [0-9][A-Z][0-9])$/;
-        let test = reUSA.test(String(this.state.zip)) || reCanada.test(String(this.state.zip));
-        return test;
-    }
-
-    validateForms() {
-        if (this.state.street === '' || this.state.city === '' || this.state.state === '' || this.state.zip === '' || this.state.contact === '' || this.state.phone === '' || this.state.email === '') {
-            return false;
-        }
-        else if (!this.validateEmail() && !this.validateZip()) {
-            return false;
-        }
-        return true;
-    }
-
-    saveLocation(e) {
-        e.preventDefault();
-
-        if (checkToken(this.props)) return;
-
-        let {warehouseName, street, city, state, zip, contact, phone, email} = this.state;
-
-        this.setState({isSubmitted: true})
-
-        if (!this.validateForms()) return;
-
-        this.props.saveWarehouse(warehouseName, street, city, state, contact, phone, email, zip).then(() => {
-            this.props.fetchWarehouses().then(() => {
-                this.setState({edit: false}, () => this.changeLocation('saved'))
-            })
-        });
-    }
-
-    updateLocation(e) {
-        e.preventDefault();
-        let {warehouseIndex, warehouseName, street, city, state, zip, contact, phone, email} = this.state;
-
-        this.setState({isSubmitted: true})
-
-        if (!this.validateForms()) return;
-
-        this.props.updateWarehouse(warehouseIndex, warehouseName, street, city, state, contact, phone, email, zip).then(() => {
-            this.props.fetchWarehouses().then(() => {
-                this.setState({edit: false})
-            })
-        });
-    }
-
-    getCurrentItemById(id){
-        if (id === '') return ''; // 'Select'
-        for (let i = 0; i < this.props.locations.length; i++) {
-            if (this.props.locations[i].province && id === this.props.locations[i].province.id) {
-                return this.props.locations[i].province.name
-            } else if (this.props.locations[i].country && id === this.props.locations[i].country.id) {
-                return this.props.locations[i].country.name
-            }
-        }
-        return '';
-        // return 'error'
-    }
-
-    renderSavedLocation() {
-        const disabled = this.state.warehouseIndex === '';
-        const button = this.state.edit ?
-            <button onClick={(e) => this.updateLocation(e)} className='edit-location'
-                    data-test='add_inventory_location_saved_save_btn'>Save</button> :
-            <button className={'edit-location' + classnames({" disabled": (disabled)})}
-                    onClick={(e) => this.changeMode(e)}
-                    data-test='add_inventory_location_saved_edit_btn'>Edit</button>;
-
-        const { formatMessage } = this.props.intl;
-
-        return (
-            <div>
-                <div>
-                    <div className='group-item-wr'>
-                        <Errors
-                            className="form-error"
-                            model="forms.addProductOffer.warehouse"
-                            show="touched"
-                            messages={{
-                                required: messages.required,
-                            }}
-                        />
-                        <label>
-                            <FormattedMessage
-                                id='addInventory.location.warehouse'
-                                defaultMessage='Warehouse'
-                            />
-                        </label>
-                            <DropdownRedux
-                                model="forms.addProductOffer.warehouse"
-                                dispatch={this.props.dispatch}
-                                opns={this.props.warehouse}
-                                // defaultValue={this.state.warehouseIndex}
-                                validators={{required}}
-                                onChange={(value) => this.setLocation(value)}
-                                placeholder={formatMessage({
-                                    id: 'global.selectLocation',
-                                    defaultMessage: 'Select Location'
-                                })}
-                                data-test='add_inventory_location_location_drpdn'
-                            />
-                    </div>
+    return (
+      <div>
+        <div>
+          <div className='group-item-wr'>
+            <Errors
+              className='form-error'
+              model='forms.addProductOffer.warehouse'
+              show='touched'
+              messages={{
+                required: messages.required
+              }}
+            />
+            <label>
+              <FormattedMessage id='addInventory.location.warehouse' defaultMessage='Warehouse' />
+            </label>
+            <DropdownRedux
+              model='forms.addProductOffer.warehouse'
+              dispatch={this.props.dispatch}
+              opns={this.props.warehouse}
+              // defaultValue={this.state.warehouseIndex}
+              validators={{required}}
+              onChange={value => this.setLocation(value)}
+              placeholder={formatMessage({
+                id: 'global.selectLocation',
+                defaultMessage: 'Select Location'
+              })}
+              data-test='add_inventory_location_location_drpdn'
+            />
+          </div>
+        </div>
+        <React.Fragment>
+          <div>
+            <div className='group-item-wr' data-test='add_inventory_location_streetAddress_inp'>
+              {this.state.isSubmitted && this.state.street === '' ? (
+                <div className='warehouse-val'>
+                  <span>
+                    <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                  </span>
                 </div>
-                    <React.Fragment>
-                        <div>
-                            <div className='group-item-wr' data-test='add_inventory_location_streetAddress_inp'>
-                                {(this.state.isSubmitted && this.state.street === '') ?
-                                    <div className='warehouse-val'>
-                                        <span>
-                                            <FormattedMessage
-                                                id='addInventory.required'
-                                                defaultMessage='Required'
-                                            />
-                                        </span>
-                                    </div>
-                                    : null}
-                                <label htmlFor="street">
-                                    <FormattedMessage
-                                        id='addInventory.streetAddress'
-                                        defaultMessage='Street Address'
-                                    />
-                                </label>
-                                <input id="street"
-                                       disabled={!this.state.edit}
-                                       value={this.state.street}
-                                       onChange={(e) => {
-                                           this.handleInputs(e.target.value, 'street')
-                                       }}/>
-                            </div>
-                            <div className='group-item-wr' data-test='add_inventory_location_city_inp'>
-                                {(this.state.isSubmitted && this.state.city === '') ?
-                                    <div className='warehouse-val'>
-                                        <span>
-                                            <FormattedMessage
-                                                id='addInventory.required'
-                                                defaultMessage='Required'
-                                            />
-                                        </span>
-                                    </div>
-                                    : null}
-                                <label htmlFor="city">
-                                    <FormattedMessage
-                                        id='global.city'
-                                        defaultMessage='City'
-                                    />
-                                </label>
-                                <input id="city"
-                                       disabled={!this.state.edit}
-                                       value={this.state.city}
-                                       onChange={(e) => {
-                                           this.handleInputs(e.target.value, 'city')
-                                       }}/>
-                            </div>
-                            <div className='group-item-wr'>
-                                {(this.state.isSubmitted && this.state.state === '') ?
-                                    <div className='warehouse-val'>
-                                        <span>
-                                            <FormattedMessage
-                                                id='addInventory.required'
-                                                defaultMessage='Required'
-                                            />
-                                        </span>
-                                    </div>
-                                    : null}
-                                <RemoteComboBox id="state-search" scroll={0} disabled={!this.state.edit}
-                                                currentValue={this.getCurrentItemById(this.state.state)}
-                                                getObject={(location) => {
-                                                    if(location.country) this.setState({state : location.country.id})
-                                                    else if(location.province) this.setState({state : location.province.id})
-                                                    else this.setState({state : 1});
-                                                }}
-                                                items={this.props.filterLocations}
-                                                api={(text) => this.props.fetchFilterLocations(text)}
-                                                dataFetched={this.props.locationsFetched}
-                                                isFetching={this.props.filterLocationsFetching}
-                                                className="cas-search"
-                                                limit={5}
-                                                placeholder={formatMessage({
-                                                    id: 'global.state',
-                                                    defaultMessage: 'State'
-                                                })}
-                                                label={formatMessage({
-                                                    id: 'global.state',
-                                                    defaultMessage: 'State'
-                                                })}
-                                                /*
+              ) : null}
+              <label htmlFor='street'>
+                <FormattedMessage id='addInventory.streetAddress' defaultMessage='Street Address' />
+              </label>
+              <input
+                id='street'
+                disabled={!this.state.edit}
+                value={this.state.street}
+                onChange={e => {
+                  this.handleInputs(e.target.value, 'street')
+                }}
+              />
+            </div>
+            <div className='group-item-wr' data-test='add_inventory_location_city_inp'>
+              {this.state.isSubmitted && this.state.city === '' ? (
+                <div className='warehouse-val'>
+                  <span>
+                    <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                  </span>
+                </div>
+              ) : null}
+              <label htmlFor='city'>
+                <FormattedMessage id='global.city' defaultMessage='City' />
+              </label>
+              <input
+                id='city'
+                disabled={!this.state.edit}
+                value={this.state.city}
+                onChange={e => {
+                  this.handleInputs(e.target.value, 'city')
+                }}
+              />
+            </div>
+            <div className='group-item-wr'>
+              {this.state.isSubmitted && this.state.state === '' ? (
+                <div className='warehouse-val'>
+                  <span>
+                    <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                  </span>
+                </div>
+              ) : null}
+              <RemoteComboBox
+                id='state-search'
+                scroll={0}
+                disabled={!this.state.edit}
+                currentValue={this.getCurrentItemById(this.state.state)}
+                getObject={location => {
+                  if (location.country) this.setState({state: location.country.id})
+                  else if (location.province) this.setState({state: location.province.id})
+                  else this.setState({state: 1})
+                }}
+                items={this.props.filterLocations}
+                api={text => this.props.fetchFilterLocations(text)}
+                dataFetched={this.props.locationsFetched}
+                isFetching={this.props.filterLocationsFetching}
+                className='cas-search'
+                limit={5}
+                placeholder={formatMessage({
+                  id: 'global.state',
+                  defaultMessage: 'State'
+                })}
+                label={formatMessage({
+                  id: 'global.state',
+                  defaultMessage: 'State'
+                })}
+                /*
                                                 displayName={(location) => (
                                                     location.country ?
                                                         location.country.name : location.province.name
                                                 )}
                                                 */
-                                                validators={{required}}
-                                                onChange={ (value) => this.setState({state : value})}
-                                                displayName={(location) => {
-                                                    if (location.country) return location.country.name;
-                                                    else if (location.province) return location.province.name;
-                                                    else return 'no province or country';
-                                                }}
-                                                data-test='add_inventory_location_state_drpdn'/>
-                            </div>
-                            <div className='group-item-wr' data-test='add_inventory_location_zip_inp'>
-                                {(this.state.isSubmitted && this.state.zip === '') ?
-                                    <div className='warehouse-val'>
-                                        <span>
-                                            <FormattedMessage
-                                                id='addInventory.required'
-                                                defaultMessage='Required'
-                                            />
-                                        </span>
-                                    </div>
-                                    : null}
-                                <label htmlFor="zip">
-                                        <FormattedMessage
-                                            id='addInventory.zipCode'
-                                            defaultMessage='Zip Code'
-                                        />
-                                </label>
-                                <input id="zip"
-                                       disabled={!this.state.edit}
-                                       value={this.state.zip}
-                                       onChange={(e) => {
-                                           this.handleInputs(e.target.value, 'zip')
-                                       }}
-                                       type="number"/>
-                            </div>
-                        </div>
-                        <div>
-                            <div className='group-item-wr' data-test='add_inventory_location_contactName_inp'>
-                                {(this.state.isSubmitted && this.state.contact === '') ?
-                                    <div className='warehouse-val'>
-                                        <span>
-                                            <FormattedMessage
-                                                id='addInventory.required'
-                                                defaultMessage='Required'
-                                            />
-                                        </span>
-                                    </div>
-                                    : null}
-                                <label htmlFor="contact">
-                                    <FormattedMessage
-                                        id='addInventory.contactName'
-                                        defaultMessage='Contact Name'
-                                    />
-                                </label>
-                                <input id="contact"
-                                       disabled={!this.state.edit}
-                                       value={this.state.contact}
-                                       onChange={(e) => {
-                                           this.handleInputs(e.target.value, 'contact')
-                                       }}/>
-                            </div>
-                            <div className='group-item-wr' data-test='add_inventory_location_phoneNumber_inp'>
-                                {(this.state.isSubmitted && this.state.phone === '') ?
-                                    <div className='warehouse-val'>
-                                        <span>
-                                            <FormattedMessage
-                                                id='addInventory.required'
-                                                defaultMessage='Required'
-                                            />
-                                        </span>
-                                    </div>
-                                    : null}
-                                <label htmlFor="number">
-                                    <FormattedMessage
-                                        id='global.phoneNumber'
-                                        defaultMessage='Phone Number'
-                                    />
-                                </label>
-                                <input id="number"
-                                       disabled={!this.state.edit}
-                                       value={this.state.phone}
-                                       onChange={(e) => {
-                                           this.handleInputs(e.target.value, 'phone')
-                                       }}/>
-                            </div>
-                            <div className='group-item-wr' data-test='add_inventory_location_email_inp'>
-                                {(this.state.isSubmitted && this.state.email === '') ?
-                                    <div className='warehouse-val'>
-                                        <span>
-                                            <FormattedMessage
-                                                id='addInventory.required'
-                                                defaultMessage='Required'
-                                            />
-                                        </span>
-                                    </div>
-                                    : null}
-                                {(this.state.isSubmitted && !this.validateEmail()) ?
-                                    <div className='warehouse-val'>
-                                        <span>
-                                            <FormattedMessage
-                                                id='addInventory.invalidEmail'
-                                                defaultMessage='Invalid E-mail'
-                                            />
-                                        </span>
-                                    </div> : null}
-                                <label htmlFor="email">
-                                    <FormattedMessage
-                                        id='global.email'
-                                        defaultMessage='E-mail'
-                                    />
-                                </label>
-                                <input id="email"
-                                       disabled={!this.state.edit}
-                                       value={this.state.email}
-                                       onChange={(e) => {
-                                           this.handleInputs(e.target.value, 'email')
-                                       }}/>
-                            </div>
-
-                            {!this.props.edit && button}
-
-                        </div>
-                    </React.Fragment>
+                validators={{required}}
+                onChange={value => this.setState({state: value})}
+                displayName={location => {
+                  if (location.country) return location.country.name
+                  else if (location.province) return location.province.name
+                  else return 'no province or country'
+                }}
+                data-test='add_inventory_location_state_drpdn'
+              />
             </div>
-        )
-    }
+            <div className='group-item-wr' data-test='add_inventory_location_zip_inp'>
+              {this.state.isSubmitted && this.state.zip === '' ? (
+                <div className='warehouse-val'>
+                  <span>
+                    <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                  </span>
+                </div>
+              ) : null}
+              <label htmlFor='zip'>
+                <FormattedMessage id='addInventory.zipCode' defaultMessage='Zip Code' />
+              </label>
+              <input
+                id='zip'
+                disabled={!this.state.edit}
+                value={this.state.zip}
+                onChange={e => {
+                  this.handleInputs(e.target.value, 'zip')
+                }}
+                type='number'
+              />
+            </div>
+          </div>
+          <div>
+            <div className='group-item-wr' data-test='add_inventory_location_contactName_inp'>
+              {this.state.isSubmitted && this.state.contact === '' ? (
+                <div className='warehouse-val'>
+                  <span>
+                    <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                  </span>
+                </div>
+              ) : null}
+              <label htmlFor='contact'>
+                <FormattedMessage id='addInventory.contactName' defaultMessage='Contact Name' />
+              </label>
+              <input
+                id='contact'
+                disabled={!this.state.edit}
+                value={this.state.contact}
+                onChange={e => {
+                  this.handleInputs(e.target.value, 'contact')
+                }}
+              />
+            </div>
+            <div className='group-item-wr' data-test='add_inventory_location_phoneNumber_inp'>
+              {this.state.isSubmitted && this.state.phone === '' ? (
+                <div className='warehouse-val'>
+                  <span>
+                    <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                  </span>
+                </div>
+              ) : null}
+              <label htmlFor='number'>
+                <FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />
+              </label>
+              <input
+                id='number'
+                disabled={!this.state.edit}
+                value={this.state.phone}
+                onChange={e => {
+                  this.handleInputs(e.target.value, 'phone')
+                }}
+              />
+            </div>
+            <div className='group-item-wr' data-test='add_inventory_location_email_inp'>
+              {this.state.isSubmitted && this.state.email === '' ? (
+                <div className='warehouse-val'>
+                  <span>
+                    <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                  </span>
+                </div>
+              ) : null}
+              {this.state.isSubmitted && !this.validateEmail() ? (
+                <div className='warehouse-val'>
+                  <span>
+                    <FormattedMessage id='addInventory.invalidEmail' defaultMessage='Invalid E-mail' />
+                  </span>
+                </div>
+              ) : null}
+              <label htmlFor='email'>
+                <FormattedMessage id='global.email' defaultMessage='E-mail' />
+              </label>
+              <input
+                id='email'
+                disabled={!this.state.edit}
+                value={this.state.email}
+                onChange={e => {
+                  this.handleInputs(e.target.value, 'email')
+                }}
+              />
+            </div>
 
-    renderNewLocation() {
+            {!this.props.edit && button}
+          </div>
+        </React.Fragment>
+      </div>
+    )
+  }
 
-        const { formatMessage } = this.props.intl;
+  renderNewLocation() {
+    const {formatMessage} = this.props.intl
 
-        let button =
-            <button onClick={(e) => this.saveLocation(e, false)} className='edit-location' data-test='add_inventory_location_new_save_btn'>
-                <FormattedMessage
-                    id='addInventory.save'
-                    defaultMessage='Save'
-                />
-            </button>
-        return (
-            <div>
-                <div>
-                    <div className='group-item-wr' data-test='add_inventory_location_warehouseName_inp'>
-                        {(this.state.isSubmitted && this.state.warehouseName === '') ?
-                            <div className='warehouse-val'>
-                                <span className="warehouse-val-fm">
-                                    <FormattedMessage
-                                        id='addInventory.required'
-                                        defaultMessage='Required'
-                                    />
-                                </span>
-                            </div>
-                            : null}
-                        <label htmlFor="street">
-                            <FormattedMessage
-                                id='addInventory.warehouseName'
-                                defaultMessage='Warehouse Name'
-                            />
-                        </label>
-                        <input id="name"
-                               value={this.state.warehouseName}
-                               onChange={(e) => {
-                                   this.handleInputs(e.target.value, 'warehouseName')
-                               }}
-                        />
-                    </div>
-                    <div className='group-item-wr' data-test='add_inventory_location_streetAddress_inp'>
-                        {(this.state.isSubmitted && this.state.street === '') ?
-                            <div className='warehouse-val'>
-                                <span className="warehouse-val-fm">
-                                    <FormattedMessage
-                                        id='addInventory.required'
-                                        defaultMessage='Required'
-                                    />
-                                </span>
-                            </div>
-                            : null}
-                        <label htmlFor="street">
-                            <FormattedMessage
-                                id='addInventory.streetAddress'
-                                defaultMessage='Street Address'
-                            />
-                        </label>
-                        <input id="street"
-                               value={this.state.street}
-                               onChange={(e) => {
-                                   this.handleInputs(e.target.value, 'street')
-                               }}/>
-                    </div>
-                    <div className='group-item-wr' data-test='add_inventory_location_city_inp'>
-                        {(this.state.isSubmitted && this.state.city === '') ?
-                            <div className='warehouse-val'>
-                                <span className="warehouse-val-fm">
-                                    <FormattedMessage
-                                        id='addInventory.required'
-                                        defaultMessage='Required'
-                                    />
-                                </span>
-                            </div>
-                            : null}
-                        <label htmlFor="city">City</label>
-                        <input id="city"
-                               value={this.state.city}
-                               onChange={(e) => {
-                                   this.handleInputs(e.target.value, 'city')
-                               }}/>
-                    </div>
-                    <div className='group-item-wr'>
-                        {(this.state.isSubmitted && this.state.state === '') ?
-                            <div className='warehouse-val'>
-                                <span className="warehouse-val-fm">
-                                    <FormattedMessage
-                                        id='addInventory.required'
-                                        defaultMessage='Required'
-                                    />
-                                </span>
-                            </div>
-                            : null}
-                        <RemoteComboBox id="state-search" scroll={0}
-                                        getObject={(location) => {
-                                            if(location.country) this.setState({state : location.country.id})
-                                            else if(location.province) this.setState({state : location.province.id})
-                                            else this.setState({state : 1});
-                                        }}
-                                        items={this.props.filterLocations}
-                                        api={(text) => this.props.fetchFilterLocations(text)}
-                                        dataFetched={this.props.locationsFetched}
-                                        isFetching={this.props.filterLocationsFetching}
-                                        className="cas-search"
-                                        limit={5}
-                                        placeholder={formatMessage({
-                                            id: 'global.state',
-                                            defaultMessage: 'State'
-                                        })}
-                                        label={formatMessage({
-                                            id: 'global.state',
-                                            defaultMessage: 'State'
-                                        })}
-                                        /*
+    let button = (
+      <button
+        onClick={e => this.saveLocation(e, false)}
+        className='edit-location'
+        data-test='add_inventory_location_new_save_btn'>
+        <FormattedMessage id='addInventory.save' defaultMessage='Save' />
+      </button>
+    )
+    return (
+      <div>
+        <div>
+          <div className='group-item-wr' data-test='add_inventory_location_warehouseName_inp'>
+            {this.state.isSubmitted && this.state.warehouseName === '' ? (
+              <div className='warehouse-val'>
+                <span className='warehouse-val-fm'>
+                  <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                </span>
+              </div>
+            ) : null}
+            <label htmlFor='street'>
+              <FormattedMessage id='addInventory.warehouseName' defaultMessage='Warehouse Name' />
+            </label>
+            <input
+              id='name'
+              value={this.state.warehouseName}
+              onChange={e => {
+                this.handleInputs(e.target.value, 'warehouseName')
+              }}
+            />
+          </div>
+          <div className='group-item-wr' data-test='add_inventory_location_streetAddress_inp'>
+            {this.state.isSubmitted && this.state.street === '' ? (
+              <div className='warehouse-val'>
+                <span className='warehouse-val-fm'>
+                  <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                </span>
+              </div>
+            ) : null}
+            <label htmlFor='street'>
+              <FormattedMessage id='addInventory.streetAddress' defaultMessage='Street Address' />
+            </label>
+            <input
+              id='street'
+              value={this.state.street}
+              onChange={e => {
+                this.handleInputs(e.target.value, 'street')
+              }}
+            />
+          </div>
+          <div className='group-item-wr' data-test='add_inventory_location_city_inp'>
+            {this.state.isSubmitted && this.state.city === '' ? (
+              <div className='warehouse-val'>
+                <span className='warehouse-val-fm'>
+                  <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                </span>
+              </div>
+            ) : null}
+            <label htmlFor='city'>City</label>
+            <input
+              id='city'
+              value={this.state.city}
+              onChange={e => {
+                this.handleInputs(e.target.value, 'city')
+              }}
+            />
+          </div>
+          <div className='group-item-wr'>
+            {this.state.isSubmitted && this.state.state === '' ? (
+              <div className='warehouse-val'>
+                <span className='warehouse-val-fm'>
+                  <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                </span>
+              </div>
+            ) : null}
+            <RemoteComboBox
+              id='state-search'
+              scroll={0}
+              getObject={location => {
+                if (location.country) this.setState({state: location.country.id})
+                else if (location.province) this.setState({state: location.province.id})
+                else this.setState({state: 1})
+              }}
+              items={this.props.filterLocations}
+              api={text => this.props.fetchFilterLocations(text)}
+              dataFetched={this.props.locationsFetched}
+              isFetching={this.props.filterLocationsFetching}
+              className='cas-search'
+              limit={5}
+              placeholder={formatMessage({
+                id: 'global.state',
+                defaultMessage: 'State'
+              })}
+              label={formatMessage({
+                id: 'global.state',
+                defaultMessage: 'State'
+              })}
+              /*
                                         displayName={(location) => (
                                             location.country ?
                                                 location.country.name : location.province.name
                                         )}
                                         */
-                                        validators={{required}}
-                                        onChange={ (value) => this.setState({state : value})}
-                                        displayName={(location) => {
-                                            if (location.country) return location.country.name;
-                                            else if (location.province) return location.province.name;
-                                            else return 'no province or country';
-                                        }}
-                                        data-test='add_inventory_location_state_drpdn'/>
-                    </div>
-                    <div className='group-item-wr' data-test='add_inventory_location_zip_inp'>
-                        {(this.state.isSubmitted && this.state.zip === '') ?
-                            <div className='warehouse-val'>
-                                <span className="warehouse-val-fm">
-                                    <FormattedMessage
-                                        id='addInventory.required'
-                                        defaultMessage='Required'
-                                    />
-                                </span>
-                            </div>
-                            : null}
-                        {(this.state.isSubmitted && !this.validateZip()) ?
-                            <div className='warehouse-val'><span>Invalid Zip code</span></div> : null}
-                        <label htmlFor="zip">
-                            <FormattedMessage
-                                id='addInventory.zipCode'
-                                defaultMessage='Zip Code'
-                            />
-                        </label>
-                        <input id="zip"
-                               value={this.state.zip}
-                               onChange={(e) => {
-                                   this.handleInputs(e.target.value, 'zip')
-                               }}
-                               />
-                    </div>
-                </div>
-                <div>
-                    <div className='group-item-wr' data-test='add_inventory_location_contactName_inp'>
-                    {(this.state.isSubmitted && this.state.contact === '') ?
-                            <div className='warehouse-val'>
-                                <span className="warehouse-val-fm">
-                                    <FormattedMessage
-                                        id='addInventory.required'
-                                        defaultMessage='Required'
-                                    />
-                                </span>
-                            </div>
-                        : null}
-                        <label htmlFor="contact">
-                            <FormattedMessage
-                                id='addInventory.contactName'
-                                defaultMessage='Contact Name'
-                            />
-                        </label>
-                        <input id="contact"
-                               value={this.state.contact}
-                               onChange={(e) => {
-                                   this.handleInputs(e.target.value, 'contact')
-                               }}/>
-                    </div>
-                    <div className='group-item-wr' data-test='add_inventory_location_phoneNumber_inp'>
-                    {(this.state.isSubmitted && this.state.phone === '') ?
-                            <div className='warehouse-val'>
-                                <span className="warehouse-val-fm">
-                                    <FormattedMessage
-                                        id='addInventory.required'
-                                        defaultMessage='Required'
-                                    />
-                                </span>
-                            </div>
-                        : null}
-                        <label htmlFor="number">
-                            <FormattedMessage
-                                id='global.phoneNumber'
-                                defaultMessage='Phone Number'
-                            />
-                        </label>
-                        <input id="number"
-                               value={this.state.phone}
-                               onChange={(e) => {
-                                   this.handleInputs(e.target.value, 'phone')
-                               }}/>
-                    </div>
-                    <div className='group-item-wr' data-test='add_inventory_location_email_inp'>
-                        {(this.state.isSubmitted && this.state.email === '') ?
-                            <div className='warehouse-val'>
-                                <span className="warehouse-val-fm">
-                                    <FormattedMessage
-                                        id='addInventory.required'
-                                        defaultMessage='Required'
-                                    />
-                                </span>
-                            </div>
-                            : null}
-                        {(this.state.isSubmitted && !this.validateEmail()) ?
-                            <div className='warehouse-val'>
-                                <span className="warehouse-val-fm">
-                                    <FormattedMessage
-                                        id='addInventory.invalidEmail'
-                                        defaultMessage='Invalid E-mail'
-                                    />
-                                </span>
-                            </div>
-                            : null}
-                        <label htmlFor="email">
-                            <FormattedMessage
-                                id='global.email'
-                                defaultMessage='E-mail'
-                            />
-                        </label>
-                        <input id="email"
-                               value={this.state.email}
-                               onChange={(e) => {
-                                   this.handleInputs(e.target.value, 'email')
-                               }}/>
-                    </div>
-                    {button}
-                </div>
-            </div>
-        )
-    }
+              validators={{required}}
+              onChange={value => this.setState({state: value})}
+              displayName={location => {
+                if (location.country) return location.country.name
+                else if (location.province) return location.province.name
+                else return 'no province or country'
+              }}
+              data-test='add_inventory_location_state_drpdn'
+            />
+          </div>
+          <div className='group-item-wr' data-test='add_inventory_location_zip_inp'>
+            {this.state.isSubmitted && this.state.zip === '' ? (
+              <div className='warehouse-val'>
+                <span className='warehouse-val-fm'>
+                  <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                </span>
+              </div>
+            ) : null}
+            {this.state.isSubmitted && !this.validateZip() ? (
+              <div className='warehouse-val'>
+                <span>Invalid Zip code</span>
+              </div>
+            ) : null}
+            <label htmlFor='zip'>
+              <FormattedMessage id='addInventory.zipCode' defaultMessage='Zip Code' />
+            </label>
+            <input
+              id='zip'
+              value={this.state.zip}
+              onChange={e => {
+                this.handleInputs(e.target.value, 'zip')
+              }}
+            />
+          </div>
+        </div>
+        <div>
+          <div className='group-item-wr' data-test='add_inventory_location_contactName_inp'>
+            {this.state.isSubmitted && this.state.contact === '' ? (
+              <div className='warehouse-val'>
+                <span className='warehouse-val-fm'>
+                  <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                </span>
+              </div>
+            ) : null}
+            <label htmlFor='contact'>
+              <FormattedMessage id='addInventory.contactName' defaultMessage='Contact Name' />
+            </label>
+            <input
+              id='contact'
+              value={this.state.contact}
+              onChange={e => {
+                this.handleInputs(e.target.value, 'contact')
+              }}
+            />
+          </div>
+          <div className='group-item-wr' data-test='add_inventory_location_phoneNumber_inp'>
+            {this.state.isSubmitted && this.state.phone === '' ? (
+              <div className='warehouse-val'>
+                <span className='warehouse-val-fm'>
+                  <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                </span>
+              </div>
+            ) : null}
+            <label htmlFor='number'>
+              <FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />
+            </label>
+            <input
+              id='number'
+              value={this.state.phone}
+              onChange={e => {
+                this.handleInputs(e.target.value, 'phone')
+              }}
+            />
+          </div>
+          <div className='group-item-wr' data-test='add_inventory_location_email_inp'>
+            {this.state.isSubmitted && this.state.email === '' ? (
+              <div className='warehouse-val'>
+                <span className='warehouse-val-fm'>
+                  <FormattedMessage id='addInventory.required' defaultMessage='Required' />
+                </span>
+              </div>
+            ) : null}
+            {this.state.isSubmitted && !this.validateEmail() ? (
+              <div className='warehouse-val'>
+                <span className='warehouse-val-fm'>
+                  <FormattedMessage id='addInventory.invalidEmail' defaultMessage='Invalid E-mail' />
+                </span>
+              </div>
+            ) : null}
+            <label htmlFor='email'>
+              <FormattedMessage id='global.email' defaultMessage='E-mail' />
+            </label>
+            <input
+              id='email'
+              value={this.state.email}
+              onChange={e => {
+                this.handleInputs(e.target.value, 'email')
+              }}
+            />
+          </div>
+          {button}
+        </div>
+      </div>
+    )
+  }
 
-    changeLocation(loc) {
-        if (loc === 'saved') {
-            if (this.state.warehouseIndex === '') {
-                this.setState({
-                    street: '',
-                    city: '',
-                    state: '',
-                    zip: '',
-                    contact: '',
-                    phone: '',
-                    email: '',
-                    location: 'saved'
-                })
-             } 
-             
-            else {
-                let index;
+  changeLocation(loc) {
+    if (loc === 'saved') {
+      if (this.state.warehouseIndex === '') {
+        this.setState({
+          street: '',
+          city: '',
+          state: '',
+          zip: '',
+          contact: '',
+          phone: '',
+          email: '',
+          location: 'saved'
+        })
+      } else {
+        let index
 
-                for(let i = 0; i < this.props.warehouse.length; i++) {
-                    if(this.props.warehouse[i].id === this.state.warehouseIndex) {
-                        index = i;
-                    }
-                }
-
-                this.setState({
-                    street: this.props.warehouse[index].address.streetAddress,
-                    city: this.props.warehouse[index].address.city,
-                    state: this.props.warehouse[index].address.province.id,
-                    contact: this.props.warehouse[index].contact.name,
-                    phone: this.props.warehouse[index].contact.phone,
-                    email: this.props.warehouse[index].contact.email,
-                    zip: this.props.warehouse[index].address.zip.zip,
-                    location: 'saved'
-                })
-            }
-
-        } else {
-            this.setState({
-                isSubmitted: false,
-                warehouseName: '',
-                street: '',
-                city: '',
-                state: '',
-                zip: '',
-                contact: '',
-                phone: '',
-                email: '',
-                location: 'new'
-            })
+        for (let i = 0; i < this.props.warehouse.length; i++) {
+          if (this.props.warehouse[i].id === this.state.warehouseIndex) {
+            index = i
+          }
         }
 
+        this.setState({
+          street: this.props.warehouse[index].address.streetAddress,
+          city: this.props.warehouse[index].address.city,
+          state: this.props.warehouse[index].address.province.id,
+          contact: this.props.warehouse[index].contact.name,
+          phone: this.props.warehouse[index].contact.phone,
+          email: this.props.warehouse[index].contact.email,
+          zip: this.props.warehouse[index].address.zip.zip,
+          location: 'saved'
+        })
+      }
+    } else {
+      this.setState({
+        isSubmitted: false,
+        warehouseName: '',
+        street: '',
+        city: '',
+        state: '',
+        zip: '',
+        contact: '',
+        phone: '',
+        email: '',
+        location: 'new'
+      })
     }
+  }
 
-    render() {
-        const location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
-        return (
-            <div className='location-wr'>
-                {!this.props.edit ?
-                    <div className={'location-submenu ' + this.state.location}>
-                        <div
-                            className='saved'
-                            onClick={() => this.changeLocation('saved')}
-                            data-test='add_inventory_location_saved_btn'>
-                            <FormattedMessage
-                                id='addInventory.savedWarehouse'
-                                defaultMessage='SAVED WAREHOUSE'
-                            />
-                        </div>
-                        <div
-                            className='new'
-                            onClick={() => this.changeLocation('new')}
-                            data-test='add_inventory_location_new_btn'>
-                            <FormattedMessage
-                                id='addInventory.newWarehouse'
-                                defaultMessage='NEW WAREHOUSE'
-                            />
-                        </div>
-                    </div> : null
-                }
-                {location}
+  render() {
+    const location = this.state.location === 'saved' ? this.renderSavedLocation() : this.renderNewLocation()
+    return (
+      <div className='location-wr'>
+        {!this.props.edit ? (
+          <div className={'location-submenu ' + this.state.location}>
+            <div
+              className='saved'
+              onClick={() => this.changeLocation('saved')}
+              data-test='add_inventory_location_saved_btn'>
+              <FormattedMessage id='addInventory.savedWarehouse' defaultMessage='SAVED WAREHOUSE' />
             </div>
-        );
-    }
+            <div className='new' onClick={() => this.changeLocation('new')} data-test='add_inventory_location_new_btn'>
+              <FormattedMessage id='addInventory.newWarehouse' defaultMessage='NEW WAREHOUSE' />
+            </div>
+          </div>
+        ) : null}
+        {location}
+      </div>
+    )
+  }
 }
 
-export default injectIntl(Location);
+export default injectIntl(Location)

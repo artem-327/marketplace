@@ -1,13 +1,13 @@
-import { FormattedMessage } from 'react-intl'
+import {FormattedMessage} from 'react-intl'
 
 export const tabs = [
-  { text: { id: 'global.ep.info', defaultMessage: 'Info(EP)' }, key: 'info' },
+  {text: {id: 'global.ep.info', defaultMessage: 'Info(EP)'}, key: 'info'},
   {
-    text: { id: 'global.ep.properties', defaultMessage: 'Properties(EP)' },
+    text: {id: 'global.ep.properties', defaultMessage: 'Properties(EP)'},
     key: 'properties'
   },
   {
-    text: { id: 'global.ep.regulatory', defaultMessage: 'Regulatory(EP)' },
+    text: {id: 'global.ep.regulatory', defaultMessage: 'Regulatory(EP)'},
     key: 'regulatory'
   },
   {
@@ -18,19 +18,19 @@ export const tabs = [
     key: 'transportation'
   },
   {
-    text: { id: 'global.ep.documents', defaultMessage: 'Documents(EP)' },
+    text: {id: 'global.ep.documents', defaultMessage: 'Documents(EP)'},
     key: 'documents'
   }
 ]
 
 export const tabsMarketPlace = [
-  { text: { id: 'global.ep.info', defaultMessage: 'Info(EP)' }, key: 'info' },
+  {text: {id: 'global.ep.info', defaultMessage: 'Info(EP)'}, key: 'info'},
   {
-    text: { id: 'global.ep.properties', defaultMessage: 'Properties(EP)' },
+    text: {id: 'global.ep.properties', defaultMessage: 'Properties(EP)'},
     key: 'properties'
   },
   {
-    text: { id: 'global.ep.regulatory', defaultMessage: 'Regulatory(EP)' },
+    text: {id: 'global.ep.regulatory', defaultMessage: 'Regulatory(EP)'},
     key: 'regulatory'
   },
   {
@@ -51,9 +51,7 @@ export const regulatoryFilter = {
   epa: {
     key: 'epa',
     text: (
-      <FormattedMessage
-        id='global.regulatoryEpa'
-        defaultMessage='Regulatory - EPA'>
+      <FormattedMessage id='global.regulatoryEpa' defaultMessage='Regulatory - EPA'>
         {text => text}
       </FormattedMessage>
     ),
@@ -62,9 +60,7 @@ export const regulatoryFilter = {
   dhs: {
     key: 'dhs',
     text: (
-      <FormattedMessage
-        id='global.regulatoryDhs'
-        defaultMessage='Regulatory - DHS'>
+      <FormattedMessage id='global.regulatoryDhs' defaultMessage='Regulatory - DHS'>
         {text => text}
       </FormattedMessage>
     ),
@@ -78,9 +74,7 @@ export const regulatoryFilter = {
   caProp65: {
     key: 'caProp65',
     text: (
-      <FormattedMessage
-        id='global.regulatoryCaProp65'
-        defaultMessage='Regulatory - CA Prop 65'>
+      <FormattedMessage id='global.regulatoryCaProp65' defaultMessage='Regulatory - CA Prop 65'>
         {text => text}
       </FormattedMessage>
     ),
@@ -89,9 +83,7 @@ export const regulatoryFilter = {
   rightToKnow: {
     key: 'rightToKnow',
     text: (
-      <FormattedMessage
-        id='global.regulatoryRightToKnow'
-        defaultMessage='Regulatory - Right to Know'>
+      <FormattedMessage id='global.regulatoryRightToKnow' defaultMessage='Regulatory - Right to Know'>
         {text => text}
       </FormattedMessage>
     ),
@@ -100,9 +92,7 @@ export const regulatoryFilter = {
   dea: {
     key: 'dea',
     text: (
-      <FormattedMessage
-        id='global.regulatoryDea'
-        defaultMessage='Regulatory - DEA'>
+      <FormattedMessage id='global.regulatoryDea' defaultMessage='Regulatory - DEA'>
         {text => text}
       </FormattedMessage>
     ),
@@ -111,9 +101,7 @@ export const regulatoryFilter = {
   international: {
     key: 'international',
     text: (
-      <FormattedMessage
-        id='global.regulatoryInternational'
-        defaultMessage='Regulatory - International'>
+      <FormattedMessage id='global.regulatoryInternational' defaultMessage='Regulatory - International'>
         {text => text}
       </FormattedMessage>
     ),
@@ -162,7 +150,7 @@ export const dropdownOptions = {
   ca65Prop: {
     caprop65TypeofToxicity: {
       options: ['Developmental', 'Cancer', 'Female', 'Male'],
-      inputProps: { multiple: true }
+      inputProps: {multiple: true}
     },
     caprop65ListingMechanism: {
       options: ['FR', 'AB', 'SQE', 'LC']
@@ -193,12 +181,7 @@ export const echoProductGrouping = [
   }
 ]
 
-export const groupActions = (
-  fromMarketPlace,
-  rows,
-  companyProductId,
-  callback
-) => {
+export const groupActions = (fromMarketPlace, rows, companyProductId, callback) => {
   let companyProduct = rows.find(el => el.companyProduct.id == companyProductId)
 
   if (!companyProduct || companyProduct.cfStatus === 'Unmapped') return []

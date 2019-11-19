@@ -1,8 +1,8 @@
 import React from 'react'
-import { Control } from 'react-redux-form'
-import { Radio } from 'semantic-ui-react'
+import {Control} from 'react-redux-form'
+import {Radio} from 'semantic-ui-react'
 
-const RadioBroadcastRedux = (props) => {
+const RadioBroadcastRedux = props => {
   return (
     <Control.checkbox
       labelPosition='left'
@@ -10,10 +10,14 @@ const RadioBroadcastRedux = (props) => {
       component={Radio}
       model={props.model}
       value={props.value}
-      onClick={e => props.onClick(e)} id={props.id}
-      data-test={`RadioBroadcastRedux_id_${props.id}_action`}/>
+      onClick={e => props.onClick(e)}
+      id={props.id}
+      data-test={`RadioBroadcastRedux_id_${props.id}_action`}
+    />
   )
-  {/* <span className={"radiomark"} /> */ }
+  {
+    /* <span className={"radiomark"} /> */
+  }
 }
 
-export default RadioBroadcastRedux;
+export default RadioBroadcastRedux

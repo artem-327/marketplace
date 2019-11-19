@@ -1,11 +1,11 @@
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import DwollaRegister from './DwollaRegister'
-import { getBusinessClassifications, postDwollaAccount } from '~/modules/settings/actions'
-import { getBusinessTypes } from '~/modules/company-form/actions'
-import { getCompanyDetails } from '~/modules/admin/actions'
+import {getBusinessClassifications, postDwollaAccount} from '~/modules/settings/actions'
+import {getBusinessTypes} from '~/modules/company-form/actions'
+import {getCompanyDetails} from '~/modules/admin/actions'
 
-const mapStateToProps = (store) => {
-  let identity = store.admin.company ? { company: store.admin.company } : store.auth.identity
+const mapStateToProps = store => {
+  let identity = store.admin.company ? {company: store.admin.company} : store.auth.identity
   return {
     identity,
     // adminCompanyId: getSafe(() => store.admin.company)

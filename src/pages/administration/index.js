@@ -1,16 +1,13 @@
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import Administration from './Administration';
-
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+import Administration from './Administration'
 
 function mapStateToProps(store) {
-    return {
-
-    }
+  return {}
 }
 
-function mapDispatchToProps(dispatch){
-    return bindActionCreators({}, dispatch)
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({}, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Administration);
+export default connect(mapStateToProps, mapDispatchToProps)(Administration)

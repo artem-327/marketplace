@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import pt, { node, bool, number, object } from 'prop-types'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import pt, {node, bool, number, object} from 'prop-types'
+import {connect} from 'react-redux'
 import _ from 'lodash'
 import * as Actions from '../actions'
 import {
@@ -21,26 +21,26 @@ import {
   GridColumn,
   Popup
 } from 'semantic-ui-react'
-import { Formik } from 'formik'
+import {Formik} from 'formik'
 import {
   Input as FormikInput,
   Button as FormikButton,
   Dropdown as FormikDropdown
 } from 'formik-semantic-ui-fixed-validation'
-import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup } from '~/utils/functions'
+import {withToastManager} from 'react-toast-notifications'
+import {generateToastMarkup} from '~/utils/functions'
 import TreeModel from 'tree-model'
-import { Rule, BottomUnpaddedRow, RightAlignedDiv, StretchedGrid } from './Broadcast.style'
+import {Rule, BottomUnpaddedRow, RightAlignedDiv, StretchedGrid} from './Broadcast.style'
 import RuleItem from './RuleItem'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 import * as Yup from 'yup'
 
-import { getSafe } from '~/utils/functions'
+import {getSafe} from '~/utils/functions'
 
-import { errorMessages } from '~/constants/yupValidation'
+import {errorMessages} from '~/constants/yupValidation'
 
 import confirm from '~/src/components/Confirmable/confirm'
-import { setBroadcast, normalizeTree, getBroadcast } from '~/modules/broadcast/utils'
+import {setBroadcast, normalizeTree, getBroadcast} from '~/modules/broadcast/utils'
 
 const templateInitialValues = {
   name: ''
@@ -54,8 +54,8 @@ const templateValidation = () =>
 class Broadcast extends Component {
   state = {
     filterSearch: '',
-    tree: new TreeModel().parse({ model: { rule: {} } }),
-    selectedTemplate: { name: null, id: null },
+    tree: new TreeModel().parse({model: {rule: {}}}),
+    selectedTemplate: {name: null, id: null},
     broadcastingTo: 0,
     change: false,
     saved: false,
@@ -70,7 +70,7 @@ class Broadcast extends Component {
   }
 
   componentDidMount() {
-    if (this.props.filter.category !== 'region') this.handleFilterChange(null, { name: 'category', value: 'region' })
+    if (this.props.filter.category !== 'region') this.handleFilterChange(null, {name: 'category', value: 'region'})
     this.props.getTemplates()
   }
 
@@ -78,7 +78,7 @@ class Broadcast extends Component {
     let tree = this.getFilteredTree(props.treeData, props.filter)
 
     if (!_.isEqual(tree, this.state.tree)) {
-      this.setState({ tree })
+      this.setState({tree})
     }
   }
 
@@ -105,11 +105,11 @@ class Broadcast extends Component {
     let path = node.getPath()
 
     for (let i = 0; i < path.length - 1; i++) {
-      let { priceAddition, priceMultiplier } = path[i].model.rule
+      let {priceAddition, priceMultiplier} = path[i].model.rule
       if (priceAddition || priceMultiplier) node.model.rule.priceOverride = 1
     }
 
-    this.setState({ tree: this.state.tree, change: true, saved: false })
+    this.setState({tree: this.state.tree, change: true, saved: false})
 
     this.formChanged()
   }
@@ -133,7 +133,7 @@ class Broadcast extends Component {
   }
 
   handleChange = node => {
-    const { treeData } = this.props
+    const {treeData} = this.props
     const findInData = node =>
       getSafe(
         () => treeData.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type),
@@ -143,7 +143,7 @@ class Broadcast extends Component {
     let path = getSafe(() => findInData(node).getPath(), [])
     for (let i = path.length - 2; i >= 0; i--) setBroadcast(path[i])
 
-    this.setState({ tree: this.state.tree, change: true, saved: false })
+    this.setState({tree: this.state.tree, change: true, saved: false})
     // Hotfix - Changes were not applied to data structure when clicking on nodes with childs with 'By Company' filter applied
     // This fixes it, but causes a delay when clicking on root as it iterates through every node and it's path in data structure
 
@@ -165,17 +165,17 @@ class Broadcast extends Component {
 
     if (!node.model.expanded) node.all(n => (n.model.expanded = false))
 
-    this.setState({ tree: this.state.tree })
+    this.setState({tree: this.state.tree})
   }
 
-  handleSearchChange = (e, { name, value }) => {
-    this.setState({ filterSearch: value })
+  handleSearchChange = (e, {name, value}) => {
+    this.setState({filterSearch: value})
 
-    this.handleFilterChange(e, { name, value })
+    this.handleFilterChange(e, {name, value})
   }
 
-  handleFilterChange = (_, { name, value }) => {
-    const { updateFilter, filter } = this.props
+  handleFilterChange = (_, {name, value}) => {
+    const {updateFilter, filter} = this.props
 
     updateFilter({
       ...filter,
@@ -186,7 +186,7 @@ class Broadcast extends Component {
   getFilteredTree = (treeData, filter) => {
     const fs = filter.search.toLowerCase()
     const {
-      intl: { formatMessage }
+      intl: {formatMessage}
     } = this.props
 
     const searchFn = n => {
@@ -218,14 +218,14 @@ class Broadcast extends Component {
             defaultMessage: 'By Region'
           }),
           // rule: treeData.model, // { ...treeData.model, broadcast: getBroadcast(treeData) },
-          rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
+          rule: {...treeData.model, broadcast: getBroadcast(treeData)},
           depth: 1,
           children: treeData.children
             .filter(n => searchParentFn(n))
             .map(n1 => ({
               name: n1.model.name,
               // rule: n1.model,
-              rule: { ...n1.model, broadcast: getBroadcast(n1) },
+              rule: {...n1.model, broadcast: getBroadcast(n1)},
               depth: 2,
               children: n1.children
                 .filter(n => searchFn(n) || searchParentFn(n))
@@ -253,7 +253,7 @@ class Broadcast extends Component {
             defaultMessage: 'By Company'
           }),
           // rule: treeData.model,
-          rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
+          rule: {...treeData.model, broadcast: getBroadcast(treeData)},
           depth: 1,
           children: _.uniqBy(
             treeData.all(n => n.model.type === 'company'),
@@ -263,7 +263,7 @@ class Broadcast extends Component {
             .map(n1 => ({
               name: n1.model.name,
               // rule: n1.model,
-              rule: { ...n1.model, broadcast: getBroadcast(n1) },
+              rule: {...n1.model, broadcast: getBroadcast(n1)},
               depth: 2,
               children: treeData
                 .all(n => n.model.type === 'branch' && n.parent.model.id === n1.model.id)
@@ -294,18 +294,18 @@ class Broadcast extends Component {
   onTemplateSelected = (_, data, setFieldValue) => {
     let name = data.options.find(opt => opt.value === data.value).text
     setFieldValue('name', name)
-    this.setState({ selectedTemplate: { name, id: data.value } })
+    this.setState({selectedTemplate: {name, id: data.value}})
 
     this.props.getTemplate(data.value)
   }
 
   handleTemplateDelete = async setFieldValue => {
-    const { deleteTemplate, toastManager, intl } = this.props
-    const { formatMessage } = intl
-    let { name, id } = this.state.selectedTemplate
+    const {deleteTemplate, toastManager, intl} = this.props
+    const {formatMessage} = intl
+    let {name, id} = this.state.selectedTemplate
     await confirm(
-      formatMessage({ id: 'confirm.deleteTemplate.title' }),
-      formatMessage({ id: 'confirm.deleteTemplate.content' }, { name })
+      formatMessage({id: 'confirm.deleteTemplate.title'}),
+      formatMessage({id: 'confirm.deleteTemplate.content'}, {name})
     )
 
     await deleteTemplate(id)
@@ -315,9 +315,9 @@ class Broadcast extends Component {
     toastManager.add(
       generateToastMarkup(
         <FormattedMessage id='notifications.templateDelete.header' />,
-        <FormattedMessage id='notifications.templateDelete.content' values={{ name }} />
+        <FormattedMessage id='notifications.templateDelete.content' values={{name}} />
       ),
-      { appearance: 'success' }
+      {appearance: 'success'}
     )
   }
 
@@ -331,7 +331,7 @@ class Broadcast extends Component {
       saveTemplate,
       filter,
       loading,
-      intl: { formatMessage },
+      intl: {formatMessage},
       treeData,
       toastManager,
       additionalGridProps,
@@ -352,11 +352,11 @@ class Broadcast extends Component {
         : treeData.all(n => !n.hasChildren() && n.model.broadcast === 1 && n.model.type === 'branch').length
 
     return (
-      <StretchedGrid className='flex stretched' {...additionalGridProps} style={asSidebar ? { height: 'auto' } : null}>
+      <StretchedGrid className='flex stretched' {...additionalGridProps} style={asSidebar ? {height: 'auto'} : null}>
         <Grid.Row divided className='flex stretched'>
           <Grid.Column width={asSidebar ? 16 : 6}>
             <div>
-              <Message info size='large' style={{ padding: '6px 15px' }}>
+              <Message info size='large' style={{padding: '6px 15px'}}>
                 <Popup
                   trigger={<Icon name='info circle' />}
                   content={
@@ -428,8 +428,8 @@ class Broadcast extends Component {
                         value={filter.category}
                         onChange={this.handleFilterChange}
                         options={[
-                          { key: 'region', text: 'By Region', value: 'region' },
-                          { key: 'branch', text: 'By Company', value: 'branch' }
+                          {key: 'region', text: 'By Region', value: 'region'},
+                          {key: 'branch', text: 'By Company', value: 'branch'}
                         ]}
                       />
                     </Form.Field>
@@ -454,7 +454,7 @@ class Broadcast extends Component {
                 validationSchema={templateValidation()}
                 validateOnChange={true}
                 enableReinitialize
-                onSubmit={async (values, { setSubmitting, setFieldValue }) => {
+                onSubmit={async (values, {setSubmitting, setFieldValue}) => {
                   let payload = {
                     mappedBroadcastRules: {
                       ...treeData.model
@@ -463,10 +463,10 @@ class Broadcast extends Component {
                   }
 
                   if (templates.some(el => el.name === values.name)) {
-                    let { name, id } = this.state.selectedTemplate
+                    let {name, id} = this.state.selectedTemplate
 
                     await confirm(
-                      formatMessage({ id: 'broadcast.overwriteTemplate.header' }, { name }),
+                      formatMessage({id: 'broadcast.overwriteTemplate.header'}, {name}),
                       formatMessage({
                         id: 'broadcast.overwriteTemplate.content'
                       })
@@ -474,8 +474,8 @@ class Broadcast extends Component {
 
                     await updateTemplate(id, payload)
                   } else {
-                    let { value } = await saveTemplate(payload)
-                    this.setState({ selectedTemplate: value })
+                    let {value} = await saveTemplate(payload)
+                    this.setState({selectedTemplate: value})
                     setFieldValue('templates', value.id)
                   }
 
@@ -486,10 +486,10 @@ class Broadcast extends Component {
                       <FormattedMessage id={`notifications.template${status}.header`} />,
                       <FormattedMessage
                         id={`notifications.template${status}.content`}
-                        values={{ name: getSafe(() => values.name, name) }}
+                        values={{name: getSafe(() => values.name, name)}}
                       />
                     ),
-                    { appearance: 'success' }
+                    {appearance: 'success'}
                   )
 
                   setSubmitting(false)
@@ -520,7 +520,7 @@ class Broadcast extends Component {
                                   value: template.id
                                 }))}
                                 inputProps={{
-                                  style: { width: '100%' },
+                                  style: {width: '100%'},
                                   onChange: async (e, data) => {
                                     const dataName = getSafe(
                                       () => templates.find(el => el.id === data.value).name,
@@ -686,15 +686,15 @@ class Broadcast extends Component {
           <Grid.Column
             width={asSidebar ? 16 : 10}
             stretched
-            style={asSidebar ? { padding: '0', 'box-shadow': '0 0 0 transparent' } : null}>
+            style={asSidebar ? {padding: '0', 'box-shadow': '0 0 0 transparent'} : null}>
             <Rule.Root>
-              <Rule.Header style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
+              <Rule.Header style={asSidebar ? {'justify-content': 'flex-end'} : {}}>
                 <Rule.RowContent>
                   <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region select'>
                     {text => text}
                   </FormattedMessage>
                 </Rule.RowContent>
-                <Rule.Toggle style={asSidebar ? { flex: '0 0 60px' } : null}>
+                <Rule.Toggle style={asSidebar ? {flex: '0 0 60px'} : null}>
                   <FormattedMessage id='broadcast.include' defaultMessage='Include' />
                 </Rule.Toggle>
 
@@ -705,7 +705,7 @@ class Broadcast extends Component {
                   {!hideFobPrice && <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />}
                 </Rule.Toggle>
               </Rule.Header>
-              <Rule.Content style={asSidebar ? { flex: '1 0 auto', 'overflow-y': 'hidden' } : null}>
+              <Rule.Content style={asSidebar ? {flex: '1 0 auto', 'overflow-y': 'hidden'} : null}>
                 <RuleItem
                   loadingChanged={this.props.loadingChanged}
                   filter={filter}
@@ -733,7 +733,7 @@ class Broadcast extends Component {
 
   getButtons = () => {
     const {
-      intl: { formatMessage },
+      intl: {formatMessage},
       closeBroadcast,
       asModal,
       asSidebar
@@ -743,12 +743,12 @@ class Broadcast extends Component {
       <>
         {asModal && (
           <Button onClick={() => closeBroadcast()} data-test='broadcast_modal_close_btn'>
-            {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+            {formatMessage({id: 'global.cancel', defaultMessage: 'Cancel'})}
           </Button>
         )}
         {!asSidebar && (
           <Button primary onClick={() => this.saveBroadcastRules()} data-test='broadcast_modal_save_btn'>
-            {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+            {formatMessage({id: 'global.save', defaultMessage: 'Save'})}
           </Button>
         )}
       </>
@@ -756,12 +756,12 @@ class Broadcast extends Component {
   }
 
   saveBroadcastRules = async () => {
-    const { saveRules, id, treeData, toastManager, filter } = this.props
-    this.setState({ initialize: false })
+    const {saveRules, id, treeData, toastManager, filter} = this.props
+    this.setState({initialize: false})
 
     await saveRules(id, treeData.model)
 
-    this.setState({ saved: true, initialize: true })
+    this.setState({saved: true, initialize: true})
 
     toastManager.add(generateToastMarkup('Saved successfully!', 'New broadcast rules have been saved.'), {
       appearance: 'success'
@@ -769,7 +769,7 @@ class Broadcast extends Component {
   }
 
   render() {
-    const { open, closeBroadcast, asModal, isPrepared } = this.props
+    const {open, closeBroadcast, asModal, isPrepared} = this.props
 
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
 
@@ -783,7 +783,7 @@ class Broadcast extends Component {
         <Modal.Header>
           <FormattedMessage id='inventory.broadcast' defaultMessage='Price Book' />
         </Modal.Header>
-        <Modal.Content scrolling style={{ minHeight: '70vh' }} className='flex stretched'>
+        <Modal.Content scrolling style={{minHeight: '70vh'}} className='flex stretched'>
           {this.getContent()}
         </Modal.Content>
         <Modal.Actions>{this.getButtons()}</Modal.Actions>
@@ -811,10 +811,10 @@ Broadcast.defaultProps = {
 export default injectIntl(
   withToastManager(
     connect(
-      ({ broadcast: { data, filter, ...rest } }) => {
+      ({broadcast: {data, filter, ...rest}}) => {
         const treeData = data
-          ? new TreeModel({ childrenPropertyName: 'elements' }).parse(data)
-          : new TreeModel().parse({ model: { rule: {} } })
+          ? new TreeModel({childrenPropertyName: 'elements'}).parse(data)
+          : new TreeModel().parse({model: {rule: {}}})
 
         return {
           treeData,
@@ -822,7 +822,7 @@ export default injectIntl(
           ...rest
         }
       },
-      { ...Actions }
+      {...Actions}
     )(Broadcast)
   )
 )

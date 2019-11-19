@@ -1,482 +1,447 @@
-import React, {Component} from 'react';
-import {Control, Form, Errors} from 'react-redux-form';
-import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
-import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerRedux";
+import React, {Component} from 'react'
+import {Control, Form, Errors} from 'react-redux-form'
+import DropdownRedux from '../../../../../../components/Dropdown/DropdownRedux'
+import DatepickerRedux from '../../../../../../components/Datepicker/DatepickerRedux'
 import './ProductOffering.scss'
-import {required, messages, min, isNumber, maxPercent, lotNumber} from "../../../../../../utils/validation";
-import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteComboBoxRedux";
-import Tooltip from "../../../../../../components/Tooltip/Tooltip";
-import moment from 'moment';
-import {FormattedMessage, injectIntl} from 'react-intl';
-import {checkToken} from "../../../../../../utils/auth";
+import {required, messages, min, isNumber, maxPercent, lotNumber} from '../../../../../../utils/validation'
+import RemoteComboBoxRedux from '../../../../../../components/ComboBox/RemoteComboBoxRedux'
+import Tooltip from '../../../../../../components/Tooltip/Tooltip'
+import moment from 'moment'
+import {FormattedMessage, injectIntl} from 'react-intl'
+import {checkToken} from '../../../../../../utils/auth'
 
 class ProductOffering extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            save: false,
-            firstValue: true,
-            minWarning: null,
-            maxWarning: null,
-            originSearched: false,
-            manufacturerSearched: false
-        }
-
-        this.minValidationHandler = this.minValidationHandler.bind(this)
-        this.maxValidationHandler = this.maxValidationHandler.bind(this)
+  constructor(props) {
+    super(props)
+    this.state = {
+      save: false,
+      firstValue: true,
+      minWarning: null,
+      maxWarning: null,
+      originSearched: false,
+      manufacturerSearched: false
     }
 
-    componentDidMount() {
-        this.props.fetchProductForms();
-        this.props.fetchProductGrade();
-        this.props.fetchProductConditions();
-        this.props.fetchOrigin();
-    }
+    this.minValidationHandler = this.minValidationHandler.bind(this)
+    this.maxValidationHandler = this.maxValidationHandler.bind(this)
+  }
 
-    componentWillUnmount() {
-        this.props.resetForm('forms.productOffering');
-    }
+  componentDidMount() {
+    this.props.fetchProductForms()
+    this.props.fetchProductGrade()
+    this.props.fetchProductConditions()
+    this.props.fetchOrigin()
+  }
 
-    // validateMapping() {
-    //     if (this.props.productMapping.indexName === '' || this.props.productMapping.casNumber === '' || this.props.productMapping.chemicalName === '' || this.props.productMapping.productName === '' || this.props.productMapping.productCode === '' || this.props.productMapping.measurements === '' || this.props.productMapping.packaging.container === undefined || this.props.productMapping.packaging.unit === undefined) {
-    //         return true;
-    //     }
-    // }
+  componentWillUnmount() {
+    this.props.resetForm('forms.productOffering')
+  }
 
-    saveOffering(values) {
-        /*
+  // validateMapping() {
+  //     if (this.props.productMapping.indexName === '' || this.props.productMapping.casNumber === '' || this.props.productMapping.chemicalName === '' || this.props.productMapping.productName === '' || this.props.productMapping.productCode === '' || this.props.productMapping.measurements === '' || this.props.productMapping.packaging.container === undefined || this.props.productMapping.packaging.unit === undefined) {
+  //         return true;
+  //     }
+  // }
+
+  saveOffering(values) {
+    /*
         if (this.validateMapping()) {
             this.props.addMessage("Please fill mapping forms before you add new lot.");
             return;
         }
         */
 
-        let validateOnly = (document.getElementById('form-offering').classList.contains('validate-only') && typeof localStorage.productLots !== 'undefined')
-        document.getElementById("form-offering").classList.remove('validate-only')
+    let validateOnly =
+      document.getElementById('form-offering').classList.contains('validate-only') &&
+      typeof localStorage.productLots !== 'undefined'
+    document.getElementById('form-offering').classList.remove('validate-only')
 
-        if (checkToken(this.props) || validateOnly) return;
+    if (checkToken(this.props) || validateOnly) return
 
-        if (!this.state.minWarning && !this.state.maxWarning) {
-            this.setState({save: true, firstValue: false});
-            this.props.addLot(values);
-        }
+    if (!this.state.minWarning && !this.state.maxWarning) {
+      this.setState({save: true, firstValue: false})
+      this.props.addLot(values)
+    }
+  }
+
+  fetchManufacturer(text) {
+    this.setState({manufacturerSearched: true})
+    this.props.fetchManufacturer(text)
+  }
+
+  fetchOrigin(text) {
+    this.setState({originSearched: true})
+    this.props.fetchOrigin(text)
+  }
+
+  minValidationHandler(e) {
+    let assayMin = parseFloat(e.target.value)
+    let assayMax = parseFloat(this.props.productOffering.assayMax)
+    let newMinWarning
+    let newMaxWarning
+
+    if (assayMin > assayMax) {
+      newMinWarning = 'Must be < or = Max'
     }
 
-    fetchManufacturer(text) {
-        this.setState({manufacturerSearched: true})
-        this.props.fetchManufacturer(text)
+    if (assayMax && assayMin < assayMax) {
+      newMaxWarning = null
     }
 
-    fetchOrigin(text) {
-        this.setState({originSearched: true})
-        this.props.fetchOrigin(text)
+    this.setState({minWarning: newMinWarning, maxWarning: newMaxWarning})
+
+    //console.log(e.target.value)
+  }
+
+  maxValidationHandler(e) {
+    let assayMax = parseFloat(e.target.value)
+    let assayMin = parseFloat(this.props.productOffering.assayMin)
+    let newMinWarning
+    let newMaxWarning
+
+    //console.log(e.target.value)
+
+    if (assayMin > assayMax) {
+      newMaxWarning = 'Must be > or = Min'
     }
 
-    minValidationHandler(e) {
-        let assayMin = parseFloat(e.target.value);
-        let assayMax = parseFloat(this.props.productOffering.assayMax);
-        let newMinWarning;
-        let newMaxWarning;
-
-        if (assayMin > assayMax) {
-            newMinWarning = 'Must be < or = Max'
-        }
-
-        if (assayMax && (assayMin < assayMax)) {
-            newMaxWarning = null
-        }
-
-        this.setState({minWarning: newMinWarning, maxWarning: newMaxWarning})
-
-        //console.log(e.target.value)
+    if (assayMin && assayMin < assayMax) {
+      newMinWarning = null
     }
 
-    maxValidationHandler(e) {
-        let assayMax = parseFloat(e.target.value);
-        let assayMin = parseFloat(this.props.productOffering.assayMin);
-        let newMinWarning;
-        let newMaxWarning;
+    this.setState({maxWarning: newMaxWarning, minWarning: newMinWarning})
+  }
 
-        //console.log(e.target.value)
+  render() {
+    let button = (
+      <button id='offering-btn' className='button big add-productOffering'>
+        <FormattedMessage id='addIventory.addLot' defaultMessage='Add Lot' />
+      </button>
+    )
 
-       
-        if (assayMin > assayMax) {
-            newMaxWarning = 'Must be > or = Min'
-        }
+    const {formatMessage} = this.props.intl
+    const manufacturerName =
+      typeof this.props.productOffer.manufacturer !== 'undefined' ? this.props.productOffer.manufacturer.name : null
+    const originName =
+      typeof this.props.productOffer.origin !== 'undefined' ? this.props.productOffer.origin.name : null
 
-        if (assayMin && (assayMin < assayMax)) {
-            newMinWarning = null
-        }
-
-        this.setState({maxWarning: newMaxWarning, minWarning: newMinWarning})
-    }
-
-    render() {
-        let button =
-            <button id="offering-btn" className='button big add-productOffering'>
-                <FormattedMessage
-                    id='addIventory.addLot'
-                    defaultMessage='Add Lot'
-                />
-            </button>;
-
-        const { formatMessage } = this.props.intl;
-        const manufacturerName = (typeof this.props.productOffer.manufacturer !== 'undefined' ? this.props.productOffer.manufacturer.name : null)
-        const originName = (typeof this.props.productOffer.origin !== 'undefined' ? this.props.productOffer.origin.name : null)
-
-        return (
-            <div>
-                <h4>
-                    <FormattedMessage
-                        id='addInventory.productOffering'
-                        defaultMessage='PRODUCT OFFERING'
-                    />
-                </h4>
-                <Form id="form-offering" model="forms.productOffering" onSubmit={(values) => this.saveOffering(values)}>
-                    <div>
-                        <div className='group-item-wr'>
-                            <RemoteComboBoxRedux
-                                items={this.props.manufacturer ? this.props.manufacturer : []}
-                                api={(text) => this.fetchManufacturer(text)}
-                                dataFetched={this.props.manufacturerFetched}
-                                currentValue={this.props.edit && !this.props.isFetchingManufacturer && !this.state.manufacturerSearched ? manufacturerName : null}
-                                className="manufacturer"
-                                limit={5}
-                                label={formatMessage({
-                                    id: 'addInventory.manufacturer',
-                                    defaultMessage: 'Manufacturer'
-                                })}
-                                placeholder={formatMessage({
-                                    id: 'addInventory.search',
-                                    defaultMessage: 'Search'
-                                })}
-                                isFetching={this.props.isFetchingManufacturer}
-                                saveObj={obj=>obj}
-                                dispatch={this.props.dispatch}
-                                model="forms.productOffering.manufacturer"
-                            />
-                        </div>
-
-                        <div className='group-item-wr'>
-                            <RemoteComboBoxRedux
-                                items={this.props.originData ? this.props.originData : []}
-                                dataFetched={this.props.originFetched}
-                                api={(text) => this.fetchOrigin(text)}
-                                className="origin"
-                                limit={5}
-                                label={formatMessage({
-                                    id: 'addInventory.origin',
-                                    defaultMessage: 'Origin'
-                                })}
-                                placeholder={formatMessage({
-                                    id: 'addInventory.search',
-                                    defaultMessage: 'Search'
-                                })}
-                                currentValue={this.props.edit && !this.props.isFetchingOrigin && !this.state.originSearched ? originName : null}
-                                isFetching={this.props.isFetchingOrigin}
-                                saveObj={obj=>obj}
-                                dispatch={this.props.dispatch}
-                                model="forms.productOffering.origin"
-                            />
-                        </div>
-                        <div className='group-item-wr'>
-                            <Errors
-                                className="form-error"
-                                model="forms.productOffering.productForm"
-                                show="touched"
-                                messages={{
-                                    required: messages.required,
-                                }}
-                            />
-                            <label htmlFor=".form">
-                                <FormattedMessage
-                                    id='dataTable.Form'
-                                    defaultMessage='Form'
-                                />
-                            </label>
-                            <DropdownRedux
-                                opns={this.props.productForms}
-                                placeholder={formatMessage({
-                                    id: 'addInventory.select',
-                                    defaultMessage: 'Select'
-                                })}
-                                model="forms.productOffering.productForm"
-                                validators={{required}}
-                                dispatch={this.props.dispatch}
-                            />
-                        </div>
-                        <div className='group-item-wr'>
-                            <label htmlFor=".tradeName">
-                                <FormattedMessage
-                                    id='dataTable.TradeName'
-                                    defaultMessage='Trade Name'
-                                />
-                            </label>
-                            <Control.text
-                                model=".tradeName"
-                                id=".tradeName"
-                            />
-                        </div>
-                        <div>
-                            <div className='group-item-wr'>
-                                <Errors
-                                    className="form-error"
-                                    model=".assayMin"
-                                    show="touched"
-                                    messages={{
-                                        min: messages.min,
-                                        isNumber: messages.isNumber,
-                                        maxPercent: messages.maxPercent,
-                                       
-                                    }}
-                                />
-                                <label htmlFor=".assayMin">
-                                    <FormattedMessage
-                                        id='addInventory.assayMin'
-                                        defaultMessage='Assay Min %'
-                                    />
-                                </label>
-                                <Control.text
-                                    model=".assayMin"
-                                    onChange={this.minValidationHandler}
-                                    type="number"
-                                    id=".assayMin"
-                                    validators={{
-                                          isNumber,
-                                          min: (val) => min(val, 0),
-                                          maxPercent
-                                    }}
-                                    step="0.001"
-                                    data-test='inventory_add_offering_assayMin_control'
-                                />
-                                <div className="warning">{this.state.minWarning}</div>
-                            </div>
-                            <div className='group-item-wr'>
-                                <Errors
-                                    className="form-error"
-                                    model=".assayMax"
-                                    show="touched"
-                                    messages={{
-                                        min: messages.min,
-                                        isNumber: messages.isNumber,
-                                        maxPercent: messages.maxPercent,
-                                    }}
-                                />
-                                <label htmlFor=".assayMax">
-                                    <FormattedMessage
-                                        id='addInventory.assayMax'
-                                        defaultMessage='Assay Max %'
-                                    />
-                                </label>
-                                <Control.text
-                                    model=".assayMax"
-                                    onChange={this.maxValidationHandler}
-                                    type="number"
-                                    id=".assayMax"
-                                    validators={{
-                                        isNumber,
-                                        min: (val) => min(val, 0),
-                                        maxPercent
-                                      }}
-                                    step="0.001"
-                                    data-test='inventory_add_offering_assayMax_control'
-                                />
-                                <div className="warning">{this.state.maxWarning}</div>
-                            </div>
-                            <div className='group-item-wr'>
-                                <Errors
-                                    className="form-error"
-                                    model="forms.productOffering.productGrade"
-                                    show="touched"
-                                    messages={{
-                                        required: messages.required,
-                                    }}
-                                />
-                                <label htmlFor=".grade">
-                                    <FormattedMessage
-                                        id='filter.grade'
-                                        defaultMessage='Grade'
-                                    />
-                                </label>
-                                <DropdownRedux
-                                    opns={this.props.productGrade}
-                                    placeholder={formatMessage({
-                                        id: 'addInventory.select',
-                                        defaultMessage: 'Select'
-                                    })}
-                                    model="forms.productOffering.productGrade"
-                                    validators={{required}}
-                                    dispatch={this.props.dispatch}
-                                />
-                            </div>
-                            <div className='group-item-wr'>
-                                <Errors
-                                    className="form-error"
-                                    model="forms.productOffering.productCondition"
-                                    show="touched"
-                                    messages={{
-                                        required: messages.required,
-                                    }}
-                                />
-                                <label htmlFor=".condition">
-                                    <FormattedMessage
-                                        id='dataTable.condition'
-                                        defaultMessage='Condition'
-                                    />
-                                </label>
-                                <DropdownRedux
-                                    opns={this.props.productConditions}
-                                    placeholder={formatMessage({
-                                        id: 'addInventory.select',
-                                        defaultMessage: 'Select'
-                                    })}
-                                    model="forms.productOffering.productCondition"
-                                    validators={{required}}
-                                    dispatch={this.props.dispatch}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div className="group-item-wr long">
-                            <Tooltip
-                                className="notes"
-                                content={formatMessage({
-                                    id: 'addInventory.externalNotesTip',
-                                    defaultMessage: 'External notes are visible to other merchants.'
-                                })}/>
-                            <div className="notes-textarea">
-                                <label htmlFor=".externalNotes">
-                                    <FormattedMessage
-                                        id='addInventory.externalNotes'
-                                        defaultMessage='External Notes'
-                                    />
-                                </label>
-                                <Control.textarea
-                                    model=".externalNotes"
-                                    id=".externalNotes"
-                                    className="textarea"
-                                    placeholder={formatMessage({
-                                        id: 'addInventory.notesPlaceholder',
-                                        defaultMessage: 'Enter notes here'
-                                    })}/>
-                            </div>
-                        </div>
-                        <div className="group-item-wr long">
-                            <Tooltip
-                                className="notes"
-                                content={formatMessage({
-                                    id: 'addInventory.internalNotesTip',
-                                    defaultMessage: 'Internal notes are visible to you or other users of your company only.'
-                                })}
-                            />
-                            <div className="notes-textarea">
-                                <label htmlFor=".internalNotes">
-                                    <FormattedMessage
-                                        id='addInventory.internalNotes'
-                                        defaultMessage='Internal Notes'
-                                    />
-                                </label>
-                                <Control.textarea
-                                    model=".internalNotes"
-                                    id=".internalNotes"
-                                    className="textarea"
-                                    placeholder={formatMessage({
-                                        id: 'addInventory.notesPlaceholder',
-                                        defaultMessage: 'Enter notes here'
-                                    })}
-                                />
-
-                            </div>
-                        </div>
-                        <div>
-                        <div className='group-item-wr'>
-                            <Errors
-                                className="form-error"
-                                model=".pkgAmount"
-                                show="touched"
-                                messages={{
-                                    required: messages.required,
-                                    min: messages.min,
-                                    isNumber: messages.isNumber
-                                }}
-                            />
-                            <label htmlFor=".pkgAmount">
-                                <FormattedMessage
-                                    id='addInventory.totalPackages'
-                                    defaultMessage='Total Packages'
-                                />
-                            </label>
-                            <Control.text
-                                model=".pkgAmount"
-                                validators={{min: (val) => min(val, 0), isNumber, required}}
-                                id=".pkgAmount"
-                                onChange={this.props.totalPackagesHandler}
-                                data-test='inventory_add_offering_pkgAmount_control'
-                            />
-                        </div>
-                        <div className='group-item-wr'>
-                            <Errors
-                                className="form-error"
-                                model=".lotNumber"
-                                show="touched"
-                                messages={{
-                                    required: messages.required,
-                                    // lotNumber: messages.lotNumber
-                                }}
-                            />
-                            <label htmlFor=".lotNumber">
-                                <FormattedMessage
-                                    id='addInventory.lotNumber'
-                                    defaultMessage='Lot Number'
-                                />
-                            </label>
-                            <Control.text model=".lotNumber"
-                                        validators={{required}}  //! ! validace cisla - validators={{required, lotNumber}}
-                                        id=".lotNumber"/>
-                            </div>
-
-                        <div className='group-item-wr'>
-                            <label htmlFor=".creationDate">
-                                <FormattedMessage
-                                    id='dataTable.MFGDate'
-                                    defaultMessage='MFG Date'
-                                />
-                            </label>
-                            <DatepickerRedux
-                                placeholder={'test'}
-                                maxDate={moment().subtract(1, "days")}
-                                dispatch={this.props.dispatch}
-                                onChange={(value) => console.log(value)}
-                                model='forms.productOffering.creationDate'
-                                data-test='inventory_add_offering_creationDate_control'/>
-                        </div>
-                        <div className='group-item-wr'>
-                            <label htmlFor=".expirationDate">
-                                <FormattedMessage
-                                    id='addInventory.expirationDate'
-                                    defaultMessage='Expiration Date'
-                                />
-                            </label>
-                            <DatepickerRedux
-                                placeholder={'test'}
-                                minDate={moment().add(1, "days")}
-                                dispatch={this.props.dispatch}
-                                onChange={(value) => console.log(value)}
-                                model='forms.productOffering.expirationDate'
-                                data-test='inventory_add_offering_expirationDate_control'/>
-                        </div>
-                        <div className='group-item-wr'>
-                            {button}
-                        </div>
-                        
-                    </div>
-                        
-                    </div>
-                </Form>
+    return (
+      <div>
+        <h4>
+          <FormattedMessage id='addInventory.productOffering' defaultMessage='PRODUCT OFFERING' />
+        </h4>
+        <Form id='form-offering' model='forms.productOffering' onSubmit={values => this.saveOffering(values)}>
+          <div>
+            <div className='group-item-wr'>
+              <RemoteComboBoxRedux
+                items={this.props.manufacturer ? this.props.manufacturer : []}
+                api={text => this.fetchManufacturer(text)}
+                dataFetched={this.props.manufacturerFetched}
+                currentValue={
+                  this.props.edit && !this.props.isFetchingManufacturer && !this.state.manufacturerSearched
+                    ? manufacturerName
+                    : null
+                }
+                className='manufacturer'
+                limit={5}
+                label={formatMessage({
+                  id: 'addInventory.manufacturer',
+                  defaultMessage: 'Manufacturer'
+                })}
+                placeholder={formatMessage({
+                  id: 'addInventory.search',
+                  defaultMessage: 'Search'
+                })}
+                isFetching={this.props.isFetchingManufacturer}
+                saveObj={obj => obj}
+                dispatch={this.props.dispatch}
+                model='forms.productOffering.manufacturer'
+              />
             </div>
-        );
-    }
+
+            <div className='group-item-wr'>
+              <RemoteComboBoxRedux
+                items={this.props.originData ? this.props.originData : []}
+                dataFetched={this.props.originFetched}
+                api={text => this.fetchOrigin(text)}
+                className='origin'
+                limit={5}
+                label={formatMessage({
+                  id: 'addInventory.origin',
+                  defaultMessage: 'Origin'
+                })}
+                placeholder={formatMessage({
+                  id: 'addInventory.search',
+                  defaultMessage: 'Search'
+                })}
+                currentValue={
+                  this.props.edit && !this.props.isFetchingOrigin && !this.state.originSearched ? originName : null
+                }
+                isFetching={this.props.isFetchingOrigin}
+                saveObj={obj => obj}
+                dispatch={this.props.dispatch}
+                model='forms.productOffering.origin'
+              />
+            </div>
+            <div className='group-item-wr'>
+              <Errors
+                className='form-error'
+                model='forms.productOffering.productForm'
+                show='touched'
+                messages={{
+                  required: messages.required
+                }}
+              />
+              <label htmlFor='.form'>
+                <FormattedMessage id='dataTable.Form' defaultMessage='Form' />
+              </label>
+              <DropdownRedux
+                opns={this.props.productForms}
+                placeholder={formatMessage({
+                  id: 'addInventory.select',
+                  defaultMessage: 'Select'
+                })}
+                model='forms.productOffering.productForm'
+                validators={{required}}
+                dispatch={this.props.dispatch}
+              />
+            </div>
+            <div className='group-item-wr'>
+              <label htmlFor='.tradeName'>
+                <FormattedMessage id='dataTable.TradeName' defaultMessage='Trade Name' />
+              </label>
+              <Control.text model='.tradeName' id='.tradeName' />
+            </div>
+            <div>
+              <div className='group-item-wr'>
+                <Errors
+                  className='form-error'
+                  model='.assayMin'
+                  show='touched'
+                  messages={{
+                    min: messages.min,
+                    isNumber: messages.isNumber,
+                    maxPercent: messages.maxPercent
+                  }}
+                />
+                <label htmlFor='.assayMin'>
+                  <FormattedMessage id='addInventory.assayMin' defaultMessage='Assay Min %' />
+                </label>
+                <Control.text
+                  model='.assayMin'
+                  onChange={this.minValidationHandler}
+                  type='number'
+                  id='.assayMin'
+                  validators={{
+                    isNumber,
+                    min: val => min(val, 0),
+                    maxPercent
+                  }}
+                  step='0.001'
+                  data-test='inventory_add_offering_assayMin_control'
+                />
+                <div className='warning'>{this.state.minWarning}</div>
+              </div>
+              <div className='group-item-wr'>
+                <Errors
+                  className='form-error'
+                  model='.assayMax'
+                  show='touched'
+                  messages={{
+                    min: messages.min,
+                    isNumber: messages.isNumber,
+                    maxPercent: messages.maxPercent
+                  }}
+                />
+                <label htmlFor='.assayMax'>
+                  <FormattedMessage id='addInventory.assayMax' defaultMessage='Assay Max %' />
+                </label>
+                <Control.text
+                  model='.assayMax'
+                  onChange={this.maxValidationHandler}
+                  type='number'
+                  id='.assayMax'
+                  validators={{
+                    isNumber,
+                    min: val => min(val, 0),
+                    maxPercent
+                  }}
+                  step='0.001'
+                  data-test='inventory_add_offering_assayMax_control'
+                />
+                <div className='warning'>{this.state.maxWarning}</div>
+              </div>
+              <div className='group-item-wr'>
+                <Errors
+                  className='form-error'
+                  model='forms.productOffering.productGrade'
+                  show='touched'
+                  messages={{
+                    required: messages.required
+                  }}
+                />
+                <label htmlFor='.grade'>
+                  <FormattedMessage id='filter.grade' defaultMessage='Grade' />
+                </label>
+                <DropdownRedux
+                  opns={this.props.productGrade}
+                  placeholder={formatMessage({
+                    id: 'addInventory.select',
+                    defaultMessage: 'Select'
+                  })}
+                  model='forms.productOffering.productGrade'
+                  validators={{required}}
+                  dispatch={this.props.dispatch}
+                />
+              </div>
+              <div className='group-item-wr'>
+                <Errors
+                  className='form-error'
+                  model='forms.productOffering.productCondition'
+                  show='touched'
+                  messages={{
+                    required: messages.required
+                  }}
+                />
+                <label htmlFor='.condition'>
+                  <FormattedMessage id='dataTable.condition' defaultMessage='Condition' />
+                </label>
+                <DropdownRedux
+                  opns={this.props.productConditions}
+                  placeholder={formatMessage({
+                    id: 'addInventory.select',
+                    defaultMessage: 'Select'
+                  })}
+                  model='forms.productOffering.productCondition'
+                  validators={{required}}
+                  dispatch={this.props.dispatch}
+                />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className='group-item-wr long'>
+              <Tooltip
+                className='notes'
+                content={formatMessage({
+                  id: 'addInventory.externalNotesTip',
+                  defaultMessage: 'External notes are visible to other merchants.'
+                })}
+              />
+              <div className='notes-textarea'>
+                <label htmlFor='.externalNotes'>
+                  <FormattedMessage id='addInventory.externalNotes' defaultMessage='External Notes' />
+                </label>
+                <Control.textarea
+                  model='.externalNotes'
+                  id='.externalNotes'
+                  className='textarea'
+                  placeholder={formatMessage({
+                    id: 'addInventory.notesPlaceholder',
+                    defaultMessage: 'Enter notes here'
+                  })}
+                />
+              </div>
+            </div>
+            <div className='group-item-wr long'>
+              <Tooltip
+                className='notes'
+                content={formatMessage({
+                  id: 'addInventory.internalNotesTip',
+                  defaultMessage: 'Internal notes are visible to you or other users of your company only.'
+                })}
+              />
+              <div className='notes-textarea'>
+                <label htmlFor='.internalNotes'>
+                  <FormattedMessage id='addInventory.internalNotes' defaultMessage='Internal Notes' />
+                </label>
+                <Control.textarea
+                  model='.internalNotes'
+                  id='.internalNotes'
+                  className='textarea'
+                  placeholder={formatMessage({
+                    id: 'addInventory.notesPlaceholder',
+                    defaultMessage: 'Enter notes here'
+                  })}
+                />
+              </div>
+            </div>
+            <div>
+              <div className='group-item-wr'>
+                <Errors
+                  className='form-error'
+                  model='.pkgAmount'
+                  show='touched'
+                  messages={{
+                    required: messages.required,
+                    min: messages.min,
+                    isNumber: messages.isNumber
+                  }}
+                />
+                <label htmlFor='.pkgAmount'>
+                  <FormattedMessage id='addInventory.totalPackages' defaultMessage='Total Packages' />
+                </label>
+                <Control.text
+                  model='.pkgAmount'
+                  validators={{min: val => min(val, 0), isNumber, required}}
+                  id='.pkgAmount'
+                  onChange={this.props.totalPackagesHandler}
+                  data-test='inventory_add_offering_pkgAmount_control'
+                />
+              </div>
+              <div className='group-item-wr'>
+                <Errors
+                  className='form-error'
+                  model='.lotNumber'
+                  show='touched'
+                  messages={{
+                    required: messages.required
+                    // lotNumber: messages.lotNumber
+                  }}
+                />
+                <label htmlFor='.lotNumber'>
+                  <FormattedMessage id='addInventory.lotNumber' defaultMessage='Lot Number' />
+                </label>
+                <Control.text
+                  model='.lotNumber'
+                  validators={{required}} //! ! validace cisla - validators={{required, lotNumber}}
+                  id='.lotNumber'
+                />
+              </div>
+
+              <div className='group-item-wr'>
+                <label htmlFor='.creationDate'>
+                  <FormattedMessage id='dataTable.MFGDate' defaultMessage='MFG Date' />
+                </label>
+                <DatepickerRedux
+                  placeholder={'test'}
+                  maxDate={moment().subtract(1, 'days')}
+                  dispatch={this.props.dispatch}
+                  onChange={value => console.log(value)}
+                  model='forms.productOffering.creationDate'
+                  data-test='inventory_add_offering_creationDate_control'
+                />
+              </div>
+              <div className='group-item-wr'>
+                <label htmlFor='.expirationDate'>
+                  <FormattedMessage id='addInventory.expirationDate' defaultMessage='Expiration Date' />
+                </label>
+                <DatepickerRedux
+                  placeholder={'test'}
+                  minDate={moment().add(1, 'days')}
+                  dispatch={this.props.dispatch}
+                  onChange={value => console.log(value)}
+                  model='forms.productOffering.expirationDate'
+                  data-test='inventory_add_offering_expirationDate_control'
+                />
+              </div>
+              <div className='group-item-wr'>{button}</div>
+            </div>
+          </div>
+        </Form>
+      </div>
+    )
+  }
 }
 
-export default injectIntl(ProductOffering);
+export default injectIntl(ProductOffering)
