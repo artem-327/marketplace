@@ -1,22 +1,22 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import Marketplace from './Marketplace'
 import * as Actions from '../actions'
-import {sidebarChanged} from '~/src/modules/cart'
-import {getProductOffer} from '~/modules/purchase-order/actions'
+import { sidebarChanged } from '~/src/modules/cart'
+import { getProductOffer } from '~/modules/purchase-order/actions'
 import moment from 'moment/moment'
-import {getLocationString} from '~/src/utils/functions'
-import {withDatagrid} from '~/modules/datagrid'
-import {applyFilter} from '~/modules/filter/actions'
-import {FormattedNumber} from 'react-intl'
+import { getLocationString } from '~/src/utils/functions'
+import { withDatagrid } from '~/modules/datagrid'
+import { applyFilter } from '~/modules/filter/actions'
+import { FormattedNumber } from 'react-intl'
 
-import {openPopup} from '~/modules/company-product-info/actions'
+import { openPopup } from '~/modules/company-product-info/actions'
 
-import {FormattedUnit, FormattedAssay} from '~/components/formatted-messages'
-import {currency} from '~/constants/index'
-import {getSafe} from '~/utils/functions'
+import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
+import { currency } from '~/constants/index'
+import { getSafe } from '~/utils/functions'
 import React from 'react'
 
-function mapStateToProps(store, {datagrid}) {
+function mapStateToProps(store, { datagrid }) {
   return {
     ...store.marketplace,
     // rows: store.marketplace.broadcastedProductOffers.map(po => {
@@ -73,5 +73,5 @@ function mapStateToProps(store, {datagrid}) {
 }
 
 export default withDatagrid(
-  connect(mapStateToProps, {...Actions, sidebarChanged, openPopup, getProductOffer, applyFilter})(Marketplace)
+  connect(mapStateToProps, { ...Actions, sidebarChanged, openPopup, getProductOffer, applyFilter })(Marketplace)
 )

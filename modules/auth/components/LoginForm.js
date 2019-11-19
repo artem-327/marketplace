@@ -1,13 +1,13 @@
-import React, {Component} from 'react'
-import {withRouter} from 'next/router'
-import {Segment, Image, Button, Message, Grid, GridRow, GridColumn, Header} from 'semantic-ui-react'
-import {Form, Input} from 'formik-semantic-ui-fixed-validation'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import React, { Component } from 'react'
+import { withRouter } from 'next/router'
+import { Segment, Image, Button, Message, Grid, GridRow, GridColumn, Header } from 'semantic-ui-react'
+import { Form, Input } from 'formik-semantic-ui-fixed-validation'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import ConfirmationPage from '~/modules/auth/components/ConfirmationPage'
-import {getSafe} from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 import * as val from 'yup'
-import {errorMessages} from '~/constants/yupValidation'
+import { errorMessages } from '~/constants/yupValidation'
 
 import Logo from '~/assets/images/login/logo-login.png'
 
@@ -103,7 +103,7 @@ class LoginForm extends Component {
   }
 
   componentDidMount() {
-    const {loginInit, getVersion} = this.props
+    const { loginInit, getVersion } = this.props
 
     loginInit()
     getVersion()
@@ -112,9 +112,9 @@ class LoginForm extends Component {
   handleSubmit = async e => {
     const {
       target,
-      target: {username, password}
+      target: { username, password }
     } = e
-    const {login, resetPasswordRequest} = this.props
+    const { login, resetPasswordRequest } = this.props
 
     e.preventDefault()
 
@@ -136,9 +136,9 @@ class LoginForm extends Component {
   }
 
   render() {
-    const {isLoading, message, version, intl, router, identity} = this.props
-    const {usernameError, passwordError} = this.state
-    const {formatMessage} = intl
+    const { isLoading, message, version, intl, router, identity } = this.props
+    const { usernameError, passwordError } = this.state
+    const { formatMessage } = intl
 
     return (
       <>
@@ -161,8 +161,8 @@ class LoginForm extends Component {
               validateOnChange={true}
               validationSchema={validationScheme}
               onSubmit={async (values, actions) => {
-                const {username, password} = values
-                const {login, resetPasswordRequest} = this.props
+                const { username, password } = values
+                const { login, resetPasswordRequest } = this.props
 
                 let inputsState = {
                   passwordError: this.state.resetPassword ? false : password.length < 3,
@@ -181,7 +181,7 @@ class LoginForm extends Component {
                   actions.setSubmitting(false)
                 }
               }}>
-              {({values, errors, setFieldValue, validateForm, validate, submitForm}) => {
+              {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
                 return (
                   <>
                     <InstructionsDiv>
@@ -194,7 +194,7 @@ class LoginForm extends Component {
                       </label>
                       <Input
                         name='username'
-                        inputProps={{placeholder: formatMessage({id: 'auth.username', defaultMessage: 'Password'})}}
+                        inputProps={{ placeholder: formatMessage({ id: 'auth.username', defaultMessage: 'Password' }) }}
                       />
                     </LoginField>
                     {!this.state.resetPassword && (
@@ -205,7 +205,7 @@ class LoginForm extends Component {
                         <Input
                           name='password'
                           inputProps={{
-                            placeholder: formatMessage({id: 'auth.password', defaultMessage: 'Password'}),
+                            placeholder: formatMessage({ id: 'auth.password', defaultMessage: 'Password' }),
                             type: 'password'
                           }}
                         />

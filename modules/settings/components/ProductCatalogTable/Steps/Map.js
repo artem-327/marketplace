@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {Table, Dropdown, Grid, Input, Select, Checkbox, Button} from 'semantic-ui-react'
+import { Table, Dropdown, Grid, Input, Select, Checkbox, Button } from 'semantic-ui-react'
 
 import {
   changeHeadersCSV,
@@ -20,9 +20,9 @@ import {
   deleteCSVMapProductOffer
 } from '../../../actions'
 
-import {getSafe, generateToastMarkup} from '~/utils/functions'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
 import _invert from 'lodash/invert'
-import {withToastManager} from 'react-toast-notifications'
+import { withToastManager } from 'react-toast-notifications'
 import styled from 'styled-components'
 
 const SmallerTableCell = styled(Table.Cell)`
@@ -206,7 +206,7 @@ class Map extends Component {
 
   getMapping = mapperList => {
     const {
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
     return mapperList.required
@@ -235,9 +235,9 @@ class Map extends Component {
 
   componentDidMount = async () => {
     const {
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
-    let {mapping} = this.state
+    let { mapping } = this.state
     let constant = ''
     if (this.props.productOffer) {
       this.props.getCSVMapProductOffer()
@@ -255,7 +255,7 @@ class Map extends Component {
       mapping = mappingCompanyProduct
     }
 
-    this.setState({newHeaders: this.props.CSV.headerCSV, mapping: mapping, constant: constant})
+    this.setState({ newHeaders: this.props.CSV.headerCSV, mapping: mapping, constant: constant })
 
     let a = mapping.sort(function(a, b) {
       let x = a.text.toLowerCase()
@@ -307,7 +307,7 @@ class Map extends Component {
       })
     }
 
-    this.setState({options: ar, values: values})
+    this.setState({ options: ar, values: values })
   }
 
   modifyOptionLists = (options, value, notIndex, indexAdd) => {
@@ -350,7 +350,7 @@ class Map extends Component {
     const {
       CSV,
       selectedSavedMap,
-      intl: {formatMessage},
+      intl: { formatMessage },
       toastManager
     } = this.props
 
@@ -361,7 +361,7 @@ class Map extends Component {
         value: map.id
       }))
 
-    const {values} = this.state
+    const { values } = this.state
 
     return (
       <React.Fragment>
@@ -370,7 +370,10 @@ class Map extends Component {
             <Grid.Row verticalAlign='middle'>
               <Grid.Column width={5} textAlign='center'>
                 <Select
-                  placeholder={formatMessage({id: 'settings.selectSavedMap', defaultMessage: 'Select your saved map'})}
+                  placeholder={formatMessage({
+                    id: 'settings.selectSavedMap',
+                    defaultMessage: 'Select your saved map'
+                  })}
                   noResultsMessage={formatMessage({
                     id: 'settings.noSavedMaps',
                     defaultMessage: 'There are no saved Maps yet.'
@@ -383,7 +386,7 @@ class Map extends Component {
                   search={true}
                   selectOnBlur={false}
                   data-test='settings_product_import_select_map'
-                  style={{width: '100%'}}
+                  style={{ width: '100%' }}
                 />
               </Grid.Column>
               <Grid.Column width={3} textAlign='center' verticalAlign='middle'>
@@ -402,19 +405,19 @@ class Map extends Component {
 
                       toastManager.add(
                         generateToastMarkup(
-                          formatMessage({id: 'notifications.deleteMapSuccess.header', defaultMessage: 'Map deleted'}),
+                          formatMessage({ id: 'notifications.deleteMapSuccess.header', defaultMessage: 'Map deleted' }),
                           formatMessage(
                             {
                               id: 'notifications.deleteMapSuccess.content',
                               defaultMessage: `Map {name} successfully deleted.`
                             },
-                            {name: mapName}
+                            { name: mapName }
                           )
                         ),
-                        {appearance: 'success'}
+                        { appearance: 'success' }
                       )
                     }}
-                    style={{width: '100%'}}>
+                    style={{ width: '100%' }}>
                     <FormattedMessage id='settings.deleteMap' defaultMessage='Delete Map'>
                       {text => text}
                     </FormattedMessage>
@@ -423,9 +426,9 @@ class Map extends Component {
               </Grid.Column>
               <Grid.Column width={5} textAlign='center' data-test='settings_product_import_csv_name_inp'>
                 <Input
-                  placeholder={formatMessage({id: 'settings.', defaultMessage: 'Map Name'})}
+                  placeholder={formatMessage({ id: 'settings.', defaultMessage: 'Map Name' })}
                   onChange={this.inputMapName}
-                  style={{width: '100%'}}
+                  style={{ width: '100%' }}
                 />
               </Grid.Column>
               <Grid.Column width={3} textAlign='center' verticalAlign='middle'>
@@ -447,10 +450,10 @@ class Map extends Component {
                                 ', '
                               )}`
                             },
-                            {missingRequired: missingRequired.join(', ')}
+                            { missingRequired: missingRequired.join(', ') }
                           )
                         ),
-                        {appearance: 'error'}
+                        { appearance: 'error' }
                       )
 
                       return false
@@ -509,14 +512,14 @@ class Map extends Component {
                     toastManager.add(
                       generateToastMarkup(
                         <FormattedMessage id='notifications.mapCreated.header' />,
-                        <FormattedMessage id='notifications.mapCreated.content' values={{name: mapName}} />
+                        <FormattedMessage id='notifications.mapCreated.content' values={{ name: mapName }} />
                       ),
                       {
                         appearance: 'success'
                       }
                     )
                   }}
-                  style={{width: '100%'}}>
+                  style={{ width: '100%' }}>
                   <FormattedMessage id='settings.saveMap' defaultMessage='Save Map' />
                 </Button>
               </Grid.Column>
@@ -553,7 +556,7 @@ class Map extends Component {
                   })}
                   <Table.Cell>
                     <Dropdown
-                      placeholder={formatMessage({id: 'settings.selectColumn', defaultMessage: 'Select Column'})}
+                      placeholder={formatMessage({ id: 'settings.selectColumn', defaultMessage: 'Select Column' })}
                       column_number={lineHeader.columnNumber}
                       selection
                       clearable
@@ -580,7 +583,7 @@ class Map extends Component {
     if (!mapping) mapping = this.state.mapping
 
     const {
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
     const required = mapping.reduce((requiredFields, mapField) => {
@@ -594,15 +597,15 @@ class Map extends Component {
     })
     return requiredMissing.map(reqM => {
       const field = reqM.replace(/Mapper$/gi, '')
-      return formatMessage({id: `${constant}.${field}`, defaultMessage: field})
+      return formatMessage({ id: `${constant}.${field}`, defaultMessage: field })
     })
   }
 
-  selectSavedMap = (e, {value}) => {
+  selectSavedMap = (e, { value }) => {
     const selectedMap = this.props.maps.find(map => map.id === value)
     this.props.selectSavedMap(selectedMap)
 
-    let {options, values, mapping} = this.state
+    let { options, values, mapping } = this.state
     const invSelectedMap = _invert(selectedMap)
     let newHeaders = this.props.mappedHeader
 
@@ -632,7 +635,7 @@ class Map extends Component {
 
     this.props.changeHeadersCSV(newHeaders, missingRequired)
 
-    this.setState({options: options, values: values})
+    this.setState({ options: options, values: values })
   }
 
   inputMapName = e => {
@@ -643,8 +646,8 @@ class Map extends Component {
     this.props.handleSaveMapCSV()
   }
 
-  selectMapping = (e, {column_number, value}) => {
-    const {mapping} = this.state
+  selectMapping = (e, { column_number, value }) => {
+    const { mapping } = this.state
     const mappedHeader = this.props.mappedHeader ? this.props.mappedHeader : [...this.state.newHeaders]
     const newHeaders = mappedHeader.map(line => {
       if (column_number === line.columnNumber) {
@@ -668,7 +671,7 @@ class Map extends Component {
 
     const missingRequired = this.findNotSelectedRequired(values)
 
-    this.setState({options: options, values: values})
+    this.setState({ options: options, values: values })
 
     this.props.changeHeadersCSV(newHeaders, missingRequired)
   }

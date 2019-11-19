@@ -1,11 +1,11 @@
-import React, {Component} from 'react'
-import {Container, Menu, Header, Checkbox, Icon, Popup, List, Button} from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { Container, Menu, Header, Checkbox, Icon, Popup, List, Button } from 'semantic-ui-react'
 import SubMenu from '~/src/components/SubMenu'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
 import ProdexTable from '~/components/table'
-import {Broadcast} from '~/modules/broadcast'
-import {Filter} from '~/modules/filter'
+import { Broadcast } from '~/modules/broadcast'
+import { Filter } from '~/modules/filter'
 
 import SimpleEdit from '~/modules/inventory/components/SimpleEdit'
 import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
@@ -14,10 +14,10 @@ import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import cn from 'classnames'
 
-import {groupActions} from '~/modules/company-product-info/constants'
+import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
-import {getSafe} from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -57,8 +57,8 @@ class MyInventory extends Component {
         width: 160,
         sortPath: 'ProductOffer.companyProduct.intProductCode'
       },
-      {name: 'echoName', disabled: true},
-      {name: 'echoCode', disabled: true},
+      { name: 'echoName', disabled: true },
+      { name: 'echoCode', disabled: true },
       {
         name: 'warehouse',
         title: (
@@ -269,7 +269,7 @@ class MyInventory extends Component {
       }, [])
 
       if (productIds.length) {
-        filter = {...filter, product: productIds}
+        filter = { ...filter, product: productIds }
       }
     }
     //this.props.getMyProductOffers(filter, PAGE_SIZE)
@@ -333,7 +333,7 @@ class MyInventory extends Component {
           <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
         ),
         broadcast: (
-          <div style={{float: 'right'}}>
+          <div style={{ float: 'right' }}>
             <Popup
               id={r.id}
               trigger={
@@ -370,12 +370,12 @@ class MyInventory extends Component {
   }
 
   handleFilterClear = () => {
-    this.props.applyFilter({filters: []})
-    this.props.datagrid.setFilter({filters: []})
+    this.props.applyFilter({ filters: [] })
+    this.props.datagrid.setFilter({ filters: [] })
   }
 
   removeFilter = indexes => {
-    let {datagrid, appliedFilter} = this.props
+    let { datagrid, appliedFilter } = this.props
 
     indexes.forEach((index, i) => {
       datagrid.filters.splice(index - i, 1)
@@ -389,7 +389,7 @@ class MyInventory extends Component {
   render() {
     const {
       openBroadcast,
-      intl: {formatMessage},
+      intl: { formatMessage },
       rows,
       datagrid,
       openImportPopup,
@@ -399,13 +399,13 @@ class MyInventory extends Component {
       sidebarValues,
       openPopup
     } = this.props
-    const {columns, selectedRows} = this.state
+    const { columns, selectedRows } = this.state
 
     return (
       <>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
 
-        <Container fluid style={{padding: '0 32px'}}>
+        <Container fluid style={{ padding: '0 32px' }}>
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
@@ -418,7 +418,7 @@ class MyInventory extends Component {
                   <FormattedMessage
                     id='myInventory.smallHeader'
                     defaultMessage={selectedRows.length + ' products offerings selected'}
-                    values={{number: selectedRows.length}}
+                    values={{ number: selectedRows.length }}
                   />
                 </Header>
               </Menu.Item>
@@ -471,7 +471,7 @@ class MyInventory extends Component {
           </Menu>
         </Container>
 
-        <div class='flex stretched' style={{padding: '10px 32px'}}>
+        <div class='flex stretched' style={{ padding: '10px 32px' }}>
           <ProdexTable
             defaultHiddenColumns={defaultHiddenColumns}
             {...datagrid.tableProps}
@@ -491,19 +491,19 @@ class MyInventory extends Component {
                 })
                 .value()
             }
-            renderGroupLabel={({row, children = null}) => {
-              let {value} = row
+            renderGroupLabel={({ row, children = null }) => {
+              let { value } = row
               const [name, number, count] = value.split('_')
 
               return (
                 <span>
                   {children}
-                  <span style={{color: '#2599d5'}}>{name ? name : 'Unmapped'}</span>
+                  <span style={{ color: '#2599d5' }}>{name ? name : 'Unmapped'}</span>
                   <span className='right'>Product offerings: {count}</span>
                 </span>
               )
             }}
-            onSelectionChange={selectedRows => this.setState({selectedRows})}
+            onSelectionChange={selectedRows => this.setState({ selectedRows })}
             groupActions={row => {
               let values = row.key.split('_')
               return groupActions(false, rows, values[values.length - 1], openPopup).map(a => ({
@@ -562,7 +562,7 @@ class MyInventory extends Component {
                         id: 'confirm.deleteItem',
                         defaultMessage: `Do you really want to remove ${row.chemicalName}?`
                       },
-                      {item: row.chemicalName}
+                      { item: row.chemicalName }
                     )
                   ).then(() => {
                     this.props.deleteProductOffer(row.id)

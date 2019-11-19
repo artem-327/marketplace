@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {Form, Button} from 'formik-semantic-ui-fixed-validation'
-import {Container, Grid, GridColumn, Segment} from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Form, Button } from 'formik-semantic-ui-fixed-validation'
+import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'
 import styled from 'styled-components'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 import Tabs from './Tabs'
 import UsersTable from './UserTable/UsersTable'
@@ -32,21 +32,21 @@ import DocumentsTable from './Documents/DocumentManagerTable'
 import DocumentsPopup from './Documents/DocumentManagerPopup'
 
 import DwollaAccount from './DwollaAccountComponent'
-import {CompanyForm} from '~/modules/company-form/'
-import {companyDetailsTab} from '../contants'
+import { CompanyForm } from '~/modules/company-form/'
+import { companyDetailsTab } from '../contants'
 import PriceBook from './PriceBook'
 
 import Router from 'next/router'
 
-import {addTab, tabChanged, resetSettings, loadLogo} from '../actions'
+import { addTab, tabChanged, resetSettings, loadLogo } from '../actions'
 
-import {updateCompany} from '~/modules/auth/actions'
-import {postCompanyLogo, deleteCompanyLogo} from '~/modules/company-form/actions'
-import {validationSchema} from '~/modules/company-form/constants'
+import { updateCompany } from '~/modules/auth/actions'
+import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
+import { validationSchema } from '~/modules/company-form/constants'
 
-import {DatagridProvider} from '~/modules/datagrid'
+import { DatagridProvider } from '~/modules/datagrid'
 
-import {withToastManager} from 'react-toast-notifications'
+import { withToastManager } from 'react-toast-notifications'
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
@@ -67,7 +67,7 @@ class Settings extends Component {
   }
 
   componentDidMount() {
-    let {isCompanyAdmin, addTab, tabsNames, tabChanged, currentTab} = this.props
+    let { isCompanyAdmin, addTab, tabsNames, tabChanged, currentTab } = this.props
     if (isCompanyAdmin) addTab(companyDetailsTab)
     let queryTab =
       (Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) : false) ||
@@ -77,39 +77,39 @@ class Settings extends Component {
   }
 
   companyUpdated = name => {
-    let {toastManager} = this.props
+    let { toastManager } = this.props
 
     toastManager.add(
       <div>
         <strong>
-          <FormattedMessage id='notifications.companyUpdated' defaultMessage='Company updated' values={{name}} />
+          <FormattedMessage id='notifications.companyUpdated' defaultMessage='Company updated' values={{ name }} />
         </strong>
       </div>,
-      {appearance: 'success', pauseOnHover: true}
+      { appearance: 'success', pauseOnHover: true }
     )
   }
 
   selectLogo = logo => {
-    this.setState({companyLogo: logo})
+    this.setState({ companyLogo: logo })
   }
 
   removeLogo = () => {
-    this.setState({companyLogo: null})
+    this.setState({ companyLogo: null })
   }
 
   companyDetails = () => {
-    let {toastManager, postCompanyLogo, deleteCompanyLogo} = this.props
-    const {selectLogo, removeLogo, companyUpdated} = this
-    const {companyLogo} = this.state
+    let { toastManager, postCompanyLogo, deleteCompanyLogo } = this.props
+    const { selectLogo, removeLogo, companyUpdated } = this
+    const { companyLogo } = this.state
     return (
       <TopMargedGrid relaxed='very' centered>
         <GridColumn computer={12}>
           <Form
             initialValues={this.props.company}
             validationSchema={validationSchema}
-            onSubmit={async (values, {setSubmitting}) => {
+            onSubmit={async (values, { setSubmitting }) => {
               try {
-                const {updateCompany} = this.props
+                const { updateCompany } = this.props
 
                 await updateCompany(values.id, {
                   ...values,
@@ -127,7 +127,7 @@ class Settings extends Component {
                 setSubmitting(false)
               }
             }}>
-            {({values, errors, setFieldValue, setFieldTouched, touched, isSubmitting}) => {
+            {({ values, errors, setFieldValue, setFieldTouched, touched, isSubmitting }) => {
               return (
                 <Segment basic>
                   <CompanyForm
@@ -224,7 +224,7 @@ class Settings extends Component {
   }
 
   getApiConfig = () => {
-    const {currentTab} = this.props
+    const { currentTab } = this.props
     const datagridApiMap = {
       // 'company-details': this.companyDetails(),
       users: {
@@ -232,7 +232,7 @@ class Settings extends Component {
         searchToFilter: v =>
           v
             ? [
-                {operator: 'LIKE', path: 'User.name', values: [`%${v}%`]},
+                { operator: 'LIKE', path: 'User.name', values: [`%${v}%`] },
                 {
                   operator: 'LIKE',
                   path: 'User.homeBranch.deliveryAddress.contactName',
@@ -376,20 +376,20 @@ class Settings extends Component {
   }
 
   render() {
-    const {currentTab} = this.props
+    const { currentTab } = this.props
 
     return (
       <DatagridProvider apiConfig={this.getApiConfig()}>
         <Container fluid className='flex stretched'>
-          <Container fluid style={{padding: '0 1.5vh'}}>
+          <Container fluid style={{ padding: '0 1.5vh' }}>
             <TablesHandlers currentTab={currentTab} />
           </Container>
-          <Grid columns='equal' className='flex stretched' style={{padding: '0 1.5vh'}}>
+          <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
             <Grid.Row>
               <Grid.Column width={3}>
                 <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />
               </Grid.Column>
-              <Grid.Column className='flex stretched' style={{marginTop: '10px'}}>
+              <Grid.Column className='flex stretched' style={{ marginTop: '10px' }}>
                 {this.renderContent()}
               </Grid.Column>
             </Grid.Row>
@@ -400,7 +400,7 @@ class Settings extends Component {
   }
 }
 
-const mapStateToProps = ({settings, auth}) => {
+const mapStateToProps = ({ settings, auth }) => {
   return {
     ...settings,
     isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,

@@ -41,5 +41,5 @@ export default function reducer(state = initialState, action) {
 }
 
 export function getShippingQuotes(pack) {
-  return {type: SHIPPINGQUOTES_FETCH_REQUESTED, payload: {pack}}
+  return { type: SHIPPINGQUOTES_FETCH_REQUESTED, payload: { pack } }
 }

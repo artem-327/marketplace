@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import './TooltipFilter.scss'
 import classnames from 'classnames'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class TooltipFilter extends Component {
   formatName(name) {
@@ -63,7 +63,7 @@ class TooltipFilter extends Component {
   }
 
   render() {
-    const {selected, name, isVisible, content} = this.props
+    const { selected, name, isVisible, content } = this.props
     const bold = selected ? 'tooltipBold' : ''
     return (
       <div className={'tooltipFilter-component'}>
@@ -72,7 +72,7 @@ class TooltipFilter extends Component {
           <FormattedMessage id='filter.saved.name' defaultMessage='Filter name: ' />
           <b>{name}</b>
         </span>
-        <label className={classnames({show: isVisible})}>{this.renderContent(content)}</label>
+        <label className={classnames({ show: isVisible })}>{this.renderContent(content)}</label>
       </div>
     )
   }

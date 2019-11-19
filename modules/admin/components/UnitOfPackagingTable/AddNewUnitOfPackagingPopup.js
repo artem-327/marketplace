@@ -1,15 +1,15 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import {Modal, FormGroup} from 'semantic-ui-react'
+import { Modal, FormGroup } from 'semantic-ui-react'
 
-import {closeAddPopup, postNewRequest} from '../../actions'
-import {Form, Input, Button, Dropdown} from 'formik-semantic-ui-fixed-validation'
+import { closeAddPopup, postNewRequest } from '../../actions'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
-import {withToastManager} from 'react-toast-notifications'
-import {generateToastMarkup} from '~/utils/functions'
-import {FormattedMessage} from 'react-intl'
+import { withToastManager } from 'react-toast-notifications'
+import { generateToastMarkup } from '~/utils/functions'
+import { FormattedMessage } from 'react-intl'
 
 const initialFormValues = {
   val0: '',
@@ -26,7 +26,7 @@ const formValidation = Yup.object().shape({
 
 class AddNewUnitOfPackagingPopup extends React.Component {
   render() {
-    const {closeAddPopup, currentTab, config, postNewRequest, measureOptions, toastManager} = this.props
+    const { closeAddPopup, currentTab, config, postNewRequest, measureOptions, toastManager } = this.props
 
     return (
       <Modal closeIcon onClose={() => closeAddPopup()} open centered={false}>
@@ -38,7 +38,7 @@ class AddNewUnitOfPackagingPopup extends React.Component {
             initialValues={initialFormValues}
             validationSchema={formValidation}
             onReset={closeAddPopup}
-            onSubmit={async (values, {setSubmitting}) => {
+            onSubmit={async (values, { setSubmitting }) => {
               let data = {
                 [config.edit[0].name]: values.val0.trim(),
                 [config.edit[1].name]: values.val1
@@ -48,9 +48,9 @@ class AddNewUnitOfPackagingPopup extends React.Component {
               toastManager.add(
                 generateToastMarkup(
                   <FormattedMessage id='notifications.unitOfPackagingCreated.header' />,
-                  <FormattedMessage id='notifications.unitOfPackagingCreated.content' values={{name: values.val0}} />
+                  <FormattedMessage id='notifications.unitOfPackagingCreated.content' values={{ name: values.val0 }} />
                 ),
-                {appearance: 'success'}
+                { appearance: 'success' }
               )
 
               setSubmitting(false)
@@ -63,10 +63,10 @@ class AddNewUnitOfPackagingPopup extends React.Component {
                 label={config.edit[1].title}
                 options={measureOptions}
                 name='val1'
-                inputProps={{'data-test': 'admin_add_unit_packaging_type_drpdn'}}
+                inputProps={{ 'data-test': 'admin_add_unit_packaging_type_drpdn' }}
               />
             </FormGroup>
-            <div style={{textAlign: 'right'}}>
+            <div style={{ textAlign: 'right' }}>
               <Button.Reset data-test='admin_add_unit_packaging_cancel_btn'>
                 <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                   {text => text}

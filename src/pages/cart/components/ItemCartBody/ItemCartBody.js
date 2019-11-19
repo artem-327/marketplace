@@ -1,16 +1,16 @@
-import React, {Component} from 'react'
-import {object, func} from 'prop-types'
+import React, { Component } from 'react'
+import { object, func } from 'prop-types'
 import confirm from '../../../../components/Confirmable/confirm'
-import {FormattedMessage, FormattedNumber} from 'react-intl'
+import { FormattedMessage, FormattedNumber } from 'react-intl'
 
-import {Button} from 'semantic-ui-react'
-import {FormattedUnit, FormattedAssay} from '~/components/formatted-messages'
-import {currency} from '~/constants/index'
+import { Button } from 'semantic-ui-react'
+import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
+import { currency } from '~/constants/index'
 
 export default class ItemCartBody extends Component {
   render() {
-    let {cartItem, deleteCartItem, casNumberChemName} = this.props
-    let {productOffer} = cartItem
+    let { cartItem, deleteCartItem, casNumberChemName } = this.props
+    let { productOffer } = cartItem
     let unitName = productOffer.companyProduct.packagingUnit.nameAbbreviation
 
     return (
@@ -33,14 +33,14 @@ export default class ItemCartBody extends Component {
               <FormattedMessage
                 id='cart.location'
                 defaultMessage={'Location: ' + location}
-                values={{location: cartItem.locationStr}}
+                values={{ location: cartItem.locationStr }}
               />
             </div>
             <div>
               <FormattedMessage
                 id='global.pricePer'
                 defaultMessage={`Price per ${unitName}`}
-                values={{unit: unitName}}
+                values={{ unit: unitName }}
               />
               :{' '}
               <FormattedNumber id='cart.pricePer' style='currency' currency={currency} value={cartItem.cfPricePerUOM} />
@@ -58,7 +58,7 @@ export default class ItemCartBody extends Component {
               <FormattedMessage
                 id='cart.origin'
                 defaultMessage={`Origin: ${productOffer.origin ? productOffer.origin.name : 'N/A'} `}
-                values={{origin: productOffer.origin ? productOffer.origin.name : 'N/A'}}
+                values={{ origin: productOffer.origin ? productOffer.origin.name : 'N/A' }}
               />
             </div>
             <div>
@@ -69,14 +69,14 @@ export default class ItemCartBody extends Component {
               <FormattedMessage
                 id='cart.condition'
                 defaultMessage={`Condition: ${productOffer.condition ? productOffer.condition.name : 'N/A'} `}
-                values={{condition: productOffer.condition ? productOffer.condition.name : 'N/A'}}
+                values={{ condition: productOffer.condition ? productOffer.condition.name : 'N/A' }}
               />
             </div>
             <div>
               <FormattedMessage
                 id='cart.formVal'
                 defaultMessage={`Form ${productOffer.form ? productOffer.form.name : 'N/A'} `}
-                values={{form: productOffer.form ? productOffer.form.name : 'N/A'}}
+                values={{ form: productOffer.form ? productOffer.form.name : 'N/A' }}
               />
             </div>
           </div>

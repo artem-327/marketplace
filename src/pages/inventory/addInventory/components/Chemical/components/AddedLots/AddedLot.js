@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './AddedLots.scss'
 import UploadLot from '../../../Upload/UploadLot'
 

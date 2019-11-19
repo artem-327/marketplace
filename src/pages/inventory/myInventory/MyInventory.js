@@ -1,13 +1,13 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import ProductOffers from './components/ProductOffers'
 import Filter from '../../../components/Filter'
 import './myInventory.scss'
 import Spinner from '../../../components/Spinner/Spinner'
 import FilterTag from '../../../components/Filter/components/FilterTag'
-import {getSelectedDataTable} from '../../../utils/functions'
+import { getSelectedDataTable } from '../../../utils/functions'
 import SubMenu from '../../../components/SubMenu'
-import {FormattedMessage} from 'react-intl'
-import {Container, Menu, Header} from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
+import { Container, Menu, Header } from 'semantic-ui-react'
 
 const GROUP_BY_ALL_COMPANIES = 1
 const GROUP_BY_REGIONS = 2
@@ -19,7 +19,7 @@ class MyInventory extends Component {
       targetGroups: [],
       currentSelected: 'All companies',
       selections: [
-        {name: 'All companies', id: GROUP_BY_ALL_COMPANIES}
+        { name: 'All companies', id: GROUP_BY_ALL_COMPANIES }
         // {name: 'Region', id: GROUP_BY_REGIONS}
       ]
     }
@@ -41,7 +41,7 @@ class MyInventory extends Component {
   }
 
   setActiveBroadcastButton(active) {
-    this.setState({brActive: active})
+    this.setState({ brActive: active })
   }
 
   setFilter(type, companies = this.props.companies) {
@@ -60,10 +60,10 @@ class MyInventory extends Component {
   }
 
   groupByAllCompanies(companies) {
-    let targets = companies.map(company => ({name: company.name, company: company.id}))
+    let targets = companies.map(company => ({ name: company.name, company: company.id }))
     this.setState({
       currentSelected: 'All companies',
-      targetGroups: [{name: 'All Companies', type: 'company', visible: true, targets: targets}]
+      targetGroups: [{ name: 'All Companies', type: 'company', visible: true, targets: targets }]
     })
   }
 
@@ -78,7 +78,7 @@ class MyInventory extends Component {
             id: location.id,
             visible: true,
             targets: []
-          }).targets.push({name: company.name, company: company.id})
+          }).targets.push({ name: company.name, company: company.id })
         })
         return carry
       }, {})
@@ -130,7 +130,7 @@ class MyInventory extends Component {
                     <FormattedMessage
                       id='myInventory.smallHeader'
                       defaultMessage={number + ' products offerings selected'}
-                      values={{number: number}}
+                      values={{ number: number }}
                     />
                   </Header>
                 </Menu.Item>
@@ -143,7 +143,7 @@ class MyInventory extends Component {
                   <FilterTag
                     dispatch={this.props.dispatch}
                     closeFunc={filter => {
-                      this.props.fetchMyProductOffers({...filter})
+                      this.props.fetchMyProductOffers({ ...filter })
                     }}
                   />
                 </Menu.Item>
@@ -166,7 +166,7 @@ class MyInventory extends Component {
           productGrade
           form
           filterFunc={filter => {
-            this.props.fetchMyProductOffers({...filter})
+            this.props.fetchMyProductOffers({ ...filter })
           }}
           {...this.props}
         />

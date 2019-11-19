@@ -1,8 +1,8 @@
-import {Input, TextArea, Dropdown} from 'formik-semantic-ui-fixed-validation'
+import { Input, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
-import {errorMessages} from '~/constants/yupValidation'
-import {getSafe} from '~/utils/functions'
+import { errorMessages } from '~/constants/yupValidation'
+import { getSafe } from '~/utils/functions'
 
 export const roles = {
   admin: 'admin',
@@ -113,8 +113,8 @@ export const typeToComponent = (type, options = {}) => {
 
 export const toYupSchema = (validation, type) => {
   const defaultOptions = {
-    type: {value: type ? type : defaultDataType},
-    required: {value: false}
+    type: { value: type ? type : defaultDataType },
+    required: { value: false }
   }
 
   let options = {

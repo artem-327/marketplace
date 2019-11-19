@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {NavLink} from 'react-router-dom'
+import React, { Component } from 'react'
+import { NavLink } from 'react-router-dom'
 import './nav.scss'
 
 //import logo from '../../images/nav/Logo.png';
@@ -11,7 +11,7 @@ import clients from '../../images/nav/clients.png'
 import inventory from '../../images/nav/inventory.png'
 import reports from '../../images/nav/reports.png'
 import myAccount from '../../images/nav/myAccount.svg'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class Nav extends Component {
   constructor(props) {
@@ -56,9 +56,9 @@ class Nav extends Component {
 
   handleResize() {
     if (window.innerWidth < 800) {
-      this.setState({isScreenBig: false})
+      this.setState({ isScreenBig: false })
     } else {
-      this.setState({isScreenBig: true})
+      this.setState({ isScreenBig: true })
     }
   }
 
@@ -76,7 +76,7 @@ class Nav extends Component {
 
   toggleMenu(e) {
     e.stopPropagation()
-    let {menuOpen} = this.state
+    let { menuOpen } = this.state
     this.setState({
       menuOpen: !menuOpen
     })
@@ -84,7 +84,7 @@ class Nav extends Component {
 
   openDropdown(id) {
     document.addEventListener('click', this.handleClickOutside, false)
-    this.setState({dropdown: {[id]: !this.state.dropdown[id]}})
+    this.setState({ dropdown: { [id]: !this.state.dropdown[id] } })
   }
 
   renderDropdown(id, links, name) {
@@ -172,7 +172,7 @@ class Nav extends Component {
   }
 
   render() {
-    const {isScreenBig} = this.state
+    const { isScreenBig } = this.state
 
     let currentLogo
     const path = this.props.location.pathname
@@ -205,31 +205,31 @@ class Nav extends Component {
           <img src={currentLogo} alt='LOGO' />
         </div>
         <div className='links'>
-          {this.renderMenuItem('dashboard', [{name: 'Dashboard', url: '/'}], 'Dashboard')}
+          {this.renderMenuItem('dashboard', [{ name: 'Dashboard', url: '/' }], 'Dashboard')}
           {this.renderDropdown(
             'inventory',
             [
-              {name: 'My Inventory', url: '/inventory/my-inventory'},
-              {name: 'Marketplace', url: '/inventory/all-inventory'},
-              {name: 'Add Inventory', url: '/inventory/add-inventory'},
-              {name: 'Shopping Cart', url: '/cart/shopping-cart'}
+              { name: 'My Inventory', url: '/inventory/my-inventory' },
+              { name: 'Marketplace', url: '/inventory/all-inventory' },
+              { name: 'Add Inventory', url: '/inventory/add-inventory' },
+              { name: 'Shopping Cart', url: '/cart/shopping-cart' }
             ],
             'Inventory'
           )}
           {this.renderDropdown(
             'orders',
             [
-              {name: 'Sales Orders', url: '/orders/sales'},
-              {name: 'Purchase Orders', url: '/orders/purchase'}
+              { name: 'Sales Orders', url: '/orders/sales' },
+              { name: 'Purchase Orders', url: '/orders/purchase' }
             ],
             'Orders'
           )}
-          {this.renderMenuItem('clients', [{name: 'Clients', url: '/clients'}], 'Clients')}
-          {this.renderMenuItem('reports', [{name: 'Reports', url: '/reports'}], 'Reports')}
-          {this.renderMenuItem('settings', [{name: 'Settings', url: '/settings'}], 'Settings')}
-          {this.renderMenuItem('admin', [{name: 'Admin', url: '/admin'}], 'Admin')}
+          {this.renderMenuItem('clients', [{ name: 'Clients', url: '/clients' }], 'Clients')}
+          {this.renderMenuItem('reports', [{ name: 'Reports', url: '/reports' }], 'Reports')}
+          {this.renderMenuItem('settings', [{ name: 'Settings', url: '/settings' }], 'Settings')}
+          {this.renderMenuItem('admin', [{ name: 'Admin', url: '/admin' }], 'Admin')}
         </div>
-        <div className='logout'>{this.renderMyAccount('myaccount', [{name: 'Logout'}], 'My Account')}</div>
+        <div className='logout'>{this.renderMyAccount('myaccount', [{ name: 'Logout' }], 'My Account')}</div>
       </div>
     ) : (
       <div className='nav-inside guest'></div>

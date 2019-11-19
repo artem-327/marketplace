@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './checkbox.scss'
 import PropTypes from 'prop-types'
 

@@ -1,15 +1,15 @@
 import React from 'react'
 import BackgroundImage from '~/images/background.svg'
 import Layout from '~/components/LayoutUnauthorized'
-import {Button} from 'semantic-ui-react'
+import { Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import Router from 'next/router'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 export default class Error extends React.Component {
-  static getInitialProps({res, err}) {
+  static getInitialProps({ res, err }) {
     const statusCode = res ? res.statusCode : err ? err.statusCode : null
-    return {statusCode}
+    return { statusCode }
   }
 
   render() {
@@ -20,7 +20,7 @@ export default class Error extends React.Component {
           <Message>
             <h1>
               {this.props.statusCode ? (
-                <FormattedMessage id='error.server' values={{error: this.props.statusCode || 'unexpected'}} />
+                <FormattedMessage id='error.server' values={{ error: this.props.statusCode || 'unexpected' }} />
               ) : (
                 <FormattedMessage id='error.client' />
               )}

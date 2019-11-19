@@ -1,10 +1,10 @@
 import React from 'react'
-import {Control} from 'react-redux-form'
+import { Control } from 'react-redux-form'
 import Switcher from './Switcher'
-import {Checkbox} from 'semantic-ui-react'
+import { Checkbox } from 'semantic-ui-react'
 
 const SwitcherRedux = props => {
-  const {isrounded, partlybrc, model, onClick} = props
+  const { isrounded, partlybrc, model, onClick } = props
   return (
     <Control.checkbox
       component={Checkbox}

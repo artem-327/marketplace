@@ -1,12 +1,12 @@
 import * as AT from './action-types'
-import {chatWidget_hide, chatWidget_show, chatWidget_isConnected} from './components/chatWidgetFunctions'
+import { chatWidget_hide, chatWidget_show, chatWidget_isConnected } from './components/chatWidgetFunctions'
 
 export const initialState = {
   supportChatEnabled: false
 }
 
 export default function reducer(state = initialState, action) {
-  const {payload} = action
+  const { payload } = action
 
   switch (action.type) {
     case AT.SUPPORT_CHAT_TOGGLE: {

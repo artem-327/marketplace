@@ -1,4 +1,4 @@
-import {call, put, takeEvery, takeLatest} from 'redux-saga/effects'
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import Api from './api'
 import * as AT from './action-types'
 
@@ -7,7 +7,7 @@ import * as AT from './action-types'
  */
 function* getOrders(action) {
   try {
-    yield put({type: AT.ORDERS_FETCH_REQUESTED})
+    yield put({ type: AT.ORDERS_FETCH_REQUESTED })
 
     let data = []
     if (action.payload.filter) {
@@ -74,9 +74,9 @@ function* getOrders(action) {
 
     data.dataType = action.payload.endpointType
     data.statusFilter = !action.payload.filter ? 'All' : action.payload.filter.status
-    yield put({type: AT.ORDERS_FETCH_SUCCESS, payload: data})
+    yield put({ type: AT.ORDERS_FETCH_SUCCESS, payload: data })
   } catch (error) {
-    yield put({type: AT.ORDERS_FETCH_FAILURE})
+    yield put({ type: AT.ORDERS_FETCH_FAILURE })
   }
 }
 
@@ -85,12 +85,12 @@ function* getOrders(action) {
  */
 function* getOrder(action) {
   try {
-    yield put({type: AT.ORDERS_DETAIL_FETCH_REQUESTED})
+    yield put({ type: AT.ORDERS_DETAIL_FETCH_REQUESTED })
     const detail = yield call(Api.getOrder, action.payload.endpointType, action.payload.selectedIndex)
     detail.detailType = action.payload.endpointType
-    yield put({type: AT.ORDERS_DETAIL_FETCH_SUCCESS, payload: detail})
+    yield put({ type: AT.ORDERS_DETAIL_FETCH_SUCCESS, payload: detail })
   } catch (error) {
-    yield put({type: AT.ORDERS_DETAIL_FETCH_FAILURE})
+    yield put({ type: AT.ORDERS_DETAIL_FETCH_FAILURE })
   }
 }
 
@@ -99,11 +99,11 @@ function* getOrder(action) {
  */
 function* confirm(action) {
   try {
-    yield put({type: AT.ORDER_CONFIRM_FETCH_REQUESTED})
+    yield put({ type: AT.ORDER_CONFIRM_FETCH_REQUESTED })
     yield call(Api.confirm, action.payload.orderId)
-    yield put({type: AT.ORDER_CONFIRM_FETCH_SUCCESS})
+    yield put({ type: AT.ORDER_CONFIRM_FETCH_SUCCESS })
   } catch (error) {
-    yield put({type: AT.ORDER_CONFIRM_FETCH_FAILURE})
+    yield put({ type: AT.ORDER_CONFIRM_FETCH_FAILURE })
   }
 }
 
@@ -112,11 +112,11 @@ function* confirm(action) {
  */
 function* reject(action) {
   try {
-    yield put({type: AT.ORDER_REJECT_FETCH_REQUESTED})
+    yield put({ type: AT.ORDER_REJECT_FETCH_REQUESTED })
     yield call(Api.reject, action.payload.orderId)
-    yield put({type: AT.ORDER_REJECT_FETCH_SUCCESS})
+    yield put({ type: AT.ORDER_REJECT_FETCH_SUCCESS })
   } catch (error) {
-    yield put({type: AT.ORDER_REJECT_FETCH_FAILURE})
+    yield put({ type: AT.ORDER_REJECT_FETCH_FAILURE })
   }
 }
 

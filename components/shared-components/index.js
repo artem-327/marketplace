@@ -1,1 +1,1 @@
-export {default as CompanyProductMixtures} from './CompanyProductMixtures'
+export { default as CompanyProductMixtures } from './CompanyProductMixtures'

@@ -1,21 +1,21 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import Router, {withRouter} from 'next/router'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import Router, { withRouter } from 'next/router'
 import Link from 'next/link'
-import {Menu} from 'semantic-ui-react'
+import { Menu } from 'semantic-ui-react'
 
-import {tabChanged} from '../actions'
+import { tabChanged } from '../actions'
 
 class Tabs extends Component {
   handleTabClick = tab => {
-    let {currentTab, tabChanged} = this.props
+    let { currentTab, tabChanged } = this.props
     if (tab.type !== currentTab.type) {
       tabChanged(tab)
     }
   }
 
   render() {
-    const {tabsNames, currentTab} = this.props
+    const { tabsNames, currentTab } = this.props
     return (
       <Menu pointing secondary vertical fluid>
         {tabsNames.map((tab, i) => (

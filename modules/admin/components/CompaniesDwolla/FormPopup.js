@@ -1,9 +1,9 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import {Form, Modal, FormGroup, Accordion, Icon, Segment, Header} from 'semantic-ui-react'
+import { Form, Modal, FormGroup, Accordion, Icon, Segment, Header } from 'semantic-ui-react'
 
-import {Formik} from 'formik'
+import { Formik } from 'formik'
 import {
   closeRegisterDwollaAccount,
   updateCompany,
@@ -13,18 +13,18 @@ import {
   getMailingBranchProvinces,
   postDwollaAccount
 } from '../../actions'
-import {addZip, getZipCodes} from '~/modules/zip-dropdown/actions'
-import {ZipDropdown} from '~/modules/zip-dropdown'
-import {Input, Button, Dropdown} from 'formik-semantic-ui-fixed-validation'
-import {DateInput} from '~/components/custom-formik'
+import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
+import { ZipDropdown } from '~/modules/zip-dropdown'
+import { Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { DateInput } from '~/components/custom-formik'
 import * as Yup from 'yup'
 // debug purposes only
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {validationSchema} from '~/modules/company-form/constants'
-import {errorMessages, addressValidationSchema} from '~/constants/yupValidation'
+import { validationSchema } from '~/modules/company-form/constants'
+import { errorMessages, addressValidationSchema } from '~/constants/yupValidation'
 
-import {AddressForm} from '~/modules/address-form'
+import { AddressForm } from '~/modules/address-form'
 
 const formValidationNew = Yup.object().shape({
   // beneficialOwner: Yup.object().shape({
@@ -108,7 +108,7 @@ class AddNewPopupCasProducts extends React.Component {
     if (country.hasProvinces) {
       this.props.getPrimaryBranchProvinces(country.id)
     }
-    this.setState({primaryBranchHasProvinces: country.hasProvinces})
+    this.setState({ primaryBranchHasProvinces: country.hasProvinces })
   }
 
   handleMailingBranchCountry = (e, d) => {
@@ -116,13 +116,13 @@ class AddNewPopupCasProducts extends React.Component {
     if (country.hasProvinces) {
       this.props.getMailingBranchProvinces(country.id)
     }
-    this.setState({mailingBranchHasProvinces: country.hasProvinces})
+    this.setState({ mailingBranchHasProvinces: country.hasProvinces })
   }
 
-  handleAccordionChange = (e, {name}) => {
-    let {accordionActive} = this.state
+  handleAccordionChange = (e, { name }) => {
+    let { accordionActive } = this.state
     accordionActive[name] = !accordionActive[name]
-    this.setState({accordionActive})
+    this.setState({ accordionActive })
   }
 
   render() {
@@ -137,7 +137,7 @@ class AddNewPopupCasProducts extends React.Component {
       zip
     } = this.props
 
-    let {accordionActive} = this.state
+    let { accordionActive } = this.state
 
     const initialFormValues = {
       dwollaController: {
@@ -174,8 +174,8 @@ class AddNewPopupCasProducts extends React.Component {
         validationSchema={formValidationNew}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={async (values, {setSubmitting}) => {
-          let {address, ...rest} = values.dwollaController
+        onSubmit={async (values, { setSubmitting }) => {
+          let { address, ...rest } = values.dwollaController
           let payload = {
             dwollaController: {
               ...address,
@@ -189,7 +189,7 @@ class AddNewPopupCasProducts extends React.Component {
         }}
         onReset={closeRegisterDwollaAccount}
         render={props => {
-          let {setFieldValue, values, isSubmitting} = props
+          let { setFieldValue, values, isSubmitting } = props
 
           return (
             <Modal closeIcon onClose={() => closeRegisterDwollaAccount()} open centered={false} size='small'>
@@ -246,17 +246,17 @@ class AddNewPopupCasProducts extends React.Component {
                       <Accordion.Content active={accordionActive.controllerAddress}>
                         <FormGroup widths='equal' data-test='admin_popup_company_dwolla_name_inp'>
                           <Input
-                            inputProps={{fluid: true}}
+                            inputProps={{ fluid: true }}
                             label={<FormattedMessage id='global.firstName2' defaultMessage='First Name' />}
                             name='dwollaController.firstName'
                           />
                           <Input
-                            inputProps={{fluid: true}}
+                            inputProps={{ fluid: true }}
                             label={<FormattedMessage id='global.lastName2' defaultMessage='Last Name' />}
                             name='dwollaController.lastName'
                           />
                           <Input
-                            inputProps={{fluid: true}}
+                            inputProps={{ fluid: true }}
                             label={<FormattedMessage id='global.title' defaultMessage='Job Title' />}
                             name='dwollaController.jobTitle'
                           />
@@ -265,7 +265,7 @@ class AddNewPopupCasProducts extends React.Component {
                           <DateInput
                             label={<FormattedMessage id='global.dateOfBirth2' defaultMessage='Birth' />}
                             name='dwollaController.dateOfBirth'
-                            inputProps={{'data-test': 'admin_popup_company_dwolla_birth_dtin'}}
+                            inputProps={{ 'data-test': 'admin_popup_company_dwolla_birth_dtin' }}
                           />
                           <Input
                             label={<FormattedMessage id='global.ssn2' defaultMessage='SSN' />}
@@ -332,7 +332,7 @@ const mapDispatchToProps = {
   getZipCodes
 }
 
-const mapStateToProps = ({admin, zip, auth}) => {
+const mapStateToProps = ({ admin, zip, auth }) => {
   return {
     ...admin,
     zip,

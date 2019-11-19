@@ -1,12 +1,12 @@
 import React from 'react'
 import classnames from 'classnames'
-import {Control, Form} from 'react-redux-form'
+import { Control, Form } from 'react-redux-form'
 import '../login.scss'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 class LoginForm extends React.Component {
   handleSubmit(input) {
-    let {email, password} = this.props.loginInputs
+    let { email, password } = this.props.loginInputs
     if (!email || !password) return
     this.props.login(input.email, input.password).then(() => {
       this.props.getIdentity().then(() => {
@@ -21,9 +21,9 @@ class LoginForm extends React.Component {
 
   render() {
     //console.log(this.props);
-    const {formatMessage} = this.props.intl
-    let {isFetching, hasError} = this.props.formStatus
-    let {email, password} = this.props.loginInputs
+    const { formatMessage } = this.props.intl
+    let { isFetching, hasError } = this.props.formStatus
+    let { email, password } = this.props.loginInputs
     let butLogin = isFetching ? (
       <FormattedMessage id='login.loging' defaultMessage='Logging' description='Login button during request' />
     ) : (
@@ -60,7 +60,7 @@ class LoginForm extends React.Component {
         </div>
         <div className='error-holder'>{loginErr}</div>
         <div className='form-middle'>
-          <button className={classnames({loading: isFetching}, {disabled: !email || !password})}>{butLogin}</button>
+          <button className={classnames({ loading: isFetching }, { disabled: !email || !password })}>{butLogin}</button>
         </div>
         <div className='form-place version'>{this.props.version}</div>
       </Form>

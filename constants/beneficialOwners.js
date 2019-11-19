@@ -1,6 +1,6 @@
-import {deepSearch} from '~/utils/functions'
+import { deepSearch } from '~/utils/functions'
 
-export const USA = JSON.stringify({countryId: 1, hasProvinces: true})
+export const USA = JSON.stringify({ countryId: 1, hasProvinces: true })
 
 export const maxBeneficialOwners = 4
 

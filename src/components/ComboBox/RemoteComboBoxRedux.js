@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {Control} from 'react-redux-form'
+import { Control } from 'react-redux-form'
 import RemoteComboBox from './RemoteComboBox'
 
 class RemoteComboBoxRedux extends Component {

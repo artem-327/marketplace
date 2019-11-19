@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './ProductOffers.scss'
 import moment from 'moment'
 //import AddCart from '../../../cart/components/AddCart'
-import {DATE_FORMAT} from '../../../../utils/constants'
-import {getUnit} from '../../../../utils/functions'
+import { DATE_FORMAT } from '../../../../utils/constants'
+import { getUnit } from '../../../../utils/functions'
 import DataTable from '../../../../components/DataTable'
 import Spinner from '../../../../components/Spinner/Spinner'
 
@@ -18,7 +18,7 @@ class ProductOffers extends Component {
     return productOffers.reduce((carry, offer) => {
       ;(carry[typeof offer.product !== 'undefined' ? offer.product.id : 0] = carry[
         typeof offer.product !== 'undefined' ? offer.product.id : 0
-      ] || {...offer.product, visible: true, productOffers: []}).productOffers.push(offer)
+      ] || { ...offer.product, visible: true, productOffers: [] }).productOffers.push(offer)
       return carry
     }, {})
   }
@@ -94,19 +94,19 @@ class ProductOffers extends Component {
         onRowClick={this.props.onRowClick}
         sortFunc={nameColumn => console.log(nameColumn)}
         headerInit={[
-          {name: 'Merchant'},
-          {name: 'Available PKGs'},
-          {name: 'Packaging'},
-          {name: 'Quantity'},
-          {name: 'FOBPrice'},
-          {name: 'TradeName'},
-          {name: 'MFR.'},
-          {name: 'Origin'},
-          {name: 'Expiration'},
-          {name: 'Assay'},
-          {name: 'Condition'},
-          {name: 'Form'},
-          {name: 'Location'}
+          { name: 'Merchant' },
+          { name: 'Available PKGs' },
+          { name: 'Packaging' },
+          { name: 'Quantity' },
+          { name: 'FOBPrice' },
+          { name: 'TradeName' },
+          { name: 'MFR.' },
+          { name: 'Origin' },
+          { name: 'Expiration' },
+          { name: 'Assay' },
+          { name: 'Condition' },
+          { name: 'Form' },
+          { name: 'Location' }
         ]}
         rows={rows}
         history={this.props.history}

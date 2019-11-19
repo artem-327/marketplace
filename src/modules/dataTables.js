@@ -18,8 +18,8 @@ export default function reducer(state = initialState, action) {
       }
     }
     case SELECT_ROW: {
-      const {id} = action.payload
-      const {groupId, rowId, checked, othersChecked, disabling} = action.payload.data
+      const { id } = action.payload
+      const { groupId, rowId, checked, othersChecked, disabling } = action.payload.data
       return {
         ...state,
         [id]: {
@@ -62,8 +62,8 @@ export default function reducer(state = initialState, action) {
       }
     }
     case SELECT_GROUP: {
-      const {id} = action.payload
-      const {groupId, rows, checked, disabling} = action.payload.data
+      const { id } = action.payload
+      const { groupId, rows, checked, disabling } = action.payload.data
       return {
         ...state,
         [id]: {
@@ -109,7 +109,7 @@ export default function reducer(state = initialState, action) {
           ...state[action.payload.id],
           header: state[action.payload.id].header.map(h =>
             h.index === action.payload.headerId
-              ? {...state[action.payload.id].rowsOpns[action.payload.headerId], visible: action.payload.value}
+              ? { ...state[action.payload.id].rowsOpns[action.payload.headerId], visible: action.payload.value }
               : h
           )
         }
@@ -123,34 +123,34 @@ export default function reducer(state = initialState, action) {
 export function initDataTable(id, header, rowsOpns) {
   return {
     type: INIT_DATA_TABLE,
-    payload: {id, header, rowsOpns}
+    payload: { id, header, rowsOpns }
   }
 }
 
 export function selectRow(id, data) {
   return {
     type: SELECT_ROW,
-    payload: {id, data}
+    payload: { id, data }
   }
 }
 
 export function selectGroup(id, data) {
   return {
     type: SELECT_GROUP,
-    payload: {id, data}
+    payload: { id, data }
   }
 }
 
 export function selectDataTable(id, rowsOpns) {
   return {
     type: SELECT_DATA_TABLE,
-    payload: {id, rowsOpns}
+    payload: { id, rowsOpns }
   }
 }
 
 export function toggleVisibleColumn(id, headerId, value) {
   return {
     type: TOGGLE_VISIBLE_COLUMN,
-    payload: {id, headerId, value}
+    payload: { id, headerId, value }
   }
 }

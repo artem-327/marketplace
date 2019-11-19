@@ -1,11 +1,11 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {Control, actions} from 'react-redux-form'
+import { Control, actions } from 'react-redux-form'
 import ComboBox from './ComboBox'
 
 class ComboBoxRedux extends Component {
   handleChange(value) {
-    const {model, dispatch} = this.props
+    const { model, dispatch } = this.props
     dispatch(actions.change(model, value))
     if (this.props.onChange) this.props.onChange(value)
   }

@@ -1,5 +1,5 @@
 import * as AT from './action-types'
-import {getSafe} from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 import {
   ChatWidget_create,
   chatWidget_hide,
@@ -8,8 +8,8 @@ import {
   chatWidget_isChatting,
   chatWidget_isConnected
 } from './components/chatWidgetFunctions'
-import {generateToastMarkup} from '~/utils/functions'
-import {FormattedMessage} from 'react-intl'
+import { generateToastMarkup } from '~/utils/functions'
+import { FormattedMessage } from 'react-intl'
 import React from 'react'
 
 export function chatWidgetCreate(identity, props) {
@@ -52,7 +52,7 @@ export function chatWidgetToggle(props) {
               defaultMessage='Support chat is not available'
             />
           ),
-          {appearance: 'error'}
+          { appearance: 'error' }
         )
       }
     }

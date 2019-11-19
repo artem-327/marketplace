@@ -1,33 +1,33 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import {withRouter} from 'next/router'
-import {Container, Menu, Image, Dropdown, Icon, Label} from 'semantic-ui-react'
+import { withRouter } from 'next/router'
+import { Container, Menu, Image, Dropdown, Icon, Label } from 'semantic-ui-react'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/logo-echo.png'
 // import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
 import PopUp from '~/src/components/PopUp'
-import {Messages} from '~/modules/messages'
+import { Messages } from '~/modules/messages'
 import Settings from '~/components/settings'
-import {connect} from 'react-redux'
-import {withAuth} from '~/hocs'
+import { connect } from 'react-redux'
+import { withAuth } from '~/hocs'
 
-import {takeOverCompanyFinish} from '~/modules/admin/actions'
-import {openProfilePopup} from '~/modules/profile/actions'
-import {agreeWithTOS} from '~/modules/auth/actions'
-import {triggerSystemSettingsModal} from '~/modules/settings/actions'
+import { takeOverCompanyFinish } from '~/modules/admin/actions'
+import { openProfilePopup } from '~/modules/profile/actions'
+import { agreeWithTOS } from '~/modules/auth/actions'
+import { triggerSystemSettingsModal } from '~/modules/settings/actions'
 
 import Profile from '~/modules/profile/components/Profile'
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Router from 'next/router'
-import {getSafe} from '~/utils/functions'
-import {injectIntl} from 'react-intl'
-import {AgreementModal} from '~/components/modals'
-import {getCountryCodes} from '~/modules/phoneNumber/actions'
+import { getSafe } from '~/utils/functions'
+import { injectIntl } from 'react-intl'
+import { AgreementModal } from '~/components/modals'
+import { getCountryCodes } from '~/modules/phoneNumber/actions'
 
-import {chatWidgetCreate, chatWidgetToggle, chatWidgetShow, chatUnreadMessages} from '~/modules/chatWidget/actions'
-import {withToastManager} from 'react-toast-notifications'
+import { chatWidgetCreate, chatWidgetToggle, chatWidgetShow, chatUnreadMessages } from '~/modules/chatWidget/actions'
+import { withToastManager } from 'react-toast-notifications'
 
 import ChatWidget from '~/modules/chatWidget/components/ChatWidgetContainer'
 
@@ -81,7 +81,7 @@ const CircularLabel = styled(Label)`
   font-weight: 400 !important;
 `
 
-const MenuLink = withRouter(({router: {pathname}, to, children}) => (
+const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
     <Menu.Item as='a' active={pathname === to}>
       {children}
@@ -105,7 +105,7 @@ class Layout extends Component {
   render() {
     const {
       children,
-      router: {pathname},
+      router: { pathname },
       title = 'Echo exchange',
       auth,
       takeOverCompanyFinish,
@@ -115,7 +115,7 @@ class Layout extends Component {
       chatWidgetToggle,
       cartItems,
       takeover,
-      intl: {formatMessage},
+      intl: { formatMessage },
       isOpen,
       agreeWithTOS
     } = this.props
@@ -125,7 +125,7 @@ class Layout extends Component {
         <PopUp />
         <Head>
           <title>
-            {formatMessage({id: 'global.echoTitle', defaultMessage: 'Echo exchange'})} / {title}
+            {formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo exchange' })} / {title}
           </title>
         </Head>
         <TopMenu fixed='top' inverted size='large' borderless>
@@ -140,7 +140,7 @@ class Layout extends Component {
                   <MiniCart />
                 </Menu.Item>
               )}
-              <Dropdown item icon={{name: 'user circle outline', size: 'large'}}>
+              <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
                 <Dropdown.Menu data-test='navigation_menu_user_drpdn'>
                   <Dropdown.Item
                     as={Menu.Item}
@@ -179,7 +179,7 @@ class Layout extends Component {
                       onClick={() => triggerSystemSettingsModal(true)}
                       data-test='navigation_menu_settings_lnk'>
                       <>
-                        {formatMessage({id: 'navigation.userSettings', defaultMessage: 'User Settings'})}
+                        {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
                         <Settings role='user' />
                       </>
                     </Menu.Item>

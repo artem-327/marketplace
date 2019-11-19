@@ -1,6 +1,6 @@
 import * as AT from './action-types'
-import {INVENTORY_LINK_ATTACHMENT} from '~/modules/inventory/action-types'
-import {getSafe} from '~/utils/functions'
+import { INVENTORY_LINK_ATTACHMENT } from '~/modules/inventory/action-types'
+import { getSafe } from '~/utils/functions'
 
 const initialState = {
   data: [],

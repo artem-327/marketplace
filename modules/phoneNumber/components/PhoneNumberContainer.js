@@ -1,9 +1,9 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import PhoneNumber from './PhoneNumber'
 import * as Actions from '../actions'
-import {injectIntl} from 'react-intl'
+import { injectIntl } from 'react-intl'
 
-function mapStateToProps({phoneNumber}) {
+function mapStateToProps({ phoneNumber }) {
   return {
     phoneCountryCodes: phoneNumber.phoneCountryCodes.map(d => {
       return {

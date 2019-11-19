@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Dropdown from '../../../../components/Dropdown/Dropdown'
 import Spinner from '../../../../components/Spinner/Spinner'
 
@@ -31,7 +31,7 @@ class User extends Component {
     }
     switch (this.state.mode) {
       case MERCHANT: {
-        user = {...user, approved: this.state.approved, office: this.state.office}
+        user = { ...user, approved: this.state.approved, office: this.state.office }
         return this.props.isFetching ? (
           <Spinner />
         ) : (
@@ -39,20 +39,20 @@ class User extends Component {
             <Dropdown
               opns={this.props.offices}
               placeholder='Select Office'
-              onChange={value => this.setState({office: value})}
+              onChange={value => this.setState({ office: value })}
               data-test='administration_users_merchant_drpdn'
             />
             {this.state.office ? (
               <React.Fragment>
                 <button
                   className='button small'
-                  onClick={() => this.setState({approved: !this.state.approved})}
+                  onClick={() => this.setState({ approved: !this.state.approved })}
                   data-test='administration_users_merchant_approve_btn'>
                   {this.state.approved ? 'Approved!' : 'Approve'}
                 </button>
                 <button
                   className='button small green'
-                  onClick={() => this.props.putPromoteToMerchant(this.props.id, {...user})}
+                  onClick={() => this.props.putPromoteToMerchant(this.props.id, { ...user })}
                   data-test='administration_users_merchant_save_btn'>
                   Save
                 </button>
@@ -62,20 +62,20 @@ class User extends Component {
         )
       }
       case OPERATOR: {
-        user = {...user, login: this.state.operator}
+        user = { ...user, login: this.state.operator }
         return this.props.isFetching ? (
           <Spinner />
         ) : (
           <React.Fragment data-test='administration_users_login_inp'>
             <input
               placeholder='Login'
-              onChange={e => this.setState({operator: e.target.value})}
+              onChange={e => this.setState({ operator: e.target.value })}
               value={this.state.operator}
             />
             {this.state.operator !== '' ? (
               <button
                 className='button small green'
-                onClick={() => this.props.putPromoteToOperator(this.props.id, {...user})}
+                onClick={() => this.props.putPromoteToOperator(this.props.id, { ...user })}
                 data-test='administration_users_operator_save_btn'>
                 Save
               </button>
@@ -89,7 +89,7 @@ class User extends Component {
   }
 
   render() {
-    let {firstname, middlename, lastname, email} = this.props
+    let { firstname, middlename, lastname, email } = this.props
     return (
       <tr className='admin-users-new-item'>
         <td>{firstname}</td>
@@ -99,10 +99,10 @@ class User extends Component {
         <td>
           <Dropdown
             opns={[
-              {id: MERCHANT, name: 'Merchant'},
-              {id: OPERATOR, name: 'Operator'}
+              { id: MERCHANT, name: 'Merchant' },
+              { id: OPERATOR, name: 'Operator' }
             ]}
-            onChange={value => this.setState({mode: value})}
+            onChange={value => this.setState({ mode: value })}
             currentValue={this.state.mode}
             data-test='administration_users_drpdn'
           />

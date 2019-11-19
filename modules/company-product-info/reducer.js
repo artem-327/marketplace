@@ -1,5 +1,5 @@
 import typeToReducer from 'type-to-reducer'
-import {openPopup, closePopup, tabChanged} from './actions'
+import { openPopup, closePopup, tabChanged } from './actions'
 
 const initialState = {
   isOpen: false,
@@ -9,7 +9,7 @@ const initialState = {
 
 export default typeToReducer(
   {
-    [openPopup]: (state, {payload: {companyProduct, activeIndex}}) => {
+    [openPopup]: (state, { payload: { companyProduct, activeIndex } }) => {
       return {
         ...state,
         isOpen: true,
@@ -23,7 +23,7 @@ export default typeToReducer(
       isOpen: false
     }),
 
-    [tabChanged]: (state, {payload}) => ({
+    [tabChanged]: (state, { payload }) => ({
       ...state,
       activeIndex: payload
     })

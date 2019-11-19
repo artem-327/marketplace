@@ -1,86 +1,86 @@
 import api from '~/api'
 import axios from 'axios'
-import {getSafe, generateQueryString} from '~/utils/functions'
+import { getSafe, generateQueryString } from '~/utils/functions'
 
 export async function getAlternativeProductNames(value) {
-  const {data} = await api.get(`/prodex/api/cas-products/alternative-names/cas-product/${value}`)
+  const { data } = await api.get(`/prodex/api/cas-products/alternative-names/cas-product/${value}`)
   return data
 }
 
 export async function getCasProductByString(value, limit = 30) {
-  const {data} = await api.get(`/prodex/api/cas-products/search?limit=${limit}&pattern=${value}`)
+  const { data } = await api.get(`/prodex/api/cas-products/search?limit=${limit}&pattern=${value}`)
   return data
 }
 
 export async function getManufacturersByString(value, limit = 30) {
-  const {data} = await api.get(`/prodex/api/manufacturers/search?limit=${limit}&search=${value}`)
+  const { data } = await api.get(`/prodex/api/manufacturers/search?limit=${limit}&search=${value}`)
   return data
 }
 
 export async function postNewCasProduct(value) {
-  const {data} = await api.post('/prodex/api/cas-products', value)
+  const { data } = await api.post('/prodex/api/cas-products', value)
   return data
 }
 
 export async function updateCasProduct(id, value) {
-  const {data} = await api.put(`/prodex/api/cas-products/id/${id}`, value)
+  const { data } = await api.put(`/prodex/api/cas-products/id/${id}`, value)
   return data
 }
 
 export const deleteCasProduct = id => api.delete(`/prodex/api/cas-products/id/${id}`).then(() => id)
 
 export async function getAllUnNumbers() {
-  const {data} = await api.get('/prodex/api/un-numbers')
+  const { data } = await api.get('/prodex/api/un-numbers')
   return data
 }
 
 export async function getUnNumbersByString(value, limit = 30) {
-  const {data} = await api.get(`/prodex/api/un-numbers/search?limit=${limit}&pattern=${value}`)
+  const { data } = await api.get(`/prodex/api/un-numbers/search?limit=${limit}&pattern=${value}`)
   return data
 }
 
 export async function getMeasureTypes() {
-  const {data} = await api.get('/prodex/api/measure-types')
+  const { data } = await api.get('/prodex/api/measure-types')
   return data
 }
 
 export async function getHazardClasses() {
-  const {data} = await api.get('/prodex/api/hazard-classes')
+  const { data } = await api.get('/prodex/api/hazard-classes')
   return data
 }
 
 export async function getDataRequest(config, values) {
-  const {data} = await api.get(config.api.get.apiCall)
+  const { data } = await api.get(config.api.get.apiCall)
   return data
 }
 
 export async function postNewRequest(config, values) {
-  const {data} = await api.post(config.api.post.apiCall, values)
+  const { data } = await api.post(config.api.post.apiCall, values)
   return data
 }
 
 export async function postNewDwollaAccount(values, companyId) {
-  const {data} = await api.post(`/prodex/api/payments/dwolla/register/${companyId}`, values)
+  const { data } = await api.post(`/prodex/api/payments/dwolla/register/${companyId}`, values)
   return data
 }
 
 export async function deleteItem(config, id) {
-  const {data} = await api.delete(config.api.delete.apiCall + id)
+  const { data } = await api.delete(config.api.delete.apiCall + id)
   return data
 }
 
 export async function putEditedDataRequest(config, values, id) {
-  const {data} = await api[getSafe(() => config.api.update.method, 'put')](config.api.update.apiCall + id, values)
+  const { data } = await api[getSafe(() => config.api.update.method, 'put')](config.api.update.apiCall + id, values)
   return data
 }
 
 export async function getPackagingGroups() {
-  const {data} = await api.get('/prodex/api/packaging-groups')
+  const { data } = await api.get('/prodex/api/packaging-groups')
   return data
 }
 
 export async function getCountries() {
-  const {data} = await api.get('/prodex/api/countries')
+  const { data } = await api.get('/prodex/api/countries')
   return data
 }
 // export async function getZipCodes() { // TODO Refactor to use limit and search (and countryId?)
@@ -91,7 +91,7 @@ export async function getCountries() {
 export const getProvinces = id => api.get(`/prodex/api/provinces/country/${id}`).then(response => response.data)
 
 export async function getCompanies(params) {
-  const {data} = await api.post(`/prodex/api/companies/datagrid`, {
+  const { data } = await api.post(`/prodex/api/companies/datagrid`, {
     filters: [],
     ...params
   })
@@ -99,7 +99,7 @@ export async function getCompanies(params) {
 }
 
 export async function getCompany(params) {
-  const {data} = await api.get(`/prodex/api/companies/id/${params}`, {
+  const { data } = await api.get(`/prodex/api/companies/id/${params}`, {
     filters: [],
     ...params
   })
@@ -114,12 +114,12 @@ export async function getCompany(id) {
 */
 
 export async function createCompany(formData) {
-  const {data} = await api.post('/prodex/api/companies', formData)
+  const { data } = await api.post('/prodex/api/companies', formData)
   return data
 }
 
 export async function updateCompany(id, formData) {
-  const {data} = await api.patch(`/prodex/api/companies/id/${id}`, formData)
+  const { data } = await api.patch(`/prodex/api/companies/id/${id}`, formData)
 
   return data
 }
@@ -127,12 +127,12 @@ export async function updateCompany(id, formData) {
 export const deleteCompany = id => api.delete(`/prodex/api/companies/id/${id}`).then(() => id)
 
 export async function postNewProductName(productId, value) {
-  const {data} = await api.post(`/prodex/api/cas-products/alternative-names/cas-product/${productId}`, value)
+  const { data } = await api.post(`/prodex/api/cas-products/alternative-names/cas-product/${productId}`, value)
   return data
 }
 
 export async function updateProductName(id, value) {
-  const {data} = await api.patch(`/prodex/api/cas-products/alternative-names/id/${id}`, value)
+  const { data } = await api.patch(`/prodex/api/cas-products/alternative-names/id/${id}`, value)
   return data
 }
 
@@ -145,12 +145,12 @@ export const deleteUnit = id => api.delete(`/prodex/api/units/${id}`).then(() =>
 export const deleteUnitOfPackaging = id => api.delete(`/prodex/api/packaging-types/${id}`).then(() => id)
 
 export async function getAddressSearch(body) {
-  const {data} = await api.post('/prodex/api/addresses/search', body)
+  const { data } = await api.post('/prodex/api/addresses/search', body)
   return data
 }
 
 export async function getAlternativeEchoProductNames(id) {
-  const {data} = await api.get(`/prodex/api/echo-products/alternative-names/echo-product/${id}`)
+  const { data } = await api.get(`/prodex/api/echo-products/alternative-names/echo-product/${id}`)
   return data
 }
 
@@ -202,14 +202,14 @@ export const loadFile = attachment => {
     url: attachment.preview,
     method: 'GET',
     responseType: 'blob'
-  }).then(r => new File([r.data], attachment.name, {type: attachment.type}))
+  }).then(r => new File([r.data], attachment.name, { type: attachment.type }))
 }
 
 export const addAttachment = (attachment, docType, additionalParams = {}) => {
   let defaultParams = {
     isTemporary: true
   }
-  let params = {...defaultParams, ...additionalParams, type: docType}
+  let params = { ...defaultParams, ...additionalParams, type: docType }
   const formData = new FormData()
   formData.append('file', attachment)
 

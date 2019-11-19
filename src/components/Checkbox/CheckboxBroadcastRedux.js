@@ -1,9 +1,9 @@
 import React from 'react'
-import {Control} from 'react-redux-form'
-import {Checkbox} from 'semantic-ui-react'
+import { Control } from 'react-redux-form'
+import { Checkbox } from 'semantic-ui-react'
 
 const CheckboxBroadcastRedux = props => {
-  const {model, label, onClick, partlyanonym} = props
+  const { model, label, onClick, partlyanonym } = props
   return (
     <Control.checkbox
       component={Checkbox}

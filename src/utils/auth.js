@@ -1,9 +1,9 @@
 import axios from 'axios'
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Spinner from '../components/Spinner/Spinner'
-import {logout} from '../modules/identity'
+import { logout } from '../modules/identity'
 
 export function withAuth(ComposedComponent) {
   class requireAuth extends React.Component {

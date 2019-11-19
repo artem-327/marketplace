@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './BroadcastRule.scss'
 import BroadcastTargets from './BroadcastTargets'
 import Dropdown from '../../../../components/Dropdown/Dropdown'
@@ -21,7 +21,7 @@ class BroadcastRule extends Component {
     let tmp = []
     Object.values(this.state.rawData).map(item => {
       item.map(item1 => {
-        tmp.push({visibility: item1.visibility, company: item1.company, [item1.updateType]: item1.amount})
+        tmp.push({ visibility: item1.visibility, company: item1.company, [item1.updateType]: item1.amount })
         return null
       })
       return null
@@ -33,11 +33,11 @@ class BroadcastRule extends Component {
         active={value => this.activeBroadcastButton(value)}
         removePopup={this.props.removePopup}
         submitRules={this.props.submitRules}
-        subjects={[{productOffer: this.props.productOffersSelection}]}
+        subjects={[{ productOffer: this.props.productOffersSelection }]}
         targets={tmp}
       />
     )
-    this.setState({isOpen: false})
+    this.setState({ isOpen: false })
   }
 
   closeBroadcastRule() {
@@ -46,7 +46,7 @@ class BroadcastRule extends Component {
 
   render() {
     return (
-      <div ref={this.props.brRef} className={classnames('broadcast-rule', {open: this.props.visible})}>
+      <div ref={this.props.brRef} className={classnames('broadcast-rule', { open: this.props.visible })}>
         <div>
           <div>
             <span className='left header-section'>
@@ -75,7 +75,7 @@ class BroadcastRule extends Component {
           <BroadcastTargets
             targetGroups={this.props.targetGroups}
             filter={this.props.currentSelected}
-            getData={data => this.setState({rawData: data})}
+            getData={data => this.setState({ rawData: data })}
           />
         </div>
         <div className='br-buttons-wr'>

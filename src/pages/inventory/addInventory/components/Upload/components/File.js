@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './file.scss'
 import PropTypes from 'prop-types'
-import {Icon} from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 
 class File extends Component {
   render() {
@@ -10,7 +10,7 @@ class File extends Component {
         <span
           key={this.props.index}
           className={this.props.className}
-          style={{opacity: this.props.disabled ? '0.45' : '1'}}>
+          style={{ opacity: this.props.disabled ? '0.45' : '1' }}>
           <Icon
             name='times circle outline'
             size='big'

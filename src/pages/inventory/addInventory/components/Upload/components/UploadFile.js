@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import ReactDropzone from 'react-dropzone'
 import File from './File'
@@ -12,7 +12,7 @@ class UploadFile extends Component {
   }
 
   removeFile(index) {
-    this.setState({files: [...this.state.files.slice(0, index), ...this.state.files.slice(index + 1)]})
+    this.setState({ files: [...this.state.files.slice(0, index), ...this.state.files.slice(index + 1)] })
   }
 
   onPreviewDrop = files => {

@@ -1,10 +1,10 @@
-import React, {Component} from 'react'
-import {func, bool, node} from 'prop-types'
-import {Modal, Button} from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { func, bool, node } from 'prop-types'
+import { Modal, Button } from 'semantic-ui-react'
 
 export default class KeepShopping extends Component {
   render() {
-    let {handleClose, handleContinue, trigger, open} = this.props
+    let { handleClose, handleContinue, trigger, open } = this.props
 
     return (
       <Modal closeIcon size='small' onClose={handleClose} open={open} centered={false} trigger={trigger}>

@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-import {Table} from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 
 import {
   dataHeaderCSV,
@@ -11,7 +11,7 @@ import {
   putCSVMapProductOffer
 } from '../../../actions'
 import _invert from 'lodash/invert'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 
 const SmallerTableCell = styled(Table.Cell)`
@@ -33,7 +33,7 @@ class Preview extends Component {
       const mappedHeader = props.CSV.headerCSV.reduce((prev, curr) => {
         const valSelected = invertedSelectedSavedMap[curr.content]
         if (valSelected) {
-          prev.push({...curr, header: curr.content})
+          prev.push({ ...curr, header: curr.content })
         }
         return prev
       }, [])
@@ -112,8 +112,8 @@ class Preview extends Component {
   }
 
   render() {
-    const {CSV} = this.props
-    const {filteredHeader} = this.state
+    const { CSV } = this.props
+    const { filteredHeader } = this.state
 
     return (
       <Table celled padded textAlign='center'>

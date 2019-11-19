@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import MerchantTableRow from './components/MerchantTableRow'
 import './MerchantsTable.scss'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class MerchantsTable extends Component {
   componentDidMount() {
@@ -9,7 +9,7 @@ class MerchantsTable extends Component {
   }
 
   render() {
-    const {merchants, addPopup, putMerchantEdit} = this.props
+    const { merchants, addPopup, putMerchantEdit } = this.props
     const merchantsData = merchants.data.map(i => {
       return (
         <MerchantTableRow addPopup={addPopup} merchantData={i} key={i.id} id={i.id} putMerchantEdit={putMerchantEdit} />

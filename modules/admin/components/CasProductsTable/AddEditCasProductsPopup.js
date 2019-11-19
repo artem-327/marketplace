@@ -1,21 +1,21 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import {Modal, FormGroup, Header, Dropdown as SDropdown, FormField, Search} from 'semantic-ui-react'
+import { Modal, FormGroup, Header, Dropdown as SDropdown, FormField, Search } from 'semantic-ui-react'
 
-import {closeAddPopup, postNewCasProductRequest, updateCasProductRequest, getUnNumbersByString} from '../../actions'
-import {Form, Input, Button, Dropdown, Field} from 'formik-semantic-ui-fixed-validation'
+import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest, getUnNumbersByString } from '../../actions'
+import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import debounce from 'lodash/debounce'
 import escapeRegExp from 'lodash/escapeRegExp'
 import filter from 'lodash/filter'
-import {CompanyProductInfo} from '~/modules/company-product-info'
+import { CompanyProductInfo } from '~/modules/company-product-info'
 
-import {withToastManager} from 'react-toast-notifications'
-import {removeEmpty, generateToastMarkup} from '~/utils/functions'
-import {FormattedMessage} from 'react-intl'
+import { withToastManager } from 'react-toast-notifications'
+import { removeEmpty, generateToastMarkup } from '~/utils/functions'
+import { FormattedMessage } from 'react-intl'
 
-import {errorMessages} from '~/constants/yupValidation'
+import { errorMessages } from '~/constants/yupValidation'
 
 class AddEditCasProductsPopup extends React.Component {
   render() {
@@ -45,7 +45,7 @@ class AddEditCasProductsPopup extends React.Component {
         readOnly={false}
         casProductOnly
         handleSubmit={async (values, formikProps) => {
-          let {setSubmitting} = formikProps
+          let { setSubmitting } = formikProps
           removeEmpty(values)
 
           if (popupValues) await updateCasProductRequest(popupValues.id, values.casProduct)
@@ -58,7 +58,7 @@ class AddEditCasProductsPopup extends React.Component {
               <FormattedMessage id={`notifications.${status}.header`} />,
               <FormattedMessage
                 id={`notifications.${status}.content`}
-                values={{name: values.casProduct.casIndexName}}
+                values={{ name: values.casProduct.casIndexName }}
               />
             ),
             {

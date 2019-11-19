@@ -112,10 +112,10 @@ module.exports = {
 
     /* File Renames */
     rename: {
-      minJS: {extname: '.min.js'},
-      minCSS: {extname: '.min.css'},
-      rtlCSS: {extname: '.rtl.css'},
-      rtlMinCSS: {extname: '.rtl.min.css'}
+      minJS: { extname: '.min.js' },
+      minCSS: { extname: '.min.css' },
+      rtlCSS: { extname: '.rtl.css' },
+      rtlMinCSS: { extname: '.rtl.min.css' }
     },
 
     /* Minified CSS Concat */

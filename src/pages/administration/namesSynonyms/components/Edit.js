@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import InputEdit from '../../../../components/InputEdit/InputEdit'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class NamesSynonyms extends Component {
   constructor(props) {
@@ -12,7 +12,7 @@ class NamesSynonyms extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({alternativeNames: nextProps.alternativeNames})
+    this.setState({ alternativeNames: nextProps.alternativeNames })
     if (nextProps.selectedProduct) {
       this.setState({
         primaryName: nextProps.selectedProduct.chemicalName
@@ -39,7 +39,7 @@ class NamesSynonyms extends Component {
         </h3>
         <InputEdit
           value={this.state.primaryName}
-          onSave={text => this.setState({primaryName: text})}
+          onSave={text => this.setState({ primaryName: text })}
           data-test='administration_name_synonyms_primaryName_inp'
         />
         <h3>

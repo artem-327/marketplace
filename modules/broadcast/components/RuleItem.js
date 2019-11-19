@@ -1,10 +1,10 @@
-import {Icon, Checkbox} from 'semantic-ui-react'
+import { Icon, Checkbox } from 'semantic-ui-react'
 import PriceControl from './PriceControl'
-import {Rule} from './Broadcast.style'
-import {getNodeStatus, setBroadcast} from '~/modules/broadcast/utils'
+import { Rule } from './Broadcast.style'
+import { getNodeStatus, setBroadcast } from '~/modules/broadcast/utils'
 
 const EmptyIconSpace = () => (
-  <span style={{width: '1.18em', display: 'inline-block', marginRight: '0.25rem'}}>&nbsp;</span>
+  <span style={{ width: '1.18em', display: 'inline-block', marginRight: '0.25rem' }}>&nbsp;</span>
 )
 
 const RuleItem = props => {
@@ -15,7 +15,7 @@ const RuleItem = props => {
     item,
     offer,
     item: {
-      model: {name, rule}
+      model: { name, rule }
     },
     hideFobPrice,
     filter,
@@ -52,7 +52,7 @@ const RuleItem = props => {
   }
 
   const nodePath = item.getPath()
-  let {allChildrenBroadcasting, anyChildBroadcasting} = getNodeStatus(item)
+  let { allChildrenBroadcasting, anyChildBroadcasting } = getNodeStatus(item)
 
   const broadcastedParents = nodePath
     .reverse()
@@ -71,7 +71,7 @@ const RuleItem = props => {
         type={rule.type}
         onClick={() => rule.type !== 'root' && handleRowClick(item)}
         data-test='broadcast_rule_row_click'
-        style={asSidebar ? {'justify-content': 'flex-end'} : {}}>
+        style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
         <Rule.RowContent>
           {item.children.length > 0 && rule.type !== 'root' ? (
             <Icon name={`chevron ${item.model.expanded ? 'down' : 'right'}`} />
@@ -81,7 +81,7 @@ const RuleItem = props => {
           <span>{name}</span>
         </Rule.RowContent>
 
-        <Rule.Toggle style={asSidebar ? {flex: '0 0 60px'} : null}>
+        <Rule.Toggle style={asSidebar ? { flex: '0 0 60px' } : null}>
           <Checkbox
             className={rule.priceOverride && nodeBroadcast === 1 && 'independent'}
             data-test='broadcast_rule_toggle_chckb'

@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './ComboBox.scss'
 import debounce from 'debounce'
 import PropTypes from 'prop-types'
-import {DEBOUNCE_TIME} from '../../utils/constants'
+import { DEBOUNCE_TIME } from '../../utils/constants'
 import Spinner from '../Spinner/Spinner'
 
 class ComboBox extends Component {
@@ -26,7 +26,7 @@ class ComboBox extends Component {
 
   componentDidMount() {
     if (this.props.currentValue) {
-      this.setState({fulltext: this.props.currentValue}, () => {
+      this.setState({ fulltext: this.props.currentValue }, () => {
         if (this.props.onChange) this.props.onChange(this.state.fulltext)
       })
     }
@@ -38,7 +38,7 @@ class ComboBox extends Component {
 
   handleClickOutside(e) {
     if (this.comboRef.current.contains(e.target)) return
-    this.setState({isOpen: false})
+    this.setState({ isOpen: false })
   }
 
   renderResults() {
@@ -51,7 +51,7 @@ class ComboBox extends Component {
       )
     if (this.state.results.length === 0)
       return (
-        <div className={'combo-results'} style={{maxHeight: 44 * this.state.results_count}}>
+        <div className={'combo-results'} style={{ maxHeight: 44 * this.state.results_count }}>
           <p className='combo-no-result'>No results</p>
         </div>
       )
@@ -60,7 +60,7 @@ class ComboBox extends Component {
         key={combo.id}
         className='combo-item'
         onClick={() => {
-          this.setState({fulltext: combo.name, hasSearched: false}, () => {
+          this.setState({ fulltext: combo.name, hasSearched: false }, () => {
             if (this.props.onChange) this.props.onChange(this.state.fulltext)
             if (this.props.getObject) this.props.getObject(combo)
           })
@@ -70,14 +70,14 @@ class ComboBox extends Component {
       </div>
     ))
     return (
-      <div className={'combo-results'} style={{maxHeight: 44 * this.state.results_count}}>
+      <div className={'combo-results'} style={{ maxHeight: 44 * this.state.results_count }}>
         {res}
       </div>
     )
   }
 
   handleChange(e) {
-    this.setState({fulltext: e.target.value, hasSearched: true, isOpen: true}, () => {
+    this.setState({ fulltext: e.target.value, hasSearched: true, isOpen: true }, () => {
       if (this.state.fulltext.length > 0) this.filterData()
     })
   }
@@ -89,11 +89,11 @@ class ComboBox extends Component {
         results.push(this.props.items[i])
       }
     }
-    this.setState({results})
+    this.setState({ results })
   }
 
   render() {
-    let {fulltext} = this.state
+    let { fulltext } = this.state
     let results = this.renderResults()
     return (
       <div className={'comboBox ' + this.props.className} ref={this.comboRef} data-test='comboBox_inp'>

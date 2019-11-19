@@ -1,11 +1,11 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './AddInventory.scss'
 import AddForm from './components/AddForm'
 import AddGroup from './components/AddGroup'
 import Chemical from './components/Chemical'
-import {actions} from 'react-redux-form'
-import {FormattedMessage} from 'react-intl'
-import {logout} from '../../../modules/identity'
+import { actions } from 'react-redux-form'
+import { FormattedMessage } from 'react-intl'
+import { logout } from '../../../modules/identity'
 import moment from 'moment'
 
 export default class AddInventory extends Component {
@@ -60,7 +60,7 @@ export default class AddInventory extends Component {
   }
 
   render() {
-    const {productOffer} = this.props
+    const { productOffer } = this.props
     return (
       <div>
         <h1 className='header'>
@@ -70,7 +70,7 @@ export default class AddInventory extends Component {
             <FormattedMessage
               id='addInventory.editProductOffer'
               defaultMessage={'EDIT PRODUCT OFFER - ' + productOffer.productName || productOffer.tradeName}
-              values={{productName: productOffer.productName || productOffer.tradeName}}
+              values={{ productName: productOffer.productName || productOffer.tradeName }}
             />
           )}
         </h1>

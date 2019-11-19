@@ -1,17 +1,17 @@
-import React, {Component} from 'react'
-import {Modal, Button, FormGroup} from 'semantic-ui-react'
-import {connect} from 'react-redux'
-import {FormattedMessage, injectIntl} from 'react-intl'
-import {Form, Input, Dropdown} from 'formik-semantic-ui-fixed-validation'
+import React, { Component } from 'react'
+import { Modal, Button, FormGroup } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { Form, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
-import {array} from 'prop-types'
-import {withToastManager} from 'react-toast-notifications'
+import { array } from 'prop-types'
+import { withToastManager } from 'react-toast-notifications'
 
-import {generateToastMarkup} from '~/utils/functions'
+import { generateToastMarkup } from '~/utils/functions'
 
-import {errorMessages} from '~/constants/yupValidation'
+import { errorMessages } from '~/constants/yupValidation'
 
-const {requiredMessage} = errorMessages
+const { requiredMessage } = errorMessages
 
 import {
   closePopup,
@@ -47,7 +47,7 @@ class LogisticsPopup extends Component {
       logisticsProvidersFetching,
       createLogisticsAccount,
       updateLogisticsAccount,
-      intl: {formatMessage},
+      intl: { formatMessage },
       toastManager
     } = this.props
 
@@ -67,7 +67,7 @@ class LogisticsPopup extends Component {
             validateOnChange={false}
             validateOnBlur={false}
             initialValues={popupValues || initialValues}
-            onSubmit={async (values, {setSubmitting}) => {
+            onSubmit={async (values, { setSubmitting }) => {
               try {
                 if (popupValues) {
                   await updateLogisticsAccount(values)
@@ -79,13 +79,13 @@ class LogisticsPopup extends Component {
 
                 toastManager.add(
                   generateToastMarkup(
-                    formatMessage({id: `notifications.logistics${status}.header`}),
+                    formatMessage({ id: `notifications.logistics${status}.header` }),
                     formatMessage(
-                      {id: `notifications.logistics${status}.content`},
-                      {name: logisticsProviders[logisticsProviders.findIndex(el => el.id === values.provider)].name}
+                      { id: `notifications.logistics${status}.content` },
+                      { name: logisticsProviders[logisticsProviders.findIndex(el => el.id === values.provider)].name }
                     )
                   ),
-                  {appearance: 'success'}
+                  { appearance: 'success' }
                 )
               } catch {
               } finally {
@@ -93,7 +93,7 @@ class LogisticsPopup extends Component {
                 closePopup()
               }
             }}>
-            {({submitForm}) => {
+            {({ submitForm }) => {
               this.handleSubmit = submitForm
               return (
                 <>
@@ -120,7 +120,7 @@ class LogisticsPopup extends Component {
                     />
                     <Input
                       name='apiKey'
-                      label={formatMessage({id: 'logistics.label.apiKey', defaultMessage: 'API Key'})}
+                      label={formatMessage({ id: 'logistics.label.apiKey', defaultMessage: 'API Key' })}
                       inputProps={{
                         placeholder: formatMessage({
                           id: 'logistics.placeholder.apiKey',
@@ -133,15 +133,15 @@ class LogisticsPopup extends Component {
                   <FormGroup widths='equal' data-test='settings_logistics_namePassword_inp'>
                     <Input
                       name='username'
-                      label={formatMessage({id: 'logistics.label.username', defaultMessage: 'User Name'})}
+                      label={formatMessage({ id: 'logistics.label.username', defaultMessage: 'User Name' })}
                       inputProps={{
-                        placeholder: formatMessage({id: 'logistics.placeholder.username', defaultMessage: 'username'})
+                        placeholder: formatMessage({ id: 'logistics.placeholder.username', defaultMessage: 'username' })
                       }}
                     />
                     <Input
                       name='password'
-                      label={formatMessage({id: 'logistics.label.password', defaultMessage: 'Password'})}
-                      inputProps={{type: 'password'}}
+                      label={formatMessage({ id: 'logistics.label.password', defaultMessage: 'Password' })}
+                      inputProps={{ type: 'password' }}
                     />
                   </FormGroup>
                 </>
@@ -181,7 +181,7 @@ const mapDispatchToProps = {
   updateLogisticsAccount
 }
 
-const mapStateToProps = ({settings: {popupValues, logisticsProvidersFetching, logisticsProviders}}) => ({
+const mapStateToProps = ({ settings: { popupValues, logisticsProvidersFetching, logisticsProviders } }) => ({
   popupValues,
   logisticsProvidersFetching,
   logisticsProviders

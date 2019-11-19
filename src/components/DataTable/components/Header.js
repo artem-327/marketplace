@@ -1,19 +1,19 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import CheckboxControlled from '../../Checkbox/CheckboxControlled'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class Header extends Component {
   constructor(props) {
     super(props)
     this.header = React.createRef()
     this.handleClickOutside = this.handleClickOutside.bind(this)
-    this.state = {open: {}}
+    this.state = { open: {} }
     this.node = React.createRef()
   }
 
   handleClickOutside(event) {
     if (this.node.current && this.node.current.contains(event.target)) return
-    this.setState({open: {}})
+    this.setState({ open: {} })
   }
 
   componentWillUnmount() {
@@ -28,7 +28,7 @@ class Header extends Component {
       document.removeEventListener('click', this.handleClickOutside, false)
     }
     if (name !== null) {
-      this.setState({open: {[name]: !this.state.open[name]}})
+      this.setState({ open: { [name]: !this.state.open[name] } })
     }
   }
 

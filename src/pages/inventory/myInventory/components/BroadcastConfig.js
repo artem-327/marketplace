@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './BroadcastTargets.scss'
 import Radio from '../../../../components/Radio/Radio'
 
@@ -18,13 +18,13 @@ class BroadcastConfig extends Component {
   render() {
     let brOpns = this.props.item
       ? [
-          {value: 'include', label: 'Include'},
-          {value: 'exclude', label: 'Exclude'}
+          { value: 'include', label: 'Include' },
+          { value: 'exclude', label: 'Exclude' }
         ]
       : [
-          {value: 'include', label: 'Include'},
-          {value: 'exclude', label: 'Exclude'},
-          {value: 'custom', label: 'Custom'}
+          { value: 'include', label: 'Include' },
+          { value: 'exclude', label: 'Exclude' },
+          { value: 'custom', label: 'Custom' }
         ]
     return (
       <div className='br-config'>
@@ -47,8 +47,8 @@ class BroadcastConfig extends Component {
             name={this.props.name + 'mark'}
             className='small br-config-radio'
             opns={[
-              {value: 'priceMultiplication', label: '%'},
-              {value: 'priceAddition', label: '$'}
+              { value: 'priceMultiplication', label: '%' },
+              { value: 'priceAddition', label: '$' }
             ]}
             checked={this.props.updateType}
             data-test='my_inventory_broadcast_price_rad'

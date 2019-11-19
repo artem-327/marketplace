@@ -1,7 +1,7 @@
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-import {getBroadcast, postBroadcast} from '../../../../../modules/broadcast'
-import {removePopup} from '../../../../../modules/popup'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { getBroadcast, postBroadcast } from '../../../../../modules/broadcast'
+import { removePopup } from '../../../../../modules/popup'
 import AddBroadcast from './AddBroadcast'
 
 const mapStateToProps = store => ({

@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import {Header, Modal, Grid, Icon, Step, ModalContent, Button} from 'semantic-ui-react'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { Header, Modal, Grid, Icon, Step, ModalContent, Button } from 'semantic-ui-react'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/dist/client/router'
 
 import {
@@ -23,8 +23,8 @@ import Preview from './Steps/Preview'
 import ConfirmationPage from './Steps/ConfirmationPage'
 import _invert from 'lodash/invert'
 import confirm from '~/src/components/Confirmable/confirm'
-import {generateToastMarkup} from '~/utils/functions'
-import {withToastManager} from 'react-toast-notifications'
+import { generateToastMarkup } from '~/utils/functions'
+import { withToastManager } from 'react-toast-notifications'
 
 const StyledModal = styled(ModalContent)`
   height: 500px;
@@ -84,12 +84,12 @@ class ProductImportPopup extends Component {
       csvFileId,
       CSV,
       closeImportPopupCancel,
-      intl: {formatMessage},
+      intl: { formatMessage },
       csvImportError,
       reloadFilter
     } = this.props
 
-    const {currentStep, isFinishUpload, isFinishMap, isFinishPreview} = this.state
+    const { currentStep, isFinishUpload, isFinishMap, isFinishPreview } = this.state
 
     return (
       <Modal
@@ -143,9 +143,9 @@ class ProductImportPopup extends Component {
                 {currentStep === 'preview' ? (
                   <Button
                     basic
-                    onClick={() => this.setState({currentStep: 'map'})}
+                    onClick={() => this.setState({ currentStep: 'map' })}
                     data-text='settings_product_import_back_btn'>
-                    {formatMessage({id: 'settings.previous', defaultMessage: 'Previous'})}
+                    {formatMessage({ id: 'settings.previous', defaultMessage: 'Previous' })}
                   </Button>
                 ) : null}
               </Grid.Column>
@@ -154,7 +154,7 @@ class ProductImportPopup extends Component {
                   basic
                   onClick={() => closeImportPopupCancel(csvFileId)}
                   data-test='settings_product_import_cancel_btn'>
-                  {formatMessage({id: 'global.cancel', defaultMessage: 'Cancel'})}
+                  {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
                 </Button>
                 <Button
                   primary
@@ -181,21 +181,21 @@ class ProductImportPopup extends Component {
       mappedHeaders,
       missingRequired,
       csvFileId,
-      intl: {formatMessage},
+      intl: { formatMessage },
       toastManager
     } = this.props
-    const {currentStep} = this.state
+    const { currentStep } = this.state
 
     switch (currentStep) {
       case 'upload':
-        this.setState({currentStep: 'map', isFinishUpload: true})
+        this.setState({ currentStep: 'map', isFinishUpload: true })
         break
       case 'map':
-        const {selectedSavedMap} = this.props // mapper (header): csvHeader (content)
+        const { selectedSavedMap } = this.props // mapper (header): csvHeader (content)
         if (missingRequired.length) {
           toastManager.add(
             generateToastMarkup(
-              formatMessage({id: 'notifications.importMissingRequired.header', defaultMessage: 'Required Options'}),
+              formatMessage({ id: 'notifications.importMissingRequired.header', defaultMessage: 'Required Options' }),
               formatMessage(
                 {
                   id: 'notifications.importMissingRequired.content',
@@ -203,10 +203,10 @@ class ProductImportPopup extends Component {
                     ', '
                   )}`
                 },
-                {missingRequired: missingRequired.join(', ')}
+                { missingRequired: missingRequired.join(', ') }
               )
             ),
-            {appearance: 'error'}
+            { appearance: 'error' }
           )
           return false
         }
@@ -223,26 +223,26 @@ class ProductImportPopup extends Component {
           })
           if (foundModification) {
             confirm(
-              formatMessage({id: 'confirm.selectedMapChange', defaultMessage: 'Possible Map Modification'}),
+              formatMessage({ id: 'confirm.selectedMapChange', defaultMessage: 'Possible Map Modification' }),
               formatMessage(
                 {
                   id: 'confirm.selectedMapChanged.description',
                   defaultMessage: `Mapped header do not properly correspond to selected map '${selectedSavedMap.mapName}'. Would you like to save changes to this map?`
                 },
-                {mapName: selectedSavedMap.mapName}
+                { mapName: selectedSavedMap.mapName }
               )
             )
               .then(() => {
                 this.props.handleSaveMapCSV()
               })
               .finally(() => {
-                this.setState({currentStep: 'preview', isFinishMap: true})
+                this.setState({ currentStep: 'preview', isFinishMap: true })
               })
           } else {
-            this.setState({currentStep: 'preview', isFinishMap: true})
+            this.setState({ currentStep: 'preview', isFinishMap: true })
           }
         } else {
-          this.setState({currentStep: 'preview', isFinishMap: true})
+          this.setState({ currentStep: 'preview', isFinishMap: true })
         }
         break
       case 'preview':
@@ -252,7 +252,7 @@ class ProductImportPopup extends Component {
           ? this.props.postImportEchoProductCSV(mappedDataHeaderCSV, csvFileId)
           : this.props.postImportProductCSV(mappedDataHeaderCSV, csvFileId)
 
-        this.setState({currentStep: 'confirmation', isFinishPreview: true})
+        this.setState({ currentStep: 'confirmation', isFinishPreview: true })
         break
     }
   }

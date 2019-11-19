@@ -1,16 +1,16 @@
 import './allinventory.scss'
 
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import ProductOffers from './components/ProductOffers'
 import Filter from '../../../components/Filter'
 import Spinner from '../../../components/Spinner/Spinner'
 import FilterTag from '../../../components/Filter/components/FilterTag'
-import {ShippingQuotes} from '~/modules/shipping'
+import { ShippingQuotes } from '~/modules/shipping'
 import SubMenu from '../../../components/SubMenu'
-import {FormattedMessage} from 'react-intl'
-import {Menu, Header, Container, Sidebar, Button} from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
+import { Menu, Header, Container, Sidebar, Button } from 'semantic-ui-react'
 import AddCart from '../../cart/components/AddCart'
-import {getSelectedRowsDataTable} from '../../../utils/functions'
+import { getSelectedRowsDataTable } from '../../../utils/functions'
 
 export default class AllInventory extends Component {
   state = {
@@ -28,12 +28,12 @@ export default class AllInventory extends Component {
   }
 
   tableRowClicked = clickedId => {
-    const {getProductOffer, sidebarChanged} = this.props
-    let {isOpen, id} = this.props.sidebar
+    const { getProductOffer, sidebarChanged } = this.props
+    let { isOpen, id } = this.props.sidebar
     getProductOffer(clickedId)
 
-    if (id !== clickedId && id) sidebarChanged({isOpen: true, id: clickedId, quantity: 1})
-    else sidebarChanged({isOpen: !isOpen, id: clickedId, quantity: 1})
+    if (id !== clickedId && id) sidebarChanged({ isOpen: true, id: clickedId, quantity: 1 })
+    else sidebarChanged({ isOpen: !isOpen, id: clickedId, quantity: 1 })
   }
 
   render() {
@@ -48,11 +48,11 @@ export default class AllInventory extends Component {
 
     return (
       <div id='page' className='all-inventory flex stretched scrolling'>
-        <Container fluid style={{padding: '0 32px'}}>
+        <Container fluid style={{ padding: '0 32px' }}>
           <ShippingQuotes
             modalProps={{
               open: this.state.open,
-              closeModal: () => this.setState({open: false})
+              closeModal: () => this.setState({ open: false })
             }}
             selectedRows={selectedRows}
             removePopup={this.props.removePopup}
@@ -69,7 +69,7 @@ export default class AllInventory extends Component {
               {selectedRows.length === 0 ? null : (
                 <Button
                   primary
-                  onClick={() => this.setState({open: true})}
+                  onClick={() => this.setState({ open: true })}
                   data-test='all_inventory_shipping_quote_btn'>
                   <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
                     {text => text}
@@ -80,7 +80,7 @@ export default class AllInventory extends Component {
                 <FilterTag
                   dispatch={this.props.dispatch}
                   closeFunc={filter => {
-                    this.props.fetchMyProductOffers({...filter})
+                    this.props.fetchMyProductOffers({ ...filter })
                   }}
                 />
               </Menu.Item>
@@ -105,7 +105,7 @@ export default class AllInventory extends Component {
           savingFilters={true}
           {...this.props}
         />
-        <Container fluid style={{padding: '20px 32px 10px 32px'}}>
+        <Container fluid style={{ padding: '20px 32px 10px 32px' }}>
           {content}
         </Container>
 

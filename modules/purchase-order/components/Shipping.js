@@ -1,16 +1,16 @@
-import React, {Component} from 'react'
-import PropTypes, {bool} from 'prop-types'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import React, { Component } from 'react'
+import PropTypes, { bool } from 'prop-types'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {Grid, Segment, GridRow, GridColumn, Divider, Header, Button} from 'semantic-ui-react'
-import {Dropdown} from 'formik-semantic-ui-fixed-validation'
+import { Grid, Segment, GridRow, GridColumn, Divider, Header, Button } from 'semantic-ui-react'
+import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 
 import ShippingAddress from './ShippingAddress'
 
 class Shipping extends Component {
   handleToggleChange = otherAddresses => {
     if (otherAddresses !== this.props.otherAddresses) {
-      let {branches, getBranches, warehouses, getWarehouses} = this.props
+      let { branches, getBranches, warehouses, getWarehouses } = this.props
 
       this.props.handleToggleChange(otherAddresses).then(() => {
         // if (branches.length === 0 && !this.props.otherAddresses) getBranches()
@@ -26,8 +26,8 @@ class Shipping extends Component {
   }
 
   render() {
-    let {deliveryAddresses, branches, warehouses, getAddress, selectedAddress, intl} = this.props
-    let {formatMessage} = intl
+    let { deliveryAddresses, branches, warehouses, getAddress, selectedAddress, intl } = this.props
+    let { formatMessage } = intl
 
     let addresses = this.props.otherAddresses ? deliveryAddresses : warehouses // branches
 
@@ -49,7 +49,7 @@ class Shipping extends Component {
             <GridColumn floated='right'>
               <span
                 className='headerAddtext'
-                onClick={() => this.props.shippingChanged({isShippingEdit: true, isNewAddress: !selectedAddress})}
+                onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !selectedAddress })}
                 data-test='purchase_order_edit_address'>
                 <FormattedMessage id='global.edit' defaultMessage='Edit'>
                   {text => text}
@@ -71,7 +71,7 @@ class Shipping extends Component {
                   {text => text}
                 </FormattedMessage>
               </Button>
-              <Button.Or text={formatMessage({id: 'global.or', defaultMessage: 'or'})} />
+              <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
               <Button
                 type='button'
                 disabled={this.props.shippingQuotesAreFetching}
@@ -94,7 +94,7 @@ class Shipping extends Component {
               inputProps={{
                 disabled: this.props.shippingQuotesAreFetching,
                 placeholder: <FormattedMessage id='global.selectLocation' defaultMessage='Select Location' />,
-                onChange: (_, {value}) => getAddress(value)
+                onChange: (_, { value }) => getAddress(value)
               }}
               options={dropdownOptions}
               value={selectedAddress ? selectedAddress.id : null}

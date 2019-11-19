@@ -1,9 +1,9 @@
-import {actions} from 'react-redux-form'
+import { actions } from 'react-redux-form'
 
 export const filterNonEmptyAttributes = object => {
   return Object.entries(object)
     .filter(([key, value]) => value !== null && value !== '')
-    .reduce((carry, [key, value]) => ({...carry, [key]: value}), {})
+    .reduce((carry, [key, value]) => ({ ...carry, [key]: value }), {})
 }
 
 // eslint-disable-next-line
@@ -117,10 +117,10 @@ export function getPricing(offerDetail, quantity) {
           index = i
         } else break
       }
-      return {quantityFrom: offerDetail.minPkg, price: sortedTiers[index].pricePerUOM}
+      return { quantityFrom: offerDetail.minPkg, price: sortedTiers[index].pricePerUOM }
     }
 
-    return {quantityFrom: offerDetail.minPkg, price: tiers[0].pricePerUOM}
+    return { quantityFrom: offerDetail.minPkg, price: tiers[0].pricePerUOM }
   }
 }
 
@@ -135,12 +135,12 @@ export function getLocationString(productOffer) {
 }
 
 export function addFirstTier(productOffer) {
-  let {pricingTiers, minPkg, price} = productOffer
+  let { pricingTiers, minPkg, price } = productOffer
 
   let sortedTiers = pricingTiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
 
   if (sortedTiers.length && minPkg < sortedTiers[0].quantityFrom)
-    return {...productOffer, pricingTiers: [{quantityFrom: minPkg, price: price.amount}].concat(sortedTiers)}
+    return { ...productOffer, pricingTiers: [{ quantityFrom: minPkg, price: price.amount }].concat(sortedTiers) }
 
   return productOffer
 }
@@ -152,5 +152,5 @@ export const calculateTotalPrice = cart => {
     cartItem.price = cartItem.cfPriceSubtotal
     cfPriceSubtotal += cartItem.price
   })
-  return {...cart, cfPriceSubtotal, totalPrice: cfPriceSubtotal, cartItems}
+  return { ...cart, cfPriceSubtotal, totalPrice: cfPriceSubtotal, cartItems }
 }
