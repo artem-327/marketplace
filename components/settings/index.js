@@ -58,7 +58,9 @@ class Settings extends Component {
         if (el.frontendConfig) {
           let parsed = JSON.parse(el.frontendConfig)
           if (getSafe(() => parsed.validation, false)) {
-            tmp[el.name] = Yup.object().shape({value: Yup.object().shape({visible: toYupSchema(parsed.validation)})})
+            tmp[el.name] = Yup.object().shape({
+              value: Yup.object().shape({visible: toYupSchema(parsed.validation, el.type)})
+            })
           }
         }
       })
@@ -92,7 +94,7 @@ class Settings extends Component {
       let el = group[key]
       if (el.changeable) {
         if (!el.edit && role !== 'admin') payload.settings.push({id: el.id, value: 'EMPTY_SETTING'})
-        else payload.settings.push({id: el.id, value: el.value.visible})
+        else if (el.value.visible) payload.settings.push({id: el.id, value: el.value.visible})
       }
     })
 
@@ -139,7 +141,7 @@ class Settings extends Component {
           original: setting.original,
           value: {
             actual: setting.value,
-            visible: setting.value === 'EMPTY_SETTING' ? '' : setting.value
+            visible: setting.value === 'EMPTY_SETTING' ? null : setting.value ? setting.value : null
           },
           changeable: setting.changeable,
           edit: setting.changeable && setting.original && setting.value !== 'EMPTY_SETTING'
@@ -153,7 +155,8 @@ class Settings extends Component {
         enableReinitialize
         validationSchema={this.state.validationSchema}
         render={formikProps => {
-          let {values} = formikProps
+          let {values, errors} = formikProps
+
           return (
             <Form>
               {systemSettings.map(group => {
@@ -244,7 +247,7 @@ class Settings extends Component {
 
                                   if (errorFields.length > 0) {
                                     errorFields.forEach(field =>
-                                      formikProps.setFieldTouched(`${role}${group.name}.${field}.value`)
+                                      formikProps.setFieldTouched(`${role}.${group.name}.${field}.value.visible`)
                                     )
                                   } else {
                                     this.setState(

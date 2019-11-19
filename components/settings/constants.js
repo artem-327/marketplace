@@ -23,9 +23,15 @@ const supportedValidation = {
     value ? chain.concat(chain.required(errorMessages.requiredMessage)) : chain.concat(chain.nullable())
 }
 
+const numberAllowEmptyString = Yup.number(errorMessages.mustBeNumber)
+  .transform(value => (isNaN(value) ? undefined : value))
+  .typeError(errorMessages.mustBeNumber)
+
 export const dataTypes = {
   STRING: Yup.string(errorMessages.invalidString),
-  NUMBER: Yup.number(errorMessages.mustBeNumber).typeError(errorMessages.mustBeNumber)
+  INTEGER: numberAllowEmptyString,
+  NUMBER: numberAllowEmptyString,
+  FLOAT: numberAllowEmptyString
 }
 
 const defaultDataType = 'STRING'
@@ -105,9 +111,9 @@ export const typeToComponent = (type, options = {}) => {
   }
 }
 
-export const toYupSchema = validation => {
+export const toYupSchema = (validation, type) => {
   const defaultOptions = {
-    type: {value: defaultDataType},
+    type: {value: type ? type : defaultDataType},
     required: {value: false}
   }
 
