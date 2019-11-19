@@ -7,7 +7,8 @@ import {Form, Input, Button, Dropdown, Checkbox, TextArea} from 'formik-semantic
 import styled from 'styled-components'
 import * as val from 'yup'
 import Router from 'next/router'
-import Logo from '~/assets/images/logos/logo-dark.png'
+
+import Logo from '~/assets/images/login/logo-login.png'
 
 import {
   dunsValidation,
@@ -25,21 +26,62 @@ const ConfirmSegment = styled(Segment.Group)`
   position: relative;
   display: flex !important;
   width: 800px;
-  margin: 55px auto auto !important;
-  padding-top: 85px !important;
-  background-color: #fff !important;
+  margin: 100px auto 0 !important;
+  border: 0 none !important;
+  padding: 40px 40px 0 !important;
+  background: #fff;
+  box-shadow: 0 0 0 3000px #1B3454 !important;
 `
+
+const InnerSegment = styled(Segment)`
+  margin: 0 !important;
+  border: 0 none !important;
+  padding: 0 0 40px !important;
+  background: #fff !important;
+  box-shadow: 0 0 0 transparent !important;
+`
+
+const ButtonsSegment = styled(Segment)`
+  padding: 40px 0 !important
+`
+
 const LogoWrapper = styled(Segment)`
   position: absolute !important;
-  top: 0;
-  left: 0;
-  right: 0;
-  transform: translateY(-50%);
+  top: -165px;
+  left: 50%;
+  width: 348px;
+  max-width: 348px;
+  margin: 0 0 0 -174px !important;
+  border: 0 none !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: 0 0 0 0 transparent !important;
 `
+
 const LogoImage = styled(Image)`
-  width: 126px;
-  max-width: 100%;
-  margin: auto;
+  width: 100%;
+  height: auto;
+`
+
+const LoginHeader = styled.div`
+  position: relative;
+  margin: -31px 0 1.8571429rem -40px;
+  padding: 0 0 4px 40px;
+  text-decoration: none !important;
+  font-size: 1.7857143em;
+  font-weight: 400;
+  line-height: 2.44;
+  
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: block;
+    width: 103px;
+    height: 4px;
+    background: #1B3454;
+  }
 `
 
 const initValues = {
@@ -152,21 +194,17 @@ class ConfirmationPage extends Component {
         {({values, setFieldValue, validateForm, submitForm, setFieldTouched, errors, touched, isSubmitting}) => {
           return (
             <ConfirmSegment raised compact>
-              <Segment padded='very' style={{position: 'static', paddingTop: '0'}}>
+              <InnerSegment>
                 <LogoWrapper basic textAlign='center'>
                   <LogoImage src={Logo} />
                 </LogoWrapper>
-                <Header as='h2' textAlign='center'>
+
+                <LoginHeader as='h1'>
                   <FormattedMessage id='laststep.header' defaultMessage='Last Step' />
-                </Header>
-                <Header
-                  as='h2'
-                  textAlign='center'
-                  style={{marginTop: '0', paddingTop: '0.5em', fontSize: '1.14285714em'}}>
-                  <FormattedMessage
-                    id='laststep.subheader'
-                    defaultMessage='Please verify the company information below.'
-                  />
+                </LoginHeader>
+
+                <Header as='h2' textAlign='center' style={{ marginTop: '0', paddingTop: '0.5em', fontSize: '1.14285714em' }}>
+                  <FormattedMessage id='laststep.subheader' defaultMessage='Please verify the company information below.' />
                 </Header>
 
                 <Header as='h3'>
@@ -285,8 +323,8 @@ class ConfirmationPage extends Component {
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
-              </Segment>
-              <Segment padded='very'>
+              </InnerSegment>
+              <ButtonsSegment>
                 <Grid>
                   <Grid.Row>
                     <Grid.Column aligned='right' textAlign='right'>
@@ -308,7 +346,7 @@ class ConfirmationPage extends Component {
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
-              </Segment>
+              </ButtonsSegment>
             </ConfirmSegment>
           )
         }}
