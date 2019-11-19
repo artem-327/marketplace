@@ -6,7 +6,7 @@ import {
   closePopup,
   searchCasProduct, putEchoProduct,
   postEchoProduct, searchManufacturers, loadFile, addAttachment, linkAttachment, removeAttachmentLink,
-  removeAttachment
+  removeAttachment, editEchoProductChangeTab
 } from '~/modules/admin/actions'
 
 import { Header } from 'semantic-ui-react'
@@ -25,6 +25,7 @@ const mapDispatchToProps = {
   putEchoProduct,
   postEchoProduct,
   searchManufacturers,
+  editEchoProductChangeTab,
 }
 
 const mapStateToProps = ({ admin }, props) => {
@@ -35,7 +36,7 @@ const mapStateToProps = ({ admin }, props) => {
     addForm: currentTab && !!admin.currentAddForm,
     editForm: currentTab && !!admin.currentEditForm,
     popupValues: admin.popupValues,
-    editTab: admin.popupValues ? admin.popupValues.editTab : 0,
+    editTab: admin.editEchoProductEditTab,
     packagingGroups: admin.packagingGroups.map((pGroup, id) => {
       return {
         key: id,

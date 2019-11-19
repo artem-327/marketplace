@@ -77,7 +77,7 @@ const validationScheme = Yup.object().shape({
       })
       .test('v', errorMessages.mustBeNumber, function(v) { return (v === null || v === '' || !isNaN(v))}),
     assayMax: Yup.string()
-      .test('v', errorMessages.minUpToMax, function(v) {
+      .test('v', errorMessages.maxAtLeastMin, function(v) {
         const { assayMin: v2 } = this.parent
         if (v === null || v === '' || isNaN(v)) return true      // No number value - can not be tested
         if (v2 === null || v2 === '' || isNaN(v2)) return true    // No min limit value - can not be tested
@@ -100,7 +100,6 @@ class AddEditEchoProduct extends React.Component {
   state = {
     isLoading: false,
     casProduct: '',
-    activeTab: 0,
     changedForm: false,
     transportationType: transportationTypes[0].value,
     codesList: [],
@@ -110,23 +109,25 @@ class AddEditEchoProduct extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.visible) {
       if (!prevProps.visible) { // Sidebar just opened
-        this.setInitialState( this.props.popupValues, { activeTab: this.props.editTab})
+        this.setInitialState(this.props.popupValues)
+        this.props.editEchoProductChangeTab(0)
         this.resetForm()
       }
 
       if (prevProps.editForm && !prevProps.addForm && this.props.addForm) { // Changed from Edit to Add form
-        //this.setState({ activeTab: 0, codesList: [], changedForm: false })
-        this.setInitialState( null, { activeTab: 0, codesList: [], changedForm: false})
+        this.setInitialState(null, { codesList: [], changedForm: false})
+        this.props.editEchoProductChangeTab(0)
         this.resetForm()
       }
 
       if (prevProps.addForm && !prevProps.editForm && this.props.editForm) { // Changed from Add to Edit form
-        this.setInitialState( this.props.popupValues, { activeTab: this.props.editTab})
+        this.setInitialState(this.props.popupValues)
         this.resetForm()
       }
 
-      if (prevProps.editForm && this.props.editForm && prevProps.popupValues.id !== this.props.popupValues.id) { // Changed edit product
-        this.setInitialState( this.props.popupValues, { activeTab: this.props.editTab})
+      if (prevProps.editForm && this.props.editForm && (prevProps.popupValues.id !== this.props.popupValues.id
+        || prevProps.editTab !== this.props.editTab)) { // Changed edit product or edit tab
+        this.setInitialState(this.props.popupValues)
         this.resetForm()
       }
     }
@@ -284,7 +285,7 @@ class AddEditEchoProduct extends React.Component {
   }
 
   tabChanged = (index) => {
-    this.setState({ activeTab: index})
+    this.props.editEchoProductChangeTab(index)
   }
 
   switchToErrors = (err) => {
@@ -487,7 +488,6 @@ class AddEditEchoProduct extends React.Component {
 
 
     return (
-
       <>
         <GridRow>
           <GridColumn width={16}>
@@ -515,10 +515,10 @@ class AddEditEchoProduct extends React.Component {
             <>
               {values.elements && values.elements.length ? values.elements.map((element, index) => (
                 <GridRow style={{ alignItems: 'flex-end', 'padding-bottom': '0.5rem' }} >
-                  <GridColumn width={2} data-text='admin_product_popup_proprietary'>
+                  <GridColumn width={3} data-text='admin_product_popup_proprietary' textAlign='center'>
                     <Checkbox name={`elements[${index}].proprietary`} />
                   </GridColumn>
-                  <GridColumn width={6}>
+                  <GridColumn width={5}>
                     {values.elements[index].proprietary ? (
                       <Input name={`elements[${index}].name`} defaultValue={''} inputProps={{ 'data-test': `admin_product_popup_element_${index}_name` }} />
                     ) : (
@@ -569,7 +569,7 @@ class AddEditEchoProduct extends React.Component {
               <GridRow>
                 <GridColumn width={14}>
                 </GridColumn>
-                <GridColumn width={2}>
+                <GridColumn width={2} textAlign='center'>
                   <Button basic icon color='green' onClick={() => {
                     arrayHelpers.push({ name: '', casProduct: null, assayMin: 100, assayMax: 100 })
                     this.setState({ changedForm: true })
@@ -847,8 +847,8 @@ class AddEditEchoProduct extends React.Component {
   }
 
   getContent = (formikProps) => {
-    let { activeTab } = this.state
-    switch (activeTab) {
+    let { editTab } = this.props
+    switch (editTab) {
       case 0: {   // Edit
         return this.renderEdit(formikProps)
       }
@@ -872,11 +872,8 @@ class AddEditEchoProduct extends React.Component {
       closePopup,
       intl: {formatMessage},
       isLoading,
+      editTab
     } = this.props
-
-    const {
-      activeTab
-    } = this.state
 
     return (
       <Form
@@ -908,7 +905,7 @@ class AddEditEchoProduct extends React.Component {
                     {tabs.map((tab, i) => (
                       <Menu.Item
                         onClick={() => this.tabChanged(i)}
-                        active={activeTab === i}
+                        active={editTab === i}
                       >{formatMessage(tab.text)}</Menu.Item>
                     ))}
                   </Menu>
