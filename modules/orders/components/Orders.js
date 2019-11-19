@@ -224,6 +224,15 @@ class Orders extends Component {
           }
         ]
       },
+      'To ship': {
+        filters: [
+          {
+            operator: 'EQUALS',
+            path: 'Order.cfGlobalStatus',
+            values: [`To Ship`]
+          }
+        ]
+      },
       Returned: {
         filters: [
           {
@@ -615,6 +624,20 @@ class Orders extends Component {
               }
               active={activeStatus === 'Completed'}
               data-test='menu_orders_completed'
+            />
+            <Menu.Item
+              name={formatMessage({
+                id: 'order.menu.toShip',
+                defaultMessage: 'TO SHIP'
+              })}
+              onClick={() =>
+                this.loadData(endpointType, {
+                  ...this.props.filterData,
+                  status: 'To Ship'
+                })
+              }
+              active={activeStatus === 'To Ship'}
+              data-test='menu_orders_ship'
             />
             <Menu.Item
               name={formatMessage({
