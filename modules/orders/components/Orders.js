@@ -229,7 +229,7 @@ class Orders extends Component {
           {
             operator: 'EQUALS',
             path: 'Order.cfGlobalStatus',
-            values: [`To ship`]
+            values: [`To Ship`]
           }
         ]
       },
@@ -633,10 +633,10 @@ class Orders extends Component {
               onClick={() =>
                 this.loadData(endpointType, {
                   ...this.props.filterData,
-                  status: 'To ship'
+                  status: 'To Ship'
                 })
               }
-              active={activeStatus === 'To ship'}
+              active={activeStatus === 'To Ship'}
               data-test='menu_orders_ship'
             />
             <Menu.Item
