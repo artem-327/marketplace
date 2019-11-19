@@ -600,6 +600,8 @@
   "global.import": "Import",
   "global.disapprove": "Disapprove",
   "global.approve": "Approve",
+  "global.warning": "Warning!",
+  "global.info": "Info!",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",
