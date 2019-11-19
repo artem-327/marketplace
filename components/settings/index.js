@@ -215,13 +215,13 @@ class Settings extends Component {
 
                               {React.cloneElement(
                                 typeToComponent(el.type, {
-                                  props: getSafe(() => el.frontendConfig.props),
+                                  props: getSafe(() => JSON.parse(el.frontendConfig).props),
                                   inputProps: {
                                     disabled:
                                       !el.changeable ||
                                       (getSafe(() => !values[role][group.name][el.name].edit, false) &&
                                         !(role === 'admin')),
-                                    ...getSafe(() => el.frontendConfig.inputProps, {})
+                                    ...getSafe(() => JSON.parse(el.frontendConfig).inputProps, {})
                                   }
                                 }),
                                 {
