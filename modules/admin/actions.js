@@ -484,13 +484,19 @@ export function getProductsCatalogRequest() {
 	}
 }
 
+export function editEchoProductChangeTab(editTab) {
+	return {
+		type: AT.ADMIN_EDIT_ECHO_PRODUCT_CHANGE_TAB,
+		payload: editTab
+	}
+}
+
 export function openEditEchoProduct(id, editTab) {
 	return async dispatch => {
 		// get newest data
 		const response = await dispatch(getEchoProduct(id))
 		let formData = {
 			...response.value.data,
-			editTab
 		}
 
 		// mark attachments as linked
@@ -502,7 +508,7 @@ export function openEditEchoProduct(id, editTab) {
 				}
 			})
 		}
-
+		dispatch(editEchoProductChangeTab(editTab))
 		// open popup with modified data
 		dispatch(openPopup(formData))
 	}

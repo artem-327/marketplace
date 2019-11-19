@@ -65,7 +65,8 @@ export const initialState = {
   searchedManufacturers: [],
   searchedManufacturersLoading: false,
   altEchoNamesRows: [],
-  documentTypes: []
+  documentTypes: [],
+  editEchoProductEditTab: 0
 }
 
 export default function reducer(state = initialState, action) {
@@ -318,6 +319,14 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_EDIT_ECHO_PRODUCT_CHANGE_TAB: {
+      return {
+        ...state,
+        editEchoProductEditTab: action.payload,
+      }
+    }
+
+    case AT.ADMIN_GET_ECHO_PRODUCT_PENDING:
     case AT.ADMIN_POST_ECHO_PRODUCT_PENDING:
     case AT.ADMIN_PUT_ECHO_PRODUCT_PENDING:
     case AT.ADMIN_ADD_ATTACHMENT_PENDING:
@@ -450,6 +459,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_ECHO_PRODUCT_FULFILLED:
     case AT.ADMIN_POST_ECHO_PRODUCT_FULFILLED:
     case AT.ADMIN_PUT_ECHO_PRODUCT_FULFILLED:
     case AT.ADMIN_ADD_ATTACHMENT_FULFILLED:
@@ -462,6 +472,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_ECHO_PRODUCT_REJECTED:
     case AT.ADMIN_POST_ECHO_PRODUCT_REJECTED:
     case AT.ADMIN_PUT_ECHO_PRODUCT_REJECTED:
     case AT.ADMIN_ADD_ATTACHMENT_REJECTED:
