@@ -1,10 +1,5 @@
 import React, { Component } from 'react'
-import {
-  injectIntl,
-  FormattedMessage,
-  FormattedDate,
-  FormattedNumber
-} from 'react-intl'
+import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
 import { Modal, Menu, Header, Container, Icon, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 
@@ -68,9 +63,7 @@ class Orders extends Component {
       {
         name: 'productName',
         title: (
-          <FormattedMessage
-            id='order.productName'
-            defaultMessage='Product Name'>
+          <FormattedMessage id='order.productName' defaultMessage='Product Name'>
             {text => text}
           </FormattedMessage>
         ),
@@ -264,9 +257,7 @@ class Orders extends Component {
       {
         name: 'documentNumber',
         title: (
-          <FormattedMessage
-            id='order.related.documentNumber'
-            defaultMessage='PO #'>
+          <FormattedMessage id='order.related.documentNumber' defaultMessage='PO #'>
             {text => text}
           </FormattedMessage>
         ),
@@ -302,9 +293,7 @@ class Orders extends Component {
       {
         name: 'cfPriceTotal',
         title: (
-          <FormattedMessage
-            id='order.related.cfPriceTotal'
-            defaultMessage='Total'>
+          <FormattedMessage id='order.related.cfPriceTotal' defaultMessage='Total'>
             {text => text}
           </FormattedMessage>
         ),
@@ -314,9 +303,7 @@ class Orders extends Component {
   }
 
   getMimeType = documentName => {
-    const documentExtension = documentName.substr(
-      documentName.lastIndexOf('.') + 1
-    )
+    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
 
     switch (documentExtension) {
       case 'doc':
@@ -358,9 +345,7 @@ class Orders extends Component {
   }
 
   loadData(endpointType, filterData) {
-    this.props.dispatch(
-      actions.change('forms.filter.status', filterData.status)
-    )
+    this.props.dispatch(actions.change('forms.filter.status', filterData.status))
     this.props.datagrid.loadData(this.state.filters[filterData.status])
     this.props.loadData(endpointType, filterData)
   }
@@ -372,14 +357,8 @@ class Orders extends Component {
   getRows = () => {
     return this.props.rows.map(row => ({
       ...row,
-      globalStatus:
-        row.globalStatus === 'Failed'
-          ? this.failedWrapper(row.globalStatus)
-          : row.globalStatus,
-      paymentStatus:
-        row.paymentStatus === 'Failed'
-          ? this.failedWrapper(row.paymentStatus)
-          : row.paymentStatus,
+      globalStatus: row.globalStatus === 'Failed' ? this.failedWrapper(row.globalStatus) : row.globalStatus,
+      paymentStatus: row.paymentStatus === 'Failed' ? this.failedWrapper(row.paymentStatus) : row.paymentStatus,
       bl: <Icon name='file' className='unknown' />, // unknown / positive / negative
       sds: <Icon name='file' className='unknown' />,
       cofA: <Icon name='file' className='unknown' />,
@@ -416,10 +395,7 @@ class Orders extends Component {
   }
 
   handleFilterApply = payload => {
-    let statusFilters = getSafe(
-      () => this.state.filters[this.props.filterData.status].filters,
-      []
-    )
+    let statusFilters = getSafe(() => this.state.filters[this.props.filterData.status].filters, [])
     statusFilters.forEach(f => payload.filters.push(f))
 
     this.props.datagrid.setFilter(payload)
@@ -452,9 +428,7 @@ class Orders extends Component {
 
   prepareLinkToAttachment = async documentId => {
     let downloadedFile = await this.props.downloadAttachment(documentId)
-    const fileName = this.extractFileName(
-      downloadedFile.value.headers['content-disposition']
-    )
+    const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
     const mimeType = fileName && this.getMimeType(fileName)
     const element = document.createElement('a')
     const file = new Blob([downloadedFile.value.data], { type: mimeType })
@@ -466,10 +440,7 @@ class Orders extends Component {
 
   extractFileName = contentDispositionValue => {
     var filename = ''
-    if (
-      contentDispositionValue &&
-      contentDispositionValue.indexOf('attachment') !== -1
-    ) {
+    if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
       var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
       var matches = filenameRegex.exec(contentDispositionValue)
       if (matches != null && matches[1]) {
@@ -483,45 +454,25 @@ class Orders extends Component {
     const { relatedOrders } = this.props
     const rowsRelatedOrders = relatedOrders.map(order => ({
       documentNumber: (
-        <Button
-          as='a'
-          onClick={() =>
-            this.downloadAttachment(order.documentNumber, order.id)
-          }>
+        <Button as='a' onClick={() => this.downloadAttachment(order.documentNumber, order.id)}>
           <Icon name='download' />
           {order.documentNumber}
         </Button>
       ),
       type: order.type,
-      issuedAt: getSafe(
-        () => <FormattedDate value={order.issuedAt.split('T')[0]} />,
-        'N/A'
-      ),
+      issuedAt: getSafe(() => <FormattedDate value={order.issuedAt.split('T')[0]} />, 'N/A'),
       issuerCompanyName: order.issuerCompanyName,
-      cfPriceTotal: (
-        <FormattedNumber
-          style='currency'
-          currency={currency}
-          value={order.cfPriceTotal}
-        />
-      )
+      cfPriceTotal: <FormattedNumber style='currency' currency={currency} value={order.cfPriceTotal} />
     }))
     return (
       <>
         <TitleOrderId>
-          <FormattedMessage
-            id='order.related.orderId'
-            defaultMessage='Order ID: '>
+          <FormattedMessage id='order.related.orderId' defaultMessage='Order ID: '>
             {text => text}
           </FormattedMessage>
           {`${relatedOrders[0].relatedOrder}`}
         </TitleOrderId>
-        <ProdexGrid
-          hideSettingsIcon={true}
-          tableName='related_orders'
-          columns={this.state.columnsRelatedOrders}
-          rows={rowsRelatedOrders}
-        />
+        <ProdexGrid hideSettingsIcon={true} tableName='related_orders' columns={this.state.columnsRelatedOrders} rows={rowsRelatedOrders} />
       </>
     )
   }
@@ -537,31 +488,29 @@ class Orders extends Component {
       intl: { formatMessage }
     } = this.props
 
+    console.log({ tableProps: datagrid })
+
     const { columns } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
 
     return (
       <div id='page' className='flex stretched scrolling'>
-        {this.props &&
-          this.props.relatedOrders &&
-          this.props.relatedOrders.length > 0 && (
-            <Modal
-              size='tiny'
-              closeIcon
-              onClose={() => this.setState({ openModal: false })}
-              centered={true}
-              open={this.state.openModal}
-              onClose={() => this.setState({ openModal: false })}>
-              <Modal.Header>
-                <FormattedMessage
-                  id='order.related.table'
-                  defaultMessage='RELATED ORDERS'>
-                  {text => text}
-                </FormattedMessage>
-              </Modal.Header>
-              <Modal.Content scrolling>{this.getContent()}</Modal.Content>
-            </Modal>
-          )}
+        {this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (
+          <Modal
+            size='tiny'
+            closeIcon
+            onClose={() => this.setState({ openModal: false })}
+            centered={true}
+            open={this.state.openModal}
+            onClose={() => this.setState({ openModal: false })}>
+            <Modal.Header>
+              <FormattedMessage id='order.related.table' defaultMessage='RELATED ORDERS'>
+                {text => text}
+              </FormattedMessage>
+            </Modal.Header>
+            <Modal.Content scrolling>{this.getContent()}</Modal.Content>
+          </Modal>
+        )}
         <Container fluid style={{ padding: '0 32px' }}>
           <Menu pointing secondary horizontal>
             <Menu.Item
@@ -717,10 +666,7 @@ class Orders extends Component {
             </Menu.Menu>
           </Menu>
         </Container>
-        <Container
-          fluid
-          style={{ padding: '20px 32px 0 32px' }}
-          className='flex stretched'>
+        <Container fluid style={{ padding: '20px 32px 0 32px' }} className='flex stretched'>
           <Header as='h1' size='medium'>
             {activeStatus
               ? activeStatus.toUpperCase()
@@ -730,7 +676,7 @@ class Orders extends Component {
                 })}{' '}
             {`${ordersType.toUpperCase()} ${formatMessage({
               id: 'order.orders',
-              defaultMessage: '!ORDERS'
+              defaultMessage: 'ORDERS'
             })}`}
           </Header>
           <OrderFilter
@@ -748,21 +694,14 @@ class Orders extends Component {
               {...datagrid.tableProps}
               loading={datagrid.loading}
               rows={this.getRows()}
-              onSortingChange={sorting =>
-                sorting.sortPath && this.setState({ sorting })
-              }
+              // onSortingChange={sorting => sorting.sortPath && this.setState({ sorting })}
               rowActions={[
                 {
                   text: formatMessage({
                     id: 'orders.detail',
                     defaultMessage: 'Detail'
                   }),
-                  callback: row =>
-                    router.push(
-                      `/orders/detail?type=${ordersType.toLowerCase()}&id=${
-                        row.id
-                      }`
-                    )
+                  callback: row => router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`)
                 }
               ]}
               /* COMMENTED #30916

@@ -472,8 +472,11 @@ class _Table extends Component {
   }
 
   handleSortingChange = sort => {
+    if (this.state.columnsSettings.sorting.length === 0) {
+      var sorting = sort
+    } else var { sorting } = this.state.columnsSettings
+
     let columnName = sort[0].columnName
-    let { sorting } = this.state.columnsSettings
     let [s] = sorting
     s.columnName = columnName
 
@@ -485,7 +488,7 @@ class _Table extends Component {
     s.direction = s.direction.toUpperCase() === 'ASC' ? 'DESC' : 'ASC'
 
     this.handleColumnsSettings({ sorting })
-
+    
     onSortingChange &&
       onSortingChange({
         sortPath: column ? column.sortPath : s.columnName,
