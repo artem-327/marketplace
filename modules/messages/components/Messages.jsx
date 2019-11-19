@@ -1,15 +1,10 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import axios from 'axios'
-import { Icon } from 'semantic-ui-react'
-import { array } from 'prop-types'
 
-import {
-  MessageContainer,
-  StyledMessage,
-  CloseIcon,
-  themes
-} from '../constants'
-import { FormattedMessage } from 'react-intl'
+import {themes} from '../constants'
+import {FormattedMessage} from 'react-intl'
+
+import {generateToastMarkup} from '~/utils/functions'
 
 export default class Messages extends Component {
   componentDidMount() {
@@ -26,9 +21,11 @@ export default class Messages extends Component {
               : `Request failed with status code: ${error.response.status}`
           else if (error.clientMessage)
             errorMessage =
-              process.env.NODE_ENV !== 'production'
-                ? `${error.clientMessage} ${error.exceptionMessage}`
-                : error.clientMessage
+              process.env.NODE_ENV === 'production'
+                ? error.descriptionMessage
+                  ? `${error.clientMessage} ${error.descriptionMessage}`
+                  : `${error.clientMessage}`
+                : error
 
           self.onError(errorMessage)
 
@@ -43,76 +40,38 @@ export default class Messages extends Component {
   }
 
   onError = errorMessage => {
-    let { addMessage, toastManager } = this.props
+    let {toastManager} = this.props
 
     const errMessage =
-      errorMessage && errorMessage.clientMessage
-        ? errorMessage.clientMessage
+      errorMessage && errorMessage.level
+        ? errorMessage.descriptionMessage
+          ? `${errorMessage.clientMessage} ${errorMessage.descriptionMessage} ${errorMessage.exceptionMessage}`
+          : `${errorMessage.clientMessage} ${errorMessage.exceptionMessage}`
         : errorMessage
 
-    if (errMessage) {
+    // errorMessage.level can be ERROR, WARNING, INFO
+    if (errMessage && errorMessage.level) {
+      const lowerCaseLevel = errorMessage.level.toLowerCase()
       toastManager.add(
-        <div>
-          <strong>
-            <FormattedMessage id='global.error' defaultMessage='Error!' />
-          </strong>
-          <div>{errMessage}</div>
-        </div>,
-        { appearance: themes.ERROR, pauseOnHover: true }
+        generateToastMarkup(
+          <FormattedMessage
+            id={`global.${lowerCaseLevel}`}
+            defaultMessage={`${lowerCaseLevel.charAt(0).toUpperCase()}${lowerCaseLevel.slice(1)}!`}
+          />,
+          errMessage
+        ),
+        {appearance: themes[errorMessage.level], pauseOnHover: true}
       )
-      // addMessage({ theme: themes.ERROR, content: errorMessage })
+      // this 'else if' can be remove in the future if backend will give all levels in all responses.
+    } else if (errMessage && !errorMessage.level) {
+      toastManager.add(
+        generateToastMarkup(<FormattedMessage id='global.error' defaultMessage='Error!' />, errMessage),
+        {appearance: themes.ERROR, pauseOnHover: true}
+      )
     }
-  }
-
-  handleMessageDismiss = index => {
-    this.props.removeMessage(index)
-  }
-
-  getMessage = (message, index) => {
-    let { theme, content } = message
-    let color = 'red',
-      iconName = 'warning sign'
-
-    switch (theme) {
-      case themes.ERROR: {
-        break
-      }
-
-      case themes.SUCCESS: {
-        ;(color = 'green'), (iconName = 'check')
-        break
-      }
-      default:
-        break
-    }
-
-    return (
-      <StyledMessage floating key={index} color={color} size='large'>
-        <Icon size='big' name={iconName} /> {content}
-        <CloseIcon
-          size='large'
-          name='x'
-          onClick={() => this.handleMessageDismiss(index)}
-          data-test='messages_dismiss_icon'
-        />
-      </StyledMessage>
-    )
   }
 
   render() {
-    // let { messages } = this.props
-
     return null
-    // <MessageContainer fluid>
-    //   {messages.map((message, i) => this.getMessage(message, i))}
-    // </MessageContainer>
   }
-}
-
-Messages.propTypes = {
-  messages: array
-}
-
-Messages.defaultProps = {
-  messages: []
 }
