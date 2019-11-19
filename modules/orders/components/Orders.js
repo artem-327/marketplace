@@ -488,8 +488,6 @@ class Orders extends Component {
       intl: { formatMessage }
     } = this.props
 
-    console.log({ tableProps: datagrid })
-
     const { columns } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
 
