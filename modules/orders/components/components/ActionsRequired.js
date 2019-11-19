@@ -96,7 +96,7 @@ class ActionsRequired extends React.Component {
                   null,
                   13,
                   null,
-                  'order.confirm.description',
+                  'order.confirm.accept.decline',
                   [
                     {
                       buttonType: 'primary',
@@ -152,27 +152,21 @@ class ActionsRequired extends React.Component {
           //orderStatus === 'Purchase'
           <>
             {action === '100'
-              ? this.renderSegment(
-                  null,
-                  13,
-                  null,
-                  'order.confirm.description',
-                  [
-                    {
-                      buttonType: 'basic',
-                      onClick: this.cancelOrder,
-                      dataTest: 'orders_detail_cancel_btn',
-                      text: 'global.cancel'
-                    }
-                  ]
-                )
+              ? this.renderSegment(null, 13, null, 'order.confirm.cancel', [
+                  {
+                    buttonType: 'basic',
+                    onClick: this.cancelOrder,
+                    dataTest: 'orders_detail_cancel_btn',
+                    text: 'global.cancel'
+                  }
+                ])
               : null}
             {action === '400'
               ? this.renderSegment(
                   null,
                   11,
                   null,
-                  'order.confirm.description',
+                  'order.confirm.approve.dissaprove',
                   [
                     {
                       buttonType: 'primary',

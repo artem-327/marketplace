@@ -215,9 +215,9 @@ class DwollaRegister extends Component {
                           ),
                           email: (
                             <a
-                              href='mailto:support@echoexchange.zendesk.com'
+                              href='mailto:support@echosystem.com'
                               target='_blank'>
-                              support@echoexchange.zendesk.com
+                              support@echosystem.com
                             </a>
                           ),
                           number: (
