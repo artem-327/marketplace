@@ -1,13 +1,13 @@
-import {connect} from 'react-redux';
-import Reports from './Reports';
+import {connect} from 'react-redux'
+import Reports from './Reports'
 import {bindActionCreators} from 'redux'
 
 function mapStateToProps(store) {
-    return {}
+  return {}
 }
 
-function mapDispatchToProps(dispatch){
-    return bindActionCreators({}, dispatch)
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({}, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Reports);
+export default connect(mapStateToProps, mapDispatchToProps)(Reports)

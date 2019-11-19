@@ -1,10 +1,10 @@
-import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
+import {createAction, createAsyncAction} from 'redux-promise-middleware-actions'
 import * as api from './api'
-import { currency } from '~/constants/index'
-import { getSafe } from '~/utils/functions'
+import {currency} from '~/constants/index'
+import {getSafe} from '~/utils/functions'
 
-export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (offer) => {
-  const { data } = await api.loadRules(offer.id)
+export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async offer => {
+  const {data} = await api.loadRules(offer.id)
 
   return {
     data,
@@ -17,10 +17,9 @@ export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (offer) =
   }
 })
 
-
 export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', async () => {
   let data = await api.loadGeneralRules()
-  
+
   return {
     data,
     id: null,
@@ -44,6 +43,6 @@ export const getTemplates = createAsyncAction('GET_TEMPLATES', () => api.getTemp
 
 export const closeBroadcast = createAction('BROADCAST_CLOSE')
 export const updateFilter = createAction('BROADCAST_FILTER_UPDATE', filter => filter)
-export const switchMode = createAction('BROADCAST_SWITCH_MODE', (mode) => mode)
+export const switchMode = createAction('BROADCAST_SWITCH_MODE', mode => mode)
 export const loadingChanged = createAction('BROADCAST_LOADING', (force = null) => force)
-export const treeDataChanged = createAction('TREE_DATA_CHANGED', (treeData) => treeData)
+export const treeDataChanged = createAction('TREE_DATA_CHANGED', treeData => treeData)

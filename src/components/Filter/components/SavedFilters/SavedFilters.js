@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import './SavedFilters.scss'
 import SaveFilterItem from './SaveFilterItem'
-import { Segment, Loader, Dimmer } from 'semantic-ui-react'
+import {Segment, Loader, Dimmer} from 'semantic-ui-react'
 import styled from 'styled-components'
-import { FormattedMessage } from 'react-intl'
-import Axios from 'axios';
+import {FormattedMessage} from 'react-intl'
+import Axios from 'axios'
 
 const CenteredSegment = styled(Segment)`
   vertical-align: middle;
@@ -18,16 +18,18 @@ export default class SavedFilters extends Component {
     savedFilters: []
   }
   componentDidMount() {
-    Axios.get('/prodex/api/product-offers/broadcasted/datagrid/saved-filters').then((response) => this.setState({ savedFilters: response.data }))
+    Axios.get('/prodex/api/product-offers/broadcasted/datagrid/saved-filters').then(response =>
+      this.setState({savedFilters: response.data})
+    )
   }
 
   renderSaveItems(saved) {
     return saved.map((item, index) => {
-      const { filterName } = item;
-      let final = [];
+      const {filterName} = item
+      let final = []
       for (let key in item) {
         if (key === 'filterName' || key === 'id' || !item[key]) continue
-        final.push({ name: key, value: item[key] })
+        final.push({name: key, value: item[key]})
       }
       return (
         <SaveFilterItem
@@ -38,14 +40,14 @@ export default class SavedFilters extends Component {
           filterName={filterName}
           index={index}
           key={index}
-          toolTipContent={final} />
-      );
+          toolTipContent={final}
+        />
+      )
     })
   }
 
   render() {
-
-    let { saveFilters, fetching } = this.props
+    let {saveFilters, fetching} = this.props
     if (fetching) {
       return (
         <CenteredSegment padded='very' raised basic>
@@ -64,10 +66,6 @@ export default class SavedFilters extends Component {
       )
     }
 
-    return (
-      <ul className='saved-filters'>
-        {this.renderSaveItems(this.state.savedFilters)}
-      </ul>
-    )
+    return <ul className='saved-filters'>{this.renderSaveItems(this.state.savedFilters)}</ul>
   }
 }

@@ -1,11 +1,11 @@
 import * as AT from './action-types'
 
-import { getSafe } from '~/utils/functions'
+import {getSafe} from '~/utils/functions'
 
 const mergeAndFilterCodes = (newCodes, oldCodes) => {
   if (!(newCodes instanceof Array)) newCodes = [newCodes]
 
-  let newZips = newCodes.map((code) => ({
+  let newZips = newCodes.map(code => ({
     text: getSafe(() => code.zip, code) + '',
     value: getSafe(() => code.zip, code) + '',
     key: getSafe(() => code.id, code) + ''
@@ -18,7 +18,8 @@ const mergeAndFilterCodes = (newCodes, oldCodes) => {
     // store the keys of the unique objects
     .map((e, i, final) => final.indexOf(e) === i && i)
     // eliminate the dead keys & store unique objects
-    .filter(e => codes[e]).map(e => codes[e])
+    .filter(e => codes[e])
+    .map(e => codes[e])
 
   return uniqueCodes
 }
@@ -29,21 +30,20 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-  let { type, payload } = action
+  let {type, payload} = action
 
   switch (type) {
     case AT.ADD_ZIP: {
       return {
         ...state,
-        codes: mergeAndFilterCodes(payload, state.codes)//state.codes.concat(codes)
+        codes: mergeAndFilterCodes(payload, state.codes) //state.codes.concat(codes)
       }
     }
-
 
     case AT.GET_ZIP_CODES_PENDING: {
       return {
         ...state,
-        loading: true,
+        loading: true
       }
     }
 
@@ -52,10 +52,10 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         codes: mergeAndFilterCodes(payload, state.codes) //uniqueCodes
-
       }
     }
 
-    default: return state
+    default:
+      return state
   }
 }

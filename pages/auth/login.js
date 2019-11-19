@@ -8,12 +8,15 @@ const Container = styled.div`
   padding: 60px 0;
 `
 class Login extends Component {
-  
   render() {
     return (
       <Layout>
         <Container>
-          <style jsx global>{`body {background: #f2f2f2;}`}</style>
+          <style jsx global>{`
+            body {
+              background: #f2f2f2;
+            }
+          `}</style>
           <LoginForm />
         </Container>
       </Layout>

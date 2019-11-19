@@ -1,33 +1,33 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { withRouter } from 'next/router'
-import { Container, Menu, Image, Dropdown, Icon, Label } from 'semantic-ui-react'
+import {withRouter} from 'next/router'
+import {Container, Menu, Image, Dropdown, Icon, Label} from 'semantic-ui-react'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/logo-echo.png'
 // import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
 import PopUp from '~/src/components/PopUp'
-import { Messages } from '~/modules/messages'
+import {Messages} from '~/modules/messages'
 import Settings from '~/components/settings'
-import { connect } from 'react-redux'
-import { withAuth } from '~/hocs'
+import {connect} from 'react-redux'
+import {withAuth} from '~/hocs'
 
-import { takeOverCompanyFinish } from '~/modules/admin/actions'
-import { openProfilePopup } from '~/modules/profile/actions'
-import { agreeWithTOS } from '~/modules/auth/actions'
-import { triggerSystemSettingsModal } from '~/modules/settings/actions'
+import {takeOverCompanyFinish} from '~/modules/admin/actions'
+import {openProfilePopup} from '~/modules/profile/actions'
+import {agreeWithTOS} from '~/modules/auth/actions'
+import {triggerSystemSettingsModal} from '~/modules/settings/actions'
 
 import Profile from '~/modules/profile/components/Profile'
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import Router from 'next/router'
-import { getSafe } from '~/utils/functions'
-import { injectIntl } from 'react-intl'
-import { AgreementModal } from '~/components/modals'
-import { getCountryCodes } from '~/modules/phoneNumber/actions'
+import {getSafe} from '~/utils/functions'
+import {injectIntl} from 'react-intl'
+import {AgreementModal} from '~/components/modals'
+import {getCountryCodes} from '~/modules/phoneNumber/actions'
 
-import { chatWidgetCreate, chatWidgetToggle, chatWidgetShow, chatUnreadMessages } from '~/modules/chatWidget/actions'
-import { withToastManager } from 'react-toast-notifications'
+import {chatWidgetCreate, chatWidgetToggle, chatWidgetShow, chatUnreadMessages} from '~/modules/chatWidget/actions'
+import {withToastManager} from 'react-toast-notifications'
 
 import ChatWidget from '~/modules/chatWidget/components/ChatWidgetContainer'
 
@@ -35,14 +35,20 @@ const TopMenu = styled(Menu)`
   background-color: #1b3454 !important;
   position: fixed;
   height: 49px;
-  top: 0; right: 0; bottom: 0; left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 `
 const TopMenuContainer = styled(Container)`
   padding: 0 29px;
 `
 const MainContainer = styled(Container)`
   position: fixed;
-  top: 0; right: 0; bottom: 0; left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 `
 const ContentContainer = styled(Container)`
   /* padding: 0 20px; */
@@ -52,7 +58,10 @@ const ContentContainer = styled(Container)`
 `
 const FlexContainer = styled.div`
   position: fixed;
-  top: 49px; right: 0; bottom: 0; left: 0;
+  top: 49px;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -72,9 +81,11 @@ const CircularLabel = styled(Label)`
   font-weight: 400 !important;
 `
 
-const MenuLink = withRouter(({ router: { pathname }, to, children, }) => (
+const MenuLink = withRouter(({router: {pathname}, to, children}) => (
   <Link prefetch href={to}>
-    <Menu.Item as='a' active={pathname === to}>{children}</Menu.Item>
+    <Menu.Item as='a' active={pathname === to}>
+      {children}
+    </Menu.Item>
   </Link>
 ))
 
@@ -93,73 +104,101 @@ class Layout extends Component {
 
   render() {
     const {
-      children, router: { pathname }, title = 'Echo exchange',
-      auth, takeOverCompanyFinish, triggerSystemSettingsModal,
-      profile, openProfilePopup, chatWidgetToggle, cartItems, takeover,
-      intl: { formatMessage }, isOpen, agreeWithTOS
+      children,
+      router: {pathname},
+      title = 'Echo exchange',
+      auth,
+      takeOverCompanyFinish,
+      triggerSystemSettingsModal,
+      profile,
+      openProfilePopup,
+      chatWidgetToggle,
+      cartItems,
+      takeover,
+      intl: {formatMessage},
+      isOpen,
+      agreeWithTOS
     } = this.props
 
     return (
       <MainContainer fluid>
         <PopUp />
         <Head>
-          <title>{formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo exchange' })} / {title}</title>
+          <title>
+            {formatMessage({id: 'global.echoTitle', defaultMessage: 'Echo exchange'})} / {title}
+          </title>
         </Head>
         <TopMenu fixed='top' inverted size='large' borderless>
-
           <TopMenuContainer fluid>
             <LogoImage src={Logo} />
 
             <NavigationMenu takeover={takeover} />
 
             <Menu.Menu position='right' className='black'>
-              {auth && auth.identity && !auth.identity.isAdmin &&
+              {auth && auth.identity && !auth.identity.isAdmin && (
                 <Menu.Item onClick={() => Router.push('/cart')} data-test='navigation_menu_cart'>
                   <MiniCart />
                 </Menu.Item>
-              }
-              <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
+              )}
+              <Dropdown item icon={{name: 'user circle outline', size: 'large'}}>
                 <Dropdown.Menu data-test='navigation_menu_user_drpdn'>
-                  <Dropdown.Item as={Menu.Item} onClick={() => openProfilePopup()}
-                    data-test='navigation_menu_user_my_profile_drpdn'>{formatMessage({
+                  <Dropdown.Item
+                    as={Menu.Item}
+                    onClick={() => openProfilePopup()}
+                    data-test='navigation_menu_user_my_profile_drpdn'>
+                    {formatMessage({
                       id: 'global.myProfile',
                       defaultMessage: 'My Profile'
                     })}
                   </Dropdown.Item>
-                  <Dropdown.Item as={Menu.Item} onClick={() => chatWidgetToggle(this.props)}
-                    data-test='navigation_menu_user_support_chat_drpdn'>{formatMessage({
+                  <Dropdown.Item
+                    as={Menu.Item}
+                    onClick={() => chatWidgetToggle(this.props)}
+                    data-test='navigation_menu_user_support_chat_drpdn'>
+                    {formatMessage({
                       id: 'global.supportChat',
                       defaultMessage: 'Support Chat'
                     })}
                   </Dropdown.Item>
 
-                  {getSafe(() => auth.identity.isAdmin, false) && takeover &&
-                    <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()}
-                      data-test='navigation_menu_user_return_to_admin_drpdn'>{formatMessage({
+                  {getSafe(() => auth.identity.isAdmin, false) && takeover && (
+                    <Dropdown.Item
+                      as={Menu.Item}
+                      onClick={() => takeOverCompanyFinish()}
+                      data-test='navigation_menu_user_return_to_admin_drpdn'>
+                      {formatMessage({
                         id: 'global.returnToAdmin',
                         defaultMessage: 'Return To Admin'
-                      })}</Dropdown.Item>
-                  }
-                  {(!getSafe(() => auth.identity.isAdmin, false) || takeover || !getSafe(() => auth.identity.isCompanyAdmin, false)) && (
-                    <Menu.Item onClick={() => triggerSystemSettingsModal(true)} data-test='navigation_menu_settings_lnk'>
+                      })}
+                    </Dropdown.Item>
+                  )}
+                  {(!getSafe(() => auth.identity.isAdmin, false) ||
+                    takeover ||
+                    !getSafe(() => auth.identity.isCompanyAdmin, false)) && (
+                    <Menu.Item
+                      onClick={() => triggerSystemSettingsModal(true)}
+                      data-test='navigation_menu_settings_lnk'>
                       <>
-                        {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
+                        {formatMessage({id: 'navigation.userSettings', defaultMessage: 'User Settings'})}
                         <Settings role='user' />
                       </>
                     </Menu.Item>
-                  )
-                  }
-                  <Dropdown.Item as={Menu.Item}
+                  )}
+                  <Dropdown.Item
+                    as={Menu.Item}
                     onClick={() => window.open('https://www.echoexchange.net/legal')}
-                    data-test='navigation_menu_user_terms_of_service_drpdn'>{formatMessage({
+                    data-test='navigation_menu_user_terms_of_service_drpdn'>
+                    {formatMessage({
                       id: 'global.termsOfService',
                       defaultMessage: 'Terms of Service'
-                    })}</Dropdown.Item>
-                  <Dropdown.Item as={MenuLink} to='/auth/logout'
-                    data-test='navigation_menu_user_logout_drpdn'>{formatMessage({
+                    })}
+                  </Dropdown.Item>
+                  <Dropdown.Item as={MenuLink} to='/auth/logout' data-test='navigation_menu_user_logout_drpdn'>
+                    {formatMessage({
                       id: 'global.logout',
                       defaultMessage: 'Logout'
-                    })}</Dropdown.Item>
+                    })}
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </Menu.Menu>
@@ -180,7 +219,6 @@ class Layout extends Component {
     )
   }
 }
-
 
 const mapDispatchToProps = {
   takeOverCompanyFinish,

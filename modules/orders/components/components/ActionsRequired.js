@@ -1,10 +1,10 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
 import * as Actions from '../../actions'
-import { Segment, Grid, Header, Button } from 'semantic-ui-react'
-import { FormattedMessage } from 'react-intl'
-import { getSafe } from '~/utils/functions'
+import {Segment, Grid, Header, Button} from 'semantic-ui-react'
+import {FormattedMessage} from 'react-intl'
+import {getSafe} from '~/utils/functions'
 import moment from 'moment/moment'
 
 class ActionsRequired extends React.Component {
@@ -37,17 +37,11 @@ class ActionsRequired extends React.Component {
   }
 
   renderSegment(color, columnWidth, title, description, buttons) {
-    console.log(buttons)
     return (
-      <Segment
-        color={color ? color : 'blue'}
-        style={{ marginLeft: '32px', marginRight: '32px' }}>
+      <Segment color={color ? color : 'blue'} style={{marginLeft: '32px', marginRight: '32px'}}>
         <Grid verticalAlign='middle' columns='equal'>
           <Grid.Column width={columnWidth}>
-            <Header
-              as='h3'
-              color={color ? color : 'black'}
-              style={{ margin: '0 0 0.3571429rem' }}>
+            <Header as='h3' color={color ? color : 'black'} style={{margin: '0 0 0.3571429rem'}}>
               <FormattedMessage id={title ? title : 'order.actionRequired'} />
             </Header>
             <FormattedMessage id={description} />
@@ -78,13 +72,7 @@ class ActionsRequired extends React.Component {
   }
 
   render() {
-    const {
-      action,
-      ordersType,
-      detail,
-      openReinitiateTransfer,
-      cancelOrder
-    } = this.props
+    const {action, ordersType, detail, openReinitiateTransfer, cancelOrder} = this.props
     const repayUntil = moment(detail.orderDate)
 
     return (
@@ -92,43 +80,31 @@ class ActionsRequired extends React.Component {
         {ordersType === 'Sales' ? (
           <>
             {action === '100'
-              ? this.renderSegment(
-                  null,
-                  13,
-                  null,
-                  'order.confirm.accept.decline',
-                  [
-                    {
-                      buttonType: 'primary',
-                      onClick: this.confirmOrder,
-                      dataTest: 'orders_detail_accept_btn',
-                      text: 'global.accept'
-                    },
-                    {
-                      buttonType: 'basic',
-                      onClick: this.rejectOrder,
-                      dataTest: 'orders_detail_decline_btn',
-                      text: 'global.decline'
-                    }
-                  ]
-                )
+              ? this.renderSegment(null, 13, null, 'order.confirm.accept.decline', [
+                  {
+                    buttonType: 'primary',
+                    onClick: this.confirmOrder,
+                    dataTest: 'orders_detail_accept_btn',
+                    text: 'global.accept'
+                  },
+                  {
+                    buttonType: 'basic',
+                    onClick: this.rejectOrder,
+                    dataTest: 'orders_detail_decline_btn',
+                    text: 'global.decline'
+                  }
+                ])
               : null}
 
             {action === '210'
-              ? this.renderSegment(
-                  null,
-                  14,
-                  null,
-                  'order.assignLots.description',
-                  [
-                    {
-                      buttonType: 'primary',
-                      onClick: this.openAssignLots,
-                      dataTest: 'orders_detail_assign_lots_btn',
-                      text: 'order.assignLots'
-                    }
-                  ]
-                )
+              ? this.renderSegment(null, 14, null, 'order.assignLots.description', [
+                  {
+                    buttonType: 'primary',
+                    onClick: this.openAssignLots,
+                    dataTest: 'orders_detail_assign_lots_btn',
+                    text: 'order.assignLots'
+                  }
+                ])
               : null}
 
             {action === '211'
@@ -162,43 +138,30 @@ class ActionsRequired extends React.Component {
                 ])
               : null}
             {action === '400'
-              ? this.renderSegment(
-                  null,
-                  11,
-                  null,
-                  'order.confirm.approve.dissaprove',
-                  [
-                    {
-                      buttonType: 'primary',
-                      onClick: this.approveOrder,
-                      dataTest: 'orders_detail_approve_btn',
-                      text: 'global.approve'
-                    },
-                    {
-                      buttonType: 'basic',
-                      onClick: this.disapproveOrder,
-                      dataTest: 'orders_detail_disapprove_btn',
-                      text: 'global.disapprove'
-                    }
-                  ]
-                )
+              ? this.renderSegment(null, 11, null, 'order.confirm.approve.dissaprove', [
+                  {
+                    buttonType: 'primary',
+                    onClick: this.approveOrder,
+                    dataTest: 'orders_detail_approve_btn',
+                    text: 'global.approve'
+                  },
+                  {
+                    buttonType: 'basic',
+                    onClick: this.disapproveOrder,
+                    dataTest: 'orders_detail_disapprove_btn',
+                    text: 'global.disapprove'
+                  }
+                ])
               : null}
-            {(detail.paymentStatus === 5 || detail.paymentStatus === 4) &&
-            moment().isBefore(repayUntil.add(3, 'days'))
-              ? this.renderSegment(
-                  'red',
-                  14,
-                  null,
-                  'order.payment.failed.description',
-                  [
-                    {
-                      buttonType: 'primary',
-                      onClick: openReinitiateTransfer,
-                      dataTest: 'orders_detail_reinitiate_transfer',
-                      text: 'order.reinitiateTransfer'
-                    }
-                  ]
-                )
+            {(detail.paymentStatus === 5 || detail.paymentStatus === 4) && moment().isBefore(repayUntil.add(3, 'days'))
+              ? this.renderSegment('red', 14, null, 'order.payment.failed.description', [
+                  {
+                    buttonType: 'primary',
+                    onClick: openReinitiateTransfer,
+                    dataTest: 'orders_detail_reinitiate_transfer',
+                    text: 'order.reinitiateTransfer'
+                  }
+                ])
               : null}
           </>
         )}
@@ -231,7 +194,7 @@ function actionRequired(data) {
 }
 
 function mapStateToProps(state, ownProps) {
-  const { orders } = state
+  const {orders} = state
 
   return {
     action: actionRequired(orders.detail),

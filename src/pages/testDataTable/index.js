@@ -1,15 +1,13 @@
-import {connect} from 'react-redux';
+import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import TestDataTable from './TestDataTable';
+import TestDataTable from './TestDataTable'
 
 function mapStateToProps(store) {
-    return {
-
-    }
+  return {}
 }
 
-function mapDispatchToProps(dispatch){
-    return bindActionCreators({},dispatch)
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({}, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TestDataTable);
+export default connect(mapStateToProps, mapDispatchToProps)(TestDataTable)

@@ -1,35 +1,45 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import confirm from '~/src/components/Confirmable/confirm'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { withDatagrid } from '~/modules/datagrid'
+import {FormattedMessage, injectIntl} from 'react-intl'
+import {withDatagrid} from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
-import { withToastManager } from 'react-toast-notifications'
-import { downloadAttachment } from '~/modules/inventory/actions'
-import { Button, Icon } from 'semantic-ui-react'
+import {generateToastMarkup, getSafe} from '~/utils/functions'
+import {withToastManager} from 'react-toast-notifications'
+import {downloadAttachment} from '~/modules/inventory/actions'
+import {Button, Icon} from 'semantic-ui-react'
 
 import * as Actions from '../../actions'
-import moment from "moment/moment"
+import moment from 'moment/moment'
 
-import { echoRowActions } from './constants'
-
+import {echoRowActions} from './constants'
 
 class ProductCatalogTable extends Component {
-
-  getRows = (rows) => {
-    const { intl: { formatMessage } } = this.props
-    return rows.map((row) => {
+  getRows = rows => {
+    const {
+      intl: {formatMessage}
+    } = this.props
+    return rows.map(row => {
       return {
         ...row,
-        sds: row.attachments && row.attachments.length ? (<Button as='a' onClick={() => this.downloadAttachment(row.attachments[0].name, row.attachments[0].id)}><Icon name='download' />{row.attachments[0].name}</Button>) : '',
+        sds:
+          row.attachments && row.attachments.length ? (
+            <Button as='a' onClick={() => this.downloadAttachment(row.attachments[0].name, row.attachments[0].id)}>
+              <Icon name='download' />
+              {row.attachments[0].name}
+            </Button>
+          ) : (
+            ''
+          ),
         manufacturerName: row.manufacturer ? row.manufacturer.name : '',
-        sdsRevisionDate: row.sdsRevisionDate ? moment(row.sdsRevisionDate).format(formatMessage({ id: 'date.standardFormat', date: 'MM/DD/YYYY' })) : ''
+        sdsRevisionDate: row.sdsRevisionDate
+          ? moment(row.sdsRevisionDate).format(formatMessage({id: 'date.standardFormat', date: 'MM/DD/YYYY'}))
+          : ''
       }
     })
   }
 
-  getMimeType = (documentName) => {
+  getMimeType = documentName => {
     const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
     switch (documentExtension) {
       case 'doc':
@@ -75,7 +85,7 @@ class ProductCatalogTable extends Component {
     const mimeType = this.getMimeType(documentName)
 
     const element = document.createElement('a')
-    const file = new Blob([downloadedFile.value.data], { type: mimeType })
+    const file = new Blob([downloadedFile.value.data], {type: mimeType})
     let fileURL = URL.createObjectURL(file)
 
     element.href = fileURL
@@ -103,7 +113,7 @@ class ProductCatalogTable extends Component {
       datagrid,
       columns,
       rows,
-      intl: { formatMessage },
+      intl: {formatMessage},
       openEditEchoProduct,
       openEditEchoAltNamesPopup,
       deleteEchoProduct
@@ -123,15 +133,27 @@ class ProductCatalogTable extends Component {
           rows={this.getRows(rows)}
           rowActions={[
             ...echoRowActions((row, i) => openEditEchoProduct(row.id, i)),
-            { text: formatMessage({ id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }), callback: (row) => openEditEchoAltNamesPopup(row) },
-            { text: formatMessage({ id: 'admin.deleteEchoProduct', defaultMessage: 'Delete Echo Product' }), callback: (row) => confirm(
-                formatMessage({ id: 'confirm.deleteEchoProduct.title', defaultMessage: 'Delete Echo Product?' }),
-                formatMessage({ id: 'confirm.deleteEchoProduct.content', defaultMessage: `Do you really want to delete '${row.name}' echo product?` }, { name: row.name })
-              ).then(() => {
-                deleteEchoProduct(row.id)
-                datagrid.removeRow(row.id)
-              })
+            {
+              text: formatMessage({id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names'}),
+              callback: row => openEditEchoAltNamesPopup(row)
             },
+            {
+              text: formatMessage({id: 'admin.deleteEchoProduct', defaultMessage: 'Delete Echo Product'}),
+              callback: row =>
+                confirm(
+                  formatMessage({id: 'confirm.deleteEchoProduct.title', defaultMessage: 'Delete Echo Product?'}),
+                  formatMessage(
+                    {
+                      id: 'confirm.deleteEchoProduct.content',
+                      defaultMessage: `Do you really want to delete '${row.name}' echo product?`
+                    },
+                    {name: row.name}
+                  )
+                ).then(() => {
+                  deleteEchoProduct(row.id)
+                  datagrid.removeRow(row.id)
+                })
+            }
           ]}
         />
       </React.Fragment>
@@ -139,18 +161,20 @@ class ProductCatalogTable extends Component {
   }
 }
 
-const mapStateToProps = ({ admin }, { datagrid }) => {
+const mapStateToProps = ({admin}, {datagrid}) => {
   return {
     columns: admin.config[admin.currentTab.name].display.columns,
     productListDataRequest: admin.productListDataRequest,
     filterValue: admin.filterValue,
     currentTab: admin.currentTab,
     rows: datagrid.rows.map(c => ({
-      ...c,
+      ...c
     })),
     confirmMessage: admin.confirmMessage,
-    deleteRowById: admin.deleteRowById,
+    deleteRowById: admin.deleteRowById
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions, downloadAttachment })(injectIntl(withToastManager(ProductCatalogTable))))
+export default withDatagrid(
+  connect(mapStateToProps, {...Actions, downloadAttachment})(injectIntl(withToastManager(ProductCatalogTable)))
+)

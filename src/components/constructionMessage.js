@@ -1,9 +1,7 @@
-import React from "react";
+import React from 'react'
 
 const constructionMessage = () => {
-    return (
-        <div className="conMess">This page is still under construction</div>
-    )
-};
+  return <div className='conMess'>This page is still under construction</div>
+}
 
-export default constructionMessage;
+export default constructionMessage

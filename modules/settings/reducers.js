@@ -2,10 +2,10 @@ import * as AT from './action-types'
 import * as inventoryAT from '~/modules/inventory/action-types'
 import Link from 'next/link'
 
-import { defaultTabs } from "./contants"
+import {defaultTabs} from './contants'
 
-import { currency } from '~/constants/index'
-import { FormattedMessage } from 'react-intl'
+import {currency} from '~/constants/index'
+import {FormattedMessage} from 'react-intl'
 
 export const initialState = {
   editPopupBoolean: false,
@@ -49,10 +49,10 @@ export const initialState = {
   currentEditForm: null,
   currentAddForm: null,
   confirmMessage: null,
-  toast: { message: null, isSuccess: null },
+  toast: {message: null, isSuccess: null},
   deleteUserById: null,
   deleteRowById: null,
-  filterValue: "",
+  filterValue: '',
   productCatalogUnmappedValue: false,
   editPopupSearchProducts: [],
   fileCSVId: null,
@@ -68,8 +68,8 @@ export const initialState = {
   loaded: false,
   searchedCasProducts: [[]],
   searchedUnNumbers: [],
-  deliveryAddressesFilter: { pageSize: 50, pageNumber: 0 },
-  productsFilter: { pageSize: 50, pageNumber: 0 },
+  deliveryAddressesFilter: {pageSize: 50, pageNumber: 0},
+  productsFilter: {pageSize: 50, pageNumber: 0},
   documentTypes: [],
   addressSearch: [],
   logisticsAccounts: [],
@@ -82,22 +82,33 @@ export const initialState = {
   verificationDocumentTypes: [],
   agreementModal: {
     open: false,
-    declineButtonContent: <FormattedMessage id='global.logout' defaultMessage='Logout'>{text => text}</FormattedMessage>,
-    acceptButtonContent: <FormattedMessage id='global.accept' defaultMessage='Accept'>{text => text}</FormattedMessage>,
-    modalHeader:
-      <FormattedMessage
-        id='agree.withTOS.header'
-        defaultMessage='Agree with Terms of Service' />,
-    modalContent:
+    declineButtonContent: (
+      <FormattedMessage id='global.logout' defaultMessage='Logout'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    acceptButtonContent: (
+      <FormattedMessage id='global.accept' defaultMessage='Accept'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    modalHeader: <FormattedMessage id='agree.withTOS.header' defaultMessage='Agree with Terms of Service' />,
+    modalContent: (
       <FormattedMessage
         id='agree.withTOS.content'
         values={{
-          tos: <FormattedMessage id='verification.termsOfService'>
-            {text => <Link href='https://echoexchange.net/legal'><a target='_blank'>{text}</a></Link>}
-          </FormattedMessage>
-
-        }
-        } />,
+          tos: (
+            <FormattedMessage id='verification.termsOfService'>
+              {text => (
+                <Link href='https://echoexchange.net/legal'>
+                  <a target='_blank'>{text}</a>
+                </Link>
+              )}
+            </FormattedMessage>
+          )
+        }}
+      />
+    )
   },
   languages: [],
   languagesFetching: false,
@@ -105,11 +116,11 @@ export const initialState = {
   echoProductsFetching: false,
   nmfcNumbersFiltered: [],
   nmfcNumbersFetching: false,
-  csvImportError: null,
+  csvImportError: null
 }
 
 export default function reducer(state = initialState, action) {
-  const { payload } = action
+  const {payload} = action
 
   switch (action.type) {
     case AT.OPEN_POPUP: {
@@ -213,7 +224,7 @@ export default function reducer(state = initialState, action) {
     case AT.CLOSE_TOAST: {
       return {
         ...state,
-        toast: { message: null, isSuccess: null }
+        toast: {message: null, isSuccess: null}
       }
     }
     /* DELETE DELIVERY ADDRESS */
@@ -229,7 +240,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        deliveryAddressesRows: state.deliveryAddressesRows.filter((address) => address.id !== payload)
+        deliveryAddressesRows: state.deliveryAddressesRows.filter(address => address.id !== payload)
       }
     }
 
@@ -239,7 +250,6 @@ export default function reducer(state = initialState, action) {
         loading: false
       }
     }
-
 
     case AT.CLOSE_CONFIRM_POPUP: {
       return {
@@ -308,8 +318,9 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_USERS_DATA_PENDING: {// ! ! vsude zmenit na pending
-      return { ...state, loading: true }
+    case AT.GET_USERS_DATA_PENDING: {
+      // ! ! vsude zmenit na pending
+      return {...state, loading: true}
     }
 
     case AT.GET_USERS_DATA_FULFILLED: {
@@ -332,7 +343,7 @@ export default function reducer(state = initialState, action) {
           // preferredCurrency: (user.preferredCurrency || {}).id || 0,
           preferredCurrency: currency,
           homeBranch: user.homeBranch.name,
-          permissions: user.roles ? user.roles.name : "", // ! ! array?
+          permissions: user.roles ? user.roles.name : '', // ! ! array?
           id: user.id,
           allUserRoles: user.roles || [],
           lastLoginAt: user.lastLoginAt
@@ -359,15 +370,15 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_WAREHOUSES_DATA_PENDING: {// ! ! pending
-      return { ...state, loading: true }
+    case AT.GET_WAREHOUSES_DATA_PENDING: {
+      // ! ! pending
+      return {...state, loading: true}
     }
 
     case AT.GET_WAREHOUSES_DATA_FULFILLED: {
       const warehousesRows = action.payload.warehouses.map(warehouse => ({
         name: warehouse.name,
-        address:
-          warehouse.address.streetAddress + ", " + warehouse.address.city,
+        address: warehouse.address.streetAddress + ', ' + warehouse.address.city,
         streetAddress: warehouse.address.streetAddress,
         city: warehouse.address.city,
         countryName: warehouse.address.country.name,
@@ -387,8 +398,8 @@ export default function reducer(state = initialState, action) {
 
       warehousesRows.forEach(element => {
         for (let key in element) {
-          if (element[key] === "unknown") {
-            element[key] = ""
+          if (element[key] === 'unknown') {
+            element[key] = ''
           }
         }
       })
@@ -402,15 +413,16 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_BRANCHES_DATA_PENDING: {  // ! ! pending
-      return { ...state, loading: true }
+    case AT.GET_BRANCHES_DATA_PENDING: {
+      // ! ! pending
+      return {...state, loading: true}
     }
 
     case AT.GET_BRANCHES_DATA_FULFILLED: {
       const branchesRows = action.payload.branches.map(branch => {
         return {
           name: branch.name,
-          address: branch.address.streetAddress + ", " + branch.address.city,
+          address: branch.address.streetAddress + ', ' + branch.address.city,
           streetAddress: branch.address.streetAddress,
           city: branch.address.city,
           countryName: branch.address.country.name,
@@ -430,8 +442,8 @@ export default function reducer(state = initialState, action) {
       })
       branchesRows.forEach(element => {
         for (let key in element) {
-          if (element[key] === "unknown") {
-            element[key] = ""
+          if (element[key] === 'unknown') {
+            element[key] = ''
           }
         }
       })
@@ -458,7 +470,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_CREDIT_CARDS_DATA_PENDING: {  // ! ! pending
+    case AT.GET_CREDIT_CARDS_DATA_PENDING: {
+      // ! ! pending
       return {
         ...state,
         loading: true
@@ -474,7 +487,7 @@ export default function reducer(state = initialState, action) {
           expirationMonth: card.expMonth,
           expirationYear: card.expYear,
           last4: `**** **** **** ${card.last4}`,
-          expMonthYear: card.expMonth + " / " + card.expYear
+          expMonthYear: card.expMonth + ' / ' + card.expYear
         }
       })
 
@@ -485,23 +498,23 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_BANK_ACCOUNTS_DATA_PENDING: { // ! ! pending
-      return { ...state, loading: true }
+    case AT.GET_BANK_ACCOUNTS_DATA_PENDING: {
+      // ! ! pending
+      return {...state, loading: true}
     }
 
     case AT.GET_BANK_ACCOUNTS_DATA_FULFILLED: {
       const {
         bankAccountsData,
-        newCountryFormat,
+        newCountryFormat
         // newCurrencyFormat
       } = action.payload
-
 
       return {
         ...state,
         loading: false,
         bankAccountsRows: bankAccountsData,
-        country: newCountryFormat,
+        country: newCountryFormat
         // currency: newCurrencyFormat
       }
     }
@@ -642,10 +655,7 @@ export default function reducer(state = initialState, action) {
           productName: item.productName,
           productNumber: item.product.unNumber,
           productId: item.product.id,
-          packagingType:
-            item.packaging.packagingType === undefined
-              ? ""
-              : item.packaging.packagingType.name,
+          packagingType: item.packaging.packagingType === undefined ? '' : item.packaging.packagingType.name,
           packagingSize: item.packaging.size
         }
       })
@@ -771,7 +781,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_CREATE_CAS_PRODUCTS_INDEX: {
       // ADD new array to casProducts
-      let { searchedCasProducts } = state
+      let {searchedCasProducts} = state
       searchedCasProducts.push([])
 
       return {
@@ -782,7 +792,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_REMOVE_CAS_PRODUCTS_INDEX: {
       // REMOVE array from casProducts
-      let { searchedCasProducts } = state
+      let {searchedCasProducts} = state
       searchedCasProducts.splice(action.payload.index, 1)
 
       return {
@@ -897,7 +907,7 @@ export default function reducer(state = initialState, action) {
         countriesDropDown: payload.map(c => ({
           text: c.name,
           value: c.id,
-          key: c.id,
+          key: c.id
         }))
       }
     }
@@ -908,8 +918,6 @@ export default function reducer(state = initialState, action) {
         countriesLoading: false
       }
     }
-
-
 
     case AT.SETTINGS_GET_PROVINCES_FULFILLED: {
       return {
@@ -925,7 +933,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.ADD_TAB: {
       var tabsNames = state.tabsNames
-      if (!state.tabsNames.find((el) => el.id === payload.id)) {
+      if (!state.tabsNames.find(el => el.id === payload.id)) {
         var tabsNames = [].concat(payload, state.tabsNames)
       }
       return {
@@ -947,22 +955,18 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        popupValues: null,
+        popupValues: null
         // isOpenPopup: false,
       }
     }
 
     case AT.POST_NEW_BANK_ACCOUNT_REQUEST_FULFILLED: {
-
       return {
         ...state,
         loading: false,
         popupValues: null,
         isOpenPopup: false,
-        bankAccountsRows: [
-          ...state.bankAccountsRows,
-          action.payload
-        ]
+        bankAccountsRows: [...state.bankAccountsRows, action.payload]
       }
     }
 
@@ -977,7 +981,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        bankAccountsRows: state.bankAccountsRows.filter((account) => account.id !== payload)
+        bankAccountsRows: state.bankAccountsRows.filter(account => account.id !== payload)
       }
     }
 
@@ -1039,7 +1043,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        [property]: state[property].filter((warehouse) => warehouse.id !== payload)
+        [property]: state[property].filter(warehouse => warehouse.id !== payload)
       }
     }
 
@@ -1061,7 +1065,7 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_GET_DOCUMENT_TYPES_FULFILLED: {
       return {
         ...state,
-        documentTypes: action.payload.data.map((docType) => {
+        documentTypes: action.payload.data.map(docType => {
           return {
             key: docType.id,
             text: docType.name,
@@ -1132,7 +1136,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.UPDATE_LOGISTICS_ACCOUNT_FULFILLED: {
       let logisticsAccounts = state.logisticsAccounts.slice()
-      logisticsAccounts[state.logisticsAccounts.findIndex((el) => el.id === payload.id)] = payload
+      logisticsAccounts[state.logisticsAccounts.findIndex(el => el.id === payload.id)] = payload
 
       return {
         ...state,
@@ -1153,7 +1157,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        logisticsAccounts: state.logisticsAccounts.filter((el) => el.id !== payload)
+        logisticsAccounts: state.logisticsAccounts.filter(el => el.id !== payload)
       }
     }
 
@@ -1226,7 +1230,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-
     /* GET_BUSINESS_CLASSIFICATIONS */
 
     case AT.GET_BUSINESS_CLASSIFICATIONS_PENDING: {
@@ -1240,7 +1243,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         businessClassifications: payload,
-        bussinessClassificationsLoading: false,
+        bussinessClassificationsLoading: false
       }
     }
 
@@ -1294,8 +1297,8 @@ export default function reducer(state = initialState, action) {
     /* TRIGGER_AGREEMENT_MODAL */
 
     case AT.TRIGGER_AGREEMENT_MODAL: {
-      let { force, modalProps } = payload
-      let { open } = !state.agreementModal
+      let {force, modalProps} = payload
+      let {open} = !state.agreementModal
 
       if (force !== null) open = force
 
@@ -1303,7 +1306,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         agreementModal: {
           ...state.agreementModal,
-          open,
+          open
           // ...modalProps
         }
       }
@@ -1372,7 +1375,7 @@ export default function reducer(state = initialState, action) {
     case AT.GET_NMFC_NUMBERS_PENDING: {
       return {
         ...state,
-        nmfcNumbersFetching: true,
+        nmfcNumbersFetching: true
       }
     }
 
@@ -1380,7 +1383,7 @@ export default function reducer(state = initialState, action) {
     case AT.GET_NMFC_NUMBERS_REJECTED: {
       return {
         ...state,
-        nmfcNumbersFetching: false,
+        nmfcNumbersFetching: false
       }
     }
 
@@ -1399,7 +1402,7 @@ export default function reducer(state = initialState, action) {
       if (!(payload instanceof Array)) payloadNew = [payload]
 
       payloadNew.forEach(element => {
-        if (!copy.find((e) => e.id === element.id)) copy.push(element)
+        if (!copy.find(e => e.id === element.id)) copy.push(element)
       })
 
       return {

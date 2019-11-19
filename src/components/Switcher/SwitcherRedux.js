@@ -1,11 +1,10 @@
+import React from 'react'
+import {Control} from 'react-redux-form'
+import Switcher from './Switcher'
+import {Checkbox} from 'semantic-ui-react'
 
-import React from 'react';
-import { Control } from 'react-redux-form';
-import Switcher from './Switcher';
-import { Checkbox } from 'semantic-ui-react';
-
-const SwitcherRedux = (props) => {
-  const { isrounded, partlybrc, model, onClick } = props;
+const SwitcherRedux = props => {
+  const {isrounded, partlybrc, model, onClick} = props
   return (
     <Control.checkbox
       component={Checkbox}
@@ -13,7 +12,7 @@ const SwitcherRedux = (props) => {
       model={model}
       onClick={e => onClick(e)}
       mapProps={{
-        show: (props) => props.modelValue === false ? 0 : 1,
+        show: props => (props.modelValue === false ? 0 : 1)
       }}
       controlProps={{
         isrounded,
@@ -22,7 +21,7 @@ const SwitcherRedux = (props) => {
       data-test='SwitcherRedux_action_chckb'
       {...props}
     />
-  );
-};
+  )
+}
 
-export default SwitcherRedux;
+export default SwitcherRedux

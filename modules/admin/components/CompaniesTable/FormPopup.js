@@ -1,37 +1,44 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 
-import { Form, Modal, FormGroup, Divider, Accordion, Icon, Segment, Header } from 'semantic-ui-react'
-import { Formik } from 'formik'
+import {Form, Modal, FormGroup, Divider, Accordion, Icon, Segment, Header} from 'semantic-ui-react'
+import {Formik} from 'formik'
 import {
-  closePopup, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces,
-  getAddressSearchPrimaryBranch, getAddressSearchMailingBranch, removeEmpty
+  closePopup,
+  updateCompany,
+  createCompany,
+  getCountries,
+  getPrimaryBranchProvinces,
+  getMailingBranchProvinces,
+  getAddressSearchPrimaryBranch,
+  getAddressSearchMailingBranch,
+  removeEmpty
 } from '~/modules/admin/actions'
-import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
-import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
-import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import {addZip, getZipCodes} from '~/modules/zip-dropdown/actions'
+import {postCompanyLogo, deleteCompanyLogo} from '~/modules/company-form/actions'
+import {Input, Button, Checkbox, Dropdown} from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 // import { ZipDropdown } from '~/modules/zip-dropdown'
 // debug purposes only
 // import JSONPretty from 'react-json-pretty'
 
-import { cloneDeep } from 'lodash'
+import {cloneDeep} from 'lodash'
 
-import { FormattedMessage, injectIntl } from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 import styled from 'styled-components'
 
-import { withToastManager } from 'react-toast-notifications'
+import {withToastManager} from 'react-toast-notifications'
 
-import { validationSchema } from '~/modules/company-form/constants'
-import { provinceObjectRequired, errorMessages, minOrZeroLength } from '~/constants/yupValidation'
+import {validationSchema} from '~/modules/company-form/constants'
+import {provinceObjectRequired, errorMessages, minOrZeroLength} from '~/constants/yupValidation'
 
-import { CompanyForm } from '~/modules/company-form/'
-import { AddressForm } from '~/modules/address-form/'
-import { addressValidationSchema, phoneValidation, websiteValidation } from '~/constants/yupValidation'
+import {CompanyForm} from '~/modules/company-form/'
+import {AddressForm} from '~/modules/address-form/'
+import {addressValidationSchema, phoneValidation, websiteValidation} from '~/constants/yupValidation'
 
-import { getSafe, generateToastMarkup, deepSearch } from '~/utils/functions'
-import { Datagrid } from '~/modules/datagrid'
-import { PhoneNumber } from '~/modules/phoneNumber'
+import {getSafe, generateToastMarkup, deepSearch} from '~/utils/functions'
+import {Datagrid} from '~/modules/datagrid'
+import {PhoneNumber} from '~/modules/phoneNumber'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -62,7 +69,7 @@ const initialFormValues = {
       },
       contactEmail: '',
       contactName: '',
-      contactPhone: '',
+      contactPhone: ''
     },
     warehouse: true
   },
@@ -79,13 +86,13 @@ const initialFormValues = {
       },
       contactEmail: '',
       contactName: '',
-      contactPhone: '',
+      contactPhone: ''
     },
     warehouse: true
   },
   primaryUser: {
     email: '',
-    name: '',
+    name: ''
   }
 }
 
@@ -107,63 +114,89 @@ class AddNewPopupCasProducts extends React.Component {
   //   this.props.getCountries()
   // }
 
+  formValidationNew = () =>
+    Yup.lazy(values => {
+      // let primaryUserRequired = values.primaryUser.email !== '' || values.primaryUser.name !== ''
+      // let mailingBranchRequired = values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
+      //   values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
+      //   values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
+      //   values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''
+      let mailingBranchRequired = deepSearch(values.mailingBranch.deliveryAddress, val => val.trim() !== '')
 
-  formValidationNew = () => (Yup.lazy(values => {
-    // let primaryUserRequired = values.primaryUser.email !== '' || values.primaryUser.name !== ''
-    // let mailingBranchRequired = values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
-    //   values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
-    //   values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
-    //   values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''
-    let mailingBranchRequired = deepSearch(values.mailingBranch.deliveryAddress, (val) => val.trim() !== '')
+      let minLength = errorMessages.minLength(2)
 
-    let minLength = errorMessages.minLength(2)
+      let validation = Yup.object().shape({
+        name: Yup.string()
+          .trim()
+          .min(2, minLength)
+          .required(minLength),
+        website: websiteValidation(),
 
-    let validation = Yup.object().shape({
-      name: Yup.string().trim().min(2, minLength).required(minLength),
-      website: websiteValidation(),
+        mailingBranch: Yup.lazy(() => {
+          if (mailingBranchRequired)
+            return Yup.object().shape({
+              deliveryAddress: Yup.object().shape({
+                addressName: minOrZeroLength(3),
+                contactEmail: Yup.string()
+                  .trim()
+                  .email(errorMessages.invalidEmail)
+                  .required(errorMessages.invalidEmail),
+                contactName: Yup.string()
+                  .trim()
+                  .min(2, minLength)
+                  .required(minLength),
+                contactPhone: Yup.string()
+                  .trim()
+                  .required(errorMessages.enterPhoneNumber),
+                address: addressValidationSchema()
+              })
+            })
+          return Yup.mixed().notRequired()
+        }),
 
-      mailingBranch: Yup.lazy(() => {
-        if (mailingBranchRequired) return Yup.object().shape({
+        primaryBranch: Yup.object().shape({
           deliveryAddress: Yup.object().shape({
             addressName: minOrZeroLength(3),
-            contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-            contactName: Yup.string().trim().min(2, minLength).required(minLength),
-            contactPhone: Yup.string().trim().required(errorMessages.enterPhoneNumber),
+            contactEmail: Yup.string()
+              .trim()
+              .email(errorMessages.invalidEmail)
+              .required(errorMessages.invalidEmail),
+            contactName: Yup.string()
+              .trim()
+              .min(2, minLength)
+              .required(minLength),
+            contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),
             address: addressValidationSchema()
           })
+        }),
+        primaryUser: Yup.lazy(() => {
+          // if (primaryUserRequired)
+          return Yup.object().shape({
+            email: Yup.string()
+              .trim()
+              .email(errorMessages.invalidEmail)
+              .required(errorMessages.invalidEmail),
+            name: Yup.string()
+              .trim()
+              .min(2, minLength)
+              .required(minLength)
+          })
+          // return Yup.mixed().notRequired()
         })
-        return Yup.mixed().notRequired()
-      }),
+      })
 
-      primaryBranch: Yup.object().shape({
-        deliveryAddress: Yup.object().shape({
-          addressName: minOrZeroLength(3),
-          contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-          contactName: Yup.string().trim().min(2, minLength).required(minLength),
-          contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),
-          address: addressValidationSchema()
-        })
-      }),
-      primaryUser: Yup.lazy(() => {
-        // if (primaryUserRequired) 
-        return Yup.object().shape({
-          email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-          name: Yup.string().trim().min(2, minLength).required(minLength),
-        })
-        // return Yup.mixed().notRequired()
-      }),
+      return validation
     })
-
-    return validation
-  })
-  )
 
   handlePrimaryBranchCountry = (e, d) => {
     let country = this.props.countries.find(obj => obj.id == d.value)
     if (country.hasProvinces) {
       this.props.getPrimaryBranchProvinces(country.id)
     }
-    this.setState({ primaryBranchHasProvinces: country.hasProvinces, primaryBranchProvinceValidation: provinceObjectRequired(country.hasProvinces) })
+    this.setState({
+      primaryBranchHasProvinces: country.hasProvinces,
+      primaryBranchProvinceValidation: provinceObjectRequired(country.hasProvinces)
+    })
   }
 
   handleMailingBranchCountry = (e, d) => {
@@ -171,13 +204,16 @@ class AddNewPopupCasProducts extends React.Component {
     if (country.hasProvinces) {
       this.props.getMailingBranchProvinces(country.id)
     }
-    this.setState({ mailingBranchHasProvinces: country.hasProvinces, mailingBranchProvinceValidation: provinceObjectRequired(country.hasProvinces) })
+    this.setState({
+      mailingBranchHasProvinces: country.hasProvinces,
+      mailingBranchProvinceValidation: provinceObjectRequired(country.hasProvinces)
+    })
   }
 
-  handleAccordionChange = (e, { name }) => {
-    let { accordionActive } = this.state
+  handleAccordionChange = (e, {name}) => {
+    let {accordionActive} = this.state
     accordionActive[name] = !accordionActive[name]
-    this.setState({ accordionActive })
+    this.setState({accordionActive})
   }
 
   // handleAddressSelectPrimaryBranch = (d, values, setFieldValue) => {
@@ -235,12 +271,12 @@ class AddNewPopupCasProducts extends React.Component {
   //   }
   // }
 
-  selectLogo = (logo) => {
-    this.setState({ companyLogo: logo })
+  selectLogo = logo => {
+    this.setState({companyLogo: logo})
   }
 
   removeLogo = () => {
-    this.setState({ companyLogo: null })
+    this.setState({companyLogo: null})
   }
 
   render() {
@@ -261,17 +297,16 @@ class AddNewPopupCasProducts extends React.Component {
       deleteCompanyLogo
     } = this.props
 
-    const { selectLogo, removeLogo } = this
+    const {selectLogo, removeLogo} = this
 
-    let { accordionActive, companyLogo } = this.state
+    let {accordionActive, companyLogo} = this.state
 
-    const { formatMessage } = intl
+    const {formatMessage} = intl
     // const {
     //   initialState,
     //   primaryBranchHasProvinces,
     //   mailingBranchHasProvinces
     // } = this.state
-
 
     return (
       <Formik
@@ -280,33 +315,31 @@ class AddNewPopupCasProducts extends React.Component {
         validationSchema={popupValues ? validationSchema : this.formValidationNew()}
         onSubmit={async (values, actions) => {
           try {
-
             if (popupValues) {
               let newValues = {}
 
-              Object.keys(values)
-                .forEach(key => {
-                  // TODO: try to have reviewRequested in values not as React.element
-                  if (typeof values[key].$$typeof === 'undefined') {
-                    if (typeof values[key] === 'string') newValues[key] = values[key].trim()
-                    else newValues[key] = values[key]
-                  }
-                })
+              Object.keys(values).forEach(key => {
+                // TODO: try to have reviewRequested in values not as React.element
+                if (typeof values[key].$$typeof === 'undefined') {
+                  if (typeof values[key] === 'string') newValues[key] = values[key].trim()
+                  else newValues[key] = values[key]
+                }
+              })
 
-              const data = await updateCompany(popupValues.id, { ...newValues, businessType: getSafe(() => newValues.businessType.id, null) })
+              const data = await updateCompany(popupValues.id, {
+                ...newValues,
+                businessType: getSafe(() => newValues.businessType.id, null)
+              })
               if (this.state.companyLogo) {
                 postCompanyLogo(data.id, companyLogo)
 
-                Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: true }))
+                Datagrid.updateRow(data.id, () => ({...data, hasLogo: true}))
               } else {
-                if (popupValues.hasLogo)
-                  deleteCompanyLogo(popupValues.id)
+                if (popupValues.hasLogo) deleteCompanyLogo(popupValues.id)
 
-                Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: false }))
+                Datagrid.updateRow(data.id, () => ({...data, hasLogo: false}))
               }
-
-            }
-            else {
+            } else {
               // Really ??
               // if (values.mailingBranch && !(values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
               //   values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
@@ -314,10 +347,10 @@ class AddNewPopupCasProducts extends React.Component {
               //   values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''))
               //   delete values['mailingBranch']
 
-              if(!values.deliveryAddress || !deepSearch(values.mailingBranch.deliveryAddress, (val) => val !== '')) delete values['mailingBranch']
-              
-              let branches = ['primaryBranch', 'mailingBranch']
+              if (!values.deliveryAddress || !deepSearch(values.mailingBranch.deliveryAddress, val => val !== ''))
+                delete values['mailingBranch']
 
+              let branches = ['primaryBranch', 'mailingBranch']
 
               if (values.businessType) values.businessType = values.businessType.id
 
@@ -330,7 +363,7 @@ class AddNewPopupCasProducts extends React.Component {
 
               if (this.state.companyLogo) {
                 let reader = new FileReader()
-                reader.onload = async function () {
+                reader.onload = async function() {
                   const loadedLogo = btoa(reader.result)
                   const data = await createCompany(payload)
                   await postCompanyLogo(data.id, companyLogo)
@@ -348,137 +381,237 @@ class AddNewPopupCasProducts extends React.Component {
             }
             let status = popupValues ? 'companyUpdated' : 'companyCreated'
 
-
-
-            toastManager.add(generateToastMarkup(
-              <FormattedMessage id={`notifications.${status}.header`} />,
-              <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
-            ), {
-              appearance: 'success'
-            })
+            toastManager.add(
+              generateToastMarkup(
+                <FormattedMessage id={`notifications.${status}.header`} />,
+                <FormattedMessage id={`notifications.${status}.content`} values={{name: values.name}} />
+              ),
+              {
+                appearance: 'success'
+              }
+            )
           } catch (err) {
             console.error(err)
-          }
-          finally {
+          } finally {
             actions.setSubmitting(false)
           }
         }}
         onReset={closePopup}
         render={props => {
-          let { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = props
+          let {setFieldValue, values, setFieldTouched, errors, touched, isSubmitting} = props
           return (
             <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
-
-              <Modal.Header><FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} /> {config.addEditText}</Modal.Header>
+              <Modal.Header>
+                <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} /> {config.addEditText}
+              </Modal.Header>
               <Segment basic padded>
                 <Form loading={isSubmitting}>
                   <Accordion exclusive={false}>
                     <Modal.Content>
-                      <CompanyForm admin={true} selectLogo={selectLogo} removeLogo={removeLogo} companyLogo={companyLogo} values={values} setFieldValue={setFieldValue}
-                        setFieldTouched={setFieldTouched} errors={errors} touched={touched} isSubmitting={isSubmitting} />
+                      <CompanyForm
+                        admin={true}
+                        selectLogo={selectLogo}
+                        removeLogo={removeLogo}
+                        companyLogo={companyLogo}
+                        values={values}
+                        setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        errors={errors}
+                        touched={touched}
+                        isSubmitting={isSubmitting}
+                      />
                       {!popupValues && (
                         <>
                           <Divider />
-                          <Accordion.Title active={accordionActive.companyAdmin} onClick={this.handleAccordionChange} name='companyAdmin' data-test='admin_popup_company_accordion_companyAdmin'>
+                          <Accordion.Title
+                            active={accordionActive.companyAdmin}
+                            onClick={this.handleAccordionChange}
+                            name='companyAdmin'
+                            data-test='admin_popup_company_accordion_companyAdmin'>
                             <AccordionHeader as='h4'>
-                              <Icon color={accordionActive.companyAdmin && 'blue'} name={accordionActive.companyAdmin ? 'chevron down' : 'chevron right'} />
-                              <FormattedMessage id='global.companyAdmin' defaultMessage='Company Admin (Primary User)' />
+                              <Icon
+                                color={accordionActive.companyAdmin && 'blue'}
+                                name={accordionActive.companyAdmin ? 'chevron down' : 'chevron right'}
+                              />
+                              <FormattedMessage
+                                id='global.companyAdmin'
+                                defaultMessage='Company Admin (Primary User)'
+                              />
                             </AccordionHeader>
                           </Accordion.Title>
                           <Accordion.Content active={accordionActive.companyAdmin}>
                             <FormGroup widths='equal' data-test='admin_popup_company_primaryUserNameEmail_inp'>
-                              <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='primaryUser.name' />
-                              <Input label={<FormattedMessage id='global.email' defaultMessage='Email' />} name='primaryUser.email' />
+                              <Input
+                                label={<FormattedMessage id='global.name' defaultMessage='Name' />}
+                                name='primaryUser.name'
+                              />
+                              <Input
+                                label={<FormattedMessage id='global.email' defaultMessage='Email' />}
+                                name='primaryUser.email'
+                              />
                             </FormGroup>
                             <FormGroup widths='equal' data-test='admin_popup_company_primaryUserTitlePhone_inp'>
-                              <Input label={<FormattedMessage id='global.jobTitle' defaultMessage='Job Title' />} name='primaryUser.jobTitle' />
+                              <Input
+                                label={<FormattedMessage id='global.jobTitle' defaultMessage='Job Title' />}
+                                name='primaryUser.jobTitle'
+                              />
                               <PhoneNumber
-                                label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='primaryUser.phone'
-                                values={values} setFieldValue={setFieldValue}
-                                setFieldTouched={setFieldTouched} errors={errors}
-                                touched={touched} isSubmitting={isSubmitting}
+                                label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+                                name='primaryUser.phone'
+                                values={values}
+                                setFieldValue={setFieldValue}
+                                setFieldTouched={setFieldTouched}
+                                errors={errors}
+                                touched={touched}
+                                isSubmitting={isSubmitting}
                               />
                             </FormGroup>
                           </Accordion.Content>
                         </>
                       )}
 
-                      {!popupValues && <>
-                        {/* {AddressSuggestPrimaryBranchInput}
+                      {!popupValues && (
+                        <>
+                          {/* {AddressSuggestPrimaryBranchInput}
                         {AddressSuggestMailingBranchInput} */}
-                        <Divider />
-                        <Accordion.Title active={accordionActive.billingAddress} onClick={this.handleAccordionChange} name='billingAddress' data-test='admin_popup_company_accordion_primaryBranch'>
-                          <AccordionHeader as='h4'>
-                            <Icon color={accordionActive.billingAddress && 'blue'} name={accordionActive.billingAddress ? 'chevron down' : 'chevron right'} />
-                            <FormattedMessage id='global.primaryBranch' defaultMessage='Primary Branch (Billing Address)' />
-                          </AccordionHeader>
-                        </Accordion.Title>
-                        <Accordion.Content active={accordionActive.billingAddress}>
-                          <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchName_inp' >
-                            <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='primaryBranch.deliveryAddress.addressName' />
-                          </FormGroup>
-                          <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchNameEmailPhone_inp' >
-                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='primaryBranch.deliveryAddress.contactName' />
-                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />} name='primaryBranch.deliveryAddress.contactEmail' />
-                            <PhoneNumber
-                              label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />}
-                              name='primaryBranch.deliveryAddress.contactPhone'
-                              values={values} setFieldValue={setFieldValue}
-                              setFieldTouched={setFieldTouched} errors={errors}
-                              touched={touched} isSubmitting={isSubmitting}
+                          <Divider />
+                          <Accordion.Title
+                            active={accordionActive.billingAddress}
+                            onClick={this.handleAccordionChange}
+                            name='billingAddress'
+                            data-test='admin_popup_company_accordion_primaryBranch'>
+                            <AccordionHeader as='h4'>
+                              <Icon
+                                color={accordionActive.billingAddress && 'blue'}
+                                name={accordionActive.billingAddress ? 'chevron down' : 'chevron right'}
+                              />
+                              <FormattedMessage
+                                id='global.primaryBranch'
+                                defaultMessage='Primary Branch (Billing Address)'
+                              />
+                            </AccordionHeader>
+                          </Accordion.Title>
+                          <Accordion.Content active={accordionActive.billingAddress}>
+                            <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchName_inp'>
+                              <Input
+                                label={<FormattedMessage id='global.name' defaultMessage='Name' />}
+                                name='primaryBranch.deliveryAddress.addressName'
+                              />
+                            </FormGroup>
+                            <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchNameEmailPhone_inp'>
+                              <Input
+                                inputProps={{fluid: true}}
+                                label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />}
+                                name='primaryBranch.deliveryAddress.contactName'
+                              />
+                              <Input
+                                inputProps={{fluid: true}}
+                                label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />}
+                                name='primaryBranch.deliveryAddress.contactEmail'
+                              />
+                              <PhoneNumber
+                                label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />}
+                                name='primaryBranch.deliveryAddress.contactPhone'
+                                values={values}
+                                setFieldValue={setFieldValue}
+                                setFieldTouched={setFieldTouched}
+                                errors={errors}
+                                touched={touched}
+                                isSubmitting={isSubmitting}
+                              />
+                            </FormGroup>
+                            <FormGroup widths='equal'>
+                              <Checkbox
+                                label={formatMessage({id: 'global.warehouse', defaultMessage: 'Warehouse'})}
+                                name='primaryBranch.warehouse'
+                                inputProps={{'data-test': 'admin_popup_company_primaryBranch_warehouse_chckb'}}
+                              />
+                            </FormGroup>
+                            <AddressForm
+                              values={values}
+                              setFieldValue={setFieldValue}
+                              prefix='primaryBranch.deliveryAddress'
                             />
-                          </FormGroup>
-                          <FormGroup widths='equal'>
-                            <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='primaryBranch.warehouse' inputProps={{ 'data-test': 'admin_popup_company_primaryBranch_warehouse_chckb' }} />
-                          </FormGroup>
-                          <AddressForm values={values} setFieldValue={setFieldValue} prefix='primaryBranch.deliveryAddress' />
-                        </Accordion.Content>
-                        <Divider />
+                          </Accordion.Content>
+                          <Divider />
 
-                        <Accordion.Title active={accordionActive.mailingAddress} onClick={this.handleAccordionChange} name='mailingAddress' data-test='admin_popup_company_accordion_mailingBranch'>
-                          <AccordionHeader as='h4'>
-                            <Icon color={accordionActive.mailingAddress && 'blue'} name={accordionActive.mailingAddress ? 'chevron down' : 'chevron right'} />
-                            <FormattedMessage id='global.mailingBranch' defaultMessage='Mailing Branch (optional)' />
-                          </AccordionHeader>
-                        </Accordion.Title>
-                        <Accordion.Content active={accordionActive.mailingAddress}>
-                          <FormGroup widths='equal' data-test='admin_popup_company_mailingBranchNameEmailPhone_inp'>
-                            <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='mailingBranch.deliveryAddress.addressName' />
-                          </FormGroup>
-                          <FormGroup widths='equal'>
-                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact Email' />} name='mailingBranch.deliveryAddress.contactEmail' />
-                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='mailingBranch.deliveryAddress.contactName' />
-                            <PhoneNumber
-                              label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />}
-                              name='mailingBranch.deliveryAddress.contactPhone'
-                              values={values} setFieldValue={setFieldValue}
-                              setFieldTouched={setFieldTouched} errors={errors}
-                              touched={touched} isSubmitting={isSubmitting}
+                          <Accordion.Title
+                            active={accordionActive.mailingAddress}
+                            onClick={this.handleAccordionChange}
+                            name='mailingAddress'
+                            data-test='admin_popup_company_accordion_mailingBranch'>
+                            <AccordionHeader as='h4'>
+                              <Icon
+                                color={accordionActive.mailingAddress && 'blue'}
+                                name={accordionActive.mailingAddress ? 'chevron down' : 'chevron right'}
+                              />
+                              <FormattedMessage id='global.mailingBranch' defaultMessage='Mailing Branch (optional)' />
+                            </AccordionHeader>
+                          </Accordion.Title>
+                          <Accordion.Content active={accordionActive.mailingAddress}>
+                            <FormGroup widths='equal' data-test='admin_popup_company_mailingBranchNameEmailPhone_inp'>
+                              <Input
+                                label={<FormattedMessage id='global.name' defaultMessage='Name' />}
+                                name='mailingBranch.deliveryAddress.addressName'
+                              />
+                            </FormGroup>
+                            <FormGroup widths='equal'>
+                              <Input
+                                inputProps={{fluid: true}}
+                                label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact Email' />}
+                                name='mailingBranch.deliveryAddress.contactEmail'
+                              />
+                              <Input
+                                inputProps={{fluid: true}}
+                                label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />}
+                                name='mailingBranch.deliveryAddress.contactName'
+                              />
+                              <PhoneNumber
+                                label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />}
+                                name='mailingBranch.deliveryAddress.contactPhone'
+                                values={values}
+                                setFieldValue={setFieldValue}
+                                setFieldTouched={setFieldTouched}
+                                errors={errors}
+                                touched={touched}
+                                isSubmitting={isSubmitting}
+                              />
+                            </FormGroup>
+                            <FormGroup widths='equal'>
+                              <Checkbox
+                                label={formatMessage({id: 'global.warehouse', defaultMessage: 'Warehouse'})}
+                                name='mailingBranch.deliveryAddress.warehouse'
+                                inputProps={{'data-test': 'admin_popup_company_mailingBranch_warehouse_chckb'}}
+                              />
+                            </FormGroup>
+                            <AddressForm
+                              values={values}
+                              setFieldValue={setFieldValue}
+                              prefix='mailingBranch.deliveryAddress'
+                              datalistName='mailingAddresses.deliveryAddress'
                             />
-                          </FormGroup>
-                          <FormGroup widths='equal'>
-                            <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='mailingBranch.deliveryAddress.warehouse' inputProps={{ 'data-test': 'admin_popup_company_mailingBranch_warehouse_chckb' }} />
-                          </FormGroup>
-                          <AddressForm values={values} setFieldValue={setFieldValue} prefix='mailingBranch.deliveryAddress' datalistName='mailingAddresses.deliveryAddress' />
-                        </Accordion.Content>
-                      </>}
+                          </Accordion.Content>
+                        </>
+                      )}
                     </Modal.Content>
                   </Accordion>
-
                 </Form>
               </Segment>
               <Modal.Actions>
                 <Button.Reset data-test='admin_popup_company_cancel_btn' onClick={props.handleReset}>
-                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage>
+                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                    {text => text}
+                  </FormattedMessage>
                 </Button.Reset>
                 <Button.Submit data-test='admin_popup_company_save_btn' onClick={props.handleSubmit}>
-                  <FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage>
+                  <FormattedMessage id='global.save' defaultMessage='Save'>
+                    {text => text}
+                  </FormattedMessage>
                 </Button.Submit>
               </Modal.Actions>
             </Modal>
           )
-        }}>
-      </Formik>
+        }}></Formik>
     )
   }
 }
@@ -510,7 +643,7 @@ const mapDispatchToProps = {
 //   </datalist>
 // )
 
-const mapStateToProps = ({ admin, zip }) => {
+const mapStateToProps = ({admin, zip}) => {
   // const AddressSuggestOptionsPrimaryBranch = admin.addressSearchPrimaryBranch.map((a) => (
   //   a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
   // ))

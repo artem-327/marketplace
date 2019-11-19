@@ -1,15 +1,15 @@
 import React from 'react'
 import BackgroundImage from '~/images/background.svg'
 import Layout from '~/components/LayoutUnauthorized'
-import { Button } from 'semantic-ui-react'
+import {Button} from 'semantic-ui-react'
 import styled from 'styled-components'
 import Router from 'next/router'
-import { FormattedMessage } from 'react-intl'
+import {FormattedMessage} from 'react-intl'
 
 export default class Error extends React.Component {
-  static getInitialProps({ res, err }) {
+  static getInitialProps({res, err}) {
     const statusCode = res ? res.statusCode : err ? err.statusCode : null
-    return { statusCode }
+    return {statusCode}
   }
 
   render() {
@@ -20,10 +20,7 @@ export default class Error extends React.Component {
           <Message>
             <h1>
               {this.props.statusCode ? (
-                <FormattedMessage
-                  id='error.server'
-                  values={{ error: this.props.statusCode || 'unexpected' }}
-                />
+                <FormattedMessage id='error.server' values={{error: this.props.statusCode || 'unexpected'}} />
               ) : (
                 <FormattedMessage id='error.client' />
               )}
@@ -31,25 +28,15 @@ export default class Error extends React.Component {
               <FormattedMessage id='error.apologize' />
             </h1>
             <br />
-            <Button
-              size='massive'
-              primary
-              onClick={() => Router.push('/auth/login')}
-              data-test='error_back_btn'>
-              <FormattedMessage id='error.backButtonText'>
-                {text => text}
-              </FormattedMessage>
+            <Button size='massive' primary onClick={() => Router.push('/auth/login')} data-test='error_back_btn'>
+              <FormattedMessage id='error.backButtonText'>{text => text}</FormattedMessage>
             </Button>
           </Message>
           <Footer>
             <FormattedMessage
               id='error.footer'
               values={{
-                email: (
-                  <a href='mailto:support@echosystem.com'>
-                    support@echosystem.com
-                  </a>
-                )
+                email: <a href='mailto:support@echosystem.com'>support@echosystem.com</a>
               }}
             />
           </Footer>

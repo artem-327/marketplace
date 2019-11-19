@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import GroupRow from "./GroupRow";
-import Row from "./Row";
+import React, {Component} from 'react'
+import GroupRow from './GroupRow'
+import Row from './Row'
 
 class Rows extends Component {
   render() {
@@ -25,25 +25,27 @@ class Rows extends Component {
             addPopup={this.props.addPopup}
             removePopup={this.props.removePopup}
           />
-        );
+        )
       return this.props.data[item.index].rows.map((row, index2) => {
-        return <Row
-          onRowClick={this.props.onRowClick}
-          data={row.data}
-          rowOpns={this.props.rowsOpns[item.index].rows[index2]}
-          rowComponent={this.props.rowComponent}
-          contextMenu={this.props.contextMenu}
-          headers={this.props.headers}
-          selectable={this.props.selectable}
-          key={index2}
-          groupId={item.index}
-          id={item.id}
-          selectFunc={this.props.selectFunc}
-        />
-      });
-    });
-    return <tbody>{rows}</tbody>;
+        return (
+          <Row
+            onRowClick={this.props.onRowClick}
+            data={row.data}
+            rowOpns={this.props.rowsOpns[item.index].rows[index2]}
+            rowComponent={this.props.rowComponent}
+            contextMenu={this.props.contextMenu}
+            headers={this.props.headers}
+            selectable={this.props.selectable}
+            key={index2}
+            groupId={item.index}
+            id={item.id}
+            selectFunc={this.props.selectFunc}
+          />
+        )
+      })
+    })
+    return <tbody>{rows}</tbody>
   }
 }
 
-export default Rows;
+export default Rows

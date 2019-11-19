@@ -1,6 +1,6 @@
 import * as AT from './action-types'
-import { config } from './config'
-import { uniqueArrayByKey } from '~/utils/functions'
+import {config} from './config'
+import {uniqueArrayByKey} from '~/utils/functions'
 
 export const initialState = {
   editPopupBoolean: false,
@@ -26,23 +26,23 @@ export const initialState = {
   primaryBranchProvinces: [],
   mailingBranchProvinces: [],
   tabsNames: [
-    { name: 'CAS Products', id: 7 },
-    { name: 'Companies', id: 8 },
-    { name: 'Product Catalog', id: 12 },
-    { name: 'Units of Measure', id: 1 },
-    { name: 'Units of Packaging', id: 2 },
-    { name: 'Manufacturers', id: 3 },
-    { name: 'Grades', id: 4 },
-    { name: 'Forms', id: 5 },
-    { name: 'Conditions', id: 6 },
-    { name: 'Document Types', id: 9 },
-    { name: 'Market Segments', id: 10 },
-    { name: 'Admin Settings', id: 11, hideHandler: true }
+    {name: 'CAS Products', id: 7},
+    {name: 'Companies', id: 8},
+    {name: 'Product Catalog', id: 12},
+    {name: 'Units of Measure', id: 1},
+    {name: 'Units of Packaging', id: 2},
+    {name: 'Manufacturers', id: 3},
+    {name: 'Grades', id: 4},
+    {name: 'Forms', id: 5},
+    {name: 'Conditions', id: 6},
+    {name: 'Document Types', id: 9},
+    {name: 'Market Segments', id: 10},
+    {name: 'Admin Settings', id: 11, hideHandler: true}
   ],
 
-  currentTab: { name: 'CAS Products', id: 7 },
-  casListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: "ASC", sortPath: "CasProduct.chemicalName" },
-  companyListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: "ASC", sortPath: "Company.name" },
+  currentTab: {name: 'CAS Products', id: 7},
+  casListDataRequest: {pageSize: 50, pageNumber: 0, sortDirection: 'ASC', sortPath: 'CasProduct.chemicalName'},
+  companyListDataRequest: {pageSize: 50, pageNumber: 0, sortDirection: 'ASC', sortPath: 'Company.name'},
   currentEditForm: null,
   currentEdit2Form: null,
   currentAddForm: null,
@@ -65,14 +65,14 @@ export const initialState = {
   searchedManufacturers: [],
   searchedManufacturersLoading: false,
   altEchoNamesRows: [],
-  documentTypes: []
+  documentTypes: [],
+  editEchoProductEditTab: 0
 }
 
 export default function reducer(state = initialState, action) {
-  const { payload } = action
+  const {payload} = action
 
   switch (action.type) {
-
     case AT.ADMIN_OPEN_POPUP: {
       return {
         ...state,
@@ -80,20 +80,17 @@ export default function reducer(state = initialState, action) {
 
         //[payload.data ? 'currentEditForm' : 'currentAddForm']: state.currentTab,
 
-
-        ...(payload.data ?
-            {
+        ...(payload.data
+          ? {
               currentAddForm: null,
-              currentEditForm: state.currentTab,
+              currentEditForm: state.currentTab
             }
-            :
-            {
+          : {
               currentAddForm: state.currentTab,
-              currentEditForm: null,
-            }
-        ),
+              currentEditForm: null
+            }),
         currentEdit2Form: null,
-        currentAddDwolla: null,
+        currentAddDwolla: null
       }
     }
 
@@ -103,7 +100,7 @@ export default function reducer(state = initialState, action) {
         currentAddForm: null,
         currentEditForm: null,
         currentEdit2Form: null,
-        currentAddDwolla: null,
+        currentAddDwolla: null
       }
     }
 
@@ -161,7 +158,7 @@ export default function reducer(state = initialState, action) {
         currentAddForm: null,
         currentEditForm: null,
         currentEdit2Form: null,
-        currentAddDwolla: null,
+        currentAddDwolla: null
       }
     }
 
@@ -195,7 +192,7 @@ export default function reducer(state = initialState, action) {
         currentAddForm: null,
         currentEditForm: null,
         currentEdit2Form: null,
-        currentAddDwolla: null,
+        currentAddDwolla: null
       }
     }
 
@@ -203,7 +200,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         confirmMessage: true,
-        deleteRowById: action.payload,
+        deleteRowById: action.payload
       }
     }
 
@@ -236,7 +233,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        companiesRows: state.companiesRows.filter((company) => company.id !== payload)
+        companiesRows: state.companiesRows.filter(company => company.id !== payload)
       }
     }
 
@@ -254,7 +251,7 @@ export default function reducer(state = initialState, action) {
         countriesDropDown: payload.countries.map(c => ({
           text: c.name,
           value: c.id,
-          key: c.id,
+          key: c.id
         }))
       }
     }
@@ -285,9 +282,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-
-
-
     case AT.ADMIN_HANDLE_ACTIVE_TAB: {
       return {
         ...state,
@@ -296,7 +290,7 @@ export default function reducer(state = initialState, action) {
         currentEditForm: null,
         currentEdit2Form: null,
         currentAddDwolla: null,
-        filterCasIds: [],
+        filterCasIds: []
       }
     }
 
@@ -318,6 +312,14 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_EDIT_ECHO_PRODUCT_CHANGE_TAB: {
+      return {
+        ...state,
+        editEchoProductEditTab: action.payload
+      }
+    }
+
+    case AT.ADMIN_GET_ECHO_PRODUCT_PENDING:
     case AT.ADMIN_POST_ECHO_PRODUCT_PENDING:
     case AT.ADMIN_PUT_ECHO_PRODUCT_PENDING:
     case AT.ADMIN_ADD_ATTACHMENT_PENDING:
@@ -397,7 +399,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_GET_UN_NUMBERS_BY_STRING_PENDING: {
       return {
         ...state,
-        unNumbersFetching: true,
+        unNumbersFetching: true
       }
     }
 
@@ -450,6 +452,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_ECHO_PRODUCT_FULFILLED:
     case AT.ADMIN_POST_ECHO_PRODUCT_FULFILLED:
     case AT.ADMIN_PUT_ECHO_PRODUCT_FULFILLED:
     case AT.ADMIN_ADD_ATTACHMENT_FULFILLED:
@@ -462,6 +465,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_ECHO_PRODUCT_REJECTED:
     case AT.ADMIN_POST_ECHO_PRODUCT_REJECTED:
     case AT.ADMIN_PUT_ECHO_PRODUCT_REJECTED:
     case AT.ADMIN_ADD_ATTACHMENT_REJECTED:
@@ -493,7 +497,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_CAS_DELETE_PRODUCT_FULFILLED: {
       return {
         ...state,
-        casProductsRows: state.casProductsRows.filter((row) => row.id !== payload),
+        casProductsRows: state.casProductsRows.filter(row => row.id !== payload),
         loading: false
       }
     }
@@ -517,7 +521,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_DELETE_UNIT_FULFILLED: {
       return {
         ...state,
-        unitsOfMeasureRows: state.unitsOfMeasureRows.filter((el) => el.id !== payload),
+        unitsOfMeasureRows: state.unitsOfMeasureRows.filter(el => el.id !== payload),
         loading: false
       }
     }
@@ -573,9 +577,7 @@ export default function reducer(state = initialState, action) {
       if (!(payload instanceof Array)) payload = [payload]
 
       payload.forEach(element => {
-        if (!copy.find((e) => e.id === element.id)) copy.push(element)
-
-
+        if (!copy.find(e => e.id === element.id)) copy.push(element)
       })
 
       return {
@@ -629,7 +631,6 @@ export default function reducer(state = initialState, action) {
     // }
 
     case AT.ADMIN_SEARCH_CAS_PRODUCT_FULFILLED: {
-      
       return {
         ...state,
         // searchedCasProducts: payload.concat(state.searchedCasProducts),
@@ -712,8 +713,7 @@ export default function reducer(state = initialState, action) {
                 if (config[groupName].api.get.typeSuccess === action.type) {
                   if (typeof config[groupName].api.get.retFcnProcess !== 'undefined') {
                     return config[groupName].api.get.retFcnProcess(state, action, config[groupName])
-                  }
-                  else {
+                  } else {
                     const rows = action.payload.map(data => {
                       return data
                     })
@@ -734,7 +734,6 @@ export default function reducer(state = initialState, action) {
             }
           }
         }
-
       }
       return state
     }

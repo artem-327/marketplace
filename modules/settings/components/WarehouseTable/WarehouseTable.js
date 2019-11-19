@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import ProdexGrid from '~/components/table'
-import { withDatagrid } from '~/modules/datagrid'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import {withDatagrid} from '~/modules/datagrid'
+import {FormattedMessage, injectIntl} from 'react-intl'
 import {
   getWarehousesDataRequest,
   getBranchesDataRequest,
@@ -12,24 +12,80 @@ import {
   handleOpenConfirmPopup,
   deleteBranch
 } from '../../actions'
-import Router from "next/router"
+import Router from 'next/router'
 
-import { getSafe } from '~/utils/functions'
+import {getSafe} from '~/utils/functions'
 
 import confirm from '~/src/components/Confirmable/confirm'
-import { FormattedPhone } from '~/components/formatted-messages/'
+import {FormattedPhone} from '~/components/formatted-messages/'
 
 class WarehouseTable extends Component {
   state = {
     columns: [
-      { name: 'addressName', title: <FormattedMessage id='global.warehouseName' defaultMessage='Warehouse Name'>{(text) => text}</FormattedMessage> },
-      { name: 'streetAddress', title: <FormattedMessage id='global.streetAddress' defaultMessage='Street Address'>{(text) => text}</FormattedMessage> },
-      { name: 'city', title: <FormattedMessage id='global.city' defaultMessage='City'>{(text) => text}</FormattedMessage> },
-      { name: 'provinceName', title: <FormattedMessage id='global.stateProvince' defaultMessage='State/Province'>{(text) => text}</FormattedMessage> },
-      { name: 'countryName', title: <FormattedMessage id='global.country' defaultMessage='Country'>{(text) => text}</FormattedMessage> },
-      { name: 'contactName', title: <FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name'>{(text) => text}</FormattedMessage> },
-      { name: 'phoneFormatted', title: <FormattedMessage id='global.phone' defaultMessage='Phone'>{(text) => text}</FormattedMessage> },
-      { name: 'contactEmail', title: <FormattedMessage id='global.email' defaultMessage='E-mail'>{(text) => text}</FormattedMessage> }
+      {
+        name: 'addressName',
+        title: (
+          <FormattedMessage id='global.warehouseName' defaultMessage='Warehouse Name'>
+            {text => text}
+          </FormattedMessage>
+        )
+      },
+      {
+        name: 'streetAddress',
+        title: (
+          <FormattedMessage id='global.streetAddress' defaultMessage='Street Address'>
+            {text => text}
+          </FormattedMessage>
+        )
+      },
+      {
+        name: 'city',
+        title: (
+          <FormattedMessage id='global.city' defaultMessage='City'>
+            {text => text}
+          </FormattedMessage>
+        )
+      },
+      {
+        name: 'provinceName',
+        title: (
+          <FormattedMessage id='global.stateProvince' defaultMessage='State/Province'>
+            {text => text}
+          </FormattedMessage>
+        )
+      },
+      {
+        name: 'countryName',
+        title: (
+          <FormattedMessage id='global.country' defaultMessage='Country'>
+            {text => text}
+          </FormattedMessage>
+        )
+      },
+      {
+        name: 'contactName',
+        title: (
+          <FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name'>
+            {text => text}
+          </FormattedMessage>
+        )
+      },
+      {
+        name: 'phoneFormatted',
+        title: (
+          <FormattedMessage id='global.phone' defaultMessage='Phone'>
+            {text => text}
+          </FormattedMessage>
+        )
+      },
+      {
+        name: 'contactEmail',
+        title: (
+          <FormattedMessage id='global.email' defaultMessage='E-mail'>
+            {text => text}
+          </FormattedMessage>
+        )
+      }
     ],
     tab: ''
   }
@@ -39,16 +95,13 @@ class WarehouseTable extends Component {
   }
 
   handlerLoadPage() {
-    const {
-      currentTab
-    } = this.props
+    const {currentTab} = this.props
 
     if (currentTab.type === 'warehouses') {
       this.setState({
         tab: 'warehouses'
       })
-    }
-    else if (currentTab.type === 'branches') {
+    } else if (currentTab.type === 'branches') {
       this.setState({
         tab: 'branches'
       })
@@ -61,7 +114,7 @@ class WarehouseTable extends Component {
 
   branchChecker() {
     if (this.state.tab === 'branches') {
-      let { columns } = this.state
+      let {columns} = this.state
       return columns.map(item => {
         let obj = {}
         if (item.title === 'Warehouse Name') {
@@ -84,7 +137,7 @@ class WarehouseTable extends Component {
       openPopup,
       deleteBranch,
       intl,
-      currentTab,
+      currentTab
       // closeConfirmPopup,
       // deleteConfirmation,
       // confirmMessage,
@@ -93,31 +146,37 @@ class WarehouseTable extends Component {
       // currentTab
     } = this.props
 
-    let message = currentTab.type === 'branches'
-      ? { id: 'confirm.deleteBranch', defaultMessage: 'Delete Branch' }
-      : { id: 'confirm.deleteWarehouse', defaultMessage: 'Delete Warehouse' }
+    let message =
+      currentTab.type === 'branches'
+        ? {id: 'confirm.deleteBranch', defaultMessage: 'Delete Branch'}
+        : {id: 'confirm.deleteWarehouse', defaultMessage: 'Delete Warehouse'}
 
-    const { formatMessage } = intl
+    const {formatMessage} = intl
 
     return (
       <React.Fragment>
         <ProdexGrid
-          tableName="settings_werehouser_branches"
+          tableName='settings_werehouser_branches'
           {...datagrid.tableProps}
           filterValue={filterValue}
           columns={this.branchChecker()}
           loading={datagrid.loading || loading}
           rows={rows}
-          style={{ marginTop: '5px' }}
+          style={{marginTop: '5px'}}
           rowActions={[
-            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row.popupValues) },
             {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }), callback: row =>
+              text: formatMessage({id: 'global.edit', defaultMessage: 'Edit'}),
+              callback: row => openPopup(row.popupValues)
+            },
+            {
+              text: formatMessage({id: 'global.delete', defaultMessage: 'Delete'}),
+              callback: row =>
                 confirm(
-                  formatMessage({ ...message }),
+                  formatMessage({...message}),
                   formatMessage(
-                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}! ? ` },
-                    { item: row.name })
+                    {id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}! ? `},
+                    {item: row.name}
+                  )
                 ).then(() => deleteBranch(row.id))
             }
           ]}
@@ -137,8 +196,7 @@ const mapDispatchToProps = {
   deleteBranch
 }
 
-const mapStateToProps = (state, { datagrid }) => {
-
+const mapStateToProps = (state, {datagrid}) => {
   return {
     rows: datagrid.rows.map(r => {
       let countryId = getSafe(() => r.deliveryAddress.address.country.id),
@@ -159,7 +217,7 @@ const mapStateToProps = (state, { datagrid }) => {
                 city: getSafe(() => r.deliveryAddress.address.city),
                 province: provinceId,
                 country: JSON.stringify({countryId, hasProvinces}),
-                zip,
+                zip
               },
               readyTime: getSafe(() => r.deliveryAddress.readyTime, ''),
               closeTime: getSafe(() => r.deliveryAddress.closeTime, ''),
@@ -170,13 +228,13 @@ const mapStateToProps = (state, { datagrid }) => {
               addressName: getSafe(() => r.deliveryAddress.addressName, ''),
               contactName: getSafe(() => r.deliveryAddress.contactName, ''),
               contactPhone: getSafe(() => r.deliveryAddress.contactPhone, ''),
-              contactEmail: getSafe(() => r.deliveryAddress.contactEmail, ''),
-            },
+              contactEmail: getSafe(() => r.deliveryAddress.contactEmail, '')
+            }
           },
           zipID,
           countryId,
           hasProvinces,
-          branchId: r.id,
+          branchId: r.id
         },
         countryName: getSafe(() => r.deliveryAddress.address.country.name),
         countryId,
@@ -199,8 +257,10 @@ const mapStateToProps = (state, { datagrid }) => {
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
-    currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-      state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+    currentTab:
+      Router && Router.router && Router.router.query && Router.router.query.type
+        ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
+        : state.settings.tabsNames[0],
     deleteRowById: state.settings.deleteRowById,
     loading: state.settings.loading
   }

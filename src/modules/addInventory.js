@@ -1,50 +1,49 @@
-import axios from "axios";
+import axios from 'axios'
 
-const PACKAGE_OPTIONS = 'PACKAGE_OPTIONS';
-const PACKAGE_OPTIONS_FULFILLED = 'PACKAGE_OPTIONS_FULFILLED';
-const MANUFACTURER = 'MANUFACTURER';
-const MANUFACTURER_FULFILLED = 'MANUFACTURER_FULFILLED';
+const PACKAGE_OPTIONS = 'PACKAGE_OPTIONS'
+const PACKAGE_OPTIONS_FULFILLED = 'PACKAGE_OPTIONS_FULFILLED'
+const MANUFACTURER = 'MANUFACTURER'
+const MANUFACTURER_FULFILLED = 'MANUFACTURER_FULFILLED'
 
 export const initialState = {
-    package: [],
-    units: [],
-    manufacturer: [],
-};
+  package: [],
+  units: [],
+  manufacturer: []
+}
 
 //Currently unused
 
 export default function reducer(state = initialState, action) {
-    switch (action.type) {
-        case PACKAGE_OPTIONS_FULFILLED: {
-            return {
-                ...state,
-                units:{
-                    ...state.units,
-                    options: action.payload.units
-                },
-                package: {
-                    ...state.package,
-                    isPending: false,
-                    options: action.payload.packageTypes
-                }
-            }
+  switch (action.type) {
+    case PACKAGE_OPTIONS_FULFILLED: {
+      return {
+        ...state,
+        units: {
+          ...state.units,
+          options: action.payload.units
+        },
+        package: {
+          ...state.package,
+          isPending: false,
+          options: action.payload.packageTypes
         }
-        case MANUFACTURER_FULFILLED: {
-            return {
-                ...state,
-                manufacturer: {
-                    ...state.manufacturer,
-                    isPending: false,
-                    options: action.payload.data.manufacturers
-                }
-            }
-        }
-        default: {
-            return state
-        }
+      }
     }
+    case MANUFACTURER_FULFILLED: {
+      return {
+        ...state,
+        manufacturer: {
+          ...state.manufacturer,
+          isPending: false,
+          options: action.payload.data.manufacturers
+        }
+      }
+    }
+    default: {
+      return state
+    }
+  }
 }
-
 
 // Unused
 // export function getPackageOptions(productType) {
@@ -74,15 +73,8 @@ export default function reducer(state = initialState, action) {
 // }
 
 export function getManufacturer() {
-    return {
-        type: MANUFACTURER,
-        payload: axios.get("/api/manufacturers")
-    }
+  return {
+    type: MANUFACTURER,
+    payload: axios.get('/api/manufacturers')
+  }
 }
-
-
-
-
-
-
-

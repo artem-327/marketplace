@@ -6,14 +6,13 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-  let { type, payload } = action
+  let {type, payload} = action
 
   switch (type) {
-
     case AT.PHONE_NUMBER_GET_COUNTRY_CODES_PENDING: {
       return {
         ...state,
-        loading: true,
+        loading: true
       }
     }
 
@@ -22,10 +21,10 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         phoneCountryCodes: payload
-
       }
     }
 
-    default: return state
+    default:
+      return state
   }
 }

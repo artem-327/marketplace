@@ -1,1 +1,1 @@
-export { default as DwollaRegister } from './components/DwollaRegisterContainer'
+export {default as DwollaRegister} from './components/DwollaRegisterContainer'

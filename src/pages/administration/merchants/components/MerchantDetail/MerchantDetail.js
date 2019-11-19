@@ -30,7 +30,7 @@ class MerchantDetail extends Component {
   componentDidMount() {
     const {merchantDetail, getMerchant, id} = this.props
     if (merchantDetail.id !== id) {
-      new Promise((resolve) => {
+      new Promise(resolve => {
         getMerchant(id, resolve)
       }).then(() => {
         this.setState({...this.props.merchantDetail})
@@ -41,7 +41,7 @@ class MerchantDetail extends Component {
   }
 
   render() {
-    const {isFetching, id, removePopup, putMerchantEdit, deleteMerchant} = this.props;
+    const {isFetching, id, removePopup, putMerchantEdit, deleteMerchant} = this.props
     if (isFetching) return <Spinner />
     const editBody = {
       id: id,
@@ -53,54 +53,83 @@ class MerchantDetail extends Component {
     }
     const footerComponent = (
       <React.Fragment>
-        <Button color="red" onClick={() => deleteMerchant(id)} data-test='administration_merchant_detail_delete_btn'>
+        <Button color='red' onClick={() => deleteMerchant(id)} data-test='administration_merchant_detail_delete_btn'>
           Delete
         </Button>
-        <Button color="blue" onClick={() => putMerchantEdit(editBody)} data-test='administration_merchant_detail_edit_btn'>
+        <Button
+          color='blue'
+          onClick={() => putMerchantEdit(editBody)}
+          data-test='administration_merchant_detail_edit_btn'>
           Edit
         </Button>
       </React.Fragment>
     )
     return (
-      <PopupComponent removePopup={removePopup} headerTitle="Merchant Detail" footerComponent={footerComponent}>
-        <div className="add-cart-body">
-          <div className="add-cart-body-section">
+      <PopupComponent removePopup={removePopup} headerTitle='Merchant Detail' footerComponent={footerComponent}>
+        <div className='add-cart-body'>
+          <div className='add-cart-body-section'>
             <div>MERCHANT INFO:</div>
             <div>
-              First Name: <InputControlled value={this.state.firstname} handleChange={this.handleChange} name="firstname" data-test='administration_merchant_detail_firstname_inp' />
+              First Name:{' '}
+              <InputControlled
+                value={this.state.firstname}
+                handleChange={this.handleChange}
+                name='firstname'
+                data-test='administration_merchant_detail_firstname_inp'
+              />
             </div>
             <div>
-              Middle Name: <InputControlled value={this.state.middlename} handleChange={this.handleChange} name="middlename" data-test='administration_merchant_detail_middlename_inp' />
+              Middle Name:{' '}
+              <InputControlled
+                value={this.state.middlename}
+                handleChange={this.handleChange}
+                name='middlename'
+                data-test='administration_merchant_detail_middlename_inp'
+              />
             </div>
             <div>
-              Last Name: <InputControlled value={this.state.lastname} handleChange={this.handleChange} name="lastname" data-test='administration_merchant_detail_lastname_inp' />
+              Last Name:{' '}
+              <InputControlled
+                value={this.state.lastname}
+                handleChange={this.handleChange}
+                name='lastname'
+                data-test='administration_merchant_detail_lastname_inp'
+              />
             </div>
             <div>
-              Email: <InputControlled value={this.state.email} handleChange={this.handleChange} name="email" data-test='administration_merchant_detail_email_inp' />
+              Email:{' '}
+              <InputControlled
+                value={this.state.email}
+                handleChange={this.handleChange}
+                name='email'
+                data-test='administration_merchant_detail_email_inp'
+              />
             </div>
             <div>OFFICE:</div>
             <div>
-              Country: <InputControlled
+              Country:{' '}
+              <InputControlled
                 value={this.state.officeResponse.location.country}
                 handleChange={this.handleChange}
-                name="country"
+                name='country'
                 disabled={true}
                 data-test='administration_merchant_detail_country_inp'
               />
             </div>
             <div>
-              State: <InputControlled
+              State:{' '}
+              <InputControlled
                 value={this.state.officeResponse.location.state}
                 handleChange={this.handleChange}
-                name="state"
+                name='state'
                 disabled={true}
                 data-test='administration_merchant_detail_state_inp'
               />
             </div>
             <div>
               <Checkbox
-                label="Approved"
-                name="approved"
+                label='Approved'
+                name='approved'
                 defaultValue={this.state.approved}
                 onChange={value => {
                   console.log(value)
@@ -118,9 +147,9 @@ class MerchantDetail extends Component {
 export default MerchantDetail
 
 MerchantDetail.propTypes = {
-  isFetching:PropTypes.bool,
-  id:PropTypes.number,
-  removePopup:PropTypes.func,
-  putMerchantEdit:PropTypes.func,
-  deleteMerchant:PropTypes.func
-};
+  isFetching: PropTypes.bool,
+  id: PropTypes.number,
+  removePopup: PropTypes.func,
+  putMerchantEdit: PropTypes.func,
+  deleteMerchant: PropTypes.func
+}

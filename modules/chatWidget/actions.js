@@ -1,10 +1,16 @@
-import * as AT from "./action-types"
-import { getSafe } from '~/utils/functions'
-import { ChatWidget_create, chatWidget_hide, chatWidget_show, chatWidget_EndSession,
-  chatWidget_isChatting, chatWidget_isConnected } from './components/chatWidgetFunctions'
-import { generateToastMarkup } from '~/utils/functions'
-import {FormattedMessage} from "react-intl";
-import React from "react";
+import * as AT from './action-types'
+import {getSafe} from '~/utils/functions'
+import {
+  ChatWidget_create,
+  chatWidget_hide,
+  chatWidget_show,
+  chatWidget_EndSession,
+  chatWidget_isChatting,
+  chatWidget_isConnected
+} from './components/chatWidgetFunctions'
+import {generateToastMarkup} from '~/utils/functions'
+import {FormattedMessage} from 'react-intl'
+import React from 'react'
 
 export function chatWidgetCreate(identity, props) {
   ChatWidget_create(identity, props)
@@ -35,13 +41,18 @@ export function chatWidgetToggle(props) {
             lang: getSafe(() => props.auth.identity.preferredLanguage.languageAbbreviation, 'us')
           },
           props
-        ))
+        )
+      )
       if (!chatWidget_isConnected()) {
         props.toastManager.add(
           generateToastMarkup(
             <FormattedMessage id='notifications.supportChatError.header' defaultMessage='Support chat error' />,
-            <FormattedMessage id='notifications.supportChatError.content' defaultMessage='Support chat is not available' />
-          ), { appearance: 'error' }
+            <FormattedMessage
+              id='notifications.supportChatError.content'
+              defaultMessage='Support chat is not available'
+            />
+          ),
+          {appearance: 'error'}
         )
       }
     }
@@ -72,7 +83,7 @@ export function chatUnreadMessages(cnt) {
   return async dispatch => {
     dispatch({
       type: AT.SUPPORT_CHAT_UNREAD_MESSAGES,
-      payload: 0  // cnt
+      payload: 0 // cnt
     })
     dispatch(chatWidgetShow())
   }

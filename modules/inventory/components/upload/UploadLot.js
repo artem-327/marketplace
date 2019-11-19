@@ -1,18 +1,18 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import './uploadLot.scss'
 import upload from '~/src/images/upload/upload.png'
 import uploaded from '~/src/images/upload/uploaded.png'
 import PropTypes from 'prop-types'
 import File from '~/src/pages/inventory/addInventory/components/Upload/components/File'
 import ReactDropzone from 'react-dropzone'
-import { FormattedMessage } from 'react-intl'
-import { TOO_LARGE_FILE, UPLOAD_FILE_FAILED } from '~/src/modules/errors.js'
-import { FieldArray } from 'formik'
+import {FormattedMessage} from 'react-intl'
+import {TOO_LARGE_FILE, UPLOAD_FILE_FAILED} from '~/src/modules/errors.js'
+import {FieldArray} from 'formik'
 import confirm from '~/src/components/Confirmable/confirm'
-import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
+import {withToastManager} from 'react-toast-notifications'
+import {generateToastMarkup, getSafe} from '~/utils/functions'
 import styled from 'styled-components'
-import { Table, TableCell, Modal, Button } from 'semantic-ui-react'
+import {Table, TableCell, Modal, Button} from 'semantic-ui-react'
 
 const StyledButton = styled(Button)`
   margin: 4px 4px 4px 4px !important;
@@ -40,11 +40,7 @@ class UploadLot extends Component {
     // delete attachment from database
     if (file.linked) {
       this.props
-        .removeAttachmentLink(
-          this.props.lot ? true : false,
-          this.props.lot ? this.props.lot.id : poId,
-          file.id
-        )
+        .removeAttachmentLink(this.props.lot ? true : false, this.props.lot ? this.props.lot.id : poId, file.id)
         .then(() => {
           this.props.removeAttachment(file.id)
           if (this.props.onRemoveFile) this.props.onRemoveFile(file.id)
@@ -56,18 +52,15 @@ class UploadLot extends Component {
   }
 
   onDropRejected = blobs => {
-    let { fileMaxSize, toastManager } = this.props
+    let {fileMaxSize, toastManager} = this.props
     blobs.forEach(function(blob) {
       if (blob.size > fileMaxSize * 1024 * 1024) {
         toastManager.add(
           generateToastMarkup(
-            <FormattedMessage
-              id='errors.fileTooLarge.header'
-              defaultMessage='Too large file'
-            />,
+            <FormattedMessage id='errors.fileTooLarge.header' defaultMessage='Too large file' />,
             <FormattedMessage
               id='errors.fileTooLarge.content'
-              values={{ name: blob.name, size: fileMaxSize }}
+              values={{name: blob.name, size: fileMaxSize}}
               defaultMessage='File is larger than maximal allowed size'
             />
           ),
@@ -84,18 +77,15 @@ class UploadLot extends Component {
   }
 
   onUploadFail = fileName => {
-    let { fileMaxSize, toastManager } = this.props
+    let {fileMaxSize, toastManager} = this.props
 
     toastManager.add(
       generateToastMarkup(
-        <FormattedMessage
-          id='errors.fileNotUploaded.header'
-          defaultMessage='File not uploaded'
-        />,
+        <FormattedMessage id='errors.fileNotUploaded.header' defaultMessage='File not uploaded' />,
         <FormattedMessage
           id='errors.fileNotUploaded.content'
           defaultMessage={`File ${fileName} was not uploaded due to an error`}
-          values={{ name: fileName }}
+          values={{name: fileName}}
         />
       ),
       {
@@ -115,7 +105,7 @@ class UploadLot extends Component {
       expiration,
       listDocumentTypes
     } = this.props
-    let { onDropRejected, onUploadSuccess, onUploadFail } = this
+    let {onDropRejected, onUploadSuccess, onUploadFail} = this
     let duplicateFiles = []
 
     if (typeof unspecifiedTypes === 'undefined') unspecifiedTypes = []
@@ -123,10 +113,7 @@ class UploadLot extends Component {
       files = []
       toastManager.add(
         generateToastMarkup(
-          <FormattedMessage
-            id='errors.fileNotUploaded.header'
-            defaultMessage='File not uploaded'
-          />,
+          <FormattedMessage id='errors.fileNotUploaded.header' defaultMessage='File not uploaded' />,
           <FormattedMessage
             id='errors.fileNotUploaded.specifyDocType'
             defaultMessage='You have to specify document type first'
@@ -162,13 +149,11 @@ class UploadLot extends Component {
                   })
                   .catch(e => {
                     if (e.clientMessage) {
-                      const docType = listDocumentTypes.find(
-                        x => x.value === type
-                      )
+                      const docType = listDocumentTypes.find(x => x.value === type)
                       duplicateFiles.push({
                         id: parseInt(e.clientMessage),
                         name: files[j].name,
-                        documentType: { id: docType.value, name: docType.text },
+                        documentType: {id: docType.value, name: docType.text},
                         file: file
                       })
                     }
@@ -182,7 +167,7 @@ class UploadLot extends Component {
               })
           }).then(loop.bind(null, j + 1))
       })(0).then(() => {
-        this.setState({ duplicateFiles: duplicateFiles })
+        this.setState({duplicateFiles: duplicateFiles})
       })
     } else {
       onUploadSuccess(files)
@@ -192,14 +177,14 @@ class UploadLot extends Component {
   removeDuplicateFile = index => {
     let duplicateFiles = this.state.duplicateFiles.slice()
     duplicateFiles.splice(index, 1)
-    this.setState({ duplicateFiles: duplicateFiles })
+    this.setState({duplicateFiles: duplicateFiles})
   }
 
   handleConfirmFile = async (index, att) => {
-    let { addAttachment, type, expiration } = this.props
+    let {addAttachment, type, expiration} = this.props
 
     await new Promise((resolve, reject) => {
-      addAttachment(att.file.value, parseInt(type), { expiration, force: true })
+      addAttachment(att.file.value, parseInt(type), {expiration, force: true})
         .then(a => {
           this.onUploadSuccess(att)
           this.removeDuplicateFile(index)
@@ -212,7 +197,7 @@ class UploadLot extends Component {
   }
 
   handleLinkFile = async (index, att) => {
-    let { type, toastManager, lot } = this.props
+    let {type, toastManager, lot} = this.props
 
     await new Promise((resolve, reject) => {
       this.onUploadSuccess(att)
@@ -229,16 +214,9 @@ class UploadLot extends Component {
 
   renderDuplicateFilesModal = () => {
     return this.state.duplicateFiles.length ? (
-      <Modal
-        closeIcon
-        onClose={() => this.setState({ duplicateFiles: [] })}
-        open
-        centered={false}
-        size='small'>
+      <Modal closeIcon onClose={() => this.setState({duplicateFiles: []})} open centered={false} size='small'>
         <Modal.Header>
-          <FormattedMessage
-            id={'attachments.popup.header'}
-            defaultMessage='Document Already Exists'>
+          <FormattedMessage id={'attachments.popup.header'} defaultMessage='Document Already Exists'>
             {text => text}
           </FormattedMessage>
         </Modal.Header>
@@ -248,16 +226,10 @@ class UploadLot extends Component {
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell width={5}>
-                    <FormattedMessage
-                      id='attachments.popup.tableHeader1'
-                      defaultMessage='Document name'
-                    />
+                    <FormattedMessage id='attachments.popup.tableHeader1' defaultMessage='Document name' />
                   </Table.HeaderCell>
                   <Table.HeaderCell width={11}>
-                    <FormattedMessage
-                      id='attachments.popup.tableHeader2'
-                      defaultMessage='Select action'
-                    />
+                    <FormattedMessage id='attachments.popup.tableHeader2' defaultMessage='Select action' />
                   </Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
@@ -267,14 +239,12 @@ class UploadLot extends Component {
                     <Table.Row key={index}>
                       <TableCell>{d.name}</TableCell>
                       <TableCell>
-                        <div style={{ 'text-align': 'center' }}>
+                        <div style={{'text-align': 'center'}}>
                           <StyledButton
                             type='button'
                             data-test='attachments_duplicate_cancel_btn'
                             onClick={() => this.handleCancelFile(index)}>
-                            <FormattedMessage
-                              id={'attachments.popup.button.cancel'}
-                              defaultMessage='Cancel'>
+                            <FormattedMessage id={'attachments.popup.button.cancel'} defaultMessage='Cancel'>
                               {text => text}
                             </FormattedMessage>
                           </StyledButton>
@@ -312,11 +282,9 @@ class UploadLot extends Component {
             type='button'
             data-test='attachments_duplicate_cancel_all_btn'
             floated='right'
-            style={{ margin: '20px 0px 20px 10px' }}
-            onClick={() => this.setState({ duplicateFiles: [] })}>
-            <FormattedMessage
-              id={'attachments.popup.button.cancel'}
-              defaultMessage='Cancel'>
+            style={{margin: '20px 0px 20px 10px'}}
+            onClick={() => this.setState({duplicateFiles: []})}>
+            <FormattedMessage id={'attachments.popup.button.cancel'} defaultMessage='Cancel'>
               {text => text}
             </FormattedMessage>
           </Button>
@@ -326,23 +294,14 @@ class UploadLot extends Component {
   }
 
   render() {
-    let {
-      attachments,
-      disabled,
-      filesLimit,
-      toastManager,
-      hideAttachments
-    } = this.props
+    let {attachments, disabled, filesLimit, toastManager, hideAttachments} = this.props
     let hasFile = this.props.attachments && this.props.attachments.length !== 0
 
     const limitMsg = generateToastMarkup(
-      <FormattedMessage
-        id='errors.fileNotUploaded.limitExceeded.header'
-        defaultMessage='File limit exceeded'
-      />,
+      <FormattedMessage id='errors.fileNotUploaded.limitExceeded.header' defaultMessage='File limit exceeded' />,
       <FormattedMessage
         id='errors.fileNotUploaded.limitExceeded.content'
-        values={{ count: filesLimit }}
+        values={{count: filesLimit}}
         defaultMessage={`You can't upload more than ${filesLimit} document(s)`}
       />
     )

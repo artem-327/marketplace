@@ -1,24 +1,21 @@
-import React, { Component } from 'react'
-import PropTypes, { bool } from 'prop-types'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import React, {Component} from 'react'
+import PropTypes, {bool} from 'prop-types'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
-import { Grid, Segment, GridRow, GridColumn, Divider, Header, Button } from 'semantic-ui-react'
-import { Dropdown } from 'formik-semantic-ui-fixed-validation'
+import {Grid, Segment, GridRow, GridColumn, Divider, Header, Button} from 'semantic-ui-react'
+import {Dropdown} from 'formik-semantic-ui-fixed-validation'
 
 import ShippingAddress from './ShippingAddress'
 
-
 class Shipping extends Component {
-  handleToggleChange = (otherAddresses) => {
+  handleToggleChange = otherAddresses => {
     if (otherAddresses !== this.props.otherAddresses) {
-      let { branches, getBranches, warehouses, getWarehouses } = this.props
+      let {branches, getBranches, warehouses, getWarehouses} = this.props
 
-      this.props.handleToggleChange(otherAddresses)
-        .then(() => {
-          // if (branches.length === 0 && !this.props.otherAddresses) getBranches()
-          if (warehouses.length === 0 && !this.props.otherAddresses) getWarehouses()
-        })
-
+      this.props.handleToggleChange(otherAddresses).then(() => {
+        // if (branches.length === 0 && !this.props.otherAddresses) getBranches()
+        if (warehouses.length === 0 && !this.props.otherAddresses) getWarehouses()
+      })
     }
   }
 
@@ -29,15 +26,13 @@ class Shipping extends Component {
   }
 
   render() {
-    let { deliveryAddresses, branches, warehouses, getAddress, selectedAddress, intl } = this.props
-    let { formatMessage } = intl
+    let {deliveryAddresses, branches, warehouses, getAddress, selectedAddress, intl} = this.props
+    let {formatMessage} = intl
 
     let addresses = this.props.otherAddresses ? deliveryAddresses : warehouses // branches
 
     let dropdownOptions = addresses.map(i => ({
-      text: this.props.otherAddresses
-        ? `${i.cfName}`
-        : `${i.deliveryAddress.cfName}`,
+      text: this.props.otherAddresses ? `${i.cfName}` : `${i.deliveryAddress.cfName}`,
       value: i.id,
       key: i.id
     }))
@@ -47,25 +42,21 @@ class Shipping extends Component {
         <GridRow columns={2} className='header'>
           <GridColumn>
             <Header as='h2'>
-              <FormattedMessage
-                id='cart.1shipping'
-                defaultMessage='1. Shipping'
-              />
+              <FormattedMessage id='cart.1shipping' defaultMessage='1. Shipping' />
             </Header>
-
           </GridColumn>
-          {
-            this.props.otherAddresses && (
-              <GridColumn floated='right'>
-                <span
-                  className='headerAddtext'
-                  onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !selectedAddress })}
-                  data-test='purchase_order_edit_address'>
-                  <FormattedMessage id='global.edit' defaultMessage='Edit'>{(text) => text}</FormattedMessage>
-                </span>
-              </GridColumn>
-            )
-          }
+          {this.props.otherAddresses && (
+            <GridColumn floated='right'>
+              <span
+                className='headerAddtext'
+                onClick={() => this.props.shippingChanged({isShippingEdit: true, isNewAddress: !selectedAddress})}
+                data-test='purchase_order_edit_address'>
+                <FormattedMessage id='global.edit' defaultMessage='Edit'>
+                  {text => text}
+                </FormattedMessage>
+              </span>
+            </GridColumn>
+          )}
         </GridRow>
         <GridRow>
           <GridColumn textAlign='center' tablet={16} computer={8}>
@@ -76,15 +67,21 @@ class Shipping extends Component {
                 onClick={() => this.handleToggleChange(true)}
                 active={this.props.otherAddresses}
                 data-test='purchase_order_address_btn'>
-                <FormattedMessage id='cart.addresses' defaultMessage='Addresses'>{(text) => text}</FormattedMessage></Button>
-              <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
+                <FormattedMessage id='cart.addresses' defaultMessage='Addresses'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+              <Button.Or text={formatMessage({id: 'global.or', defaultMessage: 'or'})} />
               <Button
                 type='button'
                 disabled={this.props.shippingQuotesAreFetching}
                 onClick={() => this.handleToggleChange(false)}
                 active={!this.props.otherAddresses}
                 data-test='purchase_order_branches_btn'>
-                <FormattedMessage id='cart.warehouses' defaultMessage='Warehouses'>{(text) => text}</FormattedMessage></Button>
+                <FormattedMessage id='cart.warehouses' defaultMessage='Warehouses'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
             </Button.Group>
           </GridColumn>
         </GridRow>
@@ -97,11 +94,10 @@ class Shipping extends Component {
               inputProps={{
                 disabled: this.props.shippingQuotesAreFetching,
                 placeholder: <FormattedMessage id='global.selectLocation' defaultMessage='Select Location' />,
-                onChange: (_, { value }) => getAddress(value)
+                onChange: (_, {value}) => getAddress(value)
               }}
               options={dropdownOptions}
               value={selectedAddress ? selectedAddress.id : null}
-
               data-test='purchase_order_location_drpdn'
             />
           </GridColumn>
@@ -110,7 +106,6 @@ class Shipping extends Component {
 
         <ShippingAddress selectedAddress={selectedAddress} />
       </>
-
     )
   }
 }
@@ -127,5 +122,5 @@ Shipping.propTypes = {
 }
 
 Shipping.defaultProps = {
-  otherAddresses: true,
+  otherAddresses: true
 }

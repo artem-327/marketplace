@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { Message, Container, Icon } from 'semantic-ui-react'
-import { FormattedMessage } from 'react-intl'
+import {Message, Container, Icon} from 'semantic-ui-react'
+import {FormattedMessage} from 'react-intl'
 
 export const MessageContainer = styled(Container)`
   padding: 5px;

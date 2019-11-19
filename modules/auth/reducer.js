@@ -1,19 +1,19 @@
 import moment from 'moment'
 
 import * as AT from './action-types'
-import { ROLES_ENUM } from '../../src/utils/constants'
-import { getSafe } from '~/utils/functions'
-import { ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '~/modules/admin/action-types'
-import { SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '~/modules/settings/action-types'
-import { SET_PREFERRED_LANGUAGE_FULFILLED } from '~/modules/settings/action-types'
-import { PROFILE_UPDATE_MY_PROFILE_FULFILLED } from '~/modules/profile/action-types'
+import {ROLES_ENUM} from '../../src/utils/constants'
+import {getSafe} from '~/utils/functions'
+import {ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED} from '~/modules/admin/action-types'
+import {SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED} from '~/modules/settings/action-types'
+import {SET_PREFERRED_LANGUAGE_FULFILLED} from '~/modules/settings/action-types'
+import {PROFILE_UPDATE_MY_PROFILE_FULFILLED} from '~/modules/profile/action-types'
 
-const getAccessRights = (roles) => {
+const getAccessRights = roles => {
   let accessRights = {}
 
   if (roles) {
     ROLES_ENUM.forEach(role => {
-      accessRights[role.propertyName] = !!roles.find((el) => el.id === role.id)
+      accessRights[role.propertyName] = !!roles.find(el => el.id === role.id)
     })
   }
 
@@ -39,7 +39,7 @@ export const initialState = {
       deliveryNotes: '',
       forkLift: false,
       liftGate: false,
-      readyTime: '',
+      readyTime: ''
     },
     companyAdminUser: {
       name: '',
@@ -56,17 +56,16 @@ export const initialState = {
     isLoading: false,
     message: null,
     isLogged: false,
-    version: '',
+    version: ''
   },
   identity: null
 }
 
 export default function reducer(state = initialState, action) {
-  const { loginForm } = state
-  const { type, payload } = action
+  const {loginForm} = state
+  const {type, payload} = action
 
   switch (type) {
-
     case AT.LOGIN_INIT: {
       return initialState
     }
@@ -100,37 +99,43 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
-        confirmationForm: getSafe(() => payload.identity.company.reviewRequested, false) && primaryUser ? {
-          address: {
-            address: {
-              city: address.city,
-              country: JSON.stringify({countryId: address.country.id, hasProvinces: address.country.hasProvinces}),
-              province: address.province ? address.province.id : null,
-              streetAddress: address.streetAddress,
-              zip: address.zip.zip
-            },
-            addressName: deliveryAddress.cfName || '',
-            callAhead: !!deliveryAddress.callAhead,
-            closeTime: deliveryAddress.closeTime || '',
-            contactEmail: deliveryAddress.contactEmail || primaryUser.email || '',
-            contactName: deliveryAddress.contactName || primaryUser.name || '',
-            contactPhone: deliveryAddress.contactPhone || primaryUser.phone || '',
-            deliveryNotes: deliveryAddress.deliveryNotes || '',
-            forkLift: !!deliveryAddress.forkLift,
-            liftGate: !!deliveryAddress.liftGate,
-            readyTime: deliveryAddress.readyTime || ''
-          },
-          companyAdminUser: {
-            name: payload.identity.name,
-            jobTitle: payload.identity.jobTitle,
-            phone: payload.identity.phone,
-            email: payload.identity.email
-          },
-          dba: payload.identity.company.dba,
-          dunsNumber: payload.identity.company.dunsNumber,
-          name: payload.identity.company.name,
-          tin: payload.identity.company.tin
-        } : state.confirmationForm,
+        confirmationForm:
+          getSafe(() => payload.identity.company.reviewRequested, false) && primaryUser
+            ? {
+                address: {
+                  address: {
+                    city: address.city,
+                    country: JSON.stringify({
+                      countryId: address.country.id,
+                      hasProvinces: address.country.hasProvinces
+                    }),
+                    province: address.province ? address.province.id : null,
+                    streetAddress: address.streetAddress,
+                    zip: address.zip.zip
+                  },
+                  addressName: deliveryAddress.cfName || '',
+                  callAhead: !!deliveryAddress.callAhead,
+                  closeTime: deliveryAddress.closeTime || '',
+                  contactEmail: deliveryAddress.contactEmail || primaryUser.email || '',
+                  contactName: deliveryAddress.contactName || primaryUser.name || '',
+                  contactPhone: deliveryAddress.contactPhone || primaryUser.phone || '',
+                  deliveryNotes: deliveryAddress.deliveryNotes || '',
+                  forkLift: !!deliveryAddress.forkLift,
+                  liftGate: !!deliveryAddress.liftGate,
+                  readyTime: deliveryAddress.readyTime || ''
+                },
+                companyAdminUser: {
+                  name: payload.identity.name,
+                  jobTitle: payload.identity.jobTitle,
+                  phone: payload.identity.phone,
+                  email: payload.identity.email
+                },
+                dba: payload.identity.company.dba,
+                dunsNumber: payload.identity.company.dunsNumber,
+                name: payload.identity.company.name,
+                tin: payload.identity.company.tin
+              }
+            : state.confirmationForm,
         identity: {
           ...payload.identity,
           ...getAccessRights(payload.identity.roles)
@@ -151,7 +156,7 @@ export default function reducer(state = initialState, action) {
     case AT.UPDATE_IDENTITY: {
       return {
         ...state,
-        identity: { ...payload, ...getAccessRights(payload.roles) }
+        identity: {...payload, ...getAccessRights(payload.roles)}
       }
     }
 
@@ -227,7 +232,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-
     /* UPDATE_COMPANY */
 
     case AT.UPDATE_COMPANY_FULFILLED: {
@@ -237,7 +241,6 @@ export default function reducer(state = initialState, action) {
           ...state.identity,
           company: payload
         }
-
       }
     }
 
@@ -246,7 +249,7 @@ export default function reducer(state = initialState, action) {
     case AT.GET_IDENTITY_FULFILLED: {
       return {
         ...state,
-        identity: { ...payload, ...getAccessRights(payload.roles) }
+        identity: {...payload, ...getAccessRights(payload.roles)}
       }
     }
 
@@ -286,9 +289,8 @@ export default function reducer(state = initialState, action) {
           company: {
             ...state.identity.company,
             hasDwollaAccount: true,
-            dwollaAccountStatus: 'verified',
+            dwollaAccountStatus: 'verified'
           }
-
         }
       }
     }
@@ -299,7 +301,9 @@ export default function reducer(state = initialState, action) {
         ...state,
         identity: {
           ...state.identity,
-          tosAgreementDate: moment().utc().format()
+          tosAgreementDate: moment()
+            .utc()
+            .format()
         }
       }
     }
@@ -315,7 +319,6 @@ export default function reducer(state = initialState, action) {
         }
       }
     }
-
 
     /* SET_COMPANY_SELL_ELLIGIBLE */
 
