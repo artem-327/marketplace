@@ -1,1 +1,1 @@
-export { default as ZipDropdown } from './components/ZipDropdownContainer'
+export {default as ZipDropdown} from './components/ZipDropdownContainer'

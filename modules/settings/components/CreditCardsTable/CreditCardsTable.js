@@ -1,21 +1,19 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import ProdexTable from '~/components/table'
-import { Confirm } from 'semantic-ui-react'
-import {
-  getCreditCardsDataRequest,
-  handleOpenConfirmPopup,
-  closeConfirmPopup,
-  deleteConfirmation
-} from '../../actions'
+import {Confirm} from 'semantic-ui-react'
+import {getCreditCardsDataRequest, handleOpenConfirmPopup, closeConfirmPopup, deleteConfirmation} from '../../actions'
 import Router from 'next/router'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 class ProductCatalogTable extends Component {
   state = {
     columns: [
-      { name: 'cardNumber', title: <FormattedMessage id='settings.cardNumber' defaultMessage='Card Number' /> },
-      { name: 'expMonthYear', title: <FormattedMessage id='settings.expMonthYear' defaultMessage='Expiration month/year' /> }
+      {name: 'cardNumber', title: <FormattedMessage id='settings.cardNumber' defaultMessage='Card Number' />},
+      {
+        name: 'expMonthYear',
+        title: <FormattedMessage id='settings.expMonthYear' defaultMessage='Expiration month/year' />
+      }
     ]
   }
 
@@ -34,16 +32,19 @@ class ProductCatalogTable extends Component {
       deleteRowById,
       currentTab,
       loading,
-      intl: { formatMessage }
+      intl: {formatMessage}
     } = this.props
 
-    const { columns } = this.state
+    const {columns} = this.state
 
     return (
       <React.Fragment>
         <Confirm
           size='tiny'
-          content={formatMessage({ id: 'settings.deleteCreditCardConfirm', defaultMessage: 'Do you really want to delete this Credit Card?' })}
+          content={formatMessage({
+            id: 'settings.deleteCreditCardConfirm',
+            defaultMessage: 'Do you really want to delete this Credit Card?'
+          })}
           open={confirmMessage}
           onCancel={closeConfirmPopup}
           onConfirm={() => deleteConfirmation(deleteRowById, currentTab)}
@@ -56,7 +57,7 @@ class ProductCatalogTable extends Component {
           filterValue={filterValue}
           rowActions={[
             {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+              text: formatMessage({id: 'global.delete', defaultMessage: 'Delete'}),
               callback: row => handleOpenConfirmPopup(row.id)
             }
           ]}
@@ -80,12 +81,11 @@ const mapStateToProps = state => {
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
-    currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-      state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+    currentTab:
+      Router && Router.router && Router.router.query && Router.router.query.type
+        ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
+        : state.settings.tabsNames[0]
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(injectIntl(ProductCatalogTable))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(ProductCatalogTable))

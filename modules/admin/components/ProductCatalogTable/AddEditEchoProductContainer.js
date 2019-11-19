@@ -1,18 +1,25 @@
 import AddEditEchoProduct from './AddEditEchoProduct'
 import React from 'react'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 
 import {
   closePopup,
-  searchCasProduct, putEchoProduct,
-  postEchoProduct, searchManufacturers, loadFile, addAttachment, linkAttachment, removeAttachmentLink,
-  removeAttachment, editEchoProductChangeTab
+  searchCasProduct,
+  putEchoProduct,
+  postEchoProduct,
+  searchManufacturers,
+  loadFile,
+  addAttachment,
+  linkAttachment,
+  removeAttachmentLink,
+  removeAttachment,
+  editEchoProductChangeTab
 } from '~/modules/admin/actions'
 
-import { Header } from 'semantic-ui-react'
+import {Header} from 'semantic-ui-react'
 
-import { injectIntl } from 'react-intl'
-import { withToastManager } from 'react-toast-notifications'
+import {injectIntl} from 'react-intl'
+import {withToastManager} from 'react-toast-notifications'
 
 const mapDispatchToProps = {
   loadFile,
@@ -25,10 +32,10 @@ const mapDispatchToProps = {
   putEchoProduct,
   postEchoProduct,
   searchManufacturers,
-  editEchoProductChangeTab,
+  editEchoProductChangeTab
 }
 
-const mapStateToProps = ({ admin }, props) => {
+const mapStateToProps = ({admin}, props) => {
   const currentTab = admin.currentTab.name === props.tabName
 
   return {
@@ -43,11 +50,7 @@ const mapStateToProps = ({ admin }, props) => {
         text: pGroup.groupCode,
         //description: pGroup.description,
         value: pGroup.id,
-        content: <Header
-          content={pGroup.groupCode}
-          subheader={pGroup.description}
-          style={{ fontSize: '1em' }}
-        />
+        content: <Header content={pGroup.groupCode} subheader={pGroup.description} style={{fontSize: '1em'}} />
       }
     }),
     searchedManufacturersLoading: admin.searchedManufacturersLoading,
@@ -56,7 +59,7 @@ const mapStateToProps = ({ admin }, props) => {
     isLoading: admin.loading,
 
     config: admin.config[admin.currentTab.name],
-    listDocumentTypes: admin.documentTypes,
+    listDocumentTypes: admin.documentTypes
   }
 }
 

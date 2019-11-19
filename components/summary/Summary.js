@@ -1,19 +1,17 @@
-import React, { Component } from 'react'
-import { Grid, GridColumn, Header, Segment, GridRow } from 'semantic-ui-react'
-import { string, array, func, number, node } from 'prop-types'
-import { FormattedMessage, FormattedNumber } from 'react-intl'
-import { getSafe } from '~/utils/functions'
-import { RelaxedRow, HeaderTextRow } from './styledComponents'
-import { currency } from '~/constants/index'
-
+import React, {Component} from 'react'
+import {Grid, GridColumn, Header, Segment, GridRow} from 'semantic-ui-react'
+import {string, array, func, number, node} from 'prop-types'
+import {FormattedMessage, FormattedNumber} from 'react-intl'
+import {getSafe} from '~/utils/functions'
+import {RelaxedRow, HeaderTextRow} from './styledComponents'
+import {currency} from '~/constants/index'
 
 import './styles.scss'
 
-
 export default class Summary extends Component {
   render() {
-    let { header, cart, totalPrice, additionalContent } = this.props
-    let { cartItems } = cart
+    let {header, cart, totalPrice, additionalContent} = this.props
+    let {cartItems} = cart
 
     if (cartItems.length === 0) return null
 
@@ -31,7 +29,7 @@ export default class Summary extends Component {
     // let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, 'USD')  // ! !
 
     //let pricePerUnit = (totalPrice + shipping) / totalWeight
-    
+
     return (
       <Segment>
         <Grid className='bottom-padded darker-gray' verticalAlign='middle'>
@@ -45,62 +43,33 @@ export default class Summary extends Component {
             <Grid className='light-gray cart-item-summary'>
               <RelaxedRow columns={2}>
                 <GridColumn>
-                  <FormattedMessage
-                    id='cart.subtotal'
-                    defaultMessage='Subtotal'
-                  />
+                  <FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />
                 </GridColumn>
 
                 <GridColumn>
-                  <FormattedNumber
-                    style='currency'
-                    currency={currency}
-                    value={totalPrice}
-                  />
-
+                  <FormattedNumber style='currency' currency={currency} value={totalPrice} />
                 </GridColumn>
               </RelaxedRow>
 
               <RelaxedRow columns={2}>
                 <GridColumn>
-                  <FormattedMessage
-                    id='cart.estimatedShipping'
-                    defaultMessage='Estimated Shipping'
-                  />
+                  <FormattedMessage id='cart.estimatedShipping' defaultMessage='Estimated Shipping' />
                 </GridColumn>
 
                 <GridColumn>
-                  {shipping > 0 &&
-                    <FormattedNumber
-                      style='currency'
-                      currency={currency}
-                      value={shipping}
-                    />
-                  }
-
-
+                  {shipping > 0 && <FormattedNumber style='currency' currency={currency} value={shipping} />}
                 </GridColumn>
               </RelaxedRow>
-
 
               <RelaxedRow columns={2}>
                 <GridColumn>
-                  <FormattedMessage
-                    id='cart.estimatedTax'
-                    defaultMessage='Estimated Tax'
-                  />
+                  <FormattedMessage id='cart.estimatedTax' defaultMessage='Estimated Tax' />
                 </GridColumn>
 
                 <GridColumn>
-                  <FormattedNumber
-                    style='currency'
-                    currency={currency}
-                    value={cart.cfPriceSubtotal}
-                  />
-
+                  <FormattedNumber style='currency' currency={currency} value={cart.cfPriceSubtotal} />
                 </GridColumn>
               </RelaxedRow>
-
 
               {/*
               <RelaxedRow columns={2}>
@@ -124,31 +93,21 @@ export default class Summary extends Component {
 
               <HeaderTextRow columns={2}>
                 <GridColumn>
-                  <FormattedMessage
-                    id='cart.total'
-                    defaultMessage='Total'
-                  />
+                  <FormattedMessage id='cart.total' defaultMessage='Total' />
                 </GridColumn>
 
                 <GridColumn>
-                  <FormattedNumber
-                    style='currency'
-                    currency={currency}
-                    value={totalPrice + shipping}
-                  />
-
+                  <FormattedNumber style='currency' currency={currency} value={totalPrice + shipping} />
                 </GridColumn>
               </HeaderTextRow>
               {additionalContent}
             </Grid>
-
           </GridColumn>
         </Grid>
       </Segment>
     )
   }
 }
-
 
 Summary.propTypes = {
   header: string,

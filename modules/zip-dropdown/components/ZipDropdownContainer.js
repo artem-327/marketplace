@@ -1,8 +1,8 @@
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import ZipDropdown from './ZipDropdown'
 import * as Actions from '../actions'
 
-function mapStateToProps({ zip }) {
+function mapStateToProps({zip}) {
   return {
     ...zip
   }

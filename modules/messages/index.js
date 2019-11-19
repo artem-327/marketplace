@@ -1,1 +1,1 @@
-export { default as Messages } from './components/MessagesContainer'
+export {default as Messages} from './components/MessagesContainer'

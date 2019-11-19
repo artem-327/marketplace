@@ -1,47 +1,56 @@
-import React, { Component } from 'react'
-import { Modal, Grid, GridRow, GridColumn, Form, Button, Divider } from 'semantic-ui-react'
-import { node } from 'prop-types'
-import { FormattedMessage } from 'react-intl'
-import { Dropdown, Input } from 'formik-semantic-ui-fixed-validation'
-import { connect } from 'react-redux'
-import { Formik } from 'formik'
+import React, {Component} from 'react'
+import {Modal, Grid, GridRow, GridColumn, Form, Button, Divider} from 'semantic-ui-react'
+import {node} from 'prop-types'
+import {FormattedMessage} from 'react-intl'
+import {Dropdown, Input} from 'formik-semantic-ui-fixed-validation'
+import {connect} from 'react-redux'
+import {Formik} from 'formik'
 import Router from 'next/router'
-import { debounce } from 'lodash'
+import {debounce} from 'lodash'
 import styled from 'styled-components'
-import { withToastManager } from 'react-toast-notifications'
+import {withToastManager} from 'react-toast-notifications'
 import * as Yup from 'yup'
-import { CompanyProductMixtures } from '~/components/shared-components/'
-import { currency } from '~/constants/index'
+import {CompanyProductMixtures} from '~/components/shared-components/'
+import {currency} from '~/constants/index'
 
-import { Datagrid } from '~/modules/datagrid'
-import { uniqueArrayByKey, getSafe, generateToastMarkup, getDesiredCasProductsProps } from '~/utils/functions'
-import { errorMessages } from '~/constants/yupValidation'
+import {Datagrid} from '~/modules/datagrid'
+import {uniqueArrayByKey, getSafe, generateToastMarkup, getDesiredCasProductsProps} from '~/utils/functions'
+import {errorMessages} from '~/constants/yupValidation'
 
-import { getWarehouses } from '~/modules/purchase-order/actions'
-import { simpleEditTrigger, getAutocompleteData, addProductOffer } from '~/modules/inventory/actions'
+import {getWarehouses} from '~/modules/purchase-order/actions'
+import {simpleEditTrigger, getAutocompleteData, addProductOffer} from '~/modules/inventory/actions'
 
 const BoldLabel = styled.label`
   font-weight: bolder;
 `
 const EllipsisColumn = styled(GridColumn)`
-& input {
-  text-overflow: ellipsis !important;
-}
+  & input {
+    text-overflow: ellipsis !important;
+  }
 `
 
-
-const { requiredMessage, mustBeNumber, minimum } = errorMessages
+const {requiredMessage, mustBeNumber, minimum} = errorMessages
 
 const validationSchema = Yup.object().shape({
-  product: Yup.number().required(requiredMessage).typeError(requiredMessage),
-  pricingTiers: Yup.array(Yup.object().shape({
-    price: Yup.number().required(requiredMessage).typeError(mustBeNumber).positive(minimum(0.001)),
-  })),
-  quantity: Yup.number().required(requiredMessage).typeError(mustBeNumber).positive(minimum(1)),
-  warehouse: Yup.number().required(requiredMessage).typeError(requiredMessage)
+  product: Yup.number()
+    .required(requiredMessage)
+    .typeError(requiredMessage),
+  pricingTiers: Yup.array(
+    Yup.object().shape({
+      price: Yup.number()
+        .required(requiredMessage)
+        .typeError(mustBeNumber)
+        .positive(minimum(0.001))
+    })
+  ),
+  quantity: Yup.number()
+    .required(requiredMessage)
+    .typeError(mustBeNumber)
+    .positive(minimum(1)),
+  warehouse: Yup.number()
+    .required(requiredMessage)
+    .typeError(requiredMessage)
 })
-
-
 
 class SimpleEdit extends Component {
   state = {
@@ -50,39 +59,45 @@ class SimpleEdit extends Component {
   }
 
   componentDidMount() {
-    const { warehouses, getWarehouses, isAdmin, takeover } = this.props
+    const {warehouses, getWarehouses, isAdmin, takeover} = this.props
 
     if (warehouses.length === 0 && (!isAdmin || takeover)) getWarehouses()
   }
 
-
-  handleSearch = debounce((searchQuery) => {
-    this.props.getAutocompleteData({ searchUrl: `/prodex/api/company-products/own/search?pattern=${searchQuery}&onlyMapped=false` })
+  handleSearch = debounce(searchQuery => {
+    this.props.getAutocompleteData({
+      searchUrl: `/prodex/api/company-products/own/search?pattern=${searchQuery}&onlyMapped=false`
+    })
   }, 250)
 
-
   render() {
-    const { open } = this.state
+    const {open} = this.state
     const {
-      trigger, simpleEditOpen, simpleEditTrigger,
-      popupValues, autocompleteData,
-      autocompleteDataLoading, preferredCurrency,
-      warehouses, warehousesFetching,
-      addProductOffer, toastManager } = this.props
-
+      trigger,
+      simpleEditOpen,
+      simpleEditTrigger,
+      popupValues,
+      autocompleteData,
+      autocompleteDataLoading,
+      preferredCurrency,
+      warehouses,
+      warehousesFetching,
+      addProductOffer,
+      toastManager
+    } = this.props
 
     let productOptions = autocompleteData
     let warehouseOptions = warehouses
 
-
     if (popupValues.id && popupValues.companyProduct) productOptions.push(popupValues.companyProduct)
-    if (getSafe(() => popupValues.warehouse.warehouseName)) warehouseOptions.push({
-      deliveryAddress: {
-        addressName: popupValues.warehouse.warehouseName
-      },
-      //! !name: popupValues.warehouse.warehouseName,
-      id: popupValues.warehouse.id
-    })
+    if (getSafe(() => popupValues.warehouse.warehouseName))
+      warehouseOptions.push({
+        deliveryAddress: {
+          addressName: popupValues.warehouse.warehouseName
+        },
+        //! !name: popupValues.warehouse.warehouseName,
+        id: popupValues.warehouse.id
+      })
 
     let initialValues = {
       packagingSize: getSafe(() => popupValues.companyProduct.packagingSize),
@@ -92,28 +107,34 @@ class SimpleEdit extends Component {
       casTradeName: getSafe(() => popupValues.companyProduct.echoProduct.name),
       casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.companyProduct.echoProduct.elements, [])),
       // price: getSafe(() => popupValues.pricingTiers[0].price.amount),
-      pricingTiers: getSafe(() => popupValues.pricingTiers.map((el) => ({
-        quantityFrom: el.quantityFrom,
-        price: el.pricePerUOM.amount  // ! !
-      })), [{ quantityFrom: 1, price: '' }]),
+      pricingTiers: getSafe(
+        () =>
+          popupValues.pricingTiers.map(el => ({
+            quantityFrom: el.quantityFrom,
+            price: el.pricePerUOM.amount // ! !
+          })),
+        [{quantityFrom: 1, price: ''}]
+      ),
       quantity: getSafe(() => popupValues.pkgAvailable),
       warehouse: getSafe(() => popupValues.warehouse.id)
     }
 
     return (
       <Formik
-        onSubmit={async (values) => {
-          this.setState({ submitting: true })
+        onSubmit={async values => {
+          this.setState({submitting: true})
           let payload = {
-            pricingTiers: values.pricingTiers.map((el) => ({
+            pricingTiers: values.pricingTiers.map(el => ({
               quantityFrom: el.quantityFrom,
               price: parseFloat(el.price)
             })),
             companyProduct: values.product,
-            lots: [{
-              lotNumber: '1',
-              pkgAvailable: parseInt(values.quantity)
-            }],
+            lots: [
+              {
+                lotNumber: '1',
+                pkgAvailable: parseInt(values.quantity)
+              }
+            ],
             tradeName: values.casTradeName,
             warehouse: values.warehouse
           }
@@ -123,31 +144,32 @@ class SimpleEdit extends Component {
 
             let status = popupValues.id ? 'edited' : 'created'
 
-            toastManager.add(generateToastMarkup(
-              <FormattedMessage
-                id={`notifications.productOffer.${status}.header`}
-                defaultMessage={`Product Offer ${popupValues.id ? 'Edited' : 'Listed'}`}
-              />,
-              <FormattedMessage
-                id={`notifications.productOffer.${status}.content`}
-                defaultMessage={`Product Offer successfully ${popupValues.id ? 'edited' : 'listed'}`}
-              />
-            ), { appearance: 'success' })
+            toastManager.add(
+              generateToastMarkup(
+                <FormattedMessage
+                  id={`notifications.productOffer.${status}.header`}
+                  defaultMessage={`Product Offer ${popupValues.id ? 'Edited' : 'Listed'}`}
+                />,
+                <FormattedMessage
+                  id={`notifications.productOffer.${status}.content`}
+                  defaultMessage={`Product Offer successfully ${popupValues.id ? 'edited' : 'listed'}`}
+                />
+              ),
+              {appearance: 'success'}
+            )
 
             Datagrid.loadData()
-
-          }
-          catch (e) { console.error(e) }
-          finally {
-            this.setState({ submitting: false })
+          } catch (e) {
+            console.error(e)
+          } finally {
+            this.setState({submitting: false})
             simpleEditTrigger({}, false)
           }
         }}
-
         enableReinitialize
         initialValues={initialValues}
         validationSchema={validationSchema}
-        render={({ submitForm, values }) => {
+        render={({submitForm, values}) => {
           this.submitForm = submitForm
 
           return (
@@ -157,14 +179,13 @@ class SimpleEdit extends Component {
               size='small'
               onClose={() => simpleEditTrigger({}, false)}
               open={open || simpleEditOpen}
-              trigger={trigger && React.cloneElement(trigger, { onClick: () => this.setState({ open: false }) })}>
+              trigger={trigger && React.cloneElement(trigger, {onClick: () => this.setState({open: false})})}>
               <Modal.Header>
                 <FormattedMessage
                   id={`global.${popupValues.id ? 'editListing' : 'addListing'}`}
                   defaultMessage={`${popupValues.id ? 'Edit' : 'Add'} Listing`}
                 />
               </Modal.Header>
-
 
               <Modal.Content>
                 <Form loading={this.state.submitting}>
@@ -173,60 +194,96 @@ class SimpleEdit extends Component {
                       <GridColumn>
                         <Dropdown
                           name='product'
-                          label={<FormattedMessage id='global.companyProduct' defaultMessage='Company Product'>{text => text}</FormattedMessage>}
+                          label={
+                            <FormattedMessage id='global.companyProduct' defaultMessage='Company Product'>
+                              {text => text}
+                            </FormattedMessage>
+                          }
                           inputProps={{
-                            placeholder: <FormattedMessage id='global.startTypingToSearch' defaultMessage='Start typing to begin search' />,
+                            placeholder: (
+                              <FormattedMessage
+                                id='global.startTypingToSearch'
+                                defaultMessage='Start typing to begin search'
+                              />
+                            ),
                             fluid: true,
                             icon: 'search',
                             search: true,
                             loading: autocompleteDataLoading,
-                            onChange: (_, { value }) => {
-                              simpleEditTrigger({
-                                ...popupValues,
-                                companyProduct: autocompleteData.find((el) => el.id === value)
-                              }, true)
+                            onChange: (_, {value}) => {
+                              simpleEditTrigger(
+                                {
+                                  ...popupValues,
+                                  companyProduct: autocompleteData.find(el => el.id === value)
+                                },
+                                true
+                              )
                             },
-                            onSearchChange: (_, { searchQuery }) => this.handleSearch(searchQuery)
+                            onSearchChange: (_, {searchQuery}) => this.handleSearch(searchQuery)
                           }}
-                          options={
-                            uniqueArrayByKey(productOptions, 'id').map((el) => ({
-                              key: el.id,
-                              text: el.intProductName,
-                              value: el.id
-                            }))
-                          }
+                          options={uniqueArrayByKey(productOptions, 'id').map(el => ({
+                            key: el.id,
+                            text: el.intProductName,
+                            value: el.id
+                          }))}
                         />
                       </GridColumn>
                     </GridRow>
-                    {values.product &&
+                    {values.product && (
                       <>
                         <GridRow columns={4}>
                           <EllipsisColumn width={6}>
                             <Input
-                              label={<BoldLabel><FormattedMessage id='global.externalProductName' defaultMessage='External Product Name'>{text => text}</FormattedMessage></BoldLabel>}
+                              label={
+                                <BoldLabel>
+                                  <FormattedMessage
+                                    id='global.externalProductName'
+                                    defaultMessage='External Product Name'>
+                                    {text => text}
+                                  </FormattedMessage>
+                                </BoldLabel>
+                              }
                               name='casTradeName'
-                              inputProps={{ transparent: true, readOnly: true }}
+                              inputProps={{transparent: true, readOnly: true}}
                             />
                           </EllipsisColumn>
                           <GridColumn width={3}>
                             <Input
-                              label={<BoldLabel><FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>{text => text}</FormattedMessage></BoldLabel>}
+                              label={
+                                <BoldLabel>
+                                  <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>
+                                    {text => text}
+                                  </FormattedMessage>
+                                </BoldLabel>
+                              }
                               name='packagingSize'
-                              inputProps={{ transparent: true, readOnly: true }}
+                              inputProps={{transparent: true, readOnly: true}}
                             />
                           </GridColumn>
                           <GridColumn width={3}>
                             <Input
-                              label={<BoldLabel><FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit'>{text => text}</FormattedMessage></BoldLabel>}
+                              label={
+                                <BoldLabel>
+                                  <FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit'>
+                                    {text => text}
+                                  </FormattedMessage>
+                                </BoldLabel>
+                              }
                               name='uom'
-                              inputProps={{ transparent: true, readOnly: true }}
+                              inputProps={{transparent: true, readOnly: true}}
                             />
                           </GridColumn>
                           <GridColumn width={4}>
                             <Input
-                              label={<BoldLabel><FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>{text => text}</FormattedMessage></BoldLabel>}
+                              label={
+                                <BoldLabel>
+                                  <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>
+                                    {text => text}
+                                  </FormattedMessage>
+                                </BoldLabel>
+                              }
                               name='packaging'
-                              inputProps={{ transparent: true, readOnly: true }}
+                              inputProps={{transparent: true, readOnly: true}}
                             />
                           </GridColumn>
                         </GridRow>
@@ -234,7 +291,7 @@ class SimpleEdit extends Component {
                         <CompanyProductMixtures casProducts={values.casProducts} />
                         <Divider />
                       </>
-                    }
+                    )}
                     <GridRow>
                       <GridColumn width={4}>
                         <Input
@@ -246,7 +303,11 @@ class SimpleEdit extends Component {
                             fluid: true
                           }}
                           name='pricingTiers[0].price'
-                          label={<FormattedMessage id='global.fobPrice' defaultMessage='FOB Price'>{text => text}</FormattedMessage>}
+                          label={
+                            <FormattedMessage id='global.fobPrice' defaultMessage='FOB Price'>
+                              {text => text}
+                            </FormattedMessage>
+                          }
                         />
                       </GridColumn>
 
@@ -258,7 +319,11 @@ class SimpleEdit extends Component {
                             step: 1
                           }}
                           name='quantity'
-                          label={<FormattedMessage id='global.packagesAvailable' defaultMessage='Packages Available'>{text => text}</FormattedMessage>}
+                          label={
+                            <FormattedMessage id='global.packagesAvailable' defaultMessage='Packages Available'>
+                              {text => text}
+                            </FormattedMessage>
+                          }
                         />
                       </GridColumn>
 
@@ -267,13 +332,17 @@ class SimpleEdit extends Component {
                           inputProps={{
                             loading: warehousesFetching
                           }}
-                          options={uniqueArrayByKey(warehouseOptions, 'id').map((wh) => ({
+                          options={uniqueArrayByKey(warehouseOptions, 'id').map(wh => ({
                             key: wh.id,
                             text: wh.deliveryAddress.cfName,
                             value: wh.id
                           }))}
                           name='warehouse'
-                          label={<FormattedMessage id='global.warehouse' defaultMessage='Warehouse'>{text => text}</FormattedMessage>}
+                          label={
+                            <FormattedMessage id='global.warehouse' defaultMessage='Warehouse'>
+                              {text => text}
+                            </FormattedMessage>
+                          }
                         />
                       </GridColumn>
                     </GridRow>
@@ -282,24 +351,32 @@ class SimpleEdit extends Component {
               </Modal.Content>
 
               <Modal.Actions>
-                <Button onClick={() => {
-                  simpleEditTrigger({}, false)
-                  this.setState({ open: false })
-                }}>
-                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage>
+                <Button
+                  onClick={() => {
+                    simpleEditTrigger({}, false)
+                    this.setState({open: false})
+                  }}>
+                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                    {text => text}
+                  </FormattedMessage>
                 </Button>
-                <Button basic primary onClick={() => Router.push(`/inventory/${popupValues.id ? `edit?id=${popupValues.id}` : 'add'}`)}>
-                  <FormattedMessage id='global.advanced' defaultMessage='Advanced'>{text => text}</FormattedMessage>
+                <Button
+                  basic
+                  primary
+                  onClick={() => Router.push(`/inventory/${popupValues.id ? `edit?id=${popupValues.id}` : 'add'}`)}>
+                  <FormattedMessage id='global.advanced' defaultMessage='Advanced'>
+                    {text => text}
+                  </FormattedMessage>
                 </Button>
                 <Button primary type='submit' onClick={() => this.submitForm()}>
                   <FormattedMessage
                     id={`global.${popupValues.id ? 'editListing' : 'addListing'}'`}
                     defaultMessage={`${popupValues.id ? 'Edit Listing' : 'Add Listing'}`}>
                     {text => text}
-                  </FormattedMessage >
-                </Button >
-              </Modal.Actions >
-            </Modal >
+                  </FormattedMessage>
+                </Button>
+              </Modal.Actions>
+            </Modal>
           )
         }}
       />
@@ -308,7 +385,7 @@ class SimpleEdit extends Component {
 }
 
 SimpleEdit.propTypes = {
-  trigger: node,
+  trigger: node
 }
 
 const mapDispatchToProps = {
@@ -318,12 +395,11 @@ const mapDispatchToProps = {
   addProductOffer
 }
 
-const mapStateToProps = ({ simpleAdd: {
-  simpleEditOpen,
-  popupValues,
-  autocompleteData,
-  autocompleteDataLoading
-}, auth, cart }) => ({
+const mapStateToProps = ({
+  simpleAdd: {simpleEditOpen, popupValues, autocompleteData, autocompleteDataLoading},
+  auth,
+  cart
+}) => ({
   simpleEditOpen,
   popupValues,
   autocompleteData,

@@ -1,18 +1,33 @@
 import './AddCart.scss'
 // import file from '../../../../images/file.svg'
-import { checkToken } from '../../../../utils/auth'
+import {checkToken} from '../../../../utils/auth'
 
 import styled from 'styled-components'
-import React, { Component } from 'react'
-import { object, func } from 'prop-types'
-import { Sidebar, Button, Header, Grid, GridRow, GridColumn, Loader, Dimmer, Dropdown, Input, Divider, Segment, List, Popup } from 'semantic-ui-react'
+import React, {Component} from 'react'
+import {object, func} from 'prop-types'
+import {
+  Sidebar,
+  Button,
+  Header,
+  Grid,
+  GridRow,
+  GridColumn,
+  Loader,
+  Dimmer,
+  Dropdown,
+  Input,
+  Divider,
+  Segment,
+  List,
+  Popup
+} from 'semantic-ui-react'
 import Router from 'next/router'
-import { FormattedNumber, FormattedMessage } from 'react-intl'
-import { FormattedUnit, UnitOfPackaging } from '~/components/formatted-messages'
-import { errorMessages } from '~/constants/yupValidation'
+import {FormattedNumber, FormattedMessage} from 'react-intl'
+import {FormattedUnit, UnitOfPackaging} from '~/components/formatted-messages'
+import {errorMessages} from '~/constants/yupValidation'
 
-import { currency } from '~/constants/index'
-import { getSafe } from '~/utils/functions'
+import {currency} from '~/constants/index'
+import {getSafe} from '~/utils/functions'
 
 const CapitalizedColumn = styled(GridColumn)`
   text-transform: capitalize;
@@ -49,29 +64,26 @@ export default class AddCart extends Component {
     // if (this.props.isEdit) this.props.getOrderDetail(this.props.orderId)
   }
 
-
   createOrder = async () => {
-
     if (checkToken(this.props)) return
-    const { addCartItem } = this.props
-    let { sidebar } = this.props
-    let { pkgAmount, id } = sidebar
+    const {addCartItem} = this.props
+    let {sidebar} = this.props
+    let {pkgAmount, id} = sidebar
 
-    await addCartItem({ productOffer: id, pkgAmount })
+    await addCartItem({productOffer: id, pkgAmount})
     Router.push('/cart')
   }
 
   editOrder = async () => {
-    const { updateCartItem } = this.props
-    let { sidebar } = this.props
-    let { pkgAmount } = sidebar
+    const {updateCartItem} = this.props
+    let {sidebar} = this.props
+    let {pkgAmount} = sidebar
 
-
-    await updateCartItem({ cartItemId: sidebar.id, pkgAmount })
+    await updateCartItem({cartItemId: sidebar.id, pkgAmount})
   }
 
   handleQuantity = e => {
-    let { minPkg, splitPkg, pkgAvailable } = this.props.offer
+    let {minPkg, splitPkg, pkgAvailable} = this.props.offer
     let pkgAmount = parseInt(e.target.value, 10)
     let warning = null
 
@@ -83,88 +95,102 @@ export default class AddCart extends Component {
       warning = `split is ${splitPkg}`
     }
 
-    this.props.sidebarChanged({ warning, pkgAmount })
+    this.props.sidebarChanged({warning, pkgAmount})
   }
 
   getCartMarkup = () => {
-    let { offer, order, isEdit } = this.props
-    let { pkgAmount, pricing, warning } = this.props.sidebar
+    let {offer, order, isEdit} = this.props
+    let {pkgAmount, pricing, warning} = this.props.sidebar
 
-    let { pkgAvailable, pricingTiers } = offer
+    let {pkgAvailable, pricingTiers} = offer
 
     const price = pricing ? pricing.price : null
 
-    let { packagingUnit, packagingSize, packagingType } = offer.companyProduct
+    let {packagingUnit, packagingSize, packagingType} = offer.companyProduct
     let nameAbbreviation = packagingUnit ? packagingUnit.nameAbbreviation : null
 
-    let totalPrice = (pkgAmount && price) ? price * pkgAmount * packagingSize : null
+    let totalPrice = pkgAmount && price ? price * pkgAmount * packagingSize : null
     let error = null
 
     let dropdownOptions = []
     //let currencyCode = getSafe(() => offer.pricingTiers[0].pricePerUOM.currency.code, currency)
     let currencyCode = currency // ! ! getSafe(() => offer.pricingTiers[0].pricePerUOM.currency.code, currency)
 
-
     if (pricingTiers.length > 0) {
       pricingTiers.forEach((tier, i) => {
-        let quantityTo = (i + 1) >= pricingTiers.length ? pkgAvailable : (tier.quantityFrom > pricingTiers[i + 1].quantityFrom ? tier.quantityFrom : pricingTiers[i + 1].quantityFrom - 1)
+        let quantityTo =
+          i + 1 >= pricingTiers.length
+            ? pkgAvailable
+            : tier.quantityFrom > pricingTiers[i + 1].quantityFrom
+            ? tier.quantityFrom
+            : pricingTiers[i + 1].quantityFrom - 1
 
-
-        let text = <>
-          <FormattedUnit unit='' separator=' - ' value={tier.quantityFrom} /><FormattedUnit unit='' value={quantityTo} />
-          <FormattedNumber style='currency' value={tier.pricePerUOM} currency={currencyCode} />
-        </>
+        let text = (
+          <>
+            <FormattedUnit unit='' separator=' - ' value={tier.quantityFrom} />
+            <FormattedUnit unit='' value={quantityTo} />
+            <FormattedNumber style='currency' value={tier.pricePerUOM} currency={currencyCode} />
+          </>
+        )
         dropdownOptions.push({
           key: i,
-          value: { quantityFrom: tier.quantityFrom, price: tier.pricePerUOM },
+          value: {quantityFrom: tier.quantityFrom, price: tier.pricePerUOM},
           text
         })
       })
-    }
-    else {
+    } else {
       let value = price
 
       dropdownOptions.push({
         key: 0,
-        value: { quantityFrom: 1, price: value },
-        text: <><FormattedNumber minimumFractionDigits={0} value={value} style='currency' currency={currencyCode} /></>
+        value: {quantityFrom: 1, price: value},
+        text: (
+          <>
+            <FormattedNumber minimumFractionDigits={0} value={value} style='currency' currency={currencyCode} />
+          </>
+        )
       })
     }
 
-    if (isNaN(pkgAmount))
-      error =
-        <ErrorLabel>
-          {errorMessages.requiredMessage}
-        </ErrorLabel>
+    if (isNaN(pkgAmount)) error = <ErrorLabel>{errorMessages.requiredMessage}</ErrorLabel>
     else if (pkgAmount < offer.minPkg)
-      error =
+      error = (
         <ErrorLabel>
-          <FormattedMessage id='validation.minimum' defaultMessage='Minimum is {min}' values={{ min: offer.minPkg }} />
+          <FormattedMessage id='validation.minimum' defaultMessage='Minimum is {min}' values={{min: offer.minPkg}} />
         </ErrorLabel>
+      )
     else if (pkgAmount > pkgAvailable)
-      error =
+      error = (
         <ErrorLabel>
-          <FormattedMessage id='validation.maximum' defaultMessage='Maximum is {max}' values={{ max: pkgAvailable }} />
+          <FormattedMessage id='validation.maximum' defaultMessage='Maximum is {max}' values={{max: pkgAvailable}} />
         </ErrorLabel>
+      )
     else if (pkgAmount % offer.splitPkg !== 0)
-      error =
+      error = (
         <ErrorLabel>
-          <FormattedMessage id='validation.multiplyOfSplit' defaultMessage='Must be multiply of split ({split})' values={{ split: offer.splitPkg }} />
+          <FormattedMessage
+            id='validation.multiplyOfSplit'
+            defaultMessage='Must be multiply of split ({split})'
+            values={{split: offer.splitPkg}}
+          />
         </ErrorLabel>
+      )
 
     // let attachments = offer.attachments.map(att =>
     //   <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
     // )
 
     let canProceed = !warning && price && pkgAmount > 0
-    
+
     return (
       <>
         <FlexContent basic>
           <Grid verticalAlign='top'>
             <GridRow className='action' columns={1}>
               <GridColumn>
-                <Header><FormattedMessage id='cart.InfoHeader' defaultMessage='1. Product Information' /></Header>
+                <Header>
+                  <FormattedMessage id='cart.InfoHeader' defaultMessage='1. Product Information' />
+                </Header>
               </GridColumn>
             </GridRow>
 
@@ -187,27 +213,21 @@ export default class AddCart extends Component {
               <GridColumn computer={6}>
                 <FormattedMessage id='cart.productName' defaultMessage='Product Name:' />
               </GridColumn>
-              <GridColumn computer={10}>
-                {offer.companyProduct.echoProduct.name}
-              </GridColumn>
+              <GridColumn computer={10}>{offer.companyProduct.echoProduct.name}</GridColumn>
             </GridRow>
 
             <GridRow>
               <GridColumn computer={6}>
                 <FormattedMessage id='cart.productCode' defaultMessage='Product Code:' />
               </GridColumn>
-              <GridColumn computer={10}>
-                {offer.companyProduct.echoProduct.code}
-              </GridColumn>
+              <GridColumn computer={10}>{offer.companyProduct.echoProduct.code}</GridColumn>
             </GridRow>
 
             <GridRow>
               <GridColumn computer={6}>
                 <FormattedMessage id='cart.mixtures' defaultMessage='Mixtures:' />
               </GridColumn>
-              <GridColumn computer={10}>
-                {this.props.casProductsChemNames}
-              </GridColumn>
+              <GridColumn computer={10}>{this.props.casProductsChemNames}</GridColumn>
             </GridRow>
 
             {/*<GridRow>
@@ -223,9 +243,7 @@ export default class AddCart extends Component {
               <GridColumn computer={6}>
                 <FormattedMessage id='cart.productLocation' defaultMessage='Location:' />
               </GridColumn>
-              <GridColumn computer={10}>
-                {offer.locationStr}
-              </GridColumn>
+              <GridColumn computer={10}>{offer.locationStr}</GridColumn>
             </GridRow>
 
             <GridRow>
@@ -233,18 +251,17 @@ export default class AddCart extends Component {
                 <FormattedMessage id='cart.availableProduct' defaultMessage='Available Product:' />
               </GridColumn>
               <GridColumn computer={10}>
-                <FormattedNumber minimumFractionDigits={0} value={pkgAvailable} /> <UnitOfPackaging value={packagingType.name} /> / <FormattedUnit unit={nameAbbreviation} separator={' '} value={pkgAvailable * packagingSize} />
+                <FormattedNumber minimumFractionDigits={0} value={pkgAvailable} />{' '}
+                <UnitOfPackaging value={packagingType.name} /> /{' '}
+                <FormattedUnit unit={nameAbbreviation} separator={' '} value={pkgAvailable * packagingSize} />
               </GridColumn>
-
             </GridRow>
 
             <GridRow>
               <GridColumn computer={6}>
                 <FormattedMessage id='cart.form' defaultMessage='Form:' />
               </GridColumn>
-              <GridColumn computer={10}>
-                {offer.form ? offer.form.name : 'N/A'}
-              </GridColumn>
+              <GridColumn computer={10}>{offer.form ? offer.form.name : 'N/A'}</GridColumn>
             </GridRow>
 
             <GridRow>
@@ -253,7 +270,8 @@ export default class AddCart extends Component {
               </GridColumn>
 
               <GridColumn company={10}>
-                <FormattedUnit unit={nameAbbreviation} separator={' '} value={packagingSize} /> <UnitOfPackaging value={packagingType.name} />
+                <FormattedUnit unit={nameAbbreviation} separator={' '} value={packagingSize} />{' '}
+                <UnitOfPackaging value={packagingType.name} />
               </GridColumn>
             </GridRow>
 
@@ -269,35 +287,40 @@ export default class AddCart extends Component {
 
             <GridRow className='action'>
               <GridColumn>
-                <Header><FormattedMessage id='cart.PurchaseHeader' defaultMessage='2. Purchase Info' /></Header>
+                <Header>
+                  <FormattedMessage id='cart.PurchaseHeader' defaultMessage='2. Purchase Info' />
+                </Header>
               </GridColumn>
             </GridRow>
 
             <CustomList selection>
-              <ListHeader><FormattedMessage id='cart.pricingLevel' defaultMessage='Pricing Level:' /></ListHeader>
-              {dropdownOptions.map((el) => (
+              <ListHeader>
+                <FormattedMessage id='cart.pricingLevel' defaultMessage='Pricing Level:' />
+              </ListHeader>
+              {dropdownOptions.map(el => (
                 <List.Item active={el.value.price === this.props.sidebar.pricing.price}>
-                  <List.Content>
-                    {el.text}
-                  </List.Content>
+                  <List.Content>{el.text}</List.Content>
                 </List.Item>
               ))}
             </CustomList>
             <GridRow columns={2}>
-              <Popup trigger={
-                <GridColumn><FormattedMessage id='cart.minimumQQ' defaultMessage='Minimum Order QQ' />:</GridColumn>
-              }
+              <Popup
+                trigger={
+                  <GridColumn>
+                    <FormattedMessage id='cart.minimumQQ' defaultMessage='Minimum Order QQ' />:
+                  </GridColumn>
+                }
                 content={<FormattedMessage id='cart.minimumOrderQQ' defaultMessage='Minimum Order Quantity' />}
               />
               <GridColumn>{offer.minPkg}</GridColumn>
             </GridRow>
 
-
             <GridRow columns={2}>
-              <GridColumn><FormattedMessage id='cart.split' defaultMessage='Split' />:</GridColumn>
+              <GridColumn>
+                <FormattedMessage id='cart.split' defaultMessage='Split' />:
+              </GridColumn>
               <GridColumn>{offer.splitPkg}</GridColumn>
             </GridRow>
-
 
             <GridRow verticalAlign='middle' columns={2}>
               <GridColumn>
@@ -309,76 +332,117 @@ export default class AddCart extends Component {
                   error={!!error}
                   min={1}
                   value={this.props.sidebar.pkgAmount}
-                  onChange={this.handleQuantity} type='number' />
+                  onChange={this.handleQuantity}
+                  type='number'
+                />
               </GridColumn>
             </GridRow>
 
-            {error && <GridRow columns={2}>
-              <GridColumn />
-              <GridColumn> {error}</GridColumn>
-            </GridRow>}
+            {error && (
+              <GridRow columns={2}>
+                <GridColumn />
+                <GridColumn> {error}</GridColumn>
+              </GridRow>
+            )}
 
-            <GridRow columns={1}>
-
-            </GridRow>
+            <GridRow columns={1}></GridRow>
 
             <GridRow className='action'>
               <GridColumn>
-                <Header><FormattedMessage id='cart.SummaryHeader' defaultMessage='3. Summary' /></Header>
+                <Header>
+                  <FormattedMessage id='cart.SummaryHeader' defaultMessage='3. Summary' />
+                </Header>
               </GridColumn>
             </GridRow>
 
             <GridRow>
-              <GridColumn computer={6}><FormattedMessage id='cart.totalQuantity' defaultMessage='Total Quantity:' /></GridColumn>
+              <GridColumn computer={6}>
+                <FormattedMessage id='cart.totalQuantity' defaultMessage='Total Quantity:' />
+              </GridColumn>
               <GridColumn computer={10}>
-                {(pkgAmount && pkgAmount > 0 ? <> <FormattedNumber minimumFractionDigits={0} value={pkgAmount} />  <UnitOfPackaging value={packagingType.name} /> </> : null)
-                  || (isEdit && <> <FormattedNumber minimumFractionDigits={0} value={order.pkgAmount} />  <UnitOfPackaging value={packagingType.name} /> </>)}
+                {(pkgAmount && pkgAmount > 0 ? (
+                  <>
+                    {' '}
+                    <FormattedNumber minimumFractionDigits={0} value={pkgAmount} />{' '}
+                    <UnitOfPackaging value={packagingType.name} />{' '}
+                  </>
+                ) : null) ||
+                  (isEdit && (
+                    <>
+                      {' '}
+                      <FormattedNumber minimumFractionDigits={0} value={order.pkgAmount} />{' '}
+                      <UnitOfPackaging value={packagingType.name} />{' '}
+                    </>
+                  ))}
               </GridColumn>
             </GridRow>
 
             <GridRow>
-              <GridColumn computer={6}><FormattedMessage id='cart.price' defaultMessage='Price' /></GridColumn>
+              <GridColumn computer={6}>
+                <FormattedMessage id='cart.price' defaultMessage='Price' />
+              </GridColumn>
               <GridColumn computer={10}>
-                {
-                  price && !isNaN(price) ? <><FormattedNumber
-                    style='currency'
-                    currency={currencyCode}
-                    value={price} /> {nameAbbreviation && `/ ${nameAbbreviation}`}</> : null
-                }
+                {price && !isNaN(price) ? (
+                  <>
+                    <FormattedNumber style='currency' currency={currencyCode} value={price} />{' '}
+                    {nameAbbreviation && `/ ${nameAbbreviation}`}
+                  </>
+                ) : null}
               </GridColumn>
             </GridRow>
             <Divider />
             <GridRow>
-              <GridColumn computer={6}><FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />:</GridColumn>
-              <GridColumn computer={10}>{totalPrice ?
-                <FormattedNumber style='currency' currency={currencyCode} value={totalPrice} />
-                : null}
+              <GridColumn computer={6}>
+                <FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />:
+              </GridColumn>
+              <GridColumn computer={10}>
+                {totalPrice ? <FormattedNumber style='currency' currency={currencyCode} value={totalPrice} /> : null}
               </GridColumn>
             </GridRow>
-          </Grid >
-        </FlexContent >
+          </Grid>
+        </FlexContent>
 
         <RelaxedSegment basic>
           <Grid>
             <GridRow className='action' columns={2}>
               <GridColumn>
-                <Button fluid floated='right' onClick={() => this.props.sidebarChanged({ isOpen: false })}
+                <Button
+                  fluid
+                  floated='right'
+                  onClick={() => this.props.sidebarChanged({isOpen: false})}
                   data-test='add_cart_cancel_btn'>
-                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage>
+                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                    {text => text}
+                  </FormattedMessage>
                 </Button>
               </GridColumn>
 
               <GridColumn>
-                {!isEdit
-                  ? <Button disabled={!canProceed} fluid floated='right' primary onClick={this.createOrder}
+                {!isEdit ? (
+                  <Button
+                    disabled={!canProceed}
+                    fluid
+                    floated='right'
+                    primary
+                    onClick={this.createOrder}
                     data-test='add_cart_create_order_btn'>
-                    <FormattedMessage id='global.continue' defaultMessage='Continue'>{text => text}</FormattedMessage>
+                    <FormattedMessage id='global.continue' defaultMessage='Continue'>
+                      {text => text}
+                    </FormattedMessage>
                   </Button>
-                  : <Button disabled={!canProceed} fluid floated='right' primary onClick={this.editOrder}
+                ) : (
+                  <Button
+                    disabled={!canProceed}
+                    fluid
+                    floated='right'
+                    primary
+                    onClick={this.editOrder}
                     data-test='add_cart_edit_order_btn'>
-                    <FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage>
+                    <FormattedMessage id='global.save' defaultMessage='Save'>
+                      {text => text}
+                    </FormattedMessage>
                   </Button>
-                }
+                )}
               </GridColumn>
             </GridRow>
           </Grid>
@@ -388,16 +452,27 @@ export default class AddCart extends Component {
   }
 
   render() {
-    let { sidebar, isEdit, orderDetailIsFetching, offerDetailIsFetching } = this.props
-    const { sidebarChanged } = this.props
-    let { isOpen } = sidebar
+    let {sidebar, isEdit, orderDetailIsFetching, offerDetailIsFetching} = this.props
+    const {sidebarChanged} = this.props
+    let {isOpen} = sidebar
 
     return (
-      <Sidebar onHide={() => sidebarChanged({ isOpen: false })} width='very wide' className='cart-sidebar flex' direction='right' animation='scale down' visible={isOpen} style={{ zIndex: 601 }}>
-        {
-          (offerDetailIsFetching) ? <Dimmer active inverted> <Loader size='large' /> </Dimmer>
-            : this.getCartMarkup()
-        }
+      <Sidebar
+        onHide={() => sidebarChanged({isOpen: false})}
+        width='very wide'
+        className='cart-sidebar flex'
+        direction='right'
+        animation='scale down'
+        visible={isOpen}
+        style={{zIndex: 601}}>
+        {offerDetailIsFetching ? (
+          <Dimmer active inverted>
+            {' '}
+            <Loader size='large' />{' '}
+          </Dimmer>
+        ) : (
+          this.getCartMarkup()
+        )}
       </Sidebar>
     )
   }
@@ -408,7 +483,7 @@ AddCart.propTypes = {
   order: object,
   postNewOrder: func,
   casProductsChemNames: object,
-  casProductsCasNumbers: object,
+  casProductsCasNumbers: object
   // id: number,
   // pkgAmount: number,
   // pricing: object,

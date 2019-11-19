@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 
-import { uniqueArrayByKey, getSafe } from '~/utils/functions'
+import {uniqueArrayByKey, getSafe} from '~/utils/functions'
 import moment from 'moment'
 
 export const initialState = {
@@ -33,7 +33,7 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-  const { type, payload } = action
+  const {type, payload} = action
 
   switch (type) {
     case AT.INVENTORY_ADD_PRODUCT_OFFER_PENDING: {
@@ -129,21 +129,20 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.INVENTORY_GET_PRODUCT_OFFER_FULFILLED: {
-
-      let { data } = action.payload
+      let {data} = action.payload
       let expirationDate = getSafe(() => data.validityDate)
 
-      let filteredAttachments = data.attachments.reduce(function (filtered, att) {
+      let filteredAttachments = data.attachments.reduce(function(filtered, att) {
         if (att.documentType.id === 2) {
-          var returnedAtt = { id: att.id, name: att.name, linked: true, documentType: { ...att.documentType } }
+          var returnedAtt = {id: att.id, name: att.name, linked: true, documentType: {...att.documentType}}
           filtered.push(returnedAtt)
         }
         return filtered
       }, [])
 
-      let filteredAdditional = data.attachments.reduce(function (filtered, att) {
+      let filteredAdditional = data.attachments.reduce(function(filtered, att) {
         if (att.documentType.id !== 2) {
-          var returnedAtt = { id: att.id, name: att.name, linked: true, documentType: { ...att.documentType } }
+          var returnedAtt = {id: att.id, name: att.name, linked: true, documentType: {...att.documentType}}
           filtered.push(returnedAtt)
         }
         return filtered
@@ -156,16 +155,21 @@ export default function reducer(state = initialState, action) {
         initialState: {
           attachments: filteredAttachments,
           additional: filteredAdditional,
-          lots: getSafe(() => data.lots, []).length > 0 ? data.lots.map((el) => ({
-            ...el,
-            manufacturedDate: moment(el.manufacturedDate).format('YYYY-MM-DD'),
-            expirationDate: moment(el.expirationDate).format('YYYY-MM-DD')
-          })) : [{
-            lotNumber: 'Lot #1',
-            pkgAvailable: 1,
-            manufacturedDate: '',
-            expirationDate: ''
-          }],
+          lots:
+            getSafe(() => data.lots, []).length > 0
+              ? data.lots.map(el => ({
+                  ...el,
+                  manufacturedDate: moment(el.manufacturedDate).format('YYYY-MM-DD'),
+                  expirationDate: moment(el.expirationDate).format('YYYY-MM-DD')
+                }))
+              : [
+                  {
+                    lotNumber: 'Lot #1',
+                    pkgAvailable: 1,
+                    manufacturedDate: '',
+                    expirationDate: ''
+                  }
+                ],
           processingTimeDays: data.processingTimeDays ? data.processingTimeDays : 1,
           product: data.companyProduct.id,
           warehouse: data.warehouse.id,
@@ -177,17 +181,20 @@ export default function reducer(state = initialState, action) {
           minimum: getSafe(() => data.minPkg, 1),
           splits: getSafe(() => data.splitPkg, 1),
           priceTiers: data.pricingTiers.length > 0 ? data.pricingTiers.length : 1,
-          pricingTiers: data.pricingTiers.length > 0 ? data.pricingTiers.map(pt => ({
-            // ? ! ! id: pt.id,
-            //! ! price: pt.pricePerUOM.amount,
-            price: 1,  // ! ! ! ! ! ! TODO temporary, opravit co nejdrive!
-            quantityFrom: pt.quantityFrom
-          })) : [{ price: null, quantityFrom: 1 }],
+          pricingTiers:
+            data.pricingTiers.length > 0
+              ? data.pricingTiers.map(pt => ({
+                  // ? ! ! id: pt.id,
+                  //! ! price: pt.pricePerUOM.amount,
+                  price: 1, // ! ! ! ! ! ! TODO temporary, opravit co nejdrive!
+                  quantityFrom: pt.quantityFrom
+                }))
+              : [{price: null, quantityFrom: 1}],
           origin: getSafe(() => data.origin.id),
           tradeName: data.companyProduct.echoProduct.name, // ! ! ? data.tradeName,
           productCondition: getSafe(() => data.condition.id),
           productForm: getSafe(() => data.form.id),
-          productGrades: getSafe(() => data.grades.map((el) => el.id)),
+          productGrades: getSafe(() => data.grades.map(el => el.id)),
           assayMin: data.assayMin,
           assayMax: data.assayMax,
           internalNotes: data.internalNotes,
@@ -195,8 +202,6 @@ export default function reducer(state = initialState, action) {
         },
         product: data
       }
-
-
 
       // let searchedLists = {}
       // if (action.payload.data.manufacturer) {
@@ -307,7 +312,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         documentTypesFetching: false,
-        listDocumentTypes: action.payload.data.map((docType) => {
+        listDocumentTypes: action.payload.data.map(docType => {
           return {
             key: docType.id,
             text: docType.name,
@@ -327,7 +332,7 @@ export default function reducer(state = initialState, action) {
     case AT.INVENTORY_GET_WAREHOUSES_FULFILLED: {
       return {
         ...state,
-        warehousesList: action.payload.data.map((warehouse) => {
+        warehousesList: action.payload.data.map(warehouse => {
           return {
             ...warehouse,
             text: warehouse.deliveryAddress.cfName,
@@ -346,11 +351,13 @@ export default function reducer(state = initialState, action) {
         warehousesList: state.warehousesList,
         initialState: {
           ...action.payload.data,
-          pricingTiers: [{
-            quantityFrom: 1,
-            price: null,
-            manuallyModified: 0
-          }]
+          pricingTiers: [
+            {
+              quantityFrom: 1,
+              price: null,
+              manuallyModified: 0
+            }
+          ]
         }
       }
     }
@@ -401,7 +408,6 @@ export default function reducer(state = initialState, action) {
     //   }
     // }
 
-
     /* GET_AUTOCOMPLETE_DATA */
 
     case AT.GET_AUTOCOMPLETE_DATA_PENDING: {
@@ -415,7 +421,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         autocompleteDataLoading: false,
-        autocompleteData: uniqueArrayByKey(payload.concat(state.autocompleteData), 'id').map((el) => {
+        autocompleteData: uniqueArrayByKey(payload.concat(state.autocompleteData), 'id').map(el => {
           const productCode = getSafe(() => el.intProductCode, el.mfrProductCode)
           const productName = getSafe(() => el.intProductName, el.mfrProductName)
           return {
@@ -433,7 +439,7 @@ export default function reducer(state = initialState, action) {
               casProducts: getSafe(() => el.echoProduct.elements, [])
             }
           }
-        }),
+        })
       }
     }
 
@@ -489,6 +495,4 @@ export default function reducer(state = initialState, action) {
       return state
     }
   }
-
 }
-

@@ -175,5 +175,3 @@ src/styles/fonts.css.map
 /src/components/ShippingQuote/shippingquote.css
 /src/pages/inventory/allInventory/components/ShippingQuotes/shippingquotes.css
 /src/pages/inventory/allInventory/allinventory.css
-
-.prettierrc

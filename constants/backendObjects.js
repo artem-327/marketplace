@@ -135,7 +135,6 @@ export const EchoProductResponse = {
   wasteDisposalMethods: ''
 }
 
-
 export const CasProductResponse = {
   appearance: '',
   autoIgnitionTemperature: '',

@@ -12,12 +12,12 @@ export const initShipingForm = () => ({
   }
 })
 
-export const getShipingQuotes = (params) => ({
+export const getShipingQuotes = params => ({
   type: AT.SHIPING_GET_QUOTES,
   payload: api.getQuotes(params)
 })
 
-export const clearShippingQuotes = (params) => ({
+export const clearShippingQuotes = params => ({
   type: AT.SHIPPING_CLEAR_QUOTES,
   payload: null
 })

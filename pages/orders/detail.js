@@ -11,7 +11,7 @@ class OrderDetail extends Component {
     return (
       <Layout>
         <OrderWithRouter />
-      </Layout>  
+      </Layout>
     )
   }
 }

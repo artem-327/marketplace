@@ -1,1 +1,1 @@
-export { default as CompanyProductInfo } from './components/CompanyProductInfoContainer'
+export {default as CompanyProductInfo} from './components/CompanyProductInfoContainer'

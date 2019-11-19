@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Header from './components/Header';
-import Rows from './components/Rows';
-import './dataTable.scss';
-import Spinner from '../Spinner/Spinner';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+import Header from './components/Header'
+import Rows from './components/Rows'
+import './dataTable.scss'
+import Spinner from '../Spinner/Spinner'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 class DataTable extends Component {
   componentDidMount() {
-    this.initDataTable();
+    this.initDataTable()
   }
 
   initDataTable() {
@@ -20,68 +20,62 @@ class DataTable extends Component {
       align: item.align ? item.align : '',
       sort: item.sort !== undefined ? item.sort : true,
       visible: item.visible !== undefined ? item.visible : true
-    }));
+    }))
     let rowsOpns = this.props.rows.map((item, index) => {
-        return ({
-            ...item,
-            index: index,
-            rows: item.rows.map((row, index2) => ({
-                disabled: false,
-                selected: false,
-                index: index2,
-                id: row.id
-            }))
-        });
-    });
-    this.props.initDataTable(this.props.id, header, rowsOpns);
+      return {
+        ...item,
+        index: index,
+        rows: item.rows.map((row, index2) => ({
+          disabled: false,
+          selected: false,
+          index: index2,
+          id: row.id
+        }))
+      }
+    })
+    this.props.initDataTable(this.props.id, header, rowsOpns)
     // }
   }
 
   handleScrollY() {
-    let topPosition = document.querySelector('#datatable-wrapper > .scrollbar-container').scrollTop;
-    let fixHeader = document.querySelectorAll('#datatable-wrapper th > .fix-header');
+    let topPosition = document.querySelector('#datatable-wrapper > .scrollbar-container').scrollTop
+    let fixHeader = document.querySelectorAll('#datatable-wrapper th > .fix-header')
     for (let i = 0; i < fixHeader.length; i++) {
-      fixHeader[i].style.top = topPosition + 'px';
+      fixHeader[i].style.top = topPosition + 'px'
     }
-    let xScrollbar = document.querySelector('#datatable-wrapper > .scrollbar-container > .ps__rail-x');
-    let yScrollbar = document.querySelector('#datatable-wrapper > .scrollbar-container > .ps__rail-y');
-    xScrollbar.style.marginBottom = -topPosition + 'px';
-    yScrollbar.style.marginTop = topPosition + 'px';
+    let xScrollbar = document.querySelector('#datatable-wrapper > .scrollbar-container > .ps__rail-x')
+    let yScrollbar = document.querySelector('#datatable-wrapper > .scrollbar-container > .ps__rail-y')
+    xScrollbar.style.marginBottom = -topPosition + 'px'
+    yScrollbar.style.marginTop = topPosition + 'px'
   }
 
   handleScrollX() {
-    let leftPosition = document.querySelector('#datatable-wrapper > .scrollbar-container').scrollLeft;
-    let xScrollbar = document.querySelector('#datatable-wrapper > .scrollbar-container > .ps__rail-x');
-    let yScrollbar = document.querySelector('#datatable-wrapper > .scrollbar-container > .ps__rail-y');
-    xScrollbar.style.marginLeft = leftPosition + 'px';
-    yScrollbar.style.marginRight = -leftPosition + 'px';
+    let leftPosition = document.querySelector('#datatable-wrapper > .scrollbar-container').scrollLeft
+    let xScrollbar = document.querySelector('#datatable-wrapper > .scrollbar-container > .ps__rail-x')
+    let yScrollbar = document.querySelector('#datatable-wrapper > .scrollbar-container > .ps__rail-y')
+    xScrollbar.style.marginLeft = leftPosition + 'px'
+    yScrollbar.style.marginRight = -leftPosition + 'px'
   }
 
   render() {
-    if (!this.props.dataTable || !this.props.rows) return null;
-    if (this.props.isFetching) return <Spinner />;
+    if (!this.props.dataTable || !this.props.rows) return null
+    if (this.props.isFetching) return <Spinner />
     if (this.props.rows.length !== this.props.dataTable.rowsOpns.length) {
-      console.error("DataTable error, rowsOpns don't belong to rows, TODO::15");
-      return <h4>DataTable Error</h4>;
+      console.error("DataTable error, rowsOpns don't belong to rows, TODO::15")
+      return <h4>DataTable Error</h4>
     }
 
     console.log('dataTable props', this.props)
     return (
-      <div id="datatable-wrapper" className="data-table-wr">
+      <div id='datatable-wrapper' className='data-table-wr'>
         <PerfectScrollbar onScrollY={this.handleScrollY} onScrollX={this.handleScrollX}>
-          <table className="data-table">
+          <table className='data-table'>
             <Header
               data={this.props.dataTable}
               sortFunc={this.props.sortFunc}
-              selectTable={rows =>
-                this.props.selectDataTable(this.props.id, rows)
-              }
-              contextMenu={
-                this.props.contextMenu && this.props.contextMenu.length !== 0
-              }
-              toggleColumn={(headerId, value) =>
-                this.props.toggleVisibleColumn(this.props.id, headerId, value)
-              }
+              selectTable={rows => this.props.selectDataTable(this.props.id, rows)}
+              contextMenu={this.props.contextMenu && this.props.contextMenu.length !== 0}
+              toggleColumn={(headerId, value) => this.props.toggleVisibleColumn(this.props.id, headerId, value)}
               selectable={this.props.selectableHeader}
               selectableRows={this.props.selectableRows}
             />
@@ -98,17 +92,13 @@ class DataTable extends Component {
               contextMenu={this.props.contextMenu}
               rowComponent={this.props.rowComponent}
               headers={this.props.dataTable.header}
-              selectGroupFunc={(data) =>
-                this.props.selectGroup(this.props.id, data)
-              }
-              selectFunc={(data) =>
-                this.props.selectRow(this.props.id, data)
-              }
+              selectGroupFunc={data => this.props.selectGroup(this.props.id, data)}
+              selectFunc={data => this.props.selectRow(this.props.id, data)}
             />
           </table>
         </PerfectScrollbar>
       </div>
-    );
+    )
   }
 }
 
@@ -131,6 +121,6 @@ DataTable.propTypes = {
   ),
   sortFunc: PropTypes.func,
   rowComponent: PropTypes.element
-};
+}
 
-export default DataTable;
+export default DataTable

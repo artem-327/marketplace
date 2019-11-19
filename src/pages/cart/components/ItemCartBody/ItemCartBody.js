@@ -1,30 +1,27 @@
-import React, { Component } from 'react'
-import { object, func } from 'prop-types'
+import React, {Component} from 'react'
+import {object, func} from 'prop-types'
 import confirm from '../../../../components/Confirmable/confirm'
-import { FormattedMessage, FormattedNumber } from 'react-intl'
+import {FormattedMessage, FormattedNumber} from 'react-intl'
 
-import { Button } from 'semantic-ui-react'
-import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
-import { currency } from '~/constants/index'
+import {Button} from 'semantic-ui-react'
+import {FormattedUnit, FormattedAssay} from '~/components/formatted-messages'
+import {currency} from '~/constants/index'
 
 export default class ItemCartBody extends Component {
   render() {
-    let { cartItem, deleteCartItem, casNumberChemName } = this.props
-    let { productOffer } = cartItem
+    let {cartItem, deleteCartItem, casNumberChemName} = this.props
+    let {productOffer} = cartItem
     let unitName = productOffer.companyProduct.packagingUnit.nameAbbreviation
 
     return (
       <div className='item-cart'>
         <div className='item-cart-body'>
           <div className='item-cart-body-section'>
-
             <div className='item-cart-body-section-name'>
               {productOffer.companyProduct.echoProduct.code + ' - ' + productOffer.companyProduct.echoProduct.name}
             </div>
 
-            <div className='item-cart-body-section-name'>
-              {casNumberChemName}
-            </div>
+            <div className='item-cart-body-section-name'>{casNumberChemName}</div>
             <div>
               {/* <FormattedMessage
                 id='cart.merchant.email'
@@ -36,17 +33,17 @@ export default class ItemCartBody extends Component {
               <FormattedMessage
                 id='cart.location'
                 defaultMessage={'Location: ' + location}
-                values={{ location: cartItem.locationStr }}
+                values={{location: cartItem.locationStr}}
               />
             </div>
             <div>
-              <FormattedMessage id='global.pricePer' defaultMessage={`Price per ${unitName}`} values={{ unit: unitName }} />:{' '}
-              <FormattedNumber
-                id='cart.pricePer'
-                style='currency'
-                currency={currency}
-                value={cartItem.cfPricePerUOM}
+              <FormattedMessage
+                id='global.pricePer'
+                defaultMessage={`Price per ${unitName}`}
+                values={{unit: unitName}}
               />
+              :{' '}
+              <FormattedNumber id='cart.pricePer' style='currency' currency={currency} value={cartItem.cfPricePerUOM} />
             </div>
             {/*<div>
               <FormattedMessage id='global.totalWeight' defaultMessage='Total Weight' />:{' '}
@@ -61,7 +58,7 @@ export default class ItemCartBody extends Component {
               <FormattedMessage
                 id='cart.origin'
                 defaultMessage={`Origin: ${productOffer.origin ? productOffer.origin.name : 'N/A'} `}
-                values={{ origin: productOffer.origin ? productOffer.origin.name : 'N/A'}}
+                values={{origin: productOffer.origin ? productOffer.origin.name : 'N/A'}}
               />
             </div>
             <div>
@@ -72,38 +69,47 @@ export default class ItemCartBody extends Component {
               <FormattedMessage
                 id='cart.condition'
                 defaultMessage={`Condition: ${productOffer.condition ? productOffer.condition.name : 'N/A'} `}
-                values={{ condition: productOffer.condition ? productOffer.condition.name : 'N/A' }}
+                values={{condition: productOffer.condition ? productOffer.condition.name : 'N/A'}}
               />
             </div>
             <div>
               <FormattedMessage
                 id='cart.formVal'
                 defaultMessage={`Form ${productOffer.form ? productOffer.form.name : 'N/A'} `}
-                values={{ form: productOffer.form ? productOffer.form.name : 'N/A' }}
+                values={{form: productOffer.form ? productOffer.form.name : 'N/A'}}
               />
             </div>
           </div>
         </div>
         <footer className='popup-footer'>
-          <Button control={Button}
+          <Button
+            control={Button}
             color='grey'
-            onClick={() => confirm('Remove item', 'Are you sure you want to remove item from Shopping Cart?')
-              .then(() => {
-                // `proceed`
-                // remove Edit Cart popup if opened currently deleted offer
-                deleteCartItem(cartItem.id)
-              }, (result) => {
-                // `cancel`
-              }
-              )}
+            onClick={() =>
+              confirm('Remove item', 'Are you sure you want to remove item from Shopping Cart?').then(
+                () => {
+                  // `proceed`
+                  // remove Edit Cart popup if opened currently deleted offer
+                  deleteCartItem(cartItem.id)
+                },
+                result => {
+                  // `cancel`
+                }
+              )
+            }
             data-test='item_cart_remove_btn'>
-            <FormattedMessage id='global.remove' defaultMessage='Remove'>{(text) => text}</FormattedMessage>
+            <FormattedMessage id='global.remove' defaultMessage='Remove'>
+              {text => text}
+            </FormattedMessage>
           </Button>
-          <Button control={Button}
+          <Button
+            control={Button}
             color='blue'
             onClick={() => this.props.editCart(cartItem)}
             data-test='item_cart_edit_btn'>
-            <FormattedMessage id='global.edit' defaultMessage='Edit'>{(text) => text}</FormattedMessage>
+            <FormattedMessage id='global.edit' defaultMessage='Edit'>
+              {text => text}
+            </FormattedMessage>
           </Button>
         </footer>
       </div>

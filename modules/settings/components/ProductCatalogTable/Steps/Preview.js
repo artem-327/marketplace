@@ -1,11 +1,17 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 
-import { Table } from 'semantic-ui-react'
+import {Table} from 'semantic-ui-react'
 
-import { dataHeaderCSV, postCSVMapEchoProduct, putCSVMapEchoProduct, postCSVMapProductOffer, putCSVMapProductOffer } from '../../../actions'
+import {
+  dataHeaderCSV,
+  postCSVMapEchoProduct,
+  putCSVMapEchoProduct,
+  postCSVMapProductOffer,
+  putCSVMapProductOffer
+} from '../../../actions'
 import _invert from 'lodash/invert'
-import { FormattedMessage } from 'react-intl'
+import {FormattedMessage} from 'react-intl'
 import styled from 'styled-components'
 
 const SmallerTableCell = styled(Table.Cell)`
@@ -27,7 +33,7 @@ class Preview extends Component {
       const mappedHeader = props.CSV.headerCSV.reduce((prev, curr) => {
         const valSelected = invertedSelectedSavedMap[curr.content]
         if (valSelected) {
-          prev.push({ ...curr, header: curr.content })
+          prev.push({...curr, header: curr.content})
         }
         return prev
       }, [])
@@ -43,16 +49,15 @@ class Preview extends Component {
 
   componentDidMount() {
     if (this.props.selectedSavedMap && !this.props.isSaveMapCSV) {
-      (this.props.productOffer || this.props.echoProduct) &&
-        this.props.dataHeaderCSV(this.props.selectedSavedMap)
+      ;(this.props.productOffer || this.props.echoProduct) && this.props.dataHeaderCSV(this.props.selectedSavedMap)
 
       if (this.props.echoProduct)
         this.props.isSaveMapCSV &&
-        data &&
-        this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
-          ...data,
-          mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
-        })
+          data &&
+          this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
+            ...data,
+            mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+          })
     } else {
       const data =
         this.state.filteredHeader &&
@@ -72,43 +77,43 @@ class Preview extends Component {
         // save edited maps
         if (this.props.echoProduct)
           this.props.isSaveMapCSV &&
-          data &&
-          this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
-            ...data,
-            mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
-          })
+            data &&
+            this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
+              ...data,
+              mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+            })
 
         if (this.props.productOffer)
           this.props.isSaveMapCSV &&
-          data &&
-          this.props.putCSVMapProductOffer(this.props.selectedSavedMap.id, {
-            ...data,
-            mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
-          })
+            data &&
+            this.props.putCSVMapProductOffer(this.props.selectedSavedMap.id, {
+              ...data,
+              mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+            })
       } else {
         // save new maps
         if (this.props.echoProduct)
           this.props.isSaveMapCSV &&
-          data &&
-          this.props.postCSVMapEchoProduct({
-            ...data,
-            mapName: this.props.mapName
-          })
+            data &&
+            this.props.postCSVMapEchoProduct({
+              ...data,
+              mapName: this.props.mapName
+            })
 
         if (this.props.productOffer)
           this.props.isSaveMapCSV &&
-          data &&
-          this.props.postCSVMapProductOffer({
-            ...data,
-            mapName: this.props.mapName
-          })
+            data &&
+            this.props.postCSVMapProductOffer({
+              ...data,
+              mapName: this.props.mapName
+            })
       }
     }
   }
 
   render() {
-    const { CSV } = this.props
-    const { filteredHeader } = this.state
+    const {CSV} = this.props
+    const {filteredHeader} = this.state
 
     return (
       <Table celled padded textAlign='center'>
@@ -117,7 +122,10 @@ class Preview extends Component {
             {filteredHeader &&
               filteredHeader.map(column => (
                 <Table.HeaderCell key={column.columnNumber}>
-                  <FormattedMessage id={`global.${column.header.replace(/Mapper$/gi, '')}`} defaultMessage={column.content} />
+                  <FormattedMessage
+                    id={`global.${column.header.replace(/Mapper$/gi, '')}`}
+                    defaultMessage={column.content}
+                  />
                 </Table.HeaderCell>
               ))}
           </Table.Row>
@@ -131,9 +139,7 @@ class Preview extends Component {
                   filteredHeader.map(
                     header =>
                       header.columnNumber === cell.columnNumber && (
-                        <SmallerTableCell key={cell.columnNumber}>
-                          {cell.content}
-                        </SmallerTableCell>
+                        <SmallerTableCell key={cell.columnNumber}>{cell.content}</SmallerTableCell>
                       )
                   )
                 )
@@ -164,7 +170,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Preview)
+export default connect(mapStateToProps, mapDispatchToProps)(Preview)

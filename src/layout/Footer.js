@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react'
 
 const Footer = () => {
-    return <div className="App-footer">Copyright</div>
-};
+  return <div className='App-footer'>Copyright</div>
+}
 
 export default Footer

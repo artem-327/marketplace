@@ -1,12 +1,12 @@
 import api from '~/api'
 import axios from 'axios'
-import { generateQueryString } from '~/utils/functions'
+import {generateQueryString} from '~/utils/functions'
 
 export function addAttachment(attachment, docType, additionalParams = {}) {
   let defaultParams = {
     isTemporary: true
   }
-  let params = { ...defaultParams, ...additionalParams, type: docType }
+  let params = {...defaultParams, ...additionalParams, type: docType}
   const formData = new FormData()
   formData.append('file', attachment)
 
@@ -31,8 +31,7 @@ export function downloadAttachment(id) {
   })
 }
 
-export const updateAttachment = (id, params) =>
-  api.put(`/prodex/api/attachments/${id}${generateQueryString(params)}`)
+export const updateAttachment = (id, params) => api.put(`/prodex/api/attachments/${id}${generateQueryString(params)}`)
 
 export function findProducts(search) {
   return api.get(`/prodex/api/products/search?search=${search}`)
@@ -69,9 +68,9 @@ export async function getWarehouses() {
 
 export function linkAttachment(isLot, itemId, aId) {
   return api.post(
-    `/prodex/api/attachment-links/to-${
-      isLot ? 'lot' : 'product-offer'
-    }?attachmentId=${aId}&${isLot ? 'lotId' : 'productOfferId'}=${itemId}`
+    `/prodex/api/attachment-links/to-${isLot ? 'lot' : 'product-offer'}?attachmentId=${aId}&${
+      isLot ? 'lotId' : 'productOfferId'
+    }=${itemId}`
   )
 }
 
@@ -81,13 +80,11 @@ export function loadFile(attachment) {
     url: attachment.preview,
     method: 'GET',
     responseType: 'blob'
-  }).then(r => new File([r.data], attachment.name, { type: attachment.type }))
+  }).then(r => new File([r.data], attachment.name, {type: attachment.type}))
 }
 
 export function patchBroadcast(broadcasted, productOfferId) {
-  return api.patch(
-    `/prodex/api/product-offers/${productOfferId}/broadcast?broadcasted=${!!broadcasted}`
-  )
+  return api.patch(`/prodex/api/product-offers/${productOfferId}/broadcast?broadcasted=${!!broadcasted}`)
 }
 
 export function removeAttachment(aId) {
@@ -96,9 +93,9 @@ export function removeAttachment(aId) {
 
 export function removeAttachmentLink(isLot, itemId, aId) {
   return api.delete(
-    `/prodex/api/attachment-links/to-${
-      isLot ? 'lot' : 'product-offer'
-    }?attachmentId=${aId}&${isLot ? 'lotId' : 'productOfferId'}=${itemId}`
+    `/prodex/api/attachment-links/to-${isLot ? 'lot' : 'product-offer'}?attachmentId=${aId}&${
+      isLot ? 'lotId' : 'productOfferId'
+    }=${itemId}`
   )
 }
 
@@ -124,5 +121,4 @@ export function updateProductOffer(poId, values) {
   return api.patch(`/prodex/api/product-offers/${poId}`, values)
 }
 
-export const getAutocompleteData = searchUrl =>
-  api.get(searchUrl).then(response => response.data)
+export const getAutocompleteData = searchUrl => api.get(searchUrl).then(response => response.data)
