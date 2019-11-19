@@ -136,3 +136,19 @@ export const formatAssay = (min = null, max = null, delimiter = ' - ') => (
     max ? `< ${max}%`
       : ''
 )
+
+export const getFloatOrNull = (value) => {
+    let num = Number(value)
+    if (
+      value === null
+      || (typeof value === 'string' && !value.length)
+      || isNaN(num)
+    ) return null
+    else return num
+}
+
+export const getIntOrNull = (value) => {
+    let num = parseInt(value)
+    if (isNaN(num)) return null
+    else return num
+}

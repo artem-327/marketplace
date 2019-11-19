@@ -15,7 +15,7 @@ import * as Yup from 'yup'
 import { currency } from '~/constants/index'
 import { getPackagingGroupsDataRequest, getHazardClassesDataRequest, getUnNumbersByString, addUnNumber } from '~/modules/admin/actions'
 import { getNmfcNumbersByString, addNmfcNumber } from '~/modules/settings/actions'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
+import { generateToastMarkup, getSafe, getFloatOrNull, getIntOrNull } from '~/utils/functions'
 import { nmfcValidation, freightClassValidation } from '~/constants/yupValidation'
 
 const validationSchema = Yup.object().shape({
@@ -98,7 +98,14 @@ class CartItemSummary extends Component {
         onSubmit={async (values, { setSubmitting }) => {
           try {
             this.setState({ edittingHazmatInfo: false })
-            await updateHazmatInfo(item.id, values)
+            await updateHazmatInfo(item.id, {
+              unNumber: getIntOrNull(values.unNumber),
+              packagingGroup: getIntOrNull(values.packagingGroup),
+              hazardClass: getIntOrNull(values.hazardClass),
+              freightClass: getFloatOrNull(values.freightClass),
+              nmfcNumber: getIntOrNull(values.nmfcNumber),
+              stackable: values.stackable
+            })
             toastManager.add(generateToastMarkup(
               <FormattedMessage
                 id='notifications.hazardInfoUpdated.header'
@@ -185,7 +192,7 @@ class CartItemSummary extends Component {
                       value: hazardClass.id,
                       text: `${hazardClass.classCode} - ${hazardClass.description}`
                     }))}
-                    inputProps={{ disabled, search: true }}
+                    inputProps={{ disabled, search: true, clearable: true }}
                     name='hazardClass' label={formatMessage({ id: 'cart.hazardClass', defaultMessage: 'Hazard Class' })} />
                 </GridColumn>
               </GridRow>
