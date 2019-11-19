@@ -37,7 +37,6 @@ class ActionsRequired extends React.Component {
   }
 
   renderSegment(color, columnWidth, title, description, buttons) {
-    console.log(buttons)
     return (
       <Segment color={color ? color : 'blue'} style={{marginLeft: '32px', marginRight: '32px'}}>
         <Grid verticalAlign='middle' columns='equal'>

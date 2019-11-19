@@ -679,7 +679,7 @@ class Orders extends Component {
                 })}{' '}
             {`${ordersType.toUpperCase()} ${formatMessage({
               id: 'order.orders',
-              defaultMessage: '!ORDERS'
+              defaultMessage: 'ORDERS'
             })}`}
           </Header>
           <OrderFilter
@@ -697,7 +697,7 @@ class Orders extends Component {
               {...datagrid.tableProps}
               loading={datagrid.loading}
               rows={this.getRows()}
-              onSortingChange={sorting => sorting.sortPath && this.setState({sorting})}
+              // onSortingChange={sorting => sorting.sortPath && this.setState({ sorting })}
               rowActions={[
                 {
                   text: formatMessage({
