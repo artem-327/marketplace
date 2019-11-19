@@ -8,4 +8,7 @@ export function findProducts(search) {
   }
 }
 
-export const getAutocompleteData = ({ searchQuery }) => ({ type: AT.GET_AUTOCOMPLETE_DATA_MARKETPLACE, payload: api.getAutocompleteData(searchQuery) })
+export const getAutocompleteData = ({searchQuery}) => ({
+  type: AT.GET_AUTOCOMPLETE_DATA_MARKETPLACE,
+  payload: api.getAutocompleteData(searchQuery)
+})

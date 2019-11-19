@@ -1,11 +1,10 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { handleActiveTab } from "../actions"
-import { Menu } from 'semantic-ui-react'
-
+import {connect} from 'react-redux'
+import {handleActiveTab} from '../actions'
+import {Menu} from 'semantic-ui-react'
 
 function Tabs(props) {
-  const { tabsNames, handleActiveTab, currentTab } = props
+  const {tabsNames, handleActiveTab, currentTab} = props
 
   return (
     <Menu pointing secondary vertical fluid>

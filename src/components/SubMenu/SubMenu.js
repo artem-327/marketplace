@@ -1,14 +1,12 @@
 import './submenu.scss'
 
-import React, { Component } from 'react'
-import { arrayOf, shape, string, bool } from 'prop-types'
+import React, {Component} from 'react'
+import {arrayOf, shape, string, bool} from 'prop-types'
 import filterIconClose from '../../images/subMenu/filter-icon-transparent.png'
 import filterIconOpen from '../../images/subMenu/filter-icon-transparent-active.png'
 import classNames from 'classnames'
 
-
 export default class SubMenu extends Component {
-
   toggleFilter = () => {
     this.props.toggleFilter(null, this.props.filterType)
   }
@@ -18,18 +16,18 @@ export default class SubMenu extends Component {
     let filterClass = this.props.filterOpen ? 'opened' : 'closed'
 
     return (
-      <div className={classNames('submenu-filter', filterClass)} onClick={() => this.toggleFilter()} data-test='SubMenu_filter_toggle'>
-        <img src={filterIcon} className={filterClass} alt='open filter' />Filters
+      <div
+        className={classNames('submenu-filter', filterClass)}
+        onClick={() => this.toggleFilter()}
+        data-test='SubMenu_filter_toggle'>
+        <img src={filterIcon} className={filterClass} alt='open filter' />
+        Filters
       </div>
     )
   }
 
   render() {
-    return (
-      <div className='submenu'>
-        {this.renderFilterButton()}
-      </div>
-    )
+    return <div className='submenu'>{this.renderFilterButton()}</div>
   }
 }
 
@@ -39,7 +37,7 @@ SubMenu.propTypes = {
       label: string,
       url: string,
       class: string,
-      exact: bool,
+      exact: bool
     })
   ),
   search: bool,
@@ -50,4 +48,3 @@ SubMenu.propTypes = {
 SubMenu.defaultProps = {
   filterType: null
 }
-

@@ -1,17 +1,16 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 // import PropTypes from 'prop-types'
-import "./ShippingEdit.scss"
+import './ShippingEdit.scss'
 
-
-import { FormattedMessage } from 'react-intl'
+import {FormattedMessage} from 'react-intl'
 
 import styled from 'styled-components'
 
-import { Container, Segment, Grid, GridRow, GridColumn, Radio, Divider, Header, FormGroup } from 'semantic-ui-react'
-import { Form, Input, Dropdown, Button } from 'formik-semantic-ui-fixed-validation'
+import {Container, Segment, Grid, GridRow, GridColumn, Radio, Divider, Header, FormGroup} from 'semantic-ui-react'
+import {Form, Input, Dropdown, Button} from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
-import { PHONE_REGEXP } from '../../../../utils/constants'
-import { errorMessages, provinceObjectRequired } from '~/constants/yupValidation'
+import {PHONE_REGEXP} from '../../../../utils/constants'
+import {errorMessages, provinceObjectRequired} from '~/constants/yupValidation'
 
 const BottomMargedGrid = styled(Grid)`
   margin-bottom: 1rem !important;
@@ -32,11 +31,10 @@ const initialValues = {
       name: ''
     },
     country: ''
-  },
+  }
 }
 
 export default class ShippingEdit extends Component {
-
   state = {
     stateId: null,
     hasProvinces: false,
@@ -44,44 +42,44 @@ export default class ShippingEdit extends Component {
   }
 
   validationSchema = (opts = {}) => {
-
     let defaultOpts = errorMessages
 
-    let newOpts = { ...defaultOpts, ...opts }
+    let newOpts = {...defaultOpts, ...opts}
 
-    let { invalidString, invalidEmail, requiredMessage, invalidPhoneNumber } = newOpts
+    let {invalidString, invalidEmail, requiredMessage, invalidPhoneNumber} = newOpts
 
-    return (
-      Yup.object().shape({
-        firstName: Yup.string(invalidString).required(requiredMessage),
-        lastName: Yup.string(invalidString).required(requiredMessage),
-        email: Yup.string().email(invalidEmail).required(requiredMessage),
-        phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
-        address: Yup.object().shape({
-          zip: Yup.object().shape({ zip: Yup.string().required(requiredMessage) }),
-          city: Yup.string(invalidString).required(requiredMessage),
-          country: Yup.string(invalidString).required(requiredMessage),
-          streetAddress: Yup.string(invalidString).required(requiredMessage),
-          province: provinceObjectRequired(this.state.hasProvinces)
-        })
+    return Yup.object().shape({
+      firstName: Yup.string(invalidString).required(requiredMessage),
+      lastName: Yup.string(invalidString).required(requiredMessage),
+      email: Yup.string()
+        .email(invalidEmail)
+        .required(requiredMessage),
+      phoneNumber: Yup.string()
+        .matches(PHONE_REGEXP, invalidPhoneNumber)
+        .required(requiredMessage),
+      address: Yup.object().shape({
+        zip: Yup.object().shape({zip: Yup.string().required(requiredMessage)}),
+        city: Yup.string(invalidString).required(requiredMessage),
+        country: Yup.string(invalidString).required(requiredMessage),
+        streetAddress: Yup.string(invalidString).required(requiredMessage),
+        province: provinceObjectRequired(this.state.hasProvinces)
       })
-    )
+    })
   }
 
   componentDidMount() {
-    let { selectedAddress, getStates } = this.props
+    let {selectedAddress, getStates} = this.props
     getStates()
     if (selectedAddress) {
-      let { id, hasProvinces } = selectedAddress.address.country
+      let {id, hasProvinces} = selectedAddress.address.country
 
-      this.handleStateChange({ id, hasProvinces })
+      this.handleStateChange({id, hasProvinces})
     }
   }
 
-
-  handleStateChange = ({ id, hasProvinces, selectedProvince = null }) => {
+  handleStateChange = ({id, hasProvinces, selectedProvince = null}) => {
     if (this.state.stateId !== id) {
-      this.setState({ stateId: id, hasProvinces, selectedProvince })
+      this.setState({stateId: id, hasProvinces, selectedProvince})
 
       if (hasProvinces) {
         this.props.getProvinces(id)
@@ -89,59 +87,62 @@ export default class ShippingEdit extends Component {
     }
   }
 
-  newAddressMarkup = (props) => {
-    let { location } = this.props
-    let { errors, setFieldValue, values } = props
+  newAddressMarkup = props => {
+    let {location} = this.props
+    let {errors, setFieldValue, values} = props
     return (
       <>
         <FormGroup data-test='cart_shipping_edit_name_inp'>
           <Input
-            fieldProps={{ width: 8 }}
+            fieldProps={{width: 8}}
             label={<FormattedMessage id='global.firstName' default='First Name' />}
-            name='firstName' />
+            name='firstName'
+          />
 
           <Input
-            fieldProps={{ width: 8 }}
+            fieldProps={{width: 8}}
             label={<FormattedMessage id='global.lastName' defaultMessage='Last Name' />}
-            name='lastName' />
+            name='lastName'
+          />
         </FormGroup>
 
         <FormGroup data-test='cart_shipping_edit_streetZip_inp'>
           <Input
-            fieldProps={{ width: 10 }}
+            fieldProps={{width: 10}}
             label={<FormattedMessage id='global.address' defaultMessage='Address' />}
-            name='address.streetAddress' />
+            name='address.streetAddress'
+          />
 
           <Input
-            fieldProps={{ width: 6 }}
+            fieldProps={{width: 6}}
             label={<FormattedMessage id='global.zip' defaultMessage='Postal Code' />}
-            name='address.zip.zip' />
-
+            name='address.zip.zip'
+          />
         </FormGroup>
 
         <FormGroup widths='equal' data-test='cart_shipping_edit_city_inp'>
-          <Input
-            label={<FormattedMessage id='global.city' defaultMessage='City' />}
-            name='address.city' />
+          <Input label={<FormattedMessage id='global.city' defaultMessage='City' />} name='address.city' />
 
           <Dropdown
             inputProps={{
               'data-test': 'cart_shipping_edit_country_drpdn',
-              onChange: (e, { value }) => {
+              onChange: (e, {value}) => {
                 this.handleStateChange(value)
                 setFieldValue('address.province.name', '')
               },
               search: true,
               error: !!(errors.address && errors.address.country)
             }}
-            options={location.states.map((state) => ({
+            options={location.states.map(state => ({
               text: state.name,
               key: state.id,
               value: state
             }))}
             id='address.country'
             name='address.country'
-            loading={location.statesAreFetching} selection fluid
+            loading={location.statesAreFetching}
+            selection
+            fluid
             label={<FormattedMessage id='global.state' defaultMessage='State' />}
           />
 
@@ -149,42 +150,39 @@ export default class ShippingEdit extends Component {
             inputProps={{
               'data-test': 'cart_shipping_edit_province_drpdn',
               disabled: !this.state.hasProvinces,
-              onChange: (e, { value }) => this.setState({ selectedProvince: value }),
+              onChange: (e, {value}) => this.setState({selectedProvince: value}),
               loading: location.provincesAreFetching,
               error: !!(this.state.hasProvinces && errors.address && errors.address.province),
               search: true
             }}
-            options={location.provinces.map((province) => ({
+            options={location.provinces.map(province => ({
               text: province.name,
               key: province.id,
-              value: { id: province.id, name: province.name, abbreviation: province.abbreviation || '' }
+              value: {id: province.id, name: province.name, abbreviation: province.abbreviation || ''}
             }))}
             id='address.province'
             name='address.province'
-            selection fluid
+            selection
+            fluid
             label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />}
           />
-
         </FormGroup>
 
         <FormGroup widths='equal' data-test='cart_shipping_edit_emailPhone_inp'>
-          <Input
-            label={<FormattedMessage id='global.email' defaultMessage='E-mail Address' />}
-            name='email' />
+          <Input label={<FormattedMessage id='global.email' defaultMessage='E-mail Address' />} name='email' />
 
           <Input
             label={<FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />}
-            name='phoneNumber' />
-
+            name='phoneNumber'
+          />
         </FormGroup>
       </>
     )
   }
 
-
-  handleSubmit = (values) => {
-    let { address, email, firstName, lastName, phoneNumber } = values
-    let { isNewAddress, postNewDeliveryAddress, updateDeliveryAddress } = this.props
+  handleSubmit = values => {
+    let {address, email, firstName, lastName, phoneNumber} = values
+    let {isNewAddress, postNewDeliveryAddress, updateDeliveryAddress} = this.props
 
     let payload = {
       address: {
@@ -194,21 +192,22 @@ export default class ShippingEdit extends Component {
         streetAddress: address.streetAddress,
         zip: address.zip.zip
       },
-      email, firstName, lastName, phoneNumber,
+      email,
+      firstName,
+      lastName,
+      phoneNumber
     }
 
-
     if (!isNewAddress) postNewDeliveryAddress(payload)
-    else updateDeliveryAddress({
-      ...payload,
-      id: this.props.selectedAddress.id
-    })
-
+    else
+      updateDeliveryAddress({
+        ...payload,
+        id: this.props.selectedAddress.id
+      })
   }
 
-
   render() {
-    let { isNewAddress, shippingChanged, selectedAddress, savedShippingPreferences } = this.props
+    let {isNewAddress, shippingChanged, selectedAddress, savedShippingPreferences} = this.props
 
     return (
       <Segment>
@@ -216,12 +215,8 @@ export default class ShippingEdit extends Component {
           <GridRow className='header'>
             <GridColumn>
               <Header as='h2'>
-                <FormattedMessage
-                  id='cart.1shipping'
-                  defaultMessage='1. Shipping'
-                />
+                <FormattedMessage id='cart.1shipping' defaultMessage='1. Shipping' />
               </Header>
-
             </GridColumn>
           </GridRow>
         </BottomMargedGrid>
@@ -230,28 +225,35 @@ export default class ShippingEdit extends Component {
           onSubmit={this.handleSubmit}
           loading={true}
           enableReinitialize
-          initialValues={selectedAddress ? { ...selectedAddress } : initialValues}
+          initialValues={selectedAddress ? {...selectedAddress} : initialValues}
           validationSchema={this.validationSchema}>
-
           {props => {
             return (
               <Container>
                 <FormGroup widths='equal'>
                   <Form.Field>
                     <Radio
-                      onChange={() => shippingChanged({ isNewAddress: true })}
+                      onChange={() => shippingChanged({isNewAddress: true})}
                       checked={isNewAddress}
                       disabled={!selectedAddress}
-                      label={<label><FormattedMessage id='global.savedAddress' defaultMessage='Saved Address' /> </label>}
+                      label={
+                        <label>
+                          <FormattedMessage id='global.savedAddress' defaultMessage='Saved Address' />{' '}
+                        </label>
+                      }
                       data-test='cart_shipping_edit_savedAddress_rad'
                     />
                   </Form.Field>
 
                   <Form.Field>
                     <Radio
-                      onChange={() => shippingChanged({ isNewAddress: false })}
+                      onChange={() => shippingChanged({isNewAddress: false})}
                       checked={!isNewAddress}
-                      label={<label><FormattedMessage id='global.addNewAddress' defaultMessage='Add New' /> </label>}
+                      label={
+                        <label>
+                          <FormattedMessage id='global.addNewAddress' defaultMessage='Add New' />{' '}
+                        </label>
+                      }
                       data-test='cart_shipping_edit_addNewAddress_rad'
                     />
                   </Form.Field>
@@ -278,17 +280,21 @@ export default class ShippingEdit extends Component {
                     <GridColumn>
                       <Grid>
                         <GridColumn floated='right' computer={4}>
-                          <Button fieldProps={{ width: 4 }} onClick={() => shippingChanged({ isShippingEdit: false })} fluid
-                                  data-test='cart_shipping_edit_cancel_btn'>
-                            <FormattedMessage
-                              id='global.cancel'
-                              defaultMessage='Cancel'
-                            />
+                          <Button
+                            fieldProps={{width: 4}}
+                            onClick={() => shippingChanged({isShippingEdit: false})}
+                            fluid
+                            data-test='cart_shipping_edit_cancel_btn'>
+                            <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                           </Button>
                         </GridColumn>
                         <GridColumn computer={4}>
-                          <Button.Submit loading={this.props.isFetching} primary fluid type='submit'
-                                         data-test='cart_shipping_edit_submit_btn'>
+                          <Button.Submit
+                            loading={this.props.isFetching}
+                            primary
+                            fluid
+                            type='submit'
+                            data-test='cart_shipping_edit_submit_btn'>
                             <FormattedMessage
                               id={`global.${isNewAddress ? 'edit' : 'addNew'}`}
                               defaultMessage={isNewAddress ? 'Edit' : 'Add New'}
@@ -304,7 +310,6 @@ export default class ShippingEdit extends Component {
           }}
         </Form>
       </Segment>
-
     )
   }
 }

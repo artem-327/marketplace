@@ -1,20 +1,26 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import * as Actions from '../actions'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { Grid, Header, Segment, Image, Divider } from 'semantic-ui-react'
-import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
+import {FormattedMessage, injectIntl} from 'react-intl'
+import {Grid, Header, Segment, Image, Divider} from 'semantic-ui-react'
+import {Form, Input, Button, Dropdown, Checkbox, TextArea} from 'formik-semantic-ui-fixed-validation'
 import styled from 'styled-components'
 import * as val from 'yup'
 import Router from 'next/router'
 
 import Logo from '~/assets/images/login/logo-login.png'
 
-import { dunsValidation, addressValidationSchema, errorMessages, einValidation, phoneValidation } from '~/constants/yupValidation'
+import {
+  dunsValidation,
+  addressValidationSchema,
+  errorMessages,
+  einValidation,
+  phoneValidation
+} from '~/constants/yupValidation'
 
-import { getSafe } from '~/utils/functions'
-import { AddressForm } from '~/modules/address-form'
-import { PhoneNumber } from '~/modules/phoneNumber'
+import {getSafe} from '~/utils/functions'
+import {AddressForm} from '~/modules/address-form'
+import {PhoneNumber} from '~/modules/phoneNumber'
 
 const ConfirmSegment = styled(Segment.Group)`
   position: relative;
@@ -95,7 +101,7 @@ const initValues = {
     deliveryNotes: '',
     forkLift: false,
     liftGate: false,
-    readyTime: '',
+    readyTime: ''
   },
   companyAdminUser: {
     name: '',
@@ -113,14 +119,20 @@ const validationScheme = val.object().shape({
   address: val.object().shape({
     address: addressValidationSchema(),
     contactName: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
-    contactEmail: val.string(errorMessages.invalidEmail).email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
-    contactPhone: phoneValidation().required(errorMessages.requiredMessage),
+    contactEmail: val
+      .string(errorMessages.invalidEmail)
+      .email(errorMessages.invalidEmail)
+      .required(errorMessages.requiredMessage),
+    contactPhone: phoneValidation().required(errorMessages.requiredMessage)
   }),
   companyAdminUser: val.object().shape({
     name: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
     jobTitle: val.string(),
     phone: phoneValidation(),
-    email: val.string(errorMessages.invalidEmail).email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
+    email: val
+      .string(errorMessages.invalidEmail)
+      .email(errorMessages.invalidEmail)
+      .required(errorMessages.requiredMessage)
   }),
   dba: val.string(),
   dunsNumber: dunsValidation(),
@@ -129,7 +141,6 @@ const validationScheme = val.object().shape({
 })
 
 class ConfirmationPage extends Component {
-
   componentDidMount() {
     if (getSafe(() => this.props.identity.branches[0].address.country.id, false)) {
       this.props.searchProvinces(this.props.identity.branches[0].address.country.id)
@@ -149,15 +160,14 @@ class ConfirmationPage extends Component {
     } = this.props
     const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
 
-    let { formatMessage } = intl
-    
+    let {formatMessage} = intl
+
     return (
       <Form
         enableReinitialize
-        initialValues={{ ...initValues, ...confirmationForm }}
+        initialValues={{...initValues, ...confirmationForm}}
         validationSchema={validationScheme}
         onSubmit={async (values, actions) => {
-
           let payload = {
             ...values,
             dunsNumber: values.dunsNumber ? parseInt(values.dunsNumber, 10) : null,
@@ -174,15 +184,14 @@ class ConfirmationPage extends Component {
             await reviewCompany(payload)
             actions.setSubmitting(false)
             Router.push('/dwolla-register')
-          }
-          catch { }
-          finally {
+          } catch {
+          } finally {
             actions.setSubmitting(false)
           }
         }}
         className='flex stretched'
-        style={{ padding: '20px' }}>
-        {({ values, setFieldValue, validateForm, submitForm, setFieldTouched, errors, touched, isSubmitting }) => {
+        style={{padding: '20px'}}>
+        {({values, setFieldValue, validateForm, submitForm, setFieldTouched, errors, touched, isSubmitting}) => {
           return (
             <ConfirmSegment raised compact>
               <InnerSegment>
@@ -203,13 +212,14 @@ class ConfirmationPage extends Component {
                 </Header>
                 <Grid>
                   <Grid.Row columns={2}>
-                    <Grid.Column data-test='auth_confirm_companyName_inp' >
-                      <Input label={formatMessage({ id: 'laststep.company.name', defaultMessage: 'Company Legal Name *' })}
-                        name='name' />
+                    <Grid.Column data-test='auth_confirm_companyName_inp'>
+                      <Input
+                        label={formatMessage({id: 'laststep.company.name', defaultMessage: 'Company Legal Name *'})}
+                        name='name'
+                      />
                     </Grid.Column>
-                    <Grid.Column data-test='auth_confirm_companyDBA_inp' >
-                      <Input label={formatMessage({ id: 'laststep.company.dba', defaultMessage: 'DBA' })}
-                        name='dba' />
+                    <Grid.Column data-test='auth_confirm_companyDBA_inp'>
+                      <Input label={formatMessage({id: 'laststep.company.dba', defaultMessage: 'DBA'})} name='dba' />
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -221,13 +231,17 @@ class ConfirmationPage extends Component {
 
                 <Grid>
                   <Grid.Row columns={2}>
-                    <Grid.Column data-test='auth_confirm_addressEIN_inp' >
-                      <Input label={formatMessage({ id: 'laststep.address.ein', defaultMessage: 'EIN Number *' })}
-                        name='tin' />
+                    <Grid.Column data-test='auth_confirm_addressEIN_inp'>
+                      <Input
+                        label={formatMessage({id: 'laststep.address.ein', defaultMessage: 'EIN Number *'})}
+                        name='tin'
+                      />
                     </Grid.Column>
                     <Grid.Column data-test='auth_confirm_addressDUNS_inp'>
-                      <Input label={formatMessage({ id: 'laststep.address.duns', defaultMessage: 'DUNS Number' })}
-                        name='dunsNumber' />
+                      <Input
+                        label={formatMessage({id: 'laststep.address.duns', defaultMessage: 'DUNS Number'})}
+                        name='dunsNumber'
+                      />
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -239,26 +253,33 @@ class ConfirmationPage extends Component {
                 <Grid>
                   <Grid.Row columns={1}>
                     <Grid.Column data-test='auth_confirm_addressContactName_inp'>
-                      <Input label={formatMessage({ id: 'laststep.address.contactName', defaultMessage: 'Contact Name *' })}
-                             name='address.contactName' />
+                      <Input
+                        label={formatMessage({id: 'laststep.address.contactName', defaultMessage: 'Contact Name *'})}
+                        name='address.contactName'
+                      />
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
 
                 <Grid>
                   <Grid.Row columns={2}>
-                    <Grid.Column data-test='auth_confirm_addressContactPhone_inp' >
+                    <Grid.Column data-test='auth_confirm_addressContactPhone_inp'>
                       <PhoneNumber
-                        label={formatMessage({ id: 'laststep.address.contactPhone', defaultMessage: 'Contact Phone *' })}
+                        label={formatMessage({id: 'laststep.address.contactPhone', defaultMessage: 'Contact Phone *'})}
                         name='address.contactPhone'
-                        values={values} setFieldValue={setFieldValue}
-                        setFieldTouched={setFieldTouched} errors={errors}
-                        touched={touched} isSubmitting={isSubmitting}
+                        values={values}
+                        setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        errors={errors}
+                        touched={touched}
+                        isSubmitting={isSubmitting}
                       />
                     </Grid.Column>
                     <Grid.Column data-test='auth_confirm_addressContactEmail_inp'>
-                      <Input label={formatMessage({ id: 'laststep.address.contactEmail', defaultMessage: 'Contact E-Mail *' })}
-                             name='address.contactEmail' />
+                      <Input
+                        label={formatMessage({id: 'laststep.address.contactEmail', defaultMessage: 'Contact E-Mail *'})}
+                        name='address.contactEmail'
+                      />
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -268,28 +289,37 @@ class ConfirmationPage extends Component {
                 </Header>
                 <Grid>
                   <Grid.Row columns={2}>
-                    <Grid.Column data-test='auth_confirm_adminName_inp' >
-                      <Input label={formatMessage({ id: 'laststep.admin.name', defaultMessage: 'Name *' })}
-                        name='companyAdminUser.name' />
+                    <Grid.Column data-test='auth_confirm_adminName_inp'>
+                      <Input
+                        label={formatMessage({id: 'laststep.admin.name', defaultMessage: 'Name *'})}
+                        name='companyAdminUser.name'
+                      />
                     </Grid.Column>
                     <Grid.Column data-test='auth_confirm_adminTitle_inp'>
-                      <Input label={formatMessage({ id: 'laststep.admin.title', defaultMessage: 'Title' })}
-                        name='companyAdminUser.jobTitle' />
+                      <Input
+                        label={formatMessage({id: 'laststep.admin.title', defaultMessage: 'Title'})}
+                        name='companyAdminUser.jobTitle'
+                      />
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row columns={2}>
                     <Grid.Column data-test='auth_confirm_adminPhone_inp'>
                       <PhoneNumber
-                        label={formatMessage({ id: 'laststep.admin.phone', defaultMessage: 'Phone' })}
+                        label={formatMessage({id: 'laststep.admin.phone', defaultMessage: 'Phone'})}
                         name='companyAdminUser.phone'
-                        values={values} setFieldValue={setFieldValue}
-                        setFieldTouched={setFieldTouched} errors={errors}
-                        touched={touched} isSubmitting={isSubmitting}
+                        values={values}
+                        setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        errors={errors}
+                        touched={touched}
+                        isSubmitting={isSubmitting}
                       />
                     </Grid.Column>
                     <Grid.Column data-test='auth_confirm_adminEmail_inp'>
-                      <Input label={formatMessage({ id: 'laststep.admin.email', defaultMessage: 'E-Mail *' })}
-                        name='companyAdminUser.email' />
+                      <Input
+                        label={formatMessage({id: 'laststep.admin.email', defaultMessage: 'E-Mail *'})}
+                        name='companyAdminUser.email'
+                      />
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -298,11 +328,20 @@ class ConfirmationPage extends Component {
                 <Grid>
                   <Grid.Row>
                     <Grid.Column aligned='right' textAlign='right'>
-                      <Button style={{ marginRight: '1em' }} onClick={() => { isAdmin ? Router.push('/admin') : Router.push('/inventory/my') }} data-test='auth_confirm_cancel_btn'>
-                        <FormattedMessage id='laststep.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+                      <Button
+                        style={{marginRight: '1em'}}
+                        onClick={() => {
+                          isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
+                        }}
+                        data-test='auth_confirm_cancel_btn'>
+                        <FormattedMessage id='laststep.cancel' defaultMessage='Cancel'>
+                          {text => text}
+                        </FormattedMessage>
                       </Button>
                       <Button.Submit color='blue' data-test='auth_confirm_submit_btn'>
-                        <FormattedMessage id='laststep.submit' defaultMessage='Enter Echo Exchange'>{(text) => text}</FormattedMessage>
+                        <FormattedMessage id='laststep.submit' defaultMessage='Enter Echo Exchange'>
+                          {text => text}
+                        </FormattedMessage>
                       </Button.Submit>
                     </Grid.Column>
                   </Grid.Row>
@@ -310,13 +349,12 @@ class ConfirmationPage extends Component {
               </ButtonsSegment>
             </ConfirmSegment>
           )
-        }
-        }
+        }}
       </Form>
     )
   }
 }
 
-const stateToProps = ({ auth: { confirmationForm, identity } }) => ({ confirmationForm, identity })
+const stateToProps = ({auth: {confirmationForm, identity}}) => ({confirmationForm, identity})
 
 export default connect(stateToProps, Actions)(injectIntl(ConfirmationPage))

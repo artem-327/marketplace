@@ -1,10 +1,14 @@
 .administration-wrapper {
   display: grid;
-  grid-template-columns: 1fr 4fr; }
-  .administration-wrapper .administration-content .data-table-wr {
-    position: relative;
-    top: 0; }
-  .administration-wrapper .administration-menu {
-    min-width: 200px; }
-    .administration-wrapper .administration-menu .adm-menu-item {
-      cursor: pointer; }
+  grid-template-columns: 1fr 4fr;
+}
+.administration-wrapper .administration-content .data-table-wr {
+  position: relative;
+  top: 0;
+}
+.administration-wrapper .administration-menu {
+  min-width: 200px;
+}
+.administration-wrapper .administration-menu .adm-menu-item {
+  cursor: pointer;
+}

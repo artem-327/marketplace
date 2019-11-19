@@ -1,11 +1,11 @@
-import { Component } from 'react'
-import { Modal, Button, Form } from 'semantic-ui-react'
+import {Component} from 'react'
+import {Modal, Button, Form} from 'semantic-ui-react'
 import Router from 'next/router'
 import IdleTimer from 'react-idle-timer'
-import { refreshToken } from '~/utils/auth'
+import {refreshToken} from '~/utils/auth'
 import moment from 'moment'
 import styled from 'styled-components'
-import { FormattedMessage } from 'react-intl'
+import {FormattedMessage} from 'react-intl'
 
 const WARNING_OFFSET = 3 * 60 * 1000
 
@@ -15,7 +15,6 @@ const TimeTitle = styled.p`
 `
 
 export default class TimeoutWarning extends Component {
-
   state = {
     warningOpen: false,
     remainingTime: WARNING_OFFSET,
@@ -33,10 +32,9 @@ export default class TimeoutWarning extends Component {
   }
 
   checkTime = () => {
-
     this.setState(s => ({
       remainingTime: s.remainingTime - 1000,
-      warningOpen: true,
+      warningOpen: true
     }))
 
     if (this.state.remainingTime < 1) {
@@ -55,7 +53,7 @@ export default class TimeoutWarning extends Component {
   }
 
   resetIdleTimer = async () => {
-    this.setState({ loading: true })
+    this.setState({loading: true})
     await refreshToken()
 
     clearInterval(this.checkTimeInterval)
@@ -66,14 +64,14 @@ export default class TimeoutWarning extends Component {
     this.setIdleTimeout()
     this.idleTimer && this.idleTimer.reset()
 
-    this.setState({ loading: false })
+    this.setState({loading: false})
   }
 
   setIdleTimeout = () => {
     let ttl = window.localStorage.getItem('ttl')
     let date = new Date(parseInt(ttl, 10))
-    
-    this.setState({ timeout: moment(date).diff(moment()) })
+
+    this.setState({timeout: moment(date).diff(moment())})
   }
 
   componentDidMount() {
@@ -81,15 +79,14 @@ export default class TimeoutWarning extends Component {
   }
 
   render() {
-    const { warningOpen, timeout } = this.state
+    const {warningOpen, timeout} = this.state
 
     if (!timeout) return null
 
-    
     return (
       <>
         <IdleTimer
-          ref={r => this.idleTimer = r}
+          ref={r => (this.idleTimer = r)}
           timeout={timeout - WARNING_OFFSET}
           onIdle={this.handleIdle}
           // onAction={this.handleAction}
@@ -98,12 +95,20 @@ export default class TimeoutWarning extends Component {
           // debounce={(1000)}
           stopOnIdle={true}
         />
-        <Modal open={warningOpen} closeIcon onClose={this.resetIdleTimer} size='tiny' style={{ width: 400 }} centered={false}>
+        <Modal
+          open={warningOpen}
+          closeIcon
+          onClose={this.resetIdleTimer}
+          size='tiny'
+          style={{width: 400}}
+          centered={false}>
           <Modal.Header>
             <FormattedMessage id='auth.sessionTimeout.modalHeader' defaultMessage='SESSION TIMEOUT' />
           </Modal.Header>
           <Modal.Content>
-            <h4><FormattedMessage id='auth.sessionTimeout.title' defaultMessage='Your session will timeout in: ' /></h4>
+            <h4>
+              <FormattedMessage id='auth.sessionTimeout.title' defaultMessage='Your session will timeout in: ' />
+            </h4>
             <TimeTitle>{this.getRemainingTimeString()}</TimeTitle>
             <p>
               <FormattedMessage
@@ -117,16 +122,25 @@ export default class TimeoutWarning extends Component {
             </p>
           </Modal.Content>
           <Modal.Actions>
-            <Button basic data-test='logout_timeout_logout_btn' color='blue' onClick={() => Router.push(`/auth/logout`)}>
+            <Button
+              basic
+              data-test='logout_timeout_logout_btn'
+              color='blue'
+              onClick={() => Router.push(`/auth/logout`)}>
               <FormattedMessage id='auth.sessionTimeout.buttonLogOut' defaultMessage='Log Out' />
             </Button>
-            <Button loading={this.state.loading} primary data-test='logout_timeout_keep_working_btn' onClick={this.resetIdleTimer}>
-              <FormattedMessage id='auth.sessionTimeout.buttonKeepWorking' defaultMessage='Keep Working'>{text => text}</FormattedMessage>
+            <Button
+              loading={this.state.loading}
+              primary
+              data-test='logout_timeout_keep_working_btn'
+              onClick={this.resetIdleTimer}>
+              <FormattedMessage id='auth.sessionTimeout.buttonKeepWorking' defaultMessage='Keep Working'>
+                {text => text}
+              </FormattedMessage>
             </Button>
           </Modal.Actions>
         </Modal>
       </>
     )
   }
-
 }

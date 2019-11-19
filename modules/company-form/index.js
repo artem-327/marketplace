@@ -1,1 +1,1 @@
-export { default as CompanyForm } from './components/CompanyFormContainer'
+export {default as CompanyForm} from './components/CompanyFormContainer'

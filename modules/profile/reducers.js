@@ -1,19 +1,17 @@
-import * as AT from "./action-types"
+import * as AT from './action-types'
 
 export const initialState = {
   usersMe: null,
   currency: null,
   loading: false,
   profilePopup: false,
-  changePasswordPopup: false,
+  changePasswordPopup: false
 }
 
 export default function reducer(state = initialState, action) {
-  const { payload } = action
+  const {payload} = action
 
   switch (action.type) {
-
-
     case AT.PROFILE_OPEN_POPUP: {
       return {
         ...state,
@@ -52,7 +50,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.PROFILE_CHANGE_PASSWORD:    // ! ! smazat
+    case AT.PROFILE_CHANGE_PASSWORD: // ! ! smazat
     case AT.PROFILE_CHANGE_PASSWORD_FULFILLED:
     case AT.PROFILE_CLOSE_CHANGE_PASSWORD: {
       return {
@@ -88,6 +86,5 @@ export default function reducer(state = initialState, action) {
     default: {
       return state
     }
-
   }
 }

@@ -1,26 +1,19 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import './reports.scss'
-import ConMess from '../../components/constructionMessage';
-
+import ConMess from '../../components/constructionMessage'
 
 class Reports extends Component {
+  componentDidMount() {}
+  componentWillUnmount() {}
 
-    componentDidMount() {
-
-    }
-    componentWillUnmount() {
-
-    }
-
-    render() {
-        return (
-            <div>
-                <h1 className="header">Reports</h1>
-                <ConMess />
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div>
+        <h1 className='header'>Reports</h1>
+        <ConMess />
+      </div>
+    )
+  }
 }
 
-export default Reports;
-
+export default Reports

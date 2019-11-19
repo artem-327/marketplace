@@ -1,6 +1,6 @@
 import * as AT from './action-types'
-import { INVENTORY_LINK_ATTACHMENT } from '~/modules/inventory/action-types'
-import { getSafe } from '~/utils/functions'
+import {INVENTORY_LINK_ATTACHMENT} from '~/modules/inventory/action-types'
+import {getSafe} from '~/utils/functions'
 
 const initialState = {
   data: [],
@@ -62,10 +62,7 @@ export default function(state = initialState, action) {
         ...state,
         isDetailFetching: false,
         detail: action.payload.data,
-        detailType:
-          action.payload.detailType === 'sale'
-            ? 'sales'
-            : action.payload.detailType,
+        detailType: action.payload.detailType === 'sale' ? 'sales' : action.payload.detailType,
         reloadPage: false
       }
     case AT.ORDERS_DETAIL_FETCH_FAILURE:
@@ -201,9 +198,7 @@ export default function(state = initialState, action) {
         detail: {
           ...state.detail,
           orderItems: state.detail.orderItems.map(orderItem => {
-            let foundOrderItem = action.payload.find(
-              oi => oi.id === orderItem.id
-            )
+            let foundOrderItem = action.payload.find(oi => oi.id === orderItem.id)
             if (foundOrderItem) {
               return {
                 ...foundOrderItem

@@ -2,8 +2,7 @@ import {
   SHIPPINGQUOTES_FETCH_REQUESTED,
   SHIPPINGQUOTES_FETCH_SUCCEEDED,
   SHIPPINGQUOTES_FETCH_FAILED
-} from "../constants/shippingQuotes"
-
+} from '../constants/shippingQuotes'
 
 export const initialState = {
   destinationZIP: '',
@@ -14,7 +13,6 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-
   switch (action.type) {
     case SHIPPINGQUOTES_FETCH_REQUESTED: {
       return {
@@ -43,5 +41,5 @@ export default function reducer(state = initialState, action) {
 }
 
 export function getShippingQuotes(pack) {
-  return { type: SHIPPINGQUOTES_FETCH_REQUESTED, payload: { pack } }
+  return {type: SHIPPINGQUOTES_FETCH_REQUESTED, payload: {pack}}
 }

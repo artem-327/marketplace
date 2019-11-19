@@ -1,72 +1,60 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import OfficesDetailAdmin from "./OfficesDetailAdmin";
-import Spinner from "../../../components/Spinner/Spinner";
-import DataTable from "../../../components/DataTable";
-import {
-  deleteOffice,
-  getOffices,
-  postNewOffice
-} from "../../../modules/companies";
-import { fetchLocations } from "../../../modules/location";
-import {addPopup, /*removePopup*/} from "../../../modules/popup";
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+import OfficesDetailAdmin from './OfficesDetailAdmin'
+import Spinner from '../../../components/Spinner/Spinner'
+import DataTable from '../../../components/DataTable'
+import {deleteOffice, getOffices, postNewOffice} from '../../../modules/companies'
+import {fetchLocations} from '../../../modules/location'
+import {addPopup /*removePopup*/} from '../../../modules/popup'
 //import { required } from "../../../utils/validation";
 //import RemoteComboBox from "../../../components/ComboBox/RemoteComboBox";
 //import Button from "../../../components/Button/Button";
 
 class Offices extends Component {
   state = {
-    name: "",
+    name: '',
     location: {}
-  };
+  }
 
   componentDidMount() {
-    this.props.getOffices();
-    this.props.fetchLocations();
+    this.props.getOffices()
+    this.props.fetchLocations()
   }
 
   render() {
-    const { offices, isFetching } = this.props;
-    if (isFetching) return <Spinner />;
+    const {offices, isFetching} = this.props
+    if (isFetching) return <Spinner />
     const rows = offices.map(office => {
-      const merchants = office.merchants.map(i => i.email).join();
+      const merchants = office.merchants.map(i => i.email).join()
       return {
-        group: "office", //hack - i dont know how to initialize datatable without group - it doesnt work well... maybe it would be necessary to fix datatable component
+        group: 'office', //hack - i dont know how to initialize datatable without group - it doesnt work well... maybe it would be necessary to fix datatable component
         rows: [
           {
             id: office.id,
-            data: [
-              office.name, 
-              office.company ? office.company.name : "-", 
-              merchants
-            ]
+            data: [office.name, office.company ? office.company.name : '-', merchants]
           }
         ]
-      };
-    });
+      }
+    })
     return (
       <DataTable
-        id="offices"
+        id='offices'
         sortFunc={nameColumn => console.log(nameColumn)}
-        headerInit={[
-          { name: "officeName" },
-          { name: "companyName" },
-          { name: "merchants" }
-        ]}
+        headerInit={[{name: 'officeName'}, {name: 'companyName'}, {name: 'merchants'}]}
         contextMenu={[
           {
-            action: id =>  this.props.addPopup(<OfficesDetailAdmin id={id}/>),
-            label: "editOffice"
+            action: id => this.props.addPopup(<OfficesDetailAdmin id={id} />),
+            label: 'editOffice'
           },
           {
             action: id => this.props.deleteOffice(id),
-            label: "removeOffice"
+            label: 'removeOffice'
           }
         ]}
         rows={rows}
       />
-    );
+    )
     // const newOfficePayload = {
     //    name: this.state.name,
     //    baselocation: this.state.location.id,
@@ -124,17 +112,11 @@ function mapStateToProps(store) {
     offices: store.companies.offices,
     locations: store.location.locations,
     locationsFetched: store.location.locationsFetched
-  };
+  }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(
-    { getOffices, deleteOffice, postNewOffice, fetchLocations, addPopup },
-    dispatch
-  );
+  return bindActionCreators({getOffices, deleteOffice, postNewOffice, fetchLocations, addPopup}, dispatch)
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Offices);
+export default connect(mapStateToProps, mapDispatchToProps)(Offices)

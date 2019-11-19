@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 import Spinner from '../../../../../components/Spinner/Spinner'
-import { Icon } from 'semantic-ui-react';
+import {Icon} from 'semantic-ui-react'
 
-const BroadcastingNumbers = ({ storedOffices, convertObjectToArray }) => {
+const BroadcastingNumbers = ({storedOffices, convertObjectToArray}) => {
   if (!storedOffices) return <Spinner />
   const brcOffices = convertObjectToArray(storedOffices)
   const broadcastingTo = brcOffices.filter(i => i.broadcast === true).length
@@ -10,10 +10,13 @@ const BroadcastingNumbers = ({ storedOffices, convertObjectToArray }) => {
     <>
       <Icon name='info' circular />
       <span>
-        Broadcasting to: <b>{broadcastingTo}/{brcOffices.length}</b>
+        Broadcasting to:{' '}
+        <b>
+          {broadcastingTo}/{brcOffices.length}
+        </b>
       </span>
     </>
-  );
-};
+  )
+}
 
-export default BroadcastingNumbers;
+export default BroadcastingNumbers

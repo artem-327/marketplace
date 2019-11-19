@@ -1,1 +1,1 @@
-export { default as AttachmentManager } from './components/AttachmentManager'
+export {default as AttachmentManager} from './components/AttachmentManager'

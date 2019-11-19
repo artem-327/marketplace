@@ -1,19 +1,19 @@
-import React, { Component } from 'react'
-import PropTypes from "prop-types"
-import { actions } from 'react-redux-form'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+import {actions} from 'react-redux-form'
 
-import Shipping from "./components/Shipping"
-import ShippingEdit from "./components/ShippingEdit"
-import ShippingQuote from "./components/ShippingQuote"
-import Payment from "./components/Payment"
-import { Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment } from "semantic-ui-react"
+import Shipping from './components/Shipping'
+import ShippingEdit from './components/ShippingEdit'
+import ShippingQuote from './components/ShippingQuote'
+import Payment from './components/Payment'
+import {Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment} from 'semantic-ui-react'
 import styled from 'styled-components'
 import Spinner from '../../../components/Spinner/Spinner'
-import "./PurchaseOrder.scss"
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { checkToken } from "../../../utils/auth"
+import './PurchaseOrder.scss'
+import {FormattedMessage, injectIntl} from 'react-intl'
+import {checkToken} from '../../../utils/auth'
 import Router from 'next/router'
-import { currency } from '~/constants/index'
+import {currency} from '~/constants/index'
 
 import CartItemSummary from '~/components/summary/CartItemSummary'
 import Summary from '~/components/summary/Summary'
@@ -22,12 +22,10 @@ import confirm from '../../../components/Confirmable/confirm'
 
 import './PurchaseOrder.scss'
 
-
 const RelaxedGrid = styled(Grid)`
   margin-top 1.5rem !important;
   padding-bottom: 50px !important;
 `
-
 
 class PurchaseOrder extends Component {
   componentDidMount() {
@@ -54,28 +52,28 @@ class PurchaseOrder extends Component {
   //     }));
   // }
 
-  handleQuoteSelect = (index) => {
-    let { shippingQuoteSelected, shippingQuotes } = this.props
-    shippingQuoteSelected({ index, quote: shippingQuotes[index] })
+  handleQuoteSelect = index => {
+    let {shippingQuoteSelected, shippingQuotes} = this.props
+    shippingQuoteSelected({index, quote: shippingQuotes[index]})
   }
 
-  getAddress = (selectedAddressId) => {
-    let { deliveryAddresses } = this.props
+  getAddress = selectedAddressId => {
+    let {deliveryAddresses} = this.props
     let selectedAddress = deliveryAddresses.find(i => i.id === selectedAddressId)
 
-    this.props.shippingChanged({ selectedAddress })
+    this.props.shippingChanged({selectedAddress})
     this.getShippingQuotes(selectedAddress)
   }
 
-  getPayment = (selectedPaymentId) => {
-    const { payments } = this.props
+  getPayment = selectedPaymentId => {
+    const {payments} = this.props
     const selectedPayment = payments.find(i => i.id === selectedPaymentId)
-    this.props.shippingChanged({ selectedPayment })
+    this.props.shippingChanged({selectedPayment})
   }
 
-  getShippingQuotes = (selectedAddress) => {
+  getShippingQuotes = selectedAddress => {
     // TODO:: 'USA' to ID and variable
-    this.props.getShippingQuotes(1, selectedAddress.address.zip.zip);
+    this.props.getShippingQuotes(1, selectedAddress.address.zip.zip)
   }
 
   // toggleRadio = (name = 'isNewAddress') => {
@@ -84,22 +82,23 @@ class PurchaseOrder extends Component {
   //   }))
   // }
 
-  deleteCart = (id) => {
+  deleteCart = id => {
     if (checkToken(this.props)) return
-    let { cart } = this.props
+    let {cart} = this.props
 
-    let { formatMessage } = this.props.intl
+    let {formatMessage} = this.props.intl
 
     if (cart.cartItems.length === 1) {
       return confirm(
-        formatMessage(({
+        formatMessage({
           id: 'order.deleteHeader',
           defaultMessage: 'Delete Order'
-        })),
-        formatMessage(({
+        }),
+        formatMessage({
           id: 'order.deleteBody',
-          defaultMessage: 'You are about to delete last item of order. Doing so will redirect you to Shopping cart. Do you wish to continue?'
-        }))
+          defaultMessage:
+            'You are about to delete last item of order. Doing so will redirect you to Shopping cart. Do you wish to continue?'
+        })
       ).then(() => {
         this.props.deleteCart()
         Router.push('/cart')
@@ -114,30 +113,32 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    const { dispatch, postNewDeliveryAddress, updateDeliveryAddress } = this.props
-    let { cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shipping } = this.props
+    const {dispatch, postNewDeliveryAddress, updateDeliveryAddress} = this.props
+    let {cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shipping} = this.props
 
     if (cartIsFetching) return <Spinner />
 
     return (
-      <div className="app-inner-main">
-        <div className="header-top">
+      <div className='app-inner-main'>
+        <div className='header-top'>
           <Container fluid>
             <Menu secondary>
               <Menu.Item header>
                 <Header as='h1' size='medium'>
-                  <FormattedMessage id='cart.checkout'
-                    defaultMessage='Checkout' />
+                  <FormattedMessage id='cart.checkout' defaultMessage='Checkout' />
                 </Header>
               </Menu.Item>
 
               <Menu.Menu position='right'>
                 <Menu.Item>
-                  <Button icon basic labelPosition='left' onClick={() => Router.push('/cart')}
-                          data-test='cart_purchase_back_btn'>
+                  <Button
+                    icon
+                    basic
+                    labelPosition='left'
+                    onClick={() => Router.push('/cart')}
+                    data-test='cart_purchase_back_btn'>
                     <Icon name='chevron left' />
-                    <FormattedMessage id='cart.backToShoppingCart'
-                      defaultMessage='Back to Shopping Cart' />
+                    <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart' />
                   </Button>
                 </Menu.Item>
               </Menu.Menu>
@@ -146,10 +147,8 @@ class PurchaseOrder extends Component {
         </div>
 
         <RelaxedGrid centered className='purchase-order'>
-
           <GridColumn computer={8}>
-
-            {shipping.isShippingEdit ?
+            {shipping.isShippingEdit ? (
               <ShippingEdit
                 savedShippingPreferences={shipping.savedShippingPreferences}
                 selectedAddress={shipping.selectedAddress}
@@ -162,7 +161,7 @@ class PurchaseOrder extends Component {
                 location={this.props.location}
                 isFetching={this.props.isFetching}
               />
-              :
+            ) : (
               <>
                 <Shipping
                   deliveryAddresses={deliveryAddresses}
@@ -172,26 +171,20 @@ class PurchaseOrder extends Component {
                   selectedAddress={shipping.selectedAddress}
                 />
               </>
-            }
-
-
-
+            )}
 
             <Segment>
               <Grid className='bottom-padded'>
                 <GridRow className='header'>
                   <GridColumn>
                     <Header as='h2'>
-                      <FormattedMessage
-                        id='cart.2freightSelection'
-                        defaultMessage='2. Freight Selection'
-                      />
+                      <FormattedMessage id='cart.2freightSelection' defaultMessage='2. Freight Selection' />
                     </Header>
                   </GridColumn>
                 </GridRow>
 
                 <ShippingQuote
-                  currency={{ code: currency}}
+                  currency={{code: currency}}
                   selectedShippingQuote={this.props.cart.selectedShipping}
                   handleQuoteSelect={this.handleQuoteSelect}
                   selectedAddress={shipping.selectedAddress}
@@ -201,17 +194,12 @@ class PurchaseOrder extends Component {
               </Grid>
             </Segment>
 
-
-
             <Segment>
               <Grid className='bottom-padded'>
                 <GridRow className='header'>
                   <GridColumn>
                     <Header as='h2'>
-                      <FormattedMessage
-                        id='cart.3payment'
-                        defaultMessage='3. Payment'
-                      />
+                      <FormattedMessage id='cart.3payment' defaultMessage='3. Payment' />
                     </Header>
                   </GridColumn>
                 </GridRow>
@@ -225,27 +213,17 @@ class PurchaseOrder extends Component {
                 />
               </Grid>
             </Segment>
-
-
           </GridColumn>
 
           <GridColumn computer={5}>
-
-
-            <CartItemSummary
-              cartItems={cart.cartItems}
-              deleteCart={this.deleteCart}
-            />
+            <CartItemSummary cartItems={cart.cartItems} deleteCart={this.deleteCart} />
 
             <Summary
               additionalContent={
                 <GridRow centered>
                   <GridColumn>
-                    <Button fluid primary onClick={this.handleContinue}
-                            data-test='cart_purchase_place_order_btn'>
-                      <FormattedMessage
-                        id='cart.placeOrder'
-                        defaultMessage='Place Order1' />
+                    <Button fluid primary onClick={this.handleContinue} data-test='cart_purchase_place_order_btn'>
+                      <FormattedMessage id='cart.placeOrder' defaultMessage='Place Order1' />
                     </Button>
                   </GridColumn>
                 </GridRow>
@@ -254,12 +232,8 @@ class PurchaseOrder extends Component {
               cart={cart}
               totalPrice={this.props.cart.totalPrice}
             />
-
           </GridColumn>
-
-
         </RelaxedGrid>
-
       </div>
     )
   }

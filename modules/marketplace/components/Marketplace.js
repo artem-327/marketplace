@@ -1,16 +1,16 @@
-import React, { Component } from 'react'
-import { Container, Menu, Header, Button, Popup, List } from 'semantic-ui-react'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import React, {Component} from 'react'
+import {Container, Menu, Header, Button, Popup, List} from 'semantic-ui-react'
+import {FormattedMessage, injectIntl} from 'react-intl'
 import styled from 'styled-components'
 
-import { ShippingQuotes } from '~/modules/shipping'
+import {ShippingQuotes} from '~/modules/shipping'
 import SubMenu from '~/src/components/SubMenu'
-import { Filter } from '~/modules/filter'
+import {Filter} from '~/modules/filter'
 import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
-import { filterTypes } from '~/modules/filter/constants/filter'
-import { groupActions } from '~/modules/company-product-info/constants'
+import {filterTypes} from '~/modules/filter/constants/filter'
+import {groupActions} from '~/modules/company-product-info/constants'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -19,15 +19,13 @@ const CapitalizedText = styled.span`
 class Marketplace extends Component {
   state = {
     columns: [
-      { name: 'productName', disabled: true },
-      { name: 'productNumber', disabled: true },
+      {name: 'productName', disabled: true},
+      {name: 'productNumber', disabled: true},
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
       {
         name: 'available',
         title: (
-          <FormattedMessage
-            id='marketplace.available'
-            defaultMessage='Available PKGs'>
+          <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs'>
             {text => text}
           </FormattedMessage>
         ),
@@ -37,9 +35,7 @@ class Marketplace extends Component {
       {
         name: 'packaging',
         title: (
-          <FormattedMessage
-            id='marketplace.packaging'
-            defaultMessage='Packaging'>
+          <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging'>
             {text => text}
           </FormattedMessage>
         ),
@@ -58,9 +54,7 @@ class Marketplace extends Component {
       {
         name: 'fobPrice',
         title: (
-          <FormattedMessage
-            id='marketplace.fobPrice'
-            defaultMessage='FOB Price'>
+          <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>
             {text => text}
           </FormattedMessage>
         ),
@@ -70,9 +64,7 @@ class Marketplace extends Component {
       {
         name: 'manufacturer',
         title: (
-          <FormattedMessage
-            id='marketplace.manufacturer'
-            defaultMessage='Manufacturer'>
+          <FormattedMessage id='marketplace.manufacturer' defaultMessage='Manufacturer'>
             {text => text}
           </FormattedMessage>
         ),
@@ -92,9 +84,7 @@ class Marketplace extends Component {
       {
         name: 'expiration',
         title: (
-          <FormattedMessage
-            id='marketplace.expirationDate'
-            defaultMessage='Expiration Date'>
+          <FormattedMessage id='marketplace.expirationDate' defaultMessage='Expiration Date'>
             {text => text}
           </FormattedMessage>
         ),
@@ -104,9 +94,7 @@ class Marketplace extends Component {
       {
         name: 'condition',
         title: (
-          <FormattedMessage
-            id='marketplace.condition'
-            defaultMessage='Condition'>
+          <FormattedMessage id='marketplace.condition' defaultMessage='Condition'>
             {text => text}
           </FormattedMessage>
         ),
@@ -139,7 +127,7 @@ class Marketplace extends Component {
   }
 
   initData = () => {
-    const { datagrid } = this.props
+    const {datagrid} = this.props
     datagrid.loadData()
   }
 
@@ -148,17 +136,14 @@ class Marketplace extends Component {
   }
 
   getRows = () => {
-    const { rows } = this.props
+    const {rows} = this.props
 
     return rows.map(r => ({
       ...r,
       condition: r.condition ? (
         <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
       ) : (
-        <FormattedMessage
-          id='global.nonConforming'
-          defaultMessage='Non Conforming'
-        />
+        <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
       ),
       packaging: (
         <>
@@ -170,13 +155,12 @@ class Marketplace extends Component {
   }
 
   tableRowClicked = clickedId => {
-    const { getProductOffer, sidebarChanged } = this.props
-    let { isOpen, id } = this.props.sidebar
+    const {getProductOffer, sidebarChanged} = this.props
+    let {isOpen, id} = this.props.sidebar
     getProductOffer(clickedId)
 
-    if (id !== clickedId && id)
-      sidebarChanged({ isOpen: true, id: clickedId, quantity: 1 })
-    else sidebarChanged({ isOpen: !isOpen, id: clickedId, quantity: 1 })
+    if (id !== clickedId && id) sidebarChanged({isOpen: true, id: clickedId, quantity: 1})
+    else sidebarChanged({isOpen: !isOpen, id: clickedId, quantity: 1})
   }
 
   handleFilterApply = filter => {
@@ -184,12 +168,12 @@ class Marketplace extends Component {
   }
 
   handleFilterClear = () => {
-    this.props.applyFilter({ filters: [] })
-    this.props.datagrid.setFilter({ filters: [] })
+    this.props.applyFilter({filters: []})
+    this.props.datagrid.setFilter({filters: []})
   }
 
   removeFilter = indexes => {
-    let { datagrid, appliedFilter } = this.props
+    let {datagrid, appliedFilter} = this.props
 
     indexes.forEach((index, i) => {
       datagrid.filters.splice(index - i, 1)
@@ -201,26 +185,19 @@ class Marketplace extends Component {
   }
 
   render() {
-    const {
-      datagrid,
-      intl,
-      getAutocompleteData,
-      autocompleteData,
-      autocompleteDataLoading,
-      openPopup
-    } = this.props
-    const { columns, selectedRows } = this.state
+    const {datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading, openPopup} = this.props
+    const {columns, selectedRows} = this.state
     const rows = this.getRows()
 
-    let { formatMessage } = intl
+    let {formatMessage} = intl
 
     return (
       <>
-        <Container fluid style={{ padding: '0 32px' }}>
+        <Container fluid style={{padding: '0 32px'}}>
           <ShippingQuotes
             modalProps={{
               open: this.state.open,
-              closeModal: () => this.setState({ open: false })
+              closeModal: () => this.setState({open: false})
             }}
             productOfferIds={rows.reduce(function(filtered, row, rowIndex) {
               if (selectedRows.includes(rowIndex)) {
@@ -228,11 +205,7 @@ class Marketplace extends Component {
               }
               return filtered
             }, [])}
-            productOffersSelected={rows.reduce(function(
-              filtered,
-              row,
-              rowIndex
-            ) {
+            productOffersSelected={rows.reduce(function(filtered, row, rowIndex) {
               if (selectedRows.includes(rowIndex)) {
                 filtered.push({
                   id: row.id,
@@ -241,8 +214,7 @@ class Marketplace extends Component {
                 })
               }
               return filtered
-            },
-            [])}
+            }, [])}
             removePopup={this.props.removePopup}
             {...this.props}
           />
@@ -250,10 +222,7 @@ class Marketplace extends Component {
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
-                <FormattedMessage
-                  id='allInventory.marketplace'
-                  defaultMessage='MARKETPLACE'
-                />
+                <FormattedMessage id='allInventory.marketplace' defaultMessage='MARKETPLACE' />
               </Header>
             </Menu.Item>
 
@@ -281,11 +250,9 @@ class Marketplace extends Component {
                     <Button
                       disabled={selectedRows.length === 0}
                       primary
-                      onClick={() => this.setState({ open: true })}
+                      onClick={() => this.setState({open: true})}
                       data-test='marketplace_shipping_quote_btn'>
-                      <FormattedMessage
-                        id='allInventory.shippingQuote'
-                        defaultMessage='Shipping Quote'>
+                      <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
                         {text => text}
                       </FormattedMessage>
                     </Button>
@@ -298,22 +265,13 @@ class Marketplace extends Component {
             </Menu.Menu>
           </Menu>
         </Container>
-        <div class='flex stretched' style={{ padding: '10px 32px' }}>
+        <div class='flex stretched' style={{padding: '10px 32px'}}>
           <ProdexGrid
             groupActions={row => {
               let values = row.key.split('_')
-              return groupActions(
-                true,
-                rows,
-                values[values.length - 1],
-                openPopup
-              ).map(a => ({
+              return groupActions(true, rows, values[values.length - 1], openPopup).map(a => ({
                 ...a,
-                text: (
-                  <FormattedMessage {...a.text}>
-                    {text => text}
-                  </FormattedMessage>
-                )
+                text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
               }))
             }}
             tableName='marketplace_grid'
@@ -332,20 +290,18 @@ class Marketplace extends Component {
                 }))
                 .value()
             }
-            renderGroupLabel={({ row: { value }, children = null }) => {
+            renderGroupLabel={({row: {value}, children = null}) => {
               const [name, number, count] = value.split('_')
               // const numberArray = number.split(' & ')
               return (
                 <span>
                   {children}
-                  <span style={{ color: '#2599d5' }}>
-                    {name ? name : 'Unmapped'}
-                  </span>
+                  <span style={{color: '#2599d5'}}>{name ? name : 'Unmapped'}</span>
                   <span className='right'>Product offerings: {count}</span>
                 </span>
               )
             }}
-            onSelectionChange={selectedRows => this.setState({ selectedRows })}
+            onSelectionChange={selectedRows => this.setState({selectedRows})}
             /* COMMENTED #30916
             onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()
@@ -373,9 +329,7 @@ class Marketplace extends Component {
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}
           savedUrl='/prodex/api/product-offers/broadcasted/datagrid/saved-filters'
-          searchUrl={text =>
-            `/prodex/api/company-products/broadcasted/search?pattern=${text}&onlyMapped=true`
-          }
+          searchUrl={text => `/prodex/api/company-products/broadcasted/search?pattern=${text}&onlyMapped=true`}
           apiUrl={datagrid.apiUrl}
           filters={datagrid.filters}
         />

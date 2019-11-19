@@ -1,1 +1,1 @@
-export { default as Password } from './components/PasswordContainer'
+export {default as Password} from './components/PasswordContainer'

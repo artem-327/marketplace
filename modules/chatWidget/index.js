@@ -1,1 +1,1 @@
-export { default as ChatWidget } from './components/ChatWidgetContainer'
+export {default as ChatWidget} from './components/ChatWidgetContainer'
