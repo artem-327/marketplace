@@ -1,10 +1,10 @@
 import * as AT from './action-types'
 import * as api from './api'
-import { setAuth, unsetAuth, authorize } from '~/utils/auth'
+import {setAuth, unsetAuth, authorize} from '~/utils/auth'
 import Router from 'next/router'
-import { ROLES_ENUM } from '~/src/utils/constants'
-import { getSafe } from '~/utils/functions'
-import { currency } from '~/constants/index'
+import {ROLES_ENUM} from '~/src/utils/constants'
+import {getSafe} from '~/utils/functions'
+import {currency} from '~/constants/index'
 
 export function getIdentity() {
   return {
@@ -22,7 +22,8 @@ export function loginInit() {
 export function login(username, password) {
   return async dispatch => {
     await dispatch({
-      type: AT.LOGIN, async payload() {
+      type: AT.LOGIN,
+      async payload() {
         const auth = await authorize(username, password)
         setAuth(auth)
         const identity = await api.getIdentity()
@@ -34,15 +35,16 @@ export function login(username, password) {
           ...auth,
           identity: {
             ...identity,
-            company: identity.company || company ? {
-              ...identity.company,
-              ...company
-            } : null
+            company:
+              identity.company || company
+                ? {
+                    ...identity.company,
+                    ...company
+                  }
+                : null
           },
           preferredCurrency
         }
-
-
 
         const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
 
@@ -50,15 +52,19 @@ export function login(username, password) {
 
         if (identity.roles) {
           ROLES_ENUM.forEach(role => {
-            accessRights[role.propertyName] = !!identity.roles.find((el) => el.id === role.id)
+            accessRights[role.propertyName] = !!identity.roles.find(el => el.id === role.id)
           })
         }
-
 
         setAuth(authPayload)
 
         // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
-        if (!(identity.roles.find(role => role.name === 'Company Admin') && getSafe(() => identity.company.reviewRequested, false))) {
+        if (
+          !(
+            identity.roles.find(role => role.name === 'Company Admin') &&
+            getSafe(() => identity.company.reviewRequested, false)
+          )
+        ) {
           isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
         }
 
@@ -67,7 +73,6 @@ export function login(username, password) {
     })
     // dispatch(triggerAgreementModal(true))
   }
-
 }
 
 export function getVersion() {
@@ -88,7 +93,8 @@ export function logout(isAutologout) {
 }
 
 export const resetPasswordRequest = email => ({
-  type: AT.RESET_PASSWORD_REQUEST, payload: async () => {
+  type: AT.RESET_PASSWORD_REQUEST,
+  payload: async () => {
     await api.resetPasswordRequest(email)
     Router.push('/password/reset')
   }
@@ -111,7 +117,7 @@ export const resetPasswordRequest = email => ({
 //   }
 // }
 
-export const reviewCompany = (values) => {
+export const reviewCompany = values => {
   delete values.address.availableCountries
   delete values.address.availableProvinces
 
@@ -133,17 +139,20 @@ export const setCompanyElligible = () => ({
   type: AT.SET_COMPANY_SELL_ELLIGIBLE,
   payload: async () => {
     let data = await api.getIdentity()
-    console.log({ data })
+    console.log({data})
     return getSafe(() => data.company.sellEligible, 'kkt :D')
   }
 })
 
-export const searchCountries = (searchQuery) => ({ type: AT.AUTH_SEARCH_COUNTRIES, payload: api.searchCountries(searchQuery) })
+export const searchCountries = searchQuery => ({
+  type: AT.AUTH_SEARCH_COUNTRIES,
+  payload: api.searchCountries(searchQuery)
+})
 
-export const searchProvinces = (countryId) => ({ type: AT.AUTH_SEARCH_PROVINCES, payload: api.searchProvinces(countryId) })
+export const searchProvinces = countryId => ({type: AT.AUTH_SEARCH_PROVINCES, payload: api.searchProvinces(countryId)})
 
-export const updateIdentity = (payload) => ({ type: AT.UPDATE_IDENTITY, payload })
+export const updateIdentity = payload => ({type: AT.UPDATE_IDENTITY, payload})
 
-export const updateCompany = (id, payload) => ({ type: AT.UPDATE_COMPANY, payload: api.updateCompany(id, payload) })
+export const updateCompany = (id, payload) => ({type: AT.UPDATE_COMPANY, payload: api.updateCompany(id, payload)})
 
-export const agreeWithTOS = () => ({ type: AT.AGREE_WITH_TOS, payload: api.agreeWithTOS() })
+export const agreeWithTOS = () => ({type: AT.AGREE_WITH_TOS, payload: api.agreeWithTOS()})

@@ -1,11 +1,9 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import moment from 'moment'
 
-import { FormattedMessage, FormattedNumber } from 'react-intl'
-import { Grid, GridRow, GridColumn, Header, Divider, Radio, Dimmer, Loader } from 'semantic-ui-react'
+import {FormattedMessage, FormattedNumber} from 'react-intl'
+import {Grid, GridRow, GridColumn, Header, Divider, Radio, Dimmer, Loader} from 'semantic-ui-react'
 import styled from 'styled-components'
-
-
 
 const InnerGrid = styled(Grid)`
   display: block !important;
@@ -33,17 +31,23 @@ export default class ShippingQuote extends Component {
     let deliveryTime = timeObj.format('MMM D, YYYY')
     let daysLeft = timeObj.fromNow()
 
-    let { handleQuoteSelect, selectedShippingQuote, currency } = this.props
+    let {handleQuoteSelect, selectedShippingQuote, currency} = this.props
 
     return (
       <>
-        {index > 0 ? (
-          <Divider />
-        ) : null}
+        {index > 0 ? <Divider /> : null}
         <RelaxedRow key={index}>
-          <GridColumn computer={1}><Radio checked={selectedShippingQuote && selectedShippingQuote.index === index} onChange={() => handleQuoteSelect(index)} data-test={`purchase_order_shipping_quote_${index}_rad`}/></GridColumn>
+          <GridColumn computer={1}>
+            <Radio
+              checked={selectedShippingQuote && selectedShippingQuote.index === index}
+              onChange={() => handleQuoteSelect(index)}
+              data-test={`purchase_order_shipping_quote_${index}_rad`}
+            />
+          </GridColumn>
           <GridColumn computer={4}>{item.carrierName}</GridColumn>
-          <GridColumn computer={2}><FormattedNumber style='currency' currency={currency} value={item.estimatedPrice} /></GridColumn>
+          <GridColumn computer={2}>
+            <FormattedNumber style='currency' currency={currency} value={item.estimatedPrice} />
+          </GridColumn>
           <GridColumn computer={4}>{deliveryTime}</GridColumn>
           <GridColumn computer={2}>{daysLeft}</GridColumn>
           <GridColumn computer={3}>{item.serviceType}</GridColumn>
@@ -53,8 +57,7 @@ export default class ShippingQuote extends Component {
   }
 
   render() {
-    let { shippingQuotes, shippingQuotesAreFetching, selectedAddress } = this.props
-
+    let {shippingQuotes, shippingQuotesAreFetching, selectedAddress} = this.props
 
     if (shippingQuotesAreFetching) {
       return (
@@ -72,14 +75,16 @@ export default class ShippingQuote extends Component {
           <Grid>
             <GridRow>
               <GridColumn computer={16}>
-                <FormattedMessage id='cart.nothing' defaultMessage='Please, first select a shipping destination Warehouse or Delivery Address.' />
+                <FormattedMessage
+                  id='cart.nothing'
+                  defaultMessage='Please, first select a shipping destination Warehouse or Delivery Address.'
+                />
               </GridColumn>
             </GridRow>
           </Grid>
         </GridColumn>
       )
     }
-
 
     if (!shippingQuotes || shippingQuotes.length === 0) {
       return (
@@ -87,15 +92,16 @@ export default class ShippingQuote extends Component {
           <Grid>
             <GridRow>
               <GridColumn computer={16}>
-                <FormattedMessage id='cart.noShippingQuotes' defaultMessage='We are sorry, but not matching Shipping Quotes has been found.' />
+                <FormattedMessage
+                  id='cart.noShippingQuotes'
+                  defaultMessage='We are sorry, but not matching Shipping Quotes has been found.'
+                />
               </GridColumn>
             </GridRow>
           </Grid>
         </GridColumn>
       )
     }
-
-
 
     return (
       <>
@@ -131,7 +137,6 @@ export default class ShippingQuote extends Component {
               </Header>
             </GridColumn>
           </Grid>
-
         </RelaxedColumn>
 
         <InnerGrid padded verticalAlign='middle'>

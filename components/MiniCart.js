@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import {connect} from "react-redux"
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import styled from 'styled-components'
-import { getCart } from "~/modules/purchase-order/actions"
-import { Icon, Label } from 'semantic-ui-react'
-import { getSafe } from '~/utils/functions'
+import {getCart} from '~/modules/purchase-order/actions'
+import {Icon, Label} from 'semantic-ui-react'
+import {getSafe} from '~/utils/functions'
 
 const CircularLabel = styled(Label)`
   position: absolute;
@@ -17,27 +17,28 @@ const CircularLabel = styled(Label)`
 `
 
 class MiniCart extends Component {
-
   componentDidMount() {
     this.props.getCart()
   }
 
   render() {
-    const { cartItems } = this.props
+    const {cartItems} = this.props
 
     return (
       <Icon.Group>
         <Icon name='shopping cart' color='white' size='large' />
-        <CircularLabel circular color='blue'>{cartItems}</CircularLabel>
+        <CircularLabel circular color='blue'>
+          {cartItems}
+        </CircularLabel>
       </Icon.Group>
     )
   }
 }
 
-const stateToProps = (state) => {
+const stateToProps = state => {
   return {
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0)
   }
 }
 
-export default connect(stateToProps, { getCart })(MiniCart)
+export default connect(stateToProps, {getCart})(MiniCart)

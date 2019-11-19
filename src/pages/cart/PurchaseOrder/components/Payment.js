@@ -1,14 +1,12 @@
-import React, { Component } from 'react'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { Dropdown, GridRow, GridColumn, Divider } from 'semantic-ui-react';
-import ShippingAddress from './ShippingAddress';
-
+import React, {Component} from 'react'
+import {FormattedMessage, injectIntl} from 'react-intl'
+import {Dropdown, GridRow, GridColumn, Divider} from 'semantic-ui-react'
+import ShippingAddress from './ShippingAddress'
 
 class Payment extends Component {
-
   render() {
-    let { payments, selectedAddress } = this.props
-    let { formatMessage } = this.props.intl
+    let {payments, selectedAddress} = this.props
+    let {formatMessage} = this.props.intl
 
     return (
       <>
@@ -22,18 +20,22 @@ class Payment extends Component {
                 id: 'cart.selectCreditCard',
                 defaultMessage: 'Select Credit Card'
               })}
-              data-test='cart_purchase_orders_payments_credit_card_drpdn'/>
+              data-test='cart_purchase_orders_payments_credit_card_drpdn'
+            />
           </GridColumn>
         </GridRow>
 
         <Divider />
 
-        <ShippingAddress selectedAddress={selectedAddress} addressOnly={true} header={{ id: 'cart.billingInfo', defaultMessage: 'Billing Info' }} />
+        <ShippingAddress
+          selectedAddress={selectedAddress}
+          addressOnly={true}
+          header={{id: 'cart.billingInfo', defaultMessage: 'Billing Info'}}
+        />
       </>
     )
   }
 }
-
 
 export default injectIntl(Payment)
 

@@ -1,15 +1,15 @@
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import PurchaseOrder from './PurchaseOrder'
 import * as Actions from '../actions'
 
-import { getSafe } from '~/utils/functions'
+import {getSafe} from '~/utils/functions'
 
 function mapStateToProps(store) {
   let preferredBankAccountId = getSafe(() => store.auth.identity.company.preferredBankAccountId)
-  let { selectedAddress } = store.cart.shipping
+  let {selectedAddress} = store.cart.shipping
   if (selectedAddress) {
-    if(selectedAddress.deliveryAddress) var { address } = selectedAddress.deliveryAddress
-    else var { address } = selectedAddress
+    if (selectedAddress.deliveryAddress) var {address} = selectedAddress.deliveryAddress
+    else var {address} = selectedAddress
   }
   return {
     ...store.cart,
@@ -18,7 +18,7 @@ function mapStateToProps(store) {
       ...selectedAddress,
       address: {
         ...address,
-        country: JSON.stringify({ countryId: address.country.id, hasProvinces: address.country.hasProvinces }),
+        country: JSON.stringify({countryId: address.country.id, hasProvinces: address.country.hasProvinces}),
         zip: address.zip.zip,
         province: getSafe(() => address.province.id)
       }

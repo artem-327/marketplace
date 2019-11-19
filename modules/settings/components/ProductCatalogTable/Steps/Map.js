@@ -1,17 +1,9 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 
-import { FormattedMessage, injectIntl } from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
-import {
-  Table,
-  Dropdown,
-  Grid,
-  Input,
-  Select,
-  Checkbox,
-  Button
-} from 'semantic-ui-react'
+import {Table, Dropdown, Grid, Input, Select, Checkbox, Button} from 'semantic-ui-react'
 
 import {
   changeHeadersCSV,
@@ -28,9 +20,9 @@ import {
   deleteCSVMapProductOffer
 } from '../../../actions'
 
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import {getSafe, generateToastMarkup} from '~/utils/functions'
 import _invert from 'lodash/invert'
-import { withToastManager } from 'react-toast-notifications'
+import {withToastManager} from 'react-toast-notifications'
 import styled from 'styled-components'
 
 const SmallerTableCell = styled(Table.Cell)`
@@ -39,175 +31,166 @@ const SmallerTableCell = styled(Table.Cell)`
 
 const simpleEchoProductList = {
   constant: 'global',
-  required: [
-    "codeMapper",
-    "elementsMapper",
-    "nameMapper",
-  ],
+  required: ['codeMapper', 'elementsMapper', 'nameMapper'],
   optional: [
-    "alternativeNamesMapper",
-    "appearanceMapper",
-    "aspirationHazardMapper",
-    "autoIgnitionTemperatureMapper",
-    "boilingPointRangeMapper",
-    "conditionsToAvoidMapper",
-    "decompositionTemperatureMapper",
-    "developmentalEffectsMapper",
-    "dotHazardClassMapper",
-    "dotHazardLabelMapper",
-    "dotMarinePollutantMapper",
-    "dotPackagingGroupMapper",
-    "dotProperShippingNameMapper",
-    "dotProperTechnicalNameMapper",
-    "dotReportableQuantityMapper",
-    "dotSevereMarinePollutantMapper",
-    "dotUnNumberMapper",
-    "emergencyPhoneMapper",
-    "endocrineDisruptorInformationMapper",
-    "evaporationPointMapper",
-    "eyeContactMapper",
-    "flammabilityOrExplosiveLowerMapper",
-    "flammabilityOrExplosiveUpperMapper",
-    "flammabilitySolidGasMapper",
-    "flashPointMapper",
-    "generalAdviceMapper",
-    "hazardStatementMapper",
-    "hazardousDecompositionProductsMapper",
-    "hazardousPolymerizationMapper",
-    "hazardousReactionsMapper",
-    "hmisChronicHealthHazardMapper",
-    "hmisFlammabilityMapper",
-    "hmisHealthHazardMapper",
-    "hmisPhysicalHazardMapper",
-    "hnocMapper",
-    "iataHazardClassMapper",
-    "iataHazardLabelMapper",
-    "iataPackagingGroupMapper",
-    "iataProperShippingNameMapper",
-    "iataProperTechnicalNameMapper",
-    "iataUnNumberMapper",
-    "imdgImoHazardClassMapper",
-    "imdgImoHazardLabelMapper",
-    "imdgImoPackagingGroupMapper",
-    "imdgImoProperShippingNameMapper",
-    "imdgImoProperTechnicalNameMapper",
-    "imdgImoUnNumberMapper",
-    "incompatibleMaterialsMapper",
-    "ingestionMapper",
-    "inhalationMapper",
-    "irritationMapper",
-    "labelElementsMapper",
-    "manufacturerMapper",
-    "meltingPointRangeMapper",
-    "mexicoGradeMapper",
-    "mfrProductCodesMapper",
-    "molecularFormulaMapper",
-    "molecularWeightMapper",
-    "mostImportantSymptomsAndEffectsMapper",
-    "mutagenicEffectsMapper",
-    "nfpaFireHazardMapper",
-    "nfpaHealthHazardMapper",
-    "nfpaReactivityHazardMapper",
-    "nfpaSpecialHazardMapper",
-    "notesToPhysicianMapper",
-    "odorMapper",
-    "odorThresholdMapper",
-    "oshaDefinedHazardsMapper",
-    "otherAdverseEffectsMapper",
-    "packagingGroupMapper",
-    "partitionCoefficientMapper",
-    "phMapper",
-    "physicalStateMapper",
-    "precautionaryStatementsMapper",
-    "productLc50InhalationMapper",
-    "productLd50DermalMapper",
-    "productLd50OralMapper",
-    "reactiveHazardMapper",
-    "recommendedUseMapper",
-    "reproductiveEffectsMapper",
-    "sdsIssuedDateMapper",
-    "sdsPreparedByMapper",
-    "sdsRevisionDateMapper",
-    "sdsVersionNumberMapper",
-    "sensitizationMapper",
-    "signalWordMapper",
-    "skinContactMapper",
-    "solubilityMapper",
-    "specificGravityMapper",
-    "stabilityMapper",
-    "stotRepeatedExposureMapper",
-    "stotSingleExposureMapper",
-    "supplementalInformationMapper",
-    "symptomsEffectsMapper",
-    "tdgHazardClassMapper",
-    "tdgHazardLabelMapper",
-    "tdgPackagingGroupMapper",
-    "tdgProperShippingNameMapper",
-    "tdgProperTechnicalNameMapper",
-    "tdgUnNumberMapper",
-    "tdsIssuedDateMapper",
-    "tdsPreparedByMapper",
-    "tdsRevisionDateMapper",
-    "tdsVersionNumberMapper",
-    "teratogenicityMapper",
-    "usesAdvisedAgainstMapper",
-    "vaporDensityMapper",
-    "vaporPressureMapper",
-    "viscosityMapper",
-    "wasteDisposalMethodsMapper"
+    'alternativeNamesMapper',
+    'appearanceMapper',
+    'aspirationHazardMapper',
+    'autoIgnitionTemperatureMapper',
+    'boilingPointRangeMapper',
+    'conditionsToAvoidMapper',
+    'decompositionTemperatureMapper',
+    'developmentalEffectsMapper',
+    'dotHazardClassMapper',
+    'dotHazardLabelMapper',
+    'dotMarinePollutantMapper',
+    'dotPackagingGroupMapper',
+    'dotProperShippingNameMapper',
+    'dotProperTechnicalNameMapper',
+    'dotReportableQuantityMapper',
+    'dotSevereMarinePollutantMapper',
+    'dotUnNumberMapper',
+    'emergencyPhoneMapper',
+    'endocrineDisruptorInformationMapper',
+    'evaporationPointMapper',
+    'eyeContactMapper',
+    'flammabilityOrExplosiveLowerMapper',
+    'flammabilityOrExplosiveUpperMapper',
+    'flammabilitySolidGasMapper',
+    'flashPointMapper',
+    'generalAdviceMapper',
+    'hazardStatementMapper',
+    'hazardousDecompositionProductsMapper',
+    'hazardousPolymerizationMapper',
+    'hazardousReactionsMapper',
+    'hmisChronicHealthHazardMapper',
+    'hmisFlammabilityMapper',
+    'hmisHealthHazardMapper',
+    'hmisPhysicalHazardMapper',
+    'hnocMapper',
+    'iataHazardClassMapper',
+    'iataHazardLabelMapper',
+    'iataPackagingGroupMapper',
+    'iataProperShippingNameMapper',
+    'iataProperTechnicalNameMapper',
+    'iataUnNumberMapper',
+    'imdgImoHazardClassMapper',
+    'imdgImoHazardLabelMapper',
+    'imdgImoPackagingGroupMapper',
+    'imdgImoProperShippingNameMapper',
+    'imdgImoProperTechnicalNameMapper',
+    'imdgImoUnNumberMapper',
+    'incompatibleMaterialsMapper',
+    'ingestionMapper',
+    'inhalationMapper',
+    'irritationMapper',
+    'labelElementsMapper',
+    'manufacturerMapper',
+    'meltingPointRangeMapper',
+    'mexicoGradeMapper',
+    'mfrProductCodesMapper',
+    'molecularFormulaMapper',
+    'molecularWeightMapper',
+    'mostImportantSymptomsAndEffectsMapper',
+    'mutagenicEffectsMapper',
+    'nfpaFireHazardMapper',
+    'nfpaHealthHazardMapper',
+    'nfpaReactivityHazardMapper',
+    'nfpaSpecialHazardMapper',
+    'notesToPhysicianMapper',
+    'odorMapper',
+    'odorThresholdMapper',
+    'oshaDefinedHazardsMapper',
+    'otherAdverseEffectsMapper',
+    'packagingGroupMapper',
+    'partitionCoefficientMapper',
+    'phMapper',
+    'physicalStateMapper',
+    'precautionaryStatementsMapper',
+    'productLc50InhalationMapper',
+    'productLd50DermalMapper',
+    'productLd50OralMapper',
+    'reactiveHazardMapper',
+    'recommendedUseMapper',
+    'reproductiveEffectsMapper',
+    'sdsIssuedDateMapper',
+    'sdsPreparedByMapper',
+    'sdsRevisionDateMapper',
+    'sdsVersionNumberMapper',
+    'sensitizationMapper',
+    'signalWordMapper',
+    'skinContactMapper',
+    'solubilityMapper',
+    'specificGravityMapper',
+    'stabilityMapper',
+    'stotRepeatedExposureMapper',
+    'stotSingleExposureMapper',
+    'supplementalInformationMapper',
+    'symptomsEffectsMapper',
+    'tdgHazardClassMapper',
+    'tdgHazardLabelMapper',
+    'tdgPackagingGroupMapper',
+    'tdgProperShippingNameMapper',
+    'tdgProperTechnicalNameMapper',
+    'tdgUnNumberMapper',
+    'tdsIssuedDateMapper',
+    'tdsPreparedByMapper',
+    'tdsRevisionDateMapper',
+    'tdsVersionNumberMapper',
+    'teratogenicityMapper',
+    'usesAdvisedAgainstMapper',
+    'vaporDensityMapper',
+    'vaporPressureMapper',
+    'viscosityMapper',
+    'wasteDisposalMethodsMapper'
   ]
 }
 
 const simpleCompanyProductList = {
   constant: 'global',
   required: [
-    "echoProduct",
-    "intProductCodeMapper",
-    "intProductNameMapper",
-    "packagingSizeMapper",
-    "packagingTypeMapper",
-    "packagingUnitMapper"
+    'echoProduct',
+    'intProductCodeMapper',
+    'intProductNameMapper',
+    'packagingSizeMapper',
+    'packagingTypeMapper',
+    'packagingUnitMapper'
   ],
   optional: [
-    "freezeProtectMapper",
-    "freightClassMapper",
-    "hazardousMapper",
-    "inciNameMapper",
-    "nmfcNumberMapper",
-    "stackableMapper"
+    'freezeProtectMapper',
+    'freightClassMapper',
+    'hazardousMapper',
+    'inciNameMapper',
+    'nmfcNumberMapper',
+    'stackableMapper'
   ]
 }
 
 const simpleProductOfferList = {
   constant: 'import',
-  required: [
-    "companyProductMapper",
-    "pkgAvailableMapper",
-    "pricingTiersMapper",
-    "warehouseNameMapper"
-  ],
+  required: ['companyProductMapper', 'pkgAvailableMapper', 'pricingTiersMapper', 'warehouseNameMapper'],
   optional: [
-    "assayMaxMapper",
-    "assayMinMapper",
-    "broadcastedMapper",
-    "conformingMapper", // condition removed, conformin instead of it
-    "conditionNotesMapper",
-    "costPerUomMapper",
-    "costRecordsMapper",
-    "currencyMapper",
-    "externalNotesMapper",
-    "formMapper",
-    "gradesMapper",
-    "inStockMapper",
-    "internalNotesMapper",
-    "leadTimeMapper",
-    "lotExpirationDateMapper",
-    "lotManufacturedDateMapper",
-    "lotNumberMapper",
-    "minPkgMapper",
-    "originMapper",
-    "splitPkgMapper",
-    "validityDateMapper"
+    'assayMaxMapper',
+    'assayMinMapper',
+    'broadcastedMapper',
+    'conformingMapper', // condition removed, conformin instead of it
+    'conditionNotesMapper',
+    'costPerUomMapper',
+    'costRecordsMapper',
+    'currencyMapper',
+    'externalNotesMapper',
+    'formMapper',
+    'gradesMapper',
+    'inStockMapper',
+    'internalNotesMapper',
+    'leadTimeMapper',
+    'lotExpirationDateMapper',
+    'lotManufacturedDateMapper',
+    'lotNumberMapper',
+    'minPkgMapper',
+    'originMapper',
+    'splitPkgMapper',
+    'validityDateMapper'
   ]
 }
 
@@ -221,52 +204,68 @@ class Map extends Component {
     constant: ''
   }
 
-  getMapping = (mapperList) => {
-    const { intl: { formatMessage }} = this.props
+  getMapping = mapperList => {
+    const {
+      intl: {formatMessage}
+    } = this.props
 
-    return mapperList.required.map(option => {
-      return {
-        text: formatMessage({ id: `${mapperList.constant}.${option.replace(/Mapper$/gi, '')}`, defaultMessage: option.replace(/Mapper$/gi, '') }),
-        value: option,
-        required: true
-      }
-    }).concat(mapperList.optional.map(option => {
-      return {
-        text: formatMessage({ id: `${mapperList.constant}.${option.replace(/Mapper$/gi, '')}`, defaultMessage: option.replace(/Mapper$/gi, '') }),
-        value: option
-      }
-    }))
+    return mapperList.required
+      .map(option => {
+        return {
+          text: formatMessage({
+            id: `${mapperList.constant}.${option.replace(/Mapper$/gi, '')}`,
+            defaultMessage: option.replace(/Mapper$/gi, '')
+          }),
+          value: option,
+          required: true
+        }
+      })
+      .concat(
+        mapperList.optional.map(option => {
+          return {
+            text: formatMessage({
+              id: `${mapperList.constant}.${option.replace(/Mapper$/gi, '')}`,
+              defaultMessage: option.replace(/Mapper$/gi, '')
+            }),
+            value: option
+          }
+        })
+      )
   }
 
-  componentDidMount = async() => {
-    const { intl: { formatMessage }} = this.props
-    let { mapping } = this.state
+  componentDidMount = async () => {
+    const {
+      intl: {formatMessage}
+    } = this.props
+    let {mapping} = this.state
     let constant = ''
     if (this.props.productOffer) {
       this.props.getCSVMapProductOffer()
       const mappingProductOffer = this.getMapping(simpleProductOfferList)
       constant = simpleProductOfferList.constant
       mapping = mappingProductOffer
-    }
-    else if (this.props.echoProduct) {
+    } else if (this.props.echoProduct) {
       this.props.getCSVMapEchoProduct()
       const mappingEchoProduct = this.getMapping(simpleEchoProductList)
       constant = simpleEchoProductList.constant
       mapping = mappingEchoProduct
-    }
-    else {
+    } else {
       const mappingCompanyProduct = this.getMapping(simpleCompanyProductList)
       constant = simpleCompanyProductList.constant
       mapping = mappingCompanyProduct
     }
 
-    this.setState({ newHeaders: this.props.CSV.headerCSV, mapping: mapping, constant: constant })
+    this.setState({newHeaders: this.props.CSV.headerCSV, mapping: mapping, constant: constant})
 
-    let a = (mapping).sort(function (a, b) {
+    let a = mapping.sort(function(a, b) {
       let x = a.text.toLowerCase()
       let y = b.text.toLowerCase()
-      if (x < y) { return -1 }
-      if (x > y) { return 1 }
+      if (x < y) {
+        return -1
+      }
+      if (x > y) {
+        return 1
+      }
       return 0
     })
 
@@ -279,11 +278,17 @@ class Map extends Component {
       const newHeaders = this.props.CSV.headerCSV
       values = values.map((value, vIndex) => {
         const content = this.simplifyText(newHeaders[vIndex].content)
-        const foundItem = ar[vIndex].find(option => this.simplifyText(option.value) === content || this.simplifyText(option.text) === content)
+        const foundItem = ar[vIndex].find(
+          option => this.simplifyText(option.value) === content || this.simplifyText(option.text) === content
+        )
 
         if (foundItem) {
           newHeaders[vIndex].header = foundItem.value
-          ar = this.modifyOptionLists(ar, getSafe(() => foundItem.value, null), vIndex)
+          ar = this.modifyOptionLists(
+            ar,
+            getSafe(() => foundItem.value, null),
+            vIndex
+          )
         }
 
         return getSafe(() => foundItem.value, '')
@@ -296,14 +301,13 @@ class Map extends Component {
       values = values.map((value, vIndex) => {
         const indexMap = this.props.mappedHeader[vIndex]
 
-        if (indexMap.header)
-          ar = this.modifyOptionLists(ar, indexMap.header, vIndex)
+        if (indexMap.header) ar = this.modifyOptionLists(ar, indexMap.header, vIndex)
 
         return getSafe(() => indexMap.header, '')
       })
     }
 
-    this.setState({ options: ar, values: values })
+    this.setState({options: ar, values: values})
   }
 
   modifyOptionLists = (options, value, notIndex, indexAdd) => {
@@ -316,11 +320,15 @@ class Map extends Component {
         let indexRemove = options[i].findIndex(obj => obj.value === value)
         if (indexRemove >= 0) options[i].splice(indexRemove, 1)
         // Sort alphabetically
-        options[i].sort(function (a, b) {
+        options[i].sort(function(a, b) {
           let x = a.value.toLowerCase()
           let y = b.value.toLowerCase()
-          if (x < y) { return -1 }
-          if (x > y) { return 1 }
+          if (x < y) {
+            return -1
+          }
+          if (x > y) {
+            return 1
+          }
           return 0
         })
       }
@@ -329,13 +337,22 @@ class Map extends Component {
     return options
   }
 
-  simplifyText = (text) => {
+  simplifyText = text => {
     // simplify text to compare
-    return text.toLowerCase().replace(/[^0-9a-z]/gi, '').replace(/mapper$/gi, '').replace(/s$/gi, '')
+    return text
+      .toLowerCase()
+      .replace(/[^0-9a-z]/gi, '')
+      .replace(/mapper$/gi, '')
+      .replace(/s$/gi, '')
   }
 
   render() {
-    const { CSV, selectedSavedMap, intl: { formatMessage }, toastManager } = this.props
+    const {
+      CSV,
+      selectedSavedMap,
+      intl: {formatMessage},
+      toastManager
+    } = this.props
 
     const optionMaps =
       this.props.maps &&
@@ -344,7 +361,7 @@ class Map extends Component {
         value: map.id
       }))
 
-    const { values } = this.state
+    const {values} = this.state
 
     return (
       <React.Fragment>
@@ -353,8 +370,11 @@ class Map extends Component {
             <Grid.Row verticalAlign='middle'>
               <Grid.Column width={5} textAlign='center'>
                 <Select
-                  placeholder={formatMessage({ id: 'settings.selectSavedMap', defaultMessage: 'Select your saved map' })}
-                  noResultsMessage={formatMessage({ id: 'settings.noSavedMaps', defaultMessage: 'There are no saved Maps yet.' })}
+                  placeholder={formatMessage({id: 'settings.selectSavedMap', defaultMessage: 'Select your saved map'})}
+                  noResultsMessage={formatMessage({
+                    id: 'settings.noSavedMaps',
+                    defaultMessage: 'There are no saved Maps yet.'
+                  })}
                   value={getSafe(() => selectedSavedMap.id, '')}
                   options={optionMaps}
                   clearable
@@ -363,108 +383,140 @@ class Map extends Component {
                   search={true}
                   selectOnBlur={false}
                   data-test='settings_product_import_select_map'
-                  style={{ width: '100%' }}
+                  style={{width: '100%'}}
                 />
               </Grid.Column>
               <Grid.Column width={3} textAlign='center' verticalAlign='middle'>
                 {this.props.echoProduct || this.props.productOffer ? (
-                  <Button type='button'
-                          color='red'
-                          disabled={getSafe(() => !this.props.selectedSavedMap.id, true)}
-                          onClick={async () => {
-                            const mapName = this.props.selectedSavedMap.name
-                            if (this.props.echoProduct)
-                              await this.props.deleteCSVMapEchoProduct(this.props.selectedSavedMap.id)
+                  <Button
+                    type='button'
+                    color='red'
+                    disabled={getSafe(() => !this.props.selectedSavedMap.id, true)}
+                    onClick={async () => {
+                      const mapName = this.props.selectedSavedMap.name
+                      if (this.props.echoProduct)
+                        await this.props.deleteCSVMapEchoProduct(this.props.selectedSavedMap.id)
 
-                            if (this.props.productOffer)
-                              await this.props.deleteCSVMapProductOffer(this.props.selectedSavedMap.id)
+                      if (this.props.productOffer)
+                        await this.props.deleteCSVMapProductOffer(this.props.selectedSavedMap.id)
 
-                            toastManager.add(generateToastMarkup(
-                              formatMessage({ id: 'notifications.deleteMapSuccess.header', defaultMessage: 'Map deleted' }),
-                              formatMessage({ id: 'notifications.deleteMapSuccess.content', defaultMessage: `Map {name} successfully deleted.` }, { name: mapName })
-                            ), { appearance: 'success' })
-                          }}
-                          style={{ width: '100%' }}>
-                    <FormattedMessage id='settings.deleteMap' defaultMessage='Delete Map'>{text => text}</FormattedMessage>
+                      toastManager.add(
+                        generateToastMarkup(
+                          formatMessage({id: 'notifications.deleteMapSuccess.header', defaultMessage: 'Map deleted'}),
+                          formatMessage(
+                            {
+                              id: 'notifications.deleteMapSuccess.content',
+                              defaultMessage: `Map {name} successfully deleted.`
+                            },
+                            {name: mapName}
+                          )
+                        ),
+                        {appearance: 'success'}
+                      )
+                    }}
+                    style={{width: '100%'}}>
+                    <FormattedMessage id='settings.deleteMap' defaultMessage='Delete Map'>
+                      {text => text}
+                    </FormattedMessage>
                   </Button>
                 ) : null}
               </Grid.Column>
               <Grid.Column width={5} textAlign='center' data-test='settings_product_import_csv_name_inp'>
-                <Input placeholder={formatMessage({ id: 'settings.', defaultMessage: 'Map Name' })} onChange={this.inputMapName}
-                       style={{ width: '100%' }} />
+                <Input
+                  placeholder={formatMessage({id: 'settings.', defaultMessage: 'Map Name'})}
+                  onChange={this.inputMapName}
+                  style={{width: '100%'}}
+                />
               </Grid.Column>
               <Grid.Column width={3} textAlign='center' verticalAlign='middle'>
-                <Button type='button'
-                        onClick={async () => {
-                          const missingRequired = this.findNotSelectedRequired(values, this.state.mapping)
-                          if (missingRequired.length) {
-                            toastManager.add(generateToastMarkup(
-                              formatMessage({ id: 'notifications.importMissingRequired.header', defaultMessage: 'Required Options' }),
-                              formatMessage({ id: 'notifications.importMissingRequired.content', defaultMessage: `To continue, you need to apply all required attribute mappings: ${missingRequired.join(', ')}` }, { missingRequired: missingRequired.join(', ') })
-                            ), { appearance: 'error' })
+                <Button
+                  type='button'
+                  onClick={async () => {
+                    const missingRequired = this.findNotSelectedRequired(values, this.state.mapping)
+                    if (missingRequired.length) {
+                      toastManager.add(
+                        generateToastMarkup(
+                          formatMessage({
+                            id: 'notifications.importMissingRequired.header',
+                            defaultMessage: 'Required Options'
+                          }),
+                          formatMessage(
+                            {
+                              id: 'notifications.importMissingRequired.content',
+                              defaultMessage: `To continue, you need to apply all required attribute mappings: ${missingRequired.join(
+                                ', '
+                              )}`
+                            },
+                            {missingRequired: missingRequired.join(', ')}
+                          )
+                        ),
+                        {appearance: 'error'}
+                      )
 
-                            return false
-                          }
+                      return false
+                    }
 
-                          const data =
-                            this.state.newHeaders &&
-                            this.state.newHeaders.reduce(
-                              (prev, next) => {
-                                if (next.header && next.content)
-                                  prev[next.header] = next.content
+                    const data =
+                      this.state.newHeaders &&
+                      this.state.newHeaders.reduce(
+                        (prev, next) => {
+                          if (next.header && next.content) prev[next.header] = next.content
 
-                                return prev
-                              },
-                              {
-                                headerLine: true,
-                                mapName: this.props.mapName || 'Uno'
-                              }
-                            )
-                          let mapName = ''
+                          return prev
+                        },
+                        {
+                          headerLine: true,
+                          mapName: this.props.mapName || 'Uno'
+                        }
+                      )
+                    let mapName = ''
 
-                          if (this.props.echoProduct) {
-                            if (this.props.selectedSavedMap) {
-                              mapName = this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
-                              await this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
-                                ...data,
-                                mapName: mapName
-                              })
-                            } else {
-                              mapName = this.props.mapName
-                              await this.props.postCSVMapEchoProduct({
-                                ...data,
-                                mapName: mapName
-                              })
-                            }
+                    if (this.props.echoProduct) {
+                      if (this.props.selectedSavedMap) {
+                        mapName = this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+                        await this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
+                          ...data,
+                          mapName: mapName
+                        })
+                      } else {
+                        mapName = this.props.mapName
+                        await this.props.postCSVMapEchoProduct({
+                          ...data,
+                          mapName: mapName
+                        })
+                      }
 
-                            this.props.getCSVMapEchoProduct()
-                          }
-                          if (this.props.productOffer) {
-                            if (this.props.selectedSavedMap) {
-                              mapName = this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
-                              await this.props.putCSVMapProductOffer(this.props.selectedSavedMap.id, {
-                                ...data,
-                                mapName: mapName
-                              })
-                            } else {
-                              mapName = this.props.mapName
-                              await this.props.postCSVMapProductOffer({
-                                ...data,
-                                mapName: mapName
-                              })
-                            }
+                      this.props.getCSVMapEchoProduct()
+                    }
+                    if (this.props.productOffer) {
+                      if (this.props.selectedSavedMap) {
+                        mapName = this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+                        await this.props.putCSVMapProductOffer(this.props.selectedSavedMap.id, {
+                          ...data,
+                          mapName: mapName
+                        })
+                      } else {
+                        mapName = this.props.mapName
+                        await this.props.postCSVMapProductOffer({
+                          ...data,
+                          mapName: mapName
+                        })
+                      }
 
-                            this.props.getCSVMapProductOffer()
-                          }
+                      this.props.getCSVMapProductOffer()
+                    }
 
-                          toastManager.add(generateToastMarkup(
-                            <FormattedMessage id='notifications.mapCreated.header' />,
-                            <FormattedMessage id='notifications.mapCreated.content' values={{ name: mapName }} />
-                          ), {
-                            appearance: 'success'
-                          })
-                        }}
-                        style={{ width: '100%' }}>
+                    toastManager.add(
+                      generateToastMarkup(
+                        <FormattedMessage id='notifications.mapCreated.header' />,
+                        <FormattedMessage id='notifications.mapCreated.content' values={{name: mapName}} />
+                      ),
+                      {
+                        appearance: 'success'
+                      }
+                    )
+                  }}
+                  style={{width: '100%'}}>
                   <FormattedMessage id='settings.saveMap' defaultMessage='Save Map' />
                 </Button>
               </Grid.Column>
@@ -474,9 +526,15 @@ class Map extends Component {
         <Table celled padded textAlign='center'>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell><FormattedMessage id='settings.csvColumns' defaultMessage='CSV Columns' /></Table.HeaderCell>
-              <Table.HeaderCell colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}><FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' /></Table.HeaderCell>
-              <Table.HeaderCell><FormattedMessage id='settings.mapping' defaultMessage='Mapping' /></Table.HeaderCell>
+              <Table.HeaderCell>
+                <FormattedMessage id='settings.csvColumns' defaultMessage='CSV Columns' />
+              </Table.HeaderCell>
+              <Table.HeaderCell colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}>
+                <FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <FormattedMessage id='settings.mapping' defaultMessage='Mapping' />
+              </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           {CSV && values.length /* values.length is necessary for defaultValue */ && (
@@ -487,20 +545,19 @@ class Map extends Component {
                   {CSV.bodyCSV.map(line => {
                     return line.columns.map(lineBody => {
                       return (
-                        lineHeader.columnNumber === lineBody.columnNumber &&
-                        <SmallerTableCell>{lineBody.content}</SmallerTableCell>
+                        lineHeader.columnNumber === lineBody.columnNumber && (
+                          <SmallerTableCell>{lineBody.content}</SmallerTableCell>
+                        )
                       )
                     })
                   })}
                   <Table.Cell>
                     <Dropdown
-                      placeholder={formatMessage({ id: 'settings.selectColumn', defaultMessage: 'Select Column' })}
+                      placeholder={formatMessage({id: 'settings.selectColumn', defaultMessage: 'Select Column'})}
                       column_number={lineHeader.columnNumber}
                       selection
                       clearable
-                      options={
-                        this.state.options[lineHeader.columnNumber]
-                      }
+                      options={this.state.options[lineHeader.columnNumber]}
                       search={true}
                       onChange={this.selectMapping}
                       selectOnBlur={false}
@@ -518,33 +575,34 @@ class Map extends Component {
   }
 
   findNotSelectedRequired = (values, mapping, constant) => {
-    if (!constant)
-      constant = this.state.constant
+    if (!constant) constant = this.state.constant
 
-    if (!mapping)
-      mapping = this.state.mapping
+    if (!mapping) mapping = this.state.mapping
 
-    const { intl: { formatMessage }} = this.props
+    const {
+      intl: {formatMessage}
+    } = this.props
 
     const required = mapping.reduce((requiredFields, mapField) => {
-      if (mapField.required)
-        requiredFields.push(mapField.value)
+      if (mapField.required) requiredFields.push(mapField.value)
 
       return requiredFields
     }, [])
 
-    const requiredMissing = required.filter(function(field) {return values.indexOf(field) < 0;});
+    const requiredMissing = required.filter(function(field) {
+      return values.indexOf(field) < 0
+    })
     return requiredMissing.map(reqM => {
       const field = reqM.replace(/Mapper$/gi, '')
-      return formatMessage({ id: `${constant}.${field}`, defaultMessage: field })
+      return formatMessage({id: `${constant}.${field}`, defaultMessage: field})
     })
   }
 
-  selectSavedMap = (e, { value }) => {
+  selectSavedMap = (e, {value}) => {
     const selectedMap = this.props.maps.find(map => map.id === value)
     this.props.selectSavedMap(selectedMap)
 
-    let { options, values, mapping } = this.state
+    let {options, values, mapping} = this.state
     const invSelectedMap = _invert(selectedMap)
     let newHeaders = this.props.mappedHeader
 
@@ -553,13 +611,15 @@ class Map extends Component {
       const mapper = invSelectedMap[content]
 
       if (mapper) {
-        values.forEach(function(value2, v2Index) {
-          if (v2Index !== vIndex && mapper === value2) {
-            let indexAdd = mapping.findIndex(obj => obj.value === newHeaders[v2Index].header)
-            newHeaders[v2Index].header = ''
-            options = this.modifyOptionLists(options, '', v2Index, indexAdd)
-          }
-        }.bind(this))
+        values.forEach(
+          function(value2, v2Index) {
+            if (v2Index !== vIndex && mapper === value2) {
+              let indexAdd = mapping.findIndex(obj => obj.value === newHeaders[v2Index].header)
+              newHeaders[v2Index].header = ''
+              options = this.modifyOptionLists(options, '', v2Index, indexAdd)
+            }
+          }.bind(this)
+        )
         let indexAdd = mapping.findIndex(obj => obj.value === newHeaders[vIndex].header)
         newHeaders[vIndex].header = mapper
         options = this.modifyOptionLists(options, mapper, vIndex, indexAdd)
@@ -572,7 +632,7 @@ class Map extends Component {
 
     this.props.changeHeadersCSV(newHeaders, missingRequired)
 
-    this.setState({ options: options, values: values })
+    this.setState({options: options, values: values})
   }
 
   inputMapName = e => {
@@ -583,11 +643,9 @@ class Map extends Component {
     this.props.handleSaveMapCSV()
   }
 
-  selectMapping = (e, { column_number, value }) => {
-    const { mapping } = this.state
-    const mappedHeader = this.props.mappedHeader
-      ? this.props.mappedHeader
-      : [...this.state.newHeaders]
+  selectMapping = (e, {column_number, value}) => {
+    const {mapping} = this.state
+    const mappedHeader = this.props.mappedHeader ? this.props.mappedHeader : [...this.state.newHeaders]
     const newHeaders = mappedHeader.map(line => {
       if (column_number === line.columnNumber) {
         line['header'] = value
@@ -610,7 +668,7 @@ class Map extends Component {
 
     const missingRequired = this.findNotSelectedRequired(values)
 
-    this.setState({ options: options, values: values })
+    this.setState({options: options, values: values})
 
     this.props.changeHeadersCSV(newHeaders, missingRequired)
   }
@@ -642,7 +700,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default injectIntl(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withToastManager(Map)))
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withToastManager(Map)))

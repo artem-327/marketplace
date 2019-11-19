@@ -1,11 +1,9 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import moment from 'moment'
 
-import { FormattedMessage, FormattedNumber } from 'react-intl'
-import { Grid, GridRow, GridColumn, Header, Divider, Radio, Dimmer, Loader } from 'semantic-ui-react'
+import {FormattedMessage, FormattedNumber} from 'react-intl'
+import {Grid, GridRow, GridColumn, Header, Divider, Radio, Dimmer, Loader} from 'semantic-ui-react'
 import styled from 'styled-components'
-
-
 
 const InnerGrid = styled(Grid)`
   height: 260px;
@@ -32,14 +30,22 @@ export default class ShippingQuote extends Component {
     let deliveryTime = timeObj.format('MMM D, YYYY')
     let daysLeft = timeObj.fromNow()
 
-    let { handleQuoteSelect, selectedShippingQuote, currency } = this.props
+    let {handleQuoteSelect, selectedShippingQuote, currency} = this.props
 
     return (
       <>
         <RelaxedRow key={index}>
-          <GridColumn computer={1}><Radio checked={selectedShippingQuote && selectedShippingQuote.index === index} onChange={() => handleQuoteSelect(index)} data-test={`cart_purchase_order_shipping_quote_${index}_rad`} /></GridColumn>
+          <GridColumn computer={1}>
+            <Radio
+              checked={selectedShippingQuote && selectedShippingQuote.index === index}
+              onChange={() => handleQuoteSelect(index)}
+              data-test={`cart_purchase_order_shipping_quote_${index}_rad`}
+            />
+          </GridColumn>
           <GridColumn computer={4}>{item.carrierName}</GridColumn>
-          <GridColumn computer={2}><FormattedNumber style='currency' currency={'USD'} value={item.estimatedPrice} /></GridColumn>
+          <GridColumn computer={2}>
+            <FormattedNumber style='currency' currency={'USD'} value={item.estimatedPrice} />
+          </GridColumn>
           <GridColumn computer={4}>{deliveryTime}</GridColumn>
           <GridColumn computer={2}>{daysLeft}</GridColumn>
           <GridColumn computer={3}>{item.serviceType}</GridColumn>
@@ -50,8 +56,7 @@ export default class ShippingQuote extends Component {
   }
 
   render() {
-    let { shippingQuotes, shippingQuotesAreFetching } = this.props
-
+    let {shippingQuotes, shippingQuotesAreFetching} = this.props
 
     if (shippingQuotesAreFetching) {
       return (
@@ -63,68 +68,44 @@ export default class ShippingQuote extends Component {
       )
     }
 
-
     if (!shippingQuotes || shippingQuotes.length === 0) {
-      return (
-        <FormattedMessage
-          id='cart.nothing'
-          defaultMessage='Nothing to show'
-        />
-      )
+      return <FormattedMessage id='cart.nothing' defaultMessage='Nothing to show' />
     }
 
     return (
       <>
-
         <RelaxedColumn computer={16}>
-
           <Grid padded>
             <GridColumn computer={1} />
             <GridColumn computer={4}>
               <Header as='h4'>
-                <FormattedMessage
-                  id='cart.carrier'
-                  defaultMessage='Carrier'
-                />
+                <FormattedMessage id='cart.carrier' defaultMessage='Carrier' />
               </Header>
             </GridColumn>
             <GridColumn computer={2}>
               <Header as='h4'>
-                <FormattedMessage
-                  id='cart.cost'
-                  defaultMessage='Cost'
-                />
+                <FormattedMessage id='cart.cost' defaultMessage='Cost' />
               </Header>
             </GridColumn>
 
             <GridColumn computer={4}>
               <Header as='h4'>
-                <FormattedMessage
-                  id='cart.estimatedDelivery'
-                  defaultMessage='Estimated Delivery'
-                />
+                <FormattedMessage id='cart.estimatedDelivery' defaultMessage='Estimated Delivery' />
               </Header>
             </GridColumn>
 
             <GridColumn computer={2}>
               <Header as='h4'>
-                <FormattedMessage
-                  id='cart.etd'
-                  defaultMessage='ETD'
-                />
+                <FormattedMessage id='cart.etd' defaultMessage='ETD' />
               </Header>
             </GridColumn>
 
             <GridColumn computer={3}>
               <Header as='h4'>
-                <FormattedMessage
-                  id='cart.serviceType'
-                  defaultMessage='Service Type'
-                />
+                <FormattedMessage id='cart.serviceType' defaultMessage='Service Type' />
               </Header>
             </GridColumn>
           </Grid>
-
         </RelaxedColumn>
 
         <InnerGrid padded verticalAlign='middle'>
@@ -134,7 +115,6 @@ export default class ShippingQuote extends Component {
     )
   }
 }
-
 
 // class ShippingQuote extends Component {
 //     state = {}
@@ -186,9 +166,6 @@ export default class ShippingQuote extends Component {
 //         //         </div>
 //         //     )
 //         // }
-
-
-
 
 //         return (
 //             <PerfectScrollbar className="freight-selection-wrapper" onScrollY={this.handleScrollY}>

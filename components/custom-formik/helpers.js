@@ -4,9 +4,7 @@ export const getFieldError = (field, form) => {
   const {name} = field
   const {serverValidation} = form.status || {}
   const touched = getIn(form.touched, name)
-  const checkTouched = serverValidation
-    ? !touched
-    : touched
+  const checkTouched = serverValidation ? !touched : touched
   return checkTouched && getIn(form.errors, name)
 }
 

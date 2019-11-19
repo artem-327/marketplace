@@ -1,16 +1,16 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { injectIntl, FormattedMessage } from 'react-intl'
-import { generateToastMarkup } from '~/utils/functions'
-import { withToastManager } from 'react-toast-notifications'
-import { FormattedDateTime, FormattedPhone } from '~/components/formatted-messages/'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {injectIntl, FormattedMessage} from 'react-intl'
+import {generateToastMarkup} from '~/utils/functions'
+import {withToastManager} from 'react-toast-notifications'
+import {FormattedDateTime, FormattedPhone} from '~/components/formatted-messages/'
 
 import ProdexGrid from '~/components/table'
-import { withDatagrid } from '~/modules/datagrid'
+import {withDatagrid} from '~/modules/datagrid'
 // import { TablePopUp } from '~/components/tablePopup'
 import confirm from '~/src/components/Confirmable/confirm'
-import { currency } from '~/constants/index'
-import { getSafe } from '~/utils/functions'
+import {currency} from '~/constants/index'
+import {getSafe} from '~/utils/functions'
 
 import {
   getUsersDataRequest,
@@ -23,29 +23,87 @@ import {
   resendWelcomeEmail
 } from '../../actions'
 import Router from 'next/router'
-import { Checkbox, Popup, Label } from 'semantic-ui-react'
+import {Checkbox, Popup, Label} from 'semantic-ui-react'
 
-
-const handleSwitchEnabled = (id) => {
+const handleSwitchEnabled = id => {
   userSwitchEnableDisable(id)
 }
 
 class UsersTable extends Component {
   state = {
     columns: [
-      { name: 'name', title: <FormattedMessage id='global.user' defaultMessage='User'>{(text) => text}</FormattedMessage> },
-      { name: 'jobTitle', title: <FormattedMessage id='global.jobTitle' defaultMessage='Job Title'>{(text) => text}</FormattedMessage> },
-      { name: 'email', title: <FormattedMessage id='global.email' defaultMessage='E-mail'>{(text) => text}</FormattedMessage> },
-      { name: 'phoneFormatted', title: <FormattedMessage id='global.phone' defaultMessage='Phone'>{(text) => text}</FormattedMessage> },
-      { name: 'homeBranchName', title: <FormattedMessage id='global.homeBranch' defaultMessage='Home Branch'>{(text) => text}</FormattedMessage> },
-      { name: 'userRoles', title: <FormattedMessage id='global.roles' defaultMessage='Roles'>{(text) => text}</FormattedMessage>, width: 200 },
-      { name: 'lastLoginAt', title: <FormattedMessage id='global.lastLogin' defaultMessage='Last Login'>{(text) => text}</FormattedMessage>, width: 200 },
-      { name: 'switchEnable', title: <FormattedMessage id='global.enableUser' defaultMessage='Enable User'>{(text) => text}</FormattedMessage>, width: 120 }
+      {
+        name: 'name',
+        title: (
+          <FormattedMessage id='global.user' defaultMessage='User'>
+            {text => text}
+          </FormattedMessage>
+        )
+      },
+      {
+        name: 'jobTitle',
+        title: (
+          <FormattedMessage id='global.jobTitle' defaultMessage='Job Title'>
+            {text => text}
+          </FormattedMessage>
+        )
+      },
+      {
+        name: 'email',
+        title: (
+          <FormattedMessage id='global.email' defaultMessage='E-mail'>
+            {text => text}
+          </FormattedMessage>
+        )
+      },
+      {
+        name: 'phoneFormatted',
+        title: (
+          <FormattedMessage id='global.phone' defaultMessage='Phone'>
+            {text => text}
+          </FormattedMessage>
+        )
+      },
+      {
+        name: 'homeBranchName',
+        title: (
+          <FormattedMessage id='global.homeBranch' defaultMessage='Home Branch'>
+            {text => text}
+          </FormattedMessage>
+        )
+      },
+      {
+        name: 'userRoles',
+        title: (
+          <FormattedMessage id='global.roles' defaultMessage='Roles'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 200
+      },
+      {
+        name: 'lastLoginAt',
+        title: (
+          <FormattedMessage id='global.lastLogin' defaultMessage='Last Login'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 200
+      },
+      {
+        name: 'switchEnable',
+        title: (
+          <FormattedMessage id='global.enableUser' defaultMessage='Enable User'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120
+      }
     ]
   }
 
   componentDidUpdate(oldProps) {
-    const { addedItem, editedItem, datagrid } = this.props
+    const {addedItem, editedItem, datagrid} = this.props
 
     if (addedItem !== oldProps.addedItem) {
       datagrid.loadData()
@@ -84,8 +142,8 @@ class UsersTable extends Component {
       // currentTab
     } = this.props
 
-    let { columns } = this.state
-    const { formatMessage } = intl
+    let {columns} = this.state
+    const {formatMessage} = intl
 
     return (
       <React.Fragment>
@@ -96,26 +154,36 @@ class UsersTable extends Component {
           columns={columns}
           rows={rows}
           loading={datagrid.loading || loading}
-          style={{ marginTop: '5px' }}
+          style={{marginTop: '5px'}}
           rowActions={[
-            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row), hidden: row => currentUserId === row.id },
-            { text: formatMessage({ id: 'settings.editRoles', defaultMessage: 'Edit Roles' }), callback: row => openRolesPopup(row), hidden: row => currentUserId === row.id },
             {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }), callback: row => confirm(
-                formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
-                formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` }, { item: row.name })
-              ).then(() => deleteUser(row.id, row.name)),
+              text: formatMessage({id: 'global.edit', defaultMessage: 'Edit'}),
+              callback: row => openPopup(row),
+              hidden: row => currentUserId === row.id
+            },
+            {
+              text: formatMessage({id: 'settings.editRoles', defaultMessage: 'Edit Roles'}),
+              callback: row => openRolesPopup(row),
+              hidden: row => currentUserId === row.id
+            },
+            {
+              text: formatMessage({id: 'global.delete', defaultMessage: 'Delete'}),
+              callback: row =>
+                confirm(
+                  formatMessage({id: 'confirm.deleteUser', defaultMessage: 'Delete User'}),
+                  formatMessage(
+                    {id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?`},
+                    {item: row.name}
+                  )
+                ).then(() => deleteUser(row.id, row.name)),
               hidden: row => currentUserId === row.id
             },
             {
               text: <FormattedMessage id='settings.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
-              callback: async (row) => {
-                const { value } = await resendWelcomeEmail(row.id)
-                
-                toastManager.add(generateToastMarkup(
-                  null,
-                  value.clientMessage
-                ), {
+              callback: async row => {
+                const {value} = await resendWelcomeEmail(row.id)
+
+                toastManager.add(generateToastMarkup(null, value.clientMessage), {
                   appearance: 'success'
                 })
               },
@@ -141,12 +209,14 @@ const mapDispatchToProps = {
 
 const userEnableDisableStatus = (r, currentUserId) => {
   let id = r.enabled ? 'settings.user.enabled' : 'settings.user.disabled'
-  
+
   return (
-    <div style={{ float: 'right' }}>
-      <Popup id={r.id}
+    <div style={{float: 'right'}}>
+      <Popup
+        id={r.id}
         trigger={
-          <Checkbox toggle={true}
+          <Checkbox
+            toggle={true}
             defaultChecked={r.enabled}
             disabled={r.id === currentUserId}
             onChange={() => handleSwitchEnabled(r.id)}
@@ -154,16 +224,23 @@ const userEnableDisableStatus = (r, currentUserId) => {
           />
         }
         content={
-          r.id === currentUserId
-            ? <FormattedMessage id={id} defaultMessage={`User ${r.enabled ? 'enabled' : 'disabled'}`} />
-            : <FormattedMessage id={`${id}.clickToChange`} defaultMessage={r.enabled ? '!User enabled. Click to disable user.' : '!User disabled. Click to enable user.'} />
+          r.id === currentUserId ? (
+            <FormattedMessage id={id} defaultMessage={`User ${r.enabled ? 'enabled' : 'disabled'}`} />
+          ) : (
+            <FormattedMessage
+              id={`${id}.clickToChange`}
+              defaultMessage={
+                r.enabled ? '!User enabled. Click to disable user.' : '!User disabled. Click to enable user.'
+              }
+            />
+          )
         }
       />
     </div>
   )
 }
 
-const mapStateToProps = (state, { datagrid }) => {
+const mapStateToProps = (state, {datagrid}) => {
   const currentUserId = state.settings.currentUser && state.settings.currentUser.id
   return {
     rows: datagrid.rows.map(user => ({
@@ -191,8 +268,10 @@ const mapStateToProps = (state, { datagrid }) => {
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
-    currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-      state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+    currentTab:
+      Router && Router.router && Router.router.query && Router.router.query.type
+        ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
+        : state.settings.tabsNames[0],
     loading: state.settings.loading,
     roles: state.settings.roles
   }

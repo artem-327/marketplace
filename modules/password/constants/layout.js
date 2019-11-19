@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { Form, Button } from 'formik-semantic-ui-fixed-validation'
-import { Segment, Image, GridRow } from 'semantic-ui-react'
+import {Form, Button} from 'formik-semantic-ui-fixed-validation'
+import {Segment, Image, GridRow} from 'semantic-ui-react'
 
 export const width = 400
 
@@ -10,7 +10,7 @@ export const LoginSegment = styled(Segment)`
   margin: 100px auto 0 !important;
   border: 0 none !important;
   padding: 40px !important;
-  box-shadow: 0 0 0 3000px #1B3454 !important;
+  box-shadow: 0 0 0 3000px #1b3454 !important;
 `
 
 export const LogoWrapper = styled(Segment)`
@@ -40,16 +40,16 @@ export const LoginHeader = styled.div`
   font-size: 1.7857143em;
   font-weight: 400;
   line-height: 2.44;
-  
+
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     left: 0;
     bottom: 0;
     display: block;
     width: 103px;
     height: 4px;
-    background: #1B3454;
+    background: #1b3454;
   }
 `
 

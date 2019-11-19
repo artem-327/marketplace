@@ -1,65 +1,61 @@
-import React, { Component } from 'react'
-import { func, array } from 'prop-types'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {func, array} from 'prop-types'
+import {connect} from 'react-redux'
 
-import { Icon, Grid, GridColumn } from 'semantic-ui-react'
-import { FormattedMessage } from 'react-intl'
+import {Icon, Grid, GridColumn} from 'semantic-ui-react'
+import {FormattedMessage} from 'react-intl'
 
-
-import { FilterTag, PopupRow, WiderPopup } from '../constants/layout'
-import { groupFilters } from '../constants/filter'
-
+import {FilterTag, PopupRow, WiderPopup} from '../constants/layout'
+import {groupFilters} from '../constants/filter'
 
 const TAGS_TO_DISPLAY = 3
 const MAX_TAG_ENTITIES = 2
 
 class FilterTags extends Component {
-
   removeFilter = filter => {
     this.props.onClick(filter.indexes)
   }
 
-  tagMarkup = (filters) => {
+  tagMarkup = filters => {
     return filters.map((filter, i) => {
-      let { tagDescription } = filter
+      let {tagDescription} = filter
 
       if (tagDescription instanceof Array && tagDescription.length > MAX_TAG_ENTITIES) {
         return (
-          <WiderPopup position='bottom center' trigger={
-            <FilterTag key={i} >
-              <span> {filter.description} ({tagDescription.length})...
-                  <Icon onClick={() => this.removeFilter(filter)}
-                  name='delete'
-                  data-test='filter_tags_remove_filter'/>
-              </span>
-            </FilterTag>
-          }>
+          <WiderPopup
+            position='bottom center'
+            trigger={
+              <FilterTag key={i}>
+                <span>
+                  {' '}
+                  {filter.description} ({tagDescription.length})...
+                  <Icon onClick={() => this.removeFilter(filter)} name='delete' data-test='filter_tags_remove_filter' />
+                </span>
+              </FilterTag>
+            }>
             <Grid verticalAlign='middle'>
               <PopupRow>
-                <GridColumn>
-                  {tagDescription.toString().replace(/,/g, ', ')}
-                </GridColumn>
+                <GridColumn>{tagDescription.toString().replace(/,/g, ', ')}</GridColumn>
               </PopupRow>
             </Grid>
           </WiderPopup>
         )
         // {tagDescription.toString().replace(/,/g, ', ')}
       } else {
-        return <FilterTag key={i}>
-          <span>{tagDescription} 
-            <Icon onClick={() => this.removeFilter(filter)}
-              name='delete'
-              data-test='filter_tags_remove_filter'/>
-          </span>
-        </FilterTag>
+        return (
+          <FilterTag key={i}>
+            <span>
+              {tagDescription}
+              <Icon onClick={() => this.removeFilter(filter)} name='delete' data-test='filter_tags_remove_filter' />
+            </span>
+          </FilterTag>
+        )
       }
     })
-
   }
 
-
   render() {
-    let { appliedFilter } = this.props
+    let {appliedFilter} = this.props
     if (!appliedFilter.filters || appliedFilter.filters.length === 0) return null
     let filters = groupFilters(appliedFilter.filters, this.props.params)
 
@@ -70,37 +66,31 @@ class FilterTags extends Component {
       tagsToDisplay = this.tagMarkup(filters.slice(0, TAGS_TO_DISPLAY))
 
       tagsToDisplay.push(
-        <WiderPopup disabled={!!!filters[0].description} trigger={
-          <FilterTag key={TAGS_TO_DISPLAY} >
-            <span><FormattedMessage id='filterTags.andMore' values={{ count: filters.length - TAGS_TO_DISPLAY }} /></span>
-          </FilterTag>
-        }>
+        <WiderPopup
+          disabled={!!!filters[0].description}
+          trigger={
+            <FilterTag key={TAGS_TO_DISPLAY}>
+              <span>
+                <FormattedMessage id='filterTags.andMore' values={{count: filters.length - TAGS_TO_DISPLAY}} />
+              </span>
+            </FilterTag>
+          }>
           <Grid verticalAlign='middle'>
-            {filters.slice(TAGS_TO_DISPLAY).map((el) => {
+            {filters.slice(TAGS_TO_DISPLAY).map(el => {
               if (el.description && el.valuesDescription)
                 return (
                   <PopupRow>
-                    <GridColumn computer={8}>
-                      {el.description}:
-                </GridColumn>
-                    <GridColumn computer={8}>
-                      {el.valuesDescription.toString().replace(/,/g, ', ')}
-                    </GridColumn>
+                    <GridColumn computer={8}>{el.description}:</GridColumn>
+                    <GridColumn computer={8}>{el.valuesDescription.toString().replace(/,/g, ', ')}</GridColumn>
                   </PopupRow>
                 )
-            }
-            )}
+            })}
           </Grid>
         </WiderPopup>
       )
-
     } else tagsToDisplay = this.tagMarkup(filters)
 
-    return (
-      <>
-        {tagsToDisplay}
-      </>
-    )
+    return <>{tagsToDisplay}</>
   }
 }
 

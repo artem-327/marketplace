@@ -1,7 +1,10 @@
-import axios from 'axios';
+import axios from 'axios'
 
 const api = {
-    getShippingQuotes: (pack) => axios.post('/prodex/api/shipment/', pack, {headers: {'Content-Type': 'application/json'}}).then(response => response.data)
-};
+  getShippingQuotes: pack =>
+    axios
+      .post('/prodex/api/shipment/', pack, {headers: {'Content-Type': 'application/json'}})
+      .then(response => response.data)
+}
 
-export default api;
+export default api

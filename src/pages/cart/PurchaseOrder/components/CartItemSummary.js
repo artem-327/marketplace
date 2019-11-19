@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import { array, string, func } from 'prop-types'
-import { FormattedMessage, FormattedNumber } from 'react-intl'
-import { Grid, GridRow, GridColumn, Header, Segment, Divider } from 'semantic-ui-react'
+import React, {Component} from 'react'
+import {array, string, func} from 'prop-types'
+import {FormattedMessage, FormattedNumber} from 'react-intl'
+import {Grid, GridRow, GridColumn, Header, Segment, Divider} from 'semantic-ui-react'
 import styled from 'styled-components'
-import { currency } from '~/constants/index'
-import { getSafe } from '~/utils/functions'
+import {currency} from '~/constants/index'
+import {getSafe} from '~/utils/functions'
 
 const RelaxedSegment = styled(Segment)`
   margin-top: 0px !important;
@@ -26,128 +26,83 @@ const Title = styled(HeaderTextRow)`
   text-transform: uppercase;
 `
 
-
 export default class CartItemSummary extends Component {
-
   renderItem = (item, i, lastChild) => {
-    let { productOffer } = item
+    let {productOffer} = item
 
     let currency = getSafe(() => productOffer.pricing.price.currency.code, currency)
 
     return (
       <>
         <HeaderTextRow columns={2}>
-          <GridColumn>
-            {`Item ${i + 1}`}
-          </GridColumn>
+          <GridColumn>{`Item ${i + 1}`}</GridColumn>
           <GridColumn floated='right'>
             <span
               className='headerAddtext'
               onClick={() => deleteCart(productOffer.id)}
               data-test={`cart_delete_item_${i}`}>
-              <FormattedMessage
-                id='global.remove'
-                defaultMessage='Remove'
-              />
+              <FormattedMessage id='global.remove' defaultMessage='Remove' />
             </span>
           </GridColumn>
         </HeaderTextRow>
 
         <HeaderTextRow>
-          <GridColumn>
-            {productOffer.product.casProduct.casIndexName}
-          </GridColumn>
+          <GridColumn>{productOffer.product.casProduct.casIndexName}</GridColumn>
         </HeaderTextRow>
 
         <RelaxedRow columns={2}>
           <GridColumn>
-            <FormattedMessage
-              id='cart.merchant'
-              defaultMessage='Merchant'
-            />
+            <FormattedMessage id='cart.merchant' defaultMessage='Merchant' />
           </GridColumn>
 
-          <GridColumn floated='right'>
-            {productOffer.merchant.email}
-          </GridColumn>
+          <GridColumn floated='right'>{productOffer.merchant.email}</GridColumn>
         </RelaxedRow>
-
 
         <RelaxedRow columns={2}>
           <GridColumn>
-            <FormattedMessage
-              id='global.location'
-              defaultMessage='Location'
-            />
+            <FormattedMessage id='global.location' defaultMessage='Location' />
           </GridColumn>
 
-          <GridColumn floated='right'>
-            {item.locationStr}
-          </GridColumn>
+          <GridColumn floated='right'>{item.locationStr}</GridColumn>
         </RelaxedRow>
-
-
 
         <RelaxedRow columns={2}>
           <GridColumn>
-            <FormattedMessage
-              id='global.quantity'
-              defaultMessage='Quantity'
-            />
+            <FormattedMessage id='global.quantity' defaultMessage='Quantity' />
           </GridColumn>
 
           <GridColumn floated='right'>
-            <FormattedNumber
-              id='cart.packs'
-              value={item.quantity}
-            /> {productOffer.product.packagingType.name}
+            <FormattedNumber id='cart.packs' value={item.quantity} /> {productOffer.product.packagingType.name}
           </GridColumn>
         </RelaxedRow>
-
-
 
         <RelaxedRow columns={2}>
           <GridColumn>
-            <FormattedMessage
-              id='global.weight'
-              defaultMessage='Weight'
-            />
+            <FormattedMessage id='global.weight' defaultMessage='Weight' />
           </GridColumn>
 
           <GridColumn floated='right'>
-            <FormattedNumber
-              id='cart.packs'
-              value={item.quantity * productOffer.product.packagingSize}
-            /> {productOffer.product.packagingUnit.nameAbbreviation}
+            <FormattedNumber id='cart.packs' value={item.quantity * productOffer.product.packagingSize} />{' '}
+            {productOffer.product.packagingUnit.nameAbbreviation}
           </GridColumn>
         </RelaxedRow>
-
 
         <RelaxedRow columns={2}>
           <GridColumn>
             <FormattedMessage
               id='global.pricePer'
-              values={{ unit: productOffer.product.packagingUnit.nameAbbreviation }}
+              values={{unit: productOffer.product.packagingUnit.nameAbbreviation}}
             />
           </GridColumn>
 
           <GridColumn floated='right'>
-            <FormattedNumber
-              style='currency'
-              currency={currency}
-              id='cart.packs'
-              value={item.pricing.price}
-            />
+            <FormattedNumber style='currency' currency={currency} id='cart.packs' value={item.pricing.price} />
           </GridColumn>
         </RelaxedRow>
 
-
         <HeaderTextRow columns={2}>
           <GridColumn>
-            <FormattedMessage
-              id='cart.productTotal'
-              defaultMessage='Product Total'
-            />
+            <FormattedMessage id='cart.productTotal' defaultMessage='Product Total' />
           </GridColumn>
 
           <GridColumn floated='right'>
@@ -160,37 +115,25 @@ export default class CartItemSummary extends Component {
         </HeaderTextRow>
 
         {!lastChild ? <Divider /> : null}
-
-
       </>
     )
-
   }
 
   render() {
-    let { cartItems, header } = this.props
-
+    let {cartItems, header} = this.props
 
     return (
       <RelaxedSegment className='cart-item-summary'>
         <Grid>
           <Title className='header'>
-
             <Header>{header}</Header>
-
           </Title>
-          {
-            cartItems.map((item, i) => this.renderItem(item, i, (cartItems.length - 1) === i))
-          }
-
-
+          {cartItems.map((item, i) => this.renderItem(item, i, cartItems.length - 1 === i))}
         </Grid>
-
       </RelaxedSegment>
     )
   }
 }
-
 
 CartItemSummary.propTypes = {
   cartItems: array,

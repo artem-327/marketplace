@@ -1,17 +1,17 @@
-import {connect} from 'react-redux';
+import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import CompaniesAdmin from "./CompaniesAdmin";
-import {postNewCompany, fetchAll} from "../../../modules/companies";
+import CompaniesAdmin from './CompaniesAdmin'
+import {postNewCompany, fetchAll} from '../../../modules/companies'
 
 function mapStateToProps(store) {
-    return {
-        isFetching: store.companies.isFetching,
-        companies: store.companies.data
-    }
+  return {
+    isFetching: store.companies.isFetching,
+    companies: store.companies.data
+  }
 }
 
-function mapDispatchToProps(dispatch){
-    return bindActionCreators({fetchAll, postNewCompany}, dispatch)
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({fetchAll, postNewCompany}, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CompaniesAdmin);
+export default connect(mapStateToProps, mapDispatchToProps)(CompaniesAdmin)

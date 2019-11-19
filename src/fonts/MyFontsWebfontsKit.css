@@ -31,53 +31,40 @@
  * © 2018 MyFonts Inc
 */
 
-
 /* @import must be at top of file, otherwise CSS will not work */
-@import url("//hello.myfonts.net/count/36fe24");
+@import url('//hello.myfonts.net/count/36fe24');
 
-  
 @font-face {
-    font-family: 'AvenirLTPro-Roman';
-    src: url('webfonts/36FE24_0_0.eot');
-    src: url('webfonts/36FE24_0_0.eot?#iefix') format('embedded-opentype'),
-         url('webfonts/36FE24_0_0.woff2') format('woff2'),
-         url('webfonts/36FE24_0_0.woff') format('woff'),
-         url('webfonts/36FE24_0_0.ttf') format('truetype');
+  font-family: 'AvenirLTPro-Roman';
+  src: url('webfonts/36FE24_0_0.eot');
+  src: url('webfonts/36FE24_0_0.eot?#iefix') format('embedded-opentype'),
+    url('webfonts/36FE24_0_0.woff2') format('woff2'), url('webfonts/36FE24_0_0.woff') format('woff'),
+    url('webfonts/36FE24_0_0.ttf') format('truetype');
 }
- 
-  
+
 @font-face {
-    font-family: 'HelveticaNeueLTPro';
-    font-weight: 400;
-    src: url('webfonts/36FE24_1_0.eot');
-    src: local('HelveticaNeueLTPro-Roman'),
-         url('webfonts/36FE24_1_0.eot?#iefix') format('embedded-opentype'),
-         url('webfonts/36FE24_1_0.woff2') format('woff2'),
-         url('webfonts/36FE24_1_0.woff') format('woff'),
-         url('webfonts/36FE24_1_0.ttf') format('truetype');
+  font-family: 'HelveticaNeueLTPro';
+  font-weight: 400;
+  src: url('webfonts/36FE24_1_0.eot');
+  src: local('HelveticaNeueLTPro-Roman'), url('webfonts/36FE24_1_0.eot?#iefix') format('embedded-opentype'),
+    url('webfonts/36FE24_1_0.woff2') format('woff2'), url('webfonts/36FE24_1_0.woff') format('woff'),
+    url('webfonts/36FE24_1_0.ttf') format('truetype');
 }
- 
-  
+
 @font-face {
-    font-family: 'HelveticaNeueLTPro';
-    font-weight: 500;
-    src: url('webfonts/36FE24_2_0.eot');
-    src: local('HelveticaNeueLTPro-Md'),
-         url('webfonts/36FE24_2_0.eot?#iefix') format('embedded-opentype'),
-         url('webfonts/36FE24_2_0.woff2') format('woff2'),
-         url('webfonts/36FE24_2_0.woff') format('woff'),
-         url('webfonts/36FE24_2_0.ttf') format('truetype');
+  font-family: 'HelveticaNeueLTPro';
+  font-weight: 500;
+  src: url('webfonts/36FE24_2_0.eot');
+  src: local('HelveticaNeueLTPro-Md'), url('webfonts/36FE24_2_0.eot?#iefix') format('embedded-opentype'),
+    url('webfonts/36FE24_2_0.woff2') format('woff2'), url('webfonts/36FE24_2_0.woff') format('woff'),
+    url('webfonts/36FE24_2_0.ttf') format('truetype');
 }
- 
-  
+
 @font-face {
-    font-family: 'HelveticaNeueLTPro';
-    font-weight: 700;
-    src: url('webfonts/36FE24_3_0.eot');
-    src: local('HelveticaNeueLTPro-Bd'),
-         url('webfonts/36FE24_3_0.eot?#iefix') format('embedded-opentype'),
-         url('webfonts/36FE24_3_0.woff2') format('woff2'),
-         url('webfonts/36FE24_3_0.woff') format('woff'),
-         url('webfonts/36FE24_3_0.ttf') format('truetype');
+  font-family: 'HelveticaNeueLTPro';
+  font-weight: 700;
+  src: url('webfonts/36FE24_3_0.eot');
+  src: local('HelveticaNeueLTPro-Bd'), url('webfonts/36FE24_3_0.eot?#iefix') format('embedded-opentype'),
+    url('webfonts/36FE24_3_0.woff2') format('woff2'), url('webfonts/36FE24_3_0.woff') format('woff'),
+    url('webfonts/36FE24_3_0.ttf') format('truetype');
 }
- 

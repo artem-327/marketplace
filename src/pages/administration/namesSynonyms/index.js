@@ -1,20 +1,19 @@
-import {connect} from 'react-redux';
+import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import NamesSynonyms from "./NamesSynonyms";
-import {fetchAlternativeNames, searchProducts} from "../../../modules/products";
-
+import NamesSynonyms from './NamesSynonyms'
+import {fetchAlternativeNames, searchProducts} from '../../../modules/products'
 
 function mapStateToProps(store) {
-    return {
-        isSearching: store.products.isFetching,
-        searchedProducts: store.products.data,
-        productsFetched: store.products.productsFetched,
-        alternativeNames: store.products.alternativeNames
-    }
+  return {
+    isSearching: store.products.isFetching,
+    searchedProducts: store.products.data,
+    productsFetched: store.products.productsFetched,
+    alternativeNames: store.products.alternativeNames
+  }
 }
 
-function mapDispatchToProps(dispatch){
-    return bindActionCreators({searchProducts, fetchAlternativeNames}, dispatch)
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({searchProducts, fetchAlternativeNames}, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NamesSynonyms);
+export default connect(mapStateToProps, mapDispatchToProps)(NamesSynonyms)

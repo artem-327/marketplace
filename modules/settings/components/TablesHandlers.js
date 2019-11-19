@@ -1,28 +1,18 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import get from 'lodash/get'
-import {
-  Header,
-  Menu,
-  Button,
-  Checkbox,
-  Input,
-  Dropdown,
-  Grid,
-  GridRow,
-  GridColumn
-} from 'semantic-ui-react'
-import { debounce } from 'lodash'
+import {Header, Menu, Button, Checkbox, Input, Dropdown, Grid, GridRow, GridColumn} from 'semantic-ui-react'
+import {debounce} from 'lodash'
 import Router from 'next/router'
 import styled from 'styled-components'
 
 import * as Actions from '../actions'
-import { openGlobalBroadcast } from '~/modules/broadcast/actions'
-import { withDatagrid, Datagrid } from '~/modules/datagrid'
-import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
-import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
-import { currency } from '~/constants/index'
-import { SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP_FULFILLED } from '../action-types'
+import {openGlobalBroadcast} from '~/modules/broadcast/actions'
+import {withDatagrid, Datagrid} from '~/modules/datagrid'
+import {FormattedNumber, FormattedMessage, injectIntl} from 'react-intl'
+import {bankAccountsConfig} from './BankAccountsTable/BankAccountsTable'
+import {currency} from '~/constants/index'
+import {SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP_FULFILLED} from '../action-types'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -85,7 +75,7 @@ class TablesHandlers extends Component {
   }
 
   async componentDidMount() {
-    const { documentTypes, getDocumentTypes } = this.props
+    const {documentTypes, getDocumentTypes} = this.props
     if (!documentTypes || documentTypes.length === 0) await getDocumentTypes()
     this.setState({
       options: [
@@ -111,23 +101,23 @@ class TablesHandlers extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.currentTab !== this.props.currentTab) {
-      this.setState({ filterValue: '' })
+      this.setState({filterValue: ''})
       this.handleFiltersValue('')
     }
   }
 
   handleFiltersValue = value => {
-    const { handleFiltersValue } = this.props
+    const {handleFiltersValue} = this.props
     if (Datagrid.isReady()) Datagrid.setSearch(value)
     else handleFiltersValue(value)
   }
 
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
+  handleFilterChange = (e, {value}) => {
+    this.setState({filterValue: value})
     this.handleFiltersValue(value)
   }
 
-  handleFilterChangeDocumentType = (e, { value }) => {
+  handleFilterChangeDocumentType = (e, {value}) => {
     this.handleFiltersValue(value)
   }
 
@@ -151,10 +141,10 @@ class TablesHandlers extends Component {
       dwollaAccBalance,
       // openGlobalBroadcast,
       bankAccounts,
-      intl: { formatMessage }
+      intl: {formatMessage}
     } = this.props
 
-    const { filterValue } = this.state
+    const {filterValue} = this.state
     const bankAccTab = currentTab.type === 'bank-accounts'
     return (
       <>
@@ -173,11 +163,7 @@ class TablesHandlers extends Component {
           </GridColumn>
         )}
         {currentTab.type !== 'global-broadcast' && (
-          <GridColumn
-            floated={currentTab.type !== 'documents' && 'right'}
-            widescreen={7}
-            computer={5}
-            tablet={4}>
+          <GridColumn floated={currentTab.type !== 'documents' && 'right'} widescreen={7} computer={5} tablet={4}>
             <Input
               fluid
               icon='search'
@@ -199,9 +185,7 @@ class TablesHandlers extends Component {
                 defaultMessage: 'Unmapped only'
               })}
               defaultChecked={productCatalogUnmappedValue}
-              onChange={(e, { checked }) =>
-                Datagrid.setQuery({ unmappedOnly: checked })
-              }
+              onChange={(e, {checked}) => Datagrid.setQuery({unmappedOnly: checked})}
               data-test='settings_dwolla_unmapped_only_chckb'
             />
           </GridColumn>
@@ -223,13 +207,8 @@ class TablesHandlers extends Component {
         )}
         {bankAccTab && bankAccounts.uploadDocumentsButton && (
           <GridColumn>
-            <Button
-              primary
-              onClick={() => openUploadDocumentsPopup()}
-              data-test='settings_dwolla_upload_documents_btn'>
-              <FormattedMessage
-                id='settings.tables.bankAccounts.uploadDoc'
-                defaultMessage='Upload Documents'>
+            <Button primary onClick={() => openUploadDocumentsPopup()} data-test='settings_dwolla_upload_documents_btn'>
+              <FormattedMessage id='settings.tables.bankAccounts.uploadDoc' defaultMessage='Upload Documents'>
                 {text => text}
               </FormattedMessage>
             </Button>
@@ -237,43 +216,23 @@ class TablesHandlers extends Component {
         )}
         {bankAccTab && bankAccounts.dwollaBalance && (
           <GridColumn computer={2}>
-            <FormattedMessage
-              id='settings.dwollaAccBalance'
-              defaultMessage='Dwolla Balance: '
-            />
-            <FormattedNumber
-              style='currency'
-              currency={dwollaAccBalance.currency}
-              value={dwollaAccBalance.value}
-            />
+            <FormattedMessage id='settings.dwollaAccBalance' defaultMessage='Dwolla Balance: ' />
+            <FormattedNumber style='currency' currency={dwollaAccBalance.currency} value={dwollaAccBalance.value} />
           </GridColumn>
         )}
         {!currentTab.hideButtons && (
           <>
             {(!bankAccTab || bankAccounts.addButton) && (
               <GridColumn widescreen={2} computer={2} tablet={3}>
-                <Button
-                  fluid
-                  primary
-                  onClick={() => openPopup()}
-                  data-test='settings_open_popup_btn'>
-                  <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>
-                    {text => text}
-                  </FormattedMessage>
+                <Button fluid primary onClick={() => openPopup()} data-test='settings_open_popup_btn'>
+                  <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
                 </Button>
               </GridColumn>
             )}
             {currentTab.type === 'products' && (
               <GridColumn widescreen={2} computer={2} tablet={3}>
-                <Button
-                  fluid
-                  primary
-                  onClick={() => openImportPopup()}
-                  data-test='settings_open_import_popup_btn'>
-                  <FormattedMessage
-                    id={textsTable[currentTab.type].BtnImportText}>
-                    {text => text}
-                  </FormattedMessage>
+                <Button fluid primary onClick={() => openImportPopup()} data-test='settings_open_import_popup_btn'>
+                  <FormattedMessage id={textsTable[currentTab.type].BtnImportText}>{text => text}</FormattedMessage>
                 </Button>
               </GridColumn>
             )}
@@ -310,14 +269,8 @@ const mapStateToProps = state => {
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     productsFilter: state.settings.productsFilter,
     filterValue: state.settings.filterValue,
-    dwollaAccBalance: state.settings.dwollaAccBalance
-      ? state.settings.dwollaAccBalance.balance
-      : { value: '', currency }
+    dwollaAccBalance: state.settings.dwollaAccBalance ? state.settings.dwollaAccBalance.balance : {value: '', currency}
   }
 }
 
-export default withDatagrid(
-  connect(mapStateToProps, { ...Actions, openGlobalBroadcast })(
-    injectIntl(TablesHandlers)
-  )
-)
+export default withDatagrid(connect(mapStateToProps, {...Actions, openGlobalBroadcast})(injectIntl(TablesHandlers)))

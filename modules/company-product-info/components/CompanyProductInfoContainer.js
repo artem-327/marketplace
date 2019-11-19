@@ -1,9 +1,9 @@
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import CompanyProductInfo from './CompanyProductInfo'
-import { tabChanged, closePopup } from '../actions'
+import {tabChanged, closePopup} from '../actions'
 
-const mapStateToProps = (store) => ({
+const mapStateToProps = store => ({
   ...store.companyProductInfo
 })
 
-export default connect(mapStateToProps, { tabChanged, closePopup })(CompanyProductInfo)
+export default connect(mapStateToProps, {tabChanged, closePopup})(CompanyProductInfo)
