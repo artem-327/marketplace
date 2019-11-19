@@ -1532,6 +1532,7 @@
   "order.menu.review": "REVIEW",
   "order.menu.credit": "CREDIT",
   "order.menu.completed": "COMPLETED",
+  "order.menu.toShip": "TO SHIP",
   "order.menu.returned": "RETURNED",
   "order.menu.declined": "DECLINED",
   "order.menu.cancelled": "CANCELLED",
