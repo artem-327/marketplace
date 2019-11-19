@@ -155,10 +155,11 @@ class Marketplace extends Component {
   }
 
   tableRowClicked = clickedId => {
-    const { getProductOffer, sidebarChanged } = this.props
+    const { getProductOffer, sidebarChanged, isProductInfoOpen, closePopup } = this.props
     let { isOpen, id } = this.props.sidebar
     getProductOffer(clickedId)
 
+    if (isProductInfoOpen) closePopup()
     if (id !== clickedId && id) sidebarChanged({ isOpen: true, id: clickedId, quantity: 1 })
     else sidebarChanged({ isOpen: !isOpen, id: clickedId, quantity: 1 })
   }
