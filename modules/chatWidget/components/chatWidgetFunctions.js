@@ -97,7 +97,6 @@ export const chatWidget_toggle = () => {
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
     zE(function() {
       $zopim(function() {
-        //console.log('!!!!! ', $zopim.livechat.window.getDisplay())
         $zopim.livechat.window.getDisplay() // after 3rd call getDisplay() returns true even the window is hidden (?)
           ? $zopim.livechat.window.hide()
           : $zopim.livechat.window.show()

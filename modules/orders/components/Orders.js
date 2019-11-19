@@ -722,4 +722,17 @@ class Orders extends Component {
   }
 }
 
+// FilterTags.propTypes = {
+//   filter: array,
+//   onClick: func,
+//   filters: arrayOf(
+//     shape({
+//       description: string,
+//       indexes: arrayOf(number),
+//       tagDescription: arrayOf(string),
+//       valuesDescription: arrayOf(string)
+//     })
+//   )
+// }
+
 export default injectIntl(Orders)

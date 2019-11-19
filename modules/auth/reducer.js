@@ -95,8 +95,6 @@ export default function reducer(state = initialState, action) {
       let address = getSafe(() => payload.identity.company.primaryBranch.deliveryAddress.address, null)
       let primaryUser = getSafe(() => payload.identity.company.primaryUser, null)
 
-      // console.log('!!!!!!! identity', getSafe(() => payload.identity))
-
       return {
         ...state,
         confirmationForm:

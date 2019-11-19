@@ -48,7 +48,6 @@ function* getOrders(action) {
       // TODO: when prepared filtered path for products in orders - finish following filter
       /*if (action.payload.filter.product) {
           let products = yield call(Api.searchProducts, action.payload.filter.product)
-          console.log('PRODUCTS', products)
           filters.filters.push({
             operator: 'EQUALS',
             path: 'OrderItem.id',

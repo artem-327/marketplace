@@ -15,7 +15,6 @@ export default class Summary extends Component {
 
     if (cartItems.length === 0) return null
 
-    //console.log('!!!!!! Summary Render props', this.props)
 
     //let totalWeight = 0
     /*
