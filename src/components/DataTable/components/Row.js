@@ -1,21 +1,21 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 
 import ThreeDotsMenu from '../../ThreeDots/ThreeDotsMenu'
 import AddCart from '../../../pages/cart/components/AddCart'
-import {checkToken} from '../../../utils/auth'
-import {Icon, Checkbox} from 'semantic-ui-react'
+import { checkToken } from '../../../utils/auth'
+import { Icon, Checkbox } from 'semantic-ui-react'
 
 class Row extends Component {
   constructor(props) {
     super(props)
     this.handleClickOutside = this.handleClickOutside.bind(this)
-    this.state = {openContext: false, openRowComponent: false}
+    this.state = { openContext: false, openRowComponent: false }
     this.row = React.createRef()
   }
 
   handleClickOutside(event) {
     if (this.row.current && this.row.current.contains(event.target)) return
-    this.setState({openContext: false})
+    this.setState({ openContext: false })
   }
 
   componentWillUnmount() {
@@ -29,7 +29,7 @@ class Row extends Component {
     } else {
       document.removeEventListener('click', this.handleClickOutside, false)
     }
-    this.setState({openContext: !this.state.openContext})
+    this.setState({ openContext: !this.state.openContext })
   }
 
   addCart(event, id) {
@@ -56,7 +56,7 @@ class Row extends Component {
   }
 
   render() {
-    const {tableType} = this.props
+    const { tableType } = this.props
     const isAllInventory = tableType === 'allInventoryTable'
     return (
       <React.Fragment>
@@ -140,7 +140,7 @@ class Row extends Component {
               {React.cloneElement(this.props.rowComponent, {
                 visible: this.state.openRowComponent,
                 id: this.props.rowOpns.id,
-                closeRowComponent: () => this.setState({openRowComponent: false})
+                closeRowComponent: () => this.setState({ openRowComponent: false })
               })}
             </td>
           </tr>

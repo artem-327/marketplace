@@ -9,7 +9,7 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-  const {payload} = action
+  const { payload } = action
 
   switch (action.type) {
     case AT.PROFILE_OPEN_POPUP: {

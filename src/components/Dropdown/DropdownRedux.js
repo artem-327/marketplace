@@ -1,13 +1,13 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {Dropdown} from 'semantic-ui-react'
-import {actions} from 'react-redux-form'
-import {Control} from 'react-redux-form'
+import { Dropdown } from 'semantic-ui-react'
+import { actions } from 'react-redux-form'
+import { Control } from 'react-redux-form'
 
 class DropdownRedux extends Component {
-  handleChange = (e, {name, value}) => {
+  handleChange = (e, { name, value }) => {
     e.preventDefault()
-    const {model, dispatch} = this.props
+    const { model, dispatch } = this.props
     // dispatch is prepared only for filters
     dispatch(actions.change('forms.filter' + model, e.target.innerText))
   }

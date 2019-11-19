@@ -32,7 +32,7 @@ module.exports = function(callback) {
     var repo = repos[index].toLowerCase(),
       outputDirectory = release.outputRoot + repo + '/',
       exec = process.exec,
-      execSettings = {cwd: outputDirectory},
+      execSettings = { cwd: outputDirectory },
       updateNPM = 'npm publish;meteor publish;'
     /* Register with NPM */
     exec(updateNPM, execSettings, function(err, stdout, stderr) {

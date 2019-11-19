@@ -1,6 +1,6 @@
 import React from 'react'
-import {Control} from 'react-redux-form'
-import {Radio} from 'semantic-ui-react'
+import { Control } from 'react-redux-form'
+import { Radio } from 'semantic-ui-react'
 
 const RadioBroadcastRedux = props => {
   return (

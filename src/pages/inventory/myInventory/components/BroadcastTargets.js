@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import BroadcastTargetGroup from './BroadcastTargetGroup'
 import './BroadcastTargets.scss'
 
@@ -9,7 +9,7 @@ class BroadcastTargets extends Component {
   }
 
   addToTargets(id, targets) {
-    this.setState({[id]: targets}, () => {
+    this.setState({ [id]: targets }, () => {
       //console.log("BRCTargets", id, targets);
       this.props.getData(this.state)
     })

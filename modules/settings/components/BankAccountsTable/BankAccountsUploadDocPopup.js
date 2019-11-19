@@ -1,11 +1,11 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import {withToastManager} from 'react-toast-notifications'
-import {generateToastMarkup} from '~/utils/functions'
-import {Modal, Grid, GridRow, FormGroup, FormField} from 'semantic-ui-react'
-import {FormattedMessage, injectIntl} from 'react-intl'
-import {Button, Dropdown, Form} from 'formik-semantic-ui-fixed-validation'
+import { withToastManager } from 'react-toast-notifications'
+import { generateToastMarkup } from '~/utils/functions'
+import { Modal, Grid, GridRow, FormGroup, FormField } from 'semantic-ui-react'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { Button, Dropdown, Form } from 'formik-semantic-ui-fixed-validation'
 //import { closeUploadDocumentsPopup, getVerificationDocumentTypes } from "../../actions";
 import * as Actions from '../../actions'
 import Router from 'next/dist/client/router'
@@ -28,7 +28,7 @@ class BankAccountsUploadDocPopup extends React.Component {
     const {
       closeUploadDocumentsPopup,
       verificationDocumentTypes,
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
     return (
@@ -38,7 +38,7 @@ class BankAccountsUploadDocPopup extends React.Component {
         </Modal.Header>
         <Modal.Content>
           <Form initialValues={this.getInitialFormValues()} onReset={closeUploadDocumentsPopup} validateOnBlur={false}>
-            {({values, setFieldValue}) => {
+            {({ values, setFieldValue }) => {
               return (
                 <>
                   <Grid>
@@ -49,7 +49,7 @@ class BankAccountsUploadDocPopup extends React.Component {
                       <Dropdown
                         name={`attachmentType`}
                         options={verificationDocumentTypes}
-                        inputProps={{'data-test': 'new_inventory_doc_type_drpdn'}}
+                        inputProps={{ 'data-test': 'new_inventory_doc_type_drpdn' }}
                       />
                     </FormField>
 
@@ -117,7 +117,7 @@ class BankAccountsUploadDocPopup extends React.Component {
                       />
                     </GridRow>
                   </Grid>
-                  <div style={{textAlign: 'right'}}>
+                  <div style={{ textAlign: 'right' }}>
                     <Button.Reset
                       onClick={closeUploadDocumentsPopup}
                       data-test='settings_bank_account_upload_doc_popup_close_btn'>

@@ -1,7 +1,7 @@
 import './ShoppingCart.scss'
 
-import React, {Component} from 'react'
-import {func, array, object} from 'prop-types'
+import React, { Component } from 'react'
+import { func, array, object } from 'prop-types'
 
 import ItemCartBody from '../components/ItemCartBody/ItemCartBody'
 import AddCart from '../components/AddCart'
@@ -10,11 +10,11 @@ import KeepShoppingPopup from '../components/KeepShoppingPopup/KeepShoppingPopup
 import Spinner from '../../../components/Spinner/Spinner'
 
 import styled from 'styled-components'
-import {FormattedMessage} from 'react-intl'
-import {checkToken} from '../../../utils/auth'
-import {Container, Menu, Header, Button, Icon} from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
+import { checkToken } from '../../../utils/auth'
+import { Container, Menu, Header, Button, Icon } from 'semantic-ui-react'
 import Router from 'next/router'
-import {ArrayToMultiple} from '~/components/formatted-messages'
+import { ArrayToMultiple } from '~/components/formatted-messages'
 
 const MargedButton = styled(Button)`
   margin: 14px 0px 14px 0px !important;
@@ -40,14 +40,14 @@ export default class ShoppingCart extends Component {
   }
 
   editCart = cartItem => {
-    let {id, pkgAmount} = cartItem
+    let { id, pkgAmount } = cartItem
     this.props.getProductOffer(cartItem.productOffer.id, true)
-    this.props.sidebarChanged({isOpen: true, id, pkgAmount})
+    this.props.sidebarChanged({ isOpen: true, id, pkgAmount })
   }
 
   render() {
-    const {cart, deleteCartItem, history, cartIsFetching, sidebarChanged} = this.props
-    let {cartItems, cfPriceSubtotal} = cart
+    const { cart, deleteCartItem, history, cartIsFetching, sidebarChanged } = this.props
+    let { cartItems, cfPriceSubtotal } = cart
 
     if (cartIsFetching) return <Spinner />
     const itemContent =
@@ -79,13 +79,13 @@ export default class ShoppingCart extends Component {
       <FormattedMessage
         id='cart.shoppingCartHeader'
         defaultMessage={`Items (${itemsNumber})`}
-        values={{number: itemsNumber}}
+        values={{ number: itemsNumber }}
       />
     )
 
     return (
       <div className='app-inner-main flex stretched'>
-        <div className='header-top' style={{padding: '0 32px', zIndex: 10, backgroundColor: '#FFF'}}>
+        <div className='header-top' style={{ padding: '0 32px', zIndex: 10, backgroundColor: '#FFF' }}>
           <Container fluid>
             <Menu secondary>
               <Menu.Item header>
@@ -105,7 +105,7 @@ export default class ShoppingCart extends Component {
             </Menu>
           </Container>
         </div>
-        <div className='shopping-cart flex stretched' style={{overflow: 'auto'}}>
+        <div className='shopping-cart flex stretched' style={{ overflow: 'auto' }}>
           <div className='shopping-cart-body'>
             <div className='shopping-cart-items'>
               <header>
@@ -125,7 +125,7 @@ export default class ShoppingCart extends Component {
               ) : null}
 
               <KeepShoppingPopup
-                handleClose={() => this.setState({modalOpen: false})}
+                handleClose={() => this.setState({ modalOpen: false })}
                 handleContinue={this.handleContinueShopping}
                 open={this.state.modalOpen}
                 trigger={

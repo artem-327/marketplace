@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {Button} from 'semantic-ui-react'
+import { Button } from 'semantic-ui-react'
 
 export const DisabledButtonWrapped = styled.span`
   & > button {

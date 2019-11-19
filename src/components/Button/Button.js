@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import './Button.scss'
 
-const Button = ({size, color, children, rounded, ...props}) => {
+const Button = ({ size, color, children, rounded, ...props }) => {
   const roundedBtn = rounded ? `rounded-${rounded}` : ''
   const sizeBtn = size ? `size-${size}` : ''
 

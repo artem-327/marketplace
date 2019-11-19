@@ -1,8 +1,8 @@
 import * as AT from './action-types'
 import api from './api'
 
-import {SET_PREFERRED_LANGUAGE} from '~/modules/settings/action-types'
-import {setPreferredLanguage} from '~/modules/settings/actions'
+import { SET_PREFERRED_LANGUAGE } from '~/modules/settings/action-types'
+import { setPreferredLanguage } from '~/modules/settings/actions'
 
 const removeEmpty = obj =>
   Object.entries(obj).forEach(([key, val]) => {
@@ -60,7 +60,10 @@ export function getCurrencies() {
   }
 }
 
-export const updateMyProfile = payload => ({type: AT.PROFILE_UPDATE_MY_PROFILE, payload: api.updateMyProfile(payload)})
+export const updateMyProfile = payload => ({
+  type: AT.PROFILE_UPDATE_MY_PROFILE,
+  payload: api.updateMyProfile(payload)
+})
 
 export function changePassword(data) {
   return {

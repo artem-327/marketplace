@@ -1,10 +1,10 @@
 import './AddCart.scss'
 // import file from '../../../../images/file.svg'
-import {checkToken} from '../../../../utils/auth'
+import { checkToken } from '../../../../utils/auth'
 
 import styled from 'styled-components'
-import React, {Component} from 'react'
-import {object, func} from 'prop-types'
+import React, { Component } from 'react'
+import { object, func } from 'prop-types'
 import {
   Sidebar,
   Button,
@@ -22,12 +22,12 @@ import {
   Popup
 } from 'semantic-ui-react'
 import Router from 'next/router'
-import {FormattedNumber, FormattedMessage} from 'react-intl'
-import {FormattedUnit, UnitOfPackaging} from '~/components/formatted-messages'
-import {errorMessages} from '~/constants/yupValidation'
+import { FormattedNumber, FormattedMessage } from 'react-intl'
+import { FormattedUnit, UnitOfPackaging } from '~/components/formatted-messages'
+import { errorMessages } from '~/constants/yupValidation'
 
-import {currency} from '~/constants/index'
-import {getSafe} from '~/utils/functions'
+import { currency } from '~/constants/index'
+import { getSafe } from '~/utils/functions'
 
 const CapitalizedColumn = styled(GridColumn)`
   text-transform: capitalize;
@@ -66,24 +66,24 @@ export default class AddCart extends Component {
 
   createOrder = async () => {
     if (checkToken(this.props)) return
-    const {addCartItem} = this.props
-    let {sidebar} = this.props
-    let {pkgAmount, id} = sidebar
+    const { addCartItem } = this.props
+    let { sidebar } = this.props
+    let { pkgAmount, id } = sidebar
 
-    await addCartItem({productOffer: id, pkgAmount})
+    await addCartItem({ productOffer: id, pkgAmount })
     Router.push('/cart')
   }
 
   editOrder = async () => {
-    const {updateCartItem} = this.props
-    let {sidebar} = this.props
-    let {pkgAmount} = sidebar
+    const { updateCartItem } = this.props
+    let { sidebar } = this.props
+    let { pkgAmount } = sidebar
 
-    await updateCartItem({cartItemId: sidebar.id, pkgAmount})
+    await updateCartItem({ cartItemId: sidebar.id, pkgAmount })
   }
 
   handleQuantity = e => {
-    let {minPkg, splitPkg, pkgAvailable} = this.props.offer
+    let { minPkg, splitPkg, pkgAvailable } = this.props.offer
     let pkgAmount = parseInt(e.target.value, 10)
     let warning = null
 
@@ -95,18 +95,18 @@ export default class AddCart extends Component {
       warning = `split is ${splitPkg}`
     }
 
-    this.props.sidebarChanged({warning, pkgAmount})
+    this.props.sidebarChanged({ warning, pkgAmount })
   }
 
   getCartMarkup = () => {
-    let {offer, order, isEdit} = this.props
-    let {pkgAmount, pricing, warning} = this.props.sidebar
+    let { offer, order, isEdit } = this.props
+    let { pkgAmount, pricing, warning } = this.props.sidebar
 
-    let {pkgAvailable, pricingTiers} = offer
+    let { pkgAvailable, pricingTiers } = offer
 
     const price = pricing ? pricing.price : null
 
-    let {packagingUnit, packagingSize, packagingType} = offer.companyProduct
+    let { packagingUnit, packagingSize, packagingType } = offer.companyProduct
     let nameAbbreviation = packagingUnit ? packagingUnit.nameAbbreviation : null
 
     let totalPrice = pkgAmount && price ? price * pkgAmount * packagingSize : null
@@ -134,7 +134,7 @@ export default class AddCart extends Component {
         )
         dropdownOptions.push({
           key: i,
-          value: {quantityFrom: tier.quantityFrom, price: tier.pricePerUOM},
+          value: { quantityFrom: tier.quantityFrom, price: tier.pricePerUOM },
           text
         })
       })
@@ -143,7 +143,7 @@ export default class AddCart extends Component {
 
       dropdownOptions.push({
         key: 0,
-        value: {quantityFrom: 1, price: value},
+        value: { quantityFrom: 1, price: value },
         text: (
           <>
             <FormattedNumber minimumFractionDigits={0} value={value} style='currency' currency={currencyCode} />
@@ -156,13 +156,13 @@ export default class AddCart extends Component {
     else if (pkgAmount < offer.minPkg)
       error = (
         <ErrorLabel>
-          <FormattedMessage id='validation.minimum' defaultMessage='Minimum is {min}' values={{min: offer.minPkg}} />
+          <FormattedMessage id='validation.minimum' defaultMessage='Minimum is {min}' values={{ min: offer.minPkg }} />
         </ErrorLabel>
       )
     else if (pkgAmount > pkgAvailable)
       error = (
         <ErrorLabel>
-          <FormattedMessage id='validation.maximum' defaultMessage='Maximum is {max}' values={{max: pkgAvailable}} />
+          <FormattedMessage id='validation.maximum' defaultMessage='Maximum is {max}' values={{ max: pkgAvailable }} />
         </ErrorLabel>
       )
     else if (pkgAmount % offer.splitPkg !== 0)
@@ -171,7 +171,7 @@ export default class AddCart extends Component {
           <FormattedMessage
             id='validation.multiplyOfSplit'
             defaultMessage='Must be multiply of split ({split})'
-            values={{split: offer.splitPkg}}
+            values={{ split: offer.splitPkg }}
           />
         </ErrorLabel>
       )
@@ -409,7 +409,7 @@ export default class AddCart extends Component {
                 <Button
                   fluid
                   floated='right'
-                  onClick={() => this.props.sidebarChanged({isOpen: false})}
+                  onClick={() => this.props.sidebarChanged({ isOpen: false })}
                   data-test='add_cart_cancel_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                     {text => text}
@@ -452,19 +452,19 @@ export default class AddCart extends Component {
   }
 
   render() {
-    let {sidebar, isEdit, orderDetailIsFetching, offerDetailIsFetching} = this.props
-    const {sidebarChanged} = this.props
-    let {isOpen} = sidebar
+    let { sidebar, isEdit, orderDetailIsFetching, offerDetailIsFetching } = this.props
+    const { sidebarChanged } = this.props
+    let { isOpen } = sidebar
 
     return (
       <Sidebar
-        onHide={() => sidebarChanged({isOpen: false})}
+        onHide={() => sidebarChanged({ isOpen: false })}
         width='very wide'
         className='cart-sidebar flex'
         direction='right'
         animation='scale down'
         visible={isOpen}
-        style={{zIndex: 601}}>
+        style={{ zIndex: 601 }}>
         {offerDetailIsFetching ? (
           <Dimmer active inverted>
             {' '}

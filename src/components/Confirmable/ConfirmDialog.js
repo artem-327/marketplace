@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {confirmable} from 'react-confirm'
+import { confirmable } from 'react-confirm'
 
-import {Modal, Button} from 'semantic-ui-react'
+import { Modal, Button } from 'semantic-ui-react'
 
-const ConfirmDialog = ({show, proceed, dismiss, cancel, title, confirmation, options}) => {
-  let {cancelText, proceedText} = options
+const ConfirmDialog = ({ show, proceed, dismiss, cancel, title, confirmation, options }) => {
+  let { cancelText, proceedText } = options
   return (
     <Modal closeIcon size='tiny' centered={false} open={show} onClose={dismiss}>
       <Modal.Header>{title}</Modal.Header>

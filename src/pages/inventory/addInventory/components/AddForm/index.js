@@ -1,6 +1,6 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import AddForm from './AddForm'
-import {bindActionCreators} from 'redux'
+import { bindActionCreators } from 'redux'
 import {
   saveWarehouse,
   updateWarehouse,
@@ -17,9 +17,9 @@ import {
   removeAttachment,
   removeAttachmentLink
 } from '../../../../../modules/productOffers'
-import {validatePackageType} from '../../../../../modules/packageTypes'
-import {addMessage} from '../../../../../modules/errors'
-import {getMerchant} from '../../../../../modules/merchants'
+import { validatePackageType } from '../../../../../modules/packageTypes'
+import { addMessage } from '../../../../../modules/errors'
+import { getMerchant } from '../../../../../modules/merchants'
 
 function mapStateToProps(store) {
   return {

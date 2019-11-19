@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import './dropdown.scss'
 import classnames from 'classnames'
@@ -19,7 +19,7 @@ class Dropdown extends Component {
   }
 
   setCurrentValue(id, val) {
-    this.setState({currentValue: val, isOpen: false}, () => {
+    this.setState({ currentValue: val, isOpen: false }, () => {
       if (this.props.onChange) this.props.onChange(id)
     })
   }
@@ -34,9 +34,9 @@ class Dropdown extends Component {
           break
         }
       }
-      this.setState({currentValue: cv, isOpen: false})
+      this.setState({ currentValue: cv, isOpen: false })
     } else if (nextProps.currentValue) {
-      this.setState({currentValue: nextProps.currentValue, isOpen: false})
+      this.setState({ currentValue: nextProps.currentValue, isOpen: false })
     }
   }
 
@@ -50,7 +50,7 @@ class Dropdown extends Component {
 
   handleClickOutside(e) {
     if (this.dropdownRef.current.contains(e.target)) return
-    this.setState({isOpen: false})
+    this.setState({ isOpen: false })
   }
 
   renderDropdown(opt) {
@@ -71,13 +71,13 @@ class Dropdown extends Component {
 
   toggleDropdown() {
     if (this.props.disabled) return
-    this.setState({isOpen: !this.state.isOpen})
+    this.setState({ isOpen: !this.state.isOpen })
   }
 
   render() {
     const arrow = !this.state.isOpen ? <img alt='up' src={ArrowDown} /> : <img alt='up' src={ArrowUp} />
 
-    let {currentValue, isOpen} = this.state
+    let { currentValue, isOpen } = this.state
     let isSelected = false
     const opnsLength = this.props.opns ? this.props.opns.length : 0
     for (let i = 0; i < opnsLength; i++) {
@@ -87,7 +87,7 @@ class Dropdown extends Component {
       }
     }
     let options = this.state.isOpen ? (
-      <ul className='dropdown-options' style={{maxHeight: 39 * this.state.results_count}}>
+      <ul className='dropdown-options' style={{ maxHeight: 39 * this.state.results_count }}>
         {this.renderDropdown(this.props.opns)}
       </ul>
     ) : null

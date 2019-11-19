@@ -1,5 +1,5 @@
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import Filter from './Filter'
 import {
   toggleFilterGroup,
@@ -16,10 +16,10 @@ import {
   fetchPackagingTypes,
   fetchProductGrade
 } from '../../modules/products'
-import {fetchWarehouseDistances} from '../../modules/location'
-import {resetForm} from '../../utils/functions'
-import {actions} from 'react-redux-form'
-import {getBroadcastedFilters} from '~/modules/marketplace/actions'
+import { fetchWarehouseDistances } from '../../modules/location'
+import { resetForm } from '../../utils/functions'
+import { actions } from 'react-redux-form'
+import { getBroadcastedFilters } from '~/modules/marketplace/actions'
 
 function mapStateToProps(store) {
   return {

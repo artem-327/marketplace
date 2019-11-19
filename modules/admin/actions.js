@@ -1,7 +1,7 @@
 import * as AT from './action-types'
 import * as api from './api'
-import {updateIdentity} from '~/modules/auth/actions'
-import {Datagrid} from '~/modules/datagrid'
+import { updateIdentity } from '~/modules/auth/actions'
+import { Datagrid } from '~/modules/datagrid'
 
 import Router from 'next/router'
 
@@ -123,7 +123,7 @@ export function handleActiveTab(tab) {
 
   return {
     type: AT.ADMIN_HANDLE_ACTIVE_TAB,
-    payload: {tab}
+    payload: { tab }
   }
 }
 
@@ -268,7 +268,7 @@ export function openEditCasPopup(data) {
   // ! ! TODO probably openPopup() may be used
   return {
     type: AT.ADMIN_OPEN_POPUP,
-    payload: {data}
+    payload: { data }
   }
 }
 
@@ -280,7 +280,7 @@ export function openEditAltNamesCasPopup(value) {
   }
   return {
     type: AT.ADMIN_OPEN_EDIT_2_POPUP,
-    payload: {data}
+    payload: { data }
   }
 }
 
@@ -297,14 +297,14 @@ export function openEditAltNamesCasPopup(value) {
 
 export function getCountries() {
   return (dispatch, getState) => {
-    const {admin} = getState()
+    const { admin } = getState()
     admin.countries.length === 0 &&
       dispatch({
         type: AT.ADMIN_GET_COUNTRIES,
         async payload() {
           const countries = await api.getCountries()
 
-          return {countries}
+          return { countries }
         }
       })
   }
@@ -350,7 +350,7 @@ export function deleteProductName(productId, id) {
   }
 }
 
-export const deleteCompany = id => ({type: AT.ADMIN_DELETE_COMPANIES, payload: api.deleteCompany(id)})
+export const deleteCompany = id => ({ type: AT.ADMIN_DELETE_COMPANIES, payload: api.deleteCompany(id) })
 
 export function createCompany(formData) {
   return async dispatch => {
@@ -537,7 +537,7 @@ export function closeRegisterDwollaAccount() {
 export function openPopup(data) {
   return {
     type: AT.ADMIN_OPEN_POPUP,
-    payload: {data}
+    payload: { data }
   }
 }
 
@@ -665,7 +665,7 @@ export function openEditEchoAltNamesPopup(value) {
   }
   return {
     type: AT.ADMIN_OPEN_EDIT_2_POPUP,
-    payload: {...data}
+    payload: { ...data }
   }
 }
 
@@ -711,7 +711,7 @@ export function linkAttachment(isLot, echoId, attachmentIds) {
 
 export function removeAttachment(aId) {
   return async dispatch => {
-    await dispatch({type: AT.ADMIN_REMOVE_ATTACHMENT, payload: api.removeAttachment(aId)})
+    await dispatch({ type: AT.ADMIN_REMOVE_ATTACHMENT, payload: api.removeAttachment(aId) })
   }
 }
 
@@ -722,8 +722,8 @@ export function removeAttachmentLink(isLot, echoId, aId) {
   }
 }
 
-export const getDocumentTypes = () => ({type: AT.ADMIN_GET_DOCUMENT_TYPES, payload: api.getDocumentTypes()})
+export const getDocumentTypes = () => ({ type: AT.ADMIN_GET_DOCUMENT_TYPES, payload: api.getDocumentTypes() })
 
-export const addUnNumber = payload => ({type: AT.ADMIN_ADD_UN_NUMBER, payload})
+export const addUnNumber = payload => ({ type: AT.ADMIN_ADD_UN_NUMBER, payload })
 
-export const getCompanyDetails = id => ({type: AT.ADMIN_GET_COMPANY_DETAILS, payload: api.getCompanyDetails(id)})
+export const getCompanyDetails = id => ({ type: AT.ADMIN_GET_COMPANY_DETAILS, payload: api.getCompanyDetails(id) })

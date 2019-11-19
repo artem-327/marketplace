@@ -1,13 +1,13 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 
-import {array, bool, objectOf, string, object} from 'prop-types'
-import {RelaxedRow} from '~/components/summary/styledComponents'
-import {GridColumn, Header} from 'semantic-ui-react'
-import {FormattedMessage} from 'react-intl'
+import { array, bool, objectOf, string, object } from 'prop-types'
+import { RelaxedRow } from '~/components/summary/styledComponents'
+import { GridColumn, Header } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
 
 export default class ShippingAddress extends Component {
   getAddress = () => {
-    let {selectedAddress} = this.props
+    let { selectedAddress } = this.props
     return (
       selectedAddress['phone number'] && (
         <>
@@ -23,7 +23,7 @@ export default class ShippingAddress extends Component {
     )
   }
   render() {
-    let {selectedAddress, addressOnly, header} = this.props
+    let { selectedAddress, addressOnly, header } = this.props
 
     return (
       selectedAddress && (

@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
-import {FormattedMessage, injectIntl} from 'react-intl'
-import {Dropdown, GridRow, GridColumn, Divider} from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { Dropdown, GridRow, GridColumn, Divider } from 'semantic-ui-react'
 import ShippingAddress from './ShippingAddress'
 
 class Payment extends Component {
   render() {
-    let {payments, selectedAddress} = this.props
-    let {formatMessage} = this.props.intl
+    let { payments, selectedAddress } = this.props
+    let { formatMessage } = this.props.intl
 
     return (
       <>
@@ -30,7 +30,7 @@ class Payment extends Component {
         <ShippingAddress
           selectedAddress={selectedAddress}
           addressOnly={true}
-          header={{id: 'cart.billingInfo', defaultMessage: 'Billing Info'}}
+          header={{ id: 'cart.billingInfo', defaultMessage: 'Billing Info' }}
         />
       </>
     )

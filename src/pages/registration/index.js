@@ -1,7 +1,7 @@
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import Registration from './Registration'
-import {registration} from '../../modules/identity'
+import { registration } from '../../modules/identity'
 
 function mapStateToProps(store) {
   return {
@@ -14,7 +14,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({registration}, dispatch)
+  return bindActionCreators({ registration }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Registration)

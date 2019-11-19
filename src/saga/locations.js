@@ -1,4 +1,4 @@
-import {call, put, takeEvery} from 'redux-saga/effects'
+import { call, put, takeEvery } from 'redux-saga/effects'
 import Api from '../api/locations'
 import {
   REGIONS_FETCH_REQUESTED,
@@ -21,47 +21,47 @@ import {
 function* getRegions(action) {
   try {
     const regions = yield call(Api.getRegions, action.payload.search)
-    yield put({type: REGIONS_FETCH_SUCCEEDED, payload: regions})
+    yield put({ type: REGIONS_FETCH_SUCCEEDED, payload: regions })
   } catch (e) {
-    yield put({type: REGIONS_FETCH_FAILED, message: e.message})
+    yield put({ type: REGIONS_FETCH_FAILED, message: e.message })
   }
 }
 
 function* getStates(action) {
   try {
     const states = yield call(Api.getStates, action.payload.search)
-    yield put({type: STATES_FETCH_SUCCEEDED, payload: states})
+    yield put({ type: STATES_FETCH_SUCCEEDED, payload: states })
   } catch (e) {
-    yield put({type: STATES_FETCH_FAILED, message: e.message})
+    yield put({ type: STATES_FETCH_FAILED, message: e.message })
   }
 }
 
 function* getProvinces(action) {
   try {
     const provinces = yield call(Api.getProvinces, action.payload)
-    yield put({type: PROVINCES_FETCH_SUCCEEDED, payload: provinces})
+    yield put({ type: PROVINCES_FETCH_SUCCEEDED, payload: provinces })
   } catch (e) {
-    yield put({type: PROVINCES_FETCH_FAILED, message: e.message})
+    yield put({ type: PROVINCES_FETCH_FAILED, message: e.message })
   }
 }
 
 function* getStateDetail(action) {
   try {
     const stateDetail = yield call(Api.getStateDetail, action.payload.id)
-    const stateDetailWithId = {...stateDetail, id: action.payload.id}
-    yield put({type: STATEDETAIL_FETCH_SUCCEEDED, payload: stateDetailWithId})
+    const stateDetailWithId = { ...stateDetail, id: action.payload.id }
+    yield put({ type: STATEDETAIL_FETCH_SUCCEEDED, payload: stateDetailWithId })
   } catch (e) {
-    yield put({type: STATEDETAIL_FETCH_FAILED, message: e.message})
+    yield put({ type: STATEDETAIL_FETCH_FAILED, message: e.message })
   }
 }
 
 function* getRegionDetail(action) {
   try {
     const regionDetail = yield call(Api.getRegionDetail, action.payload.id)
-    const regionDetailWithId = {...regionDetail, id: action.payload.id}
-    yield put({type: REGIONDETAIL_FETCH_SUCCEEDED, payload: regionDetailWithId})
+    const regionDetailWithId = { ...regionDetail, id: action.payload.id }
+    yield put({ type: REGIONDETAIL_FETCH_SUCCEEDED, payload: regionDetailWithId })
   } catch (e) {
-    yield put({type: REGIONDETAIL_FETCH_FAILED, message: e.message})
+    yield put({ type: REGIONDETAIL_FETCH_FAILED, message: e.message })
   }
 }
 

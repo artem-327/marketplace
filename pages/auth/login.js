@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {LoginForm} from '~/modules/auth'
+import React, { Component } from 'react'
+import { LoginForm } from '~/modules/auth'
 import styled from 'styled-components'
 import Layout from '~/components/LayoutUnauthorized'
 // import '~/styles/login.scss'

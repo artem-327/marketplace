@@ -1,9 +1,9 @@
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import FilterTags from './FilterTags'
-import {closeFilterTag} from '../../../../modules/filter'
-import {resetForm} from '../../../../utils/functions'
-import {fetchProductConditions, fetchProductForms, fetchProductGrade} from '../../../../modules/products'
+import { closeFilterTag } from '../../../../modules/filter'
+import { resetForm } from '../../../../utils/functions'
+import { fetchProductConditions, fetchProductForms, fetchProductGrade } from '../../../../modules/products'
 
 function mapStateToProps(store) {
   return {
@@ -20,7 +20,7 @@ function mapStateToProps(store) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    {closeFilterTag, resetForm, fetchProductConditions, fetchProductForms, fetchProductGrade},
+    { closeFilterTag, resetForm, fetchProductConditions, fetchProductForms, fetchProductGrade },
     dispatch
   )
 }

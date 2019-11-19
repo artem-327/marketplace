@@ -1,14 +1,14 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {config} from '../config'
-import {debounce} from 'lodash'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { config } from '../config'
+import { debounce } from 'lodash'
 
-import {Header, Menu, Button, Input, Dropdown} from 'semantic-ui-react'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {openPopup, handleFiltersValue} from '../actions'
-import {openImportPopup} from '~/modules/settings/actions'
-import {Datagrid} from '~/modules/datagrid'
+import { openPopup, handleFiltersValue } from '../actions'
+import { openImportPopup } from '~/modules/settings/actions'
+import { Datagrid } from '~/modules/datagrid'
 
 class TablesHandlers extends Component {
   constructor(props) {
@@ -22,7 +22,7 @@ class TablesHandlers extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    let {filterValueKey} = this.state
+    let { filterValueKey } = this.state
 
     if (prevProps.filterValue && this.props.filterValue === '') {
       this.setState({
@@ -30,7 +30,7 @@ class TablesHandlers extends Component {
       })
     }
     if (prevProps.currentTab.id !== this.props.currentTab.id) {
-      this.setState({filterValue: ''})
+      this.setState({ filterValue: '' })
       this.props.handleFiltersValue(this.props, '')
     }
   }
@@ -54,9 +54,9 @@ class TablesHandlers extends Component {
   }
 
   render() {
-    const {currentTab, openPopup, openImportPopup, intl} = this.props
+    const { currentTab, openPopup, openImportPopup, intl } = this.props
 
-    const {formatMessage} = intl
+    const { formatMessage } = intl
 
     // if (currentTab === 'Manufactures' || currentTab === 'CAS Products' || currentTab === 'Companies') var onChange = this.debouncedOnChange
     // else var onChange = this.handleChange
@@ -72,12 +72,12 @@ class TablesHandlers extends Component {
           <Menu.Menu position='right'>
             <Menu.Item data-test='admin_table_search_inp'>
               <Input
-                style={{width: 340}}
+                style={{ width: 340 }}
                 size='large'
                 icon='search'
-                placeholder={formatMessage({id: config[currentTab.name].searchText})}
-                onChange={(e, {value}) => {
-                  this.setState({filterValue: value})
+                placeholder={formatMessage({ id: config[currentTab.name].searchText })}
+                onChange={(e, { value }) => {
+                  this.setState({ filterValue: value })
                   this.handleChange(value)
                 }}
                 value={this.state.filterValue}
@@ -94,7 +94,7 @@ class TablesHandlers extends Component {
             {currentTab.name === 'Product Catalog' ? (
               <Menu.Item>
                 <Button size='large' primary onClick={() => openImportPopup()} data-test='admin_import_btn'>
-                  {formatMessage({id: 'myInventory.import', defaultMessage: 'Import'})}
+                  {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}
                 </Button>
               </Menu.Item>
             ) : null}

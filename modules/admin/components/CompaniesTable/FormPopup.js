@@ -1,8 +1,8 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import {Form, Modal, FormGroup, Divider, Accordion, Icon, Segment, Header} from 'semantic-ui-react'
-import {Formik} from 'formik'
+import { Form, Modal, FormGroup, Divider, Accordion, Icon, Segment, Header } from 'semantic-ui-react'
+import { Formik } from 'formik'
 import {
   closePopup,
   updateCompany,
@@ -14,31 +14,31 @@ import {
   getAddressSearchMailingBranch,
   removeEmpty
 } from '~/modules/admin/actions'
-import {addZip, getZipCodes} from '~/modules/zip-dropdown/actions'
-import {postCompanyLogo, deleteCompanyLogo} from '~/modules/company-form/actions'
-import {Input, Button, Checkbox, Dropdown} from 'formik-semantic-ui-fixed-validation'
+import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
+import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
+import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 // import { ZipDropdown } from '~/modules/zip-dropdown'
 // debug purposes only
 // import JSONPretty from 'react-json-pretty'
 
-import {cloneDeep} from 'lodash'
+import { cloneDeep } from 'lodash'
 
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 
-import {withToastManager} from 'react-toast-notifications'
+import { withToastManager } from 'react-toast-notifications'
 
-import {validationSchema} from '~/modules/company-form/constants'
-import {provinceObjectRequired, errorMessages, minOrZeroLength} from '~/constants/yupValidation'
+import { validationSchema } from '~/modules/company-form/constants'
+import { provinceObjectRequired, errorMessages, minOrZeroLength } from '~/constants/yupValidation'
 
-import {CompanyForm} from '~/modules/company-form/'
-import {AddressForm} from '~/modules/address-form/'
-import {addressValidationSchema, phoneValidation, websiteValidation} from '~/constants/yupValidation'
+import { CompanyForm } from '~/modules/company-form/'
+import { AddressForm } from '~/modules/address-form/'
+import { addressValidationSchema, phoneValidation, websiteValidation } from '~/constants/yupValidation'
 
-import {getSafe, generateToastMarkup, deepSearch} from '~/utils/functions'
-import {Datagrid} from '~/modules/datagrid'
-import {PhoneNumber} from '~/modules/phoneNumber'
+import { getSafe, generateToastMarkup, deepSearch } from '~/utils/functions'
+import { Datagrid } from '~/modules/datagrid'
+import { PhoneNumber } from '~/modules/phoneNumber'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -210,10 +210,10 @@ class AddNewPopupCasProducts extends React.Component {
     })
   }
 
-  handleAccordionChange = (e, {name}) => {
-    let {accordionActive} = this.state
+  handleAccordionChange = (e, { name }) => {
+    let { accordionActive } = this.state
     accordionActive[name] = !accordionActive[name]
-    this.setState({accordionActive})
+    this.setState({ accordionActive })
   }
 
   // handleAddressSelectPrimaryBranch = (d, values, setFieldValue) => {
@@ -272,11 +272,11 @@ class AddNewPopupCasProducts extends React.Component {
   // }
 
   selectLogo = logo => {
-    this.setState({companyLogo: logo})
+    this.setState({ companyLogo: logo })
   }
 
   removeLogo = () => {
-    this.setState({companyLogo: null})
+    this.setState({ companyLogo: null })
   }
 
   render() {
@@ -297,11 +297,11 @@ class AddNewPopupCasProducts extends React.Component {
       deleteCompanyLogo
     } = this.props
 
-    const {selectLogo, removeLogo} = this
+    const { selectLogo, removeLogo } = this
 
-    let {accordionActive, companyLogo} = this.state
+    let { accordionActive, companyLogo } = this.state
 
-    const {formatMessage} = intl
+    const { formatMessage } = intl
     // const {
     //   initialState,
     //   primaryBranchHasProvinces,
@@ -333,11 +333,11 @@ class AddNewPopupCasProducts extends React.Component {
               if (this.state.companyLogo) {
                 postCompanyLogo(data.id, companyLogo)
 
-                Datagrid.updateRow(data.id, () => ({...data, hasLogo: true}))
+                Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: true }))
               } else {
                 if (popupValues.hasLogo) deleteCompanyLogo(popupValues.id)
 
-                Datagrid.updateRow(data.id, () => ({...data, hasLogo: false}))
+                Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: false }))
               }
             } else {
               // Really ??
@@ -384,7 +384,7 @@ class AddNewPopupCasProducts extends React.Component {
             toastManager.add(
               generateToastMarkup(
                 <FormattedMessage id={`notifications.${status}.header`} />,
-                <FormattedMessage id={`notifications.${status}.content`} values={{name: values.name}} />
+                <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
               ),
               {
                 appearance: 'success'
@@ -398,7 +398,7 @@ class AddNewPopupCasProducts extends React.Component {
         }}
         onReset={closePopup}
         render={props => {
-          let {setFieldValue, values, setFieldTouched, errors, touched, isSubmitting} = props
+          let { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = props
           return (
             <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
               <Modal.Header>
@@ -500,12 +500,12 @@ class AddNewPopupCasProducts extends React.Component {
                             </FormGroup>
                             <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchNameEmailPhone_inp'>
                               <Input
-                                inputProps={{fluid: true}}
+                                inputProps={{ fluid: true }}
                                 label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />}
                                 name='primaryBranch.deliveryAddress.contactName'
                               />
                               <Input
-                                inputProps={{fluid: true}}
+                                inputProps={{ fluid: true }}
                                 label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />}
                                 name='primaryBranch.deliveryAddress.contactEmail'
                               />
@@ -522,9 +522,9 @@ class AddNewPopupCasProducts extends React.Component {
                             </FormGroup>
                             <FormGroup widths='equal'>
                               <Checkbox
-                                label={formatMessage({id: 'global.warehouse', defaultMessage: 'Warehouse'})}
+                                label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })}
                                 name='primaryBranch.warehouse'
-                                inputProps={{'data-test': 'admin_popup_company_primaryBranch_warehouse_chckb'}}
+                                inputProps={{ 'data-test': 'admin_popup_company_primaryBranch_warehouse_chckb' }}
                               />
                             </FormGroup>
                             <AddressForm
@@ -557,12 +557,12 @@ class AddNewPopupCasProducts extends React.Component {
                             </FormGroup>
                             <FormGroup widths='equal'>
                               <Input
-                                inputProps={{fluid: true}}
+                                inputProps={{ fluid: true }}
                                 label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact Email' />}
                                 name='mailingBranch.deliveryAddress.contactEmail'
                               />
                               <Input
-                                inputProps={{fluid: true}}
+                                inputProps={{ fluid: true }}
                                 label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />}
                                 name='mailingBranch.deliveryAddress.contactName'
                               />
@@ -579,9 +579,9 @@ class AddNewPopupCasProducts extends React.Component {
                             </FormGroup>
                             <FormGroup widths='equal'>
                               <Checkbox
-                                label={formatMessage({id: 'global.warehouse', defaultMessage: 'Warehouse'})}
+                                label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })}
                                 name='mailingBranch.deliveryAddress.warehouse'
-                                inputProps={{'data-test': 'admin_popup_company_mailingBranch_warehouse_chckb'}}
+                                inputProps={{ 'data-test': 'admin_popup_company_mailingBranch_warehouse_chckb' }}
                               />
                             </FormGroup>
                             <AddressForm
@@ -643,7 +643,7 @@ const mapDispatchToProps = {
 //   </datalist>
 // )
 
-const mapStateToProps = ({admin, zip}) => {
+const mapStateToProps = ({ admin, zip }) => {
   // const AddressSuggestOptionsPrimaryBranch = admin.addressSearchPrimaryBranch.map((a) => (
   //   a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
   // ))

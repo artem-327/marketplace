@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-import {fetchProductOffer} from '../../../modules/productOffers'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { fetchProductOffer } from '../../../modules/productOffers'
 import Spinner from '../../../components/Spinner/Spinner'
 
 export function withEdit(ComposedComponent) {

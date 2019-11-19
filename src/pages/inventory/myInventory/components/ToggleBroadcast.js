@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 
@@ -17,7 +17,7 @@ class ToggleBroadcast extends Component {
   }
 
   render() {
-    const {offerId} = this.props
+    const { offerId } = this.props
     return (
       <div className='brc-radio-wrapper'>
         <div className='label'>{this.state.active ? 'On' : 'Off'}</div>

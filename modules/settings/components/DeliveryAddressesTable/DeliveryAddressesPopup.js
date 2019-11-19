@@ -1,7 +1,7 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {Modal, FormGroup, Header} from 'semantic-ui-react'
-import {withToastManager} from 'react-toast-notifications'
+import { connect } from 'react-redux'
+import { Modal, FormGroup, Header } from 'semantic-ui-react'
+import { withToastManager } from 'react-toast-notifications'
 
 import {
   closePopup,
@@ -12,16 +12,16 @@ import {
   getAddressSearch
 } from '../../actions'
 
-import {Form, Input, Button, Dropdown, Checkbox, TextArea} from 'formik-semantic-ui-fixed-validation'
+import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import Router from 'next/router'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {generateToastMarkup, getSafe} from '~/utils/functions'
-import {errorMessages, provinceObjectRequired, minOrZeroLength} from '~/constants/yupValidation'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
+import { errorMessages, provinceObjectRequired, minOrZeroLength } from '~/constants/yupValidation'
 
-import {AddressForm} from '~/modules/address-form'
-import {PhoneNumber} from '~/modules/phoneNumber'
+import { AddressForm } from '~/modules/address-form'
+import { PhoneNumber } from '~/modules/phoneNumber'
 
 const initialFormValues = {
   addressName: '',
@@ -87,7 +87,7 @@ class DeliveryAddressesPopup extends React.Component {
       createDeliveryAddress,
       reloadFilter,
       toastManager,
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
     return (
@@ -105,7 +105,7 @@ class DeliveryAddressesPopup extends React.Component {
             initialValues={popupValues ? popupValues : initialFormValues}
             validationSchema={formValidation()}
             onReset={closePopup}
-            onSubmit={async (values, {setSubmitting}) => {
+            onSubmit={async (values, { setSubmitting }) => {
               let payload = {
                 ...values,
                 address: {
@@ -124,25 +124,25 @@ class DeliveryAddressesPopup extends React.Component {
                 toastManager.add(
                   generateToastMarkup(
                     <FormattedMessage id={`notifications.${status}.header`} />,
-                    <FormattedMessage id={`notifications.${status}.content`} values={{name: response.cfName}} />
+                    <FormattedMessage id={`notifications.${status}.content`} values={{ name: response.cfName }} />
                   ),
-                  {appearance: 'success'}
+                  { appearance: 'success' }
                 )
               } catch {
               } finally {
                 setSubmitting(false)
               }
             }}>
-            {({values, setFieldValue, setFieldTouched, errors, touched, isSubmitting}) => {
+            {({ values, setFieldValue, setFieldTouched, errors, touched, isSubmitting }) => {
               return (
                 <>
                   {/* {AddressSuggestInput} */}
                   <FormGroup data-test='settings_delivery_address_name_inp'>
                     <Input
                       type='text'
-                      label={formatMessage({id: 'global.addressName', defaultMessage: 'Address Name'})}
+                      label={formatMessage({ id: 'global.addressName', defaultMessage: 'Address Name' })}
                       name='addressName'
-                      fieldProps={{width: 16}}
+                      fieldProps={{ width: 16 }}
                     />
                   </FormGroup>
                   <Header as='h3'>
@@ -155,15 +155,15 @@ class DeliveryAddressesPopup extends React.Component {
                   <FormGroup data-test='settings_delivery_address_contact_inp'>
                     <Input
                       type='text'
-                      label={formatMessage({id: 'global.contactName', defaultMessage: 'Contact Name'})}
+                      label={formatMessage({ id: 'global.contactName', defaultMessage: 'Contact Name' })}
                       name='contactName'
-                      fieldProps={{width: 8}}
+                      fieldProps={{ width: 8 }}
                     />
                   </FormGroup>
                   <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
                     <Input
                       type='text'
-                      label={formatMessage({id: 'settings.contactEmail', defaultMessage: 'Contact Email'})}
+                      label={formatMessage({ id: 'settings.contactEmail', defaultMessage: 'Contact Email' })}
                       name='contactEmail'
                     />
                     <PhoneNumber
@@ -184,42 +184,42 @@ class DeliveryAddressesPopup extends React.Component {
                   <FormGroup
                     widths='equal'
                     data-test='settings_delivery_address_notes_inp'
-                    style={{alignItems: 'center'}}>
+                    style={{ alignItems: 'center' }}>
                     <Input
                       type='text'
-                      label={formatMessage({id: 'global.readyTime', defaultMessage: 'Ready Time'})}
+                      label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
                       name='readyTime'
                     />
                     <Input
                       type='text'
-                      label={formatMessage({id: 'global.closeTime', defaultMessage: 'Close Time'})}
+                      label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
                       name='closeTime'
                     />
                   </FormGroup>
                   <FormGroup widths='equal'>
                     <Checkbox
-                      label={formatMessage({id: 'global.liftGate', defaultMessage: 'Lift Gate'})}
+                      label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
                       name='liftGate'
-                      inputProps={{'data-test': 'settings_delivery_address_liftGate_inp'}}
+                      inputProps={{ 'data-test': 'settings_delivery_address_liftGate_inp' }}
                     />
                     <Checkbox
-                      label={formatMessage({id: 'global.forkLift', defaultMessage: 'Fork Lift'})}
+                      label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
                       name='forkLift'
-                      inputProps={{'data-test': 'settings_delivery_address_forklift_inp'}}
+                      inputProps={{ 'data-test': 'settings_delivery_address_forklift_inp' }}
                     />
                     <Checkbox
-                      label={formatMessage({id: 'global.callAhead', defaultMessage: 'Call Ahead'})}
+                      label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
                       name='callAhead'
-                      inputProps={{'data-test': 'settings_delivery_address_callAhead_inp'}}
+                      inputProps={{ 'data-test': 'settings_delivery_address_callAhead_inp' }}
                     />
                   </FormGroup>
                   <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
                     <TextArea
                       name='deliveryNotes'
-                      label={formatMessage({id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes'})}
+                      label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
                     />
                   </FormGroup>
-                  <div style={{textAlign: 'right'}}>
+                  <div style={{ textAlign: 'right' }}>
                     <Button.Reset data-test='settings_delivery_address_reset_btn'>
                       <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                         {text => text}
@@ -257,7 +257,7 @@ const mapDispatchToProps = {
 // )
 
 const mapStateToProps = state => {
-  const {popupValues} = state.settings
+  const { popupValues } = state.settings
   let address = getSafe(() => popupValues.address)
   // const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
   //   a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')

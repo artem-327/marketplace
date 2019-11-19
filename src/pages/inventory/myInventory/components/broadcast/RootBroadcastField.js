@@ -2,7 +2,7 @@ import React from 'react'
 import BroadcastField from './BroadcastField'
 import RegionBroadcastField from './RegionBroadcastField'
 import CompanyBroadcastField from './CompanyBroadcastField'
-import {filterByUniqueProperty} from '../../../../../utils/functions'
+import { filterByUniqueProperty } from '../../../../../utils/functions'
 import Spinner from '../../../../../components/Spinner/Spinner'
 
 const RootBroadcastField = ({

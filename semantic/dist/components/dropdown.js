@@ -771,7 +771,7 @@
               module.clear()
             }
             module.debug('Creating dropdown with specified values', values)
-            module.setup.menu({values: values})
+            module.setup.menu({ values: values })
             $.each(values, function(index, item) {
               if (item.selected == true) {
                 module.debug('Setting initial selection to', item.value)
@@ -2738,7 +2738,7 @@
             $currentMenu.addClass(className.loading)
             calculations = {
               context: {
-                offset: $context.get(0) === window ? {top: 0, left: 0} : $context.offset(),
+                offset: $context.get(0) === window ? { top: 0, left: 0 } : $context.offset(),
                 scrollTop: $context.scrollTop(),
                 height: $context.outerHeight()
               },
@@ -2779,7 +2779,7 @@
             $currentMenu.addClass(className.loading)
             calculations = {
               context: {
-                offset: $context.get(0) === window ? {top: 0, left: 0} : $context.offset(),
+                offset: $context.get(0) === window ? { top: 0, left: 0 } : $context.offset(),
                 scrollLeft: $context.scrollLeft(),
                 width: $context.outerWidth()
               },

@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import * as Actions from '../actions'
-import {FormattedMessage, injectIntl} from 'react-intl'
-import {Grid, Header, Segment, Image, Divider} from 'semantic-ui-react'
-import {Form, Input, Button, Dropdown, Checkbox, TextArea} from 'formik-semantic-ui-fixed-validation'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { Grid, Header, Segment, Image, Divider } from 'semantic-ui-react'
+import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import styled from 'styled-components'
 import * as val from 'yup'
 import Router from 'next/router'
@@ -18,9 +18,9 @@ import {
   phoneValidation
 } from '~/constants/yupValidation'
 
-import {getSafe} from '~/utils/functions'
-import {AddressForm} from '~/modules/address-form'
-import {PhoneNumber} from '~/modules/phoneNumber'
+import { getSafe } from '~/utils/functions'
+import { AddressForm } from '~/modules/address-form'
+import { PhoneNumber } from '~/modules/phoneNumber'
 
 const ConfirmSegment = styled(Segment.Group)`
   position: relative;
@@ -30,7 +30,7 @@ const ConfirmSegment = styled(Segment.Group)`
   border: 0 none !important;
   padding: 40px 40px 0 !important;
   background: #fff;
-  box-shadow: 0 0 0 3000px #1B3454 !important;
+  box-shadow: 0 0 0 3000px #1b3454 !important;
 `
 
 const InnerSegment = styled(Segment)`
@@ -42,7 +42,7 @@ const InnerSegment = styled(Segment)`
 `
 
 const ButtonsSegment = styled(Segment)`
-  padding: 40px 0 !important
+  padding: 40px 0 !important;
 `
 
 const LogoWrapper = styled(Segment)`
@@ -71,16 +71,16 @@ const LoginHeader = styled.div`
   font-size: 1.7857143em;
   font-weight: 400;
   line-height: 2.44;
-  
+
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     left: 0;
     bottom: 0;
     display: block;
     width: 103px;
     height: 4px;
-    background: #1B3454;
+    background: #1b3454;
   }
 `
 
@@ -160,12 +160,12 @@ class ConfirmationPage extends Component {
     } = this.props
     const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
 
-    let {formatMessage} = intl
+    let { formatMessage } = intl
 
     return (
       <Form
         enableReinitialize
-        initialValues={{...initValues, ...confirmationForm}}
+        initialValues={{ ...initValues, ...confirmationForm }}
         validationSchema={validationScheme}
         onSubmit={async (values, actions) => {
           let payload = {
@@ -190,8 +190,8 @@ class ConfirmationPage extends Component {
           }
         }}
         className='flex stretched'
-        style={{padding: '20px'}}>
-        {({values, setFieldValue, validateForm, submitForm, setFieldTouched, errors, touched, isSubmitting}) => {
+        style={{ padding: '20px' }}>
+        {({ values, setFieldValue, validateForm, submitForm, setFieldTouched, errors, touched, isSubmitting }) => {
           return (
             <ConfirmSegment raised compact>
               <InnerSegment>
@@ -203,8 +203,14 @@ class ConfirmationPage extends Component {
                   <FormattedMessage id='laststep.header' defaultMessage='Last Step' />
                 </LoginHeader>
 
-                <Header as='h2' textAlign='center' style={{ marginTop: '0', paddingTop: '0.5em', fontSize: '1.14285714em' }}>
-                  <FormattedMessage id='laststep.subheader' defaultMessage='Please verify the company information below.' />
+                <Header
+                  as='h2'
+                  textAlign='center'
+                  style={{ marginTop: '0', paddingTop: '0.5em', fontSize: '1.14285714em' }}>
+                  <FormattedMessage
+                    id='laststep.subheader'
+                    defaultMessage='Please verify the company information below.'
+                  />
                 </Header>
 
                 <Header as='h3'>
@@ -214,12 +220,12 @@ class ConfirmationPage extends Component {
                   <Grid.Row columns={2}>
                     <Grid.Column data-test='auth_confirm_companyName_inp'>
                       <Input
-                        label={formatMessage({id: 'laststep.company.name', defaultMessage: 'Company Legal Name *'})}
+                        label={formatMessage({ id: 'laststep.company.name', defaultMessage: 'Company Legal Name *' })}
                         name='name'
                       />
                     </Grid.Column>
                     <Grid.Column data-test='auth_confirm_companyDBA_inp'>
-                      <Input label={formatMessage({id: 'laststep.company.dba', defaultMessage: 'DBA'})} name='dba' />
+                      <Input label={formatMessage({ id: 'laststep.company.dba', defaultMessage: 'DBA' })} name='dba' />
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -233,13 +239,13 @@ class ConfirmationPage extends Component {
                   <Grid.Row columns={2}>
                     <Grid.Column data-test='auth_confirm_addressEIN_inp'>
                       <Input
-                        label={formatMessage({id: 'laststep.address.ein', defaultMessage: 'EIN Number *'})}
+                        label={formatMessage({ id: 'laststep.address.ein', defaultMessage: 'EIN Number *' })}
                         name='tin'
                       />
                     </Grid.Column>
                     <Grid.Column data-test='auth_confirm_addressDUNS_inp'>
                       <Input
-                        label={formatMessage({id: 'laststep.address.duns', defaultMessage: 'DUNS Number'})}
+                        label={formatMessage({ id: 'laststep.address.duns', defaultMessage: 'DUNS Number' })}
                         name='dunsNumber'
                       />
                     </Grid.Column>
@@ -254,7 +260,7 @@ class ConfirmationPage extends Component {
                   <Grid.Row columns={1}>
                     <Grid.Column data-test='auth_confirm_addressContactName_inp'>
                       <Input
-                        label={formatMessage({id: 'laststep.address.contactName', defaultMessage: 'Contact Name *'})}
+                        label={formatMessage({ id: 'laststep.address.contactName', defaultMessage: 'Contact Name *' })}
                         name='address.contactName'
                       />
                     </Grid.Column>
@@ -265,7 +271,10 @@ class ConfirmationPage extends Component {
                   <Grid.Row columns={2}>
                     <Grid.Column data-test='auth_confirm_addressContactPhone_inp'>
                       <PhoneNumber
-                        label={formatMessage({id: 'laststep.address.contactPhone', defaultMessage: 'Contact Phone *'})}
+                        label={formatMessage({
+                          id: 'laststep.address.contactPhone',
+                          defaultMessage: 'Contact Phone *'
+                        })}
                         name='address.contactPhone'
                         values={values}
                         setFieldValue={setFieldValue}
@@ -277,7 +286,10 @@ class ConfirmationPage extends Component {
                     </Grid.Column>
                     <Grid.Column data-test='auth_confirm_addressContactEmail_inp'>
                       <Input
-                        label={formatMessage({id: 'laststep.address.contactEmail', defaultMessage: 'Contact E-Mail *'})}
+                        label={formatMessage({
+                          id: 'laststep.address.contactEmail',
+                          defaultMessage: 'Contact E-Mail *'
+                        })}
                         name='address.contactEmail'
                       />
                     </Grid.Column>
@@ -291,13 +303,13 @@ class ConfirmationPage extends Component {
                   <Grid.Row columns={2}>
                     <Grid.Column data-test='auth_confirm_adminName_inp'>
                       <Input
-                        label={formatMessage({id: 'laststep.admin.name', defaultMessage: 'Name *'})}
+                        label={formatMessage({ id: 'laststep.admin.name', defaultMessage: 'Name *' })}
                         name='companyAdminUser.name'
                       />
                     </Grid.Column>
                     <Grid.Column data-test='auth_confirm_adminTitle_inp'>
                       <Input
-                        label={formatMessage({id: 'laststep.admin.title', defaultMessage: 'Title'})}
+                        label={formatMessage({ id: 'laststep.admin.title', defaultMessage: 'Title' })}
                         name='companyAdminUser.jobTitle'
                       />
                     </Grid.Column>
@@ -305,7 +317,7 @@ class ConfirmationPage extends Component {
                   <Grid.Row columns={2}>
                     <Grid.Column data-test='auth_confirm_adminPhone_inp'>
                       <PhoneNumber
-                        label={formatMessage({id: 'laststep.admin.phone', defaultMessage: 'Phone'})}
+                        label={formatMessage({ id: 'laststep.admin.phone', defaultMessage: 'Phone' })}
                         name='companyAdminUser.phone'
                         values={values}
                         setFieldValue={setFieldValue}
@@ -317,7 +329,7 @@ class ConfirmationPage extends Component {
                     </Grid.Column>
                     <Grid.Column data-test='auth_confirm_adminEmail_inp'>
                       <Input
-                        label={formatMessage({id: 'laststep.admin.email', defaultMessage: 'E-Mail *'})}
+                        label={formatMessage({ id: 'laststep.admin.email', defaultMessage: 'E-Mail *' })}
                         name='companyAdminUser.email'
                       />
                     </Grid.Column>
@@ -329,7 +341,7 @@ class ConfirmationPage extends Component {
                   <Grid.Row>
                     <Grid.Column aligned='right' textAlign='right'>
                       <Button
-                        style={{marginRight: '1em'}}
+                        style={{ marginRight: '1em' }}
                         onClick={() => {
                           isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
                         }}
@@ -355,6 +367,6 @@ class ConfirmationPage extends Component {
   }
 }
 
-const stateToProps = ({auth: {confirmationForm, identity}}) => ({confirmationForm, identity})
+const stateToProps = ({ auth: { confirmationForm, identity } }) => ({ confirmationForm, identity })
 
 export default connect(stateToProps, Actions)(injectIntl(ConfirmationPage))

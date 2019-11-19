@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 
-import {uniqueArrayByKey, getSafe} from '~/utils/functions'
+import { uniqueArrayByKey, getSafe } from '~/utils/functions'
 import moment from 'moment'
 
 export const initialState = {
@@ -33,7 +33,7 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-  const {type, payload} = action
+  const { type, payload } = action
 
   switch (type) {
     case AT.INVENTORY_ADD_PRODUCT_OFFER_PENDING: {
@@ -129,12 +129,12 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.INVENTORY_GET_PRODUCT_OFFER_FULFILLED: {
-      let {data} = action.payload
+      let { data } = action.payload
       let expirationDate = getSafe(() => data.validityDate)
 
       let filteredAttachments = data.attachments.reduce(function(filtered, att) {
         if (att.documentType.id === 2) {
-          var returnedAtt = {id: att.id, name: att.name, linked: true, documentType: {...att.documentType}}
+          var returnedAtt = { id: att.id, name: att.name, linked: true, documentType: { ...att.documentType } }
           filtered.push(returnedAtt)
         }
         return filtered
@@ -142,7 +142,7 @@ export default function reducer(state = initialState, action) {
 
       let filteredAdditional = data.attachments.reduce(function(filtered, att) {
         if (att.documentType.id !== 2) {
-          var returnedAtt = {id: att.id, name: att.name, linked: true, documentType: {...att.documentType}}
+          var returnedAtt = { id: att.id, name: att.name, linked: true, documentType: { ...att.documentType } }
           filtered.push(returnedAtt)
         }
         return filtered
@@ -189,7 +189,7 @@ export default function reducer(state = initialState, action) {
                   price: 1, // ! ! ! ! ! ! TODO temporary, opravit co nejdrive!
                   quantityFrom: pt.quantityFrom
                 }))
-              : [{price: null, quantityFrom: 1}],
+              : [{ price: null, quantityFrom: 1 }],
           origin: getSafe(() => data.origin.id),
           tradeName: data.companyProduct.echoProduct.name, // ! ! ? data.tradeName,
           productCondition: getSafe(() => data.condition.id),

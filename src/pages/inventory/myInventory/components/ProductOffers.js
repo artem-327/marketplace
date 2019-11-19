@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Router from 'next/router'
 import './ProductOffers.scss'
 import DataTable from '../../../../components/DataTable'
@@ -6,8 +6,8 @@ import BroadcastRule from './BroadcastRule'
 import AddBroadcast from '../../../../pages/inventory/myInventory/components/broadcast'
 
 import confirm from '../../../../components/Confirmable/confirm'
-import {checkToken} from '../../../../utils/auth'
-import {Checkbox} from 'semantic-ui-react'
+import { checkToken } from '../../../../utils/auth'
+import { Checkbox } from 'semantic-ui-react'
 
 class ProductOffers extends Component {
   state = {
@@ -19,13 +19,13 @@ class ProductOffers extends Component {
     return productOffers.reduce((carry, offer) => {
       ;(carry[offer.product && offer.product.casProduct ? offer.product.casProduct.id : 0] = carry[
         offer.product && offer.product.casProduct ? offer.product.casProduct.id : 0
-      ] || {...offer.product, visible: true, productOffers: []}).productOffers.push(offer)
+      ] || { ...offer.product, visible: true, productOffers: [] }).productOffers.push(offer)
       return carry
     }, {})
   }
 
   openBroadcast = id => {
-    this.setState({id, open: true}, console.log('state', this.state))
+    this.setState({ id, open: true }, console.log('state', this.state))
   }
 
   render() {
@@ -117,19 +117,19 @@ class ProductOffers extends Component {
     })
 
     const headerInit = [
-      {name: 'ProductName'},
-      {name: 'Trade Name test 1 ! !'},
-      {name: 'ProductNumber'},
-      {name: 'Warehouse'},
-      {name: 'Available PKGs'},
-      {name: 'Packaging'},
-      {name: 'Pkg.size'},
-      {name: 'Quantity'},
-      {name: 'Cost'},
-      {name: 'FOBPrice'},
-      {name: 'TradeName'},
-      {name: 'MFR.'}, //{name: 'Condition'}, //{name: 'MFGDate'},
-      /* temporarily removed */ /* temporarily removed */ {name: 'Broadcast', align: 'a-center'}
+      { name: 'ProductName' },
+      { name: 'Trade Name test 1 ! !' },
+      { name: 'ProductNumber' },
+      { name: 'Warehouse' },
+      { name: 'Available PKGs' },
+      { name: 'Packaging' },
+      { name: 'Pkg.size' },
+      { name: 'Quantity' },
+      { name: 'Cost' },
+      { name: 'FOBPrice' },
+      { name: 'TradeName' },
+      { name: 'MFR.' }, //{name: 'Condition'}, //{name: 'MFGDate'},
+      /* temporarily removed */ /* temporarily removed */ { name: 'Broadcast', align: 'a-center' }
     ]
 
     const dataTable = (
@@ -180,7 +180,7 @@ class ProductOffers extends Component {
           }
         />
         {this.state.open ? (
-          <AddBroadcast open={this.state.open} id={this.state.id} closeModal={() => this.setState({open: false})} />
+          <AddBroadcast open={this.state.open} id={this.state.id} closeModal={() => this.setState({ open: false })} />
         ) : null}
       </>
     )

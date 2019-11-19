@@ -1,14 +1,14 @@
-import React, {Component} from 'react'
-import {Control, Form, Errors} from 'react-redux-form'
+import React, { Component } from 'react'
+import { Control, Form, Errors } from 'react-redux-form'
 import DropdownRedux from '../../../../../../components/Dropdown/DropdownRedux'
 import DatepickerRedux from '../../../../../../components/Datepicker/DatepickerRedux'
 import './ProductOffering.scss'
-import {required, messages, min, isNumber, maxPercent, lotNumber} from '../../../../../../utils/validation'
+import { required, messages, min, isNumber, maxPercent, lotNumber } from '../../../../../../utils/validation'
 import RemoteComboBoxRedux from '../../../../../../components/ComboBox/RemoteComboBoxRedux'
 import Tooltip from '../../../../../../components/Tooltip/Tooltip'
 import moment from 'moment'
-import {FormattedMessage, injectIntl} from 'react-intl'
-import {checkToken} from '../../../../../../utils/auth'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { checkToken } from '../../../../../../utils/auth'
 
 class ProductOffering extends Component {
   constructor(props) {
@@ -59,18 +59,18 @@ class ProductOffering extends Component {
     if (checkToken(this.props) || validateOnly) return
 
     if (!this.state.minWarning && !this.state.maxWarning) {
-      this.setState({save: true, firstValue: false})
+      this.setState({ save: true, firstValue: false })
       this.props.addLot(values)
     }
   }
 
   fetchManufacturer(text) {
-    this.setState({manufacturerSearched: true})
+    this.setState({ manufacturerSearched: true })
     this.props.fetchManufacturer(text)
   }
 
   fetchOrigin(text) {
-    this.setState({originSearched: true})
+    this.setState({ originSearched: true })
     this.props.fetchOrigin(text)
   }
 
@@ -88,7 +88,7 @@ class ProductOffering extends Component {
       newMaxWarning = null
     }
 
-    this.setState({minWarning: newMinWarning, maxWarning: newMaxWarning})
+    this.setState({ minWarning: newMinWarning, maxWarning: newMaxWarning })
 
     //console.log(e.target.value)
   }
@@ -109,7 +109,7 @@ class ProductOffering extends Component {
       newMinWarning = null
     }
 
-    this.setState({maxWarning: newMaxWarning, minWarning: newMinWarning})
+    this.setState({ maxWarning: newMaxWarning, minWarning: newMinWarning })
   }
 
   render() {
@@ -119,7 +119,7 @@ class ProductOffering extends Component {
       </button>
     )
 
-    const {formatMessage} = this.props.intl
+    const { formatMessage } = this.props.intl
     const manufacturerName =
       typeof this.props.productOffer.manufacturer !== 'undefined' ? this.props.productOffer.manufacturer.name : null
     const originName =
@@ -202,7 +202,7 @@ class ProductOffering extends Component {
                   defaultMessage: 'Select'
                 })}
                 model='forms.productOffering.productForm'
-                validators={{required}}
+                validators={{ required }}
                 dispatch={this.props.dispatch}
               />
             </div>
@@ -290,7 +290,7 @@ class ProductOffering extends Component {
                     defaultMessage: 'Select'
                   })}
                   model='forms.productOffering.productGrade'
-                  validators={{required}}
+                  validators={{ required }}
                   dispatch={this.props.dispatch}
                 />
               </div>
@@ -313,7 +313,7 @@ class ProductOffering extends Component {
                     defaultMessage: 'Select'
                   })}
                   model='forms.productOffering.productCondition'
-                  validators={{required}}
+                  validators={{ required }}
                   dispatch={this.props.dispatch}
                 />
               </div>
@@ -383,7 +383,7 @@ class ProductOffering extends Component {
                 </label>
                 <Control.text
                   model='.pkgAmount'
-                  validators={{min: val => min(val, 0), isNumber, required}}
+                  validators={{ min: val => min(val, 0), isNumber, required }}
                   id='.pkgAmount'
                   onChange={this.props.totalPackagesHandler}
                   data-test='inventory_add_offering_pkgAmount_control'
@@ -404,7 +404,7 @@ class ProductOffering extends Component {
                 </label>
                 <Control.text
                   model='.lotNumber'
-                  validators={{required}} //! ! validace cisla - validators={{required, lotNumber}}
+                  validators={{ required }} //! ! validace cisla - validators={{required, lotNumber}}
                   id='.lotNumber'
                 />
               </div>

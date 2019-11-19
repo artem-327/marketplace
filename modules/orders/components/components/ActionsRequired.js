@@ -1,10 +1,10 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import * as Actions from '../../actions'
-import {Segment, Grid, Header, Button} from 'semantic-ui-react'
-import {FormattedMessage} from 'react-intl'
-import {getSafe} from '~/utils/functions'
+import { Segment, Grid, Header, Button } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
+import { getSafe } from '~/utils/functions'
 import moment from 'moment/moment'
 
 class ActionsRequired extends React.Component {
@@ -39,10 +39,10 @@ class ActionsRequired extends React.Component {
   renderSegment(color, columnWidth, title, description, buttons) {
     console.log(buttons)
     return (
-      <Segment color={color ? color : 'blue'} style={{marginLeft: '32px', marginRight: '32px'}}>
+      <Segment color={color ? color : 'blue'} style={{ marginLeft: '32px', marginRight: '32px' }}>
         <Grid verticalAlign='middle' columns='equal'>
           <Grid.Column width={columnWidth}>
-            <Header as='h3' color={color ? color : 'black'} style={{margin: '0 0 0.3571429rem'}}>
+            <Header as='h3' color={color ? color : 'black'} style={{ margin: '0 0 0.3571429rem' }}>
               <FormattedMessage id={title ? title : 'order.actionRequired'} />
             </Header>
             <FormattedMessage id={description} />
@@ -73,7 +73,7 @@ class ActionsRequired extends React.Component {
   }
 
   render() {
-    const {action, ordersType, detail, openReinitiateTransfer, cancelOrder} = this.props
+    const { action, ordersType, detail, openReinitiateTransfer, cancelOrder } = this.props
     const repayUntil = moment(detail.orderDate)
 
     return (
@@ -195,7 +195,7 @@ function actionRequired(data) {
 }
 
 function mapStateToProps(state, ownProps) {
-  const {orders} = state
+  const { orders } = state
 
   return {
     action: actionRequired(orders.detail),

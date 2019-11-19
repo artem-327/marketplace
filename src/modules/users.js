@@ -54,25 +54,25 @@ export default function reducer(state = initialState, action) {
 }
 
 export function getUsers() {
-  return {type: USERS_FETCH_REQUESTED}
+  return { type: USERS_FETCH_REQUESTED }
 }
 
 export function putPromoteToMerchant(id, user) {
-  return {type: PROMOTE_TO_MERCHANT_REQUESTED, payload: {id, user}}
+  return { type: PROMOTE_TO_MERCHANT_REQUESTED, payload: { id, user } }
 }
 
 export function putPromoteToOperator(id, user) {
-  return {type: PROMOTE_TO_OPERATOR_REQUESTED, payload: {id, user}}
+  return { type: PROMOTE_TO_OPERATOR_REQUESTED, payload: { id, user } }
 }
 
 export function getOperators() {
-  return {type: OPERATORS_FETCH_REQUESTED}
+  return { type: OPERATORS_FETCH_REQUESTED }
 }
 
 export function deleteOperator(id) {
-  return {type: OPERATOR_REMOVE_REQUESTED, payload: {id}}
+  return { type: OPERATOR_REMOVE_REQUESTED, payload: { id } }
 }
 
 export function putOperatorEdit(operator) {
-  return {type: OPERATOR_EDIT_REQUESTED, payload: {operator}}
+  return { type: OPERATOR_EDIT_REQUESTED, payload: { operator } }
 }

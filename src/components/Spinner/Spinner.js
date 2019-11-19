@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './spinner.scss'
 class Spinner extends Component {
   render() {

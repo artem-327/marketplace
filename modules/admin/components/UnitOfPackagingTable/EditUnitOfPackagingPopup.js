@@ -1,15 +1,15 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import {Modal, FormGroup} from 'semantic-ui-react'
+import { Modal, FormGroup } from 'semantic-ui-react'
 
-import {closeEditPopup, putEditedDataRequest} from '../../actions'
-import {Form, Input, Button, Dropdown} from 'formik-semantic-ui-fixed-validation'
+import { closeEditPopup, putEditedDataRequest } from '../../actions'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
-import {withToastManager} from 'react-toast-notifications'
-import {generateToastMarkup} from '~/utils/functions'
-import {FormattedMessage} from 'react-intl'
+import { withToastManager } from 'react-toast-notifications'
+import { generateToastMarkup } from '~/utils/functions'
+import { FormattedMessage } from 'react-intl'
 
 const formValidation = Yup.object().shape({
   val0: Yup.string()
@@ -31,7 +31,7 @@ class EditUnitOfPackagingPopup extends React.Component {
       toastManager
     } = this.props
 
-    const {id} = popupValues
+    const { id } = popupValues
 
     const initialFormValues = {
       val0: popupValues[config.edit[0].name],
@@ -48,7 +48,7 @@ class EditUnitOfPackagingPopup extends React.Component {
             initialValues={initialFormValues}
             validationSchema={formValidation}
             onReset={closeEditPopup}
-            onSubmit={async (values, {setSubmitting}) => {
+            onSubmit={async (values, { setSubmitting }) => {
               let data = {
                 [config.edit[0].name]: values.val0.trim(),
                 [config.edit[1].name]: values.val1
@@ -58,9 +58,9 @@ class EditUnitOfPackagingPopup extends React.Component {
               toastManager.add(
                 generateToastMarkup(
                   <FormattedMessage id='notifications.unitOfPackagingUpdated.header' />,
-                  <FormattedMessage id='notifications.unitOfPackagingUpdated.content' values={{name: values.val0}} />
+                  <FormattedMessage id='notifications.unitOfPackagingUpdated.content' values={{ name: values.val0 }} />
                 ),
-                {appearance: 'success'}
+                { appearance: 'success' }
               )
 
               setSubmitting(false)
@@ -73,10 +73,10 @@ class EditUnitOfPackagingPopup extends React.Component {
                 label={config.edit[1].title}
                 options={measureOptions}
                 name='val1'
-                inputProps={{'data-test': 'admin_edit_unit_packaging_type_drpdn'}}
+                inputProps={{ 'data-test': 'admin_edit_unit_packaging_type_drpdn' }}
               />
             </FormGroup>
-            <div style={{textAlign: 'right'}}>
+            <div style={{ textAlign: 'right' }}>
               <Button.Reset data-test='admin_edit_unit_packaging_cancel_btn'>
                 <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                   {text => text}

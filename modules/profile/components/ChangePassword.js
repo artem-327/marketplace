@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {Modal} from 'semantic-ui-react'
-import {Form, Input, Button} from 'formik-semantic-ui-fixed-validation'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Modal } from 'semantic-ui-react'
+import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {changePassword, closeChangePasswordPopup} from '../actions'
-import {errorMessages, passwordValidation} from '~/constants/yupValidation'
+import { changePassword, closeChangePasswordPopup } from '../actions'
+import { errorMessages, passwordValidation } from '~/constants/yupValidation'
 
 const initialFormValues = {
   oldPassword: '',
@@ -33,7 +33,7 @@ class ChangePassword extends Component {
   render() {
     const {
       closeChangePasswordPopup,
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
     return (
@@ -54,25 +54,25 @@ class ChangePassword extends Component {
             }}
             data-test='profile_change_password_inp'>
             <Input
-              inputProps={{type: 'password'}}
+              inputProps={{ type: 'password' }}
               type='text'
-              label={formatMessage({id: 'password.current', defaultMessage: 'Current Password'})}
+              label={formatMessage({ id: 'password.current', defaultMessage: 'Current Password' })}
               name='oldPassword'
             />
             <Input
-              inputProps={{type: 'password'}}
+              inputProps={{ type: 'password' }}
               type='text'
-              label={formatMessage({id: 'password.new', defaultMessage: 'New Password'})}
+              label={formatMessage({ id: 'password.new', defaultMessage: 'New Password' })}
               name='newPassword'
             />
             <Input
-              inputProps={{type: 'password'}}
+              inputProps={{ type: 'password' }}
               type='text'
-              label={formatMessage({id: 'password.retype', defaultMessage: 'Re-type Password'})}
+              label={formatMessage({ id: 'password.retype', defaultMessage: 'Re-type Password' })}
               name='newPasswordRetype'
             />
 
-            <div style={{textAlign: 'right'}}>
+            <div style={{ textAlign: 'right' }}>
               <Button.Reset data-test='profile_change_password_reset_btn'>
                 <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
               </Button.Reset>

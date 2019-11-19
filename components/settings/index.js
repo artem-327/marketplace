@@ -1,18 +1,18 @@
-import React, {Component} from 'react'
-import {bool, oneOf} from 'prop-types'
-import {connect} from 'react-redux'
-import {Formik} from 'formik'
-import {Form, Modal, Button, Popup, Segment, Header, Icon, Grid, GridRow, GridColumn} from 'semantic-ui-react'
-import {Checkbox} from 'formik-semantic-ui-fixed-validation'
+import React, { Component } from 'react'
+import { bool, oneOf } from 'prop-types'
+import { connect } from 'react-redux'
+import { Formik } from 'formik'
+import { Form, Modal, Button, Popup, Segment, Header, Icon, Grid, GridRow, GridColumn } from 'semantic-ui-react'
+import { Checkbox } from 'formik-semantic-ui-fixed-validation'
 
-import {withToastManager} from 'react-toast-notifications'
+import { withToastManager } from 'react-toast-notifications'
 import * as Yup from 'yup'
 
-import {getSafe, generateToastMarkup} from '~/utils/functions'
-import {typeToComponent, toYupSchema} from './constants'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { typeToComponent, toYupSchema } from './constants'
 
-import {triggerSystemSettingsModal} from '~/modules/settings/actions'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { triggerSystemSettingsModal } from '~/modules/settings/actions'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import styled from 'styled-components'
 import api from '~/modules/settings/api'
@@ -48,7 +48,7 @@ class Settings extends Component {
   }
 
   async componentDidMount() {
-    let {role} = this.props
+    let { role } = this.props
     let validationSchema = {}
     let systemSettings = await api.getSettings(role)
 
@@ -58,7 +58,9 @@ class Settings extends Component {
         if (el.frontendConfig) {
           let parsed = JSON.parse(el.frontendConfig)
           if (getSafe(() => parsed.validation, false)) {
-            tmp[el.name] = Yup.object().shape({value: Yup.object().shape({visible: toYupSchema(parsed.validation)})})
+            tmp[el.name] = Yup.object().shape({
+              value: Yup.object().shape({ visible: toYupSchema(parsed.validation) })
+            })
           }
         }
       })
@@ -68,19 +70,19 @@ class Settings extends Component {
     this.setState({
       fetching: false,
       systemSettings,
-      validationSchema: Yup.object({[role]: Yup.object().shape(validationSchema)})
+      validationSchema: Yup.object({ [role]: Yup.object().shape(validationSchema) })
     })
   }
 
-  handleSubmit = async ({values}) => {
+  handleSubmit = async ({ values }) => {
     // Original = false => value is inherited from above; no value is set at current level
     // Globally, if !edit && !original then secretly send EMPTY_SETTING to BE
     // Original = true => Value was set at current level or contains EMPTY_SETTING
     // Original = true && value === 'EMPTY_SETTING' => No value is set on current level nor inherrited = send nothing
     // Original = true && value !== 'EMPTY_SETTING' => User has value set at current level
 
-    const {toastManager, triggerSystemSettingsModal, role} = this.props
-    this.setState({loading: {[this.state.clickedButton]: true}})
+    const { toastManager, triggerSystemSettingsModal, role } = this.props
+    this.setState({ loading: { [this.state.clickedButton]: true } })
 
     let payload = {
       settings: []
@@ -91,8 +93,8 @@ class Settings extends Component {
     Object.keys(group).forEach(key => {
       let el = group[key]
       if (el.changeable) {
-        if (!el.edit && role !== 'admin') payload.settings.push({id: el.id, value: 'EMPTY_SETTING'})
-        else payload.settings.push({id: el.id, value: el.value.visible})
+        if (!el.edit && role !== 'admin') payload.settings.push({ id: el.id, value: 'EMPTY_SETTING' })
+        else payload.settings.push({ id: el.id, value: el.value.visible })
       }
     })
 
@@ -107,14 +109,14 @@ class Settings extends Component {
             defaultMessage='System settings successfully updated'
           />
         ),
-        {appearance: 'success'}
+        { appearance: 'success' }
       )
 
       triggerSystemSettingsModal(false)
     } catch (e) {
       console.error(e)
     } finally {
-      this.setState({loading: {[this.state.clickedButton]: false}})
+      this.setState({ loading: { [this.state.clickedButton]: false } })
     }
   }
 
@@ -123,12 +125,12 @@ class Settings extends Component {
       open,
       asModal,
       triggerSystemSettingsModal,
-      intl: {formatMessage},
+      intl: { formatMessage },
       role
     } = this.props
-    let {loading, systemSettings} = this.state
+    let { loading, systemSettings } = this.state
 
-    let initialValues = {[role]: {}}
+    let initialValues = { [role]: {} }
 
     systemSettings.forEach(el => {
       initialValues[role][el.name] = {}
@@ -153,7 +155,7 @@ class Settings extends Component {
         enableReinitialize
         validationSchema={this.state.validationSchema}
         render={formikProps => {
-          let {values} = formikProps
+          let { values } = formikProps
           return (
             <Form>
               {systemSettings.map(group => {
@@ -191,7 +193,7 @@ class Settings extends Component {
                                             onChange: e => e.stopPropagation(),
                                             onClick: e => e.stopPropagation()
                                           }}
-                                          label={formatMessage({id: 'global.override', defaultMessage: 'Override'})}
+                                          label={formatMessage({ id: 'global.override', defaultMessage: 'Override' })}
                                           name={`${role}.${group.name}.${el.name}.edit`}
                                         />
                                       </>
@@ -248,7 +250,7 @@ class Settings extends Component {
                                     )
                                   } else {
                                     this.setState(
-                                      {clickedButton: group.name},
+                                      { clickedButton: group.name },
                                       () => !allDisabled && this.handleSubmit(formikProps)
                                     )
                                   }
@@ -327,12 +329,12 @@ Settings.defaultProps = {
 }
 
 export default connect(
-  ({auth, settings}) => ({
+  ({ auth, settings }) => ({
     open: settings.systemSettingsModalOpen,
     accessLevel: {
       isAdmin: getSafe(() => auth.identity.isAdmin, null),
       isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, null)
     }
   }),
-  {triggerSystemSettingsModal}
+  { triggerSystemSettingsModal }
 )(injectIntl(withToastManager(Settings)))

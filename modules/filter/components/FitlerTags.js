@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
-import {func, array} from 'prop-types'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { func, array } from 'prop-types'
+import { connect } from 'react-redux'
 
-import {Icon, Grid, GridColumn} from 'semantic-ui-react'
-import {FormattedMessage} from 'react-intl'
+import { Icon, Grid, GridColumn } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
 
-import {FilterTag, PopupRow, WiderPopup} from '../constants/layout'
-import {groupFilters} from '../constants/filter'
+import { FilterTag, PopupRow, WiderPopup } from '../constants/layout'
+import { groupFilters } from '../constants/filter'
 
 const TAGS_TO_DISPLAY = 3
 const MAX_TAG_ENTITIES = 2
@@ -18,7 +18,7 @@ class FilterTags extends Component {
 
   tagMarkup = filters => {
     return filters.map((filter, i) => {
-      let {tagDescription} = filter
+      let { tagDescription } = filter
 
       if (tagDescription instanceof Array && tagDescription.length > MAX_TAG_ENTITIES) {
         return (
@@ -55,7 +55,7 @@ class FilterTags extends Component {
   }
 
   render() {
-    let {appliedFilter} = this.props
+    let { appliedFilter } = this.props
     if (!appliedFilter.filters || appliedFilter.filters.length === 0) return null
     let filters = groupFilters(appliedFilter.filters, this.props.params)
 
@@ -71,7 +71,7 @@ class FilterTags extends Component {
           trigger={
             <FilterTag key={TAGS_TO_DISPLAY}>
               <span>
-                <FormattedMessage id='filterTags.andMore' values={{count: filters.length - TAGS_TO_DISPLAY}} />
+                <FormattedMessage id='filterTags.andMore' values={{ count: filters.length - TAGS_TO_DISPLAY }} />
               </span>
             </FilterTag>
           }>

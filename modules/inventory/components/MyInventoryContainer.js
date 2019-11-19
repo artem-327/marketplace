@@ -1,24 +1,24 @@
 import React from 'react'
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import MyInventory from './MyInventory'
 import * as Actions from '../actions'
-import {withDatagrid} from '~/modules/datagrid'
+import { withDatagrid } from '~/modules/datagrid'
 // import { Label, Popup, List } from 'semantic-ui-react'
 
-import {openImportPopup} from '~/modules/settings/actions'
-import {openBroadcast} from '~/modules/broadcast/actions'
-import {applyFilter} from '~/modules/filter/actions'
-import {openPopup} from '~/modules/company-product-info/actions'
-import {setCompanyElligible} from '~/modules/auth/actions'
-import {FormattedNumber} from 'react-intl'
-import {currency} from '~/constants/index'
+import { openImportPopup } from '~/modules/settings/actions'
+import { openBroadcast } from '~/modules/broadcast/actions'
+import { applyFilter } from '~/modules/filter/actions'
+import { openPopup } from '~/modules/company-product-info/actions'
+import { setCompanyElligible } from '~/modules/auth/actions'
+import { FormattedNumber } from 'react-intl'
+import { currency } from '~/constants/index'
 
-import {FormattedUnit, UnitOfPackaging, ArrayToMultiple, FormattedAssay} from '~/components/formatted-messages'
-import {getSafe} from '~/utils/functions'
+import { FormattedUnit, UnitOfPackaging, ArrayToMultiple, FormattedAssay } from '~/components/formatted-messages'
+import { getSafe } from '~/utils/functions'
 import moment from 'moment/moment'
 
-function mapStateToProps(store, {datagrid}) {
+function mapStateToProps(store, { datagrid }) {
   return {
     ...store.simpleAdd,
     sellEligible: getSafe(() => store.auth.identity.company.sellEligible, false),
@@ -110,7 +110,7 @@ function mapStateToProps(store, {datagrid}) {
 }
 
 export default withDatagrid(
-  connect(mapStateToProps, {...Actions, openPopup, openImportPopup, openBroadcast, applyFilter, setCompanyElligible})(
+  connect(mapStateToProps, { ...Actions, openPopup, openImportPopup, openBroadcast, applyFilter, setCompanyElligible })(
     MyInventory
   )
 )

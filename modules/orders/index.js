@@ -1,5 +1,5 @@
 import OrdersContainer from './components/OrdersContainer'
-import {DatagridProvider} from '~/modules/datagrid'
+import { DatagridProvider } from '~/modules/datagrid'
 import Router from 'next/router'
 
 const OrdersModule = () => (
@@ -19,4 +19,4 @@ const OrdersModule = () => (
   </>
 )
 
-export {OrdersModule}
+export { OrdersModule }

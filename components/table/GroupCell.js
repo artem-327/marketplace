@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import cn from 'classnames'
-import {Checkbox} from 'semantic-ui-react'
+import { Checkbox } from 'semantic-ui-react'
 import styled from 'styled-components'
 import _ from 'lodash'
 

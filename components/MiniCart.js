@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
-import {getCart} from '~/modules/purchase-order/actions'
-import {Icon, Label} from 'semantic-ui-react'
-import {getSafe} from '~/utils/functions'
+import { getCart } from '~/modules/purchase-order/actions'
+import { Icon, Label } from 'semantic-ui-react'
+import { getSafe } from '~/utils/functions'
 
 const CircularLabel = styled(Label)`
   position: absolute;
@@ -22,7 +22,7 @@ class MiniCart extends Component {
   }
 
   render() {
-    const {cartItems} = this.props
+    const { cartItems } = this.props
 
     return (
       <Icon.Group>
@@ -41,4 +41,4 @@ const stateToProps = state => {
   }
 }
 
-export default connect(stateToProps, {getCart})(MiniCart)
+export default connect(stateToProps, { getCart })(MiniCart)

@@ -1,12 +1,12 @@
 import moment from 'moment'
 
 import * as AT from './action-types'
-import {ROLES_ENUM} from '../../src/utils/constants'
-import {getSafe} from '~/utils/functions'
-import {ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED} from '~/modules/admin/action-types'
-import {SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED} from '~/modules/settings/action-types'
-import {SET_PREFERRED_LANGUAGE_FULFILLED} from '~/modules/settings/action-types'
-import {PROFILE_UPDATE_MY_PROFILE_FULFILLED} from '~/modules/profile/action-types'
+import { ROLES_ENUM } from '../../src/utils/constants'
+import { getSafe } from '~/utils/functions'
+import { ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '~/modules/admin/action-types'
+import { SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '~/modules/settings/action-types'
+import { SET_PREFERRED_LANGUAGE_FULFILLED } from '~/modules/settings/action-types'
+import { PROFILE_UPDATE_MY_PROFILE_FULFILLED } from '~/modules/profile/action-types'
 
 const getAccessRights = roles => {
   let accessRights = {}
@@ -62,8 +62,8 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-  const {loginForm} = state
-  const {type, payload} = action
+  const { loginForm } = state
+  const { type, payload } = action
 
   switch (type) {
     case AT.LOGIN_INIT: {
@@ -156,7 +156,7 @@ export default function reducer(state = initialState, action) {
     case AT.UPDATE_IDENTITY: {
       return {
         ...state,
-        identity: {...payload, ...getAccessRights(payload.roles)}
+        identity: { ...payload, ...getAccessRights(payload.roles) }
       }
     }
 
@@ -249,7 +249,7 @@ export default function reducer(state = initialState, action) {
     case AT.GET_IDENTITY_FULFILLED: {
       return {
         ...state,
-        identity: {...payload, ...getAccessRights(payload.roles)}
+        identity: { ...payload, ...getAccessRights(payload.roles) }
       }
     }
 

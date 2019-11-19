@@ -2,10 +2,10 @@ import api from '~/api'
 
 export const getCart = () => api.get('/prodex/api/cart').then(response => response.data)
 export const deleteCart = () => api.delete(`/prodex/api/cart`)
-export const addCartItem = ({productOffer, pkgAmount}) =>
-  api.post('/prodex/api/cart/items', {productOffer, pkgAmount}).then(response => response.data)
+export const addCartItem = ({ productOffer, pkgAmount }) =>
+  api.post('/prodex/api/cart/items', { productOffer, pkgAmount }).then(response => response.data)
 export const deleteCartItem = cartItemId => api.delete(`/prodex/api/cart/items/${cartItemId}`)
-export const updateCartItem = ({cartItemId, pkgAmount}) =>
+export const updateCartItem = ({ cartItemId, pkgAmount }) =>
   api.patch(`/prodex/api/cart/items/${cartItemId}?pkgAmount=${pkgAmount}`).then(response => response.data)
 export const getCartItem = cartItemId => api.get(`/prodex/api/cart/items/${cartItemId}`)
 export const getProductOffer = id => api.get(`/prodex/api/product-offers/${id}/`).then(response => response.data)
@@ -21,11 +21,11 @@ export const getShippingQuotes = (countryId, zip) =>
     .then(response => response.data)
 
 export const getRegions = search =>
-  api.get('/prodex/api/regions', {params: {search: search}}).then(response => response.data.regions)
+  api.get('/prodex/api/regions', { params: { search: search } }).then(response => response.data.regions)
 export const getRegionDetail = id => api.get(`/prodex/api/countries/?regionId=${id}`).then(response => response.data)
 export const getStates = search =>
-  api.get(`/prodex/api/countries`, {params: {search: search}}).then(response => response.data)
-export const getProvinces = ({countryId}) =>
+  api.get(`/prodex/api/countries`, { params: { search: search } }).then(response => response.data)
+export const getProvinces = ({ countryId }) =>
   api.get(`/prodex/api/provinces/country/${countryId}`).then(response => response.data)
 export const getStateDetail = id =>
   api.get(`/prodex/api/companies/?entityId=${id}&entityType=country`).then(response => response.data)
