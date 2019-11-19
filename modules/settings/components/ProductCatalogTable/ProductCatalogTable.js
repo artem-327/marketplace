@@ -93,7 +93,7 @@ class ProductCatalogTable extends Component {
           defaultSorting={{
             columnName: 'intProductName',
             sortPath: 'CompanyProduct.intProductName',
-            direction: 'desc'
+            direction: 'ASC'
           }}
           rowActions={[
             { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row) },
