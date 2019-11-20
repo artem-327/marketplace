@@ -37,7 +37,6 @@ export class DatagridProvider extends Component {
 
   // componentWillReceiveProps({apiConfig}) {
   //   if (JSON.stringify(apiConfig) !== JSON.stringify(this.props.apiConfig)) {
-  //     console.log('CHANGE', apiConfig)
   //     this.setState(initialState)
   //     this.loadData()
   //   }

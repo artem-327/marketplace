@@ -44,7 +44,6 @@ export default class TimeoutWarning extends Component {
   }
 
   handleIdle = () => {
-    console.log('handleIdle')
     this.checkTimeInterval = setInterval(this.checkTime, 1000)
   }
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { func, array } from 'prop-types'
+import { func, array, shape, number, arrayOf } from 'prop-types'
 import { connect } from 'react-redux'
 
 import { Icon, Grid, GridColumn } from 'semantic-ui-react'
@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl'
 
 import { FilterTag, PopupRow, WiderPopup } from '../constants/layout'
 import { groupFilters } from '../constants/filter'
+import { string } from 'postcss-selector-parser'
 
 const TAGS_TO_DISPLAY = 3
 const MAX_TAG_ENTITIES = 2
@@ -96,7 +97,15 @@ class FilterTags extends Component {
 
 FilterTags.propTypes = {
   filter: array,
-  onClick: func
+  onClick: func,
+  filters: arrayOf(
+    shape({
+      description: string,
+      indexes: arrayOf(number),
+      tagDescription: arrayOf(string),
+      valuesDescription: arrayOf(string)
+    })
+  )
 }
 
 FilterTags.defaultProps = {

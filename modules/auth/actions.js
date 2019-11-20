@@ -139,7 +139,6 @@ export const setCompanyElligible = () => ({
   type: AT.SET_COMPANY_SELL_ELLIGIBLE,
   payload: async () => {
     let data = await api.getIdentity()
-    console.log({ data })
     return getSafe(() => data.company.sellEligible, 'kkt :D')
   }
 })

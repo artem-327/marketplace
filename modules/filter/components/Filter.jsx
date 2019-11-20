@@ -489,7 +489,6 @@ class Filter extends Component {
   getOptions = options => {
     return options.map(option => {
       let parsed = JSON.parse(option.value)
-      console.log({ option, parsed })
       return {
         key: option.key,
         text: option.text,
@@ -537,7 +536,7 @@ class Filter extends Component {
     if (this.state.searchQuery.length <= 1)
       noResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
     if (autocompleteDataLoading) noResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
-    console.log({ autocompleteDataLoading })
+
     let dropdownProps = {
       search: _ => this.getOptions(autocompleteData),
       selection: true,
@@ -569,7 +568,6 @@ class Filter extends Component {
       fluid: true,
       clearable: true,
       options: autocompleteWarehouse.map(warehouse => {
-        console.log({ warehouse })
         if (warehouse.text) {
           var { text } = warehouse
         } else {
