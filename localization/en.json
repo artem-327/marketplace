@@ -193,6 +193,7 @@
   "global.checkToOverride": "Check this option if you wish to override this setting.",
   "global.canNotOverride": "This setting cannot be overridden at this level.",
   "global.to": "To",
+  "global.noShippingOptions": "No shipping options available.",
   "global.vendor": "Vendor",
   "global.vendorName": "Vendor Name",
   "global.properShippingName": "Proper Shipping Name",
