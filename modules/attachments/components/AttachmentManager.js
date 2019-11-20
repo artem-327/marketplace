@@ -47,7 +47,7 @@ const AttachmentModal = withDatagrid(
 
     getContent = () => {
       const { datagrid, lockSelection, tableProps, selectable } = this.props
-      console.log({ datagrid, tableProps })
+      
       return (
         <ProdexTable
           {...datagrid.tableProps}

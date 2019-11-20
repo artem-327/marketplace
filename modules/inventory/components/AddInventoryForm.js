@@ -1294,7 +1294,6 @@ class AddInventoryForm extends Component {
           style={{ padding: '20px' }}>
           {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
             this.submitForm = submitForm
-            console.log({ values })
             return (
               <>
                 <Modal closeIcon onClose={this.resetForm} open={this.props.poCreated} size='tiny'>
@@ -2080,8 +2079,8 @@ class AddInventoryForm extends Component {
                                           selection: true,
                                           clearable: true,
                                           loading: searchedOriginsLoading,
-                                          onChange: (e, { value }) => {
-                                            value ? console.log(value) : searchOrigins('')
+                                          onChange: (e, {value}) => {
+                                            value && searchOrigins('')
                                           },
                                           onSearchChange: debounce(
                                             (e, { searchQuery }) => searchOrigins(searchQuery),

@@ -639,7 +639,6 @@ class CompanyProductInfo extends Component {
   getContent = ({ values }) => {
     let { activeIndex } = this.props
 
-    console.log('VALUES', values)
 
     switch (activeIndex) {
       case 0: {
@@ -919,7 +918,6 @@ class CompanyProductInfo extends Component {
       }
     }
 
-    console.log({ initialValues })
 
     return (
       <Form
