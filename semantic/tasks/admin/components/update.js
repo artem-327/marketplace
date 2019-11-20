@@ -63,13 +63,13 @@ module.exports = function(callback) {
         : false,
       isNewVersion = version && componentPackage.version != version,
       commitMessage = isNewVersion ? 'Updated component to version ' + version : 'Updated files from main repo',
-      gitOptions = {cwd: outputDirectory},
-      commitOptions = {args: commitArgs, cwd: outputDirectory},
-      releaseOptions = {tag_name: version, owner: release.org, repo: repoName},
-      fileModeOptions = {args: 'config core.fileMode false', cwd: outputDirectory},
-      usernameOptions = {args: 'config user.name "' + oAuth.name + '"', cwd: outputDirectory},
-      emailOptions = {args: 'config user.email "' + oAuth.email + '"', cwd: outputDirectory},
-      versionOptions = {args: 'rev-parse --verify HEAD', cwd: outputDirectory},
+      gitOptions = { cwd: outputDirectory },
+      commitOptions = { args: commitArgs, cwd: outputDirectory },
+      releaseOptions = { tag_name: version, owner: release.org, repo: repoName },
+      fileModeOptions = { args: 'config core.fileMode false', cwd: outputDirectory },
+      usernameOptions = { args: 'config user.name "' + oAuth.name + '"', cwd: outputDirectory },
+      emailOptions = { args: 'config user.email "' + oAuth.email + '"', cwd: outputDirectory },
+      versionOptions = { args: 'rev-parse --verify HEAD', cwd: outputDirectory },
       localRepoSetup = fs.existsSync(path.join(outputDirectory, '.git')),
       canProceed = true
     console.info('Processing repository:' + outputDirectory)
@@ -108,7 +108,7 @@ module.exports = function(callback) {
     // push changes to remote
     function pushFiles() {
       console.info('Pushing files for ' + component)
-      git.push('origin', 'master', {args: '', cwd: outputDirectory}, function(error) {
+      git.push('origin', 'master', { args: '', cwd: outputDirectory }, function(error) {
         console.info('Push completed successfully')
         getSHA()
       })

@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-import {Header, Menu, Button, Input, Dropdown} from 'semantic-ui-react'
+import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
 
-import {openPopup, handleFiltersValue, openImportPopup} from '../actions'
+import { openPopup, handleFiltersValue, openImportPopup } from '../actions'
 import unitedStates from '../../../components/unitedStates'
 
 const textsTable = {
@@ -84,9 +84,9 @@ class TablesHandlers extends Component {
   }
 
   render() {
-    const {handleFiltersValue, currentTab, openPopup, openImportPopup} = this.props
+    const { handleFiltersValue, currentTab, openPopup, openImportPopup } = this.props
 
-    const {filterFieldCurrentValue} = this.state
+    const { filterFieldCurrentValue } = this.state
 
     return (
       <Menu secondary>
@@ -99,7 +99,7 @@ class TablesHandlers extends Component {
         <Menu.Menu position='right'>
           <Menu.Item data-test='settings_tables_handlers_search_inp'>
             <Input
-              style={{width: 340}}
+              style={{ width: 340 }}
               size='large'
               icon='search'
               placeholder={textsTable[currentTab].SearchText}
@@ -113,7 +113,7 @@ class TablesHandlers extends Component {
             {currentTab === 'Product catalog' && (
               <Button
                 size='large'
-                style={{marginLeft: 10}}
+                style={{ marginLeft: 10 }}
                 primary
                 onClick={() => openImportPopup()}
                 data-test='settings_tables_handlers_import_btn'>

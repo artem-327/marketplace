@@ -1,10 +1,10 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import TablesHandlers from './TablesHandlers'
-import {Container, Grid, Segment} from 'semantic-ui-react'
+import { Container, Grid, Segment } from 'semantic-ui-react'
 import Tabs from './Tabs'
-import {withAuth} from '~/hocs'
-import {FormattedMessage} from 'react-intl'
+import { withAuth } from '~/hocs'
+import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
 import styled from 'styled-components'
 
@@ -32,9 +32,9 @@ import EditAltNamesEchoProductPopup from './ProductCatalogTable/EditAltNamesEcho
 
 import ProductCatalogTable from './ProductCatalogTable/Table'
 
-import {getSafe} from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 
-import {DatagridProvider} from '~/modules/datagrid'
+import { DatagridProvider } from '~/modules/datagrid'
 import Settings from '~/components/settings'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
@@ -70,8 +70,8 @@ const datagridConfig = {
     searchToFilter: v =>
       v
         ? [
-            {operator: 'LIKE', path: 'CasProduct.casIndexName', values: [`%${v}%`]},
-            {operator: 'LIKE', path: 'CasProduct.casNumber', values: [`%${v}%`]}
+            { operator: 'LIKE', path: 'CasProduct.casIndexName', values: [`%${v}%`] },
+            { operator: 'LIKE', path: 'CasProduct.casNumber', values: [`%${v}%`] }
           ]
         : [],
     params: {
@@ -80,15 +80,15 @@ const datagridConfig = {
   },
   Companies: {
     url: '/prodex/api/companies/datagrid',
-    searchToFilter: v => (v ? [{operator: 'LIKE', path: 'Company.name', values: [`%${v}%`]}] : [])
+    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] }] : [])
   },
   'Product Catalog': {
     url: '/prodex/api/echo-products/datagrid',
     searchToFilter: v =>
       v
         ? [
-            {operator: 'LIKE', path: 'EchoProduct.name', values: [`%${v}%`]},
-            {operator: 'LIKE', path: 'EchoProduct.code', values: [`%${v}%`]}
+            { operator: 'LIKE', path: 'EchoProduct.name', values: [`%${v}%`] },
+            { operator: 'LIKE', path: 'EchoProduct.code', values: [`%${v}%`] }
           ]
         : [],
     params: {
@@ -97,35 +97,35 @@ const datagridConfig = {
   },
   Conditions: {
     url: '/prodex/api/product-conditions/datagrid',
-    searchToFilter: v => (v ? [{operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v}%`]}] : [])
+    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v}%`] }] : [])
   },
   'Document Types': {
     url: 'prodex/api/document-types/datagrid',
-    searchToFilter: v => (v ? [{operator: 'LIKE', path: 'DocumentType.name', values: [`%${v}%`]}] : [])
+    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'DocumentType.name', values: [`%${v}%`] }] : [])
   },
   Forms: {
     url: '/prodex/api/product-forms/datagrid',
-    searchToFilter: v => (v ? [{operator: 'LIKE', path: 'ProductForm.name', values: [`%${v}%`]}] : [])
+    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ProductForm.name', values: [`%${v}%`] }] : [])
   },
   Grades: {
     url: '/prodex/api/product-grades/datagrid',
-    searchToFilter: v => (v ? [{operator: 'LIKE', path: 'ProductGrade.name', values: [`%${v}%`]}] : [])
+    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ProductGrade.name', values: [`%${v}%`] }] : [])
   },
   Manufacturers: {
     url: '/prodex/api/manufacturers/datagrid',
-    searchToFilter: v => (v ? [{operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v}%`]}] : [])
+    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v}%`] }] : [])
   },
   'Market Segments': {
     url: '/prodex/api/market-segments/datagrid',
-    searchToFilter: v => (v ? [{operator: 'LIKE', path: 'MarketSegment.name', values: [`%${v}%`]}] : [])
+    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'MarketSegment.name', values: [`%${v}%`] }] : [])
   },
   'Units of Packaging': {
     url: '/prodex/api/packaging-types/datagrid',
-    searchToFilter: v => (v ? [{operator: 'LIKE', path: 'PackagingType.name', values: [`%${v}%`]}] : [])
+    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'PackagingType.name', values: [`%${v}%`] }] : [])
   },
   'Units of Measure': {
     url: '/prodex/api/units/datagrid',
-    searchToFilter: v => (v ? [{operator: 'LIKE', path: 'Unit.name', values: [`%${v}%`]}] : [])
+    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v}%`] }] : [])
   }
 }
 
@@ -192,7 +192,7 @@ class Admin extends Component {
   }
 
   getApiConfig = () => {
-    const {currentTab} = this.props
+    const { currentTab } = this.props
 
     return datagridConfig[currentTab.name]
   }
@@ -204,15 +204,15 @@ class Admin extends Component {
     return (
       <DatagridProvider apiConfig={this.getApiConfig()}>
         <Container fluid className='flex stretched'>
-          <Container fluid style={{padding: '0 32px'}}>
+          <Container fluid style={{ padding: '0 32px' }}>
             <TablesHandlers />
           </Container>
-          <Grid columns='equal' className='flex stretched' style={{padding: '0 32px'}}>
+          <Grid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
             <Grid.Row>
               <Grid.Column width={3}>
                 <Tabs />
               </Grid.Column>
-              <Grid.Column key={this.props.currentTab} style={{marginTop: '10px'}} className='flex stretched'>
+              <Grid.Column key={this.props.currentTab} style={{ marginTop: '10px' }} className='flex stretched'>
                 {this.renderContent()}
               </Grid.Column>
             </Grid.Row>

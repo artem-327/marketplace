@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
-import {withDatagrid} from '~/modules/datagrid'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { withDatagrid } from '~/modules/datagrid'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import {
   getWarehousesDataRequest,
   getBranchesDataRequest,
@@ -14,10 +14,10 @@ import {
 } from '../../actions'
 import Router from 'next/router'
 
-import {getSafe} from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 
 import confirm from '~/src/components/Confirmable/confirm'
-import {FormattedPhone} from '~/components/formatted-messages/'
+import { FormattedPhone } from '~/components/formatted-messages/'
 
 class WarehouseTable extends Component {
   state = {
@@ -95,7 +95,7 @@ class WarehouseTable extends Component {
   }
 
   handlerLoadPage() {
-    const {currentTab} = this.props
+    const { currentTab } = this.props
 
     if (currentTab.type === 'warehouses') {
       this.setState({
@@ -114,7 +114,7 @@ class WarehouseTable extends Component {
 
   branchChecker() {
     if (this.state.tab === 'branches') {
-      let {columns} = this.state
+      let { columns } = this.state
       return columns.map(item => {
         let obj = {}
         if (item.title === 'Warehouse Name') {
@@ -148,10 +148,10 @@ class WarehouseTable extends Component {
 
     let message =
       currentTab.type === 'branches'
-        ? {id: 'confirm.deleteBranch', defaultMessage: 'Delete Branch'}
-        : {id: 'confirm.deleteWarehouse', defaultMessage: 'Delete Warehouse'}
+        ? { id: 'confirm.deleteBranch', defaultMessage: 'Delete Branch' }
+        : { id: 'confirm.deleteWarehouse', defaultMessage: 'Delete Warehouse' }
 
-    const {formatMessage} = intl
+    const { formatMessage } = intl
 
     return (
       <React.Fragment>
@@ -162,20 +162,20 @@ class WarehouseTable extends Component {
           columns={this.branchChecker()}
           loading={datagrid.loading || loading}
           rows={rows}
-          style={{marginTop: '5px'}}
+          style={{ marginTop: '5px' }}
           rowActions={[
             {
-              text: formatMessage({id: 'global.edit', defaultMessage: 'Edit'}),
+              text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
               callback: row => openPopup(row.popupValues)
             },
             {
-              text: formatMessage({id: 'global.delete', defaultMessage: 'Delete'}),
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row =>
                 confirm(
-                  formatMessage({...message}),
+                  formatMessage({ ...message }),
                   formatMessage(
-                    {id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}! ? `},
-                    {item: row.name}
+                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}! ? ` },
+                    { item: row.name }
                   )
                 ).then(() => deleteBranch(row.id))
             }
@@ -196,7 +196,7 @@ const mapDispatchToProps = {
   deleteBranch
 }
 
-const mapStateToProps = (state, {datagrid}) => {
+const mapStateToProps = (state, { datagrid }) => {
   return {
     rows: datagrid.rows.map(r => {
       let countryId = getSafe(() => r.deliveryAddress.address.country.id),
@@ -216,7 +216,7 @@ const mapStateToProps = (state, {datagrid}) => {
                 streetAddress: getSafe(() => r.deliveryAddress.address.streetAddress),
                 city: getSafe(() => r.deliveryAddress.address.city),
                 province: provinceId,
-                country: JSON.stringify({countryId, hasProvinces}),
+                country: JSON.stringify({ countryId, hasProvinces }),
                 zip
               },
               readyTime: getSafe(() => r.deliveryAddress.readyTime, ''),

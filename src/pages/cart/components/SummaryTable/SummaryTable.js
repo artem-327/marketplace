@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import './SummaryTable.scss'
-import {Button} from 'semantic-ui-react'
-import {FormattedMessage} from 'react-intl'
+import { Button } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
 
-const SummaryTable = ({hasButton, children, title, handleContinue}) => {
+const SummaryTable = ({ hasButton, children, title, handleContinue }) => {
   return (
     <div className='summary-table'>
       <header>

@@ -18,7 +18,7 @@ import {
 const initialState = {
   id: null,
   offer: {
-    pricingTiers: [{price: 0}],
+    pricingTiers: [{ price: 0 }],
     price: {}
   },
   open: false,
@@ -46,7 +46,7 @@ export default typeToReducer(
       }
     },
 
-    [openBroadcast.fulfilled]: (state, {payload: {data, id, offer}}) => {
+    [openBroadcast.fulfilled]: (state, { payload: { data, id, offer } }) => {
       return {
         ...state,
         loading: false,
@@ -65,12 +65,12 @@ export default typeToReducer(
       }
     },
 
-    [switchMode]: (state, {payload: mode}) => ({
+    [switchMode]: (state, { payload: mode }) => ({
       ...state,
       mode
     }),
 
-    [updateFilter]: (state, {payload}) => ({
+    [updateFilter]: (state, { payload }) => ({
       ...state,
       filter: payload
     }),
@@ -96,7 +96,7 @@ export default typeToReducer(
       templateSaving: true
     }),
 
-    [saveTemplate.fulfilled]: (state, {payload}) => ({
+    [saveTemplate.fulfilled]: (state, { payload }) => ({
       ...state,
       templateSaving: false,
       templates: state.templates.concat(payload)
@@ -112,7 +112,7 @@ export default typeToReducer(
       loadingTemplates: true
     }),
 
-    [getTemplates.fulfilled]: (state, {payload}) => ({
+    [getTemplates.fulfilled]: (state, { payload }) => ({
       ...state,
       loadingTemplates: false,
       templates: payload
@@ -123,8 +123,8 @@ export default typeToReducer(
       loading: true
     }),
 
-    [getTemplate.fulfilled]: (state, {payload}) => {
-      let {id, mappedBroadcastRules} = payload
+    [getTemplate.fulfilled]: (state, { payload }) => {
+      let { id, mappedBroadcastRules } = payload
 
       return {
         ...state,
@@ -163,7 +163,7 @@ export default typeToReducer(
       templateDeleting: true
     }),
 
-    [deleteTemplate.fulfilled]: (state, {payload}) => ({
+    [deleteTemplate.fulfilled]: (state, { payload }) => ({
       ...state,
       templates: state.templates.filter(template => template.id !== payload),
       templateDeleting: false
@@ -177,7 +177,7 @@ export default typeToReducer(
       ...state,
       loading: true
     }),
-    [initGlobalBroadcast.fulfilled]: (state, {payload}) => ({
+    [initGlobalBroadcast.fulfilled]: (state, { payload }) => ({
       ...state,
       ...payload,
       loading: false
@@ -186,11 +186,11 @@ export default typeToReducer(
       ...state,
       loading: false
     }),
-    [loadingChanged]: (state, {payload}) => ({
+    [loadingChanged]: (state, { payload }) => ({
       ...state,
       loading: typeof payload === 'boolean' ? payload : !state.loading
     }),
-    [treeDataChanged]: (state, {payload}) => ({
+    [treeDataChanged]: (state, { payload }) => ({
       ...state,
       data: payload
     })

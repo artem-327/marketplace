@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './popup.scss'
 import classNames from 'classnames'
 
@@ -35,7 +35,7 @@ class PopUp extends Component {
   }
 
   render() {
-    let {isOpen, component} = this.state
+    let { isOpen, component } = this.state
     let specialClass =
       typeof component !== 'undefined' && typeof component.props.className !== 'undefined'
         ? component.props.className

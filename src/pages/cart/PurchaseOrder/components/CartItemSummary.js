@@ -1,10 +1,10 @@
-import React, {Component} from 'react'
-import {array, string, func} from 'prop-types'
-import {FormattedMessage, FormattedNumber} from 'react-intl'
-import {Grid, GridRow, GridColumn, Header, Segment, Divider} from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { array, string, func } from 'prop-types'
+import { FormattedMessage, FormattedNumber } from 'react-intl'
+import { Grid, GridRow, GridColumn, Header, Segment, Divider } from 'semantic-ui-react'
 import styled from 'styled-components'
-import {currency} from '~/constants/index'
-import {getSafe} from '~/utils/functions'
+import { currency } from '~/constants/index'
+import { getSafe } from '~/utils/functions'
 
 const RelaxedSegment = styled(Segment)`
   margin-top: 0px !important;
@@ -28,7 +28,7 @@ const Title = styled(HeaderTextRow)`
 
 export default class CartItemSummary extends Component {
   renderItem = (item, i, lastChild) => {
-    let {productOffer} = item
+    let { productOffer } = item
 
     let currency = getSafe(() => productOffer.pricing.price.currency.code, currency)
 
@@ -91,7 +91,7 @@ export default class CartItemSummary extends Component {
           <GridColumn>
             <FormattedMessage
               id='global.pricePer'
-              values={{unit: productOffer.product.packagingUnit.nameAbbreviation}}
+              values={{ unit: productOffer.product.packagingUnit.nameAbbreviation }}
             />
           </GridColumn>
 
@@ -120,7 +120,7 @@ export default class CartItemSummary extends Component {
   }
 
   render() {
-    let {cartItems, header} = this.props
+    let { cartItems, header } = this.props
 
     return (
       <RelaxedSegment className='cart-item-summary'>

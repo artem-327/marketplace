@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
-import {Errors} from 'react-redux-form'
+import React, { Component } from 'react'
+import { Errors } from 'react-redux-form'
 import DropdownRedux from '../../../../../components/Dropdown/DropdownRedux'
-import {messages, required} from '../../../../../utils/validation'
+import { messages, required } from '../../../../../utils/validation'
 import classnames from 'classnames'
 import './Location.scss'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import RemoteComboBox from '../../../../../components/ComboBox/RemoteComboBox'
-import {checkToken} from '../../../../../utils/auth'
+import { checkToken } from '../../../../../utils/auth'
 
 class Location extends Component {
   constructor(props) {
@@ -47,7 +47,7 @@ class Location extends Component {
   }
 
   handleInputs(value, name) {
-    this.setState({[name]: value})
+    this.setState({ [name]: value })
   }
 
   setLocation = value => {
@@ -80,7 +80,7 @@ class Location extends Component {
   changeMode(e) {
     e.preventDefault()
     if (this.state.warehouseIndex === '') return
-    this.setState({edit: !this.state.edit})
+    this.setState({ edit: !this.state.edit })
   }
 
   validateEmail() {
@@ -120,24 +120,24 @@ class Location extends Component {
 
     if (checkToken(this.props)) return
 
-    let {warehouseName, street, city, state, zip, contact, phone, email} = this.state
+    let { warehouseName, street, city, state, zip, contact, phone, email } = this.state
 
-    this.setState({isSubmitted: true})
+    this.setState({ isSubmitted: true })
 
     if (!this.validateForms()) return
 
     this.props.saveWarehouse(warehouseName, street, city, state, contact, phone, email, zip).then(() => {
       this.props.fetchWarehouses().then(() => {
-        this.setState({edit: false}, () => this.changeLocation('saved'))
+        this.setState({ edit: false }, () => this.changeLocation('saved'))
       })
     })
   }
 
   updateLocation(e) {
     e.preventDefault()
-    let {warehouseIndex, warehouseName, street, city, state, zip, contact, phone, email} = this.state
+    let { warehouseIndex, warehouseName, street, city, state, zip, contact, phone, email } = this.state
 
-    this.setState({isSubmitted: true})
+    this.setState({ isSubmitted: true })
 
     if (!this.validateForms()) return
 
@@ -145,7 +145,7 @@ class Location extends Component {
       .updateWarehouse(warehouseIndex, warehouseName, street, city, state, contact, phone, email, zip)
       .then(() => {
         this.props.fetchWarehouses().then(() => {
-          this.setState({edit: false})
+          this.setState({ edit: false })
         })
       })
   }
@@ -174,14 +174,14 @@ class Location extends Component {
       </button>
     ) : (
       <button
-        className={'edit-location' + classnames({' disabled': disabled})}
+        className={'edit-location' + classnames({ ' disabled': disabled })}
         onClick={e => this.changeMode(e)}
         data-test='add_inventory_location_saved_edit_btn'>
         Edit
       </button>
     )
 
-    const {formatMessage} = this.props.intl
+    const { formatMessage } = this.props.intl
 
     return (
       <div>
@@ -203,7 +203,7 @@ class Location extends Component {
               dispatch={this.props.dispatch}
               opns={this.props.warehouse}
               // defaultValue={this.state.warehouseIndex}
-              validators={{required}}
+              validators={{ required }}
               onChange={value => this.setLocation(value)}
               placeholder={formatMessage({
                 id: 'global.selectLocation',
@@ -269,9 +269,9 @@ class Location extends Component {
                 disabled={!this.state.edit}
                 currentValue={this.getCurrentItemById(this.state.state)}
                 getObject={location => {
-                  if (location.country) this.setState({state: location.country.id})
-                  else if (location.province) this.setState({state: location.province.id})
-                  else this.setState({state: 1})
+                  if (location.country) this.setState({ state: location.country.id })
+                  else if (location.province) this.setState({ state: location.province.id })
+                  else this.setState({ state: 1 })
                 }}
                 items={this.props.filterLocations}
                 api={text => this.props.fetchFilterLocations(text)}
@@ -293,8 +293,8 @@ class Location extends Component {
                                                         location.country.name : location.province.name
                                                 )}
                                                 */
-                validators={{required}}
-                onChange={value => this.setState({state: value})}
+                validators={{ required }}
+                onChange={value => this.setState({ state: value })}
                 displayName={location => {
                   if (location.country) return location.country.name
                   else if (location.province) return location.province.name
@@ -402,7 +402,7 @@ class Location extends Component {
   }
 
   renderNewLocation() {
-    const {formatMessage} = this.props.intl
+    const { formatMessage } = this.props.intl
 
     let button = (
       <button
@@ -482,9 +482,9 @@ class Location extends Component {
               id='state-search'
               scroll={0}
               getObject={location => {
-                if (location.country) this.setState({state: location.country.id})
-                else if (location.province) this.setState({state: location.province.id})
-                else this.setState({state: 1})
+                if (location.country) this.setState({ state: location.country.id })
+                else if (location.province) this.setState({ state: location.province.id })
+                else this.setState({ state: 1 })
               }}
               items={this.props.filterLocations}
               api={text => this.props.fetchFilterLocations(text)}
@@ -506,8 +506,8 @@ class Location extends Component {
                                                 location.country.name : location.province.name
                                         )}
                                         */
-              validators={{required}}
-              onChange={value => this.setState({state: value})}
+              validators={{ required }}
+              onChange={value => this.setState({ state: value })}
               displayName={location => {
                 if (location.country) return location.country.name
                 else if (location.province) return location.province.name

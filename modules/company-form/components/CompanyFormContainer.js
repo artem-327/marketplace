@@ -1,7 +1,7 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import CompanyForm from './CompanyForm'
 import * as Actions from '../actions'
-import {getSafe} from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 
 function mapStateToProps(state, props) {
   return {

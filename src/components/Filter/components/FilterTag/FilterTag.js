@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './filterTag.scss'
 import PropTypes from 'prop-types'
-import {Icon} from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 
 class FilterTag extends Component {
   packageName = []

@@ -7,7 +7,7 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-  let {type, payload} = action
+  let { type, payload } = action
 
   switch (type) {
     case AT.BUSINESS_TYPES_FETCH_PENDING: {

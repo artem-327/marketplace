@@ -1,27 +1,27 @@
-import React, {Component} from 'react'
-import {array, string, func} from 'prop-types'
-import {FormattedMessage, FormattedNumber, injectIntl} from 'react-intl'
-import {Grid, GridRow, GridColumn, Header, Divider, Segment, Icon, Popup, List, Label} from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { array, string, func } from 'prop-types'
+import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
+import { Grid, GridRow, GridColumn, Header, Divider, Segment, Icon, Popup, List, Label } from 'semantic-ui-react'
 
 import './styles.scss'
-import {RelaxedRow, HeaderTextRow, WiderPopup, CustomSpan, CustomHeader} from './styledComponents'
-import {FormattedUnit, ArrayToMultiple} from '~/components/formatted-messages'
-import {Form, Input, Checkbox, Dropdown} from 'formik-semantic-ui-fixed-validation'
+import { RelaxedRow, HeaderTextRow, WiderPopup, CustomSpan, CustomHeader } from './styledComponents'
+import { FormattedUnit, ArrayToMultiple } from '~/components/formatted-messages'
+import { Form, Input, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 
-import {withToastManager} from 'react-toast-notifications'
-import {connect} from 'react-redux'
-import {debounce} from 'lodash'
+import { withToastManager } from 'react-toast-notifications'
+import { connect } from 'react-redux'
+import { debounce } from 'lodash'
 import * as Yup from 'yup'
-import {currency} from '~/constants/index'
+import { currency } from '~/constants/index'
 import {
   getPackagingGroupsDataRequest,
   getHazardClassesDataRequest,
   getUnNumbersByString,
   addUnNumber
 } from '~/modules/admin/actions'
-import {getNmfcNumbersByString, addNmfcNumber} from '~/modules/settings/actions'
-import {generateToastMarkup, getSafe, getFloatOrNull, getIntOrNull} from '~/utils/functions'
-import {nmfcValidation, freightClassValidation} from '~/constants/yupValidation'
+import { getNmfcNumbersByString, addNmfcNumber } from '~/modules/settings/actions'
+import { generateToastMarkup, getSafe, getFloatOrNull, getIntOrNull } from '~/utils/functions'
+import { nmfcValidation, freightClassValidation } from '~/constants/yupValidation'
 
 const validationSchema = Yup.object().shape({
   freightClass: freightClassValidation()
@@ -59,7 +59,7 @@ class CartItemSummary extends Component {
   }
 
   onHazmatPopup = async item => {
-    const {addUnNumber, addNmfcNumber} = this.props
+    const { addUnNumber, addNmfcNumber } = this.props
 
     let nmfcNumber = getSafe(
       () => item.nmfcNumber,
@@ -71,7 +71,7 @@ class CartItemSummary extends Component {
     if (unNumber) await addUnNumber([unNumber])
   }
 
-  handleUnNumberChange = debounce((_, {searchQuery}) => {
+  handleUnNumberChange = debounce((_, { searchQuery }) => {
     this.props.getUnNumbersByString(searchQuery)
   }, 250)
 
@@ -81,7 +81,7 @@ class CartItemSummary extends Component {
 
   hazmatMarkup = item => {
     const {
-      intl: {formatMessage},
+      intl: { formatMessage },
       hazardClasses,
       packagingGroups,
       unNumbersFiltered,
@@ -92,7 +92,7 @@ class CartItemSummary extends Component {
       nmfcNumbersFiltered
     } = this.props
     let {
-      productOffer: {companyProduct}
+      productOffer: { companyProduct }
     } = item
 
     let initialValues = {
@@ -115,9 +115,9 @@ class CartItemSummary extends Component {
         initialValues={initialValues}
         validationSchema={validationSchema}
         enableReinitialize
-        onSubmit={async (values, {setSubmitting}) => {
+        onSubmit={async (values, { setSubmitting }) => {
           try {
-            this.setState({edittingHazmatInfo: false})
+            this.setState({ edittingHazmatInfo: false })
             await updateHazmatInfo(item.id, {
               unNumber: getIntOrNull(values.unNumber),
               packagingGroup: getIntOrNull(values.packagingGroup),
@@ -131,14 +131,14 @@ class CartItemSummary extends Component {
                 <FormattedMessage
                   id='notifications.hazardInfoUpdated.header'
                   defaultMessage={`Hazardous informations for ${item.productOffer.tradeName} updated`}
-                  values={{name: item.productOffer.tradeName}}
+                  values={{ name: item.productOffer.tradeName }}
                 />,
                 <FormattedMessage
                   id='notifications.hazardInfoUpdated.content'
                   defaultMessage='Hazardous informations successfully updated'
                 />
               ),
-              {appearance: 'success'}
+              { appearance: 'success' }
             )
           } catch (e) {
             console.error(e)
@@ -146,7 +146,7 @@ class CartItemSummary extends Component {
             setSubmitting(false)
           }
         }}
-        children={({handleSubmit, errors}) => (
+        children={({ handleSubmit, errors }) => (
           <Segment basic>
             <Grid verticalAlign='middle'>
               <GridRow>
@@ -161,7 +161,7 @@ class CartItemSummary extends Component {
                     positive={this.state.edittingHazmatInfo}
                     onClick={() => {
                       if (this.state.edittingHazmatInfo) handleSubmit()
-                      else this.setState({edittingHazmatInfo: !this.state.edittingHazmatInfo})
+                      else this.setState({ edittingHazmatInfo: !this.state.edittingHazmatInfo })
                     }}
                     data-test='shopping_cart_hazmat'>
                     <FormattedMessage id={`global.${this.state.edittingHazmatInfo ? 'save' : 'edit'}`}>
@@ -188,7 +188,7 @@ class CartItemSummary extends Component {
                       onSearchChange: this.handleUnNumberChange
                     }}
                     name='unNumber'
-                    label={formatMessage({id: 'global.unNumber', defaultMessage: 'UN Number'})}
+                    label={formatMessage({ id: 'global.unNumber', defaultMessage: 'UN Number' })}
                   />
                 </GridColumn>
               </GridRow>
@@ -208,7 +208,7 @@ class CartItemSummary extends Component {
                       search: true
                     }}
                     name='packagingGroup'
-                    label={formatMessage({id: 'cart.packagingGroup', defaultMessage: 'Packaging Group'})}
+                    label={formatMessage({ id: 'cart.packagingGroup', defaultMessage: 'Packaging Group' })}
                   />
                 </GridColumn>
               </GridRow>
@@ -221,9 +221,9 @@ class CartItemSummary extends Component {
                       value: hazardClass.id,
                       text: `${hazardClass.classCode} - ${hazardClass.description}`
                     }))}
-                    inputProps={{disabled, search: true, clearable: true}}
+                    inputProps={{ disabled, search: true, clearable: true }}
                     name='hazardClass'
-                    label={formatMessage({id: 'cart.hazardClass', defaultMessage: 'Hazard Class'})}
+                    label={formatMessage({ id: 'cart.hazardClass', defaultMessage: 'Hazard Class' })}
                   />
                 </GridColumn>
               </GridRow>
@@ -231,9 +231,9 @@ class CartItemSummary extends Component {
               <GridRow>
                 <GridColumn data-test='shopping_cart_freightClass_inp'>
                   <Input
-                    inputProps={{disabled}}
+                    inputProps={{ disabled }}
                     name='freightClass'
-                    label={formatMessage({id: 'cart.freightClass', defaultMessage: 'Freight Class'})}
+                    label={formatMessage({ id: 'cart.freightClass', defaultMessage: 'Freight Class' })}
                   />
                 </GridColumn>
               </GridRow>
@@ -254,7 +254,7 @@ class CartItemSummary extends Component {
                       clearable: true,
                       selection: true,
                       loading: nmfcNumbersFetching,
-                      onSearchChange: (_, {searchQuery}) => this.handleSearchNmfcNumberChange(searchQuery)
+                      onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery)
                     }}
                     name='nmfcNumber'
                   />
@@ -264,9 +264,9 @@ class CartItemSummary extends Component {
               <GridRow>
                 <GridColumn>
                   <Checkbox
-                    inputProps={{disabled, 'data-test': 'shopping_cart_stackable_chckb'}}
+                    inputProps={{ disabled, 'data-test': 'shopping_cart_stackable_chckb' }}
                     name='stackable'
-                    label={formatMessage({id: 'cart.stackable', defaultMessage: 'Stackable'})}
+                    label={formatMessage({ id: 'cart.stackable', defaultMessage: 'Stackable' })}
                   />
                 </GridColumn>
               </GridRow>
@@ -277,9 +277,9 @@ class CartItemSummary extends Component {
     )
   }
 
-  renderItem = ({item, lastChild}) => {
-    let {productOffer} = item
-    let {deleteCart} = this.props
+  renderItem = ({ item, lastChild }) => {
+    let { productOffer } = item
+    let { deleteCart } = this.props
     // let currency = this.props.currency
 
     return (
@@ -333,7 +333,7 @@ class CartItemSummary extends Component {
               <WiderPopup
                 wide
                 onOpen={() => this.onHazmatPopup(item)}
-                onClose={() => this.setState({edittingHazmatInfo: false})}
+                onClose={() => this.setState({ edittingHazmatInfo: false })}
                 position='left center'
                 on='click'
                 trigger={
@@ -377,7 +377,7 @@ class CartItemSummary extends Component {
               <GridColumn>
                 <FormattedMessage
                   id='global.pricePer'
-                  values={{unit: productOffer.companyProduct.packagingUnit.nameAbbreviation}}
+                  values={{ unit: productOffer.companyProduct.packagingUnit.nameAbbreviation }}
                 />
               </GridColumn>
 
@@ -404,7 +404,7 @@ class CartItemSummary extends Component {
   }
 
   render() {
-    let {cartItems, header} = this.props
+    let { cartItems, header } = this.props
 
     return (
       <Segment>
@@ -414,7 +414,7 @@ class CartItemSummary extends Component {
               <Header>{header}</Header>
             </GridColumn>
           </GridRow>
-          {cartItems.map((item, i) => this.renderItem({item, i, lastChild: cartItems.length - 1 === i}))}
+          {cartItems.map((item, i) => this.renderItem({ item, i, lastChild: cartItems.length - 1 === i }))}
         </Grid>
       </Segment>
     )
@@ -436,8 +436,8 @@ CartItemSummary.defaultProps = {
 export default withToastManager(
   connect(
     ({
-      admin: {packagingGroups, hazardClasses, unNumbersFiltered, unNumbersFetching},
-      settings: {nmfcNumbersFetching, nmfcNumbersFiltered}
+      admin: { packagingGroups, hazardClasses, unNumbersFiltered, unNumbersFetching },
+      settings: { nmfcNumbersFetching, nmfcNumbersFiltered }
     }) => ({
       packagingGroups,
       hazardClasses,

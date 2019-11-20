@@ -1,7 +1,7 @@
 import * as Yup from 'yup'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
-import {dateDropdownOptions} from './filter'
+import { dateDropdownOptions } from './filter'
 
 export const initialValues = {
   search: [],
@@ -28,10 +28,10 @@ export const initialValues = {
 }
 
 const errorMessages = {
-  minimum: min => <FormattedMessage id='validation.minimum' values={{min}} />,
-  maximum: max => <FormattedMessage id='validation.maximum' values={{max}} />,
-  lessThan: value => <FormattedMessage id='validation.lessThan' values={{value}} />,
-  greaterThan: value => <FormattedMessage id='validation.greaterThan' values={{value}} />
+  minimum: min => <FormattedMessage id='validation.minimum' values={{ min }} />,
+  maximum: max => <FormattedMessage id='validation.maximum' values={{ max }} />,
+  lessThan: value => <FormattedMessage id='validation.lessThan' values={{ value }} />,
+  greaterThan: value => <FormattedMessage id='validation.greaterThan' values={{ value }} />
 }
 
 const comparationHelper = (fieldOne, fieldTwo, values, options = {}) => {
@@ -70,21 +70,21 @@ export const validationSchema = () =>
   Yup.lazy(values => {
     return Yup.object().shape({
       ...comparationHelper(
-        {propertyName: 'quantityFrom', value: 'To Quantity'},
-        {propertyName: 'quantityTo', value: 'From Quantity'},
+        { propertyName: 'quantityFrom', value: 'To Quantity' },
+        { propertyName: 'quantityTo', value: 'From Quantity' },
         values
       ),
 
       ...comparationHelper(
-        {propertyName: 'priceFrom', value: 'To Price'},
-        {propertyName: 'priceTo', value: 'From Price'},
+        { propertyName: 'priceFrom', value: 'To Price' },
+        { propertyName: 'priceTo', value: 'From Price' },
         values,
-        {minimum: 0.01}
+        { minimum: 0.01 }
       ),
 
       ...comparationHelper(
-        {propertyName: 'assayFrom', value: 'Maximum'},
-        {propertyName: 'assayTo', value: 'Minimum'},
+        { propertyName: 'assayFrom', value: 'Maximum' },
+        { propertyName: 'assayTo', value: 'Minimum' },
         values,
         {
           minimum: 0,

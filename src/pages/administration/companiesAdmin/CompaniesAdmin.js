@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   postNewOffice,
   putCompanyEdit,
@@ -10,13 +10,13 @@ import {
   deleteOffice,
   getOffices
 } from '../../../modules/companies'
-import {bindActionCreators} from 'redux'
+import { bindActionCreators } from 'redux'
 import './companiesAdmin.scss'
 //import Company from "./components/Company";
 import Spinner from '../../../components/Spinner/Spinner'
 import InputControlled from '../../../components/InputControlled/InputControlled'
 import DataTable from '../../../components/DataTable'
-import {injectIntl} from 'react-intl'
+import { injectIntl } from 'react-intl'
 
 class CompaniesAdmin extends Component {
   state = {
@@ -34,7 +34,7 @@ class CompaniesAdmin extends Component {
   }
 
   render() {
-    const {postNewCompany, companies, isFetching} = this.props
+    const { postNewCompany, companies, isFetching } = this.props
     if (isFetching) return <Spinner />
     const rows = companies.map(company => {
       return {
@@ -47,13 +47,13 @@ class CompaniesAdmin extends Component {
         ]
       }
     })
-    const {formatMessage} = this.props.intl
+    const { formatMessage } = this.props.intl
     return (
       <>
         <DataTable
           id='offices'
           sortFunc={nameColumn => console.log(nameColumn)}
-          headerInit={[{name: 'companyName'}]}
+          headerInit={[{ name: 'companyName' }]}
           contextMenu={[
             {
               action: id => console.log('edit Company with id: ' + id),
@@ -80,7 +80,7 @@ class CompaniesAdmin extends Component {
           <i
             className='fas fa-plus'
             title='Add new company'
-            onClick={() => postNewCompany(this.state.name, () => this.setState({name: ''}))}
+            onClick={() => postNewCompany(this.state.name, () => this.setState({ name: '' }))}
             data-test='administration_company_new_btn'
           />
         </div>

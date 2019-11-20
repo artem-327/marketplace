@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import ReactDropzone from 'react-dropzone'
 import delete_image from '../../../../../../images/upload/delete_image.jpg'

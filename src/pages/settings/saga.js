@@ -1,5 +1,5 @@
-import {call, put, takeEvery, select} from 'redux-saga/effects'
-import {closePopup, confirmationSuccess} from './actions'
+import { call, put, takeEvery, select } from 'redux-saga/effects'
+import { closePopup, confirmationSuccess } from './actions'
 import * as AT from './action-types'
 import api from './api'
 
@@ -9,9 +9,9 @@ function* getUsersDataWorker() {
     const branches = yield call(api.getBranches)
     const roles = yield call(api.getRoles)
 
-    yield put({type: AT.GET_ALL_BRANCHES_DATA, payload: branches})
-    yield put({type: AT.GET_ROLES_DATA, payload: roles})
-    yield put({type: AT.GET_USERS_DATA_SUCCESS, payload: users})
+    yield put({ type: AT.GET_ALL_BRANCHES_DATA, payload: branches })
+    yield put({ type: AT.GET_ROLES_DATA, payload: roles })
+    yield put({ type: AT.GET_USERS_DATA_SUCCESS, payload: users })
   } catch (e) {
     yield console.log('error:', e)
   }
@@ -30,7 +30,7 @@ function* getWarehousesDataWorker() {
     })
     yield put({
       type: AT.GET_WAREHOUSES_DATA_SUCCESS,
-      payload: {warehouses, newCountryFormat}
+      payload: { warehouses, newCountryFormat }
     })
   } catch (e) {
     yield console.log('error:', e)
@@ -51,7 +51,7 @@ function* getBranchesDataWorker() {
 
     yield put({
       type: AT.GET_BRANCHES_DATA_SUCCESS,
-      payload: {branches, newCountryFormat}
+      payload: { branches, newCountryFormat }
     })
   } catch (e) {
     yield console.log('error:', e)
@@ -142,7 +142,7 @@ function* getBankAccountsDataWorker() {
 
     yield put({
       type: AT.GET_BANK_ACCOUNTS_DATA_SUCCESS,
-      payload: {bankAccountsData, newCountryFormat, newCurrencyFormat}
+      payload: { bankAccountsData, newCountryFormat, newCurrencyFormat }
     })
   } catch (e) {
     yield console.log('error:', e)
@@ -168,7 +168,7 @@ function* getProductCatalogWorker() {
   }
 }
 
-function* getProductsWithRequiredParamWorker({payload}) {
+function* getProductsWithRequiredParamWorker({ payload }) {
   try {
     const products = yield call(api.getProductsWithRequiredParamPar, payload)
     yield put({
@@ -178,10 +178,10 @@ function* getProductsWithRequiredParamWorker({payload}) {
   } catch (e) {}
 }
 
-function* getStoredCSV({payload}) {
+function* getStoredCSV({ payload }) {
   try {
     const data = yield call(api.getStoredCSV, payload)
-    yield put({type: AT.GET_STORED_CSV_SUCCESS, data})
+    yield put({ type: AT.GET_STORED_CSV_SUCCESS, data })
   } catch (e) {
     yield console.log('error:', e)
   }
@@ -190,13 +190,13 @@ function* getStoredCSV({payload}) {
 function* getCSVMapProductOffer() {
   try {
     const data = yield call(api.getCSVMapProductOffer)
-    yield put({type: AT.GET_CSV_MAP_PRODUCT_OFFER_SUCCESS, data})
+    yield put({ type: AT.GET_CSV_MAP_PRODUCT_OFFER_SUCCESS, data })
   } catch (e) {
     yield console.log('error:', e)
   }
 }
 
-function* postNewUserWorker({payload}) {
+function* postNewUserWorker({ payload }) {
   try {
     const dataBody = {
       email: payload.email,
@@ -207,15 +207,15 @@ function* postNewUserWorker({payload}) {
       password: '123'
     }
     yield call(api.postNewUser, dataBody)
-    yield put({type: AT.GET_USERS_DATA})
+    yield put({ type: AT.GET_USERS_DATA })
   } catch (e) {
     yield console.log('error:', e)
   } finally {
-    yield put(closePopup({payload: null}))
+    yield put(closePopup({ payload: null }))
   }
 }
 
-function* postNewWarehouseWorker({payload}) {
+function* postNewWarehouseWorker({ payload }) {
   try {
     const currentUser = yield call(api.getCurrentUser)
     const dataBody = {
@@ -234,18 +234,18 @@ function* postNewWarehouseWorker({payload}) {
     }
     yield call(api.postNewWarehouse, dataBody)
     if (payload.tab) {
-      yield put({type: AT.GET_BRANCHES_DATA})
+      yield put({ type: AT.GET_BRANCHES_DATA })
     } else {
-      yield put({type: AT.GET_WAREHOUSES_DATA})
+      yield put({ type: AT.GET_WAREHOUSES_DATA })
     }
   } catch (e) {
     yield console.log('error:', e)
   } finally {
-    yield put(closePopup({payload: null}))
+    yield put(closePopup({ payload: null }))
   }
 }
 
-function* postNewCreditCardWorker({payload}) {
+function* postNewCreditCardWorker({ payload }) {
   console.log('payload', payload)
   try {
     const dataBody = {
@@ -260,7 +260,7 @@ function* postNewCreditCardWorker({payload}) {
   }
 }
 
-function* postNewBankAccountWorker({payload}) {
+function* postNewBankAccountWorker({ payload }) {
   try {
     const dataBody = {
       accountHolderName: payload.accountHolderName,
@@ -274,11 +274,11 @@ function* postNewBankAccountWorker({payload}) {
   } catch (e) {
     yield console.log('error:', e)
   } finally {
-    yield put(closePopup({payload: null}))
+    yield put(closePopup({ payload: null }))
   }
 }
 
-function* postNewProductWorker({payload}) {
+function* postNewProductWorker({ payload }) {
   try {
     const productData = {
       casProduct: payload.casProduct,
@@ -289,42 +289,42 @@ function* postNewProductWorker({payload}) {
       productName: payload.productName
     }
     yield call(api.postNewProduct, productData)
-    yield put({type: AT.GET_WAREHOUSES_DATA})
+    yield put({ type: AT.GET_WAREHOUSES_DATA })
   } catch (e) {
     yield console.log('error:', e)
   } finally {
-    yield put(closePopup({payload: null}))
+    yield put(closePopup({ payload: null }))
   }
 }
 
-function* postUploadCSVFile({payload}) {
+function* postUploadCSVFile({ payload }) {
   try {
     const data = yield call(api.uploadCSVFile, payload)
-    yield put({type: AT.POST_UPLOAD_CSV_FILE_SUCCESS, data})
+    yield put({ type: AT.POST_UPLOAD_CSV_FILE_SUCCESS, data })
   } catch (e) {
     yield console.log('error:', e)
   }
 }
 
-function* postImportProductCSV({payload, id}) {
+function* postImportProductCSV({ payload, id }) {
   try {
     const data = yield call(api.postImportProductCSV, payload, id)
-    yield put({type: AT.POST_CSV_IMPORT_PRODUCTS_SUCCESS, data})
+    yield put({ type: AT.POST_CSV_IMPORT_PRODUCTS_SUCCESS, data })
   } catch (e) {
     yield console.log('error:', e)
   }
 }
 
-function* postImportProductOfferCSV({payload, id}) {
+function* postImportProductOfferCSV({ payload, id }) {
   try {
     const data = yield call(api.postImportProductOfferCSV, payload, id)
-    yield put({type: AT.POST_CSV_IMPORT_PRODUCTS_OFFER_SUCCESS, data})
+    yield put({ type: AT.POST_CSV_IMPORT_PRODUCTS_OFFER_SUCCESS, data })
   } catch (e) {
     yield console.log('error:', e)
   }
 }
 
-function* postCSVMapProductOffer({payload}) {
+function* postCSVMapProductOffer({ payload }) {
   try {
     yield call(api.postCSVMapProductOffer, payload)
   } catch (e) {
@@ -332,7 +332,7 @@ function* postCSVMapProductOffer({payload}) {
   }
 }
 
-function* putWarehouseWorker({payload, id}) {
+function* putWarehouseWorker({ payload, id }) {
   try {
     const dataBody = {
       accessorials: [0],
@@ -355,11 +355,11 @@ function* putWarehouseWorker({payload, id}) {
   } catch (e) {
     yield console.log('error:', e)
   } finally {
-    yield put(closePopup({payload: null}))
+    yield put(closePopup({ payload: null }))
   }
 }
 
-function* putUserWorker({payload, id}) {
+function* putUserWorker({ payload, id }) {
   try {
     const updateUser = {
       firstname: payload.firstName,
@@ -371,15 +371,15 @@ function* putUserWorker({payload, id}) {
     }
 
     yield call(api.patchUser, id, updateUser)
-    yield put({type: AT.GET_USERS_DATA})
+    yield put({ type: AT.GET_USERS_DATA })
   } catch (e) {
     console.log('error', e)
   } finally {
-    yield put(closePopup({payload: null}))
+    yield put(closePopup({ payload: null }))
   }
 }
 
-function* putNewUserRolesWorker({payload, id}) {
+function* putNewUserRolesWorker({ payload, id }) {
   try {
     // const updateUser = {
     //   roles: payload
@@ -387,15 +387,15 @@ function* putNewUserRolesWorker({payload, id}) {
     // console.log('payload', payload)
     // const updateUser = [2, 1]
     yield call(api.patchUserRole, id, payload)
-    yield put({type: AT.GET_USERS_DATA})
+    yield put({ type: AT.GET_USERS_DATA })
   } catch (e) {
     yield console.log('error:', e)
   } finally {
-    yield put(closePopup({payload: null}))
+    yield put(closePopup({ payload: null }))
   }
 }
 
-function* putWarehouseEditPopup({payload, id}) {
+function* putWarehouseEditPopup({ payload, id }) {
   try {
     const dataBody = {
       address: {
@@ -413,18 +413,18 @@ function* putWarehouseEditPopup({payload, id}) {
     }
     yield call(api.putWarehouse, id, dataBody)
     if (payload.tab) {
-      yield put({type: AT.GET_BRANCHES_DATA})
+      yield put({ type: AT.GET_BRANCHES_DATA })
     } else {
-      yield put({type: AT.GET_WAREHOUSES_DATA})
+      yield put({ type: AT.GET_WAREHOUSES_DATA })
     }
   } catch (e) {
     yield console.log('error:', e)
   } finally {
-    yield put(closePopup({payload: null}))
+    yield put(closePopup({ payload: null }))
   }
 }
 
-function* putProductEditPopup({payload}) {
+function* putProductEditPopup({ payload }) {
   try {
     const id = payload.id
     const updateProduct = {
@@ -437,25 +437,25 @@ function* putProductEditPopup({payload}) {
       unNumber: payload.unNumber
     }
     yield call(api.putProduct, id, updateProduct)
-    yield put({type: AT.GET_WAREHOUSES_DATA})
+    yield put({ type: AT.GET_WAREHOUSES_DATA })
   } catch (e) {
     yield console.log('error:', e)
   } finally {
-    yield put(closePopup({payload: null}))
+    yield put(closePopup({ payload: null }))
   }
 }
 
-function* putBankAccountEditPopup({payload}) {
+function* putBankAccountEditPopup({ payload }) {
   try {
     console.log('payload', payload)
   } catch (e) {
     yield console.log('error:', e)
   } finally {
-    yield put(closePopup({payload: null}))
+    yield put(closePopup({ payload: null }))
   }
 }
 
-function* deleteCreditCardWorker({payload}) {
+function* deleteCreditCardWorker({ payload }) {
   try {
     yield call(api.deleteWarehouse, payload)
   } catch (e) {
@@ -463,7 +463,7 @@ function* deleteCreditCardWorker({payload}) {
   }
 }
 
-function* deleteBankAccountWorker({payload}) {
+function* deleteBankAccountWorker({ payload }) {
   try {
     yield call(api.deleteWarehouse, payload)
   } catch (e) {
@@ -472,63 +472,63 @@ function* deleteBankAccountWorker({payload}) {
 }
 
 function* closeImportPopup({}) {
-  yield put({type: AT.CLOSE_IMPORT_POPUP_SUCCESS})
-  yield put({type: AT.GET_PRODUCTS_CATALOG_DATA})
+  yield put({ type: AT.CLOSE_IMPORT_POPUP_SUCCESS })
+  yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA })
 }
 
-function* closeImportPopupCancel({payload}) {
+function* closeImportPopupCancel({ payload }) {
   if (payload) {
     yield call(api.deleteTemporaryFile, payload)
   }
-  yield put({type: AT.CLOSE_IMPORT_POPUP_SUCCESS})
+  yield put({ type: AT.CLOSE_IMPORT_POPUP_SUCCESS })
 }
 
 function* deleteConfirmPopup({}) {
   const {
-    settings: {deleteRowByid, currentTab}
+    settings: { deleteRowByid, currentTab }
   } = yield select()
   let toast = {}
   try {
     switch (currentTab) {
       case 'Users':
         yield call(api.deleteUser, deleteRowByid)
-        toast = {message: 'User delete success', isSuccess: true}
-        yield put({type: AT.GET_USERS_DATA})
+        toast = { message: 'User delete success', isSuccess: true }
+        yield put({ type: AT.GET_USERS_DATA })
         break
       case 'Branches':
         yield call(api.deleteWarehouse, deleteRowByid)
-        toast = {message: 'Branch delete success', isSuccess: true}
-        yield put({type: AT.GET_BRANCHES_DATA})
+        toast = { message: 'Branch delete success', isSuccess: true }
+        yield put({ type: AT.GET_BRANCHES_DATA })
         break
       case 'Warehouses':
         yield call(api.deleteWarehouse, deleteRowByid)
-        toast = {message: 'Warehouse delete success', isSuccess: true}
-        yield put({type: AT.GET_WAREHOUSES_DATA})
+        toast = { message: 'Warehouse delete success', isSuccess: true }
+        yield put({ type: AT.GET_WAREHOUSES_DATA })
         break
       case 'Product catalog':
         yield call(api.deleteProduct, deleteRowByid)
-        toast = {message: 'Product delete success', isSuccess: true}
-        yield put({type: AT.GET_PRODUCTS_CATALOG_DATA})
+        toast = { message: 'Product delete success', isSuccess: true }
+        yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA })
         break
       case 'Credit cards':
         yield call(api.deleteCreditCard, deleteRowByid)
-        toast = {message: 'Credit cards delete success', isSuccess: true}
-        yield put({type: AT.GET_CREDIT_CARDS_DATA})
+        toast = { message: 'Credit cards delete success', isSuccess: true }
+        yield put({ type: AT.GET_CREDIT_CARDS_DATA })
         break
       case 'Bank accounts':
         yield call(api.deleteBankAccount, deleteRowByid)
-        toast = {message: 'Bank account delete success', isSuccess: true}
-        yield put({type: AT.GET_BANK_ACCOUNTS_DATA})
+        toast = { message: 'Bank account delete success', isSuccess: true }
+        yield put({ type: AT.GET_BANK_ACCOUNTS_DATA })
         break
       default:
         break
     }
   } catch (e) {
     yield console.log('error:', e)
-    toast = {message: 'Error', isSuccess: false}
+    toast = { message: 'Error', isSuccess: false }
   } finally {
     yield put(confirmationSuccess())
-    yield put({type: AT.OPEN_TOAST, payload: toast})
+    yield put({ type: AT.OPEN_TOAST, payload: toast })
   }
 }
 

@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './dashboard.scss'
 import ConMess from '../../components/constructionMessage'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class Dashboard extends Component {
   render() {

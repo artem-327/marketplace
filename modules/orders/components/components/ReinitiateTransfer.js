@@ -1,16 +1,16 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import * as Actions from '../../actions'
-import {loadFile, addAttachment} from '~/modules/inventory/actions'
-import {Modal, ModalContent, Header, Button, Grid, Dimmer, Loader, Segment} from 'semantic-ui-react'
-import {Form, Dropdown} from 'formik-semantic-ui-fixed-validation'
-import {getSafe, generateToastMarkup} from '~/utils/functions'
-import {FormattedMessage, FormattedDate, injectIntl} from 'react-intl'
+import { loadFile, addAttachment } from '~/modules/inventory/actions'
+import { Modal, ModalContent, Header, Button, Grid, Dimmer, Loader, Segment } from 'semantic-ui-react'
+import { Form, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import * as val from 'yup'
-import {errorMessages} from '~/constants/yupValidation'
-import {withToastManager} from 'react-toast-notifications'
+import { errorMessages } from '~/constants/yupValidation'
+import { withToastManager } from 'react-toast-notifications'
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
@@ -40,13 +40,13 @@ class ReinitiateTransfer extends React.Component {
 
   render() {
     const {
-      intl: {formatMessage},
+      intl: { formatMessage },
       bankAccounts,
       bankAccountsLoading,
       orderId,
       toastManager
     } = this.props
-    const {allowTransfer} = this.state
+    const { allowTransfer } = this.state
 
     return (
       <>
@@ -68,7 +68,7 @@ class ReinitiateTransfer extends React.Component {
               <Form
                 enableReinitialize
                 validateOnChange={false}
-                initialValues={{...initValues}}
+                initialValues={{ ...initValues }}
                 validationSchema={validationScheme}
                 onSubmit={(values, actions) => {
                   this.props
@@ -84,7 +84,7 @@ class ReinitiateTransfer extends React.Component {
                           <FormattedMessage
                             id='order.reinitiateTransfer.success.content'
                             defaultMessage='Payment transfer for order #{orderId} was initiated successfully'
-                            values={{orderId: orderId}}
+                            values={{ orderId: orderId }}
                           />
                         ),
                         {
@@ -98,8 +98,8 @@ class ReinitiateTransfer extends React.Component {
                     })
                 }}
                 className='flex stretched'
-                style={{padding: '0'}}>
-                {({values, submitForm}) => {
+                style={{ padding: '0' }}>
+                {({ values, submitForm }) => {
                   return (
                     <>
                       <Grid>
@@ -112,9 +112,9 @@ class ReinitiateTransfer extends React.Component {
                                 id: 'order.reinitiateTransfer.dropdownPlaceholder',
                                 defaultMessage: '-- select payment account --'
                               }),
-                              onChange: (e, {value}) => {
-                                if (value) this.setState({allowTransfer: true})
-                                else this.setState({allowTransfer: false})
+                              onChange: (e, { value }) => {
+                                if (value) this.setState({ allowTransfer: true })
+                                else this.setState({ allowTransfer: false })
                               },
                               clearable: true
                             }}
@@ -157,7 +157,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({...Actions}, dispatch)
+  return bindActionCreators({ ...Actions }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(ReinitiateTransfer)))

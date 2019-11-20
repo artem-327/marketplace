@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import './popupComponent.scss'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
-const PopupComponent = ({removePopup, headerTitle, children, footerComponent}) => {
+const PopupComponent = ({ removePopup, headerTitle, children, footerComponent }) => {
   return (
     <div className='popup-component'>
       <header>

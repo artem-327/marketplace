@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import OfficesDetailAdmin from './OfficesDetailAdmin'
 import Spinner from '../../../components/Spinner/Spinner'
 import DataTable from '../../../components/DataTable'
-import {deleteOffice, getOffices, postNewOffice} from '../../../modules/companies'
-import {fetchLocations} from '../../../modules/location'
-import {addPopup /*removePopup*/} from '../../../modules/popup'
+import { deleteOffice, getOffices, postNewOffice } from '../../../modules/companies'
+import { fetchLocations } from '../../../modules/location'
+import { addPopup /*removePopup*/ } from '../../../modules/popup'
 //import { required } from "../../../utils/validation";
 //import RemoteComboBox from "../../../components/ComboBox/RemoteComboBox";
 //import Button from "../../../components/Button/Button";
@@ -23,7 +23,7 @@ class Offices extends Component {
   }
 
   render() {
-    const {offices, isFetching} = this.props
+    const { offices, isFetching } = this.props
     if (isFetching) return <Spinner />
     const rows = offices.map(office => {
       const merchants = office.merchants.map(i => i.email).join()
@@ -41,7 +41,7 @@ class Offices extends Component {
       <DataTable
         id='offices'
         sortFunc={nameColumn => console.log(nameColumn)}
-        headerInit={[{name: 'officeName'}, {name: 'companyName'}, {name: 'merchants'}]}
+        headerInit={[{ name: 'officeName' }, { name: 'companyName' }, { name: 'merchants' }]}
         contextMenu={[
           {
             action: id => this.props.addPopup(<OfficesDetailAdmin id={id} />),
@@ -116,7 +116,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({getOffices, deleteOffice, postNewOffice, fetchLocations, addPopup}, dispatch)
+  return bindActionCreators({ getOffices, deleteOffice, postNewOffice, fetchLocations, addPopup }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Offices)

@@ -1,16 +1,16 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {FormattedMessage} from 'react-intl'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 import styled from 'styled-components'
 
 import ProdexGrid from '~/components/table'
-import {withDatagrid} from '~/modules/datagrid'
+import { withDatagrid } from '~/modules/datagrid'
 
-import {openPopup} from '~/modules/settings/actions'
-import {removeAttachment} from '~/modules/inventory/actions'
-import {getSafe} from '~/utils/functions'
-import {bool, array} from 'prop-types'
+import { openPopup } from '~/modules/settings/actions'
+import { removeAttachment } from '~/modules/inventory/actions'
+import { getSafe } from '~/utils/functions'
+import { bool, array } from 'prop-types'
 
 const BasicLink = styled.a`
   color: black !important;
@@ -67,7 +67,7 @@ class DocumentManager extends Component {
     }))
 
   render() {
-    const {datagrid, openPopup, removeAttachment, edit, download, deletable, loading, items} = this.props
+    const { datagrid, openPopup, removeAttachment, edit, download, deletable, loading, items } = this.props
 
     let rows = this.getRows(items ? items : this.props.rows)
 
@@ -78,7 +78,7 @@ class DocumentManager extends Component {
         columns={columns}
         rows={rows}
         loading={items ? false : loading || datagrid.loading}
-        style={{marginTop: '5px'}}
+        style={{ marginTop: '5px' }}
         rowActions={[
           ...(edit
             ? [
@@ -140,7 +140,7 @@ DocumentManager.defaultProps = {
   deletable: true
 }
 
-const mapStateToProps = (store, {datagrid}) => {
+const mapStateToProps = (store, { datagrid }) => {
   return {
     loading: store.settings.loading,
     rows: datagrid.rows

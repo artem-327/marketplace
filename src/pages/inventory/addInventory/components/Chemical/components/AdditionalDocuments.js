@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './AdditionalDocuments.scss'
 import UploadLot from '../../Upload/UploadLot'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class AdditionalDocuments extends Component {
   render() {

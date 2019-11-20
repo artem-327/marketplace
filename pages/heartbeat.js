@@ -1,11 +1,11 @@
-import React, {Component} from 'react'
-import {getVersion} from '~/modules/auth/api'
+import React, { Component } from 'react'
+import { getVersion } from '~/modules/auth/api'
 
 export default class Heartbeat extends Component {
   static async getInitialProps(ctx) {
     let body = null
     await getVersion()
-      .then(({version}) => {
+      .then(({ version }) => {
         body = version
         ctx.res.writeHead(200)
       })

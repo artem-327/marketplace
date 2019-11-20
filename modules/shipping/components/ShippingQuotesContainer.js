@@ -1,10 +1,10 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import ShippingQuotes from './ShippingQuotes'
 import * as Actions from '../actions'
 
-import {addCartItem} from '~/modules/purchase-order/actions'
+import { addCartItem } from '~/modules/purchase-order/actions'
 
-function mapStateToProps({shiping, cart}) {
+function mapStateToProps({ shiping, cart }) {
   return {
     ...shiping,
     isPurchasing: cart.isPurchasing

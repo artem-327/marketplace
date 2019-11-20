@@ -1,7 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
-import {Control, Form} from 'react-redux-form'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { Control, Form } from 'react-redux-form'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 class RegistrationForm extends React.Component {
   handleSubmit(input) {
@@ -11,8 +11,8 @@ class RegistrationForm extends React.Component {
   }
 
   render() {
-    const {formatMessage} = this.props.intl
-    let {isFetching, hasError} = this.props.formStatus
+    const { formatMessage } = this.props.intl
+    let { isFetching, hasError } = this.props.formStatus
     let butLogin = isFetching ? (
       <FormattedMessage id='registration.fetching' defaultMessage='Fetching' />
     ) : (
@@ -64,7 +64,7 @@ class RegistrationForm extends React.Component {
           <Control.text model='forms.registrationForm.lastName' placeholder={placeholders.lastName} required />
         </div>
         <div className='form-middle'>
-          <button className={classnames({'not-valid': hasError}, {loading: isFetching})}>{butLogin}</button>
+          <button className={classnames({ 'not-valid': hasError }, { loading: isFetching })}>{butLogin}</button>
         </div>
       </Form>
     )

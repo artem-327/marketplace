@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
 import {
   Modal,
@@ -14,8 +14,8 @@ import {
   Icon,
   Popup
 } from 'semantic-ui-react'
-import {FieldArray} from 'formik'
-import {FormattedMessage} from 'react-intl'
+import { FieldArray } from 'formik'
+import { FormattedMessage } from 'react-intl'
 import {
   closeEditPopup,
   getAlternativeProductNames,
@@ -23,7 +23,7 @@ import {
   updateProductName,
   deleteProductName
 } from '../../actions'
-import {Form, Input, Button, Dropdown, Field} from 'formik-semantic-ui-fixed-validation'
+import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui-fixed-validation'
 
 const initialFormValues = {
   casAlternativeNames: [{}]
@@ -85,7 +85,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
   }
 
   handleAddName = arrayHelpers => {
-    arrayHelpers.insert(0, {id: null, alternativeName: '', color: 'grey', description: '', canSave: false})
+    arrayHelpers.insert(0, { id: null, alternativeName: '', color: 'grey', description: '', canSave: false })
   }
 
   handleDeleteName = async (productId, arrayHelpers, val, index) => {
@@ -102,20 +102,20 @@ class EditAltNamesCasProductsPopup extends React.Component {
     if (name.length < 3) return
     if (val.id === null) {
       // Create new name
-      let value = {casProduct: productId, alternativeName: name}
+      let value = { casProduct: productId, alternativeName: name }
       await this.props.postNewProductName(productId, value)
     } else {
       // Update name
-      let value = {alternativeName: name}
+      let value = { alternativeName: name }
       await this.props.updateProductName(productId, val.id, value)
     }
     await this.processFetchedData()
   }
 
   render() {
-    const {closeEditPopup, currentTab, popupValues, altCasNamesRows, config, loading} = this.props
+    const { closeEditPopup, currentTab, popupValues, altCasNamesRows, config, loading } = this.props
 
-    const {initialState} = this.state
+    const { initialState } = this.state
 
     return (
       <Modal closeIcon onClose={() => closeEditPopup()} open centered={false}>
@@ -125,10 +125,10 @@ class EditAltNamesCasProductsPopup extends React.Component {
         <Modal.Content>
           <Form
             enableReinitialize
-            initialValues={{...initialFormValues, ...initialState}}
+            initialValues={{ ...initialFormValues, ...initialState }}
             loading={loading}
             onReset={closeEditPopup}>
-            {({values, errors, setFieldValue}) => (
+            {({ values, errors, setFieldValue }) => (
               <>
                 <FieldArray
                   name='casAlternativeNames'
@@ -142,7 +142,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
                           color='blue'
                           size='small'
                           floated='right'
-                          style={{marginTop: '-0.5em'}}
+                          style={{ marginTop: '-0.5em' }}
                           onClick={() => this.handleAddName(arrayHelpers)}
                         />
                         {`${popupValues.data.casNumber} ${popupValues.data.casIndexName}`}
@@ -168,7 +168,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
                                         name={`casAlternativeNames[${index}].alternativeName`}
                                         inputProps={{
                                           onChange: (e, d) => {
-                                            const {color, description, canSave} = nameValidation(
+                                            const { color, description, canSave } = nameValidation(
                                               index,
                                               d.value.trim(),
                                               vals
@@ -237,7 +237,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
                     </>
                   )}
                 />
-                <div style={{textAlign: 'right'}}>
+                <div style={{ textAlign: 'right' }}>
                   <Button.Reset data-test='admin_popup_alt_cas_name_close_btn'>
                     <FormattedMessage id='global.close' defaultMessage='Close'>
                       {text => text}

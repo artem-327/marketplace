@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
-import {func, array, bool, object} from 'prop-types'
-import {Accordion, Segment, Grid, GridRow, GridColumn, Popup, Dimmer, Loader} from 'semantic-ui-react'
-import {Form, Button} from 'formik-semantic-ui-fixed-validation'
-import {withToastManager} from 'react-toast-notifications'
+import React, { Component } from 'react'
+import { func, array, bool, object } from 'prop-types'
+import { Accordion, Segment, Grid, GridRow, GridColumn, Popup, Dimmer, Loader } from 'semantic-ui-react'
+import { Form, Button } from 'formik-semantic-ui-fixed-validation'
+import { withToastManager } from 'react-toast-notifications'
 
 import {
   SavedFilterItem,
@@ -16,9 +16,9 @@ import {
 import styled from 'styled-components'
 
 import Notifications from './Notifications'
-import {FormattedMessage, injectIntl} from 'react-intl'
-import {savedFilterValidation} from '../constants/validation'
-import {groupFilters} from '../constants/filter'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { savedFilterValidation } from '../constants/validation'
+import { groupFilters } from '../constants/filter'
 
 const StyledGrid = styled(Grid)`
   word-break: break-word;
@@ -40,17 +40,17 @@ class SavedFilters extends Component {
     const activeIndex = this.state[name]
     const newIndex = activeIndex === id ? -1 : id
 
-    this.setState({[name]: newIndex})
+    this.setState({ [name]: newIndex })
   }
 
   handleFilterApply = filter => {
-    let {onApply} = this.props
+    let { onApply } = this.props
 
     onApply(filter)
   }
 
   getTitle = (filter, i) => {
-    let {id, name} = filter
+    let { id, name } = filter
     let filterDescription = groupFilters(filter.filters, this.props.params)
     return (
       <SavedFilterTitle>
@@ -134,7 +134,7 @@ class SavedFilters extends Component {
 
   render() {
     const {
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
     if (this.props.savedFiltersLoading) {
@@ -151,7 +151,7 @@ class SavedFilters extends Component {
       <SavedFiltersSegment basic>
         <Accordion>
           {this.props.savedFilters.map((filter, i) => {
-            let {notificationEnabled, notifyMail, notifyPhone, notifySystem, notificationMail} = filter
+            let { notificationEnabled, notifyMail, notifyPhone, notifySystem, notificationMail } = filter
             let initialValues = {
               checkboxes: {
                 notificationEnabled,
@@ -176,7 +176,7 @@ class SavedFilters extends Component {
                       initialValues={initialValues}
                       validateOnChange={false}
                       validateOnBlur={false}
-                      onSubmit={async (values, {setSubmitting}) => {
+                      onSubmit={async (values, { setSubmitting }) => {
                         await this.props.updateFilterNotifications(this.state.activeIndex, {
                           name: filter.name,
                           ...values.checkboxes,
@@ -185,14 +185,14 @@ class SavedFilters extends Component {
                         this.props.toastManager.add(
                           <div>
                             <strong>
-                              <FormattedMessage id='confirm.filter.updated' values={{name: filter.name}} />
+                              <FormattedMessage id='confirm.filter.updated' values={{ name: filter.name }} />
                             </strong>
                           </div>,
-                          {appearance: 'success', pauseOnHover: true}
+                          { appearance: 'success', pauseOnHover: true }
                         )
                         setSubmitting(false)
                       }}>
-                      {({values, submitForm}) => {
+                      {({ values, submitForm }) => {
                         return (
                           <Grid verticalAlign='middle'>
                             <Notifications values={values} />
@@ -205,7 +205,7 @@ class SavedFilters extends Component {
                                   positive
                                   basic
                                   data-test='filter_save_btn'>
-                                  {formatMessage({id: 'global.save', defaultMessage: 'Save'})}
+                                  {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                                 </Button>
                               </GridColumn>
                             </ActionRow>

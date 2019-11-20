@@ -1,10 +1,10 @@
 import * as AT from './action-types'
 import * as api from './api'
-import {setAuth, unsetAuth, authorize} from '~/utils/auth'
+import { setAuth, unsetAuth, authorize } from '~/utils/auth'
 import Router from 'next/router'
-import {ROLES_ENUM} from '~/src/utils/constants'
-import {getSafe} from '~/utils/functions'
-import {currency} from '~/constants/index'
+import { ROLES_ENUM } from '~/src/utils/constants'
+import { getSafe } from '~/utils/functions'
+import { currency } from '~/constants/index'
 
 export function getIdentity() {
   return {
@@ -139,7 +139,6 @@ export const setCompanyElligible = () => ({
   type: AT.SET_COMPANY_SELL_ELLIGIBLE,
   payload: async () => {
     let data = await api.getIdentity()
-
     return getSafe(() => data.company.sellEligible, 'kkt :D')
   }
 })
@@ -149,10 +148,13 @@ export const searchCountries = searchQuery => ({
   payload: api.searchCountries(searchQuery)
 })
 
-export const searchProvinces = countryId => ({type: AT.AUTH_SEARCH_PROVINCES, payload: api.searchProvinces(countryId)})
+export const searchProvinces = countryId => ({
+  type: AT.AUTH_SEARCH_PROVINCES,
+  payload: api.searchProvinces(countryId)
+})
 
-export const updateIdentity = payload => ({type: AT.UPDATE_IDENTITY, payload})
+export const updateIdentity = payload => ({ type: AT.UPDATE_IDENTITY, payload })
 
-export const updateCompany = (id, payload) => ({type: AT.UPDATE_COMPANY, payload: api.updateCompany(id, payload)})
+export const updateCompany = (id, payload) => ({ type: AT.UPDATE_COMPANY, payload: api.updateCompany(id, payload) })
 
-export const agreeWithTOS = () => ({type: AT.AGREE_WITH_TOS, payload: api.agreeWithTOS()})
+export const agreeWithTOS = () => ({ type: AT.AGREE_WITH_TOS, payload: api.agreeWithTOS() })

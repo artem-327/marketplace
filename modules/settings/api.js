@@ -79,7 +79,7 @@ export default {
       url: attachment.preview,
       method: 'GET',
       responseType: 'blob'
-    }).then(r => new File([r.data], attachment.name, {type: attachment.type}))
+    }).then(r => new File([r.data], attachment.name, { type: attachment.type }))
   },
   postLinkAttachment: (attachmentId, productId) =>
     api.post(`/prodex/api/attachment-links/to-product?attachmentId=${attachmentId}&productId=${productId}`),
@@ -107,7 +107,7 @@ export default {
   },
   uploadCSVFile: body => {
     const formData = new FormData()
-    formData.append('file', new Blob([body], {type: 'text/plain'}))
+    formData.append('file', new Blob([body], { type: 'text/plain' }))
 
     return api
       .post('/prodex/api/imports/temporary-files', formData, {

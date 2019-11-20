@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Radio from './Radio'
-import {actions} from 'react-redux-form'
-import {Control} from 'react-redux-form'
+import { actions } from 'react-redux-form'
+import { Control } from 'react-redux-form'
 
 class RadioRedux extends Component {
   handleChange(value) {
-    const {model, dispatch} = this.props
+    const { model, dispatch } = this.props
     dispatch(actions.change(model, value))
     if (this.props.onChange) this.props.onChange(value)
   }

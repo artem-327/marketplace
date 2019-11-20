@@ -1,15 +1,15 @@
-import React, {Component} from 'react'
-import {Form} from 'semantic-ui-react'
-import {FastField, Field, getIn} from 'formik'
+import React, { Component } from 'react'
+import { Form } from 'semantic-ui-react'
+import { FastField, Field, getIn } from 'formik'
 
-import {getFieldError, setFieldValue} from './helpers'
+import { getFieldError, setFieldValue } from './helpers'
 
-import {DateInput} from 'semantic-ui-calendar-react'
+import { DateInput } from 'semantic-ui-calendar-react'
 
 class FormikInput extends Component {
   constructor(props) {
     super(props)
-    const {id, name} = props
+    const { id, name } = props
     this.id = id || `field_input_${name}`
   }
 
@@ -19,15 +19,15 @@ class FormikInput extends Component {
   }
 
   render() {
-    const {name, label, validate, inputProps = {}, fieldProps = {}, inputRef, fast} = this.props
-    const {onChange, ...safeInputProps} = inputProps
+    const { name, label, validate, inputProps = {}, fieldProps = {}, inputRef, fast } = this.props
+    const { onChange, ...safeInputProps } = inputProps
     const DesiredField = fast === true ? FastField : Field
 
     return (
       <DesiredField
         name={name}
         validate={validate}
-        render={({field, form}) => {
+        render={({ field, form }) => {
           const error = getFieldError(field, form)
           return (
             <Form.Field error={!!error} {...fieldProps}>
@@ -42,10 +42,10 @@ class FormikInput extends Component {
                 {...safeInputProps}
                 value={field.value}
                 animation='none'
-                onChange={(e, {name, value}) => {
+                onChange={(e, { name, value }) => {
                   setFieldValue(form, name, value, true)
                   Promise.resolve().then(() => {
-                    onChange && onChange(e, {name, value})
+                    onChange && onChange(e, { name, value })
                   })
                 }}
                 onBlur={form.handleBlur}

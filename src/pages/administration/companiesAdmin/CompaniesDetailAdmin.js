@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './companiesAdmin.scss'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import {
   postNewOffice,
   putCompanyEdit,
@@ -11,14 +11,14 @@ import {
   deleteOffice,
   getOffices
 } from '../../../modules/companies'
-import {bindActionCreators} from 'redux'
+import { bindActionCreators } from 'redux'
 import Office from './components/Office'
-import {fetchLocations} from '../../../modules/location'
+import { fetchLocations } from '../../../modules/location'
 import Spinner from '../../../components/Spinner/Spinner'
 import InputControlled from '../../../components/InputControlled/InputControlled'
 import Button from '../../../components/Button/Button'
 import Dropdown from '../../../components/Dropdown/Dropdown'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 class CompaniesDetailAdmin extends Component {
   state = {
@@ -36,7 +36,7 @@ class CompaniesDetailAdmin extends Component {
     new Promise(resolve => {
       this.props.fetchDetail(this.props.match.params.id, resolve)
     }).then(() => {
-      this.setState({name: this.props.company.name})
+      this.setState({ name: this.props.company.name })
     })
     this.props.getOffices(this.props.match.params.id)
   }
@@ -59,7 +59,7 @@ class CompaniesDetailAdmin extends Component {
   }
 
   getOfficePayload = officeId => {
-    const {offices} = this.props
+    const { offices } = this.props
     const selectedOffice = offices.find(i => i.id === officeId)
     return {
       id: parseInt(officeId),
@@ -69,14 +69,14 @@ class CompaniesDetailAdmin extends Component {
   }
 
   render() {
-    const {formatMessage} = this.props.intl
+    const { formatMessage } = this.props.intl
     return (
       <div className='admin-companies'>
         <h1 className='header'>
           <FormattedMessage
             id='administration.companyAdministration'
             defaultMessage={`Companies administration - ${this.props.company.name}`}
-            values={{company: this.props.company.name}}
+            values={{ company: this.props.company.name }}
           />
         </h1>
         <div className='list-companies'>
@@ -102,7 +102,9 @@ class CompaniesDetailAdmin extends Component {
             </Button>
             <Button
               color='blue'
-              onClick={() => this.props.putCompanyEdit(Object.assign({}, this.props.company, {name: this.state.name}))}
+              onClick={() =>
+                this.props.putCompanyEdit(Object.assign({}, this.props.company, { name: this.state.name }))
+              }
               data-test='administration_companies_edit_btn'>
               <FormattedMessage id='global.edit' defaultMessage='Edit' />
             </Button>
@@ -131,7 +133,7 @@ class CompaniesDetailAdmin extends Component {
               defaultMessage: 'Add New Office To Company'
             })}
             onChange={value => {
-              this.setState({officeId: value})
+              this.setState({ officeId: value })
             }}
             data-test='administration_companies_addNewOffice_drpdn'
           />

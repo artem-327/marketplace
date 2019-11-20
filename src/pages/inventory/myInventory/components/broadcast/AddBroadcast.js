@@ -1,14 +1,14 @@
-import React, {Component, lazy, Suspense} from 'react'
+import React, { Component, lazy, Suspense } from 'react'
 import PropTypes from 'prop-types'
-import {Form, actions} from 'react-redux-form'
+import { Form, actions } from 'react-redux-form'
 // import Dropdown from "../../../../../components/Dropdown/Dropdown";
 import PopupComponent from '../../../../../components/PopUp/PopupComponent'
 // import Button from "../../../../../components/Button/Button";
 import Spinner from '../../../../../components/Spinner/Spinner'
 import InputControlled from '../../../../../components/InputControlled/InputControlled'
 import './AddBroadcast.scss'
-import {FormattedMessage} from 'react-intl'
-import {Modal, Grid, GridColumn, GridRow, Dropdown, Segment, Button, Input, Divider} from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
+import { Modal, Grid, GridColumn, GridRow, Dropdown, Segment, Button, Input, Divider } from 'semantic-ui-react'
 const RootBroadcastField = lazy(() => import('./RootBroadcastField'))
 const BroadcastingNumbers = lazy(() => import('./BroadcastingNumbers'))
 
@@ -193,7 +193,7 @@ class AddBroadcast extends Component {
   }
 
   componentDidMount() {
-    const {dispatch, id} = this.props
+    const { dispatch, id } = this.props
     new Promise(resolve => {
       dispatch(actions.change('forms.brcRules', {}))
       this.props.getBroadcast(id, resolve)
@@ -207,7 +207,7 @@ class AddBroadcast extends Component {
     const states = regions.map(i => i.elements)
     const flattenStates = states.flat()
 
-    const {storedOffices, storedCompanies, storedStates, storedRegions, storedRoot} = this.props
+    const { storedOffices, storedCompanies, storedStates, storedRegions, storedRoot } = this.props
 
     const root = {
       anonymous: storedRoot[1].anonymous !== true ? 0 : !storedRoot[1].anonymousePartly ? 1 : 2,
@@ -287,8 +287,8 @@ class AddBroadcast extends Component {
   }
 
   onChangeHandler = e => {
-    this.setState({filterInput: e.target.value}, () => {
-      const {filterInput} = this.state
+    this.setState({ filterInput: e.target.value }, () => {
+      const { filterInput } = this.state
       const regions = this.props.broadcastData.elements
       const states = regions.map(i => i.elements)
       const flattenStates = states.flat()
@@ -310,7 +310,7 @@ class AddBroadcast extends Component {
   }
 
   handleExpanded = e => {
-    const {regionsExpanded, statesExpanded, companiesExpanded} = this.state
+    const { regionsExpanded, statesExpanded, companiesExpanded } = this.state
     const typeOfClickedItem = e.target.getAttribute('name')
     const idOfClickedItem = parseInt(e.target.id, 10)
 
@@ -320,38 +320,38 @@ class AddBroadcast extends Component {
       if (isExpanded) {
         const newRegionsExpanded = [...regionsExpanded]
         const filtered = newRegionsExpanded.filter(i => i !== idOfClickedItem)
-        this.setState({regionsExpanded: filtered})
-      } else this.setState({regionsExpanded: [...regionsExpanded, idOfClickedItem]})
+        this.setState({ regionsExpanded: filtered })
+      } else this.setState({ regionsExpanded: [...regionsExpanded, idOfClickedItem] })
     }
     if (typeOfClickedItem === 'state') {
       const isExpanded = statesExpanded.includes(e.target.id)
       if (isExpanded) {
         const newRegionsExpanded = [...statesExpanded]
         const filtered = newRegionsExpanded.filter(i => i !== e.target.id)
-        this.setState({statesExpanded: filtered})
-      } else this.setState({statesExpanded: [...statesExpanded, e.target.id]})
+        this.setState({ statesExpanded: filtered })
+      } else this.setState({ statesExpanded: [...statesExpanded, e.target.id] })
     }
     if (typeOfClickedItem === 'company') {
       const isExpanded = companiesExpanded.includes(idOfClickedItem)
       if (isExpanded) {
         const newRegionsExpanded = [...companiesExpanded]
         const filtered = newRegionsExpanded.filter(i => i !== idOfClickedItem)
-        this.setState({companiesExpanded: filtered})
-      } else this.setState({companiesExpanded: [...companiesExpanded, idOfClickedItem]})
+        this.setState({ companiesExpanded: filtered })
+      } else this.setState({ companiesExpanded: [...companiesExpanded, idOfClickedItem] })
     }
   }
 
   handleRuleClick = e => {
     const id = e.target.id.includes('p') || e.target.id.includes('c') ? e.target.id : parseInt(e.target.id, 10) //hack to deal with string ids at countries/provinces
-    this.setState({clickedModel: e.target.getAttribute('name')})
-    this.setState({clickedModelId: id})
+    this.setState({ clickedModel: e.target.getAttribute('name') })
+    this.setState({ clickedModelId: id })
   }
 
   //transform storedStates/storedCompanies/storedRegions from object of objects to array of objects (the former object key is now id property)
   convertObjectToArray = storedObject => {
     if (!storedObject) return
     const storedValues = Object.values(storedObject)
-    const newArray = storedValues.map(item => ({...item}))
+    const newArray = storedValues.map(item => ({ ...item }))
     return newArray
   }
 
@@ -365,7 +365,7 @@ class AddBroadcast extends Component {
       storedCompanies,
       storedOffices
     } = this.props
-    const {clickedModel, clickedModelId} = this.state
+    const { clickedModel, clickedModelId } = this.state
     if (!broadcastData.elements) return
     const broadcastRoot = storedRoot
     const broadcastRegions = this.convertObjectToArray(storedRegions)
@@ -1018,7 +1018,7 @@ class AddBroadcast extends Component {
 
   async componentDidUpdate() {
     await this.rulesUpdate()
-    if (this.state.clickedModel !== '') this.setState({clickedModel: ''})
+    if (this.state.clickedModel !== '') this.setState({ clickedModel: '' })
   }
 
   handleContinue = () => {
@@ -1028,11 +1028,11 @@ class AddBroadcast extends Component {
   }
 
   switchToList = () => {
-    this.setState({isClientList: true})
+    this.setState({ isClientList: true })
   }
 
   switchToPrice = () => {
-    this.setState({isClientList: false})
+    this.setState({ isClientList: false })
   }
 
   render() {
@@ -1062,8 +1062,8 @@ class AddBroadcast extends Component {
     } = this.state
     if (broadcastIsFetching) return <Spinner /> //shame
     const categoryFilterOptions = [
-      {name: 'All Regions', id: 'allregions', text: 'All Regions', value: 'allregions'},
-      {name: 'All Companies', id: 'allcompanies', text: 'All Companies', value: 'allcompanies'}
+      { name: 'All Regions', id: 'allregions', text: 'All Regions', value: 'allregions' },
+      { name: 'All Companies', id: 'allcompanies', text: 'All Companies', value: 'allcompanies' }
     ]
     const templatesOptions = [] //TODO
 
@@ -1131,7 +1131,7 @@ class AddBroadcast extends Component {
                       fluid
                       options={categoryFilterOptions}
                       placeholder='All Regions'
-                      onChange={(e, {value}) => this.setState({categoryFilter: value})}
+                      onChange={(e, { value }) => this.setState({ categoryFilter: value })}
                       selection
                       data-test='my_inventory_broadcast_category_filter_drpdn'
                     />
@@ -1144,7 +1144,7 @@ class AddBroadcast extends Component {
                       fluid
                       value={this.state.filterInput}
                       iconPosition='left'
-                      icon={{name: 'search', circular: true, link: true}}
+                      icon={{ name: 'search', circular: true, link: true }}
                       onChange={e => this.onChangeHandler(e)}
                       name='filterInput'
                       placeholder='Search Company or Region'
@@ -1159,7 +1159,7 @@ class AddBroadcast extends Component {
                   </GridColumn>
                   <GridColumn>
                     <Dropdown
-                      style={templatesOptions.length === 0 ? {cursor: 'not-allowed'} : null}
+                      style={templatesOptions.length === 0 ? { cursor: 'not-allowed' } : null}
                       selection
                       fluid
                       options={[]}
@@ -1271,7 +1271,7 @@ class AddBroadcast extends Component {
               <Dropdown
                 opns={categoryFilterOptions}
                 placeholder='All Regions'
-                onChange={value => this.setState({categoryFilter: value})}
+                onChange={value => this.setState({ categoryFilter: value })}
                 data-test='my_inventory_broadcast_category_filter_drpdn'
               />
             </div>

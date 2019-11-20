@@ -1,19 +1,26 @@
-import React, {Component} from 'react'
-import {object, bool, number, node, func, array} from 'prop-types'
-import {Segment, GridRow, Grid, GridColumn, Button, Dropdown, Menu, Sidebar, Table} from 'semantic-ui-react'
-import {FlexSidebar, GraySegment, FlexContent} from '~/modules/inventory/components/DetailSidebar'
-import {Form, Input, Dropdown as FormikDropdown} from 'formik-semantic-ui-fixed-validation'
-import {injectIntl, FormattedMessage} from 'react-intl'
+import React, { Component } from 'react'
+import { object, bool, number, node, func, array } from 'prop-types'
+import { Segment, GridRow, Grid, GridColumn, Button, Dropdown, Menu, Sidebar, Table } from 'semantic-ui-react'
+import { FlexSidebar, GraySegment, FlexContent } from '~/modules/inventory/components/DetailSidebar'
+import { Form, Input, Dropdown as FormikDropdown } from 'formik-semantic-ui-fixed-validation'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import moment from 'moment'
 import * as Yup from 'yup'
 
-import {tabs, regulatoryFilter, dropdownOptions, echoProductGrouping, yesNoOptions, tabsMarketPlace} from '../constants'
-import {errorMessages} from '~/constants/yupValidation'
+import {
+  tabs,
+  regulatoryFilter,
+  dropdownOptions,
+  echoProductGrouping,
+  yesNoOptions,
+  tabsMarketPlace
+} from '../constants'
+import { errorMessages } from '~/constants/yupValidation'
 
 import DocumentManager from '~/modules/settings/components/Documents/DocumentManagerTable'
-import {getSafe, formatAssay} from '~/utils/functions'
-import {EchoProductResponse, CasProductResponse} from '~/constants/backendObjects'
+import { getSafe, formatAssay } from '~/utils/functions'
+import { EchoProductResponse, CasProductResponse } from '~/constants/backendObjects'
 
 const WiderSidebar = styled(FlexSidebar)`
   min-width: 545px !important;
@@ -37,7 +44,7 @@ class CompanyProductInfo extends Component {
     echoProductGroup: echoProductGrouping[0].value
   }
 
-  getElements = ({id, defaultMessage, elements}) => {
+  getElements = ({ id, defaultMessage, elements }) => {
     return (
       <>
         <GridRow>
@@ -73,19 +80,19 @@ class CompanyProductInfo extends Component {
     )
   }
 
-  getInput = ({id, defaultMessage, name}) => (
+  getInput = ({ id, defaultMessage, name }) => (
     <GridRow>
       <GridColumn width={6}>
         <FormattedMessage id={id} defaultMessage={defaultMessage} />
       </GridColumn>
 
       <GridColumn width={10}>
-        <Input inputProps={{readOnly: this.props.readOnly, id: name}} name={name} />
+        <Input inputProps={{ readOnly: this.props.readOnly, id: name }} name={name} />
       </GridColumn>
     </GridRow>
   )
 
-  getDropdown = ({id, defaultMessage, name, props}) => (
+  getDropdown = ({ id, defaultMessage, name, props }) => (
     <GridRow>
       <GridColumn width={6}>
         <FormattedMessage id={id} defaultMessage={defaultMessage} />
@@ -97,8 +104,8 @@ class CompanyProductInfo extends Component {
           fluid
           name={name}
           {...props}
-          inputProps={{disabled: this.props.readOnly}}
-          options={props.options.map(el => (typeof el === 'object' ? el : {key: el, text: el, value: el}))}
+          inputProps={{ disabled: this.props.readOnly }}
+          options={props.options.map(el => (typeof el === 'object' ? el : { key: el, text: el, value: el }))}
         />
       </GridColumn>
     </GridRow>
@@ -262,11 +269,11 @@ class CompanyProductInfo extends Component {
         this.state.casProductIndex + 1 >
         getSafe(() => this.props.popupValues.companyProduct.echoProduct.elements.length, 0)
       )
-        this.setState({casProductIndex: 0})
+        this.setState({ casProductIndex: 0 })
   }
 
   renderCasProduct = values => {
-    let {popupValues, readOnly} = this.props
+    let { popupValues, readOnly } = this.props
 
     let casProducts = getSafe(() => popupValues.companyProduct.echoProduct.elements, [])
 
@@ -278,7 +285,7 @@ class CompanyProductInfo extends Component {
       })
     ]
 
-    let {epa, dhs, /*dot,*/ caProp65, rightToKnow, dea, international, all} = regulatoryFilter
+    let { epa, dhs, /*dot,*/ caProp65, rightToKnow, dea, international, all } = regulatoryFilter
 
     let dontBreak = this.state.regulatoryFilter === all.key
     switch (this.state.regulatoryFilter) {
@@ -619,7 +626,7 @@ class CompanyProductInfo extends Component {
               selection
               value={this.state.regulatoryFilter}
               options={Object.keys(regulatoryFilter).map(key => regulatoryFilter[key])}
-              onChange={(_, {value}) => this.setState({regulatoryFilter: value})}
+              onChange={(_, { value }) => this.setState({ regulatoryFilter: value })}
             />
           </GridColumn>
         </GridRow>
@@ -629,8 +636,8 @@ class CompanyProductInfo extends Component {
     )
   }
 
-  getContent = ({values}) => {
-    let {activeIndex} = this.props
+  getContent = ({ values }) => {
+    let { activeIndex } = this.props
 
 
     switch (activeIndex) {
@@ -730,7 +737,7 @@ class CompanyProductInfo extends Component {
                   fluid
                   options={echoProductGrouping}
                   value={this.state.echoProductGroup}
-                  onChange={(_, {value}) => this.setState({echoProductGroup: value})}
+                  onChange={(_, { value }) => this.setState({ echoProductGroup: value })}
                 />
               </GridColumn>
             </GridRow>
@@ -860,17 +867,17 @@ class CompanyProductInfo extends Component {
       casProduct,
       activeIndex,
       tabChanged,
-      intl: {formatMessage},
+      intl: { formatMessage },
       hiddenTabs,
       readOnly,
       handleSubmit,
       casProductOnly
     } = this.props
 
-    let {companyProduct} = popupValues
+    let { companyProduct } = popupValues
 
     try {
-      var {echoProduct} = companyProduct
+      var { echoProduct } = companyProduct
     } catch (e) {
       var echoProduct = {}
     }
@@ -879,7 +886,7 @@ class CompanyProductInfo extends Component {
     if (!readOnly) additionalFormProps.validationSchema = validationSchema
     if (handleSubmit) additionalFormProps.onSubmit = handleSubmit
 
-    let {id, ...rest} = getSafe(() => echoProduct.elements[this.state.casProductIndex].casProduct, {})
+    let { id, ...rest } = getSafe(() => echoProduct.elements[this.state.casProductIndex].casProduct, {})
 
     let initialValues = {
       ...companyProduct,
@@ -918,7 +925,7 @@ class CompanyProductInfo extends Component {
         initialValues={initialValues}
         {...additionalFormProps}
         render={formikProps => {
-          let {submitForm, values} = formikProps
+          let { submitForm, values } = formikProps
           this.submitForm = submitForm
           return casProductOnly ? (
             <Grid verticalAlign='middle'>{this.renderCasProduct(values)}</Grid>
@@ -950,7 +957,7 @@ class CompanyProductInfo extends Component {
   }
 
   renderActions = () => {
-    let {closePopup, onClose, handleSubmit} = this.props
+    let { closePopup, onClose, handleSubmit } = this.props
 
     return (
       <>
@@ -975,7 +982,7 @@ class CompanyProductInfo extends Component {
   }
 
   render() {
-    let {isOpen} = this.props
+    let { isOpen } = this.props
 
     const contentWrapper = children =>
       React.cloneElement(

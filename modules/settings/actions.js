@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 import api from './api'
-import {Datagrid} from '~/modules/datagrid'
+import { Datagrid } from '~/modules/datagrid'
 
 export const removeEmpty = obj =>
   Object.entries(obj).forEach(([key, val]) => {
@@ -174,7 +174,7 @@ export function closeAddPopup() {
 export function changeHeadersCSV(mappedHeaders, missingRequired) {
   return {
     type: AT.CHANGE_HEADERS_CSV,
-    payload: {mappedHeaders, missingRequired}
+    payload: { mappedHeaders, missingRequired }
   }
 }
 
@@ -330,7 +330,7 @@ export function handleProductCatalogUnmappedValue(checked, props) {
       type: AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE,
       payload: checked
     })
-    dispatch(handleFiltersValue({...props, productCatalogUnmappedValue: checked}, props.filterValue))
+    dispatch(handleFiltersValue({ ...props, productCatalogUnmappedValue: checked }, props.filterValue))
   }
 }
 //////////////////////
@@ -440,7 +440,7 @@ export function getWarehousesDataRequest() {
             value: country.id
           }
         })
-        return {warehouses, newCountryFormat, country}
+        return { warehouses, newCountryFormat, country }
       }
     })
   }
@@ -458,7 +458,7 @@ export function getBranchesDataRequest() {
             value: country.id
           }
         })
-        return {branches, newCountryFormat, country}
+        return { branches, newCountryFormat, country }
       }
     })
   }
@@ -649,7 +649,7 @@ export function postNewBankAccountRequest(payload) {
   return {
     type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
     async payload() {
-      const {data} = await api.postNewBankAccount(payload)
+      const { data } = await api.postNewBankAccount(payload)
       Datagrid.loadData()
       return data
     }
@@ -945,7 +945,7 @@ export function addVerificationDocument(attachment, type) {
 
 export function addAttachment(attachment, type, expirationDate) {
   return async dispatch => {
-    await dispatch({type: AT.SETTINGS_ADD_ATTACHMENT, payload: api.addAttachment(attachment, type, expirationDate)})
+    await dispatch({ type: AT.SETTINGS_ADD_ATTACHMENT, payload: api.addAttachment(attachment, type, expirationDate) })
     Datagrid.loadData()
   }
 }
@@ -964,23 +964,23 @@ export function removeAttachment(aId) {
   }
 }
 
-export const addTab = payload => ({type: AT.ADD_TAB, payload})
+export const addTab = payload => ({ type: AT.ADD_TAB, payload })
 
-export const tabChanged = tab => ({type: AT.TAB_CHANGED, payload: tab})
+export const tabChanged = tab => ({ type: AT.TAB_CHANGED, payload: tab })
 
 export const resendWelcomeEmail = userId => ({
   type: AT.SETTINGS_RESEND_WELCOME_EMAIL,
   payload: api.resendWelcomeEmail(userId)
 })
 
-export const getLogisticsProviders = () => ({type: AT.GET_LOGISTICS_PROVIDERS, payload: api.getLogisticsProviders()})
+export const getLogisticsProviders = () => ({ type: AT.GET_LOGISTICS_PROVIDERS, payload: api.getLogisticsProviders() })
 
 export const createLogisticsAccount = payload => ({
   type: AT.CREATE_LOGISTICS_ACCOUNT,
   payload: api.createLogisticsAccount(payload)
 })
 
-export const getLogisticsAccounts = () => ({type: AT.GET_LOGISTICS_ACCOUNTS, payload: api.getLogisticsAccounts()})
+export const getLogisticsAccounts = () => ({ type: AT.GET_LOGISTICS_ACCOUNTS, payload: api.getLogisticsAccounts() })
 
 export const updateLogisticsAccount = payload => ({
   type: AT.UPDATE_LOGISTICS_ACCOUNT,
@@ -992,13 +992,13 @@ export const deleteLogisticsAccount = id => ({
   payload: api.deleteLogisticsAccount(id)
 })
 
-export const resetSettings = () => ({type: AT.RESET_SETTINGS, payload: true})
+export const resetSettings = () => ({ type: AT.RESET_SETTINGS, payload: true })
 
 // export const getSettings = role => ({ type: AT.GET_SETTINGS, payload: api.getSettings(role) })
 
 // export const updateSettings = (role, payload) => ({ type: AT.UPDATE_SETTINGS, payload: api.updateSettings(role, payload) })
 
-export const triggerSystemSettingsModal = (force = null) => ({type: AT.TRIGGER_SYSTEM_SETTINGS_MODAL, payload: force})
+export const triggerSystemSettingsModal = (force = null) => ({ type: AT.TRIGGER_SYSTEM_SETTINGS_MODAL, payload: force })
 
 export const getBusinessClassifications = () => ({
   type: AT.GET_BUSINESS_CLASSIFICATIONS,
@@ -1007,7 +1007,7 @@ export const getBusinessClassifications = () => ({
 
 export const triggerAgreementModal = (force = null, modalProps = {}) => ({
   type: AT.TRIGGER_AGREEMENT_MODAL,
-  payload: {force, modalProps}
+  payload: { force, modalProps }
 })
 
 export const getVerificationDocumentTypes = () => ({
@@ -1015,9 +1015,12 @@ export const getVerificationDocumentTypes = () => ({
   payload: api.getVerificationDocumentTypes()
 })
 
-export const getLanguages = () => ({type: AT.GET_LANGUAGES, payload: api.getLanguages()})
+export const getLanguages = () => ({ type: AT.GET_LANGUAGES, payload: api.getLanguages() })
 
-export const setPreferredLanguage = lang => ({type: AT.SET_PREFERRED_LANGUAGE, payload: api.setPreferredLanguage(lang)})
+export const setPreferredLanguage = lang => ({
+  type: AT.SET_PREFERRED_LANGUAGE,
+  payload: api.setPreferredLanguage(lang)
+})
 
 export const searchEchoProducts = (searchQuery, limit = 30) => ({
   type: AT.SEARCH_ECHO_PRODUCTS,
@@ -1029,4 +1032,4 @@ export const getNmfcNumbersByString = value => ({
   payload: api.getNmfcNumbersByString(value)
 })
 
-export const addNmfcNumber = value => ({type: AT.ADD_NMFC_NUMBERS, payload: value})
+export const addNmfcNumber = value => ({ type: AT.ADD_NMFC_NUMBERS, payload: value })

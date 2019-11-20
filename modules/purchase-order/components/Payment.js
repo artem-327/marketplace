@@ -1,14 +1,14 @@
-import React, {Component} from 'react'
-import {FormattedMessage} from 'react-intl'
-import {GridRow, GridColumn, Divider} from 'semantic-ui-react'
-import {Dropdown} from 'formik-semantic-ui-fixed-validation'
+import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
+import { GridRow, GridColumn, Divider } from 'semantic-ui-react'
+import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 import ShippingAddress from './ShippingAddress'
 import Link from 'next/link'
 
 export default class Payment extends Component {
   render() {
-    let {payments, billingInfo} = this.props
-    let columns = payments.length === 0 ? {computer: 16} : {computer: 8}
+    let { payments, billingInfo } = this.props
+    let columns = payments.length === 0 ? { computer: 16 } : { computer: 8 }
 
     return (
       <>
@@ -49,7 +49,7 @@ export default class Payment extends Component {
         <ShippingAddress
           selectedAddress={billingInfo}
           addressOnly={true}
-          header={{id: 'cart.billingInfo', defaultMessage: 'Billing Info'}}
+          header={{ id: 'cart.billingInfo', defaultMessage: 'Billing Info' }}
         />
       </>
     )

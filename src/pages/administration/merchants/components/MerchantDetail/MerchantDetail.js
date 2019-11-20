@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Checkbox from '../../../../../components/Checkbox/Checkbox'
 import Button from '../../../../../components/Button/Button'
@@ -28,20 +28,20 @@ class MerchantDetail extends Component {
   }
 
   componentDidMount() {
-    const {merchantDetail, getMerchant, id} = this.props
+    const { merchantDetail, getMerchant, id } = this.props
     if (merchantDetail.id !== id) {
       new Promise(resolve => {
         getMerchant(id, resolve)
       }).then(() => {
-        this.setState({...this.props.merchantDetail})
+        this.setState({ ...this.props.merchantDetail })
       })
     } else {
-      this.setState({...this.props.merchantDetail})
+      this.setState({ ...this.props.merchantDetail })
     }
   }
 
   render() {
-    const {isFetching, id, removePopup, putMerchantEdit, deleteMerchant} = this.props
+    const { isFetching, id, removePopup, putMerchantEdit, deleteMerchant } = this.props
     if (isFetching) return <Spinner />
     const editBody = {
       id: id,

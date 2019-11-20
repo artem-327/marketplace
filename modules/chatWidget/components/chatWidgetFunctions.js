@@ -1,4 +1,4 @@
-import {getSafe} from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 
 export const ChatWidget_create = (identity, props) => {
   if (typeof window.$zopim === 'undefined') {

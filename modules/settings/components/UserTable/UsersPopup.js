@@ -1,7 +1,7 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {withToastManager} from 'react-toast-notifications'
-import {Modal, FormGroup} from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { withToastManager } from 'react-toast-notifications'
+import { Modal, FormGroup } from 'semantic-ui-react'
 import {
   closePopup,
   closeRolesPopup,
@@ -10,15 +10,15 @@ import {
   putNewUserRoleRequest,
   getCurrencies
 } from '../../actions'
-import {Form, Input, Button, Dropdown, Checkbox} from 'formik-semantic-ui-fixed-validation'
-import {CheckboxWithValue} from '~/components/custom-formik'
+import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
+import { CheckboxWithValue } from '~/components/custom-formik'
 import * as Yup from 'yup'
-import {FormattedMessage, injectIntl} from 'react-intl'
-import {generateToastMarkup} from '~/utils/functions'
-import {errorMessages} from '~/constants/yupValidation'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { generateToastMarkup } from '~/utils/functions'
+import { errorMessages } from '~/constants/yupValidation'
 //import { currency } from '~/constants/index'
-import {currencyId} from '~/constants/index'
-import {PhoneNumber} from '~/modules/phoneNumber'
+import { currencyId } from '~/constants/index'
+import { PhoneNumber } from '~/modules/phoneNumber'
 
 const userFormValidation = () =>
   Yup.object().shape({
@@ -50,7 +50,7 @@ class UsersPopup extends React.Component {
   }
 
   submitRoles = async (values, actions) => {
-    const {popupValues, putNewUserRoleRequest} = this.props
+    const { popupValues, putNewUserRoleRequest } = this.props
 
     try {
       await putNewUserRoleRequest(values.roles, popupValues.id)
@@ -61,7 +61,7 @@ class UsersPopup extends React.Component {
   }
 
   submitUser = async (values, actions) => {
-    const {toastManager, popupValues, handlerSubmitUserEditPopup, postNewUserRequest} = this.props
+    const { toastManager, popupValues, handlerSubmitUserEditPopup, postNewUserRequest } = this.props
 
     const data = {
       additionalBranches: values.additionalBranches,
@@ -84,9 +84,9 @@ class UsersPopup extends React.Component {
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id={`notifications.${status}.header`} />,
-          <FormattedMessage id={`notifications.${status}.content`} values={{name: values.name}} />
+          <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
         ),
-        {appearance: 'success'}
+        { appearance: 'success' }
       )
     } catch {}
     actions.setSubmitting(false)
@@ -102,7 +102,7 @@ class UsersPopup extends React.Component {
       roles,
       userRoles,
       currencies,
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
     const {
@@ -130,10 +130,10 @@ class UsersPopup extends React.Component {
       <Modal closeIcon onClose={() => closePopup()} open centered={false} size={userEditRoles ? 'mini' : null}>
         <Modal.Header>
           {userEditRoles
-            ? formatMessage({id: 'settings.assignUserRoles', defaultMessage: 'Assign User Roles'})
+            ? formatMessage({ id: 'settings.assignUserRoles', defaultMessage: 'Assign User Roles' })
             : popupValues
-            ? formatMessage({id: 'settings.editUser', defaultMessage: 'Edit User'})
-            : formatMessage({id: 'settings.addUser', defaultMessage: 'Add User'})}
+            ? formatMessage({ id: 'settings.editUser', defaultMessage: 'Edit User' })
+            : formatMessage({ id: 'settings.addUser', defaultMessage: 'Add User' })}
         </Modal.Header>
         <Modal.Content>
           <Form
@@ -141,7 +141,7 @@ class UsersPopup extends React.Component {
             validationSchema={userEditRoles ? rolesFormValidation : userFormValidation(popupValues)}
             onReset={userEditRoles ? closeRolesPopup : closePopup}
             onSubmit={userEditRoles ? this.submitRoles : this.submitUser}>
-            {({values, setFieldValue, setFieldTouched, errors, touched, isSubmitting}) => (
+            {({ values, setFieldValue, setFieldTouched, errors, touched, isSubmitting }) => (
               <>
                 {userEditRoles ? (
                   roles.map((role, i) => (
@@ -154,19 +154,19 @@ class UsersPopup extends React.Component {
                     <FormGroup widths='equal' data-test='settings_users_popup_nameTitle_inp'>
                       <Input
                         type='text'
-                        label={formatMessage({id: 'global.name', defaultMessage: 'Name'})}
+                        label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
                         name='name'
                       />
                       <Input
                         type='text'
-                        label={formatMessage({id: 'global.jobTitle', defaultMessage: 'Job Title'})}
+                        label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
                         name='jobTitle'
                       />
                     </FormGroup>
                     <FormGroup widths='equal' data-test='settings_users_popup_emailPhone_inp'>
                       <Input
                         type='text'
-                        label={formatMessage({id: 'global.email', defaultMessage: 'Email'})}
+                        label={formatMessage({ id: 'global.email', defaultMessage: 'Email' })}
                         name='email'
                       />
                       <PhoneNumber
@@ -182,17 +182,20 @@ class UsersPopup extends React.Component {
                     </FormGroup>
                     <FormGroup>
                       <Dropdown
-                        label={formatMessage({id: 'global.homeBranch', defaultMessage: 'Home Branch'})}
+                        label={formatMessage({ id: 'global.homeBranch', defaultMessage: 'Home Branch' })}
                         name='homeBranch'
                         options={branchesAll}
-                        fieldProps={{width: 7}}
-                        inputProps={{'data-test': 'settings_users_popup_homeBranch_drpdn'}}
+                        fieldProps={{ width: 7 }}
+                        inputProps={{ 'data-test': 'settings_users_popup_homeBranch_drpdn' }}
                       />
                       <Dropdown
-                        label={formatMessage({id: 'global.additionalBranches', defaultMessage: 'Additional Branches'})}
+                        label={formatMessage({
+                          id: 'global.additionalBranches',
+                          defaultMessage: 'Additional Branches'
+                        })}
                         name='additionalBranches'
                         options={branchesAll}
-                        fieldProps={{width: 7}}
+                        fieldProps={{ width: 7 }}
                         inputProps={{
                           'data-test': 'settings_users_popup_additionalBranches_drpdn',
                           multiple: true
@@ -210,7 +213,7 @@ class UsersPopup extends React.Component {
                       </pre> */}
                   </>
                 )}
-                <div style={{textAlign: 'right'}}>
+                <div style={{ textAlign: 'right' }}>
                   <Button.Reset
                     onClick={userEditRoles ? closeRolesPopup : closePopup}
                     data-test='settings_users_popup_reset_btn'>

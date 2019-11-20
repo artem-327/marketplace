@@ -2,7 +2,7 @@ const express = require('express')
 const next = require('next')
 const proxy = require('http-proxy-middleware')
 const dev = process.env.NODE_ENV !== 'production'
-const nextApp = next({dev})
+const nextApp = next({ dev })
 const port = process.env.PORT || 3000
 const cookieParser = require('cookie-parser')
 const request = require('request')
@@ -25,7 +25,7 @@ nextApp
     const app = express()
     app.use(cookieParser())
     app.use('/download', downloadRouter)
-    app.use('/prodex', proxy({target: process.env.REACT_APP_API_URL || 'http://127.0.0.1:8080', changeOrigin: true}))
+    app.use('/prodex', proxy({ target: process.env.REACT_APP_API_URL || 'http://127.0.0.1:8080', changeOrigin: true }))
     app.use(nextApp.getRequestHandler()).listen(port, err => {
       if (err) throw err
       console.log('> Ready on http://localhost:' + port)

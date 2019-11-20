@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
-import {array, string} from 'prop-types'
+import React, { Component } from 'react'
+import { array, string } from 'prop-types'
 import styled from 'styled-components'
-import {GridColumn, GridRow} from 'semantic-ui-react'
-import {FormattedMessage} from 'react-intl'
-import {Input} from 'formik-semantic-ui-fixed-validation'
+import { GridColumn, GridRow } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
+import { Input } from 'formik-semantic-ui-fixed-validation'
 
 const BottomUnpaddedRow = styled(GridRow)`
   padding-bottom: 0px !important;
@@ -15,7 +15,7 @@ const BoldLabel = styled.label`
 
 export default class CompanyProductMixtures extends Component {
   render() {
-    let {casProducts, prefix} = this.props
+    let { casProducts, prefix } = this.props
 
     return (
       <>
@@ -50,18 +50,18 @@ export default class CompanyProductMixtures extends Component {
           return (
             <GridRow columns={4}>
               <GridColumn>
-                <Input name={`${prefix}[${i}].casIndexNumber`} inputProps={{transparent: true, readOnly: true}} />
+                <Input name={`${prefix}[${i}].casIndexNumber`} inputProps={{ transparent: true, readOnly: true }} />
               </GridColumn>
               <GridColumn>
-                <Input name={`${prefix}[${i}].casIndexName`} inputProps={{transparent: true, readOnly: true}} />
-              </GridColumn>
-
-              <GridColumn>
-                <Input name={`${prefix}[${i}].min`} inputProps={{transparent: true, readOnly: true}} />
+                <Input name={`${prefix}[${i}].casIndexName`} inputProps={{ transparent: true, readOnly: true }} />
               </GridColumn>
 
               <GridColumn>
-                <Input name={`${prefix}[${i}].max`} inputProps={{transparent: true, readOnly: true}} />
+                <Input name={`${prefix}[${i}].min`} inputProps={{ transparent: true, readOnly: true }} />
+              </GridColumn>
+
+              <GridColumn>
+                <Input name={`${prefix}[${i}].max`} inputProps={{ transparent: true, readOnly: true }} />
               </GridColumn>
             </GridRow>
           )

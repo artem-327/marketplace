@@ -1,13 +1,13 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './uploadVerifyFiles.scss'
 import PropTypes from 'prop-types'
 import ReactDropzone from 'react-dropzone'
-import {FormattedMessage} from 'react-intl'
-import {TOO_LARGE_FILE, UPLOAD_FILE_FAILED} from '~/src/modules/errors.js'
-import {FieldArray} from 'formik'
-import {withToastManager} from 'react-toast-notifications'
-import {generateToastMarkup} from '~/utils/functions'
-import {Popup, Icon} from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
+import { TOO_LARGE_FILE, UPLOAD_FILE_FAILED } from '~/src/modules/errors.js'
+import { FieldArray } from 'formik'
+import { withToastManager } from 'react-toast-notifications'
+import { generateToastMarkup } from '~/utils/functions'
+import { Popup, Icon } from 'semantic-ui-react'
 
 class UploadVerifyFiles extends Component {
   constructor(props) {
@@ -19,7 +19,7 @@ class UploadVerifyFiles extends Component {
   }
 
   onDropRejected = blobs => {
-    let {fileMaxSize, toastManager} = this.props
+    let { fileMaxSize, toastManager } = this.props
     blobs.forEach(function(blob) {
       if (blob.size > fileMaxSize * 1024 * 1024) {
         toastManager.add(
@@ -27,7 +27,7 @@ class UploadVerifyFiles extends Component {
             <FormattedMessage id='errors.fileTooLarge.header' defaultMessage='Too large file' />,
             <FormattedMessage
               id='errors.fileTooLarge.content'
-              values={{name: blob.name, size: fileMaxSize}}
+              values={{ name: blob.name, size: fileMaxSize }}
               defaultMessage='File is larger than maximal allowed size'
             />
           ),
@@ -44,7 +44,7 @@ class UploadVerifyFiles extends Component {
   }
 
   onUploadFail = (fileName, error) => {
-    let {fileMaxSize, toastManager} = this.props
+    let { fileMaxSize, toastManager } = this.props
 
     const errorDescription = error.clientMessage ? ' : ' + error.clientMessage : ''
 
@@ -54,7 +54,7 @@ class UploadVerifyFiles extends Component {
         <FormattedMessage
           id='errors.fileNotUploaded.content2'
           defaultMessage={`File ${fileName} was not uploaded due to an error${errorDescription}`}
-          values={{name: fileName, errorDescription}}
+          values={{ name: fileName, errorDescription }}
         />
       ),
       {
@@ -64,8 +64,16 @@ class UploadVerifyFiles extends Component {
   }
 
   onPreviewDrop = async files => {
-    let {type, attachments, fileMaxSize, unspecifiedTypes, toastManager, loadFile, addVerificationDocument} = this.props
-    let {onDropRejected, onUploadSuccess, onUploadFail} = this
+    let {
+      type,
+      attachments,
+      fileMaxSize,
+      unspecifiedTypes,
+      toastManager,
+      loadFile,
+      addVerificationDocument
+    } = this.props
+    let { onDropRejected, onUploadSuccess, onUploadFail } = this
 
     if (typeof unspecifiedTypes === 'undefined') unspecifiedTypes = []
     if (unspecifiedTypes.indexOf(type) >= 0) {
@@ -102,7 +110,7 @@ class UploadVerifyFiles extends Component {
             />,
             <FormattedMessage
               id='errors.fileNotUploaded.alreadyAttached.content'
-              values={{name: files[i].name}}
+              values={{ name: files[i].name }}
               defaultMessage={`File '${files[i].name}' already in attachments.`}
             />
           ),
@@ -157,7 +165,7 @@ class UploadVerifyFiles extends Component {
                     data-test='array_to_multiple_list'
                     content={file.type}
                     trigger={
-                      <span key={index} className='file lot' style={{opacity: disabled ? '0.45' : '1'}}>
+                      <span key={index} className='file lot' style={{ opacity: disabled ? '0.45' : '1' }}>
                         <Icon name='file image outline' bordered size='large' />
                         {file.name}
                       </span>
@@ -172,14 +180,14 @@ class UploadVerifyFiles extends Component {
   }
 
   render() {
-    let {attachments, disabled, filesLimit, toastManager, accept} = this.props
+    let { attachments, disabled, filesLimit, toastManager, accept } = this.props
     let hasFile = this.props.attachments && this.props.attachments.length !== 0
 
     const limitMsg = generateToastMarkup(
       <FormattedMessage id='errors.fileNotUploaded.limitExceeded.header' defaultMessage='File limit exceeded' />,
       <FormattedMessage
         id='errors.fileNotUploaded.limitExceeded.content'
-        values={{count: filesLimit}}
+        values={{ count: filesLimit }}
         defaultMessage={`You can't upload more than ${filesLimit} document(s)`}
       />
     )

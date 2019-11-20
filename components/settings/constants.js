@@ -1,8 +1,8 @@
-import {Input, TextArea, Dropdown, Checkbox} from 'formik-semantic-ui-fixed-validation'
+import { Input, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
-import {errorMessages} from '~/constants/yupValidation'
-import {getSafe} from '~/utils/functions'
+import { errorMessages } from '~/constants/yupValidation'
+import { getSafe } from '~/utils/functions'
 
 export const roles = {
   admin: 'admin',
@@ -23,9 +23,15 @@ const supportedValidation = {
     value ? chain.concat(chain.required(errorMessages.requiredMessage)) : chain.concat(chain.nullable())
 }
 
+const numberAllowEmptyString = Yup.number(errorMessages.mustBeNumber)
+  .transform(value => (isNaN(value) ? undefined : value))
+  .typeError(errorMessages.mustBeNumber)
+
 export const dataTypes = {
   STRING: Yup.string(errorMessages.invalidString),
-  NUMBER: Yup.number(errorMessages.mustBeNumber).typeError(errorMessages.mustBeNumber)
+  INTEGER: numberAllowEmptyString,
+  NUMBER: numberAllowEmptyString,
+  FLOAT: numberAllowEmptyString
 }
 
 const defaultDataType = 'STRING'
@@ -119,10 +125,10 @@ export const typeToComponent = (type, options = {}) => {
   }
 }
 
-export const toYupSchema = validation => {
+export const toYupSchema = (validation, type) => {
   const defaultOptions = {
-    type: {value: defaultDataType},
-    required: {value: false}
+    type: { value: type ? type : defaultDataType },
+    required: { value: false }
   }
 
   let options = {

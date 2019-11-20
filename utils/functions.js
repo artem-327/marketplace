@@ -56,7 +56,7 @@ export const mapAutocompleteData = autocomplateData =>
     return {
       key: product.id,
       text,
-      value: JSON.stringify({id: product.id, name: product.productName, casNumber: product.casNumberCombined || null})
+      value: JSON.stringify({ id: product.id, name: product.productName, casNumber: product.casNumberCombined || null })
     }
   })
 
@@ -97,7 +97,7 @@ export const removeEmpty = obj =>
           delete obj[key]
         } catch (e) {
           console.error(e)
-          console.error('tried to delete', {obj, key})
+          console.error('tried to delete', { obj, key })
         }
       } else if (typeof val === 'string') {
         if (val.trim() === '') delete obj[key]

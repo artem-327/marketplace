@@ -1,14 +1,14 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 import ProdexGrid from '~/components/table'
 import confirm from '~/src/components/Confirmable/confirm'
-import {FormattedMessage, injectIntl} from 'react-intl'
-import {withDatagrid} from '~/modules/datagrid'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { withDatagrid } from '~/modules/datagrid'
 
 // import { TablePopUp } from '~/components/tablePopup'
 
-import {getSafe} from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 
 import {
   getDeliveryAddressesByFilterRequest,
@@ -82,8 +82,8 @@ class DeliveryAddressesTable extends Component {
       // deleteRowById
     } = this.props
 
-    let {columns} = this.state
-    const {formatMessage} = intl
+    let { columns } = this.state
+    const { formatMessage } = intl
 
     return (
       <React.Fragment>
@@ -94,17 +94,20 @@ class DeliveryAddressesTable extends Component {
           columns={columns}
           rows={rows}
           loading={datagrid.loading || loading}
-          style={{marginTop: '5px'}}
+          style={{ marginTop: '5px' }}
           rowActions={[
-            {text: formatMessage({id: 'global.edit', defaultMessage: 'Edit'}), callback: row => openPopup(row.data)},
             {
-              text: formatMessage({id: 'global.delete', defaultMessage: 'Delete'}),
+              text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+              callback: row => openPopup(row.data)
+            },
+            {
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row =>
                 confirm(
-                  formatMessage({id: 'confirm.deleteDeliveryAddress', defaultMessage: 'Delete Delivery Address'}),
+                  formatMessage({ id: 'confirm.deleteDeliveryAddress', defaultMessage: 'Delete Delivery Address' }),
                   formatMessage(
-                    {id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.streetAddress}?`},
-                    {item: row.streetAddress}
+                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.streetAddress}?` },
+                    { item: row.streetAddress }
                   )
                 ).then(() => {
                   deleteDeliveryAddress(row.id)
@@ -123,7 +126,7 @@ const mapDispatchToProps = {
   openPopup
 }
 
-const mapStateToProps = (state, {datagrid}) => {
+const mapStateToProps = (state, { datagrid }) => {
   return {
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,

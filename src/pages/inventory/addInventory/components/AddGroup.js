@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import dropdown from '../../../../images/inv-filter/dropdown.png'
 import dropdownClose from '../../../../images/inv-filter/dropdown-close.png'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 export default class AddGroup extends Component {
   constructor(props) {
@@ -20,11 +20,11 @@ export default class AddGroup extends Component {
   }
 
   handleOpen() {
-    if (!this.state.disable) this.setState({open: !this.state.open})
+    if (!this.state.disable) this.setState({ open: !this.state.open })
   }
 
   render() {
-    const {header} = this.props
+    const { header } = this.props
     let styleOpen = this.state.open ? ' open' : ''
     return (
       <div className='add-group'>

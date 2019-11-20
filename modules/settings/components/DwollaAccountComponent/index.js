@@ -1,22 +1,22 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {Header, Modal, FormGroup, Accordion, Icon, Popup} from 'semantic-ui-react'
-import {FormattedMessage, injectIntl} from 'react-intl'
-import {closeDwollaPopup, getCountries, getProvinces, postDwollaAccount} from '../../actions'
-import {Form, Input, Button, Dropdown} from 'formik-semantic-ui-fixed-validation'
+import { connect } from 'react-redux'
+import { Header, Modal, FormGroup, Accordion, Icon, Popup } from 'semantic-ui-react'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { closeDwollaPopup, getCountries, getProvinces, postDwollaAccount } from '../../actions'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import styled from 'styled-components'
-import {withToastManager} from 'react-toast-notifications'
-import {DateInput} from '~/components/custom-formik'
+import { withToastManager } from 'react-toast-notifications'
+import { DateInput } from '~/components/custom-formik'
 
-import {AddressForm} from '~/modules/address-form/'
+import { AddressForm } from '~/modules/address-form/'
 
-import {dwollaControllerValidation, beneficialOwnersValidation} from '~/constants/yupValidation'
+import { dwollaControllerValidation, beneficialOwnersValidation } from '~/constants/yupValidation'
 
-import {generateToastMarkup, deepSearch} from '~/utils/functions'
-import {beneficialOwner, USA, ownersToPayload} from '~/constants/beneficialOwners'
+import { generateToastMarkup, deepSearch } from '~/utils/functions'
+import { beneficialOwner, USA, ownersToPayload } from '~/constants/beneficialOwners'
 
-import {BeneficialOwnersForm} from '~/components/custom-formik'
+import { BeneficialOwnersForm } from '~/components/custom-formik'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -69,13 +69,13 @@ class BankAccountsPopup extends React.Component {
     if (country.hasProvinces) {
       this.props.getProvinces(country.id)
     }
-    this.setState({hasProvinces: country.hasProvinces})
+    this.setState({ hasProvinces: country.hasProvinces })
   }
 
-  handleAccordionChange = (e, {name}) => {
-    let {accordionActive} = this.state
+  handleAccordionChange = (e, { name }) => {
+    let { accordionActive } = this.state
     accordionActive[name] = !accordionActive[name]
-    this.setState({accordionActive})
+    this.setState({ accordionActive })
   }
 
   render() {
@@ -85,10 +85,10 @@ class BankAccountsPopup extends React.Component {
       provincesDropDown,
       postDwollaAccount,
       auth,
-      intl: {formatMessage},
+      intl: { formatMessage },
       toastManager
     } = this.props
-    const {accordionActive} = this.state
+    const { accordionActive } = this.state
 
     return (
       <Modal closeIcon onClose={() => closeDwollaPopup()} open centered={false}>
@@ -102,7 +102,7 @@ class BankAccountsPopup extends React.Component {
             validationSchema={formValidation}
             onReset={() => closeDwollaPopup()}
             validateOnChange={true}
-            onSubmit={async (values, {setSubmitting}) => {
+            onSubmit={async (values, { setSubmitting }) => {
               let payload = {
                 beneficialOwners: ownersToPayload(values.beneficialOwners),
                 dwollaController: {
@@ -127,7 +127,7 @@ class BankAccountsPopup extends React.Component {
                       defaultMessage='Dwolla account successfully created'
                     />
                   ),
-                  {appearance: 'success'}
+                  { appearance: 'success' }
                 )
                 closeDwollaPopup()
               } catch (e) {
@@ -136,7 +136,7 @@ class BankAccountsPopup extends React.Component {
                 setSubmitting(false)
               }
             }}
-            render={({values, errors, setFieldValue, resetForm}) => {
+            render={({ values, errors, setFieldValue, resetForm }) => {
               return (
                 <>
                   <BeneficialOwnersForm
@@ -232,11 +232,11 @@ class BankAccountsPopup extends React.Component {
                     </FormGroup> */}
                       <FormGroup widths='equal' data-test='settings_dwolla_dwollaController_name_inp'>
                         <Input
-                          label={formatMessage({id: 'global.firstName', defaultMessage: 'First Name'})}
+                          label={formatMessage({ id: 'global.firstName', defaultMessage: 'First Name' })}
                           name='dwollaController.firstName'
                         />
                         <Input
-                          label={formatMessage({id: 'global.lastName', defaultMessage: 'Last Name'})}
+                          label={formatMessage({ id: 'global.lastName', defaultMessage: 'Last Name' })}
                           name='dwollaController.lastName'
                         />
                         {/* <Dropdown label={formatMessage({ id: 'settings.passportCountry', defaultMessage: 'Passport Country' })} name='dwollaController.passport.country' options={countriesDropDown} inputProps={{ 'data-test': 'settings_dwolla_account_dwollaController_passport_country_drpdn' }} /> */}
@@ -253,7 +253,7 @@ class BankAccountsPopup extends React.Component {
                             />
                           )
                         }}
-                        additionalCountryInputProps={{disabled: true}}
+                        additionalCountryInputProps={{ disabled: true }}
                         values={values}
                         setFieldValue={setFieldValue}
                         displayHeader={false}
@@ -282,12 +282,12 @@ class BankAccountsPopup extends React.Component {
                           name='dwollaController.ssn'
                         />
                         <Input
-                          label={formatMessage({id: 'global.title', defaultMessage: 'Title'})}
+                          label={formatMessage({ id: 'global.title', defaultMessage: 'Title' })}
                           name='dwollaController.jobTitle'
                         />
                         {/* <Input inputProps={{ placeholder: 'YYYY-MM-DD' }} label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })} name='dwollaController.dateOfBirth' /> */}
                         <DateInput
-                          label={formatMessage({id: 'global.birth', defaultMessage: 'Birth'})}
+                          label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
                           name='dwollaController.dateOfBirth'
                         />
                       </FormGroup>

@@ -185,7 +185,7 @@ export default function reducer(state = initialState, action) {
 export function fetchLocations(filter = {}) {
   return {
     type: FETCH_LOCATIONS,
-    payload: axios.get('/prodex/api/locations', {params: {...filter}}).then(result => {
+    payload: axios.get('/prodex/api/locations', { params: { ...filter } }).then(result => {
       return result.data
     })
   }
@@ -194,7 +194,7 @@ export function fetchLocations(filter = {}) {
 export function fetchFilterLocations(filter = '') {
   return {
     type: FETCH_FILTER_LOCATIONS,
-    payload: axios.get('/prodex/api/locations', {params: {search: filter}}).then(result => {
+    payload: axios.get('/prodex/api/locations', { params: { search: filter } }).then(result => {
       return result.data
     })
   }
@@ -210,51 +210,51 @@ export function fetchWarehouses() {
 }
 
 export function saveWarehouse(warehouseName, streetAddress, city, province, name, number, email, zip) {
-  let address = {streetAddress, city, zip, province}
-  let contact = {name, phone: number, email}
+  let address = { streetAddress, city, zip, province }
+  let contact = { name, phone: number, email }
   return {
     type: SAVE_WAREHOUSE,
-    payload: axios.post('/prodex/api/branches', {address, company: 1, contact, warehouse: true, warehouseName})
+    payload: axios.post('/prodex/api/branches', { address, company: 1, contact, warehouse: true, warehouseName })
   }
 }
 
 export function updateWarehouse(id, warehouseName, streetAddress, city, province, name, number, email, zip) {
-  let address = {streetAddress, city, zip, province}
-  let contact = {name, phone: number, email}
+  let address = { streetAddress, city, zip, province }
+  let contact = { name, phone: number, email }
   return {
     type: UPDATE_WAREHOUSE,
-    payload: axios.put(`prodex/api/branches/${id}`, {address, company: 1, contact, warehouse: true, warehouseName})
+    payload: axios.put(`prodex/api/branches/${id}`, { address, company: 1, contact, warehouse: true, warehouseName })
   }
 }
 
 export function getRegions(search = null) {
-  return {type: REGIONS_FETCH_REQUESTED, payload: {search}}
+  return { type: REGIONS_FETCH_REQUESTED, payload: { search } }
 }
 
 export function getStates(search = null) {
-  return {type: STATES_FETCH_REQUESTED, payload: {search}}
+  return { type: STATES_FETCH_REQUESTED, payload: { search } }
 }
 
 export function getStateDetail(id) {
-  return {type: STATEDETAIL_FETCH_REQUESTED, payload: {id}}
+  return { type: STATEDETAIL_FETCH_REQUESTED, payload: { id } }
 }
 
 export function fetchWarehouseDistances() {
   return {
     type: FETCH_WAREHOUSE_DISTANCES,
     payload: [
-      {id: 1, name: '10'},
-      {id: 2, name: '100'},
-      {id: 3, name: '1000'},
-      {id: 4, name: '10000'}
+      { id: 1, name: '10' },
+      { id: 2, name: '100' },
+      { id: 3, name: '1000' },
+      { id: 4, name: '10000' }
     ]
   }
 }
 
 export function getRegionDetail(id) {
-  return {type: REGIONDETAIL_FETCH_REQUESTED, payload: {id}}
+  return { type: REGIONDETAIL_FETCH_REQUESTED, payload: { id } }
 }
 
 export function getProvinces(countryId, search = null) {
-  return {type: PROVINCES_FETCH_REQUESTED, payload: {countryId, search}}
+  return { type: PROVINCES_FETCH_REQUESTED, payload: { countryId, search } }
 }

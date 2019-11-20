@@ -4,7 +4,7 @@ import Form from './components/Form'
 import './registration.scss'
 import './registration.scss'
 import regLogin from '../../images/login/logo_echo.png'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 const Registration = props => {
   return (

@@ -1,11 +1,11 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import filter from 'lodash/filter'
 import escapeRegExp from 'lodash/escapeRegExp'
 import debounce from 'lodash/debounce'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
-import {withToastManager} from 'react-toast-notifications'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { withToastManager } from 'react-toast-notifications'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import {
   Modal,
@@ -23,9 +23,9 @@ import {
 // import { DateInput } from '~/components/custom-formik'
 // import { FieldArray } from 'formik'
 
-import {CompanyProductMixtures} from '~/components/shared-components/'
-import {generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps} from '~/utils/functions'
-import {DisabledButtonWrapped} from '~/utils/components'
+import { CompanyProductMixtures } from '~/components/shared-components/'
+import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
+import { DisabledButtonWrapped } from '~/utils/components'
 
 import {
   closePopup,
@@ -38,15 +38,15 @@ import {
   getNmfcNumbersByString,
   addNmfcNumber
 } from '../../actions'
-import {Form, Input, Button, Dropdown, TextArea, Checkbox} from 'formik-semantic-ui-fixed-validation'
+import { Form, Input, Button, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import './styles.scss'
 import Router from 'next/router'
 import styled from 'styled-components'
 
-import {UnitOfPackaging} from '~/components/formatted-messages'
+import { UnitOfPackaging } from '~/components/formatted-messages'
 
-import {errorMessages} from '~/constants/yupValidation'
+import { errorMessages } from '~/constants/yupValidation'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -107,7 +107,7 @@ class ProductPopup extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.popupValues && nextProps.popupValues.packagingUnit) {
       this.filterPackagingTypes(nextProps.popupValues.packagingUnit, nextProps.unitsAll, nextProps.packagingTypesAll)
-    } else this.setState({packagingTypesReduced: nextProps.packagingType})
+    } else this.setState({ packagingTypesReduced: nextProps.packagingType })
   }
 
   filterPackagingTypes(id, unitsAll, packagingTypesAll) {
@@ -155,9 +155,9 @@ class ProductPopup extends React.Component {
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id={`notifications.${status}.header`} />,
-          <FormattedMessage id={`notifications.${status}.content`} values={{name: values.intProductName}} />
+          <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.intProductName }} />
         ),
-        {appearance: 'success'}
+        { appearance: 'success' }
       )
     } catch (e) {
       console.error(e)
@@ -167,7 +167,7 @@ class ProductPopup extends React.Component {
   }
 
   resetComponent = () => {
-    const {popupValues} = this.props
+    const { popupValues } = this.props
     this.setState({
       isLoading: false,
       isUnLoading: false,
@@ -178,18 +178,18 @@ class ProductPopup extends React.Component {
     })
   }
 
-  handleResultSelect = (e, {result}) => {
-    this.setState({value: result, selectedList: [result].concat(this.state.selectedList)})
+  handleResultSelect = (e, { result }) => {
+    this.setState({ value: result, selectedList: [result].concat(this.state.selectedList) })
   }
 
   handleSearchChange = debounce(searchQuery => {
-    this.setState({isLoading: true, value: searchQuery})
+    this.setState({ isLoading: true, value: searchQuery })
 
     this.props.searchEchoProducts(searchQuery)
   }, 250)
 
-  handleSearchUnNumber = debounce((e, {value}) => {
-    this.setState({isUnLoading: true, unNumber: value})
+  handleSearchUnNumber = debounce((e, { value }) => {
+    this.setState({ isUnLoading: true, unNumber: value })
 
     this.props.searchUnNumber(value)
 
@@ -210,8 +210,8 @@ class ProductPopup extends React.Component {
     }))
   }
 
-  handleUnNumberSelect = (e, {result}) => {
-    this.setState({unNumber: result})
+  handleUnNumberSelect = (e, { result }) => {
+    this.setState({ unNumber: result })
   }
 
   handleSearchNmfcNumberChange = debounce(searchQuery => {
@@ -219,7 +219,7 @@ class ProductPopup extends React.Component {
   }, 250)
 
   getInitialFormValues = () => {
-    const {popupValues} = this.props
+    const { popupValues } = this.props
     return {
       ...initialValues,
       ...popupValues,
@@ -235,14 +235,14 @@ class ProductPopup extends React.Component {
       productsUnitsType,
       popupValues,
       freightClasses,
-      intl: {formatMessage},
+      intl: { formatMessage },
       echoProducts,
       echoProductsFetching,
       nmfcNumbersFetching,
       nmfcNumbersFiltered
     } = this.props
 
-    const {packagingTypesReduced} = this.state
+    const { packagingTypesReduced } = this.state
 
     let editable = popupValues ? popupValues.productOfferCount === 0 || !popupValues.productOfferCount : true
 
@@ -266,7 +266,7 @@ class ProductPopup extends React.Component {
             validationSchema={formValidation}
             onReset={closePopup}
             onSubmit={this.handlerSubmit}>
-            {({setFieldValue, values}) => {
+            {({ setFieldValue, values }) => {
               let casProducts = getSafe(() => values.casProducts, [])
 
               return (
@@ -289,14 +289,14 @@ class ProductPopup extends React.Component {
                       clearable: true,
                       selection: true,
                       loading: echoProductsFetching,
-                      onChange: (_, {value}) =>
+                      onChange: (_, { value }) =>
                         setFieldValue(
                           'casProducts',
                           getDesiredCasProductsProps(
                             getSafe(() => allEchoProducts.find(el => el.id === value).elements, [])
                           )
                         ),
-                      onSearchChange: (_, {searchQuery}) => this.handleSearchChange(searchQuery)
+                      onSearchChange: (_, { searchQuery }) => this.handleSearchChange(searchQuery)
                     }}
                     name='echoProduct'
                   />
@@ -312,12 +312,12 @@ class ProductPopup extends React.Component {
                   <FormGroup widths='equal' data-test='settings_product_popup_nameCodeInci_inp'>
                     <Input
                       type='text'
-                      label={formatMessage({id: 'global.intProductName', defaultMessage: 'Internal Product Name'})}
+                      label={formatMessage({ id: 'global.intProductName', defaultMessage: 'Internal Product Name' })}
                       name='intProductName'
                     />
                     <Input
                       type='text'
-                      label={formatMessage({id: 'global.intProductCode', defaultMessage: 'Internal Product Code'})}
+                      label={formatMessage({ id: 'global.intProductCode', defaultMessage: 'Internal Product Code' })}
                       name='intProductCode'
                     />
                   </FormGroup>
@@ -328,12 +328,12 @@ class ProductPopup extends React.Component {
                         width: 4
                       }}
                       type='text'
-                      label={formatMessage({id: 'global.packagingSize', defaultMessage: 'Packaging Size'})}
+                      label={formatMessage({ id: 'global.packagingSize', defaultMessage: 'Packaging Size' })}
                       name='packagingSize'
                     />
                     <Dropdown
-                      fieldProps={{width: 6}}
-                      label={formatMessage({id: 'global.packagingUnit', defaultMessage: 'Unit'})}
+                      fieldProps={{ width: 6 }}
+                      label={formatMessage({ id: 'global.packagingUnit', defaultMessage: 'Unit' })}
                       name='packagingUnit'
                       options={productsUnitsType}
                       inputProps={{
@@ -348,17 +348,17 @@ class ProductPopup extends React.Component {
                       fieldProps={{
                         width: 6
                       }}
-                      label={formatMessage({id: 'global.packagingType', defaultMessage: 'Packaging Type'})}
+                      label={formatMessage({ id: 'global.packagingType', defaultMessage: 'Packaging Type' })}
                       name='packagingType'
                       options={packagingTypesReduced}
-                      inputProps={{'data-test': 'settings_product_popup_packagingType_drpdn'}}
+                      inputProps={{ 'data-test': 'settings_product_popup_packagingType_drpdn' }}
                     />
                   </FormGroup>
 
                   <Accordion>
                     <Accordion.Title
                       active={this.state.advanced}
-                      onClick={() => this.setState(s => ({...s, advanced: !s.advanced}))}>
+                      onClick={() => this.setState(s => ({ ...s, advanced: !s.advanced }))}>
                       <AccordionHeader as='h4'>
                         <Icon
                           color={this.state.advanced ? 'blue' : 'black'}
@@ -385,46 +385,46 @@ class ProductPopup extends React.Component {
                             clearable: true,
                             selection: true,
                             loading: nmfcNumbersFetching,
-                            onSearchChange: (_, {searchQuery}) => this.handleSearchNmfcNumberChange(searchQuery)
+                            onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery)
                           }}
                           name='nmfcNumber'
                         />
                         <Input
-                          label={formatMessage({id: 'global.inciName', defaultMessage: 'INCI Name'})}
+                          label={formatMessage({ id: 'global.inciName', defaultMessage: 'INCI Name' })}
                           type='string'
                           name='inciName'
                         />
                         <Dropdown
-                          label={formatMessage({id: 'global.freightClass', defaultMessage: 'Freight Class'})}
+                          label={formatMessage({ id: 'global.freightClass', defaultMessage: 'Freight Class' })}
                           name='freightClass'
                           options={freightClasses}
-                          inputProps={{'data-test': 'settings_product_popup_freightClass_drpdn'}}
+                          inputProps={{ 'data-test': 'settings_product_popup_freightClass_drpdn' }}
                         />
                       </FormGroup>
 
                       <FormGroup>
                         <Checkbox
-                          fieldProps={{width: 4}}
-                          label={formatMessage({id: 'global.hazardous', defaultMessage: 'Hazardous'})}
+                          fieldProps={{ width: 4 }}
+                          label={formatMessage({ id: 'global.hazardous', defaultMessage: 'Hazardous' })}
                           name='hazardous'
-                          inputProps={{'data-test': 'settings_product_popup_hazardous_chckb'}}
+                          inputProps={{ 'data-test': 'settings_product_popup_hazardous_chckb' }}
                         />
                         <Checkbox
-                          fieldProps={{width: 4}}
-                          label={formatMessage({id: 'global.stackable', defaultMessage: 'Stackable'})}
+                          fieldProps={{ width: 4 }}
+                          label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })}
                           name='stackable'
-                          inputProps={{'data-test': 'settings_product_popup_stackable_chckb'}}
+                          inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }}
                         />
                         <Checkbox
-                          fieldProps={{width: 4}}
-                          label={formatMessage({id: 'global.freezeProtect', defaultMessage: 'Freeze Protect'})}
+                          fieldProps={{ width: 4 }}
+                          label={formatMessage({ id: 'global.freezeProtect', defaultMessage: 'Freeze Protect' })}
                           name='freezeProtect'
                         />
                       </FormGroup>
                     </Accordion.Content>
                   </Accordion>
 
-                  <div style={{textAlign: 'right'}}>
+                  <div style={{ textAlign: 'right' }}>
                     <Button.Reset onClick={closePopup} data-test='settings_product_popup_reset_btn'>
                       <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                         {text => text}
@@ -471,7 +471,7 @@ const mapDispatchToProps = {
   getNmfcNumbersByString,
   addNmfcNumber
 }
-const mapStateToProps = ({settings}) => {
+const mapStateToProps = ({ settings }) => {
   return {
     popupValues: settings.popupValues,
     echoProducts: settings.echoProducts,

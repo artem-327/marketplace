@@ -1,19 +1,19 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import {withToastManager} from 'react-toast-notifications'
-import {Modal, FormGroup} from 'semantic-ui-react'
+import { withToastManager } from 'react-toast-notifications'
+import { Modal, FormGroup } from 'semantic-ui-react'
 
-import {closePopup, putBankAccountRequest, postNewBankAccountRequest} from '../../actions'
+import { closePopup, putBankAccountRequest, postNewBankAccountRequest } from '../../actions'
 
-import {Form, Input, Button, Dropdown} from 'formik-semantic-ui-fixed-validation'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import Router from 'next/router'
 import * as Yup from 'yup'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {currency} from '~/constants/index'
-import {generateToastMarkup, getSafe} from '~/utils/functions'
-import {errorMessages} from '~/constants/yupValidation'
+import { currency } from '~/constants/index'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
+import { errorMessages } from '~/constants/yupValidation'
 
 const initialFormValues = {
   accountNumber: '',
@@ -57,8 +57,8 @@ const bankAccountType = [
 ]
 
 class BankAccountsPopup extends React.Component {
-  submitHandler = async (values, {setSubmitting}) => {
-    const {postNewBankAccountRequest, toastManager} = this.props
+  submitHandler = async (values, { setSubmitting }) => {
+    const { postNewBankAccountRequest, toastManager } = this.props
 
     try {
       await postNewBankAccountRequest(values)
@@ -66,7 +66,7 @@ class BankAccountsPopup extends React.Component {
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id='notifications.bankAccountCreated.header' />,
-          <FormattedMessage id='notifications.bankAccountCreated.content' values={{name: values.name}} />
+          <FormattedMessage id='notifications.bankAccountCreated.content' values={{ name: values.name }} />
         ),
         {
           appearance: 'success'
@@ -82,7 +82,7 @@ class BankAccountsPopup extends React.Component {
     const {
       closePopup,
       popupValues,
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
     return (
@@ -109,25 +109,25 @@ class BankAccountsPopup extends React.Component {
             <FormGroup widths='equal' data-test='settings_bank_account_accountNumber_inp'>
               <Input
                 type='text'
-                label={formatMessage({id: 'settings.accountNumber', defaultMessage: 'Account Number'})}
+                label={formatMessage({ id: 'settings.accountNumber', defaultMessage: 'Account Number' })}
                 name='accountNumber'
               />
               <Dropdown
-                label={formatMessage({id: 'settings.accountType', defaultMessage: 'Account Type'})}
+                label={formatMessage({ id: 'settings.accountType', defaultMessage: 'Account Type' })}
                 name='bankAccountType'
                 options={bankAccountType}
-                inputProps={{'data-test': 'settings_bank_account_popup_type_drpdn'}}
+                inputProps={{ 'data-test': 'settings_bank_account_popup_type_drpdn' }}
               />
             </FormGroup>
             <FormGroup widths='equal' data-test='settings_bank_account_nameNumber_inp'>
-              <Input type='text' label={formatMessage({id: 'global.name', defaultMessage: 'Name'})} name='name' />
+              <Input type='text' label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })} name='name' />
               <Input
                 type='text'
-                label={formatMessage({id: 'settings.routingNumber', defaultMessage: 'Routing Number'})}
+                label={formatMessage({ id: 'settings.routingNumber', defaultMessage: 'Routing Number' })}
                 name='routingNumber'
               />
             </FormGroup>
-            <div style={{textAlign: 'right'}}>
+            <div style={{ textAlign: 'right' }}>
               <Button.Reset onClick={closePopup} data-test='settings_bank_account_popup_reset_btn'>
                 <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                   {text => text}

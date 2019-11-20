@@ -1,10 +1,10 @@
 import './style.scss'
 import React from 'react'
-import {Message} from 'semantic-ui-react'
-import {connect} from 'react-redux'
-import {closeToast} from '../../src/pages/settings/actions'
+import { Message } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { closeToast } from '../../src/pages/settings/actions'
 
-const Toast = ({message, closeToast, isSuccess}) =>
+const Toast = ({ message, closeToast, isSuccess }) =>
   message ? (
     <Message
       onDismiss={closeToast}
@@ -20,7 +20,7 @@ const mapDispatchToProps = {
   closeToast
 }
 
-const mapStateToProps = ({settings: {toast}}) => {
+const mapStateToProps = ({ settings: { toast } }) => {
   return {
     message: toast.message,
     isSuccess: toast.isSuccess
