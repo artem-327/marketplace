@@ -31,7 +31,10 @@ export const dataTypes = {
   STRING: Yup.string(errorMessages.invalidString),
   INTEGER: numberAllowEmptyString,
   NUMBER: numberAllowEmptyString,
-  FLOAT: numberAllowEmptyString
+  FLOAT: numberAllowEmptyString,
+  LARGE_TEXT: Yup.string(errorMessages.invalidString),
+  TEXT: Yup.string(errorMessages.invalidString),
+  
 }
 
 const defaultDataType = 'STRING'
@@ -44,6 +47,7 @@ export const getRole = accessRights => {
 }
 
 export const typeToComponent = (type, options = {}) => {
+  
   switch (type) {
     case 'INTEGER':
       return (
@@ -135,6 +139,7 @@ export const toYupSchema = (validation, type) => {
     ...defaultOptions,
     ...validation
   }
+  console.log({ type, options })
 
   let chain = dataTypes[options.type.value]
 
