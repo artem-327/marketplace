@@ -139,8 +139,7 @@ export const toYupSchema = (validation, type) => {
     ...defaultOptions,
     ...validation
   }
-  console.log({ type, options })
-
+  
   let chain = dataTypes[options.type.value]
 
   Object.keys(supportedValidation).forEach(key => {
