@@ -9,7 +9,7 @@ import { withDatagrid } from '~/modules/datagrid'
 import { applyFilter } from '~/modules/filter/actions'
 import { FormattedNumber } from 'react-intl'
 
-import { openPopup } from '~/modules/company-product-info/actions'
+import { openPopup, closePopup } from '~/modules/company-product-info/actions'
 
 import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
@@ -68,10 +68,11 @@ function mapStateToProps(store, { datagrid }) {
         location: getLocationString(po)
       }
     }),
-    sidebar: store.cart.sidebar
+    sidebar: store.cart.sidebar,
+    isProductInfoOpen: store.companyProductInfo.isOpen
   }
 }
 
 export default withDatagrid(
-  connect(mapStateToProps, { ...Actions, sidebarChanged, openPopup, getProductOffer, applyFilter })(Marketplace)
+  connect(mapStateToProps, { ...Actions, sidebarChanged, openPopup, closePopup, getProductOffer, applyFilter })(Marketplace)
 )
