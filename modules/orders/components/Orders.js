@@ -11,6 +11,7 @@ import { OrderFilter } from '~/modules/filter'
 import { getSafe } from '~/utils/functions'
 import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
+import FilterTags from '~/modules/filter/components/FitlerTags'
 
 const TitleOrderId = styled.div`
   font-size: larger;
@@ -504,7 +505,6 @@ class Orders extends Component {
 
     const { columns } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
-
     return (
       <div id='page' className='flex stretched scrolling'>
         {this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (
@@ -681,6 +681,9 @@ class Orders extends Component {
               active={activeStatus === 'Cancelled'}
               data-test='menu_orders_cancelled'
             />
+            <Menu.Item>
+              <FilterTags datagrid={datagrid} />
+            </Menu.Item>
             <Menu.Menu position='right'>
               <Menu.Item
                 name={formatMessage({

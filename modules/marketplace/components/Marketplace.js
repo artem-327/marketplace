@@ -173,18 +173,6 @@ class Marketplace extends Component {
     this.props.datagrid.setFilter({ filters: [] })
   }
 
-  removeFilter = indexes => {
-    let { datagrid, appliedFilter } = this.props
-
-    indexes.forEach((index, i) => {
-      datagrid.filters.splice(index - i, 1)
-      appliedFilter.filters.splice(index - i, 1)
-    })
-
-    this.props.applyFilter(appliedFilter)
-    datagrid.setFilter(datagrid.filters)
-  }
-
   render() {
     const { datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading, openPopup } = this.props
     const { columns, selectedRows } = this.state
@@ -230,8 +218,7 @@ class Marketplace extends Component {
             <Menu.Menu position='right'>
               <Menu.Item>
                 <FilterTags
-                  filters={datagrid.filters}
-                  onClick={this.removeFilter}
+                  datagrid={datagrid}
                   data-test='marketplace_remove_filter'
                 />
               </Menu.Item>
