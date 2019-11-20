@@ -33,7 +33,7 @@ function prepareDetail(data, type) {
       typeof data.buyerRejectionDate !== 'undefined'
         ? moment(data.buyerRejectionDate).format('MMM Do, YYYY h:mm:ss A')
         : 'N/A',
-    carrier: data.shippingMethod ? data.shippingMethod : 'N/A',
+    carrier: data.shippingCourierName ? data.shippingCourierName : 'N/A',
     chemicalName: <ArrayToMultiple values={orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))} />,
     confirmationDate:
       typeof data.confirmationDate !== 'undefined'
