@@ -224,7 +224,7 @@ class Orders extends Component {
           }
         ]
       },
-      'To ship': {
+      'To Ship': {
         filters: [
           {
             operator: 'EQUALS',
