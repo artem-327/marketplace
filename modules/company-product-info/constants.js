@@ -181,22 +181,29 @@ export const echoProductGrouping = [
   }
 ]
 
-export const groupActions = (fromMarketPlace, rows, companyProductId, callback) => {
+export const groupActionsMarketplace = (rows, companyProductId, callback) => {
   let companyProduct = rows.find(el => el.companyProduct.id == companyProductId)
 
   if (!companyProduct || companyProduct.cfStatus === 'Unmapped') return []
 
-  if (fromMarketPlace) {
-    return tabsMarketPlace.map((tab, i) => ({
-      text: tab.text,
-      callback: () => callback(companyProduct, i)
-    }))
-  } else {
-    return tabs.map((tab, i) => ({
-      text: tab.text,
-      callback: () => callback(companyProduct, i)
-    }))
-  }
+  return tabsMarketPlace.map((tab, i) => ({
+    text: tab.text,
+    callback: () => callback(companyProduct, i)
+  }))
+}
+
+export const groupActions = (rows, companyProductId, sidebarDetailOpen, sidebarDetailTrigger, callback) => {
+  let companyProduct = rows.find(el => el.companyProduct.id == companyProductId)
+
+  if (!companyProduct || companyProduct.cfStatus === 'Unmapped') return []
+
+  return tabs.map((tab, i) => ({
+    text: tab.text,
+    callback: () => {
+      if (sidebarDetailOpen) sidebarDetailTrigger(null, false)
+      return callback(companyProduct, i)
+    }
+  }))
 }
 
 export const yesNoOptions = {

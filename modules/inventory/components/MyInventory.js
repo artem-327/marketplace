@@ -386,6 +386,13 @@ class MyInventory extends Component {
     datagrid.setFilter(datagrid.filters)
   }
 
+  tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
+    const { isProductInfoOpen, closePopup } = this.props
+    if (isProductInfoOpen) closePopup()
+
+    sidebarDetailTrigger(row, bol, tab)
+  }
+
   render() {
     const {
       openBroadcast,
@@ -397,7 +404,8 @@ class MyInventory extends Component {
       simpleEditTrigger,
       sidebarDetailTrigger,
       sidebarValues,
-      openPopup
+      openPopup,
+      sidebarDetailOpen
     } = this.props
     const { columns, selectedRows } = this.state
 
@@ -506,7 +514,13 @@ class MyInventory extends Component {
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
             groupActions={row => {
               let values = row.key.split('_')
-              return groupActions(false, rows, values[values.length - 1], openPopup).map(a => ({
+              return groupActions(
+                rows,
+                values[values.length - 1],
+                sidebarDetailOpen,
+                sidebarDetailTrigger,
+                openPopup
+              ).map(a => ({
                 ...a,
                 text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
               }))
@@ -522,7 +536,7 @@ class MyInventory extends Component {
                   id: 'global.edit',
                   defaultMessage: 'Edit'
                 }),
-                callback: row => sidebarDetailTrigger(row, true, 0)
+                callback: row => this.tableRowClickedProductOffer(row, true, 0, sidebarDetailTrigger)
               },
               //{ text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
               {
@@ -530,21 +544,21 @@ class MyInventory extends Component {
                   id: 'global.documents',
                   defaultMessage: 'Documents'
                 }),
-                callback: row => sidebarDetailTrigger(row, true, 1)
+                callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
               },
               {
                 text: formatMessage({
                   id: 'inventory.broadcast',
                   defaultMessage: 'Price Book'
                 }),
-                callback: row => sidebarDetailTrigger(row, true, 2)
+                callback: row => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
               },
               {
                 text: formatMessage({
                   id: 'inventory.priceTiers',
                   defaultMessage: 'Price Tiers'
                 }),
-                callback: row => sidebarDetailTrigger(row, true, 3)
+                callback: row => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
               },
               {
                 text: formatMessage({

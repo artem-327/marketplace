@@ -10,7 +10,7 @@ import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
-import { groupActions } from '~/modules/company-product-info/constants'
+import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -270,7 +270,7 @@ class Marketplace extends Component {
           <ProdexGrid
             groupActions={row => {
               let values = row.key.split('_')
-              return groupActions(true, rows, values[values.length - 1], openPopup).map(a => ({
+              return groupActionsMarketplace(rows, values[values.length - 1], openPopup).map(a => ({
                 ...a,
                 text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
               }))
