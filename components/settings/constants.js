@@ -1,4 +1,4 @@
-import { Input, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Input, TextArea, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
 import { errorMessages } from '~/constants/yupValidation'
