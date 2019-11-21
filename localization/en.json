@@ -603,6 +603,7 @@
   "global.approve": "Approve",
   "global.warning": "Warning!",
   "global.info": "Info!",
+  "global.nonConforming.tooltip": "This is a non-conforming product",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",
