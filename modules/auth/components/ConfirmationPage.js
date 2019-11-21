@@ -181,9 +181,13 @@ class ConfirmationPage extends Component {
           }
 
           try {
-            await reviewCompany(payload)
+            let response = await reviewCompany(payload)
             actions.setSubmitting(false)
-            Router.push('/dwolla-register')
+            if (getSafe(() => response.value.data.preferredBankAccountId, false)) {
+              Router.push('/settings')
+            } else {
+              Router.push('/dwolla-register')
+            }
           } catch {
           } finally {
             actions.setSubmitting(false)
