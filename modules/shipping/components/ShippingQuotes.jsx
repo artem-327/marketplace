@@ -16,7 +16,7 @@ import styled from 'styled-components'
 
 
 const CustomContainer = styled.div`
-  margin-top: 1.5em !important
+  // margin-top: 1.5em !important
 `
 
 
@@ -40,7 +40,7 @@ export default class ShippingQuotes extends Component {
       destination: {
         quantity: 1,
         zip: '',
-        maxTransit: 0
+        maxTransit: -1
       }
     }
   }
@@ -179,11 +179,6 @@ export default class ShippingQuotes extends Component {
             <Table.HeaderCell><FormattedMessage id='shippingQuote.totalFreight' defaultMessage='Total Freight'>{(text) => text}</FormattedMessage></Table.HeaderCell>
           </Table.Header>
           <Table.Body>
-            {this.props.quotes.length === 0 && !loading && 
-            <CustomContainer className='dx-g-bs4-fixed-block'>
-              <big className='text-muted'><FormattedMessage id='global.noShippingOptions' defaultMessage='No shipping options available.' /></big>
-            </CustomContainer>
-            } 
             {this.props.quotes.map((sQuote, i) => {
               let now = moment()
               let deliveryDate = sQuote.shipmentRate.estimatedDeliveryDate
@@ -220,6 +215,11 @@ export default class ShippingQuotes extends Component {
             })}
           </Table.Body>
         </Table>
+        {this.props.quotes.length === 0 && !loading && 
+            <CustomContainer className='dx-g-bs4-fixed-block'>
+              <big className='text-muted'><FormattedMessage id='global.noShippingOptions' defaultMessage='No shipping options available based on parameters provided.' /></big>
+            </CustomContainer>
+        } 
       </Segment>
     )
   }
