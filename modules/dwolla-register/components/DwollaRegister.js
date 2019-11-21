@@ -26,10 +26,12 @@ import { ControllerForm } from '~/components/custom-formik'
 
 import { postNewDwollaAccount } from '~/modules/admin/api'
 
-const BiggerTextColumn = styled(GridColumn)`
-  font-size: 18px;
-  line-height: 1.78em;
-`
+const BiggerTextColumn = styled(GridColumn)``
+
+//const BiggerTextColumn = styled(GridColumn)`
+//  font-size: 18px;
+//  line-height: 1.78em;
+//`
 
 const Wrapper = styled.div`
   background-color: rgba(208, 224, 240, 0.3);
@@ -497,19 +499,22 @@ class DwollaRegister extends Component {
                     </GridRow>
                     <GridRow>
                       <BiggerTextColumn>
-                        <FormattedMessage
-                          id='dwolla.controllerDesc2'
-                          defaultMessage='* An executive officer or senior manager (e.g., Chief Executive Officer, Chief Financial Officer, Chief Operating Officer, Managing Member, General Partner, President, Vice President, Treasurer); or'
-                        />
+                        <li>
+                          <FormattedMessage
+                            id='dwolla.controllerDesc2'
+                            defaultMessage='An executive officer or senior manager (e.g., Chief Executive Officer, Chief Financial Officer, Chief Operating Officer, Managing Member, General Partner, President, Vice President, Treasurer); or'
+                          />
+                        </li>
                       </BiggerTextColumn>
                     </GridRow>
-
                     <GridRow>
                       <BiggerTextColumn>
-                        <FormattedMessage
-                          id='dwolla.controllerDesc3'
-                          defaultMessage='* Any other individual who regularly performs similar functions.'
-                        />
+                        <li>
+                          <FormattedMessage
+                            id='dwolla.controllerDesc3'
+                            defaultMessage='Any other individual who regularly performs similar functions.'
+                          />
+                        </li>
                       </BiggerTextColumn>
                     </GridRow>
                   </Grid>
@@ -519,31 +524,22 @@ class DwollaRegister extends Component {
 
               <FormColumn largeScreen={6} computer={5} tablet={9} mobile={10}>
                 <Segment padded>
-                  <GridRow>
-                    <GridColumn>
-                      <Header as='h2'>
-                        <FormattedMessage id='global.controllerInfo' defaultMessage='Controller Information' />
-                      </Header>
-                    </GridColumn>
-                  </GridRow>
+                  <Header as='h4'>
+                    <FormattedMessage id='global.controllerInfo' defaultMessage='Controller Information' />
+                  </Header>
                   <ControllerForm setFieldValue={setFieldValue} values={values} />
-                  <GridRow>
-                    <GridColumn>
-                      <RightAlignedDiv>
-                        <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
-                          <FormattedMessage id='global.back' defaultMessage='Back'>
-                            {text => text}
-                          </FormattedMessage>
-                        </Button>
-
-                        <Button onClick={() => this.nextStep(formikProps)} primary>
-                          <FormattedMessage id='global.saveAndContinue' defaultMessage='Save and Continue'>
-                            {text => text}
-                          </FormattedMessage>
-                        </Button>
-                      </RightAlignedDiv>
-                    </GridColumn>
-                  </GridRow>
+                  <RightAlignedDiv>
+                    <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
+                      <FormattedMessage id='global.back' defaultMessage='Back'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                    <Button onClick={() => this.nextStep(formikProps)} primary>
+                      <FormattedMessage id='global.saveAndContinue' defaultMessage='Save and Continue'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                  </RightAlignedDiv>
                 </Segment>
               </FormColumn>
             </GridRow>
