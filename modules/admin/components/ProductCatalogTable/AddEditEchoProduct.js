@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import moment from 'moment'
 import { removeEmpty } from '~/modules/admin/actions'
+import { verifyEchoProduct } from '~/modules/admin/api' // No need to be an action
 import {
   FlexSidebar,
   FlexTabs,
@@ -384,13 +385,11 @@ class AddEditEchoProduct extends React.Component {
     delete formValues.attachments
 
     try {
-      let data = {}
-      if (popupValues) data = await putEchoProduct(popupValues.id, formValues)
-      else data = await postEchoProduct(formValues)
+      if (popupValues) var { value } = await putEchoProduct(popupValues.id, formValues)
+      else var { value } = await postEchoProduct(formValues)
 
-      let echoProduct = data.value.data
       const notLinkedAttachments = values.attachments.filter(att => !getSafe(() => att.linked, false))
-      await linkAttachment(false, echoProduct.id, notLinkedAttachments)
+      await linkAttachment(false, value.id, notLinkedAttachments)
 
       const docType = listDocumentTypes.find(dt => dt.id === 3)
       notLinkedAttachments.map(att => {
@@ -401,11 +400,13 @@ class AddEditEchoProduct extends React.Component {
           linked: true
         }
       })
+      // No need to await; just fire it
+      verifyEchoProduct(value.id)
 
-      Datagrid.updateRow(echoProduct.id, () => ({
-        ...echoProduct,
-        attachments: echoProduct.attachments.concat(notLinkedAttachments)
-      }))
+      // Datagrid.updateRow(data.id, () => ({
+      //   ...data,
+      //   attachments: data.attachments.concat(notLinkedAttachments)
+      // }))
 
       const status = popupValues ? 'echoProductUpdated' : 'echoProductCreated'
       toastManager.add(
