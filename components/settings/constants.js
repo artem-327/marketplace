@@ -103,8 +103,7 @@ export const typeToComponent = (type, options = {}) => {
         />
       )
 
-    case 'BOOL':
-    case 'BOOLEAN': {
+    case 'BOOL': {
       return (
         <Checkbox
           {...getSafe(() => options.props, {})}
