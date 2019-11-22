@@ -66,7 +66,8 @@ export const initialState = {
   searchedManufacturersLoading: false,
   altEchoNamesRows: [],
   documentTypes: [],
-  editEchoProductEditTab: 0
+  editEchoProductEditTab: 0,
+  editEchoProductInitTrig: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -315,7 +316,8 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_EDIT_ECHO_PRODUCT_CHANGE_TAB: {
       return {
         ...state,
-        editEchoProductEditTab: action.payload
+        editEchoProductEditTab: action.payload.editTab,
+        editEchoProductInitTrig: action.payload.force ^ state.editEchoProductInitTrig
       }
     }
 
