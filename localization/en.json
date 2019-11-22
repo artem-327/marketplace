@@ -1141,6 +1141,7 @@
   "cart.minimumOrderQQ": "Min. Purchase",
   "cart.split": "Split",
   "cart.hazmatInfo": "Hazmat Information",
+  "cart.shipingInformation": "Shipping Information",
   "cart.unCode": "UN Code",
   "cart.packagingGroup": "Packaging Group",
   "cart.hazardClass": "Hazard Class",
