@@ -159,7 +159,7 @@ class Marketplace extends Component {
             id: 'global.nonConforming.tooltip',
             defaultMessage: 'This is a non-conforming product'
           })}>
-          <Icon name='exclamation' color='red' />
+          <Icon name='exclamation triangle' color='red' />
         </DivIconTooltip>
       ),
       condition: r.condition ? (
