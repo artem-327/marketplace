@@ -27,7 +27,7 @@ context("Manufacturers CRUD", () => {
 
         cy.contains("Manufacturer created")
 
-        cy.get("input[type=text]").type("Test")
+        cy.searchInList("Test")
 
         let filter = [{"operator": "LIKE", "path": "Manufacturer.name", "values": ["%Test%"]}]
 
@@ -42,7 +42,7 @@ context("Manufacturers CRUD", () => {
     })
 
     it("Edits a manufacturer", () => {
-        cy.get("input[type=text]").type("Test")
+        cy.searchInList("Test")
 
         cy.openElement(manufacturerId, 0)
 
@@ -56,7 +56,7 @@ context("Manufacturers CRUD", () => {
         cy.contains("Updated Manufacturer")
         cy.waitForUI()
 
-        cy.get("input[type=text]").clear().type("Artio")
+        cy.searchInList("Artio")
 
         cy.openElement(manufacturerId, 0)
 

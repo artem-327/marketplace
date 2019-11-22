@@ -19,7 +19,11 @@ Cypress.Commands.add("enterText", (selector,text) => {
 })
 
 Cypress.Commands.add("searchInList", (text) => {
-    cy.get("input[type=text]").type(text)
+    cy.get("input[type=text]").eq(0).clear().type(text)
+})
+
+Cypress.Commands.add("searchInAdminList", (text) => {
+    cy.get("[data-test=admin_table_search_inp]").clear().type(text, {force: true})
 })
 
 Cypress.Commands.add("selectFromDropdown", (selector,value) => {

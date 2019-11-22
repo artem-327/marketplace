@@ -27,7 +27,7 @@ context("Market Segments CRUD", () => {
 
         cy.contains("Market Segment created")
 
-        cy.get("input[type=text]").type("Test")
+        cy.searchInList("Test")
         cy.waitForUI()
 
         let filter = [{"operator": "LIKE", "path": "MarketSegment.name", "values": ["%Test%"]}]
@@ -43,7 +43,7 @@ context("Market Segments CRUD", () => {
     })
 
     it("Edits a market segment", () => {
-        cy.get("input[type=text]").type("Test")
+        cy.searchInList("Test")
 
         cy.openElement(documentId, 0)
 
@@ -56,7 +56,7 @@ context("Market Segments CRUD", () => {
 
         cy.contains("Updated Market Segment")
 
-        cy.get("input[type=text]").clear().type("Great")
+        cy.searchInList("Great")
 
         cy.openElement(documentId, 0)
 
