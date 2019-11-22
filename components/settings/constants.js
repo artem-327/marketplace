@@ -1,4 +1,4 @@
-import { Input, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Input, TextArea, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
 import { errorMessages } from '~/constants/yupValidation'
@@ -103,8 +103,7 @@ export const typeToComponent = (type, options = {}) => {
         />
       )
 
-    case 'BOOL':
-    case 'BOOLEAN': {
+    case 'BOOL': {
       return (
         <Checkbox
           {...getSafe(() => options.props, {})}

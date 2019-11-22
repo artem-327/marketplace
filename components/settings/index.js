@@ -94,7 +94,8 @@ class Settings extends Component {
       let el = group[key]
       if (el.changeable) {
         if (!el.edit && role !== 'admin') payload.settings.push({ id: el.id, value: 'EMPTY_SETTING' })
-        else if (el.value.visible) payload.settings.push({ id: el.id, value: el.value.visible })
+        else if (el.value.visible !== null)
+          payload.settings.push({ id: el.id, value: el.type === 'BOOL' ? el.value.actual : el.value.visible })
       }
     })
 
@@ -140,9 +141,10 @@ class Settings extends Component {
           id: setting.id,
           original: setting.original,
           value: {
-            actual: setting.value,
+            actual: setting.type === 'BOOL' ? setting.value == 'true' : setting.value,
             visible: setting.value === 'EMPTY_SETTING' ? null : setting.value ? setting.value : null
           },
+          type: setting.type,
           changeable: setting.changeable,
           edit: setting.changeable && setting.original && setting.value !== 'EMPTY_SETTING'
         }
@@ -156,7 +158,6 @@ class Settings extends Component {
         validationSchema={this.state.validationSchema}
         render={formikProps => {
           let { values, errors } = formikProps
-
           return (
             <Form>
               {systemSettings.map(group => {
@@ -228,7 +229,9 @@ class Settings extends Component {
                                   }
                                 }),
                                 {
-                                  name: `${role}.${group.name}.${el.name}.value.visible`
+                                  name: `${role}.${group.name}.${el.name}.value.${
+                                    el.type === 'BOOL' ? 'actual' : 'visible'
+                                  }`
                                 }
                               )}
                             </>

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import moment from 'moment'
 import { removeEmpty } from '~/modules/admin/actions'
+import { verifyEchoProduct } from '~/modules/admin/api' // No need to be an action
 import {
   FlexSidebar,
   FlexTabs,
@@ -125,7 +126,20 @@ class AddEditEchoProduct extends React.Component {
     changedForm: false,
     transportationType: transportationTypes[0].value,
     codesList: [],
-    changedAttachments: false
+    changedAttachments: false,
+    unNumberInitOptions: [],
+  }
+
+  componentDidMount() {
+    const {
+      hazardClasses,
+      packagingGroups,
+      getHazardClassesDataRequest,
+      getPackagingGroupsDataRequest,
+    } = this.props
+
+    if (hazardClasses.length === 0) getHazardClassesDataRequest()
+    if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -153,7 +167,7 @@ class AddEditEchoProduct extends React.Component {
       if (
         prevProps.editForm &&
         this.props.editForm &&
-        (prevProps.popupValues.id !== this.props.popupValues.id || prevProps.editTab !== this.props.editTab)
+        (prevProps.popupValues.id !== this.props.popupValues.id || prevProps.editInitTrig !== this.props.editInitTrig)
       ) {
         // Changed edit product or edit tab
         this.setInitialState(this.props.popupValues)
@@ -163,18 +177,35 @@ class AddEditEchoProduct extends React.Component {
   }
 
   setInitialState = (popupValues, additionalStates) => {
-    let codesList = []
+    let codesList = [], unNumberInitOptions = []
     if (popupValues) {
       codesList = popupValues.mfrProductCodes.map(code => ({
         text: code,
         value: code
       }))
+
       this.props.searchManufacturers(
         getSafe(() => this.props.popupValues.manufacturer.name, ''),
         200
       )
+
+      if (popupValues.dotUnNumber) unNumberInitOptions.push(popupValues.dotUnNumber)
+      if (popupValues.iataUnNumber) unNumberInitOptions.push(popupValues.iataUnNumber)
+      if (popupValues.imdgImoUnNumber) unNumberInitOptions.push(popupValues.imdgImoUnNumber)
+      if (popupValues.tdgUnNumber) unNumberInitOptions.push(popupValues.tdgUnNumber)
+      unNumberInitOptions = unNumberInitOptions.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i)
+      unNumberInitOptions = unNumberInitOptions.map(d => {
+        return {
+          key: d.id,
+          text: d.unNumberCode,
+          value: d.id,
+          content: <Header content={d.unNumberCode} subheader={d.description} style={{ fontSize: '1em' }} />
+        }
+      })
     }
-    this.setState({ codesList, changedForm: false, changedAttachments: false, ...additionalStates })
+    this.setState({
+      codesList, changedForm: false, changedAttachments: false,
+      unNumberInitOptions: unNumberInitOptions, ...additionalStates })
   }
 
   getInitialFormValues = () => {
@@ -193,15 +224,15 @@ class AddEditEchoProduct extends React.Component {
             conditionsToAvoid: getSafe(() => popupValues.conditionsToAvoid, ''),
             decompositionTemperature: getSafe(() => popupValues.decompositionTemperature, ''),
             developmentalEffects: getSafe(() => popupValues.developmentalEffects, ''),
-            dotHazardClass: getSafe(() => popupValues.dotHazardClass, ''),
+            dotHazardClass: getSafe(() => popupValues.dotHazardClass.id, null),
             dotHazardLabel: getSafe(() => popupValues.dotHazardLabel, ''),
             dotMarinePollutant: getSafe(() => popupValues.dotMarinePollutant, ''),
-            dotPackagingGroup: getSafe(() => popupValues.dotPackagingGroup, ''),
+            dotPackagingGroup: getSafe(() => popupValues.dotPackagingGroup.id, null),
             dotProperShippingName: getSafe(() => popupValues.dotProperShippingName, ''),
             dotProperTechnicalName: getSafe(() => popupValues.dotProperTechnicalName, ''),
             dotReportableQuantity: getSafe(() => popupValues.dotReportableQuantity, ''),
             dotSevereMarinePollutant: getSafe(() => popupValues.dotSevereMarinePollutant, ''),
-            dotUnNumber: getSafe(() => popupValues.dotUnNumber, ''),
+            dotUnNumber: getSafe(() => popupValues.dotUnNumber.id, null),
             elements: getSafe(
               () =>
                 popupValues.elements.map(element => ({
@@ -231,18 +262,18 @@ class AddEditEchoProduct extends React.Component {
             hmisChronicHealthHazard: getSafe(() => popupValues.hmisChronicHealthHazard, ''),
             hmisPhysicalHazard: getSafe(() => popupValues.hmisPhysicalHazard, ''),
             hnoc: getSafe(() => popupValues.hnoc, ''),
-            iataHazardClass: getSafe(() => popupValues.iataHazardClass, ''),
+            iataHazardClass: getSafe(() => popupValues.iataHazardClass.id, null),
             iataHazardLabel: getSafe(() => popupValues.iataHazardLabel, ''),
-            iataPackagingGroup: getSafe(() => popupValues.iataPackagingGroup, ''),
+            iataPackagingGroup: getSafe(() => popupValues.iataPackagingGroup.id, null),
             iataProperShippingName: getSafe(() => popupValues.iataProperShippingName, ''),
             iataProperTechnicalName: getSafe(() => popupValues.iataProperTechnicalName, ''),
-            iataUnNumber: getSafe(() => popupValues.iataUnNumber, ''),
-            imdgImoHazardClass: getSafe(() => popupValues.imdgImoHazardClass, ''),
+            iataUnNumber: getSafe(() => popupValues.iataUnNumber.id, null),
+            imdgImoHazardClass: getSafe(() => popupValues.imdgImoHazardClass.id, null),
             imdgImoHazardLabel: getSafe(() => popupValues.imdgImoHazardLabel, ''),
-            imdgImoPackagingGroup: getSafe(() => popupValues.imdgImoPackagingGroup, ''),
+            imdgImoPackagingGroup: getSafe(() => popupValues.imdgImoPackagingGroup.id, null),
             imdgImoProperShippingName: getSafe(() => popupValues.imdgImoProperShippingName, ''),
             imdgImoProperTechnicalName: getSafe(() => popupValues.imdgImoProperTechnicalName, ''),
-            imdgImoUnNumber: getSafe(() => popupValues.imdgImoUnNumber, ''),
+            imdgImoUnNumber: getSafe(() => popupValues.imdgImoUnNumber.id, null),
             incompatibleMaterials: getSafe(() => popupValues.incompatibleMaterials, ''),
             ingestion: getSafe(() => popupValues.ingestion, ''),
             inhalation: getSafe(() => popupValues.inhalation, ''),
@@ -266,7 +297,6 @@ class AddEditEchoProduct extends React.Component {
             odorThreshold: getSafe(() => popupValues.odorThreshold, ''),
             oshaDefinedHazards: getSafe(() => popupValues.oshaDefinedHazards, ''),
             otherAdverseEffects: getSafe(() => popupValues.otherAdverseEffects, ''),
-            packagingGroup: getSafe(() => popupValues.packagingGroup.id, null),
             partitionCoefficient: getSafe(() => popupValues.partitionCoefficient, ''),
             ph: getSafe(() => popupValues.ph, ''),
             physicalState: getSafe(() => popupValues.physicalState, ''),
@@ -291,12 +321,12 @@ class AddEditEchoProduct extends React.Component {
             stotSingleExposure: getSafe(() => popupValues.stotSingleExposure, ''),
             supplementalInformation: getSafe(() => popupValues.supplementalInformation, ''),
             symptomsEffects: getSafe(() => popupValues.symptomsEffects, ''),
-            tdgHazardClass: getSafe(() => popupValues.tdgHazardClass, ''),
+            tdgHazardClass: getSafe(() => popupValues.tdgHazardClass.id, null),
             tdgHazardLabel: getSafe(() => popupValues.tdgHazardLabel, ''),
-            tdgPackagingGroup: getSafe(() => popupValues.tdgPackagingGroup, ''),
+            tdgPackagingGroup: getSafe(() => popupValues.tdgPackagingGroup.id, null),
             tdgProperShippingName: getSafe(() => popupValues.tdgProperShippingName, ''),
             tdgProperTechnicalName: getSafe(() => popupValues.tdgProperTechnicalName, ''),
-            tdgUnNumber: getSafe(() => popupValues.tdgUnNumber, ''),
+            tdgUnNumber: getSafe(() => popupValues.tdgUnNumber.id, null),
             tdsIssuedDate: getSafe(() => popupValues.tdsIssuedDate, ''),
             tdsPreparedBy: getSafe(() => popupValues.tdsPreparedBy, ''),
             tdsRevisionDate: getSafe(() => popupValues.tdsRevisionDate, ''),
@@ -328,6 +358,23 @@ class AddEditEchoProduct extends React.Component {
 
   tabChanged = index => {
     this.props.editEchoProductChangeTab(index)
+  }
+
+  handleUnNumberSearchChange = debounce((_, { searchQuery }) => {
+    this.props.getUnNumbersByString(searchQuery)
+  }, 250)
+
+  handleUnNumberChange = (value, options) => {
+    if (value === undefined || value ==='') return
+    let stateOptions = this.state.unNumberInitOptions
+
+    if (stateOptions.findIndex(t => t.key === value) < 0) { // value not found in state options
+      let newOption = options.find(t => t.key === value)            // new value from unNumbersFiltered
+      if (newOption) {
+        stateOptions.push(newOption)
+        this.setState({ unNumberInitOptions: stateOptions })
+      }
+    }
   }
 
   switchToErrors = err => {
@@ -384,13 +431,11 @@ class AddEditEchoProduct extends React.Component {
     delete formValues.attachments
 
     try {
-      let data = {}
-      if (popupValues) data = await putEchoProduct(popupValues.id, formValues)
-      else data = await postEchoProduct(formValues)
+      if (popupValues) var { value } = await putEchoProduct(popupValues.id, formValues)
+      else var { value } = await postEchoProduct(formValues)
 
-      let echoProduct = data.value.data
       const notLinkedAttachments = values.attachments.filter(att => !getSafe(() => att.linked, false))
-      await linkAttachment(false, echoProduct.id, notLinkedAttachments)
+      await linkAttachment(false, value.id, notLinkedAttachments)
 
       const docType = listDocumentTypes.find(dt => dt.id === 3)
       notLinkedAttachments.map(att => {
@@ -401,11 +446,14 @@ class AddEditEchoProduct extends React.Component {
           linked: true
         }
       })
+      // No need to await; just fire it
+      verifyEchoProduct(value.id)
 
-      Datagrid.updateRow(echoProduct.id, () => ({
-        ...echoProduct,
-        attachments: echoProduct.attachments.concat(notLinkedAttachments)
-      }))
+      Datagrid.loadData()
+      // Datagrid.updateRow(data.id, () => ({
+      //   ...data,
+      //   attachments: data.attachments.concat(notLinkedAttachments)
+      // }))
 
       const status = popupValues ? 'echoProductUpdated' : 'echoProductCreated'
       toastManager.add(
@@ -524,7 +572,7 @@ class AddEditEchoProduct extends React.Component {
     )
   }
 
-  RowDropdown = ({ name, readOnly = false, id, defaultMessage, props }) => (
+  RowDropdown = ({ name, readOnly = false, id, defaultMessage, props, clearable = false }) => (
     <GridRow>
       <GridColumn width={6}>
         <FormattedMessage id={id} defaultMessage={defaultMessage} />
@@ -536,7 +584,33 @@ class AddEditEchoProduct extends React.Component {
           fluid
           name={name}
           {...props}
-          inputProps={{ disabled: readOnly }}
+          inputProps={{ disabled: readOnly, clearable: clearable }}
+          options={props.options}
+        />
+      </GridColumn>
+    </GridRow>
+  )
+
+  RowUnNumberDropdown = ({ name, readOnly = false, id, defaultMessage, props }) => (
+    <GridRow>
+      <GridColumn width={6}>
+        <FormattedMessage id={id} defaultMessage={defaultMessage} />
+      </GridColumn>
+
+      <GridColumn width={10}>
+        <FormikDropdown
+          selection
+          fluid
+          name={name}
+          {...props}
+          inputProps={{
+            disabled: readOnly,
+            loading: this.props.unNumbersFetching,
+            clearable: true,
+            search: true,
+            onSearchChange: this.handleUnNumberSearchChange,
+            onChange: (_, { value }) => this.handleUnNumberChange(value, props.options)
+          }}
           options={props.options}
         />
       </GridColumn>
@@ -758,14 +832,6 @@ class AddEditEchoProduct extends React.Component {
             />
           </GridColumn>
         </GridRow>
-        {this.RowDropdown({
-          name: 'packagingGroup',
-          id: 'global.packagingGroup',
-          defaultMessage: 'Packaging Group',
-          props: {
-            options: this.props.packagingGroups
-          }
-        })}
         {this.RowPhone({
           name: 'emergencyPhone',
           id: 'global.emergencyPhone',
@@ -1071,27 +1137,42 @@ class AddEditEchoProduct extends React.Component {
             </GridColumn>
           </GridRow>
         </Grid>
-        {this.renderTransportationContent(this.state.transportationType)}
+        {this.renderTransportationContent(formikProps, this.state.transportationType)}
       </>
     )
   }
 
-  renderTransportationContent = transportationType => {
+  renderTransportationContent = (formikProps, transportationType) => {
+    let unNumberOptions = [...this.props.unNumbersFiltered, ...this.state.unNumberInitOptions]
+      .filter((v,i,a)=>a.findIndex(t=>(t.key === v.key))===i)
+
     switch (transportationType) {
       case 'dot': {
         return (
           <Grid verticalAlign='middle'>
-            {this.RowInput({ name: 'dotHazardClass', id: 'global.dotHazardClass', defaultMessage: 'DOT Hazard Class' })}
+            {this.RowDropdown({
+              name: 'dotHazardClass',
+              id: 'global.dotHazardClass',
+              defaultMessage: 'DOT Hazard Class',
+              clearable: true,
+              props: {
+                options: this.props.hazardClasses
+              }
+            })}
             {this.RowInput({ name: 'dotHazardLabel', id: 'global.dotHazardLabel', defaultMessage: 'DOT Hazard Label' })}
             {this.RowInput({
               name: 'dotMarinePollutant',
               id: 'global.dotMarinePollutant',
               defaultMessage: 'DOT Marine Pollutant'
             })}
-            {this.RowInput({
+            {this.RowDropdown({
               name: 'dotPackagingGroup',
               id: 'global.dotPackagingGroup',
-              defaultMessage: 'DOT Packaging Group'
+              defaultMessage: 'DOT Packaging Group',
+              clearable: true,
+              props: {
+                options: this.props.packagingGroups
+              }
             })}
             {this.RowInput({
               name: 'dotProperShippingName',
@@ -1113,7 +1194,14 @@ class AddEditEchoProduct extends React.Component {
               id: 'global.dotSevereMarinePollutant',
               defaultMessage: 'DOT Severe Marine Pollutant'
             })}
-            {this.RowInput({ name: 'dotUnNumber', id: 'global.dotUnNumber', defaultMessage: 'DOT UN Number' })}
+            {this.RowUnNumberDropdown({
+              name: 'dotUnNumber',
+              id: 'global.dotUnNumber',
+              defaultMessage: 'DOT UN Number',
+              props: {
+                options: unNumberOptions
+              }
+            })}
           </Grid>
         )
       }
@@ -1121,20 +1209,28 @@ class AddEditEchoProduct extends React.Component {
       case 'iata': {
         return (
           <Grid verticalAlign='middle'>
-            {this.RowInput({
+            {this.RowDropdown({
               name: 'iataHazardClass',
               id: 'global.iataHazardClass',
-              defaultMessage: 'IATA Hazard Class'
+              defaultMessage: 'IATA Hazard Class',
+              clearable: true,
+              props: {
+                options: this.props.hazardClasses
+              }
             })}
             {this.RowInput({
               name: 'iataHazardLabel',
               id: 'global.iataHazardLabel',
               defaultMessage: 'IATA Hazard Label'
             })}
-            {this.RowInput({
+            {this.RowDropdown({
               name: 'iataPackagingGroup',
               id: 'global.iataPackagingGroup',
-              defaultMessage: 'IATA Packaging Group'
+              defaultMessage: 'IATA Packaging Group',
+              clearable: true,
+              props: {
+                options: this.props.packagingGroups
+              }
             })}
             {this.RowInput({
               name: 'iataProperShippingName',
@@ -1146,7 +1242,14 @@ class AddEditEchoProduct extends React.Component {
               id: 'global.iataProperTechnicalName',
               defaultMessage: 'IATA Proper Technical Name'
             })}
-            {this.RowInput({ name: 'iataUnNumber', id: 'global.iataUnNumber', defaultMessage: 'IATA UN Number' })}
+            {this.RowUnNumberDropdown({
+              name: 'iataUnNumber',
+              id: 'global.iataUnNumber',
+              defaultMessage: 'IATA UN Number',
+              props: {
+                options: unNumberOptions
+              }
+            })}
           </Grid>
         )
       }
@@ -1154,20 +1257,28 @@ class AddEditEchoProduct extends React.Component {
       case 'tdg': {
         return (
           <Grid verticalAlign='middle'>
-            {this.RowInput({
+            {this.RowDropdown({
               name: 'imdgImoHazardClass',
               id: 'global.imdgImoHazardClass',
-              defaultMessage: 'IMDG/IMO Hazard Class'
+              defaultMessage: 'IMDG/IMO Hazard Class',
+              clearable: true,
+              props: {
+                options: this.props.hazardClasses
+              }
             })}
             {this.RowInput({
               name: 'imdgImoHazardLabel',
               id: 'global.imdgImoHazardLabel',
               defaultMessage: 'IMDG/IMO Hazard Label'
             })}
-            {this.RowInput({
+            {this.RowDropdown({
               name: 'imdgImoPackagingGroup',
               id: 'global.imdgImoPackagingGroup',
-              defaultMessage: 'IMDG/IMO Packaging Group'
+              defaultMessage: 'IMDG/IMO Packaging Group',
+              clearable: true,
+              props: {
+                options: this.props.packagingGroups
+              }
             })}
             {this.RowInput({
               name: 'imdgImoProperShippingName',
@@ -1179,10 +1290,13 @@ class AddEditEchoProduct extends React.Component {
               id: 'global.imdgImoProperTechnicalName',
               defaultMessage: 'IMDG/IMO Proper Technical Name'
             })}
-            {this.RowInput({
+            {this.RowUnNumberDropdown({
               name: 'imdgImoUnNumber',
               id: 'global.imdgImoUnNumber',
-              defaultMessage: 'IMDG/IMO UN Number'
+              defaultMessage: 'IMDG/IMO UN Number',
+              props: {
+                options: unNumberOptions
+              }
             })}
           </Grid>
         )
@@ -1191,12 +1305,24 @@ class AddEditEchoProduct extends React.Component {
       case 'imdgImo': {
         return (
           <Grid verticalAlign='middle'>
-            {this.RowInput({ name: 'tdgHazardClass', id: 'global.tdgHazardClass', defaultMessage: 'TDG Hazard Class' })}
+            {this.RowDropdown({
+              name: 'tdgHazardClass',
+              id: 'global.tdgHazardClass',
+              defaultMessage: 'TDG Hazard Class',
+              clearable: true,
+              props: {
+                options: this.props.hazardClasses
+              }
+            })}
             {this.RowInput({ name: 'tdgHazardLabel', id: 'global.tdgHazardLabel', defaultMessage: 'TDG Hazard Label' })}
-            {this.RowInput({
+            {this.RowDropdown({
               name: 'tdgPackagingGroup',
               id: 'global.tdgPackagingGroup',
-              defaultMessage: 'TDG Packaging Group'
+              defaultMessage: 'TDG Packaging Group',
+              clearable: true,
+              props: {
+                options: this.props.packagingGroups
+              }
             })}
             {this.RowInput({
               name: 'tdgProperShippingName',
@@ -1208,7 +1334,14 @@ class AddEditEchoProduct extends React.Component {
               id: 'global.tdgProperTechnicalName',
               defaultMessage: 'TDG Proper Technical Name'
             })}
-            {this.RowInput({ name: 'tdgUnNumber', id: 'global.tdgUnNumber', defaultMessage: 'TDG UN Number' })}
+            {this.RowUnNumberDropdown({
+              name: 'tdgUnNumber',
+              id: 'global.tdgUnNumber',
+              defaultMessage: 'TDG UN Number',
+              props: {
+                options: unNumberOptions
+              }
+            })}
           </Grid>
         )
       }

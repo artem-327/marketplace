@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Button, Popup, List } from 'semantic-ui-react'
+import { Container, Menu, Header, Button, Popup, List, Icon } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 
@@ -16,12 +16,23 @@ const CapitalizedText = styled.span`
   text-transform: capitalize;
 `
 
+const DivIconTooltip = styled.div`
+  position: fixed;
+  z-index: 500;
+`
+
 class Marketplace extends Component {
   state = {
     columns: [
       { name: 'productName', disabled: true },
       { name: 'productNumber', disabled: true },
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
+      {
+        name: '',
+        title: '',
+        width: 20,
+        sortPath: 'ProductOffer.condition.name'
+      },
       {
         name: 'available',
         title: (
@@ -136,10 +147,22 @@ class Marketplace extends Component {
   }
 
   getRows = () => {
-    const { rows } = this.props
+    const {
+      rows,
+      intl: { formatMessage }
+    } = this.props
 
     return rows.map(r => ({
       ...r,
+      '': !r.condition && (
+        <DivIconTooltip
+          data-tooltip={formatMessage({
+            id: 'global.nonConforming.tooltip',
+            defaultMessage: 'This is a non-conforming product'
+          })}>
+          <Icon name='exclamation' color='red' />
+        </DivIconTooltip>
+      ),
       condition: r.condition ? (
         <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
       ) : (
@@ -188,9 +211,9 @@ class Marketplace extends Component {
   render() {
     const { datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading, openPopup } = this.props
     const { columns, selectedRows } = this.state
-    const rows = this.getRows()
-
     let { formatMessage } = intl
+
+    const rows = this.getRows()
 
     return (
       <>

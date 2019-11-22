@@ -365,7 +365,7 @@ class DetailSidebar extends Component {
   }, 250)
 
   submitForm = debounce(async (values, setSubmitting, setTouched) => {
-    const { addProductOffer } = this.props
+    const { addProductOffer, datagrid, toastManager } = this.props
 
     setSubmitting(false)
     let props = {}
@@ -400,7 +400,9 @@ class DetailSidebar extends Component {
 
     if (Object.keys(props).length) {
       try {
-        await addProductOffer(props, getSafe(() => this.props.sidebarValues.id, null))
+        let data = await addProductOffer(props, getSafe(() => this.props.sidebarValues.id, null))
+        datagrid.updateRow(data.value.id, () => data.value)
+        
         toastManager.add(generateToastMarkup(
           <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
           <FormattedMessage id='addInventory.poDataSaved'
