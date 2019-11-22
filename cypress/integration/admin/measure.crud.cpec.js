@@ -32,7 +32,7 @@ context("Units of measure CRUD", () => {
     })
 
     it("Edits unit of measure", () => {
-        cy.get("input[type=text]").type("Test")
+        cy.get("input[type=text]").eq(0).type("Test")
         cy.waitForUI()
 
         cy.get("i[class='ellipsis vertical large icon']").click()

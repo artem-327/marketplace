@@ -49,7 +49,7 @@ Cypress.Commands.add("getToken", () => {
         form: true,
         body: {
             grant_type: "password",
-            username: "user1@example.com",
+            username: "mackenzie@echoexchange.net",
             password: "echopass123"
         }
     }).then((response) => {

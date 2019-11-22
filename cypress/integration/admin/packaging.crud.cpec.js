@@ -30,7 +30,7 @@ context("Units of packaging CRUD", () => {
 
         cy.contains("Unit of Packaging created")
 
-        cy.get("input[type=text]").type("Test")
+        cy.get("input[type=text]").eq(0).type("Test")
         cy.waitForUI()
 
         let filter = [{"operator": "LIKE", "path": "PackagingType.name", "values": ["%Test%"]}]
@@ -47,7 +47,7 @@ context("Units of packaging CRUD", () => {
     })
 
     it("Edits a package unit", () => {
-        cy.get("input[type=text]").type("Test")
+        cy.searchInList("Test")
 
         cy.openElement(packageId, 0)
 
@@ -60,7 +60,7 @@ context("Units of packaging CRUD", () => {
 
         cy.contains("Updated Unit of Packaging")
 
-        cy.get("input[type=text]").clear().type("Best")
+        cy.searchInList("Best")
 
         cy.openElement(packageId, 0)
 
@@ -80,7 +80,7 @@ context("Units of packaging CRUD", () => {
     })
 
     it("Deletes a package unit", () => {
-        cy.get("input[type=text]").type("Best")
+        cy.searchInList("Best")
 
         cy.openElement(packageId, 1)
 

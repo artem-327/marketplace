@@ -61,7 +61,7 @@ context("Companies CRUD", () => {
     })
 
     it("Edits a condition", () => {
-        cy.get("input[type=text]").type("Donald The Ducks")
+        cy.searchInAdminList("Donald The Ducks")
         cy.waitForUI()
 
         let filter = [{"operator":"LIKE","path":"Company.name","values":["%Donald%"]}]
@@ -98,14 +98,11 @@ context("Companies CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",12)
-            .find(".sui-error-message").each((element) => {
-            expect(element.text()).to.match(/(Required)|(Field should have at least 2 characters)|(Invalid e-mail address)|(Invalid Website URL (make sure to include http:\/\/ or https:\/\/))/i)
-        })
+            .should("have.length",11)
     })
 
     it("Deletes a company", () => {
-        cy.searchInList("Donald and Co.")
+        cy.searchInAdminList("Donald and Co.")
         cy.waitForUI()
         cy.waitForUI()
 

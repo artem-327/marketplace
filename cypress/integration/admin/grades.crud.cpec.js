@@ -29,7 +29,7 @@ context("Grades CRUD", () => {
 
         let filter = [{"operator": "LIKE", "path": "ProductGrade.name", "values": ["%Test%"]}]
 
-        cy.get("input[type=text]").type("Test", {force: true})
+        cy.get("input[type=text]").eq(0).type("Test", {force: true})
 
         cy.getToken().then(token => {
             cy.getFirstGradeWithFilter(token, filter).then(itemId => {
@@ -42,7 +42,7 @@ context("Grades CRUD", () => {
     })
 
     it("Edits a grade", () => {
-        cy.get("input[type=text]").type("Test")
+        cy.searchInList("Test")
 
         cy.openElement(gradeId, 0)
 
@@ -73,7 +73,7 @@ context("Grades CRUD", () => {
     })
 
     it("Deletes a grade", () => {
-        cy.get("input[type=text]").type("Graceful")
+        cy.searchInList("Graceful")
         cy.openElement(gradeId, 1)
 
         cy.contains("Yes").click()
