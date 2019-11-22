@@ -55,7 +55,7 @@ const AttachmentModal = withDatagrid(
           rows={datagrid.rows.map(r => ({
             id: r.id,
             name: r.name,
-            documentType: r.documentType.name,
+            documentType: r && r.documentType && r.documentType.name,
             expirationDate: r.expirationDate && moment(r.expirationDate).format('MM/DD/YYYY')
           }))}
           tableName='attachements'
