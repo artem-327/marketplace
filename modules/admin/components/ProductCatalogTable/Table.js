@@ -132,7 +132,7 @@ class ProductCatalogTable extends Component {
           }}
           rows={this.getRows(rows)}
           rowActions={[
-            ...echoRowActions((row, i) => openEditEchoProduct(row.id, i)),
+            ...echoRowActions((row, i) => openEditEchoProduct(row.id, i, true)),
             {
               text: formatMessage({ id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }),
               callback: row => openEditEchoAltNamesPopup(row)

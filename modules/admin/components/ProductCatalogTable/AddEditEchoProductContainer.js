@@ -13,7 +13,10 @@ import {
   linkAttachment,
   removeAttachmentLink,
   removeAttachment,
-  editEchoProductChangeTab
+  editEchoProductChangeTab,
+  getHazardClassesDataRequest,
+  getPackagingGroupsDataRequest,
+  getUnNumbersByString,
 } from '~/modules/admin/actions'
 
 import { Header } from 'semantic-ui-react'
@@ -32,7 +35,10 @@ const mapDispatchToProps = {
   putEchoProduct,
   postEchoProduct,
   searchManufacturers,
-  editEchoProductChangeTab
+  editEchoProductChangeTab,
+  getHazardClassesDataRequest,
+  getPackagingGroupsDataRequest,
+  getUnNumbersByString,
 }
 
 const mapStateToProps = ({ admin }, props) => {
@@ -44,6 +50,7 @@ const mapStateToProps = ({ admin }, props) => {
     editForm: currentTab && !!admin.currentEditForm,
     popupValues: admin.popupValues,
     editTab: admin.editEchoProductEditTab,
+    editInitTrig: admin.editEchoProductInitTrig,
     packagingGroups: admin.packagingGroups.map((pGroup, id) => {
       return {
         key: id,
@@ -53,13 +60,32 @@ const mapStateToProps = ({ admin }, props) => {
         content: <Header content={pGroup.groupCode} subheader={pGroup.description} style={{ fontSize: '1em' }} />
       }
     }),
+    hazardClasses: admin.hazardClasses.map((d, id) => {
+      return {
+        key: id,
+        text: d.classCode,
+        //description: d.description,
+        value: d.id,
+        content: <Header content={d.classCode} subheader={d.description} style={{ fontSize: '1em' }} />
+      }
+    }),
     searchedManufacturersLoading: admin.searchedManufacturersLoading,
     searchedManufacturers: admin.searchedManufacturers,
     searchedCasProducts: admin.searchedCasProducts,
     isLoading: admin.loading,
+    unNumbersFiltered: admin.unNumbersFiltered.map((d, id) => {
+        return {
+          key: d.id,
+          text: d.unNumberCode,
+          //description: d.description,
+          value: d.id,
+          content: <Header content={d.unNumberCode} subheader={d.description} style={{fontSize: '1em'}}/>
+      }
+    }),
+    unNumbersFetching: admin.unNumbersFetching,
 
     config: admin.config[admin.currentTab.name],
-    listDocumentTypes: admin.documentTypes
+    listDocumentTypes: admin.documentTypes,
   }
 }
 
