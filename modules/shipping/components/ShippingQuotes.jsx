@@ -12,6 +12,13 @@ import { getSafe } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { currency } from '~/constants/index'
 import { FormattedNumber } from 'react-intl'
+import styled from 'styled-components'
+
+
+const CustomContainer = styled.div`
+  // margin-top: 1.5em !important
+`
+
 
 const formValidation = (min, split) => Yup.object().shape({
   destination: Yup.object().shape({
@@ -33,7 +40,7 @@ export default class ShippingQuotes extends Component {
       destination: {
         quantity: 1,
         zip: '',
-        maxTransit: 0
+        maxTransit: -1
       }
     }
   }
@@ -130,7 +137,7 @@ export default class ShippingQuotes extends Component {
                 name='destination.maxTransit'
                 label={<FormattedMessage id='shippingQuote.maxTransitTime' defaultMessage='Max Transit Time'>{(text) => text}</FormattedMessage>}
                 options={[
-                  { value: 0, text: <FormattedMessage id='shippingQuote.noLimit' defaultMessage='No limit'>{(text) => text}</FormattedMessage> },
+                  { value: -1, text: <FormattedMessage id='shippingQuote.noLimit' defaultMessage='No limit'>{(text) => text}</FormattedMessage> },
                   { value: 2, text: <FormattedMessage id='shippingQuote.2Days' defaultMessage='2 days'>{(text) => text}</FormattedMessage> },
                   { value: 3, text: <FormattedMessage id='shippingQuote.3Days' defaultMessage='3 days'>{(text) => text}</FormattedMessage> },
                   { value: 5, text: <FormattedMessage id='shippingQuote.5Days' defaultMessage='5 days'>{(text) => text}</FormattedMessage> },
@@ -208,6 +215,11 @@ export default class ShippingQuotes extends Component {
             })}
           </Table.Body>
         </Table>
+        {this.props.quotes.length === 0 && !loading && 
+            <CustomContainer className='dx-g-bs4-fixed-block'>
+              <big className='text-muted'><FormattedMessage id='global.noShippingOptions' defaultMessage='No shipping options available based on parameters provided.' /></big>
+            </CustomContainer>
+        } 
       </Segment>
     )
   }

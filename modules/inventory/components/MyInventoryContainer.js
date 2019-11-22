@@ -9,7 +9,7 @@ import { withDatagrid } from '~/modules/datagrid'
 import { openImportPopup } from '~/modules/settings/actions'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import { applyFilter } from '~/modules/filter/actions'
-import { openPopup } from '~/modules/company-product-info/actions'
+import { openPopup, closePopup } from '~/modules/company-product-info/actions'
 import { setCompanyElligible } from '~/modules/auth/actions'
 import { FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
@@ -105,12 +105,19 @@ function mapStateToProps(store, { datagrid }) {
       }
     }),
     unmappedRows: datagrid.rows,
-    isOpenImportPopup: store.settings.isOpenImportPopup
+    isOpenImportPopup: store.settings.isOpenImportPopup,
+    isProductInfoOpen: store.companyProductInfo.isOpen
   }
 }
 
 export default withDatagrid(
-  connect(mapStateToProps, { ...Actions, openPopup, openImportPopup, openBroadcast, applyFilter, setCompanyElligible })(
-    MyInventory
-  )
+  connect(mapStateToProps, {
+    ...Actions,
+    openPopup,
+    closePopup,
+    openImportPopup,
+    openBroadcast,
+    applyFilter,
+    setCompanyElligible
+  })(MyInventory)
 )

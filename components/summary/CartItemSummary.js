@@ -19,6 +19,7 @@ import {
   getUnNumbersByString,
   addUnNumber
 } from '~/modules/admin/actions'
+import { getCart } from '~/modules/purchase-order/actions'
 import { getNmfcNumbersByString, addNmfcNumber } from '~/modules/settings/actions'
 import { generateToastMarkup, getSafe, getFloatOrNull, getIntOrNull } from '~/utils/functions'
 import { nmfcValidation, freightClassValidation } from '~/constants/yupValidation'
@@ -29,7 +30,10 @@ const validationSchema = Yup.object().shape({
 
 class CartItemSummary extends Component {
   state = {
-    edittingHazmatInfo: false
+    edittingHazmatInfo: false,
+    loadCartRequired: false,
+    nmfcNumberInitOptions: [],
+    unNumberInitOptions: [],
   }
 
   async componentDidMount() {
@@ -42,33 +46,43 @@ class CartItemSummary extends Component {
       addUnNumber
     } = this.props
 
-    /* ! ! moved to onHazmatPopup() to reload every time popup is open
-    let initialUnNumbers = []
-
-    cartItems.forEach(item => {
-      let unNumber = getSafe(() => item.unNumber)
-      if (unNumber && !initialUnNumbers.find((num) => num.id === unNumber.id)) {
-        initialUnNumbers.push(unNumber)
-      }
-    })
-
-    if (initialUnNumbers.length !== 0) await addUnNumber(initialUnNumbers)
-    */
     if (hazardClasses.length === 0) getHazardClassesDataRequest()
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
   }
 
   onHazmatPopup = async item => {
-    const { addUnNumber, addNmfcNumber } = this.props
+    let option, nmfcNumbers = []
 
-    let nmfcNumber = getSafe(
-      () => item.nmfcNumber,
-      getSafe(() => item.productOffer.companyProduct.nmfcNumber, null)
-    )
-    let unNumber = getSafe(() => item.unNumber)
+    option = getSafe(() => item.cfNmfcNumber, null)
+    if (option) nmfcNumbers.push(option)
+    option = getSafe(() => item.productOffer.companyProduct.nmfcNumber, null)
+    if (nmfcNumbers && option && nmfcNumbers[0].id !== option.id) nmfcNumbers.push(option)
 
-    if (nmfcNumber) await addNmfcNumber([nmfcNumber])
-    if (unNumber) await addUnNumber([unNumber])
+    let unNumbers = []
+    option = getSafe(() => item.cfUnNumber, null)
+    if (option) unNumbers.push(option)
+    option = getSafe(() => item.productOffer.companyProduct.echoProduct.cfUnNumber, null)
+    if (unNumbers && option && unNumbers[0].id !== option.id) unNumbers.push(option)
+
+    nmfcNumbers = nmfcNumbers.map(d => {
+      return {
+        key: d.id,
+        text: d.code,
+        value: d.id,
+        content: <Header content={d.code} subheader={d.description} style={{ fontSize: '1em' }} />
+      }
+    })
+
+    unNumbers = unNumbers.map(d => {
+      return {
+        key: d.id,
+        text: d.unNumberCode,
+        value: d.id,
+        content: <Header content={d.unNumberCode} subheader={d.description} style={{ fontSize: '1em' }} />
+      }
+    })
+
+    this.setState({ nmfcNumberInitOptions: nmfcNumbers, unNumberInitOptions: unNumbers})
   }
 
   handleUnNumberChange = debounce((_, { searchQuery }) => {
@@ -96,19 +110,27 @@ class CartItemSummary extends Component {
     } = item
 
     let initialValues = {
-      unNumber: getSafe(() => item.unNumber.id, companyProduct.echoProduct.cfUnNumber),
-      packagingGroup: getSafe(() => item.packagingGroup.id, companyProduct.cfPackagingGroup),
-      hazardClass: getSafe(() => item.hazardClass.id, companyProduct.echoProduct.cfHazardClass),
-      // item.hazardClasses ? item.hazardClasses.map((c) => c.id) : companyProduct.hazardClasses.map((hazardClass) => hazardClass.id),
-      freightClass: getSafe(() => item.freightClass, companyProduct.freightClass || ''),
+      unNumber: getSafe(() => item.cfUnNumber.id,
+        getSafe(() => companyProduct.echoProduct.cfUnNumber.id, null)),
+      packagingGroup: getSafe(() => item.cfPackagingGroup.id,
+        getSafe(() => companyProduct.echoProduct.cfPackagingGroup.id, null)),
+      hazardClass: getSafe(() => item.cfHazardClass.id,
+        getSafe(() => companyProduct.echoProduct.cfHazardClass.id, null)),
+      freightClass: getSafe(() => item.cfFreightClass,
+        getSafe(() => companyProduct.freightClass, '')),
       nmfcNumber: getSafe(
-        () => item.nmfcNumber.id,
+        () => item.cfNmfcNumber.id,
         getSafe(() => companyProduct.nmfcNumber.id, null)
       ),
       stackable: getSafe(() => item.stackable, companyProduct.stackable || false)
     }
 
     let disabled = !this.state.edittingHazmatInfo
+
+    let unNumberOptions = [...this.state.unNumberInitOptions, ...unNumbersFiltered]
+      .filter((v,i,a)=>a.findIndex(t=>(t.key === v.key))===i)
+    let nmfcNumberOptions = [...this.state.nmfcNumberInitOptions, ...nmfcNumbersFiltered]
+      .filter((v,i,a)=>a.findIndex(t=>(t.key === v.key))===i)
 
     return (
       <Form
@@ -126,6 +148,7 @@ class CartItemSummary extends Component {
               nmfcNumber: getIntOrNull(values.nmfcNumber),
               stackable: values.stackable
             })
+            this.setState({ loadCartRequired: true })
             toastManager.add(
               generateToastMarkup(
                 <FormattedMessage
@@ -174,11 +197,7 @@ class CartItemSummary extends Component {
               <GridRow>
                 <GridColumn data-test='shopping_cart_unNumber_inp'>
                   <Dropdown
-                    options={unNumbersFiltered.map(num => ({
-                      id: num.id,
-                      value: num.id,
-                      text: num.unNumberCode
-                    }))}
+                    options={unNumberOptions}
                     inputProps={{
                       loading: unNumbersFetching,
                       disabled,
@@ -246,7 +265,7 @@ class CartItemSummary extends Component {
                         {text => text}
                       </FormattedMessage>
                     }
-                    options={nmfcNumbersFiltered}
+                    options={nmfcNumberOptions}
                     inputProps={{
                       disabled,
                       fluid: true,
@@ -333,7 +352,10 @@ class CartItemSummary extends Component {
               <WiderPopup
                 wide
                 onOpen={() => this.onHazmatPopup(item)}
-                onClose={() => this.setState({ edittingHazmatInfo: false })}
+                onClose={() => {
+                  if (this.state.loadCartRequired) this.props.getCart()
+                  this.setState({ edittingHazmatInfo: false, loadCartRequired: false })
+                }}
                 position='left center'
                 on='click'
                 trigger={
@@ -441,7 +463,14 @@ export default withToastManager(
     }) => ({
       packagingGroups,
       hazardClasses,
-      unNumbersFiltered,
+      unNumbersFiltered: unNumbersFiltered.map(d => {
+        return {
+          key: d.id,
+          text: d.unNumberCode,
+          value: d.id,
+          content: <Header content={d.unNumberCode} subheader={d.description} style={{ fontSize: '1em' }} />
+        }
+      }),
       unNumbersFetching,
       nmfcNumbersFetching,
       nmfcNumbersFiltered: nmfcNumbersFiltered.map(d => {
@@ -449,12 +478,7 @@ export default withToastManager(
           key: d.id,
           text: d.code,
           value: d.id,
-          content: (
-            <>
-              <strong>{d.code}</strong>
-              <div>{d.description}</div>
-            </>
-          )
+          content: <Header content={d.code} subheader={d.description} style={{ fontSize: '1em' }} />
         }
       })
     }),
@@ -465,7 +489,8 @@ export default withToastManager(
       getUnNumbersByString,
       addUnNumber,
       getNmfcNumbersByString,
-      addNmfcNumber
+      addNmfcNumber,
+      getCart
     }
   )(injectIntl(CartItemSummary))
 )
