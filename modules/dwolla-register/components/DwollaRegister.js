@@ -26,11 +26,6 @@ import { ControllerForm } from '~/components/custom-formik'
 
 import { postNewDwollaAccount } from '~/modules/admin/api'
 
-const BiggerTextColumn = styled(GridColumn)`
-  font-size: 18px;
-  line-height: 1.78em;
-`
-
 const Wrapper = styled.div`
   background-color: rgba(208, 224, 240, 0.3);
   overflow-y: auto;
@@ -344,21 +339,21 @@ class DwollaRegister extends Component {
                     </GridRow>
 
                     <GridRow>
-                      <BiggerTextColumn>
+                      <GridColumn>
                         <FormattedMessage
                           id='dwolla.beneficialOwnersDesc1'
                           defaultMessage={`To help the government fight financial crime, Federal regulation requires our financial institution partners to obtain, verify, and record information about the beneficial owners of legal entity customers. Legal entities can be abused to disguise involvement in terrorist financing, money laundering, tax evasion, corruption, fraud, and other financial crimes. Requiring the disclosure of key individuals who ultimately own or control a legal entity (e.g. the beneficial owners) helps law enforcement investigate and prosecute these crimes.`}
                         />
-                      </BiggerTextColumn>
+                      </GridColumn>
                     </GridRow>
 
                     <GridRow>
-                      <BiggerTextColumn>
+                      <GridColumn>
                         <FormattedMessage
                           id='dwolla.beneficialOwnersDesc2'
                           defaultMessage={`The following information must be collected for each individual, if any, who, directly or indirectly, through any contract, arrangement, understanding, relationship or otherwise, owns 25 percent or more of the equity interests of the legal entity listed above. If no individual meets this definition or if the company is publicly traded, please check “Beneficial Owner Not Applicable” below and skip this section.`}
                         />
-                      </BiggerTextColumn>
+                      </GridColumn>
                     </GridRow>
 
                     <GridRow>
@@ -488,29 +483,32 @@ class DwollaRegister extends Component {
                     </GridRow>
 
                     <GridRow>
-                      <BiggerTextColumn>
+                      <GridColumn>
                         <FormattedMessage
                           id='dwolla.controllerDesc1'
                           defaultMessage='To assure compliance with US financial institution policies, Echo must collect the information of at least one individual with significant responsibility for managing the legal entity listed above, such as:'
                         />
-                      </BiggerTextColumn>
+                      </GridColumn>
                     </GridRow>
                     <GridRow>
-                      <BiggerTextColumn>
-                        <FormattedMessage
-                          id='dwolla.controllerDesc2'
-                          defaultMessage='* An executive officer or senior manager (e.g., Chief Executive Officer, Chief Financial Officer, Chief Operating Officer, Managing Member, General Partner, President, Vice President, Treasurer); or'
-                        />
-                      </BiggerTextColumn>
+                      <GridColumn>
+                        <li>
+                          <FormattedMessage
+                            id='dwolla.controllerDesc2'
+                            defaultMessage='An executive officer or senior manager (e.g., Chief Executive Officer, Chief Financial Officer, Chief Operating Officer, Managing Member, General Partner, President, Vice President, Treasurer); or'
+                          />
+                        </li>
+                      </GridColumn>
                     </GridRow>
-
                     <GridRow>
-                      <BiggerTextColumn>
-                        <FormattedMessage
-                          id='dwolla.controllerDesc3'
-                          defaultMessage='* Any other individual who regularly performs similar functions.'
-                        />
-                      </BiggerTextColumn>
+                      <GridColumn>
+                        <li>
+                          <FormattedMessage
+                            id='dwolla.controllerDesc3'
+                            defaultMessage='Any other individual who regularly performs similar functions.'
+                          />
+                        </li>
+                      </GridColumn>
                     </GridRow>
                   </Grid>
                 </Segment>
@@ -519,31 +517,22 @@ class DwollaRegister extends Component {
 
               <FormColumn largeScreen={6} computer={5} tablet={9} mobile={10}>
                 <Segment padded>
-                  <GridRow>
-                    <GridColumn>
-                      <Header as='h2'>
-                        <FormattedMessage id='global.controllerInfo' defaultMessage='Controller Information' />
-                      </Header>
-                    </GridColumn>
-                  </GridRow>
+                  <Header as='h4'>
+                    <FormattedMessage id='global.controllerInfo' defaultMessage='Controller Information' />
+                  </Header>
                   <ControllerForm setFieldValue={setFieldValue} values={values} />
-                  <GridRow>
-                    <GridColumn>
-                      <RightAlignedDiv>
-                        <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
-                          <FormattedMessage id='global.back' defaultMessage='Back'>
-                            {text => text}
-                          </FormattedMessage>
-                        </Button>
-
-                        <Button onClick={() => this.nextStep(formikProps)} primary>
-                          <FormattedMessage id='global.saveAndContinue' defaultMessage='Save and Continue'>
-                            {text => text}
-                          </FormattedMessage>
-                        </Button>
-                      </RightAlignedDiv>
-                    </GridColumn>
-                  </GridRow>
+                  <RightAlignedDiv>
+                    <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
+                      <FormattedMessage id='global.back' defaultMessage='Back'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                    <Button onClick={() => this.nextStep(formikProps)} primary>
+                      <FormattedMessage id='global.saveAndContinue' defaultMessage='Save and Continue'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                  </RightAlignedDiv>
                 </Segment>
               </FormColumn>
             </GridRow>
@@ -664,7 +653,7 @@ class DwollaRegister extends Component {
                     </GridRow>
 
                     <GridRow>
-                      <BiggerTextColumn>
+                      <GridColumn>
                         <FormattedMessage
                           id='dwolla.registrationCompleteDesc'
                           values={{
@@ -681,13 +670,13 @@ class DwollaRegister extends Component {
                           }}
                         />
                         {/* <FormattedMessage id='dwolla.registrationCompleteDesc1' defaultMessage='Thanks for registering for your Dwolla Account. The verification process can take 24-48 hours. In the meantime you can add your Products, Warehouses, Branches, and other information in the Settings section of (web app name).' /> */}
-                      </BiggerTextColumn>
+                      </GridColumn>
                     </GridRow>
 
                     {/* <GridRow>
-                      <BiggerTextColumn>
+                      <GridColumn>
                         <FormattedMessage id='dwolla.registrationCompleteDesc2' defaultMessage='Once Dwolla sends you the verification e-mail you can then add your Bank Accounts and Logisitics details. If you don’t receive a verification e-mail please contact support@echosystem.com or call (833) 321 3246.' />
-                      </BiggerTextColumn>
+                      </GridColumn>
                     </GridRow> */}
 
                     <GridRow>

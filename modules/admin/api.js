@@ -190,9 +190,9 @@ export const getDocumentTypes = () => api.get(`/prodex/api/document-types/`)
 
 export const getEchoProduct = id => api.get(`/prodex/api/echo-products/id/${id}`)
 
-export const putEchoProduct = (id, values) => api.put(`/prodex/api/echo-products/id/${id}/`, values)
+export const putEchoProduct = (id, values) => api.put(`/prodex/api/echo-products/id/${id}/`, values).then(response => response.data)
 
-export const postEchoProduct = values => api.post(`/prodex/api/echo-products`, values)
+export const postEchoProduct = values => api.post(`/prodex/api/echo-products`, values).then(response => response.data)
 
 export const deleteEchoProduct = id => api.delete(`/prodex/api/echo-products/id/${id}`)
 
@@ -240,3 +240,5 @@ export const searchManufacturers = (text, limit) =>
   )
 
 export const searchUnNumber = pattern => api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${pattern}`)
+
+export const verifyEchoProduct = id => api.get(`/prodex/api/echo-products/verify/${id}`).then(response => response.data)
