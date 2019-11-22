@@ -212,3 +212,49 @@ export const CasProductResponse = {
   vaporPressure: '',
   viscosity: ''
 }
+
+export const OrderStatusEnum = {
+  PENDING: {
+    id: 1,
+    text: 'Pending'
+  },
+  CONFIRMED: {
+    id: 2,
+    text: 'Confirmed'
+  },
+  REJECTED: {
+    id: 3,
+    text: 'Rejected'
+  },
+  DRAFT: {
+    id: 4,
+    text: 'Draft'
+  },
+  CANCELLED: {
+    id: 5,
+    text: 'Cancelled'
+  },
+  DISCARDED: {
+    id: 6,
+    text: 'Discarded'
+  }
+}
+
+export const ShippingStatusEnum = {
+  NOT_SHIPPED: {
+    id: 1,
+    text: 'Not shipped'
+  },
+  IN_TRANSIT: {
+    id: 2,
+    text: 'In transit'
+  },
+  DELIVERED: {
+    id: 3,
+    text: 'Delivered'
+  },
+  RETURNED: {
+    id: 4,
+    text: 'Returned'
+  }
+}

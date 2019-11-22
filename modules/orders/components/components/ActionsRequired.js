@@ -74,6 +74,8 @@ class ActionsRequired extends React.Component {
   render() {
     const { action, ordersType, detail, openReinitiateTransfer, cancelOrder } = this.props
     const repayUntil = moment(detail.orderDate)
+    // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
+    // Some switch might do the trick
 
     return (
       <>
@@ -127,8 +129,8 @@ class ActionsRequired extends React.Component {
         ) : (
           //orderStatus === 'Purchase'
           <>
-            {action === '100'
-              ? this.renderSegment(null, 13, null, 'order.confirm.cancel', [
+            {action === '100' // Pending
+              ? this.renderSegment(null, 13, null, 'order.detail.status.pending', [
                   {
                     buttonType: 'basic',
                     onClick: this.cancelOrder,
@@ -137,8 +139,8 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {action === '400'
-              ? this.renderSegment(null, 11, null, 'order.confirm.approve.dissaprove', [
+            {action === '400' // Draft
+              ? this.renderSegment(null, 11, null, 'order.detail.status.draft', [
                   {
                     buttonType: 'primary',
                     onClick: this.approveOrder,
@@ -149,7 +151,7 @@ class ActionsRequired extends React.Component {
                     buttonType: 'basic',
                     onClick: this.disapproveOrder,
                     dataTest: 'orders_detail_disapprove_btn',
-                    text: 'global.disapprove'
+                    text: 'global.discard'
                   }
                 ])
               : null}
