@@ -1067,7 +1067,9 @@ class DetailSidebar extends Component {
                                   <GridColumn>
                                     <ProdexGrid
                                       virtual={false}
-                                      tableName='inventory_documents'                                    
+                                      tableName='inventory_documents'
+                                      {...datagrid.tableProps}
+                                      onTableReady={() => {}}
                                       columns={columns}
                                       rows={values.documents.attachments
                                         .map(row => (
