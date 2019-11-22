@@ -654,7 +654,7 @@ class _Table extends Component {
 
             <TableColumnResizing
               onColumnWidthsChange={widths => this.handleColumnsSettings({ widths })}
-              columnWidths={columnsSettings.widths}
+              columnWidths={columnsSettings.widths.map(el => (!el.width ? { ...el, width: 200 } : el))}
             />
 
             {showHeader && <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />}
