@@ -30,8 +30,7 @@ class Marketplace extends Component {
       {
         name: '',
         title: '',
-        width: 20,
-        sortPath: 'ProductOffer.condition.name'
+        width: 20
       },
       {
         name: 'available',
@@ -240,10 +239,7 @@ class Marketplace extends Component {
 
             <Menu.Menu position='right'>
               <Menu.Item>
-                <FilterTags
-                  datagrid={datagrid}
-                  data-test='marketplace_remove_filter'
-                />
+                <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
               </Menu.Item>
               <Popup
                 wide='very'
