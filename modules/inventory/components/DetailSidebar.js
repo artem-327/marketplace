@@ -1067,6 +1067,7 @@ class DetailSidebar extends Component {
                                       virtual={false}
                                       tableName='inventory_documents'
                                       {...datagrid.tableProps}
+                                      onTableReady={() => {}}
                                       columns={columns}
                                       rows={values.documents.attachments
                                         .map(row => (
