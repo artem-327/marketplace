@@ -1,7 +1,19 @@
 import React, { Component } from 'react'
 import { array, string, func } from 'prop-types'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
-import { Grid, GridRow, GridColumn, Header, Divider, Segment, Icon, Popup, List, Label } from 'semantic-ui-react'
+import {
+  Grid,
+  GridRow,
+  GridColumn,
+  Header,
+  Divider,
+  Segment,
+  Icon,
+  Popup,
+  List,
+  Label,
+  Button
+} from 'semantic-ui-react'
 
 import './styles.scss'
 import { RelaxedRow, HeaderTextRow, WiderPopup, CustomSpan, CustomHeader } from './styledComponents'
@@ -33,7 +45,7 @@ class CartItemSummary extends Component {
     edittingHazmatInfo: false,
     loadCartRequired: false,
     nmfcNumberInitOptions: [],
-    unNumberInitOptions: [],
+    unNumberInitOptions: []
   }
 
   async componentDidMount() {
@@ -51,7 +63,8 @@ class CartItemSummary extends Component {
   }
 
   onHazmatPopup = async item => {
-    let option, nmfcNumbers = []
+    let option,
+      nmfcNumbers = []
 
     option = getSafe(() => item.cfNmfcNumber, null)
     if (option) nmfcNumbers.push(option)
@@ -82,7 +95,7 @@ class CartItemSummary extends Component {
       }
     })
 
-    this.setState({ nmfcNumberInitOptions: nmfcNumbers, unNumberInitOptions: unNumbers})
+    this.setState({ nmfcNumberInitOptions: nmfcNumbers, unNumberInitOptions: unNumbers })
   }
 
   handleUnNumberChange = debounce((_, { searchQuery }) => {
@@ -110,14 +123,22 @@ class CartItemSummary extends Component {
     } = item
 
     let initialValues = {
-      unNumber: getSafe(() => item.cfUnNumber.id,
-        getSafe(() => companyProduct.echoProduct.cfUnNumber.id, null)),
-      packagingGroup: getSafe(() => item.cfPackagingGroup.id,
-        getSafe(() => companyProduct.echoProduct.cfPackagingGroup.id, null)),
-      hazardClass: getSafe(() => item.cfHazardClass.id,
-        getSafe(() => companyProduct.echoProduct.cfHazardClass.id, null)),
-      freightClass: getSafe(() => item.cfFreightClass,
-        getSafe(() => companyProduct.freightClass, '')),
+      unNumber: getSafe(
+        () => item.cfUnNumber.id,
+        getSafe(() => companyProduct.echoProduct.cfUnNumber.id, null)
+      ),
+      packagingGroup: getSafe(
+        () => item.cfPackagingGroup.id,
+        getSafe(() => companyProduct.echoProduct.cfPackagingGroup.id, null)
+      ),
+      hazardClass: getSafe(
+        () => item.cfHazardClass.id,
+        getSafe(() => companyProduct.echoProduct.cfHazardClass.id, null)
+      ),
+      freightClass: getSafe(
+        () => item.cfFreightClass,
+        getSafe(() => companyProduct.freightClass, '')
+      ),
       nmfcNumber: getSafe(
         () => item.cfNmfcNumber.id,
         getSafe(() => companyProduct.nmfcNumber.id, null)
@@ -127,10 +148,12 @@ class CartItemSummary extends Component {
 
     let disabled = !this.state.edittingHazmatInfo
 
-    let unNumberOptions = [...this.state.unNumberInitOptions, ...unNumbersFiltered]
-      .filter((v,i,a)=>a.findIndex(t=>(t.key === v.key))===i)
-    let nmfcNumberOptions = [...this.state.nmfcNumberInitOptions, ...nmfcNumbersFiltered]
-      .filter((v,i,a)=>a.findIndex(t=>(t.key === v.key))===i)
+    let unNumberOptions = [...this.state.unNumberInitOptions, ...unNumbersFiltered].filter(
+      (v, i, a) => a.findIndex(t => t.key === v.key) === i
+    )
+    let nmfcNumberOptions = [...this.state.nmfcNumberInitOptions, ...nmfcNumbersFiltered].filter(
+      (v, i, a) => a.findIndex(t => t.key === v.key) === i
+    )
 
     return (
       <Form
@@ -346,25 +369,22 @@ class CartItemSummary extends Component {
 
             <RelaxedRow columns={2}>
               <GridColumn>
-                <FormattedMessage id='cart.hazmatInfo' defaultMessage='Hazmat Information' />
+                <FormattedMessage id='cart.shipingInformation' defaultMessage='Shipping Information' />
               </GridColumn>
-
-              <WiderPopup
-                wide
-                onOpen={() => this.onHazmatPopup(item)}
-                onClose={() => {
-                  if (this.state.loadCartRequired) this.props.getCart()
-                  this.setState({ edittingHazmatInfo: false, loadCartRequired: false })
-                }}
-                position='left center'
-                on='click'
-                trigger={
-                  <GridColumn floated='right'>
-                    <Icon name='info circle' color='blue' />
-                  </GridColumn>
-                }
-                content={this.hazmatMarkup(item)}
-              />
+              <GridColumn floated='right'>
+                <WiderPopup
+                  wide
+                  onOpen={() => this.onHazmatPopup(item)}
+                  onClose={() => {
+                    if (this.state.loadCartRequired) this.props.getCart()
+                    this.setState({ edittingHazmatInfo: false, loadCartRequired: false })
+                  }}
+                  position='left center'
+                  on='click'
+                  trigger={<Button type='button' size='mini' color='blue' content='Edit' />}
+                  content={this.hazmatMarkup(item)}
+                />
+              </GridColumn>
             </RelaxedRow>
 
             <RelaxedRow>

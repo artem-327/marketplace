@@ -145,10 +145,21 @@ class AddEditEchoProduct extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.visible) {
       if (!prevProps.visible) {
-        // Sidebar just opened
-        this.setInitialState(this.props.popupValues)
-        this.props.editEchoProductChangeTab(0)
-        this.resetForm()
+        if (this.props.addForm) {
+          // Sidebar just opened - Add
+          this.setInitialState(this.props.popupValues)
+          this.props.editEchoProductChangeTab(0)
+          this.resetForm()
+        }
+        else {
+          // Sidebar just opened - Edit
+          this.props.searchManufacturers(
+            getSafe(() => this.props.popupValues.manufacturer.name, ''), 200
+          )
+          this.setInitialState(this.props.popupValues)
+          this.resetForm()
+        }
+        return
       }
 
       if (prevProps.editForm && !prevProps.addForm && this.props.addForm) {
@@ -156,22 +167,33 @@ class AddEditEchoProduct extends React.Component {
         this.setInitialState(null, { codesList: [], changedForm: false })
         this.props.editEchoProductChangeTab(0)
         this.resetForm()
+        return
       }
 
       if (prevProps.addForm && !prevProps.editForm && this.props.editForm) {
         // Changed from Add to Edit form
         this.setInitialState(this.props.popupValues)
         this.resetForm()
+        this.props.searchManufacturers(
+          getSafe(() => this.props.popupValues.manufacturer.name, ''), 200
+        )
+        return
       }
 
-      if (
-        prevProps.editForm &&
-        this.props.editForm &&
-        (prevProps.popupValues.id !== this.props.popupValues.id || prevProps.editInitTrig !== this.props.editInitTrig)
-      ) {
+      if (prevProps.editForm && this.props.editForm && prevProps.editInitTrig !== this.props.editInitTrig) {
         // Changed edit product or edit tab
         this.setInitialState(this.props.popupValues)
         this.resetForm()
+        return
+      }
+
+      if (prevProps.editForm && this.props.editForm && prevProps.popupValues.id !== this.props.popupValues.id) {
+        // Changed edit product or edit tab
+        this.setInitialState(this.props.popupValues)
+        this.resetForm()
+        this.props.searchManufacturers(
+          getSafe(() => this.props.popupValues.manufacturer.name, ''), 200
+        )
       }
     }
   }
@@ -183,11 +205,6 @@ class AddEditEchoProduct extends React.Component {
         text: code,
         value: code
       }))
-
-      this.props.searchManufacturers(
-        getSafe(() => this.props.popupValues.manufacturer.name, ''),
-        200
-      )
 
       if (popupValues.dotUnNumber) unNumberInitOptions.push(popupValues.dotUnNumber)
       if (popupValues.iataUnNumber) unNumberInitOptions.push(popupValues.iataUnNumber)

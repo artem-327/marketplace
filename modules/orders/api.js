@@ -14,6 +14,7 @@ export default {
   update: (orderId, model) => api.put(`/prodex/api/orders/${orderId}`, model),
   confirm: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/confirm`),
   reject: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/reject`),
+  ship: (orderId, trackingId) => api.patch(`/prodex/api/sale-orders/${orderId}/ship?trackingId=${trackingId}`),
   downloadPdf: (endpointType, orderId) =>
     api.get(`/prodex/api/${endpointType}-orders/${orderId}/download-pdf`, {
       responseType: 'blob'
