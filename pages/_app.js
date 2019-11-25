@@ -4,6 +4,7 @@ import withRedux from 'next-redux-wrapper'
 import { makeStore } from '~/store'
 import { Provider } from 'react-redux'
 import { IntlProvider, FormattedNumber } from 'react-intl'
+import { Formik } from 'formik'
 
 import EN from '../localization/en.json'
 import NProgress from 'nprogress'
@@ -51,5 +52,7 @@ class ProdexApp extends App {
 FormattedNumber.defaultProps = {
   minimumFractionDigits: 3
 }
+
+Formik.defaultProps.validateOnBlur = false
 
 export default withRouter(withRedux(makeStore)(ProdexApp))
