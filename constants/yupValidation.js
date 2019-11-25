@@ -16,6 +16,7 @@ export const errorMessages = {
   lotHasToBeSelected: <FormattedMessage id='validation.lostHasToBeSelected' defaultMessage='Lot has to be selected' />,
   lotUnique: <FormattedMessage id='validation.lotUnique' defaultMessage='Lot has to be unique' />,
   requiredMessage: <FormattedMessage id='validation.required' defaultMessage='Required' />,
+  requiredNonConforming: <FormattedMessage id='validation.requiredNonConforming' defaultMessage='Required if Condition is Non Conforming' />,
   invalidPhoneNumber: (
     <FormattedMessage id='validation.phoneNumber' defaultMessage={`Please, enter valid phone number.`} />
   ),
