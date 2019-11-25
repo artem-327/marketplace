@@ -1,18 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import {
-  Form,
-  Button,
-  Input,
-  TextArea,
-  Checkbox as FormikCheckbox,
-  Dropdown,
-  Radio
-} from 'formik-semantic-ui-fixed-validation'
+import { Form, Button, Input, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { DateInput } from '~/components/custom-formik'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
-import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
 import {
@@ -28,8 +19,7 @@ import {
   Header,
   Icon,
   Popup,
-  FormField,
-  Input as SemanticInput
+  FormField
 } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
 import {
@@ -52,11 +42,13 @@ import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import ProdexGrid from '~/components/table'
 import * as val from 'yup'
-import { errorMessages, dateValidation } from '~/constants/yupValidation'
+import { errorMessages } from '~/constants/yupValidation'
 import moment from 'moment'
 import UploadLot from './upload/UploadLot'
 import { withDatagrid } from '~/modules/datagrid'
 import { AttachmentManager } from '~/modules/attachments'
+import confirm from '~/src/components/Confirmable/confirm'
+import _ from 'lodash'
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -286,15 +278,33 @@ class DetailSidebar extends Component {
     saveBroadcast: 0,
     changedForm: false,
     documentType: 1,
-    openUploadLot: false
+    openUploadLot: false,
+    edited: false,
+    saved: false
   }
 
   componentDidMount = () => {
-    this.props.getProductConditions()
-    this.props.getProductForms()
-    this.props.getProductGrades()
-    this.props.getWarehouses()
-    this.props.getDocumentTypes()
+    this.fetchIfNoData('listConditions', this.props.getProductConditions)
+    this.fetchIfNoData('listForms', this.props.getProductForms)
+    this.fetchIfNoData('listGrades', this.props.getProductGrades)
+    this.fetchIfNoData('warehousesList', this.props.getWarehouses)
+    this.fetchIfNoData('listDocumentTypes', this.props.getDocumentTypes)
+  }
+
+  fetchIfNoData = (name, fn) => {
+    if (this.props[name].length === 0) fn()
+  }
+
+  componentWillUnmount() {
+    if (this.hasEdited() && !this.state.saved) {
+      confirm(
+        <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
+        <FormattedMessage
+          id='confirm.global.unsavedChanges.content'
+          defaultMessage='You have unsaved changes. Do you wish to save them?'
+        />
+      ).then(this.submitRef)
+    }
   }
 
   componentDidUpdate = oldProps => {
@@ -379,9 +389,6 @@ class DetailSidebar extends Component {
 
   renderPricingTiers = (count, setFieldValue) => {
     let tiers = []
-    const {
-      intl: { formatMessage }
-    } = this.props
 
     for (let i = 0; i < count; i++) {
       tiers.push(
@@ -457,7 +464,7 @@ class DetailSidebar extends Component {
     })
   }, 250)
 
-  submitForm = debounce(async (values, setSubmitting, setTouched) => {
+  submitForm = async (values, setSubmitting, setTouched) => {
     const { addProductOffer, datagrid, toastManager } = this.props
 
     setSubmitting(false)
@@ -502,6 +509,7 @@ class DetailSidebar extends Component {
           getSafe(() => this.props.sidebarValues.id, null)
         )
         datagrid.updateRow(data.value.id, () => data.value)
+        this.setState({ saved: true })
 
         toastManager.add(
           generateToastMarkup(
@@ -519,7 +527,7 @@ class DetailSidebar extends Component {
         this.setState({ changedForm: false })
       }
     }
-  }, 250)
+  }
 
   switchTab = newTab => {
     this.setState({
@@ -538,7 +546,7 @@ class DetailSidebar extends Component {
     const tabs = Object.keys(errors)
 
     // switch tab only if there is no error on active tab
-    if (!tabs.includes(this.state.tabs[this.state.activeTab])) {
+    if (tabs.includes(this.state.tabs[this.state.activeTab])) {
       switch (tabs[0]) {
         case 'edit':
           this.switchTab(0)
@@ -577,63 +585,11 @@ class DetailSidebar extends Component {
     this.setState({ changedForm: true })
   }
 
-  render() {
-    let {
-      addProductOffer,
-      listConditions,
-      listForms,
-      listGrades,
-      loading,
-      openBroadcast,
-      sidebarDetailOpen,
-      sidebarValues,
-      searchedManufacturers,
-      searchedManufacturersLoading,
-      searchedOrigins,
-      searchedOriginsLoading,
-      searchedProducts,
-      searchedProductsLoading,
-      searchOrigins,
-      warehousesList,
-      listDocumentTypes,
-      intl: { formatMessage },
-      toastManager,
-      datagrid,
-      removeAttachment
-    } = this.props
-    const leftWidth = 6
-    const rightWidth = 10
+  hasEdited = () => !_.isEqual(this.getEditValues(), this.values)
 
-    const optionsYesNo = [
-      {
-        key: 1,
-        text: <FormattedMessage id='global.yes' defaultMessage='Yes' />,
-        value: true
-      },
-      {
-        key: 0,
-        text: <FormattedMessage id='global.no' defaultMessage='No' />,
-        value: false
-      }
-    ]
-
-    const listConforming = [
-      {
-        key: 1,
-        text: <FormattedMessage id='global.conforming' defaultMessage='Conforming' />,
-        value: true
-      },
-      {
-        key: 0,
-        text: <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />,
-        value: false
-      }
-    ]
-
-    const { toggleFilter } = this.props
-
-    let editValues = {}
-    editValues = {
+  getEditValues = () => {
+    const { sidebarValues } = this.props
+    return {
       edit: {
         broadcasted: getSafe(() => sidebarValues.broadcasted, false),
         condition: getSafe(() => sidebarValues.condition, null),
@@ -676,9 +632,64 @@ class DetailSidebar extends Component {
         attachments: getSafe(() => sidebarValues.attachments.map(att => ({ ...att, linked: true })), [])
       }
     }
+  }
+  render() {
+    let {
+      addProductOffer,
+      listConditions,
+      listForms,
+      listGrades,
+      loading,
+      openBroadcast,
+      sidebarDetailOpen,
+      sidebarValues,
+      searchedManufacturers,
+      searchedManufacturersLoading,
+      searchedOrigins,
+      searchedOriginsLoading,
+      searchedProducts,
+      searchedProductsLoading,
+      searchOrigins,
+      warehousesList,
+      listDocumentTypes,
+      intl: { formatMessage },
+      toastManager,
+      datagrid,
+      removeAttachment
+    } = this.props
 
+    const leftWidth = 6
+    const rightWidth = 10
 
-    
+    const optionsYesNo = [
+      {
+        key: 1,
+        text: <FormattedMessage id='global.yes' defaultMessage='Yes' />,
+        value: true
+      },
+      {
+        key: 0,
+        text: <FormattedMessage id='global.no' defaultMessage='No' />,
+        value: false
+      }
+    ]
+
+    const listConforming = [
+      {
+        key: 1,
+        text: <FormattedMessage id='global.conforming' defaultMessage='Conforming' />,
+        value: true
+      },
+      {
+        key: 0,
+        text: <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />,
+        value: false
+      }
+    ]
+
+    const { toggleFilter } = this.props
+
+    let editValues = this.getEditValues()
 
     return (
       <Form
@@ -692,7 +703,10 @@ class DetailSidebar extends Component {
         onSubmit={async (values, { setSubmitting, setTouched }) => {
           this.submitForm(values, setSubmitting, setTouched)
         }}>
-        {({ values, touched, setTouched, setFieldValue, validateForm, submitForm, setSubmitting }) => {
+        {({ values, errors, touched, setTouched, setFieldValue, validateForm, submitForm, setSubmitting }) => {
+          this.submitRef = submitForm
+          this.values = values
+
           return (
             <FlexSidebar
               visible={sidebarDetailOpen}
@@ -706,8 +720,8 @@ class DetailSidebar extends Component {
                   if (
                     e &&
                     !(e.path[0] instanceof HTMLTableCellElement) &&
-                      !(e.path[1] instanceof HTMLTableCellElement) &&
-                      (!e.target || !e.target.className.includes('submenu-filter'))
+                    !(e.path[1] instanceof HTMLTableCellElement) &&
+                    (!e.target || !e.target.className.includes('submenu-filter'))
                   ) {
                     toggleFilter(false)
                   }
@@ -1571,7 +1585,7 @@ class DetailSidebar extends Component {
                         disabled={!(Object.keys(touched).length || this.state.changedForm)}
                         primary
                         size='large'
-                        inputProps={{ type: 'button' }}
+                        type='button'
                         onClick={() =>
                           validateForm().then(r => {
                             if (Object.keys(r).length && this.state.activeTab !== 1) {

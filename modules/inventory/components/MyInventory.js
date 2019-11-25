@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Checkbox, Icon, Popup, List, Button } from 'semantic-ui-react'
+import { Container, Menu, Header, Checkbox, Popup, Button } from 'semantic-ui-react'
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import Router from 'next/router'
 import ProdexTable from '~/components/table'
-import { Broadcast } from '~/modules/broadcast'
 import { Filter } from '~/modules/filter'
 
-import SimpleEdit from '~/modules/inventory/components/SimpleEdit'
 import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
 
 import confirm from '~/src/components/Confirmable/confirm'
@@ -374,11 +371,10 @@ class MyInventory extends Component {
     this.props.datagrid.setFilter({ filters: [] })
   }
 
-
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
     const { isProductInfoOpen, closePopup } = this.props
-    if (isProductInfoOpen) closePopup()
 
+    if (isProductInfoOpen) closePopup()
     sidebarDetailTrigger(row, bol, tab)
   }
 
@@ -455,10 +451,7 @@ class MyInventory extends Component {
                 </Button>
               </Menu.Item>
               <Menu.Item>
-                <FilterTags
-                  datagrid={datagrid}
-                  data-test='my_inventory_filter_btn'
-                />
+                <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
               </Menu.Item>
               <Menu.Item>
                 <SubMenu />
