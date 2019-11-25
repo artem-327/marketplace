@@ -136,7 +136,8 @@ const initValues = {
     splits: 1, // splitPkg
     externalNotes: '',
     internalNotes: '',
-    documentType: ''
+    documentType: '',
+    broadcasted: false
   },
   priceTiers: {
     priceTiers: 1,
@@ -634,6 +635,7 @@ class DetailSidebar extends Component {
     let editValues = {}
     editValues = {
       edit: {
+        broadcasted: getSafe(() => sidebarValues.broadcasted, false),
         condition: getSafe(() => sidebarValues.condition, null),
         conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
         conforming: getSafe(() => sidebarValues.conforming, true),
@@ -1124,6 +1126,20 @@ class DetailSidebar extends Component {
                                         onChange: (e, { value }) =>
                                           this.onSplitsChange(value, values, setFieldValue, validateForm)
                                       }}
+                                    />
+                                  </GridColumn>
+                                </GridRow>
+                                <GridRow>
+                                  <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                    <FormattedMessage id='global.broadcast' defaultMessage='Broadcast'>
+                                      {text => text}
+                                    </FormattedMessage>
+                                  </GridColumn>
+                                  <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                    <Dropdown
+                                      name='edit.broadcasted'
+                                      options={optionsYesNo}
+                                      inputProps={{ 'data-test': 'add_inventory_broadcast' }}
                                     />
                                   </GridColumn>
                                 </GridRow>
