@@ -374,17 +374,6 @@ class MyInventory extends Component {
     this.props.datagrid.setFilter({ filters: [] })
   }
 
-  removeFilter = indexes => {
-    let { datagrid, appliedFilter } = this.props
-
-    indexes.forEach((index, i) => {
-      datagrid.filters.splice(index - i, 1)
-      appliedFilter.filters.splice(index - i, 1)
-    })
-
-    this.props.applyFilter(appliedFilter)
-    datagrid.setFilter(datagrid.filters)
-  }
 
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
     const { isProductInfoOpen, closePopup } = this.props
@@ -467,9 +456,8 @@ class MyInventory extends Component {
               </Menu.Item>
               <Menu.Item>
                 <FilterTags
-                  filters={datagrid.filters}
+                  datagrid={datagrid}
                   data-test='my_inventory_filter_btn'
-                  onClick={this.removeFilter}
                 />
               </Menu.Item>
               <Menu.Item>

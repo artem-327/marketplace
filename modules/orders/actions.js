@@ -11,11 +11,15 @@ export const loadDetail = (endpointType, selectedIndex) => ({
 })
 export const confirmOrder = orderId => ({
   type: AT.ORDER_CONFIRM_FETCH,
-  payload: { orderId }
+  payload: Api.confirm(orderId)
 })
 export const rejectOrder = orderId => ({
   type: AT.ORDER_REJECT_FETCH,
-  payload: { orderId }
+  payload: Api.reject(orderId)
+})
+export const shipOrder = (orderId, trackingId='trackingId') => ({
+  type: AT.ORDER_SHIP_FETCH,
+  payload: Api.ship(orderId, trackingId)
 })
 export const downloadPdf = (endpointType, orderId) => ({
   type: AT.ORDER_DOWNLOAD_PDF,

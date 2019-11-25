@@ -76,22 +76,24 @@ const getSettingColumn = (columns, formatMessage, columnWidth) => {
   return (
     <GridSemantic.Column width={columnWidth}>
       {columns.map(c => {
-        return (
-          <Checkbox
-            key={c.name}
-            disabled={c.disabled}
-            name={c.name}
-            label={
-              typeof c.title === 'string'
-                ? c.title
-                : formatMessage({
-                    id: c.title.props.id,
-                    defaultMessage: c.title.props.defaultMessage
-                  })
-            }
-            inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
-          />
-        )
+        if (c.name) {
+          return (
+            <Checkbox
+              key={c.name}
+              disabled={c.disabled}
+              name={c.name}
+              label={
+                typeof c.title === 'string'
+                  ? c.title
+                  : formatMessage({
+                      id: c.title.props.id,
+                      defaultMessage: c.title.props.defaultMessage
+                    })
+              }
+              inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
+            />
+          )
+        }
       })}
     </GridSemantic.Column>
   )
@@ -654,7 +656,7 @@ class _Table extends Component {
 
             <TableColumnResizing
               onColumnWidthsChange={widths => this.handleColumnsSettings({ widths })}
-              columnWidths={columnsSettings.widths}
+              columnWidths={columnsSettings.widths.map(el => (!el.width ? { ...el, width: 200 } : el))}
             />
 
             {showHeader && <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />}

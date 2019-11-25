@@ -73,6 +73,7 @@ export function addProductOffer(values, poId = false, simple = false) {
       assayMin: getSafe(() => parseFloat(values.assayMin)),
       assayMax: getSafe(() => parseFloat(values.assayMax)),
       attachments: attachments.concat(additional),
+      broadcasted: getSafe(() => values.broadcasted, false),
       costRecords:
         values.trackSubCosts && values.costs
           ? values.costs.map(cost => {

@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { FormattedNumber } from 'react-intl'
+import { FormattedNumber, FormattedDate } from 'react-intl'
 
 export const operators = {
   CONTAINS: 'CONTAINS',
@@ -580,8 +580,49 @@ export const datagridValues = {
     toFormik: function({ values }) {
       return values[0].value.toString()
     }
+  },
+  orderFrom: {
+    operator: operators.GREATER_THAN_OR_EQUAL_TO,
+    paths: [paths.orders.orderDate],
+    description: 'Order Date',
+
+    valuesDescription: val => val,
+    tagDescription: val => <FormattedDate value={val}>{text => `>= ${text}`}</FormattedDate>
+  },
+
+  orderTo: {
+    operator: operators.LESS_THAN_OR_EQUAL_TO,
+    paths: [paths.orders.orderDate],
+    description: 'Order Date',
+
+    valuesDescription: val => val,
+    tagDescription: val => <FormattedDate value={val}>{text => `<= ${text}`}</FormattedDate>
+  },
+
+  vendor: {
+    operator: operators.LIKE,
+    paths: [paths.orders.vendorPurchase, paths.orders.vendorSales],
+    description: 'Vendor',
+
+    valuesDescription: val => val,
+    tagDescription: val => `Vendor: ${val}`
   }
 }
+
+// export const orderFilterDescription = values => {
+//   for (let [key, value] of Object.entries(values)) {
+//     switch(key) {
+//       case 'orderFrom': {
+
+//       }
+//     }
+//   }
+//   // Object.entries(values).forEach((key, value) => {
+//   //   console.log({ value })
+//   // })
+
+//   return values
+// }
 
 export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
   let groups = [
@@ -625,6 +666,23 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
         operator: operators.LESS_THAN_OR_EQUAL_TO
       },
       tagDescription: (from, to) => `${from}% - ${to}% `
+    },
+    {
+      description: 'Order Date',
+      from: {
+        path: paths.orders.orderDate,
+        operator: operators.GREATER_THAN_OR_EQUAL_TO
+      },
+      to: {
+        path: paths.orders.orderDate,
+        operator: operators.LESS_THAN_OR_EQUAL_TO
+      },
+      tagDescription: (from, to) => (
+        <>
+          <FormattedDate value={from}>{text => `${text} - `}</FormattedDate>
+          <FormattedDate value={to}>{text => text}</FormattedDate>
+        </>
+      )
     }
 
     // {
