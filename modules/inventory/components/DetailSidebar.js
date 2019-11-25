@@ -245,7 +245,7 @@ const validationScheme = val.object().shape({
     conforming: val.boolean(),
     conditionNotes: val.string().when('conforming', {
       is: false,
-      then: val.string().required(errorMessages.requiredMessage)
+      then: val.string().required(errorMessages.requiredNonConforming)
     })
   }),
   priceTiers: val.object().shape({
