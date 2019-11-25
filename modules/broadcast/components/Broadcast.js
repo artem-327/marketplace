@@ -719,9 +719,6 @@ class Broadcast extends Component {
                   data-test='broadcast_modal_rule_action'
                   asSidebar={asSidebar}
                 />
-                <Dimmer active={loading} inverted>
-                  <Loader active={loading} />
-                </Dimmer>
               </Rule.Content>
             </Rule.Root>
             {!asModal && <RightAlignedDiv>{this.getButtons()}</RightAlignedDiv>}
@@ -769,12 +766,17 @@ class Broadcast extends Component {
   }
 
   render() {
-    const { open, closeBroadcast, asModal, isPrepared } = this.props
+    const { open, closeBroadcast, asModal, loading, isPrepared } = this.props
 
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
 
     if (!asModal) {
-      if (!isPrepared) return null
+      if (loading || !isPrepared)
+        return (
+          <Dimmer active={true} inverted>
+            <Loader active={true} />
+          </Dimmer>
+        )
       return this.getContent()
     }
 
