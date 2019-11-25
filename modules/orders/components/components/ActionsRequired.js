@@ -98,7 +98,7 @@ class ActionsRequired extends React.Component {
                 ])
               : null}
 
-            {action === '210'
+            {false && action === '210'  // ! ! to be deleted?
               ? this.renderSegment(null, 14, null, 'order.assignLots.description', [
                   {
                     buttonType: 'primary',
@@ -109,7 +109,7 @@ class ActionsRequired extends React.Component {
                 ])
               : null}
 
-            {action === '211'
+            {false && action === '211'  // ! ! to be deleted?
               ? this.renderSegment(null, 12, null, 'order.ship.description', [
                   {
                     buttonType: 'primary',
@@ -124,6 +124,16 @@ class ActionsRequired extends React.Component {
                     text: 'order.ship'
                   }
                 ])
+              : null}
+            {action === '210' || action === '211'
+              ? this.renderSegment(null, 12, null, 'order.ship.description', [
+                {
+                  buttonType: 'primary',
+                  onClick: this.shipOrder,
+                  dataTest: 'orders_detail_ship_btn',
+                  text: 'order.ship'
+                }
+              ])
               : null}
           </>
         ) : (
