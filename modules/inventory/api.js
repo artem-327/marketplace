@@ -26,7 +26,7 @@ export function addProductOffer(values) {
 }
 
 export function downloadAttachment(id) {
-  return api.get(`/prodex/api/attachments/${id}/download`, {
+  return api.get(`/prodex/api/accounting-documents/id/${id}/download-pdf`, {
     responseType: 'blob'
   })
 }
