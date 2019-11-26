@@ -12,6 +12,7 @@ const initialState = {
   isConfirmFetching: false,
   isRejectFetching: false,
   isShipFetching: false,
+  isSending: false,
   reloadPage: false,
   selectedIndex: -1,
   statusFilter: null,
@@ -114,19 +115,22 @@ export default function(state = initialState, action) {
       return {
         ...state,
         isShipFetching: true,
-        reloadPage: false
+        reloadPage: false,
+        isSending: true
       }
     case AT.ORDER_SHIP_FETCH_FULFILLED:
       return {
         ...state,
         isShipFetching: false,
-        reloadPage: true
+        reloadPage: true,
+        isSending: false
       }
     case AT.ORDER_SHIP_FETCH_FETCH_REJECTED:
       return {
         ...state,
         isShipFetching: false,
-        reloadPage: false
+        reloadPage: false,
+        isSending: false
       }
     case AT.ORDER_DOWNLOAD_PDF_FULFILLED:
       return {

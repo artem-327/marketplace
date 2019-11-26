@@ -10,8 +10,63 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { withToastManager } from 'react-toast-notifications'
 
 class ActionsRequired extends React.Component {
+  confirmCall = (d) => {
+    const { intl: { formatMessage } } = this.props
+    confirm(
+      formatMessage({ id: d.confirmTitleId, defaultMessage: d.confirmTitleDefaultMessage }),
+      formatMessage(
+        {
+          id: d.confirmContentId,
+          defaultMessage: d.confirmContentDefaultMessage
+        },
+        d.confirmValues ? d.confirmValues : {}
+      )
+    ).then(
+      () => { // confirm
+        d.toastTitleId
+          ? this.toastCall({ ...d })
+          : d.action()
+      },
+      () => { // cancel
+      }
+    )
+  }
+
+  toastCall = async (d) => {
+    const { toastManager } = this.props
+    try {
+      await d.action()
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage
+            id={d.toastTitleId}
+            defaultMessage={d.toastTitleDefaultMessage}
+          />,
+          <FormattedMessage
+            id={d.toastContentId}
+            defaultMessage={d.toastContentDefaultMessage}
+            values={d.toastValues}
+          />
+        ), { appearance: 'success' }
+      )
+    } catch {}
+  }
+
   confirmOrder = () => {
-    this.props.confirmOrder(this.props.order.id)
+    const { order, confirmOrder } = this.props
+    this.confirmCall({
+      action: () => confirmOrder(order.id),
+      confirmTitleId:               'confirm.markOrderAsConfirmed.title',
+      confirmTitleDefaultMessage:   'Mark Order as Confirmed?',
+      confirmContentId:             'confirm.markOrderAsConfirmed.content',
+      confirmContentDefaultMessage: `Do you really want to mark Order '${order.id}' as Confirmed?`,
+      confirmValues: { orderId: order.id },
+      toastTitleId:                 'notifications.markOrderAsConfirmed.success.header',
+      toastTitleDefaultMessage:     'Order Marked as Confirmed',
+      toastContentId:               'notifications.markOrderAsConfirmed.success.content',
+      toastContentDefaultMessage:   'Order {orderId} successfully marked as Confirmed',
+      toastValues: { orderId: order.id }
+    })
   }
 
   openAssignLots = () => {
@@ -19,67 +74,97 @@ class ActionsRequired extends React.Component {
   }
 
   rejectOrder = () => {
-    this.props.rejectOrder(this.props.order.id)
+    const { order, rejectOrder } = this.props
+    this.confirmCall({
+      action: () => rejectOrder(order.id),
+      confirmTitleId:               'confirm.markOrderAsRejected.title',
+      confirmTitleDefaultMessage:   'Mark Order as Rejected?',
+      confirmContentId:             'confirm.markOrderAsRejected.content',
+      confirmContentDefaultMessage: `Do you really want to mark Order '${order.id}' as Rejected?`,
+      confirmValues: { orderId: order.id },
+      toastTitleId:                 'notifications.markOrderAsRejected.success.header',
+      toastTitleDefaultMessage:     'Order Marked as Rejected',
+      toastContentId:               'notifications.markOrderAsRejected.success.content',
+      toastContentDefaultMessage:   'Order {orderId} successfully marked as Rejected',
+      toastValues: { orderId: order.id }
+    })
   }
 
-  shipOrder = () => {
-    const {
-      intl: { formatMessage },
-      order,
-      toastManager,
-    } = this.props
+  markShipped =() => {
+    const { order, shippingTrackingCode, shipOrder, openEnterTrackingId } = this.props
 
-    if (this.props.trackingId.length) {
-      confirm(
-        formatMessage({ id: 'confirm.markOrderAsShipped.title', defaultMessage: 'Mark Order as Shipped?' }),
-        formatMessage(
-          {
-            id: 'confirm.markOrderAsShipped.content',
-            defaultMessage: `Do you really want to mark Order '${order.id}' as shipped?`
-          },
-          { orderId: order.id }
-        )
-      ).then(
-        async () => {   // confirm
-          try {
-            await this.props.shipOrder(this.props.order.id, this.props.trackingId)
-            toastManager.add(
-              generateToastMarkup(
-                <FormattedMessage
-                  id='notifications.markOrderAsShipped.success.header'
-                  defaultMessage='Order Marked as Shipped'
-                />,
-                <FormattedMessage
-                  id='notifications.markOrderAsShipped.success.content'
-                  defaultMessage='Order {orderId} successfully marked as shipped'
-                  values={{ orderId: order.id }}
-                />
-              ),
-              {
-                appearance: 'success'
-              }
-            )
-          } catch {}
-        },
-        () => {         // cancel
-        }
-      )
+    if (shippingTrackingCode.length) {
+      this.confirmCall({
+        action: () => shipOrder(order.id, shippingTrackingCode),
+        confirmTitleId:               'confirm.markOrderAsShipped.title',
+        confirmTitleDefaultMessage:   'Mark Order as Shipped?',
+        confirmContentId:             'confirm.markOrderAsShipped.content',
+        confirmContentDefaultMessage: `Do you really want to mark Order '${order.id}' as shipped?`,
+        confirmValues: { orderId: order.id },
+        toastTitleId:                 'notifications.markOrderAsShipped.success.header',
+        toastTitleDefaultMessage:     'Order Marked as Shipped',
+        toastContentId:               'notifications.markOrderAsShipped.success.content',
+        toastContentDefaultMessage:   'Order {orderId} successfully marked as shipped',
+        toastValues: { orderId: order.id }
+      })
     }
     else {
-      this.props.openEnterTrackingId()
+      openEnterTrackingId()
     }
   }
 
   cancelOrder = () => {
-    this.props.cancelOrder(this.props.order.id)
+    const { order, cancelOrder } = this.props
+
+    this.confirmCall({
+      action: () => cancelOrder(order.id),
+      confirmTitleId:               'confirm.markOrderAsCancelled.title',
+      confirmTitleDefaultMessage:   'Mark Order as Cancelled?',
+      confirmContentId:             'confirm.markOrderAsCancelled.content',
+      confirmContentDefaultMessage: `Do you really want to mark Order '${order.id}' as Cancelled?`,
+      confirmValues: { orderId: order.id },
+      toastTitleId:                 'notifications.markOrderAsCancelled.success.header',
+      toastTitleDefaultMessage:     'Order Marked as Cancelled',
+      toastContentId:               'notifications.markOrderAsCancelled.success.content',
+      toastContentDefaultMessage:   'Order {orderId} successfully marked as Cancelled',
+      toastValues: { orderId: order.id }
+    })
   }
 
   approveOrder = () => {
-    this.props.approveOrder(this.props.order.id)
+    const { order, approveOrder } = this.props
+
+    this.confirmCall({
+      action: () => approveOrder(order.id),
+      confirmTitleId:               'confirm.markOrderAsApproved.title',
+      confirmTitleDefaultMessage:   'Mark Order as Approved?',
+      confirmContentId:             'confirm.markOrderAsApproved.content',
+      confirmContentDefaultMessage: `Do you really want to mark Order '${order.id}' as Approved?`,
+      confirmValues: { orderId: order.id },
+      toastTitleId:                 'notifications.markOrderAsApproved.success.header',
+      toastTitleDefaultMessage:     'Order Marked as Approved',
+      toastContentId:               'notifications.markOrderAsApproved.success.content',
+      toastContentDefaultMessage:   'Order {orderId} successfully marked as Approved',
+      toastValues: { orderId: order.id }
+    })
   }
 
   disapproveOrder = () => {
-    this.props.disapproveOrder(this.props.order.id)
+    const { order, disapproveOrder } = this.props
+
+    this.confirmCall({
+      action: () => disapproveOrder(order.id),
+      confirmTitleId:               'confirm.markOrderAsDisapproved.title',
+      confirmTitleDefaultMessage:   'Mark Order as Disapproved?',
+      confirmContentId:             'confirm.markOrderAsDisapproved.content',
+      confirmContentDefaultMessage: `Do you really want to mark Order '${order.id}' as Disapproved?`,
+      confirmValues: { orderId: order.id },
+      toastTitleId:                 'notifications.markOrderAsDisapproved.success.header',
+      toastTitleDefaultMessage:     'Order Marked as Disapproved',
+      toastContentId:               'notifications.markOrderAsDisapproved.success.content',
+      toastContentDefaultMessage:   'Order {orderId} successfully marked as Disapproved',
+      toastValues: { orderId: order.id }
+    })
   }
 
   renderSegment(color, columnWidth, title, description, buttons) {
@@ -165,7 +250,7 @@ class ActionsRequired extends React.Component {
                   },
                   {
                     buttonType: 'primary',
-                    onClick: this.shipOrder,
+                    onClick: this.markShipped,
                     dataTest: 'orders_detail_ship_btn',
                     text: 'order.ship'
                   }
@@ -175,7 +260,7 @@ class ActionsRequired extends React.Component {
               ? this.renderSegment(null, 12, null, 'order.ship.description', [
                 {
                   buttonType: 'primary',
-                  onClick: this.shipOrder,
+                  onClick: this.markShipped,
                   dataTest: 'orders_detail_ship_btn',
                   text: 'order.markAsShipped'
                 }
@@ -253,13 +338,13 @@ function actionRequired(data) {
 
 function mapStateToProps(state, ownProps) {
   const { orders } = state
-
   return {
     action: actionRequired(orders.detail),
     order: ownProps.order,
     detail: orders.detail,
     ordersType: ownProps.ordersType,
-    trackingId: ''//'test Tracking Id' // ! !  Wait to BE update
+    shippingTrackingCode: orders.detail.shippingTrackingCode ? orders.detail.shippingTrackingCode : '',
+    returnShippingTrackingCode: orders.detail.returnShippingTrackingCode ? orders.detail.returnShippingTrackingCode : ''
   }
 }
 

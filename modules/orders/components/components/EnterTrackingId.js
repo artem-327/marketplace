@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as Actions from '../../actions'
 import { loadFile, addAttachment } from '~/modules/inventory/actions'
-import { Modal, ModalContent, Button, Grid } from 'semantic-ui-react'
+import {Modal, ModalContent, Button, Grid, Dimmer, Loader} from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -42,10 +42,7 @@ class EnterTrackingId extends React.Component {
             defaultMessage='Order {orderId} successfully marked as shipped'
             values={{ orderId: orderId }}
           />
-        ),
-        {
-          appearance: 'success'
-        }
+        ), { appearance: 'success' }
       )
       closeEnterTrackingId()
     } catch {}
@@ -56,11 +53,15 @@ class EnterTrackingId extends React.Component {
     const {
       intl: { formatMessage },
       orderId,
+      isSending
     } = this.props
 
     return (
       <>
         <Modal closeIcon onClose={() => this.props.closeEnterTrackingId()} open={true} size='small'>
+          <Dimmer active={isSending} inverted>
+            <Loader />
+          </Dimmer>
           <Modal.Header>
             <FormattedMessage id='order.enterTrackingId' defaultMessage='Enter Tracking ID' />
           </Modal.Header>
@@ -72,22 +73,7 @@ class EnterTrackingId extends React.Component {
                 initialValues={{ ...initValues }}
                 onSubmit={(values, actions) => {
                   if (values.trackingId.length) {
-                    confirm(
-                      formatMessage({ id: 'confirm.markOrderAsShipped.title', defaultMessage: 'Mark Order as Shipped?' }),
-                      formatMessage(
-                        {
-                          id: 'confirm.markOrderAsShipped.content',
-                          defaultMessage: `Do you really want to mark Order '${orderId}' as shipped?`
-                        },
-                        { orderId: orderId }
-                      )
-                    ).then(
-                      () => { // confirm
-                        this.markShipped(values.trackingId)
-                      },
-                      () => { // cancel
-                      }
-                    )
+                    this.markShipped(values.trackingId)
                   }
                   else {
                     confirm(
@@ -158,6 +144,7 @@ function mapStateToProps(state) {
   const { detail } = state.orders
   return {
     orderId: detail.id,
+    isSending: state.orders.isSending
   }
 }
 

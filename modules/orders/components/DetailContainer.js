@@ -177,7 +177,9 @@ function prepareDetail(data, type) {
     paymentEmail: type === 'sales' ? data.buyerCompanyContactEmail : data.sellerCompanyContactEmail,
     paymentName: type === 'sales' ? data.buyerCompanyName : data.sellerCompanyName,
     paymentPhone: type === 'sales' ? data.buyerCompanyContactPhone : data.sellerCompanyContactPhone,
-    paymentContact: type === 'sales' ? data.buyerCompanyContactName : data.sellerCompanyContactName
+    paymentContact: type === 'sales' ? data.buyerCompanyContactName : data.sellerCompanyContactName,
+    shippingTrackingCode: data.shippingTrackingCode ? data.shippingTrackingCode : '',
+    returnShippingTrackingCode: data.returnShippingTrackingCode ? data.returnShippingTrackingCode : '',
   }
 }
 
