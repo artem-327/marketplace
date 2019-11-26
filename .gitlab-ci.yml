@@ -3,5 +3,7 @@ before_script:
 
 test:
   script:
+    - sudo rm -r cypress/screenshots/
+    - sudo rm -r cypress/results/
+    - sudo rm -r cypress/videos/
     - docker run -v $PWD:/e2e -w /e2e cypress/included:3.2.0
-    - sudo chown gitlab-runner:gitlab-runner -R cypress
