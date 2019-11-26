@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { func, array } from 'prop-types'
+import { func, array, shape, number, arrayOf, object } from 'prop-types'
 import { connect } from 'react-redux'
 
 import { Icon, Grid, GridColumn } from 'semantic-ui-react'
@@ -7,13 +7,21 @@ import { FormattedMessage } from 'react-intl'
 
 import { FilterTag, PopupRow, WiderPopup } from '../constants/layout'
 import { groupFilters } from '../constants/filter'
+import { string } from 'postcss-selector-parser'
 
 const TAGS_TO_DISPLAY = 3
 const MAX_TAG_ENTITIES = 2
 
 class FilterTags extends Component {
   removeFilter = filter => {
-    this.props.onClick(filter.indexes)
+    let { datagrid, appliedFilter } = this.props
+
+    filter.indexes.forEach((index, i) => {
+      datagrid.filters.splice(index - i, 1)
+      appliedFilter.filters.splice(index - i, 1)
+    })
+
+    datagrid.setFilter(datagrid.filters)
   }
 
   tagMarkup = filters => {
@@ -56,6 +64,7 @@ class FilterTags extends Component {
 
   render() {
     let { appliedFilter } = this.props
+
     if (!appliedFilter.filters || appliedFilter.filters.length === 0) return null
     let filters = groupFilters(appliedFilter.filters, this.props.params)
 
@@ -96,7 +105,16 @@ class FilterTags extends Component {
 
 FilterTags.propTypes = {
   filter: array,
-  onClick: func
+  onClick: func,
+  filters: arrayOf(
+    shape({
+      description: string,
+      indexes: arrayOf(number),
+      tagDescription: arrayOf(string),
+      valuesDescription: arrayOf(string)
+    })
+  ),
+  datagrid: object.isRequired
 }
 
 FilterTags.defaultProps = {

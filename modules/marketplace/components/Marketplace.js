@@ -30,8 +30,7 @@ class Marketplace extends Component {
       {
         name: '',
         title: '',
-        width: 20,
-        sortPath: 'ProductOffer.condition.name'
+        width: 20
       },
       {
         name: 'available',
@@ -160,7 +159,7 @@ class Marketplace extends Component {
             id: 'global.nonConforming.tooltip',
             defaultMessage: 'This is a non-conforming product'
           })}>
-          <Icon name='exclamation' color='red' />
+          <Icon name='exclamation triangle' color='red' />
         </DivIconTooltip>
       ),
       condition: r.condition ? (
@@ -194,18 +193,6 @@ class Marketplace extends Component {
   handleFilterClear = () => {
     this.props.applyFilter({ filters: [] })
     this.props.datagrid.setFilter({ filters: [] })
-  }
-
-  removeFilter = indexes => {
-    let { datagrid, appliedFilter } = this.props
-
-    indexes.forEach((index, i) => {
-      datagrid.filters.splice(index - i, 1)
-      appliedFilter.filters.splice(index - i, 1)
-    })
-
-    this.props.applyFilter(appliedFilter)
-    datagrid.setFilter(datagrid.filters)
   }
 
   render() {
@@ -252,11 +239,7 @@ class Marketplace extends Component {
 
             <Menu.Menu position='right'>
               <Menu.Item>
-                <FilterTags
-                  filters={datagrid.filters}
-                  onClick={this.removeFilter}
-                  data-test='marketplace_remove_filter'
-                />
+                <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
               </Menu.Item>
               <Popup
                 wide='very'
