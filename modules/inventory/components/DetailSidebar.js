@@ -1,18 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import {
-  Form,
-  Button,
-  Input,
-  TextArea,
-  Checkbox as FormikCheckbox,
-  Dropdown,
-  Radio
-} from 'formik-semantic-ui-fixed-validation'
+import { Form, Button, Input, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { DateInput } from '~/components/custom-formik'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
-import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
 import {
@@ -28,8 +19,7 @@ import {
   Header,
   Icon,
   Popup,
-  FormField,
-  Input as SemanticInput
+  FormField
 } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
 import {
@@ -52,7 +42,7 @@ import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import ProdexGrid from '~/components/table'
 import * as val from 'yup'
-import { errorMessages, dateValidation } from '~/constants/yupValidation'
+import { errorMessages } from '~/constants/yupValidation'
 import moment from 'moment'
 import UploadLot from './upload/UploadLot'
 import { withDatagrid } from '~/modules/datagrid'
@@ -246,7 +236,7 @@ const validationScheme = val.object().shape({
     conforming: val.boolean(),
     conditionNotes: val.string().when('conforming', {
       is: false,
-      then: val.string().required(errorMessages.requiredMessage)
+      then: val.string().required(errorMessages.requiredNonConforming)
     })
   }),
   priceTiers: val.object().shape({
@@ -379,9 +369,6 @@ class DetailSidebar extends Component {
 
   renderPricingTiers = (count, setFieldValue) => {
     let tiers = []
-    const {
-      intl: { formatMessage }
-    } = this.props
 
     for (let i = 0; i < count; i++) {
       tiers.push(
@@ -494,15 +481,17 @@ class DetailSidebar extends Component {
         this.setState({ changedForm: false })
         break
     }
-
     if (Object.keys(props).length) {
       try {
         let data = await addProductOffer(
           props,
           getSafe(() => this.props.sidebarValues.id, null)
         )
-        datagrid.updateRow(data.value.id, () => data.value)
-
+        if (this.props.sidebarValues.id) {
+          datagrid.updateRow(data.value.id, () => data.value)
+        } else {
+          datagrid.loadData()
+        }
         toastManager.add(
           generateToastMarkup(
             <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
@@ -579,20 +568,14 @@ class DetailSidebar extends Component {
 
   render() {
     let {
-      addProductOffer,
       listConditions,
       listForms,
       listGrades,
       loading,
-      openBroadcast,
       sidebarDetailOpen,
       sidebarValues,
-      searchedManufacturers,
-      searchedManufacturersLoading,
       searchedOrigins,
       searchedOriginsLoading,
-      searchedProducts,
-      searchedProductsLoading,
       searchOrigins,
       warehousesList,
       listDocumentTypes,
@@ -677,9 +660,6 @@ class DetailSidebar extends Component {
       }
     }
 
-
-    
-
     return (
       <Form
         enableReinitialize={true}
@@ -706,8 +686,8 @@ class DetailSidebar extends Component {
                   if (
                     e &&
                     !(e.path[0] instanceof HTMLTableCellElement) &&
-                      !(e.path[1] instanceof HTMLTableCellElement) &&
-                      (!e.target || !e.target.className.includes('submenu-filter'))
+                    !(e.path[1] instanceof HTMLTableCellElement) &&
+                    (!e.target || !e.target.className.includes('submenu-filter'))
                   ) {
                     toggleFilter(false)
                   }
