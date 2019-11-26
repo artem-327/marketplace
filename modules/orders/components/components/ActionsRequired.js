@@ -3,9 +3,11 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as Actions from '../../actions'
 import { Segment, Grid, Header, Button } from 'semantic-ui-react'
-import { FormattedMessage } from 'react-intl'
-import { getSafe } from '~/utils/functions'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
 import moment from 'moment/moment'
+import confirm from '~/src/components/Confirmable/confirm'
+import { withToastManager } from 'react-toast-notifications'
 
 class ActionsRequired extends React.Component {
   confirmOrder = () => {
@@ -21,7 +23,51 @@ class ActionsRequired extends React.Component {
   }
 
   shipOrder = () => {
-    this.props.shipOrder(this.props.order.id)
+    const {
+      intl: { formatMessage },
+      order,
+      toastManager,
+    } = this.props
+
+    if (this.props.trackingId.length) {
+      confirm(
+        formatMessage({ id: 'confirm.markOrderAsShipped.title', defaultMessage: 'Mark Order as Shipped?' }),
+        formatMessage(
+          {
+            id: 'confirm.markOrderAsShipped.content',
+            defaultMessage: `Do you really want to mark Order '${order.id}' as shipped?`
+          },
+          { orderId: order.id }
+        )
+      ).then(
+        async () => {   // confirm
+          try {
+            await this.props.shipOrder(this.props.order.id, this.props.trackingId)
+            toastManager.add(
+              generateToastMarkup(
+                <FormattedMessage
+                  id='notifications.markOrderAsShipped.success.header'
+                  defaultMessage='Order Marked as Shipped'
+                />,
+                <FormattedMessage
+                  id='notifications.markOrderAsShipped.success.content'
+                  defaultMessage='Order {orderId} successfully marked as shipped'
+                  values={{ orderId: order.id }}
+                />
+              ),
+              {
+                appearance: 'success'
+              }
+            )
+          } catch {}
+        },
+        () => {         // cancel
+        }
+      )
+    }
+    else {
+      this.props.openEnterTrackingId()
+    }
   }
 
   cancelOrder = () => {
@@ -131,7 +177,7 @@ class ActionsRequired extends React.Component {
                   buttonType: 'primary',
                   onClick: this.shipOrder,
                   dataTest: 'orders_detail_ship_btn',
-                  text: 'order.ship'
+                  text: 'order.markAsShipped'
                 }
               ])
               : null}
@@ -212,7 +258,8 @@ function mapStateToProps(state, ownProps) {
     action: actionRequired(orders.detail),
     order: ownProps.order,
     detail: orders.detail,
-    ordersType: ownProps.ordersType
+    ordersType: ownProps.ordersType,
+    trackingId: ''//'test Tracking Id' // ! !  Wait to BE update
   }
 }
 
@@ -220,4 +267,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Actions, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ActionsRequired)
+export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(ActionsRequired)))

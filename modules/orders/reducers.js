@@ -18,6 +18,7 @@ const initialState = {
   searchedCompanies: [],
   openedAssignLots: false,
   openedReinitiateTransfer: false,
+  openedEnterTrackingId: false,
   bankAccounts: [],
   bankAccountsLoading: false,
   relatedOrders: []
@@ -155,6 +156,16 @@ export default function(state = initialState, action) {
       return {
         ...state,
         openedReinitiateTransfer: false
+      }
+    case AT.ORDER_OPEN_ENTER_TRACKING_ID:
+      return {
+        ...state,
+        openedEnterTrackingId: true
+      }
+    case AT.ORDER_CLOSE_ENTER_TRACKING_ID:
+      return {
+        ...state,
+        openedEnterTrackingId: false
       }
     case AT.ORDER_LOAD_BANK_ACCOUNTS_PENDING:
       return {
