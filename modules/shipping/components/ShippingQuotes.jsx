@@ -1,26 +1,33 @@
 import React, { Component } from 'react'
 import NumberFormat from 'react-number-format'
 import moment from 'moment/moment'
-import { bool, objectOf, func } from 'prop-types'
+import { bool, objectOf, func, array } from 'prop-types'
 
 import { Modal, Button, Segment, Divider, FormGroup, FormField, Table, Checkbox } from 'semantic-ui-react'
 import { Form, Button as FButton, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import Router from 'next/router'
-import * as Yup from "yup";
+import * as Yup from 'yup'
 import { errorMessages, quantityValidation } from '~/constants/yupValidation'
 import { getSafe } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { currency } from '~/constants/index'
 import { FormattedNumber } from 'react-intl'
+import styled from 'styled-components'
 
-const formValidation = (min, split) => Yup.object().shape({
-  destination: Yup.object().shape({
-    zip: Yup.string().trim()
-      .min(3, errorMessages.minLength(3))
-      .required(errorMessages.requiredMessage),
-    quantity: quantityValidation(min, split)
+const CustomHr = styled.hr`
+  opacity: 0.4;
+`
+
+const formValidation = (min, split) =>
+  Yup.object().shape({
+    destination: Yup.object().shape({
+      zip: Yup.string()
+        .trim()
+        .min(3, errorMessages.minLength(3))
+        .required(errorMessages.requiredMessage),
+      quantity: quantityValidation(min, split)
+    })
   })
-})
 
 export default class ShippingQuotes extends Component {
   state = {
@@ -31,22 +38,28 @@ export default class ShippingQuotes extends Component {
     split: 1,
     initialValues: {
       destination: {
-        quantity: 1,
+        quantity: null,
         zip: '',
-        maxTransit: 0
+        maxTransit: -1
       }
-    }
+    },
+    allZips: []
   }
 
   componentDidMount() {
-    const { initShipingForm, defaultZip } = this.props
+    const { initShipingForm, defaultZip, zipCodes } = this.props
 
-    this.setState({initialValues: {
-      ...this.state.initialValues,
-      destination: {
-        ...this.state.initialValues.destination,
-        zip: defaultZip
-      }}
+    this.setState({
+      initialValues: {
+        ...this.state.initialValues,
+        destination: {
+          ...this.state.initialValues.destination,
+          zip: defaultZip
+        }
+      },
+      allZips: zipCodes.includes(defaultZip)
+        ? [...zipCodes]
+        : [...zipCodes, { value: defaultZip, text: defaultZip, key: zipCodes.length + 1 }]
     })
     initShipingForm()
   }
@@ -67,7 +80,7 @@ export default class ShippingQuotes extends Component {
     try {
       await this.props.addCartItem(payload)
       Router.push('/cart')
-    } catch { }
+    } catch {}
   }
 
   getShipingQuotes = async (inputs, setFieldTouched) => {
@@ -86,7 +99,7 @@ export default class ShippingQuotes extends Component {
 
   handleQuoteSelect = async (i, sQuote, setFieldTouched) => {
     const { productOffersSelected } = this.props
-    const po =  productOffersSelected[i] // ! ! mozna najit index z sQuote v productOffersSelected ?
+    const po = productOffersSelected[i] // ! ! mozna najit index z sQuote v productOffersSelected ?
 
     await this.setState({
       selectedIndex: i,
@@ -98,9 +111,24 @@ export default class ShippingQuotes extends Component {
   }
 
   renderForm() {
-    const { loading, zipCodes } = this.props
+    const {
+      loading,
+      echoProducts,
+      zipCodes,
+      defaultZip,
+      intl: { formatMessage }
+    } = this.props
     const { initialValues, min, split } = this.state
     const { closeModal } = this.props.modalProps
+    const allZips = this.state.allZips
+    // comparison if state has all zips from zipCodes
+    if (zipCodes.length > allZips.length - 1) {
+      this.setState({
+        allZips: zipCodes.includes(defaultZip)
+          ? [...zipCodes]
+          : [...zipCodes, { value: defaultZip, text: defaultZip, key: zipCodes.length + 1 }]
+      })
+    }
 
     return (
       <Form
@@ -110,47 +138,128 @@ export default class ShippingQuotes extends Component {
         validationSchema={formValidation(min, split)}
         onSubmit={(values, actions) => {
           //this.getShipingQuotes(values)
-        }}
-      >
-
+        }}>
         {({ values, errors, setFieldValue, validateForm, setFieldTouched, submitForm }) => {
           let quantity = Number(values.destination.quantity)
-          let disableCalcButton = loading || (errors.destination && errors.destination.zip) || !quantity || !Number.isInteger(quantity)
+          let disableCalcButton =
+            loading || (errors.destination && errors.destination.zip) || !quantity || !Number.isInteger(quantity)
 
           return (
-          <>
-            <FormGroup widths='equal' data-test='ShippingQuotes_quantity_inp'>
-
-              <Input
-                name='destination.quantity' type='number' label={<FormattedMessage id='shippingQuote.shippingQuantity' defaultMessage='Shipping Quantity'>{(text) => text}</FormattedMessage>}
-                inputProps={{ type: 'number', step: 1, min: 1, onChange: (_, { value }) => this.setState({ quantity: value }) }} />
-              <Dropdown name='destination.zip' label={<FormattedMessage id='shippingQuote.zipCode' defaultMessage='Zip Code'>{(text) => text}</FormattedMessage>}
-                        inputProps={{ search: true }} options={zipCodes} data-test='ShippingQuotes_zip_drpdn' />
-              <Dropdown
-                name='destination.maxTransit'
-                label={<FormattedMessage id='shippingQuote.maxTransitTime' defaultMessage='Max Transit Time'>{(text) => text}</FormattedMessage>}
-                options={[
-                  { value: 0, text: <FormattedMessage id='shippingQuote.noLimit' defaultMessage='No limit'>{(text) => text}</FormattedMessage> },
-                  { value: 2, text: <FormattedMessage id='shippingQuote.2Days' defaultMessage='2 days'>{(text) => text}</FormattedMessage> },
-                  { value: 3, text: <FormattedMessage id='shippingQuote.3Days' defaultMessage='3 days'>{(text) => text}</FormattedMessage> },
-                  { value: 5, text: <FormattedMessage id='shippingQuote.5Days' defaultMessage='5 days'>{(text) => text}</FormattedMessage> },
-                  { value: 7, text: <FormattedMessage id='shippingQuote.7Days' defaultMessage='7 days'>{(text) => text}</FormattedMessage> },
-                  { value: 14, text: <FormattedMessage id='shippingQuote.14Days' defaultMessage='14 days'>{(text) => text}</FormattedMessage> }
-                ]}
-                data-test='ShippingQuotes_maxTransit_drpdn'
-              />
-              <FormField>
-                <label>&nbsp;</label>
-                <Button type='button' fluid disabled={disableCalcButton}
-                        onClick={() => this.getShipingQuotes(values, setFieldTouched)}
-                        data-test='ShippingQuotes_calculate'><FormattedMessage id='shippingQuote.calculate' defaultMessage='Calculate'>{(text) => text}</FormattedMessage></Button>
-              </FormField>
-            </FormGroup>
-            <div>
-              {this.renderShipingQuotes(setFieldTouched)}
-            </div>
-          </>
-        )}}
+            <>
+              <div>{`Product Info: ${getSafe(() => echoProducts[0].name, '')}`}</div>
+              <CustomHr />
+              <FormGroup widths='equal' data-test='ShippingQuotes_quantity_inp'>
+                <Input
+                  name='destination.quantity'
+                  type='number'
+                  label={
+                    <FormattedMessage id='shippingQuote.shippingQuantity' defaultMessage='Shipping Quantity'>
+                      {text => text}
+                    </FormattedMessage>
+                  }
+                  inputProps={{
+                    type: 'number',
+                    step: 1,
+                    min: 1,
+                    onChange: (_, { value }) => this.setState({ quantity: value })
+                  }}
+                />
+                <Dropdown
+                  name='destination.zip'
+                  label={
+                    <FormattedMessage id='shippingQuote.destinationZipCode' defaultMessage='Destination Zip Code'>
+                      {text => text}
+                    </FormattedMessage>
+                  }
+                  options={allZips}
+                  data-test='ShippingQuotes_zip_drpdn'
+                  inputProps={{
+                    search: true,
+                    allowAdditions: true,
+                    onAddItem: (e, { value }) => {
+                      const newValue = { text: value, value: value, key: allZips.length + 1 }
+                      allZips.push(newValue)
+                      this.setState({ allZips: allZips })
+                    }
+                  }}
+                />
+                <Dropdown
+                  name='destination.maxTransit'
+                  label={
+                    <FormattedMessage id='shippingQuote.maxTransitTime' defaultMessage='Max Transit Time'>
+                      {text => text}
+                    </FormattedMessage>
+                  }
+                  options={[
+                    {
+                      value: -1,
+                      text: (
+                        <FormattedMessage id='shippingQuote.noLimit' defaultMessage='No limit'>
+                          {text => text}
+                        </FormattedMessage>
+                      )
+                    },
+                    {
+                      value: 2,
+                      text: (
+                        <FormattedMessage id='shippingQuote.2Days' defaultMessage='2 days'>
+                          {text => text}
+                        </FormattedMessage>
+                      )
+                    },
+                    {
+                      value: 3,
+                      text: (
+                        <FormattedMessage id='shippingQuote.3Days' defaultMessage='3 days'>
+                          {text => text}
+                        </FormattedMessage>
+                      )
+                    },
+                    {
+                      value: 5,
+                      text: (
+                        <FormattedMessage id='shippingQuote.5Days' defaultMessage='5 days'>
+                          {text => text}
+                        </FormattedMessage>
+                      )
+                    },
+                    {
+                      value: 7,
+                      text: (
+                        <FormattedMessage id='shippingQuote.7Days' defaultMessage='7 days'>
+                          {text => text}
+                        </FormattedMessage>
+                      )
+                    },
+                    {
+                      value: 14,
+                      text: (
+                        <FormattedMessage id='shippingQuote.14Days' defaultMessage='14 days'>
+                          {text => text}
+                        </FormattedMessage>
+                      )
+                    }
+                  ]}
+                  data-test='ShippingQuotes_maxTransit_drpdn'
+                />
+                <FormField>
+                  <label>&nbsp;</label>
+                  <Button
+                    type='button'
+                    fluid
+                    disabled={disableCalcButton}
+                    onClick={() => this.getShipingQuotes(values, setFieldTouched)}
+                    data-test='ShippingQuotes_calculate'>
+                    <FormattedMessage id='shippingQuote.calculate' defaultMessage='Calculate'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button>
+                </FormField>
+              </FormGroup>
+              <div>{this.renderShipingQuotes(setFieldTouched)}</div>
+            </>
+          )
+        }}
       </Form>
     )
   }
@@ -163,13 +272,41 @@ export default class ShippingQuotes extends Component {
         <Table basic='very'>
           <Table.Header>
             <Table.HeaderCell></Table.HeaderCell>
-            <Table.HeaderCell><FormattedMessage id='shippingQuote.vendor' defaultMessage='Vendor'>{(text) => text}</FormattedMessage></Table.HeaderCell>
-            <Table.HeaderCell><FormattedMessage id='shippingQuote.Etd' defaultMessage='ETD'>{(text) => text}</FormattedMessage></Table.HeaderCell>
-            <Table.HeaderCell><FormattedMessage id='shippingQuote.serviceType' defaultMessage='Service Type'>{(text) => text}</FormattedMessage></Table.HeaderCell>
-            <Table.HeaderCell><FormattedMessage id='shippingQuote.fobPriceLb' defaultMessage='FOB Price/lb'>{(text) => text}</FormattedMessage></Table.HeaderCell>
-            <Table.HeaderCell><FormattedMessage id='shippingQuote.freightLb' defaultMessage='Freight/lb'>{(text) => text}</FormattedMessage></Table.HeaderCell>
-            <Table.HeaderCell><FormattedMessage id='shippingQuote.totalPriceLb' defaultMessage='Total Price/lb'>{(text) => text}</FormattedMessage></Table.HeaderCell>
-            <Table.HeaderCell><FormattedMessage id='shippingQuote.totalFreight' defaultMessage='Total Freight'>{(text) => text}</FormattedMessage></Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='shippingQuote.vendor' defaultMessage='Vendor'>
+                {text => text}
+              </FormattedMessage>
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='shippingQuote.Etd' defaultMessage='ETD'>
+                {text => text}
+              </FormattedMessage>
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='shippingQuote.serviceType' defaultMessage='Service Type'>
+                {text => text}
+              </FormattedMessage>
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='shippingQuote.fobPriceLb' defaultMessage='FOB Price/lb'>
+                {text => text}
+              </FormattedMessage>
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='shippingQuote.freightLb' defaultMessage='Freight/lb'>
+                {text => text}
+              </FormattedMessage>
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='shippingQuote.totalPriceLb' defaultMessage='Total Price/lb'>
+                {text => text}
+              </FormattedMessage>
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='shippingQuote.totalFreight' defaultMessage='Total Freight'>
+                {text => text}
+              </FormattedMessage>
+            </Table.HeaderCell>
           </Table.Header>
           <Table.Body>
             {this.props.quotes.map((sQuote, i) => {
@@ -192,22 +329,48 @@ export default class ShippingQuotes extends Component {
                   <Table.Cell>{etd + (etd == 1 ? ' Day' : ' Days')}</Table.Cell>
                   <Table.Cell>{sQuote.shipmentRate.serviceType}</Table.Cell>
                   <Table.Cell>
-                    <FormattedNumber style='currency' currency={currency} value={getSafe(() => sQuote.shipmentRate.fobPricePerLb, 0)} />
+                    <FormattedNumber
+                      style='currency'
+                      currency={currency}
+                      value={getSafe(() => sQuote.shipmentRate.fobPricePerLb, 0)}
+                    />
                   </Table.Cell>
                   <Table.Cell>
-                    <FormattedNumber style='currency' currency={currency} value={getSafe(() => sQuote.shipmentRate.freightPricePerLb, 0)} />
+                    <FormattedNumber
+                      style='currency'
+                      currency={currency}
+                      value={getSafe(() => sQuote.shipmentRate.freightPricePerLb, 0)}
+                    />
                   </Table.Cell>
                   <Table.Cell>
-                    <FormattedNumber style='currency' currency={currency} value={getSafe(() => sQuote.shipmentRate.totalPricePerLb, 0)} />
+                    <FormattedNumber
+                      style='currency'
+                      currency={currency}
+                      value={getSafe(() => sQuote.shipmentRate.totalPricePerLb, 0)}
+                    />
                   </Table.Cell>
                   <Table.Cell className='a-right'>
-                    <FormattedNumber style='currency' currency={currency} value={getSafe(() => sQuote.shipmentRate.estimatedPrice, 0)} />
+                    <FormattedNumber
+                      style='currency'
+                      currency={currency}
+                      value={getSafe(() => sQuote.shipmentRate.estimatedPrice, 0)}
+                    />
                   </Table.Cell>
                 </Table.Row>
               )
             })}
           </Table.Body>
         </Table>
+        {this.props.quotes.length === 0 && !loading && (
+          <div className='dx-g-bs4-fixed-block'>
+            <big className='text-muted'>
+              <FormattedMessage
+                id='global.noShippingOptions'
+                defaultMessage='No shipping options available based on parameters provided.'
+              />
+            </big>
+          </div>
+        )}
       </Segment>
     )
   }
@@ -217,21 +380,37 @@ export default class ShippingQuotes extends Component {
     const { min, split } = this.state
 
     let quantity = Number(this.state.quantity)
-    let disableSubmitButton = !(quantity && this.state.sQuote && Number.isInteger(quantity)
-      && quantity >= min && quantity % split === 0)
+    let disableSubmitButton = !(
+      quantity &&
+      this.state.sQuote &&
+      Number.isInteger(quantity) &&
+      quantity >= min &&
+      quantity % split === 0
+    )
 
     return (
       <Modal closeIcon onClose={closeModal} centered={false} {...this.props.modalProps}>
-        <Modal.Header><FormattedMessage id='shippingQuote.header' defaultMessage='Shipping Quote'>{(text) => text}</FormattedMessage></Modal.Header>
-        <Modal.Content>
-          {this.renderForm()}
-        </Modal.Content>
+        <Modal.Header>
+          <FormattedMessage id='shippingQuote.header' defaultMessage='Shipping Quote'>
+            {text => text}
+          </FormattedMessage>
+        </Modal.Header>
+        <Modal.Content>{this.renderForm()}</Modal.Content>
         <Modal.Actions>
           <Button onClick={closeModal} data-test='ShippingQuotes_closeModal'>
-            <FormattedMessage id='global.close' defaultMessage='Close'>{(text) => text}</FormattedMessage>
+            <FormattedMessage id='global.close' defaultMessage='Close'>
+              {text => text}
+            </FormattedMessage>
           </Button>
-          <Button loading={this.props.isPurchasing} disabled={disableSubmitButton} primary onClick={this.createOrder} data-test='ShippingQuotes_createOrder'>
-            <FormattedMessage id='shippingQuote.purchase' defaultMessage='Purchase'>{(text) => text}</FormattedMessage>
+          <Button
+            loading={this.props.isPurchasing}
+            disabled={disableSubmitButton}
+            primary
+            onClick={this.createOrder}
+            data-test='ShippingQuotes_createOrder'>
+            <FormattedMessage id='shippingQuote.purchase' defaultMessage='Purchase'>
+              {text => text}
+            </FormattedMessage>
           </Button>
         </Modal.Actions>
       </Modal>
@@ -244,12 +423,14 @@ ShippingQuotes.propTypes = {
     open: bool,
     centered: bool,
     closeModal: func
-  })
+  }),
+  echoProducts: array
 }
 
 ShippingQuotes.defaultProps = {
   modalProps: {
     open: false,
     centered: false
-  }
+  },
+  echoProducts: []
 }

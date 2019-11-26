@@ -1,19 +1,19 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {Modal} from 'semantic-ui-react'
-import {Form, Input, Button, Dropdown} from 'formik-semantic-ui-fixed-validation'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Modal } from 'semantic-ui-react'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {getLanguages} from '~/modules/settings/actions'
+import { getLanguages } from '~/modules/settings/actions'
 
-import {getSafe} from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 
-import {FormattedDateTime} from '~/components/formatted-messages/'
-import {errorMessages} from '~/constants/yupValidation'
-import {PhoneNumber} from '~/modules/phoneNumber'
+import { FormattedDateTime } from '~/components/formatted-messages/'
+import { errorMessages } from '~/constants/yupValidation'
+import { PhoneNumber } from '~/modules/phoneNumber'
 
-import {closePopup, getUserMeData, getCurrencies, updateMyProfile, openChangePasswordPopup} from '../actions'
+import { closePopup, getUserMeData, getCurrencies, updateMyProfile, openChangePasswordPopup } from '../actions'
 
 const initialFormValues = {
   name: '',
@@ -46,7 +46,7 @@ class MyProfile extends Component {
       closePopup,
       // currencies,
       popupValues,
-      intl: {formatMessage},
+      intl: { formatMessage },
       languages,
       languagesFetching
     } = this.props
@@ -62,7 +62,7 @@ class MyProfile extends Component {
             validationSchema={formValidation}
             initialValues={popupValues ? popupValues : initialFormValues}
             onReset={closePopup}
-            onSubmit={async (values, {setSubmitting}) => {
+            onSubmit={async (values, { setSubmitting }) => {
               try {
                 let {
                   name,
@@ -87,15 +87,15 @@ class MyProfile extends Component {
               }
             }}
             data-test='my_profile_userData_inp'>
-            {({values, setFieldValue, setFieldTouched, errors, touched, isSubmitting}) => (
+            {({ values, setFieldValue, setFieldTouched, errors, touched, isSubmitting }) => (
               <>
                 <Input
                   type='text'
-                  label={formatMessage({id: 'global.email', defaultMessage: 'E-mail'})}
+                  label={formatMessage({ id: 'global.email', defaultMessage: 'E-mail' })}
                   name='email'
-                  inputProps={{readOnly: true}}
+                  inputProps={{ readOnly: true }}
                 />
-                <Input type='text' label={formatMessage({id: 'global.name', defaultMessage: 'Name'})} name='name' />
+                <Input type='text' label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })} name='name' />
                 <PhoneNumber
                   label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
                   name='phone'
@@ -108,9 +108,9 @@ class MyProfile extends Component {
                 />
                 <Input
                   type='text'
-                  label={formatMessage({id: 'global.title', defaultMessage: 'Title'})}
+                  label={formatMessage({ id: 'global.title', defaultMessage: 'Title' })}
                   name='jobTitle'
-                  inputProps={{readOnly: true}}
+                  inputProps={{ readOnly: true }}
                 />
                 {/* <Dropdown
                   label={formatMessage({ id: 'global.currency', defaultMessage: 'Currency' })}
@@ -118,7 +118,7 @@ class MyProfile extends Component {
                   options={currencies}
                   inputProps={{ 'data-test': 'my_profile_currency_drpdn' }} /> */}
                 <Dropdown
-                  label={formatMessage({id: 'global.language', defaultMessage: 'Language'})}
+                  label={formatMessage({ id: 'global.language', defaultMessage: 'Language' })}
                   name='language'
                   inputProps={{
                     loading: languagesFetching
@@ -131,9 +131,9 @@ class MyProfile extends Component {
                 />
                 <FormattedMessage id='profile.lastLoginAt' defaultMessage='Last login at:' />{' '}
                 {popupValues && popupValues.lastLoginAt}
-                <div style={{textAlign: 'right'}}>
+                <div style={{ textAlign: 'right' }}>
                   <Button
-                    style={{'margin-bottom': '10px'}}
+                    style={{ 'margin-bottom': '10px' }}
                     onClick={this.handleChangePassword}
                     data-test='my_profile_change_password_btn'>
                     <FormattedMessage id='password.change' defaultMessage='Change Password'>
@@ -141,7 +141,7 @@ class MyProfile extends Component {
                     </FormattedMessage>
                   </Button>
                 </div>
-                <div style={{textAlign: 'right'}}>
+                <div style={{ textAlign: 'right' }}>
                   <Button.Reset data-test='my_profile_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}

@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {messages} from '../../utils/validation'
-import {Control, Errors} from 'react-redux-form'
+import { messages } from '../../utils/validation'
+import { Control, Errors } from 'react-redux-form'
 //import {States} from './States';
 
-export const FormInput = ({name, label, validators, defaultValue, errorShow}) => {
+export const FormInput = ({ name, label, validators, defaultValue, errorShow }) => {
   return (
     <div className='input-group'>
       <div className='group-item-wr'>

@@ -1,11 +1,11 @@
-import {Component} from 'react'
-import {Modal, Button, Form} from 'semantic-ui-react'
+import { Component } from 'react'
+import { Modal, Button, Form } from 'semantic-ui-react'
 import Router from 'next/router'
 import IdleTimer from 'react-idle-timer'
-import {refreshToken} from '~/utils/auth'
+import { refreshToken } from '~/utils/auth'
 import moment from 'moment'
 import styled from 'styled-components'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 const WARNING_OFFSET = 3 * 60 * 1000
 
@@ -44,7 +44,6 @@ export default class TimeoutWarning extends Component {
   }
 
   handleIdle = () => {
-    console.log('handleIdle')
     this.checkTimeInterval = setInterval(this.checkTime, 1000)
   }
 
@@ -53,7 +52,7 @@ export default class TimeoutWarning extends Component {
   }
 
   resetIdleTimer = async () => {
-    this.setState({loading: true})
+    this.setState({ loading: true })
     await refreshToken()
 
     clearInterval(this.checkTimeInterval)
@@ -64,14 +63,14 @@ export default class TimeoutWarning extends Component {
     this.setIdleTimeout()
     this.idleTimer && this.idleTimer.reset()
 
-    this.setState({loading: false})
+    this.setState({ loading: false })
   }
 
   setIdleTimeout = () => {
     let ttl = window.localStorage.getItem('ttl')
     let date = new Date(parseInt(ttl, 10))
 
-    this.setState({timeout: moment(date).diff(moment())})
+    this.setState({ timeout: moment(date).diff(moment()) })
   }
 
   componentDidMount() {
@@ -79,7 +78,7 @@ export default class TimeoutWarning extends Component {
   }
 
   render() {
-    const {warningOpen, timeout} = this.state
+    const { warningOpen, timeout } = this.state
 
     if (!timeout) return null
 
@@ -100,7 +99,7 @@ export default class TimeoutWarning extends Component {
           closeIcon
           onClose={this.resetIdleTimer}
           size='tiny'
-          style={{width: 400}}
+          style={{ width: 400 }}
           centered={false}>
           <Modal.Header>
             <FormattedMessage id='auth.sessionTimeout.modalHeader' defaultMessage='SESSION TIMEOUT' />

@@ -1,12 +1,12 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {Modal, Table, TableCell, TableHeaderCell, FormField, Message, Icon, Popup} from 'semantic-ui-react'
-import {Form, Input, Button} from 'formik-semantic-ui-fixed-validation'
-import {FieldArray} from 'formik'
+import { connect } from 'react-redux'
+import { Modal, Table, TableCell, TableHeaderCell, FormField, Message, Icon, Popup } from 'semantic-ui-react'
+import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
+import { FieldArray } from 'formik'
 
-import {withToastManager} from 'react-toast-notifications'
+import { withToastManager } from 'react-toast-notifications'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 import {
   closePopup,
@@ -76,7 +76,7 @@ class EditAltNamesEchoProductPopup extends React.Component {
   }
 
   handleAddName = arrayHelpers => {
-    arrayHelpers.insert(0, {id: null, alternativeName: '', color: 'grey', description: '', canSave: false})
+    arrayHelpers.insert(0, { id: null, alternativeName: '', color: 'grey', description: '', canSave: false })
   }
 
   handleDeleteName = async (productId, arrayHelpers, val, index) => {
@@ -93,20 +93,20 @@ class EditAltNamesEchoProductPopup extends React.Component {
     if (name.length < 3) return
     if (val.id === null) {
       // Create new name
-      let value = {alternativeName: name}
+      let value = { alternativeName: name }
       await this.props.postNewEchoProductAltName(productId, value)
     } else {
       // Update name
-      let value = {alternativeName: name}
+      let value = { alternativeName: name }
       await this.props.updateEchoProductAltName(productId, val.id, value)
     }
     await this.processFetchedData()
   }
 
   render() {
-    const {closePopup, popupValues} = this.props
+    const { closePopup, popupValues } = this.props
 
-    const {initialState} = this.state
+    const { initialState } = this.state
 
     return (
       <Modal closeIcon onClose={() => closePopup()} open centered={false}>
@@ -114,8 +114,8 @@ class EditAltNamesEchoProductPopup extends React.Component {
           <FormattedMessage id='settings.editProductAltNames' defaultMessage='Edit Product Alternative Names' />
         </Modal.Header>
         <Modal.Content>
-          <Form enableReinitialize initialValues={{...initialFormValues, ...initialState}} onReset={closePopup}>
-            {({values, setFieldValue}) => (
+          <Form enableReinitialize initialValues={{ ...initialFormValues, ...initialState }} onReset={closePopup}>
+            {({ values, setFieldValue }) => (
               <>
                 <FieldArray
                   name='productAltNames'
@@ -128,7 +128,7 @@ class EditAltNamesEchoProductPopup extends React.Component {
                           color='blue'
                           size='small'
                           floated='right'
-                          style={{marginTop: '-0.5em'}}
+                          style={{ marginTop: '-0.5em' }}
                           onClick={() => this.handleAddName(arrayHelpers)}
                           data-test='settings_product_alt_name_add_btn'
                         />
@@ -155,7 +155,7 @@ class EditAltNamesEchoProductPopup extends React.Component {
                                         name={`productAltNames[${index}].alternativeName`}
                                         inputProps={{
                                           onChange: (e, d) => {
-                                            const {color, description, canSave} = nameValidation(
+                                            const { color, description, canSave } = nameValidation(
                                               index,
                                               d.value.trim(),
                                               vals
@@ -222,7 +222,7 @@ class EditAltNamesEchoProductPopup extends React.Component {
                     </>
                   )}
                 />
-                <div style={{textAlign: 'right'}}>
+                <div style={{ textAlign: 'right' }}>
                   <Button.Reset data-test='settings_product_alt_name_reset_btn'>
                     <FormattedMessage id='global.close' defaultMessage='Close'>
                       {text => text}

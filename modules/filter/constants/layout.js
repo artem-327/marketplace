@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {Sidebar, Accordion, Segment, GridRow, Icon, Popup, Dropdown, Grid, GridColumn} from 'semantic-ui-react'
+import { Sidebar, Accordion, Segment, GridRow, Icon, Popup, Dropdown, Grid, GridColumn } from 'semantic-ui-react'
 
 const popupWidth = 400
 

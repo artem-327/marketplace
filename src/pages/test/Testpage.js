@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Spinner from '../../components/Spinner/Spinner'
 import Radio from '../../components/Radio/Radio'
 import Checkbox from '../../components/Checkbox/Checkbox'
@@ -41,8 +41,8 @@ class TestPage extends Component {
           <Radio
             name='foo'
             opns={[
-              {value: 23, label: 'vysocina'},
-              {value: 24, label: 'Brno'}
+              { value: 23, label: 'vysocina' },
+              { value: 24, label: 'Brno' }
             ]}
             checked={24}
           />
@@ -50,8 +50,8 @@ class TestPage extends Component {
             className='small'
             name='foo2'
             opns={[
-              {value: 25, label: 'jihocesky'},
-              {value: 26, label: 'Jihlava'}
+              { value: 25, label: 'jihocesky' },
+              { value: 26, label: 'Jihlava' }
             ]}
             checked={25}
           />

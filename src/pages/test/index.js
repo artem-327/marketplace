@@ -1,8 +1,8 @@
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import TestPage from './Testpage'
-import {addPopup} from '../../modules/popup'
-import {searchProducts} from '../../modules/products'
+import { addPopup } from '../../modules/popup'
+import { searchProducts } from '../../modules/products'
 
 function mapStateToProps(store) {
   return {
@@ -13,7 +13,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({addPopup, searchProducts, dispatch}, dispatch)
+  return bindActionCreators({ addPopup, searchProducts, dispatch }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TestPage)

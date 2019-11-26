@@ -1,27 +1,40 @@
-import React, {Component} from 'react'
-import {array, string, func} from 'prop-types'
-import {FormattedMessage, FormattedNumber, injectIntl} from 'react-intl'
-import {Grid, GridRow, GridColumn, Header, Divider, Segment, Icon, Popup, List, Label} from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { array, string, func } from 'prop-types'
+import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
+import {
+  Grid,
+  GridRow,
+  GridColumn,
+  Header,
+  Divider,
+  Segment,
+  Icon,
+  Popup,
+  List,
+  Label,
+  Button
+} from 'semantic-ui-react'
 
 import './styles.scss'
-import {RelaxedRow, HeaderTextRow, WiderPopup, CustomSpan, CustomHeader} from './styledComponents'
-import {FormattedUnit, ArrayToMultiple} from '~/components/formatted-messages'
-import {Form, Input, Checkbox, Dropdown} from 'formik-semantic-ui-fixed-validation'
+import { RelaxedRow, HeaderTextRow, WiderPopup, CustomSpan, CustomHeader } from './styledComponents'
+import { FormattedUnit, ArrayToMultiple } from '~/components/formatted-messages'
+import { Form, Input, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 
-import {withToastManager} from 'react-toast-notifications'
-import {connect} from 'react-redux'
-import {debounce} from 'lodash'
+import { withToastManager } from 'react-toast-notifications'
+import { connect } from 'react-redux'
+import { debounce } from 'lodash'
 import * as Yup from 'yup'
-import {currency} from '~/constants/index'
+import { currency } from '~/constants/index'
 import {
   getPackagingGroupsDataRequest,
   getHazardClassesDataRequest,
   getUnNumbersByString,
   addUnNumber
 } from '~/modules/admin/actions'
-import {getNmfcNumbersByString, addNmfcNumber} from '~/modules/settings/actions'
-import {generateToastMarkup, getSafe, getFloatOrNull, getIntOrNull} from '~/utils/functions'
-import {nmfcValidation, freightClassValidation} from '~/constants/yupValidation'
+import { getCart } from '~/modules/purchase-order/actions'
+import { getNmfcNumbersByString, addNmfcNumber } from '~/modules/settings/actions'
+import { generateToastMarkup, getSafe, getFloatOrNull, getIntOrNull } from '~/utils/functions'
+import { nmfcValidation, freightClassValidation } from '~/constants/yupValidation'
 
 const validationSchema = Yup.object().shape({
   freightClass: freightClassValidation()
@@ -29,7 +42,10 @@ const validationSchema = Yup.object().shape({
 
 class CartItemSummary extends Component {
   state = {
-    edittingHazmatInfo: false
+    edittingHazmatInfo: false,
+    loadCartRequired: false,
+    nmfcNumberInitOptions: [],
+    unNumberInitOptions: []
   }
 
   async componentDidMount() {
@@ -42,36 +58,47 @@ class CartItemSummary extends Component {
       addUnNumber
     } = this.props
 
-    /* ! ! moved to onHazmatPopup() to reload every time popup is open
-    let initialUnNumbers = []
-
-    cartItems.forEach(item => {
-      let unNumber = getSafe(() => item.unNumber)
-      if (unNumber && !initialUnNumbers.find((num) => num.id === unNumber.id)) {
-        initialUnNumbers.push(unNumber)
-      }
-    })
-
-    if (initialUnNumbers.length !== 0) await addUnNumber(initialUnNumbers)
-    */
     if (hazardClasses.length === 0) getHazardClassesDataRequest()
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
   }
 
   onHazmatPopup = async item => {
-    const {addUnNumber, addNmfcNumber} = this.props
+    let option,
+      nmfcNumbers = []
 
-    let nmfcNumber = getSafe(
-      () => item.nmfcNumber,
-      getSafe(() => item.productOffer.companyProduct.nmfcNumber, null)
-    )
-    let unNumber = getSafe(() => item.unNumber)
+    option = getSafe(() => item.cfNmfcNumber, null)
+    if (option) nmfcNumbers.push(option)
+    option = getSafe(() => item.productOffer.companyProduct.nmfcNumber, null)
+    if (nmfcNumbers && option && nmfcNumbers[0].id !== option.id) nmfcNumbers.push(option)
 
-    if (nmfcNumber) await addNmfcNumber([nmfcNumber])
-    if (unNumber) await addUnNumber([unNumber])
+    let unNumbers = []
+    option = getSafe(() => item.cfUnNumber, null)
+    if (option) unNumbers.push(option)
+    option = getSafe(() => item.productOffer.companyProduct.echoProduct.cfUnNumber, null)
+    if (unNumbers && option && unNumbers[0].id !== option.id) unNumbers.push(option)
+
+    nmfcNumbers = nmfcNumbers.map(d => {
+      return {
+        key: d.id,
+        text: d.code,
+        value: d.id,
+        content: <Header content={d.code} subheader={d.description} style={{ fontSize: '1em' }} />
+      }
+    })
+
+    unNumbers = unNumbers.map(d => {
+      return {
+        key: d.id,
+        text: d.unNumberCode,
+        value: d.id,
+        content: <Header content={d.unNumberCode} subheader={d.description} style={{ fontSize: '1em' }} />
+      }
+    })
+
+    this.setState({ nmfcNumberInitOptions: nmfcNumbers, unNumberInitOptions: unNumbers })
   }
 
-  handleUnNumberChange = debounce((_, {searchQuery}) => {
+  handleUnNumberChange = debounce((_, { searchQuery }) => {
     this.props.getUnNumbersByString(searchQuery)
   }, 250)
 
@@ -81,7 +108,7 @@ class CartItemSummary extends Component {
 
   hazmatMarkup = item => {
     const {
-      intl: {formatMessage},
+      intl: { formatMessage },
       hazardClasses,
       packagingGroups,
       unNumbersFiltered,
@@ -92,17 +119,28 @@ class CartItemSummary extends Component {
       nmfcNumbersFiltered
     } = this.props
     let {
-      productOffer: {companyProduct}
+      productOffer: { companyProduct }
     } = item
 
     let initialValues = {
-      unNumber: getSafe(() => item.unNumber.id, companyProduct.echoProduct.cfUnNumber),
-      packagingGroup: getSafe(() => item.packagingGroup.id, companyProduct.cfPackagingGroup),
-      hazardClass: getSafe(() => item.hazardClass.id, companyProduct.echoProduct.cfHazardClass),
-      // item.hazardClasses ? item.hazardClasses.map((c) => c.id) : companyProduct.hazardClasses.map((hazardClass) => hazardClass.id),
-      freightClass: getSafe(() => item.freightClass, companyProduct.freightClass || ''),
+      unNumber: getSafe(
+        () => item.cfUnNumber.id,
+        getSafe(() => companyProduct.echoProduct.cfUnNumber.id, null)
+      ),
+      packagingGroup: getSafe(
+        () => item.cfPackagingGroup.id,
+        getSafe(() => companyProduct.echoProduct.cfPackagingGroup.id, null)
+      ),
+      hazardClass: getSafe(
+        () => item.cfHazardClass.id,
+        getSafe(() => companyProduct.echoProduct.cfHazardClass.id, null)
+      ),
+      freightClass: getSafe(
+        () => item.cfFreightClass,
+        getSafe(() => companyProduct.freightClass, '')
+      ),
       nmfcNumber: getSafe(
-        () => item.nmfcNumber.id,
+        () => item.cfNmfcNumber.id,
         getSafe(() => companyProduct.nmfcNumber.id, null)
       ),
       stackable: getSafe(() => item.stackable, companyProduct.stackable || false)
@@ -110,14 +148,21 @@ class CartItemSummary extends Component {
 
     let disabled = !this.state.edittingHazmatInfo
 
+    let unNumberOptions = [...this.state.unNumberInitOptions, ...unNumbersFiltered].filter(
+      (v, i, a) => a.findIndex(t => t.key === v.key) === i
+    )
+    let nmfcNumberOptions = [...this.state.nmfcNumberInitOptions, ...nmfcNumbersFiltered].filter(
+      (v, i, a) => a.findIndex(t => t.key === v.key) === i
+    )
+
     return (
       <Form
         initialValues={initialValues}
         validationSchema={validationSchema}
         enableReinitialize
-        onSubmit={async (values, {setSubmitting}) => {
+        onSubmit={async (values, { setSubmitting }) => {
           try {
-            this.setState({edittingHazmatInfo: false})
+            this.setState({ edittingHazmatInfo: false })
             await updateHazmatInfo(item.id, {
               unNumber: getIntOrNull(values.unNumber),
               packagingGroup: getIntOrNull(values.packagingGroup),
@@ -126,19 +171,20 @@ class CartItemSummary extends Component {
               nmfcNumber: getIntOrNull(values.nmfcNumber),
               stackable: values.stackable
             })
+            this.setState({ loadCartRequired: true })
             toastManager.add(
               generateToastMarkup(
                 <FormattedMessage
                   id='notifications.hazardInfoUpdated.header'
                   defaultMessage={`Hazardous informations for ${item.productOffer.tradeName} updated`}
-                  values={{name: item.productOffer.tradeName}}
+                  values={{ name: item.productOffer.tradeName }}
                 />,
                 <FormattedMessage
                   id='notifications.hazardInfoUpdated.content'
                   defaultMessage='Hazardous informations successfully updated'
                 />
               ),
-              {appearance: 'success'}
+              { appearance: 'success' }
             )
           } catch (e) {
             console.error(e)
@@ -146,7 +192,7 @@ class CartItemSummary extends Component {
             setSubmitting(false)
           }
         }}
-        children={({handleSubmit, errors}) => (
+        children={({ handleSubmit, errors }) => (
           <Segment basic>
             <Grid verticalAlign='middle'>
               <GridRow>
@@ -161,7 +207,7 @@ class CartItemSummary extends Component {
                     positive={this.state.edittingHazmatInfo}
                     onClick={() => {
                       if (this.state.edittingHazmatInfo) handleSubmit()
-                      else this.setState({edittingHazmatInfo: !this.state.edittingHazmatInfo})
+                      else this.setState({ edittingHazmatInfo: !this.state.edittingHazmatInfo })
                     }}
                     data-test='shopping_cart_hazmat'>
                     <FormattedMessage id={`global.${this.state.edittingHazmatInfo ? 'save' : 'edit'}`}>
@@ -174,11 +220,7 @@ class CartItemSummary extends Component {
               <GridRow>
                 <GridColumn data-test='shopping_cart_unNumber_inp'>
                   <Dropdown
-                    options={unNumbersFiltered.map(num => ({
-                      id: num.id,
-                      value: num.id,
-                      text: num.unNumberCode
-                    }))}
+                    options={unNumberOptions}
                     inputProps={{
                       loading: unNumbersFetching,
                       disabled,
@@ -188,7 +230,7 @@ class CartItemSummary extends Component {
                       onSearchChange: this.handleUnNumberChange
                     }}
                     name='unNumber'
-                    label={formatMessage({id: 'global.unNumber', defaultMessage: 'UN Number'})}
+                    label={formatMessage({ id: 'global.unNumber', defaultMessage: 'UN Number' })}
                   />
                 </GridColumn>
               </GridRow>
@@ -208,7 +250,7 @@ class CartItemSummary extends Component {
                       search: true
                     }}
                     name='packagingGroup'
-                    label={formatMessage({id: 'cart.packagingGroup', defaultMessage: 'Packaging Group'})}
+                    label={formatMessage({ id: 'cart.packagingGroup', defaultMessage: 'Packaging Group' })}
                   />
                 </GridColumn>
               </GridRow>
@@ -221,9 +263,9 @@ class CartItemSummary extends Component {
                       value: hazardClass.id,
                       text: `${hazardClass.classCode} - ${hazardClass.description}`
                     }))}
-                    inputProps={{disabled, search: true, clearable: true}}
+                    inputProps={{ disabled, search: true, clearable: true }}
                     name='hazardClass'
-                    label={formatMessage({id: 'cart.hazardClass', defaultMessage: 'Hazard Class'})}
+                    label={formatMessage({ id: 'cart.hazardClass', defaultMessage: 'Hazard Class' })}
                   />
                 </GridColumn>
               </GridRow>
@@ -231,9 +273,9 @@ class CartItemSummary extends Component {
               <GridRow>
                 <GridColumn data-test='shopping_cart_freightClass_inp'>
                   <Input
-                    inputProps={{disabled}}
+                    inputProps={{ disabled }}
                     name='freightClass'
-                    label={formatMessage({id: 'cart.freightClass', defaultMessage: 'Freight Class'})}
+                    label={formatMessage({ id: 'cart.freightClass', defaultMessage: 'Freight Class' })}
                   />
                 </GridColumn>
               </GridRow>
@@ -246,7 +288,7 @@ class CartItemSummary extends Component {
                         {text => text}
                       </FormattedMessage>
                     }
-                    options={nmfcNumbersFiltered}
+                    options={nmfcNumberOptions}
                     inputProps={{
                       disabled,
                       fluid: true,
@@ -254,7 +296,7 @@ class CartItemSummary extends Component {
                       clearable: true,
                       selection: true,
                       loading: nmfcNumbersFetching,
-                      onSearchChange: (_, {searchQuery}) => this.handleSearchNmfcNumberChange(searchQuery)
+                      onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery)
                     }}
                     name='nmfcNumber'
                   />
@@ -264,9 +306,9 @@ class CartItemSummary extends Component {
               <GridRow>
                 <GridColumn>
                   <Checkbox
-                    inputProps={{disabled, 'data-test': 'shopping_cart_stackable_chckb'}}
+                    inputProps={{ disabled, 'data-test': 'shopping_cart_stackable_chckb' }}
                     name='stackable'
-                    label={formatMessage({id: 'cart.stackable', defaultMessage: 'Stackable'})}
+                    label={formatMessage({ id: 'cart.stackable', defaultMessage: 'Stackable' })}
                   />
                 </GridColumn>
               </GridRow>
@@ -277,9 +319,9 @@ class CartItemSummary extends Component {
     )
   }
 
-  renderItem = ({item, lastChild}) => {
-    let {productOffer} = item
-    let {deleteCart} = this.props
+  renderItem = ({ item, lastChild }) => {
+    let { productOffer } = item
+    let { deleteCart } = this.props
     // let currency = this.props.currency
 
     return (
@@ -327,22 +369,22 @@ class CartItemSummary extends Component {
 
             <RelaxedRow columns={2}>
               <GridColumn>
-                <FormattedMessage id='cart.hazmatInfo' defaultMessage='Hazmat Information' />
+                <FormattedMessage id='cart.shipingInformation' defaultMessage='Shipping Information' />
               </GridColumn>
-
-              <WiderPopup
-                wide
-                onOpen={() => this.onHazmatPopup(item)}
-                onClose={() => this.setState({edittingHazmatInfo: false})}
-                position='left center'
-                on='click'
-                trigger={
-                  <GridColumn floated='right'>
-                    <Icon name='info circle' color='blue' />
-                  </GridColumn>
-                }
-                content={this.hazmatMarkup(item)}
-              />
+              <GridColumn floated='right'>
+                <WiderPopup
+                  wide
+                  onOpen={() => this.onHazmatPopup(item)}
+                  onClose={() => {
+                    if (this.state.loadCartRequired) this.props.getCart()
+                    this.setState({ edittingHazmatInfo: false, loadCartRequired: false })
+                  }}
+                  position='left center'
+                  on='click'
+                  trigger={<Button type='button' size='mini' color='blue' content='Edit' />}
+                  content={this.hazmatMarkup(item)}
+                />
+              </GridColumn>
             </RelaxedRow>
 
             <RelaxedRow>
@@ -377,7 +419,7 @@ class CartItemSummary extends Component {
               <GridColumn>
                 <FormattedMessage
                   id='global.pricePer'
-                  values={{unit: productOffer.companyProduct.packagingUnit.nameAbbreviation}}
+                  values={{ unit: productOffer.companyProduct.packagingUnit.nameAbbreviation }}
                 />
               </GridColumn>
 
@@ -404,7 +446,7 @@ class CartItemSummary extends Component {
   }
 
   render() {
-    let {cartItems, header} = this.props
+    let { cartItems, header } = this.props
 
     return (
       <Segment>
@@ -414,7 +456,7 @@ class CartItemSummary extends Component {
               <Header>{header}</Header>
             </GridColumn>
           </GridRow>
-          {cartItems.map((item, i) => this.renderItem({item, i, lastChild: cartItems.length - 1 === i}))}
+          {cartItems.map((item, i) => this.renderItem({ item, i, lastChild: cartItems.length - 1 === i }))}
         </Grid>
       </Segment>
     )
@@ -436,12 +478,19 @@ CartItemSummary.defaultProps = {
 export default withToastManager(
   connect(
     ({
-      admin: {packagingGroups, hazardClasses, unNumbersFiltered, unNumbersFetching},
-      settings: {nmfcNumbersFetching, nmfcNumbersFiltered}
+      admin: { packagingGroups, hazardClasses, unNumbersFiltered, unNumbersFetching },
+      settings: { nmfcNumbersFetching, nmfcNumbersFiltered }
     }) => ({
       packagingGroups,
       hazardClasses,
-      unNumbersFiltered,
+      unNumbersFiltered: unNumbersFiltered.map(d => {
+        return {
+          key: d.id,
+          text: d.unNumberCode,
+          value: d.id,
+          content: <Header content={d.unNumberCode} subheader={d.description} style={{ fontSize: '1em' }} />
+        }
+      }),
       unNumbersFetching,
       nmfcNumbersFetching,
       nmfcNumbersFiltered: nmfcNumbersFiltered.map(d => {
@@ -449,12 +498,7 @@ export default withToastManager(
           key: d.id,
           text: d.code,
           value: d.id,
-          content: (
-            <>
-              <strong>{d.code}</strong>
-              <div>{d.description}</div>
-            </>
-          )
+          content: <Header content={d.code} subheader={d.description} style={{ fontSize: '1em' }} />
         }
       })
     }),
@@ -465,7 +509,8 @@ export default withToastManager(
       getUnNumbersByString,
       addUnNumber,
       getNmfcNumbersByString,
-      addNmfcNumber
+      addNmfcNumber,
+      getCart
     }
   )(injectIntl(CartItemSummary))
 )

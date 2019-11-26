@@ -1,6 +1,6 @@
 import React from 'react'
-import {Dropdown, Icon} from 'semantic-ui-react'
-import {getSafe} from '~/utils/functions'
+import { Dropdown, Icon } from 'semantic-ui-react'
+import { getSafe } from '~/utils/functions'
 
 const getDropdownItems = (actions = [], row) =>
   actions.map((a, i) =>
@@ -15,7 +15,7 @@ const getDropdownItems = (actions = [], row) =>
     )
   )
 
-export function rowActionsCellFormatter({column: {actions}, row}) {
+export function rowActionsCellFormatter({ column: { actions }, row }) {
   const dropdownItems = getDropdownItems(actions, row)
 
   // Don't display if all dropdownItems are null
@@ -28,7 +28,7 @@ export function rowActionsCellFormatter({column: {actions}, row}) {
   ) : null
 }
 
-export const dropdownFormatter = ({column: {options}, row}) => {
+export const dropdownFormatter = ({ column: { options }, row }) => {
   const opts = options.map(p => ({
     text: p.text,
     value: p.value,
@@ -38,7 +38,7 @@ export const dropdownFormatter = ({column: {options}, row}) => {
 
   return (
     <Dropdown
-      style={{margin: '-6px'}}
+      style={{ margin: '-6px' }}
       placeholder='Select permission'
       selection
       fluid

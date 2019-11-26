@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './Users.scss'
 import User from './components/User'
 import DataTable from '../../../components/DataTable'
@@ -26,7 +26,7 @@ class Users extends Component {
   }
 
   render() {
-    const {users} = this.props
+    const { users } = this.props
     if (this.props.users.length === 0) return <Spinner />
     const rows = users.map(user => {
       const roles = user.roles.map(i => i).join()
@@ -45,16 +45,16 @@ class Users extends Component {
         id='users'
         sortFunc={nameColumn => console.log(nameColumn)}
         headerInit={[
-          {name: 'company'},
-          {name: 'companyOffice'},
-          {name: 'username'},
-          {name: 'lastName'},
-          {name: 'firstName'},
-          {name: 'roles'}
+          { name: 'company' },
+          { name: 'companyOffice' },
+          { name: 'username' },
+          { name: 'lastName' },
+          { name: 'firstName' },
+          { name: 'roles' }
         ]}
         contextMenu={[
-          {action: id => console.log('edit user with id: ' + id), label: 'editUser'},
-          {action: id => console.log('remove user with id: ' + id), label: 'removeUser'}
+          { action: id => console.log('edit user with id: ' + id), label: 'editUser' },
+          { action: id => console.log('remove user with id: ' + id), label: 'removeUser' }
         ]}
         rows={rows}
       />

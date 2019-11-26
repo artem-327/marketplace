@@ -1,27 +1,41 @@
-import React, {Component} from 'react'
-import {Container, Menu, Header, Button, Popup, List} from 'semantic-ui-react'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import React, { Component } from 'react'
+import { Container, Menu, Header, Button, Popup, List, Icon } from 'semantic-ui-react'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 
-import {ShippingQuotes} from '~/modules/shipping'
+import { ShippingQuotes } from '~/modules/shipping'
 import SubMenu from '~/src/components/SubMenu'
-import {Filter} from '~/modules/filter'
+import { Filter } from '~/modules/filter'
 import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
-import {filterTypes} from '~/modules/filter/constants/filter'
-import {groupActions} from '~/modules/company-product-info/constants'
+import { filterTypes } from '~/modules/filter/constants/filter'
+import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
 `
 
+const DivIconTooltip = styled.div`
+  position: fixed;
+  z-index: 500;
+`
+
+const DivButtonWithToolTip = styled.div`
+  z-index: 501;
+`
+
 class Marketplace extends Component {
   state = {
     columns: [
-      {name: 'productName', disabled: true},
-      {name: 'productNumber', disabled: true},
+      { name: 'productName', disabled: true },
+      { name: 'productNumber', disabled: true },
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
+      {
+        name: '',
+        title: '',
+        width: 20
+      },
       {
         name: 'available',
         title: (
@@ -127,7 +141,7 @@ class Marketplace extends Component {
   }
 
   initData = () => {
-    const {datagrid} = this.props
+    const { datagrid } = this.props
     datagrid.loadData()
   }
 
@@ -136,10 +150,22 @@ class Marketplace extends Component {
   }
 
   getRows = () => {
-    const {rows} = this.props
+    const {
+      rows,
+      intl: { formatMessage }
+    } = this.props
 
     return rows.map(r => ({
       ...r,
+      '': !r.condition && (
+        <DivIconTooltip
+          data-tooltip={formatMessage({
+            id: 'global.nonConforming.tooltip',
+            defaultMessage: 'This is a non-conforming product'
+          })}>
+          <Icon name='exclamation triangle' color='red' />
+        </DivIconTooltip>
+      ),
       condition: r.condition ? (
         <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
       ) : (
@@ -155,12 +181,13 @@ class Marketplace extends Component {
   }
 
   tableRowClicked = clickedId => {
-    const {getProductOffer, sidebarChanged} = this.props
-    let {isOpen, id} = this.props.sidebar
+    const { getProductOffer, sidebarChanged, isProductInfoOpen, closePopup } = this.props
+    let { isOpen, id } = this.props.sidebar
     getProductOffer(clickedId)
 
-    if (id !== clickedId && id) sidebarChanged({isOpen: true, id: clickedId, quantity: 1})
-    else sidebarChanged({isOpen: !isOpen, id: clickedId, quantity: 1})
+    if (isProductInfoOpen) closePopup()
+    if (id !== clickedId && id) sidebarChanged({ isOpen: true, id: clickedId, quantity: 1 })
+    else sidebarChanged({ isOpen: !isOpen, id: clickedId, quantity: 1 })
   }
 
   handleFilterApply = filter => {
@@ -168,36 +195,48 @@ class Marketplace extends Component {
   }
 
   handleFilterClear = () => {
-    this.props.applyFilter({filters: []})
-    this.props.datagrid.setFilter({filters: []})
+    this.props.applyFilter({ filters: [] })
+    this.props.datagrid.setFilter({ filters: [] })
   }
 
-  removeFilter = indexes => {
-    let {datagrid, appliedFilter} = this.props
+  isSelectedMultipleEcho = (rows, selectedRows) => {
+    if (!rows || !selectedRows) return
+    const filteredRows = rows.reduce((filtered, row, rowIndex) => {
+      if (selectedRows.includes(rowIndex)) {
+        filtered.push(row.companyProduct.echoProduct.id)
+      }
+      return [...new Set(filtered)]
+    }, [])
+    if (filteredRows.length <= 1) {
+      return false
+    } else {
+      return true
+    }
+  }
 
-    indexes.forEach((index, i) => {
-      datagrid.filters.splice(index - i, 1)
-      appliedFilter.filters.splice(index - i, 1)
-    })
-
-    this.props.applyFilter(appliedFilter)
-    datagrid.setFilter(datagrid.filters)
+  getEchoProducts = (rows, selectedRows) => {
+    if (!rows || !selectedRows) return
+    return rows.reduce((filtered, row, rowIndex) => {
+      if (selectedRows.includes(rowIndex)) {
+        filtered.push(row.companyProduct.echoProduct)
+      }
+      return filtered
+    }, [])
   }
 
   render() {
-    const {datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading, openPopup} = this.props
-    const {columns, selectedRows} = this.state
+    const { datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading, openPopup } = this.props
+    const { columns, selectedRows } = this.state
+    let { formatMessage } = intl
+
     const rows = this.getRows()
-
-    let {formatMessage} = intl
-
     return (
       <>
-        <Container fluid style={{padding: '0 32px'}}>
+        <Container fluid style={{ padding: '0 32px' }}>
           <ShippingQuotes
             modalProps={{
               open: this.state.open,
-              closeModal: () => this.setState({open: false})
+              closeModal: () => this.setState({ open: false })
             }}
             productOfferIds={rows.reduce(function(filtered, row, rowIndex) {
               if (selectedRows.includes(rowIndex)) {
@@ -216,6 +255,7 @@ class Marketplace extends Component {
               return filtered
             }, [])}
             removePopup={this.props.removePopup}
+            echoProducts={this.getEchoProducts(rows, selectedRows)}
             {...this.props}
           />
 
@@ -228,11 +268,7 @@ class Marketplace extends Component {
 
             <Menu.Menu position='right'>
               <Menu.Item>
-                <FilterTags
-                  filters={datagrid.filters}
-                  onClick={this.removeFilter}
-                  data-test='marketplace_remove_filter'
-                />
+                <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
               </Menu.Item>
               <Popup
                 wide='very'
@@ -240,23 +276,32 @@ class Marketplace extends Component {
                 content={
                   <FormattedMessage
                     id='marketplace.shippingQuoteTooltip'
-                    defaultMessage='Select one or more ProudctOffers to calculate a Shipping Quote. Multiple ProductOffers can be choosed only if they are at the same Location.'
+                    defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
                   />
                 }
                 disabled={selectedRows.length !== 0}
                 position='bottom right'
                 trigger={
-                  <div>
+                  <DivButtonWithToolTip
+                    data-tooltip={
+                      this.isSelectedMultipleEcho(rows, selectedRows)
+                        ? formatMessage({
+                            id: 'marketplace.multipleEchoProduct',
+                            defaultMessage: 'Multiple ProductOffers can not be calculate.'
+                          })
+                        : null
+                    }
+                    data-position='bottom right'>
                     <Button
-                      disabled={selectedRows.length === 0}
+                      disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
                       primary
-                      onClick={() => this.setState({open: true})}
+                      onClick={() => this.setState({ open: true })}
                       data-test='marketplace_shipping_quote_btn'>
                       <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
                         {text => text}
                       </FormattedMessage>
                     </Button>
-                  </div>
+                  </DivButtonWithToolTip>
                 }
               />
               <Menu.Item>
@@ -265,11 +310,11 @@ class Marketplace extends Component {
             </Menu.Menu>
           </Menu>
         </Container>
-        <div class='flex stretched' style={{padding: '10px 32px'}}>
+        <div class='flex stretched' style={{ padding: '10px 32px' }}>
           <ProdexGrid
             groupActions={row => {
               let values = row.key.split('_')
-              return groupActions(true, rows, values[values.length - 1], openPopup).map(a => ({
+              return groupActionsMarketplace(rows, values[values.length - 1], openPopup).map(a => ({
                 ...a,
                 text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
               }))
@@ -290,18 +335,18 @@ class Marketplace extends Component {
                 }))
                 .value()
             }
-            renderGroupLabel={({row: {value}, children = null}) => {
+            renderGroupLabel={({ row: { value }, children = null }) => {
               const [name, number, count] = value.split('_')
               // const numberArray = number.split(' & ')
               return (
                 <span>
                   {children}
-                  <span style={{color: '#2599d5'}}>{name ? name : 'Unmapped'}</span>
+                  <span style={{ color: '#2599d5' }}>{name ? name : 'Unmapped'}</span>
                   <span className='right'>Product offerings: {count}</span>
                 </span>
               )
             }}
-            onSelectionChange={selectedRows => this.setState({selectedRows})}
+            onSelectionChange={selectedRows => this.setState({ selectedRows })}
             /* COMMENTED #30916
             onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()

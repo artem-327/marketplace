@@ -1,6 +1,6 @@
 import axios from 'axios'
-import React, {Component} from 'react'
-import {FormattedMessage} from 'react-intl'
+import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 
 const CLOSE_MESSAGE = 'CLOSE_MESSAGE'
 const ADD_MESSAGE = 'ADD_MESSAGE'
@@ -109,7 +109,7 @@ export default function reducer(state = initialState, action) {
           <FormattedMessage
             id='tooLargeFile'
             defaultMessage='File "{fileName}" is larger than maximal allowed size: {maxSize} MB'
-            values={{fileName: action.payload.fileName, maxSize: action.payload.maxSize}}
+            values={{ fileName: action.payload.fileName, maxSize: action.payload.maxSize }}
           />
         ]
       }
@@ -122,7 +122,7 @@ export default function reducer(state = initialState, action) {
           <FormattedMessage
             id='uploadFileFailed'
             defaultMessage='File "{fileName}" was not uploaded due to error.'
-            values={{fileName: action.payload.fileName}}
+            values={{ fileName: action.payload.fileName }}
           />
         ]
       }

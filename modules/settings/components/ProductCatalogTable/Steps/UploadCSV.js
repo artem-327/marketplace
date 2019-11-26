@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import Dropzone from 'react-dropzone'
-import {Grid, Segment, Header, Icon, Form} from 'semantic-ui-react'
-import {FormattedMessage} from 'react-intl'
+import { Grid, Segment, Header, Icon, Form } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
 
-import {uploadCSVFile} from '../../../actions'
+import { uploadCSVFile } from '../../../actions'
 
 const StyledDropzone = styled(Dropzone)`
   display: flex;
@@ -45,7 +45,7 @@ class UploadCSV extends Component {
   }
 
   render() {
-    const {uploadedFile, hasError} = this.state
+    const { uploadedFile, hasError } = this.state
 
     return (
       <Grid centered padded>
@@ -68,7 +68,7 @@ class UploadCSV extends Component {
                 <Segment.Inline>
                   {uploadedFile && uploadedFile.name}
                   {hasError && (
-                    <p style={{color: 'red'}}>
+                    <p style={{ color: 'red' }}>
                       <FormattedMessage id='settings.invalidFileType' defaultMessage='Invalid file type' />{' '}
                     </p>
                   )}
@@ -84,9 +84,9 @@ class UploadCSV extends Component {
   onDrop = acceptedFiles => {
     if (acceptedFiles.length !== 0) {
       this.props.uploadCSVFile(acceptedFiles[0])
-      this.setState({uploadedFile: acceptedFiles[0], hasError: false})
+      this.setState({ uploadedFile: acceptedFiles[0], hasError: false })
     } else {
-      this.setState({uploadedFile: null, hasError: true})
+      this.setState({ uploadedFile: null, hasError: true })
     }
   }
 }

@@ -1,7 +1,7 @@
 import './submenu.scss'
 
-import React, {Component} from 'react'
-import {arrayOf, shape, string, bool} from 'prop-types'
+import React, { Component } from 'react'
+import { arrayOf, shape, string, bool } from 'prop-types'
 import filterIconClose from '../../images/subMenu/filter-icon-transparent.png'
 import filterIconOpen from '../../images/subMenu/filter-icon-transparent-active.png'
 import classNames from 'classnames'

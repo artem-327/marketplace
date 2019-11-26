@@ -1,19 +1,19 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {actions} from 'react-redux-form'
+import { actions } from 'react-redux-form'
 
 import Shipping from './components/Shipping'
 import ShippingEdit from './components/ShippingEdit'
 import ShippingQuote from './components/ShippingQuote'
 import Payment from './components/Payment'
-import {Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment} from 'semantic-ui-react'
+import { Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment } from 'semantic-ui-react'
 import styled from 'styled-components'
 import Spinner from '../../../components/Spinner/Spinner'
 import './PurchaseOrder.scss'
-import {FormattedMessage, injectIntl} from 'react-intl'
-import {checkToken} from '../../../utils/auth'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { checkToken } from '../../../utils/auth'
 import Router from 'next/router'
-import {currency} from '~/constants/index'
+import { currency } from '~/constants/index'
 
 import CartItemSummary from '~/components/summary/CartItemSummary'
 import Summary from '~/components/summary/Summary'
@@ -53,22 +53,22 @@ class PurchaseOrder extends Component {
   // }
 
   handleQuoteSelect = index => {
-    let {shippingQuoteSelected, shippingQuotes} = this.props
-    shippingQuoteSelected({index, quote: shippingQuotes[index]})
+    let { shippingQuoteSelected, shippingQuotes } = this.props
+    shippingQuoteSelected({ index, quote: shippingQuotes[index] })
   }
 
   getAddress = selectedAddressId => {
-    let {deliveryAddresses} = this.props
+    let { deliveryAddresses } = this.props
     let selectedAddress = deliveryAddresses.find(i => i.id === selectedAddressId)
 
-    this.props.shippingChanged({selectedAddress})
+    this.props.shippingChanged({ selectedAddress })
     this.getShippingQuotes(selectedAddress)
   }
 
   getPayment = selectedPaymentId => {
-    const {payments} = this.props
+    const { payments } = this.props
     const selectedPayment = payments.find(i => i.id === selectedPaymentId)
-    this.props.shippingChanged({selectedPayment})
+    this.props.shippingChanged({ selectedPayment })
   }
 
   getShippingQuotes = selectedAddress => {
@@ -84,9 +84,9 @@ class PurchaseOrder extends Component {
 
   deleteCart = id => {
     if (checkToken(this.props)) return
-    let {cart} = this.props
+    let { cart } = this.props
 
-    let {formatMessage} = this.props.intl
+    let { formatMessage } = this.props.intl
 
     if (cart.cartItems.length === 1) {
       return confirm(
@@ -113,8 +113,8 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    const {dispatch, postNewDeliveryAddress, updateDeliveryAddress} = this.props
-    let {cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shipping} = this.props
+    const { dispatch, postNewDeliveryAddress, updateDeliveryAddress } = this.props
+    let { cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shipping } = this.props
 
     if (cartIsFetching) return <Spinner />
 
@@ -184,7 +184,7 @@ class PurchaseOrder extends Component {
                 </GridRow>
 
                 <ShippingQuote
-                  currency={{code: currency}}
+                  currency={{ code: currency }}
                   selectedShippingQuote={this.props.cart.selectedShipping}
                   handleQuoteSelect={this.handleQuoteSelect}
                   selectedAddress={shipping.selectedAddress}

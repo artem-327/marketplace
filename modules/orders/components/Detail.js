@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import '~/src/pages/inventory/addInventory/AddInventory.scss'
 import Spinner from '~/src/components/Spinner/Spinner'
 import {
@@ -15,7 +15,7 @@ import {
   Popup,
   GridRow
 } from 'semantic-ui-react'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
 import ActionsRequired from './components/ActionsRequired'
@@ -23,9 +23,9 @@ import AssignLots from './components/AssignLots'
 import ReinitiateTransfer from './components/ReinitiateTransfer'
 import confirm from '~/src/components/Confirmable/confirm'
 import moment from 'moment/moment'
-import {FormattedPhone} from '~/components/formatted-messages/'
-import {withToastManager} from 'react-toast-notifications'
-import {getSafe, generateToastMarkup} from '~/utils/functions'
+import { FormattedPhone } from '~/components/formatted-messages/'
+import { withToastManager } from 'react-toast-notifications'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
 
 const AccordionTitle = styled(Accordion.Title)`
   text-transform: uppercase;
@@ -93,7 +93,7 @@ class Detail extends Component {
     let pdf = await this.props.downloadPdf(endpointType, this.props.order.id)
 
     const element = document.createElement('a')
-    const file = new Blob([pdf.value.data], {type: 'application/pdf'})
+    const file = new Blob([pdf.value.data], { type: 'application/pdf' })
     let fileURL = URL.createObjectURL(file)
 
     element.href = fileURL
@@ -103,12 +103,12 @@ class Detail extends Component {
   }
 
   handleClick = (e, titleProps) => {
-    const {index} = titleProps
-    const {activeIndexes} = this.state
+    const { index } = titleProps
+    const { activeIndexes } = this.state
 
     activeIndexes[index] = activeIndexes[index] ? false : true
 
-    this.setState({activeIndexes})
+    this.setState({ activeIndexes })
   }
 
   render() {
@@ -123,7 +123,7 @@ class Detail extends Component {
       toastManager,
       isPaymentCancellable
     } = this.props
-    const {activeIndexes} = this.state
+    const { activeIndexes } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
 
     let orderDate = moment(order.orderDate, 'MMM Do, YYYY h:mm:ss A')
@@ -132,7 +132,7 @@ class Detail extends Component {
       <div id='page' className='scrolling'>
         <PerfectScrollbar>
           <Divider hidden />
-          <Grid verticalAlign='middle' style={{padding: '0 32px'}}>
+          <Grid verticalAlign='middle' style={{ padding: '0 32px' }}>
             <GridRow>
               <Grid.Column width={3}>
                 <div className='header-top clean left detail-align'>
@@ -150,13 +150,13 @@ class Detail extends Component {
                   </Header>
                   <a
                     onClick={() => this.downloadOrder()}
-                    style={{fontSize: '1.14285714em', cursor: 'pointer'}}
+                    style={{ fontSize: '1.14285714em', cursor: 'pointer' }}
                     data-test='orders_detail_download_order'>
-                    <Icon name='download' style={{verticalAlign: 'top'}} color='blue' />
+                    <Icon name='download' style={{ verticalAlign: 'top' }} color='blue' />
                     <FormattedMessage
                       id='order.downloadOrder'
                       defaultMessage={`Download ${order.orderType} Order`}
-                      values={{orderType: order.orderType}}
+                      values={{ orderType: order.orderType }}
                     />
                   </a>
                 </div>
@@ -255,7 +255,7 @@ class Detail extends Component {
                                     <FormattedMessage
                                       id='confirm.cancelPayment.content'
                                       defaultMessage='Do you really want to Cancel Payment for Order #{orderId}'
-                                      values={{orderId: order.id}}
+                                      values={{ orderId: order.id }}
                                     />
                                   ).then(() => {
                                     cancelPayment(order.id).then(r => {
@@ -268,7 +268,7 @@ class Detail extends Component {
                                           <FormattedMessage
                                             id='order.cancelTransfer.success.content'
                                             defaultMessage='Payment transfer for order #{orderId} was canceled successfully'
-                                            values={{orderId: order.id}}
+                                            values={{ orderId: order.id }}
                                           />
                                         ),
                                         {
@@ -304,7 +304,7 @@ class Detail extends Component {
                 defaultActiveIndex={[0, 1]}
                 styled
                 fluid
-                style={{width: 'calc(100% - 64px)', margin: '0 32px'}}>
+                style={{ width: 'calc(100% - 64px)', margin: '0 32px' }}>
                 <AccordionTitle
                   active={activeIndexes[0]}
                   index={0}

@@ -1,4 +1,4 @@
-import {ADD_POPUP, REMOVE_POPUP, REMOVE_ALL} from '../constants/popup'
+import { ADD_POPUP, REMOVE_POPUP, REMOVE_ALL } from '../constants/popup'
 
 export const initialState = {
   components: []

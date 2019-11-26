@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import DataTable from '../../components/DataTable'
 
 class TestPage extends Component {
@@ -10,11 +10,11 @@ class TestPage extends Component {
           id='test'
           selectable
           sortFunc={nameColumn => console.log(nameColumn)}
-          headerInit={[{name: 'test'}, {name: 'test2'}, {name: null}]}
+          headerInit={[{ name: 'test' }, { name: 'test2' }, { name: null }]}
           contextMenu={[
-            {action: id => this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing'},
-            {action: id => console.log('BR'), label: 'Custom Broadcast'},
-            {action: id => console.log('delete'), label: 'Delete Listing'}
+            { action: id => this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing' },
+            { action: id => console.log('BR'), label: 'Custom Broadcast' },
+            { action: id => console.log('delete'), label: 'Delete Listing' }
           ]}
           rowsInit={[
             {

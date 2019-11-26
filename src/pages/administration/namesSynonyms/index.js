@@ -1,7 +1,7 @@
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import NamesSynonyms from './NamesSynonyms'
-import {fetchAlternativeNames, searchProducts} from '../../../modules/products'
+import { fetchAlternativeNames, searchProducts } from '../../../modules/products'
 
 function mapStateToProps(store) {
   return {
@@ -13,7 +13,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({searchProducts, fetchAlternativeNames}, dispatch)
+  return bindActionCreators({ searchProducts, fetchAlternativeNames }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NamesSynonyms)

@@ -1,8 +1,8 @@
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-import {addPopup, removePopup} from '../../modules/popup'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { addPopup, removePopup } from '../../modules/popup'
 import DataTable from './DataTable'
-import {initDataTable, selectDataTable, selectGroup, selectRow, toggleVisibleColumn} from '../../modules/dataTables'
+import { initDataTable, selectDataTable, selectGroup, selectRow, toggleVisibleColumn } from '../../modules/dataTables'
 
 function mapStateToProps(store, ownProps) {
   return {
@@ -12,7 +12,7 @@ function mapStateToProps(store, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    {initDataTable, addPopup, removePopup, selectRow, selectGroup, toggleVisibleColumn, selectDataTable},
+    { initDataTable, addPopup, removePopup, selectRow, selectGroup, toggleVisibleColumn, selectDataTable },
     dispatch
   )
 }

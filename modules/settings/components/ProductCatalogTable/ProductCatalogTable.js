@@ -1,17 +1,17 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
-import {withDatagrid} from '~/modules/datagrid'
-import {Popup, List} from 'semantic-ui-react'
+import { withDatagrid } from '~/modules/datagrid'
+import { Popup, List } from 'semantic-ui-react'
 
 import * as Actions from '../../actions'
 import Router from 'next/router'
 
 import confirm from '~/src/components/Confirmable/confirm'
-import {injectIntl, FormattedNumber, FormattedMessage} from 'react-intl'
+import { injectIntl, FormattedNumber, FormattedMessage } from 'react-intl'
 
-import {UnitOfPackaging} from '~/components/formatted-messages'
-import {getSafe} from '~/utils/functions'
+import { UnitOfPackaging } from '~/components/formatted-messages'
+import { getSafe } from '~/utils/functions'
 
 class ProductCatalogTable extends Component {
   state = {
@@ -89,8 +89,8 @@ class ProductCatalogTable extends Component {
   //   datagrid.setFilter([], { unmappedOnly: unmapped })
   // }
 
-  componentWillReceiveProps({productCatalogUnmappedValue: newUnmapped, filterValue: newFilterValue}) {
-    const {datagrid, filterValue} = this.props
+  componentWillReceiveProps({ productCatalogUnmappedValue: newUnmapped, filterValue: newFilterValue }) {
+    const { datagrid, filterValue } = this.props
 
     // if (filterValue !== newFilterValue) {
     //   datagrid.setFilter({
@@ -104,7 +104,7 @@ class ProductCatalogTable extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    const {action, actionId, currentTab, loaded, openPopup, rows} = this.props
+    const { action, actionId, currentTab, loaded, openPopup, rows } = this.props
 
     if (action === 'edit' && actionId && loaded) {
       if (currentTab.type === 'products') {
@@ -132,8 +132,8 @@ class ProductCatalogTable extends Component {
       loading
     } = this.props
 
-    let {columns} = this.state
-    const {formatMessage} = intl
+    let { columns } = this.state
+    const { formatMessage } = intl
 
     return (
       <React.Fragment>
@@ -143,22 +143,22 @@ class ProductCatalogTable extends Component {
           loading={datagrid.loading || loading}
           rows={rows}
           columns={columns}
-          style={{marginTop: '5px'}}
+          style={{ marginTop: '5px' }}
           defaultSorting={{
             columnName: 'intProductName',
             sortPath: 'CompanyProduct.intProductName',
             direction: 'ASC'
           }}
           rowActions={[
-            {text: formatMessage({id: 'global.edit', defaultMessage: 'Edit'}), callback: row => openPopup(row)},
+            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row) },
             {
-              text: formatMessage({id: 'global.delete', defaultMessage: 'Delete'}),
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row => {
                 return confirm(
-                  formatMessage({id: 'confirm.deleteProductCatalog', defaultMessage: 'Delete Product Catalog'}),
+                  formatMessage({ id: 'confirm.deleteProductCatalog', defaultMessage: 'Delete Product Catalog' }),
                   formatMessage(
-                    {id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.intProductName}?`},
-                    {item: row.intProductName}
+                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.intProductName}?` },
+                    { item: row.intProductName }
                   )
                 ).then(() => deleteProduct(row.id, row.intProductName))
               }
@@ -170,7 +170,7 @@ class ProductCatalogTable extends Component {
   }
 }
 
-const mapStateToProps = (state, {datagrid}) => {
+const mapStateToProps = (state, { datagrid }) => {
   return {
     rows: datagrid.rows.map(product => {
       return {

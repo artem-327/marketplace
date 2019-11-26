@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './SearchProducts.scss'
 import RemoteComboBox from '../../../../../../components/ComboBox/RemoteComboBox'
 import InfoLabel from './InfoLabel.js'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 class SearchProducts extends Component {
   render() {
-    const {formatMessage} = this.props.intl
+    const { formatMessage } = this.props.intl
     return this.props.isVisible ? (
       <div className='test'>
         <h4>

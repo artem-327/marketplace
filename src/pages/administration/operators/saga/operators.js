@@ -1,4 +1,4 @@
-import {call, put, takeEvery} from 'redux-saga/effects'
+import { call, put, takeEvery } from 'redux-saga/effects'
 import Api from '../../../../api/users'
 import {
   OPERATORS_FETCH_FAILED,
@@ -15,29 +15,29 @@ import {
 function* getOperators() {
   try {
     const operators = yield call(Api.getOperators)
-    yield put({type: OPERATORS_FETCH_SUCCEEDED, payload: operators})
+    yield put({ type: OPERATORS_FETCH_SUCCEEDED, payload: operators })
   } catch (e) {
-    yield put({type: OPERATORS_FETCH_FAILED, message: e.message})
+    yield put({ type: OPERATORS_FETCH_FAILED, message: e.message })
   }
 }
 
 function* deleteOperator(action) {
   try {
     yield call(Api.deleteOperator, action.payload.id)
-    yield put({type: OPERATOR_REMOVE_SUCCEEDED})
-    yield put({type: OPERATORS_FETCH_REQUESTED})
+    yield put({ type: OPERATOR_REMOVE_SUCCEEDED })
+    yield put({ type: OPERATORS_FETCH_REQUESTED })
   } catch (e) {
-    yield put({type: OPERATOR_REMOVE_FAILED, message: e.message})
+    yield put({ type: OPERATOR_REMOVE_FAILED, message: e.message })
   }
 }
 
 function* putOperatorEdit(action) {
   try {
     yield call(Api.putOperatorEdit, action.payload.operator)
-    yield put({type: OPERATOR_EDIT_SUCCEEDED})
-    yield put({type: OPERATORS_FETCH_REQUESTED})
+    yield put({ type: OPERATOR_EDIT_SUCCEEDED })
+    yield put({ type: OPERATORS_FETCH_REQUESTED })
   } catch (e) {
-    yield put({type: OPERATOR_EDIT_FAILED, message: e.message})
+    yield put({ type: OPERATOR_EDIT_FAILED, message: e.message })
   }
 }
 

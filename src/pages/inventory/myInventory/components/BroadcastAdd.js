@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 
 class BroadcastAdd extends Component {
   constructor(props) {
@@ -12,19 +12,19 @@ class BroadcastAdd extends Component {
   }
 
   handleInput(name, value) {
-    this.setState({[name]: value})
+    this.setState({ [name]: value })
   }
   brActive() {
     this.props.brActive(this.state.brActive)
   }
   submitRules() {
     this.props
-      .submitRules({name: this.state.name, subjects: this.props.subjects, targets: this.props.targets})
+      .submitRules({ name: this.state.name, subjects: this.props.subjects, targets: this.props.targets })
       .then(() => {
-        this.setState({fulfilled: 'Success', brActive: true}, () => {
+        this.setState({ fulfilled: 'Success', brActive: true }, () => {
           setTimeout(
             function() {
-              this.setState({fulfilled: 'Set Rules'}, () => {
+              this.setState({ fulfilled: 'Set Rules' }, () => {
                 this.props.removePopup()
                 this.props.getProductOffers()
               })

@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 
-import {getSafe} from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 
 const mergeAndFilterCodes = (newCodes, oldCodes) => {
   if (!(newCodes instanceof Array)) newCodes = [newCodes]
@@ -30,7 +30,7 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-  let {type, payload} = action
+  let { type, payload } = action
 
   switch (type) {
     case AT.ADD_ZIP: {

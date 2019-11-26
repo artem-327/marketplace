@@ -54,9 +54,9 @@ module.exports = function(callback) {
       outputDirectory = path.resolve(release.outputRoot + component),
       capitalizedComponent = component.charAt(0).toUpperCase() + component.slice(1),
       repoName = release.componentRepoRoot + capitalizedComponent,
-      gitOptions = {cwd: outputDirectory},
-      pullOptions = {args: '-q', cwd: outputDirectory, quiet: true},
-      resetOptions = {args: '-q --hard', cwd: outputDirectory, quiet: true},
+      gitOptions = { cwd: outputDirectory },
+      pullOptions = { args: '-q', cwd: outputDirectory, quiet: true },
+      resetOptions = { args: '-q --hard', cwd: outputDirectory, quiet: true },
       gitURL = 'git@github.com:' + release.org + '/' + repoName + '.git',
       repoURL = 'https://github.com/' + release.org + '/' + repoName + '/',
       localRepoSetup = fs.existsSync(path.join(outputDirectory, '.git'))
@@ -70,7 +70,7 @@ module.exports = function(callback) {
     // clean folder
     if (release.outputRoot.search('../repos') == 0) {
       console.info('Cleaning dir', outputDirectory)
-      del.sync([outputDirectory + '**/*'], {silent: true, force: true})
+      del.sync([outputDirectory + '**/*'], { silent: true, force: true })
     }
 
     // set-up local repo

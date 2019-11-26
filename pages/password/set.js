@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import styled from 'styled-components'
 
 import Layout from '~/components/LayoutUnauthorized'
-import {Password} from '~/modules/password'
+import { Password } from '~/modules/password'
 
 const Container = styled.div`
   padding: 60px 0;

@@ -125,7 +125,7 @@ export function closeToast() {
 export function handleActiveTab(tab) {
   return {
     type: AT.HANDLE_ACTIVE_TAB,
-    payload: {tab}
+    payload: { tab }
   }
 }
 

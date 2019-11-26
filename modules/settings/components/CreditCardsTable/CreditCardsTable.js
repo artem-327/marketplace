@@ -1,15 +1,15 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
-import {Confirm} from 'semantic-ui-react'
-import {getCreditCardsDataRequest, handleOpenConfirmPopup, closeConfirmPopup, deleteConfirmation} from '../../actions'
+import { Confirm } from 'semantic-ui-react'
+import { getCreditCardsDataRequest, handleOpenConfirmPopup, closeConfirmPopup, deleteConfirmation } from '../../actions'
 import Router from 'next/router'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 class ProductCatalogTable extends Component {
   state = {
     columns: [
-      {name: 'cardNumber', title: <FormattedMessage id='settings.cardNumber' defaultMessage='Card Number' />},
+      { name: 'cardNumber', title: <FormattedMessage id='settings.cardNumber' defaultMessage='Card Number' /> },
       {
         name: 'expMonthYear',
         title: <FormattedMessage id='settings.expMonthYear' defaultMessage='Expiration month/year' />
@@ -32,10 +32,10 @@ class ProductCatalogTable extends Component {
       deleteRowById,
       currentTab,
       loading,
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
-    const {columns} = this.state
+    const { columns } = this.state
 
     return (
       <React.Fragment>
@@ -57,7 +57,7 @@ class ProductCatalogTable extends Component {
           filterValue={filterValue}
           rowActions={[
             {
-              text: formatMessage({id: 'global.delete', defaultMessage: 'Delete'}),
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row => handleOpenConfirmPopup(row.id)
             }
           ]}

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './checkbox.scss'
 import PropTypes from 'prop-types'
 
@@ -9,12 +9,12 @@ class Checkbox extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.defaultValue) {
-      this.setState({checked: nextProps.defaultValue})
+      this.setState({ checked: nextProps.defaultValue })
     }
   }
 
   handleChange = () => {
-    this.setState({checked: !this.state.checked}, () => {
+    this.setState({ checked: !this.state.checked }, () => {
       this.props.onChange(this.state.checked)
     })
   }

@@ -1,4 +1,4 @@
-import {Segment, GridRow, Popup, Button, Header} from 'semantic-ui-react'
+import { Segment, GridRow, Popup, Button, Header } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 export const RelaxedSegment = styled(Segment)`

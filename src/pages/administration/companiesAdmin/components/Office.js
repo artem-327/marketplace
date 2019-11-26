@@ -1,8 +1,8 @@
 import React from 'react'
 import Button from '../../../../components/Button/Button'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
-const Office = ({office, id, deleteOffice, history}) => (
+const Office = ({ office, id, deleteOffice, history }) => (
   <tr className='company-row'>
     <td>
       <b>{office.name}</b>

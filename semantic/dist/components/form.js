@@ -347,7 +347,7 @@
                 rules: []
               }
               $.each(rules, function(index, rule) {
-                fullFields[name].rules.push({type: rule})
+                fullFields[name].rules.push({ type: rule })
               })
             })
             return fullFields
@@ -555,7 +555,7 @@
                 rules: []
               }
               $.each(rules, function(index, rule) {
-                newValidation[name].rules.push({type: rule})
+                newValidation[name].rules.push({ type: rule })
               })
             } else {
               newValidation[name] = rules

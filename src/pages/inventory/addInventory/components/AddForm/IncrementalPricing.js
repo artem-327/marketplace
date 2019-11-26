@@ -2,11 +2,11 @@ import React from 'react'
 import './Pricing.scss'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 const IncrementalPricing = props => {
   const calculateGrossMargin = index => {
-    const {cost, incrementalPricing} = props
+    const { cost, incrementalPricing } = props
     const margin = ((incrementalPricing[index].price - parseInt(cost, 10)) / parseInt(cost, 10)) * 100
     if (isNaN(margin) || incrementalPricing[index].price === '') {
       return ''
@@ -98,7 +98,7 @@ const IncrementalPricing = props => {
       const margin = (
         <input
           type='number'
-          className={classnames({inRed: grossMargin < 0})}
+          className={classnames({ inRed: grossMargin < 0 })}
           // defaultValue={grossMargin}
           value={item.margin}
           onChange={e => handleMargin(e, index)}

@@ -1,6 +1,6 @@
 import * as AT from './action-types'
-import {config} from './config'
-import {uniqueArrayByKey} from '~/utils/functions'
+import { config } from './config'
+import { uniqueArrayByKey } from '~/utils/functions'
 
 export const initialState = {
   editPopupBoolean: false,
@@ -26,23 +26,23 @@ export const initialState = {
   primaryBranchProvinces: [],
   mailingBranchProvinces: [],
   tabsNames: [
-    {name: 'CAS Products', id: 7},
-    {name: 'Companies', id: 8},
-    {name: 'Product Catalog', id: 12},
-    {name: 'Units of Measure', id: 1},
-    {name: 'Units of Packaging', id: 2},
-    {name: 'Manufacturers', id: 3},
-    {name: 'Grades', id: 4},
-    {name: 'Forms', id: 5},
-    {name: 'Conditions', id: 6},
-    {name: 'Document Types', id: 9},
-    {name: 'Market Segments', id: 10},
-    {name: 'Admin Settings', id: 11, hideHandler: true}
+    { name: 'CAS Products', id: 7 },
+    { name: 'Companies', id: 8 },
+    { name: 'Product Catalog', id: 12 },
+    { name: 'Units of Measure', id: 1 },
+    { name: 'Units of Packaging', id: 2 },
+    { name: 'Manufacturers', id: 3 },
+    { name: 'Grades', id: 4 },
+    { name: 'Forms', id: 5 },
+    { name: 'Conditions', id: 6 },
+    { name: 'Document Types', id: 9 },
+    { name: 'Market Segments', id: 10 },
+    { name: 'Admin Settings', id: 11, hideHandler: true }
   ],
 
-  currentTab: {name: 'CAS Products', id: 7},
-  casListDataRequest: {pageSize: 50, pageNumber: 0, sortDirection: 'ASC', sortPath: 'CasProduct.chemicalName'},
-  companyListDataRequest: {pageSize: 50, pageNumber: 0, sortDirection: 'ASC', sortPath: 'Company.name'},
+  currentTab: { name: 'CAS Products', id: 7 },
+  casListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'ASC', sortPath: 'CasProduct.chemicalName' },
+  companyListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'ASC', sortPath: 'Company.name' },
   currentEditForm: null,
   currentEdit2Form: null,
   currentAddForm: null,
@@ -66,11 +66,12 @@ export const initialState = {
   searchedManufacturersLoading: false,
   altEchoNamesRows: [],
   documentTypes: [],
-  editEchoProductEditTab: 0
+  editEchoProductEditTab: 0,
+  editEchoProductInitTrig: false
 }
 
 export default function reducer(state = initialState, action) {
-  const {payload} = action
+  const { payload } = action
 
   switch (action.type) {
     case AT.ADMIN_OPEN_POPUP: {
@@ -315,7 +316,8 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_EDIT_ECHO_PRODUCT_CHANGE_TAB: {
       return {
         ...state,
-        editEchoProductEditTab: action.payload
+        editEchoProductEditTab: action.payload.editTab,
+        editEchoProductInitTrig: action.payload.force ^ state.editEchoProductInitTrig
       }
     }
 

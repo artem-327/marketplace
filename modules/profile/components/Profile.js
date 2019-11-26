@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 import MyProfile from './MyProfile'
 import ChangePassword from './ChangePassword'
 
 class Profile extends Component {
   renderContent = () => {
-    const {changePasswordPopup} = this.props
+    const { changePasswordPopup } = this.props
 
     return (
       <>
@@ -21,8 +21,8 @@ class Profile extends Component {
   }
 }
 
-const mapStateToProps = ({profile}) => {
-  return {...profile}
+const mapStateToProps = ({ profile }) => {
+  return { ...profile }
 }
 
 export default connect(mapStateToProps, null)(Profile)

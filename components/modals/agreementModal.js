@@ -1,20 +1,20 @@
-import React, {Component} from 'react'
-import {Modal, Button, Checkbox, Divider} from 'semantic-ui-react'
-import {func, oneOfType, string, node, bool, object} from 'prop-types'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { Modal, Button, Checkbox, Divider } from 'semantic-ui-react'
+import { func, oneOfType, string, node, bool, object } from 'prop-types'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import {getSafe} from '~/utils/functions'
-import {logout} from '~/modules/auth/actions'
-import {triggerAgreementModal} from '~/modules/settings/actions'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { getSafe } from '~/utils/functions'
+import { logout } from '~/modules/auth/actions'
+import { triggerAgreementModal } from '~/modules/settings/actions'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 const TopMargedDiv = styled.div`
   margin-top: 15px;
 `
 
 class AgreementModal extends Component {
-  state = {checked: false}
+  state = { checked: false }
 
   render() {
     const {
@@ -30,7 +30,7 @@ class AgreementModal extends Component {
       additionalProps,
       tos,
       isCompanyAdmin,
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
     return (
@@ -47,27 +47,27 @@ class AgreementModal extends Component {
                   values={{
                     echosTermsOfService: (
                       <a href='https://www.echoexchange.net/legal' target='_blank'>
-                        {formatMessage({id: 'verification.echosTOS'})}
+                        {formatMessage({ id: 'verification.echosTOS' })}
                       </a>
                     ),
                     echosTermsOfUse: (
                       <a href='https://www.echoexchange.net/legal' target='_blank'>
-                        {formatMessage({id: 'verification.termsOfUse'})}
+                        {formatMessage({ id: 'verification.termsOfUse' })}
                       </a>
                     ),
                     echosPrivacyPolicy: (
                       <a href='https://www.echoexchange.net/legal' target='_blank'>
-                        {formatMessage({id: 'verification.privacyPolicy'})}
+                        {formatMessage({ id: 'verification.privacyPolicy' })}
                       </a>
                     ),
                     dwollasTermsOfService: (
                       <a href='https://www.dwolla.com/legal/tos/' target='_blank'>
-                        {formatMessage({id: 'verification.dwollasTOS'})}
+                        {formatMessage({ id: 'verification.dwollasTOS' })}
                       </a>
                     ),
                     dwollasPrivacyPolicy: (
                       <a href='https://www.dwolla.com/legal/privacy/' target='_blank'>
-                        {formatMessage({id: 'verification.privacyPolicy'})}
+                        {formatMessage({ id: 'verification.privacyPolicy' })}
                       </a>
                     )
                   }}
@@ -81,17 +81,17 @@ class AgreementModal extends Component {
                   values={{
                     echosTermsOfService: (
                       <a href='https://www.echoexchange.net/legal' target='_blank'>
-                        {formatMessage({id: 'verification.echosTOS'})}
+                        {formatMessage({ id: 'verification.echosTOS' })}
                       </a>
                     ),
                     echosTermsOfUse: (
                       <a href='https://www.echoexchange.net/legal' target='_blank'>
-                        {formatMessage({id: 'verification.termsOfUse'})}
+                        {formatMessage({ id: 'verification.termsOfUse' })}
                       </a>
                     ),
                     echosPrivacyPolicy: (
                       <a href='https://www.echoexchange.net/legal' target='_blank'>
-                        {formatMessage({id: 'verification.privacyPolicy'})}
+                        {formatMessage({ id: 'verification.privacyPolicy' })}
                       </a>
                     )
                   }}
@@ -101,7 +101,7 @@ class AgreementModal extends Component {
           <TopMargedDiv>
             <Checkbox
               value={this.state.checked}
-              onChange={() => this.setState({checked: !this.state.checked})}
+              onChange={() => this.setState({ checked: !this.state.checked })}
               name='accept'
               label='Accept'
             />
@@ -142,7 +142,7 @@ AgreementModal.defaultProps = {
   tos: true
 }
 
-const mapStateToProps = ({auth, settings}) => {
+const mapStateToProps = ({ auth, settings }) => {
   return {
     ...settings.agreementModal,
     isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, false)

@@ -241,55 +241,55 @@ export default function reducer(state = initialState, action) {
 }
 
 export function addLotSaveOffering() {
-  return {type: SAVE_OFFERING_FULFILLED}
+  return { type: SAVE_OFFERING_FULFILLED }
 }
 
 export function searchProducts(search) {
   return {
     type: SEARCH_PRODUCT,
-    payload: axios.get('/prodex/api/products', {params: {search}}).then(response => response)
+    payload: axios.get('/prodex/api/products', { params: { search } }).then(response => response)
   }
 }
 
 export function mapProducts(search) {
   return {
     type: MAP_PRODUCT,
-    payload: axios.get('/prodex/api/product-templates', {params: {search}}).then(response => response)
+    payload: axios.get('/prodex/api/product-templates', { params: { search } }).then(response => response)
   }
 }
 
 export function fetchManufacturer(filter = '') {
   return {
     type: FETCH_MANUFACTURER,
-    payload: axios.get('/prodex/api/manufacturers', {params: {search: filter}}).then(result => result)
+    payload: axios.get('/prodex/api/manufacturers', { params: { search: filter } }).then(result => result)
   }
 }
 
 export function fetchProductForms(filter = {}) {
   return {
     type: FETCH_PRODUCT_FORMS,
-    payload: axios.get('/prodex/api/product-forms', {params: {...filter}}).then(result => result.data)
+    payload: axios.get('/prodex/api/product-forms', { params: { ...filter } }).then(result => result.data)
   }
 }
 
 export function fetchProductConditions(filter = {}) {
   return {
     type: FETCH_PRODUCT_CONDITIONS,
-    payload: axios.get('/prodex/api/product-conditions', {params: {...filter}}).then(result => result.data)
+    payload: axios.get('/prodex/api/product-conditions', { params: { ...filter } }).then(result => result.data)
   }
 }
 
 export function fetchProductGrade(filter = {}) {
   return {
     type: FETCH_PRODUCT_GRADE,
-    payload: axios.get('/prodex/api/product-grades', {params: {...filter}}).then(result => result.data)
+    payload: axios.get('/prodex/api/product-grades', { params: { ...filter } }).then(result => result.data)
   }
 }
 
 export function fetchOrigin(filter = '') {
   return {
     type: FETCH_ORIGIN,
-    payload: axios.get('/prodex/api/countries', {params: {search: filter}}).then(result => result)
+    payload: axios.get('/prodex/api/countries', { params: { search: filter } }).then(result => result)
   }
 }
 
@@ -354,7 +354,7 @@ export function saveMapping(values) {
 }
 
 export function setSavedMappingToFalse() {
-  return {type: SAVE_MAPPING_FULFILLED_TIMEOUT}
+  return { type: SAVE_MAPPING_FULFILLED_TIMEOUT }
 }
 
 export function fetchAlternativeNames(id) {
@@ -389,7 +389,7 @@ export function fetchAlternativeNames(id) {
 export function fetchPackagingTypes(filter = {}) {
   return {
     type: FETCH_PACKAGING_TYPES,
-    payload: axios.get('/prodex/api/packaging-types', {params: {...filter}}).then(result => result.data)
+    payload: axios.get('/prodex/api/packaging-types', { params: { ...filter } }).then(result => result.data)
   }
 }
 

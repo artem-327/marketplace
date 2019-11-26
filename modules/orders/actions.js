@@ -3,19 +3,23 @@ import Api from './api'
 
 export const loadData = (endpointType, filter = null) => ({
   type: AT.ORDERS_FETCH_SUCCESS,
-  payload: {endpointType, filter}
+  payload: { endpointType, filter }
 })
 export const loadDetail = (endpointType, selectedIndex) => ({
   type: AT.ORDERS_DETAIL_FETCH,
-  payload: {endpointType, selectedIndex}
+  payload: { endpointType, selectedIndex }
 })
 export const confirmOrder = orderId => ({
   type: AT.ORDER_CONFIRM_FETCH,
-  payload: {orderId}
+  payload: Api.confirm(orderId)
 })
 export const rejectOrder = orderId => ({
   type: AT.ORDER_REJECT_FETCH,
-  payload: {orderId}
+  payload: Api.reject(orderId)
+})
+export const shipOrder = (orderId, trackingId='trackingId') => ({
+  type: AT.ORDER_SHIP_FETCH,
+  payload: Api.ship(orderId, trackingId)
 })
 export const downloadPdf = (endpointType, orderId) => ({
   type: AT.ORDER_DOWNLOAD_PDF,
@@ -46,7 +50,7 @@ export const assignLots = (orderId, tabLots) => ({
       let orderItemId = tab.orderItemId
       let assignedLots = tab.lots.reduce(function(filtered, lot) {
         if (lot.selected && lot.allocated) {
-          filtered.push({lotNumber: lot.lotNumber, pkgAmount: lot.allocated})
+          filtered.push({ lotNumber: lot.lotNumber, pkgAmount: lot.allocated })
         }
         return filtered
       }, [])

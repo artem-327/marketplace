@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {Control} from 'react-redux-form'
+import { Control } from 'react-redux-form'
 import CheckboxBroadcastRedux from '../../../../../components/Checkbox/CheckboxBroadcastRedux'
 import RadioBroadcastRedux from '../../../../../components/Radio/RadioBroadcastRedux'
 import SwitcherRedux from '../../../../../components/Switcher/SwitcherRedux'
-import {isNumber} from '../../../../../utils/validation'
-import {Input} from 'semantic-ui-react'
+import { isNumber } from '../../../../../utils/validation'
+import { Input } from 'semantic-ui-react'
 
 const BroadcastField = ({
   partlybrc,
@@ -59,7 +59,7 @@ const BroadcastField = ({
             fluid
             model={`.${type}[${id}].priceValue`}
             className='price-value'
-            validators={{isNumber}}
+            validators={{ isNumber }}
             onChange={e => handleRuleClick(e)}
             id={id}
           />

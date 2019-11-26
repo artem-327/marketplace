@@ -1,16 +1,16 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {Control, Errors} from 'react-redux-form'
-import {isNumber, min, messages, maxPercent, bigger} from '../../../utils/validation'
+import { Control, Errors } from 'react-redux-form'
+import { isNumber, min, messages, maxPercent, bigger } from '../../../utils/validation'
 import classnames from 'classnames'
 import DropdownRedux from '../../Dropdown/DropdownRedux'
 import RadioRedux from '../../Radio/RadioRedux'
 import DatepickerRedux from '../../Datepicker/DatepickerRedux'
 import ComboBoxRedux from '../../ComboBox/ComboBoxRedux'
 import RemoteComboBoxRedux from '../../ComboBox/RemoteComboBoxRedux'
-import {FormattedMessage, injectIntl} from 'react-intl'
-import {Icon, Input, Checkbox} from 'semantic-ui-react'
-import {debounce} from 'lodash'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { Icon, Input, Checkbox } from 'semantic-ui-react'
+import { debounce } from 'lodash'
 
 class FilterGroup extends Component {
   constructor(props) {
@@ -45,7 +45,7 @@ class FilterGroup extends Component {
   })
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.isOpen !== this.state.isOpen) this.setState({isOpen: nextProps.isOpen})
+    if (nextProps.isOpen !== this.state.isOpen) this.setState({ isOpen: nextProps.isOpen })
   }
 
   renderInputs() {
@@ -93,10 +93,10 @@ class FilterGroup extends Component {
                     dispatch={this.props.dispatch}
                     model={input.model}
                     opns={[
-                      {label: '0-3 months', value: '100'},
-                      {label: '3-6 months', value: '500'},
-                      {label: '6-9 months', value: '1000'},
-                      {label: 'Custom Product Age', value: '10000'}
+                      { label: '0-3 months', value: '100' },
+                      { label: '3-6 months', value: '500' },
+                      { label: '6-9 months', value: '1000' },
+                      { label: 'Custom Product Age', value: '10000' }
                     ]}
                     productAgeModel={this.props.productAgeModel}
                     productAgeCustomModel={this.props.productAgeCustomModel}
@@ -147,7 +147,7 @@ class FilterGroup extends Component {
                     />
                   </label>
                   <Control
-                    onChange={(e, {value}) => {
+                    onChange={(e, { value }) => {
                       if (value && value.length > 2) this.handleChange(input, value)
                     }}
                     component={Input}
@@ -223,8 +223,8 @@ class FilterGroup extends Component {
                     type={input.type}
                     model={input.model}
                     id={input.model}
-                    placeholder={this.props.intl.formatMessage({id: 'filter.' + input.label})}
-                    validators={{min: val => min(val, 0) || !val}}
+                    placeholder={this.props.intl.formatMessage({ id: 'filter.' + input.label })}
+                    validators={{ min: val => min(val, 0) || !val }}
                   />
 
                   <Errors
@@ -241,8 +241,8 @@ class FilterGroup extends Component {
             }
             case 'assay': {
               let validator = input.bigger
-                ? {bigger: val => bigger(val, this.props.data.assaylb), min: val => min(val, 0), maxPercent, isNumber}
-                : {min: val => min(val, 0), maxPercent, isNumber}
+                ? { bigger: val => bigger(val, this.props.data.assaylb), min: val => min(val, 0), maxPercent, isNumber }
+                : { min: val => min(val, 0), maxPercent, isNumber }
               return (
                 <div key={index} className='filter-input-text'>
                   <label className='input-label' htmlFor={input.model}>
@@ -282,10 +282,10 @@ class FilterGroup extends Component {
 
   render() {
     if (!this.props.isVisible) return null
-    let {isOpen} = this.state
+    let { isOpen } = this.state
 
     return (
-      <div className={classnames('filter-group', {split: this.props.split})}>
+      <div className={classnames('filter-group', { split: this.props.split })}>
         <div
           className='header'
           onClick={() => this.props.onOpen(!this.state.isOpen)}

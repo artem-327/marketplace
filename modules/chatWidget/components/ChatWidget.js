@@ -1,11 +1,49 @@
-import React, {Component} from 'react'
-import {getSafe} from '~/utils/functions'
-import {chatWidgetCreate, chatUnreadMessages} from '../actions'
+import React, { Component } from 'react'
+import { getSafe } from '~/utils/functions'
+import {
+  chatWidget_hide,
+  chatWidget_show,
+  chatWidget_isConnected
+} from './chatWidgetFunctions'
+
+import { generateToastMarkup } from '~/utils/functions'
+import { FormattedMessage } from 'react-intl'
+
 
 export default class ChatWidget extends Component {
-  // currently not used (used only actions & reducer)
   componentDidMount() {
-    //chatWidgetCreate(this.props.identity)
+    if (!this.props.initialized) {
+      this.props.chatWidgetCreate(this.props.identity, this.props)
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.supportChatEnabled !== prevProps.supportChatEnabled) {
+      if (!chatWidget_isConnected()) {
+        if (this.props.supportChatEnabled) {
+          this.props.chatWidgetHide()
+          return
+        }
+        // Try to connect again
+        this.props.chatWidgetCreate(this.props.identity, this.props)
+        if (!chatWidget_isConnected()) {
+          this.props.toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id='notifications.supportChatError.header' defaultMessage='Support chat error' />,
+              <FormattedMessage
+                id='notifications.supportChatError.content'
+                defaultMessage='Support chat is not available'
+              />
+            ),
+            { appearance: 'error' }
+          )
+          return
+        }
+      }
+
+    if (this.props.supportChatEnabled) chatWidget_show()
+      else chatWidget_hide()
+    }
   }
 
   render() {

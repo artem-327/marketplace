@@ -1,11 +1,11 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import pt from 'prop-types'
-import {Input, Radio} from 'semantic-ui-react'
+import { Input, Radio } from 'semantic-ui-react'
 import styled from 'styled-components'
 import _ from 'lodash'
-import {FormattedNumber} from 'react-intl'
-import {currency} from '~/constants/index'
-import {getSafe} from '~/utils/functions'
+import { FormattedNumber } from 'react-intl'
+import { currency } from '~/constants/index'
+import { getSafe } from '~/utils/functions'
 
 export default class PriceControl extends Component {
   static propTypes = {
@@ -29,9 +29,9 @@ export default class PriceControl extends Component {
   }
 
   componentWillMount() {
-    const {item} = this.props
+    const { item } = this.props
     const {
-      model: {rule}
+      model: { rule }
     } = item
 
     this.setState({
@@ -40,25 +40,25 @@ export default class PriceControl extends Component {
     })
   }
 
-  componentWillReceiveProps({rule}) {
+  componentWillReceiveProps({ rule }) {
     this.setState({
       //type: model.priceAddition > 0 ? 'addition' : model.priceMultiplier > 0 ? 'multiplier' : '',
       value: rule.priceAddition !== 0 ? rule.priceAddition : rule.priceMultiplier !== 0 ? rule.priceMultiplier : ''
     })
   }
 
-  componentDidUpdate({item}, next) {
-    let {rule} = item.model
-    if (rule.priceType && rule.priceType !== this.state.type) this.setState({type: rule.priceType})
+  componentDidUpdate({ item }, next) {
+    let { rule } = item.model
+    if (rule.priceType && rule.priceType !== this.state.type) this.setState({ type: rule.priceType })
   }
 
-  handleChange = (e, {name, value}) => {
+  handleChange = (e, { name, value }) => {
     e.preventDefault()
     e.stopPropagation()
 
-    const {item} = this.props
+    const { item } = this.props
     const {
-      model: {rule}
+      model: { rule }
     } = item
 
     if (name === 'type' && item.hasChildren()) {
@@ -73,10 +73,10 @@ export default class PriceControl extends Component {
     let minimum = name === 'type' ? this.calculateMinimum(value) : this.calculateMinimum()
 
     if (name === 'value' && value < minimum) value = minimum
-    if (name === 'type' && this.state.value < minimum) this.setState({value: minimum})
+    if (name === 'type' && this.state.value < minimum) this.setState({ value: minimum })
 
-    this.setState({[name]: value}, () => {
-      const {value, type} = this.state
+    this.setState({ [name]: value }, () => {
+      const { value, type } = this.state
 
       if (type === 'addition') {
         rule.priceAddition = value ? parseFloat(value, 10) : 0
@@ -100,9 +100,9 @@ export default class PriceControl extends Component {
       : -1 * this.props.offer.pricingTiers[this.props.offer.pricingTiers.length - 1].pricePerUOM + 0.001
 
   getPrices = () => {
-    const {offer, item, rootRule} = this.props
+    const { offer, item, rootRule } = this.props
     const {
-      model: {rule}
+      model: { rule }
     } = item
 
     const r = rule //rootRule || rule
@@ -120,8 +120,8 @@ export default class PriceControl extends Component {
   }
 
   render() {
-    const {disabled, offer, hideFobPrice} = this.props
-    const {type, value} = this.state
+    const { disabled, offer, hideFobPrice } = this.props
+    const { type, value } = this.state
     const prices = hideFobPrice ? null : this.getPrices()
 
     return (
@@ -145,14 +145,14 @@ export default class PriceControl extends Component {
             disabled={disabled}
             label='%'
             checked={type === 'multiplier'}
-            onClick={e => this.handleChange(e, {name: 'type', value: 'multiplier'})}
+            onClick={e => this.handleChange(e, { name: 'type', value: 'multiplier' })}
             data-test='broadcast_price_control_multiplier_rad'
           />
           <Radio
             disabled={disabled}
             label='$'
             checked={type === 'addition'}
-            onClick={e => this.handleChange(e, {name: 'type', value: 'addition'})}
+            onClick={e => this.handleChange(e, { name: 'type', value: 'addition' })}
             data-test='broadcast_price_control_addition_rad'
           />
         </ControlBox>

@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './operators.scss'
 import Operator from './components/Operator'
 import Spinner from '../../../components/Spinner/Spinner'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class Operators extends Component {
   componentDidMount() {
@@ -10,7 +10,7 @@ class Operators extends Component {
   }
 
   render() {
-    const {operators} = this.props
+    const { operators } = this.props
     if (this.props.isFetching) return <Spinner />
     const operatorsData = operators.map((operator, index) => {
       return (

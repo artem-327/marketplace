@@ -7,7 +7,7 @@ export const setAuth = auth => {
 
   window.localStorage.setItem('ttl', now.getTime())
 
-  Cookie.set('auth', {...auth, expires_in: now.getTime()})
+  Cookie.set('auth', { ...auth, expires_in: now.getTime() })
 }
 
 export const unsetAuth = () => {
@@ -33,7 +33,7 @@ export const unsetAuth = () => {
 // }
 
 export async function authorize(username, password) {
-  const {data} = await api.post(
+  const { data } = await api.post(
     '/prodex/oauth/token',
     `grant_type=password&username=${username}&password=${password}`,
     {
@@ -52,12 +52,16 @@ export async function refreshToken() {
 
   // if (auth.expires - 60000 > new Date().getTime()) return
 
-  const {data} = await api.post('/prodex/oauth/token', `grant_type=refresh_token&refresh_token=${auth.refresh_token}`, {
-    headers: {
-      Authorization: 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs',
-      'Content-Type': 'application/x-www-form-urlencoded'
+  const { data } = await api.post(
+    '/prodex/oauth/token',
+    `grant_type=refresh_token&refresh_token=${auth.refresh_token}`,
+    {
+      headers: {
+        Authorization: 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
     }
-  })
+  )
 
   setAuth(data)
 

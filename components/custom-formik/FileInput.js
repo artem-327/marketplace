@@ -1,10 +1,10 @@
-import React, {Component} from 'react'
-import {Input, FormField, Button, Icon} from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { Input, FormField, Button, Icon } from 'semantic-ui-react'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 import styled from 'styled-components'
-import {string, object, node, oneOf, func} from 'prop-types'
+import { string, object, node, oneOf, func } from 'prop-types'
 
 const HiddenInput = styled(Input)`
   width: 0px !important;
@@ -20,7 +20,7 @@ const ErrorLabel = styled.label`
 
 export default class FileInput extends Component {
   render() {
-    const {name, errors, errorMessage, setFieldValue, fileName} = this.props
+    const { name, errors, errorMessage, setFieldValue, fileName } = this.props
 
     return (
       <FormField

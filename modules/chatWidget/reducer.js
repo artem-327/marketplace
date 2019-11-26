@@ -1,27 +1,18 @@
 import * as AT from './action-types'
-import {chatWidget_hide, chatWidget_show, chatWidget_isConnected} from './components/chatWidgetFunctions'
 
 export const initialState = {
-  supportChatEnabled: false
+  supportChatEnabled: false,
+  initialized: false,
 }
 
 export default function reducer(state = initialState, action) {
-  const {payload} = action
+  const { payload } = action
 
   switch (action.type) {
     case AT.SUPPORT_CHAT_TOGGLE: {
-      if (chatWidget_isConnected && !state.supportChatEnabled) {
-        chatWidget_show()
-        return {
-          ...state,
-          supportChatEnabled: true
-        }
-      } else {
-        chatWidget_hide()
-        return {
-          ...state,
-          supportChatEnabled: false
-        }
+      return {
+        ...state,
+        supportChatEnabled: !state.supportChatEnabled
       }
     }
 
@@ -42,14 +33,16 @@ export default function reducer(state = initialState, action) {
     case AT.SUPPORT_CHAT_TERMINATE: {
       return {
         ...state,
-        supportChatEnabled: false
+        supportChatEnabled: false,
+        initialized: false
       }
     }
 
     case AT.SUPPORT_CHAT_CREATE: {
       return {
         ...state,
-        supportChatEnabled: false
+        supportChatEnabled: false,
+        initialized: true
       }
     }
 

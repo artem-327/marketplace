@@ -2,10 +2,10 @@ import * as AT from './action-types'
 import * as inventoryAT from '~/modules/inventory/action-types'
 import Link from 'next/link'
 
-import {defaultTabs} from './contants'
+import { defaultTabs } from './contants'
 
-import {currency} from '~/constants/index'
-import {FormattedMessage} from 'react-intl'
+import { currency } from '~/constants/index'
+import { FormattedMessage } from 'react-intl'
 
 export const initialState = {
   editPopupBoolean: false,
@@ -49,7 +49,7 @@ export const initialState = {
   currentEditForm: null,
   currentAddForm: null,
   confirmMessage: null,
-  toast: {message: null, isSuccess: null},
+  toast: { message: null, isSuccess: null },
   deleteUserById: null,
   deleteRowById: null,
   filterValue: '',
@@ -68,8 +68,8 @@ export const initialState = {
   loaded: false,
   searchedCasProducts: [[]],
   searchedUnNumbers: [],
-  deliveryAddressesFilter: {pageSize: 50, pageNumber: 0},
-  productsFilter: {pageSize: 50, pageNumber: 0},
+  deliveryAddressesFilter: { pageSize: 50, pageNumber: 0 },
+  productsFilter: { pageSize: 50, pageNumber: 0 },
   documentTypes: [],
   addressSearch: [],
   logisticsAccounts: [],
@@ -120,7 +120,7 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-  const {payload} = action
+  const { payload } = action
 
   switch (action.type) {
     case AT.OPEN_POPUP: {
@@ -224,7 +224,7 @@ export default function reducer(state = initialState, action) {
     case AT.CLOSE_TOAST: {
       return {
         ...state,
-        toast: {message: null, isSuccess: null}
+        toast: { message: null, isSuccess: null }
       }
     }
     /* DELETE DELIVERY ADDRESS */
@@ -320,7 +320,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.GET_USERS_DATA_PENDING: {
       // ! ! vsude zmenit na pending
-      return {...state, loading: true}
+      return { ...state, loading: true }
     }
 
     case AT.GET_USERS_DATA_FULFILLED: {
@@ -372,7 +372,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.GET_WAREHOUSES_DATA_PENDING: {
       // ! ! pending
-      return {...state, loading: true}
+      return { ...state, loading: true }
     }
 
     case AT.GET_WAREHOUSES_DATA_FULFILLED: {
@@ -415,7 +415,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.GET_BRANCHES_DATA_PENDING: {
       // ! ! pending
-      return {...state, loading: true}
+      return { ...state, loading: true }
     }
 
     case AT.GET_BRANCHES_DATA_FULFILLED: {
@@ -500,7 +500,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.GET_BANK_ACCOUNTS_DATA_PENDING: {
       // ! ! pending
-      return {...state, loading: true}
+      return { ...state, loading: true }
     }
 
     case AT.GET_BANK_ACCOUNTS_DATA_FULFILLED: {
@@ -781,7 +781,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_CREATE_CAS_PRODUCTS_INDEX: {
       // ADD new array to casProducts
-      let {searchedCasProducts} = state
+      let { searchedCasProducts } = state
       searchedCasProducts.push([])
 
       return {
@@ -792,7 +792,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_REMOVE_CAS_PRODUCTS_INDEX: {
       // REMOVE array from casProducts
-      let {searchedCasProducts} = state
+      let { searchedCasProducts } = state
       searchedCasProducts.splice(action.payload.index, 1)
 
       return {
@@ -1297,8 +1297,8 @@ export default function reducer(state = initialState, action) {
     /* TRIGGER_AGREEMENT_MODAL */
 
     case AT.TRIGGER_AGREEMENT_MODAL: {
-      let {force, modalProps} = payload
-      let {open} = !state.agreementModal
+      let { force, modalProps } = payload
+      let { open } = !state.agreementModal
 
       if (force !== null) open = force
 

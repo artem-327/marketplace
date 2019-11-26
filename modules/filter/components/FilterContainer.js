@@ -1,8 +1,8 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
 import Filter from './Filter'
 import * as Actions from '../actions'
-import {currency} from '~/constants/index'
+import { currency } from '~/constants/index'
 
 import {
   fetchProductConditions,
@@ -12,9 +12,9 @@ import {
   fetchWarehouses
 } from '~/src/modules/products'
 
-import {getSafe} from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 
-import {fetchWarehouseDistances} from '~/src/modules/location'
+import { fetchWarehouseDistances } from '~/src/modules/location'
 
 function mapStateToProps(store) {
   return {

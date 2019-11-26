@@ -445,7 +445,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -785,7 +784,7 @@
                 rules: []
               }
               $.each(rules, function(index, rule) {
-                fullFields[name].rules.push({type: rule})
+                fullFields[name].rules.push({ type: rule })
               })
             })
             return fullFields
@@ -993,7 +992,7 @@
                 rules: []
               }
               $.each(rules, function(index, rule) {
-                newValidation[name].rules.push({type: rule})
+                newValidation[name].rules.push({ type: rule })
               })
             } else {
               newValidation[name] = rules
@@ -1861,7 +1860,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -2381,7 +2379,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -3115,7 +3112,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -3736,7 +3732,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -4500,7 +4495,7 @@
               module.clear()
             }
             module.debug('Creating dropdown with specified values', values)
-            module.setup.menu({values: values})
+            module.setup.menu({ values: values })
             $.each(values, function(index, item) {
               if (item.selected == true) {
                 module.debug('Setting initial selection to', item.value)
@@ -6467,7 +6462,7 @@
             $currentMenu.addClass(className.loading)
             calculations = {
               context: {
-                offset: $context.get(0) === window ? {top: 0, left: 0} : $context.offset(),
+                offset: $context.get(0) === window ? { top: 0, left: 0 } : $context.offset(),
                 scrollTop: $context.scrollTop(),
                 height: $context.outerHeight()
               },
@@ -6508,7 +6503,7 @@
             $currentMenu.addClass(className.loading)
             calculations = {
               context: {
-                offset: $context.get(0) === window ? {top: 0, left: 0} : $context.offset(),
+                offset: $context.get(0) === window ? { top: 0, left: 0 } : $context.offset(),
                 scrollLeft: $context.scrollLeft(),
                 width: $context.outerWidth()
               },
@@ -7085,7 +7080,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -7694,7 +7688,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -7861,13 +7854,13 @@
           },
           scrollLock: function() {
             // touch events default to passive, due to changes in chrome to optimize mobile perf
-            $dimmable.get(0).addEventListener('touchmove', module.event.preventScroll, {passive: false})
+            $dimmable.get(0).addEventListener('touchmove', module.event.preventScroll, { passive: false })
           }
         },
 
         unbind: {
           scrollLock: function() {
-            $dimmable.get(0).removeEventListener('touchmove', module.event.preventScroll, {passive: false})
+            $dimmable.get(0).removeEventListener('touchmove', module.event.preventScroll, { passive: false })
           }
         },
 
@@ -8570,7 +8563,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -8998,7 +8990,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -9429,9 +9420,9 @@
               isWindow = $boundary[0] == window,
               targetPosition =
                 settings.inline || (settings.popup && settings.movePopup) ? $target.position() : $target.offset(),
-              screenPosition = isWindow ? {top: 0, left: 0} : $boundary.offset(),
+              screenPosition = isWindow ? { top: 0, left: 0 } : $boundary.offset(),
               calculations = {},
-              scroll = isWindow ? {top: $window.scrollTop(), left: $window.scrollLeft()} : {top: 0, left: 0},
+              scroll = isWindow ? { top: $window.scrollTop(), left: $window.scrollLeft() } : { top: 0, left: 0 },
               screen
             calculations = {
               // element which is launching popup
@@ -10352,7 +10343,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -11162,7 +11152,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -11576,7 +11565,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -12856,7 +12844,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -13617,7 +13604,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -14554,7 +14540,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -15394,7 +15379,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -16182,7 +16166,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -17111,7 +17094,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 
@@ -17654,15 +17636,15 @@
                 response = responder
               }
               // simulating response
-              mockedXHR.resolveWith(context, [response, textStatus, {responseText: response}])
+              mockedXHR.resolveWith(context, [response, textStatus, { responseText: response }])
             } else if ($.isFunction(asyncResponder)) {
               asyncCallback = function(response) {
                 module.debug('Async callback returned response', response)
 
                 if (response) {
-                  mockedXHR.resolveWith(context, [response, textStatus, {responseText: response}])
+                  mockedXHR.resolveWith(context, [response, textStatus, { responseText: response }])
                 } else {
-                  mockedXHR.rejectWith(context, [{responseText: response}, status, httpMessage])
+                  mockedXHR.rejectWith(context, [{ responseText: response }, status, httpMessage])
                 }
               }
               module.debug('Using specified async response callback', asyncResponder)
@@ -18137,7 +18119,6 @@
  * http://opensource.org/licenses/MIT
  *
  */
-
 ;(function($, window, document, undefined) {
   'use strict'
 

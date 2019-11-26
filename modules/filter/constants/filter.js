@@ -1,5 +1,5 @@
 import moment from 'moment'
-import {FormattedNumber} from 'react-intl'
+import { FormattedNumber, FormattedDate } from 'react-intl'
 
 export const operators = {
   CONTAINS: 'CONTAINS',
@@ -49,8 +49,8 @@ export const paths = {
 }
 
 export const dateDropdownOptions = [
-  {key: 0, value: 'From', text: 'More Than'},
-  {key: 1, value: 'To', text: 'Less Than'}
+  { key: 0, value: 'From', text: 'More Than' },
+  { key: 1, value: 'To', text: 'Less Than' }
 ]
 
 export const dateFormat = 'YYYY-MM-DD'
@@ -68,9 +68,9 @@ const checkboxesToFormik = (values, checkboxes) => {
 
   tmp.forEach(val => {
     try {
-      obj[replaceAmbigiousCharacters(val.name)] = {name: val.name, id: val.id}
+      obj[replaceAmbigiousCharacters(val.name)] = { name: val.name, id: val.id }
     } catch (e) {
-      console.error({val, e})
+      console.error({ val, e })
     }
   })
 
@@ -132,7 +132,7 @@ export const datagridValues = {
       return `Warehouse: ${this.valuesDescription(values)[0]}`
     },
 
-    toFormik: function({values}) {
+    toFormik: function({ values }) {
       return JSON.stringify({
         id: parseInt(values[0].value),
         name: values[0].description,
@@ -195,7 +195,7 @@ export const datagridValues = {
       return this.valuesDescription(values)
     },
 
-    toFormik: function({values}) {
+    toFormik: function({ values }) {
       return values.map(val => {
         let parsed = JSON.parse(val.description)
         return JSON.stringify({
@@ -216,7 +216,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{value: values, description: values}],
+        values: [{ value: values, description: values }],
         description: this.description
       }
     },
@@ -227,7 +227,7 @@ export const datagridValues = {
       return values.map(val => val.description)
     },
 
-    toFormik: function({values}) {
+    toFormik: function({ values }) {
       return values[0].value.toString()
     }
   },
@@ -241,7 +241,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{value: values, description: values}],
+        values: [{ value: values, description: values }],
         description: this.description
       }
     },
@@ -252,7 +252,7 @@ export const datagridValues = {
       return values.map(val => val.description)
     },
 
-    toFormik: function({values}) {
+    toFormik: function({ values }) {
       return values[0].value.toString()
     }
   },
@@ -266,12 +266,12 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{value: values, description: values}],
+        values: [{ value: values, description: values }],
         description: this.description
       }
     },
 
-    tagDescription: (values, {currencyCode} = '$') => (
+    tagDescription: (values, { currencyCode } = '$') => (
       <label>
         {'>= '}
         {<FormattedNumber style='currency' currency={currencyCode} value={values[0].description} />}
@@ -282,7 +282,7 @@ export const datagridValues = {
       return values.map(val => val.description)
     },
 
-    toFormik: function({values}) {
+    toFormik: function({ values }) {
       return values[0].value.toString()
     }
   },
@@ -295,12 +295,12 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{value: values, description: values}],
+        values: [{ value: values, description: values }],
         description: this.description
       }
     },
 
-    tagDescription: (values, {currencyCode} = '$') => (
+    tagDescription: (values, { currencyCode } = '$') => (
       <label>
         {'<= '}
         {<FormattedNumber style='currency' currency={currencyCode} value={values[0].description} />}
@@ -311,7 +311,7 @@ export const datagridValues = {
       return values.map(val => val.description)
     },
 
-    toFormik: function({values}) {
+    toFormik: function({ values }) {
       return values[0].value.toString()
     }
   },
@@ -339,7 +339,7 @@ export const datagridValues = {
       return this.valuesDescription(values)
     },
 
-    toFormik: function({values}, packagingTypes) {
+    toFormik: function({ values }, packagingTypes) {
       return checkboxesToFormik(values, packagingTypes)
     },
 
@@ -369,7 +369,7 @@ export const datagridValues = {
       return this.valuesDescription(values)
     },
 
-    toFormik: function({values}, productConditions) {
+    toFormik: function({ values }, productConditions) {
       return checkboxesToFormik(values, productConditions)
     },
 
@@ -399,7 +399,7 @@ export const datagridValues = {
       return this.valuesDescription(values)
     },
 
-    toFormik: function({values}, productGrades) {
+    toFormik: function({ values }, productGrades) {
       return checkboxesToFormik(values, productGrades)
     },
 
@@ -429,7 +429,7 @@ export const datagridValues = {
       return this.valuesDescription(values)
     },
 
-    toFormik: function({values}, productForms) {
+    toFormik: function({ values }, productForms) {
       return checkboxesToFormik(values, productForms)
     },
 
@@ -446,7 +446,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{value: date.format(), description: date.format(dateFormat)}]
+        values: [{ value: date.format(), description: date.format(dateFormat) }]
       }
     },
 
@@ -456,7 +456,7 @@ export const datagridValues = {
       return values.map(val => val.description)
     },
 
-    toFormik: function({values}) {
+    toFormik: function({ values }) {
       return moment(values[0].value.toString()).format(dateFormat)
     }
   },
@@ -470,7 +470,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{value: date.format(), description: date.format(dateFormat)}]
+        values: [{ value: date.format(), description: date.format(dateFormat) }]
       }
     },
 
@@ -480,7 +480,7 @@ export const datagridValues = {
       return values.map(val => val.description)
     },
 
-    toFormik: function({values}) {
+    toFormik: function({ values }) {
       return moment(values[0].value.toString()).format(dateFormat)
     }
   },
@@ -495,7 +495,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{value: date.format(), description: date.format(dateFormat)}]
+        values: [{ value: date.format(), description: date.format(dateFormat) }]
       }
     },
 
@@ -505,7 +505,7 @@ export const datagridValues = {
       return values.map(val => val.description)
     },
 
-    toFormik: function({values}) {
+    toFormik: function({ values }) {
       return moment(values[0].value.toString()).format(dateFormat)
     }
   },
@@ -520,7 +520,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{value: date.format(), description: date.format(dateFormat)}]
+        values: [{ value: date.format(), description: date.format(dateFormat) }]
       }
     },
 
@@ -530,7 +530,7 @@ export const datagridValues = {
       return values.map(val => val.description)
     },
 
-    toFormik: function({values}) {
+    toFormik: function({ values }) {
       return moment(values[0].value.toString()).format(dateFormat)
     }
   },
@@ -544,7 +544,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{value: values, description: values}]
+        values: [{ value: values, description: values }]
       }
     },
 
@@ -554,7 +554,7 @@ export const datagridValues = {
 
     tagDescription: values => `Assay Min. ${values[0].description}%`,
 
-    toFormik: function({values}) {
+    toFormik: function({ values }) {
       return values[0].value.toString()
     }
   },
@@ -567,7 +567,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{value: values, description: values}]
+        values: [{ value: values, description: values }]
       }
     },
 
@@ -577,13 +577,54 @@ export const datagridValues = {
 
     tagDescription: values => `Assay Max. ${values[0].description}%`,
 
-    toFormik: function({values}) {
+    toFormik: function({ values }) {
       return values[0].value.toString()
     }
+  },
+  orderFrom: {
+    operator: operators.GREATER_THAN_OR_EQUAL_TO,
+    paths: [paths.orders.orderDate],
+    description: 'Order Date',
+
+    valuesDescription: val => val,
+    tagDescription: val => <FormattedDate value={val}>{text => `>= ${text}`}</FormattedDate>
+  },
+
+  orderTo: {
+    operator: operators.LESS_THAN_OR_EQUAL_TO,
+    paths: [paths.orders.orderDate],
+    description: 'Order Date',
+
+    valuesDescription: val => val,
+    tagDescription: val => <FormattedDate value={val}>{text => `<= ${text}`}</FormattedDate>
+  },
+
+  vendor: {
+    operator: operators.LIKE,
+    paths: [paths.orders.vendorPurchase, paths.orders.vendorSales],
+    description: 'Vendor',
+
+    valuesDescription: val => val,
+    tagDescription: val => `Vendor: ${val}`
   }
 }
 
-export const groupFilters = (appliedFilters, {currencyCode} = '$') => {
+// export const orderFilterDescription = values => {
+//   for (let [key, value] of Object.entries(values)) {
+//     switch(key) {
+//       case 'orderFrom': {
+
+//       }
+//     }
+//   }
+//   // Object.entries(values).forEach((key, value) => {
+//   //   console.log({ value })
+//   // })
+
+//   return values
+// }
+
+export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
   let groups = [
     {
       description: 'Quantity',
@@ -625,6 +666,23 @@ export const groupFilters = (appliedFilters, {currencyCode} = '$') => {
         operator: operators.LESS_THAN_OR_EQUAL_TO
       },
       tagDescription: (from, to) => `${from}% - ${to}% `
+    },
+    {
+      description: 'Order Date',
+      from: {
+        path: paths.orders.orderDate,
+        operator: operators.GREATER_THAN_OR_EQUAL_TO
+      },
+      to: {
+        path: paths.orders.orderDate,
+        operator: operators.LESS_THAN_OR_EQUAL_TO
+      },
+      tagDescription: (from, to) => (
+        <>
+          <FormattedDate value={from}>{text => `${text} - `}</FormattedDate>
+          <FormattedDate value={to}>{text => text}</FormattedDate>
+        </>
+      )
     }
 
     // {

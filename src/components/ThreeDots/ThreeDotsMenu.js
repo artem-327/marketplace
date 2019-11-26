@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import './ThreeDotsMenu.scss'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 class ThreeDotsMenu extends Component {
   renderLinks() {
     if (!this.props.links) return

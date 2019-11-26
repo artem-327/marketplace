@@ -1,13 +1,13 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-import {Grid, Button} from 'semantic-ui-react'
+import { Grid, Button } from 'semantic-ui-react'
 
 import styled from 'styled-components'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import Router from 'next/dist/client/router'
 
-import {closeImportPopup} from '../../../actions'
+import { closeImportPopup } from '../../../actions'
 
 const StyledButton = styled(Button)`
   width: 200px;
@@ -32,7 +32,7 @@ class ConfirmationPage extends Component {
       </React.Fragment>
     ) : (
       <React.Fragment>
-        <Grid.Row style={{'padding-bottom': '1.25rem'}}>
+        <Grid.Row style={{ 'padding-bottom': '1.25rem' }}>
           <FormattedMessage
             id={`settings.import${status}`}
             defaultMessage={
@@ -45,40 +45,40 @@ class ConfirmationPage extends Component {
           />
         </Grid.Row>
 
-        <Grid.Row style={{'padding-top': '0.25rem', 'padding-bottom': '0.25rem'}}>
+        <Grid.Row style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }}>
           <FormattedMessage
             id='settings.importRecordCount'
             defaultMessage={`Record lines found in imported file: ${recordCount}`}
-            values={{value: recordCount}}
+            values={{ value: recordCount }}
           />
         </Grid.Row>
 
-        <Grid.Row style={{'padding-top': '0.25rem', 'padding-bottom': '0.25rem'}}>
+        <Grid.Row style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }}>
           <FormattedMessage
             id='settings.importRecordsCreated'
             defaultMessage={`Records created successfully: ${recordsCreated}`}
-            values={{value: recordsCreated}}
+            values={{ value: recordsCreated }}
           />
         </Grid.Row>
 
-        <Grid.Row style={{'padding-top': '0.25rem', 'padding-bottom': '0.25rem'}}>
+        <Grid.Row style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }}>
           <FormattedMessage
             id='settings.importRecordsUpdated'
             defaultMessage={`Records updated successfully: ${recordsUpdated}`}
-            values={{value: recordsUpdated}}
+            values={{ value: recordsUpdated }}
           />
         </Grid.Row>
 
-        <Grid.Row style={{'padding-top': '0.25rem', 'padding-bottom': '1.25rem'}}>
+        <Grid.Row style={{ 'padding-top': '0.25rem', 'padding-bottom': '1.25rem' }}>
           <FormattedMessage
             id='settings.importRecordsFailed'
             defaultMessage={`Records import failed: ${recordsFailed}`}
-            values={{value: recordsFailed}}
+            values={{ value: recordsFailed }}
           />
         </Grid.Row>
 
         {result.failureReports.map((error, i) => (
-          <Grid.Row key={i} style={{'padding-top': '0.25rem', 'padding-bottom': '0.25rem'}}>
+          <Grid.Row key={i} style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }}>
             <FormattedMessage
               id='import.errorAtLine'
               defaultMessage={`Error at line ${error.csvLineNumber}: ${error.cause}`}
@@ -95,7 +95,7 @@ class ConfirmationPage extends Component {
   }
 
   render() {
-    const {csvImportError, reloadFilter} = this.props
+    const { csvImportError, reloadFilter } = this.props
     return (
       <Grid centered padded>
         {csvImportError ? this.createReport(csvImportError) : ''}

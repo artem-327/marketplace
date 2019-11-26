@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import api from '~/api'
 import pt from 'prop-types'
 export const DatagridContext = React.createContext({})
@@ -37,7 +37,6 @@ export class DatagridProvider extends Component {
 
   // componentWillReceiveProps({apiConfig}) {
   //   if (JSON.stringify(apiConfig) !== JSON.stringify(this.props.apiConfig)) {
-  //     console.log('CHANGE', apiConfig)
   //     this.setState(initialState)
   //     this.loadData()
   //   }
@@ -51,7 +50,7 @@ export class DatagridProvider extends Component {
       this.props.apiConfig.url &&
       prevProps.apiConfig.url !== this.props.apiConfig.url
     ) {
-      this.setFilter({filters: []})
+      this.setFilter({ filters: [] })
     }
   }
 
@@ -66,13 +65,13 @@ export class DatagridProvider extends Component {
   loadNextPage = async () => {
     if (!this.props.apiConfig) return
 
-    const {datagridParams, query} = this.state
-    const {apiConfig} = this.props
+    const { datagridParams, query } = this.state
+    const { apiConfig } = this.props
 
-    this.setState({loading: true})
+    this.setState({ loading: true })
 
     try {
-      const {data} = await api.request({
+      const { data } = await api.request({
         url: apiConfig.url,
         method: apiConfig.method || 'POST',
         params: query,
@@ -93,7 +92,7 @@ export class DatagridProvider extends Component {
       }))
     } catch (e) {
       console.error(e)
-      this.setState({loading: false})
+      this.setState({ loading: false })
     }
   }
 
@@ -105,7 +104,7 @@ export class DatagridProvider extends Component {
         } else return r
       })
 
-      return {rows}
+      return { rows }
     })
   }
 
@@ -126,7 +125,7 @@ export class DatagridProvider extends Component {
   }
 
   loadNextPageSafe = () => {
-    const {allLoaded} = this.state
+    const { allLoaded } = this.state
 
     !allLoaded && this.loadNextPage()
   }
@@ -165,17 +164,17 @@ export class DatagridProvider extends Component {
   }
 
   setQuery = (query, reload = true) => {
-    this.setState({query}, () => reload && this.loadData())
+    this.setState({ query }, () => reload && this.loadData())
   }
 
   setSearch = (value, reload = true) => {
     const {
-      apiConfig: {searchToFilter, params}
+      apiConfig: { searchToFilter, params }
     } = this.props
 
     this.setState(
       s => ({
-        datagridParams: {...s.datagridParams, ...params}
+        datagridParams: { ...s.datagridParams, ...params }
       }),
       () => {
         this.setFilter(
@@ -195,7 +194,7 @@ export class DatagridProvider extends Component {
   }
 
   onTableReady = (params = {}) => {
-    this.setState({ready: true})
+    this.setState({ ready: true })
     this.loadData(params)
   }
 
@@ -203,7 +202,7 @@ export class DatagridProvider extends Component {
     const {
       rows,
       loading,
-      datagridParams: {filters}
+      datagridParams: { filters }
     } = this.state
 
     return (

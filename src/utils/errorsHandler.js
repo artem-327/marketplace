@@ -1,7 +1,7 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-import {closeMessage} from '../modules/errors'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { closeMessage } from '../modules/errors'
 
 class errorWrapper extends React.Component {
   renderErrors() {
@@ -34,7 +34,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({closeMessage}, dispatch)
+  return bindActionCreators({ closeMessage }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(errorWrapper)

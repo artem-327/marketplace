@@ -1,4 +1,4 @@
-import {getSafe} from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 
 export const normalizeTree = tree => {
   initTree(tree)
@@ -40,11 +40,11 @@ export const getNodeStatus = item => {
     allChildrenBroadcasting = all !== 0 && broadcasted !== 0 && all === broadcasted
   }
 
-  return {allChildrenBroadcasting, anyChildBroadcasting}
+  return { allChildrenBroadcasting, anyChildBroadcasting }
 }
 
 export const getBroadcast = node => {
-  let {allChildrenBroadcasting, anyChildBroadcasting} = getNodeStatus(node)
+  let { allChildrenBroadcasting, anyChildBroadcasting } = getNodeStatus(node)
 
   let broadcast = 0
   if (allChildrenBroadcasting) broadcast = 1

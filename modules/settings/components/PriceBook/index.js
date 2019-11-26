@@ -1,15 +1,15 @@
-import React, {Component} from 'react'
-import {initGlobalBroadcast} from '~/modules/broadcast/actions'
-import {connect} from 'react-redux'
-import {Broadcast} from '~/modules/broadcast'
-import {Segment} from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { initGlobalBroadcast } from '~/modules/broadcast/actions'
+import { connect } from 'react-redux'
+import { Broadcast } from '~/modules/broadcast'
+import { Segment } from 'semantic-ui-react'
 
 class PriceBook extends Component {
-  state = {loading: true}
+  state = { loading: true }
 
   async componentDidMount() {
     await this.props.initGlobalBroadcast()
-    this.setState({loading: false})
+    this.setState({ loading: false })
   }
   render() {
     return (
@@ -20,4 +20,4 @@ class PriceBook extends Component {
   }
 }
 
-export default connect(null, {initGlobalBroadcast})(PriceBook)
+export default connect(null, { initGlobalBroadcast })(PriceBook)

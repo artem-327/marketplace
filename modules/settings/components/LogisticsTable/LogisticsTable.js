@@ -1,11 +1,11 @@
-import React, {Component} from 'react'
-import {injectIntl, FormattedMessage} from 'react-intl'
-import {connect} from 'react-redux'
-import {openPopup, getLogisticsAccounts, deleteLogisticsAccount} from '~/modules/settings/actions'
-import {array} from 'prop-types'
-import {withToastManager} from 'react-toast-notifications'
+import React, { Component } from 'react'
+import { injectIntl, FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
+import { openPopup, getLogisticsAccounts, deleteLogisticsAccount } from '~/modules/settings/actions'
+import { array } from 'prop-types'
+import { withToastManager } from 'react-toast-notifications'
 
-import {generateToastMarkup} from '~/utils/functions'
+import { generateToastMarkup } from '~/utils/functions'
 import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 
@@ -46,7 +46,7 @@ class LogisticsTable extends Component {
       openPopup,
       logisticsAccounts,
       loading,
-      intl: {formatMessage},
+      intl: { formatMessage },
       deleteLogisticsAccount,
       toastManager
     } = this.props
@@ -64,20 +64,20 @@ class LogisticsTable extends Component {
         loading={loading}
         rowActions={[
           {
-            text: formatMessage({id: 'global.edit', defaultMessage: 'Edit'}),
+            text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
             callback: row => openPopup(row)
           },
           {
-            text: formatMessage({id: 'global.delete', defaultMessage: 'Delete'}),
+            text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
             callback: row => {
               confirm(
-                formatMessage({id: 'confirm.logisticsAccount.title', defaultMessage: 'Delete Logistics Account'}),
+                formatMessage({ id: 'confirm.logisticsAccount.title', defaultMessage: 'Delete Logistics Account' }),
                 formatMessage(
                   {
                     id: 'confirm.logisticsAccount.content',
                     defaultMessage: `Do you really want to delete ${row.logisticsProviderName}?`
                   },
-                  {name: row.logisticsProviderName}
+                  { name: row.logisticsProviderName }
                 )
               )
                 .then(async () => {
@@ -94,10 +94,10 @@ class LogisticsTable extends Component {
                             id: 'notifications.logisticsDeleted.content',
                             defaultMessage: `Logistics Account ${row.logisticsProviderName} successfully deleted.`
                           },
-                          {name: row.logisticsProviderName}
+                          { name: row.logisticsProviderName }
                         )
                       ),
-                      {appearance: 'success'}
+                      { appearance: 'success' }
                     )
                   } catch {}
                 })
@@ -124,7 +124,7 @@ const mapDispatchToProps = {
   deleteLogisticsAccount
 }
 
-const mapStateToProps = ({settings: {loading, logisticsAccounts, deleteLogisticsAccount}}) => ({
+const mapStateToProps = ({ settings: { loading, logisticsAccounts, deleteLogisticsAccount } }) => ({
   loading,
   logisticsAccounts,
   deleteLogisticsAccount

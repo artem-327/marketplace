@@ -1,4 +1,12 @@
-import {getSafe} from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
+
+/*
+ Working API: https://api.zopim.com/files/meshim/widget/controllers/LiveChatAPI-js.html
+ Not 100% working API: https://developer.zendesk.com/embeddables/docs/widget/api#ze.identify
+ https://support.zendesk.com/hc/en-us/articles/115000566208-Web-Widget-Chat-advanced-customization
+ https://develop.zendesk.com/hc/en-us/articles/360001075368-Using-the-Chat-SDK-APIs-to-show-the-number-of-unread-messages-iOS-
+ https://gist.github.com/kylejmhudson/216dab3c2f158dba8b5727568c95f07b
+*/
 
 export const ChatWidget_create = (identity, props) => {
   if (typeof window.$zopim === 'undefined') {
@@ -10,63 +18,81 @@ export const ChatWidget_create = (identity, props) => {
       script.onreadystatechange = () => {
         if (script.readyState == 'loaded' || script.readyState == 'complete') {
           script.onreadystatechange = null
-          chatWidget_scriptLoaded(identity, props, true)
-          chatWidget_addCallBack(props.chatUnreadMessages)
+          chatWidget_scriptLoaded(identity, true)
+          chatWidget_addCallBack(identity, props)
         }
       }
     } else {
       //Others
       script.onload = () => {
-        chatWidget_scriptLoaded(identity, props, true)
-        chatWidget_addCallBack(props.chatUnreadMessages)
+        chatWidget_scriptLoaded(identity, true)
+        chatWidget_addCallBack(identity, props)
       }
     }
 
     script.async = true
     script.id = 'ze-snippet'
-    //script.src = "https://static.zdassets.com/ekr/snippet.js?key=c9ecb4b1-1c91-482b-bce2-aac2a343619b"  // https://echoexchange.zendesk.com/chat/agent#widget/getting_started
-    script.src = 'https://static.zdassets.com/ekr/snippet.js?key=81eee0c3-a17e-470e-a004-a62dffb77870' // https://echosystem.zendesk.com/chat/agent#widget/getting_started
+    //script.src = "https://static.zdassets.com/ekr/snippet.js?key=c9ecb4b1-1c91-482b-bce2-aac2a343619b"  // https://echoexchange.zendesk.com
+    script.src = 'https://static.zdassets.com/ekr/snippet.js?key=81eee0c3-a17e-470e-a004-a62dffb77870' // https://echosystem.zendesk.com
     document.getElementsByTagName('head')[0].appendChild(script)
   } else {
-    chatWidget_scriptLoaded(identity, props, false) // In case user chas hanged
+    chatWidget_scriptLoaded(identity, false) // In case user was changed
   }
 }
 
-const chatWidget_scriptLoaded = (identity, props, hide) => {
-  // Working API: https://api.zopim.com/files/meshim/widget/controllers/LiveChatAPI-js.html
-  // Not 100% working API: https://developer.zendesk.com/embeddables/docs/widget/api#ze.identify
-  // https://support.zendesk.com/hc/en-us/articles/115000566208-Web-Widget-Chat-advanced-customization
-
+const chatWidget_updateIdentity = (identity) => {
   zE(function() {
     $zopim(function() {
       $zopim.livechat.setLanguage(identity.lang)
       $zopim.livechat.setName(identity.name)
       $zopim.livechat.setEmail(identity.email)
+    })
+  })
+}
+
+const chatWidget_scriptLoaded = (identity, hide) => {
+  zE(function() {
+    $zopim(function() {
       if (hide) $zopim.livechat.window.hide()
       $zopim.livechat.setStatus('online')
     })
   })
-
-  // https://develop.zendesk.com/hc/en-us/articles/360001075368-Using-the-Chat-SDK-APIs-to-show-the-number-of-unread-messages-iOS-
-  // po prihlaseni nekdy ukazuje pocet unread messages = 0, i kdyz predchozi zpravy nebyly zobrazene, proc?
-  /*
-  if (!this.props.profile.supportChatEnabled) {
-    zE(function () {
-      $zopim(function() {
-        $zopim.livechat.window.hide()
-      });
-    })
-  }
-  setOnUnreadMsgs
-  https://gist.github.com/kylejmhudson/216dab3c2f158dba8b5727568c95f07b
-  */
+  chatWidget_updateIdentity(identity)
 }
 
-const chatWidget_addCallBack = callBack => {
+const chatWidget_onConnected = (identity) => {
   zE(function() {
     $zopim(function() {
+      $zopim.livechat.setLanguage(identity.lang)
+      $zopim.livechat.setName(identity.name)
+      $zopim.livechat.setEmail(identity.email)
+      $zopim.livechat.setStatus('online')
+    })
+  })
+}
+
+const chatWidget_onChatStart = () => {
+
+}
+
+const chatWidget_onChatEnd = () => {
+
+}
+
+const chatWidget_addCallBack = (identity, props) => {
+  zE(function() {
+    $zopim(function() {
+      $zopim.livechat.setOnConnected(function() {
+        chatWidget_onConnected(identity)
+      })
       $zopim.livechat.setOnUnreadMsgs(function(cnt) {
-        callBack(cnt)
+        props.chatUnreadMessages(cnt)
+      })
+      $zopim.livechat.setOnChatStart(function() {
+        chatWidget_onChatStart()
+      })
+      $zopim.livechat.setOnChatEnd(function() {
+        chatWidget_onChatEnd()
       })
     })
   })
@@ -93,16 +119,15 @@ export const chatWidget_show = () => {
 }
 
 export const chatWidget_toggle = () => {
-  // Not used, $zopim.livechat.window.getDisplay() not working correctly
+  // Not used, $zopim.livechat.window.getDisplay() not working correctly in current widget version
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
     zE(function() {
       $zopim(function() {
-        //console.log('!!!!! ', $zopim.livechat.window.getDisplay())
         $zopim.livechat.window.getDisplay() // after 3rd call getDisplay() returns true even the window is hidden (?)
           ? $zopim.livechat.window.hide()
           : $zopim.livechat.window.show()
       })
-    }) // ! ! $zopim.livechat.window.toggle(); // Not working at all, why?
+    }) // ! ! $zopim.livechat.window.toggle(); // Not working at all
   }
 }
 

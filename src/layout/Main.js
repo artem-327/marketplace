@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {Switch, Route} from 'react-router-dom'
+import React, { Component } from 'react'
+import { Switch, Route } from 'react-router-dom'
 
 import Dashboard from '../pages/dashboard'
 import Inventory from '../pages/inventory/InventoryHOC'
@@ -16,7 +16,7 @@ import MyInventory from '../pages/inventory/myInventory'
 import TestPage from '../pages/test'
 import ShoppingCart from '../pages/cart/ShoppingCart'
 import PurchaseOrder from '../pages/cart/PurchaseOrder'
-import {withAuth} from '../utils/auth'
+import { withAuth } from '../utils/auth'
 import Merchants from '../pages/administration/merchants'
 import NamesSynonyms from '../pages/administration/namesSynonyms/'
 import Companies from '../pages/administration/companiesAdmin/'
@@ -29,7 +29,7 @@ import Administration from '../pages/administration/'
 import Profile from '../pages/profile'
 import NoMatch from '../components/404'
 
-import {withEdit} from '../pages/inventory/addInventory/EditInventoryHOC'
+import { withEdit } from '../pages/inventory/addInventory/EditInventoryHOC'
 import AddBroadcast from '../pages/inventory/myInventory/components/broadcast'
 
 class Main extends Component {

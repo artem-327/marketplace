@@ -3,10 +3,10 @@ import axios from 'axios'
 const api = {
   getCart: () => axios.get('/prodex/api/cart').then(response => response.data),
   deleteCart: () => axios.delete(`/prodex/api/cart`),
-  addCartItem: ({productOffer, pkgAmount}) =>
-    axios.post('/prodex/api/cart/items', {productOffer, pkgAmount}).then(response => response.data),
+  addCartItem: ({ productOffer, pkgAmount }) =>
+    axios.post('/prodex/api/cart/items', { productOffer, pkgAmount }).then(response => response.data),
   deleteCartItem: cartItemId => axios.delete(`/prodex/api/cart/items/${cartItemId}`),
-  updateCartItem: ({cartItemId, pkgAmount}) =>
+  updateCartItem: ({ cartItemId, pkgAmount }) =>
     axios.patch(`/prodex/api/cart/items/${cartItemId}?pkgAmount=${pkgAmount}`).then(response => response.data),
   getCartItem: cartItemId => axios.get(`/prodex/api/cart/items/${cartItemId}`),
   getProductOffer: id => axios.get(`/prodex/api/product-offers/${id}/applyrules`).then(response => response.data),

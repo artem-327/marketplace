@@ -1,12 +1,12 @@
 import React from 'react'
-import {SecureContext} from './securePage'
+import { SecureContext } from './securePage'
 
 export default Component =>
   class WithAuthComponent extends React.Component {
     static contextType = SecureContext
 
     render() {
-      const {auth} = this.context
+      const { auth } = this.context
 
       return (
         <Component

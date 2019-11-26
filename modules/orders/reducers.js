@@ -1,6 +1,6 @@
 import * as AT from './action-types'
-import {INVENTORY_LINK_ATTACHMENT} from '~/modules/inventory/action-types'
-import {getSafe} from '~/utils/functions'
+import { INVENTORY_LINK_ATTACHMENT } from '~/modules/inventory/action-types'
+import { getSafe } from '~/utils/functions'
 
 const initialState = {
   data: [],
@@ -11,6 +11,7 @@ const initialState = {
   isDetailFetching: false,
   isConfirmFetching: false,
   isRejectFetching: false,
+  isShipFetching: false,
   reloadPage: false,
   selectedIndex: -1,
   statusFilter: null,
@@ -71,40 +72,59 @@ export default function(state = initialState, action) {
         isDetailFetching: false,
         reloadPage: false
       }
-    case AT.ORDER_CONFIRM_FETCH_REQUESTED:
+    case AT.ORDER_CONFIRM_FETCH_PENDING:
       return {
         ...state,
         isConfirmFetching: true,
         reloadPage: false
       }
-    case AT.ORDER_CONFIRM_FETCH_SUCCESS:
+    case AT.ORDER_CONFIRM_FETCH_FULFILLED:
       return {
         ...state,
         isConfirmFetching: false,
         reloadPage: true
       }
-    case AT.ORDER_CONFIRM_FETCH_FAILURE:
+    case AT.ORDER_CONFIRM_FETCH_REJECTED:
       return {
         ...state,
         isConfirmFetching: false,
         reloadPage: false
       }
-    case AT.ORDER_REJECT_FETCH_REQUESTED:
+    case AT.ORDER_REJECT_FETCH_PENDING:
       return {
         ...state,
         isRejectFetching: true,
         reloadPage: false
       }
-    case AT.ORDER_REJECT_FETCH_SUCCESS:
+    case AT.ORDER_REJECT_FETCH_FULFILLED:
       return {
         ...state,
         isRejectFetching: false,
         reloadPage: true
       }
-    case AT.ORDER_REJECT_FETCH_FAILURE:
+    case AT.ORDER_REJECT_FETCH_REJECTED:
       return {
         ...state,
         isRejectFetching: false,
+        reloadPage: false
+      }
+
+    case AT.ORDER_SHIP_FETCH_PENDING:
+      return {
+        ...state,
+        isShipFetching: true,
+        reloadPage: false
+      }
+    case AT.ORDER_SHIP_FETCH_FULFILLED:
+      return {
+        ...state,
+        isShipFetching: false,
+        reloadPage: true
+      }
+    case AT.ORDER_SHIP_FETCH_FETCH_REJECTED:
+      return {
+        ...state,
+        isShipFetching: false,
         reloadPage: false
       }
     case AT.ORDER_DOWNLOAD_PDF_FULFILLED:

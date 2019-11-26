@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import InputControlled from '../../../../components/InputControlled/InputControlled'
 
@@ -18,12 +18,12 @@ class OperatorEditation extends Component {
   }
 
   saveEditation = () => {
-    const {putOperatorEdit, operator} = this.props
-    putOperatorEdit({id: operator.id, ...this.state}, this.props.toogleEditation())
+    const { putOperatorEdit, operator } = this.props
+    putOperatorEdit({ id: operator.id, ...this.state }, this.props.toogleEditation())
   }
 
   render() {
-    const {toogleEditation} = this.props
+    const { toogleEditation } = this.props
     return (
       <tr className='admin-operators-new-item'>
         <td>

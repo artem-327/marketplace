@@ -334,7 +334,7 @@ manager = {
         return gulp
           .src(source.themeConfig)
           .pipe(plumber())
-          .pipe(rename({extname: ''}))
+          .pipe(rename({ extname: '' }))
           .pipe(replace(regExp.siteVariable, siteVariable))
           .pipe(gulp.dest(installPaths.themeConfigFolder))
       }
@@ -360,7 +360,7 @@ manager = {
         return gulp
           .src(source.config)
           .pipe(plumber())
-          .pipe(rename({extname: ''})) // remove .template from ext
+          .pipe(rename({ extname: '' })) // remove .template from ext
           .pipe(jsonEditor(jsonConfig))
           .pipe(gulp.dest(installPaths.configFolder))
       }

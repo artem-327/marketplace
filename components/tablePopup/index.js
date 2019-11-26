@@ -1,6 +1,6 @@
 //MAIN COMPONENTS
 import React from 'react'
-import {Popup} from 'semantic-ui-react'
+import { Popup } from 'semantic-ui-react'
 //STYLES
 import './style.scss'
 

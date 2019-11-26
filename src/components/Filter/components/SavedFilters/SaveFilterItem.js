@@ -1,14 +1,14 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './SavedFilters.scss'
 import TooltipFilter from './TooltipFilter'
 import Bell from '../../../../images/bell.png'
 import BellTrans from '../../../../images/bell_transparent.png'
 import close from '../../../../images/remove.png'
-import {FormattedMessage} from 'react-intl'
-import {Control} from 'react-redux-form'
+import { FormattedMessage } from 'react-intl'
+import { Control } from 'react-redux-form'
 import CheckboxControlled from '../../../Checkbox/CheckboxControlled'
-import {display} from './actions/SaveFilterItem.actions'
-import {connect} from 'react-redux'
+import { display } from './actions/SaveFilterItem.actions'
+import { connect } from 'react-redux'
 
 const mapStateToProps = state => {
   const {
@@ -65,7 +65,7 @@ class SaveFilterItem extends Component {
     }
   }
 
-  state = {showTooltip: false}
+  state = { showTooltip: false }
 
   formatNameToStore(name) {
     switch (name) {
@@ -105,7 +105,7 @@ class SaveFilterItem extends Component {
       (ac, item) => ({
         ...ac,
         [this.formatNameToStore(item.name)]: Array.isArray(item.value)
-          ? item.value.reduce((acc, cur) => ({...acc, [cur.id]: true}), {})
+          ? item.value.reduce((acc, cur) => ({ ...acc, [cur.id]: true }), {})
           : typeof item.value === 'object'
           ? item.value.id
           : item.value
@@ -160,8 +160,8 @@ class SaveFilterItem extends Component {
   }
 
   renderNotification = () => {
-    const {show, index} = this.props
-    const {[`active${index}`]: active} = this.props.functionality
+    const { show, index } = this.props
+    const { [`active${index}`]: active } = this.props.functionality
     return (
       <div>
         <h6>Notifications</h6>
@@ -186,7 +186,7 @@ class SaveFilterItem extends Component {
   }
 
   render() {
-    const {show, index, toolTipContent, filterName, deleteSaveFilter} = this.props
+    const { show, index, toolTipContent, filterName, deleteSaveFilter } = this.props
     const {
       [`selected${index}`]: selected,
       [`toolTip${index}`]: toolTip,
