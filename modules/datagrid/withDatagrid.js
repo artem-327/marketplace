@@ -1,5 +1,5 @@
 import React from 'react'
-import {DatagridContext} from './DatagridProvider'
+import { DatagridContext } from './DatagridProvider'
 
 export default Component => {
   class DatagridComponent extends React.Component {

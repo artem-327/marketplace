@@ -1,13 +1,13 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import confirm from '~/src/components/Confirmable/confirm'
-import {injectIntl} from 'react-intl'
-import {withDatagrid} from '~/modules/datagrid'
+import { injectIntl } from 'react-intl'
+import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
-import {Checkbox} from 'semantic-ui-react'
-import {getSafe, generateToastMarkup} from '~/utils/functions'
-import {withToastManager} from 'react-toast-notifications'
-import {FormattedMessage} from 'react-intl'
+import { Checkbox } from 'semantic-ui-react'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { withToastManager } from 'react-toast-notifications'
+import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
 
 import * as Actions from '../../actions'
@@ -50,7 +50,7 @@ class CompaniesTable extends Component {
       toastManager
     } = this.props
 
-    const {formatMessage} = intl
+    const { formatMessage } = intl
 
     return (
       <React.Fragment>
@@ -61,20 +61,20 @@ class CompaniesTable extends Component {
           rows={this.getRows(rows)}
           rowActions={[
             {
-              text: formatMessage({id: 'global.edit', defaultMessage: 'Edit'}),
+              text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
               callback: row => openEditCompany(row.id, row)
             },
             {
-              text: formatMessage({id: 'global.delete', defaultMessage: 'Delete'}),
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row =>
                 confirm(
-                  formatMessage({id: 'confirm.deleteCompany.title', defaultMessage: 'Delete Company?'}),
+                  formatMessage({ id: 'confirm.deleteCompany.title', defaultMessage: 'Delete Company?' }),
                   formatMessage(
                     {
                       id: 'confirm.deleteCompany.content',
                       defaultMessage: `Do you really want to delete '${row.name}' company?`
                     },
-                    {name: row.name}
+                    { name: row.name }
                   )
                 ).then(() => {
                   deleteCompany(row.id)
@@ -82,7 +82,7 @@ class CompaniesTable extends Component {
                 })
             },
             {
-              text: formatMessage({id: 'admin.registerDwollaAccount', defaultMessage: 'Register Dwolla Account'}),
+              text: formatMessage({ id: 'admin.registerDwollaAccount', defaultMessage: 'Register Dwolla Account' }),
               callback: async row => {
                 Router.push(`/admin/dwolla-register?companyId=${row.id}`)
               },
@@ -96,7 +96,7 @@ class CompaniesTable extends Component {
             {
               text: <FormattedMessage id='admin.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
               callback: async row => {
-                const {value} = await resendWelcomeEmail(row.primaryUser.id)
+                const { value } = await resendWelcomeEmail(row.primaryUser.id)
 
                 toastManager.add(generateToastMarkup(null, value.clientMessage), {
                   appearance: 'success'
@@ -111,7 +111,7 @@ class CompaniesTable extends Component {
   }
 }
 
-const mapStateToProps = ({admin}, {datagrid}) => {
+const mapStateToProps = ({ admin }, { datagrid }) => {
   return {
     columns: admin.config[admin.currentTab.name].display.columns,
     companyListDataRequest: admin.companyListDataRequest,

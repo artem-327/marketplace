@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import XLSX from 'xlsx'
 import DragDropFile from './DragDropFile'
 import FileSelector from './FileSelector'
@@ -15,9 +15,9 @@ class ImportXLS extends Component {
     reader.onload = event => {
       //WORKAROUND - problem with date parsing from csv (https://github.com/SheetJS/js-xlsx/issues/940)
       // solution is to parse every field as string and convert manually
-      const workBook = XLSX.read(event.target.result, {type: isCsv ? 'string' : 'array', raw: true})
+      const workBook = XLSX.read(event.target.result, { type: isCsv ? 'string' : 'array', raw: true })
       const workSheet = workBook.Sheets[workBook.SheetNames[0]]
-      console.log(XLSX.utils.sheet_to_json(workSheet, {header: 0}))
+      console.log(XLSX.utils.sheet_to_json(workSheet, { header: 0 }))
     }
 
     isCsv ? reader.readAsText(file) : reader.readAsArrayBuffer(file)
@@ -33,7 +33,7 @@ class ImportXLS extends Component {
     return (
       <div>
         <DragDropFile handleFile={this.handleFile}>
-          <div style={{margin: '20px'}} className='row'>
+          <div style={{ margin: '20px' }} className='row'>
             <div className='col-xs-12'>
               <FileSelector accept={accept} handleFile={this.handleFile} data-test='file_selector_inp' />
             </div>

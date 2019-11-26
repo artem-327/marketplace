@@ -1,4 +1,4 @@
-import {CHANGE_ELEMENT} from '../constants/SaveFilterItem.constants'
+import { CHANGE_ELEMENT } from '../constants/SaveFilterItem.constants'
 
 export const display = (element, key) => {
   return {

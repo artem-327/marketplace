@@ -1,12 +1,12 @@
 import api from '~/api'
 import axios from 'axios'
-import {generateQueryString} from '~/utils/functions'
+import { generateQueryString } from '~/utils/functions'
 
 export function addAttachment(attachment, docType, additionalParams = {}) {
   let defaultParams = {
     isTemporary: true
   }
-  let params = {...defaultParams, ...additionalParams, type: docType}
+  let params = { ...defaultParams, ...additionalParams, type: docType }
   const formData = new FormData()
   formData.append('file', attachment)
 
@@ -80,7 +80,7 @@ export function loadFile(attachment) {
     url: attachment.preview,
     method: 'GET',
     responseType: 'blob'
-  }).then(r => new File([r.data], attachment.name, {type: attachment.type}))
+  }).then(r => new File([r.data], attachment.name, { type: attachment.type }))
 }
 
 export function patchBroadcast(broadcasted, productOfferId) {

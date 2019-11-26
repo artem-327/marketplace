@@ -1,16 +1,17 @@
-import React, {Component} from 'react'
-import {injectIntl, FormattedMessage, FormattedDate, FormattedNumber} from 'react-intl'
-import {Modal, Menu, Header, Container, Icon, Button} from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
+import { Modal, Menu, Header, Container, Icon, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 import SubMenu from '~/src/components/SubMenu'
 import Spinner from '~/src/components/Spinner/Spinner'
 import ProdexGrid from '~/components/table'
-import {actions} from 'react-redux-form'
-import {OrderFilter} from '~/modules/filter'
-import {getSafe} from '~/utils/functions'
-import {filterPresets} from '~/modules/filter/constants/filter'
-import {currency} from '~/constants/index'
+import { actions } from 'react-redux-form'
+import { OrderFilter } from '~/modules/filter'
+import { getSafe } from '~/utils/functions'
+import { filterPresets } from '~/modules/filter/constants/filter'
+import { currency } from '~/constants/index'
+import FilterTags from '~/modules/filter/components/FitlerTags'
 
 const TitleOrderId = styled.div`
   font-size: larger;
@@ -169,7 +170,7 @@ class Orders extends Component {
     LastEndpointType: '',
 
     filters: {
-      All: {filters: []},
+      All: { filters: [] },
       Draft: {
         filters: [
           {
@@ -221,6 +222,15 @@ class Orders extends Component {
             operator: 'EQUALS',
             path: 'Order.cfGlobalStatus',
             values: [`Completed`]
+          }
+        ]
+      },
+      'To Ship': {
+        filters: [
+          {
+            operator: 'EQUALS',
+            path: 'Order.cfGlobalStatus',
+            values: [`To Ship`]
           }
         ]
       },
@@ -351,7 +361,7 @@ class Orders extends Component {
   }
 
   failedWrapper = value => {
-    return <span style={{color: '#DB2828'}}>{value}</span>
+    return <span style={{ color: '#DB2828' }}>{value}</span>
   }
 
   getRows = () => {
@@ -391,7 +401,7 @@ class Orders extends Component {
 
   async openModalWindow(orderId) {
     await this.props.getRelatedOrders(orderId)
-    this.setState({openModal: true})
+    this.setState({ openModal: true })
   }
 
   handleFilterApply = payload => {
@@ -402,20 +412,20 @@ class Orders extends Component {
   }
 
   componentDidMount() {
-    const {endpointType, filterData} = this.props
-    this.props.loadData(endpointType, {status: 'All'})
+    const { endpointType, filterData } = this.props
+    this.props.loadData(endpointType, { status: 'All' })
   }
 
   componentDidUpdate(prevProps) {
-    const {endpointType} = this.props
+    const { endpointType } = this.props
     if (prevProps.endpointType !== this.props.endpointType) {
-      this.props.loadData(endpointType, {status: 'All'})
+      this.props.loadData(endpointType, { status: 'All' })
     }
   }
 
   handleFilterClear = () => {
-    this.props.applyFilter({filters: []})
-    this.props.datagrid.setFilter({filters: []})
+    this.props.applyFilter({ filters: [] })
+    this.props.datagrid.setFilter({ filters: [] })
   }
 
   downloadAttachment = async (documentName, documentId) => {
@@ -431,7 +441,7 @@ class Orders extends Component {
     const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
     const mimeType = fileName && this.getMimeType(fileName)
     const element = document.createElement('a')
-    const file = new Blob([downloadedFile.value.data], {type: mimeType})
+    const file = new Blob([downloadedFile.value.data], { type: mimeType })
     let fileURL = URL.createObjectURL(file)
     element.href = fileURL
 
@@ -451,7 +461,7 @@ class Orders extends Component {
   }
 
   getContent = () => {
-    const {relatedOrders} = this.props
+    const { relatedOrders } = this.props
     const rowsRelatedOrders = relatedOrders.map(order => ({
       documentNumber: (
         <Button as='a' onClick={() => this.downloadAttachment(order.documentNumber, order.id)}>
@@ -490,22 +500,21 @@ class Orders extends Component {
       queryType,
       router,
       datagrid,
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
-    const {columns} = this.state
+    const { columns } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
-
     return (
       <div id='page' className='flex stretched scrolling'>
         {this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (
           <Modal
             size='tiny'
             closeIcon
-            onClose={() => this.setState({openModal: false})}
+            onClose={() => this.setState({ openModal: false })}
             centered={true}
             open={this.state.openModal}
-            onClose={() => this.setState({openModal: false})}>
+            onClose={() => this.setState({ openModal: false })}>
             <Modal.Header>
               <FormattedMessage id='order.related.table' defaultMessage='RELATED ORDERS'>
                 {text => text}
@@ -514,7 +523,7 @@ class Orders extends Component {
             <Modal.Content scrolling>{this.getContent()}</Modal.Content>
           </Modal>
         )}
-        <Container fluid style={{padding: '0 32px'}}>
+        <Container fluid style={{ padding: '0 32px' }}>
           <Menu pointing secondary horizontal>
             <Menu.Item
               name={formatMessage({
@@ -618,6 +627,20 @@ class Orders extends Component {
             />
             <Menu.Item
               name={formatMessage({
+                id: 'order.menu.toShip',
+                defaultMessage: 'TO SHIP'
+              })}
+              onClick={() =>
+                this.loadData(endpointType, {
+                  ...this.props.filterData,
+                  status: 'To Ship'
+                })
+              }
+              active={activeStatus === 'To Ship'}
+              data-test='menu_orders_ship'
+            />
+            <Menu.Item
+              name={formatMessage({
                 id: 'order.menu.returned',
                 defaultMessage: 'RETURNED'
               })}
@@ -658,6 +681,9 @@ class Orders extends Component {
               active={activeStatus === 'Cancelled'}
               data-test='menu_orders_cancelled'
             />
+            <Menu.Item>
+              <FilterTags datagrid={datagrid} />
+            </Menu.Item>
             <Menu.Menu position='right'>
               <Menu.Item
                 name={formatMessage({
@@ -669,7 +695,7 @@ class Orders extends Component {
             </Menu.Menu>
           </Menu>
         </Container>
-        <Container fluid style={{padding: '20px 32px 0 32px'}} className='flex stretched'>
+        <Container fluid style={{ padding: '20px 32px 0 32px' }} className='flex stretched'>
           <Header as='h1' size='medium'>
             {activeStatus
               ? activeStatus.toUpperCase()
@@ -679,7 +705,7 @@ class Orders extends Component {
                 })}{' '}
             {`${ordersType.toUpperCase()} ${formatMessage({
               id: 'order.orders',
-              defaultMessage: '!ORDERS'
+              defaultMessage: 'ORDERS'
             })}`}
           </Header>
           <OrderFilter
@@ -697,7 +723,7 @@ class Orders extends Component {
               {...datagrid.tableProps}
               loading={datagrid.loading}
               rows={this.getRows()}
-              onSortingChange={sorting => sorting.sortPath && this.setState({sorting})}
+              // onSortingChange={sorting => sorting.sortPath && this.setState({ sorting })}
               rowActions={[
                 {
                   text: formatMessage({
@@ -721,5 +747,18 @@ class Orders extends Component {
     )
   }
 }
+
+// FilterTags.propTypes = {
+//   filter: array,
+//   onClick: func,
+//   filters: arrayOf(
+//     shape({
+//       description: string,
+//       indexes: arrayOf(number),
+//       tagDescription: arrayOf(string),
+//       valuesDescription: arrayOf(string)
+//     })
+//   )
+// }
 
 export default injectIntl(Orders)

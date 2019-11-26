@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import inventory from '../../../images/nav/inventory.png'
 import '../nav.scss'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 class NavDropdown extends Component {
   constructor() {
@@ -17,11 +17,11 @@ class NavDropdown extends Component {
 
   showMenu(event) {
     event.preventDefault()
-    this.setState({showMenu: true})
+    this.setState({ showMenu: true })
   }
 
   closeMenu() {
-    this.setState({showMenu: false})
+    this.setState({ showMenu: false })
   }
 
   render() {

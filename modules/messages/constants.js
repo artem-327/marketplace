@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import {Message, Container, Icon} from 'semantic-ui-react'
-import {FormattedMessage} from 'react-intl'
+import { Message, Container, Icon } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
 
 export const MessageContainer = styled(Container)`
   padding: 5px;
@@ -38,7 +38,9 @@ export const CloseIcon = styled(Icon)`
 
 export const themes = {
   ERROR: 'error',
-  SUCCESS: 'success'
+  SUCCESS: 'success',
+  WARNING: 'warning',
+  INFO: 'info'
 }
 
 export const responses = {

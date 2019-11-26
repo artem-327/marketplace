@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import confirm from '~/src/components/Confirmable/confirm'
-import {injectIntl, FormattedMessage} from 'react-intl'
-import {Popup, Label} from 'semantic-ui-react'
-import {connect} from 'react-redux'
+import { injectIntl, FormattedMessage } from 'react-intl'
+import { Popup, Label } from 'semantic-ui-react'
+import { connect } from 'react-redux'
 
 import ProdexTable from '~/components/table'
 import {
@@ -13,7 +13,7 @@ import {
   getPackagingGroupsDataRequest,
   deleteCasProduct
 } from '../../actions'
-import {withDatagrid} from '~/modules/datagrid'
+import { withDatagrid } from '~/modules/datagrid'
 
 class CasProductsTable extends Component {
   componentDidMount() {
@@ -22,10 +22,10 @@ class CasProductsTable extends Component {
   }
 
   render() {
-    const {datagrid, config, intl, rows, openPopup, openEditAltNamesCasPopup, deleteCasProduct} = this.props
+    const { datagrid, config, intl, rows, openPopup, openEditAltNamesCasPopup, deleteCasProduct } = this.props
 
-    const {formatMessage} = intl
-    const {columns} = config.display
+    const { formatMessage } = intl
+    const { columns } = config.display
 
     return (
       <React.Fragment>
@@ -36,24 +36,24 @@ class CasProductsTable extends Component {
           rows={rows}
           rowActions={[
             {
-              text: formatMessage({id: 'global.edit', defaultMessage: 'Edit'}),
-              callback: ({hazardClassesLabeled, ...rest}) => openPopup(rest)
+              text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+              callback: ({ hazardClassesLabeled, ...rest }) => openPopup(rest)
             },
             {
-              text: formatMessage({id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names'}),
+              text: formatMessage({ id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }),
               callback: row => openEditAltNamesCasPopup(row)
             },
             {
-              text: formatMessage({id: 'global.delete', defaultMessage: 'Delete'}),
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row =>
                 confirm(
-                  formatMessage({id: 'confirm.deleteCasProduct.title', defaultMessage: 'Delete CAS Product?'}),
+                  formatMessage({ id: 'confirm.deleteCasProduct.title', defaultMessage: 'Delete CAS Product?' }),
                   formatMessage(
                     {
                       id: 'confirm.deleteCasProduct.content',
                       defaultMessage: `Do you really want to delete '${row.chemicalName}' CAS product?`
                     },
-                    {name: row.chemicalName}
+                    { name: row.chemicalName }
                   )
                 ).then(() => {
                   deleteCasProduct(row.id)
@@ -91,7 +91,7 @@ const transformHazardClasses = classes => (
   </Label.Group>
 )
 
-const mapStateToProps = (state, {datagrid}) => {
+const mapStateToProps = (state, { datagrid }) => {
   let cfg = state.admin.config[state.admin.currentTab.name]
 
   return {

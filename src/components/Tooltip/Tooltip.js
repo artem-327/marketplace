@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import './tooltip.scss'
 import classnames from 'classnames'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class Tooltip extends Component {
   constructor(props) {
@@ -13,7 +13,7 @@ class Tooltip extends Component {
   }
 
   showTip(type) {
-    this.setState({isVisible: type})
+    this.setState({ isVisible: type })
   }
 
   render() {
@@ -22,7 +22,7 @@ class Tooltip extends Component {
         <span className='tooltip-icon' onMouseEnter={() => this.showTip(true)} onMouseLeave={() => this.showTip(false)}>
           i
         </span>
-        <label className={classnames({show: this.state.isVisible})}>
+        <label className={classnames({ show: this.state.isVisible })}>
           <FormattedMessage
             id='addInventory.infoLabel'
             defaultMessage={

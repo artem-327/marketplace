@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './uploadLot.scss'
 import upload from '../../../../../images/upload/upload.png'
 import uploaded from '../../../../../images/upload/uploaded.png'
 import PropTypes from 'prop-types'
 import File from './components/File'
 import ReactDropzone from 'react-dropzone'
-import {FormattedMessage} from 'react-intl'
-import {TOO_LARGE_FILE, UPLOAD_FILE_FAILED} from '../../../../../modules/errors.js'
+import { FormattedMessage } from 'react-intl'
+import { TOO_LARGE_FILE, UPLOAD_FILE_FAILED } from '../../../../../modules/errors.js'
 
 class UploadLot extends Component {
   constructor(props) {
@@ -38,7 +38,7 @@ class UploadLot extends Component {
         }
       }
       if (files && files.length) {
-        this.setState({files: files})
+        this.setState({ files: files })
       }
     }
   }
@@ -87,7 +87,7 @@ class UploadLot extends Component {
   }
 
   onDropRejected = blobs => {
-    let {fileMaxSize, dispatch} = this.props
+    let { fileMaxSize, dispatch } = this.props
     blobs.forEach(function(blob) {
       if (blob.size > fileMaxSize * 1024 * 1024) {
         dispatch(() => ({
@@ -111,8 +111,8 @@ class UploadLot extends Component {
   }
 
   onPreviewDrop = files => {
-    let {loadFile, addAttachment, type, fileMaxSize} = this.props
-    let {onDropRejected, onUploadFail, removeFile} = this
+    let { loadFile, addAttachment, type, fileMaxSize } = this.props
+    let { onDropRejected, onUploadFail, removeFile } = this
     let attachments = []
     let filesIds = []
     let filesLength = this.state.files.length
@@ -146,7 +146,7 @@ class UploadLot extends Component {
 
     let filesNew = this.state.files.concat(files)
     filesIds = this.state.filesIds.concat(filesIds)
-    this.setState({files: filesNew, filesIds})
+    this.setState({ files: filesNew, filesIds })
 
     // upload new files as temporary attachments
     ;(function loop(j) {

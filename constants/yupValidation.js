@@ -1,8 +1,8 @@
 import * as Yup from 'yup'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
-import {getSafe, deepSearch} from '~/utils/functions'
-import {isValid} from 'ein-validator'
+import { getSafe, deepSearch } from '~/utils/functions'
+import { isValid } from 'ein-validator'
 import validator from 'validator'
 import React from 'react'
 
@@ -25,33 +25,33 @@ export const errorMessages = {
     <FormattedMessage
       id='validation.minLength'
       defaultMessage={`Field should have at least ${min} characters`}
-      values={{min}}
+      values={{ min }}
     />
   ),
   maxLength: max => (
     <FormattedMessage
       id='validation.maxLength'
       defaultMessage={`Field should have max ${max} characters`}
-      values={{max}}
+      values={{ max }}
     />
   ),
   enterPhoneNumber: <FormattedMessage id='validation.enterPhoneNumber' defaultMessage='Enter phone number' />,
   minDigits: min => (
-    <FormattedMessage id='validation.minDigits' defaultMessage={`Must have at least ${min} digits`} values={{min}} />
+    <FormattedMessage id='validation.minDigits' defaultMessage={`Must have at least ${min} digits`} values={{ min }} />
   ),
   maxDigits: max => (
-    <FormattedMessage id='validation.maxDigits' defaultMessage={`Must have max ${max} digits`} values={{max}} />
+    <FormattedMessage id='validation.maxDigits' defaultMessage={`Must have max ${max} digits`} values={{ max }} />
   ),
   exactDigits: num => (
     <FormattedMessage id='validation.exactDigits' defaultMessage={`There has to be exactly ${num} digits`} />
   ),
   greaterThan: value => (
-    <FormattedMessage id='validation.greaterThan' values={{value}} defaultMessage={`Must be greater than ${value}`} />
+    <FormattedMessage id='validation.greaterThan' values={{ value }} defaultMessage={`Must be greater than ${value}`} />
   ),
   maxDecimals: max => (
     <FormattedMessage
       id='validation.maxDecimals'
-      values={{max}}
+      values={{ max }}
       defaultMessage={`There can be maximally ${max} decimal places`}
     />
   ),
@@ -65,13 +65,13 @@ export const errorMessages = {
   ),
   passwordsMustMatch: <FormattedMessage id='validation.passwordMatch' defaultMessage='Passwords must match' />,
   exactLength: len => (
-    <FormattedMessage id='validation.exactLength' defaultMessage={`Must be ${len} characters long`} values={{len}} />
+    <FormattedMessage id='validation.exactLength' defaultMessage={`Must be ${len} characters long`} values={{ len }} />
   ),
   unique: (name = '') => (
-    <FormattedMessage id='validation.unique' defaultMessage={`${name} has to be unique`} values={{name}} />
+    <FormattedMessage id='validation.unique' defaultMessage={`${name} has to be unique`} values={{ name }} />
   ),
-  minimum: min => <FormattedMessage id='validation.minimum' values={{min}} />,
-  maximum: max => <FormattedMessage id='validation.maximum' values={{max}} />,
+  minimum: min => <FormattedMessage id='validation.minimum' values={{ min }} />,
+  maximum: max => <FormattedMessage id='validation.maximum' values={{ max }} />,
   minUpToMax: (
     <FormattedMessage id='validation.minUpToMax' defaultMessage='Min value should be less or equal to Max value' />
   ),
@@ -86,14 +86,14 @@ export const errorMessages = {
     <FormattedMessage
       id='validation.invalidDateFormat'
       defaultMessage={`Invalid date format. Date should match ${example}`}
-      values={{example}}
+      values={{ example }}
     />
   ),
   invalidValueFormat: example => (
     <FormattedMessage
       id='validation.invalidValueFormat'
       defaultMessage={`Invalid value format. Format should match ${example}`}
-      values={{example}}
+      values={{ example }}
     />
   ),
   lessThanOrdered: <FormattedMessage id='validation.lessThanOrdered' defaultMessage='Less than ordered' />,
@@ -102,11 +102,11 @@ export const errorMessages = {
     <FormattedMessage
       id='validation.oneOf'
       defaultMessage={`Must be one of ${arr.toString()}`}
-      values={{values: arr.toString()}}
+      values={{ values: arr.toString() }}
     />
   ),
   aboveAge: age => (
-    <FormattedMessage id='validation.aboveAge' defaultMessage={`Must be at least ${age} years old`} values={{age}} />
+    <FormattedMessage id='validation.aboveAge' defaultMessage={`Must be at least ${age} years old`} values={{ age }} />
   ),
   invalidWebsite: <FormattedMessage id='validation.invalidURL' defaultMessage='Invalid Website URL' />,
   invalidWebsiteHttp: (
@@ -119,7 +119,7 @@ export const errorMessages = {
     <FormattedMessage
       id='validation.multiplyOfSplit'
       defaultMessage='Must be multiply of split ({split})'
-      values={{split}}
+      values={{ split }}
     />
   )
 }

@@ -1,27 +1,27 @@
-import React, {Component} from 'react'
-import {Form, Checkbox} from 'semantic-ui-react'
-import {FastField, Field, getIn} from 'formik'
+import React, { Component } from 'react'
+import { Form, Checkbox } from 'semantic-ui-react'
+import { FastField, Field, getIn } from 'formik'
 
-import {InputRef} from './InputRef'
-import {getFieldError, setFieldValue} from './helpers'
+import { InputRef } from './InputRef'
+import { getFieldError, setFieldValue } from './helpers'
 
 class FormikCheckbox extends Component {
   constructor(props) {
     super(props)
-    const {id, name, value} = props
+    const { id, name, value } = props
     this.id = id || `field_checkbox_${name}_${value}`
   }
 
   render() {
-    const {name, label, validate, inputProps = {}, fieldProps = {}, inputRef, fast, value: propValue} = this.props
+    const { name, label, validate, inputProps = {}, fieldProps = {}, inputRef, fast, value: propValue } = this.props
 
-    const {onChange, ...safeInputProps} = inputProps
+    const { onChange, ...safeInputProps } = inputProps
     const DesiredField = fast === true ? FastField : Field
     return (
       <DesiredField
         name={name}
         validate={validate}
-        render={({field, form}) => {
+        render={({ field, form }) => {
           const error = getFieldError(field, form)
           return (
             <Form.Field error={!!error} {...fieldProps}>
@@ -33,7 +33,7 @@ class FormikCheckbox extends Component {
                   label={label}
                   name={name}
                   checked={field.value.includes(propValue)}
-                  onChange={(e, {name, checked}) => {
+                  onChange={(e, { name, checked }) => {
                     if (field.value.includes(propValue)) {
                       const nextValue = field.value.filter(value => value !== propValue)
                       setFieldValue(form, name, nextValue, true)
@@ -43,7 +43,7 @@ class FormikCheckbox extends Component {
                     }
 
                     Promise.resolve().then(() => {
-                      onChange && onChange(e, {name, value: checked})
+                      onChange && onChange(e, { name, value: checked })
                     })
                   }}
                 />

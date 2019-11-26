@@ -1,15 +1,15 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Row from './Row'
 import CheckboxControlled from '../../Checkbox/CheckboxControlled'
-import {FormattedMessage} from 'react-intl'
-import {Checkbox, Icon} from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
+import { Checkbox, Icon } from 'semantic-ui-react'
 
 class GroupRow extends Component {
-  state = {open: true}
+  state = { open: true }
   checkbox = React.createRef()
 
   selectGroup(value, disabling) {
-    let rows = this.props.rowsOpns.rows.map(r => ({...r, selected: value}))
+    let rows = this.props.rowsOpns.rows.map(r => ({ ...r, selected: value }))
     this.props.selectGroup({
       groupId: this.props.rowsOpns.index,
       rows: rows,
@@ -27,11 +27,11 @@ class GroupRow extends Component {
 
   toggleGroup(e) {
     if (this.checkbox.current && this.checkbox.current.contains(e.target)) return
-    this.setState({open: !this.state.open})
+    this.setState({ open: !this.state.open })
   }
 
   render() {
-    const {tableType} = this.props
+    const { tableType } = this.props
     const isAllInventory = tableType === 'allInventoryTable'
     return (
       <React.Fragment>
@@ -54,7 +54,7 @@ class GroupRow extends Component {
                 <FormattedMessage
                   id='dataTable.groupRow.ProductOfferings'
                   defaultMessage={this.props.rows.countLabel + this.props.rows.rows.length}
-                  values={{number: this.props.rows.rows.length}}
+                  values={{ number: this.props.rows.rows.length }}
                 />
               ) : null}
               {this.state.open ? (

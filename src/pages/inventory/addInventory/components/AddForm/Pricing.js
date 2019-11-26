@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
-import {Control, Errors, actions} from 'react-redux-form'
-import {required, isNumber, min, messages} from '../../../../../utils/validation'
+import React, { Component } from 'react'
+import { Control, Errors, actions } from 'react-redux-form'
+import { required, isNumber, min, messages } from '../../../../../utils/validation'
 import IncrementalPricing from './IncrementalPricing'
 import CheckboxRedux from '../../../../../components/Checkbox/CheckboxRedux'
 import './Pricing.scss'
 import classNames from 'classnames'
 import WarningLabel from '../../../../../components/WarningLabel/WarningLabel'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 class Pricing extends Component {
   constructor(props) {
@@ -96,7 +96,7 @@ class Pricing extends Component {
       case 'price': {
         let newmargin = this.calculateMargin(activeVal, cost)
         if (isNaN(newmargin)) {
-          this.setState({margin: ''})
+          this.setState({ margin: '' })
         } else {
           this.setState({
             margin: newmargin,
@@ -115,15 +115,15 @@ class Pricing extends Component {
         }
 
         if (isNaN(newmargin)) {
-          this.setState({margin: ''})
+          this.setState({ margin: '' })
         } else {
-          this.setState({margin: newmargin, incrementalPricing: newIncrementalPricing})
+          this.setState({ margin: newmargin, incrementalPricing: newIncrementalPricing })
         }
         break
       }
 
       case 'margin': {
-        this.setState({margin: activeVal})
+        this.setState({ margin: activeVal })
         let newprice = cost + (cost * activeVal) / 100
         newprice = Number(newprice.toFixed(3))
         this.handlePriceChange('forms.addProductOffer.pricing.price', newprice)
@@ -165,20 +165,20 @@ class Pricing extends Component {
       return true
     })
     this.props.getIncPricing(newIncremental)
-    this.setState({incrementalPricing: newIncremental})
+    this.setState({ incrementalPricing: newIncremental })
   }
 
   validateMinimum = form => {
     if (form === 'minimum') {
       if (this.state.minimum < 0 || this.state.minimum === '') {
-        this.setState({minimum: ''}, () => this.disableInput())
+        this.setState({ minimum: '' }, () => this.disableInput())
         return
       } else if (this.state.splits === '') {
         return
       }
     } else if (form === 'splits') {
       if (this.state.splits < 1 || this.state.splits === '') {
-        this.setState({splits: ''}, () => this.disableInput())
+        this.setState({ splits: '' }, () => this.disableInput())
         return
       } else if (this.state.minimum === '') {
         return
@@ -193,7 +193,7 @@ class Pricing extends Component {
         this.state.splits < 2 * difference
           ? this.state.minimum + this.state.splits - difference
           : this.state.minimum - difference
-    this.setState({minimum: tmpMin}, () => {
+    this.setState({ minimum: tmpMin }, () => {
       this.disableInput()
       this.validateInputs()
     })
@@ -207,8 +207,8 @@ class Pricing extends Component {
 
   disableInput = () => {
     if (this.state.splits === '' || this.state.minimum === '') {
-      this.setState({disabled: true})
-    } else this.setState({disabled: false})
+      this.setState({ disabled: true })
+    } else this.setState({ disabled: false })
   }
 
   addNewIncrementalPricing = (e, index) => {
@@ -296,12 +296,12 @@ class Pricing extends Component {
     //mappingForm: {packaging},
     //addProductOfferForm: {pricing}
     //} = this.props
-    const {showIncrementalPricing, splits, minimum, disabled, incrementalPricing} = this.state
+    const { showIncrementalPricing, splits, minimum, disabled, incrementalPricing } = this.state
 
     //const measurement = packaging ? packaging.capacity : null
     //const price = this.props
 
-    const {packaging} = this.props.mappingForm
+    const { packaging } = this.props.mappingForm
     let pricePer, costPer, unit
     if (packaging) {
       unit = !packaging.unit ? 0 : packaging.unit
@@ -313,10 +313,10 @@ class Pricing extends Component {
         }
       }
       pricePer = (
-        <FormattedMessage id='global.pricePer' defaultMessage={'Price per ' + unitTxt} values={{unit: unitTxt}} />
+        <FormattedMessage id='global.pricePer' defaultMessage={'Price per ' + unitTxt} values={{ unit: unitTxt }} />
       )
       costPer = (
-        <FormattedMessage id='addInventory.costPer' defaultMessage={'Cost per ' + unitTxt} values={{unit: unitTxt}} />
+        <FormattedMessage id='addInventory.costPer' defaultMessage={'Cost per ' + unitTxt} values={{ unit: unitTxt }} />
       )
     }
     let totalSalesPrice
@@ -335,7 +335,7 @@ class Pricing extends Component {
           ).formatMoney(3)
         : 0
 
-    const {formatMessage} = this.props.intl
+    const { formatMessage } = this.props.intl
 
     let pricing = (
       <div>
@@ -412,7 +412,7 @@ class Pricing extends Component {
                 <Control.text
                   model='.pricing.margin'
                   id='.marginPr'
-                  className={classNames({inRed: this.state.margin < 0}, 'pricing-gross-margin')}
+                  className={classNames({ inRed: this.state.margin < 0 }, 'pricing-gross-margin')}
                   //   validators={{
                   //       min: (val) => min(val, 0),
                   //       isNumber,
@@ -520,7 +520,7 @@ class Pricing extends Component {
                 defaultValue={this.state.showIncrementalPricing}
                 dispatch={this.props.dispatch}
                 model={'forms.addProductOffer.incrementalSelected'}
-                onChange={value => this.setState({showIncrementalPricing: value})}
+                onChange={value => this.setState({ showIncrementalPricing: value })}
                 data-test='inventory_add_pricing_chckb'
               />
             </div>

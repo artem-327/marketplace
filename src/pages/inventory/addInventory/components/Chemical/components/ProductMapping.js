@@ -1,11 +1,11 @@
-import React, {Component} from 'react'
-import {Control, Form, Errors} from 'react-redux-form'
+import React, { Component } from 'react'
+import { Control, Form, Errors } from 'react-redux-form'
 import DropdownRedux from '../../../../../../components/Dropdown/DropdownRedux'
-import {required, isInteger, min, messages} from '../../../../../../utils/validation'
+import { required, isInteger, min, messages } from '../../../../../../utils/validation'
 import './ProductMapping.scss'
 import Tooltip from '../../../../../../components/Tooltip/Tooltip'
-import {FormattedMessage} from 'react-intl'
-import {checkToken} from '../../../../../../utils/auth'
+import { FormattedMessage } from 'react-intl'
+import { checkToken } from '../../../../../../utils/auth'
 export default class ProductMapping extends Component {
   constructor(props) {
     super(props)
@@ -32,7 +32,7 @@ export default class ProductMapping extends Component {
     if (checkToken(this.props)) return
 
     values = Object.assign({}, values, {
-      packaging: {...values.packaging, size: Number(values.packaging.size)},
+      packaging: { ...values.packaging, size: Number(values.packaging.size) },
       product: this.props.productID,
       fakeSubmit: document.getElementById('form-mapping').classList.contains('validate-only')
     })
@@ -157,7 +157,7 @@ export default class ProductMapping extends Component {
               </label>
               <Control.text
                 model='.productName'
-                validators={{required}}
+                validators={{ required }}
                 id='.productName'
                 defaultValue={this.props.edit ? this.props.productOffer.productName : ''}
               />
@@ -188,7 +188,7 @@ export default class ProductMapping extends Component {
               </label>
               <Control.text
                 model='.packaging.size'
-                validators={{required, min: val => min(val, 0), isInteger}}
+                validators={{ required, min: val => min(val, 0), isInteger }}
                 id='.measurements'
                 onChange={this.props.measureHandler}
                 //defaultValue=""
@@ -211,7 +211,7 @@ export default class ProductMapping extends Component {
                 opns={this.getMeasurementUnits()}
                 placeholder='Select'
                 model='forms.productMapping.packaging.unit'
-                validators={{required}}
+                validators={{ required }}
                 dispatch={this.props.dispatch}
                 onChange={value => this.selectedMeasurementUnit(value)}
                 //defaultValue=""
@@ -235,7 +235,7 @@ export default class ProductMapping extends Component {
                 placeholder='Select'
                 model='forms.productMapping.packaging.packagingType'
                 dispatch={this.props.dispatch}
-                validators={{required}}
+                validators={{ required }}
                 onChange={value => this.selectedPackagingUnit(value)}
                 data-test='inventory_add_product_map_packagingType_drpdn'
               />

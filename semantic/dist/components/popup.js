@@ -438,9 +438,9 @@
               isWindow = $boundary[0] == window,
               targetPosition =
                 settings.inline || (settings.popup && settings.movePopup) ? $target.position() : $target.offset(),
-              screenPosition = isWindow ? {top: 0, left: 0} : $boundary.offset(),
+              screenPosition = isWindow ? { top: 0, left: 0 } : $boundary.offset(),
               calculations = {},
-              scroll = isWindow ? {top: $window.scrollTop(), left: $window.scrollLeft()} : {top: 0, left: 0},
+              scroll = isWindow ? { top: $window.scrollTop(), left: $window.scrollLeft() } : { top: 0, left: 0 },
               screen
             calculations = {
               // element which is launching popup

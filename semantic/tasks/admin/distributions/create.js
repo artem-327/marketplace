@@ -121,20 +121,20 @@ module.exports = function(callback) {
       if (distribution == 'CSS') {
         gulp.task(task.repo, function() {
           var themes, components, releases
-          themes = gulp.src('dist/themes/default/**/*', {base: 'dist/'}).pipe(gulp.dest(outputDirectory))
-          components = gulp.src('dist/components/*', {base: 'dist/'}).pipe(gulp.dest(outputDirectory))
-          releases = gulp.src('dist/*', {base: 'dist/'}).pipe(gulp.dest(outputDirectory))
+          themes = gulp.src('dist/themes/default/**/*', { base: 'dist/' }).pipe(gulp.dest(outputDirectory))
+          components = gulp.src('dist/components/*', { base: 'dist/' }).pipe(gulp.dest(outputDirectory))
+          releases = gulp.src('dist/*', { base: 'dist/' }).pipe(gulp.dest(outputDirectory))
           return mergeStream(themes, components, releases)
         })
       } else if (distribution == 'LESS') {
         gulp.task(task.repo, function() {
           var definitions, themeImport, themeConfig, siteTheme, themes
-          definitions = gulp.src('src/definitions/**/*', {base: 'src/'}).pipe(gulp.dest(outputDirectory))
-          themeImport = gulp.src('src/semantic.less', {base: 'src/'}).pipe(gulp.dest(outputDirectory))
-          themeImport = gulp.src('src/theme.less', {base: 'src/'}).pipe(gulp.dest(outputDirectory))
-          themeConfig = gulp.src('src/theme.config.example', {base: 'src/'}).pipe(gulp.dest(outputDirectory))
-          siteTheme = gulp.src('src/_site/**/*', {base: 'src/'}).pipe(gulp.dest(outputDirectory))
-          themes = gulp.src('src/themes/**/*', {base: 'src/'}).pipe(gulp.dest(outputDirectory))
+          definitions = gulp.src('src/definitions/**/*', { base: 'src/' }).pipe(gulp.dest(outputDirectory))
+          themeImport = gulp.src('src/semantic.less', { base: 'src/' }).pipe(gulp.dest(outputDirectory))
+          themeImport = gulp.src('src/theme.less', { base: 'src/' }).pipe(gulp.dest(outputDirectory))
+          themeConfig = gulp.src('src/theme.config.example', { base: 'src/' }).pipe(gulp.dest(outputDirectory))
+          siteTheme = gulp.src('src/_site/**/*', { base: 'src/' }).pipe(gulp.dest(outputDirectory))
+          themes = gulp.src('src/themes/**/*', { base: 'src/' }).pipe(gulp.dest(outputDirectory))
           return mergeStream(definitions, themeImport, themeConfig, siteTheme, themes)
         })
       }

@@ -1,21 +1,20 @@
-import React, {Component} from 'react'
-import {Grid, GridColumn, Header, Segment, GridRow} from 'semantic-ui-react'
-import {string, array, func, number, node} from 'prop-types'
-import {FormattedMessage, FormattedNumber} from 'react-intl'
-import {getSafe} from '~/utils/functions'
-import {RelaxedRow, HeaderTextRow} from './styledComponents'
-import {currency} from '~/constants/index'
+import React, { Component } from 'react'
+import { Grid, GridColumn, Header, Segment, GridRow } from 'semantic-ui-react'
+import { string, array, func, number, node } from 'prop-types'
+import { FormattedMessage, FormattedNumber } from 'react-intl'
+import { getSafe } from '~/utils/functions'
+import { RelaxedRow, HeaderTextRow } from './styledComponents'
+import { currency } from '~/constants/index'
 
 import './styles.scss'
 
 export default class Summary extends Component {
   render() {
-    let {header, cart, totalPrice, additionalContent} = this.props
-    let {cartItems} = cart
+    let { header, cart, totalPrice, additionalContent } = this.props
+    let { cartItems } = cart
 
     if (cartItems.length === 0) return null
 
-    //console.log('!!!!!! Summary Render props', this.props)
 
     //let totalWeight = 0
     /*

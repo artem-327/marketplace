@@ -1,13 +1,13 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {Modal, FormGroup} from 'semantic-ui-react'
-import {Form, Input, Button} from 'formik-semantic-ui-fixed-validation'
+import { connect } from 'react-redux'
+import { Modal, FormGroup } from 'semantic-ui-react'
+import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import Router from 'next/router'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {closePopup, handlerSubmitWarehouseEditPopup, postNewCreditCardRequest} from '../../actions'
-import {errorMessages} from '~/constants/yupValidation'
+import { closePopup, handlerSubmitWarehouseEditPopup, postNewCreditCardRequest } from '../../actions'
+import { errorMessages } from '~/constants/yupValidation'
 
 const formValidation = Yup.object().shape({
   cardNumber: Yup.string()
@@ -32,7 +32,7 @@ class CreditCardsPopup extends React.Component {
       popupValues,
       currentTab,
       postNewCreditCardRequest,
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
     const title = popupValues ? 'Edit' : 'Add'
 
@@ -50,24 +50,24 @@ class CreditCardsPopup extends React.Component {
             <FormGroup widths='equal' data-test='settings_credit_card_cardNumberCvc_inp'>
               <Input
                 type='text'
-                label={formatMessage({id: 'settings.cardNumber', defaultMessage: 'Card Number'})}
+                label={formatMessage({ id: 'settings.cardNumber', defaultMessage: 'Card Number' })}
                 name='cardNumber'
               />
-              <Input type='text' label={formatMessage({id: 'settings.cvc', defaultMessage: 'CVC'})} name='cvc' />
+              <Input type='text' label={formatMessage({ id: 'settings.cvc', defaultMessage: 'CVC' })} name='cvc' />
             </FormGroup>
             <FormGroup widths='equal' data-test='settings_credit_card_expiration_inp'>
               <Input
                 type='text'
-                label={formatMessage({id: 'settings.expirationMonth', defaultMessage: 'Expiration Month'})}
+                label={formatMessage({ id: 'settings.expirationMonth', defaultMessage: 'Expiration Month' })}
                 name='expirationMonth'
               />
               <Input
                 type='text'
-                label={formatMessage({id: 'settings.expirationYear', defaultMessage: 'Expiration Year'})}
+                label={formatMessage({ id: 'settings.expirationYear', defaultMessage: 'Expiration Year' })}
                 name='expirationYear'
               />
             </FormGroup>
-            <div style={{textAlign: 'right'}}>
+            <div style={{ textAlign: 'right' }}>
               <Button.Reset onClick={closePopup} data-test='settings_credit_card_reset_btn'>
                 <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
               </Button.Reset>

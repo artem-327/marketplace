@@ -1,12 +1,12 @@
 import * as api from './api'
 
-import {createAction, createAsyncAction} from 'redux-promise-middleware-actions'
+import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
 
-import {filterTypes, filterPresets} from './constants/filter'
+import { filterTypes, filterPresets } from './constants/filter'
 
 export const toggleFilter = createAction(
   'TOGGLE_FILTER',
-  (value = null, type = filterPresets.INVENTORY_MARKETPLACE) => ({value, type})
+  (value = null, type = filterPresets.INVENTORY_MARKETPLACE) => ({ value, type })
 )
 export const filterSaving = createAction('FILTER_SAVING', (isSaving = false) => isSaving)
 export const filterApplying = createAction('FILTER_APPLYING', isApplying => isApplying)
@@ -18,7 +18,7 @@ export const getSavedFilters = createAsyncAction(
   async (savedUrl, productInfo, apiUrl, filterType = filterTypes.INVENTORY) => {
     let data = await api.getSavedFilters(savedUrl)
 
-    return {data, productInfo, filterType}
+    return { data, productInfo, filterType }
   }
 )
 // export const getAutocompleteData = createAsyncAction('GET_AUTOCOMPLETE_DATA', searchUrl => api.getAutocompleteData(searchUrl))

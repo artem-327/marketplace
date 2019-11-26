@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './ComboBox.scss'
 import debounce from 'debounce'
 import PropTypes from 'prop-types'
-import {DEBOUNCE_TIME} from '../../utils/constants'
+import { DEBOUNCE_TIME } from '../../utils/constants'
 import Spinner from '../Spinner/Spinner'
 
 //TODO: maybe try http://react-autosuggest.js.org/
@@ -23,18 +23,18 @@ class RemoteComboBox extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.dataFetched !== prevProps.dataFetched) this.setState({dataFetched: this.props.dataFetched})
-    if (this.props.items !== prevProps.items) this.setState({items: this.props.items})
+    if (this.props.dataFetched !== prevProps.dataFetched) this.setState({ dataFetched: this.props.dataFetched })
+    if (this.props.items !== prevProps.items) this.setState({ items: this.props.items })
     if (
       (this.state.fulltext.length === 0 && prevState.fulltext.length > 0) ||
       (this.state.fulltext.length === 1 && prevState.fulltext.length !== 1)
     )
-      this.setState({items: [], dataFetched: false})
+      this.setState({ items: [], dataFetched: false })
   }
 
   componentDidMount() {
     if (this.props.currentValue) {
-      this.setState({fulltext: this.props.currentValue}, () => {
+      this.setState({ fulltext: this.props.currentValue }, () => {
         if (this.props.onChange) this.props.onChange(this.state.fulltext)
       })
     }
@@ -44,7 +44,7 @@ class RemoteComboBox extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.currentValue) {
-      this.setState({fulltext: nextProps.currentValue}, () => {})
+      this.setState({ fulltext: nextProps.currentValue }, () => {})
     }
   }
 
@@ -54,7 +54,7 @@ class RemoteComboBox extends Component {
 
   handleClickOutside(e) {
     if (this.comboRef.current.contains(e.target)) return
-    this.setState({isOpen: false})
+    this.setState({ isOpen: false })
   }
 
   setActive(index) {
@@ -106,14 +106,14 @@ class RemoteComboBox extends Component {
         </div>
       ))
       return (
-        <div tabIndex='-1' className={'combo-results'} style={{maxHeight: 44 * this.state.results_count}}>
+        <div tabIndex='-1' className={'combo-results'} style={{ maxHeight: 44 * this.state.results_count }}>
           {res}
         </div>
       )
     }
     if (this.state.dataFetched === 200 && this.state.items.length === 0) {
       return (
-        <div className={'combo-results'} style={{maxHeight: 44 * this.state.results_count}}>
+        <div className={'combo-results'} style={{ maxHeight: 44 * this.state.results_count }}>
           <p className='combo-no-result'>No results</p>
         </div>
       )
@@ -122,7 +122,7 @@ class RemoteComboBox extends Component {
 
   handleChange(e) {
     //if(e.target.value === "") this.setState({items: [], dataFetched: false})
-    this.setState({fulltext: e.target.value, hasSearched: true, isOpen: true}, () => {
+    this.setState({ fulltext: e.target.value, hasSearched: true, isOpen: true }, () => {
       if (!!this.state.fulltext.length)
         setTimeout(() => {
           if (this.state.fulltext.length > 2) this.filterData()
@@ -131,7 +131,7 @@ class RemoteComboBox extends Component {
   }
 
   handleTab(e) {
-    if (e.keyCode == 9) this.setState({isOpen: false})
+    if (e.keyCode == 9) this.setState({ isOpen: false })
   }
 
   filterData() {
@@ -139,7 +139,7 @@ class RemoteComboBox extends Component {
   }
 
   render() {
-    let {fulltext} = this.state
+    let { fulltext } = this.state
     let results = this.renderResults()
     let validate =
       this.state.fulltext.length < 3 && this.state.fulltext.length > 0 ? (

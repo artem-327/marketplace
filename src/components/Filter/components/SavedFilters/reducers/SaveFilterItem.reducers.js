@@ -1,4 +1,4 @@
-import {CHANGE_ELEMENT} from '../constants/SaveFilterItem.constants'
+import { CHANGE_ELEMENT } from '../constants/SaveFilterItem.constants'
 
 const initialState = {
   bell0: false,

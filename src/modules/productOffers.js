@@ -1,7 +1,7 @@
 import axios from 'axios'
-import {transformRequestOptions, filterByUniqueProperty} from '../utils/functions'
+import { transformRequestOptions, filterByUniqueProperty } from '../utils/functions'
 import api from '../api/productOffers'
-import {PRODUCTOFFER_REMOVE_REQUESTED} from '../constants/productOffers'
+import { PRODUCTOFFER_REMOVE_REQUESTED } from '../constants/productOffers'
 import FormData from 'form-data'
 
 const GET_PRODUCT_OFFERS_MY = 'GET_PRODUCT_OFFERS_MY'
@@ -134,7 +134,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case OFFER_BROADCAST_FULFILLED: {
-      const {offerId, checked} = action.payload
+      const { offerId, checked } = action.payload
       return {
         ...state,
         myProductOffers: state.myProductOffers.map(function(po) {
@@ -156,7 +156,7 @@ export default function reducer(state = initialState, action) {
 }
 
 export function deleteProductOffersList() {
-  return {type: DELETE_PRODUCT_OFFERS_LIST}
+  return { type: DELETE_PRODUCT_OFFERS_LIST }
 }
 
 export function fetchMyProductOffers(filter = {}) {
@@ -224,7 +224,7 @@ export function loadFile(attachment) {
       url: attachment.preview,
       method: 'GET',
       responseType: 'blob'
-    }).then(r => new File([r.data], attachment.name, {type: attachment.type}))
+    }).then(r => new File([r.data], attachment.name, { type: attachment.type }))
   }
 }
 
@@ -285,7 +285,7 @@ export function getUnitOfMeasurement() {
 export function getUnitOfPackaging(pack) {
   return {
     type: GET_UNIT_OF_PACKAGING,
-    payload: axios.get('/prodex/api/packaging-types', {params: {...pack}}).then(response => response.data)
+    payload: axios.get('/prodex/api/packaging-types', { params: { ...pack } }).then(response => response.data)
   }
 }
 // unused
@@ -303,11 +303,11 @@ export function getUnitOfPackaging(pack) {
 // }
 
 export function deleteProductOffer(id, onSuccess) {
-  return {type: PRODUCTOFFER_REMOVE_REQUESTED, payload: {id, onSuccess}} //TODO: refactor all product offers to saga, then remove onSuccess
+  return { type: PRODUCTOFFER_REMOVE_REQUESTED, payload: { id, onSuccess } } //TODO: refactor all product offers to saga, then remove onSuccess
 }
 
 export function offerBroadcast(data) {
-  const {offerId, checked} = data
+  const { offerId, checked } = data
   return {
     type: OFFER_BROADCAST,
     async payload() {

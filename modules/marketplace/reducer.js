@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 
-import {uniqueArrayByKey, getSafe} from '~/utils/functions'
+import { uniqueArrayByKey, getSafe } from '~/utils/functions'
 
 export const initialState = {
   fileIds: [],
@@ -23,7 +23,7 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-  const {type, payload} = action
+  const { type, payload } = action
 
   switch (type) {
     case AT.GET_AUTOCOMPLETE_DATA_MARKETPLACE_PENDING: {

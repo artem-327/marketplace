@@ -30,7 +30,7 @@ import {
   DELIVERYADDRESS_EDIT_FAILED
 } from '../constants/cart'
 import Api from '~/src/api/cart'
-import {getLocationString, getPricing} from '../utils/functions'
+import { getLocationString, getPricing } from '../utils/functions'
 
 export const initialState = {
   offerDetail: null,
@@ -74,8 +74,8 @@ export default function reducer(state = initialState, action) {
     case ORDERDETAIL_FETCH_SUCCEEDED: {
       return {
         ...state,
-        orderDetail: {...action.payload, locationStr: getLocationString(action.payload.productOffer)},
-        sidebar: {...state.sidebar, quantity: action.payload.quantity},
+        orderDetail: { ...action.payload, locationStr: getLocationString(action.payload.productOffer) },
+        sidebar: { ...state.sidebar, quantity: action.payload.quantity },
         orderDetailIsFetching: false
       }
     }
@@ -104,7 +104,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         isFetching: false,
         deliveryAddresses: state.deliveryAddresses.concat(action.payload),
-        shipping: {...state.shipping, selectedAddress: action.payload, isShippingEdit: false}
+        shipping: { ...state.shipping, selectedAddress: action.payload, isShippingEdit: false }
       }
     }
     case DELIVERYADDRESS_CREATE_FAILED: {
@@ -128,7 +128,7 @@ export default function reducer(state = initialState, action) {
         deliveryAddresses: Object.assign([], state.deliveryAddresses, {
           [state.deliveryAddresses.findIndex(value => value.id === action.payload.id)]: action.payload
         }),
-        shipping: {...state.shipping, selectedAddress: action.payload, isShippingEdit: false}
+        shipping: { ...state.shipping, selectedAddress: action.payload, isShippingEdit: false }
       }
     }
 
@@ -159,12 +159,12 @@ export default function reducer(state = initialState, action) {
       }
     }
     case OFFER_FETCH_SUCCEEDED: {
-      let {payload} = action
+      let { payload } = action
 
       return {
         ...state,
         offerDetail: payload,
-        sidebar: {...state.sidebar, quantity: !payload.isEdit ? payload.minimum : state.sidebar.quantity},
+        sidebar: { ...state.sidebar, quantity: !payload.isEdit ? payload.minimum : state.sidebar.quantity },
         offerDetailIsFetching: false
       }
     }
@@ -175,9 +175,9 @@ export default function reducer(state = initialState, action) {
       }
     }
     case CART_FETCH_REQUESTED_FULFILLED: {
-      let {payload} = action
+      let { payload } = action
       if (payload.cartItems) {
-        let {cartItems} = payload
+        let { cartItems } = payload
         cartItems.forEach(item => {
           item.locationStr = getLocationString(item.productOffer)
           item.pricing = getPricing(item.productOffer, item.pkgAmount)
@@ -196,7 +196,7 @@ export default function reducer(state = initialState, action) {
         country: action.country,
         zip: action.zip,
         shippingQuotesAreFetching: true,
-        cart: {...state.cart, selectedShipping: null}
+        cart: { ...state.cart, selectedShipping: null }
       }
     }
     case SHIPPING_QUOTES_FETCH_SUCCEEDED: {
@@ -210,14 +210,14 @@ export default function reducer(state = initialState, action) {
     case SIDEBAR_CHANGED: {
       return {
         ...state,
-        sidebar: {...state.sidebar, ...action.payload}
+        sidebar: { ...state.sidebar, ...action.payload }
       }
     }
 
     case SHIPPING_QUOTE_SELECTED: {
       return {
         ...state,
-        cart: {...state.cart, selectedShipping: action.payload}
+        cart: { ...state.cart, selectedShipping: action.payload }
       }
     }
 
@@ -245,8 +245,8 @@ export default function reducer(state = initialState, action) {
     case UPDATE_CART_ITEM_SUCCEEDED: {
       return {
         ...state,
-        cart: {...state.cart, ...action.payload},
-        sidebar: {...state.cart.sidebar, isOpen: false},
+        cart: { ...state.cart, ...action.payload },
+        sidebar: { ...state.cart.sidebar, isOpen: false },
         offerDetailIsFetching: false
       }
     }
@@ -254,13 +254,13 @@ export default function reducer(state = initialState, action) {
     case ADD_CART_ITEM_SUCCEEDED: {
       return {
         ...state,
-        sidebar: {...state.cart.sidebar, isOpen: false}
+        sidebar: { ...state.cart.sidebar, isOpen: false }
       }
     }
     case SHIPPING_CHANGED: {
       return {
         ...state,
-        shipping: {...state.shipping, ...action.payload}
+        shipping: { ...state.shipping, ...action.payload }
       }
     }
     default: {
@@ -272,28 +272,28 @@ export default function reducer(state = initialState, action) {
 export function getProductOffer(id, isEdit = false) {
   return {
     type: OFFER_FETCH_REQUESTED,
-    payload: {id, isEdit}
+    payload: { id, isEdit }
   }
 }
 
 export function getCart() {
-  return {type: CART_FETCH_REQUESTED, payload: Api.getCart()}
+  return { type: CART_FETCH_REQUESTED, payload: Api.getCart() }
 }
 
 export function getDeliveryAddresses() {
-  return {type: DELIVERYADDRESSES_FETCH_REQUESTED}
+  return { type: DELIVERYADDRESSES_FETCH_REQUESTED }
 }
 
 export function getPayments() {
-  return {type: PAYMENTS_FETCH_REQUESTED}
+  return { type: PAYMENTS_FETCH_REQUESTED }
 }
 
 export function deleteCart(id) {
-  return {type: PRODUCTFROMCART_REMOVE_REQUESTED, payload: {id}}
+  return { type: PRODUCTFROMCART_REMOVE_REQUESTED, payload: { id } }
 }
 
 export function postNewDeliveryAddress(address) {
-  return {type: DELIVERYADDRESS_CREATE_REQUESTED, payload: address}
+  return { type: DELIVERYADDRESS_CREATE_REQUESTED, payload: address }
 }
 
 // export function getOrderDetail(id) {
@@ -309,37 +309,37 @@ export function postNewDeliveryAddress(address) {
 // }
 
 export function updateDeliveryAddress(address) {
-  return {type: DELIVERYADDRESS_EDIT_REQUESTED, payload: address}
+  return { type: DELIVERYADDRESS_EDIT_REQUESTED, payload: address }
 }
 
 export function getShippingQuotes(countryId, zip) {
-  return {type: SHIPPING_QUOTES_FETCH_REQUESTED, payload: {countryId, zip}}
+  return { type: SHIPPING_QUOTES_FETCH_REQUESTED, payload: { countryId, zip } }
 }
 
 export function sidebarChanged(payload) {
-  return {type: SIDEBAR_CHANGED, payload}
+  return { type: SIDEBAR_CHANGED, payload }
 }
 
 export function shippingQuoteSelected(payload) {
-  return {type: SHIPPING_QUOTE_SELECTED, payload}
+  return { type: SHIPPING_QUOTE_SELECTED, payload }
 }
 
 export function addCartItem(payload) {
-  return {type: ADD_CART_ITEM_REQUESTED, payload}
+  return { type: ADD_CART_ITEM_REQUESTED, payload }
 }
 
 export function updateCartItem(payload) {
-  return {type: UPDATE_CART_ITEM_REQUESTED, payload}
+  return { type: UPDATE_CART_ITEM_REQUESTED, payload }
 }
 
 export function deleteCartItem(payload) {
-  return {type: DELETE_CART_ITEM_REQUESTED, payload}
+  return { type: DELETE_CART_ITEM_REQUESTED, payload }
 }
 
 export function getCartItem(payload) {
-  return {type: GET_CART_ITEM_REQUESTED, payload}
+  return { type: GET_CART_ITEM_REQUESTED, payload }
 }
 
 export function shippingChanged(values) {
-  return {type: SHIPPING_CHANGED, payload: values}
+  return { type: SHIPPING_CHANGED, payload: values }
 }

@@ -1,16 +1,16 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {injectIntl, FormattedMessage} from 'react-intl'
-import {generateToastMarkup} from '~/utils/functions'
-import {withToastManager} from 'react-toast-notifications'
-import {FormattedDateTime, FormattedPhone} from '~/components/formatted-messages/'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { injectIntl, FormattedMessage } from 'react-intl'
+import { generateToastMarkup } from '~/utils/functions'
+import { withToastManager } from 'react-toast-notifications'
+import { FormattedDateTime, FormattedPhone } from '~/components/formatted-messages/'
 
 import ProdexGrid from '~/components/table'
-import {withDatagrid} from '~/modules/datagrid'
+import { withDatagrid } from '~/modules/datagrid'
 // import { TablePopUp } from '~/components/tablePopup'
 import confirm from '~/src/components/Confirmable/confirm'
-import {currency} from '~/constants/index'
-import {getSafe} from '~/utils/functions'
+import { currency } from '~/constants/index'
+import { getSafe } from '~/utils/functions'
 
 import {
   getUsersDataRequest,
@@ -23,7 +23,7 @@ import {
   resendWelcomeEmail
 } from '../../actions'
 import Router from 'next/router'
-import {Checkbox, Popup, Label} from 'semantic-ui-react'
+import { Checkbox, Popup, Label } from 'semantic-ui-react'
 
 const handleSwitchEnabled = id => {
   userSwitchEnableDisable(id)
@@ -103,7 +103,7 @@ class UsersTable extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    const {addedItem, editedItem, datagrid} = this.props
+    const { addedItem, editedItem, datagrid } = this.props
 
     if (addedItem !== oldProps.addedItem) {
       datagrid.loadData()
@@ -142,8 +142,8 @@ class UsersTable extends Component {
       // currentTab
     } = this.props
 
-    let {columns} = this.state
-    const {formatMessage} = intl
+    let { columns } = this.state
+    const { formatMessage } = intl
 
     return (
       <React.Fragment>
@@ -154,26 +154,26 @@ class UsersTable extends Component {
           columns={columns}
           rows={rows}
           loading={datagrid.loading || loading}
-          style={{marginTop: '5px'}}
+          style={{ marginTop: '5px' }}
           rowActions={[
             {
-              text: formatMessage({id: 'global.edit', defaultMessage: 'Edit'}),
+              text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
               callback: row => openPopup(row),
               hidden: row => currentUserId === row.id
             },
             {
-              text: formatMessage({id: 'settings.editRoles', defaultMessage: 'Edit Roles'}),
+              text: formatMessage({ id: 'settings.editRoles', defaultMessage: 'Edit Roles' }),
               callback: row => openRolesPopup(row),
               hidden: row => currentUserId === row.id
             },
             {
-              text: formatMessage({id: 'global.delete', defaultMessage: 'Delete'}),
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row =>
                 confirm(
-                  formatMessage({id: 'confirm.deleteUser', defaultMessage: 'Delete User'}),
+                  formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
                   formatMessage(
-                    {id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?`},
-                    {item: row.name}
+                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` },
+                    { item: row.name }
                   )
                 ).then(() => deleteUser(row.id, row.name)),
               hidden: row => currentUserId === row.id
@@ -181,7 +181,7 @@ class UsersTable extends Component {
             {
               text: <FormattedMessage id='settings.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
               callback: async row => {
-                const {value} = await resendWelcomeEmail(row.id)
+                const { value } = await resendWelcomeEmail(row.id)
 
                 toastManager.add(generateToastMarkup(null, value.clientMessage), {
                   appearance: 'success'
@@ -211,7 +211,7 @@ const userEnableDisableStatus = (r, currentUserId) => {
   let id = r.enabled ? 'settings.user.enabled' : 'settings.user.disabled'
 
   return (
-    <div style={{float: 'right'}}>
+    <div style={{ float: 'right' }}>
       <Popup
         id={r.id}
         trigger={
@@ -240,7 +240,7 @@ const userEnableDisableStatus = (r, currentUserId) => {
   )
 }
 
-const mapStateToProps = (state, {datagrid}) => {
+const mapStateToProps = (state, { datagrid }) => {
   const currentUserId = state.settings.currentUser && state.settings.currentUser.id
   return {
     rows: datagrid.rows.map(user => ({

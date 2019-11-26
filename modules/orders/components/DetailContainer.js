@@ -1,14 +1,14 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import React from 'react'
-import {bindActionCreators} from 'redux'
+import { bindActionCreators } from 'redux'
 import Detail from './Detail'
 import * as Actions from '../actions'
 import * as OrdersHelper from '~/src/helpers/Orders'
 import moment from 'moment/moment'
-import {getSafe} from '~/utils/functions'
-import {FormattedNumber} from 'react-intl'
-import {ArrayToMultiple} from '~/components/formatted-messages'
-import {currency} from '~/constants/index'
+import { getSafe } from '~/utils/functions'
+import { FormattedNumber } from 'react-intl'
+import { ArrayToMultiple } from '~/components/formatted-messages'
+import { currency } from '~/constants/index'
 
 function actionRequired(data) {
   // return statuses code
@@ -33,7 +33,7 @@ function prepareDetail(data, type) {
       typeof data.buyerRejectionDate !== 'undefined'
         ? moment(data.buyerRejectionDate).format('MMM Do, YYYY h:mm:ss A')
         : 'N/A',
-    carrier: data.shippingMethod ? data.shippingMethod : 'N/A',
+    carrier: data.shippingCourierName ? data.shippingCourierName : 'N/A',
     chemicalName: <ArrayToMultiple values={orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))} />,
     confirmationDate:
       typeof data.confirmationDate !== 'undefined'
@@ -182,7 +182,7 @@ function prepareDetail(data, type) {
 }
 
 function mapStateToProps(state, ownProps) {
-  const {orders} = state
+  const { orders } = state
 
   if (ownProps.router.query.type !== orders.detailType) {
     orders.detail = {}

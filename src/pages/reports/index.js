@@ -1,6 +1,6 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import Reports from './Reports'
-import {bindActionCreators} from 'redux'
+import { bindActionCreators } from 'redux'
 
 function mapStateToProps(store) {
   return {}

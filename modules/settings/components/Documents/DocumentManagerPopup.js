@@ -1,23 +1,23 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {Form, FormGroup, Modal, Button} from 'semantic-ui-react'
-import {Input, Dropdown, Checkbox} from 'formik-semantic-ui-fixed-validation'
-import {Formik} from 'formik'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Form, FormGroup, Modal, Button } from 'semantic-ui-react'
+import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
+import { Formik } from 'formik'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import * as Yup from 'yup'
 import styled from 'styled-components'
 import moment from 'moment'
-import {withToastManager} from 'react-toast-notifications'
+import { withToastManager } from 'react-toast-notifications'
 
-import {FileInput, DateInput} from '~/components/custom-formik'
+import { FileInput, DateInput } from '~/components/custom-formik'
 
-import {errorMessages, dateValidation} from '~/constants/yupValidation'
-import {otherPermissions, sharedTo} from '~/constants/index'
-import {getSafe, generateToastMarkup, removeEmpty} from '~/utils/functions'
+import { errorMessages, dateValidation } from '~/constants/yupValidation'
+import { otherPermissions, sharedTo } from '~/constants/index'
+import { getSafe, generateToastMarkup, removeEmpty } from '~/utils/functions'
 
-import {closePopup} from '~/modules/settings/actions'
-import {getDocumentTypes, addAttachment, updateAttachment} from '~/modules/inventory/actions'
-import {func} from 'prop-types'
+import { closePopup } from '~/modules/settings/actions'
+import { getDocumentTypes, addAttachment, updateAttachment } from '~/modules/inventory/actions'
+import { func } from 'prop-types'
 
 const validationSchema = Yup.lazy(values => {
   let validationObject = {
@@ -27,14 +27,14 @@ const validationSchema = Yup.lazy(values => {
     })
   }
 
-  if (!values.id) var conditionalValidations = {file: Yup.string().required(errorMessages.requiredMessage)}
+  if (!values.id) var conditionalValidations = { file: Yup.string().required(errorMessages.requiredMessage) }
   else {
     var conditionalValidations = {
       othersPermissions: Yup.string().required(errorMessages.requiredMessage),
       sharedTo: Yup.string().required(errorMessages.requiredMessage)
     }
   }
-  return Yup.object().shape({...validationObject, ...conditionalValidations})
+  return Yup.object().shape({ ...validationObject, ...conditionalValidations })
 })
 
 const initialValues = {
@@ -56,7 +56,7 @@ const RightAlignedGroup = styled(FormGroup)`
 
 class DocumentPopup extends Component {
   async componentDidMount() {
-    const {documentTypes, getDocumentTypes} = this.props
+    const { documentTypes, getDocumentTypes } = this.props
     if (documentTypes.length === 0) await getDocumentTypes()
   }
 
@@ -65,7 +65,7 @@ class DocumentPopup extends Component {
       closePopup,
       popupValues,
       documentTypes,
-      intl: {formatMessage},
+      intl: { formatMessage },
       documentTypesFetching,
       edit,
       toastManager,
@@ -89,7 +89,7 @@ class DocumentPopup extends Component {
             validateOnChange={false}
             validateOnBlur={false}
             enableReinitialize
-            onSubmit={async (values, {setSubmitting}) => {
+            onSubmit={async (values, { setSubmitting }) => {
               let payload = {
                 customName: values.customName,
                 description: values.description,
@@ -111,7 +111,7 @@ class DocumentPopup extends Component {
 
               try {
                 if (edit) {
-                  await updateAttachment(values.id, {...payload, type: values.documentType.id})
+                  await updateAttachment(values.id, { ...payload, type: values.documentType.id })
                 } else {
                   await addAttachment(values.file, values.documentType.id, payload)
                 }
@@ -128,10 +128,10 @@ class DocumentPopup extends Component {
                     <FormattedMessage
                       id={`${status}.content`}
                       defaultMessage={`Document ${name} successfully ${edit ? 'edited' : 'added'}`}
-                      values={{name}}
+                      values={{ name }}
                     />
                   ),
-                  {appearance: 'success'}
+                  { appearance: 'success' }
                 )
               } catch (e) {
                 console.error(e)
@@ -141,7 +141,7 @@ class DocumentPopup extends Component {
                 onClose()
               }
             }}
-            render={({values, errors, submitForm, setFieldValue, isSubmitting}) => {
+            render={({ values, errors, submitForm, setFieldValue, isSubmitting }) => {
               this.submitForm = submitForm
               return (
                 <Form loading={isSubmitting}>
@@ -204,7 +204,7 @@ class DocumentPopup extends Component {
                       />
                     )}
                     <Dropdown
-                      inputProps={{loading: documentTypesFetching}}
+                      inputProps={{ loading: documentTypesFetching }}
                       loading={documentTypesFetching}
                       name='documentType.id'
                       label='Document Type'
@@ -215,7 +215,7 @@ class DocumentPopup extends Component {
                   <RightAlignedGroup widths='equal'>
                     <Checkbox
                       name='isTemporary'
-                      label={formatMessage({id: 'global.isTemporary', defaultMessage: 'Temporary'})}
+                      label={formatMessage({ id: 'global.isTemporary', defaultMessage: 'Temporary' })}
                     />
                   </RightAlignedGroup>
                 </Form>
@@ -254,7 +254,7 @@ DocumentPopup.defaultProps = {
   onClose: () => {}
 }
 
-const mapStateToProps = ({simpleAdd, settings}) => {
+const mapStateToProps = ({ simpleAdd, settings }) => {
   return {
     popupValues: settings.popupValues,
     documentTypes: simpleAdd.listDocumentTypes,

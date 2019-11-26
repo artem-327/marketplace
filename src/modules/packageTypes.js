@@ -43,7 +43,7 @@ export function validatePackageType(name, measureType, capacity, unit) {
   return {
     type: VALIDATE_PACKAGE_TYPE,
     payload: axios
-      .post('/prodex/api/package-types/', {name, measureType, capacity, unit})
+      .post('/prodex/api/package-types/', { name, measureType, capacity, unit })
       .then(response => response.data.packageType.id)
   }
 }

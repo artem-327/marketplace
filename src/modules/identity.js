@@ -1,8 +1,8 @@
 import axios from 'axios'
 import qs from 'qs'
-import {setAuthToken, deleteAuthToken, finishLogout} from '../utils/auth'
+import { setAuthToken, deleteAuthToken, finishLogout } from '../utils/auth'
 import '../utils/constants'
-import {ROLE_GUEST} from '../utils/constants'
+import { ROLE_GUEST } from '../utils/constants'
 
 const GET_IDENTITY = 'GET_IDENTITY'
 const GET_IDENTITY_PENDING = 'GET_IDENTITY_PENDING'
@@ -61,28 +61,28 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isAuthenticated: false,
-        identity: {isFetching: true, data: {role: ROLE_GUEST}}
+        identity: { isFetching: true, data: { role: ROLE_GUEST } }
       }
     }
     case GET_IDENTITY_FULFILLED: {
       return {
         ...state,
         isAuthenticated: true,
-        identity: {isFetching: false, data: action.payload}
+        identity: { isFetching: false, data: action.payload }
       }
     }
     case GET_IDENTITY_REJECTED: {
       return {
         ...state,
         isAuthenticated: false,
-        identity: {isFetching: false, data: {role: ROLE_GUEST}}
+        identity: { isFetching: false, data: { role: ROLE_GUEST } }
       }
     }
     case LOGIN_PENDING: {
-      return {...state, loginForm: {isFetching: true, hasError: false, isValid: false}}
+      return { ...state, loginForm: { isFetching: true, hasError: false, isValid: false } }
     }
     case LOGIN_REJECTED: {
-      return {...state, loginForm: {isFetching: false, hasError: true, isValid: false}}
+      return { ...state, loginForm: { isFetching: false, hasError: true, isValid: false } }
     }
     case LOGIN_FULFILLED: {
       return {
@@ -95,10 +95,10 @@ export default function reducer(state = initialState, action) {
       }
     }
     case REGISTRATION_PENDING: {
-      return {...state, registrationForm: {isFetching: true, hasError: false, isValid: false}}
+      return { ...state, registrationForm: { isFetching: true, hasError: false, isValid: false } }
     }
     case REGISTRATION_REJECTED: {
-      return {...state, registrationForm: {isFetching: false, hasError: true, isValid: false}}
+      return { ...state, registrationForm: { isFetching: false, hasError: true, isValid: false } }
     }
     case REGISTRATION_FULFILLED: {
       return {
@@ -111,10 +111,10 @@ export default function reducer(state = initialState, action) {
       }
     }
     case LOGOUT: {
-      return {...state, identity: initialState.identity, isAuthenticated: false}
+      return { ...state, identity: initialState.identity, isAuthenticated: false }
     }
     case GET_VERSION_FULFILLED: {
-      return {...state, version: action.payload}
+      return { ...state, version: action.payload }
     }
 
     default: {
@@ -141,8 +141,8 @@ export function login(username, password) {
   return {
     type: LOGIN,
     payload: axios
-      .post('/prodex/oauth/token', qs.stringify({grant_type, username, password}), {
-        headers: {Authorization: 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs'}
+      .post('/prodex/oauth/token', qs.stringify({ grant_type, username, password }), {
+        headers: { Authorization: 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs' }
       })
       .then(response => setAuthToken(response.data.access_token))
   }

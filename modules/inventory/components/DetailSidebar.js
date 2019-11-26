@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {injectIntl, FormattedMessage} from 'react-intl'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import {
   Form,
   Button,
@@ -10,10 +10,10 @@ import {
   Dropdown,
   Radio
 } from 'formik-semantic-ui-fixed-validation'
-import {DateInput} from '~/components/custom-formik'
-import {getSafe, generateToastMarkup} from '~/utils/functions'
-import {bool, string, object, func, array} from 'prop-types'
-import {debounce} from 'lodash'
+import { DateInput } from '~/components/custom-formik'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { bool, string, object, func, array } from 'prop-types'
+import { debounce } from 'lodash'
 import styled from 'styled-components'
 import {
   Sidebar,
@@ -31,7 +31,7 @@ import {
   FormField,
   Input as SemanticInput
 } from 'semantic-ui-react'
-import {withToastManager} from 'react-toast-notifications'
+import { withToastManager } from 'react-toast-notifications'
 import {
   sidebarDetailTrigger,
   getAutocompleteData,
@@ -48,15 +48,15 @@ import {
   removeAttachmentLink,
   removeAttachment
 } from '../actions'
-import {Broadcast} from '~/modules/broadcast'
-import {openBroadcast} from '~/modules/broadcast/actions'
+import { Broadcast } from '~/modules/broadcast'
+import { openBroadcast } from '~/modules/broadcast/actions'
 import ProdexGrid from '~/components/table'
 import * as val from 'yup'
-import {errorMessages, dateValidation} from '~/constants/yupValidation'
+import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import moment from 'moment'
 import UploadLot from './upload/UploadLot'
-import {withDatagrid} from '~/modules/datagrid'
-import {AttachmentManager} from '~/modules/attachments'
+import { withDatagrid } from '~/modules/datagrid'
+import { AttachmentManager } from '~/modules/attachments'
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -136,7 +136,8 @@ const initValues = {
     splits: 1, // splitPkg
     externalNotes: '',
     internalNotes: '',
-    documentType: ''
+    documentType: '',
+    broadcasted: false
   },
   priceTiers: {
     priceTiers: 1,
@@ -188,7 +189,7 @@ val.addMethod(val.object, 'uniqueProperty', function(propertyName, message) {
       return true
     }
 
-    const {path} = this
+    const { path } = this
     const options = [...this.parent]
     const currentIndex = options.indexOf(value)
 
@@ -314,7 +315,7 @@ class DetailSidebar extends Component {
   }
 
   changedForm = () => {
-    this.setState({changedForm: true})
+    this.setState({ changedForm: true })
   }
 
   getPriceTiers = max => {
@@ -358,7 +359,7 @@ class DetailSidebar extends Component {
   }
 
   handleChange = (e, name, value) => {
-    this.setState({openUploadLot: true, documentType: value})
+    this.setState({ openUploadLot: true, documentType: value })
   }
 
   onSplitsChange = debounce(async (value, values, setFieldValue, validateForm) => {
@@ -379,7 +380,7 @@ class DetailSidebar extends Component {
   renderPricingTiers = (count, setFieldValue) => {
     let tiers = []
     const {
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
     for (let i = 0; i < count; i++) {
@@ -400,7 +401,7 @@ class DetailSidebar extends Component {
                 type: 'number',
                 min: 1,
                 value: null,
-                onChange: (e, {value}) => {
+                onChange: (e, { value }) => {
                   setFieldValue(`priceTiers.pricingTiers[${i}].manuallyModified`, 1)
                   if (i === 0) setFieldValue('edit.minimum', value)
                 }
@@ -421,7 +422,7 @@ class DetailSidebar extends Component {
           </GridColumn>
 
           <GridColumn computer={1} data-test={`add_inventory_manuallyModified_${i}_inp`}>
-            <Input name={`priceTiers.pricingTiers[${i}].manuallyModified`} inputProps={{type: 'hidden', value: 0}} />
+            <Input name={`priceTiers.pricingTiers[${i}].manuallyModified`} inputProps={{ type: 'hidden', value: 0 }} />
           </GridColumn>
         </Grid>
       )
@@ -447,7 +448,7 @@ class DetailSidebar extends Component {
   }
 
   saveBroadcastRules = async () => {
-    this.setState({saveBroadcast: this.state.saveBroadcast + 1})
+    this.setState({ saveBroadcast: this.state.saveBroadcast + 1 })
   }
 
   searchProducts = debounce(text => {
@@ -457,7 +458,7 @@ class DetailSidebar extends Component {
   }, 250)
 
   submitForm = debounce(async (values, setSubmitting, setTouched) => {
-    const {addProductOffer} = this.props
+    const { addProductOffer, datagrid, toastManager } = this.props
 
     setSubmitting(false)
     let props = {}
@@ -490,16 +491,18 @@ class DetailSidebar extends Component {
       case 2:
         this.saveBroadcastRules()
         setTouched({})
-        this.setState({changedForm: false})
+        this.setState({ changedForm: false })
         break
     }
 
     if (Object.keys(props).length) {
       try {
-        await addProductOffer(
+        let data = await addProductOffer(
           props,
           getSafe(() => this.props.sidebarValues.id, null)
         )
+        datagrid.updateRow(data.value.id, () => data.value)
+
         toastManager.add(
           generateToastMarkup(
             <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
@@ -513,7 +516,7 @@ class DetailSidebar extends Component {
         console.error(e)
       } finally {
         setTouched({})
-        this.setState({changedForm: false})
+        this.setState({ changedForm: false })
       }
     }
   }, 250)
@@ -523,15 +526,15 @@ class DetailSidebar extends Component {
       activeTab: newTab
     })
 
-    if (newTab === 1) {
+    if (newTab === 2) {
       this.props.openBroadcast(this.props.sidebarValues).then(async () => {
-        this.setState({broadcastLoading: false})
+        this.setState({ broadcastLoading: false })
       })
     }
   }
 
   switchToErrors = errors => {
-    const {toastManager} = this.props
+    const { toastManager } = this.props
     const tabs = Object.keys(errors)
 
     // switch tab only if there is no error on active tab
@@ -571,7 +574,7 @@ class DetailSidebar extends Component {
 
   attachDocuments = (newDocuments, values, setFieldValue) => {
     setFieldValue(`documents.attachments`, values.documents.attachments.concat(newDocuments))
-    this.setState({changedForm: true})
+    this.setState({ changedForm: true })
   }
 
   render() {
@@ -593,7 +596,7 @@ class DetailSidebar extends Component {
       searchOrigins,
       warehousesList,
       listDocumentTypes,
-      intl: {formatMessage},
+      intl: { formatMessage },
       toastManager,
       datagrid,
       removeAttachment
@@ -627,11 +630,12 @@ class DetailSidebar extends Component {
       }
     ]
 
-    const {toggleFilter} = this.props
+    const { toggleFilter } = this.props
 
     let editValues = {}
     editValues = {
       edit: {
+        broadcasted: getSafe(() => sidebarValues.broadcasted, false),
         condition: getSafe(() => sidebarValues.condition, null),
         conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
         conforming: getSafe(() => sidebarValues.conforming, true),
@@ -669,9 +673,12 @@ class DetailSidebar extends Component {
       },
       documents: {
         documentType: getSafe(() => sidebarValues.documentType, null),
-        attachments: getSafe(() => sidebarValues.attachments.map(att => ({...att, linked: true})), [])
+        attachments: getSafe(() => sidebarValues.attachments.map(att => ({ ...att, linked: true })), [])
       }
     }
+
+
+    
 
     return (
       <Form
@@ -682,15 +689,15 @@ class DetailSidebar extends Component {
         }}
         validateOnChange={false}
         validationSchema={validationScheme}
-        onSubmit={async (values, {setSubmitting, setTouched}) => {
+        onSubmit={async (values, { setSubmitting, setTouched }) => {
           this.submitForm(values, setSubmitting, setTouched)
         }}>
-        {({values, touched, setTouched, setFieldValue, validateForm, submitForm, setSubmitting}) => {
+        {({ values, touched, setTouched, setFieldValue, validateForm, submitForm, setSubmitting }) => {
           return (
             <FlexSidebar
               visible={sidebarDetailOpen}
               width='very wide'
-              style={{width: '500px'}}
+              style={{ width: '500px' }}
               direction='right'
               animation='overlay'
               onHide={e => {
@@ -716,7 +723,7 @@ class DetailSidebar extends Component {
                   <FlexTabs>
                     <Tab
                       className='inventory-sidebar tab-menu flex stretched'
-                      menu={{secondary: true, pointing: true}}
+                      menu={{ secondary: true, pointing: true }}
                       renderActiveOnly={false}
                       activeIndex={this.state.activeTab}
                       panes={[
@@ -764,7 +771,7 @@ class DetailSidebar extends Component {
                             </Menu.Item>
                           ),
                           pane: (
-                            <Tab.Pane key='edit' style={{padding: '18px'}}>
+                            <Tab.Pane key='edit' style={{ padding: '18px' }}>
                               <Grid>
                                 <GridRow>
                                   <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
@@ -792,14 +799,14 @@ class DetailSidebar extends Component {
                                         ),
                                         loading: this.props.autocompleteDataLoading,
                                         'data-test': 'new_inventory_product_search_drpdn',
-                                        style: {width: '300px'},
+                                        style: { width: '300px' },
                                         size: 'large',
                                         minCharacters: 1,
                                         icon: 'search',
                                         search: options => options,
                                         selection: true,
                                         clearable: true,
-                                        onSearchChange: (e, {searchQuery}) =>
+                                        onSearchChange: (e, { searchQuery }) =>
                                           searchQuery.length > 0 && this.searchProducts(searchQuery)
                                       }}
                                     />
@@ -845,7 +852,7 @@ class DetailSidebar extends Component {
                                         name='edit.fobPrice'
                                         inputProps={{
                                           type: 'number',
-                                          onChange: (e, {value}) => {
+                                          onChange: (e, { value }) => {
                                             if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
                                               setFieldValue(`priceTiers.pricingTiers[0].price`, value)
                                             }
@@ -864,13 +871,13 @@ class DetailSidebar extends Component {
                                   </GridColumn>
                                   <GridColumn mobile={rightWidth} computer={rightWidth}>
                                     <FormField width={16} data-test='detail_sidebar_cost'>
-                                      <Input name='edit.costPerUOM' inputProps={{type: 'number'}} />
+                                      <Input name='edit.costPerUOM' inputProps={{ type: 'number' }} />
                                     </FormField>
                                   </GridColumn>
                                 </GridRow>
                                 <GridRow>
                                   <GridColumn>
-                                    <Segment style={{margin: '0 -1em'}}>
+                                    <Segment style={{ margin: '0 -1em' }}>
                                       <Header as='h3'>
                                         <FormattedMessage id='global.lot' defaultMessage='Lot' />
                                       </Header>
@@ -893,7 +900,7 @@ class DetailSidebar extends Component {
                                           </GridColumn>
                                           <GridColumn mobile={rightWidth} computer={rightWidth}>
                                             <DateInput
-                                              inputProps={{'data-test': 'sidebar_detail_lot_exp_date'}}
+                                              inputProps={{ 'data-test': 'sidebar_detail_lot_exp_date' }}
                                               name='edit.lotExpirationDate'
                                             />
                                           </GridColumn>
@@ -946,7 +953,7 @@ class DetailSidebar extends Component {
                                     <Dropdown
                                       name='edit.productForm'
                                       options={listForms}
-                                      inputProps={{'data-test': 'new_inventory_form_drpdn'}}
+                                      inputProps={{ 'data-test': 'new_inventory_form_drpdn' }}
                                     />
                                   </GridColumn>
                                 </GridRow>
@@ -969,7 +976,10 @@ class DetailSidebar extends Component {
                                         selection: true,
                                         clearable: true,
                                         loading: searchedOriginsLoading,
-                                        onSearchChange: debounce((e, {searchQuery}) => searchOrigins(searchQuery), 250)
+                                        onSearchChange: debounce(
+                                          (e, { searchQuery }) => searchOrigins(searchQuery),
+                                          250
+                                        )
                                       }}
                                     />
                                   </GridColumn>
@@ -984,11 +994,11 @@ class DetailSidebar extends Component {
                                     <Dropdown
                                       name='edit.conforming'
                                       options={listConforming}
-                                      inputProps={{'data-test': 'new_inventory_conforming_drpdn'}}
+                                      inputProps={{ 'data-test': 'new_inventory_conforming_drpdn' }}
                                     />
                                   </GridColumn>
                                 </GridRow>
-                                <GridRow style={{position: 'absolute', top: '-20000px', left: '-20000px'}}>
+                                <GridRow style={{ position: 'absolute', top: '-20000px', left: '-20000px' }}>
                                   <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
                                     <FormattedMessage id='addInventory.condition' defaultMessage='Condition'>
                                       {text => text}
@@ -998,7 +1008,7 @@ class DetailSidebar extends Component {
                                     <Dropdown
                                       name='edit.productCondition'
                                       options={listConditions}
-                                      inputProps={{'data-test': 'new_inventory_condition_drpdn'}}
+                                      inputProps={{ 'data-test': 'new_inventory_condition_drpdn' }}
                                     />
                                   </GridColumn>
                                 </GridRow>
@@ -1024,7 +1034,7 @@ class DetailSidebar extends Component {
                                     <Dropdown
                                       name='edit.inStock'
                                       options={optionsYesNo}
-                                      inputProps={{'data-test': 'add_inventory_instock'}}
+                                      inputProps={{ 'data-test': 'add_inventory_instock' }}
                                     />
                                   </GridColumn>
                                 </GridRow>
@@ -1035,7 +1045,7 @@ class DetailSidebar extends Component {
                                     </FormattedMessage>
                                   </GridColumn>
                                   <GridColumn mobile={rightWidth - 5} computer={rightWidth - 5}>
-                                    <Input name='edit.leadTime' inputProps={{type: 'number'}} />
+                                    <Input name='edit.leadTime' inputProps={{ type: 'number' }} />
                                   </GridColumn>
                                   <GridColumn mobile={5} computer={5} verticalAlign='middle'>
                                     <FormattedMessage id='global.days' defaultMessage='Days'>
@@ -1053,7 +1063,7 @@ class DetailSidebar extends Component {
                                     <Dropdown
                                       name='edit.doesExpire'
                                       options={optionsYesNo}
-                                      inputProps={{'data-test': 'add_inventory_doesExpire'}}
+                                      inputProps={{ 'data-test': 'add_inventory_doesExpire' }}
                                     />
                                   </GridColumn>
                                 </GridRow>
@@ -1089,7 +1099,7 @@ class DetailSidebar extends Component {
                                       inputProps={{
                                         type: 'number',
                                         min: 1,
-                                        onChange: (e, {value}) => {
+                                        onChange: (e, { value }) => {
                                           value = parseInt(value)
                                           if (value > 1 && !isNaN(value)) {
                                             setFieldValue('minimumRequirement', true)
@@ -1113,9 +1123,23 @@ class DetailSidebar extends Component {
                                       inputProps={{
                                         type: 'number',
                                         min: 1,
-                                        onChange: (e, {value}) =>
+                                        onChange: (e, { value }) =>
                                           this.onSplitsChange(value, values, setFieldValue, validateForm)
                                       }}
+                                    />
+                                  </GridColumn>
+                                </GridRow>
+                                <GridRow>
+                                  <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                    <FormattedMessage id='global.broadcast' defaultMessage='Broadcast'>
+                                      {text => text}
+                                    </FormattedMessage>
+                                  </GridColumn>
+                                  <GridColumn mobile={rightWidth} computer={rightWidth}>
+                                    <Dropdown
+                                      name='edit.broadcasted'
+                                      options={optionsYesNo}
+                                      inputProps={{ 'data-test': 'add_inventory_broadcast' }}
                                     />
                                   </GridColumn>
                                 </GridRow>
@@ -1183,11 +1207,11 @@ class DetailSidebar extends Component {
                                   })
                               }}
                               data-test='detail_inventory_tab_documents'>
-                              {formatMessage({id: 'global.documents', defaultMessage: 'Documents'})}
+                              {formatMessage({ id: 'global.documents', defaultMessage: 'Documents' })}
                             </Menu.Item>
                           ),
                           pane: (
-                            <Tab.Pane key='documents' style={{padding: '18px'}}>
+                            <Tab.Pane key='documents' style={{ padding: '18px' }}>
                               <Grid>
                                 {listDocumentTypes.length && (
                                   <GridRow>
@@ -1196,7 +1220,7 @@ class DetailSidebar extends Component {
                                         {text => text}
                                       </FormattedMessage>
                                     </GridColumn>
-                                    <GridColumn style={{zIndex: '501'}} mobile={rightWidth} computer={rightWidth}>
+                                    <GridColumn style={{ zIndex: '501' }} mobile={rightWidth} computer={rightWidth}>
                                       <Dropdown
                                         name='documents.documentType'
                                         closeOnChange
@@ -1208,7 +1232,7 @@ class DetailSidebar extends Component {
                                               defaultMessage='Choose document type'
                                             />
                                           ),
-                                          onChange: (e, {name, value}) => this.handleChange(e, name, value)
+                                          onChange: (e, { name, value }) => this.handleChange(e, name, value)
                                         }}
                                       />
                                     </GridColumn>
@@ -1238,7 +1262,7 @@ class DetailSidebar extends Component {
                                         header={
                                           <DivIcon
                                             onClick={() =>
-                                              this.setState(prevState => ({openUploadLot: !prevState.openUploadLot}))
+                                              this.setState(prevState => ({ openUploadLot: !prevState.openUploadLot }))
                                             }>
                                             <CloceIcon name='close' color='grey' />
                                           </DivIcon>
@@ -1261,12 +1285,12 @@ class DetailSidebar extends Component {
                                               }
                                             ])
                                           )
-                                          this.setState({changedForm: true})
+                                          this.setState({ changedForm: true })
                                         }}
                                         data-test='new_inventory_attachments_drop'
                                         emptyContent={
                                           <>
-                                            {formatMessage({id: 'addInventory.dragDrop'})}
+                                            {formatMessage({ id: 'addInventory.dragDrop' })}
                                             <br />
                                             <FormattedMessage
                                               id='addInventory.dragDropOr'
@@ -1318,6 +1342,7 @@ class DetailSidebar extends Component {
                                         virtual={false}
                                         tableName='inventory_documents'
                                         {...datagrid.tableProps}
+                                        onTableReady={() => {}}
                                         columns={columns}
                                         rows={values.documents.attachments
                                           .map(row => ({
@@ -1383,11 +1408,11 @@ class DetailSidebar extends Component {
                                   })
                               }}
                               data-test='detail_inventory_tab_priceBook'>
-                              {formatMessage({id: 'global.priceBook', defaultMessage: 'Price Book'})}
+                              {formatMessage({ id: 'global.priceBook', defaultMessage: 'Price Book' })}
                             </Menu.Item>
                           ),
                           pane: (
-                            <Tab.Pane key='priceBook' style={{padding: '18px'}}>
+                            <Tab.Pane key='priceBook' style={{ padding: '18px' }}>
                               <Broadcast
                                 isPrepared={!this.state.broadcastLoading}
                                 asModal={false}
@@ -1435,11 +1460,11 @@ class DetailSidebar extends Component {
                                   })
                               }}
                               data-test='detail_inventory_tab_priceTiers'>
-                              {formatMessage({id: 'global.priceTiers', defaultMessage: 'Price Tiers'})}
+                              {formatMessage({ id: 'global.priceTiers', defaultMessage: 'Price Tiers' })}
                             </Menu.Item>
                           ),
                           pane: (
-                            <Tab.Pane key='priceTiers' style={{padding: '18px'}}>
+                            <Tab.Pane key='priceTiers' style={{ padding: '18px' }}>
                               <Header as='h3'>
                                 <FormattedMessage
                                   id='addInventory.pricesCount'
@@ -1474,19 +1499,19 @@ class DetailSidebar extends Component {
                                 </FormattedMessage>
                               </Header>
                               <Dropdown
-                                label={formatMessage({id: 'addInventory.priceTiers', defaultMessage: 'Price Tiers'})}
+                                label={formatMessage({ id: 'addInventory.priceTiers', defaultMessage: 'Price Tiers' })}
                                 name='priceTiers.priceTiers'
                                 options={this.getPriceTiers(10)}
                                 inputProps={{
                                   'data-test': 'new_inventory_price_tiers_drpdn',
                                   fluid: true,
-                                  onChange: (e, {value}) => {
+                                  onChange: (e, { value }) => {
                                     let pricingTiers = values.priceTiers.pricingTiers.slice()
                                     let difference = value - pricingTiers.length
                                     if (difference < 0) pricingTiers.splice(pricingTiers.length - value)
                                     else
                                       for (let i = 0; i < difference; i++)
-                                        pricingTiers.push({price: '', quantityFrom: ''})
+                                        pricingTiers.push({ price: '', quantityFrom: '' })
                                     setFieldValue('priceTiers.pricingTiers', pricingTiers)
                                   }
                                 }}
@@ -1525,20 +1550,20 @@ class DetailSidebar extends Component {
               </FlexContent>
               <GraySegment
                 basic
-                style={{position: 'relative', overflow: 'visible', height: '4.57142858em', margin: '0'}}>
+                style={{ position: 'relative', overflow: 'visible', height: '4.57142858em', margin: '0' }}>
                 <Grid>
                   <GridRow>
                     <GridColumn computer={6} textAlign='left'>
                       <Button
                         size='large'
-                        inputProps={{type: 'button'}}
+                        inputProps={{ type: 'button' }}
                         onClick={() => {
                           this.props.sidebarDetailTrigger(null, false)
                         }}
                         data-test='sidebar_inventory_cancel'>
                         {Object.keys(touched).length || this.state.changedForm
-                          ? formatMessage({id: 'global.cancel', defaultMessage: 'Cancel'})
-                          : formatMessage({id: 'global.close', defaultMessage: 'Close'})}
+                          ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
+                          : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
                       </Button>
                     </GridColumn>
                     <GridColumn computer={10} textAlign='right'>
@@ -1546,7 +1571,7 @@ class DetailSidebar extends Component {
                         disabled={!(Object.keys(touched).length || this.state.changedForm)}
                         primary
                         size='large'
-                        inputProps={{type: 'button'}}
+                        inputProps={{ type: 'button' }}
                         onClick={() =>
                           validateForm().then(r => {
                             if (Object.keys(r).length && this.state.activeTab !== 1) {
@@ -1558,7 +1583,7 @@ class DetailSidebar extends Component {
                           })
                         }
                         data-test='sidebar_inventory_save_new'>
-                        {formatMessage({id: 'global.save', defaultMessage: 'Save'})}
+                        {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                       </Button>
                     </GridColumn>
                   </GridRow>

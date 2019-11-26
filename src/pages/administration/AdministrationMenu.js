@@ -1,7 +1,7 @@
 import React from 'react'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
-const AdministrationMenu = ({contentHandler}) => {
+const AdministrationMenu = ({ contentHandler }) => {
   return (
     <div className='administration-menu'>
       <div className='add-group'>

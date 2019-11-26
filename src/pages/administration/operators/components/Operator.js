@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import OperatorEditation from './OperatorEditation'
 
@@ -14,8 +14,8 @@ class Operator extends Component {
   }
 
   render() {
-    const {deleteOperator, putOperatorEdit, ...operator} = this.props
-    const {isEditation} = this.state
+    const { deleteOperator, putOperatorEdit, ...operator } = this.props
+    const { isEditation } = this.state
     if (isEditation) {
       return (
         <OperatorEditation

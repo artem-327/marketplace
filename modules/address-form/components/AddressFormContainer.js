@@ -1,13 +1,13 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
 import AddressForm from './AddressForm'
 
-import {getCountries} from '~/modules/settings/actions'
-import {getAddressSearch, removeEmpty} from '~/modules/settings/actions'
-import {addZip} from '~/modules/zip-dropdown/actions'
+import { getCountries } from '~/modules/settings/actions'
+import { getAddressSearch, removeEmpty } from '~/modules/settings/actions'
+import { addZip } from '~/modules/zip-dropdown/actions'
 
-function mapStateToProps({settings}) {
-  let {countries} = settings
+function mapStateToProps({ settings }) {
+  let { countries } = settings
   let addressDatalistOptions = settings.addressSearch.map(
     a =>
       a.streetAddress +

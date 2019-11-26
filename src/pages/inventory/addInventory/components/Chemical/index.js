@@ -1,9 +1,9 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import Chemical from './Chemical'
-import {bindActionCreators} from 'redux'
-import {actions} from 'react-redux-form'
+import { bindActionCreators } from 'redux'
+import { actions } from 'react-redux-form'
 //import {resetForm} from '../../../../../utils/functions';
-import {addMessage} from '../../../../../modules/errors'
+import { addMessage } from '../../../../../modules/errors'
 import {
   mapProducts,
   searchProducts,
@@ -17,7 +17,7 @@ import {
   addLotSaveOffering,
   setSavedMappingToFalse
 } from '../../../../../modules/products'
-import {getUnitOfMeasurement, getUnitOfPackaging} from '../../../../../modules/productOffers'
+import { getUnitOfMeasurement, getUnitOfPackaging } from '../../../../../modules/productOffers'
 
 const mapStateToProps = store => ({
   isSearching: store.products.isFetching,

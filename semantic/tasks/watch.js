@@ -183,7 +183,7 @@ module.exports = function(callback) {
   gulp.watch([source.themes + '/**/assets/**/*.*'], function(file) {
     // copy assets
     gulp
-      .src(file.path, {base: source.themes})
+      .src(file.path, { base: source.themes })
       .pipe(gulpif(config.hasPermission, chmod(config.permission)))
       .pipe(gulp.dest(output.themes))
       .pipe(print(log.created))

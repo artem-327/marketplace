@@ -1,19 +1,19 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import * as Actions from '../../actions'
-import {loadFile, addAttachment} from '~/modules/inventory/actions'
-import {Modal, ModalContent, Table, Grid, Header, Button, Segment, Tab, TabPane, Menu, Label} from 'semantic-ui-react'
-import {Form, Input, Checkbox} from 'formik-semantic-ui-fixed-validation'
-import {FieldArray} from 'formik'
-import {getSafe, generateToastMarkup} from '~/utils/functions'
-import {FormattedMessage, FormattedDate, injectIntl} from 'react-intl'
+import { loadFile, addAttachment } from '~/modules/inventory/actions'
+import { Modal, ModalContent, Table, Grid, Header, Button, Segment, Tab, TabPane, Menu, Label } from 'semantic-ui-react'
+import { Form, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
+import { FieldArray } from 'formik'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import confirm from '~/src/components/Confirmable/confirm'
 import styled from 'styled-components'
 import * as val from 'yup'
-import {errorMessages} from '~/constants/yupValidation'
-import {withToastManager} from 'react-toast-notifications'
+import { errorMessages } from '~/constants/yupValidation'
+import { withToastManager } from 'react-toast-notifications'
 
 const ModalBody = styled(ModalContent)`
   padding: 0 1.5rem 1.5rem !important;
@@ -56,7 +56,7 @@ val.addMethod(val.object, 'lessThanOrdered', function(propertyName, message) {
       return true
     }
 
-    const {path} = this
+    const { path } = this
     const options = [...this.parent]
     const amount = value['amount']
     const allocated = options.reduce(function(allocated, option) {
@@ -81,7 +81,7 @@ val.addMethod(val.object, 'moreThanOrdered', function(propertyName, message) {
       return true
     }
 
-    const {path} = this
+    const { path } = this
     const options = [...this.parent]
     const amount = value['amount']
     const allocated = options.reduce(function(allocated, option) {
@@ -130,7 +130,7 @@ class AssignLots extends React.Component {
   }
 
   componentDidMount() {
-    const {orderItems} = this.props
+    const { orderItems } = this.props
 
     if (getSafe(() => orderItems.length, 0)) {
       let allocated = this.state.allocated
@@ -145,7 +145,7 @@ class AssignLots extends React.Component {
           alreadyLoadedLots.push(orderItem.productOffer)
         }
       })
-      this.setState({allocated: allocated})
+      this.setState({ allocated: allocated })
     }
   }
 
@@ -162,12 +162,12 @@ class AssignLots extends React.Component {
           })
         }
       })
-      this.setState({poLots: availability})
+      this.setState({ poLots: availability })
     }
   }
 
   linkAttachment = (lotId, files, data) => {
-    const {values, setFieldValue, lotNumber, productOfferId} = data
+    const { values, setFieldValue, lotNumber, productOfferId } = data
     this.props.linkAttachment(lotId, files).then(r => {
       const affectedOrderItems = values.tabLots.forEach((tab, tabIndex) => {
         if (tab.productOfferId === productOfferId) {
@@ -187,7 +187,7 @@ class AssignLots extends React.Component {
   }
 
   removeAttachment = (fileId, data) => {
-    const {values, setFieldValue} = data
+    const { values, setFieldValue } = data
     values.tabLots.forEach((tab, tabIndex) => {
       const lotIndex = tab.lots.findIndex(lot => getSafe(() => lot.attachments[0].id, 0) === fileId)
       if (lotIndex) {
@@ -198,7 +198,7 @@ class AssignLots extends React.Component {
   }
 
   renderTab(tabIndex, orderItem, lots, setFieldValue, values) {
-    const {poLots} = this.props
+    const { poLots } = this.props
     const statePoLots = this.state.poLots
     let tabAvailability = []
     if (statePoLots.length)
@@ -208,27 +208,27 @@ class AssignLots extends React.Component {
 
     return (
       <LotsTab active={this.state.activeTab === tabIndex}>
-        <Grid style={{marginTop: '0.5em'}}>
+        <Grid style={{ marginTop: '0.5em' }}>
           <Grid.Column width={14}>
             <FormattedMessage
               id='order.assignLots.orderItem.amount'
               defaultMessage='Allocated packages: {allocated} / {amount}'
-              values={{allocated: this.state.allocated[tabIndex], amount: orderItem.amount}}
+              values={{ allocated: this.state.allocated[tabIndex], amount: orderItem.amount }}
             />
             {this.state.allocated[tabIndex] > orderItem.amount ? (
-              <Label circular color='red' empty style={{marginLeft: '0.5em'}} />
+              <Label circular color='red' empty style={{ marginLeft: '0.5em' }} />
             ) : null}
           </Grid.Column>
           <Grid.Column width={1}>
             <Input
               name={`tabLots[${tabIndex}].orderItemId`}
-              inputProps={{type: 'hidden', defaultValue: orderItem.id}}
+              inputProps={{ type: 'hidden', defaultValue: orderItem.id }}
             />
           </Grid.Column>
           <Grid.Column width={1}>
             <Input
               name={`tabLots[${tabIndex}].productOfferId`}
-              inputProps={{type: 'hidden', defaultValue: orderItem.productOffer}}
+              inputProps={{ type: 'hidden', defaultValue: orderItem.productOffer }}
             />
           </Grid.Column>
         </Grid>
@@ -270,13 +270,13 @@ class AssignLots extends React.Component {
                         <Table.Cell>
                           <Input
                             name={`tabLots[${tabIndex}].lots[${index}].amount`}
-                            inputProps={{type: 'hidden', defaultValue: orderItem.amount}}
+                            inputProps={{ type: 'hidden', defaultValue: orderItem.amount }}
                           />
                           <Checkbox
                             name={`tabLots[${tabIndex}].lots[${index}].selected`}
                             value={lot.lotNumber}
                             inputProps={{
-                              onClick: (e, {checked}) => {
+                              onClick: (e, { checked }) => {
                                 setFieldValue(`tabLots[${tabIndex}].lots[${index}].selected`, checked)
                                 const stateAllocated = this.state.allocated
                                 const stateAvailability = this.state.poLots
@@ -315,7 +315,7 @@ class AssignLots extends React.Component {
                                     }
                                   })
 
-                                  this.setState({poLots: newAvailability, allocated: stateAllocated})
+                                  this.setState({ poLots: newAvailability, allocated: stateAllocated })
                                 } else {
                                   const allocated = values.tabLots[tabIndex].lots[index].allocated
                                   setFieldValue(`tabLots[${tabIndex}].lots[${index}].allocated`, 0)
@@ -341,7 +341,7 @@ class AssignLots extends React.Component {
                                     }
                                   })
 
-                                  this.setState({poLots: newAvailability, allocated: stateAllocated})
+                                  this.setState({ poLots: newAvailability, allocated: stateAllocated })
                                 }
                               },
                               id: `tab${tabIndex}_lot${index}`
@@ -362,7 +362,7 @@ class AssignLots extends React.Component {
                                 ? false
                                 : true,
                               defaultValue: lot.allocated,
-                              onChange: (e, {value}) => {
+                              onChange: (e, { value }) => {
                                 const origValue = value
                                 value = parseInt(value)
                                 if (!Number.isInteger(value) || (Number.isInteger(value) && value < 0)) {
@@ -415,7 +415,7 @@ class AssignLots extends React.Component {
                                     setFieldValue(`tabLots[${tabIndex}].lots[${index}].allocated`, value)
                                   }
 
-                                  this.setState({poLots: newAvailability, allocated: stateAllocated})
+                                  this.setState({ poLots: newAvailability, allocated: stateAllocated })
                                 }
                               }
                             }}
@@ -440,7 +440,7 @@ class AssignLots extends React.Component {
                         <Table.Cell textAlign='center'>
                           <UploadLot
                             {...this.props}
-                            removeAttachment={fileId => this.removeAttachment(fileId, {values, setFieldValue})}
+                            removeAttachment={fileId => this.removeAttachment(fileId, { values, setFieldValue })}
                             attachments={getSafe(
                               () => values.tabLots[tabIndex].lots[index].attachments,
                               lot.attachments
@@ -490,9 +490,9 @@ class AssignLots extends React.Component {
   }
 
   render() {
-    const {orderId, orderItems, intl, toastManager, poLots} = this.props
+    const { orderId, orderItems, intl, toastManager, poLots } = this.props
 
-    let {formatMessage} = intl
+    let { formatMessage } = intl
 
     const tabLots = orderItems.map(orderItem => {
       const productOffer = poLots.find(po => po.id === orderItem.productOffer)
@@ -515,7 +515,7 @@ class AssignLots extends React.Component {
       }
     })
 
-    const lotsList = {tabLots}
+    const lotsList = { tabLots }
 
     return (
       <>
@@ -535,7 +535,7 @@ class AssignLots extends React.Component {
               <Form
                 enableReinitialize
                 validateOnChange={false}
-                initialValues={{...initValues, ...lotsList}}
+                initialValues={{ ...initValues, ...lotsList }}
                 validationSchema={validationScheme}
                 onSubmit={(values, actions) => {
                   const tabLots = values.tabLots
@@ -571,7 +571,7 @@ class AssignLots extends React.Component {
                   // confirm to assign when missing attachment(s) for assigned lot(s)
                   if (missingFile) {
                     confirm(
-                      formatMessage({id: 'confirm.missingCOfA.title', defaultMessage: 'Missing C of A'}),
+                      formatMessage({ id: 'confirm.missingCOfA.title', defaultMessage: 'Missing C of A' }),
                       formatMessage({
                         id: 'confirm.missingCOfA.content',
                         defaultMessage:
@@ -635,14 +635,14 @@ class AssignLots extends React.Component {
                   }
                 }}
                 className='flex stretched'
-                style={{padding: '0'}}>
-                {({values, errors, setFieldValue, validateForm, validate, submitForm}) => {
+                style={{ padding: '0' }}>
+                {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
                   const panes = orderItems.map((orderItem, index) => {
                     return {
                       menuItem: (
                         <Menu.Item
                           key={`orderItem${index}`}
-                          onClick={(e, {index}) => {
+                          onClick={(e, { index }) => {
                             validateForm()
                               .then(r => {
                                 // stop when errors found on current tab
@@ -652,7 +652,7 @@ class AssignLots extends React.Component {
                                 }
 
                                 // if validation is correct - switch tabs
-                                this.setState({activeTab: index})
+                                this.setState({ activeTab: index })
                               })
                               .catch(e => {
                                 console.log('CATCH', e)
@@ -662,7 +662,7 @@ class AssignLots extends React.Component {
                           <FormattedMessage
                             id='order.assignLots.orderItem'
                             defaultMessage='Order Item {num}'
-                            values={{num: index + 1}}
+                            values={{ num: index + 1 }}
                           />
                         </Menu.Item>
                       ),
@@ -671,7 +671,7 @@ class AssignLots extends React.Component {
                   })
                   return (
                     <TabMenu
-                      menu={{secondary: true, pointing: true}}
+                      menu={{ secondary: true, pointing: true }}
                       panes={panes}
                       renderActiveOnly={false}
                       activeIndex={this.state.activeTab}
@@ -688,7 +688,7 @@ class AssignLots extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const {detail} = state.orders
+  const { detail } = state.orders
 
   return {
     poLots: getSafe(() => detail.poLots, []),
@@ -705,7 +705,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({...Actions, loadFile, addAttachment}, dispatch)
+  return bindActionCreators({ ...Actions, loadFile, addAttachment }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(AssignLots)))

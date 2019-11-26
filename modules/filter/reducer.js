@@ -1,15 +1,15 @@
 import * as a from './actions'
 import typeToReducer from 'type-to-reducer'
 
-import {uniqueArrayByKey, mapAutocompleteData} from '~/utils/functions'
+import { uniqueArrayByKey, mapAutocompleteData } from '~/utils/functions'
 
-import {datagridValues, paths, filterPresets} from './constants/filter'
-import {currency} from '~/constants/index'
+import { datagridValues, paths, filterPresets } from './constants/filter'
+import { currency } from '~/constants/index'
 
 const asignFiltersDescription = (filter, params) => {
   let datagridKeys = Object.keys(datagridValues)
 
-  let {filters} = filter
+  let { filters } = filter
 
   if (filters) {
     filters.forEach(filter => {
@@ -50,7 +50,7 @@ export const initialState = {
 
 export default typeToReducer(
   {
-    [a.setParams]: (state, {payload}) => ({
+    [a.setParams]: (state, { payload }) => ({
       ...state,
       params: {
         ...state.params,
@@ -60,7 +60,7 @@ export default typeToReducer(
 
     /* TOGGLE_FILTER */
 
-    [a.toggleFilter]: (state, {payload: {value, type}}) => {
+    [a.toggleFilter]: (state, { payload: { value, type } }) => {
       let propName = 'isOpen'
       if (type === filterPresets.ORDERS) propName = 'ordersIsOpen'
 
@@ -72,14 +72,14 @@ export default typeToReducer(
 
     /* FILTER_SAVING */
 
-    [a.filterSaving]: (state, {payload: isSaving}) => ({
+    [a.filterSaving]: (state, { payload: isSaving }) => ({
       ...state,
       isFilterSaving: isSaving
     }),
 
     /* FILTER_APPLYING */
 
-    [a.filterApplying]: (state, {payload: isApplying}) => ({
+    [a.filterApplying]: (state, { payload: isApplying }) => ({
       ...state,
       isFilterApplying: isApplying
     }),
@@ -92,8 +92,8 @@ export default typeToReducer(
         savedFiltersLoading: true
       }
     },
-    [a.getSavedFilters.fulfilled]: (state, {payload}) => {
-      let {data} = payload
+    [a.getSavedFilters.fulfilled]: (state, { payload }) => {
+      let { data } = payload
       let autocompleteData = []
 
       data.forEach(element => {
@@ -102,8 +102,8 @@ export default typeToReducer(
           if (filter.path === paths.productOffers.productId || filter.path === paths.casProduct.id) {
             filter.values.forEach(element => {
               let parsed = JSON.parse(element.description)
-              let {name, casNumberCombined} = parsed
-              autocompleteData.push({id: element.value, productName: name, casNumberCombined})
+              let { name, casNumberCombined } = parsed
+              autocompleteData.push({ id: element.value, productName: name, casNumberCombined })
             })
           }
         })
@@ -158,7 +158,7 @@ export default typeToReducer(
         autocompleteWarehouseLoading: true
       }
     },
-    [a.getAutocompleteWarehouse.fulfilled]: (state, {payload}) => {
+    [a.getAutocompleteWarehouse.fulfilled]: (state, { payload }) => {
       return {
         ...state,
         autocompleteWarehouseLoading: false,
@@ -181,7 +181,7 @@ export default typeToReducer(
         isFilterSaving: true
       }
     },
-    [a.saveFilter.fulfilled]: (state, {payload}) => {
+    [a.saveFilter.fulfilled]: (state, { payload }) => {
       return {
         ...state,
         isFilterSaving: false,
@@ -197,7 +197,7 @@ export default typeToReducer(
 
     /* APPLY_FILTER */
 
-    [a.applyFilter]: (state, {payload}) => {
+    [a.applyFilter]: (state, { payload }) => {
       let appliedFilter = asignFiltersDescription(payload, state.params)
 
       return {
@@ -218,7 +218,7 @@ export default typeToReducer(
       }
     },
 
-    [a.deleteFilter.fulfilled]: (state, {payload}) => {
+    [a.deleteFilter.fulfilled]: (state, { payload }) => {
       return {
         ...state,
         savedFilters: state.savedFilters.filter(filter => filter.id !== payload),
@@ -242,7 +242,7 @@ export default typeToReducer(
       }
     },
 
-    [a.updateFilterNotifications.fulfilled]: (state, {payload}) => {
+    [a.updateFilterNotifications.fulfilled]: (state, { payload }) => {
       let savedFilters = state.savedFilters.slice(0)
       let index = savedFilters.findIndex(el => el.id === payload.id)
 
@@ -271,7 +271,7 @@ export default typeToReducer(
       }
     },
 
-    [a.updateFilter.fulfilled]: (state, {payload}) => {
+    [a.updateFilter.fulfilled]: (state, { payload }) => {
       let savedFilters = state.savedFilters.slice(0)
       let index = savedFilters.findIndex(el => el.id === payload.id)
 

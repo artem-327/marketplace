@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 
-import {getLocationString, getPricing, addFirstTier, calculateTotalPrice} from '~/src/utils/functions'
+import { getLocationString, getPricing, addFirstTier, calculateTotalPrice } from '~/src/utils/functions'
 
 export const initialState = {
   offerDetail: {},
@@ -54,8 +54,8 @@ export default function reducer(state = initialState, action) {
     case AT.ORDERDETAIL_FETCH_SUCCEEDED: {
       return {
         ...state,
-        orderDetail: {...action.payload, locationStr: getLocationString(action.payload.productOffer)},
-        sidebar: {...state.sidebar, quantity: action.payload.quantity},
+        orderDetail: { ...action.payload, locationStr: getLocationString(action.payload.productOffer) },
+        sidebar: { ...state.sidebar, quantity: action.payload.quantity },
         orderDetailIsFetching: false
       }
     }
@@ -91,7 +91,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         isFetching: false,
         deliveryAddresses: state.deliveryAddresses.concat(action.payload),
-        shipping: {...state.shipping, selectedAddress: action.payload, isShippingEdit: false}
+        shipping: { ...state.shipping, selectedAddress: action.payload, isShippingEdit: false }
       }
     }
     case AT.DELIVERY_ADDRESS_CREATE_REJECTED: {
@@ -117,7 +117,7 @@ export default function reducer(state = initialState, action) {
         deliveryAddresses: Object.assign([], state.deliveryAddresses, {
           [state.deliveryAddresses.findIndex(value => value.id === action.payload.id)]: action.payload
         }),
-        shipping: {...state.shipping, selectedAddress: action.payload, isShippingEdit: false}
+        shipping: { ...state.shipping, selectedAddress: action.payload, isShippingEdit: false }
       }
     }
 
@@ -161,12 +161,15 @@ export default function reducer(state = initialState, action) {
       }
     }
     case AT.OFFER_FETCH_FULFILLED: {
-      let {payload} = action
+      let { payload } = action
 
       return {
         ...state,
         offerDetail: addFirstTier(payload.productOffer),
-        sidebar: {...state.sidebar, quantity: !payload.isEdit ? payload.productOffer.minimum : state.sidebar.quantity},
+        sidebar: {
+          ...state.sidebar,
+          quantity: !payload.isEdit ? payload.productOffer.minimum : state.sidebar.quantity
+        },
         offerDetailIsFetching: false
       }
     }
@@ -180,10 +183,10 @@ export default function reducer(state = initialState, action) {
       }
     }
     case AT.CART_FETCH_FULFILLED: {
-      let {payload} = action
+      let { payload } = action
 
       if (payload.cartItems) {
-        let {cartItems} = payload
+        let { cartItems } = payload
         cartItems.forEach(item => {
           item.locationStr = getLocationString(item.productOffer)
           //! !item.pricing = {price: item.cfPricePerUOM} // ! ! getPricing(item.productOffer, item.quantity)
@@ -283,7 +286,7 @@ export default function reducer(state = initialState, action) {
         country: action.country,
         zip: action.zip,
         shippingQuotesAreFetching: true,
-        cart: {...state.cart, selectedShipping: null}
+        cart: { ...state.cart, selectedShipping: null }
       }
     }
     case AT.SHIPPING_QUOTES_FETCH_FULFILLED: {
@@ -315,7 +318,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isPurchasing: false,
-        sidebar: {...state.cart.sidebar, isOpen: false}
+        sidebar: { ...state.cart.sidebar, isOpen: false }
       }
     }
 
@@ -338,8 +341,8 @@ export default function reducer(state = initialState, action) {
     case AT.UPDATE_CART_ITEM_FULFILLED: {
       return {
         ...state,
-        cart: {...state.cart, ...action.payload},
-        sidebar: {...state.cart.sidebar, isOpen: false},
+        cart: { ...state.cart, ...action.payload },
+        sidebar: { ...state.cart.sidebar, isOpen: false },
         offerDetailIsFetching: false
       }
     }
@@ -347,7 +350,7 @@ export default function reducer(state = initialState, action) {
     /* DELETE_CART_ITEM */
 
     case AT.DELETE_CART_ITEM_FULFILLED: {
-      let cart = {...state.cart, cartItems: state.cart.cartItems.filter(item => item.id !== action.payload)}
+      let cart = { ...state.cart, cartItems: state.cart.cartItems.filter(item => item.id !== action.payload) }
 
       return {
         ...state,
@@ -360,28 +363,28 @@ export default function reducer(state = initialState, action) {
     case AT.DELETE_CART_FULFILLED: {
       return {
         ...state,
-        cart: {...state.cart, cartItems: []}
+        cart: { ...state.cart, cartItems: [] }
       }
     }
 
     case AT.DELETE_CART_REJECTED: {
       return {
         ...state,
-        cart: {...state.cart, cartItems: []}
+        cart: { ...state.cart, cartItems: [] }
       }
     }
 
     case AT.SIDEBAR_CHANGED: {
       return {
         ...state,
-        sidebar: {...state.sidebar, ...action.payload}
+        sidebar: { ...state.sidebar, ...action.payload }
       }
     }
 
     case AT.SHIPPING_QUOTE_SELECTED: {
       return {
         ...state,
-        cart: {...state.cart, selectedShipping: action.payload}
+        cart: { ...state.cart, selectedShipping: action.payload }
       }
     }
 
@@ -402,7 +405,7 @@ export default function reducer(state = initialState, action) {
     case AT.SHIPPING_CHANGED: {
       return {
         ...state,
-        shipping: {...state.shipping, ...action.payload}
+        shipping: { ...state.shipping, ...action.payload }
       }
     }
 
@@ -435,11 +438,11 @@ export default function reducer(state = initialState, action) {
     case AT.UPDATE_HAZMAT_INFO_FULFILLED: {
       let cartItems = []
       for (let i = 0; i < state.cart.cartItems.length; i++) {
-        cartItems.push({...state.cart.cartItems[i], ...action.payload.cartItems[i]})
+        cartItems.push({ ...state.cart.cartItems[i], ...action.payload.cartItems[i] })
       }
       return {
         ...state,
-        cart: {...state.cart, ...action.payload, cartItems}
+        cart: { ...state.cart, ...action.payload, cartItems }
       }
     }
 

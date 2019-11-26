@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
-import {Logout} from '~/modules/auth'
-import {withRouter} from 'next/router'
+import React, { Component } from 'react'
+import { Logout } from '~/modules/auth'
+import { withRouter } from 'next/router'
 
 class LogoutPage extends Component {
   render() {

@@ -166,7 +166,7 @@ export function toggleFilter(value = null) {
 export function toggleFilterGroup(name, value) {
   return {
     type: TOGGLE_FILTER_GROUP,
-    payload: {name, value}
+    payload: { name, value }
   }
 }
 export function addFilterTag(data) {

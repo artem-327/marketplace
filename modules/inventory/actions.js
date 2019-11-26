@@ -1,12 +1,12 @@
 import * as AT from './action-types'
 import * as api from './api'
 import moment from 'moment'
-import {getSafe} from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 
 // import { createAsyncAction } from 'redux-promise-middleware-actions'
 
 // import { toggleFilter, filterSaving, filterApplying } from '~/modules/filter/actions'
-import {Datagrid} from '~/modules/datagrid'
+import { Datagrid } from '~/modules/datagrid'
 
 export function initProductOfferEdit(id) {
   return async dispatch => {
@@ -46,7 +46,7 @@ export function addVerificationDocuments(attachment, type) {
 
 export const updateAttachment = (id, payload) => {
   return async dispatch => {
-    await dispatch({type: AT.INVENTORY_UPDATE_ATTACHMENT, payload: api.updateAttachment(id, payload)})
+    await dispatch({ type: AT.INVENTORY_UPDATE_ATTACHMENT, payload: api.updateAttachment(id, payload) })
     Datagrid.loadData()
   }
 }
@@ -73,6 +73,7 @@ export function addProductOffer(values, poId = false, simple = false) {
       assayMin: getSafe(() => parseFloat(values.assayMin)),
       assayMax: getSafe(() => parseFloat(values.assayMax)),
       attachments: attachments.concat(additional),
+      broadcasted: getSafe(() => values.broadcasted, false),
       costRecords:
         values.trackSubCosts && values.costs
           ? values.costs.map(cost => {
@@ -299,7 +300,7 @@ export function removeAttachmentLink(isLot, itemId, aId) {
 
 export function removeAttachment(aId) {
   return async dispatch => {
-    await dispatch({type: AT.INVENTORY_REMOVE_ATTACHMENT, payload: api.removeAttachment(aId)})
+    await dispatch({ type: AT.INVENTORY_REMOVE_ATTACHMENT, payload: api.removeAttachment(aId) })
     Datagrid.removeRow(aId)
   }
 }
@@ -390,20 +391,20 @@ export function uploadDocuments(isLot, productOfferId, fileIds) {
   })(0)
 }
 
-export const getAutocompleteData = ({searchUrl}) => ({
+export const getAutocompleteData = ({ searchUrl }) => ({
   type: AT.GET_AUTOCOMPLETE_DATA,
   payload: api.getAutocompleteData(searchUrl)
 })
 
 export const simpleEditTrigger = (popupValues = {}, force = null) => ({
   type: AT.SIMPLE_EDIT_TRIGGER,
-  payload: {popupValues, force}
+  payload: { popupValues, force }
 })
 
 export const sidebarDetailTrigger = (row = {}, force = null, activeTab = 0) => {
   return {
     type: AT.SIDEBAR_DETAIL_TRIGGER,
-    meta: {force: force, activeTab: activeTab, row: row},
+    meta: { force: force, activeTab: activeTab, row: row },
     async payload() {
       let sidebarValues = {}
 

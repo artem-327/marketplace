@@ -1,1 +1,1 @@
-export {default as AddressForm} from './components/AddressFormContainer'
+export { default as AddressForm } from './components/AddressFormContainer'

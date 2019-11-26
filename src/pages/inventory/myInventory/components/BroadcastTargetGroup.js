@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import BroadcastConfig from './BroadcastConfig'
 
 class BroadcastTargetGroup extends Component {
@@ -96,7 +96,7 @@ class BroadcastTargetGroup extends Component {
       if (this.state.target[i].company === id) {
         let newTarget = this.state.target.slice()
         newTarget[i].amount = value
-        this.setState({target: newTarget, groupAmount: ''}, () => {
+        this.setState({ target: newTarget, groupAmount: '' }, () => {
           this.props.updateTargets(this.props.index, this.state.target)
         })
         return
@@ -106,7 +106,7 @@ class BroadcastTargetGroup extends Component {
       {
         target: [
           ...this.state.target,
-          {visibility: true, company: id, updateType: 'priceMultiplication', amount: value}
+          { visibility: true, company: id, updateType: 'priceMultiplication', amount: value }
         ],
         groupAmount: ''
       },
@@ -122,7 +122,7 @@ class BroadcastTargetGroup extends Component {
         let newTarget = this.state.target.slice()
         newTarget[i].updateType = value
         newTarget[i].amount = newTarget[i].amount || 0
-        this.setState({target: newTarget, groupChangeType: null}, () => {
+        this.setState({ target: newTarget, groupChangeType: null }, () => {
           this.props.updateTargets(this.props.index, this.state.target)
         })
         return
@@ -130,7 +130,7 @@ class BroadcastTargetGroup extends Component {
     }
     this.setState(
       {
-        target: [...this.state.target, {visibility: true, company: id, updateType: value, amount: 0}],
+        target: [...this.state.target, { visibility: true, company: id, updateType: value, amount: 0 }],
         groupChangeType: null
       },
       () => {
@@ -145,7 +145,7 @@ class BroadcastTargetGroup extends Component {
       if (this.state.target[i].company === id) {
         let newTarget = this.state.target.slice()
         newTarget[i].visibility = value === 'include'
-        this.setState({target: newTarget, groupSelected: newGroupState}, () => {
+        this.setState({ target: newTarget, groupSelected: newGroupState }, () => {
           this.props.updateTargets(this.props.index, this.state.target)
         })
         return
@@ -155,7 +155,7 @@ class BroadcastTargetGroup extends Component {
       {
         target: [
           ...this.state.target,
-          {visibility: value === 'include', company: id, updateType: 'priceMultiplication', amount: 0}
+          { visibility: value === 'include', company: id, updateType: 'priceMultiplication', amount: 0 }
         ],
         groupSelected: newGroupState
       },
@@ -203,7 +203,7 @@ class BroadcastTargetGroup extends Component {
 
   toggleGroup(e) {
     if (this.brRef.current.contains(e.target)) return
-    this.setState({isOpen: !this.state.isOpen})
+    this.setState({ isOpen: !this.state.isOpen })
   }
 
   render() {

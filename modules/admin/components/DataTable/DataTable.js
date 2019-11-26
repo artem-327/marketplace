@@ -1,19 +1,19 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {injectIntl} from 'react-intl'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { injectIntl } from 'react-intl'
 import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
-import {getDataRequest, openEditPopup, closeConfirmPopup, deleteConfirmation} from '../../actions'
-import {withDatagrid} from '~/modules/datagrid'
+import { getDataRequest, openEditPopup, closeConfirmPopup, deleteConfirmation } from '../../actions'
+import { withDatagrid } from '~/modules/datagrid'
 
 class DataTable extends Component {
   render() {
-    const {config, intl, loading, rows, datagrid, filterValue, openEditPopup, deleteConfirmation} = this.props
+    const { config, intl, loading, rows, datagrid, filterValue, openEditPopup, deleteConfirmation } = this.props
 
-    const {formatMessage} = intl
-    const {tableName} = this.props.config
-    const {columns} = this.props.config.display
-    const {addEditText, formattedMessageName} = this.props.config
+    const { formatMessage } = intl
+    const { tableName } = this.props.config
+    const { columns } = this.props.config.display
+    const { addEditText, formattedMessageName } = this.props.config
 
     return (
       <React.Fragment>
@@ -25,9 +25,9 @@ class DataTable extends Component {
           columns={columns}
           rows={rows}
           rowActions={[
-            {text: formatMessage({id: 'global.edit', defaultMessage: 'Edit'}), callback: row => openEditPopup(row)},
+            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
             {
-              text: formatMessage({id: 'global.delete', defaultMessage: 'Delete'}),
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row =>
                 confirm(
                   formatMessage({
@@ -41,7 +41,7 @@ class DataTable extends Component {
                         formattedMessageName.slice(1)}.content`,
                       defaultMessage: `Do you really want to delete '${row.name}' ${formattedMessageName}?`
                     },
-                    {name: row.name}
+                    { name: row.name }
                   )
                 ).then(() => deleteConfirmation(row.id, config))
             }
@@ -59,7 +59,7 @@ const mapDispatchToProps = {
   deleteConfirmation
 }
 
-const mapStateToProps = (state, {datagrid}) => {
+const mapStateToProps = (state, { datagrid }) => {
   let cfg = state.admin.config[state.admin.currentTab.name]
   return {
     config: cfg,

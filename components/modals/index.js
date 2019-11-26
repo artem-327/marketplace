@@ -1,1 +1,1 @@
-export {default as AgreementModal} from './agreementModal'
+export { default as AgreementModal } from './agreementModal'

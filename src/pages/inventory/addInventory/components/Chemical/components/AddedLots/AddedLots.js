@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './AddedLots.scss'
 import AddedLot from './AddedLot'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class AddedLots extends Component {
   removeLots(index) {

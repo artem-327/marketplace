@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
-import {Grid, GridColumn, GridRow, Segment, Header, Form, Button, Icon, Popup} from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { Grid, GridColumn, GridRow, Segment, Header, Form, Button, Icon, Popup } from 'semantic-ui-react'
 import styled from 'styled-components'
-import {Formik} from 'formik'
-import {Input, Dropdown, Checkbox} from 'formik-semantic-ui-fixed-validation'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { Formik } from 'formik'
+import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import * as Yup from 'yup'
 import Router from 'next/router'
@@ -16,20 +16,15 @@ import {
   einValidation,
   websiteValidation
 } from '~/constants/yupValidation'
-import {BeneficialOwnersForm} from '~/components/custom-formik'
-import {getSafe} from '~/utils/functions'
+import { BeneficialOwnersForm } from '~/components/custom-formik'
+import { getSafe } from '~/utils/functions'
 
-import {beneficialOwner, USA, ownersToPayload} from '~/constants/beneficialOwners'
+import { beneficialOwner, USA, ownersToPayload } from '~/constants/beneficialOwners'
 
-import {AddressForm} from '~/modules/address-form'
-import {ControllerForm} from '~/components/custom-formik'
+import { AddressForm } from '~/modules/address-form'
+import { ControllerForm } from '~/components/custom-formik'
 
-import {postNewDwollaAccount} from '~/modules/admin/api'
-
-const BiggerTextColumn = styled(GridColumn)`
-  font-size: 18px;
-  line-height: 1.78em;
-`
+import { postNewDwollaAccount } from '~/modules/admin/api'
 
 const Wrapper = styled.div`
   background-color: rgba(208, 224, 240, 0.3);
@@ -86,7 +81,7 @@ class DwollaRegister extends Component {
   }
 
   getValidationSchema = () => {
-    const {requiredMessage, invalidString, invalidEmail, minLength} = errorMessages
+    const { requiredMessage, invalidString, invalidEmail, minLength } = errorMessages
     const minLengthValue = 3
     const minLengthErr = minLength(minLengthValue)
 
@@ -121,13 +116,13 @@ class DwollaRegister extends Component {
         ein: einValidation()
       },
       {},
-      {beneficialOwners: beneficialOwnersValidation()},
-      {dwollaController: dwollaControllerValidation()}
+      { beneficialOwners: beneficialOwnersValidation() },
+      { dwollaController: dwollaControllerValidation() }
     ]
 
     for (let i = 0; i < this.state.step; i++) {
       if (validation[i]) {
-        validationSchema = {...validationSchema, ...validation[i]}
+        validationSchema = { ...validationSchema, ...validation[i] }
       }
     }
 
@@ -135,9 +130,9 @@ class DwollaRegister extends Component {
   }
 
   getContent = formikProps => {
-    const {values, setFieldValue, resetForm, submitForm} = formikProps
+    const { values, setFieldValue, resetForm, submitForm } = formikProps
     const {
-      intl: {formatMessage},
+      intl: { formatMessage },
       businessClassifications,
       businessClassificationsLoading
     } = this.props
@@ -214,22 +209,22 @@ class DwollaRegister extends Component {
                   {/* <Header as='h5'><FormattedMessage id='global.step' defaultMessage='Step' /> {' '} {this.state.step} / {numberOfSteps}</Header> */}
                   <Input
                     label={<FormattedMessage id='global.legalFirstName' defaultMessage='Legal First Name' />}
-                    inputProps={{fluid: true}}
+                    inputProps={{ fluid: true }}
                     name='firstName'
                   />
                   <Input
                     label={<FormattedMessage id='global.legalLastName' defaultMessage='Legal Last Name' />}
-                    inputProps={{fluid: true}}
+                    inputProps={{ fluid: true }}
                     name='lastName'
                   />
                   <Input
                     label={<FormattedMessage id='global.email' defaultMessage='E-Mail' />}
-                    inputProps={{fluid: true}}
+                    inputProps={{ fluid: true }}
                     name='email'
                   />
                   <Input
                     label={<FormattedMessage id='global.websiteURL' defaultMessage='Website URL' />}
-                    inputProps={{fluid: true}}
+                    inputProps={{ fluid: true }}
                     name='website'
                   />
 
@@ -261,7 +256,7 @@ class DwollaRegister extends Component {
                   {/* <Header as='h5'><FormattedMessage id='global.step' defaultMessage='Step' /> {' '} {this.state.step} / {numberOfSteps}</Header> */}
                   <Input
                     label={<FormattedMessage id='global.businessName' defaultMessage='Business Name' />}
-                    inputProps={{fluid: true}}
+                    inputProps={{ fluid: true }}
                     name='businessName'
                   />
                   <Dropdown
@@ -309,7 +304,7 @@ class DwollaRegister extends Component {
                   <Input name='ein' label={<FormattedMessage id='global.ein' defaultMessage='EIN' />} />
 
                   <RightAlignedDiv>
-                    <Button type='button' onClick={() => this.setState({step: this.state.step - 1})}>
+                    <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
                       <FormattedMessage id='global.back' defaultMessage='Back'>
                         {text => text}
                       </FormattedMessage>
@@ -344,21 +339,21 @@ class DwollaRegister extends Component {
                     </GridRow>
 
                     <GridRow>
-                      <BiggerTextColumn>
+                      <GridColumn>
                         <FormattedMessage
                           id='dwolla.beneficialOwnersDesc1'
                           defaultMessage={`To help the government fight financial crime, Federal regulation requires our financial institution partners to obtain, verify, and record information about the beneficial owners of legal entity customers. Legal entities can be abused to disguise involvement in terrorist financing, money laundering, tax evasion, corruption, fraud, and other financial crimes. Requiring the disclosure of key individuals who ultimately own or control a legal entity (e.g. the beneficial owners) helps law enforcement investigate and prosecute these crimes.`}
                         />
-                      </BiggerTextColumn>
+                      </GridColumn>
                     </GridRow>
 
                     <GridRow>
-                      <BiggerTextColumn>
+                      <GridColumn>
                         <FormattedMessage
                           id='dwolla.beneficialOwnersDesc2'
                           defaultMessage={`The following information must be collected for each individual, if any, who, directly or indirectly, through any contract, arrangement, understanding, relationship or otherwise, owns 25 percent or more of the equity interests of the legal entity listed above. If no individual meets this definition or if the company is publicly traded, please check “Beneficial Owner Not Applicable” below and skip this section.`}
                         />
-                      </BiggerTextColumn>
+                      </GridColumn>
                     </GridRow>
 
                     <GridRow>
@@ -376,13 +371,13 @@ class DwollaRegister extends Component {
                     <GridRow>
                       <GridColumn>
                         <RightAlignedDiv>
-                          <Button type='button' onClick={() => this.setState({step: this.state.step - 1})}>
+                          <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
                             <FormattedMessage id='global.back' defaultMessage='Back'>
                               {text => text}
                             </FormattedMessage>
                           </Button>
 
-                          <Button onClick={() => this.setState({step: this.state.step + 1})} primary>
+                          <Button onClick={() => this.setState({ step: this.state.step + 1 })} primary>
                             <FormattedMessage id='global.acceptAndContinue' defaultMessage='Accept and Continue'>
                               {text => text}
                             </FormattedMessage>
@@ -423,7 +418,7 @@ class DwollaRegister extends Component {
                     />
 
                     <RightAlignedDiv>
-                      <Button type='button' onClick={() => this.setState({step: this.state.step - 1})}>
+                      <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
                         <FormattedMessage id='global.back' defaultMessage='Back'>
                           {text => text}
                         </FormattedMessage>
@@ -488,29 +483,32 @@ class DwollaRegister extends Component {
                     </GridRow>
 
                     <GridRow>
-                      <BiggerTextColumn>
+                      <GridColumn>
                         <FormattedMessage
                           id='dwolla.controllerDesc1'
                           defaultMessage='To assure compliance with US financial institution policies, Echo must collect the information of at least one individual with significant responsibility for managing the legal entity listed above, such as:'
                         />
-                      </BiggerTextColumn>
+                      </GridColumn>
                     </GridRow>
                     <GridRow>
-                      <BiggerTextColumn>
-                        <FormattedMessage
-                          id='dwolla.controllerDesc2'
-                          defaultMessage='* An executive officer or senior manager (e.g., Chief Executive Officer, Chief Financial Officer, Chief Operating Officer, Managing Member, General Partner, President, Vice President, Treasurer); or'
-                        />
-                      </BiggerTextColumn>
+                      <GridColumn>
+                        <li>
+                          <FormattedMessage
+                            id='dwolla.controllerDesc2'
+                            defaultMessage='An executive officer or senior manager (e.g., Chief Executive Officer, Chief Financial Officer, Chief Operating Officer, Managing Member, General Partner, President, Vice President, Treasurer); or'
+                          />
+                        </li>
+                      </GridColumn>
                     </GridRow>
-
                     <GridRow>
-                      <BiggerTextColumn>
-                        <FormattedMessage
-                          id='dwolla.controllerDesc3'
-                          defaultMessage='* Any other individual who regularly performs similar functions.'
-                        />
-                      </BiggerTextColumn>
+                      <GridColumn>
+                        <li>
+                          <FormattedMessage
+                            id='dwolla.controllerDesc3'
+                            defaultMessage='Any other individual who regularly performs similar functions.'
+                          />
+                        </li>
+                      </GridColumn>
                     </GridRow>
                   </Grid>
                 </Segment>
@@ -519,31 +517,22 @@ class DwollaRegister extends Component {
 
               <FormColumn largeScreen={6} computer={5} tablet={9} mobile={10}>
                 <Segment padded>
-                  <GridRow>
-                    <GridColumn>
-                      <Header as='h2'>
-                        <FormattedMessage id='global.controllerInfo' defaultMessage='Controller Information' />
-                      </Header>
-                    </GridColumn>
-                  </GridRow>
+                  <Header as='h4'>
+                    <FormattedMessage id='global.controllerInfo' defaultMessage='Controller Information' />
+                  </Header>
                   <ControllerForm setFieldValue={setFieldValue} values={values} />
-                  <GridRow>
-                    <GridColumn>
-                      <RightAlignedDiv>
-                        <Button type='button' onClick={() => this.setState({step: this.state.step - 1})}>
-                          <FormattedMessage id='global.back' defaultMessage='Back'>
-                            {text => text}
-                          </FormattedMessage>
-                        </Button>
-
-                        <Button onClick={() => this.nextStep(formikProps)} primary>
-                          <FormattedMessage id='global.saveAndContinue' defaultMessage='Save and Continue'>
-                            {text => text}
-                          </FormattedMessage>
-                        </Button>
-                      </RightAlignedDiv>
-                    </GridColumn>
-                  </GridRow>
+                  <RightAlignedDiv>
+                    <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
+                      <FormattedMessage id='global.back' defaultMessage='Back'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                    <Button onClick={() => this.nextStep(formikProps)} primary>
+                      <FormattedMessage id='global.saveAndContinue' defaultMessage='Save and Continue'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                  </RightAlignedDiv>
                 </Segment>
               </FormColumn>
             </GridRow>
@@ -577,7 +566,7 @@ class DwollaRegister extends Component {
                     <GridColumn>
                       <Input
                         label={<FormattedMessage id='global.legalFirstName' defaultMessage='Legal First Name' />}
-                        inputProps={{fluid: true}}
+                        inputProps={{ fluid: true }}
                         name='firstName'
                       />
                     </GridColumn>
@@ -586,7 +575,7 @@ class DwollaRegister extends Component {
                     <GridColumn>
                       <Input
                         label={<FormattedMessage id='global.legalLastName' defaultMessage='Legal Last Name' />}
-                        inputProps={{fluid: true}}
+                        inputProps={{ fluid: true }}
                         name='lastName'
                       />
                     </GridColumn>
@@ -596,7 +585,7 @@ class DwollaRegister extends Component {
                     <GridColumn>
                       <Input
                         label={<FormattedMessage id='global.title' defaultMessage='Title' />}
-                        inputProps={{fluid: true}}
+                        inputProps={{ fluid: true }}
                         name='dwollaController.jobTitle'
                       />
                     </GridColumn>
@@ -627,7 +616,7 @@ class DwollaRegister extends Component {
                   <GridRow>
                     <GridColumn>
                       <RightAlignedDiv>
-                        <Button type='button' onClick={() => this.setState({step: this.state.step - 1})}>
+                        <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
                           <FormattedMessage id='global.back' defaultMessage='Back'>
                             {text => text}
                           </FormattedMessage>
@@ -664,7 +653,7 @@ class DwollaRegister extends Component {
                     </GridRow>
 
                     <GridRow>
-                      <BiggerTextColumn>
+                      <GridColumn>
                         <FormattedMessage
                           id='dwolla.registrationCompleteDesc'
                           values={{
@@ -681,13 +670,13 @@ class DwollaRegister extends Component {
                           }}
                         />
                         {/* <FormattedMessage id='dwolla.registrationCompleteDesc1' defaultMessage='Thanks for registering for your Dwolla Account. The verification process can take 24-48 hours. In the meantime you can add your Products, Warehouses, Branches, and other information in the Settings section of (web app name).' /> */}
-                      </BiggerTextColumn>
+                      </GridColumn>
                     </GridRow>
 
                     {/* <GridRow>
-                      <BiggerTextColumn>
+                      <GridColumn>
                         <FormattedMessage id='dwolla.registrationCompleteDesc2' defaultMessage='Once Dwolla sends you the verification e-mail you can then add your Bank Accounts and Logisitics details. If you don’t receive a verification e-mail please contact support@echosystem.com or call (833) 321 3246.' />
-                      </BiggerTextColumn>
+                      </GridColumn>
                     </GridRow> */}
 
                     <GridRow>
@@ -714,10 +703,10 @@ class DwollaRegister extends Component {
     }
   }
 
-  nextStep = ({validateForm, setTouched}) => {
+  nextStep = ({ validateForm, setTouched }) => {
     validateForm()
       .then(errors => {
-        if (Object.keys(errors).length === 0) this.setState({step: this.state.step + 1})
+        if (Object.keys(errors).length === 0) this.setState({ step: this.state.step + 1 })
         setTouched(errors)
       })
       .catch(err => console.log('catch', err))
@@ -725,7 +714,7 @@ class DwollaRegister extends Component {
 
   render() {
     let initialValues = {}
-    const {identity, postDwollaAccount, companyId} = this.props
+    const { identity, postDwollaAccount, companyId } = this.props
 
     if (identity && identity.company) {
       const deliveryAddress = getSafe(() => identity.company.primaryBranch.deliveryAddress)
@@ -780,7 +769,7 @@ class DwollaRegister extends Component {
         <Container>
           <Formik
             onSubmit={async values => {
-              this.setState({submitting: true})
+              this.setState({ submitting: true })
 
               let payload = {
                 ...values,
@@ -804,10 +793,10 @@ class DwollaRegister extends Component {
                 if (payload.beneficialOwners.length === 0) delete payload.beneficialOwners
                 if (companyId) await postNewDwollaAccount(payload, companyId)
                 else await postDwollaAccount(payload)
-                this.setState({step: this.state.step + 1})
+                this.setState({ step: this.state.step + 1 })
               } catch {
               } finally {
-                this.setState({submitting: false})
+                this.setState({ submitting: false })
               }
             }}
             enableReinitialize

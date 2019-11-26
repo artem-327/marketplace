@@ -1,1 +1,1 @@
-export {default as ShippingQuotes} from './components/ShippingQuotesContainer'
+export { default as ShippingQuotes } from './components/ShippingQuotesContainer'

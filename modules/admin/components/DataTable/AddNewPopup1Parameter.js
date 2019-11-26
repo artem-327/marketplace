@@ -1,16 +1,16 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import {Modal, FormGroup} from 'semantic-ui-react'
+import { Modal, FormGroup } from 'semantic-ui-react'
 
-import {closeAddPopup, postNewRequest} from '../../actions'
-import {Form, Input, Button} from 'formik-semantic-ui-fixed-validation'
+import { closeAddPopup, postNewRequest } from '../../actions'
+import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
-import {withToastManager} from 'react-toast-notifications'
+import { withToastManager } from 'react-toast-notifications'
 
-import {generateToastMarkup} from '~/utils/functions'
-import {FormattedMessage} from 'react-intl'
+import { generateToastMarkup } from '~/utils/functions'
+import { FormattedMessage } from 'react-intl'
 
 const initialFormValues = {
   val0: ''
@@ -25,7 +25,7 @@ const formValidation = Yup.object().shape({
 
 class AddNewPopup1Parameter extends React.Component {
   render() {
-    const {closeAddPopup, currentTab, config, postNewRequest, toastManager} = this.props
+    const { closeAddPopup, currentTab, config, postNewRequest, toastManager } = this.props
 
     return (
       <Modal closeIcon onClose={() => closeAddPopup()} open centered={false}>
@@ -37,7 +37,7 @@ class AddNewPopup1Parameter extends React.Component {
             initialValues={initialFormValues}
             validationSchema={formValidation}
             onReset={closeAddPopup}
-            onSubmit={async (values, {setSubmitting}) => {
+            onSubmit={async (values, { setSubmitting }) => {
               let data = {
                 [config.edit[0].name]: values.val0.trim()
               }
@@ -50,9 +50,9 @@ class AddNewPopup1Parameter extends React.Component {
                 toastManager.add(
                   generateToastMarkup(
                     <FormattedMessage id={`${formattedMsgId}.header`} />,
-                    <FormattedMessage id={`${formattedMsgId}.content`} values={{name: values.val0}} />
+                    <FormattedMessage id={`${formattedMsgId}.content`} values={{ name: values.val0 }} />
                   ),
-                  {appearance: 'success'}
+                  { appearance: 'success' }
                 )
               } catch (e) {
                 console.error(e)
@@ -64,7 +64,7 @@ class AddNewPopup1Parameter extends React.Component {
               <Input type={config.edit[0].type} label={config.edit[0].title} name='val0' />
             </FormGroup>
 
-            <div style={{textAlign: 'right'}}>
+            <div style={{ textAlign: 'right' }}>
               <Button.Reset data-test={`admin_add_${config.formattedMessageName}_cancel_btn`}>
                 <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                   {text => text}

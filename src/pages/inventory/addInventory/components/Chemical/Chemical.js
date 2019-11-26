@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import ProductOffering from './components/ProductOffering'
 import ProductMapping from './components/ProductMapping'
 import AddedLots from './components/AddedLots/AddedLots'
@@ -27,12 +27,12 @@ class Chemical extends Component {
     localStorage.removeItem('productLots')
 
     if (this.props.edit && this.props.productOffer.lots) {
-      this.setState({lots: this.props.productOffer.lots})
+      this.setState({ lots: this.props.productOffer.lots })
       localStorage.setItem('productLots', JSON.stringify(this.props.productOffer.lots))
     }
 
     if (this.props.edit && typeof this.props.productOffer.product !== 'undefined') {
-      this.setState({productID: this.props.productOffer.product.id})
+      this.setState({ productID: this.props.productOffer.product.id })
     }
 
     if (this.props.edit) return
@@ -118,7 +118,7 @@ class Chemical extends Component {
   }
 
   setProductMapping(mapping) {
-    this.setState({selectedProductMapping: mapping, productID: mapping.product.id}, () => {
+    this.setState({ selectedProductMapping: mapping, productID: mapping.product.id }, () => {
       let inputs = {
         indexName: this.state.selectedProductMapping.product.casIndexName,
         casNumber: this.state.selectedProductMapping.product.casNumber,
@@ -136,7 +136,7 @@ class Chemical extends Component {
   }
 
   setSelectedProduct(product) {
-    this.setState({selectedProduct: product, productID: product.id}, () => {
+    this.setState({ selectedProduct: product, productID: product.id }, () => {
       let inputs = {
         indexName: this.state.selectedProduct.casIndexName,
         casNumber: this.state.selectedProduct.casNumber,
@@ -148,18 +148,18 @@ class Chemical extends Component {
 
   addLot(lots) {
     let productMapping = Object.assign({}, this.props.productMapping, {
-      packaging: {...this.props.productMapping.packaging, amount: lots.pkgAmount}
+      packaging: { ...this.props.productMapping.packaging, amount: lots.pkgAmount }
     })
     if (!localStorage.getItem('productLots')) {
-      let values = [{...lots, ...productMapping, product: this.state.productID}]
+      let values = [{ ...lots, ...productMapping, product: this.state.productID }]
       localStorage.setItem('productLots', JSON.stringify(values))
-      this.setState({lots: values})
+      this.setState({ lots: values })
       this.props.addLotSaveOffering()
     } else {
       let newLots = JSON.parse(localStorage.getItem('productLots'))
-      newLots.push({...lots, ...productMapping, product: this.state.productID})
+      newLots.push({ ...lots, ...productMapping, product: this.state.productID })
       localStorage.setItem('productLots', JSON.stringify(newLots))
-      this.setState({lots: newLots})
+      this.setState({ lots: newLots })
       this.props.addLotSaveOffering()
     }
   }
@@ -168,7 +168,7 @@ class Chemical extends Component {
     let newLots = JSON.parse(localStorage.getItem('productLots'))
     newLots.splice(index, 1)
     localStorage.setItem('productLots', JSON.stringify(newLots))
-    this.setState({lots: newLots})
+    this.setState({ lots: newLots })
   }
 
   render() {

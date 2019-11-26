@@ -1,24 +1,24 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './radioButton.scss'
 import PropTypes from 'prop-types'
-import {Control} from 'react-redux-form'
+import { Control } from 'react-redux-form'
 
 class Radio extends Component {
   state = {}
 
   componentWillMount() {
     let checked = this.props.redux ? this.props.value : this.props.checked
-    this.setState({checked})
+    this.setState({ checked })
   }
 
   componentWillReceiveProps(nextProps) {
     let checked = nextProps.redux ? nextProps.value : nextProps.checked
-    this.setState({checked})
+    this.setState({ checked })
   }
 
   handleChange = event => {
-    const {value} = event.target
-    this.setState({checked: value}, () => {
+    const { value } = event.target
+    this.setState({ checked: value }, () => {
       if (this.props.onChange) this.props.onChange(value)
     })
   }

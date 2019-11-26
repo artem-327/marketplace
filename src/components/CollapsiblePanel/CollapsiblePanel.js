@@ -1,6 +1,6 @@
-import React, {Component, Children} from 'react'
+import React, { Component, Children } from 'react'
 import './style.scss'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import dropdown from '../../images/inv-filter/dropdown.png'
 import dropdownClose from '../../images/inv-filter/dropdown-close.png'
 
@@ -14,15 +14,15 @@ export default class CollapsiblePanel extends Component {
   }
 
   render() {
-    const {header, children} = this.props
-    const {open} = this.state
+    const { header, children } = this.props
+    const { open } = this.state
     const styleOpen = this.state.open ? ' open' : ''
 
     return (
       <div className='add-group'>
         <div
           className={'header-group' + styleOpen}
-          onClick={() => this.setState({open: !open})}
+          onClick={() => this.setState({ open: !open })}
           data-test='collapsible_panel_toggle'>
           {open ? <img src={dropdown} alt='drop' /> : <img src={dropdownClose} alt='drop-close' />}
           <h2>{header}</h2>

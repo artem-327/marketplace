@@ -1,13 +1,13 @@
 import React from 'react'
 import DatePicker from './Datepicker'
-import {Control, actions} from 'react-redux-form'
+import { Control, actions } from 'react-redux-form'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import PropTypes from 'prop-types'
 
 class DatepickerRedux extends React.Component {
   handleChange(value) {
-    const {model, dispatch} = this.props
+    const { model, dispatch } = this.props
     dispatch(actions.change(model, value))
     if (this.props.onChange) this.props.onChange(value)
   }

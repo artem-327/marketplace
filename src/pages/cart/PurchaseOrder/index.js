@@ -1,5 +1,5 @@
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import PurchaseOrder from './PurchaseOrder'
 import {
   getDeliveryAddresses,
@@ -12,9 +12,9 @@ import {
   shippingChanged
 } from '../../../modules/cart'
 
-import {addCartItem, updateCartItem, deleteCartItem, getCart, deleteCart} from '~/modules/purchase-order/actions'
+import { addCartItem, updateCartItem, deleteCartItem, getCart, deleteCart } from '~/modules/purchase-order/actions'
 
-import {getStates, getProvinces} from '../../../modules/location'
+import { getStates, getProvinces } from '../../../modules/location'
 
 function mapStateToProps(store) {
   return {

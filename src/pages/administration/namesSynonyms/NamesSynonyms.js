@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './namesSynonyms.scss'
 import RemoteComboBox from '../../../components/ComboBox/RemoteComboBox'
 import Edit from './components/Edit'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 class NamesSynonyms extends Component {
   constructor(props) {
@@ -13,12 +13,12 @@ class NamesSynonyms extends Component {
   }
 
   selectProduct(product) {
-    this.setState({selected: product})
+    this.setState({ selected: product })
     this.props.fetchAlternativeNames(product.id)
   }
 
   render() {
-    const {formatMessage} = this.props.intl
+    const { formatMessage } = this.props.intl
     return (
       <div className='names-synonyms'>
         <h1 className='header'>

@@ -1,10 +1,10 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import * as Actions from '../../actions'
-import {Segment, Grid, Header, Button} from 'semantic-ui-react'
-import {FormattedMessage} from 'react-intl'
-import {getSafe} from '~/utils/functions'
+import { Segment, Grid, Header, Button } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
+import { getSafe } from '~/utils/functions'
 import moment from 'moment/moment'
 
 class ActionsRequired extends React.Component {
@@ -37,12 +37,11 @@ class ActionsRequired extends React.Component {
   }
 
   renderSegment(color, columnWidth, title, description, buttons) {
-    console.log(buttons)
     return (
-      <Segment color={color ? color : 'blue'} style={{marginLeft: '32px', marginRight: '32px'}}>
+      <Segment color={color ? color : 'blue'} style={{ marginLeft: '32px', marginRight: '32px' }}>
         <Grid verticalAlign='middle' columns='equal'>
           <Grid.Column width={columnWidth}>
-            <Header as='h3' color={color ? color : 'black'} style={{margin: '0 0 0.3571429rem'}}>
+            <Header as='h3' color={color ? color : 'black'} style={{ margin: '0 0 0.3571429rem' }}>
               <FormattedMessage id={title ? title : 'order.actionRequired'} />
             </Header>
             <FormattedMessage id={description} />
@@ -73,8 +72,10 @@ class ActionsRequired extends React.Component {
   }
 
   render() {
-    const {action, ordersType, detail, openReinitiateTransfer, cancelOrder} = this.props
+    const { action, ordersType, detail, openReinitiateTransfer, cancelOrder } = this.props
     const repayUntil = moment(detail.orderDate)
+    // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
+    // Some switch might do the trick
 
     return (
       <>
@@ -97,7 +98,7 @@ class ActionsRequired extends React.Component {
                 ])
               : null}
 
-            {action === '210'
+            {false && action === '210'  // ! ! to be deleted?
               ? this.renderSegment(null, 14, null, 'order.assignLots.description', [
                   {
                     buttonType: 'primary',
@@ -108,7 +109,7 @@ class ActionsRequired extends React.Component {
                 ])
               : null}
 
-            {action === '211'
+            {false && action === '211'  // ! ! to be deleted?
               ? this.renderSegment(null, 12, null, 'order.ship.description', [
                   {
                     buttonType: 'primary',
@@ -124,12 +125,22 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
+            {action === '210' || action === '211'
+              ? this.renderSegment(null, 12, null, 'order.ship.description', [
+                {
+                  buttonType: 'primary',
+                  onClick: this.shipOrder,
+                  dataTest: 'orders_detail_ship_btn',
+                  text: 'order.ship'
+                }
+              ])
+              : null}
           </>
         ) : (
           //orderStatus === 'Purchase'
           <>
-            {action === '100'
-              ? this.renderSegment(null, 13, null, 'order.confirm.cancel', [
+            {action === '100' // Pending
+              ? this.renderSegment(null, 13, null, 'order.detail.status.pending', [
                   {
                     buttonType: 'basic',
                     onClick: this.cancelOrder,
@@ -138,8 +149,8 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {action === '400'
-              ? this.renderSegment(null, 11, null, 'order.confirm.approve.dissaprove', [
+            {action === '400' // Draft
+              ? this.renderSegment(null, 11, null, 'order.detail.status.draft', [
                   {
                     buttonType: 'primary',
                     onClick: this.approveOrder,
@@ -150,7 +161,7 @@ class ActionsRequired extends React.Component {
                     buttonType: 'basic',
                     onClick: this.disapproveOrder,
                     dataTest: 'orders_detail_disapprove_btn',
-                    text: 'global.disapprove'
+                    text: 'global.discard'
                   }
                 ])
               : null}
@@ -195,7 +206,7 @@ function actionRequired(data) {
 }
 
 function mapStateToProps(state, ownProps) {
-  const {orders} = state
+  const { orders } = state
 
   return {
     action: actionRequired(orders.detail),

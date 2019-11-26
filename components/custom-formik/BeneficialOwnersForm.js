@@ -1,14 +1,14 @@
-import React, {Component} from 'react'
-import {object, func, number} from 'prop-types'
-import {Input} from 'formik-semantic-ui-fixed-validation'
-import {FormGroup, Header, Popup, Button, Icon} from 'semantic-ui-react'
-import {injectIntl, FormattedMessage} from 'react-intl'
+import React, { Component } from 'react'
+import { object, func, number } from 'prop-types'
+import { Input } from 'formik-semantic-ui-fixed-validation'
+import { FormGroup, Header, Popup, Button, Icon } from 'semantic-ui-react'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 
-import {beneficialOwner, maxBeneficialOwners} from '~/constants/beneficialOwners'
+import { beneficialOwner, maxBeneficialOwners } from '~/constants/beneficialOwners'
 
-import {AddressForm} from '~/modules/address-form/'
-import {DateInput} from '~/components/custom-formik'
+import { AddressForm } from '~/modules/address-form/'
+import { DateInput } from '~/components/custom-formik'
 
 const RightAlignedDiv = styled.div`
   text-align: right !important;
@@ -18,7 +18,7 @@ class BeneficialOwnersForm extends Component {
   getBeneficialOwners = (values, setFieldValue) => {
     let beneficialOwners = []
     let {
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
     for (let i = 0; i < this.props.beneficialOwnersCount; i++) {
@@ -26,13 +26,13 @@ class BeneficialOwnersForm extends Component {
         <>
           <FormGroup widths='equal' data-test='settings_dwolla_beneficialOwner_namePostal_inp'>
             <Input
-              inputProps={{fluid: true}}
-              label={formatMessage({id: 'global.firstName', defaultMessage: 'First Name'})}
+              inputProps={{ fluid: true }}
+              label={formatMessage({ id: 'global.firstName', defaultMessage: 'First Name' })}
               name={`beneficialOwners[${i}].firstName`}
             />
             <Input
-              inputProps={{fluid: true}}
-              label={formatMessage({id: 'global.lastName', defaultMessage: 'Last Name'})}
+              inputProps={{ fluid: true }}
+              label={formatMessage({ id: 'global.lastName', defaultMessage: 'Last Name' })}
               name={`beneficialOwners[${i}].lastName`}
             />
           </FormGroup>
@@ -51,18 +51,18 @@ class BeneficialOwnersForm extends Component {
             index={i}
             prefix={`beneficialOwners`}
             displayHeader={false}
-            additionalCountryInputProps={{disabled: true}}
+            additionalCountryInputProps={{ disabled: true }}
           />
 
           <FormGroup widths='equal' data-test='settings_dwolla_beneficialOwner_nameSsn_inp'>
             <Input
-              inputProps={{placeholder: '123-45-6789', fluid: true}}
-              label={formatMessage({id: 'settings.ssn', defaultMessage: 'SSN'})}
+              inputProps={{ placeholder: '123-45-6789', fluid: true }}
+              label={formatMessage({ id: 'settings.ssn', defaultMessage: 'SSN' })}
               name={`beneficialOwners[${i}].ssn`}
             />
             <DateInput
-              inputProps={{fluid: true}}
-              label={formatMessage({id: 'global.birth', defaultMessage: 'Birth'})}
+              inputProps={{ fluid: true }}
+              label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
               name={`beneficialOwners[${i}].dateOfBirth`}
             />
           </FormGroup>
@@ -74,9 +74,9 @@ class BeneficialOwnersForm extends Component {
   }
 
   handleOwnerCountChange = (direction = 0, values) => {
-    let {beneficialOwnersCount} = this.props
+    let { beneficialOwnersCount } = this.props
     if (beneficialOwnersCount + direction > 0 && beneficialOwnersCount + direction <= maxBeneficialOwners) {
-      let {beneficialOwners} = values
+      let { beneficialOwners } = values
       direction === -1 ? beneficialOwners.pop() : beneficialOwners.push(beneficialOwner)
 
       this.props.handleOwnerCountChange(values)
@@ -84,7 +84,7 @@ class BeneficialOwnersForm extends Component {
   }
 
   handleFormReset = values => {
-    let {dwollaController, ...rest} = values
+    let { dwollaController, ...rest } = values
     let beneficialOwners = values.beneficialOwners.slice()
 
     if (beneficialOwners.length === this.props.beneficialOwnersCount) return
@@ -103,7 +103,7 @@ class BeneficialOwnersForm extends Component {
   }
 
   render() {
-    let {values, setFieldValue} = this.props
+    let { values, setFieldValue } = this.props
     return (
       <>
         {this.getBeneficialOwners(values, setFieldValue).map((owner, i) => (
@@ -112,7 +112,7 @@ class BeneficialOwnersForm extends Component {
               <FormattedMessage
                 id='settings.beneficialOwnerNum'
                 defaultMessage={`Beneficial owner # ${i + 1}`}
-                values={{num: i + 1}}
+                values={{ num: i + 1 }}
               />
             </Header>
             {owner}

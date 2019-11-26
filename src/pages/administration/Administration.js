@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './Administration.scss'
 
 import AdministrationMenu from './AdministrationMenu'
@@ -7,7 +7,7 @@ import AdministrationContent from './AdministrationContent'
 import Users from './users'
 import CompaniesAdmin from './companiesAdmin'
 import Offices from './officesAdmin/Offices'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 // import MerchantsTable from "./merchants"
 // import Operators from "./operators"
 
@@ -34,7 +34,7 @@ export default class Administration extends Component {
   }
 
   contentHandler = e => {
-    this.setState({content: e.target.getAttribute('name')})
+    this.setState({ content: e.target.getAttribute('name') })
   }
 
   render() {

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import './reports.scss'
 import ConMess from '../../components/constructionMessage'
 

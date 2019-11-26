@@ -1,13 +1,13 @@
-import {Form, Control} from 'react-redux-form'
+import { Form, Control } from 'react-redux-form'
 import './filter.scss'
 
 import FilterGroup from './components/FilterGroup'
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {filterNonEmptyAttributes} from '../../utils/functions'
+import { filterNonEmptyAttributes } from '../../utils/functions'
 import SavedFilters from './components/SavedFilters/SavedFilters'
 import styled from 'styled-components'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import {
   Segment,
@@ -22,7 +22,7 @@ import {
   Checkbox
 } from 'semantic-ui-react'
 
-import {operators} from './constants'
+import { operators } from './constants'
 import Axios from 'axios'
 
 const FlexContent = styled.div`
@@ -45,15 +45,19 @@ const GrayRow = styled(GridRow)`
 `
 
 const datagridValues = {
-  search: {getFilter: values => ({operator: operators.LIKE, path: 'ProductOffer.product.productName', values})},
+  search: { getFilter: values => ({ operator: operators.LIKE, path: 'ProductOffer.product.productName', values }) },
   qntylb: {
-    getFilter: values => ({operator: operators.GREATER_THAN_OR_EQUAL_TO, path: 'ProductOffer.quantity', values})
+    getFilter: values => ({ operator: operators.GREATER_THAN_OR_EQUAL_TO, path: 'ProductOffer.quantity', values })
   },
-  qntyub: {getFilter: values => ({operator: operators.LESS_THAN_OR_EQUAL_TO, path: 'ProductOffer.quantity', values})},
+  qntyub: {
+    getFilter: values => ({ operator: operators.LESS_THAN_OR_EQUAL_TO, path: 'ProductOffer.quantity', values })
+  },
   prclb: {
-    getFilter: values => ({operator: operators.GREATER_THAN_OR_EQUAL_TO, path: 'ProductOffer.pricingPrice', values})
+    getFilter: values => ({ operator: operators.GREATER_THAN_OR_EQUAL_TO, path: 'ProductOffer.pricingPrice', values })
   },
-  prcub: {getFilter: values => ({operator: operators.LESS_THAN_OR_EQUAL_TO, path: 'ProductOffer.pricingPrice', values})}
+  prcub: {
+    getFilter: values => ({ operator: operators.LESS_THAN_OR_EQUAL_TO, path: 'ProductOffer.pricingPrice', values })
+  }
 }
 // ProductOffer.product.packagingType.id
 // { name: 'search',  },
@@ -103,7 +107,7 @@ class Filter extends Component {
       }
     })
 
-    console.log({datagridFilter})
+    console.log({ datagridFilter })
     Axios.post('/prodex/api/product-offers/own/datagrid', datagridFilter)
       .then(response => console.log('OK!', response.data))
       .catch(err => console.log('err', err))
@@ -117,8 +121,8 @@ class Filter extends Component {
   }
 
   notificationsMarkup = () => {
-    let {intl} = this.props
-    let {formatMessage} = intl
+    let { intl } = this.props
+    let { formatMessage } = intl
     return (
       <>
         <GridRow>
@@ -127,7 +131,7 @@ class Filter extends Component {
               name='email'
               checked={this.state.checkboxes.email}
               onChange={this.handleCheckboxChange}
-              label={formatMessage({id: 'filter.notifications.email', defaultMessage: 'Email Notifications:'})}
+              label={formatMessage({ id: 'filter.notifications.email', defaultMessage: 'Email Notifications:' })}
               data-test='filter_email_chckb'
             />
           </GridColumn>
@@ -144,7 +148,7 @@ class Filter extends Component {
               name='phone'
               checked={this.state.checkboxes.phone}
               onChange={this.handleCheckboxChange}
-              label={formatMessage({id: 'filter.notifications.mobile', defaultMessage: 'Mobile Notifications:'})}
+              label={formatMessage({ id: 'filter.notifications.mobile', defaultMessage: 'Mobile Notifications:' })}
               data-test='filter_phone_chckb'
             />
           </GridColumn>
@@ -168,7 +172,7 @@ class Filter extends Component {
               name='system'
               checked={this.state.checkboxes.system}
               onChange={this.handleCheckboxChange}
-              label={formatMessage({id: 'filter.notifications.system', defaultMessage: 'System Notifications:'})}
+              label={formatMessage({ id: 'filter.notifications.system', defaultMessage: 'System Notifications:' })}
               data-test='filter_system_chckb'
             />
           </GridColumn>
@@ -275,14 +279,14 @@ class Filter extends Component {
               model: '.status',
               type: 'dropdown',
               data: [
-                {key: 0, text: 'All', value: 'All'},
-                {key: 1, text: 'Pending', value: 'Pending'},
-                {key: 2, text: 'In Transit', value: 'In Transit'},
-                {key: 3, text: 'Review', value: 'Review'},
-                {key: 4, text: 'Credit', value: 'Credit'},
-                {key: 5, text: 'Completed', value: 'Completed'},
-                {key: 6, text: 'Returned', value: 'Returned'},
-                {key: 7, text: 'Declined', value: 'Declined'}
+                { key: 0, text: 'All', value: 'All' },
+                { key: 1, text: 'Pending', value: 'Pending' },
+                { key: 2, text: 'In Transit', value: 'In Transit' },
+                { key: 3, text: 'Review', value: 'Review' },
+                { key: 4, text: 'Credit', value: 'Credit' },
+                { key: 5, text: 'Completed', value: 'Completed' },
+                { key: 6, text: 'Returned', value: 'Returned' },
+                { key: 7, text: 'Declined', value: 'Declined' }
               ],
               filterValue:
                 this.props.orderStatus && this.props.orderStatus.filterValue ? this.props.orderStatus.filterValue : null
@@ -555,7 +559,7 @@ class Filter extends Component {
       this.props.fetchPackagingTypes(),
       this.props.fetchWarehouseDistances(),
       this.props.fetchProductGrade()
-    ]).finally(() => this.setState({loaded: true}))
+    ]).finally(() => this.setState({ loaded: true }))
   }
 
   deleteSaveFilter(id) {
@@ -569,21 +573,21 @@ class Filter extends Component {
   }
 
   changeFilterName(e) {
-    this.setState({filterName: e.target.value})
+    this.setState({ filterName: e.target.value })
   }
 
   switchFilter(value) {
-    this.setState({filterSwitch: value})
+    this.setState({ filterSwitch: value })
   }
 
-  handleCheckboxChange = (e, {name}) => {
-    let {checkboxes} = this.state
+  handleCheckboxChange = (e, { name }) => {
+    let { checkboxes } = this.state
     checkboxes[name] = !checkboxes[name]
-    this.setState({checkboxes})
+    this.setState({ checkboxes })
   }
 
   saveFilters = () => {
-    this.setState({saveFilter: false, saving: true})
+    this.setState({ saveFilter: false, saving: true })
     let inputs = this.props.filterData
     let filter = Object.assign(
       {},
@@ -603,14 +607,14 @@ class Filter extends Component {
           .filter(([key, value]) => value === 'true')
           .map(([key]) => key)
       },
-      {filterName: this.state.filterName},
-      {quantityFrom: inputs.qntylb || ''},
-      {quantityTo: inputs.qntyub || ''},
-      {priceFrom: inputs.prclb || ''},
-      {priceTo: inputs.prcub || ''},
-      {chemicalName: inputs.search || ''}
+      { filterName: this.state.filterName },
+      { quantityFrom: inputs.qntylb || '' },
+      { quantityTo: inputs.qntyub || '' },
+      { priceFrom: inputs.prclb || '' },
+      { priceTo: inputs.prcub || '' },
+      { chemicalName: inputs.search || '' }
     )
-    this.props.saveSaveFilter(filter).finally(() => this.setState({saveFilter: true, saving: false}))
+    this.props.saveSaveFilter(filter).finally(() => this.setState({ saveFilter: true, saving: false }))
   }
 
   render() {
@@ -635,8 +639,8 @@ class Filter extends Component {
     //     />
     //   </span>
 
-    let {intl} = this.props
-    let {formatMessage} = intl
+    let { intl } = this.props
+    let { formatMessage } = intl
 
     return (
       <Sidebar
@@ -701,7 +705,10 @@ class Filter extends Component {
                             size='large'
                             fluid
                             value={this.state.filterName}
-                            placeholder={formatMessage({id: 'filter.setFilterName', defaultMessage: 'Set Filter Name'})}
+                            placeholder={formatMessage({
+                              id: 'filter.setFilterName',
+                              defaultMessage: 'Set Filter Name'
+                            })}
                             onChange={e => this.changeFilterName(e)}
                           />
                         </GridColumn>
@@ -738,7 +745,7 @@ class Filter extends Component {
                         <GridColumn>
                           <Checkbox
                             name='notifications'
-                            label={formatMessage({id: 'filter.notifications', defaultMessage: 'Notifications'})}
+                            label={formatMessage({ id: 'filter.notifications', defaultMessage: 'Notifications' })}
                             onChange={this.handleCheckboxChange}
                             checked={this.state.checkboxes.notifications}
                             data-test='filter_notifications_chckb'

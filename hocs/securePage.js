@@ -7,7 +7,7 @@ import Timeout from '~/components/timeout'
 export const SecureContext = React.createContext()
 
 const authorize = ctx => {
-  const {auth} = nextCookie(ctx)
+  const { auth } = nextCookie(ctx)
 
   /*
    * This happens on server only, ctx.req is available means it's being
@@ -15,7 +15,7 @@ const authorize = ctx => {
    * means user is not logged in.
    */
   if (ctx.req && !auth) {
-    ctx.res.writeHead(302, {Location: '/auth/login'})
+    ctx.res.writeHead(302, { Location: '/auth/login' })
     ctx.res.end()
     return
   }
@@ -63,10 +63,10 @@ const securePageHoc = Page =>
     }
 
     render() {
-      const {auth} = this.props
+      const { auth } = this.props
 
       return (
-        <SecureContext.Provider value={{auth}}>
+        <SecureContext.Provider value={{ auth }}>
           <Page {...this.props} />
           <Timeout />
         </SecureContext.Provider>

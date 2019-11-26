@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import AddGroup from '../AddGroup'
-import {Form} from 'react-redux-form'
+import { Form } from 'react-redux-form'
 import Pricing from './Pricing'
 import Location from './Location'
 import classnames from 'classnames'
 import Chemical from '../Chemical'
-import {FormattedMessage} from 'react-intl'
-import {checkToken} from '../../../../../utils/auth'
+import { FormattedMessage } from 'react-intl'
+import { checkToken } from '../../../../../utils/auth'
 
 export default class AddForm extends Component {
   constructor(props) {
@@ -100,16 +100,16 @@ export default class AddForm extends Component {
 
     if (!this.props.productMappingValidation || typeof localStorage.productLots === 'undefined') {
       if (document.getElementsByClassName('form-error').length) {
-        document.getElementsByClassName('form-error')[0].scrollIntoView({block: 'start', behavior: 'smooth'})
+        document.getElementsByClassName('form-error')[0].scrollIntoView({ block: 'start', behavior: 'smooth' })
       }
       return
     }
 
     let newPricing = inputs['pricing']
     if (inputs['incrementalSelected']) {
-      newPricing = {...inputs['pricing'], tiers: this.validateIncPricing()}
+      newPricing = { ...inputs['pricing'], tiers: this.validateIncPricing() }
     } else {
-      newPricing = {...inputs['pricing'], tiers: []}
+      newPricing = { ...inputs['pricing'], tiers: [] }
     }
 
     let newTiers = newPricing.tiers || []
@@ -148,7 +148,7 @@ export default class AddForm extends Component {
     let params = Object.assign({}, inputs, {
       ...this.props.mappingForm,
       ...this.props.productOfferingForm,
-      productGrades: [{id: this.props.productOfferingForm.productGrade}],
+      productGrades: [{ id: this.props.productOfferingForm.productGrade }],
       anonymous: false,
       assayMin: parseInt(this.props.productOfferingForm.assayMin),
       assayMax: parseInt(this.props.productOfferingForm.assayMax),
@@ -204,7 +204,7 @@ export default class AddForm extends Component {
   }
 
   getIncPricing(data) {
-    this.setState({incrementalPricing: data}, () => this.validateIncPricing())
+    this.setState({ incrementalPricing: data }, () => this.validateIncPricing())
   }
 
   editProductOfferTimeout = async inputs => {
@@ -227,16 +227,16 @@ export default class AddForm extends Component {
 
     if (!this.props.productMappingValidation || typeof localStorage.productLots === 'undefined') {
       if (document.getElementsByClassName('form-error').length) {
-        document.getElementsByClassName('form-error')[0].scrollIntoView({block: 'start', behavior: 'smooth'})
+        document.getElementsByClassName('form-error')[0].scrollIntoView({ block: 'start', behavior: 'smooth' })
       }
       return
     }
 
     let newPricing = inputs['pricing']
     if (inputs['incrementalSelected']) {
-      newPricing = {...inputs['pricing'], tiers: this.validateIncPricing()}
+      newPricing = { ...inputs['pricing'], tiers: this.validateIncPricing() }
     } else {
-      newPricing = {...inputs['pricing'], tiers: []}
+      newPricing = { ...inputs['pricing'], tiers: [] }
     }
 
     let newTiers = newPricing.tiers || []
@@ -274,7 +274,7 @@ export default class AddForm extends Component {
     let params = Object.assign({}, inputs, {
       ...this.props.mappingForm,
       ...this.props.productOfferingForm,
-      productGrades: [{id: this.props.productOfferingForm.productGrade}],
+      productGrades: [{ id: this.props.productOfferingForm.productGrade }],
       anonymous: false,
       pricing: {
         ...this.props.addProductOfferForm.pricing,
@@ -296,7 +296,7 @@ export default class AddForm extends Component {
           ? this.props.productOffer.origin.id
           : '',
       product: typeof this.props.productOffer.product !== 'undefined' ? this.props.productOffer.product.id : '',
-      packaging: {...this.props.mappingForm.packaging}
+      packaging: { ...this.props.mappingForm.packaging }
     })
 
     delete params.creationDate
@@ -329,13 +329,13 @@ export default class AddForm extends Component {
     let submitButton = (
       <button
         disabled={this.props.disable}
-        className={classnames('button add-inventory big', {disabled: this.props.disable})}
+        className={classnames('button add-inventory big', { disabled: this.props.disable })}
         data-test='add_inventory_submit_edit_btn'>
         <FormattedMessage id='addInventory.save' defaultMessage='Save' />
       </button>
     )
     return (
-      <div className={classnames('add-inventory', {disable: this.props.disable})}>
+      <div className={classnames('add-inventory', { disable: this.props.disable })}>
         <Form
           model='forms.addProductOffer'
           onSubmit={inputs =>

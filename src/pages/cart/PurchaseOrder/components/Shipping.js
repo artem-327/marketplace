@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {Grid, Segment, GridRow, GridColumn, Dropdown, Divider, Header, Button} from 'semantic-ui-react'
+import { Grid, Segment, GridRow, GridColumn, Dropdown, Divider, Header, Button } from 'semantic-ui-react'
 import ShippingAddress from './ShippingAddress'
 
 class Shipping extends Component {
@@ -12,13 +12,13 @@ class Shipping extends Component {
 
   handleToggleChange = otherAddresses => {
     if (otherAddresses !== this.state.otherAddresses) {
-      this.setState({otherAddresses})
+      this.setState({ otherAddresses })
     }
   }
 
   render() {
-    let {deliveryAddresses, getAddress, selectedAddress, intl} = this.props
-    let {formatMessage} = intl
+    let { deliveryAddresses, getAddress, selectedAddress, intl } = this.props
+    let { formatMessage } = intl
 
     let dropdownOptions = deliveryAddresses.map(i => ({
       text: `${i.address.streetAddress}, ${i.address.city}`,
@@ -39,7 +39,7 @@ class Shipping extends Component {
               <GridColumn floated='right'>
                 <span
                   className='headerAddtext'
-                  onClick={() => this.props.shippingChanged({isShippingEdit: true, isNewAddress: !!selectedAddress})}
+                  onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !!selectedAddress })}
                   data-test='cart_purchase_addresses_edit'>
                   <FormattedMessage id='global.edit' defaultMessage='Edit' />
                 </span>
@@ -55,7 +55,7 @@ class Shipping extends Component {
                   data-test='cart_purchase_addresses_btn'>
                   <FormattedMessage id='cart.addresses' defaultMessage='Addresses' />
                 </Button>
-                <Button.Or text={formatMessage({id: 'global.or', defaultMessage: 'or'})} />
+                <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
                 <Button
                   onClick={() => this.handleToggleChange(false)}
                   active={!this.state.otherAddresses}
@@ -71,7 +71,7 @@ class Shipping extends Component {
                 fluid
                 selection
                 options={dropdownOptions}
-                onChange={(e, {value}) => getAddress(value)}
+                onChange={(e, { value }) => getAddress(value)}
                 value={selectedAddress ? selectedAddress.id : null}
                 placeholder={<FormattedMessage id='global.selectLocation' defaultMessage='Select Location' />}
                 data-test='cart_purchase_orders_shipping_location_drpdn'

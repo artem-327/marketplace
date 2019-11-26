@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import moment from 'moment'
 
-import {FormattedMessage, FormattedNumber} from 'react-intl'
-import {Grid, GridRow, GridColumn, Header, Divider, Radio, Dimmer, Loader} from 'semantic-ui-react'
+import { FormattedMessage, FormattedNumber } from 'react-intl'
+import { Grid, GridRow, GridColumn, Header, Divider, Radio, Dimmer, Loader } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 const InnerGrid = styled(Grid)`
@@ -31,7 +31,7 @@ export default class ShippingQuote extends Component {
     let deliveryTime = timeObj.format('MMM D, YYYY')
     let daysLeft = timeObj.fromNow()
 
-    let {handleQuoteSelect, selectedShippingQuote, currency} = this.props
+    let { handleQuoteSelect, selectedShippingQuote, currency } = this.props
 
     return (
       <>
@@ -57,7 +57,7 @@ export default class ShippingQuote extends Component {
   }
 
   render() {
-    let {shippingQuotes, shippingQuotesAreFetching, selectedAddress} = this.props
+    let { shippingQuotes, shippingQuotesAreFetching, selectedAddress } = this.props
 
     if (shippingQuotesAreFetching) {
       return (

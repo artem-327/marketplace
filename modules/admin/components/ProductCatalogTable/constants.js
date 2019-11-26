@@ -1,18 +1,18 @@
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import React from 'react'
 
 export const tabs = [
-  {text: {id: 'global.ep.edit', defaultMessage: 'Edit'}, key: 'edit'},
-  {text: {id: 'global.ep.info', defaultMessage: 'Info'}, key: 'info'},
-  {text: {id: 'global.ep.documents', defaultMessage: 'Documents'}, key: 'documents'},
-  {text: {id: 'global.ep.transportation', defaultMessage: 'Transportation'}, key: 'transportation'}
+  { text: { id: 'global.ep.edit', defaultMessage: 'Edit' }, key: 'edit' },
+  { text: { id: 'global.ep.info', defaultMessage: 'Info' }, key: 'info' },
+  { text: { id: 'global.ep.documents', defaultMessage: 'Documents' }, key: 'documents' },
+  { text: { id: 'global.ep.transportation', defaultMessage: 'Transportation' }, key: 'transportation' }
 ]
 
 export const transportationTypes = [
-  {key: 'dot', text: <FormattedMessage id='global.dot' defaultMessage='DOT' />, value: 'dot'},
-  {key: 'iata', text: <FormattedMessage id='global.iata' defaultMessage='IATA' />, value: 'iata'},
-  {key: 'tdg', text: <FormattedMessage id='global.tdg' defaultMessage='TDG' />, value: 'tdg'},
-  {key: 'imdgImo', text: <FormattedMessage id='global.imdgImo' defaultMessage='IMDG/IMO' />, value: 'imdgImo'}
+  { key: 'dot', text: <FormattedMessage id='global.dot' defaultMessage='DOT' />, value: 'dot' },
+  { key: 'iata', text: <FormattedMessage id='global.iata' defaultMessage='IATA' />, value: 'iata' },
+  { key: 'tdg', text: <FormattedMessage id='global.tdg' defaultMessage='TDG' />, value: 'tdg' },
+  { key: 'imdgImo', text: <FormattedMessage id='global.imdgImo' defaultMessage='IMDG/IMO' />, value: 'imdgImo' }
 ]
 
 export const onErrorFieldTabs = {
@@ -40,7 +40,7 @@ export const defaultValues = {
   dotReportableQuantity: '',
   dotSevereMarinePollutant: '',
   dotUnNumber: '',
-  elements: [{name: '', casProduct: '', assayMin: 100, assayMax: 100, proprietary: false}],
+  elements: [{ name: '', casProduct: '', assayMin: 100, assayMax: 100, proprietary: false }],
   emergencyPhone: '',
   endocrineDisruptorInformation: '',
   evaporationPoint: '',

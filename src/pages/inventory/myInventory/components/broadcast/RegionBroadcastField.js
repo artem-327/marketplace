@@ -1,7 +1,7 @@
 import React from 'react'
 import BroadcastField from './BroadcastField'
 import StateBroadcastField from './StateBroadcastField'
-import {filterByUniqueProperty} from '../../../../../utils/functions'
+import { filterByUniqueProperty } from '../../../../../utils/functions'
 
 const RegionBroadcastField = ({
   regionsExpanded,

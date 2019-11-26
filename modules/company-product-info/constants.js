@@ -1,13 +1,13 @@
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 export const tabs = [
-  {text: {id: 'global.ep.info', defaultMessage: 'Info(EP)'}, key: 'info'},
+  { text: { id: 'global.ep.info', defaultMessage: 'Info(EP)' }, key: 'info' },
   {
-    text: {id: 'global.ep.properties', defaultMessage: 'Properties(EP)'},
+    text: { id: 'global.ep.properties', defaultMessage: 'Properties(EP)' },
     key: 'properties'
   },
   {
-    text: {id: 'global.ep.regulatory', defaultMessage: 'Regulatory(EP)'},
+    text: { id: 'global.ep.regulatory', defaultMessage: 'Regulatory(EP)' },
     key: 'regulatory'
   },
   {
@@ -18,19 +18,19 @@ export const tabs = [
     key: 'transportation'
   },
   {
-    text: {id: 'global.ep.documents', defaultMessage: 'Documents(EP)'},
+    text: { id: 'global.ep.documents', defaultMessage: 'Documents(EP)' },
     key: 'documents'
   }
 ]
 
 export const tabsMarketPlace = [
-  {text: {id: 'global.ep.info', defaultMessage: 'Info(EP)'}, key: 'info'},
+  { text: { id: 'global.ep.info', defaultMessage: 'Info(EP)' }, key: 'info' },
   {
-    text: {id: 'global.ep.properties', defaultMessage: 'Properties(EP)'},
+    text: { id: 'global.ep.properties', defaultMessage: 'Properties(EP)' },
     key: 'properties'
   },
   {
-    text: {id: 'global.ep.regulatory', defaultMessage: 'Regulatory(EP)'},
+    text: { id: 'global.ep.regulatory', defaultMessage: 'Regulatory(EP)' },
     key: 'regulatory'
   },
   {
@@ -150,7 +150,7 @@ export const dropdownOptions = {
   ca65Prop: {
     caprop65TypeofToxicity: {
       options: ['Developmental', 'Cancer', 'Female', 'Male'],
-      inputProps: {multiple: true}
+      inputProps: { multiple: true }
     },
     caprop65ListingMechanism: {
       options: ['FR', 'AB', 'SQE', 'LC']
@@ -181,22 +181,29 @@ export const echoProductGrouping = [
   }
 ]
 
-export const groupActions = (fromMarketPlace, rows, companyProductId, callback) => {
+export const groupActionsMarketplace = (rows, companyProductId, callback) => {
   let companyProduct = rows.find(el => el.companyProduct.id == companyProductId)
 
   if (!companyProduct || companyProduct.cfStatus === 'Unmapped') return []
 
-  if (fromMarketPlace) {
-    return tabsMarketPlace.map((tab, i) => ({
-      text: tab.text,
-      callback: () => callback(companyProduct, i)
-    }))
-  } else {
-    return tabs.map((tab, i) => ({
-      text: tab.text,
-      callback: () => callback(companyProduct, i)
-    }))
-  }
+  return tabsMarketPlace.map((tab, i) => ({
+    text: tab.text,
+    callback: () => callback(companyProduct, i)
+  }))
+}
+
+export const groupActions = (rows, companyProductId, sidebarDetailOpen, sidebarDetailTrigger, callback) => {
+  let companyProduct = rows.find(el => el.companyProduct.id == companyProductId)
+
+  if (!companyProduct || companyProduct.cfStatus === 'Unmapped') return []
+
+  return tabs.map((tab, i) => ({
+    text: tab.text,
+    callback: () => {
+      if (sidebarDetailOpen) sidebarDetailTrigger(null, false)
+      return callback(companyProduct, i)
+    }
+  }))
 }
 
 export const yesNoOptions = {
