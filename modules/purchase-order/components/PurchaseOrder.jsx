@@ -236,7 +236,7 @@ class PurchaseOrder extends Component {
     }
 
     let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit} lbs` : ''
-    console.log({ shipping })
+ 
     return (
       <div className='app-inner-main flex stretched'>
         <div className='header-top' style={{ zIndex: 10, backgroundColor: '#FFF' }}>
