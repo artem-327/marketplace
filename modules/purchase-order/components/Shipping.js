@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import PropTypes, { bool } from 'prop-types'
+import { array, func, object, bool } from 'prop-types'
+
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { Grid, Segment, GridRow, GridColumn, Divider, Header, Button } from 'semantic-ui-react'
@@ -113,12 +114,12 @@ class Shipping extends Component {
 export default injectIntl(Shipping)
 
 Shipping.propTypes = {
-  deliveryAddresses: PropTypes.array,
+  deliveryAddresses: array,
   otherAddresses: bool,
-  dispatch: PropTypes.func,
-  getAddress: PropTypes.func,
-  selectedAddress: PropTypes.object,
-  toggleShippingEdit: PropTypes.func
+  dispatch: func,
+  getAddress: func,
+  selectedAddress: object,
+  toggleShippingEdit: func
 }
 
 Shipping.defaultProps = {
