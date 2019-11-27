@@ -1,6 +1,7 @@
 context("Units of packaging CRUD", () => {
 
     let packageId = null
+    let filter = [{"operator": "LIKE", "path": "PackagingType.name", "values": ["%Test%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -19,6 +20,12 @@ context("Units of packaging CRUD", () => {
     })
 
     it("Creates a package unit", () => {
+        cy.getToken().then(token => {
+            cy.getFirstEntityWithFilter(token, 'packaging-types',filter).then(itemId => {
+                if(itemId != null)
+                    cy.deleteEntity(token, 'packaging-types', itemId)
+            })
+        })
         cy.clickAdd()
 
         cy.enterText("#field_input_val0", "Test package")
@@ -32,8 +39,6 @@ context("Units of packaging CRUD", () => {
 
         cy.get("input[type=text]").eq(0).type("Test")
         cy.waitForUI()
-
-        let filter = [{"operator": "LIKE", "path": "PackagingType.name", "values": ["%Test%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstPackagingUnitWithFilter(token, filter).then(itemId => {

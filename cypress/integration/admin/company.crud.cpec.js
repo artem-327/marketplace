@@ -1,6 +1,7 @@
 context("Companies CRUD", () => {
 
     let companyId = null
+    let filter = [{"operator":"LIKE","path":"Company.name","values":["%Donald%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -21,6 +22,13 @@ context("Companies CRUD", () => {
     })
 
     it("Creates a company", () => {
+        cy.getToken().then(token => {
+            cy.getFirstEntityWithFilter(token, 'companies',filter).then(itemId => {
+                if(itemId != null)
+                    cy.deleteEntity(token, 'companies/id', itemId)
+            })
+        })
+
         cy.clickAdd()
 
         cy.enterText("#field_input_name","Donald The Ducks")
@@ -61,10 +69,8 @@ context("Companies CRUD", () => {
     })
 
     it("Edits a condition", () => {
-        cy.searchInAdminList("Donald The Ducks")
+        cy.searchInList("Donald The Ducks")
         cy.waitForUI()
-
-        let filter = [{"operator":"LIKE","path":"Company.name","values":["%Donald%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstCompanyWithFilter(token, filter).then(itemId => {
@@ -102,7 +108,7 @@ context("Companies CRUD", () => {
     })
 
     it("Deletes a company", () => {
-        cy.searchInAdminList("Donald and Co.")
+        cy.searchInList("Donald and Co.")
         cy.waitForUI()
         cy.waitForUI()
 

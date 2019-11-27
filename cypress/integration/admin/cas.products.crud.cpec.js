@@ -1,6 +1,8 @@
 context("CAS products CRUD", () => {
 
     let productId = null
+    let filter = [{"operator":"LIKE","path":"CasProduct.casIndexName","values":["%Testinonium%"]},
+        {"operator":"LIKE","path":"CasProduct.casNumber","values":["%Testinonium%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -13,6 +15,13 @@ context("CAS products CRUD", () => {
     })
 
     it("Creates a CAS product", () => {
+        cy.getToken().then(token => {
+            cy.getFirstCasProductWithFilter(token, filter).then(itemId => {
+                if(itemId != null)
+                cy.deleteEntity(token, 'cas-products', itemId)
+            })
+        })
+
         cy.get("button[class='ui large primary button']").eq(0).click({force: true})
 
         cy.enterText("[name='casProduct.casNumber']", "100-95-521")
@@ -25,9 +34,6 @@ context("CAS products CRUD", () => {
             .children("div")
             .children("input")
             .type("Testinonium")
-
-        let filter = [{"operator":"LIKE","path":"CasProduct.casIndexName","values":["%Testinonium%"]},
-            {"operator":"LIKE","path":"CasProduct.casNumber","values":["%Testinonium%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstCasProductWithFilter(token, filter).then(itemId => {

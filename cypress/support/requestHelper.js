@@ -1,7 +1,7 @@
-Cypress.Commands.add("deleteBroadcastRule", (token,ruleId) => {
+Cypress.Commands.add("deleteBroadcastRule", (token, ruleId) => {
     cy.request({
         method: 'DELETE',
-        url: '/prodex/api/broadcast-rules/'+ruleId,
+        url: '/prodex/api/broadcast-rules/' + ruleId,
         headers: {
             authorization: "Bearer " + token
         }
@@ -25,15 +25,15 @@ Cypress.Commands.add("deleteWholeCart", (token) => {
 Cypress.Commands.add("getBroadcastRuleId", (token, offerId) => {
     cy.request({
         method: 'GET',
-        url: '/prodex/api/broadcast-rules/productOffer/'+offerId,
+        url: '/prodex/api/broadcast-rules/productOffer/' + offerId,
         headers: {
             authorization: "Bearer " + token
         }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        if(response.body[0] === undefined){
+        if (response.body[0] === undefined) {
             return -1
-        }else{
+        } else {
             return response.body[0].id
         }
     })
@@ -49,7 +49,7 @@ Cypress.Commands.add("getToken", () => {
         form: true,
         body: {
             grant_type: "password",
-            username: "mackenzie@echoexchange.net",
+            username: "admin@example.com",
             password: "echopass123"
         }
     }).then((response) => {
@@ -72,6 +72,18 @@ Cypress.Commands.add("getFirstItemId", (token) => {
     })
 })
 
+Cypress.Commands.add("deleteEntity", (token, entity, id) => {
+    cy.request({
+        method: 'DELETE',
+        url: '/prodex/api/' + entity + '/' + id,
+        headers: {
+            authorization: "Bearer " + token
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+    })
+})
+
 Cypress.Commands.add("getFirstItemIdWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
@@ -79,7 +91,7 @@ Cypress.Commands.add("getFirstItemIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {filters: filter,pageNumber: 0, pageSize: 50}
+        body: {filters: filter, pageNumber: 0, pageSize: 50}
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].id
@@ -93,7 +105,7 @@ Cypress.Commands.add("getFirstEchoProductIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {filters: filter,pageNumber: 0, pageSize: 50, "orOperator": true}
+        body: {filters: filter, pageNumber: 0, pageSize: 50, "orOperator": true}
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].id
@@ -107,7 +119,7 @@ Cypress.Commands.add("getFirstMarketName", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {filters: filter,pageNumber: 0, pageSize: 50, "orOperator": true}
+        body: {filters: filter, pageNumber: 0, pageSize: 50, "orOperator": true}
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].companyProduct.intProductName
@@ -117,7 +129,7 @@ Cypress.Commands.add("getFirstMarketName", (token, filter) => {
 Cypress.Commands.add("getItemBody", (token, itemId) => {
     cy.request({
         method: 'GET',
-        url: '/prodex/api/product-offers/'+itemId,
+        url: '/prodex/api/product-offers/' + itemId,
         headers: {
             authorization: "Bearer " + token
         }
@@ -164,12 +176,12 @@ Cypress.Commands.add("getExpectedCartPrice", (token) => {
         body: {pageNumber: 0, filters: [], pageSize: 50}
     }).then((response) => {
         expect(response.status).to.eq(200)
-        let price = parseInt(response.body[0].pricingTiers[0].price.amount,10) + parseInt(response.body[0].companyProduct.packagingSize,10)
+        let price = parseInt(response.body[0].pricingTiers[0].price.amount, 10) + parseInt(response.body[0].companyProduct.packagingSize, 10)
         return price
     })
 })
 
-Cypress.Commands.add("getFirstMarketIdWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstMarketIdWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/product-offers/broadcasted/datagrid/',
@@ -197,49 +209,49 @@ Cypress.Commands.add("getFirstUser", (token) => {
     })
 })
 
-Cypress.Commands.add("getFirstUserIdWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstUserIdWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/users/datagrid',
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator:true}
+        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator: true}
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].id
     })
 })
 
-Cypress.Commands.add("getFirstBranchIdWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstBranchIdWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/branches/datagrid',
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator:true}
+        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator: true}
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].id
     })
 })
 
-Cypress.Commands.add("getFirstProductIdWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstProductIdWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/products/datagrid',
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator:true}
+        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator: true}
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].id
     })
 })
 
-Cypress.Commands.add("getFirstAddressIdWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstAddressIdWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/delivery-addresses/datagrid',
@@ -253,21 +265,43 @@ Cypress.Commands.add("getFirstAddressIdWithFilter", (token,filter) => {
     })
 })
 
-Cypress.Commands.add("getFirstCasProductWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstCasProductWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/cas-products/datagrid',
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator:true}
+        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator: true}
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        if (response.body[0] == undefined) {
+            return null
+        } else {
+            return response.body[0].id
+        }
     })
 })
 
-Cypress.Commands.add("getFirstPackagingUnitWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstEntityWithFilter", (token, entity, filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/' + entity + '/datagrid',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator: true}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        if (response.body[0] == undefined) {
+            return null
+        } else {
+            return response.body[0].id
+        }
+    })
+})
+
+Cypress.Commands.add("getFirstPackagingUnitWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/packaging-types/datagrid',
@@ -281,7 +315,7 @@ Cypress.Commands.add("getFirstPackagingUnitWithFilter", (token,filter) => {
     })
 })
 
-Cypress.Commands.add("getFirstDocumentTypeWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstDocumentTypeWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/document-types/datagrid',
@@ -295,7 +329,7 @@ Cypress.Commands.add("getFirstDocumentTypeWithFilter", (token,filter) => {
     })
 })
 
-Cypress.Commands.add("getFirstMarketSegmentWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstMarketSegmentWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/market-segments/datagrid',
@@ -309,7 +343,7 @@ Cypress.Commands.add("getFirstMarketSegmentWithFilter", (token,filter) => {
     })
 })
 
-Cypress.Commands.add("getFirstManufacturerWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstManufacturerWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/manufacturers/datagrid',
@@ -323,7 +357,7 @@ Cypress.Commands.add("getFirstManufacturerWithFilter", (token,filter) => {
     })
 })
 
-Cypress.Commands.add("getFirstConditionWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstConditionWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/product-conditions/datagrid',
@@ -337,7 +371,7 @@ Cypress.Commands.add("getFirstConditionWithFilter", (token,filter) => {
     })
 })
 
-Cypress.Commands.add("getFirstGradeWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstGradeWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/product-grades/datagrid',
@@ -351,7 +385,7 @@ Cypress.Commands.add("getFirstGradeWithFilter", (token,filter) => {
     })
 })
 
-Cypress.Commands.add("getFirstFormWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstFormWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/product-forms/datagrid',
@@ -365,7 +399,7 @@ Cypress.Commands.add("getFirstFormWithFilter", (token,filter) => {
     })
 })
 
-Cypress.Commands.add("getFirstConditionWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstConditionWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/product-conditions/datagrid',
@@ -379,7 +413,7 @@ Cypress.Commands.add("getFirstConditionWithFilter", (token,filter) => {
     })
 })
 
-Cypress.Commands.add("getFirstCompanyWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstCompanyWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/companies/datagrid',
@@ -393,7 +427,7 @@ Cypress.Commands.add("getFirstCompanyWithFilter", (token,filter) => {
     })
 })
 
-Cypress.Commands.add("getFirstCompanyProductWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstCompanyProductWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/company-products/datagrid',
@@ -407,7 +441,7 @@ Cypress.Commands.add("getFirstCompanyProductWithFilter", (token,filter) => {
     })
 })
 
-Cypress.Commands.add("getFirstAttachmentWithFilter", (token,filter) => {
+Cypress.Commands.add("getFirstAttachmentWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/attachments/datagrid/',
