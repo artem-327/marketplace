@@ -21,6 +21,7 @@ import styled from 'styled-components'
 import ActionsRequired from './components/ActionsRequired'
 import AssignLots from './components/AssignLots'
 import ReinitiateTransfer from './components/ReinitiateTransfer'
+import EnterTrackingId from './components/EnterTrackingId'
 import confirm from '~/src/components/Confirmable/confirm'
 import moment from 'moment/moment'
 import { FormattedPhone } from '~/components/formatted-messages/'
@@ -136,6 +137,7 @@ class Detail extends Component {
       isDetailFetching,
       openedAssignLots,
       openedReinitiateTransfer,
+      openedEnterTrackingId,
       cancelPayment,
       toastManager,
       isPaymentCancellable
@@ -316,6 +318,7 @@ class Detail extends Component {
               <ActionsRequired order={order} ordersType={ordersType} />
               {openedAssignLots ? <AssignLots /> : null}
               {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
+              {openedEnterTrackingId ? <EnterTrackingId /> : null}
               <Divider hidden />
               <Accordion
                 defaultActiveIndex={[0, 1]}
