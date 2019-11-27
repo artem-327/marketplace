@@ -1135,7 +1135,7 @@
   "cart.branches": "Branches",
   "order.deleteHeader": "Delete Order",
   "order.deleteBody": "You are about to delete last item of order. Doing so will redirect you to Shopping cart. Do you wish to continue?",
-  "cart.shoppingCartHeader": "Items ({number})",
+  "cart.shoppingCartHeader": "ITEMS ({number})",
   "notFound": "... think we are lost, sir !",
   "cart.keepShopping": "Keep Shopping",
   "cart.minimumQQ": "Minimum QQ",
