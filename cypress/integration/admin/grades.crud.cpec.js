@@ -1,6 +1,7 @@
 context("Grades CRUD", () => {
 
     let gradeId = null
+    let filter = [{"operator": "LIKE", "path": "ProductGrade.name", "values": ["%Test%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -19,15 +20,17 @@ context("Grades CRUD", () => {
     })
 
     it("Creates a grade", () => {
+        cy.getToken().then(token => {
+            cy.getFirstEntityWithFilter(token, 'product-grades',filter).then(itemId => {
+                if(itemId != null)
+                    cy.deleteEntity(token, 'product-grades', itemId)
+            })
+        })
         cy.clickAdd()
 
         cy.enterText("#field_input_val0", "Test grade")
-
         cy.clickSave()
-
         cy.contains("Grade created")
-
-        let filter = [{"operator": "LIKE", "path": "ProductGrade.name", "values": ["%Test%"]}]
 
         cy.get("input[type=text]").eq(0).type("Test", {force: true})
 

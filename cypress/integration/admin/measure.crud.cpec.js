@@ -1,4 +1,5 @@
 context("Units of measure CRUD", () => {
+    let filter = [{"operator":"LIKE","path":"Unit.name","values":["%Test%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -18,6 +19,12 @@ context("Units of measure CRUD", () => {
     })
 
     it("Creates an unit of measure", () => {
+        cy.getToken().then(token => {
+            cy.getFirstEntityWithFilter(token, 'units', filter).then(itemId => {
+                if(itemId != null)
+                    cy.deleteEntity(token, 'units', itemId)
+            })
+        })
         cy.clickAdd()
 
         cy.enterText("#field_input_val0", "Test measure")

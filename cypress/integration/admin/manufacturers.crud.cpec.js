@@ -1,6 +1,7 @@
 context("Manufacturers CRUD", () => {
 
     let manufacturerId = null
+    let filter = [{"operator": "LIKE", "path": "Manufacturer.name", "values": ["%Test%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -19,6 +20,12 @@ context("Manufacturers CRUD", () => {
     })
 
     it("Creates a manufacturer", () => {
+        cy.getToken().then(token => {
+            cy.getFirstEntityWithFilter(token, 'manufacturers',filter).then(itemId => {
+                if(itemId != null)
+                    cy.deleteEntity(token, 'manufacturers/id', itemId)
+            })
+        })
         cy.clickAdd()
 
         cy.enterText("#field_input_val0", "Test manufacturer")
@@ -28,8 +35,6 @@ context("Manufacturers CRUD", () => {
         cy.contains("Manufacturer created")
 
         cy.searchInList("Test")
-
-        let filter = [{"operator": "LIKE", "path": "Manufacturer.name", "values": ["%Test%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstManufacturerWithFilter(token, filter).then(itemId => {

@@ -1,6 +1,7 @@
 context("Form CRUD", () => {
 
     let formId = null
+    let filter = [{"operator": "LIKE", "path": "ProductForm.name", "values": ["%Liquor%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -19,15 +20,17 @@ context("Form CRUD", () => {
     })
 
     it("Creates a form", () => {
+        cy.getToken().then(token => {
+            cy.getFirstEntityWithFilter(token, 'product-forms',filter).then(itemId => {
+                if(itemId != null)
+                    cy.deleteEntity(token, 'product-forms', itemId)
+            })
+        })
         cy.clickAdd()
 
         cy.enterText("#field_input_val0", "Liquor")
-
         cy.clickSave()
-
         cy.contains("Form created")
-
-        let filter = [{"operator": "LIKE", "path": "ProductForm.name", "values": ["%Liquor%"]}]
 
         cy.getToken().then(token => {
             cy.getFirstFormWithFilter(token, filter).then(itemId => {

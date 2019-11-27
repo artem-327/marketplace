@@ -1,6 +1,7 @@
 context("Market Segments CRUD", () => {
 
     let documentId = null
+    let filter = [{"operator": "LIKE", "path": "MarketSegment.name", "values": ["%Test%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -19,6 +20,12 @@ context("Market Segments CRUD", () => {
     })
 
     it("Creates a market segment", () => {
+        cy.getToken().then(token => {
+            cy.getFirstEntityWithFilter(token, 'market-segments',filter).then(itemId => {
+                if(itemId != null)
+                    cy.deleteEntity(token, 'market-segments/id', itemId)
+            })
+        })
         cy.clickAdd()
 
         cy.enterText("#field_input_val0", "Test segment")
@@ -30,7 +37,7 @@ context("Market Segments CRUD", () => {
         cy.searchInList("Test")
         cy.waitForUI()
 
-        let filter = [{"operator": "LIKE", "path": "MarketSegment.name", "values": ["%Test%"]}]
+
 
         cy.getToken().then(token => {
             cy.getFirstMarketSegmentWithFilter(token, filter).then(itemId => {
