@@ -1,16 +1,12 @@
 import React, { Component } from 'react'
 import './uploadLot.scss'
-import upload from '~/src/images/upload/upload.png'
-import uploaded from '~/src/images/upload/uploaded.png'
 import PropTypes from 'prop-types'
 import File from '~/src/pages/inventory/addInventory/components/Upload/components/File'
 import ReactDropzone from 'react-dropzone'
 import { FormattedMessage } from 'react-intl'
-import { TOO_LARGE_FILE, UPLOAD_FILE_FAILED } from '~/src/modules/errors.js'
 import { FieldArray } from 'formik'
-import confirm from '~/src/components/Confirmable/confirm'
 import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
+import { generateToastMarkup } from '~/utils/functions'
 import styled from 'styled-components'
 import { Table, TableCell, Modal, Button } from 'semantic-ui-react'
 
@@ -295,7 +291,7 @@ class UploadLot extends Component {
 
   render() {
     let { attachments, disabled, filesLimit, toastManager, hideAttachments } = this.props
-    let hasFile = this.props.attachments && this.props.attachments.length !== 0
+    let hasFile = attachments && attachments.length !== 0
 
     const limitMsg = generateToastMarkup(
       <FormattedMessage id='errors.fileNotUploaded.limitExceeded.header' defaultMessage='File limit exceeded' />,

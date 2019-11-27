@@ -4,7 +4,7 @@ import confirm from '../../../../components/Confirmable/confirm'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 
 import { Button } from 'semantic-ui-react'
-import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
+import { FormattedAssay } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
 
 export default class ItemCartBody extends Component {
@@ -84,7 +84,8 @@ export default class ItemCartBody extends Component {
         <footer className='popup-footer'>
           <Button
             control={Button}
-            color='grey'
+            basic
+            primary
             onClick={() =>
               confirm('Remove item', 'Are you sure you want to remove item from Shopping Cart?').then(
                 () => {
@@ -102,11 +103,7 @@ export default class ItemCartBody extends Component {
               {text => text}
             </FormattedMessage>
           </Button>
-          <Button
-            control={Button}
-            color='blue'
-            onClick={() => this.props.editCart(cartItem)}
-            data-test='item_cart_edit_btn'>
+          <Button control={Button} primary onClick={() => this.props.editCart(cartItem)} data-test='item_cart_edit_btn'>
             <FormattedMessage id='global.edit' defaultMessage='Edit'>
               {text => text}
             </FormattedMessage>

@@ -17,7 +17,7 @@ export const rejectOrder = orderId => ({
   type: AT.ORDER_REJECT_FETCH,
   payload: Api.reject(orderId)
 })
-export const shipOrder = (orderId, trackingId='trackingId') => ({
+export const shipOrder = (orderId, trackingId='') => ({
   type: AT.ORDER_SHIP_FETCH,
   payload: Api.ship(orderId, trackingId)
 })
@@ -129,4 +129,12 @@ export const approveOrder = orderId => ({
 export const disapproveOrder = orderId => ({
   type: AT.ORDER_DISAPPROVE_ORDER,
   payload: Api.disapproveOrder(orderId)
+})
+export const openEnterTrackingId = () => ({
+  type: AT.ORDER_OPEN_ENTER_TRACKING_ID,
+  payload: {}
+})
+export const closeEnterTrackingId = () => ({
+  type: AT.ORDER_CLOSE_ENTER_TRACKING_ID,
+  payload: {}
 })
