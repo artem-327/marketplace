@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { Modal, Button, Form } from 'semantic-ui-react'
+import { Modal, Button } from 'semantic-ui-react'
 import Router from 'next/router'
 import IdleTimer from 'react-idle-timer'
 import { refreshToken } from '~/utils/auth'
@@ -121,11 +121,7 @@ export default class TimeoutWarning extends Component {
             </p>
           </Modal.Content>
           <Modal.Actions>
-            <Button
-              basic
-              data-test='logout_timeout_logout_btn'
-              color='blue'
-              onClick={() => Router.push(`/auth/logout`)}>
+            <Button data-test='logout_timeout_logout_btn' onClick={() => Router.push(`/auth/logout`)}>
               <FormattedMessage id='auth.sessionTimeout.buttonLogOut' defaultMessage='Log Out' />
             </Button>
             <Button

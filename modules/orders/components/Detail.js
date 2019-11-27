@@ -21,6 +21,7 @@ import styled from 'styled-components'
 import ActionsRequired from './components/ActionsRequired'
 import AssignLots from './components/AssignLots'
 import ReinitiateTransfer from './components/ReinitiateTransfer'
+import EnterTrackingId from './components/EnterTrackingId'
 import confirm from '~/src/components/Confirmable/confirm'
 import moment from 'moment/moment'
 import { FormattedPhone } from '~/components/formatted-messages/'
@@ -52,6 +53,23 @@ const GridDataColumn = styled(Grid.Column)`
   strong {
     padding-left: 0.4375em;
     padding-right: 0.4375em;
+  }
+`
+
+const StyledTable = styled(Table)`
+  padding-top: 1em !important;
+  padding-bottom: 1em !important;
+`
+
+const TableRowData = styled(Table.Row)`
+  padding-top: 0.75em !important;
+  padding-bottom: 0.75em !important;
+  font-size: 1.14285714rem;
+  line-height: 1.125;
+
+  strong {
+    padding-left: 0;
+    padding-right: 0;
   }
 `
 
@@ -119,6 +137,7 @@ class Detail extends Component {
       isDetailFetching,
       openedAssignLots,
       openedReinitiateTransfer,
+      openedEnterTrackingId,
       cancelPayment,
       toastManager,
       isPaymentCancellable
@@ -299,6 +318,7 @@ class Detail extends Component {
               <ActionsRequired order={order} ordersType={ordersType} />
               {openedAssignLots ? <AssignLots /> : null}
               {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
+              {openedEnterTrackingId ? <EnterTrackingId /> : null}
               <Divider hidden />
               <Accordion
                 defaultActiveIndex={[0, 1]}
@@ -466,26 +486,26 @@ class Detail extends Component {
                         <div className='left'>
                           {ordersType === 'Sales' ? (
                             <>
-                              <Table basic='very' collapsing singleLine className='order-total'>
+                              <StyledTable basic='very' collapsing singleLine className='order-total'>
                                 <Table.Header>
-                                  <Table.Row>
+                                  <TableRowData>
                                     <Table.HeaderCell colSpan='2'>
                                       <strong>
                                         <FormattedMessage id='order.orderTotal' defaultMessage='Order Total' />
                                       </strong>
                                     </Table.HeaderCell>
-                                  </Table.Row>
+                                  </TableRowData>
                                 </Table.Header>
                                 <Table.Body>
-                                  <Table.Row>
+                                  <TableRowData>
                                     <Table.Cell>
                                       <strong>
                                         <FormattedMessage id='order.amount' defaultMessage='Amount' />
                                       </strong>
                                     </Table.Cell>
                                     <Table.Cell textAlign='right'>{order.amount}</Table.Cell>
-                                  </Table.Row>
-                                  <Table.Row>
+                                  </TableRowData>
+                                  <TableRowData>
                                     <Table.Cell>
                                       <strong>
                                         <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' /> (
@@ -493,10 +513,10 @@ class Detail extends Component {
                                       </strong>
                                     </Table.Cell>
                                     <Table.Cell textAlign='right'>{order.feesAmount}</Table.Cell>
-                                  </Table.Row>
+                                  </TableRowData>
                                 </Table.Body>
                                 <Table.Footer>
-                                  <Table.Row>
+                                  <TableRowData>
                                     <Table.HeaderCell>
                                       <strong>
                                         <FormattedMessage id='order.total' defaultMessage='Total' />
@@ -505,25 +525,25 @@ class Detail extends Component {
                                     <Table.HeaderCell textAlign='right'>
                                       <strong>{order.total}</strong>
                                     </Table.HeaderCell>
-                                  </Table.Row>
+                                  </TableRowData>
                                 </Table.Footer>
-                              </Table>
+                              </StyledTable>
 
                               <Divider hidden />
 
-                              <Table basic='very' collapsing singleLine className='order-total'>
+                              <StyledTable basic='very' collapsing singleLine className='order-total'>
                                 <Table.Body>
-                                  <Table.Row>
+                                  <TableRowData>
                                     <Table.Cell>
                                       <strong>
                                         <FormattedMessage id='order.cogs' defaultMessage='COGS' />
                                       </strong>
                                     </Table.Cell>
                                     <Table.Cell textAlign='right'></Table.Cell>
-                                  </Table.Row>
+                                  </TableRowData>
                                 </Table.Body>
                                 <Table.Footer>
-                                  <Table.Row>
+                                  <TableRowData>
                                     <Table.HeaderCell>
                                       <strong>
                                         <FormattedMessage id='order.grossProfit' defaultMessage='Gross Profit' />
@@ -532,50 +552,50 @@ class Detail extends Component {
                                     <Table.HeaderCell textAlign='right'>
                                       <strong>{order.grossProfit}</strong>
                                     </Table.HeaderCell>
-                                  </Table.Row>
+                                  </TableRowData>
                                 </Table.Footer>
-                              </Table>
+                              </StyledTable>
                             </>
                           ) : (
                             <>
-                              <Table basic='very' collapsing singleLine className='order-total'>
+                              <StyledTable basic='very' collapsing singleLine className='order-total'>
                                 <Table.Header>
-                                  <Table.Row>
+                                  <TableRowData>
                                     <Table.HeaderCell colSpan='2'>
                                       <strong>
                                         <FormattedMessage id='order.orderTotal' defaultMessage='Order Total' />
                                       </strong>
                                     </Table.HeaderCell>
-                                  </Table.Row>
+                                  </TableRowData>
                                 </Table.Header>
                                 <Table.Body>
-                                  <Table.Row>
+                                  <TableRowData>
                                     <Table.Cell>
                                       <strong>
                                         <FormattedMessage id='order.amount' defaultMessage='Amount' />
                                       </strong>
                                     </Table.Cell>
                                     <Table.Cell textAlign='right'>{order.amount}</Table.Cell>
-                                  </Table.Row>
-                                  <Table.Row>
+                                  </TableRowData>
+                                  <TableRowData>
                                     <Table.Cell>
                                       <strong>
                                         <FormattedMessage id='order.subtotal' defaultMessage='Subtotal' />
                                       </strong>
                                     </Table.Cell>
                                     <Table.Cell textAlign='right'>{order.subtotal}</Table.Cell>
-                                  </Table.Row>
-                                  <Table.Row>
+                                  </TableRowData>
+                                  <TableRowData>
                                     <Table.Cell>
                                       <strong>
                                         <FormattedMessage id='order.freight' defaultMessage='Freight' />
                                       </strong>
                                     </Table.Cell>
                                     <Table.Cell textAlign='right'>{order.freight}</Table.Cell>
-                                  </Table.Row>
+                                  </TableRowData>
                                 </Table.Body>
                                 <Table.Footer>
-                                  <Table.Row>
+                                  <TableRowData>
                                     <Table.HeaderCell>
                                       <strong>
                                         <FormattedMessage id='order.total' defaultMessage='Total' />
@@ -584,9 +604,9 @@ class Detail extends Component {
                                     <Table.HeaderCell textAlign='right'>
                                       <strong>{order.total}</strong>
                                     </Table.HeaderCell>
-                                  </Table.Row>
+                                  </TableRowData>
                                 </Table.Footer>
-                              </Table>
+                              </StyledTable>
                             </>
                           )}
                         </div>

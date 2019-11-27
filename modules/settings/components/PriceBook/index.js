@@ -13,7 +13,7 @@ class PriceBook extends Component {
   }
   render() {
     return (
-      <Segment loading={this.state.loading} padded='very' basic>
+      <Segment padded='very' basic>
         <Broadcast hideFobPrice isPrepared={!this.state.loading} asModal={false} />
       </Segment>
     )

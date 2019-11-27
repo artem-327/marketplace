@@ -113,12 +113,12 @@ class Shipping extends Component {
 export default injectIntl(Shipping)
 
 Shipping.propTypes = {
-  deliveryAddresses: PropTypes.array,
+  deliveryAddresses: array,
   otherAddresses: bool,
-  dispatch: PropTypes.func,
-  getAddress: PropTypes.func,
-  selectedAddress: PropTypes.object,
-  toggleShippingEdit: PropTypes.func
+  dispatch: func,
+  getAddress: func,
+  selectedAddress: object,
+  toggleShippingEdit: func
 }
 
 Shipping.defaultProps = {
