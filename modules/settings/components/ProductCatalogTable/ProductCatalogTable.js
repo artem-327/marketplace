@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
-import { Popup, List } from 'semantic-ui-react'
 
 import * as Actions from '../../actions'
 import Router from 'next/router'
