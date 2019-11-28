@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Cookie from 'js-cookie'
 import Router from 'next/router'
-
+import { Message } from '~/modules/messages'
 // axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
 axios.defaults.validateStatus = status => {
@@ -24,7 +24,10 @@ axios.interceptors.request.use(
 )
 
 axios.interceptors.response.use(
-  response => response,
+  response => {
+    Message.checkForMessages(response)
+    return response
+  },
   function(error) {
     if (
       error.request.responseType === 'blob' &&
@@ -60,11 +63,12 @@ axios.interceptors.response.use(
       if (error.response && error.response.status === 401) {
         Router.push('/auth/logout?auto=true')
       }
-
-      const errData = error && error.response && error.response.data
-
-      return Promise.reject(errData || error)
     }
+    
+    // const errData = error && error.response && error.response.data
+    Message.checkForMessages(error.response)
+
+    return Promise.reject(error)
   }
 )
 

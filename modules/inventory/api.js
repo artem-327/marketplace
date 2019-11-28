@@ -1,5 +1,4 @@
 import api from '~/api'
-import axios from 'axios'
 import { generateQueryString } from '~/utils/functions'
 
 export function addAttachment(attachment, docType, additionalParams = {}) {
@@ -75,7 +74,7 @@ export function linkAttachment(isLot, itemId, aId) {
 }
 
 export function loadFile(attachment) {
-  return axios({
+  return api({
     baseURL: '',
     url: attachment.preview,
     method: 'GET',
