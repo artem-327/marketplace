@@ -3,25 +3,10 @@ import { connect } from 'react-redux'
 import filter from 'lodash/filter'
 import escapeRegExp from 'lodash/escapeRegExp'
 import debounce from 'lodash/debounce'
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {
-  Modal,
-  Header,
-  FormGroup,
-  FormField,
-  Search,
-  Label,
-  Icon,
-  Accordion,
-  Popup,
-  Grid,
-  Divider
-} from 'semantic-ui-react'
-// import { DateInput } from '~/components/custom-formik'
-// import { FieldArray } from 'formik'
+import { Modal, FormGroup, Popup, Grid, Divider } from 'semantic-ui-react'
 
 import { CompanyProductMixtures } from '~/components/shared-components/'
 import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
@@ -38,23 +23,14 @@ import {
   getNmfcNumbersByString,
   addNmfcNumber
 } from '../../actions'
-import { Form, Input, Button, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui-fixed-validation'
+import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import './styles.scss'
 import Router from 'next/router'
-import styled from 'styled-components'
 
 import { UnitOfPackaging } from '~/components/formatted-messages'
 
 import { errorMessages } from '~/constants/yupValidation'
-
-const AccordionHeader = styled(Header)`
-  font-size: 18px;
-  font-weight: bolder;
-  & > i {
-    font-weight: bolder;
-  }
-`
 
 const initialValues = {
   intProductName: '',
@@ -64,7 +40,8 @@ const initialValues = {
   packagingType: '',
   nmfcNumber: '',
   stackable: false,
-  freezeProtect: false
+  freezeProtect: false,
+  freightClass: ''
 }
 
 const formValidation = Yup.object().shape({
@@ -80,11 +57,9 @@ const formValidation = Yup.object().shape({
     .typeError(errorMessages.mustBeNumber)
     .required(errorMessages.requiredMessage),
   packagingUnit: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
-  packagingType: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage)
-  /*nmfcNumber: Yup.number()
-    .typeError(errorMessages.mustBeNumber)
-    .test('len', errorMessages.exactLength(5), val => val ? getSafe(() => val.toString().length, 0) === 5 : true)
-    .nullable(),*/
+  packagingType: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
+  nmfcNumber: Yup.number().typeError(errorMessages.mustBeNumber),
+  freightClass: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage)
 })
 
 class ProductPopup extends React.Component {
@@ -244,7 +219,7 @@ class ProductPopup extends React.Component {
 
     const { packagingTypesReduced } = this.state
 
-    let editable = popupValues ? popupValues.productOfferCount === 0 || !popupValues.productOfferCount : true
+    let editable = popupValues ? popupValues.cfProductOfferCount === 0 || !popupValues.cfProductOfferCount : true
 
     let allEchoProducts = uniqueArrayByKey(
       echoProducts.concat(getSafe(() => popupValues.echoProduct) ? popupValues.echoProduct : []),
@@ -355,74 +330,55 @@ class ProductPopup extends React.Component {
                     />
                   </FormGroup>
 
-                  <Accordion>
-                    <Accordion.Title
-                      active={this.state.advanced}
-                      onClick={() => this.setState(s => ({ ...s, advanced: !s.advanced }))}>
-                      <AccordionHeader as='h4'>
-                        <Icon
-                          color={this.state.advanced ? 'blue' : 'black'}
-                          name={this.state.advanced ? 'chevron down' : 'chevron right'}
-                        />
-                        <FormattedMessage id='global.advanced' defaultMessage='Advanced'>
+                  <FormGroup widths='equal'>
+                    <Dropdown
+                      label={
+                        <FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code'>
                           {text => text}
                         </FormattedMessage>
-                      </AccordionHeader>
-                    </Accordion.Title>
+                      }
+                      options={nmfcNumbersFiltered}
+                      inputProps={{
+                        fluid: true,
+                        search: val => val,
+                        selection: true,
+                        loading: nmfcNumbersFetching,
+                        onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery)
+                      }}
+                      name='nmfcNumber'
+                    />
+                    <Input
+                      label={formatMessage({ id: 'global.inciName', defaultMessage: 'INCI Name' })}
+                      type='string'
+                      name='inciName'
+                    />
+                    <Dropdown
+                      label={formatMessage({ id: 'global.freightClass', defaultMessage: 'Freight Class' })}
+                      name='freightClass'
+                      options={freightClasses}
+                      inputProps={{ 'data-test': 'settings_product_popup_freightClass_drpdn' }}
+                    />
+                  </FormGroup>
 
-                    <Accordion.Content active={this.state.advanced}>
-                      <FormGroup widths='equal'>
-                        <Dropdown
-                          label={
-                            <FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code'>
-                              {text => text}
-                            </FormattedMessage>
-                          }
-                          options={nmfcNumbersFiltered}
-                          inputProps={{
-                            fluid: true,
-                            search: val => val,
-                            clearable: true,
-                            selection: true,
-                            loading: nmfcNumbersFetching,
-                            onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery)
-                          }}
-                          name='nmfcNumber'
-                        />
-                        <Input
-                          label={formatMessage({ id: 'global.inciName', defaultMessage: 'INCI Name' })}
-                          type='string'
-                          name='inciName'
-                        />
-                        <Dropdown
-                          label={formatMessage({ id: 'global.freightClass', defaultMessage: 'Freight Class' })}
-                          name='freightClass'
-                          options={freightClasses}
-                          inputProps={{ 'data-test': 'settings_product_popup_freightClass_drpdn' }}
-                        />
-                      </FormGroup>
-
-                      <FormGroup>
-                        <Checkbox
-                          fieldProps={{ width: 4 }}
-                          label={formatMessage({ id: 'global.hazardous', defaultMessage: 'Hazardous' })}
-                          name='hazardous'
-                          inputProps={{ 'data-test': 'settings_product_popup_hazardous_chckb' }}
-                        />
-                        <Checkbox
-                          fieldProps={{ width: 4 }}
-                          label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })}
-                          name='stackable'
-                          inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }}
-                        />
-                        <Checkbox
-                          fieldProps={{ width: 4 }}
-                          label={formatMessage({ id: 'global.freezeProtect', defaultMessage: 'Freeze Protect' })}
-                          name='freezeProtect'
-                        />
-                      </FormGroup>
-                    </Accordion.Content>
-                  </Accordion>
+                  <FormGroup>
+                    <Checkbox
+                      fieldProps={{ width: 4 }}
+                      label={formatMessage({ id: 'global.hazardous', defaultMessage: 'Hazardous' })}
+                      name='hazardous'
+                      inputProps={{ 'data-test': 'settings_product_popup_hazardous_chckb' }}
+                    />
+                    <Checkbox
+                      fieldProps={{ width: 4 }}
+                      label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })}
+                      name='stackable'
+                      inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }}
+                    />
+                    <Checkbox
+                      fieldProps={{ width: 4 }}
+                      label={formatMessage({ id: 'global.freezeProtect', defaultMessage: 'Freeze Protect' })}
+                      name='freezeProtect'
+                    />
+                  </FormGroup>
 
                   <div style={{ textAlign: 'right' }}>
                     <Button.Reset onClick={closePopup} data-test='settings_product_popup_reset_btn'>
