@@ -381,6 +381,7 @@ class MyInventory extends Component {
   render() {
     const {
       openBroadcast,
+      sidebarDetailOpen,
       intl: { formatMessage },
       rows,
       datagrid,
@@ -389,11 +390,10 @@ class MyInventory extends Component {
       simpleEditTrigger,
       sidebarDetailTrigger,
       sidebarValues,
-      openPopup,
-      sidebarDetailOpen
+      openPopup
     } = this.props
     const { columns, selectedRows } = this.state
-
+    
     return (
       <>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
@@ -575,7 +575,7 @@ class MyInventory extends Component {
           }}*/
           />
         </div>
-        <DetailSidebar key={getSafe(() => sidebarValues.id, 0)} />
+        {sidebarDetailOpen && <DetailSidebar />}
         <Filter
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}

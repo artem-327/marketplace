@@ -106,7 +106,7 @@ function mapStateToProps(store, { datagrid }) {
     }),
     unmappedRows: datagrid.rows,
     isOpenImportPopup: store.settings.isOpenImportPopup,
-    isProductInfoOpen: store.companyProductInfo.isOpen
+    isProductInfoOpen: store.companyProductInfo.isOpen 
   }
 }
 
