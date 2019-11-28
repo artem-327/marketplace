@@ -1,5 +1,6 @@
 context("Company Product Catalog CRUD", () => {
     let productId = null
+    let filter = [{"operator":"LIKE","path":"CompanyProduct.intProductCode","values":["%OURPR%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -7,9 +8,7 @@ context("Company Product Catalog CRUD", () => {
         cy.route("GET", "/prodex/api/users").as("addressLoading")
         cy.route("POST", "/prodex/api/company-products/datagrid").as("productLoading")
 
-        cy.FElogin("user1@example.com", "echopass123")
-
-        //cy.url().should("include", "inventory")
+        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.contains("Settings").click()
@@ -22,6 +21,12 @@ context("Company Product Catalog CRUD", () => {
     })
 
     it("Creates a product", () => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.getFirstEntityWithFilter(token, 'company-products',filter).then(itemId => {
+                if(itemId != null)
+                    cy.deleteEntity(token, 'company-products/id', itemId)
+            })
+        })
         cy.settingsAdd()
 
         cy.enterText("#field_input_intProductName", "Our product")
@@ -34,13 +39,10 @@ context("Company Product Catalog CRUD", () => {
         cy.get("[data-test='settings_product_popup_packagingType_drpdn']").click()
         cy.contains("paper bags").click()
 
-        cy.selectFromDropdown("#field_dropdown_echoProduct","Sodium Special Solution")
-
         cy.clickSave()
 
         cy.contains("Created Product")
-
-        let filter = [{"operator":"LIKE","path":"CompanyProduct.intProductCode","values":["%OURPR%"]}]
+        cy.searchInList("Our")
 
         cy.getToken().then(token => {
             cy.getFirstCompanyProductWithFilter(token, filter).then(itemId => {
@@ -61,10 +63,10 @@ context("Company Product Catalog CRUD", () => {
 
         cy.contains("paper bags")
         cy.contains("kilograms")
-        cy.contains("Sodium Special Solution")
     })
 
     it("Edits a product", () => {
+        cy.searchInList("Our")
         cy.openElement(productId, 0)
 
         cy.get("#field_input_intProductName")
@@ -74,6 +76,7 @@ context("Company Product Catalog CRUD", () => {
 
         cy.clickSave()
 
+        cy.searchInList("My")
         cy.openElement(productId, 0)
 
         cy.get("#field_input_intProductName")
@@ -93,6 +96,7 @@ context("Company Product Catalog CRUD", () => {
     })
 
     it("Deletes a product", () => {
+        cy.searchInList("My")
         cy.openElement(productId, 1)
 
         cy.clickSave()

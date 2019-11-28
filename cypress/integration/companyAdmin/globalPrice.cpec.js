@@ -8,16 +8,14 @@ context("Prodex Global Price", () => {
         cy.route("POST", '/prodex/api/broadcast-rules/general').as('rulesSaving')
         cy.viewport(1280, 800)
 
-        cy.FElogin("user1@example.com", "echopass123")
+        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
-        cy.url().should("include", "inventory")
-
-        cy.wait('@inventoryLoading')
+        cy.wait("@inventoryLoading", {timeout: 100000})
         cy.contains("Settings").click()
     })
 
     it("Turns on the broadcasting", () => {
-        cy.getToken().then(token => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.turnOffGlobalBroadcasting(token)
         })
 
@@ -41,7 +39,7 @@ context("Prodex Global Price", () => {
     })
 
     it("Turns off the broadcasting", () => {
-        cy.getToken().then(token => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.turnOnGlobalBroadcasting(token)
         })
 
@@ -65,7 +63,7 @@ context("Prodex Global Price", () => {
     })
 
     it("Turns on the broadcasting for Albreta and USA only", () => {
-        cy.getToken().then(token => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.turnOffGlobalBroadcasting(token)
         })
 
@@ -102,7 +100,7 @@ context("Prodex Global Price", () => {
     })
 
     it("Switch to company broadcasting", () => {
-        cy.getToken().then(token => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.turnOffGlobalBroadcasting(token)
         })
 
