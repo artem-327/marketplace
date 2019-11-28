@@ -1,73 +1,61 @@
-import React, {Component} from 'react'
-import axios from 'axios'
+import React, { Component } from 'react'
 
-import {themes} from '../constants'
-import {FormattedMessage} from 'react-intl'
+import { themes } from '../constants'
+import { FormattedMessage } from 'react-intl'
 
-import {generateToastMarkup} from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 
-export default class Messages extends Component {
-  componentDidMount() {
-    let self = this
+let Message
+class Messages extends Component {
+  constructor(props) {
+    super(props)
 
-    if (!this.interceptor) {
-      this.interceptor = axios.interceptors.response.use(
-        response => response,
-        function(error) {
-          var errorMessage = null
-          if (error.response)
-            errorMessage = error.response.data
-              ? error.response.data
-              : `Request failed with status code: ${error.response.status}`
-          else if (error.clientMessage)
-            errorMessage =
-              process.env.NODE_ENV === 'production'
-                ? error.descriptionMessage
-                  ? `${error.clientMessage} ${error.descriptionMessage}`
-                  : `${error.clientMessage}`
-                : error
+    Message = this
+  }
 
-          self.onError(errorMessage)
+  checkForMessages = response => {
+    if (!response) return
 
-          return Promise.reject(error)
-        }
-      )
+    let { data } = response
+    let messages = data.clientMessage ? [data] : getSafe(() => data.messages, [])
+
+    if (messages.length > 0) {
+      messages.forEach(message => {
+        this.onMessage(message)
+      })
     }
   }
 
-  componentWillUnmount() {
-    axios.interceptors.response.eject(this.interceptor)
-  }
+  onMessage = message => {
+    let { toastManager } = this.props
 
-  onError = errorMessage => {
-    let {toastManager} = this.props
+    const msg =
+      message && message.level
+        ? message.descriptionMessage
+          ? `${message.clientMessage} ${message.descriptionMessage} ${
+              process.env.NODE_ENV === 'production' ? '' : message.exceptionMessage
+            }`
+          : `${message.clientMessage} ${getSafe(() => message.exceptionMessage, '')}`
+        : message
 
-    const errMessage =
-      errorMessage && errorMessage.level
-        ? errorMessage.descriptionMessage
-          ? `${errorMessage.clientMessage} ${errorMessage.descriptionMessage} ${errorMessage.exceptionMessage}`
-          : `${errorMessage.clientMessage} ${errorMessage.exceptionMessage}`
-        : errorMessage
-
-    // errorMessage.level can be ERROR, WARNING, INFO
-    if (errMessage && errorMessage.level) {
-      const lowerCaseLevel = errorMessage.level.toLowerCase()
+    if (msg && message.level) {
+      const lowerCaseLevel = message.level.toLowerCase()
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage
             id={`global.${lowerCaseLevel}`}
             defaultMessage={`${lowerCaseLevel.charAt(0).toUpperCase()}${lowerCaseLevel.slice(1)}!`}
           />,
-          errMessage
+          msg
         ),
-        {appearance: themes[errorMessage.level], pauseOnHover: true}
+        { appearance: themes[message.level], pauseOnHover: true }
       )
       // this 'else if' can be remove in the future if backend will give all levels in all responses.
-    } else if (errMessage && !errorMessage.level) {
-      toastManager.add(
-        generateToastMarkup(<FormattedMessage id='global.error' defaultMessage='Error!' />, errMessage),
-        {appearance: themes.ERROR, pauseOnHover: true}
-      )
+    } else if (msg && !message.level) {
+      toastManager.add(generateToastMarkup(<FormattedMessage id='global.error' defaultMessage='Error!' />, msg), {
+        appearance: themes.ERROR,
+        pauseOnHover: true
+      })
     }
   }
 
@@ -75,3 +63,5 @@ export default class Messages extends Component {
     return null
   }
 }
+
+export { Messages, Message }

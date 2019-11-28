@@ -1,5 +1,5 @@
 import api from '~/api'
-import axios from 'axios'
+
 import { getSafe, generateQueryString } from '~/utils/functions'
 
 export async function getAlternativeProductNames(value) {
@@ -197,7 +197,7 @@ export const postEchoProduct = values => api.post(`/prodex/api/echo-products`, v
 export const deleteEchoProduct = id => api.delete(`/prodex/api/echo-products/id/${id}`)
 
 export const loadFile = attachment => {
-  return axios({
+  return api({
     baseURL: '',
     url: attachment.preview,
     method: 'GET',
