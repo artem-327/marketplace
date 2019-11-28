@@ -238,7 +238,7 @@ const validationScheme = val.object().shape({
     conforming: val.boolean(),
     conditionNotes: val.string().when('conforming', {
       is: false,
-      then: val.string().required(errorMessages.requiredMessage)
+      then: val.string().required(errorMessages.requiredNonConforming)
     })
   }),
   priceTiers: val.object().shape({
@@ -501,16 +501,17 @@ class DetailSidebar extends Component {
         this.setState({ changedForm: false })
         break
     }
-
     if (Object.keys(props).length) {
       try {
         let data = await addProductOffer(
           props,
           getSafe(() => this.props.sidebarValues.id, null)
         )
-        datagrid.updateRow(data.value.id, () => data.value)
-        this.setState({ saved: true })
-
+        if (this.props.sidebarValues.id) {
+          datagrid.updateRow(data.value.id, () => data.value)
+        } else {
+          datagrid.loadData()
+        }
         toastManager.add(
           generateToastMarkup(
             <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
@@ -635,20 +636,14 @@ class DetailSidebar extends Component {
   }
   render() {
     let {
-      addProductOffer,
       listConditions,
       listForms,
       listGrades,
       loading,
-      openBroadcast,
       sidebarDetailOpen,
       sidebarValues,
-      searchedManufacturers,
-      searchedManufacturersLoading,
       searchedOrigins,
       searchedOriginsLoading,
-      searchedProducts,
-      searchedProductsLoading,
       searchOrigins,
       warehousesList,
       listDocumentTypes,

@@ -63,7 +63,7 @@ class Notifications extends Component {
             />
           </GridColumn>
         </LessPaddedRow>
-        <LessPaddedRow>
+        {false && (<LessPaddedRow>
           <GridColumn computer={7}>
             <FormikCheckbox
               inputProps={{ disabled, 'data-test': 'filter_notifications_notifySystem_chckb' }}
@@ -71,7 +71,7 @@ class Notifications extends Component {
               label={formatMessage({ id: 'filter.notifications.system', defaultMessage: 'System Notifications:' })}
             />
           </GridColumn>
-        </LessPaddedRow>
+        </LessPaddedRow>)}
       </Grid>
     )
   }

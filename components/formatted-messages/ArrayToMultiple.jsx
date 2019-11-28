@@ -19,8 +19,8 @@ export default class ArrayToMultiple extends Component {
             data-test='array_to_multiple_list'
             content={
               <List>
-                {values.map((text) => (
-                  <List.Item>
+                {values.map((text, i) => (
+                  <List.Item key={i}>
                     <List.Content>
                       {text}
                     </List.Content>

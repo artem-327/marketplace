@@ -1,19 +1,7 @@
 import React, { Component } from 'react'
 import { array, string, func } from 'prop-types'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
-import {
-  Grid,
-  GridRow,
-  GridColumn,
-  Header,
-  Divider,
-  Segment,
-  Icon,
-  Popup,
-  List,
-  Label,
-  Button
-} from 'semantic-ui-react'
+import { Grid, GridRow, GridColumn, Header, Divider, Segment, Button } from 'semantic-ui-react'
 
 import './styles.scss'
 import { RelaxedRow, HeaderTextRow, WiderPopup, CustomSpan, CustomHeader } from './styledComponents'
@@ -34,7 +22,7 @@ import {
 import { getCart } from '~/modules/purchase-order/actions'
 import { getNmfcNumbersByString, addNmfcNumber } from '~/modules/settings/actions'
 import { generateToastMarkup, getSafe, getFloatOrNull, getIntOrNull } from '~/utils/functions'
-import { nmfcValidation, freightClassValidation } from '~/constants/yupValidation'
+import { freightClassValidation } from '~/constants/yupValidation'
 
 const validationSchema = Yup.object().shape({
   freightClass: freightClassValidation()
@@ -49,14 +37,7 @@ class CartItemSummary extends Component {
   }
 
   async componentDidMount() {
-    const {
-      hazardClasses,
-      packagingGroups,
-      cartItems,
-      getHazardClassesDataRequest,
-      getPackagingGroupsDataRequest,
-      addUnNumber
-    } = this.props
+    const { hazardClasses, packagingGroups, getHazardClassesDataRequest, getPackagingGroupsDataRequest } = this.props
 
     if (hazardClasses.length === 0) getHazardClassesDataRequest()
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
@@ -327,7 +308,7 @@ class CartItemSummary extends Component {
     return (
       <>
         <GridColumn computer={16}>
-          <Grid columns={2} className='light-gray cart-item-summary'>
+          <Grid columns={2} className='light-gray cart-item-summary' style={{ fontSize: '16px' }}>
             <HeaderTextRow>
               <GridColumn>
                 {productOffer.companyProduct.intProductCode + ' ' + productOffer.companyProduct.intProductName}
