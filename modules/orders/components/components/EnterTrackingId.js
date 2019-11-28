@@ -34,12 +34,12 @@ class EnterTrackingId extends React.Component {
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage
-            id='notifications.markOrderAsShipped.success.header'
+            id='notifications.order.actions.shipped.success.header'
             defaultMessage='Order Marked as Shipped'
           />,
           <FormattedMessage
-            id='notifications.markOrderAsShipped.success.content'
-            defaultMessage='Order {orderId} successfully marked as shipped'
+            id='notifications.order.actions.shipped.success.content'
+            defaultMessage='Order {orderId} successfully marked as shipped.'
             values={{ orderId: orderId }}
           />
         ), { appearance: 'success' }
@@ -77,10 +77,10 @@ class EnterTrackingId extends React.Component {
                   }
                   else {
                     confirm(
-                      formatMessage({ id: 'confirm.markOrderAsShippedNoTracking.title', defaultMessage: 'Mark Order as Shipped without Tracking ID?' }),
+                      formatMessage({ id: 'confirm.order.actions.shippedNoTracking.title', defaultMessage: 'Mark Order as Shipped without Tracking ID' }),
                       formatMessage(
                         {
-                          id: 'confirm.markOrderAsShippedNoTracking.content',
+                          id: 'confirm.order.actions.shippedNoTracking.content',
                           defaultMessage: `Do you want to mark order ${orderId} as shipped without providing Tracking ID?`
                         },
                         { orderId: orderId }

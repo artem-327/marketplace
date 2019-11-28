@@ -138,3 +138,11 @@ export const closeEnterTrackingId = () => ({
   type: AT.ORDER_CLOSE_ENTER_TRACKING_ID,
   payload: {}
 })
+export const receivedOrder = orderId => ({
+  type: AT.ORDER_RECEIVED_ORDER,
+  payload: Api.receivedOrder(orderId)
+})
+export const acceptDelivery = orderId => ({
+  type: AT.ORDER_ACCEPT_DELIVERY_ORDER,
+  payload: Api.accept(orderId)
+})
