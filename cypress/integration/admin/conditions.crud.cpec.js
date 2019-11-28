@@ -29,9 +29,7 @@ context("Conditions CRUD", () => {
         cy.clickAdd()
 
         cy.enterText("#field_input_val0", "Half")
-
         cy.clickSave()
-
         cy.contains("Condition created")
 
         cy.getToken().then(token => {

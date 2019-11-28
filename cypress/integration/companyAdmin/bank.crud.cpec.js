@@ -8,7 +8,7 @@ context("Prodex Bank Account CRUD", () => {
         cy.route("GET", "/prodex/api/branches").as("addressLoading")
         cy.route("POST","/prodex/api/payments/**").as("verifyLoading")
 
-        cy.FElogin("user1@example.com", "echopass123")
+        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.contains("Settings").click()
@@ -73,8 +73,7 @@ context("Prodex Bank Account CRUD", () => {
     })
 
     it("Checks error messages", () => {
-        cy.clickAdd()
-
+        cy.get("[data-test='settings_open_popup_btn']").click()
         cy.clickSave()
 
         cy.get(".error")

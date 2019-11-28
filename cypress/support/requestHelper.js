@@ -58,6 +58,26 @@ Cypress.Commands.add("getToken", () => {
     })
 })
 
+Cypress.Commands.add("getUserToken", (user, password) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/oauth/token',
+        headers: {
+            authorization: "Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs"
+        },
+        form: true,
+        body: {
+            grant_type: "password",
+            username: user,
+            password: password
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body.access_token
+    })
+})
+
+
 Cypress.Commands.add("getFirstItemId", (token) => {
     cy.request({
         method: 'POST',

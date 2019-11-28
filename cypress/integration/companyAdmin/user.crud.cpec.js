@@ -1,5 +1,7 @@
 context("Prodex User CRUD", () => {
     let userID = null
+    let filter = [{"operator":"LIKE","path":"User.name","values":["%John Automator%"]},
+        {"operator":"LIKE","path":"User.homeBranch.deliveryAddress.contactName","values":["%John Automator%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -8,19 +10,24 @@ context("Prodex User CRUD", () => {
         cy.route("GET", "/prodex/api/users").as("usersLogin")
         cy.route("POST", "/prodex/api/users").as("usersSave")
 
-        cy.FElogin("user1@example.com", "echopass123")
+        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.contains("Settings").click()
-
         cy.wait("@usersLogin", {timeout: 100000})
 
         cy.contains("USERS").click()
-
         cy.wait("@usersLogin")
     })
 
     it("Creates a user", () => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.getFirstEntityWithFilter(token, 'users', filter).then(itemId => {
+                if(itemId != null)
+                    cy.deleteEntity(token, 'users/id', itemId)
+            })
+        })
+
         cy.settingsAdd()
 
         cy.enterText("#field_input_name", "John Automator")
@@ -38,10 +45,7 @@ context("Prodex User CRUD", () => {
         cy.wait("@usersSave")
         cy.contains("User John Automator successfully created.")
 
-        let filter = [{"operator": "LIKE", "path": "User.name", "values": ["%John Automator%"]},
-            {"operator": "LIKE", "path": "User.homeBranch.deliveryAddress.contactName", "values": ["%John Automator%"]}]
-
-        cy.getToken().then(token => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.getFirstUserIdWithFilter(token, filter).then(itemId => {
                 cy.openElement(itemId, 0)
 

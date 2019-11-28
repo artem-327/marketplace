@@ -7,7 +7,7 @@ context("Prodex Branches CRUD", () => {
         cy.route("GET", "/prodex/api/branches").as("branchesLoading")
         cy.route("POST", "/prodex/api/branches/datagrid").as("branchesLoadingPOST")
 
-        cy.FElogin("user1@example.com", "echopass123")
+        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.contains("Settings").click()
