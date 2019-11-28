@@ -1213,6 +1213,8 @@
   "notifications.echoProductCreated.content": "Echo Product {name} successfully created",
   "notifications.echoProductUpdated.header": "Updated Echo Product",
   "notifications.echoProductUpdated.content": "Echo Product {name} successfully updated",
+  "notifications.manualShippingQuote.header": "Request succesfully submitted",
+  "notifications.manualShippingQuote.content": "Request for Shipment Quote has been successful",
   "productCatalog.newProduct": "New Product",
   "productCatalog.editedProduct": "Edited Product",
   "productCatalog.removedProduct": "Removed Product",
