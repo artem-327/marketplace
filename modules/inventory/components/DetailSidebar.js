@@ -282,8 +282,7 @@ class DetailSidebar extends Component {
     documentType: 1,
     openUploadLot: false,
     edited: false,
-    saved: false,
-    edited: false
+    saved: false
   }
 
   componentDidMount = () => {
@@ -308,7 +307,7 @@ class DetailSidebar extends Component {
         />
       )
         .then(this.submitRef)
-        .catch(() => { })
+        .catch(() => {})
         .finally(() => this.setState({ edited: false }))
     }
   }
@@ -650,7 +649,6 @@ class DetailSidebar extends Component {
     }
   }
   onChange = () => !this.state.edited && this.setState({ edited: true })
-  
 
   render() {
     let {
@@ -1619,7 +1617,7 @@ class DetailSidebar extends Component {
                           size='large'
                           inputProps={{ type: 'button' }}
                           onClick={() => {
-                            this.props.sidebarDetailTrigger(null, false)
+                            this.setState({ edited: false }, () => this.props.sidebarDetailTrigger(null, false))
                           }}
                           data-test='sidebar_inventory_cancel'>
                           {Object.keys(touched).length || this.state.changedForm
