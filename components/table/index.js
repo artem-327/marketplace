@@ -490,22 +490,34 @@ class _Table extends Component {
   }
 
   handleSortingChange = sort => {
-    if (this.state.columnsSettings.sorting.length === 0) {
-      var sorting = sort
-    } else var { sorting } = this.state.columnsSettings
+    let { sorting } = this.state.columnsSettings
+    let newSorting = []
+    
+    if (sorting.length === 0) {
+      newSorting = sort
+    } else {
+      if (sorting[0].columnName === sort[0].columnName) {
+        // Just switch directions
+        newSorting = [
+          { columnName: sort[0].columnName, direction: sorting[0].direction.toUpperCase() === 'ASC' ? 'DESC' : 'ASC' }
+        ]
+      } else {
+        // Just switch columnName and set to ASC as is default
+        newSorting = [{
+          columnName: sort[0].columnName, direction: 'ASC'
+        }]
+      }
+    }
 
-    let columnName = sort[0].columnName
-    let [s] = sorting
-    s.columnName = columnName
+    let [s] = newSorting
+    
 
     const { onSortingChange, columns } = this.props
     const column = columns.find(c => c.name === s.columnName)
 
     if (!column || !column.sortPath) return
 
-    s.direction = s.direction.toUpperCase() === 'ASC' ? 'DESC' : 'ASC'
-
-    this.handleColumnsSettings({ sorting })
+    this.handleColumnsSettings({ sorting: newSorting })
 
     onSortingChange &&
       onSortingChange({
@@ -516,7 +528,7 @@ class _Table extends Component {
 
   handleColumnsSettings = data => {
     const { tableName } = this.props
-
+    
     this.setState(
       state => ({
         columnsSettings: {
@@ -526,6 +538,7 @@ class _Table extends Component {
       }),
       () => {
         tableName && (localStorage[tableName] = JSON.stringify(this.state.columnsSettings))
+        // console.log({ state: this.state.columnsSettings.sorting })
       }
     )
   }
@@ -605,6 +618,7 @@ class _Table extends Component {
                 // sorting={[columnsSettings.sorting.map(el => ({ ...el, direction: el.direction.toLowerCase() }))]}
                 sorting={columnsSettings.sorting}
                 onSortingChange={sorting => this.handleSortingChange(sorting)}
+                // onSortingChange={(sorting) => console.log(columnsSettings.sorting, sorting)}
               />
             )}
 
