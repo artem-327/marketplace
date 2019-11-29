@@ -374,7 +374,6 @@ class MyInventory extends Component {
     this.props.datagrid.setFilter({ filters: [] })
   }
 
-
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
     const { isProductInfoOpen, closePopup } = this.props
     if (isProductInfoOpen) closePopup()
@@ -455,10 +454,7 @@ class MyInventory extends Component {
                 </Button>
               </Menu.Item>
               <Menu.Item>
-                <FilterTags
-                  datagrid={datagrid}
-                  data-test='my_inventory_filter_btn'
-                />
+                <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
               </Menu.Item>
               <Menu.Item>
                 <SubMenu />
@@ -467,7 +463,7 @@ class MyInventory extends Component {
           </Menu>
         </Container>
 
-        <div class='flex stretched' style={{ padding: '10px 32px' }}>
+        <div className='flex stretched' style={{ padding: '10px 32px' }}>
           <ProdexTable
             defaultHiddenColumns={defaultHiddenColumns}
             {...datagrid.tableProps}
