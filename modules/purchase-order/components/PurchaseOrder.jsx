@@ -182,7 +182,7 @@ class PurchaseOrder extends Component {
   }
 
   handleManualShipment = async formikProps => {
-    let { values, setSubmitting, errors, validateForm, setFieldTouched } = formikProps
+    let { values, setSubmitting, setFieldTouched } = formikProps
     let {
       requestManualShipment,
       shipping: { selectedAddress },
@@ -241,7 +241,6 @@ class PurchaseOrder extends Component {
     }
 
     let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit} lbs` : ''
- 
     return (
       <div className='app-inner-main flex stretched'>
         <div className='header-top' style={{ zIndex: 10, backgroundColor: '#FFF' }}>

@@ -159,12 +159,12 @@ class UsersTable extends Component {
             {
               text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
               callback: row => openPopup(row),
-              hidden: row => currentUserId === row.id
+              // hidden: row => currentUserId === row.id
             },
             {
               text: formatMessage({ id: 'settings.editRoles', defaultMessage: 'Edit Roles' }),
               callback: row => openRolesPopup(row),
-              hidden: row => currentUserId === row.id
+              // hidden: row => currentUserId === row.id
             },
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -187,7 +187,7 @@ class UsersTable extends Component {
                   appearance: 'success'
                 })
               },
-              hidden: row => !!row.lastLoginAt
+              hidden: row => !!row.lastLoginAt || currentUserId === row.id
             }
           ]}
         />

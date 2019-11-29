@@ -12,7 +12,7 @@ import Spinner from '../../../components/Spinner/Spinner'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 import { checkToken } from '../../../utils/auth'
-import { Container, Menu, Header, Button, Icon } from 'semantic-ui-react'
+import { Container, Menu, Header, Button } from 'semantic-ui-react'
 import Router from 'next/router'
 import { ArrayToMultiple } from '~/components/formatted-messages'
 
@@ -106,10 +106,10 @@ export default class ShoppingCart extends Component {
           </Container>
         </div>
         <div className='shopping-cart flex stretched' style={{ overflow: 'auto' }}>
-          <div className='shopping-cart-body'>
+          <div className='shopping-cart-body' style={{ width: '83.25%' }}>
             <div className='shopping-cart-items'>
-              <header>
-                <h2>{headerTitle}</h2>
+              <header style={{ backgroundColor: '#e7e7e7', padding: '14px 24px' }}>
+                <div className='ui header'>{headerTitle}</div>
               </header>
               {itemContent}
             </div>
@@ -130,10 +130,9 @@ export default class ShoppingCart extends Component {
                 open={this.state.modalOpen}
                 trigger={
                   <Button
-                    size='large'
                     basic
                     fluid
-                    color='blue'
+                    primary
                     data-test='shopping_cart_keep_shopping_btn'
                     onClick={() => Router.push('/marketplace/all')}>
                     <FormattedMessage id='cart.keepShopping' defaultMessage='Keep Shopping'>

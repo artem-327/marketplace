@@ -276,7 +276,8 @@ class DetailSidebar extends Component {
     saveBroadcast: 0,
     changedForm: false,
     documentType: 1,
-    openUploadLot: false
+    openUploadLot: false,
+    documentAttachments: []
   }
 
   componentDidMount = () => {
@@ -505,7 +506,7 @@ class DetailSidebar extends Component {
         console.error(e)
       } finally {
         setTouched({})
-        this.setState({ changedForm: false })
+        this.setState({ changedForm: false, documentAttachments: [] })
       }
     }
   }, 250)
@@ -1249,7 +1250,7 @@ class DetailSidebar extends Component {
                                         }
                                         hideAttachments
                                         edit={getSafe(() => sidebarValues.id, 0)}
-                                        attachments={values.documents.attachments}
+                                        attachments={this.state.documentAttachments}
                                         name='documents.attachments'
                                         type={this.state.documentType}
                                         filesLimit={1}
@@ -1265,7 +1266,16 @@ class DetailSidebar extends Component {
                                               }
                                             ])
                                           )
-                                          this.setState({ changedForm: true })
+                                          this.setState(prevState => ({
+                                            changedForm: true,
+                                            documentAttachments: prevState.documentAttachments.concat([
+                                              {
+                                                id: files.id,
+                                                name: files.name,
+                                                documentType: files.documentType
+                                              }
+                                            ])
+                                          }))
                                         }}
                                         data-test='new_inventory_attachments_drop'
                                         emptyContent={

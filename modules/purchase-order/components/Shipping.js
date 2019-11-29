@@ -3,7 +3,7 @@ import { array, func, object, bool } from 'prop-types'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { Grid, Segment, GridRow, GridColumn, Divider, Header, Button } from 'semantic-ui-react'
+import { GridRow, GridColumn, Divider, Header, Button } from 'semantic-ui-react'
 import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 
 import ShippingAddress from './ShippingAddress'
@@ -27,7 +27,7 @@ class Shipping extends Component {
   }
 
   render() {
-    let { deliveryAddresses, branches, warehouses, getAddress, selectedAddress, intl } = this.props
+    let { deliveryAddresses, /* branches, */ warehouses, getAddress, selectedAddress, intl } = this.props
     let { formatMessage } = intl
 
     let addresses = this.props.otherAddresses ? deliveryAddresses : warehouses // branches

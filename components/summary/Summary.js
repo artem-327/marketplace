@@ -15,7 +15,6 @@ export default class Summary extends Component {
 
     if (cartItems.length === 0) return null
 
-
     //let totalWeight = 0
     /*
     for (let i = 0; i < cartItems.length; i++) {
@@ -39,7 +38,7 @@ export default class Summary extends Component {
           </GridRow>
 
           <GridColumn computer={16}>
-            <Grid className='light-gray cart-item-summary'>
+            <Grid className='light-gray cart-item-summary' style={{ fontSize: '16px' }}>
               <RelaxedRow columns={2}>
                 <GridColumn>
                   <FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />
