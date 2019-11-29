@@ -167,7 +167,6 @@ export default function(state = initialState, action) {
         openedReinitiateTransfer: false
       }
     case AT.ORDER_OPEN_POPUP_NAME:
-      console.log('!!!!!!!! ORDER_OPEN_POPUP_NAME', action.payload)
       return {
         ...state,
         [action.payload]: true

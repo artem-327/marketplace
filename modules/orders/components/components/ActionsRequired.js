@@ -447,11 +447,11 @@ function checkAssignLotsRequired(data) {
 function mapStateToProps(state, ownProps) {
   const { orders } = state
   return {
-    orderStatus: 2,//getSafe(() => orders.detail.orderStatus, 0),
-    shippingStatus: 0,//getSafe(() => orders.detail.shippingStatus, 0),
-    reviewStatus: 1,//getSafe(() => orders.detail.reviewStatus, 0),
-    creditStatus: 0,//getSafe(() => orders.detail.creditStatus, 0),
-    returnStatus: 0,//getSafe(() => orders.detail.returnStatus, 0),
+    orderStatus: getSafe(() => orders.detail.orderStatus, 0),
+    shippingStatus: getSafe(() => orders.detail.shippingStatus, 0),
+    reviewStatus: getSafe(() => orders.detail.reviewStatus, 0),
+    creditStatus: getSafe(() => orders.detail.creditStatus, 0),
+    returnStatus: getSafe(() => orders.detail.returnStatus, 0),
     assignLotsRequired: false,//checkAssignLotsRequired(orders.detail),
 
     fundingSourceId: '?', // ! ! which param? (string)
