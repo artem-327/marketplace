@@ -115,12 +115,10 @@ export default class ShippingQuotes extends Component {
       loading,
       echoProducts,
       zipCodes,
-      defaultZip,
-      intl: { formatMessage }
+      defaultZip
     } = this.props
-    const { initialValues, min, split } = this.state
-    const { closeModal } = this.props.modalProps
-    const allZips = this.state.allZips
+    const { initialValues, min, split, allZips } = this.state
+    
     // comparison if state has all zips from zipCodes
     if (zipCodes.length > allZips.length - 1) {
       this.setState({

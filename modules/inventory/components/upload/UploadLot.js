@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import File from '~/src/pages/inventory/addInventory/components/Upload/components/File'
 import ReactDropzone from 'react-dropzone'
 import { FormattedMessage } from 'react-intl'
+
 import { FieldArray } from 'formik'
 import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup } from '~/utils/functions'

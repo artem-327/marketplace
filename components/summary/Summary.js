@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Grid, GridColumn, Header, Segment, GridRow } from 'semantic-ui-react'
 import { string, array, func, number, node } from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
+import { getSafe } from '~/utils/functions'
 import { RelaxedRow, HeaderTextRow } from './styledComponents'
 import { currency } from '~/constants/index'
 

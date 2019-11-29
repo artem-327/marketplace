@@ -181,21 +181,26 @@ class PurchaseOrder extends Component {
     this.setState({ submitting: false })
   }
 
-  handleManualShipment = formikProps => {
-    let { values, setSubmitting, errors, validateForm, setFieldTouched } = formikProps
+  handleManualShipment = async formikProps => {
+    let { values, setSubmitting, setFieldTouched } = formikProps
     let {
       requestManualShipment,
-      shipping: { selectedAddress }
+      shipping: { selectedAddress },
+      toastManager
     } = this.props
     setFieldTouched('address')
     setSubmitting(false)
-
+    
     if (values.address) {
       let payload = {
         destinationCountryId: selectedAddress.address.country.id,
         destinationZIP: selectedAddress.address.zip.zip
       }
-      requestManualShipment(payload)
+      await requestManualShipment(payload)
+      toastManager.add(generateToastMarkup(
+        <FormattedMessage id='notifications.manualShippingQuote.header' defaultMessage='Request succesfully submitted' />,
+        <FormattedMessage id='notifications.manualShippingQuote.content' defaultMessage='Request for Shipment Quote has been successful' />
+      ), {appearance: 'success'})
     }
   }
 
@@ -236,7 +241,6 @@ class PurchaseOrder extends Component {
     }
 
     let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit} lbs` : ''
-
     return (
       <div className='app-inner-main flex stretched'>
         <div className='header-top' style={{ zIndex: 10, backgroundColor: '#FFF' }}>
