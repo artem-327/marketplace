@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Checkbox, Icon, Popup, List, Button } from 'semantic-ui-react'
+import { Container, Menu, Header, Checkbox, Popup, Button } from 'semantic-ui-react'
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import Router from 'next/router'
 import ProdexTable from '~/components/table'
-import { Broadcast } from '~/modules/broadcast'
 import { Filter } from '~/modules/filter'
 
-import SimpleEdit from '~/modules/inventory/components/SimpleEdit'
 import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
 
 import confirm from '~/src/components/Confirmable/confirm'
@@ -376,14 +373,15 @@ class MyInventory extends Component {
 
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
     const { isProductInfoOpen, closePopup } = this.props
-    if (isProductInfoOpen) closePopup()
 
+    if (isProductInfoOpen) closePopup()
     sidebarDetailTrigger(row, bol, tab)
   }
 
   render() {
     const {
       openBroadcast,
+      sidebarDetailOpen,
       intl: { formatMessage },
       rows,
       datagrid,
@@ -392,11 +390,10 @@ class MyInventory extends Component {
       simpleEditTrigger,
       sidebarDetailTrigger,
       sidebarValues,
-      openPopup,
-      sidebarDetailOpen
+      openPopup
     } = this.props
     const { columns, selectedRows } = this.state
-
+    
     return (
       <>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
@@ -578,7 +575,7 @@ class MyInventory extends Component {
           }}*/
           />
         </div>
-        <DetailSidebar key={getSafe(() => sidebarValues.id, 0)} />
+        {sidebarDetailOpen && <DetailSidebar />}
         <Filter
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}
