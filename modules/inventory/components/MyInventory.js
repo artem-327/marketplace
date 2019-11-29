@@ -460,7 +460,7 @@ class MyInventory extends Component {
           </Menu>
         </Container>
 
-        <div class='flex stretched' style={{ padding: '10px 32px' }}>
+        <div className='flex stretched' style={{ padding: '10px 32px' }}>
           <ProdexTable
             defaultHiddenColumns={defaultHiddenColumns}
             {...datagrid.tableProps}
