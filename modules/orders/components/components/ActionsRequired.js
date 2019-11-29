@@ -24,7 +24,7 @@ class ActionsRequired extends React.Component {
     ).then(
       () => { // confirm
         d.toastTitleId
-          ? this.toastCall({ ...d })
+          ? this.toastCall(d)
           : d.action()
       },
       () => { // cancel
@@ -35,7 +35,8 @@ class ActionsRequired extends React.Component {
   toastCall = async (d) => {
     const { toastManager } = this.props
     try {
-      //! !await d.action()
+      // ! !
+      await d.action()
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage
@@ -54,17 +55,12 @@ class ActionsRequired extends React.Component {
 
   confirmOrder = () => {
     const { order, confirmOrder } = this.props
-    this.confirmCall({
+    this.toastCall({
       action: () => confirmOrder(order.id),
-      confirmTitleId:               'confirm.order.actions.confirmed.title',
-      confirmTitleDefaultMessage:   'Confirm Order',
-      confirmContentId:             'confirm.order.actions.confirmed.content',
-      confirmContentDefaultMessage: `Do you really want to confirm order '${order.id}'?`,
-      confirmValues: { orderId: order.id },
       toastTitleId:                 'notifications.order.actions.confirmed.success.header',
       toastTitleDefaultMessage:     'Order Confirmed',
       toastContentId:               'notifications.order.actions.confirmed.success.content',
-      toastContentDefaultMessage:   'Order {orderId} successfully confirmed.',
+      toastContentDefaultMessage:   `Order ${order.id} was confirmed.`,
       toastValues: { orderId: order.id }
     })
   }
@@ -85,13 +81,13 @@ class ActionsRequired extends React.Component {
       toastTitleId:                 'notifications.order.actions.rejected.success.header',
       toastTitleDefaultMessage:     'Order Rejected',
       toastContentId:               'notifications.order.actions.rejected.success.content',
-      toastContentDefaultMessage:   'Order {orderId} successfully rejected.',
+      toastContentDefaultMessage:   `Order ${order.id} was rejected.`,
       toastValues: { orderId: order.id }
     })
   }
 
   markShipped =() => {
-    const { order, shippingTrackingCode, shipOrder, openEnterTrackingId } = this.props
+    const { order, shippingTrackingCode, shipOrder, openPopupName } = this.props
 
     if (shippingTrackingCode.length) {
       this.confirmCall({
@@ -104,13 +100,48 @@ class ActionsRequired extends React.Component {
         toastTitleId:                 'notifications.order.actions.shipped.success.header',
         toastTitleDefaultMessage:     'Order Marked as Shipped',
         toastContentId:               'notifications.order.actions.shipped.success.content',
-        toastContentDefaultMessage:   'Order {orderId} successfully marked as shipped',
+        toastContentDefaultMessage:   `Order '${order.id}' was marked as shipped.`,
         toastValues: { orderId: order.id }
       })
     }
     else {
-      openEnterTrackingId()
+      openPopupName('openedEnterTrackingIdShip')
     }
+  }
+
+  markShippedReturn =() => {
+    const { order, returnShippingTrackingCode, returnShipOrder, openPopupName } = this.props
+
+    if (returnShippingTrackingCode.length) {
+      this.confirmCall({
+        action: () => returnShipOrder(order.id, returnShippingTrackingCode),
+        confirmTitleId:               'confirm.order.actions.shipped.title',
+        confirmTitleDefaultMessage:   'Mark Order as Shipped',
+        confirmContentId:             'confirm.order.actions.shipped.content',
+        confirmContentDefaultMessage: `Do you really want to mark order '${order.id}' as shipped?`,
+        confirmValues: { orderId: order.id },
+        toastTitleId:                 'notifications.order.actions.shipped.success.header',
+        toastTitleDefaultMessage:     'Order Marked as Shipped',
+        toastContentId:               'notifications.order.actions.returnShipped.success.content',
+        toastContentDefaultMessage:   `Order '${order.id}' was marked as shipped to be returned.`,
+        toastValues: { orderId: order.id }
+      })
+    }
+    else {
+      openPopupName('openedEnterTrackingIdReturnShip')
+    }
+  }
+
+  markReturned = () => {
+    const { order, confirmReturned, fundingSourceId } = this.props
+    this.toastCall({
+      action: () => confirmReturned(order.id, fundingSourceId),
+      toastTitleId:                 'notifications.order.actions.confirmReturned.success.header',
+      toastTitleDefaultMessage:     'Order Marked as Returned',
+      toastContentId:               'notifications.order.actions.confirmReturned.success.content',
+      toastContentDefaultMessage:   `Order ${order.id} was marked as returned.`,
+      toastValues: { orderId: order.id }
+    })
   }
 
   cancelOrder = () => {
@@ -121,12 +152,12 @@ class ActionsRequired extends React.Component {
       confirmTitleId:               'confirm.order.actions.cancelled.title',
       confirmTitleDefaultMessage:   'Cancel Order',
       confirmContentId:             'confirm.order.actions.cancelled.content',
-      confirmContentDefaultMessage: `Do you really want to cancel order '${order.id}'?`,
+      confirmContentDefaultMessage: `Do you really want to cancel order ${order.id}?`,
       confirmValues: { orderId: order.id },
       toastTitleId:                 'notifications.order.actions.cancelled.success.header',
       toastTitleDefaultMessage:     'Order Cancelled',
       toastContentId:               'notifications.order.actions.cancelled.success.content',
-      toastContentDefaultMessage:   'Order {orderId} successfully cancelled.',
+      toastContentDefaultMessage:   `Order ${order.id} was cancelled.`,
       toastValues: { orderId: order.id }
     })
   }
@@ -134,17 +165,12 @@ class ActionsRequired extends React.Component {
   approveOrder = () => {
     const { order, approveOrder } = this.props
 
-    this.confirmCall({
+    this.toastCall({
       action: () => approveOrder(order.id),
-      confirmTitleId:               'confirm.order.actions.approved.title',
-      confirmTitleDefaultMessage:   'Approve Order',
-      confirmContentId:             'confirm.order.actions.approved.content',
-      confirmContentDefaultMessage: `Do you really want to approve order '${order.id}'?`,
-      confirmValues: { orderId: order.id },
       toastTitleId:                 'notifications.order.actions.approved.success.header',
       toastTitleDefaultMessage:     'Order Approved',
       toastContentId:               'notifications.order.actions.approved.success.content',
-      toastContentDefaultMessage:   'Order {orderId} successfully approved.',
+      toastContentDefaultMessage:   `Order draft ${order.id} was approved.`,
       toastValues: { orderId: order.id }
     })
   }
@@ -152,17 +178,12 @@ class ActionsRequired extends React.Component {
   disapproveOrder = () => {
     const { order, disapproveOrder } = this.props
 
-    this.confirmCall({
+    this.toastCall({
       action: () => disapproveOrder(order.id),
-      confirmTitleId:               'confirm.order.actions.disapproved.title',
-      confirmTitleDefaultMessage:   'Discard Order',
-      confirmContentId:             'confirm.order.actions.disapproved.content',
-      confirmContentDefaultMessage: `Do you really want to discard order '${order.id}'?`,
-      confirmValues: { orderId: order.id },
       toastTitleId:                 'notifications.order.actions.disapproved.success.header',
       toastTitleDefaultMessage:     'Order Discarded',
       toastContentId:               'notifications.order.actions.disapproved.success.content',
-      toastContentDefaultMessage:   'Order {orderId} successfully discarded.',
+      toastContentDefaultMessage:   `Order draft ${order.id} was discarded.`,
       toastValues: { orderId: order.id }
     })
   }
@@ -170,17 +191,12 @@ class ActionsRequired extends React.Component {
   markDelivered = () => {
     const { order, receivedOrder } = this.props
 
-    this.confirmCall({
+    this.toastCall({
       action: () => receivedOrder(order.id),
-      confirmTitleId:               'confirm.order.actions.delivered.title',
-      confirmTitleDefaultMessage:   'Mark Order as Delivered',
-      confirmContentId:             'confirm.order.actions.delivered.content',
-      confirmContentDefaultMessage: `Do you really want to mark order '${order.id}' as delivered?`,
-      confirmValues: { orderId: order.id },
       toastTitleId:                 'notifications.order.actions.delivered.success.header',
       toastTitleDefaultMessage:     'Order Marked as Delivered',
       toastContentId:               'notifications.order.actions.delivered.success.content',
-      toastContentDefaultMessage:   'Order {orderId} successfully marked as delivered.',
+      toastContentDefaultMessage:   `Order '${order.id}' was marked as delivered.`,
       toastValues: { orderId: order.id }
     })
   }
@@ -188,17 +204,12 @@ class ActionsRequired extends React.Component {
   acceptDelivery = () => {
     const { order, acceptDelivery } = this.props
 
-    this.confirmCall({
+    this.toastCall({
       action: () => acceptDelivery(order.id),
-      confirmTitleId:               'confirm.order.actions.acceptDelivery.title',
-      confirmTitleDefaultMessage:   'Accept Delivered Order',
-      confirmContentId:             'confirm.order.actions.acceptDelivery.content',
-      confirmContentDefaultMessage: `Do you really want to accept delivered order '${order.id}'?`,
-      confirmValues: { orderId: order.id },
       toastTitleId:                 'notifications.order.actions.acceptDelivery.success.header',
-      toastTitleDefaultMessage:     'Order Marked as Delivered',
+      toastTitleDefaultMessage:     'Order Accepted',
       toastContentId:               'notifications.order.actions.acceptDelivery.success.content',
-      toastContentDefaultMessage:   'Order {orderId} successfully marked as delivered.',
+      toastContentDefaultMessage:   `Order '${order.id}' was accepted.`,
       toastValues: { orderId: order.id }
     })
   }
@@ -241,8 +252,8 @@ class ActionsRequired extends React.Component {
 
   render() {
     const {
-      orderStatus, shippingStatus, reviewStatus,
-      ordersType, detail, openReinitiateTransfer, cancelOrder
+      orderStatus, shippingStatus, reviewStatus, assignLotsRequired, creditStatus, returnStatus,
+      ordersType, detail, openReinitiateTransfer, openPopupName
     } = this.props
     const repayUntil = moment(detail.orderDate)
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
@@ -268,41 +279,53 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-
-            {false && orderStatus === 210  // ! ! temporary commented
-              ? this.renderSegment(null, 14, null, 'order.assignLots.description', [
-                  {// FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
-                    buttonType: 'primary',
-                    onClick: this.openAssignLots,
-                    dataTest: 'orders_detail_assign_lots_btn',
-                    text: 'order.assignLots'
-                  }
-                ])
-              : null}
-
-            {false && orderStatus === 211  // ! ! temporary commented
-              ? this.renderSegment(null, 12, null, 'order.ship.description', [
-                  {// FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
-                    buttonType: 'primary',
-                    onClick: this.openAssignLots,
-                    dataTest: 'orders_detail_assign_lots_btn',
-                    text: 'order.assignLots.re'
-                  },
-                  {
-                    buttonType: 'primary',
-                    onClick: this.markShipped,
-                    dataTest: 'orders_detail_markAsShipped_btn',
-                    text: 'order.ship'
-                  }
-                ])
-              : null}
-            {orderStatus === 2 && shippingStatus === 1  // Confirmed && Not shipped
-              ? this.renderSegment(null, 12, null, 'order.ship.description', [
+            {orderStatus === 2 && shippingStatus === 1 && !assignLotsRequired // Confirmed && Not shipped
+              ? this.renderSegment(null, 14, null, 'order.ship.description', [
                 {
                   buttonType: 'primary',
                   onClick: this.markShipped,
                   dataTest: 'orders_detail_markAsShipped_btn',
                   text: 'order.markAsShipped'
+                }
+              ])
+              : null}
+            {orderStatus === 2 && shippingStatus === 1 && assignLotsRequired // Confirmed && Not shipped
+              ? this.renderSegment(null, 14, null, 'order.ship.description', [
+                {// FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
+                  buttonType: 'primary',
+                  onClick: this.openAssignLots,
+                  dataTest: 'orders_detail_assign_lots_btn',
+                  text: 'order.assignLots.re'
+                }
+              ])
+              : null}
+            {orderStatus === 2 && reviewStatus === 1 && creditStatus === 1 // CONFIRMED && PENDING && PENDING
+              ? this.renderSegment(null, 14, null, 'order.reviewCreditRequest.description', [
+                {// FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
+                  buttonType: 'primary',
+                  onClick: () => openPopupName('openedSaleReviewCreditRequest'),
+                  dataTest: 'orders_detail_reviewCreditRequest_btn',
+                  text: 'order.reviewCreditRequest'
+                }
+              ])
+              : null}
+            {orderStatus === 2 && reviewStatus === 3 && returnStatus === 0 // CONFIRMED && PENDING && null
+              ? this.renderSegment(null, 14, null, 'order.returnShipmentSale.description', [
+                {// FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
+                  buttonType: 'primary',
+                  onClick: () => openPopupName('openedSaleReturnShipping'),
+                  dataTest: 'orders_detail_returnShipmentSale_btn',
+                  text: 'order.returnShipmentSale'
+                }
+              ])
+              : null}
+            {orderStatus === 2 && returnStatus === 1    // Confirmed && IN_TRANSIT
+              ? this.renderSegment(null, 14, null, 'order.returnInTransit.description', [
+                {
+                  buttonType: 'primary',
+                  onClick: this.markReturned,
+                  dataTest: 'orders_detail_returnInTransit_btn',
+                  text: 'order.returnInTransit'
                 }
               ])
               : null}
@@ -346,7 +369,7 @@ class ActionsRequired extends React.Component {
                 }
               ])
               : null}
-            {orderStatus === 2 && shippingStatus === 3 && reviewStatus === 1 // Confirmed && Delivered && Pending
+            {orderStatus === 2 && reviewStatus === 1 && creditStatus === 0 // Confirmed && Pending
               ? this.renderSegment(null, 10, null, 'order.delivered.description', [
                 {
                   buttonType: 'primary',
@@ -356,15 +379,35 @@ class ActionsRequired extends React.Component {
                 },
                 {
                   buttonType: 'basic',
-                  onClick: this.requestCreditDelivery,
-                  dataTest: 'orders_detail_requestCredit_btn',
-                  text: 'order.requestCredit'
+                  onClick: () => openPopupName('openedPurchaseRejectDelivery'),
+                  dataTest: 'orders_detail_reject_btn',
+                  text: 'global.reject'
                 },
                 {
                   buttonType: 'basic',
-                  onClick: this.rejectDelivery,
-                  dataTest: 'orders_detail_reject_btn',
-                  text: 'global.reject'
+                  onClick: () => openPopupName('openedPurchaseRequestCreditDelivery'),
+                  dataTest: 'orders_detail_requestCredit_btn',
+                  text: 'order.requestCredit'
+                }
+              ])
+              : null}
+            {orderStatus === 2 && reviewStatus === 1 &&  creditStatus === 2 // Confirmed && PENDING && COUNTER_OFFER_PENDING
+              ? this.renderSegment(null, 13, null, 'order.reviewCreditRequest.description', [
+                {
+                  buttonType: 'primary',
+                  onClick: () => openPopupName('openedPurchaseReviewCreditRequest'),
+                  dataTest: 'orders_detail_reviewCreditRequest_btn',
+                  text: 'order.reviewCreditRequest'
+                }
+              ])
+              : null}
+            {orderStatus === 2 && reviewStatus === 3 &&  creditStatus === 2 // Confirmed && Rejected && COUNTER_OFFER_PENDING
+              ? this.renderSegment(null, 13, null, 'order.waitToReturn.description', [
+                {
+                  buttonType: 'primary',
+                  onClick: this.markShippedReturn,
+                  dataTest: 'orders_detail_markAsShippedReturn_btn',
+                  text: 'order.markAsShipped'
                 }
               ])
               : null}
@@ -385,12 +428,33 @@ class ActionsRequired extends React.Component {
   }
 }
 
+function checkAssignLotsRequired(data) {
+  const status =
+    getSafe(
+      () =>
+        data.orderItems.filter(orderItem => {
+          return (
+            orderItem.amount ===
+            orderItem.lots.reduce(function(allocated, lot) {
+              return allocated + lot.amount
+            }, 0)
+          )
+        }).length === data.orderItems.length
+      , false)
+  return status
+}
+
 function mapStateToProps(state, ownProps) {
   const { orders } = state
   return {
     orderStatus: 2,//getSafe(() => orders.detail.orderStatus, 0),
-    shippingStatus: 3,//getSafe(() => orders.detail.shippingStatus, 0),
+    shippingStatus: 0,//getSafe(() => orders.detail.shippingStatus, 0),
     reviewStatus: 1,//getSafe(() => orders.detail.reviewStatus, 0),
+    creditStatus: 0,//getSafe(() => orders.detail.creditStatus, 0),
+    returnStatus: 0,//getSafe(() => orders.detail.returnStatus, 0),
+    assignLotsRequired: false,//checkAssignLotsRequired(orders.detail),
+
+    fundingSourceId: '?', // ! ! which param? (string)
 
     order: ownProps.order,
     detail: orders.detail,

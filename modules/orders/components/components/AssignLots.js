@@ -591,7 +591,8 @@ class AssignLots extends React.Component {
                                 />,
                                 <FormattedMessage
                                   id='order.assignLots.success.content'
-                                  defaultMessage='Selected Lots were assigned and available packages allocated'
+                                  defaultMessage='Lot assignments for Order {id} was saved.'
+                                  values={{ id: orderId }}
                                 />
                               ),
                               {

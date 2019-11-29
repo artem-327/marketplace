@@ -13,6 +13,10 @@ export const confirmOrder = orderId => ({
   type: AT.ORDER_CONFIRM_FETCH,
   payload: Api.confirm(orderId)
 })
+export const confirmReturned = (orderId, fundingSourceId) => ({
+  type: AT.ORDER_CONFIRM_RETURNED_FETCH,
+  payload: Api.confirmReturned(orderId, fundingSourceId)
+})
 export const rejectOrder = orderId => ({
   type: AT.ORDER_REJECT_FETCH,
   payload: Api.reject(orderId)
@@ -20,6 +24,10 @@ export const rejectOrder = orderId => ({
 export const shipOrder = (orderId, trackingId='') => ({
   type: AT.ORDER_SHIP_FETCH,
   payload: Api.ship(orderId, trackingId)
+})
+export const returnShipOrder = (orderId, trackingId='') => ({
+  type: AT.ORDER_RETURN_SHIP_FETCH,
+  payload: Api.returnShip(orderId, trackingId)
 })
 export const downloadPdf = (endpointType, orderId) => ({
   type: AT.ORDER_DOWNLOAD_PDF,
@@ -130,12 +138,12 @@ export const disapproveOrder = orderId => ({
   type: AT.ORDER_DISAPPROVE_ORDER,
   payload: Api.disapproveOrder(orderId)
 })
-export const openEnterTrackingId = () => ({
-  type: AT.ORDER_OPEN_ENTER_TRACKING_ID,
-  payload: {}
+export const openPopupName = (name) => ({
+  type: AT.ORDER_OPEN_POPUP_NAME,
+  payload: name
 })
-export const closeEnterTrackingId = () => ({
-  type: AT.ORDER_CLOSE_ENTER_TRACKING_ID,
+export const closePopup = () => ({
+  type: AT.ORDER_CLOSE_POPUP,
   payload: {}
 })
 export const receivedOrder = orderId => ({
