@@ -13,8 +13,12 @@ export default {
   getOrder: (endpointType, orderId) => api.get(`/prodex/api/${endpointType}-orders/${orderId}`),
   update: (orderId, model) => api.put(`/prodex/api/orders/${orderId}`, model),
   confirm: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/confirm`),
+  confirmReturned: (orderId, fundingSourceId) =>
+    api.patch(`/prodex/api/sale-orders/${orderId}/return-ship/delivered?fundingSourceId=${fundingSourceId}`),
   reject: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/reject`),
   ship: (orderId, trackingId) => api.patch(`/prodex/api/sale-orders/${orderId}/ship?trackingId=${trackingId}`),
+  returnShip: (orderId, trackingId) =>
+    api.patch(`/prodex/api/purchase-orders/${orderId}/return-ship?trackingId=${trackingId}`),
   downloadPdf: (endpointType, orderId) =>
     api.get(`/prodex/api/${endpointType}-orders/${orderId}/download-pdf`, {
       responseType: 'blob'
@@ -35,5 +39,7 @@ export default {
   getRelatedOrders: orderId => api.get(`/prodex/api/accounting-documents/order/${orderId}`),
   cancelOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/cancel`),
   approveOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/approve`),
-  disapproveOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/disapprove`)
+  disapproveOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/disapprove`),
+  receivedOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/received`),
+  accept: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/accept`),
 }

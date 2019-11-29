@@ -195,7 +195,13 @@ function mapStateToProps(state, ownProps) {
     isPaymentCancellable: getSafe(() => orders.detail.isPaymentCancellable, false),
     openedAssignLots: orders.openedAssignLots,
     openedReinitiateTransfer: orders.openedReinitiateTransfer,
-    openedEnterTrackingId: orders.openedEnterTrackingId,
+    openedEnterTrackingIdShip: orders.openedEnterTrackingIdShip,
+    openedEnterTrackingIdReturnShip: orders.openedEnterTrackingIdReturnShip,
+    openedPurchaseRejectDelivery: orders.openedPurchaseRejectDelivery,
+    openedPurchaseRequestCreditDelivery: orders.openedPurchaseRequestCreditDelivery,
+    openedPurchaseReviewCreditRequest: orders.openedPurchaseReviewCreditRequest,
+    openedSaleReturnShipping: orders.openedSaleReturnShipping,
+    openedSaleReviewCreditRequest: orders.openedSaleReviewCreditRequest,
     action: actionRequired(orders.detail),
     reloadPage: orders.reloadPage
   }
