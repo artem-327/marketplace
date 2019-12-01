@@ -21,7 +21,8 @@ import {
   Header,
   Icon,
   Popup,
-  FormField
+  FormField,
+  Button as ButtonSemantic
 } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
 import {
@@ -38,7 +39,8 @@ import {
   addAttachment,
   loadFile,
   removeAttachmentLink,
-  removeAttachment
+  removeAttachment,
+  downloadAttachment
 } from '../actions'
 import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
@@ -600,6 +602,79 @@ class DetailSidebar extends Component {
     this.setState({ changedForm: true })
   }
 
+  downloadAttachment = async (documentName, documentId) => {
+    const element = await this.prepareLinkToAttachment(documentId)
+
+    element.download = documentName
+    document.body.appendChild(element) // Required for this to work in FireFox
+    element.click()
+  }
+
+  prepareLinkToAttachment = async documentId => {
+    let downloadedFile = await this.props.downloadAttachment(documentId)
+    const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
+    const mimeType = fileName && this.getMimeType(fileName)
+    const element = document.createElement('a')
+    const file = new Blob([downloadedFile.value.data], { type: mimeType })
+    let fileURL = URL.createObjectURL(file)
+    element.href = fileURL
+
+    return element
+  }
+
+  extractFileName = contentDispositionValue => {
+    var filename = ''
+    if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
+      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+      var matches = filenameRegex.exec(contentDispositionValue)
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, '')
+      }
+    }
+    return filename
+  }
+
+  getMimeType = documentName => {
+    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
+
+    switch (documentExtension) {
+      case 'doc':
+        return 'application/msword'
+      case 'docx':
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      case 'ppt':
+        return 'application/vnd.ms-powerpoint'
+      case 'pptx':
+        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      case 'xls':
+        return 'application/vnd.ms-excel'
+      case 'xlsx':
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      case 'gif':
+        return 'image/gif'
+      case 'png':
+        return 'image/png'
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg'
+      case 'svg':
+        return 'image/svg'
+      case 'pdf':
+        return 'application/pdf'
+      case '7z':
+        return 'application/x-7z-compressed'
+      case 'zip':
+        return 'application/zip'
+      case 'tar':
+        return 'application/x-tar'
+      case 'rar':
+        return 'application/x-rar-compressed'
+      case 'xml':
+        return 'application/xml'
+      default:
+        return 'text/plain'
+    }
+  }
   hasEdited = values => !_.isEqual(this.getEditValues(), values)
 
   getEditValues = () => {
@@ -671,7 +746,6 @@ class DetailSidebar extends Component {
       listDocumentTypes,
       intl: { formatMessage },
       toastManager,
-      datagrid,
       removeAttachment
     } = this.props
 
@@ -1263,7 +1337,7 @@ class DetailSidebar extends Component {
                             pane: (
                               <Tab.Pane key='documents' style={{ padding: '18px' }}>
                                 <Grid>
-                                  {listDocumentTypes.length && (
+                                  {listDocumentTypes.length ? (
                                     <GridRow>
                                       <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
                                         <FormattedMessage id='global.uploadDocument' defaultMessage='Upload document: '>
@@ -1290,7 +1364,7 @@ class DetailSidebar extends Component {
                                         />
                                       </GridColumn>
                                     </GridRow>
-                                  )}
+                                  ) : null}
                                   <GridRow>
                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
                                       <FormattedMessage
@@ -1396,7 +1470,6 @@ class DetailSidebar extends Component {
                                         <ProdexGrid
                                           virtual={false}
                                           tableName='inventory_documents'
-                                          {...datagrid.tableProps}
                                           onTableReady={() => {}}
                                           columns={columns}
                                           rows={values.documents.attachments
@@ -1408,13 +1481,32 @@ class DetailSidebar extends Component {
                                           rowActions={[
                                             {
                                               text: (
-                                                <FormattedMessage id='global.delete' defaultMessage='Delete'>
+                                                <FormattedMessage id='global.unlink' defaultMessage='Unlink'>
                                                   {text => text}
                                                 </FormattedMessage>
                                               ),
                                               callback: async row => {
-                                                await removeAttachment(row.id)
-                                                datagrid.removeRow(row.id)
+                                                try {
+                                                  await this.props.removeAttachmentLink(false, sidebarValues.id, row.id)
+                                                  this.props.sidebarDetailTrigger(sidebarValues, true, 1)
+                                                  toastManager.add(
+                                                    generateToastMarkup(
+                                                      <FormattedMessage
+                                                        id='addInventory.success'
+                                                        defaultMessage='Success'
+                                                      />,
+                                                      <FormattedMessage
+                                                        id='addInventory.unlinkeAttachment'
+                                                        defaultMessage='Attachment was successfully unlinked.'
+                                                      />
+                                                    ),
+                                                    {
+                                                      appearance: 'success'
+                                                    }
+                                                  )
+                                                } catch (e) {
+                                                  console.error(e)
+                                                }
                                               }
                                             }
                                           ]}
@@ -1672,7 +1764,8 @@ const mapDispatchToProps = {
   addAttachment,
   loadFile,
   removeAttachmentLink,
-  removeAttachment
+  removeAttachment,
+  downloadAttachment
 }
 
 const mapStateToProps = ({

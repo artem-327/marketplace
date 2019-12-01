@@ -437,7 +437,7 @@ class Orders extends Component {
   }
 
   prepareLinkToAttachment = async documentId => {
-    let downloadedFile = await this.props.downloadAttachment(documentId)
+    let downloadedFile = await this.props.downloadAttachmentPdf(documentId)
     const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
     const mimeType = fileName && this.getMimeType(fileName)
     const element = document.createElement('a')
