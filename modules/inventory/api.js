@@ -24,8 +24,13 @@ export function addProductOffer(values) {
   return api.post(`/prodex/api/product-offers/`, values)
 }
 
-export function downloadAttachment(id) {
+export function downloadAttachmentPdf(id) {
   return api.get(`/prodex/api/accounting-documents/id/${id}/download-pdf`, {
+    responseType: 'blob'
+  })
+}
+export function downloadAttachment(id) {
+  return api.get(`/prodex/api/attachments/${id}/download`, {
     responseType: 'blob'
   })
 }

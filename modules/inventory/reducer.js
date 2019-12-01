@@ -43,6 +43,20 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.INVENTORY_REMOVE_ATTACHMENT_LINK_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.INVENTORY_REMOVE_ATTACHMENT_LINK_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
     case AT.INVENTORY_ADD_PRODUCT_OFFER_FULFILLED: {
       return {
         ...state,

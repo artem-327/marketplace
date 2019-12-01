@@ -169,6 +169,13 @@ export function downloadAttachment(id) {
   }
 }
 
+export function downloadAttachmentPdf(id) {
+  return {
+    type: AT.INVENTORY_DOWNLOAD_ATTACHMENT_PDF,
+    payload: api.downloadAttachmentPdf(id)
+  }
+}
+
 export function errorTooLarge(fileName, fileMaxSize) {
   return {
     type: AT.ERROR_TOO_LARGE_FILE,
