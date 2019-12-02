@@ -15,43 +15,28 @@ const ModalBody = styled(ModalContent)`
 `
 
 const initValues = {
-  trackingId: ''
 }
 
-class EnterTrackingIdShip extends React.Component {
+class SaleNewShipping extends React.Component {
 
-  markShipped = async (value) => {
-    const {
-      orderId,
-      toastManager,
-      closePopup
-    } = this.props
+  submitHandler = async (values, actions) => {
+    const { closePopup } = this.props
 
     try {
-      await this.props.shipOrder(orderId, value)
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage
-            id='notifications.order.actions.shipped.success.header'
-            defaultMessage='Order Marked as Shipped'
-          />,
-          <FormattedMessage
-            id='notifications.order.actions.shipped.success.content'
-            defaultMessage={`Order '${orderId}' was marked as shipped.`}
-            values={{ orderId: orderId }}
-          />
-        ), { appearance: 'success' }
-      )
-      closePopup()
-    } catch {}
-  }
 
+
+      closePopup()
+    } catch {
+    } finally {
+      actions.setSubmitting(false)
+    }
+  }
 
   render() {
     const {
       intl: { formatMessage },
       orderId,
-      isSending
+      isSending,
     } = this.props
 
     return (
@@ -61,7 +46,7 @@ class EnterTrackingIdShip extends React.Component {
             <Loader />
           </Dimmer>
           <Modal.Header>
-            <FormattedMessage id='order.enterTrackingId' defaultMessage='Enter Tracking ID' />
+            <FormattedMessage id='order.someTextHeaderId' defaultMessage='SaleNewShipping header' />
           </Modal.Header>
           <ModalBody>
             <Modal.Description>
@@ -69,30 +54,7 @@ class EnterTrackingIdShip extends React.Component {
                 enableReinitialize
                 validateOnChange={false}
                 initialValues={{ ...initValues }}
-                onSubmit={(values, actions) => {
-                  if (values.trackingId.length) {
-                    this.markShipped(values.trackingId)
-                  }
-                  else {
-                    confirm(
-                      formatMessage({ id: 'confirm.order.actions.shippedNoTracking.title', defaultMessage: 'Mark Order as Shipped without Tracking ID' }),
-                      formatMessage(
-                        {
-                          id: 'confirm.order.actions.shippedNoTracking.content',
-                          defaultMessage: `Do you want to mark order ${orderId} as shipped without providing Tracking ID?`
-                        },
-                        { orderId: orderId }
-                      )
-                    ).then(
-                      () => { // confirm
-                        this.markShipped(values.trackingId)
-                      },
-                      () => { // cancel
-                      }
-                    )
-                  }
-                  actions.setSubmitting(false)
-                }}
+                onSubmit={this.submitHandler}
                 className='flex stretched'
                 style={{ padding: '0' }}>
                 {({ values, submitForm }) => {
@@ -101,11 +63,11 @@ class EnterTrackingIdShip extends React.Component {
                       <Grid>
                         <Grid.Row>
                           <Grid.Column width={16}>
-                            <Input
-                              type='text'
-                              label={formatMessage({ id: 'order.trackingId', defaultMessage: 'Tracking ID' })}
-                              name='trackingId'
-                            />
+
+                            <div>SaleNewShipping body</div>
+
+
+
                           </Grid.Column>
                         </Grid.Row>
                         <Grid.Row>
@@ -146,4 +108,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(EnterTrackingIdShip)))
+export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(SaleNewShipping)))
