@@ -58,7 +58,7 @@ const formValidation = Yup.object().shape({
     .required(errorMessages.requiredMessage),
   packagingUnit: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
   packagingType: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
-  nmfcNumber: Yup.number().typeError(errorMessages.mustBeNumber),
+  nmfcNumber: Yup.number().required(errorMessages.requiredMessage),
   freightClass: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage)
 })
 
@@ -200,7 +200,7 @@ class ProductPopup extends React.Component {
       ...popupValues,
       casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.echoProduct.elements, [])),
       echoProduct: getSafe(() => popupValues.echoProduct.id),
-      nmfcNumber: getSafe(() => popupValues.nmfcNumber.id, null)
+      nmfcNumber: getSafe(() => popupValues.nmfcNumber.id, '')
     }
   }
 
