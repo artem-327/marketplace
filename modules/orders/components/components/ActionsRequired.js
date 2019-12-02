@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import * as Actions from '../../actions'
 import { Segment, Grid, Header, Button } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -279,6 +278,16 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
+            {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
+              ? this.renderSegment(null, 14, null, 'order.shipFailed.description', [
+                {
+                  buttonType: 'primary',
+                  onClick: () => openPopupName('openedSaleNewShipping'),
+                  dataTest: 'orders_detail_newShipmentSale_btn',
+                  text: 'order.NewShipmentSale'
+                }
+              ])
+              : null}
             {orderStatus === 2 && shippingStatus === 1 && !assignLotsRequired // Confirmed && Not shipped
               ? this.renderSegment(null, 14, null, 'order.ship.description', [
                 {
@@ -309,7 +318,7 @@ class ActionsRequired extends React.Component {
                 }
               ])
               : null}
-            {orderStatus === 2 && reviewStatus === 3 && returnStatus === 0 // CONFIRMED && PENDING && null
+            {orderStatus === 2 && reviewStatus === 3 && returnStatus === 0 // CONFIRMED && Rejected && null
               ? this.renderSegment(null, 14, null, 'order.returnShipmentSale.description', [
                 {// FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
                   buttonType: 'primary',
@@ -464,8 +473,4 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Actions, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(ActionsRequired)))
+export default connect(mapStateToProps, {...Actions})(withToastManager(injectIntl(ActionsRequired)))

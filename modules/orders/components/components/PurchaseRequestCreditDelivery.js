@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import * as Actions from '../../actions'
 import {Modal, ModalContent, Button, Grid, Dimmer, Loader} from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
@@ -109,8 +108,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ ...Actions }, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(PurchaseRequestCreditDelivery)))
+export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(PurchaseRequestCreditDelivery)))
