@@ -22,7 +22,7 @@ export default class Summary extends Component {
     }
     */
 
-    let shipping = cart.selectedShipping ? cart.selectedShipping.quote.estimatedPrice : 0
+    let shipping = cart.selectedShipping ? cart.selectedShipping.quote.estimatedPrice : 'N/A'
     // let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, 'USD')  // ! !
 
     //let pricePerUnit = (totalPrice + shipping) / totalWeight
@@ -64,7 +64,7 @@ export default class Summary extends Component {
                 </GridColumn>
 
                 <GridColumn>
-                  <FormattedNumber style='currency' currency={currency} value={cart.cfPriceSubtotal} />
+                  <FormattedNumber style='currency' currency={currency} value={0} />
                 </GridColumn>
               </RelaxedRow>
 
@@ -94,7 +94,11 @@ export default class Summary extends Component {
                 </GridColumn>
 
                 <GridColumn>
-                  <FormattedNumber style='currency' currency={currency} value={totalPrice + shipping} />
+                  <FormattedNumber
+                    style='currency'
+                    currency={currency}
+                    value={totalPrice + (shipping !== 'N/A' ? shipping : 0)}
+                  />
                 </GridColumn>
               </HeaderTextRow>
               {additionalContent}
