@@ -362,7 +362,15 @@ class CartItemSummary extends Component {
                   }}
                   position='left center'
                   on='click'
-                  trigger={<Button type='button' size='mini' color='blue' content='Edit' />}
+                  trigger={
+                    <span
+                      className='headerAddtext'
+                      data-test={`shopping_cart_viewEdit_${item.id}_btn`}>
+                      <FormattedMessage id='global.viewEdit' defaultMessage='View/Edit'>
+                        {text => text}
+                      </FormattedMessage>
+                    </span>
+                  }
                   content={this.hazmatMarkup(item)}
                 />
               </GridColumn>

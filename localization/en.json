@@ -363,6 +363,7 @@
   "global.user": "User",
   "global.pricePer": "Price per {unit}",
   "global.remove": "Remove",
+  "global.viewEdit": "View/Edit",
   "global.selectLocation": "Select Location",
   "global.cancel": "Cancel",
   "global.phoneNumber": "Phone Number",
