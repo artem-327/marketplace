@@ -304,7 +304,7 @@ class CartItemSummary extends Component {
     let { productOffer } = item
     let { deleteCart } = this.props
     // let currency = this.props.currency
-    console.log({ item })
+    
     return (
       <>
         <GridColumn computer={16}>
