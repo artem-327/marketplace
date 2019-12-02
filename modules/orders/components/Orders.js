@@ -269,7 +269,7 @@ class Orders extends Component {
       {
         name: 'documentNumber',
         title: (
-          <FormattedMessage id='order.related.documentNumber' defaultMessage='PO #'>
+          <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #'>
             {text => text}
           </FormattedMessage>
         ),
@@ -278,7 +278,7 @@ class Orders extends Component {
       {
         name: 'type',
         title: (
-          <FormattedMessage id='order.cfGlobalStatus' defaultMessage='Status'>
+          <FormattedMessage id='order.related.type' defaultMessage='Type'>
             {text => text}
           </FormattedMessage>
         ),
@@ -287,16 +287,16 @@ class Orders extends Component {
       {
         name: 'issuedAt',
         title: (
-          <FormattedMessage id='order.date' defaultMessage='Order Date'>
+          <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date'>
             {text => text}
           </FormattedMessage>
         ),
-        width: 90
+        width: 130
       },
       {
         name: 'issuerCompanyName',
         title: (
-          <FormattedMessage id='order.vendor' defaultMessage='Vendor'>
+          <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer'>
             {text => text}
           </FormattedMessage>
         ),
@@ -309,7 +309,8 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 100
+        width: 100,
+        align: 'right'
       }
     ]
   }
@@ -511,14 +512,14 @@ class Orders extends Component {
       <div id='page' className='flex stretched scrolling'>
         {this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (
           <Modal
-            size='tiny'
+            size='small'
             closeIcon
             onClose={() => this.setState({ openModal: false })}
             centered={true}
             open={this.state.openModal}
             onClose={() => this.setState({ openModal: false })}>
             <Modal.Header>
-              <FormattedMessage id='order.related.table' defaultMessage='RELATED ORDERS'>
+              <FormattedMessage id='order.related.table' defaultMessage='Related Accounting Documents'>
                 {text => text}
               </FormattedMessage>
             </Modal.Header>
