@@ -28,8 +28,9 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120,
-        sortPath: 'Order.id'
+        width: 100,
+        sortPath: 'Order.id',
+        align: 'right'
       },
       {
         name: 'globalStatus',
@@ -159,6 +160,7 @@ class Orders extends Component {
           </FormattedMessage>
         ),
         width: 160,
+        align: 'right',
         sortPath: 'Order.cfPriceSubtotal'
       }
     ],

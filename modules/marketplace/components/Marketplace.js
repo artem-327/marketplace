@@ -40,6 +40,7 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 140,
+        align: 'right',
         sortPath: 'ProductOffer.pkgAvailable'
       },
       {
@@ -59,6 +60,7 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 140,
+        align: 'right',
         sortPath: 'ProductOffer.quantity'
       },
       {
@@ -69,6 +71,7 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 160,
+        align: 'right',
         sortPath: 'ProductOffer.cfPricePerUOM'
       },
       {

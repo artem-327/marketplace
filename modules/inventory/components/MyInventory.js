@@ -74,6 +74,7 @@ class MyInventory extends Component {
           </FormattedMessage>
         ),
         width: 130,
+        align: 'right',
         sortPath: 'ProductOffer.quantity'
       },
       {
@@ -84,6 +85,7 @@ class MyInventory extends Component {
           </FormattedMessage>
         ),
         width: 130,
+        align: 'right',
         sortPath: 'ProductOffer.pkgAvailable'
       },
       {
@@ -114,6 +116,7 @@ class MyInventory extends Component {
           </FormattedMessage>
         ),
         width: 130,
+        align: 'right',
         sortPath: 'ProductOffer.quantity'
       },
       {
@@ -123,7 +126,8 @@ class MyInventory extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 100
+        width: 100,
+        align: 'right'
       },
       {
         name: 'fobPrice',
@@ -133,6 +137,7 @@ class MyInventory extends Component {
           </FormattedMessage>
         ),
         width: 180,
+        align: 'right',
         sortPath: 'ProductOffer.price'
       },
       {
