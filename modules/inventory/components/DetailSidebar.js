@@ -282,7 +282,8 @@ class DetailSidebar extends Component {
     documentType: 1,
     openUploadLot: false,
     edited: false,
-    saved: false
+    saved: false,
+    oldProductOffer: null
   }
 
   componentDidMount = () => {
@@ -297,7 +298,7 @@ class DetailSidebar extends Component {
     this.askForSave()
   }
 
-  askForSave = () => {
+  askForSave = (oldProductOffer = null) => {
     if (this.state.edited && !this.state.saved) {
       confirm(
         <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
@@ -306,7 +307,10 @@ class DetailSidebar extends Component {
           defaultMessage='You have unsaved changes. Do you wish to save them?'
         />
       )
-        .then(this.submitRef)
+        .then(() => {
+          // this.setState({ oldProductOffer }, this.submitRef)
+          this.submitRef()
+        })
         .catch(() => {})
         .finally(() => this.setState({ edited: false }))
     }
@@ -319,8 +323,11 @@ class DetailSidebar extends Component {
   componentDidUpdate = oldProps => {
     let oldId = getSafe(() => oldProps.sidebarValues.id, null)
     let newId = getSafe(() => this.props.sidebarValues.id, null)
-
-    if ((oldId || newId) && newId !== oldId) this.askForSave()
+    
+    if ((oldId || newId) && newId !== oldId) {
+      this.setState({ oldId })
+      this.askForSave(oldProps.sidebarValues)
+    }
 
     if (getSafe(() => this.props.sidebarValues.id, false) && oldProps.sidebarValues !== this.props.sidebarValues) {
       this.props.getDocumentTypes()
@@ -478,9 +485,13 @@ class DetailSidebar extends Component {
     })
   }, 250)
 
-  submitForm = async (values, setSubmitting, setTouched) => {
-    const { addProductOffer, datagrid, toastManager } = this.props
+  submitForm = async (formValues, setSubmitting, setTouched) => {
+    const { addProductOffer, datagrid, toastManager, sidebarValues } = this.props
+    let isEdit = getSafe(() => sidebarValues.id, null)
+    let values = this.state.oldProductOffer ? { ...this.getEditValues(), ...this.state.oldProductOffer } : formValues
 
+    await new Promise(resolve => this.setState({ edited: false, saved: true }, resolve))
+    
     setSubmitting(false)
     let props = {}
     switch (this.state.activeTab) {
@@ -517,15 +528,13 @@ class DetailSidebar extends Component {
     }
     if (Object.keys(props).length) {
       try {
-        let data = await addProductOffer(
-          props,
-          getSafe(() => this.props.sidebarValues.id, null)
-        )
-        if (this.props.sidebarValues.id) {
+        let data = await addProductOffer(props, this.state.oldId ? this.state.oldId : isEdit)
+        if (isEdit) {
           datagrid.updateRow(data.value.id, () => data.value)
         } else {
           datagrid.loadData()
         }
+
         toastManager.add(
           generateToastMarkup(
             <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
@@ -648,7 +657,7 @@ class DetailSidebar extends Component {
       }
     }
   }
-  onChange = () => !this.state.edited && this.setState({ edited: true })
+  onChange = debounce(() => this.setState({ edited: true, saved: false, oldProductOffer: this.values }), 200)
 
   render() {
     let {
@@ -721,7 +730,7 @@ class DetailSidebar extends Component {
         }}>
         {({ values, touched, setTouched, setFieldValue, validateForm, submitForm, setSubmitting }) => {
           this.submitRef = submitForm
-
+          this.values = values
           return (
             <Form onChange={this.onChange}>
               <FlexSidebar

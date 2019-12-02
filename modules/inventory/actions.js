@@ -143,20 +143,14 @@ export function addProductOffer(values, poId = false, simple = false) {
     return {
       type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
       async payload() {
-        const response = await api.updateProductOffer(poId, paramsCleaned)
-        Datagrid.updateRow(poId, () => response.data)
-
-        return response.data
+        return await api.updateProductOffer(poId, paramsCleaned)
       }
     }
   } else {
     return {
       type: AT.INVENTORY_ADD_PRODUCT_OFFER,
       async payload() {
-        const response = await api.addProductOffer(paramsCleaned)
-        Datagrid.loadData()
-
-        return response.data
+        return await api.addProductOffer(paramsCleaned)
       }
     }
   }

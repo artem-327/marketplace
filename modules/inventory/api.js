@@ -21,7 +21,7 @@ export function addAttachment(attachment, docType, additionalParams = {}) {
 }
 
 export function addProductOffer(values) {
-  return api.post(`/prodex/api/product-offers/`, values)
+  return api.post(`/prodex/api/product-offers/`, values).then(response => response.data)
 }
 
 export function downloadAttachment(id) {
@@ -117,7 +117,7 @@ export async function searchOrigins(text, limit) {
 }
 
 export function updateProductOffer(poId, values) {
-  return api.patch(`/prodex/api/product-offers/${poId}`, values)
+  return api.patch(`/prodex/api/product-offers/${poId}`, values).then(response => response.data)
 }
 
 export const getAutocompleteData = searchUrl => api.get(searchUrl).then(response => response.data)
