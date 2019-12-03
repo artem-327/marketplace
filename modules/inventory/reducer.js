@@ -85,7 +85,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         poCreated: true,
         loading: false,
-        sidebarValues: payload
+        sidebarValues: payload.id === state.sidebarValues.id ? payload : state.sidebarValues
       }
     }
 
