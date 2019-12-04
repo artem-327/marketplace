@@ -201,7 +201,7 @@ function mapStateToProps(state, ownProps) {
     openedPurchaseReviewCreditRequest: orders.openedPurchaseReviewCreditRequest,
     openedSaleReturnShipping: orders.openedSaleReturnShipping,
     openedSaleReviewCreditRequest: orders.openedSaleReviewCreditRequest,
-    openedSaleNewShipping: orders.openedSaleNewShipping,
+    openedPurchaseOrderShipping: orders.openedPurchaseOrderShipping,
     action: actionRequired(orders.detail),
     reloadPage: orders.reloadPage
   }

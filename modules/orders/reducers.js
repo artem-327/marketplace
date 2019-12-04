@@ -25,10 +25,12 @@ const initialState = {
   openedPurchaseReviewCreditRequest: false,
   openedSaleReviewCreditRequest: false,
   openedSaleReturnShipping: false,
-  openedSaleNewShipping: false,
+  openedPurchaseOrderShipping: false,
   bankAccounts: [],
   bankAccountsLoading: false,
-  relatedOrders: []
+  relatedOrders: [],
+  shippingQuotesAreFetching: false,
+  shippingQuotes: [],
 }
 
 export default function(state = initialState, action) {
@@ -117,6 +119,7 @@ export default function(state = initialState, action) {
         reloadPage: false
       }
 
+    case AT.ORDER_PURCHASE_SHIPMENT_ORDER_PENDING:
     case AT.ORDER_RETURN_SHIP_FETCH_PENDING:
     case AT.ORDER_SHIP_FETCH_PENDING:
       return {
@@ -124,6 +127,7 @@ export default function(state = initialState, action) {
         reloadPage: false,
         isSending: true
       }
+    case AT.ORDER_PURCHASE_SHIPMENT_ORDER_FULFILLED:
     case AT.ORDER_RETURN_SHIP_FETCH_FULFILLED:
     case AT.ORDER_SHIP_FETCH_FULFILLED:
       return {
@@ -131,6 +135,7 @@ export default function(state = initialState, action) {
         reloadPage: true,
         isSending: false
       }
+    case AT.ORDER_PURCHASE_SHIPMENT_ORDER_REJECTED:
     case AT.ORDER_RETURN_SHIP_FETCH_REJECTED:
     case AT.ORDER_SHIP_FETCH_FETCH_REJECTED:
       return {
@@ -182,7 +187,7 @@ export default function(state = initialState, action) {
         openedPurchaseReviewCreditRequest: false,
         openedSaleReviewCreditRequest: false,
         openedSaleReturnShipping: false,
-        openedSaleNewShipping: false
+        openedPurchaseOrderShipping: false
       }
     case AT.ORDER_LOAD_BANK_ACCOUNTS_PENDING:
       return {
@@ -297,6 +302,28 @@ export default function(state = initialState, action) {
         ...state,
         detail: action.payload.data
       }
+    case AT.ORDER_SHIPPING_QUOTES_FETCH_PENDING: {
+      return {
+        ...state,
+        shippingQuotesAreFetching: true,
+      }
+    }
+    case AT.ORDER_SHIPPING_QUOTES_FETCH_FULFILLED: {
+      return {
+        ...state,
+        shippingQuotes: action.payload,
+        shippingQuotesAreFetching: false
+      }
+    }
+    case AT.ORDER_SHIPPING_QUOTES_FETCH_REJECTED: {
+      return {
+        ...state,
+        shippingQuotesAreFetching: false,
+        shippingQuotes: []
+      }
+    }
+
+
     default:
       return state
   }

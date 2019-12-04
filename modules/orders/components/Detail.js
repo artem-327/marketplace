@@ -29,7 +29,7 @@ import PurchaseRequestCreditDelivery from './components/PurchaseRequestCreditDel
 import PurchaseReviewCreditRequest from './components/PurchaseReviewCreditRequest'
 import SaleReviewCreditRequest from './components/SaleReviewCreditRequest'
 import SaleReturnShipping from './components/SaleReturnShipping'
-import SaleNewShipping from './components/SaleNewShipping'
+import PurchaseOrderShipping from './components/PurchaseOrderShipping'
 
 import confirm from '~/src/components/Confirmable/confirm'
 import moment from 'moment/moment'
@@ -153,7 +153,7 @@ class Detail extends Component {
       openedPurchaseReviewCreditRequest,
       openedSaleReturnShipping,
       openedSaleReviewCreditRequest,
-      openedSaleNewShipping,
+      openedPurchaseOrderShipping,
       cancelPayment,
       toastManager,
       isPaymentCancellable
@@ -341,7 +341,7 @@ class Detail extends Component {
               {openedPurchaseReviewCreditRequest ? <PurchaseReviewCreditRequest /> : null}
               {openedSaleReturnShipping ? <SaleReturnShipping /> : null}
               {openedSaleReviewCreditRequest ? <SaleReviewCreditRequest /> : null}
-              {openedSaleNewShipping ? <SaleNewShipping /> : null}
+              {openedPurchaseOrderShipping ? <PurchaseOrderShipping /> : null}
 
               <Divider hidden />
               <Accordion

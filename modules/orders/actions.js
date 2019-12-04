@@ -154,3 +154,15 @@ export const acceptDelivery = orderId => ({
   type: AT.ORDER_ACCEPT_DELIVERY_ORDER,
   payload: Api.accept(orderId)
 })
+export const getShippingQuotes = (orderId, pickupDate) => ({
+  type: AT.ORDER_SHIPPING_QUOTES_FETCH,
+  payload: Api.getShippingQuotes(orderId, pickupDate)
+})
+export const getManualShippingQuote = (orderId, pickupDate) => ({
+  type: AT.ORDER_MANUAL_SHIPPING_QUOTE,
+  payload: Api.getManualShippingQuote(orderId, pickupDate)
+})
+export const purchaseShipmentOrder = (orderId, body) => ({
+  type: AT.ORDER_PURCHASE_SHIPMENT_ORDER,
+  payload: Api.purchaseShipmentOrder(orderId, body)
+})
