@@ -28,7 +28,9 @@ const initialState = {
   openedSaleNewShipping: false,
   bankAccounts: [],
   bankAccountsLoading: false,
-  relatedOrders: []
+  relatedOrders: [],
+  returnShipmentRates: [],
+  returnShipmentOrder: {}
 }
 
 export default function(state = initialState, action) {
@@ -288,6 +290,16 @@ export default function(state = initialState, action) {
       return {
         ...state,
         detail: action.payload.data
+      }
+    case AT.RETURN_SHIPMENT_RATES_FULFILLED:
+      return {
+        ...state,
+        returnShipmentRates: action.payload.data
+      }
+    case AT.RETURN_SHIPMENT_ORDER_FULFILLED:
+      return {
+        ...state,
+        returnShipmentOrder: action.payload.data
       }
     case AT.ORDER_CONFIRM_RETURNED_FETCH_FULFILLED:
     case AT.ORDER_ACCEPT_DELIVERY_ORDER_FULFILLED:

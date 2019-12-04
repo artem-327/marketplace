@@ -42,4 +42,6 @@ export default {
   disapproveOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/disapprove`),
   receivedOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/received`),
   accept: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/accept`),
+  returnShipmentRates: orderId => api.get(`/prodex/api/sales-orders/${orderId}/return-shipment-rates`),
+  returnShipmentOrder: orderId => api.get(`/prodex/api/sales-orders/${orderId}/return-shipment-order`)
 }

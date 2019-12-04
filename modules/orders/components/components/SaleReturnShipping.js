@@ -11,7 +11,8 @@ import {
   Loader,
   Segment,
   GridColumn,
-  GridRow
+  GridRow,
+  Table
 } from 'semantic-ui-react'
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
@@ -32,6 +33,10 @@ const ModalBody = styled(ModalContent)`
 const initValues = {}
 
 class SaleReviewCreditRequest extends React.Component {
+  componentWillMount = async () => {
+    await this.props.returnShipmentRates()
+  }
+
   submitHandler = async (values, actions) => {
     const { closePopup, orderId, toastManager } = this.props
     console.log('====================================')
@@ -39,6 +44,7 @@ class SaleReviewCreditRequest extends React.Component {
     console.log('====================================')
 
     try {
+      await this.props.returnShipmentOrder(orderId)
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id='order.success' defaultMessage='Success' />,
@@ -93,20 +99,22 @@ class SaleReviewCreditRequest extends React.Component {
     }
   }
 
-  renderFreightSelection = formikProps => {
+  renderFreightSelection(formikProps) {
     let { cart, shippingQuotes, shippingQuotesAreFetching, shipping, manualShipmentPending } = this.props
+
+    let weightLimitStr = cart && cart.weightLimit ? `of ${cart.weightLimit} lbs` : ''
 
     return (
       <Segment>
         <Grid className='bottom-padded'>
           <GridRow className='header'>
             <GridColumn>
-              <Header as='h2'>
+              <Header as='h4'>
                 <FormattedMessage id='cart.2freightSelection' defaultMessage='2. Freight Selection' />
               </Header>
             </GridColumn>
           </GridRow>
-          {!cart.weightLimitExceed ? (
+          {cart && !cart.weightLimitExceed ? (
             <ShippingQuote
               currency={currency}
               selectedShippingQuote={cart.selectedShipping}
@@ -116,6 +124,7 @@ class SaleReviewCreditRequest extends React.Component {
               shippingQuotesAreFetching={shippingQuotesAreFetching}
             />
           ) : (
+            shipping &&
             !shipping.selectedAddress && (
               <GridRow>
                 <GridColumn>
@@ -127,7 +136,7 @@ class SaleReviewCreditRequest extends React.Component {
               </GridRow>
             )
           )}
-          {cart.weightLimitExceed && shipping.selectedAddress && (
+          {cart && cart.weightLimitExceed && shipping && shipping.selectedAddress && (
             <>
               <GridRow>
                 <GridColumn computer={16}>
@@ -141,9 +150,12 @@ class SaleReviewCreditRequest extends React.Component {
             </>
           )}
 
-          {shippingQuotes.length === 0 &&
+          {shippingQuotes &&
+            shippingQuotes.length === 0 &&
+            shipping &&
             shipping.selectedAddress &&
             !shippingQuotesAreFetching &&
+            cart &&
             !cart.weightLimitExceed && (
               <GridRow>
                 <GridColumn computer={16}>
@@ -154,7 +166,8 @@ class SaleReviewCreditRequest extends React.Component {
                 </GridColumn>
               </GridRow>
             )}
-          {shipping.selectedAddress &&
+          {shipping &&
+            shipping.selectedAddress &&
             // shippingQuotes.length === 0 &&
             (!shippingQuotesAreFetching || cart.weightLimitExceed) && (
               <>
@@ -194,11 +207,127 @@ class SaleReviewCreditRequest extends React.Component {
     )
   }
 
+  renderShipingQuotes(setFieldTouched) {
+    const { loading } = this.props
+
+    return (
+      <Segment basic style={{ padding: 0 }} loading={loading}>
+        <Table basic='very'>
+          <Table.Header>
+            <Table.HeaderCell></Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='shippingQuote.vendor' defaultMessage='Vendor'>
+                {text => text}
+              </FormattedMessage>
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='shippingQuote.Etd' defaultMessage='ETD'>
+                {text => text}
+              </FormattedMessage>
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='shippingQuote.serviceType' defaultMessage='Service Type'>
+                {text => text}
+              </FormattedMessage>
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='shippingQuote.fobPriceLb' defaultMessage='FOB Price/lb'>
+                {text => text}
+              </FormattedMessage>
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='shippingQuote.freightLb' defaultMessage='Freight/lb'>
+                {text => text}
+              </FormattedMessage>
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='shippingQuote.totalPriceLb' defaultMessage='Total Price/lb'>
+                {text => text}
+              </FormattedMessage>
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='shippingQuote.totalFreight' defaultMessage='Total Freight'>
+                {text => text}
+              </FormattedMessage>
+            </Table.HeaderCell>
+          </Table.Header>
+          <Table.Body>
+            {this.props.quotes &&
+              this.props.quotes.map((sQuote, i) => {
+                let now = moment()
+                let deliveryDate = sQuote.shipmentRate.estimatedDeliveryDate
+                let etd = now.diff(deliveryDate, 'days') * -1 + 1
+
+                return (
+                  <Table.Row key={i}>
+                    <Table.Cell>
+                      <Checkbox
+                        radio
+                        checked={this.state.selectedIndex === i}
+                        onChange={() => this.handleQuoteSelect(i, sQuote, setFieldTouched)}
+                        value={i}
+                        data-test={`ShippingQuotes_row_${i}_chckb`}
+                      />
+                    </Table.Cell>
+                    <Table.Cell>{sQuote.shipmentRate.carrierName}</Table.Cell>
+                    <Table.Cell>{etd + (etd == 1 ? ' Day' : ' Days')}</Table.Cell>
+                    <Table.Cell>{sQuote.shipmentRate.serviceType}</Table.Cell>
+                    <Table.Cell>
+                      <FormattedNumber
+                        style='currency'
+                        currency={currency}
+                        value={getSafe(() => sQuote.shipmentRate.fobPricePerLb, 0)}
+                      />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <FormattedNumber
+                        style='currency'
+                        currency={currency}
+                        value={getSafe(() => sQuote.shipmentRate.freightPricePerLb, 0)}
+                      />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <FormattedNumber
+                        style='currency'
+                        currency={currency}
+                        value={getSafe(() => sQuote.shipmentRate.totalPricePerLb, 0)}
+                      />
+                    </Table.Cell>
+                    <Table.Cell className='a-right'>
+                      <FormattedNumber
+                        style='currency'
+                        currency={currency}
+                        value={getSafe(() => sQuote.shipmentRate.estimatedPrice, 0)}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                )
+              })}
+          </Table.Body>
+        </Table>
+        {this.props.quotes && this.props.quotes.length === 0 && !loading && (
+          <CustomContainer className='dx-g-bs4-fixed-block'>
+            <big className='text-muted'>
+              <FormattedMessage
+                id='global.noShippingOptions'
+                defaultMessage='No shipping options available based on parameters provided.'
+              />
+            </big>
+          </CustomContainer>
+        )}
+      </Segment>
+    )
+  }
+
   render() {
     const {
       intl: { formatMessage },
       isSending
     } = this.props
+
+    console.log('THIS.PROPS====================================')
+    console.log(this.props)
+    console.log('====================================')
 
     return (
       <>
@@ -237,6 +366,8 @@ class SaleReviewCreditRequest extends React.Component {
                               }
                               name='pickupDate'
                             />
+
+                            {this.renderShipingQuotes(formikProps.setFieldTouched)}
                             <TextArea
                               name='pickupRemarks'
                               label={formatMessage({
@@ -258,6 +389,7 @@ class SaleReviewCreditRequest extends React.Component {
                                 defaultMessage: 'Enter shipper reference number: '
                               })}
                             />
+                            {this.renderFreightSelection(formikProps)}
                           </Grid.Column>
                         </Grid.Row>
                         <Grid.Row>
