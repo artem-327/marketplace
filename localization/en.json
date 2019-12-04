@@ -609,6 +609,8 @@
   "global.info": "Info!",
   "global.nonConforming.tooltip": "This is a non-conforming product",
   "global.unlink": "Unlink",
+  "global.counter": "Counter",
+  "global.returnReview": "Return to review",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",
@@ -1714,5 +1716,16 @@
   "order.cancelTransfer.success.content": "Payment transfer for order {orderId} was canceled successfully",
   "order.cancelOrder": "Cancel Order",
   "profile.myProfile": "My Profile",
-  "profile.lastLoginAt": "Last login at:"
+  "profile.lastLoginAt": "Last login at:",
+  "order.requestCreditPopUpHeader": "REQUEST CREDIT",
+  "order.requestingCredit": "Requesting a credit of ",
+  "order.requestingCreditBecause": " because",
+  "order.saleReviewCreditRequestHeader": "REVIEW CREDIT REQUEST",
+  "order.sellerRequesting": "Seller is requesting a discount of $",
+  "order.sellerRequestingDetail": "You have selected to Counter the credit request. Please fill in the counter details below.",
+  "order.notes": "Notes:",
+  "order.counterValue": "Counter Value",
+  "order.attachments": "Attachments: ",
+  "order.reasons": "Reasons:",
+  "order.viewRequesting": "Please view reasoning and images below:"
 }
