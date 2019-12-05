@@ -1655,6 +1655,7 @@
   "order.returnDeliveryDate": "Return Delivery Date",
   "order.carrier": "Carrier",
   "order.proNumber": "Pro Number",
+  "order.trackingNumber": "Tracking Number",
   "order.service": "Service",
   "order.incoterms": "Incoterms",
   "order.paymentSendDate": "Payment Send Date",
@@ -1719,6 +1720,11 @@
   "order.cancelTransfer.success.header": "Canceled Payment",
   "order.cancelTransfer.success.content": "Payment transfer for order {orderId} was canceled successfully",
   "order.cancelOrder": "Cancel Order",
+  "order.returnShipping": "Return Shipping",
+  "order.returnTo": "Return To",
+  "order.returnToAddress": "Return To Address",
+  "order.returnCarrier": "Return Carrier",
+  "order.returnTrackingNumber": "Return Tracking Number",
   "profile.myProfile": "My Profile",
   "profile.lastLoginAt": "Last login at:"
 }
