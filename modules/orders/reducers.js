@@ -11,7 +11,6 @@ const initialState = {
   isDetailFetching: false,
   isConfirmFetching: false,
   isRejectFetching: false,
-  isShipFetching: false,
   isSending: false,
   reloadPage: false,
   selectedIndex: -1,
@@ -19,7 +18,14 @@ const initialState = {
   searchedCompanies: [],
   openedAssignLots: false,
   openedReinitiateTransfer: false,
-  openedEnterTrackingId: false,
+  openedEnterTrackingIdShip: false,
+  openedEnterTrackingIdReturnShip: false,
+  openedPurchaseRejectDelivery: false,
+  openedPurchaseRequestCreditDelivery: false,
+  openedPurchaseReviewCreditRequest: false,
+  openedSaleReviewCreditRequest: false,
+  openedSaleReturnShipping: false,
+  openedSaleNewShipping: false,
   bankAccounts: [],
   bankAccountsLoading: false,
   relatedOrders: []
@@ -111,24 +117,24 @@ export default function(state = initialState, action) {
         reloadPage: false
       }
 
+    case AT.ORDER_RETURN_SHIP_FETCH_PENDING:
     case AT.ORDER_SHIP_FETCH_PENDING:
       return {
         ...state,
-        isShipFetching: true,
         reloadPage: false,
         isSending: true
       }
+    case AT.ORDER_RETURN_SHIP_FETCH_FULFILLED:
     case AT.ORDER_SHIP_FETCH_FULFILLED:
       return {
         ...state,
-        isShipFetching: false,
         reloadPage: true,
         isSending: false
       }
+    case AT.ORDER_RETURN_SHIP_FETCH_REJECTED:
     case AT.ORDER_SHIP_FETCH_FETCH_REJECTED:
       return {
         ...state,
-        isShipFetching: false,
         reloadPage: false,
         isSending: false
       }
@@ -161,15 +167,22 @@ export default function(state = initialState, action) {
         ...state,
         openedReinitiateTransfer: false
       }
-    case AT.ORDER_OPEN_ENTER_TRACKING_ID:
+    case AT.ORDER_OPEN_POPUP_NAME:
       return {
         ...state,
-        openedEnterTrackingId: true
+        [action.payload]: true
       }
-    case AT.ORDER_CLOSE_ENTER_TRACKING_ID:
+    case AT.ORDER_CLOSE_POPUP:
       return {
         ...state,
-        openedEnterTrackingId: false
+        openedEnterTrackingIdShip: false,
+        openedEnterTrackingIdReturnShip: false,
+        openedPurchaseRejectDelivery: false,
+        openedPurchaseRequestCreditDelivery: false,
+        openedPurchaseReviewCreditRequest: false,
+        openedSaleReviewCreditRequest: false,
+        openedSaleReturnShipping: false,
+        openedSaleNewShipping: false
       }
     case AT.ORDER_LOAD_BANK_ACCOUNTS_PENDING:
       return {
@@ -276,6 +289,9 @@ export default function(state = initialState, action) {
         ...state,
         detail: action.payload.data
       }
+    case AT.ORDER_CONFIRM_RETURNED_FETCH_FULFILLED:
+    case AT.ORDER_ACCEPT_DELIVERY_ORDER_FULFILLED:
+    case AT.ORDER_RECEIVED_ORDER_FULFILLED:
     case AT.ORDER_DISAPPROVE_ORDER_FULFILLED:
       return {
         ...state,

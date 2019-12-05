@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import * as Actions from '../../actions'
 import { loadFile, addAttachment } from '~/modules/inventory/actions'
 import { Modal, ModalContent, Header, Button, Grid, Dimmer, Loader, Segment } from 'semantic-ui-react'
@@ -156,8 +155,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ ...Actions }, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(ReinitiateTransfer)))
+export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(ReinitiateTransfer)))

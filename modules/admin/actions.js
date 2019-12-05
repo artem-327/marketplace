@@ -484,14 +484,20 @@ export function getProductsCatalogRequest() {
   }
 }
 
-export function editEchoProductChangeTab(editTab, force = false) {
+export function editEchoProductChangeTab(editTab, force = false, data = null) {
   return {
     type: AT.ADMIN_EDIT_ECHO_PRODUCT_CHANGE_TAB,
-    payload: { editTab, force }
+    payload: { editTab, force, data }
   }
 }
 
 export function openEditEchoProduct(id, editTab, force = false) {
+  return async dispatch => {
+    dispatch(editEchoProductChangeTab(editTab, force, { id }))
+  }
+}
+
+export function loadEditEchoProduct(id, editTab) {
   return async dispatch => {
     // get newest data
     const response = await dispatch(getEchoProduct(id))
@@ -508,9 +514,7 @@ export function openEditEchoProduct(id, editTab, force = false) {
         }
       })
     }
-    dispatch(editEchoProductChangeTab(editTab, force))
-    // open popup with modified data
-    dispatch(openPopup(formData))
+    await dispatch(editEchoProductChangeTab(editTab, false, formData))
   }
 }
 

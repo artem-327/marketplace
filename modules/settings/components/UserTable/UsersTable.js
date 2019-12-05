@@ -23,7 +23,7 @@ import {
   resendWelcomeEmail
 } from '../../actions'
 import Router from 'next/router'
-import { Checkbox, Popup, Label } from 'semantic-ui-react'
+import { Checkbox, Popup, Label, List } from 'semantic-ui-react'
 
 const handleSwitchEnabled = id => {
   userSwitchEnableDisable(id)
@@ -240,6 +240,34 @@ const userEnableDisableStatus = (r, currentUserId) => {
   )
 }
 
+const displayUserRoles = (roles) => {
+  const rolesList = (
+    <List>
+      {roles.map((rol) => (
+        <List.Item key={rol.id}>
+          <List.Content>
+            {rol.name}
+          </List.Content>
+        </List.Item>
+      ))}
+    </List>
+  )
+
+  return (
+    roles.map((rol) => (
+      <Popup
+        wide='very'
+        data-test='array_to_multiple_list'
+        content={rolesList}
+        key={rol.id}
+        trigger={
+          <Label size='small' key={rol.id}>{rol.name}</Label>
+        }
+      />
+    ))
+  )
+}
+
 const mapStateToProps = (state, { datagrid }) => {
   const currentUserId = state.settings.currentUser && state.settings.currentUser.id
   return {
@@ -258,7 +286,7 @@ const mapStateToProps = (state, { datagrid }) => {
       permissions: user.roles ? user.roles.name : '', // ! ! array?
       id: user.id,
       allUserRoles: user.roles || [],
-      userRoles: user.roles && user.roles.map(rol => <Label size='small'>{rol.name}</Label>),
+      userRoles: displayUserRoles(user.roles),
       switchEnable: userEnableDisableStatus(user, currentUserId),
       lastLoginAt: user.lastLoginAt ? <FormattedDateTime dateTime={user.lastLoginAt} /> : ''
     })),

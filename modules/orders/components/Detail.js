@@ -21,7 +21,16 @@ import styled from 'styled-components'
 import ActionsRequired from './components/ActionsRequired'
 import AssignLots from './components/AssignLots'
 import ReinitiateTransfer from './components/ReinitiateTransfer'
-import EnterTrackingId from './components/EnterTrackingId'
+import EnterTrackingIdShip from './components/EnterTrackingIdShip'
+import EnterTrackingIdReturnShip from './components/EnterTrackingIdReturnShip'
+
+import PurchaseRejectDelivery from './components/PurchaseRejectDelivery'
+import PurchaseRequestCreditDelivery from './components/PurchaseRequestCreditDelivery'
+import PurchaseReviewCreditRequest from './components/PurchaseReviewCreditRequest'
+import SaleReviewCreditRequest from './components/SaleReviewCreditRequest'
+import SaleReturnShipping from './components/SaleReturnShipping'
+import SaleNewShipping from './components/SaleNewShipping'
+
 import confirm from '~/src/components/Confirmable/confirm'
 import moment from 'moment/moment'
 import { FormattedPhone } from '~/components/formatted-messages/'
@@ -137,7 +146,14 @@ class Detail extends Component {
       isDetailFetching,
       openedAssignLots,
       openedReinitiateTransfer,
-      openedEnterTrackingId,
+      openedEnterTrackingIdShip,
+      openedEnterTrackingIdReturnShip,
+      openedPurchaseRejectDelivery,
+      openedPurchaseRequestCreditDelivery,
+      openedPurchaseReviewCreditRequest,
+      openedSaleReturnShipping,
+      openedSaleReviewCreditRequest,
+      openedSaleNewShipping,
       cancelPayment,
       toastManager,
       isPaymentCancellable
@@ -318,7 +334,15 @@ class Detail extends Component {
               <ActionsRequired order={order} ordersType={ordersType} />
               {openedAssignLots ? <AssignLots /> : null}
               {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
-              {openedEnterTrackingId ? <EnterTrackingId /> : null}
+              {openedEnterTrackingIdShip ? <EnterTrackingIdShip /> : null}
+              {openedEnterTrackingIdReturnShip ? <EnterTrackingIdReturnShip /> : null}
+              {openedPurchaseRejectDelivery ? <PurchaseRejectDelivery /> : null}
+              {openedPurchaseRequestCreditDelivery ? <PurchaseRequestCreditDelivery /> : null}
+              {openedPurchaseReviewCreditRequest ? <PurchaseReviewCreditRequest /> : null}
+              {openedSaleReturnShipping ? <SaleReturnShipping /> : null}
+              {openedSaleReviewCreditRequest ? <SaleReviewCreditRequest /> : null}
+              {openedSaleNewShipping ? <SaleNewShipping /> : null}
+
               <Divider hidden />
               <Accordion
                 defaultActiveIndex={[0, 1]}

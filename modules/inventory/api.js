@@ -1,5 +1,4 @@
 import api from '~/api'
-import axios from 'axios'
 import { generateQueryString } from '~/utils/functions'
 
 export function addAttachment(attachment, docType, additionalParams = {}) {
@@ -22,11 +21,16 @@ export function addAttachment(attachment, docType, additionalParams = {}) {
 }
 
 export function addProductOffer(values) {
-  return api.post(`/prodex/api/product-offers/`, values)
+  return api.post(`/prodex/api/product-offers/`, values).then(response => response.data)
 }
 
-export function downloadAttachment(id) {
+export function downloadAttachmentPdf(id) {
   return api.get(`/prodex/api/accounting-documents/id/${id}/download-pdf`, {
+    responseType: 'blob'
+  })
+}
+export function downloadAttachment(id) {
+  return api.get(`/prodex/api/attachments/${id}/download`, {
     responseType: 'blob'
   })
 }
@@ -75,7 +79,7 @@ export function linkAttachment(isLot, itemId, aId) {
 }
 
 export function loadFile(attachment) {
-  return axios({
+  return api({
     baseURL: '',
     url: attachment.preview,
     method: 'GET',
@@ -118,7 +122,7 @@ export async function searchOrigins(text, limit) {
 }
 
 export function updateProductOffer(poId, values) {
-  return api.patch(`/prodex/api/product-offers/${poId}`, values)
+  return api.patch(`/prodex/api/product-offers/${poId}`, values).then(response => response.data)
 }
 
 export const getAutocompleteData = searchUrl => api.get(searchUrl).then(response => response.data)

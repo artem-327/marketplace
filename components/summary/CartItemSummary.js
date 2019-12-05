@@ -304,14 +304,15 @@ class CartItemSummary extends Component {
     let { productOffer } = item
     let { deleteCart } = this.props
     // let currency = this.props.currency
-
+    
     return (
       <>
         <GridColumn computer={16}>
           <Grid columns={2} className='light-gray cart-item-summary' style={{ fontSize: '16px' }}>
             <HeaderTextRow>
               <GridColumn>
-                {productOffer.companyProduct.intProductCode + ' ' + productOffer.companyProduct.intProductName}
+                {/* {productOffer.companyProduct.intProductCode + ' ' + productOffer.companyProduct.intProductName} */}
+                {productOffer.companyProduct.echoProduct.name}
               </GridColumn>
 
               <GridColumn floated='right'>
@@ -326,7 +327,7 @@ class CartItemSummary extends Component {
               </GridColumn>
             </HeaderTextRow>
 
-            <RelaxedRow>
+            {/* <RelaxedRow>
               <GridColumn>
                 <FormattedMessage id='global.mixtures' defaultMessage='Mixtures' />
               </GridColumn>
@@ -338,7 +339,7 @@ class CartItemSummary extends Component {
                   })}
                 />
               </GridColumn>
-            </RelaxedRow>
+            </RelaxedRow> */}
 
             <RelaxedRow>
               <GridColumn>
@@ -362,9 +363,30 @@ class CartItemSummary extends Component {
                   }}
                   position='left center'
                   on='click'
-                  trigger={<Button type='button' size='mini' color='blue' content='Edit' />}
+                  trigger={
+                    <span
+                      className='headerAddtext'
+                      data-test={`shopping_cart_viewEdit_${item.id}_btn`}>
+                      <FormattedMessage id='global.viewEdit' defaultMessage='View/Edit'>
+                        {text => text}
+                      </FormattedMessage>
+                    </span>
+                  }
                   content={this.hazmatMarkup(item)}
                 />
+              </GridColumn>
+            </RelaxedRow>
+
+            <RelaxedRow columns={2}>
+              <GridColumn>
+                <FormattedMessage id='global.packages' defaultMessage='Packages' />
+              </GridColumn>
+
+              <GridColumn>
+                <FormattedNumber minimumFractionDigits={0} value={item.pkgAmount} /> x{' '}
+                {item.productOffer.companyProduct.packagingSize}{' '}
+                {item.productOffer.companyProduct.packagingUnit.nameAbbreviation}{' '}
+                {item.productOffer.companyProduct.packagingType.name}
               </GridColumn>
             </RelaxedRow>
 
@@ -375,14 +397,14 @@ class CartItemSummary extends Component {
 
               <GridColumn floated='right'>
                 <FormattedUnit
-                  unit={productOffer.companyProduct.packagingType.name}
+                  unit={item.productOffer.companyProduct.packagingUnit.nameAbbreviation}
                   separator=' '
-                  value={item.pkgAmount}
+                  value={item.pkgAmount * item.productOffer.companyProduct.packagingSize}
                 />
               </GridColumn>
             </RelaxedRow>
 
-            <RelaxedRow>
+            {/* <RelaxedRow>
               <GridColumn>
                 <FormattedMessage id='global.weight' defaultMessage='Weight' />
               </GridColumn>
@@ -394,18 +416,16 @@ class CartItemSummary extends Component {
                   value={item.pkgAmount * productOffer.companyProduct.packagingSize}
                 />
               </GridColumn>
-            </RelaxedRow>
+            </RelaxedRow> */}
 
             <RelaxedRow>
               <GridColumn>
-                <FormattedMessage
-                  id='global.pricePer'
-                  values={{ unit: productOffer.companyProduct.packagingUnit.nameAbbreviation }}
-                />
+                <FormattedMessage id='global.fobPrice' defaultMessage='!FOB Price' />
               </GridColumn>
 
               <GridColumn floated='right'>
-                <FormattedNumber style='currency' currency={currency} id='cart.packs' value={item.cfPricePerUOM} />
+                <FormattedNumber style='currency' currency={currency} id='cart.packs' value={item.cfPricePerUOM} /> /{' '}
+                {productOffer.companyProduct.packagingUnit.nameAbbreviation}
               </GridColumn>
             </RelaxedRow>
 

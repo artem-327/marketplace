@@ -12,7 +12,7 @@ import { ArrayToMultiple } from '~/components/formatted-messages'
 import React from 'react'
 import { FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
-import { downloadAttachment } from '~/modules/inventory/actions'
+import { downloadAttachmentPdf } from '~/modules/inventory/actions'
 
 function mapStateToProps(state, { router, datagrid }) {
   const { orders } = state
@@ -51,7 +51,7 @@ function mapStateToProps(state, { router, datagrid }) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ ...Actions, downloadAttachment, dispatch, applyFilter }, dispatch)
+  return bindActionCreators({ ...Actions, downloadAttachmentPdf, dispatch, applyFilter }, dispatch)
 }
 
 export default withDatagrid(withRouter(connect(mapStateToProps, mapDispatchToProps)(Orders)))

@@ -1,8 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import * as Actions from '../../actions'
-import { loadFile, addAttachment } from '~/modules/inventory/actions'
 import {Modal, ModalContent, Button, Grid, Dimmer, Loader} from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
@@ -20,13 +18,13 @@ const initValues = {
   trackingId: ''
 }
 
-class EnterTrackingId extends React.Component {
+class EnterTrackingIdShip extends React.Component {
 
   markShipped = async (value) => {
     const {
       orderId,
       toastManager,
-      closeEnterTrackingId
+      closePopup
     } = this.props
 
     try {
@@ -34,17 +32,17 @@ class EnterTrackingId extends React.Component {
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage
-            id='notifications.markOrderAsShipped.success.header'
+            id='notifications.order.actions.shipped.success.header'
             defaultMessage='Order Marked as Shipped'
           />,
           <FormattedMessage
-            id='notifications.markOrderAsShipped.success.content'
-            defaultMessage='Order {orderId} successfully marked as shipped'
+            id='notifications.order.actions.shipped.success.content'
+            defaultMessage={`Order '${orderId}' was marked as shipped.`}
             values={{ orderId: orderId }}
           />
         ), { appearance: 'success' }
       )
-      closeEnterTrackingId()
+      closePopup()
     } catch {}
   }
 
@@ -58,7 +56,7 @@ class EnterTrackingId extends React.Component {
 
     return (
       <>
-        <Modal closeIcon onClose={() => this.props.closeEnterTrackingId()} open={true} size='small'>
+        <Modal closeIcon onClose={() => this.props.closePopup()} open={true} size='small'>
           <Dimmer active={isSending} inverted>
             <Loader />
           </Dimmer>
@@ -77,10 +75,10 @@ class EnterTrackingId extends React.Component {
                   }
                   else {
                     confirm(
-                      formatMessage({ id: 'confirm.markOrderAsShippedNoTracking.title', defaultMessage: 'Mark Order as Shipped without Tracking ID?' }),
+                      formatMessage({ id: 'confirm.order.actions.shippedNoTracking.title', defaultMessage: 'Mark Order as Shipped without Tracking ID' }),
                       formatMessage(
                         {
-                          id: 'confirm.markOrderAsShippedNoTracking.content',
+                          id: 'confirm.order.actions.shippedNoTracking.content',
                           defaultMessage: `Do you want to mark order ${orderId} as shipped without providing Tracking ID?`
                         },
                         { orderId: orderId }
@@ -113,7 +111,7 @@ class EnterTrackingId extends React.Component {
                         <Grid.Row>
                           <Grid.Column width={10}></Grid.Column>
                           <Grid.Column floated='right' width={3}>
-                            <Button basic fluid onClick={() => this.props.closeEnterTrackingId()}>
+                            <Button basic fluid onClick={() => this.props.closePopup()}>
                               <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' >
                                 {text => text}
                               </FormattedMessage>
@@ -148,8 +146,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ ...Actions }, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(EnterTrackingId)))
+export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(EnterTrackingIdShip)))

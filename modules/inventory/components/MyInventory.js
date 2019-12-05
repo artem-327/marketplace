@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Checkbox, Icon, Popup, List, Button } from 'semantic-ui-react'
+import { Container, Menu, Header, Checkbox, Popup, Button } from 'semantic-ui-react'
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import Router from 'next/router'
 import ProdexTable from '~/components/table'
-import { Broadcast } from '~/modules/broadcast'
 import { Filter } from '~/modules/filter'
 
-import SimpleEdit from '~/modules/inventory/components/SimpleEdit'
 import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
 
 import confirm from '~/src/components/Confirmable/confirm'
@@ -77,6 +74,7 @@ class MyInventory extends Component {
           </FormattedMessage>
         ),
         width: 130,
+        align: 'right',
         sortPath: 'ProductOffer.quantity'
       },
       {
@@ -87,6 +85,7 @@ class MyInventory extends Component {
           </FormattedMessage>
         ),
         width: 130,
+        align: 'right',
         sortPath: 'ProductOffer.pkgAvailable'
       },
       {
@@ -117,6 +116,7 @@ class MyInventory extends Component {
           </FormattedMessage>
         ),
         width: 130,
+        align: 'right',
         sortPath: 'ProductOffer.quantity'
       },
       {
@@ -126,7 +126,8 @@ class MyInventory extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 100
+        width: 100,
+        align: 'right'
       },
       {
         name: 'fobPrice',
@@ -136,6 +137,7 @@ class MyInventory extends Component {
           </FormattedMessage>
         ),
         width: 180,
+        align: 'right',
         sortPath: 'ProductOffer.price'
       },
       {
@@ -374,17 +376,17 @@ class MyInventory extends Component {
     this.props.datagrid.setFilter({ filters: [] })
   }
 
-
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
     const { isProductInfoOpen, closePopup } = this.props
-    if (isProductInfoOpen) closePopup()
 
+    if (isProductInfoOpen) closePopup()
     sidebarDetailTrigger(row, bol, tab)
   }
 
   render() {
     const {
       openBroadcast,
+      sidebarDetailOpen,
       intl: { formatMessage },
       rows,
       datagrid,
@@ -393,11 +395,10 @@ class MyInventory extends Component {
       simpleEditTrigger,
       sidebarDetailTrigger,
       sidebarValues,
-      openPopup,
-      sidebarDetailOpen
+      openPopup
     } = this.props
     const { columns, selectedRows } = this.state
-
+    
     return (
       <>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
@@ -455,10 +456,7 @@ class MyInventory extends Component {
                 </Button>
               </Menu.Item>
               <Menu.Item>
-                <FilterTags
-                  datagrid={datagrid}
-                  data-test='my_inventory_filter_btn'
-                />
+                <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
               </Menu.Item>
               <Menu.Item>
                 <SubMenu />
@@ -467,7 +465,7 @@ class MyInventory extends Component {
           </Menu>
         </Container>
 
-        <div class='flex stretched' style={{ padding: '10px 32px' }}>
+        <div className='flex stretched' style={{ padding: '10px 32px' }}>
           <ProdexTable
             defaultHiddenColumns={defaultHiddenColumns}
             {...datagrid.tableProps}
@@ -582,7 +580,7 @@ class MyInventory extends Component {
           }}*/
           />
         </div>
-        <DetailSidebar key={getSafe(() => sidebarValues.id, 0)} />
+        {sidebarDetailOpen && <DetailSidebar />}
         <Filter
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}

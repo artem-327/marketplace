@@ -2,6 +2,7 @@ import { Icon, Checkbox } from 'semantic-ui-react'
 import PriceControl from './PriceControl'
 import { Rule } from './Broadcast.style'
 import { getNodeStatus, setBroadcast } from '~/modules/broadcast/utils'
+import { getSafe } from '~/utils/functions'
 
 const EmptyIconSpace = () => (
   <span style={{ width: '1.18em', display: 'inline-block', marginRight: '0.25rem' }}>&nbsp;</span>
@@ -61,6 +62,13 @@ const RuleItem = props => {
   const parentBroadcasted = broadcastedParents.reverse()[0]
   const nodeBroadcast = rule.broadcast === 1 || allChildrenBroadcasting ? 1 : 0
 
+  const companyName =
+    getSafe(() => item.model.rule.type, '') === 'branch' &&
+    getSafe(() => item.parent.model.rule.elements[0].type, '') === 'company' &&
+    getSafe(() => item.parent.model.rule.elements[0].name, '')
+      ? `${item.parent.model.rule.elements[0].name} - `
+      : ''
+
   // const toggleDisabled = !!parentBroadcasted
   // const priceDisabled = rule.broadcast === 0 //!(rule.broadcast === 1 && !parentBroadcasted) //allChildrenBroadcasting || rule.broadcast !== 1 || toggleDisabled
 
@@ -78,7 +86,7 @@ const RuleItem = props => {
           ) : (
             <EmptyIconSpace />
           )}
-          <span>{name}</span>
+          <span>{`${companyName} ${name}`}</span>
         </Rule.RowContent>
 
         <Rule.Toggle style={asSidebar ? { flex: '0 0 60px' } : null}>
