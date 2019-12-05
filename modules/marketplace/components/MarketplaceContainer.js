@@ -63,7 +63,7 @@ function mapStateToProps(store, { datagrid }) {
         origin: getSafe(() => po.origin.name),
         expiration: moment(po.expirationDate).format('MM/DD/YYYY'),
         assay: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
-        condition: getSafe(() => po.conforming),
+        condition: !getSafe(() => po.conforming),
         form: getSafe(() => po.form.name),
         location: getLocationString(po)
       }

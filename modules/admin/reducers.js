@@ -316,8 +316,20 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_EDIT_ECHO_PRODUCT_CHANGE_TAB: {
       return {
         ...state,
-        editEchoProductEditTab: action.payload.editTab,
-        editEchoProductInitTrig: action.payload.force ^ state.editEchoProductInitTrig
+        editEchoProductEditTab: payload.editTab,
+        editEchoProductInitTrig: payload.force ^ state.editEchoProductInitTrig,
+        popupValues: payload.data,
+        ...(payload.data
+          ? {
+            currentAddForm: null,
+            currentEditForm: state.currentTab
+          }
+          : {
+            currentAddForm: state.currentTab,
+            currentEditForm: null
+          }),
+        currentEdit2Form: null,
+        currentAddDwolla: null
       }
     }
 

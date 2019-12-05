@@ -30,6 +30,7 @@ import debounce from 'lodash/debounce'
 import { uniqueArrayByKey } from '~/utils/functions'
 import escapeRegExp from 'lodash/escapeRegExp'
 import { Datagrid } from '~/modules/datagrid'
+import confirm from '~/src/components/Confirmable/confirm'
 
 export const MyContainer = styled.div`
   margin: 0 15px 0 0;
@@ -128,6 +129,8 @@ class AddEditEchoProduct extends React.Component {
     codesList: [],
     changedAttachments: false,
     unNumberInitOptions: [],
+    popupValues: null,
+    editTab: 0
   }
 
   componentDidMount() {
@@ -147,53 +150,51 @@ class AddEditEchoProduct extends React.Component {
       if (!prevProps.visible) {
         if (this.props.addForm) {
           // Sidebar just opened - Add
-          this.setInitialState(this.props.popupValues)
-          this.props.editEchoProductChangeTab(0)
+          this.setInitialState(null, { editTab: 0 })
           this.resetForm()
         }
         else {
           // Sidebar just opened - Edit
-          this.props.searchManufacturers(
-            getSafe(() => this.props.popupValues.manufacturer.name, ''), 200
-          )
-          this.setInitialState(this.props.popupValues)
-          this.resetForm()
+          this.props.loadEditEchoProduct(this.props.popupValues.id, this.props.editTab, true)
         }
         return
       }
 
+      const { popupValues, editTab,  } = this.props
+
       if (prevProps.editForm && !prevProps.addForm && this.props.addForm) {
         // Changed from Edit to Add form
-        this.setInitialState(null, { codesList: [], changedForm: false })
-        this.props.editEchoProductChangeTab(0)
-        this.resetForm()
+        this.validateSaveOrSwitchToErrors(() => {
+          this.setInitialState(null, { codesList: [], changedForm: false, editTab: 0 })
+          this.resetForm()
+        })
         return
       }
 
       if (prevProps.addForm && !prevProps.editForm && this.props.editForm) {
         // Changed from Add to Edit form
-        this.setInitialState(this.props.popupValues)
-        this.resetForm()
-        this.props.searchManufacturers(
-          getSafe(() => this.props.popupValues.manufacturer.name, ''), 200
-        )
+        this.validateSaveOrSwitchToErrors(() => {
+          this.props.loadEditEchoProduct(popupValues.id, editTab, true)
+        })
         return
       }
 
       if (prevProps.editForm && this.props.editForm && prevProps.editInitTrig !== this.props.editInitTrig) {
-        // Changed edit product or edit tab
-        this.setInitialState(this.props.popupValues)
-        this.resetForm()
+        // Changed edit product
+        this.validateSaveOrSwitchToErrors(() => {
+          this.props.loadEditEchoProduct(popupValues.id, editTab, false)
+        })
         return
       }
 
-      if (prevProps.editForm && this.props.editForm && prevProps.popupValues.id !== this.props.popupValues.id) {
-        // Changed edit product or edit tab
-        this.setInitialState(this.props.popupValues)
-        this.resetForm()
+      if (this.props.editForm && this.props.popupValues && (
+        (prevProps.popupValues && prevProps.popupValues !== this.props.popupValues)
+        || (prevProps.popupValues === null))) {
         this.props.searchManufacturers(
           getSafe(() => this.props.popupValues.manufacturer.name, ''), 200
         )
+        this.setInitialState(this.props.popupValues, { editTab: this.props.editTab })
+        this.resetForm()
       }
     }
   }
@@ -221,12 +222,12 @@ class AddEditEchoProduct extends React.Component {
       })
     }
     this.setState({
-      codesList, changedForm: false, changedAttachments: false,
+      codesList, changedForm: false, changedAttachments: false, popupValues,
       unNumberInitOptions: unNumberInitOptions, ...additionalStates })
   }
 
   getInitialFormValues = () => {
-    const { popupValues } = this.props
+    const { popupValues } = this.state
 
     let initialValues = {
       ...defaultValues,
@@ -374,7 +375,8 @@ class AddEditEchoProduct extends React.Component {
   }
 
   tabChanged = index => {
-    this.props.editEchoProductChangeTab(index)
+    this.setState({ editTab: index })
+    //! !this.props.editEchoProductChangeTab(index)
   }
 
   handleUnNumberSearchChange = debounce((_, { searchQuery }) => {
@@ -414,9 +416,43 @@ class AddEditEchoProduct extends React.Component {
     }, 250)
   }, 500)
 
-  submitForm = async (values, setSubmitting, setTouched) => {
+  validateSaveOrSwitchToErrors = async (callback) => {
+    const { touched, validateForm, submitForm, values, setSubmitting } = this.formikProps
+
+    if (Object.keys(touched).length || this.state.changedForm) {  // Form edited and not saved yet
+      validateForm().then(err => {
+        const errors = Object.keys(err)
+        if (errors.length && errors[0] !== 'isCanceled') {    // Edited, Errors found
+          submitForm()    // to show errors
+          this.switchToErrors(Object.keys(err))
+          return
+        }
+        else {    // Edited, Errors not found, try to save
+          confirm(
+            <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
+            <FormattedMessage
+              id='confirm.global.unsavedChanges.content'
+              defaultMessage='You have unsaved changes. Do you wish to save them?'
+            />
+          )
+            .then(async () => { // Confirm
+                if (await this.submitForm(values, setSubmitting)) callback()
+              }, () => {  // Cancel
+                callback()
+              }
+            )
+            .catch(() => {})
+          return
+        }
+      })
+    }
+    else {  // Form not modified
+      callback()
+    }
+  }
+
+  submitForm = async (values, setSubmitting) => {
     const {
-      popupValues,
       putEchoProduct,
       postEchoProduct,
       closePopup,
@@ -424,6 +460,10 @@ class AddEditEchoProduct extends React.Component {
       linkAttachment,
       listDocumentTypes
     } = this.props
+
+    const { popupValues } = this.state
+
+    let sendSuccess = false
 
     let formValues = {
       ...values,
@@ -446,6 +486,14 @@ class AddEditEchoProduct extends React.Component {
       tdsRevisionDate: values.tdsRevisionDate ? values.tdsRevisionDate + 'T00:00:00.00000Z' : ''
     }
     delete formValues.attachments
+
+    const fieldsToNull = [
+      'dotHazardClass', 'dotPackagingGroup', 'dotUnNumber',
+      'iataHazardClass', 'iataPackagingGroup', 'iataUnNumber',
+      'imdgImoHazardClass', 'imdgImoPackagingGroup', 'imdgImoUnNumber',
+      'tdgHazardClass', 'tdgPackagingGroup', 'tdgUnNumber',
+    ]
+    fieldsToNull.forEach(el => {if (formValues[el] === '') formValues[el] = null})
 
     try {
       if (popupValues) var { value } = await putEchoProduct(popupValues.id, formValues)
@@ -484,10 +532,11 @@ class AddEditEchoProduct extends React.Component {
       )
 
       setSubmitting(false)
-      closePopup()
+      sendSuccess = true
     } catch (err) {
       setSubmitting(false)
     }
+    return sendSuccess
   }
 
   RowInput = ({ name, readOnly = false, id, defaultMessage }) => (
@@ -637,10 +686,11 @@ class AddEditEchoProduct extends React.Component {
   renderMixtures = formikProps => {
     const {
       closePopup,
-      popupValues,
       intl: { formatMessage },
       isLoading
     } = this.props
+
+    const { popupValues } = this.state
 
     let { values } = formikProps
 
@@ -1111,7 +1161,7 @@ class AddEditEchoProduct extends React.Component {
   }
 
   renderDocuments = formikProps => {
-    let { popupValues } = this.props
+    let { popupValues } = this.state
 
     return (
       <Grid verticalAlign='middle'>
@@ -1366,7 +1416,7 @@ class AddEditEchoProduct extends React.Component {
   }
 
   getContent = formikProps => {
-    let { editTab } = this.props
+    let { editTab } = this.state
     switch (editTab) {
       case 0: {
         // Edit
@@ -1396,20 +1446,22 @@ class AddEditEchoProduct extends React.Component {
       closePopup,
       intl: { formatMessage },
       isLoading,
-      editTab
     } = this.props
+
+    const { editTab } = this.state
 
     return (
       <Form
         enableReinitialize
         initialValues={this.getInitialFormValues()}
         validationSchema={validationScheme}
-        onSubmit={async (values, { setSubmitting, setTouched }) => {
-          this.submitForm(values, setSubmitting, setTouched)
+        onSubmit={async (values, { setSubmitting }) => {
+          if (this.submitForm(values, setSubmitting)) closePopup()
         }}
         render={formikProps => {
-          let { touched, validateForm, resetForm } = formikProps
+          let { touched, validateForm, resetForm, values } = formikProps
           this.resetForm = resetForm
+          this.formikProps = formikProps
 
           return (
             <FlexSidebar

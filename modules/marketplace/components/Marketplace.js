@@ -16,11 +16,6 @@ const CapitalizedText = styled.span`
   text-transform: capitalize;
 `
 
-const DivIconTooltip = styled.div`
-  position: fixed;
-  z-index: 500;
-`
-
 const DivButtonWithToolTip = styled.div`
   z-index: 501;
 `
@@ -44,6 +39,7 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 140,
+        align: 'right',
         sortPath: 'ProductOffer.pkgAvailable'
       },
       {
@@ -63,6 +59,7 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 140,
+        align: 'right',
         sortPath: 'ProductOffer.quantity'
       },
       {
@@ -73,6 +70,7 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 160,
+        align: 'right',
         sortPath: 'ProductOffer.cfPricePerUOM'
       },
       {
@@ -157,14 +155,18 @@ class Marketplace extends Component {
 
     return rows.map(r => ({
       ...r,
-      '': !r.condition && (
-        <DivIconTooltip
-          data-tooltip={formatMessage({
-            id: 'global.nonConforming.tooltip',
-            defaultMessage: 'This is a non-conforming product'
-          })}>
-          <Icon name='exclamation triangle' color='red' />
-        </DivIconTooltip>
+      '': r.condition && (
+        <Popup
+          content={
+            <FormattedMessage
+              id='global.nonConforming.tooltip'
+              defaultMessage='This is a non-conforming product.'
+            />
+          }
+          trigger={
+            <Icon name='exclamation triangle' color='red'/>
+          }
+        />
       ),
       condition: r.condition ? (
         <FormattedMessage id='global.conforming' defaultMessage='Conforming' />

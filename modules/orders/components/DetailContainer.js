@@ -1,6 +1,5 @@
 import { connect } from 'react-redux'
 import React from 'react'
-import { bindActionCreators } from 'redux'
 import Detail from './Detail'
 import * as Actions from '../actions'
 import * as OrdersHelper from '~/src/helpers/Orders'
@@ -195,14 +194,17 @@ function mapStateToProps(state, ownProps) {
     isPaymentCancellable: getSafe(() => orders.detail.isPaymentCancellable, false),
     openedAssignLots: orders.openedAssignLots,
     openedReinitiateTransfer: orders.openedReinitiateTransfer,
-    openedEnterTrackingId: orders.openedEnterTrackingId,
+    openedEnterTrackingIdShip: orders.openedEnterTrackingIdShip,
+    openedEnterTrackingIdReturnShip: orders.openedEnterTrackingIdReturnShip,
+    openedPurchaseRejectDelivery: orders.openedPurchaseRejectDelivery,
+    openedPurchaseRequestCreditDelivery: orders.openedPurchaseRequestCreditDelivery,
+    openedPurchaseReviewCreditRequest: orders.openedPurchaseReviewCreditRequest,
+    openedSaleReturnShipping: orders.openedSaleReturnShipping,
+    openedSaleReviewCreditRequest: orders.openedSaleReviewCreditRequest,
+    openedSaleNewShipping: orders.openedSaleNewShipping,
     action: actionRequired(orders.detail),
     reloadPage: orders.reloadPage
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Actions, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Detail)
+export default connect(mapStateToProps, {...Actions})(Detail)

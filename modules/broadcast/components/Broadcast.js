@@ -207,7 +207,7 @@ class Broadcast extends Component {
       return found
     }
 
-    const searchParentFn = n => n.first(i => i.model.type !== 'company' && searchFn(i))
+    const searchParentFn = n => n.first(i => searchFn(i))
 
     const presets = {
       region: () =>
@@ -259,6 +259,7 @@ class Broadcast extends Component {
             treeData.all(n => n.model.type === 'company'),
             n => n.model.id
           )
+            .sort((a, b) => (a.model.name > b.model.name ? 1 : b.model.name > a.model.name ? -1 : 0))
             .filter(searchFn)
             .map(n1 => ({
               name: n1.model.name,
@@ -686,7 +687,7 @@ class Broadcast extends Component {
           <Grid.Column
             width={asSidebar ? 16 : 10}
             stretched
-            style={asSidebar ? { padding: '0', 'box-shadow': '0 0 0 transparent' } : null}>
+            style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : null}>
             <Rule.Root>
               <Rule.Header style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
                 <Rule.RowContent>
@@ -705,7 +706,7 @@ class Broadcast extends Component {
                   {!hideFobPrice && <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />}
                 </Rule.Toggle>
               </Rule.Header>
-              <Rule.Content style={asSidebar ? { flex: '1 0 auto', 'overflow-y': 'hidden' } : null}>
+              <Rule.Content style={asSidebar ? { flex: '1 0 auto', overflowY: 'hidden' } : null}>
                 <RuleItem
                   loadingChanged={this.props.loadingChanged}
                   filter={filter}
