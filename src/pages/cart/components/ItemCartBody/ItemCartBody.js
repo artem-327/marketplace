@@ -37,7 +37,7 @@ export default class ItemCartBody extends Component {
           <GridColumn width={9}>
             <div className='item-cart-body-section'>
               <GridRow className='item-cart-body-section-name'>
-                {productOffer.companyProduct.echoProduct.code + ' - ' + productOffer.companyProduct.echoProduct.name}
+                {productOffer.companyProduct.echoProduct.name}
               </GridRow>
               <Grid columns={2}>
                 <GridColumn width={leftWidth1}>
