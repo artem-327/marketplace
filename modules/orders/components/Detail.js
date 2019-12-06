@@ -385,35 +385,35 @@ class Detail extends Component {
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[0]}>
                   <Grid divided='horizontally'>
-                    <Grid.Row columns={2}>
+                    <Grid.Row columns={3}>
                       <Grid.Column>
                         <GridData columns={2}>
-                          <GridDataColumn width={4}>
+                          <GridDataColumn width={8}>
                             <strong>
                               {ordersType} <FormattedMessage id='order' defaultMessage='Order' />
                             </strong>
                           </GridDataColumn>
-                          <GridDataColumn width={12}>{order.id}</GridDataColumn>
-                          <GridDataColumn width={4}>
+                          <GridDataColumn width={8}>{order.id}</GridDataColumn>
+                          <GridDataColumn width={8}>
                             <strong>
                               {ordersType.charAt(0)}
                               <FormattedMessage id='order.oDate' defaultMessage='O Date' />
                             </strong>
                           </GridDataColumn>
-                          <GridDataColumn width={12}>{order.orderDate}</GridDataColumn>
-                          <GridDataColumn width={4}>
+                          <GridDataColumn width={8}>{order.orderDate}</GridDataColumn>
+                          <GridDataColumn width={8}>
                             <strong>
                               {ordersType.charAt(0)}
                               <FormattedMessage id='order.oConfirmDate' defaultMessage='O Confirmation Date' />
                             </strong>
                           </GridDataColumn>
-                          <GridDataColumn width={12}>{order.confirmationDate}</GridDataColumn>
-                          <GridDataColumn width={4}>
+                          <GridDataColumn width={8}>{order.confirmationDate}</GridDataColumn>
+                          <GridDataColumn width={8}>
                             <strong>
                               <FormattedMessage id='order.orderAcceptDate' defaultMessage='Order Acceptance Date' />
                             </strong>
                           </GridDataColumn>
-                          <GridDataColumn width={12}>{order.acceptanceDate}</GridDataColumn>
+                          <GridDataColumn width={8}>{order.acceptanceDate}</GridDataColumn>
                         </GridData>
                       </Grid.Column>
                       <Grid.Column>
@@ -446,7 +446,7 @@ class Detail extends Component {
                           )}
                           {ordersType === 'Purchase' ? (
                             <>
-                              <GridDataColumn width={4}>
+                              <GridDataColumn width={8}>
                                 <strong>
                                   <FormattedMessage id='order.createdBy' defaultMessage='Created By' />
                                 </strong>
@@ -556,14 +556,6 @@ class Detail extends Component {
                                   <TableRowData>
                                     <Table.Cell>
                                       <strong>
-                                        <FormattedMessage id='order.amount' defaultMessage='Amount' />
-                                      </strong>
-                                    </Table.Cell>
-                                    <Table.Cell textAlign='right'>{order.amount}</Table.Cell>
-                                  </TableRowData>
-                                  <TableRowData>
-                                    <Table.Cell>
-                                      <strong>
                                         <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' /> (
                                         {order.feesPercent}%)
                                       </strong>
@@ -628,14 +620,6 @@ class Detail extends Component {
                                   <TableRowData>
                                     <Table.Cell>
                                       <strong>
-                                        <FormattedMessage id='order.amount' defaultMessage='Amount' />
-                                      </strong>
-                                    </Table.Cell>
-                                    <Table.Cell textAlign='right'>{order.amount}</Table.Cell>
-                                  </TableRowData>
-                                  <TableRowData>
-                                    <Table.Cell>
-                                      <strong>
                                         <FormattedMessage id='order.subtotal' defaultMessage='Subtotal' />
                                       </strong>
                                     </Table.Cell>
@@ -644,10 +628,18 @@ class Detail extends Component {
                                   <TableRowData>
                                     <Table.Cell>
                                       <strong>
-                                        <FormattedMessage id='order.freight' defaultMessage='Freight' />
+                                        <FormattedMessage id='order.shipping' defaultMessage='Shipping' />
                                       </strong>
                                     </Table.Cell>
                                     <Table.Cell textAlign='right'>{order.freight}</Table.Cell>
+                                  </TableRowData>
+                                  <TableRowData>
+                                    <Table.Cell>
+                                      <strong>
+                                        <FormattedMessage id='order.tax' defaultMessage='Tax' />
+                                      </strong>
+                                    </Table.Cell>
+                                    <Table.Cell textAlign='right'>{'$0'}</Table.Cell>
                                   </TableRowData>
                                 </Table.Body>
                                 <Table.Footer>
@@ -666,6 +658,90 @@ class Detail extends Component {
                             </>
                           )}
                         </div>
+                      </Grid.Column>
+                    </Grid.Row>
+                  </Grid>
+                </Accordion.Content>
+
+                <AccordionTitle
+                  active={activeIndexes[1]}
+                  index={1}
+                  onClick={this.handleClick}
+                  data-test='orders_detail_product_info'>
+                  <Icon
+                    name={'chevron ' + (activeIndexes[1] ? 'down' : 'right')}
+                    size='large'
+                    color={activeIndexes[1] ? 'blue' : 'black'}
+                  />
+                  <FormattedMessage id='order.productInfo' defaultMessage='Product Info' />
+                </AccordionTitle>
+                <Accordion.Content active={activeIndexes[1]}>
+                  <Grid divided='horizontally'>
+                    <Grid.Row>
+                      <Grid.Column>
+                        <GridData columns={2}>
+                          <GridDataColumn width={4}>
+                            <strong>
+                              <FormattedMessage id='order.chemicalName' defaultMessage='Chemical Name' />
+                            </strong>
+                          </GridDataColumn>
+                          <GridDataColumn width={12}>{order.chemicalName}</GridDataColumn>
+                          <GridDataColumn width={4}>
+                            <strong>
+                              <FormattedMessage id='order.name' defaultMessage='Name' />
+                            </strong>
+                          </GridDataColumn>
+                          <GridDataColumn width={12}>{order.productName}</GridDataColumn>
+                          <GridDataColumn width={4}>
+                            <strong>
+                              <FormattedMessage id='order.code' defaultMessage='Code' />
+                            </strong>
+                          </GridDataColumn>
+                          <GridDataColumn width={12}>{order.productCode}</GridDataColumn>
+                          <GridDataColumn width={4}>
+                            <strong>
+                              <FormattedMessage id='order.packaging' defaultMessage='Packaging' />
+                            </strong>
+                          </GridDataColumn>
+                          <GridDataColumn width={12}>{order.packaging}</GridDataColumn>
+                          <GridDataColumn width={4}>
+                            <strong>
+                              <FormattedMessage id='order.pkgs' defaultMessage='PKGs' />
+                            </strong>
+                          </GridDataColumn>
+                          <GridDataColumn width={12}>{order.totalPkg}</GridDataColumn>
+                          <GridDataColumn width={4}>
+                            <strong>
+                              <FormattedMessage id='order.quantity' defaultMessage='Quantity' />
+                            </strong>
+                          </GridDataColumn>
+                          <GridDataColumn width={12}>{order.quantityOrdered}</GridDataColumn>
+                          <GridDataColumn width={4}>
+                            <strong>
+                              <FormattedMessage id='order.fobPrice' defaultMessage='FOB Price' />
+                            </strong>
+                          </GridDataColumn>
+                          <GridDataColumn width={12}>{order.unitPrice}</GridDataColumn>
+                          <GridDataColumn width={4}>
+                            <strong>
+                              <FormattedMessage id='order.itemTotal' defaultMessage='Item Total' />
+                            </strong>
+                          </GridDataColumn>
+                          <GridDataColumn width={12}>{order.subtotal}</GridDataColumn>
+
+                          {ordersType === 'Sales' ? (
+                            <>
+                              <GridDataColumn width={4}>
+                                <strong>
+                                  <FormattedMessage id='order.unitCost' defaultMessage='Unit Cost' />
+                                </strong>
+                              </GridDataColumn>
+                              <GridDataColumn width={12}>{order.unitCost}</GridDataColumn>
+                            </>
+                          ) : (
+                            ''
+                          )}
+                        </GridData>
                       </Grid.Column>
                     </Grid.Row>
                   </Grid>
