@@ -257,6 +257,26 @@ class MyInventory extends Component {
   }
 
   componentDidMount() {
+    const { sidebarDetailTrigger } = this.props
+
+    if (window) {
+      const searchParams = new URLSearchParams(getSafe(() => window.location.href, ''))
+
+      if (searchParams.has('id') || searchParams.has(`${window.location.href.split('?')[0]}?id`)) {
+        const idOffer = searchParams.get('id')
+          ? { id: Number(searchParams.get('id')) }
+          : { id: Number(searchParams.get(`${window.location.href.split('?')[0]}?id`)) }
+        let tabOffer = 0
+
+        if (searchParams.has('tab') || searchParams.has(`${window.location.href.split('?')[0]}?tab`)) {
+          tabOffer = searchParams.get('tab')
+            ? Number(searchParams.get('tab'))
+            : Number(searchParams.get(`${window.location.href.split('?')[0]}?tab`))
+        }
+
+        sidebarDetailTrigger(idOffer, true, tabOffer)
+      }
+    }
     // Because of #31767
     this.props.setCompanyElligible()
   }
