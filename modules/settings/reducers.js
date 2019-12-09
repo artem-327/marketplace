@@ -27,6 +27,7 @@ export const initialState = {
   packagingTypes: [],
   productsUnitsType: [],
   units: [],
+  packageWeightUnits: [],
   productsFreightClasses: [],
   productsHazardClasses: [],
   productsPackagingGroups: [],
@@ -609,6 +610,16 @@ export default function reducer(state = initialState, action) {
           value: pGroup.id
         }
       })
+      const packageWeightUnits = action.payload.units
+        .filter(unit => unit.measureType.id === 1)    // Weight only
+        .map((type, id) => {
+        return {
+          key: id,
+          text: type.name,
+          value: type.id
+        }
+      })
+
       return {
         ...state,
         loading: false,
@@ -620,7 +631,8 @@ export default function reducer(state = initialState, action) {
         units: action.payload.units,
         productsHazardClasses: hazardClasses,
         productsFreightClasses: freightClasses,
-        productsPackagingGroups: packagingGroups
+        productsPackagingGroups: packagingGroups,
+        packageWeightUnits: packageWeightUnits
       }
     }
 
