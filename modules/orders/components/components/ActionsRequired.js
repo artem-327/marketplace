@@ -336,7 +336,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && returnStatus === 1 // Confirmed && IN_TRANSIT
+            {orderStatus === 2 && returnStatus === 2 // Confirmed && IN_TRANSIT
               ? this.renderSegment(null, 14, null, 'order.returnInTransit.description', [
                   {
                     buttonType: 'primary',
@@ -446,18 +446,18 @@ class ActionsRequired extends React.Component {
 }
 
 function checkAssignLotsRequired(data) {
-  const status =
-    getSafe(
-      () =>
-        data.orderItems.filter(orderItem => {
-          return (
-            orderItem.amount ===
-            orderItem.lots.reduce(function(allocated, lot) {
-              return allocated + lot.amount
-            }, 0)
-          )
-        }).length === data.orderItems.length
-      , false)
+  const status = getSafe(
+    () =>
+      data.orderItems.filter(orderItem => {
+        return (
+          orderItem.amount ===
+          orderItem.lots.reduce(function(allocated, lot) {
+            return allocated + lot.amount
+          }, 0)
+        )
+      }).length === data.orderItems.length,
+    false
+  )
   return status
 }
 
@@ -469,7 +469,7 @@ function mapStateToProps(state, ownProps) {
     reviewStatus: getSafe(() => orders.detail.reviewStatus, 0),
     creditStatus: getSafe(() => orders.detail.creditStatus, 0),
     returnStatus: getSafe(() => orders.detail.returnStatus, 0),
-    assignLotsRequired: false,//checkAssignLotsRequired(orders.detail),
+    assignLotsRequired: false, //checkAssignLotsRequired(orders.detail),
 
     fundingSourceId: '?', // ! ! which param? (string)
 
@@ -481,4 +481,4 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-export default connect(mapStateToProps, {...Actions})(withToastManager(injectIntl(ActionsRequired)))
+export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(ActionsRequired)))
