@@ -263,13 +263,13 @@ class MyInventory extends Component {
       const searchParams = new URLSearchParams(getSafe(() => window.location.href, ''))
 
       if (searchParams.has('id') || searchParams.has(`${window.location.href.split('?')[0]}?id`)) {
-        const idOffer = searchParams.get('id')
+        const idOffer = searchParams.has('id')
           ? { id: Number(searchParams.get('id')) }
           : { id: Number(searchParams.get(`${window.location.href.split('?')[0]}?id`)) }
         let tabOffer = 0
 
         if (searchParams.has('tab') || searchParams.has(`${window.location.href.split('?')[0]}?tab`)) {
-          tabOffer = searchParams.get('tab')
+          tabOffer = searchParams.has('tab')
             ? Number(searchParams.get('tab'))
             : Number(searchParams.get(`${window.location.href.split('?')[0]}?tab`))
         }
