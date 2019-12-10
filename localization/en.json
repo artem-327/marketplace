@@ -762,6 +762,7 @@
   "myInventory.broadcasting.incomplete": "Incomplete, please enter all required values first.",
   "myInventory.broadcasting.unmapped": "Unmapped, please make sure related Product is mapped first.",
   "myInventory.broadcasting.noSellEligible": "Your company is not eligible for broadcasting yet. Make sure to finalize your set-up.",
+  "myInventory.broadcasting.validityExpired": "This product offer validity date has expired, so it cannot be broadcasted.",
   "myInventory.minOrderQuantity": "Min. Purchase",
   "myInventory.splits": "Splits",
   "myInventory.condition": "Condition",
