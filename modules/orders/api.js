@@ -42,6 +42,12 @@ export default {
   disapproveOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/disapprove`),
   receivedOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/received`),
   accept: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/accept`),
-  returnShipmentRates: orderId => api.get(`/prodex/api/sales-orders/${orderId}/return-shipment-rates`),
-  returnShipmentOrder: orderId => api.get(`/prodex/api/sales-orders/${orderId}/return-shipment-order`)
+  returnShipmentRates: (orderId, pickupDate) =>
+    api.get(`/prodex/api/shipment/order/${orderId}/return-shipment-rates?pickupDate=${pickupDate}`),
+  returnShipmentOrder: (orderId, deliveryRemarks, pickupRemarks, quoteId, shipperRefNo) =>
+    api.patch(
+      `/prodex/api/shipment/order/${orderId}/return-shipment-order?deliveryRemarks=${deliveryRemarks}&pickupRemarks=${pickupRemarks}&quoteId=${quoteId}&shipperRefNo=${shipperRefNo}`
+    ),
+  getManualShippingQuote: (orderId, pickupDate) =>
+    api.get(`/prodex/api/shipment/${orderId}/manual-quote?pickupDate${pickupDate}`) //! ! TODO: when after endpoint is created
 }

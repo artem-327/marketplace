@@ -33,8 +33,9 @@ const ModalBody = styled(ModalContent)`
 const initValues = {}
 
 class SaleReviewCreditRequest extends React.Component {
-  componentWillMount = async () => {
-    await this.props.returnShipmentRates()
+  state = {
+    selectedShippingQuote: 0,
+    shipmentQuoteId: ''
   }
 
   submitHandler = async (values, actions) => {
@@ -42,9 +43,9 @@ class SaleReviewCreditRequest extends React.Component {
     console.log('====================================')
     console.log(values)
     console.log('====================================')
-
+    return
     try {
-      await this.props.returnShipmentOrder(orderId)
+      await this.props.returnShipmentOrder(orderId, deliveryRemarks, pickupRemarks, quoteId, shipperRefNo)
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id='order.success' defaultMessage='Success' />,
@@ -67,262 +68,35 @@ class SaleReviewCreditRequest extends React.Component {
     shippingQuoteSelected({ index, quote: shippingQuotes[index] })
   }
 
-  handleManualShipment = async formikProps => {
-    let { values, setSubmitting, errors, validateForm, setFieldTouched } = formikProps
-    let {
-      requestManualShipment,
-      shipping: { selectedAddress },
-      toastManager
-    } = this.props
-    setFieldTouched('address')
-    setSubmitting(false)
-
-    if (values.address) {
-      let payload = {
-        destinationCountryId: selectedAddress.address.country.id,
-        destinationZIP: selectedAddress.address.zip.zip
-      }
-      await requestManualShipment(payload)
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage
-            id='notifications.manualShippingQuote.header'
-            defaultMessage='Request succesfully submitted'
-          />,
-          <FormattedMessage
-            id='notifications.manualShippingQuote.content'
-            defaultMessage='Request for Shipment Quote has been successful'
-          />
-        ),
-        { appearance: 'success' }
-      )
+  onDateChange = async (event, { name, value }) => {
+    const datePickUp = new Date(value)
+    try {
+      //Prozatím je na backendu bug a tento dotaz nefunguje
+      await this.props.returnShipmentRates(this.props.orderId, datePickUp.toISOString())
+    } catch (e) {
+      console.error(e)
     }
   }
 
-  renderFreightSelection(formikProps) {
-    let { cart, shippingQuotes, shippingQuotesAreFetching, shipping, manualShipmentPending } = this.props
-
-    let weightLimitStr = cart && cart.weightLimit ? `of ${cart.weightLimit} lbs` : ''
-
-    return (
-      <Segment>
-        <Grid className='bottom-padded'>
-          <GridRow className='header'>
-            <GridColumn>
-              <Header as='h4'>
-                <FormattedMessage id='cart.2freightSelection' defaultMessage='2. Freight Selection' />
-              </Header>
-            </GridColumn>
-          </GridRow>
-          {cart && !cart.weightLimitExceed ? (
-            <ShippingQuote
-              currency={currency}
-              selectedShippingQuote={cart.selectedShipping}
-              handleQuoteSelect={this.handleQuoteSelect}
-              selectedAddress={shipping.selectedAddress}
-              shippingQuotes={shippingQuotes}
-              shippingQuotesAreFetching={shippingQuotesAreFetching}
-            />
-          ) : (
-            shipping &&
-            !shipping.selectedAddress && (
-              <GridRow>
-                <GridColumn>
-                  <FormattedMessage
-                    id='cart.selectWhOrAddress'
-                    defaultMessage='Please, select delivery address or warehouse first.'
-                  />
-                </GridColumn>
-              </GridRow>
-            )
-          )}
-          {cart && cart.weightLimitExceed && shipping && shipping.selectedAddress && (
-            <>
-              <GridRow>
-                <GridColumn computer={16}>
-                  <FormattedMessage
-                    id='cart.weightLimitExceeded'
-                    defaultMessage={`Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
-                    values={{ limit: weightLimitStr }}
-                  />
-                </GridColumn>
-              </GridRow>
-            </>
-          )}
-
-          {shippingQuotes &&
-            shippingQuotes.length === 0 &&
-            shipping &&
-            shipping.selectedAddress &&
-            !shippingQuotesAreFetching &&
-            cart &&
-            !cart.weightLimitExceed && (
-              <GridRow>
-                <GridColumn computer={16}>
-                  <FormattedMessage
-                    id='cart.noShippingQuotes.processManually'
-                    defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
-                  />
-                </GridColumn>
-              </GridRow>
-            )}
-          {shipping &&
-            shipping.selectedAddress &&
-            // shippingQuotes.length === 0 &&
-            (!shippingQuotesAreFetching || cart.weightLimitExceed) && (
-              <>
-                <GridRow>
-                  <GridColumn computer={8}>
-                    <Input
-                      name='shipmentQuoteId'
-                      label={<FormattedMessage id='cart.shipmentQuote' defaultMessage='Shipment Quote' />}
-                    />
-                  </GridColumn>
-                </GridRow>
-
-                <GridRow>
-                  <GridColumn computer={16}>
-                    <Button
-                      loading={manualShipmentPending}
-                      type='button'
-                      onClick={() => this.handleManualShipment(formikProps)}>
-                      <FormattedMessage id='cart.requestShippingQuote' defaultMessage='Request Shipping Quote'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button>
-                  </GridColumn>
-                </GridRow>
-                <GridRow>
-                  <GridColumn computer={16}>
-                    <FormattedMessage
-                      id='cart.quoteReceived'
-                      defaultMessage='If you already received the shipping quote and agree, please type in the provided Quote Id and continue with Checkout.'
-                    />
-                  </GridColumn>
-                </GridRow>
-              </>
-            )}
-        </Grid>
-      </Segment>
-    )
-  }
-
-  renderShipingQuotes(setFieldTouched) {
-    const { loading } = this.props
-
-    return (
-      <Segment basic style={{ padding: 0 }} loading={loading}>
-        <Table basic='very'>
-          <Table.Header>
-            <Table.HeaderCell></Table.HeaderCell>
-            <Table.HeaderCell>
-              <FormattedMessage id='shippingQuote.vendor' defaultMessage='Vendor'>
-                {text => text}
-              </FormattedMessage>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <FormattedMessage id='shippingQuote.Etd' defaultMessage='ETD'>
-                {text => text}
-              </FormattedMessage>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <FormattedMessage id='shippingQuote.serviceType' defaultMessage='Service Type'>
-                {text => text}
-              </FormattedMessage>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <FormattedMessage id='shippingQuote.fobPriceLb' defaultMessage='FOB Price/lb'>
-                {text => text}
-              </FormattedMessage>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <FormattedMessage id='shippingQuote.freightLb' defaultMessage='Freight/lb'>
-                {text => text}
-              </FormattedMessage>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <FormattedMessage id='shippingQuote.totalPriceLb' defaultMessage='Total Price/lb'>
-                {text => text}
-              </FormattedMessage>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <FormattedMessage id='shippingQuote.totalFreight' defaultMessage='Total Freight'>
-                {text => text}
-              </FormattedMessage>
-            </Table.HeaderCell>
-          </Table.Header>
-          <Table.Body>
-            {this.props.quotes &&
-              this.props.quotes.map((sQuote, i) => {
-                let now = moment()
-                let deliveryDate = sQuote.shipmentRate.estimatedDeliveryDate
-                let etd = now.diff(deliveryDate, 'days') * -1 + 1
-
-                return (
-                  <Table.Row key={i}>
-                    <Table.Cell>
-                      <Checkbox
-                        radio
-                        checked={this.state.selectedIndex === i}
-                        onChange={() => this.handleQuoteSelect(i, sQuote, setFieldTouched)}
-                        value={i}
-                        data-test={`ShippingQuotes_row_${i}_chckb`}
-                      />
-                    </Table.Cell>
-                    <Table.Cell>{sQuote.shipmentRate.carrierName}</Table.Cell>
-                    <Table.Cell>{etd + (etd == 1 ? ' Day' : ' Days')}</Table.Cell>
-                    <Table.Cell>{sQuote.shipmentRate.serviceType}</Table.Cell>
-                    <Table.Cell>
-                      <FormattedNumber
-                        style='currency'
-                        currency={currency}
-                        value={getSafe(() => sQuote.shipmentRate.fobPricePerLb, 0)}
-                      />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <FormattedNumber
-                        style='currency'
-                        currency={currency}
-                        value={getSafe(() => sQuote.shipmentRate.freightPricePerLb, 0)}
-                      />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <FormattedNumber
-                        style='currency'
-                        currency={currency}
-                        value={getSafe(() => sQuote.shipmentRate.totalPricePerLb, 0)}
-                      />
-                    </Table.Cell>
-                    <Table.Cell className='a-right'>
-                      <FormattedNumber
-                        style='currency'
-                        currency={currency}
-                        value={getSafe(() => sQuote.shipmentRate.estimatedPrice, 0)}
-                      />
-                    </Table.Cell>
-                  </Table.Row>
-                )
-              })}
-          </Table.Body>
-        </Table>
-        {this.props.quotes && this.props.quotes.length === 0 && !loading && (
-          <CustomContainer className='dx-g-bs4-fixed-block'>
-            <big className='text-muted'>
-              <FormattedMessage
-                id='global.noShippingOptions'
-                defaultMessage='No shipping options available based on parameters provided.'
-              />
-            </big>
-          </CustomContainer>
-        )}
-      </Segment>
-    )
+  requestManualShippingQuote = async pickupDate => {
+    const datePickUp = new Date(pickupDate)
+    try {
+      //Prozatím je na backendu bug a tento dotaz nefunguje
+      await this.props.returnShipmentRates(this.props.orderId, datePickUp.toISOString())
+    } catch (e) {
+      console.error(e)
+    } finally {
+    }
   }
 
   render() {
     const {
       intl: { formatMessage },
-      isSending
+      orderId,
+      isSending,
+      order,
+      shippingQuotesAreFetching,
+      shippingQuotes
     } = this.props
 
     console.log('THIS.PROPS====================================')
@@ -348,6 +122,7 @@ class SaleReviewCreditRequest extends React.Component {
                 className='flex stretched'
                 style={{ padding: '0' }}>
                 {formikProps => {
+                  let { touched, validateForm, resetForm, values } = formikProps
                   return (
                     <>
                       <Grid>
@@ -356,7 +131,9 @@ class SaleReviewCreditRequest extends React.Component {
                             <DateInput
                               inputProps={{
                                 fluid: true,
-                                placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
+                                placeholder: formatMessage({ id: 'global.selectDate', defaultMessage: 'Select Date' }),
+                                onChange: (event, val) => this.onDateChange(event, val),
+                                'data-test': 'return_shipping_pickup_date'
                               }}
                               label={
                                 <FormattedMessage
@@ -366,8 +143,70 @@ class SaleReviewCreditRequest extends React.Component {
                               }
                               name='pickupDate'
                             />
+                          </Grid.Column>
+                        </Grid.Row>
 
-                            {this.renderShipingQuotes(formikProps.setFieldTouched)}
+                        {true ? (
+                          <>
+                            <GridRow>
+                              <GridColumn computer={16}>
+                                <FormattedMessage
+                                  id='order.weightLimitExceeded'
+                                  defaultMessage={`Your order weight exceeds weight limit for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
+                                />
+                              </GridColumn>
+                            </GridRow>
+                            <Grid.Row>
+                              <Grid.Column width={8}>
+                                <Button
+                                  type='button'
+                                  fluid
+                                  onClick={() => this.requestManualShippingQuote(values.pickupDate)}>
+                                  <FormattedMessage
+                                    id='cart.requestShippingQuote'
+                                    defaultMessage='Request Shipping Quote'
+                                    tagName='span'>
+                                    {text => text}
+                                  </FormattedMessage>
+                                </Button>
+                              </Grid.Column>
+                            </Grid.Row>
+                            <GridRow>
+                              <GridColumn computer={16}>
+                                <FormattedMessage
+                                  id='order.quoteReceived'
+                                  defaultMessage='If you already received the shipping quote and agree, please type in the provided Quote Id and continue with shipping order.'
+                                />
+                              </GridColumn>
+                            </GridRow>
+                            <Grid.Row>
+                              <GridColumn computer={16}>
+                                <Input
+                                  name='shipmentQuoteId'
+                                  label={formatMessage({
+                                    id: 'cart.shipmentQuote',
+                                    defaultMessage: 'Shipment Quote'
+                                  })}
+                                />
+                              </GridColumn>
+                            </Grid.Row>
+                          </>
+                        ) : (
+                          <Grid.Row>
+                            <Grid.Column width={16}>
+                              <ShippingQuote
+                                currency={currency}
+                                selectedShippingQuote={{ index: this.state.selectedShippingQuote }}
+                                handleQuoteSelect={index => this.setState({ selectedShippingQuote: index })}
+                                selectedAddress={1}
+                                shippingQuotes={shippingQuotes}
+                                shippingQuotesAreFetching={shippingQuotesAreFetching}
+                              />
+                            </Grid.Column>
+                          </Grid.Row>
+                        )}
+                        <Grid.Row>
+                          <Grid.Column width={16}>
                             <TextArea
                               name='pickupRemarks'
                               label={formatMessage({
@@ -375,6 +214,10 @@ class SaleReviewCreditRequest extends React.Component {
                                 defaultMessage: 'Enter pickup remarks:'
                               })}
                             />
+                          </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                          <Grid.Column width={16}>
                             <TextArea
                               name='deliveryRemarks'
                               label={formatMessage({
@@ -382,6 +225,10 @@ class SaleReviewCreditRequest extends React.Component {
                                 defaultMessage: 'Enter delivery remarks:'
                               })}
                             />
+                          </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                          <Grid.Column width={16}>
                             <Input
                               name='shipperRefNo'
                               label={formatMessage({
@@ -389,7 +236,6 @@ class SaleReviewCreditRequest extends React.Component {
                                 defaultMessage: 'Enter shipper reference number: '
                               })}
                             />
-                            {this.renderFreightSelection(formikProps)}
                           </Grid.Column>
                         </Grid.Row>
                         <Grid.Row>
