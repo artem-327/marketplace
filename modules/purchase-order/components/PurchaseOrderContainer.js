@@ -11,11 +11,28 @@ function mapStateToProps(store) {
     if (selectedAddress.deliveryAddress) var { address } = selectedAddress.deliveryAddress
     else var { address } = selectedAddress
   }
+
+  function getAddressName() {
+    if (selectedAddress.addressName) {
+      return selectedAddress.addressName
+    }
+    if (!selectedAddress.addressName && !selectedAddress.deliveryAddress) {
+      return selectedAddress.cfName
+    }
+    if (selectedAddress.deliveryAddress && selectedAddress.deliveryAddress.addressName) {
+      return selectedAddress.deliveryAddress.addressName
+    }
+    if (selectedAddress.deliveryAddress && !selectedAddress.deliveryAddress.addressName) {
+      return selectedAddress.deliveryAddress.cfName
+    }
+    return ''
+  }
   return {
     ...store.cart,
     selectedAddressId: store.forms.cart.selectedAddressId,
     initialValues: selectedAddress && {
       ...selectedAddress,
+      addressName: getAddressName(),
       address: {
         ...address,
         country: JSON.stringify({ countryId: address.country.id, hasProvinces: address.country.hasProvinces }),
@@ -27,7 +44,8 @@ function mapStateToProps(store) {
     location: store.location,
     preferredBankAccountId,
     logisticsAccount: getSafe(() => store.auth.identity.company.logisticsAccount, false),
-    billingInfo: getSafe(() => store.auth.identity.company.primaryBranch.deliveryAddress, null)
+    billingInfo: getSafe(() => store.auth.identity.company.primaryBranch.deliveryAddress, null),
+    companyName: getSafe(() => store.auth.identity.company.name, null)
   }
 }
 
