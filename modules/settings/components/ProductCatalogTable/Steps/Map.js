@@ -149,20 +149,23 @@ const simpleEchoProductList = {
 const simpleCompanyProductList = {
   constant: 'global',
   required: [
-    'echoProduct',
+    'freightClassMapper',
     'intProductCodeMapper',
     'intProductNameMapper',
+    'nmfcNumberMapper',
+    'packageWeightMapper',
+    'packageWeightUnitMapper',
     'packagingSizeMapper',
     'packagingTypeMapper',
-    'packagingUnitMapper'
+    'packagingUnitMapper',
+    'stackableMapper'
   ],
   optional: [
+    'echoProduct',
     'freezeProtectMapper',
-    'freightClassMapper',
     'hazardousMapper',
     'inciNameMapper',
-    'nmfcNumberMapper',
-    'stackableMapper'
+    'packagesPerPalletMapper'
   ]
 }
 
