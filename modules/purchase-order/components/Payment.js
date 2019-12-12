@@ -50,6 +50,7 @@ export default class Payment extends Component {
           selectedAddress={billingInfo}
           addressOnly={true}
           header={{ id: 'cart.billingInfo', defaultMessage: 'Billing Info' }}
+          companyName={this.props.companyName}
         />
       </>
     )

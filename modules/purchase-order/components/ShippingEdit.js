@@ -16,6 +16,10 @@ const BottomMargedGrid = styled(Grid)`
   margin-bottom: 1rem !important;
 `
 
+const CustomDiv = styled.div`
+  width: 49%;
+`
+
 import { AddressForm } from '~/modules/address-form'
 import { addressValidationSchema } from '~/constants/yupValidation'
 import { generateToastMarkup } from '~/utils/functions'
@@ -41,6 +45,10 @@ const initialValues = {
 }
 
 class ShippingEdit extends Component {
+  state = {
+    clickedNewAddressInEditMode: false
+  }
+
   validationSchema = (opts = {}) => {
     let defaultOpts = {
       invalidString: <FormattedMessage id='validation.invalidString' defaultMessage='Invalid value' />,
@@ -74,16 +82,16 @@ class ShippingEdit extends Component {
 
     return (
       <>
-        <FormGroup widths='equal' data-test='purchase_order_shipping_edit_name_inp'>
-          <Input label={<FormattedMessage id='global.contactName' default='Contact Name' />} name='contactName' />
-
+        <AddressForm displayHeader={false} values={values} setFieldValue={setFieldValue} />
+        <CustomDiv>
           <Input
             label={<FormattedMessage id='global.addressName' defaultMessage='Address Name' />}
             name='addressName'
           />
-        </FormGroup>
-        <AddressForm displayHeader={false} values={values} setFieldValue={setFieldValue} />
-
+        </CustomDiv>
+        <CustomDiv>
+          <Input label={<FormattedMessage id='global.contactName' default='Contact Name' />} name='contactName' />
+        </CustomDiv>
         <FormGroup widths='equal' data-test='purchase_order_shipping_edit_emailPhone_inp'>
           <Input label={<FormattedMessage id='global.email' defaultMessage='E-mail Address' />} name='contactEmail' />
 
@@ -101,7 +109,7 @@ class ShippingEdit extends Component {
         <Header as='h3'>
           <FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' />
         </Header>
-        <FormGroup widths='equal' data-test='settings_delivery_address_notes_inp' style={{ alignItems: 'center' }}>
+        <FormGroup widths='3' data-test='settings_delivery_address_notes_inp' style={{ marginBottom: '0' }}>
           <Input
             type='text'
             label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
@@ -112,8 +120,13 @@ class ShippingEdit extends Component {
             label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
             name='closeTime'
           />
+          <TextArea
+            inputProps={{ rows: 2 }}
+            name='deliveryNotes'
+            label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
+          />
         </FormGroup>
-        <FormGroup widths='equal'>
+        <FormGroup widths='4'>
           <Checkbox
             label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
             name='liftGate'
@@ -128,12 +141,6 @@ class ShippingEdit extends Component {
             label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
             name='callAhead'
             inputProps={{ 'data-test': 'settings_delivery_address_callAhead_inp' }}
-          />
-        </FormGroup>
-        <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
-          <TextArea
-            name='deliveryNotes'
-            label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
           />
         </FormGroup>
       </>
@@ -201,26 +208,43 @@ class ShippingEdit extends Component {
           {props => {
             return (
               <Container>
-                <FormGroup widths='equal'>
-                  <Form.Field>
-                    <Radio
-                      onChange={() => shippingChanged({ isNewAddress: false })}
-                      checked={!isNewAddress}
-                      disabled={!selectedAddress}
-                      label={formatMessage({ id: 'global.savedAddress', defaultMessage: 'Saved Address' })}
-                      data-test='purchase_order_shipping_edit_savedAddress_rad'
-                    />
-                  </Form.Field>
-
-                  <Form.Field>
-                    <Radio
-                      onChange={() => shippingChanged({ isNewAddress: true })}
-                      checked={isNewAddress}
-                      label={formatMessage({ id: 'global.addNewAddress', defaultMessage: 'Add New' })}
-                      data-test='purchase_order_shipping_edit_addNewAddress_rad'
-                    />
-                  </Form.Field>
-                </FormGroup>
+                <GridRow>
+                  <GridColumn textAlign='center' tablet={16} computer={8}>
+                    <Button.Group fluid>
+                      {selectedAddress && (
+                        <>
+                          <Button
+                            type='button'
+                            onClick={() => shippingChanged({ isNewAddress: false })}
+                            active={!isNewAddress}
+                            disabled={!selectedAddress}
+                            data-test='purchase_order_shipping_edit_savedAddress_rad'>
+                            <FormattedMessage id='global.savedAddress' defaultMessage='Saved Address'>
+                              {text => text}
+                            </FormattedMessage>
+                          </Button>
+                          <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
+                        </>
+                      )}
+                      {!isNewAddress || this.state.clickedNewAddressInEditMode ? (
+                        <>
+                          <Button
+                            type='button'
+                            onClick={() => {
+                              shippingChanged({ isNewAddress: true })
+                              this.setState({ clickedNewAddressInEditMode: true })
+                            }}
+                            active={isNewAddress}
+                            data-test='purchase_order_shipping_edit_addNewAddress_rad'>
+                            <FormattedMessage id='global.addNewAddress' defaultMessage='Add New'>
+                              {text => text}
+                            </FormattedMessage>
+                          </Button>
+                        </>
+                      ) : null}
+                    </Button.Group>
+                  </GridColumn>
+                </GridRow>
                 {this.markup(props)}
                 <Divider />
                 <Grid>
@@ -250,8 +274,8 @@ class ShippingEdit extends Component {
                             type='submit'
                             data-test='purchase_order_shipping_edit_submit_btn'>
                             <FormattedMessage
-                              id={`global.${!isNewAddress ? 'edit' : 'addNew'}`}
-                              defaultMessage={!isNewAddress ? 'Edit' : 'Add New'}>
+                              id={`global.${!isNewAddress ? 'save' : 'addNew'}`}
+                              defaultMessage={!isNewAddress ? 'Save' : 'Add New'}>
                               {text => text}
                             </FormattedMessage>
                           </Button>
