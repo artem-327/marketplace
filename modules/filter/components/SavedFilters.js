@@ -94,8 +94,8 @@ class SavedFilters extends Component {
               <GridColumn computer={8}>
                 <StyledGrid verticalAlign='top'>
                   {filterDescription && filterDescription.length > 0 ? (
-                    filterDescription.map(f => (
-                      <GridRow>
+                    filterDescription.map((f, index) => (
+                      <GridRow key={index}>
                         <GridColumn computer={8}>{f.description}:</GridColumn>
 
                         <GridColumn computer={8}>
@@ -120,7 +120,7 @@ class SavedFilters extends Component {
                   onClick={() => this.props.deleteFilter(id)}
                   computer={2}
                   data-test={`filter_deleteFilter_${i}`}>
-                  <SavedFilterIcon name='remove' />
+                  <SavedFilterIcon name='trash alternate outline' />
                 </GridColumn>
               }
               position='left center'>
@@ -151,7 +151,7 @@ class SavedFilters extends Component {
       <SavedFiltersSegment basic>
         <Accordion>
           {this.props.savedFilters.map((filter, i) => {
-            let { notificationEnabled, notifyMail, notifyPhone, notifySystem, notificationMail } = filter
+            let { notificationEnabled, notifyMail, notifyPhone, notifySystem, notificationMail, notificationPhone } = filter
             let initialValues = {
               checkboxes: {
                 notificationEnabled,
@@ -160,7 +160,8 @@ class SavedFilters extends Component {
                 notifySystem
               },
               notifications: {
-                notificationMail
+                notificationMail,
+                notificationPhone
               }
             }
 
@@ -177,29 +178,37 @@ class SavedFilters extends Component {
                       validateOnChange={false}
                       validateOnBlur={false}
                       onSubmit={async (values, { setSubmitting }) => {
-                        await this.props.updateFilterNotifications(this.state.activeIndex, {
-                          name: filter.name,
-                          ...values.checkboxes,
-                          ...values.notifications
-                        })
-                        this.props.toastManager.add(
-                          <div>
-                            <strong>
-                              <FormattedMessage id='confirm.filter.updated' values={{ name: filter.name }} />
-                            </strong>
-                          </div>,
-                          { appearance: 'success', pauseOnHover: true }
-                        )
+                        try {
+                          let { notificationMail, notificationPhone } = values.notifications
+
+                          let body = {
+                            name: filter.name,
+                            ...values.checkboxes,
+                            ...(notificationMail === undefined || notificationMail === '' ? null : {notificationMail}),
+                            ...(notificationPhone === undefined || notificationPhone === '' ? null : {notificationPhone}),
+                          }
+
+                          await this.props.updateFilterNotifications(this.state.activeIndex, body)
+                          this.props.toastManager.add(
+                            <div>
+                              <strong>
+                                <FormattedMessage id='confirm.filter.updated' values={{name: filter.name}}/>
+                              </strong>
+                            </div>,
+                            {appearance: 'success', pauseOnHover: true}
+                          )
+
+                        } catch (err) { }
                         setSubmitting(false)
                       }}>
-                      {({ values, submitForm }) => {
+                      {(formikProps) => {
                         return (
                           <Grid verticalAlign='middle'>
-                            <Notifications values={values} />
+                            <Notifications values={formikProps.values} formikProps={formikProps}/>
                             <ActionRow>
                               <GridColumn computer={4} floated='right'>
                                 <Button
-                                  onClick={submitForm}
+                                  onClick={formikProps.submitForm}
                                   loading={this.props.savedFilterUpdating}
                                   fluid
                                   positive

@@ -121,7 +121,7 @@ export const SavedFilterIcon = styled(Icon)`
 `
 
 export const ActionRow = styled(GridRow)`
-  padding-top: 0px !important;
+  padding-top: 15px !important;
   margin-bottom: 15px !important;
 `
 
