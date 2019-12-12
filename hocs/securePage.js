@@ -15,7 +15,7 @@ const authorize = ctx => {
    * means user is not logged in.
    */
   if (ctx.req && !auth) {
-    ctx.res.writeHead(302, { Location: '/auth/login' })
+    ctx.res.writeHead(302, { Location: `/auth/login?redirectUrl=${encodeURI(ctx.req.url)}` })
     ctx.res.end()
     return
   }
