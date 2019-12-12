@@ -20,8 +20,7 @@ class FilterTags extends Component {
       datagrid.filters.splice(index - i, 1)
       appliedFilter.filters.splice(index - i, 1)
     })
-
-    datagrid.setFilter(datagrid.filters)
+    datagrid.setFilter({ filters: datagrid.filters })
   }
 
   tagMarkup = filters => {
@@ -31,9 +30,10 @@ class FilterTags extends Component {
       if (tagDescription instanceof Array && tagDescription.length > MAX_TAG_ENTITIES) {
         return (
           <WiderPopup
+            key={i}
             position='bottom center'
             trigger={
-              <FilterTag key={i}>
+              <FilterTag>
                 <span>
                   {' '}
                   {filter.description} ({tagDescription.length})...
@@ -76,6 +76,7 @@ class FilterTags extends Component {
 
       tagsToDisplay.push(
         <WiderPopup
+          key={TAGS_TO_DISPLAY}
           disabled={!!!filters[0].description}
           trigger={
             <FilterTag key={TAGS_TO_DISPLAY}>
@@ -85,10 +86,10 @@ class FilterTags extends Component {
             </FilterTag>
           }>
           <Grid verticalAlign='middle'>
-            {filters.slice(TAGS_TO_DISPLAY).map(el => {
+            {filters.slice(TAGS_TO_DISPLAY).map((el, i) => {
               if (el.description && el.valuesDescription)
                 return (
-                  <PopupRow>
+                  <PopupRow key={i}>
                     <GridColumn computer={8}>{el.description}:</GridColumn>
                     <GridColumn computer={8}>{el.valuesDescription.toString().replace(/,/g, ', ')}</GridColumn>
                   </PopupRow>
