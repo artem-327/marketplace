@@ -325,7 +325,6 @@ class DetailSidebar extends Component {
   componentDidUpdate = oldProps => {
     let oldId = getSafe(() => oldProps.sidebarValues.id, null)
     let newId = getSafe(() => this.props.sidebarValues.id, null)
-
     if ((oldId || newId) && newId !== oldId) {
       this.setState({ oldId })
       this.askForSave(oldProps.sidebarValues)
@@ -493,7 +492,7 @@ class DetailSidebar extends Component {
     let values = this.state.oldProductOffer ? { ...this.getEditValues(), ...this.state.oldProductOffer } : formValues
 
     await new Promise(resolve => this.setState({ edited: false, saved: true }, resolve))
-
+    
     setSubmitting(false)
     let props = {}
     switch (this.state.activeTab) {

@@ -97,11 +97,11 @@ function mapStateToProps(store, { datagrid }) {
         origin: getSafe(() => po.origin.name, ''),
         form: getSafe(() => po.form.name, ''),
         assayString: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
-        mfgDate: getSafe(() => moment(po.manufacturedDate).format('MM/DD/YYYY'), ''),
-        expDate: getSafe(() => moment(po.expirationDate).format('MM/DD/YYYY'), ''),
+        mfgDate: po.manufacturedDate ? moment(po.manufacturedDate).format('MM/DD/YYYY') : 'N/A',
+        expDate: po.lotExpirationDate ? moment(po.lotExpirationDate).format('MM/DD/YYYY') : 'N/A',
         allocatedPkg: po.pkgAllocated,
         // processingTimeDays: po.processingTimeDays,
-        offerExpiration: getSafe(() => moment(po.validityDate).format('MM/DD/YYYY'), '')
+        offerExpiration: po.validityDate ? moment(po.validityDate).format('MM/DD/YYYY') : 'N/A',
       }
     }),
     unmappedRows: datagrid.rows,

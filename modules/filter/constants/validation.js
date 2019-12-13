@@ -1,7 +1,7 @@
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
-
 import { dateDropdownOptions } from './filter'
+import { errorMessages as errorMessagesGlobal, phoneValidation } from '~/constants/yupValidation'
 
 export const initialValues = {
   search: [],
@@ -14,15 +14,20 @@ export const initialValues = {
   name: '',
   expiration: dateDropdownOptions[0].value,
   mfg: dateDropdownOptions[0].value,
+  expirationTo: '',
+  expirationFrom: '',
+  mfgTo: '',
+  mfgFrom: '',
   checkboxes: {
+    notificationEnabled: false,
     automaticallyApply: true,
     notifyMail: false,
     notifyPhone: false,
     notifySystem: false
   },
   notifications: {
-    notificationMail: null,
-    notificationPhone: null
+    notificationMail: '',
+    notificationPhone: ''
   },
   warehouse: ''
 }
@@ -66,7 +71,7 @@ const comparationHelper = (fieldOne, fieldTwo, values, options = {}) => {
   }
 }
 
-export const validationSchema = () =>
+export const validationSchema = (openedSaveFilter) =>
   Yup.lazy(values => {
     return Yup.object().shape({
       ...comparationHelper(
@@ -105,7 +110,20 @@ export const validationSchema = () =>
         .notRequired(),
       mfgTo: Yup.number('number')
         .moreThan(0, errorMessages.greaterThan(0))
-        .notRequired()
+        .notRequired(),
+
+      ...( openedSaveFilter && {
+        name: Yup.string()
+          .trim()
+          .min(2, errorMessagesGlobal.minLength(2))
+          .required(errorMessagesGlobal.minLength(2)),
+        notifications: Yup.object().shape({
+          notificationMail: Yup.string()
+            .trim()
+            .email(errorMessagesGlobal.invalidEmail),
+          notificationPhone: phoneValidation()
+        })
+      })
     })
   })
 
@@ -113,9 +131,10 @@ export const savedFilterValidation = Yup.lazy(values => {
   if (values.checkboxes.notifyMail) {
     return Yup.object().shape({
       notifications: Yup.object().shape({
-        notificationMail: Yup.string('Required')
-          .email('Valid mail required')
-          .required('Required!')
+        notificationMail:  Yup.string()
+          .trim()
+          .email(errorMessagesGlobal.invalidEmail),
+        notificationPhone: phoneValidation()
       })
     })
   }

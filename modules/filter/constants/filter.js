@@ -27,15 +27,15 @@ export const paths = {
   productOffers: {
     productId: 'ProductOffer.companyProduct.echoProduct.id',
     quantity: 'ProductOffer.quantity',
-    price: 'ProductOffer.price',
+    price: 'ProductOffer.cfPricePerUOM',
     packagingTypes: 'ProductOffer.companyProduct.packagingType.id',
-    productConditions: 'ProductOffer.productCondition.id',
+    productConditions: 'ProductOffer.condition.id',
     productGrade: 'ProductGrade.id',
-    productForms: 'ProductOffer.productForm.id',
-    expirationDate: 'ProductOffer.expirationDate',
+    productForms: 'ProductOffer.form.id',
+    expirationDate: 'ProductOffer.lotExpirationDate',
     assayFrom: 'ProductOffer.assayMin',
     assayTo: 'ProductOffer.assayMax',
-    manufacturedDate: 'ProductOffer.manufacturedDate',
+    manufacturedDate: 'ProductOffer.lotManufacturedDate',
     warehouseId: 'ProductOffer.warehouse.id'
   },
   orders: {
@@ -121,7 +121,7 @@ export const datagridValues = {
     valuesDescription: function(values) {
       return values.map(val => {
         try {
-          return JSON.parse(val.description).name
+          return JSON.parse(val.description).text
         } catch {
           return val.description
         }
@@ -133,10 +133,10 @@ export const datagridValues = {
     },
 
     toFormik: function({ values }) {
+      let parsed = JSON.parse(values[0].description)
       return JSON.stringify({
         id: parseInt(values[0].value),
-        name: values[0].description,
-        text: values[0].description
+        text: parsed.text
       })
     }
   },

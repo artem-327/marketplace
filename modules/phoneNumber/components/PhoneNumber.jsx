@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { string, object, bool, func, oneOfType, node } from 'prop-types'
-import { FormField, Dropdown, Label, List, Popup } from 'semantic-ui-react'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { string, object, bool, func } from 'prop-types'
+import { FormField, Dropdown } from 'semantic-ui-react'
 import styled from 'styled-components'
 //import { InputMask } from 'react-input-mask'
 const InputMask = require('react-input-mask')
@@ -37,6 +36,9 @@ const StyledDropdown = styled(Dropdown)`
     z-index: 3;
     opacity: 0.8;
     transition: opacity 0.1s ease;
+  }
+  > .menu {
+    left: -100% !important;
   }
 `
 
@@ -84,7 +86,7 @@ export default class PhoneNumber extends Component {
       phoneFull: phone.phoneCountryCode.length ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
     })
 
-    setFieldValue(name, phone.phoneCountryCode.length ? ('+' + phone.phoneCountryCode + phone.phoneNumber) : phone.phoneNumber)
+    //setFieldValue(name, phone.phoneCountryCode.length ? ('+' + phone.phoneCountryCode + phone.phoneNumber) : phone.phoneNumber)
     // setFieldTouched(name, true, true)
   }
 
@@ -123,7 +125,10 @@ export default class PhoneNumber extends Component {
       errors,
       name,
       touched,
-      isSubmitting
+      isSubmitting,
+      disabled,
+      clearable,
+      placeholder
     } = this.props
 
     let {
@@ -141,17 +146,20 @@ export default class PhoneNumber extends Component {
             options={phoneCountryCodes}
             onChange={(e, data) => this.handleChange('phoneCountryCode', data.value)}
             search
+            disabled={disabled}
+            clearable={clearable}
             placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+CCC' })}
             value={phoneCountryCode}
           />
           <StyledInputMask
             mask='999 999 9999'
             maskChar=' '
-            compact
+            compact='true'
+            disabled={disabled}
             type='text'
             value={phoneNumber}
             onChange={(data) => this.handleChange('phoneNumber', data.target.value)}
-            placeholder={formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
+            placeholder={placeholder || formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
           />
         </span>
         {error && <span className='sui-error-message'>{error}</span>}
@@ -169,7 +177,10 @@ PhoneNumber.propTypes = {
   search: bool,
   errors: object,
   isSubmitting: bool,
-  touched: object
+  touched: object,
+  disabled: bool,
+  clearable: bool,
+  placeholder: string
 }
 
 PhoneNumber.defaultProps = {
@@ -181,5 +192,8 @@ PhoneNumber.defaultProps = {
   label: 'Phone',
   errors: {},
   isSubmitting: false,
-  touched: {}
+  touched: {},
+  disabled: false,
+  clearable: false,
+  placeholder: null
 }

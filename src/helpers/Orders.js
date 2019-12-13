@@ -73,17 +73,19 @@ export function getCreditStatus(creditStatus) {
     case 4:
       return 'Rejected'
     default:
-      return 'N/A'
+      return null
   }
 }
 
 export function getReturnStatus(returnStatus) {
   switch (returnStatus) {
     case 1:
-      return 'In Transit'
+      return 'Not Shipped'
     case 2:
+      return 'In Transit'
+    case 3:
       return 'Delivered'
     default:
-      return 'N/A'
+      return null
   }
 }
