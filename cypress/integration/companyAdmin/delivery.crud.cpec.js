@@ -1,5 +1,6 @@
 context("Prodex Branches CRUD", () => {
     let addressId = null
+    let filter = [{"operator":"LIKE","path":"DeliveryAddress.address.streetAddress","values":["%125 N G St%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -19,6 +20,12 @@ context("Prodex Branches CRUD", () => {
     })
 
     it("Creates a delivery address", () => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.getFirstEntityWithFilter(token, 'delivery-addresses',filter).then(itemId => {
+                if(itemId != null)
+                    cy.deleteEntity(token, 'delivery-addresses/id', itemId)
+            })
+        })
         cy.settingsAdd()
 
         cy.enterText("#field_input_addressName", "Automatic")
@@ -43,9 +50,7 @@ context("Prodex Branches CRUD", () => {
 
         cy.contains("Created Delivery Address")
 
-        let filter = [{"operator":"LIKE","path":"DeliveryAddress.address.streetAddress","values":["%125 N G St%"]}]
-
-        cy.getToken().then(token => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.getFirstAddressIdWithFilter(token, filter).then(itemId => {
                 cy.get('[data-test=action_' + itemId + ']').click()
 

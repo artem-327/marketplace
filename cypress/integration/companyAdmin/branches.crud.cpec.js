@@ -1,5 +1,8 @@
 context("Prodex Branches CRUD", () => {
     let branchId = null
+    let filter = [{"operator":"LIKE","path":"Branch.deliveryAddress.addressName","values":["%Central%"]},
+        {"operator":"LIKE","path":"Branch.deliveryAddress.address.streetAddress","values":["%Central%"]},
+        {"operator":"LIKE","path":"Branch.deliveryAddress.contactName","values":["%Central%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -21,6 +24,12 @@ context("Prodex Branches CRUD", () => {
     })
 
     it("Creates a branch", () => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.getFirstEntityWithFilter(token, 'branches',filter).then(itemId => {
+                if(itemId != null)
+                    cy.deleteEntity(token, 'branches', itemId)
+            })
+        })
         cy.settingsAdd()
 
         cy.enterText("input[id='field_input_deliveryAddress.addressName']", "Central branch")
@@ -43,11 +52,7 @@ context("Prodex Branches CRUD", () => {
 
         cy.contains("Created Warehouse")
 
-        let filter = [{"operator":"LIKE","path":"Branch.deliveryAddress.addressName","values":["%Central%"]},
-            {"operator":"LIKE","path":"Branch.deliveryAddress.address.streetAddress","values":["%Central%"]},
-            {"operator":"LIKE","path":"Branch.deliveryAddress.contactName","values":["%Central%"]}]
-
-        cy.getToken().then(token => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.getFirstBranchIdWithFilter(token, filter).then(itemId => {
                 cy.openElement(itemId, 0)
 
@@ -71,6 +76,8 @@ context("Prodex Branches CRUD", () => {
     })
 
     it("Edits a branch", () => {
+        cy.searchInList("Central")
+
         cy.openElement(branchId, 0)
 
         cy.get("input[id='field_input_deliveryAddress.addressName']")
@@ -92,13 +99,15 @@ context("Prodex Branches CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length", 8)
+            .should("have.length", 7)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
     })
 
     it("Deletes a branch", () => {
+        cy.searchInList("Arnold")
+
         cy.openElement(branchId, 1)
 
         cy.clickSave()
