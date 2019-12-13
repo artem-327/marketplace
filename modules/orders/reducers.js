@@ -293,6 +293,7 @@ export default function(state = initialState, action) {
     case AT.ORDER_ACCEPT_DELIVERY_ORDER_FULFILLED:
     case AT.ORDER_RECEIVED_ORDER_FULFILLED:
     case AT.ORDER_DISAPPROVE_ORDER_FULFILLED:
+    case AT.REJECT_PURCHASE_ORDER_FULFILLED:
       return {
         ...state,
         detail: action.payload.data

@@ -1749,5 +1749,10 @@
   "order.returnCarrier": "Return Carrier",
   "order.returnTrackingNumber": "Return Tracking Number",
   "profile.myProfile": "My Profile",
-  "profile.lastLoginAt": "Last login at:"
+  "profile.lastLoginAt": "Last login at:",
+  "order.rejectOrder": "REJECT ORDED",
+  "order.selectReason": "Please select the reason for rejecting this order",
+  "order.success": "Success",
+  "order.rejected": "Order was successfully rejected",
+  "order.reject.enterReasonHere": "Enter reason here:"
 }
