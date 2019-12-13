@@ -21,11 +21,11 @@ export const rejectOrder = orderId => ({
   type: AT.ORDER_REJECT_FETCH,
   payload: Api.reject(orderId)
 })
-export const shipOrder = (orderId, trackingId='') => ({
+export const shipOrder = (orderId, trackingId = '') => ({
   type: AT.ORDER_SHIP_FETCH,
   payload: Api.ship(orderId, trackingId)
 })
-export const returnShipOrder = (orderId, trackingId='') => ({
+export const returnShipOrder = (orderId, trackingId = '') => ({
   type: AT.ORDER_RETURN_SHIP_FETCH,
   payload: Api.returnShip(orderId, trackingId)
 })
@@ -138,7 +138,7 @@ export const disapproveOrder = orderId => ({
   type: AT.ORDER_DISAPPROVE_ORDER,
   payload: Api.disapproveOrder(orderId)
 })
-export const openPopupName = (name) => ({
+export const openPopupName = name => ({
   type: AT.ORDER_OPEN_POPUP_NAME,
   payload: name
 })
@@ -153,4 +153,8 @@ export const receivedOrder = orderId => ({
 export const acceptDelivery = orderId => ({
   type: AT.ORDER_ACCEPT_DELIVERY_ORDER,
   payload: Api.accept(orderId)
+})
+export const rejectPurchaseOrder = (orderId, reason, reasonText, file) => ({
+  type: AT.REJECT_PURCHASE_ORDER,
+  payload: Api.rejectPurchaseOrder(orderId, reason, reasonText, file)
 })
