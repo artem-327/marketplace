@@ -1,5 +1,8 @@
 context("Prodex Warehouse CRUD", () => {
     let branchId = null
+    let filter = [{"operator":"LIKE","path":"Branch.deliveryAddress.addressName","values":["%Central branch%"]},
+        {"operator":"LIKE","path":"Branch.deliveryAddress.address.streetAddress","values":["%Central branch%"]},
+        {"operator":"LIKE","path":"Branch.deliveryAddress.contactName","values":["%Central branch%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -7,7 +10,7 @@ context("Prodex Warehouse CRUD", () => {
         cy.route("GET", "/prodex/api/users").as("settingsLoading")
         cy.route("POST", "/prodex/api/branches/warehouses/datagrid").as("warehouseLoading")
 
-        cy.FElogin("user1@example.com", "echopass123")
+        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.contains("Settings").click()
@@ -21,6 +24,12 @@ context("Prodex Warehouse CRUD", () => {
     })
 
     it("Creates a warehouse", () => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.getFirstEntityWithFilter(token, 'branches/warehouses',filter).then(itemId => {
+                if(itemId != null)
+                    cy.deleteEntity(token, 'branches', itemId)
+            })
+        })
         cy.get("[data-test='settings_open_popup_btn']").click()
 
         cy.enterText("input[name='deliveryAddress.addressName']", "Central branch")
@@ -43,11 +52,9 @@ context("Prodex Warehouse CRUD", () => {
 
         cy.contains("Created Warehouse")
 
-        let filter = [{"operator":"LIKE","path":"Branch.deliveryAddress.addressName","values":["%Central branch%"]},
-            {"operator":"LIKE","path":"Branch.deliveryAddress.address.streetAddress","values":["%Central branch%"]},
-            {"operator":"LIKE","path":"Branch.deliveryAddress.contactName","values":["%Central branch%"]}]
+        cy.searchInList("Central")
 
-        cy.getToken().then(token => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.getFirstBranchIdWithFilter(token, filter).then(itemId => {
                 cy.openElement(itemId, 0)
 

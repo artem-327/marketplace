@@ -139,7 +139,7 @@ Cypress.Commands.add("getFirstMarketName", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {filters: filter, pageNumber: 0, pageSize: 50, "orOperator": true}
+        body: {filters: filter, pageNumber: 0, pageSize: 50}
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].companyProduct.intProductName

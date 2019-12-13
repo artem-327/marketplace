@@ -8,7 +8,7 @@ context("Shopping cart CRUD", () => {
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
 
-        cy.FElogin("user1@example.com", "echopass123")
+        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.waitForUI()
         cy.url().should("include", "inventory")
@@ -23,7 +23,7 @@ context("Shopping cart CRUD", () => {
     })
 
     it("Adds item to shopping card", () => {
-        cy.getToken().then(token => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
                 cy.deleteWholeCart(token)
 
@@ -37,7 +37,7 @@ context("Shopping cart CRUD", () => {
 
                 cy.contains("Continue").click()
 
-                cy.getToken().then(token => {
+                cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
                     //Check product name
                     cy.getItemBody(token, marketPlaceId).then(itemBody => {
                         cy.get(".item-cart-body-section-name").should('contain', itemBody.companyProduct.echoProduct.name)
@@ -46,9 +46,9 @@ context("Shopping cart CRUD", () => {
                     //Check cart price
                     cy.getCartBody(token).then(priceBody => {
                         cy.get(".eEIHvq").within(() => {
-                            cy.get("label").should(($label) => {
+                            cy.get(".column").eq(1).should(($label) => {
                                 const actualPrice = $label.text()
-                                expect(actualPrice.replace(/[^\d.]/g, '').replace(/\..*/g, '')).to.eq(priceBody.cfPriceSubtotal.toString())
+                                expect(actualPrice.replace(/[^\d.]/g, '')).to.eq(addZeroes(priceBody.cfPriceSubtotal))
                             })
                         })
                     })
@@ -67,16 +67,16 @@ context("Shopping cart CRUD", () => {
             .type("2")
 
         cy.get("[data-test='add_cart_edit_order_btn']").click()
-        cy.getToken().then(token => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.getCartBody(token).then(priceBody => {
                 //Expect there are 2 items
                 expect(priceBody.cartItems[0].pkgAmount).to.eq(2)
 
                 //Expect right price displayed
                 cy.get(".eEIHvq").within(() => {
-                    cy.get("label").should(($label) => {
+                    cy.get(".column").eq(1).should(($label) => {
                         const actualPrice = $label.text()
-                        expect(actualPrice.replace(/[^\d.]/g, '').replace(/\..*/g, '')).to.eq(priceBody.cfPriceSubtotal.toString())
+                        expect(actualPrice.replace(/[^\d.]/g, '')).to.eq(addZeroes(priceBody.cfPriceSubtotal))
                     })
                 })
             })
@@ -84,7 +84,7 @@ context("Shopping cart CRUD", () => {
     })
 
     it("Add second item in shopping card", () => {
-        cy.getToken().then(token => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
                 cy.deleteWholeCart(token)
 
@@ -110,7 +110,7 @@ context("Shopping cart CRUD", () => {
 
             cy.waitForUI()
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
-                marketPlaceId2 = marketPlaceBody[1].id
+                marketPlaceId2 = marketPlaceBody[2].id
 
                 cy.openElement(marketPlaceId2, 0)
             })
@@ -126,7 +126,7 @@ context("Shopping cart CRUD", () => {
             })
 
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
-                marketPlaceId2 = marketPlaceBody[1].id
+                marketPlaceId2 = marketPlaceBody[2].id
 
                 cy.getItemBody(token, marketPlaceId2).then(itemBody => {
                     cy.get(".item-cart-body-section-name").eq(2).should('contain', itemBody.companyProduct.echoProduct.name)
@@ -143,7 +143,7 @@ context("Shopping cart CRUD", () => {
         cy.contains("Yes").click()
 
         cy.get(".item-cart-body-section-name").should("have.length", "2")
-        cy.getToken().then(token => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.getItemBody(token, marketPlaceId).then(itemBody => {
                 cy.get(".item-cart-body-section-name").should('contain', itemBody.companyProduct.echoProduct.name)
             })
@@ -152,7 +152,7 @@ context("Shopping cart CRUD", () => {
         cy.reload()
 
         cy.get(".item-cart-body-section-name").should("have.length", "2")
-        cy.getToken().then(token => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.getItemBody(token, marketPlaceId).then(itemBody => {
                 cy.get(".item-cart-body-section-name").should('contain', itemBody.companyProduct.echoProduct.name)
             })
@@ -167,16 +167,20 @@ context("Shopping cart CRUD", () => {
 
         cy.url().should("include", "purchase-order")
         cy.contains("Place Order").should('not.be.enabled')
-        cy.get("[data-test='purchase_order_location_drpdn']").click()
-        cy.getToken().then(token => {
+        cy.get("#field_dropdown_address").click()
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.getDeliveryAddresses(token).then(addresses => {
-                cy.contains(addresses[1].address.streetAddress).click()
+                cy.contains(addresses[1].addressName).click()
             })
         })
 
-        cy.get("[data-test='purchase_order_shipping_quote_0_rad']").click()
+        cy.get("[data-test='purchase_order_shipping_quote_0_rad']", {timeout: 60000}).click()
 
         cy.contains("Place Order").should('be.enabled')
     })
 
 })
+
+function addZeroes(num) {
+    return num.toLocaleString("en", {useGrouping: false, minimumFractionDigits: 3})
+}
