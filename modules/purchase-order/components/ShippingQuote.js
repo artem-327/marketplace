@@ -21,6 +21,11 @@ const RelaxedRow = styled(GridRow)`
   padding-top: 0px !important;
 `
 
+const RelaxedRowPaddingTop = styled(GridRow)`
+  padding-bottom: 0px !important;
+  padding-top: 5px !important;
+`
+
 export default class ShippingQuote extends Component {
   state = {
     selectedItem: null
@@ -88,18 +93,14 @@ export default class ShippingQuote extends Component {
 
     if (!shippingQuotes || shippingQuotes.length === 0) {
       return (
-        <GridColumn computer={16}>
-          <Grid>
-            <GridRow>
-              <GridColumn computer={16}>
-                <FormattedMessage
-                  id='cart.noShippingQuotes'
-                  defaultMessage='We are sorry, but not matching Shipping Quotes has been found.'
-                />
-              </GridColumn>
-            </GridRow>
-          </Grid>
-        </GridColumn>
+        <RelaxedRowPaddingTop>
+          <GridColumn computer={16}>
+            <FormattedMessage
+              id='cart.noShippingQuotes'
+              defaultMessage='We are sorry, but no matching Shipping Quotes were provided by logistics company.'
+            />
+          </GridColumn>
+        </RelaxedRowPaddingTop>
       )
     }
 

@@ -28,7 +28,7 @@ import '../styles/PurchaseOrder.scss'
 import { errorMessages } from '~/constants/yupValidation'
 
 const RelaxedForm = styled(Form)`
-  padding-top 1.5rem !important;
+  padding-top: 1.5rem !important;
   padding-bottom: 50px !important;
   overflow: auto;
 `
@@ -190,17 +190,26 @@ class PurchaseOrder extends Component {
     } = this.props
     setFieldTouched('address')
     setSubmitting(false)
-    
+
     if (values.address) {
       let payload = {
         destinationCountryId: selectedAddress.address.country.id,
         destinationZIP: selectedAddress.address.zip.zip
       }
       await requestManualShipment(payload)
-      toastManager.add(generateToastMarkup(
-        <FormattedMessage id='notifications.manualShippingQuote.header' defaultMessage='Request succesfully submitted' />,
-        <FormattedMessage id='notifications.manualShippingQuote.content' defaultMessage='Request for Shipment Quote has been successful' />
-      ), {appearance: 'success'})
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage
+            id='notifications.manualShippingQuote.header'
+            defaultMessage='Request succesfully submitted'
+          />,
+          <FormattedMessage
+            id='notifications.manualShippingQuote.content'
+            defaultMessage='Request for Shipment Quote has been successful'
+          />
+        ),
+        { appearance: 'success' }
+      )
     }
   }
 
@@ -384,15 +393,6 @@ class PurchaseOrder extends Component {
                         (!shippingQuotesAreFetching || cart.weightLimitExceed) && (
                           <>
                             <GridRow>
-                              <GridColumn computer={8}>
-                                <Input
-                                  name='shipmentQuoteId'
-                                  label={<FormattedMessage id='cart.shipmentQuote' defaultMessage='Shipment Quote' />}
-                                />
-                              </GridColumn>
-                            </GridRow>
-
-                            <GridRow>
                               <GridColumn computer={16}>
                                 <Button
                                   loading={this.props.manualShipmentPending}
@@ -410,7 +410,17 @@ class PurchaseOrder extends Component {
                               <GridColumn computer={16}>
                                 <FormattedMessage
                                   id='cart.quoteReceived'
-                                  defaultMessage='If you already received the shipping quote and agree, please type in the provided Quote Id and continue with Checkout.'
+                                  defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
+                                />
+                              </GridColumn>
+                            </GridRow>
+                            <GridRow>
+                              <GridColumn computer={8}>
+                                <Input
+                                  name='shipmentQuoteId'
+                                  label={
+                                    <FormattedMessage id='cart.shippingQuoteId' defaultMessage='Shipping Quote ID' />
+                                  }
                                 />
                               </GridColumn>
                             </GridRow>
@@ -435,6 +445,7 @@ class PurchaseOrder extends Component {
                         selectedPayment={shipping.selectedPayment}
                         payments={payments}
                         getPayment={this.getPayment}
+                        companyName={this.props.companyName}
                       />
                     </Grid>
                   </Segment>

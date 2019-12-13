@@ -7,6 +7,7 @@ import { GridRow, GridColumn, Divider, Header, Button } from 'semantic-ui-react'
 import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 
 import ShippingAddress from './ShippingAddress'
+import { getSafe } from '~/utils/functions'
 
 class Shipping extends Component {
   handleToggleChange = otherAddresses => {
@@ -26,17 +27,70 @@ class Shipping extends Component {
     }
   }
 
+  getFullAddress = address => {
+    let fullAddress = ''
+    if (getSafe(() => address.streetAddress, false)) {
+      fullAddress = address.streetAddress
+    }
+    if (getSafe(() => address.city, false)) {
+      fullAddress ? (fullAddress += `, ${address.city}`) : (fullAddress = address.city)
+    }
+    if (getSafe(() => address.province.abbreviation, false)) {
+      fullAddress
+        ? (fullAddress += `, ${address.province.abbreviation}`)
+        : (fullAddress = address.province.abbreviation)
+    }
+    if (getSafe(() => address.country.code, false)) {
+      fullAddress ? (fullAddress += `, ${address.country.code}`) : (fullAddress = i.address.country.code)
+    }
+
+    return fullAddress
+  }
+
   render() {
     let { deliveryAddresses, /* branches, */ warehouses, getAddress, selectedAddress, intl } = this.props
     let { formatMessage } = intl
 
     let addresses = this.props.otherAddresses ? deliveryAddresses : warehouses // branches
 
-    let dropdownOptions = addresses.map(i => ({
-      text: this.props.otherAddresses ? `${i.cfName}` : `${i.deliveryAddress.cfName}`,
-      value: i.id,
-      key: i.id
-    }))
+    let dropdownOptions = addresses.map(i => {
+      const address = i.warehouse ? getSafe(() => i.deliveryAddress.address, '') : getSafe(() => i.address, '')
+
+      return {
+        text: this.props.otherAddresses
+          ? `${this.getFullAddress(address)} ${getSafe(() => i.addressName, '')} `
+          : `${getSafe(() => i.deliveryAddress.cfName, '')}`,
+        value: i.id,
+        key: i.id,
+        content: (
+          <Header
+            key={i.id}
+            content={
+              <div
+                style={{
+                  fontSize: '14px'
+                }}>
+                {this.getFullAddress(address)}
+              </div>
+            }
+            subheader={
+              <div style={{ fontSize: '12px', color: 'gray', fontWeight: '100' }}>
+                {i.warehouse
+                  ? !i.deliveryAddress.addressName
+                    ? getSafe(() => i.deliveryAddress.cfName, '')
+                    : getSafe(() => i.deliveryAddress.addressName, '')
+                  : !i.addressName
+                  ? getSafe(() => i.cfName, '')
+                  : getSafe(() => i.addressName, '')}
+              </div>
+            }
+          />
+        )
+      }
+    })
+
+    const editOrAddMessage = selectedAddress ? 'Edit' : 'Add New'
+    const editOrAddId = selectedAddress ? 'global.edit' : 'global.addNew'
 
     return (
       <>
@@ -46,18 +100,17 @@ class Shipping extends Component {
               <FormattedMessage id='cart.1shipping' defaultMessage='1. Shipping' />
             </Header>
           </GridColumn>
-          {this.props.otherAddresses && (
-            <GridColumn floated='right'>
-              <span
-                className='headerAddtext'
-                onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !selectedAddress })}
-                data-test='purchase_order_edit_address'>
-                <FormattedMessage id='global.edit' defaultMessage='Edit'>
-                  {text => text}
-                </FormattedMessage>
-              </span>
-            </GridColumn>
-          )}
+
+          <GridColumn floated='right'>
+            <span
+              className='headerAddtext'
+              onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !selectedAddress })}
+              data-test='purchase_order_edit_address'>
+              <FormattedMessage id={editOrAddId} defaultMessage={editOrAddMessage}>
+                {text => text}
+              </FormattedMessage>
+            </span>
+          </GridColumn>
         </GridRow>
         <GridRow>
           <GridColumn textAlign='center' tablet={16} computer={8}>
@@ -93,6 +146,9 @@ class Shipping extends Component {
               fluid
               selection
               inputProps={{
+                minCharacters: 1,
+                icon: 'search',
+                search: true,
                 disabled: this.props.shippingQuotesAreFetching,
                 placeholder: <FormattedMessage id='global.selectLocation' defaultMessage='Select Location' />,
                 onChange: (_, { value }) => getAddress(value)

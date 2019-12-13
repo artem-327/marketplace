@@ -32,10 +32,12 @@ class Messages extends Component {
     const msg =
       message && message.level
         ? message.descriptionMessage
-          ? `${message.clientMessage} ${message.descriptionMessage} ${
-              process.env.NODE_ENV === 'production' ? '' : message.exceptionMessage
+          ? `${getSafe(() => message.clientMessage, '')} ${getSafe(() => message.descriptionMessage, '')} ${
+              process.env.NODE_ENV === 'production' ? '' : getSafe(() => message.exceptionMessage, '')
             }`
-          : `${message.clientMessage} ${getSafe(() => message.exceptionMessage, '')}`
+          : `${getSafe(() => message.clientMessage, '')} ${
+              process.env.NODE_ENV === 'production' ? '' : getSafe(() => message.exceptionMessage, '')
+            }`
         : message
 
     if (msg && message.level) {

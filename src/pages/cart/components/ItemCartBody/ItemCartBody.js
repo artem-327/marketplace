@@ -3,84 +3,154 @@ import { object, func } from 'prop-types'
 import confirm from '../../../../components/Confirmable/confirm'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 
-import { Button } from 'semantic-ui-react'
+import { Button, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import { FormattedAssay } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
+import moment from 'moment/moment'
+import { getSafe } from '~/utils/functions'
+import styled from 'styled-components'
+import { FormattedUnit } from '~/components/formatted-messages'
+
+const CapitalizedText = styled.span`
+  text-transform: capitalize;
+`
 
 export default class ItemCartBody extends Component {
   render() {
     let { cartItem, deleteCartItem, casNumberChemName } = this.props
     let { productOffer } = cartItem
-    let unitName = productOffer.companyProduct.packagingUnit.nameAbbreviation
+
+    const packagingType = getSafe(() => productOffer.companyProduct.packagingType.name, '')
+    const unitName = getSafe(() => productOffer.companyProduct.packagingUnit.nameAbbreviation, '')
+    const packagingSize = getSafe(() => productOffer.companyProduct.packagingSize, 0)
+    const pkgAmount = getSafe(() => cartItem.pkgAmount, 0)
+
+    const leftWidth1 = 5
+    const rightWidth1 = 11
+    const leftWidth2 = 6
+    const rightWidth2 = 10
 
     return (
       <div className='item-cart'>
-        <div className='item-cart-body'>
-          <div className='item-cart-body-section'>
-            <div className='item-cart-body-section-name'>
-              {productOffer.companyProduct.echoProduct.code + ' - ' + productOffer.companyProduct.echoProduct.name}
-            </div>
+        <Grid className='item-cart-body'>
+          <GridColumn width={9}>
+            <div className='item-cart-body-section'>
+              <GridRow className='item-cart-body-section-name'>{productOffer.companyProduct.echoProduct.name}</GridRow>
+              <Grid columns={2}>
+                <GridColumn width={leftWidth1}>
+                  <FormattedMessage id='cart.packaging' defaultMessage='Packaging:' />
+                </GridColumn>
+                <GridColumn width={rightWidth1}>
+                  <>
+                    <FormattedNumber minimumFractionDigits={0} value={packagingSize} />
+                    {` ${unitName} `}
+                    <CapitalizedText>{packagingType}</CapitalizedText>{' '}
+                  </>
+                </GridColumn>
 
-            <div className='item-cart-body-section-name'>{casNumberChemName}</div>
-            <div>
-              {/* <FormattedMessage
-                id='cart.merchant.email'
-                defaultMessage={'Merchant: ' + productOffer.merchant ? productOffer.merchant.email : productOffer.warehouse.address.contactEmail}
-                values={{ merchant: productOffer.merchant ? productOffer.merchant.company.name : productOffer.warehouse.address.contactEmail }}
-              /> */}
+                <GridColumn width={leftWidth1}>
+                  <FormattedMessage id='cart.numOfPackages' defaultMessage='# of Packages:' />
+                </GridColumn>
+                <GridColumn width={rightWidth1}>
+                  <FormattedNumber minimumFractionDigits={0} value={pkgAmount} />
+                </GridColumn>
+
+                <GridColumn width={leftWidth1}>
+                  <FormattedMessage id='cart.totalQuantity' defaultMessage='Total Quantity:' />
+                </GridColumn>
+                <GridColumn width={rightWidth1}>
+                  <>
+                    <FormattedNumber minimumFractionDigits={0} value={pkgAmount * packagingSize} />
+                    {unitName && ` ${unitName}`}
+                  </>
+                </GridColumn>
+
+                <GridColumn width={leftWidth1}>
+                  <FormattedMessage id='cart.fobPrice' defaultMessage='FOB Price:' />
+                </GridColumn>
+                <GridColumn width={rightWidth1}>
+                  <>
+                    <FormattedNumber
+                      id='cart.fobPrice'
+                      style='currency'
+                      currency={currency}
+                      value={cartItem.cfPricePerUOM}
+                    />
+                    {unitName && ` / ${unitName}`}
+                  </>
+                </GridColumn>
+
+                <GridColumn width={leftWidth1}>
+                  <FormattedMessage id='cart.totalPerItem' defaultMessage='Total per Item:' />
+                </GridColumn>
+                <GridColumn width={rightWidth1}>
+                  <FormattedNumber
+                    id='cart.totalPerItem'
+                    style='currency'
+                    currency={currency}
+                    value={cartItem.cfPriceSubtotal}
+                  />
+                </GridColumn>
+              </Grid>
             </div>
-            <div>
-              <FormattedMessage
-                id='cart.location'
-                defaultMessage={'Location: ' + location}
-                values={{ location: cartItem.locationStr }}
-              />
+          </GridColumn>
+          <GridColumn width={7}>
+            <div className='item-cart-body-section'>
+              <Grid columns={2}>
+                <GridRow />
+                <GridColumn width={leftWidth2}>
+                  <FormattedMessage id='cart.manufacturer' defaultMessage='Manufacturer:' />
+                </GridColumn>
+                <GridColumn width={rightWidth2}>
+                  {getSafe(() => productOffer.companyProduct.echoProduct.manufacturer.name, '')}
+                </GridColumn>
+
+                <GridColumn width={leftWidth2}>
+                  <FormattedMessage id='cart.origin' defaultMessage='Origin:' />
+                </GridColumn>
+                <GridColumn width={rightWidth2}>{productOffer.origin ? productOffer.origin.name : 'N/A'}</GridColumn>
+
+                <GridColumn width={leftWidth2}>
+                  <FormattedMessage id='cart.location' defaultMessage='Location:' />
+                </GridColumn>
+                <GridColumn width={rightWidth2}>{cartItem.locationStr ? cartItem.locationStr : 'N/A'}</GridColumn>
+
+                <GridColumn width={leftWidth2}>
+                  <FormattedMessage id='cart.expiration' defaultMessage='Expiration:' />
+                </GridColumn>
+                <GridColumn width={rightWidth2}>
+                  {productOffer.lotExpirationDate ? moment(productOffer.lotExpirationDate).format('MM/DD/YYYY') : 'N/A'}
+                </GridColumn>
+
+                <GridColumn width={leftWidth2}>
+                  <FormattedMessage id='cart.productForm' defaultMessage='Form:' />
+                </GridColumn>
+                <GridColumn width={rightWidth2}>{productOffer.form ? productOffer.form.name : 'N/A'}</GridColumn>
+
+                <GridColumn width={leftWidth2}>
+                  <FormattedMessage id='cart.condition' defaultMessage='Condition:' />
+                </GridColumn>
+                <GridColumn width={rightWidth2}>
+                  {productOffer.conforming ? (
+                    <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
+                  ) : (
+                    <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+                  )}
+                </GridColumn>
+
+                {productOffer.companyProduct.conditionNotes && (
+                  <>
+                    <GridColumn width={leftWidth2}>
+                      <FormattedMessage id='cart.conditionNotes' defaultMessage='Condition Notes:' />
+                    </GridColumn>
+                    <GridColumn width={rightWidth2}>{productOffer.companyProduct.conditionNotes}</GridColumn>
+                  </>
+                )}
+              </Grid>
             </div>
-            <div>
-              <FormattedMessage
-                id='global.pricePer'
-                defaultMessage={`Price per ${unitName}`}
-                values={{ unit: unitName }}
-              />
-              :{' '}
-              <FormattedNumber id='cart.pricePer' style='currency' currency={currency} value={cartItem.cfPricePerUOM} />
-            </div>
-            {/*<div>
-              <FormattedMessage id='global.totalWeight' defaultMessage='Total Weight' />:{' '}
-              <FormattedUnit
-                value={cartItem.quantity * productOffer.companyProduct.packagingSize}
-                unit={unitName} separator=''
-              />
-            </div>*/}
-          </div>
-          <div className='item-cart-body-section'>
-            <div>
-              <FormattedMessage
-                id='cart.origin'
-                defaultMessage={`Origin: ${productOffer.origin ? productOffer.origin.name : 'N/A'} `}
-                values={{ origin: productOffer.origin ? productOffer.origin.name : 'N/A' }}
-              />
-            </div>
-            <div>
-              <FormattedMessage id='cart.assay' defaultMessage='Assay :' />
-              <FormattedAssay min={productOffer.assayMin} max={productOffer.assayMax} />
-            </div>
-            <div>
-              <FormattedMessage
-                id='cart.condition'
-                defaultMessage={`Condition: ${productOffer.condition ? productOffer.condition.name : 'N/A'} `}
-                values={{ condition: productOffer.condition ? productOffer.condition.name : 'N/A' }}
-              />
-            </div>
-            <div>
-              <FormattedMessage
-                id='cart.formVal'
-                defaultMessage={`Form ${productOffer.form ? productOffer.form.name : 'N/A'} `}
-                values={{ form: productOffer.form ? productOffer.form.name : 'N/A' }}
-              />
-            </div>
-          </div>
-        </div>
+          </GridColumn>
+        </Grid>
+
         <footer className='popup-footer'>
           <Button
             control={Button}

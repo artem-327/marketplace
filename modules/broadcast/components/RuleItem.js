@@ -62,12 +62,20 @@ const RuleItem = props => {
   const parentBroadcasted = broadcastedParents.reverse()[0]
   const nodeBroadcast = rule.broadcast === 1 || allChildrenBroadcasting ? 1 : 0
 
-  const companyName =
-    getSafe(() => item.model.rule.type, '') === 'branch' &&
-    getSafe(() => item.parent.model.rule.elements[0].type, '') === 'company' &&
-    getSafe(() => item.parent.model.rule.elements[0].name, '')
-      ? `${item.parent.model.rule.elements[0].name} - `
-      : ''
+  let companyName = ''
+  //get company name from item based on id with 2 loops. When find the same id then has companyName and breaks all loops
+  if (getSafe(() => item.model.rule.type, null) === 'branch') {
+    loop1: for (let i in getSafe(() => item.parent.model.rule.elements, [])) {
+      if (item.parent.model.rule.elements[i].elements.length) {
+        loop2: for (let j in item.parent.model.rule.elements[i].elements) {
+          if (item.parent.model.rule.elements[i].elements[j].id === getSafe(() => item.model.rule.id, '')) {
+            companyName = item.parent.model.rule.elements[i].name
+            break loop1
+          }
+        }
+      }
+    }
+  }
 
   // const toggleDisabled = !!parentBroadcasted
   // const priceDisabled = rule.broadcast === 0 //!(rule.broadcast === 1 && !parentBroadcasted) //allChildrenBroadcasting || rule.broadcast !== 1 || toggleDisabled
@@ -86,7 +94,7 @@ const RuleItem = props => {
           ) : (
             <EmptyIconSpace />
           )}
-          <span>{`${companyName} ${name}`}</span>
+          <span>{companyName ? `${companyName} ${name}` : `${name}`}</span>
         </Rule.RowContent>
 
         <Rule.Toggle style={asSidebar ? { flex: '0 0 60px' } : null}>

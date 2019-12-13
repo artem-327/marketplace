@@ -1,4 +1,4 @@
-import { Segment, GridRow, Popup, Button, Header } from 'semantic-ui-react'
+import { Segment, GridRow, Modal, Button, Header } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 export const RelaxedSegment = styled(Segment)`
@@ -21,7 +21,7 @@ export const Title = styled(HeaderTextRow)`
   text-transform: uppercase;
 `
 
-export const WiderPopup = styled(Popup)`
+export const WiderModal = styled(Modal)`
   width: 350px !important;
   max-height: 80vh;
   overflow-y: auto;

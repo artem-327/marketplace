@@ -121,7 +121,8 @@ export const errorMessages = {
       defaultMessage='Must be multiply of split ({split})'
       values={{ split }}
     />
-  )
+  ),
+  positive: <FormattedMessage id='validation.positive' defaultMessage='Number value should be positive' />,
 }
 
 export const provinceObjectRequired = hasProvinces =>
