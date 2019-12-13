@@ -1384,8 +1384,6 @@
   "notifications.order.actions.shipped.success.header": "Order Marked as Shipped",
   "notifications.order.actions.shipped.success.content": "Order {orderId} was marked as shipped.",
   "notifications.order.actions.returnShipped.success.content": "Order {orderId} was marked as shipped to be returned.",
-  "notifications.order.actions.confirmed.success.header": "Order Confirmed",
-  "notifications.order.actions.confirmed.success.content": "Order {orderId} was confirmed.",
   "notifications.order.actions.rejected.success.header": "Order Rejected",
   "notifications.order.actions.rejected.success.content": "Order {orderId} was rejected.",
   "notifications.order.actions.cancelled.success.header": "Order Cancelled",
