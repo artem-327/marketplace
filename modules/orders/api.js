@@ -34,7 +34,7 @@ export default {
     api.delete(`/prodex/api/attachment-links/to-lot?attachmentId=${aId}&lotId=${lotId}`),
   payOrder: (orderId, bankAccount) =>
     api.post(`/prodex/api/payments/pay?purchaseOrderId=${orderId}&bankAccountId=${bankAccount}`), // nevraci body
-  cancelPayment: orderId => api.patch(`/prodex/api/payments/dwolla/transfer/${orderId}/cancel`),  // nevraci body
+  cancelPayment: orderId => api.patch(`/prodex/api/payments/dwolla/transfer/${orderId}/cancel`), // nevraci body
   loadBankAccounts: () => api.get(`/prodex/api/payments/bank-accounts`),
   getRelatedOrders: orderId => api.get(`/prodex/api/accounting-documents/order/${orderId}`),
   cancelOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/cancel`),
@@ -42,13 +42,14 @@ export default {
   discardOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/discard`),
   receivedOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/received`),
   accept: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/accept`),
-  rejectPurchaseOrder: (orderId, reason, reasonText, file) => {
+  rejectPurchaseOrder: (orderId, reason, reasonText, files) => {
     const reasonComment = reasonText ? `&reasonComment=${reasonText.trim()}` : ''
-    if (!file) {
+    if (!files || !files.length) {
       return api.patch(`/prodex/api/purchase-orders/${orderId}/reject?reason=${reason}${reasonComment}`)
     } else {
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', files)
+
       return api.patch(`/prodex/api/purchase-orders/${orderId}/reject?reason=${reason}${reasonComment}`, formData, {
         headers: {
           accept: 'application/json',

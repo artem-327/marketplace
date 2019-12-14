@@ -154,7 +154,7 @@ export const acceptDelivery = orderId => ({
   type: AT.ORDER_ACCEPT_DELIVERY_ORDER,
   payload: Api.accept(orderId)
 })
-export const rejectPurchaseOrder = (orderId, reason, reasonText, file) => ({
+export const rejectPurchaseOrder = (orderId, reason, reasonText, files) => ({
   type: AT.REJECT_PURCHASE_ORDER,
-  payload: Api.rejectPurchaseOrder(orderId, reason, reasonText, file)
+  payload: Api.rejectPurchaseOrder(orderId, reason, reasonText, files)
 })
