@@ -119,8 +119,9 @@ class PurchaseRejectDelivery extends React.Component {
                               />
                             </strong>
                             <FormGroup grouped>
-                              {reasons.map(reason => (
+                              {reasons.map((reason, i) => (
                                 <Form.Radio
+                                  key={i}
                                   checked={this.state.reason === reason.value}
                                   onChange={(e, { value, name }) => this.handleChange(e, value, name, setFieldValue)}
                                   label={formatMessage({
@@ -129,39 +130,32 @@ class PurchaseRejectDelivery extends React.Component {
                                   })}
                                   name={'reason'}
                                   value={reason.value}
+                                  data-test={`purchase_reject_radio_index=${i}`}
                                 />
                               ))}
 
                               <Form.TextArea
-                                required
-                                disabled={this.state.reason !== 7}
+                                required={this.state.reason === 7}
                                 onChange={(e, { value, name }) => this.handleChange(e, value, name, setFieldValue)}
                                 name='reasonText'
                                 label={formatMessage({
                                   id: 'order.reject.enterReasonHere',
                                   defaultMessage: 'Enter reason here:'
                                 })}
+                                data-test='purchase_reject_text_area'
                               />
                               <UploadLot
                                 {...this.props}
                                 name='attachments'
                                 attachments={values.attachments}
-                                filesLimit={1}
                                 fileMaxSize={20}
                                 onChange={files => {
-                                  setFieldValue(
-                                    `attachments[${
-                                      values.attachments && values.attachments.length ? values.attachments.length : 0
-                                    }]`,
-                                    {
-                                      id: files[0].lastModified,
-                                      name: files[0].name,
-                                      documentType: files[0].type
-                                    }
-                                  )
+                                  files.map((file, i) => {
+                                    setFieldValue(`attachments[${i}]`, file)
+                                  })
                                   this.setState({ changedForm: true })
                                 }}
-                                data-test='settings_product_import_attachments'
+                                data-test='purchase_reject_import_attachments'
                                 emptyContent={
                                   <label>
                                     <FormattedMessage
@@ -230,9 +224,7 @@ class PurchaseRejectDelivery extends React.Component {
                                   (!this.state.reasonText || (this.state.reasonText && !this.state.reasonText.trim())))
                               }
                               primary
-                              fluid
-                              type='submit'
-                              onClick={submitForm}>
+                              fluid>
                               <FormattedMessage id='global.confirm' defaultMessage='Confirm' tagName='span'>
                                 {text => text}
                               </FormattedMessage>
