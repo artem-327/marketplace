@@ -399,6 +399,7 @@ class AddNewPopupCasProducts extends React.Component {
         onReset={closePopup}
         render={props => {
           let { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = props
+          let colorIcon = accordionActive.companyAdmin && 'blue'
           return (
             <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
               <Modal.Header>
@@ -430,7 +431,7 @@ class AddNewPopupCasProducts extends React.Component {
                             data-test='admin_popup_company_accordion_companyAdmin'>
                             <AccordionHeader as='h4'>
                               <Icon
-                                color={accordionActive.companyAdmin && 'blue'}
+                                color={colorIcon}
                                 name={accordionActive.companyAdmin ? 'chevron down' : 'chevron right'}
                               />
                               <FormattedMessage
@@ -482,7 +483,7 @@ class AddNewPopupCasProducts extends React.Component {
                             data-test='admin_popup_company_accordion_primaryBranch'>
                             <AccordionHeader as='h4'>
                               <Icon
-                                color={accordionActive.billingAddress && 'blue'}
+                                color={colorIcon}
                                 name={accordionActive.billingAddress ? 'chevron down' : 'chevron right'}
                               />
                               <FormattedMessage
@@ -542,7 +543,7 @@ class AddNewPopupCasProducts extends React.Component {
                             data-test='admin_popup_company_accordion_mailingBranch'>
                             <AccordionHeader as='h4'>
                               <Icon
-                                color={accordionActive.mailingAddress && 'blue'}
+                                color={colorIcon}
                                 name={accordionActive.mailingAddress ? 'chevron down' : 'chevron right'}
                               />
                               <FormattedMessage id='global.mailingBranch' defaultMessage='Mailing Branch (optional)' />
