@@ -84,6 +84,7 @@ Cypress.Commands.add('login', (username, password) =>{
 Cypress.Commands.add("openElement", (elementId, dropdownOption) => {
     cy.waitForUI()
 
+    cy.get("[data-test=action_" + elementId + "]").scrollIntoView()
     cy.get("[data-test=action_" + elementId + "]").click()
     cy.get("[data-test=action_" + elementId + "_" + dropdownOption + "]").click()
 })

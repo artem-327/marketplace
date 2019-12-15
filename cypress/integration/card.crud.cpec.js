@@ -4,6 +4,7 @@ context("Shopping cart CRUD", () => {
     let marketPlaceId2 = null
 
     beforeEach(function () {
+        cy.viewport(1200,800)
         cy.server()
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
@@ -11,9 +12,9 @@ context("Shopping cart CRUD", () => {
         cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.waitForUI()
-        cy.url().should("include", "inventory")
 
-        cy.wait('@inventoryLoading')
+        cy.wait('@inventoryLoading', {timeout: 30000})
+        cy.url().should("include", "inventory")
         cy.contains("Marketplace").click()
         cy.get("[data-test=navigation_menu_marketplace_drpdn]").within(() => {
             cy.contains("Marketplace").click()
@@ -27,12 +28,16 @@ context("Shopping cart CRUD", () => {
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
                 cy.deleteWholeCart(token)
 
-                marketPlaceId = marketPlaceBody[0].id
+                let suitableOffers = marketPlaceBody.filter(function (entry) {
+                    return entry.minPkg == 1
+                })
+
+                marketPlaceId = suitableOffers[0].id
 
                 cy.openElement(marketPlaceId, 0)
 
                 cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
-                    cy.get('input[type="number"]').type("2")
+                    cy.get('input[type="number"]').type("1")
                 })
 
                 cy.contains("Continue").click()
@@ -88,7 +93,16 @@ context("Shopping cart CRUD", () => {
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
                 cy.deleteWholeCart(token)
 
-                marketPlaceId = marketPlaceBody[0].id
+                let suitableOffers = marketPlaceBody.filter(function (entry) {
+                    if(marketPlaceBody.filter(function (searchedOffer) {
+                        entry.warehouse.id == searchedOffer.warehouse.id && entry.id != searchedOffer.id
+                        marketPlaceId2 = searchedOffer.id
+                    })){
+                        return entry
+                    }
+                })
+
+                marketPlaceId = suitableOffers[0].id
 
                 cy.openElement(marketPlaceId, 0)
             })
@@ -126,7 +140,7 @@ context("Shopping cart CRUD", () => {
             })
 
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
-                marketPlaceId2 = marketPlaceBody[2].id
+                //marketPlaceId2 = marketPlaceBody[2].id
 
                 cy.getItemBody(token, marketPlaceId2).then(itemBody => {
                     cy.get(".item-cart-body-section-name").eq(2).should('contain', itemBody.companyProduct.echoProduct.name)
