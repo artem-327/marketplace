@@ -1,15 +1,20 @@
 Cypress.Commands.add("selectChemical", (chemical) => {
     cy.server()
-    cy.route("GET",'/prodex/api/products/own/search?*').as('search')
+    cy.route("GET",'/prodex/api/company-products/own/search?*').as('search')
 
-    cy.get("#field_dropdown_product")
+    cy.waitForUI()
+
+    cy.get("[id='field_dropdown_edit.product']")
         .children("input")
-        .type(chemical)
+        .type(chemical, {force: true})
         .should("have.value",chemical)
 
     cy.wait('@search')
     cy.wait(500)
-    cy.get('div[role=option]').eq(0).click({force: true})
+    cy.get("[id='field_dropdown_edit.product']").within(() => {
+        cy.get('div[role=option]').eq(0).click({force: true})
+    })
+
 })
 
 Cypress.Commands.add("assertProductDetail", (index,value) => {

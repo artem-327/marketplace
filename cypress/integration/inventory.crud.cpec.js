@@ -1,70 +1,76 @@
 context("Inventory CRUD",() => {
+    let filter = dsasd
+    let itemId = null
 	
 	beforeEach(function () {
 	    cy.server()
-		cy.route("POST",'/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-		cy.route("GET",'/prodex/api/countries/search*').as('addingLoading')
-		cy.route("GET",'/prodex/api/product-offers/*').as('offerLoading')
+		cy.route("POST","/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+		cy.route("GET","/prodex/api/countries/search*").as("addingLoading")
+		cy.route("GET","/prodex/api/product-offers/*").as("offerLoading")
 
-		cy.login("user1@example.com","echopass123")
+        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
+        cy.wait("@inventoryLoading", {timeout: 100000})
 		cy.url().should("include","inventory")
-
-		cy.wait('@inventoryLoading')
 	})
 
-    it('Create item',() => {
-		cy.contains("Inventory").click()
-		cy.contains("Add Inventory").click()
+    it("Create item",() => {
+		cy.get("[data-test=my_inventory_add_btn]").click()
 
-		cy.wait("@addingLoading")
-		cy.url().should("include","add")
+        cy.selectChemical("Caustic")
 
-        cy.selectChemical("IP550")
+		cy.get("[data-test=new_inventory_warehouse_drpdn]").click()
+        cy.get("[data-test=new_inventory_warehouse_drpdn]").within(() => {
+            cy.contains("CGM Industries, Inc.").click()
+        })
 
-		cy.get("#field_dropdown_warehouse").click()
-		cy.get("div[name='Test 2']").first().click()
+        cy.setNumberInput("[id='field_input_edit.pkgAvailable']","5")
+        cy.setNumberInput("[id='field_input_edit.fobPrice']","20")
 
-        cy.setNumberInput("#field_input_pkgAmount","5")
-        cy.setNumberInput("input[name='pricingTiers[0].price']","5")
-
-		cy.contains("Add Product Offer").click({force:true})
-		cy.contains("Go to My Inventory").click()
+        cy.get("[data-test=sidebar_inventory_save_new]").click()
 
 		cy.wait("@inventoryLoading")
 
-		cy.contains("Isopropanol").should('be.visible')
-		cy.contains("IP550").should('be.visible')
-		cy.contains("Test 2").should('be.visible')
-		cy.contains("5").should('be.visible')
+		cy.contains("20")
+		cy.contains("Houston Warehouse")
+		cy.contains("5")
     })
 
-    it('See item details',() => {
-        cy.getToken().then(token => {
-            cy.getFirstItemId(token).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+    it("See item details",() => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.getFirstEntityWithFilter(token, 'company-products',filter).then(itemId => {
+
             })
         })
 
 		cy.wait("@offerLoading")
-		cy.get("#field_dropdown_product").contains("IP550 Isopropanol")
+        //TODO
+		//cy.get("#field_dropdown_product").contains("IP550 Isopropanol")
 
-		cy.get("#field_input_pkgAmount")
+		cy.get("[id='field_input_edit.pkgAvailable']")
 			.should("have.value","5")
 
-		cy.get("input[name='pricingTiers[0].price']")
-			.should("have.value","5")
+        cy.get("[id='field_input_edit.fobPrice']")
+            .should("have.value","20")
 
-        cy.assertProductDetail(1,"Isopropanol")
-        cy.assertProductDetail(3,"IP550")
+        cy.get("[data-test=new_inventory_warehouse_drpdn]")
+            .should("have.value","Houston Warehouse")
+
+        cy.get("[data-test=detail_inventory_tab_documents]").click()
+        cy.get("[id='field_dropdown_documents.documentType']").should("be.visible")
+
+        cy.get("[data-test=detail_inventory_tab_priceBook]").click()
+        cy.get("[data-test=broadcast_rule_row_click]").eq(0).should("be.visible")
+
+        cy.get("[data-test=detail_inventory_tab_priceTiers]").click()
+        cy.get("[data-test=field_dropdown_priceTiers.priceTiers]").should("be.visible")
     })
 
-	it('Update item',() => {
+	it("Update item",() => {
         cy.getToken().then(token => {
             cy.getFirstItemId(token).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.get("[data-test=action_' + itemId + ']").click()
+                cy.get("[data-test=action_' + itemId + '_0]").click()
             })
         })
 
@@ -87,38 +93,35 @@ context("Inventory CRUD",() => {
 		cy.contains("10").should('be.visible')
     })
 	
-	it('Delete item',() => {
+	it("Delete item",() => {
         cy.getToken().then(token => {
             cy.getFirstItemId(token).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-                cy.get('[data-test=action_' + itemId + '_2]').click()
+                cy.get("[data-test=action_' + itemId + ']").click()
+                cy.get("[data-test=action_' + itemId + '_4]").click()
 
                 cy.waitForUI()
-                cy.contains("Yes").click({force: true})
+                cy.get("[data-test=confirm_dialog_proceed_btn]").click()
 
-                cy.get('[data-test=action_' + itemId + ']').should('not.exist')
+                cy.get("[data-test=action_' + itemId + ']").should("not.exist")
             })
         })
     })
 
-    it('Create item validation',() => {
-		cy.contains("Inventory").click()
-		cy.contains("Add Inventory").click()
+    it("Create item validation",() => {
+        cy.get("[data-test=my_inventory_add_btn]").click()
 
-		cy.wait("@addingLoading")
-		cy.url().should("include","add")
+        cy.get("#field_dropdown_edit.warehouse").click()
+        cy.get("#field_input_edit.fobPrice").click()
 
-		cy.contains("Add Product Offer").click({force:true})
+        cy.get("#sidebar_inventory_save_new").click()
 		cy.get(".error")
-			.should("have.length",2)
+			.should("have.length",4)
 			.find(".sui-error-message").each((element) => {
-			expect(element.text()).to.match(/(required)|(must be number)|(Amount has to be greater than 0)/i)
+			expect(element.text()).to.match(/(Required)|(Must be number)/i)
 		})
 
-        cy.get("#__next").within(() => {
-            cy.contains("OPTIONAL PRODUCT INFO").click()
-        })
-		cy.get("#field_dropdown_origin").should("not.visible")
+        cy.get("[data-test=detail_inventory_tab_documents]").click()
+		cy.contains("Save First").should("not.visible")
 
 	})
 
@@ -207,5 +210,13 @@ context("Inventory CRUD",() => {
 
         cy.get(".submenu-filter").click()
         cy.contains("No records found.")
+    })
+
+    it("Set price triers", () =>{
+
+    })
+
+    it("Set price book", () =>{
+
     })
 })
