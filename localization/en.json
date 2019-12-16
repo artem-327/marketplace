@@ -349,6 +349,7 @@
   "global.addressName": "Address Name",
   "global.nameAbbreviation": "Name Abbreviation",
   "global.measureType": "Measure Type",
+  "global.ratioToBaseSiUnit": "Ratio to Base SI Unit",
   "global.delete": "Delete",
   "global.no": "No",
   "global.download": "Download",
