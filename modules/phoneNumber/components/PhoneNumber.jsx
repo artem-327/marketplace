@@ -107,6 +107,15 @@ export default class PhoneNumber extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    return ( this.state.phoneFull !== nextState.phoneFull
+      || get(this.props.values, this.props.name, '') !== get(nextProps.values, nextProps.name, '')
+      || get(this.props.errors, this.props.name, '') !== get(nextProps.errors, nextProps.name, '')
+      || get(this.props.touched, this.props.name, '') !== get(nextProps.touched, nextProps.name, '')
+      || this.props.phoneCountryCodes.length !== nextProps.phoneCountryCodes.length
+    )
+  }
+
   handleChangeDropdown = (e, { value }) => {
     const { name, setFieldValue, setFieldTouched } = this.props
     const phone = { ...this.state, ...{ phoneCountryCode: value } }
