@@ -210,7 +210,15 @@ export const config = {
               {text => text}
             </FormattedMessage>
           )
-        }
+        },
+        {
+          name: 'ratioToBaseSiUnit',
+          title: (
+            <FormattedMessage id='global.ratioToBaseSiUnit' defaultMessage='Ratio to Base SI Unit'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
       ]
     },
     edit: [
@@ -242,6 +250,16 @@ export const config = {
           </FormattedMessage>
         ),
         type: 'text',
+        required: true
+      },
+      {
+        name: 'ratioToBaseSiUnit',
+        title: (
+          <FormattedMessage id='global.ratioToBaseSiUnit' defaultMessage='Ratio to Base SI Unit'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'number',
         required: true
       }
     ],
