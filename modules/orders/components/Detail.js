@@ -616,9 +616,6 @@ class Detail extends Component {
                     <Table.Header>
                       <Table.Row>
                         <Table.HeaderCell>
-                          <FormattedMessage id='order.chemicalName' defaultMessage='Chemical Name' />
-                        </Table.HeaderCell>
-                        <Table.HeaderCell>
                           <FormattedMessage id='order.name' defaultMessage='Name' />
                         </Table.HeaderCell>
                         <Table.HeaderCell>
@@ -650,11 +647,10 @@ class Detail extends Component {
                     </Table.Header>
                     <Table.Body>
                       {order &&
-                        order.chemicalName &&
-                        order.chemicalName.map((element, index) => (
+                        order.productName &&
+                        order.productName.map((element, index) => (
                           <Table.Row>
                             <Table.Cell>{element}</Table.Cell>
-                            <Table.Cell>{order.productName[index]}</Table.Cell>
                             <Table.Cell>{order.productCode[index]}</Table.Cell>
                             <Table.Cell>{order.packaging[index]}</Table.Cell>
                             <Table.Cell textAlign='right'>{order.totalPkg[index]}</Table.Cell>
