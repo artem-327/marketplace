@@ -3,7 +3,7 @@ import { array, func, object, bool } from 'prop-types'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { Grid, Segment, GridRow, GridColumn, Divider, Header, Button } from 'semantic-ui-react'
+import { GridRow, GridColumn, Divider, Header, Button } from 'semantic-ui-react'
 import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 
 import ShippingAddress from './ShippingAddress'
@@ -11,6 +11,7 @@ import { getSafe } from '~/utils/functions'
 
 class Shipping extends Component {
   handleToggleChange = otherAddresses => {
+    this.props.formikProps.setFieldValue('address', null)
     if (otherAddresses !== this.props.otherAddresses) {
       let { branches, getBranches, warehouses, getWarehouses } = this.props
 
@@ -57,9 +58,16 @@ class Shipping extends Component {
       const address = i.warehouse ? getSafe(() => i.deliveryAddress.address, '') : getSafe(() => i.address, '')
 
       return {
+        searchText: this.props.otherAddresses
+          ? `${getSafe(() => i.addressName, '')}, ${this.getFullAddress(address)}  `
+          : `${getSafe(() => i.deliveryAddress.cfName, '')}, ${this.getFullAddress(address)} `,
         text: this.props.otherAddresses
-          ? `${this.getFullAddress(address)} ${getSafe(() => i.addressName, '')} `
-          : `${getSafe(() => i.deliveryAddress.cfName, '')}`,
+          ? `${getSafe(() => i.addressName, '') ? getSafe(() => i.addressName, '') : getSafe(() => i.cfName, '')} `
+          : `${
+              getSafe(() => i.deliveryAddress.cfName, '')
+                ? getSafe(() => i.deliveryAddress.cfName, '')
+                : getSafe(() => i.deliveryAddress.addressName, '')
+            } `,
         value: i.id,
         key: i.id,
         content: (
@@ -70,11 +78,6 @@ class Shipping extends Component {
                 style={{
                   fontSize: '14px'
                 }}>
-                {this.getFullAddress(address)}
-              </div>
-            }
-            subheader={
-              <div style={{ fontSize: '12px', color: 'gray', fontWeight: '100' }}>
                 {i.warehouse
                   ? !i.deliveryAddress.addressName
                     ? getSafe(() => i.deliveryAddress.cfName, '')
@@ -83,6 +86,9 @@ class Shipping extends Component {
                   ? getSafe(() => i.cfName, '')
                   : getSafe(() => i.addressName, '')}
               </div>
+            }
+            subheader={
+              <div style={{ fontSize: '12px', color: 'gray', fontWeight: '100' }}>{this.getFullAddress(address)}</div>
             }
           />
         )
@@ -146,12 +152,13 @@ class Shipping extends Component {
               fluid
               selection
               inputProps={{
-                minCharacters: 1,
                 icon: 'search',
-                search: true,
+                search: (options, query) => {
+                  return options.filter(opt => opt.searchText.toLowerCase().includes(query.trim().toLowerCase()))
+                },
                 disabled: this.props.shippingQuotesAreFetching,
-                placeholder: <FormattedMessage id='global.selectLocation' defaultMessage='Select Location' />,
-                onChange: (_, { value }) => getAddress(value)
+                onChange: (_, { value }) => getAddress(value),
+                placeholder: <FormattedMessage id='global.selectLocation' defaultMessage='Select Location' />
               }}
               options={dropdownOptions}
               value={selectedAddress ? selectedAddress.id : null}

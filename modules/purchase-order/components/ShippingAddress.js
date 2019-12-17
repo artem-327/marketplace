@@ -52,11 +52,13 @@ export default class ShippingAddress extends Component {
           )}
 
           <RelaxedRow>
-            <GridColumn computer={16}>{selectedAddress.address.streetAddress}</GridColumn>
+            <GridColumn computer={16}>{selectedAddress.address && selectedAddress.address.streetAddress}</GridColumn>
             <GridColumn computer={16}>
-              {selectedAddress.address.city}
-              {selectedAddress.address.province && `, ${selectedAddress.address.province.name}`},{' '}
-              {selectedAddress.address.zip.zip}
+              {selectedAddress.address && selectedAddress.address.city}
+              {selectedAddress.address &&
+                selectedAddress.address.province &&
+                `, ${selectedAddress.address.province.name}`}
+              , {selectedAddress.address && selectedAddress.address.zip.zip}
             </GridColumn>
           </RelaxedRow>
 
