@@ -160,9 +160,7 @@ function prepareDetail(data, type) {
         return sum
       }
     }),
-    unitPrice: orderItems.map((d, i) => (
-        <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} />
-    )),
+    unitPrice: orderItems.map((d, i) => <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} />),
     itemTotal: orderItems.map(d => {
       if (d.pkgAmount && d.packagingSize && d.pricePerUOM) {
         return d.pkgAmount * d.packagingSize * d.pricePerUOM
