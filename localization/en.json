@@ -1109,7 +1109,7 @@
   "operators": "Operators",
   "operators.login": "Login",
   "cart.shippingQuoteId": "Shipping Quote ID",
-  "cart.weightLimitExceeded": "Your order weight exceeds weight limit {limit} for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.",
+  "cart.weightLimitExceeded": "Your order weight exceeds weight limit {limit} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.",
   "cart.selectWhOrAddress": "Please, select delivery address or warehouse first.",
   "cart.quoteReceived": "If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.",
   "cart.requestShippingQuote": "Request Shipping Quote",
