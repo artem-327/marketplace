@@ -138,8 +138,9 @@ export default class AddCart extends Component {
         let text = (
           <>
             <FormattedUnit unit='' separator=' - ' value={tier.quantityFrom} />
-            <FormattedUnit unit='' value={quantityTo} />
+            <FormattedUnit unit='' separator=' : ' value={quantityTo} />
             <FormattedNumber style='currency' value={tier.pricePerUOM} currency={currencyCode} />
+            {nameAbbreviation && ` / ${nameAbbreviation}`}
           </>
         )
         dropdownOptions.push({
@@ -157,6 +158,7 @@ export default class AddCart extends Component {
         text: (
           <>
             <FormattedNumber minimumFractionDigits={0} value={value} style='currency' currency={currencyCode} />
+            {nameAbbreviation && ` / ${nameAbbreviation}`}
           </>
         )
       })
