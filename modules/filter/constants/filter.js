@@ -25,7 +25,7 @@ export const filterPresets = {
 
 export const paths = {
   productOffers: {
-    productId: 'ProductOffer.companyProduct.echoProduct.id',
+    productId: 'ProductOffer.companyProduct.id',
     quantity: 'ProductOffer.quantity',
     price: 'ProductOffer.cfPricePerUOM',
     packagingTypes: 'ProductOffer.companyProduct.packagingType.id',
@@ -149,6 +149,7 @@ export const datagridValues = {
     toFilter: function(values, filterType = filterTypes.INVENTORY) {
       let modifiedValues = values.map(val => {
         let parsed = JSON.parse(val)
+        
         return {
           value: parsed.id,
           description: JSON.stringify({
