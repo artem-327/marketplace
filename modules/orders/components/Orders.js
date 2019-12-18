@@ -29,7 +29,6 @@ class Orders extends Component {
           </FormattedMessage>
         ),
         width: 100,
-        sortPath: 'Order.id',
         align: 'right'
       },
       {
