@@ -26,7 +26,10 @@ const initialState = {
   openedSaleNewShipping: false,
   bankAccounts: [],
   bankAccountsLoading: false,
-  relatedOrders: []
+  relatedOrders: [],
+  returnShipmentRates: [],
+  returnShipmentOrder: {},
+  loadRelatedOrders: false
 }
 
 export default function(state = initialState, action) {
@@ -231,9 +234,15 @@ export default function(state = initialState, action) {
           paymentStatus: 4
         }
       }
+    case AT.RELATED_ORDERS_PENDING:
+      return {
+        ...state,
+        loadRelatedOrders: true
+      }
     case AT.RELATED_ORDERS_FULFILLED:
       return {
         ...state,
+        loadRelatedOrders: false,
         relatedOrders: action.payload.data
       }
 
