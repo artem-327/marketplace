@@ -230,6 +230,7 @@ const validationScheme = val.object().shape({
       .required(errorMessages.requiredMessage),
     pkgAvailable: val
       .number()
+      .positive(errorMessages.positive)
       .typeError(errorMessages.mustBeNumber)
       .required(errorMessages.requiredMessage),
     splits: val
@@ -499,7 +500,7 @@ class DetailSidebar extends Component {
     const { addProductOffer, datagrid, toastManager, sidebarValues } = this.props
     let isEdit = getSafe(() => sidebarValues.id, null)
     let values = !savedButtonClicked ? { ...this.getEditValues(), ...this.state.oldProductOffer } : formValues
-    
+
     await new Promise(resolve => this.setState({ edited: false, saved: true }, resolve))
 
     setSubmitting(false)
@@ -558,17 +559,23 @@ class DetailSidebar extends Component {
         console.error(e)
         let entityId = getSafe(() => e.response.data.entityId, null)
 
-        if(entityId) {
+        if (entityId) {
           confirm(
-          <FormattedMessage id='notifications.productOffer.alreadyExists.header' defaultMessage='Product Offer already exists' />,
-          <FormattedMessage id='notifications.productOffer.alreadyExists.content' defaultMessage={`Product offer with given Lot number, warehouse and company product already exists. \n Would you like to overwrite it?`} />)
-            .then(async ()=>  {
+            <FormattedMessage
+              id='notifications.productOffer.alreadyExists.header'
+              defaultMessage='Product Offer already exists'
+            />,
+            <FormattedMessage
+              id='notifications.productOffer.alreadyExists.content'
+              defaultMessage={`Product offer with given Lot number, warehouse and company product already exists. \n Would you like to overwrite it?`}
+            />
+          )
+            .then(async () => {
               let po = await addProductOffer(props, entityId)
               datagrid.updateRow(entityId, () => po.value)
             })
             .catch(_)
         }
-
       } finally {
         setTouched({})
         this.setState({ changedForm: false })
@@ -811,7 +818,7 @@ class DetailSidebar extends Component {
     const { toggleFilter } = this.props
 
     let editValues = this.getEditValues()
-    
+
     return (
       <Formik
         enableReinitialize
@@ -956,7 +963,13 @@ class DetailSidebar extends Component {
                                       </FormattedMessage>
                                     </GridColumn>
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                      <Input type='text' name='edit.pkgAvailable' />
+                                      <Input
+                                        inputProps={{
+                                          min: 1,
+                                          type: 'number'
+                                        }}
+                                        name='edit.pkgAvailable'
+                                      />
                                     </GridColumn>
                                   </GridRow>
                                   <GridRow>
