@@ -17,7 +17,7 @@ import {
   loadEditEchoProduct,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
-  getUnNumbersByString,
+  getUnNumbersByString
 } from '~/modules/admin/actions'
 
 import { Header } from 'semantic-ui-react'
@@ -40,12 +40,11 @@ const mapDispatchToProps = {
   loadEditEchoProduct,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
-  getUnNumbersByString,
+  getUnNumbersByString
 }
 
 const mapStateToProps = ({ admin }, props) => {
   const currentTab = admin.currentTab.name === props.tabName
-
   return {
     visible: currentTab && (!!admin.currentAddForm || !!admin.currentEditForm),
     addForm: currentTab && !!admin.currentAddForm,
@@ -57,7 +56,6 @@ const mapStateToProps = ({ admin }, props) => {
       return {
         key: id,
         text: pGroup.groupCode,
-        //description: pGroup.description,
         value: pGroup.id,
         content: <Header content={pGroup.groupCode} subheader={pGroup.description} style={{ fontSize: '1em' }} />
       }
@@ -66,7 +64,6 @@ const mapStateToProps = ({ admin }, props) => {
       return {
         key: id,
         text: d.classCode,
-        //description: d.description,
         value: d.id,
         content: <Header content={d.classCode} subheader={d.description} style={{ fontSize: '1em' }} />
       }
@@ -76,18 +73,17 @@ const mapStateToProps = ({ admin }, props) => {
     searchedCasProducts: admin.searchedCasProducts,
     isLoading: admin.loading,
     unNumbersFiltered: admin.unNumbersFiltered.map((d, id) => {
-        return {
-          key: d.id,
-          text: d.unNumberCode,
-          //description: d.description,
-          value: d.id,
-          content: <Header content={d.unNumberCode} subheader={d.description} style={{fontSize: '1em'}}/>
+      return {
+        key: d.id,
+        text: d.unNumberCode,
+        value: d.id,
+        content: <Header content={d.unNumberCode} subheader={d.description} style={{ fontSize: '1em' }} />
       }
     }),
     unNumbersFetching: admin.unNumbersFetching,
 
     config: admin.config[admin.currentTab.name],
-    listDocumentTypes: admin.documentTypes,
+    listDocumentTypes: admin.documentTypes
   }
 }
 
