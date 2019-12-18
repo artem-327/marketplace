@@ -1162,17 +1162,14 @@ class DetailSidebar extends Component {
                                     </GridColumn>
                                   </GridRow>
                                   <GridRow>
-                                    <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                      <FormattedMessage
-                                        id='addInventory.conditionNotes'
-                                        defaultMessage='Condition Notes'>
-                                        {text => text}
-                                      </FormattedMessage>
-                                    </GridColumn>
-                                    <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                      <FormField width={16} data-test='detail_sidebar_condition_notes'>
-                                        <Input type='text' name='edit.conditionNotes' />
-                                      </FormField>
+                                    <GridColumn mobile={leftWidth + rightWidth} computer={leftWidth + rightWidth}>
+                                      <TextArea
+                                        name='edit.conditionNotes'
+                                        label={formatMessage({
+                                          id: 'addInventory.conditionNotes',
+                                          defaultMessage: 'Condition Notes'
+                                        })}
+                                      />
                                     </GridColumn>
                                   </GridRow>
                                   <GridRow>
