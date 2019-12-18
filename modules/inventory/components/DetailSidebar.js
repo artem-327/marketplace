@@ -8,6 +8,8 @@ import { DateInput } from '~/components/custom-formik'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
+import confirm from '~/src/components/Confirmable/confirm'
+
 import {
   Sidebar,
   Segment,
@@ -51,7 +53,7 @@ import moment from 'moment'
 import UploadLot from './upload/UploadLot'
 import { withDatagrid } from '~/modules/datagrid'
 import { AttachmentManager } from '~/modules/attachments'
-import confirm from '~/src/components/Confirmable/confirm'
+
 import _ from 'lodash'
 
 export const FlexSidebar = styled(Sidebar)`
@@ -558,6 +560,19 @@ class DetailSidebar extends Component {
         )
       } catch (e) {
         console.error(e)
+        let entityId = getSafe(() => e.response.data.entityId, null)
+
+        if(entityId) {
+          confirm(
+          <FormattedMessage id='notifications.productOffer.alreadyExists.header' defaultMessage='Product Offer already exists' />,
+          <FormattedMessage id='notifications.productOffer.alreadyExists.content' defaultMessage={`Product offer with given Lot number, warehouse and company product already exists. \n Would you like to overwrite it?`} />)
+            .then(async ()=>  {
+              let po = await addProductOffer(props, entityId)
+              datagrid.updateRow(entityId, () => po.value)
+            })
+            .catch(_)
+        }
+
       } finally {
         setTouched({})
         this.setState({ changedForm: false })
