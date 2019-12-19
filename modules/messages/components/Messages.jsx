@@ -17,8 +17,16 @@ class Messages extends Component {
     if (!response) return
 
     let { data } = response
-    let messages = data.clientMessage ? [data] : getSafe(() => data.messages, [])
-
+    //let messages = data.clientMessage ? [data] : getSafe(() => data.messages, [])
+    let messages = getSafe(() => data.messages,
+      data.clientMessage
+        ? [data]
+        : (
+          Array.isArray(data)
+            ? data.filter(d => !!d.clientMessage)
+            : []
+        )
+    )
     if (messages.length > 0) {
       messages.forEach(message => {
         this.onMessage(message)
@@ -32,10 +40,12 @@ class Messages extends Component {
     const msg =
       message && message.level
         ? message.descriptionMessage
-          ? `${message.clientMessage} ${message.descriptionMessage} ${
-              process.env.NODE_ENV === 'production' ? '' : message.exceptionMessage
+          ? `${getSafe(() => message.clientMessage, '')} ${getSafe(() => message.descriptionMessage, '')} ${
+              process.env.NODE_ENV === 'production' ? '' : getSafe(() => message.exceptionMessage, '')
             }`
-          : `${message.clientMessage} ${getSafe(() => message.exceptionMessage, '')}`
+          : `${getSafe(() => message.clientMessage, '')} ${
+              process.env.NODE_ENV === 'production' ? '' : getSafe(() => message.exceptionMessage, '')
+            }`
         : message
 
     if (msg && message.level) {

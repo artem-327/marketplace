@@ -36,7 +36,6 @@ class ActionsRequired extends React.Component {
   toastCall = async d => {
     const { toastManager } = this.props
     try {
-      // ! !
       await d.action()
       toastManager.add(
         generateToastMarkup(
@@ -52,16 +51,9 @@ class ActionsRequired extends React.Component {
     } catch {}
   }
 
-  confirmOrder = () => {
+  confirmOrder = async () => {
     const { order, confirmOrder } = this.props
-    this.toastCall({
-      action: () => confirmOrder(order.id),
-      toastTitleId: 'notifications.order.actions.confirmed.success.header',
-      toastTitleDefaultMessage: 'Order Confirmed',
-      toastContentId: 'notifications.order.actions.confirmed.success.content',
-      toastContentDefaultMessage: `Order ${order.id} was confirmed.`,
-      toastValues: { orderId: order.id }
-    })
+    await confirmOrder(order.id)
   }
 
   openAssignLots = () => {
@@ -172,11 +164,11 @@ class ActionsRequired extends React.Component {
     })
   }
 
-  disapproveOrder = () => {
-    const { order, disapproveOrder } = this.props
+  discardOrder = () => {
+    const { order, discardOrder } = this.props
 
     this.toastCall({
-      action: () => disapproveOrder(order.id),
+      action: () => discardOrder(order.id),
       toastTitleId: 'notifications.order.actions.disapproved.success.header',
       toastTitleDefaultMessage: 'Order Discarded',
       toastContentId: 'notifications.order.actions.disapproved.success.content',
@@ -336,7 +328,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && returnStatus === 1 // Confirmed && IN_TRANSIT
+            {orderStatus === 2 && returnStatus === 2 // Confirmed && IN_TRANSIT
               ? this.renderSegment(null, 14, null, 'order.returnInTransit.description', [
                   {
                     buttonType: 'primary',
@@ -360,7 +352,7 @@ class ActionsRequired extends React.Component {
                   },
                   {
                     buttonType: 'basic',
-                    onClick: this.disapproveOrder,
+                    onClick: this.discardOrder,
                     dataTest: 'orders_detail_discard_btn',
                     text: 'global.discard'
                   }
@@ -376,6 +368,16 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
+            {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
+              ? this.renderSegment(null, 14, null, 'order.shipFailed.description', [
+                  {
+                    buttonType: 'primary',
+                    onClick: () => openPopupName('openedPurchaseOrderShipping'),
+                    dataTest: 'orders_detail_newShipmentPurchase_btn',
+                    text: 'order.NewShipmentPurchase'
+                  }
+                ])
+              : null}
             {orderStatus === 2 && shippingStatus === 2 // Confirmed && In transit
               ? this.renderSegment(null, 13, null, 'order.transit.description', [
                   {
@@ -386,7 +388,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 2 && creditStatus === 0 // Confirmed && Pending TODO zmenit zpet na reviewStatus === 1
+            {orderStatus === 2 && reviewStatus === 1 && creditStatus === 0 // Confirmed && Pending
               ? this.renderSegment(null, 10, null, 'order.delivered.description', [
                   {
                     buttonType: 'primary',
@@ -408,7 +410,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 1 && creditStatus === 2 // Confirmed && PENDING && COUNTER_OFFER_PENDING //
+            {orderStatus === 2 && reviewStatus === 1 && creditStatus === 2 // Confirmed && PENDING && COUNTER_OFFER_PENDING
               ? this.renderSegment(null, 13, null, 'order.reviewCreditRequest.description', [
                   {
                     buttonType: 'primary',

@@ -9,8 +9,6 @@ const initialState = {
   detailType: null,
   isFetching: false,
   isDetailFetching: false,
-  isConfirmFetching: false,
-  isRejectFetching: false,
   isSending: false,
   reloadPage: false,
   selectedIndex: -1,
@@ -25,10 +23,13 @@ const initialState = {
   openedPurchaseReviewCreditRequest: false,
   openedSaleReviewCreditRequest: false,
   openedSaleReturnShipping: false,
-  openedSaleNewShipping: false,
+  openedPurchaseOrderShipping: false,
   bankAccounts: [],
   bankAccountsLoading: false,
-  relatedOrders: []
+  relatedOrders: [],
+  returnShipmentRates: [],
+  returnShipmentOrder: {},
+  loadRelatedOrders: false
 }
 
 export default function(state = initialState, action) {
@@ -81,61 +82,20 @@ export default function(state = initialState, action) {
         reloadPage: false
       }
     case AT.ORDER_CONFIRM_FETCH_PENDING:
-      return {
-        ...state,
-        isConfirmFetching: true,
-        reloadPage: false
-      }
-    case AT.ORDER_CONFIRM_FETCH_FULFILLED:
-      return {
-        ...state,
-        isConfirmFetching: false,
-        reloadPage: true
-      }
-    case AT.ORDER_CONFIRM_FETCH_REJECTED:
-      return {
-        ...state,
-        isConfirmFetching: false,
-        reloadPage: false
-      }
     case AT.ORDER_REJECT_FETCH_PENDING:
-      return {
-        ...state,
-        isRejectFetching: true,
-        reloadPage: false
-      }
-    case AT.ORDER_REJECT_FETCH_FULFILLED:
-      return {
-        ...state,
-        isRejectFetching: false,
-        reloadPage: true
-      }
-    case AT.ORDER_REJECT_FETCH_REJECTED:
-      return {
-        ...state,
-        isRejectFetching: false,
-        reloadPage: false
-      }
-
     case AT.ORDER_RETURN_SHIP_FETCH_PENDING:
     case AT.ORDER_SHIP_FETCH_PENDING:
       return {
         ...state,
-        reloadPage: false,
         isSending: true
       }
-    case AT.ORDER_RETURN_SHIP_FETCH_FULFILLED:
-    case AT.ORDER_SHIP_FETCH_FULFILLED:
-      return {
-        ...state,
-        reloadPage: true,
-        isSending: false
-      }
+
+    case AT.ORDER_CONFIRM_FETCH_REJECTED:
+    case AT.ORDER_REJECT_FETCH_REJECTED:
     case AT.ORDER_RETURN_SHIP_FETCH_REJECTED:
-    case AT.ORDER_SHIP_FETCH_FETCH_REJECTED:
+    case AT.ORDER_SHIP_FETCH_REJECTED:
       return {
         ...state,
-        reloadPage: false,
         isSending: false
       }
     case AT.ORDER_DOWNLOAD_PDF_FULFILLED:
@@ -182,7 +142,7 @@ export default function(state = initialState, action) {
         openedPurchaseReviewCreditRequest: false,
         openedSaleReviewCreditRequest: false,
         openedSaleReturnShipping: false,
-        openedSaleNewShipping: false
+        openedPurchaseOrderShipping: false
       }
     case AT.ORDER_LOAD_BANK_ACCOUNTS_PENDING:
       return {
@@ -274,28 +234,33 @@ export default function(state = initialState, action) {
           paymentStatus: 4
         }
       }
+    case AT.RELATED_ORDERS_PENDING:
+      return {
+        ...state,
+        loadRelatedOrders: true
+      }
     case AT.RELATED_ORDERS_FULFILLED:
       return {
         ...state,
+        loadRelatedOrders: false,
         relatedOrders: action.payload.data
       }
+
+    case AT.ORDER_RETURN_SHIP_FETCH_FULFILLED:
+    case AT.ORDER_SHIP_FETCH_FULFILLED:
+    case AT.ORDER_CONFIRM_FETCH_FULFILLED:
+    case AT.ORDER_REJECT_FETCH_FULFILLED:
     case AT.ORDER_CANCEL_ORDER_FULFILLED:
-      return {
-        ...state,
-        detail: action.payload.data
-      }
     case AT.ORDER_APPROVE_ORDER_FULFILLED:
-      return {
-        ...state,
-        detail: action.payload.data
-      }
     case AT.ORDER_CONFIRM_RETURNED_FETCH_FULFILLED:
     case AT.ORDER_ACCEPT_DELIVERY_ORDER_FULFILLED:
     case AT.ORDER_RECEIVED_ORDER_FULFILLED:
-    case AT.ORDER_DISAPPROVE_ORDER_FULFILLED:
+    case AT.ORDER_DISCARD_ORDER:
+    case AT.REJECT_PURCHASE_ORDER_FULFILLED:
       return {
         ...state,
-        detail: action.payload.data
+        detail: action.payload.data,
+        isSending: false
       }
     default:
       return state

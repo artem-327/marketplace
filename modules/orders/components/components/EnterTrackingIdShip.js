@@ -20,7 +20,7 @@ const initValues = {
 
 class EnterTrackingIdShip extends React.Component {
 
-  markShipped = async (value) => {
+  markShipped = async (value, actions) => {
     const {
       orderId,
       toastManager,
@@ -43,7 +43,11 @@ class EnterTrackingIdShip extends React.Component {
         ), { appearance: 'success' }
       )
       closePopup()
-    } catch {}
+    } catch (e) {
+      console.error(e)
+    } finally {
+      actions.setSubmitting(false)
+    }
   }
 
 
@@ -71,7 +75,7 @@ class EnterTrackingIdShip extends React.Component {
                 initialValues={{ ...initValues }}
                 onSubmit={(values, actions) => {
                   if (values.trackingId.length) {
-                    this.markShipped(values.trackingId)
+                    this.markShipped(values.trackingId, actions)
                   }
                   else {
                     confirm(
@@ -85,7 +89,7 @@ class EnterTrackingIdShip extends React.Component {
                       )
                     ).then(
                       () => { // confirm
-                        this.markShipped(values.trackingId)
+                        this.markShipped(values.trackingId, actions)
                       },
                       () => { // cancel
                       }

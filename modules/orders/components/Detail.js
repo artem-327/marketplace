@@ -29,13 +29,15 @@ import PurchaseRequestCreditDelivery from './components/PurchaseRequestCreditDel
 import PurchaseReviewCreditRequest from './components/PurchaseReviewCreditRequest'
 import SaleReviewCreditRequest from './components/SaleReviewCreditRequest'
 import SaleReturnShipping from './components/SaleReturnShipping'
-import SaleNewShipping from './components/SaleNewShipping'
+import PurchaseOrderShipping from './components/PurchaseOrderShipping'
 
 import confirm from '~/src/components/Confirmable/confirm'
 import moment from 'moment/moment'
 import { FormattedPhone } from '~/components/formatted-messages/'
 import { withToastManager } from 'react-toast-notifications'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { FormattedNumber } from 'react-intl'
+import { currency } from '~/constants/index'
 
 const AccordionTitle = styled(Accordion.Title)`
   text-transform: uppercase;
@@ -84,7 +86,7 @@ const TableRowData = styled(Table.Row)`
 
 class Detail extends Component {
   state = {
-    activeIndexes: [true, true, false, false, false]
+    activeIndexes: [true, true, false, false, false, false]
   }
 
   constructor(props) {
@@ -153,7 +155,7 @@ class Detail extends Component {
       openedPurchaseReviewCreditRequest,
       openedSaleReturnShipping,
       openedSaleReviewCreditRequest,
-      openedSaleNewShipping,
+      openedPurchaseOrderShipping,
       cancelPayment,
       toastManager,
       isPaymentCancellable
@@ -240,28 +242,50 @@ class Detail extends Component {
                       </List.Description>
                     </List.Content>
                   </List.Item>
-                  <List.Item>
-                    <List.Content>
-                      <List.Header as='label'>
-                        <FormattedMessage id='order.creditStatus' defaultMessage='Credit Status' />
-                      </List.Header>
-                      <List.Description as='span'>
-                        <Label circular empty color={order.creditStatus !== 'N/A' ? 'blue' : false}></Label>{' '}
-                        {order.creditStatus}
-                      </List.Description>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Content>
-                      <List.Header as='label'>
-                        <FormattedMessage id='order.returnStatus' defaultMessage='Return Status' />
-                      </List.Header>
-                      <List.Description as='span'>
-                        <Label circular empty color={order.returnStatus !== 'N/A' ? 'blue' : false}></Label>{' '}
-                        {order.returnStatus}
-                      </List.Description>
-                    </List.Content>
-                  </List.Item>
+                  {order.creditStatus && (
+                    <List.Item>
+                      <List.Content>
+                        <List.Header as='label'>
+                          <FormattedMessage id='order.creditStatus' defaultMessage='Credit Status' />
+                        </List.Header>
+                        <List.Description as='span'>
+                          <Label
+                            circular
+                            empty
+                            color={
+                              order.creditStatus === 'Pending' || order.creditStatus === 'Counter Offer Pending'
+                                ? 'blue'
+                                : order.creditStatus === 'Accepted'
+                                ? 'green'
+                                : 'red'
+                            }></Label>{' '}
+                          {order.creditStatus}
+                        </List.Description>
+                      </List.Content>
+                    </List.Item>
+                  )}
+                  {order.returnStatus && (
+                    <List.Item>
+                      <List.Content>
+                        <List.Header as='label'>
+                          <FormattedMessage id='order.returnStatus' defaultMessage='Return Status' />
+                        </List.Header>
+                        <List.Description as='span'>
+                          <Label
+                            circular
+                            empty
+                            color={
+                              order.returnStatus === 'In Transit'
+                                ? 'blue'
+                                : order.returnStatus === 'Delivered'
+                                ? 'green'
+                                : 'red'
+                            }></Label>{' '}
+                          {order.returnStatus}
+                        </List.Description>
+                      </List.Content>
+                    </List.Item>
+                  )}
                   <List.Item>
                     <List.Content>
                       <List.Header as='label'>
@@ -341,7 +365,7 @@ class Detail extends Component {
               {openedPurchaseReviewCreditRequest ? <PurchaseReviewCreditRequest /> : null}
               {openedSaleReturnShipping ? <SaleReturnShipping /> : null}
               {openedSaleReviewCreditRequest ? <SaleReviewCreditRequest /> : null}
-              {openedSaleNewShipping ? <SaleNewShipping /> : null}
+              {openedPurchaseOrderShipping ? <PurchaseOrderShipping /> : null}
 
               <Divider hidden />
               <Accordion
@@ -363,63 +387,212 @@ class Detail extends Component {
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[0]}>
                   <Grid divided='horizontally'>
-                    <Grid.Row columns={2}>
+                    <Grid.Row columns={3}>
                       <Grid.Column>
                         <GridData columns={2}>
-                          <GridDataColumn width={4}>
+                          <GridDataColumn width={8}>
                             <strong>
                               {ordersType} <FormattedMessage id='order' defaultMessage='Order' />
                             </strong>
                           </GridDataColumn>
-                          <GridDataColumn width={12}>{order.id}</GridDataColumn>
-                          <GridDataColumn width={4}>
+                          <GridDataColumn width={8}>{order.id}</GridDataColumn>
+                          <GridDataColumn width={8}>
                             <strong>
                               {ordersType.charAt(0)}
                               <FormattedMessage id='order.oDate' defaultMessage='O Date' />
                             </strong>
                           </GridDataColumn>
-                          <GridDataColumn width={12}>{order.orderDate}</GridDataColumn>
-                          <GridDataColumn width={4}>
+                          <GridDataColumn width={8}>{order.orderDate}</GridDataColumn>
+                          <GridDataColumn width={8}>
                             <strong>
                               {ordersType.charAt(0)}
                               <FormattedMessage id='order.oConfirmDate' defaultMessage='O Confirmation Date' />
                             </strong>
                           </GridDataColumn>
-                          <GridDataColumn width={12}>{order.confirmationDate}</GridDataColumn>
-                          <GridDataColumn width={4}>
+                          <GridDataColumn width={8}>{order.confirmationDate}</GridDataColumn>
+                          <GridDataColumn width={8}>
                             <strong>
                               <FormattedMessage id='order.orderAcceptDate' defaultMessage='Order Acceptance Date' />
                             </strong>
                           </GridDataColumn>
-                          <GridDataColumn width={12}>{order.acceptanceDate}</GridDataColumn>
+                          <GridDataColumn width={8}>{order.acceptanceDate}</GridDataColumn>
                         </GridData>
                       </Grid.Column>
+                      {order.sellerRejectionDate ||
+                        order.buyerRejectionDate ||
+                        (ordersType === 'Purchase' && (
+                          <Grid.Column>
+                            <GridData columns={2}>
+                              {order.sellerRejectionDate && (
+                                <>
+                                  <GridDataColumn width={8}>
+                                    <strong>
+                                      <FormattedMessage
+                                        id='order.sellerRejectionDate'
+                                        defaultMessage='Seller Rejection Date'
+                                      />
+                                    </strong>
+                                  </GridDataColumn>
+                                  <GridDataColumn width={8}>{order.sellerRejectionDate}</GridDataColumn>
+                                </>
+                              )}
+                              {order.buyerRejectionDate && (
+                                <>
+                                  <GridDataColumn width={8}>
+                                    <strong>
+                                      <FormattedMessage
+                                        id='order.buyerRejectionDate'
+                                        defaultMessage='Buyer Rejection Date'
+                                      />
+                                    </strong>
+                                  </GridDataColumn>
+                                  <GridDataColumn width={8}>{order.buyerRejectionDate}</GridDataColumn>
+                                </>
+                              )}
+                              {ordersType === 'Purchase' ? (
+                                <>
+                                  <GridDataColumn width={8}>
+                                    <strong>
+                                      <FormattedMessage id='order.createdBy' defaultMessage='Created By' />
+                                    </strong>
+                                  </GridDataColumn>
+                                  <GridDataColumn width={8}>{order.createdBy}</GridDataColumn>
+                                </>
+                              ) : (
+                                ''
+                              )}
+                            </GridData>
+                          </Grid.Column>
+                        ))}
                       <Grid.Column>
                         <GridData columns={2}>
-                          <GridDataColumn width={4}>
-                            <strong>
-                              <FormattedMessage id='order.sellerRejectionDate' defaultMessage='Seller Rejection Date' />
-                            </strong>
-                          </GridDataColumn>
-                          <GridDataColumn width={12}>{order.sellerRejectionDate}</GridDataColumn>
-                          <GridDataColumn width={4}>
-                            <strong>
-                              <FormattedMessage id='order.buyerRejectionDate' defaultMessage='Buyer Rejection Date' />
-                            </strong>
-                          </GridDataColumn>
-                          <GridDataColumn width={12}>{order.buyerRejectionDate}</GridDataColumn>
-                          {ordersType === 'Purchase' ? (
-                            <>
-                              <GridDataColumn width={4}>
-                                <strong>
-                                  <FormattedMessage id='order.createdBy' defaultMessage='Created By' />
-                                </strong>
-                              </GridDataColumn>
-                              <GridDataColumn width={12}>{order.createdBy}</GridDataColumn>
-                            </>
-                          ) : (
-                            ''
-                          )}
+                          <div className='left'>
+                            {ordersType === 'Sales' ? (
+                              <>
+                                <StyledTable basic='very' collapsing singleLine className='order-total'>
+                                  <Table.Header>
+                                    <TableRowData>
+                                      <Table.HeaderCell colSpan='2'>
+                                        <strong>
+                                          <FormattedMessage id='order.orderTotal' defaultMessage='Order Total' />
+                                        </strong>
+                                      </Table.HeaderCell>
+                                    </TableRowData>
+                                  </Table.Header>
+                                  <Table.Body>
+                                    <TableRowData>
+                                      <Table.Cell>
+                                        <strong>
+                                          <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' /> (
+                                          {order.feesPercent}%)
+                                        </strong>
+                                      </Table.Cell>
+                                      <Table.Cell textAlign='right'>{order.feesAmount}</Table.Cell>
+                                    </TableRowData>
+                                  </Table.Body>
+                                  <Table.Footer>
+                                    <TableRowData>
+                                      <Table.HeaderCell>
+                                        <strong>
+                                          <FormattedMessage id='order.total' defaultMessage='Total' />
+                                        </strong>
+                                      </Table.HeaderCell>
+                                      <Table.HeaderCell textAlign='right'>
+                                        <strong>{order.total}</strong>
+                                      </Table.HeaderCell>
+                                    </TableRowData>
+                                  </Table.Footer>
+                                </StyledTable>
+
+                                <Divider hidden />
+
+                                <StyledTable basic='very' collapsing singleLine className='order-total'>
+                                  <Table.Body>
+                                    <TableRowData>
+                                      <Table.Cell>
+                                        <strong>
+                                          <FormattedMessage id='order.cogs' defaultMessage='COGS' />
+                                        </strong>
+                                      </Table.Cell>
+                                      <Table.Cell textAlign='right'></Table.Cell>
+                                    </TableRowData>
+                                  </Table.Body>
+                                  <Table.Footer>
+                                    <TableRowData>
+                                      <Table.HeaderCell>
+                                        <strong>
+                                          <FormattedMessage id='order.grossProfit' defaultMessage='Gross Profit' />
+                                        </strong>
+                                      </Table.HeaderCell>
+                                      <Table.HeaderCell textAlign='right'>
+                                        <strong>{order.grossProfit}</strong>
+                                      </Table.HeaderCell>
+                                    </TableRowData>
+                                  </Table.Footer>
+                                </StyledTable>
+                              </>
+                            ) : (
+                              <>
+                                <StyledTable basic='very' collapsing singleLine className='order-total'>
+                                  <Table.Header>
+                                    <TableRowData>
+                                      <Table.HeaderCell colSpan='2'>
+                                        <strong>
+                                          <FormattedMessage id='order.orderTotal' defaultMessage='Order Total' />
+                                        </strong>
+                                      </Table.HeaderCell>
+                                    </TableRowData>
+                                  </Table.Header>
+                                  <Table.Body>
+                                    <TableRowData>
+                                      <Table.Cell>
+                                        <strong>
+                                          <FormattedMessage id='order.subtotal' defaultMessage='Subtotal' />
+                                        </strong>
+                                      </Table.Cell>
+                                      <Table.Cell textAlign='right'>
+                                        {
+                                          <FormattedNumber
+                                            style='currency'
+                                            currency={currency}
+                                            value={order.subtotal}
+                                          />
+                                        }
+                                      </Table.Cell>
+                                    </TableRowData>
+                                    <TableRowData>
+                                      <Table.Cell>
+                                        <strong>
+                                          <FormattedMessage id='order.shipping' defaultMessage='Shipping' />
+                                        </strong>
+                                      </Table.Cell>
+                                      <Table.Cell textAlign='right'>{order.freight}</Table.Cell>
+                                    </TableRowData>
+                                    <TableRowData>
+                                      <Table.Cell>
+                                        <strong>
+                                          <FormattedMessage id='order.tax' defaultMessage='Tax' />
+                                        </strong>
+                                      </Table.Cell>
+                                      <Table.Cell textAlign='right'>{'$0'}</Table.Cell>
+                                    </TableRowData>
+                                  </Table.Body>
+                                  <Table.Footer>
+                                    <TableRowData>
+                                      <Table.HeaderCell>
+                                        <strong>
+                                          <FormattedMessage id='order.total' defaultMessage='Total' />
+                                        </strong>
+                                      </Table.HeaderCell>
+                                      <Table.HeaderCell textAlign='right'>
+                                        <strong>{order.total}</strong>
+                                      </Table.HeaderCell>
+                                    </TableRowData>
+                                  </Table.Footer>
+                                </StyledTable>
+                              </>
+                            )}
+                          </div>
                         </GridData>
                       </Grid.Column>
                     </Grid.Row>
@@ -439,204 +612,72 @@ class Detail extends Component {
                   <FormattedMessage id='order.productInfo' defaultMessage='Product Info' />
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[1]}>
-                  <Grid divided='horizontally'>
-                    <Grid.Row columns={2}>
-                      <Grid.Column>
-                        <GridData columns={2}>
-                          <GridDataColumn width={4}>
-                            <strong>
-                              <FormattedMessage id='order.chemicalName' defaultMessage='Chemical Name' />
-                            </strong>
-                          </GridDataColumn>
-                          <GridDataColumn width={12}>{order.chemicalName}</GridDataColumn>
-                          <GridDataColumn width={4}>
-                            <strong>
-                              <FormattedMessage id='order.productName' defaultMessage='Product Name' />
-                            </strong>
-                          </GridDataColumn>
-                          <GridDataColumn width={12}>{order.productName}</GridDataColumn>
-                          <GridDataColumn width={4}>
-                            <strong>
-                              <FormattedMessage id='order.productCode' defaultMessage='Product Code' />
-                            </strong>
-                          </GridDataColumn>
-                          <GridDataColumn width={12}>{order.productCode}</GridDataColumn>
-                          <GridDataColumn width={4}>
-                            <strong>
-                              <FormattedMessage id='order.packaging' defaultMessage='Packaging' />
-                            </strong>
-                          </GridDataColumn>
-                          <GridDataColumn width={12}>{order.packaging}</GridDataColumn>
-                          <GridDataColumn width={4}>
-                            <strong>
-                              <FormattedMessage id='order.totalPkg' defaultMessage='Total PKG' />
-                            </strong>
-                          </GridDataColumn>
-                          <GridDataColumn width={12}>{order.totalPkg}</GridDataColumn>
-                          <GridDataColumn width={4}>
-                            <strong>
-                              <FormattedMessage id='order.quantityOrdered' defaultMessage='Quantity Ordered' />
-                            </strong>
-                          </GridDataColumn>
-                          <GridDataColumn width={12}>{order.quantityOrdered}</GridDataColumn>
-                          <GridDataColumn width={4}>
-                            <strong>
-                              <FormattedMessage id='order.unit' defaultMessage='Unit' />
-                            </strong>
-                          </GridDataColumn>
-                          <GridDataColumn width={12}>{order.unit}</GridDataColumn>
-                          <GridDataColumn width={4}>
-                            <strong>
-                              <FormattedMessage id='order.unitPrice' defaultMessage='Unit Price' />
-                            </strong>
-                          </GridDataColumn>
-                          <GridDataColumn width={12}>{order.unitPrice}</GridDataColumn>
-
-                          {ordersType === 'Sales' ? (
-                            <>
-                              <GridDataColumn width={4}>
-                                <strong>
-                                  <FormattedMessage id='order.unitCost' defaultMessage='Unit Cost' />
-                                </strong>
-                              </GridDataColumn>
-                              <GridDataColumn width={12}>{order.unitCost}</GridDataColumn>
-                            </>
-                          ) : (
-                            ''
-                          )}
-                        </GridData>
-                      </Grid.Column>
-                      <Grid.Column>
-                        <div className='left'>
-                          {ordersType === 'Sales' ? (
-                            <>
-                              <StyledTable basic='very' collapsing singleLine className='order-total'>
-                                <Table.Header>
-                                  <TableRowData>
-                                    <Table.HeaderCell colSpan='2'>
-                                      <strong>
-                                        <FormattedMessage id='order.orderTotal' defaultMessage='Order Total' />
-                                      </strong>
-                                    </Table.HeaderCell>
-                                  </TableRowData>
-                                </Table.Header>
-                                <Table.Body>
-                                  <TableRowData>
-                                    <Table.Cell>
-                                      <strong>
-                                        <FormattedMessage id='order.amount' defaultMessage='Amount' />
-                                      </strong>
-                                    </Table.Cell>
-                                    <Table.Cell textAlign='right'>{order.amount}</Table.Cell>
-                                  </TableRowData>
-                                  <TableRowData>
-                                    <Table.Cell>
-                                      <strong>
-                                        <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' /> (
-                                        {order.feesPercent}%)
-                                      </strong>
-                                    </Table.Cell>
-                                    <Table.Cell textAlign='right'>{order.feesAmount}</Table.Cell>
-                                  </TableRowData>
-                                </Table.Body>
-                                <Table.Footer>
-                                  <TableRowData>
-                                    <Table.HeaderCell>
-                                      <strong>
-                                        <FormattedMessage id='order.total' defaultMessage='Total' />
-                                      </strong>
-                                    </Table.HeaderCell>
-                                    <Table.HeaderCell textAlign='right'>
-                                      <strong>{order.total}</strong>
-                                    </Table.HeaderCell>
-                                  </TableRowData>
-                                </Table.Footer>
-                              </StyledTable>
-
-                              <Divider hidden />
-
-                              <StyledTable basic='very' collapsing singleLine className='order-total'>
-                                <Table.Body>
-                                  <TableRowData>
-                                    <Table.Cell>
-                                      <strong>
-                                        <FormattedMessage id='order.cogs' defaultMessage='COGS' />
-                                      </strong>
-                                    </Table.Cell>
-                                    <Table.Cell textAlign='right'></Table.Cell>
-                                  </TableRowData>
-                                </Table.Body>
-                                <Table.Footer>
-                                  <TableRowData>
-                                    <Table.HeaderCell>
-                                      <strong>
-                                        <FormattedMessage id='order.grossProfit' defaultMessage='Gross Profit' />
-                                      </strong>
-                                    </Table.HeaderCell>
-                                    <Table.HeaderCell textAlign='right'>
-                                      <strong>{order.grossProfit}</strong>
-                                    </Table.HeaderCell>
-                                  </TableRowData>
-                                </Table.Footer>
-                              </StyledTable>
-                            </>
-                          ) : (
-                            <>
-                              <StyledTable basic='very' collapsing singleLine className='order-total'>
-                                <Table.Header>
-                                  <TableRowData>
-                                    <Table.HeaderCell colSpan='2'>
-                                      <strong>
-                                        <FormattedMessage id='order.orderTotal' defaultMessage='Order Total' />
-                                      </strong>
-                                    </Table.HeaderCell>
-                                  </TableRowData>
-                                </Table.Header>
-                                <Table.Body>
-                                  <TableRowData>
-                                    <Table.Cell>
-                                      <strong>
-                                        <FormattedMessage id='order.amount' defaultMessage='Amount' />
-                                      </strong>
-                                    </Table.Cell>
-                                    <Table.Cell textAlign='right'>{order.amount}</Table.Cell>
-                                  </TableRowData>
-                                  <TableRowData>
-                                    <Table.Cell>
-                                      <strong>
-                                        <FormattedMessage id='order.subtotal' defaultMessage='Subtotal' />
-                                      </strong>
-                                    </Table.Cell>
-                                    <Table.Cell textAlign='right'>{order.subtotal}</Table.Cell>
-                                  </TableRowData>
-                                  <TableRowData>
-                                    <Table.Cell>
-                                      <strong>
-                                        <FormattedMessage id='order.freight' defaultMessage='Freight' />
-                                      </strong>
-                                    </Table.Cell>
-                                    <Table.Cell textAlign='right'>{order.freight}</Table.Cell>
-                                  </TableRowData>
-                                </Table.Body>
-                                <Table.Footer>
-                                  <TableRowData>
-                                    <Table.HeaderCell>
-                                      <strong>
-                                        <FormattedMessage id='order.total' defaultMessage='Total' />
-                                      </strong>
-                                    </Table.HeaderCell>
-                                    <Table.HeaderCell textAlign='right'>
-                                      <strong>{order.total}</strong>
-                                    </Table.HeaderCell>
-                                  </TableRowData>
-                                </Table.Footer>
-                              </StyledTable>
-                            </>
-                          )}
-                        </div>
-                      </Grid.Column>
-                    </Grid.Row>
-                  </Grid>
+                  <Table basic='very'>
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.HeaderCell>
+                          <FormattedMessage id='order.name' defaultMessage='Name' />
+                        </Table.HeaderCell>
+                        <Table.HeaderCell>
+                          <FormattedMessage id='order.code' defaultMessage='Code' />
+                        </Table.HeaderCell>
+                        <Table.HeaderCell>
+                          <FormattedMessage id='order.packaging' defaultMessage='Packaging' />
+                        </Table.HeaderCell>
+                        <Table.HeaderCell textAlign='right'>
+                          <FormattedMessage id='order.pkgs' defaultMessage='PKGs' />
+                        </Table.HeaderCell>
+                        <Table.HeaderCell textAlign='right'>
+                          <FormattedMessage id='order.quantity' defaultMessage='Quantity' />
+                        </Table.HeaderCell>
+                        <Table.HeaderCell textAlign='right'>
+                          <FormattedMessage id='order.fobPrice' defaultMessage='FOB Price' />
+                        </Table.HeaderCell>
+                        <Table.HeaderCell textAlign='right'>
+                          <FormattedMessage id='order.itemTotal' defaultMessage='Item Total' />
+                        </Table.HeaderCell>
+                        {ordersType === 'Sales' && (
+                          <>
+                            <Table.HeaderCell textAlign='right'>
+                              <FormattedMessage id='order.unitCost' defaultMessage='Unit Cost' />
+                            </Table.HeaderCell>
+                          </>
+                        )}
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      {order &&
+                        order.productName &&
+                        order.productName.map((element, index) => (
+                          <Table.Row>
+                            <Table.Cell>{element}</Table.Cell>
+                            <Table.Cell>{order.productCode[index]}</Table.Cell>
+                            <Table.Cell>{order.packaging[index]}</Table.Cell>
+                            <Table.Cell textAlign='right'>{order.totalPkg[index]}</Table.Cell>
+                            <Table.Cell textAlign='right'>{order.quantityOrdered[index]}</Table.Cell>
+                            <Table.Cell textAlign='right'>{order.unitPrice[index]}</Table.Cell>
+                            <Table.Cell textAlign='right'>
+                              {<FormattedNumber style='currency' currency={currency} value={order.itemTotal[index]} />}
+                            </Table.Cell>
+                            {ordersType === 'Sales' && (
+                              <>
+                                <Table.Cell textAlign='right'>
+                                  {order.unitCost[index] ? (
+                                    <FormattedNumber
+                                      style='currency'
+                                      currency={currency}
+                                      value={order.unitCost[index]}
+                                    />
+                                  ) : (
+                                    'N/A'
+                                  )}
+                                </Table.Cell>
+                              </>
+                            )}
+                          </Table.Row>
+                        ))}
+                    </Table.Body>
+                  </Table>
                 </Accordion.Content>
 
                 <AccordionTitle
@@ -690,19 +731,100 @@ class Detail extends Component {
                   </Grid>
                 </Accordion.Content>
 
+                {order.reviewStatus === 'Rejected' && (
+                  <>
+                    <AccordionTitle
+                      active={activeIndexes[3]}
+                      index={3}
+                      onClick={this.handleClick}
+                      data-test='orders_detail_return_shipping'>
+                      <Icon
+                        name={'chevron ' + (activeIndexes[3] ? 'down' : 'right')}
+                        size='large'
+                        color={activeIndexes[3] ? 'blue' : 'black'}
+                      />
+                      <FormattedMessage id='order.returnShipping' defaultMessage='Return Shipping' />
+                    </AccordionTitle>
+                    <Accordion.Content active={activeIndexes[3]}>
+                      <Grid divided='horizontally'>
+                        <Grid.Row columns={2}>
+                          <Grid.Column>
+                            <GridData columns={2}>
+                              <GridDataColumn width={4}>
+                                <strong>
+                                  <FormattedMessage id='order.returnTo' defaultMessage='Return To' />
+                                </strong>
+                              </GridDataColumn>
+                              <GridDataColumn width={12}>{order.returnTo}</GridDataColumn>
+                              <GridDataColumn width={4}>
+                                <strong>
+                                  <FormattedMessage id='order.returnToAddress' defaultMessage='Return To Address' />
+                                </strong>
+                              </GridDataColumn>
+                              <GridDataColumn width={12}>{order.returnAddress}</GridDataColumn>
+                              {order.returnShipDate && (
+                                <>
+                                  <GridDataColumn width={4}>
+                                    <strong>
+                                      <FormattedMessage id='order.returnShipDate' defaultMessage='Return Ship Date' />
+                                    </strong>
+                                  </GridDataColumn>
+                                  <GridDataColumn width={12}>{order.returnShipDate}</GridDataColumn>
+                                </>
+                              )}
+                              {order.returnDeliveryDate && (
+                                <>
+                                  <GridDataColumn width={4}>
+                                    <strong>
+                                      <FormattedMessage
+                                        id='order.returnDeliveryDate'
+                                        defaultMessage='Return Delivery Date'
+                                      />
+                                    </strong>
+                                  </GridDataColumn>
+                                  <GridDataColumn width={12}>{order.returnDeliveryDate}</GridDataColumn>
+                                </>
+                              )}
+                            </GridData>
+                          </Grid.Column>
+                          <Grid.Column>
+                            <GridData columns={2}>
+                              <GridDataColumn width={4}>
+                                <strong>
+                                  <FormattedMessage id='order.returnCarrier' defaultMessage='Return Carrier' />
+                                </strong>
+                              </GridDataColumn>
+                              <GridDataColumn width={12}>{order.returnCourierName}</GridDataColumn>
+                              <GridDataColumn width={4}>
+                                <strong>
+                                  <FormattedMessage
+                                    id='order.returnTrackingNumber'
+                                    defaultMessage='Return Tracking Number'
+                                  />
+                                </strong>
+                              </GridDataColumn>
+                              <GridDataColumn width={12}>{order.returnShippingTrackingCode}</GridDataColumn>
+                            </GridData>
+                          </Grid.Column>
+                        </Grid.Row>
+                      </Grid>
+                    </Accordion.Content>
+                  </>
+                )}
+
                 <AccordionTitle
-                  active={activeIndexes[3]}
-                  index={3}
+                  active={activeIndexes[4]}
+                  index={4}
                   onClick={this.handleClick}
                   data-test='orders_detail_shipping'>
                   <Icon
-                    name={'chevron ' + (activeIndexes[3] ? 'down' : 'right')}
+                    name={'chevron ' + (activeIndexes[4] ? 'down' : 'right')}
                     size='large'
-                    color={activeIndexes[3] ? 'blue' : 'black'}
+                    color={activeIndexes[4] ? 'blue' : 'black'}
                   />
                   <FormattedMessage id='order.shipping' defaultMessage='Shipping' />
                 </AccordionTitle>
-                <Accordion.Content active={activeIndexes[3]}>
+                <Accordion.Content active={activeIndexes[4]}>
                   <Grid divided='horizontally'>
                     <Grid.Row columns={2}>
                       <Grid.Column>
@@ -737,18 +859,6 @@ class Detail extends Component {
                             </strong>
                           </GridDataColumn>
                           <GridDataColumn width={12}>{order.deliveryDate}</GridDataColumn>
-                          <GridDataColumn width={4}>
-                            <strong>
-                              <FormattedMessage id='order.returnShipDate' defaultMessage='Return Ship Date' />
-                            </strong>
-                          </GridDataColumn>
-                          <GridDataColumn width={12}>{order.returnShipDate}</GridDataColumn>
-                          <GridDataColumn width={4}>
-                            <strong>
-                              <FormattedMessage id='order.returnDeliveryDate' defaultMessage='Return Delivery Date' />
-                            </strong>
-                          </GridDataColumn>
-                          <GridDataColumn width={12}>{order.returnDeliveryDate}</GridDataColumn>
                         </GridData>
                       </Grid.Column>
                       <Grid.Column>
@@ -767,10 +877,10 @@ class Detail extends Component {
                           <GridDataColumn width={12}>{order.service}</GridDataColumn>
                           <GridDataColumn width={4}>
                             <strong>
-                              <FormattedMessage id='order.proNumber' defaultMessage='Pro Number' />
+                              <FormattedMessage id='order.trackingNumber' defaultMessage='Tracking Number' />
                             </strong>
                           </GridDataColumn>
-                          <GridDataColumn width={12}>{order.proNumber}</GridDataColumn>
+                          <GridDataColumn width={12}>{order.shippingTrackingCode}</GridDataColumn>
                           <GridDataColumn width={4}>
                             <strong>
                               <FormattedMessage id='order.incoterms' defaultMessage='Incoterms' />
@@ -784,18 +894,18 @@ class Detail extends Component {
                 </Accordion.Content>
 
                 <AccordionTitle
-                  active={activeIndexes[4]}
-                  index={4}
+                  active={activeIndexes[5]}
+                  index={5}
                   onClick={this.handleClick}
                   data-test='orders_detail_payment'>
                   <Icon
-                    name={'chevron ' + (activeIndexes[4] ? 'down' : 'right')}
+                    name={'chevron ' + (activeIndexes[5] ? 'down' : 'right')}
                     size='large'
-                    color={activeIndexes[4] ? 'blue' : 'black'}
+                    color={activeIndexes[5] ? 'blue' : 'black'}
                   />
                   <FormattedMessage id='order.payment' defaultMessage='Payment' /> / {order.paymentType}
                 </AccordionTitle>
-                <Accordion.Content active={activeIndexes[4]}>
+                <Accordion.Content active={activeIndexes[5]}>
                   <Grid divided='horizontally'>
                     <Grid.Row columns={2}>
                       <Grid.Column>
@@ -824,12 +934,16 @@ class Detail extends Component {
                             </strong>
                           </GridDataColumn>
                           <GridDataColumn width={12}>{order.paymentReceivedDate}</GridDataColumn>
-                          <GridDataColumn width={4}>
-                            <strong>
-                              <FormattedMessage id='order.refundDate' defaultMessage='Refund Date' />
-                            </strong>
-                          </GridDataColumn>
-                          <GridDataColumn width={12}>{order.refundDate}</GridDataColumn>
+                          {order.refundDate && (
+                            <>
+                              <GridDataColumn width={4}>
+                                <strong>
+                                  <FormattedMessage id='order.refundDate' defaultMessage='Refund Date' />
+                                </strong>
+                              </GridDataColumn>
+                              <GridDataColumn width={12}>{order.refundDate}</GridDataColumn>
+                            </>
+                          )}
                           <GridDataColumn width={4}>
                             <strong>
                               <FormattedMessage id='order.terms' defaultMessage='Terms' />

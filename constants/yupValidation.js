@@ -9,6 +9,7 @@ import React from 'react'
 const allowedFreightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500]
 
 export const errorMessages = {
+  mustBeInFuture: <FormattedMessage id='validation.dateInFuture' defaultMessage='Date must be in future' />,
   invalidString: <FormattedMessage id='validation.invalidString' defaultMessage='Invalid value' />,
   invalidEmail: <FormattedMessage id='validation.invalidEmail' defaultMessage='Invalid e-mail address' />,
   invalidDate: <FormattedMessage id='validation.invalidDate' defaultMessage='Invalid date' />,
@@ -121,7 +122,8 @@ export const errorMessages = {
       defaultMessage='Must be multiply of split ({split})'
       values={{ split }}
     />
-  )
+  ),
+  positive: <FormattedMessage id='validation.positive' defaultMessage='Number value should be positive' />,
 }
 
 export const provinceObjectRequired = hasProvinces =>

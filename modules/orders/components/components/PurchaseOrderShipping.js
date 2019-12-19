@@ -17,7 +17,7 @@ const ModalBody = styled(ModalContent)`
 const initValues = {
 }
 
-class SaleNewShipping extends React.Component {
+class PurchaseOrderShipping extends React.Component {
 
   submitHandler = async (values, actions) => {
     const { closePopup } = this.props
@@ -46,7 +46,7 @@ class SaleNewShipping extends React.Component {
             <Loader />
           </Dimmer>
           <Modal.Header>
-            <FormattedMessage id='order.someTextHeaderId' defaultMessage='SaleNewShipping header' />
+            <FormattedMessage id='order.someTextHeaderId' defaultMessage='PurchaseOrderShipping header' />
           </Modal.Header>
           <ModalBody>
             <Modal.Description>
@@ -63,11 +63,12 @@ class SaleNewShipping extends React.Component {
                       <Grid>
                         <Grid.Row>
                           <Grid.Column width={16}>
-
-                            <div>SaleNewShipping body</div>
-
-
-
+                            <div>
+                            <p>Task #32133</p>
+                            <p>PATCH
+                              /api/shipment/order/{orderId}/shipment-order
+                              Orders shipping with given shipping quote.</p>
+                            </div>
                           </Grid.Column>
                         </Grid.Row>
                         <Grid.Row>
@@ -108,4 +109,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(SaleNewShipping)))
+export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(PurchaseOrderShipping)))

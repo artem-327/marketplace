@@ -7,9 +7,6 @@ import {
   getWarehousesDataRequest,
   getBranchesDataRequest,
   openPopup,
-  closeConfirmPopup,
-  deleteConfirmation,
-  handleOpenConfirmPopup,
   deleteBranch
 } from '../../actions'
 import Router from 'next/router'
@@ -25,7 +22,7 @@ class WarehouseTable extends Component {
       {
         name: 'addressName',
         title: (
-          <FormattedMessage id='global.warehouseName' defaultMessage='Warehouse Name'>
+          <FormattedMessage id='settings.warehouseName' defaultMessage='Warehouse Name'>
             {text => text}
           </FormattedMessage>
         )
@@ -96,36 +93,36 @@ class WarehouseTable extends Component {
 
   handlerLoadPage() {
     const { currentTab } = this.props
+    let { columns } = this.state
 
     if (currentTab.type === 'warehouses') {
-      this.setState({
-        tab: 'warehouses'
-      })
+      columns[0].title = (
+        <FormattedMessage id='settings.warehouseName' defaultMessage='Warehouse Name'>
+          {text => text}
+        </FormattedMessage>
+      )
+      this.setState((prevState) => ({
+        tab: 'warehouses',
+        columns
+      }))
     } else if (currentTab.type === 'branches') {
-      this.setState({
-        tab: 'branches'
-      })
+      columns[0].title = (
+        <FormattedMessage id='settings.branchName' defaultMessage='Branch Name'>
+          {text => text}
+        </FormattedMessage>
+      )
+      this.setState((prevState) => ({
+        tab: 'branches',
+        columns
+      }))
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.state.tab != nextProps.currentTab.type ? this.handlerLoadPage() : null
-  }
-
-  branchChecker() {
-    if (this.state.tab === 'branches') {
-      let { columns } = this.state
-      return columns.map(item => {
-        let obj = {}
-        if (item.title === 'Warehouse Name') {
-          obj['name'] = 'name'
-          obj['title'] = 'Branch Name'
-          return obj
-        }
-        return item
-      })
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.state.tab !== this.props.currentTab.type
+      && this.props.currentTab.type !== prevProps.currentTab.type) {
+      this.handlerLoadPage()
     }
-    return this.state.columns
   }
 
   render() {
@@ -138,12 +135,6 @@ class WarehouseTable extends Component {
       deleteBranch,
       intl,
       currentTab
-      // closeConfirmPopup,
-      // deleteConfirmation,
-      // confirmMessage,
-      // handleOpenConfirmPopup,
-      // deleteRowById,
-      // currentTab
     } = this.props
 
     let message =
@@ -159,7 +150,7 @@ class WarehouseTable extends Component {
           tableName='settings_werehouser_branches'
           {...datagrid.tableProps}
           filterValue={filterValue}
-          columns={this.branchChecker()}
+          columns={this.state.columns}
           loading={datagrid.loading || loading}
           rows={rows}
           style={{ marginTop: '5px' }}
@@ -190,9 +181,6 @@ const mapDispatchToProps = {
   getWarehousesDataRequest,
   getBranchesDataRequest,
   openPopup,
-  closeConfirmPopup,
-  deleteConfirmation,
-  handleOpenConfirmPopup,
   deleteBranch
 }
 
@@ -256,12 +244,10 @@ const mapStateToProps = (state, { datagrid }) => {
     editPopupBoolean: state.settings.editPopupBoolean,
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
     filterValue: state.settings.filterValue,
-    confirmMessage: state.settings.confirmMessage,
     currentTab:
       Router && Router.router && Router.router.query && Router.router.query.type
         ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
         : state.settings.tabsNames[0],
-    deleteRowById: state.settings.deleteRowById,
     loading: state.settings.loading
   }
 }

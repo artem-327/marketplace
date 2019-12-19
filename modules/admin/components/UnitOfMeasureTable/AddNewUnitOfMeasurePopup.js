@@ -10,23 +10,28 @@ import { withToastManager } from 'react-toast-notifications'
 
 import { generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
+import { errorMessages } from '~/constants/yupValidation'
 
 const initialFormValues = {
   val0: '',
   val1: '',
-  val2: ''
+  val2: '',
+  val3: ''
 }
 
 const formValidation = Yup.object().shape({
   val0: Yup.string()
     .trim()
-    .min(1, 'Too short')
-    .required('Required'),
+    .required(errorMessages.minLength(1)),
   val1: Yup.string()
     .trim()
-    .min(1, 'Too short')
-    .required('Required'),
-  val2: Yup.number().required('Required')
+    .required(errorMessages.minLength(1)),
+  val2: Yup.number()
+    .required(errorMessages.requiredMessage),
+  val3: Yup.number()
+    .typeError(errorMessages.mustBeNumber)
+    .positive(errorMessages.positive)
+    .required(errorMessages.requiredMessage)
 })
 
 class AddNewUnitOfMeasurePopup extends React.Component {
@@ -47,7 +52,8 @@ class AddNewUnitOfMeasurePopup extends React.Component {
               let data = {
                 [config.edit[0].name]: values.val0.trim(),
                 [config.edit[1].name]: values.val1.trim(),
-                [config.edit[2].name]: values.val2
+                [config.edit[2].name]: values.val2,
+                [config.edit[3].name]: Number(values.val3)
               }
               await postNewRequest(config, data)
 
@@ -79,6 +85,9 @@ class AddNewUnitOfMeasurePopup extends React.Component {
                 name='val2'
                 inputProps={{ 'data-test': 'admin_add_unit_measure_type_drpdn' }}
               />
+            </FormGroup>
+            <FormGroup widths='equal' data-test='admin_add_unit_measure_ratioToBaseSiUnit_inp'>
+              <Input type={config.edit[3].type} label={config.edit[3].title} name='val3' />
             </FormGroup>
             <div style={{ textAlign: 'right' }}>
               <Button.Reset data-test='admin_add_unit_measure_cancel_btn'>

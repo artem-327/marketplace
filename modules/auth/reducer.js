@@ -86,7 +86,7 @@ export default function reducer(state = initialState, action) {
         loginForm: {
           ...loginForm,
           isLoading: false,
-          message: payload.error_description
+          message: payload.response.data.error_description
         }
       }
     }

@@ -33,6 +33,7 @@ import { UnitOfPackaging } from '~/components/formatted-messages'
 import { errorMessages } from '~/constants/yupValidation'
 
 const initialValues = {
+  echoProduct: null,
   intProductName: '',
   intProductCode: '',
   packagingSize: '',
@@ -41,7 +42,12 @@ const initialValues = {
   nmfcNumber: '',
   stackable: false,
   freezeProtect: false,
-  freightClass: ''
+  hazardous: false,
+  freightClass: '',
+  packageWeight: '',
+  packageWeightUnit: '',
+  packagesPerPallet: '',
+  inciName: ''
 }
 
 const formValidation = Yup.object().shape({
@@ -55,11 +61,22 @@ const formValidation = Yup.object().shape({
     .required(errorMessages.requiredMessage),
   packagingSize: Yup.number(errorMessages.invalidNumber)
     .typeError(errorMessages.mustBeNumber)
-    .required(errorMessages.requiredMessage),
+    .integer(errorMessages.integer)
+    .required(errorMessages.requiredMessage)
+    .positive(errorMessages.positive),
   packagingUnit: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
   packagingType: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
   nmfcNumber: Yup.number().required(errorMessages.requiredMessage),
-  freightClass: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage)
+  freightClass: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
+  packageWeight: Yup.number()
+    .typeError(errorMessages.mustBeNumber)
+    .required(errorMessages.requiredMessage)
+    .positive(errorMessages.positive),
+  packageWeightUnit: Yup.number().required(errorMessages.requiredMessage),
+  packagesPerPallet: Yup.number()
+    .typeError(errorMessages.mustBeNumber)
+    .positive(errorMessages.positive)
+    .integer(errorMessages.integer)
 })
 
 class ProductPopup extends React.Component {
@@ -119,18 +136,37 @@ class ProductPopup extends React.Component {
     } = this.props
     delete values.casProducts
 
+    let formValues = {
+      intProductName: values.intProductName,
+      intProductCode: values.intProductCode,
+      packagingUnit: values.packagingUnit,
+      packagingType: values.packagingType,
+      nmfcNumber: values.nmfcNumber,
+      stackable: values.stackable,
+      freightClass: values.freightClass,
+      packageWeightUnit: values.packageWeightUnit,
+      echoProduct: values.echoProduct === null || values.echoProduct === '' ? null : values.echoProduct,
+      freezeProtect: values.freezeProtect,
+      hazardous: values.hazardous,
+      inciName: values.inciName === null || values.inciName === '' ? null : values.inciName,
+      packagingSize: Number(values.packagingSize),
+      packageWeight: Number(values.packageWeight),
+      packagesPerPallet:
+        values.packagesPerPallet === null || values.packagesPerPallet === '' ? null : Number(values.packagesPerPallet)
+    }
+
     try {
       if (popupValues) {
-        await handleSubmitProductEditPopup(values, popupValues.id, reloadFilter)
+        await handleSubmitProductEditPopup(formValues, popupValues.id, reloadFilter)
       } else {
-        await handleSubmitProductAddPopup(values, reloadFilter)
+        await handleSubmitProductAddPopup(formValues, reloadFilter)
       }
       let status = popupValues ? 'productUpdated' : 'productCreated'
 
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id={`notifications.${status}.header`} />,
-          <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.intProductName }} />
+          <FormattedMessage id={`notifications.${status}.content`} values={{ name: formValues.intProductName }} />
         ),
         { appearance: 'success' }
       )
@@ -200,7 +236,8 @@ class ProductPopup extends React.Component {
       ...popupValues,
       casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.echoProduct.elements, [])),
       echoProduct: getSafe(() => popupValues.echoProduct.id),
-      nmfcNumber: getSafe(() => popupValues.nmfcNumber.id, '')
+      nmfcNumber: getSafe(() => popupValues.nmfcNumber.id, ''),
+      packageWeightUnit: getSafe(() => popupValues.packageWeightUnit.id, '')
     }
   }
 
@@ -214,7 +251,8 @@ class ProductPopup extends React.Component {
       echoProducts,
       echoProductsFetching,
       nmfcNumbersFetching,
-      nmfcNumbersFiltered
+      nmfcNumbersFiltered,
+      packageWeightUnits
     } = this.props
 
     const { packagingTypesReduced } = this.state
@@ -302,7 +340,7 @@ class ProductPopup extends React.Component {
                       fieldProps={{
                         width: 4
                       }}
-                      type='text'
+                      type='number'
                       label={formatMessage({ id: 'global.packagingSize', defaultMessage: 'Packaging Size' })}
                       name='packagingSize'
                     />
@@ -327,6 +365,34 @@ class ProductPopup extends React.Component {
                       name='packagingType'
                       options={packagingTypesReduced}
                       inputProps={{ 'data-test': 'settings_product_popup_packagingType_drpdn' }}
+                    />
+                  </FormGroup>
+
+                  <FormGroup data-test='settings_product_popup_packageWeight_inp'>
+                    <Input
+                      fieldProps={{
+                        width: 4
+                      }}
+                      type='text'
+                      label={formatMessage({ id: 'global.packageWeight', defaultMessage: 'Package Weight' })}
+                      name='packageWeight'
+                    />
+                    <Dropdown
+                      fieldProps={{ width: 6 }}
+                      label={formatMessage({ id: 'global.packageWeightUnit', defaultMessage: 'Package Weight Unit' })}
+                      name='packageWeightUnit'
+                      options={packageWeightUnits}
+                      inputProps={{
+                        'data-test': 'settings_product_popup_packageWeightUnit_drpdn'
+                      }}
+                    />
+                    <Input
+                      fieldProps={{
+                        width: 6
+                      }}
+                      type='text'
+                      label={formatMessage({ id: 'global.packagesPerPallet', defaultMessage: 'Packages per Pallet' })}
+                      name='packagesPerPallet'
                     />
                   </FormGroup>
 
@@ -435,6 +501,7 @@ const mapStateToProps = ({ settings }) => {
     packagingType: settings.productsPackagingType,
     packagingTypesAll: settings.packagingTypes,
     productsUnitsType: settings.productsUnitsType,
+    packageWeightUnits: settings.packageWeightUnits,
     unitsAll: settings.units,
     freightClasses: settings.productsFreightClasses,
     hazardClasses: settings.productsHazardClasses,

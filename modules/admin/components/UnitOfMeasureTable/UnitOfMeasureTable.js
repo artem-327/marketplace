@@ -78,7 +78,8 @@ const mapStateToProps = (state, { datagrid }) => {
         name: d.name,
         nameAbbreviation: d.nameAbbreviation,
         measureType: d.measureType.name,
-        measureTypeId: d.measureType.id
+        measureTypeId: d.measureType.id,
+        ratioToBaseSiUnit: d.ratioToBaseSiUnit
       }
     }),
     filterValue: state.admin.filterValue,
