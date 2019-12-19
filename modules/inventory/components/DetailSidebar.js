@@ -212,8 +212,13 @@ const validationScheme = val.object().shape({
       .required(errorMessages.requiredMessage),
     fobPrice: val
       .number()
+      .min(0, errorMessages.minimum(0))
       .typeError(errorMessages.mustBeNumber)
-      .nullable()
+      .required(errorMessages.requiredMessage),
+    costPerUOM: val
+      .number()
+      .min(0)
+      .typeError(errorMessages.mustBeNumber)
       .required(errorMessages.requiredMessage),
     lotNumber: val
       .string()
@@ -222,6 +227,7 @@ const validationScheme = val.object().shape({
     inStock: val.bool().required(errorMessages.requiredMessage),
     minimum: val
       .number()
+      .min(1, errorMessages.minimum(1))
       .typeError(errorMessages.mustBeNumber)
       .divisibleBy(
         val.ref('splits'),
@@ -230,10 +236,16 @@ const validationScheme = val.object().shape({
       .required(errorMessages.requiredMessage),
     pkgAvailable: val
       .number()
+      .min(0, errorMessages.minimum(0))
       .typeError(errorMessages.mustBeNumber)
       .required(errorMessages.requiredMessage),
+    leadTime: val
+      .number()
+      .min(1, errorMessages.minimum(1))
+      .typeError(errorMessages.mustBeNumber),
     splits: val
       .number()
+      .min(1, errorMessages.minimum(1))
       .typeError(errorMessages.mustBeNumber)
       .required(errorMessages.requiredMessage),
     warehouse: val
@@ -956,7 +968,11 @@ class DetailSidebar extends Component {
                                       </FormattedMessage>
                                     </GridColumn>
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                      <Input type='text' name='edit.pkgAvailable' />
+                                      <Input name='edit.pkgAvailable' inputProps={{
+                                            type: 'number',
+                                            min: '0',
+                                            'data-test': 'detail_sidebar_pkgAvailable'
+                                          }}/>
                                     </GridColumn>
                                   </GridRow>
                                   <GridRow>
@@ -990,6 +1006,7 @@ class DetailSidebar extends Component {
                                           name='edit.fobPrice'
                                           inputProps={{
                                             type: 'number',
+                                            min: '0',
                                             onChange: (e, { value }) => {
                                               if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
                                                 setFieldValue(`priceTiers.pricingTiers[0].price`, value)
@@ -1009,7 +1026,7 @@ class DetailSidebar extends Component {
                                     </GridColumn>
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <FormField width={16} data-test='detail_sidebar_cost'>
-                                        <Input name='edit.costPerUOM' inputProps={{ type: 'number' }} />
+                                        <Input name='edit.costPerUOM' inputProps={{ type: 'number', min: '0' }} />
                                       </FormField>
                                     </GridColumn>
                                   </GridRow>
@@ -1193,7 +1210,7 @@ class DetailSidebar extends Component {
                                       </FormattedMessage>
                                     </GridColumn>
                                     <GridColumn mobile={rightWidth - 5} computer={rightWidth - 5}>
-                                      <Input name='edit.leadTime' inputProps={{ type: 'number' }} />
+                                      <Input name='edit.leadTime' inputProps={{ type: 'number', min: '0' }} />
                                     </GridColumn>
                                     <GridColumn mobile={5} computer={5} verticalAlign='middle'>
                                       <FormattedMessage id='global.days' defaultMessage='Days'>
