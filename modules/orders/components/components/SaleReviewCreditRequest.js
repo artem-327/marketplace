@@ -288,16 +288,9 @@ class SaleReturnShipping extends React.Component {
                                   filesLimit={1}
                                   fileMaxSize={20}
                                   onChange={files => {
-                                    setFieldValue(
-                                      `attachments[${
-                                        values.attachments && values.attachments.length ? values.attachments.length : 0
-                                      }]`,
-                                      {
-                                        id: files[0].lastModified,
-                                        name: files[0].name,
-                                        documentType: files[0].type
-                                      }
-                                    )
+                                    files.map((file, i) => {
+                                      setFieldValue(`attachments[${i}]`, file)
+                                    })
                                     this.setState({ changedForm: true })
                                   }}
                                   data-test='settings_product_import_attachments'
