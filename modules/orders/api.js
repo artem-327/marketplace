@@ -42,7 +42,10 @@ export default {
   disapproveOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/disapprove`),
   receivedOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/received`),
   accept: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/accept`),
-  getShippingQuotes: (orderId, pickupDate) => api.get(`/prodex/api/purchase-orders/${orderId}/shipment-rates`),  //! ! TODO: update when endpoint is created
-  getManualShippingQuote: (orderId, pickupDate) => api.get(`/prodex/api/shipment/${orderId}/manual-quote`),  //! ! TODO: when after endpoint is created
-  purchaseShipmentOrder: (orderId, body) => api.patch(`/prodex/api/purchase-orders/${orderId}/shipment-order`, body),  //! ! TODO: when after endpoint is created
+  getShippingQuotes: (orderId, pickupDate) => api.get(`/prodex/api/shipment/order/${orderId}/shipment-rates`
+    + (pickupDate ? `?pickupDate=${pickupDate}` : '')), // ! ! TODO: date not working?
+  getManualShippingQuote: (orderId, countryId, zip) => api.get(`/prodex/api/shipment/order/${orderId}/manual-quote?`
+    + `destinationCountryId=${countryId}&destinationZIP=${zip}`
+  ),  //! ! TODO: endpoint seems not working
+  purchaseShipmentOrder: (orderId, body) => api.patch(`/api/shipment/order/${orderId}/shipment-order`, body),  //! ! TODO: when after endpoint is created
 }

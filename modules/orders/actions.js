@@ -158,9 +158,9 @@ export const getShippingQuotes = (orderId, pickupDate) => ({
   type: AT.ORDER_SHIPPING_QUOTES_FETCH,
   payload: Api.getShippingQuotes(orderId, pickupDate)
 })
-export const getManualShippingQuote = (orderId, pickupDate) => ({
+export const getManualShippingQuote = (orderId, countryId, zip) => ({
   type: AT.ORDER_MANUAL_SHIPPING_QUOTE,
-  payload: Api.getManualShippingQuote(orderId, pickupDate)
+  payload: Api.getManualShippingQuote(orderId, countryId, zip)
 })
 export const purchaseShipmentOrder = (orderId, body) => ({
   type: AT.ORDER_PURCHASE_SHIPMENT_ORDER,

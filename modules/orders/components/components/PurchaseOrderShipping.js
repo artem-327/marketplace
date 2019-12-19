@@ -25,11 +25,10 @@ class PurchaseOrderShipping extends React.Component {
   }
 
   componentDidMount() {
-    if (!this.props.order.weightLimitExceed) {
-      //! ! TODO prepare pickupDate (can not be date in the past!)
-      // if (pickupDate ...
-      // format pickupDate? ( + 'T00:00:00.00000Z')?
-      //this.requestShippingQuote(pickupDate + 'T00:00:00.00000Z')
+    if (!this.props.order.cfWeightExceeded) {
+      let pickupDate = moment().format()
+      //this.props.getShippingQuotes(this.props.orderId, pickupDate)
+      this.props.getShippingQuotes(this.props.orderId, null)
     }
   }
 
@@ -39,14 +38,13 @@ class PurchaseOrderShipping extends React.Component {
     try {
       let formValues = {
         ...values,
-        pickupDate: values.pickupDate.length ? values.pickupDate + 'T00:00:00.00000Z' : null,
+        //pickupDate: values.pickupDate.length ? values.pickupDate + 'T00:00:00.00000Z' : null,
+        shipmentQuoteId: ''
       }
-
-      if (!formValues.pickupDate) delete formValues.pickupDate
 
       console.log('!!!!! submitHandler formValues', formValues)
 
-      await this.props.purchaseShipmentOrder(orderId, null)
+      await this.props.purchaseShipmentOrder(orderId, formValues)
 
       toastManager.add(
         generateToastMarkup(
@@ -62,23 +60,19 @@ class PurchaseOrderShipping extends React.Component {
   }
 
   onDateChange = async (event, {name, value}) => {
-    console.log('!!!! date changed event', event)
-    console.log('!!!! date changed name', name)
-    console.log('!!!! date changed value', value)
-
-    /*
-    if (!this.props.order.weightLimitExceed) {
+    if (!this.props.order.cfWeightExceeded) {
       try {
-        await this.props.getShippingQuotes(this.props.order.id, pickupDate + 'T00:00:00.00000Z')
+        await this.props.getShippingQuotes(this.props.order.id, value + 'T00:00:00.00000Z')
       } catch {
       } finally {}
     }
-    */
   }
 
-  requestManualShippingQuote = async (pickupDate) => {
-    try {
-      await this.props.getManualShippingQuote(this.props.order.id, pickupDate)
+  requestManualShippingQuote = async () => {
+    const { order } = this.props
+
+    try {                                    //orderId, countryId, zip
+      await this.props.getManualShippingQuote(order.id, 1, order.shippingAddressZip)
     } catch {
     } finally {}
   }
@@ -98,8 +92,6 @@ class PurchaseOrderShipping extends React.Component {
       initialValues.pickupDate = moment(initialValues.pickupDate).format('YYYY-MM-DD')
     else
       initialValues.pickupDate = moment().format('YYYY-MM-DD')
-
-    console.log('!!!!!! initialValues', initialValues)
 
     return initialValues
   }
@@ -169,7 +161,7 @@ class PurchaseOrderShipping extends React.Component {
                             </GridRow>
                             <Grid.Row>
                               <Grid.Column width={8}>
-                                <Button type='button' fluid onClick={() => this.requestManualShippingQuote(values.pickupDate)}>
+                                <Button type='button' fluid onClick={() => this.requestManualShippingQuote()}>
                                   <FormattedMessage id='cart.requestShippingQuote' defaultMessage='Request Shipping Quote' tagName='span'>
                                     {text => text}
                                   </FormattedMessage>
@@ -269,14 +261,13 @@ function mapStateToProps(state) {
   const { orders } = state
   const { detail } = orders
 
-  console.log('!!!!!! orders', orders)
-  console.log('!!!!!! detail', detail)
   return {
     order: detail,
     orderId: detail.id,
     isSending: orders.isSending,
     shippingQuotesAreFetching: orders.shippingQuotesAreFetching,
-    //shippingQuotes: orders.shippingQuotes,
+    shippingQuotes: orders.shippingQuotes,
+    /*
     shippingQuotes: [ // ! ! temporary
       {
         "carrierName": "Carrier name 1",
@@ -299,6 +290,7 @@ function mapStateToProps(state) {
         "totalPricePerLb": 22
       }
     ]
+    */
   }
 }
 
