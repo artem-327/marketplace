@@ -259,7 +259,8 @@ export default function(state = initialState, action) {
     case AT.REJECT_PURCHASE_ORDER_FULFILLED:
       return {
         ...state,
-        detail: action.payload.data
+        detail: action.payload.data,
+        isSending: false
       }
     default:
       return state
