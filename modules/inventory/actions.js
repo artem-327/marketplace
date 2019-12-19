@@ -402,16 +402,16 @@ export const simpleEditTrigger = (popupValues = {}, force = null) => ({
   payload: { popupValues, force }
 })
 
-export const sidebarDetailTrigger = (row = {}, force = null, activeTab = 0) => {
+export const sidebarDetailTrigger = (row = {}, force = null, activeTab = 0, refetchData = true) => {
   return {
     type: AT.SIDEBAR_DETAIL_TRIGGER,
     meta: { force: force, activeTab: activeTab, row: row },
     async payload() {
-      let sidebarValues = {}
+      let sidebarValues = {} 
+      if(!refetchData) sidebarValues = row
+      else if (getSafe(() => row.id, false)) sidebarValues = await api.getProductOffer(row.id).data
 
-      if (getSafe(() => row.id, false)) sidebarValues = await api.getProductOffer(row.id)
-
-      return getSafe(() => sidebarValues.data, {})
+      return sidebarValues
     }
   }
 }

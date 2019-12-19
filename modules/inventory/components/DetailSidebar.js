@@ -308,8 +308,11 @@ class DetailSidebar extends Component {
     this.askForSave()
   }
 
-  askForSave = (oldProductOffer = null) => {
+  askForSave = () => {
+    let oldProductOffer = { ...this.getEditValues(), ...this.state.oldProductOffer }
+
     if (this.state.edited && !this.state.saved) {
+      this.setState({ edited: false })
       confirm(
         <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
         <FormattedMessage
@@ -318,8 +321,20 @@ class DetailSidebar extends Component {
         />
       )
         .then(() => {
-          // this.setState({ oldProductOffer }, this.submitRef)
-          this.submitRef()
+          
+          this.formikProps.validateForm(oldProductOffer).then(errors => {
+
+            if (getSafe(() => errors.edit, false)) {
+              this.props.sidebarDetailTrigger(oldProductOffer, true, 0, false)
+              this.formikProps.submitForm()
+              
+              document.getElementsByName(`edit.${Object.keys(errors.edit)}`)[0].focus()
+            } else {
+              this.submitRef()
+            }
+          })
+
+          // return Promise.resolve()
         })
         .catch(() => {})
         .finally(() => this.setState({ edited: false }))
@@ -499,7 +514,7 @@ class DetailSidebar extends Component {
     const { addProductOffer, datagrid, toastManager, sidebarValues } = this.props
     let isEdit = getSafe(() => sidebarValues.id, null)
     let values = !savedButtonClicked ? { ...this.getEditValues(), ...this.state.oldProductOffer } : formValues
-    
+
     await new Promise(resolve => this.setState({ edited: false, saved: true }, resolve))
 
     setSubmitting(false)
@@ -558,17 +573,23 @@ class DetailSidebar extends Component {
         console.error(e)
         let entityId = getSafe(() => e.response.data.entityId, null)
 
-        if(entityId) {
+        if (entityId) {
           confirm(
-          <FormattedMessage id='notifications.productOffer.alreadyExists.header' defaultMessage='Product Offer already exists' />,
-          <FormattedMessage id='notifications.productOffer.alreadyExists.content' defaultMessage={`Product offer with given Lot number, warehouse and company product already exists. \n Would you like to overwrite it?`} />)
-            .then(async ()=>  {
+            <FormattedMessage
+              id='notifications.productOffer.alreadyExists.header'
+              defaultMessage='Product Offer already exists'
+            />,
+            <FormattedMessage
+              id='notifications.productOffer.alreadyExists.content'
+              defaultMessage={`Product offer with given Lot number, warehouse and company product already exists. \n Would you like to overwrite it?`}
+            />
+          )
+            .then(async () => {
               let po = await addProductOffer(props, entityId)
               datagrid.updateRow(entityId, () => po.value)
             })
             .catch(_)
         }
-
       } finally {
         setTouched({})
         this.setState({ changedForm: false })
@@ -709,6 +730,9 @@ class DetailSidebar extends Component {
 
   getEditValues = () => {
     const { sidebarValues } = this.props
+
+    if (getSafe(() => sidebarValues.edit, false)) return sidebarValues
+
     return {
       edit: {
         broadcasted: getSafe(() => sidebarValues.broadcasted, false),
@@ -726,7 +750,7 @@ class DetailSidebar extends Component {
         lotManufacturedDate: getSafe(() => sidebarValues.lotManufacturedDate.substring(0, 10), ''),
         minimum: getSafe(() => sidebarValues.minPkg, 1),
         origin: getSafe(() => sidebarValues.origin.id, null),
-        pkgAvailable: getSafe(() => sidebarValues.pkgAvailable, ''),
+        pkgAvailable: getSafe(() => sidebarValues.pkgAvailable, false) ? parseInt(sidebarValues.pkgAvailable, 10) : '',
         product: getSafe(() => sidebarValues.companyProduct.id, null),
         productCondition: getSafe(() => sidebarValues.condition.id, null),
         productForm: getSafe(() => sidebarValues.form.id, null),
@@ -756,6 +780,7 @@ class DetailSidebar extends Component {
   onChange = debounce(() => this.setState({ edited: true, saved: false, oldProductOffer: this.values }), 200)
 
   render() {
+    
     let {
       // addProductOffer,
       listConditions,
@@ -811,7 +836,7 @@ class DetailSidebar extends Component {
     const { toggleFilter } = this.props
 
     let editValues = this.getEditValues()
-    
+
     return (
       <Formik
         enableReinitialize
@@ -823,7 +848,9 @@ class DetailSidebar extends Component {
         onSubmit={async (values, { setSubmitting, setTouched }) => {
           this.submitForm(values, setSubmitting, setTouched)
         }}>
-        {({ values, touched, setTouched, setFieldValue, validateForm, submitForm, setSubmitting }) => {
+        {formikProps => {
+          let { values, touched, setTouched, setFieldValue, validateForm, submitForm, setSubmitting } = formikProps
+          this.formikProps = formikProps
           this.submitRef = submitForm
           this.values = values
           return (

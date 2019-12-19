@@ -375,9 +375,7 @@ class MyInventory extends Component {
                   data-test='my_inventory_broadcast_chckb'
                   toggle
                   defaultChecked={
-                    r.cfStatus.toLowerCase() === 'broadcasting'
-                    && this.props.sellEligible !== false
-                    && isOfferValid
+                    r.cfStatus.toLowerCase() === 'broadcasting' && this.props.sellEligible !== false && isOfferValid
                   }
                   className={cn({
                     error:
@@ -435,7 +433,7 @@ class MyInventory extends Component {
       openPopup
     } = this.props
     const { columns, selectedRows } = this.state
-    
+
     return (
       <>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
