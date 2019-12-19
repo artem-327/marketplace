@@ -250,7 +250,7 @@ const validationScheme = val.object().shape({
       is: true,
       then: val
         .string()
-        .test('min-date', errorMessages.invalidDate, val => moment('00:00:00', 'hh:mm:ss').diff(val, 'days') <= -1)
+        .test('min-date', errorMessages.mustBeInFuture, val => moment('00:00:00', 'hh:mm:ss').diff(val, 'days') <= -1)
     })
   }),
   priceTiers: val.object().shape({
@@ -1230,6 +1230,7 @@ class DetailSidebar extends Component {
                                       <DateInput
                                         inputProps={{
                                           disabled: !values.edit.doesExpire,
+                                          minDate: moment().add(1, 'day'),
                                           'data-test': 'sidebar_detail_expiration_date'
                                           //! ! crashes on component calendar open if expirationDate is in past:
                                           //! ! minDate: moment().add(1, 'days')
