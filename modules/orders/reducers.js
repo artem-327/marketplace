@@ -23,7 +23,7 @@ const initialState = {
   openedPurchaseReviewCreditRequest: false,
   openedSaleReviewCreditRequest: false,
   openedSaleReturnShipping: false,
-  openedSaleNewShipping: false,
+  openedPurchaseOrderShipping: false,
   bankAccounts: [],
   bankAccountsLoading: false,
   relatedOrders: [],
@@ -142,7 +142,7 @@ export default function(state = initialState, action) {
         openedPurchaseReviewCreditRequest: false,
         openedSaleReviewCreditRequest: false,
         openedSaleReturnShipping: false,
-        openedSaleNewShipping: false
+        openedPurchaseOrderShipping: false
       }
     case AT.ORDER_LOAD_BANK_ACCOUNTS_PENDING:
       return {
@@ -259,7 +259,8 @@ export default function(state = initialState, action) {
     case AT.REJECT_PURCHASE_ORDER_FULFILLED:
       return {
         ...state,
-        detail: action.payload.data
+        detail: action.payload.data,
+        isSending: false
       }
     default:
       return state

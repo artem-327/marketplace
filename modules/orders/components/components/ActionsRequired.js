@@ -275,16 +275,6 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
-              ? this.renderSegment(null, 14, null, 'order.shipFailed.description', [
-                  {
-                    buttonType: 'primary',
-                    onClick: () => openPopupName('openedSaleNewShipping'),
-                    dataTest: 'orders_detail_newShipmentSale_btn',
-                    text: 'order.NewShipmentSale'
-                  }
-                ])
-              : null}
             {orderStatus === 2 && shippingStatus === 1 && !assignLotsRequired // Confirmed && Not shipped
               ? this.renderSegment(null, 14, null, 'order.ship.description', [
                   {
@@ -367,6 +357,16 @@ class ActionsRequired extends React.Component {
                     text: 'global.cancel'
                   }
                 ])
+              : null}
+            {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
+              ? this.renderSegment(null, 14, null, 'order.shipFailed.description', [
+                {
+                  buttonType: 'primary',
+                  onClick: () => openPopupName('openedPurchaseOrderShipping'),
+                  dataTest: 'orders_detail_newShipmentPurchase_btn',
+                  text: 'order.NewShipmentPurchase'
+                }
+              ])
               : null}
             {orderStatus === 2 && shippingStatus === 2 // Confirmed && In transit
               ? this.renderSegment(null, 13, null, 'order.transit.description', [
