@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
-import { Modal, Menu, Header, Container, Icon, Button } from 'semantic-ui-react'
+import { Modal, Menu, Header, Container, Icon, Button, Dimmer, Loader } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 import SubMenu from '~/src/components/SubMenu'
@@ -29,7 +29,6 @@ class Orders extends Component {
           </FormattedMessage>
         ),
         width: 100,
-        sortPath: 'Order.id',
         align: 'right'
       },
       {
@@ -403,8 +402,8 @@ class Orders extends Component {
   }
 
   async openModalWindow(orderId) {
-    await this.props.getRelatedOrders(orderId)
     this.setState({ openModal: true })
+    await this.props.getRelatedOrders(orderId)
   }
 
   handleFilterApply = payload => {
@@ -464,7 +463,7 @@ class Orders extends Component {
   }
 
   getContent = () => {
-    const { relatedOrders } = this.props
+    const { relatedOrders, loadRelatedOrders } = this.props
     const rowsRelatedOrders = relatedOrders.map(order => ({
       documentNumber: (
         <Button as='a' onClick={() => this.downloadAttachment(order.documentNumber, order.id)}>
@@ -479,13 +478,16 @@ class Orders extends Component {
     }))
     return (
       <>
-        <TitleOrderId>
-          <FormattedMessage id='order.related.orderId' defaultMessage='Order ID: '>
-            {text => text}
-          </FormattedMessage>
-          {`${relatedOrders[0].relatedOrder}`}
-        </TitleOrderId>
+        {!loadRelatedOrders && (
+          <TitleOrderId>
+            <FormattedMessage id='order.related.orderId' defaultMessage='Order ID: '>
+              {text => text}
+            </FormattedMessage>
+            {`${relatedOrders[0].relatedOrder}`}
+          </TitleOrderId>
+        )}
         <ProdexGrid
+          loading={this.state.submitting || loadRelatedOrders}
           hideSettingsIcon={true}
           tableName='related_orders'
           columns={this.state.columnsRelatedOrders}
@@ -503,11 +505,13 @@ class Orders extends Component {
       queryType,
       router,
       datagrid,
+      loadRelatedOrders,
       intl: { formatMessage }
     } = this.props
 
     const { columns } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
+
     return (
       <div id='page' className='flex stretched scrolling'>
         {this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (
@@ -516,8 +520,7 @@ class Orders extends Component {
             closeIcon
             onClose={() => this.setState({ openModal: false })}
             centered={true}
-            open={this.state.openModal}
-            onClose={() => this.setState({ openModal: false })}>
+            open={this.state.openModal}>
             <Modal.Header>
               <FormattedMessage id='order.related.table' defaultMessage='Related Accounting Documents'>
                 {text => text}
@@ -746,6 +749,7 @@ class Orders extends Component {
             />
           )}
         </Container>
+        }
       </div>
     )
   }

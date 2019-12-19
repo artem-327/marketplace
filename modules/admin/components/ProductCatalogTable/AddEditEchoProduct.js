@@ -17,10 +17,18 @@ import * as Yup from 'yup'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { Form, Button, Dropdown as FormikDropdown, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
+import {
+  Form,
+  Button,
+  Dropdown as FormikDropdown,
+  Input,
+  Checkbox,
+  TextArea
+} from 'formik-semantic-ui-fixed-validation'
 import { Menu, Grid, GridRow, GridColumn, Segment, Header, Dropdown, Icon, Dimmer, Loader } from 'semantic-ui-react'
+import TextareaAutosize from 'react-autosize-textarea'
+import { FieldArray, Field } from 'formik'
 
-import { FieldArray } from 'formik'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
@@ -39,6 +47,16 @@ export const MyContainer = styled.div`
   padding: 10px 0 15px 0;
   font-weight: bold;
   font-size: 1.1rem;
+`
+
+const CustomTextarea = styled(TextareaAutosize)`
+  resize: vertical !important;
+`
+
+const CustomGridColumn = styled(GridColumn)`
+  #__next & {
+    align-self: flex-start !important;
+  }
 `
 
 const validationScheme = Yup.object().shape({
@@ -134,12 +152,7 @@ class AddEditEchoProduct extends React.Component {
   }
 
   componentDidMount() {
-    const {
-      hazardClasses,
-      packagingGroups,
-      getHazardClassesDataRequest,
-      getPackagingGroupsDataRequest,
-    } = this.props
+    const { hazardClasses, packagingGroups, getHazardClassesDataRequest, getPackagingGroupsDataRequest } = this.props
 
     if (hazardClasses.length === 0) getHazardClassesDataRequest()
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
@@ -152,15 +165,14 @@ class AddEditEchoProduct extends React.Component {
           // Sidebar just opened - Add
           this.setInitialState(null, { editTab: 0 })
           this.resetForm()
-        }
-        else {
+        } else {
           // Sidebar just opened - Edit
           this.props.loadEditEchoProduct(this.props.popupValues.id, this.props.editTab, true)
         }
         return
       }
 
-      const { popupValues, editTab,  } = this.props
+      const { popupValues, editTab } = this.props
 
       if (prevProps.editForm && !prevProps.addForm && this.props.addForm) {
         // Changed from Edit to Add form
@@ -187,11 +199,14 @@ class AddEditEchoProduct extends React.Component {
         return
       }
 
-      if (this.props.editForm && this.props.popupValues && (
-        (prevProps.popupValues && prevProps.popupValues !== this.props.popupValues)
-        || (prevProps.popupValues === null))) {
+      if (
+        this.props.editForm &&
+        this.props.popupValues &&
+        ((prevProps.popupValues && prevProps.popupValues !== this.props.popupValues) || prevProps.popupValues === null)
+      ) {
         this.props.searchManufacturers(
-          getSafe(() => this.props.popupValues.manufacturer.name, ''), 200
+          getSafe(() => this.props.popupValues.manufacturer.name, ''),
+          200
         )
         this.setInitialState(this.props.popupValues, { editTab: this.props.editTab })
         this.resetForm()
@@ -200,7 +215,8 @@ class AddEditEchoProduct extends React.Component {
   }
 
   setInitialState = (popupValues, additionalStates) => {
-    let codesList = [], unNumberInitOptions = []
+    let codesList = [],
+      unNumberInitOptions = []
     if (popupValues) {
       codesList = popupValues.mfrProductCodes.map(code => ({
         text: code,
@@ -211,7 +227,7 @@ class AddEditEchoProduct extends React.Component {
       if (popupValues.iataUnNumber) unNumberInitOptions.push(popupValues.iataUnNumber)
       if (popupValues.imdgImoUnNumber) unNumberInitOptions.push(popupValues.imdgImoUnNumber)
       if (popupValues.tdgUnNumber) unNumberInitOptions.push(popupValues.tdgUnNumber)
-      unNumberInitOptions = unNumberInitOptions.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i)
+      unNumberInitOptions = unNumberInitOptions.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i)
       unNumberInitOptions = unNumberInitOptions.map(d => {
         return {
           key: d.id,
@@ -222,13 +238,17 @@ class AddEditEchoProduct extends React.Component {
       })
     }
     this.setState({
-      codesList, changedForm: false, changedAttachments: false, popupValues,
-      unNumberInitOptions: unNumberInitOptions, ...additionalStates })
+      codesList,
+      changedForm: false,
+      changedAttachments: false,
+      popupValues,
+      unNumberInitOptions: unNumberInitOptions,
+      ...additionalStates
+    })
   }
 
   getInitialFormValues = () => {
     const { popupValues } = this.state
-
     let initialValues = {
       ...defaultValues,
       ...(popupValues
@@ -376,7 +396,6 @@ class AddEditEchoProduct extends React.Component {
 
   tabChanged = index => {
     this.setState({ editTab: index })
-    //! !this.props.editEchoProductChangeTab(index)
   }
 
   handleUnNumberSearchChange = debounce((_, { searchQuery }) => {
@@ -384,11 +403,12 @@ class AddEditEchoProduct extends React.Component {
   }, 250)
 
   handleUnNumberChange = (value, options) => {
-    if (value === undefined || value ==='') return
+    if (value === undefined || value === '') return
     let stateOptions = this.state.unNumberInitOptions
 
-    if (stateOptions.findIndex(t => t.key === value) < 0) { // value not found in state options
-      let newOption = options.find(t => t.key === value)            // new value from unNumbersFiltered
+    if (stateOptions.findIndex(t => t.key === value) < 0) {
+      // value not found in state options
+      let newOption = options.find(t => t.key === value) // new value from unNumbersFiltered
       if (newOption) {
         stateOptions.push(newOption)
         this.setState({ unNumberInitOptions: stateOptions })
@@ -416,18 +436,20 @@ class AddEditEchoProduct extends React.Component {
     }, 250)
   }, 500)
 
-  validateSaveOrSwitchToErrors = async (callback) => {
+  validateSaveOrSwitchToErrors = async callback => {
     const { touched, validateForm, submitForm, values, setSubmitting } = this.formikProps
 
-    if (Object.keys(touched).length || this.state.changedForm) {  // Form edited and not saved yet
+    if (Object.keys(touched).length || this.state.changedForm) {
+      // Form edited and not saved yet
       validateForm().then(err => {
         const errors = Object.keys(err)
-        if (errors.length && errors[0] !== 'isCanceled') {    // Edited, Errors found
-          submitForm()    // to show errors
+        if (errors.length && errors[0] !== 'isCanceled') {
+          // Edited, Errors found
+          submitForm() // to show errors
           this.switchToErrors(Object.keys(err))
           return
-        }
-        else {    // Edited, Errors not found, try to save
+        } else {
+          // Edited, Errors not found, try to save
           confirm(
             <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
             <FormattedMessage
@@ -435,9 +457,13 @@ class AddEditEchoProduct extends React.Component {
               defaultMessage='You have unsaved changes. Do you wish to save them?'
             />
           )
-            .then(async () => { // Confirm
+            .then(
+              async () => {
+                // Confirm
                 if (await this.submitForm(values, setSubmitting)) callback()
-              }, () => {  // Cancel
+              },
+              () => {
+                // Cancel
                 callback()
               }
             )
@@ -445,21 +471,14 @@ class AddEditEchoProduct extends React.Component {
           return
         }
       })
-    }
-    else {  // Form not modified
+    } else {
+      // Form not modified
       callback()
     }
   }
 
   submitForm = async (values, setSubmitting) => {
-    const {
-      putEchoProduct,
-      postEchoProduct,
-      closePopup,
-      toastManager,
-      linkAttachment,
-      listDocumentTypes
-    } = this.props
+    const { putEchoProduct, postEchoProduct, closePopup, toastManager, linkAttachment, listDocumentTypes } = this.props
 
     const { popupValues } = this.state
 
@@ -488,12 +507,22 @@ class AddEditEchoProduct extends React.Component {
     delete formValues.attachments
 
     const fieldsToNull = [
-      'dotHazardClass', 'dotPackagingGroup', 'dotUnNumber',
-      'iataHazardClass', 'iataPackagingGroup', 'iataUnNumber',
-      'imdgImoHazardClass', 'imdgImoPackagingGroup', 'imdgImoUnNumber',
-      'tdgHazardClass', 'tdgPackagingGroup', 'tdgUnNumber',
+      'dotHazardClass',
+      'dotPackagingGroup',
+      'dotUnNumber',
+      'iataHazardClass',
+      'iataPackagingGroup',
+      'iataUnNumber',
+      'imdgImoHazardClass',
+      'imdgImoPackagingGroup',
+      'imdgImoUnNumber',
+      'tdgHazardClass',
+      'tdgPackagingGroup',
+      'tdgUnNumber'
     ]
-    fieldsToNull.forEach(el => {if (formValues[el] === '') formValues[el] = null})
+    fieldsToNull.forEach(el => {
+      if (formValues[el] === '') formValues[el] = null
+    })
 
     try {
       if (popupValues) var { value } = await putEchoProduct(popupValues.id, formValues)
@@ -547,6 +576,26 @@ class AddEditEchoProduct extends React.Component {
 
       <GridColumn width={10}>
         <Input inputProps={{ readOnly: readOnly, id: name }} name={name} />
+      </GridColumn>
+    </GridRow>
+  )
+
+  RowTextArea = ({ name, readOnly = false, id, defaultMessage }, formikProps) => (
+    <GridRow>
+      <CustomGridColumn width={6}>
+        <FormattedMessage id={id} defaultMessage={defaultMessage} />
+      </CustomGridColumn>
+      <GridColumn width={10}>
+        <CustomTextarea
+          defaultValue={formikProps && formikProps.initialValues && formikProps.initialValues[name]}
+          rows={2}
+          name={name}
+          id={name}
+          onChange={e => {
+            formikProps.setFieldValue(name, e.target.value)
+            this.setState({ changedForm: true })
+          }}
+        />
       </GridColumn>
     </GridRow>
   )
@@ -946,11 +995,14 @@ class AddEditEchoProduct extends React.Component {
           id: 'global.boilingPointRange',
           defaultMessage: 'Boiling Point/Range'
         })}
-        {this.RowInput({
-          name: 'conditionsToAvoid',
-          id: 'global.conditionsToAvoid',
-          defaultMessage: 'Conditions to Avoid'
-        })}
+        {this.RowTextArea(
+          {
+            name: 'conditionsToAvoid',
+            id: 'global.conditionsToAvoid',
+            defaultMessage: 'Conditions to Avoid'
+          },
+          formikProps
+        )}
         {this.RowInput({
           name: 'decompositionTemperature',
           id: 'global.decompositionTemperature',
@@ -971,7 +1023,7 @@ class AddEditEchoProduct extends React.Component {
           id: 'global.evaporationPoint',
           defaultMessage: 'Evaporation Point'
         })}
-        {this.RowInput({ name: 'eyeContact', id: 'global.eyeContact', defaultMessage: 'Eye Contact' })}
+        {this.RowTextArea({ name: 'eyeContact', id: 'global.eyeContact', defaultMessage: 'Eye Contact' }, formikProps)}
         {this.RowInput({
           name: 'flammabilityOrExplosiveLower',
           id: 'global.flammabilityOrExplosiveLower',
@@ -988,8 +1040,18 @@ class AddEditEchoProduct extends React.Component {
           defaultMessage: 'Flammability (solid, gas)'
         })}
         {this.RowInput({ name: 'flashPoint', id: 'global.flashPoint', defaultMessage: 'Flash Point' })}
-        {this.RowInput({ name: 'generalAdvice', id: 'global.generalAdvice', defaultMessage: 'General Advice' })}
-        {this.RowInput({ name: 'hazardStatement', id: 'global.hazardStatement', defaultMessage: 'Hazard Statement' })}
+        {this.RowTextArea(
+          { name: 'generalAdvice', id: 'global.generalAdvice', defaultMessage: 'General Advice' },
+          formikProps
+        )}
+        {this.RowTextArea(
+          {
+            name: 'hazardStatement',
+            id: 'global.hazardStatement',
+            defaultMessage: 'Hazard Statement'
+          },
+          formikProps
+        )}
         {this.RowInput({
           name: 'hazardousDecompositionProducts',
           id: 'global.hazardousDecompositionProducts',
@@ -1026,13 +1088,16 @@ class AddEditEchoProduct extends React.Component {
           defaultMessage: 'HMIS Physical Hazard'
         })}
         {this.RowInput({ name: 'hnoc', id: 'global.hnoc', defaultMessage: 'HNOC' })}
-        {this.RowInput({
-          name: 'incompatibleMaterials',
-          id: 'global.incompatibleMaterials',
-          defaultMessage: 'Incompatible Materials'
-        })}
-        {this.RowInput({ name: 'ingestion', id: 'global.ingestion', defaultMessage: 'Ingestion' })}
-        {this.RowInput({ name: 'inhalation', id: 'global.inhalation', defaultMessage: 'Inhalation' })}
+        {this.RowTextArea(
+          {
+            name: 'incompatibleMaterials',
+            id: 'global.incompatibleMaterials',
+            defaultMessage: 'Incompatible Materials'
+          },
+          formikProps
+        )}
+        {this.RowTextArea({ name: 'ingestion', id: 'global.ingestion', defaultMessage: 'Ingestion' }, formikProps)}
+        {this.RowTextArea({ name: 'inhalation', id: 'global.inhalation', defaultMessage: 'Inhalation' }, formikProps)}
         {this.RowInput({ name: 'irritation', id: 'global.irritation', defaultMessage: 'Irritation' })}
         {this.RowInput({ name: 'labelElements', id: 'global.labelElements', defaultMessage: 'Label Elements' })}
         {this.RowInput({
@@ -1097,11 +1162,14 @@ class AddEditEchoProduct extends React.Component {
         })}
         {this.RowInput({ name: 'ph', id: 'global.ph', defaultMessage: 'pH' })}
         {this.RowInput({ name: 'physicalState', id: 'global.physicalState', defaultMessage: 'Physical State' })}
-        {this.RowInput({
-          name: 'precautionaryStatements',
-          id: 'global.precautionaryStatements',
-          defaultMessage: 'Precautionary Statements'
-        })}
+        {this.RowTextArea(
+          {
+            name: 'precautionaryStatements',
+            id: 'global.precautionaryStatements',
+            defaultMessage: 'Precautionary Statements'
+          },
+          formikProps
+        )}
         {this.RowInput({
           name: 'productLc50Inhalation',
           id: 'global.productLc50Inhalation',
@@ -1114,7 +1182,10 @@ class AddEditEchoProduct extends React.Component {
         })}
         {this.RowInput({ name: 'productLd50Oral', id: 'global.productLd50Oral', defaultMessage: 'Product LD50 Oral' })}
         {this.RowInput({ name: 'reactiveHazard', id: 'global.reactiveHazard', defaultMessage: 'Reactive Hazard' })}
-        {this.RowInput({ name: 'recommendedUse', id: 'global.recommendedUse', defaultMessage: 'Recommended Use' })}
+        {this.RowTextArea(
+          { name: 'recommendedUse', id: 'global.recommendedUse', defaultMessage: 'Recommended Use' },
+          formikProps
+        )}
         {this.RowInput({
           name: 'reproductiveEffects',
           id: 'global.reproductiveEffects',
@@ -1122,7 +1193,10 @@ class AddEditEchoProduct extends React.Component {
         })}
         {this.RowInput({ name: 'sensitization', id: 'global.sensitization', defaultMessage: 'Sensitization' })}
         {this.RowInput({ name: 'signalWord', id: 'global.signalWord', defaultMessage: 'Signal Word' })}
-        {this.RowInput({ name: 'skinContact', id: 'global.skinContact', defaultMessage: 'Skin Contact' })}
+        {this.RowTextArea(
+          { name: 'skinContact', id: 'global.skinContact', defaultMessage: 'Skin Contact' },
+          formikProps
+        )}
         {this.RowInput({ name: 'solubility', id: 'global.solubility', defaultMessage: 'Solubility' })}
         {this.RowInput({ name: 'specificGravity', id: 'global.specificGravity', defaultMessage: 'Specific Gravity' })}
         {this.RowInput({ name: 'stability', id: 'global.stability', defaultMessage: 'Stability' })}
@@ -1141,7 +1215,14 @@ class AddEditEchoProduct extends React.Component {
           id: 'global.supplementalInformation',
           defaultMessage: 'Supplemental Information'
         })}
-        {this.RowInput({ name: 'symptomsEffects', id: 'global.symptomsEffects', defaultMessage: 'Symptoms/Effects' })}
+        {this.RowTextArea(
+          {
+            name: 'symptomsEffects',
+            id: 'global.symptomsEffects',
+            defaultMessage: 'Symptoms/Effects'
+          },
+          formikProps
+        )}
         {this.RowInput({ name: 'teratogenicity', id: 'global.teratogenicity', defaultMessage: 'Teratogenicity' })}
         {this.RowInput({
           name: 'usesAdvisedAgainst',
@@ -1210,8 +1291,9 @@ class AddEditEchoProduct extends React.Component {
   }
 
   renderTransportationContent = (formikProps, transportationType) => {
-    let unNumberOptions = [...this.props.unNumbersFiltered, ...this.state.unNumberInitOptions]
-      .filter((v,i,a)=>a.findIndex(t=>(t.key === v.key))===i)
+    let unNumberOptions = [...this.props.unNumbersFiltered, ...this.state.unNumberInitOptions].filter(
+      (v, i, a) => a.findIndex(t => t.key === v.key) === i
+    )
 
     switch (transportationType) {
       case 'dot': {
@@ -1445,7 +1527,7 @@ class AddEditEchoProduct extends React.Component {
       visible,
       closePopup,
       intl: { formatMessage },
-      isLoading,
+      isLoading
     } = this.props
 
     const { editTab } = this.state

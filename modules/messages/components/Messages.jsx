@@ -17,8 +17,16 @@ class Messages extends Component {
     if (!response) return
 
     let { data } = response
-    let messages = data.clientMessage ? [data] : getSafe(() => data.messages, [])
-
+    //let messages = data.clientMessage ? [data] : getSafe(() => data.messages, [])
+    let messages = getSafe(() => data.messages,
+      data.clientMessage
+        ? [data]
+        : (
+          Array.isArray(data)
+            ? data.filter(d => !!d.clientMessage)
+            : []
+        )
+    )
     if (messages.length > 0) {
       messages.forEach(message => {
         this.onMessage(message)
