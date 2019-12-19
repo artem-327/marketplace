@@ -398,7 +398,7 @@ class PurchaseOrder extends Component {
                       {this.state.selectedAddress &&
                         // shippingQuotes.length === 0 &&
                         !shippingQuotesAreFetching &&
-                        cart.weightLimitExceed && (
+                        (cart.weightLimitExceed || shippingQuotes.length === 0) && (
                           <>
                             <GridRow>
                               <GridColumn computer={16}>
