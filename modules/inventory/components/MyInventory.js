@@ -15,6 +15,7 @@ import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
 import { getSafe } from '~/utils/functions'
+import moment from 'moment/moment'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -218,7 +219,7 @@ class MyInventory extends Component {
       {
         name: 'mfgDate',
         title: (
-          <FormattedMessage id='myInventory.mfgDate' defaultMessage='MFG Date'>
+          <FormattedMessage id='myInventory.mfgDate' defaultMessage='MFR Date'>
             {text => text}
           </FormattedMessage>
         ),
@@ -245,7 +246,7 @@ class MyInventory extends Component {
       {
         name: 'offerExpiration',
         title: (
-          <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer EXP'>
+          <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Expiration Date'>
             {text => text}
           </FormattedMessage>
         ),
@@ -263,13 +264,13 @@ class MyInventory extends Component {
       const searchParams = new URLSearchParams(getSafe(() => window.location.href, ''))
 
       if (searchParams.has('id') || searchParams.has(`${window.location.href.split('?')[0]}?id`)) {
-        const idOffer = searchParams.get('id')
+        const idOffer = searchParams.has('id')
           ? { id: Number(searchParams.get('id')) }
           : { id: Number(searchParams.get(`${window.location.href.split('?')[0]}?id`)) }
         let tabOffer = 0
 
         if (searchParams.has('tab') || searchParams.has(`${window.location.href.split('?')[0]}?tab`)) {
-          tabOffer = searchParams.get('tab')
+          tabOffer = searchParams.has('tab')
             ? Number(searchParams.get('tab'))
             : Number(searchParams.get(`${window.location.href.split('?')[0]}?tab`))
         }
@@ -301,42 +302,53 @@ class MyInventory extends Component {
     let title = ''
 
     return rows.map(r => {
+      const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
+
       if (this.props.sellEligible) {
-        switch (r.cfStatus.toLowerCase()) {
-          case 'broadcasting':
-            title = (
-              <FormattedMessage
-                id='myInventory.broadcasting.active'
-                defaultMessage='Broadcasting now, switch off to stop broadcasting.'
-              />
-            )
-            break
-          case 'not broadcasting':
-            title = (
-              <FormattedMessage
-                id='myInventory.broadcasting.inactive'
-                defaultMessage='Not Broadcasting now, switch on to start broadcasting.'
-              />
-            )
-            break
-          case 'incomplete':
-            title = (
-              <FormattedMessage
-                id='myInventory.broadcasting.incomplete'
-                defaultMessage='Incomplete, please enter all required values first.'
-              />
-            )
-            break
-          case 'unmapped':
-            title = (
-              <FormattedMessage
-                id='myInventory.broadcasting.unmapped'
-                defaultMessage='Unmapped, please make sure related Product is mapped first.'
-              />
-            )
-            break
-          default:
-            title = ''
+        if (isOfferValid) {
+          switch (r.cfStatus.toLowerCase()) {
+            case 'broadcasting':
+              title = (
+                <FormattedMessage
+                  id='myInventory.broadcasting.active'
+                  defaultMessage='Broadcasting now, switch off to stop broadcasting.'
+                />
+              )
+              break
+            case 'not broadcasting':
+              title = (
+                <FormattedMessage
+                  id='myInventory.broadcasting.inactive'
+                  defaultMessage='Not Broadcasting now, switch on to start broadcasting.'
+                />
+              )
+              break
+            case 'incomplete':
+              title = (
+                <FormattedMessage
+                  id='myInventory.broadcasting.incomplete'
+                  defaultMessage='Incomplete, please enter all required values first.'
+                />
+              )
+              break
+            case 'unmapped':
+              title = (
+                <FormattedMessage
+                  id='myInventory.broadcasting.unmapped'
+                  defaultMessage='Unmapped, please make sure related Product is mapped first.'
+                />
+              )
+              break
+            default:
+              title = ''
+          }
+        } else {
+          title = (
+            <FormattedMessage
+              id='myInventory.broadcasting.validityExpired'
+              defaultMessage='This product offer validity date has expired, so it cannot be broadcasted.'
+            />
+          )
         }
       } else {
         title = (
@@ -362,7 +374,11 @@ class MyInventory extends Component {
                 <Checkbox
                   data-test='my_inventory_broadcast_chckb'
                   toggle
-                  defaultChecked={r.cfStatus.toLowerCase() === 'broadcasting' && this.props.sellEligible !== false}
+                  defaultChecked={
+                    r.cfStatus.toLowerCase() === 'broadcasting'
+                    && this.props.sellEligible !== false
+                    && isOfferValid
+                  }
                   className={cn({
                     error:
                       this.props.sellEligible &&
@@ -371,7 +387,8 @@ class MyInventory extends Component {
                   disabled={
                     !this.props.sellEligible ||
                     r.cfStatus.toLowerCase() === 'incomplete' ||
-                    r.cfStatus.toLowerCase() === 'unmapped'
+                    r.cfStatus.toLowerCase() === 'unmapped' ||
+                    !isOfferValid
                   }
                   onChange={(e, data) => {
                     e.preventDefault()

@@ -28,7 +28,7 @@ import '../styles/PurchaseOrder.scss'
 import { errorMessages } from '~/constants/yupValidation'
 
 const RelaxedForm = styled(Form)`
-  padding-top 1.5rem !important;
+  padding-top: 1.5rem !important;
   padding-bottom: 50px !important;
   overflow: auto;
 `
@@ -41,7 +41,9 @@ class PurchaseOrder extends Component {
   state = {
     otherAddresses: true,
     submitting: false,
-    addressId: 'deliveryAddressId'
+    addressId: 'deliveryAddressId',
+    shippingQuotes: [],
+    selectedAddress: ''
   }
   componentDidMount() {
     this.props.getCart()
@@ -51,25 +53,25 @@ class PurchaseOrder extends Component {
 
   handleQuoteSelect = index => {
     let { shippingQuoteSelected, shippingQuotes } = this.props
-    shippingQuoteSelected({ index, quote: shippingQuotes[index] })
+    shippingQuoteSelected({ index, quote: this.state.shippingQuotes[index] })
   }
 
   getAddress = selectedAddressId => {
     let { deliveryAddresses, warehouses, branches, cart } = this.props
     let addresses = this.state.otherAddresses ? deliveryAddresses : warehouses //branches
     let selectedAddress = addresses.find(i => i.id === selectedAddressId)
-    if (selectedAddress.deliveryAddress)
-      selectedAddress = {
-        ...selectedAddress,
-        address: selectedAddress.deliveryAddress.address
+
+    if (selectedAddress.deliveryAddress) {
+      selectedAddress = { ...selectedAddress, address: selectedAddress.deliveryAddress.address }
+    }
+
+    this.setState(
+      { selectedAddress, addressId: this.state.otherAddresses ? 'deliveryAddressId' : 'warehouseId' },
+      () => {
+        this.props.shippingChanged(this.state.selectedAddress)
+        if (!cart.weightLimitExceed) this.getShippingQuotes(this.state.selectedAddress)
       }
-
-    this.setState({
-      addressId: this.state.otherAddresses ? 'deliveryAddressId' : 'warehouseId'
-    })
-    this.props.shippingChanged({ selectedAddress })
-
-    if (!cart.weightLimitExceed) this.getShippingQuotes(selectedAddress)
+    )
   }
 
   getPayment = selectedPaymentId => {
@@ -78,10 +80,14 @@ class PurchaseOrder extends Component {
     this.props.shippingChanged({ selectedPayment })
   }
 
-  getShippingQuotes = selectedAddress => {
+  getShippingQuotes = async selectedAddress => {
     let { address } = selectedAddress
-
-    this.props.getShippingQuotes(address.country.id, address.zip.zip)
+    try {
+      const shippingQuotes = await this.props.getShippingQuotes(address.country.id, address.zip.zip)
+      this.setState({ shippingQuotes: shippingQuotes.value })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   postNewDeliveryAddress = async payload => {
@@ -104,7 +110,7 @@ class PurchaseOrder extends Component {
 
   handleToggleChange = otherAddresses => {
     return new Promise(resolve => {
-      this.setState({ otherAddresses }, resolve)
+      this.setState({ otherAddresses, selectedAddress: null }, resolve)
     })
   }
 
@@ -140,7 +146,7 @@ class PurchaseOrder extends Component {
 
     const { toastManager } = this.props
     const data = {
-      [this.state.addressId]: shipping.selectedAddress.id,
+      [this.state.addressId]: this.state.selectedAddress.id,
       shipmentQuoteId
     }
 
@@ -190,17 +196,26 @@ class PurchaseOrder extends Component {
     } = this.props
     setFieldTouched('address')
     setSubmitting(false)
-    
+
     if (values.address) {
       let payload = {
-        destinationCountryId: selectedAddress.address.country.id,
-        destinationZIP: selectedAddress.address.zip.zip
+        destinationCountryId: this.state.selectedAddress.address.country.id,
+        destinationZIP: this.state.selectedAddress.address.zip.zip
       }
       await requestManualShipment(payload)
-      toastManager.add(generateToastMarkup(
-        <FormattedMessage id='notifications.manualShippingQuote.header' defaultMessage='Request succesfully submitted' />,
-        <FormattedMessage id='notifications.manualShippingQuote.content' defaultMessage='Request for Shipment Quote has been successful' />
-      ), {appearance: 'success'})
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage
+            id='notifications.manualShippingQuote.header'
+            defaultMessage='Request succesfully submitted'
+          />,
+          <FormattedMessage
+            id='notifications.manualShippingQuote.content'
+            defaultMessage='Request for Shipment Quote has been successful'
+          />
+        ),
+        { appearance: 'success' }
+      )
     }
   }
 
@@ -237,11 +252,11 @@ class PurchaseOrder extends Component {
       payment,
       address: '',
       shipmentQuoteId: '',
-      address: getSafe(() => shipping.selectedAddress.id, null)
+      address: ''
     }
 
-    let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit} lbs` : ''
- 
+    let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit}` : ''
+
     return (
       <div className='app-inner-main flex stretched'>
         <div className='header-top' style={{ zIndex: 10, backgroundColor: '#FFF' }}>
@@ -285,7 +300,7 @@ class PurchaseOrder extends Component {
                   {shipping.isShippingEdit && (
                     <ShippingEdit
                       savedShippingPreferences={shipping.savedShippingPreferences}
-                      selectedAddress={shipping.selectedAddress}
+                      selectedAddress={this.state.selectedAddress}
                       isNewAddress={shipping.isNewAddress}
                       shippingChanged={this.props.shippingChanged}
                       postNewDeliveryAddress={this.postNewDeliveryAddress}
@@ -307,7 +322,7 @@ class PurchaseOrder extends Component {
                           dispatch={dispatch}
                           shippingChanged={this.props.shippingChanged}
                           getAddress={this.getAddress}
-                          selectedAddress={shipping.selectedAddress}
+                          selectedAddress={this.state.selectedAddress}
                           getBranches={this.props.getBranches}
                           branchesAreFetching={this.props.branchesAreFetching}
                           branches={this.props.branches}
@@ -332,17 +347,17 @@ class PurchaseOrder extends Component {
                           </Header>
                         </GridColumn>
                       </GridRow>
-                      {!cart.weightLimitExceed ? (
+                      {!cart.weightLimitExceed && this.state.selectedAddress ? (
                         <ShippingQuote
                           currency={currency}
                           selectedShippingQuote={this.props.cart.selectedShipping}
                           handleQuoteSelect={this.handleQuoteSelect}
-                          selectedAddress={shipping.selectedAddress}
-                          shippingQuotes={shippingQuotes}
+                          selectedAddress={this.state.selectedAddress}
+                          shippingQuotes={this.state.shippingQuotes}
                           shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
                         />
                       ) : (
-                        !shipping.selectedAddress && (
+                        !this.state.selectedAddress && (
                           <GridRow>
                             <GridColumn>
                               <FormattedMessage
@@ -353,13 +368,13 @@ class PurchaseOrder extends Component {
                           </GridRow>
                         )
                       )}
-                      {cart.weightLimitExceed && shipping.selectedAddress && (
+                      {cart.weightLimitExceed && this.state.selectedAddress && (
                         <>
                           <GridRow>
                             <GridColumn computer={16}>
                               <FormattedMessage
                                 id='cart.weightLimitExceeded'
-                                defaultMessage={`Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
+                                defaultMessage={`Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
                                 values={{ limit: weightLimitStr }}
                               />
                             </GridColumn>
@@ -367,8 +382,8 @@ class PurchaseOrder extends Component {
                         </>
                       )}
 
-                      {shippingQuotes.length === 0 &&
-                        shipping.selectedAddress &&
+                      {this.state.shippingQuotes.length === 0 &&
+                        this.state.selectedAddress &&
                         !shippingQuotesAreFetching &&
                         !cart.weightLimitExceed && (
                           <GridRow>
@@ -380,19 +395,11 @@ class PurchaseOrder extends Component {
                             </GridColumn>
                           </GridRow>
                         )}
-                      {shipping.selectedAddress &&
+                      {this.state.selectedAddress &&
                         // shippingQuotes.length === 0 &&
-                        (!shippingQuotesAreFetching || cart.weightLimitExceed) && (
+                        !shippingQuotesAreFetching &&
+                        cart.weightLimitExceed && (
                           <>
-                            <GridRow>
-                              <GridColumn computer={8}>
-                                <Input
-                                  name='shipmentQuoteId'
-                                  label={<FormattedMessage id='cart.shipmentQuote' defaultMessage='Shipment Quote' />}
-                                />
-                              </GridColumn>
-                            </GridRow>
-
                             <GridRow>
                               <GridColumn computer={16}>
                                 <Button
@@ -411,7 +418,17 @@ class PurchaseOrder extends Component {
                               <GridColumn computer={16}>
                                 <FormattedMessage
                                   id='cart.quoteReceived'
-                                  defaultMessage='If you already received the shipping quote and agree, please type in the provided Quote Id and continue with Checkout.'
+                                  defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
+                                />
+                              </GridColumn>
+                            </GridRow>
+                            <GridRow>
+                              <GridColumn computer={8}>
+                                <Input
+                                  name='shipmentQuoteId'
+                                  label={
+                                    <FormattedMessage id='cart.shippingQuoteId' defaultMessage='Shipping Quote ID' />
+                                  }
                                 />
                               </GridColumn>
                             </GridRow>
@@ -436,6 +453,7 @@ class PurchaseOrder extends Component {
                         selectedPayment={shipping.selectedPayment}
                         payments={payments}
                         getPayment={this.getPayment}
+                        companyName={this.props.companyName}
                       />
                     </Grid>
                   </Segment>
@@ -461,7 +479,7 @@ class PurchaseOrder extends Component {
                                   !values.payment ||
                                   !this.props.logisticsAccount ||
                                   !(
-                                    shipping.selectedAddress &&
+                                    this.state.selectedAddress &&
                                     (this.props.cart.selectedShipping || values.shipmentQuoteId)
                                   )
                                 }

@@ -57,7 +57,14 @@ export function login(username, password) {
         }
 
         setAuth(authPayload)
+        let urlPage = '/inventory/my'
+        if (window) {
+          const searchParams = new URLSearchParams(getSafe(() => window.location.search, ''))
 
+          if (searchParams.has('redirectUrl')) {
+            urlPage = decodeURI(getSafe(() => window.location.search.split('redirectUrl=')[1], urlPage))
+          }
+        }
         // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
         if (
           !(
@@ -65,7 +72,7 @@ export function login(username, password) {
             getSafe(() => identity.company.reviewRequested, false)
           )
         ) {
-          isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
+          isAdmin ? Router.push('/admin') : Router.push(urlPage)
         }
 
         return authPayload

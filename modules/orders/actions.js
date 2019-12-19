@@ -134,9 +134,9 @@ export const approveOrder = orderId => ({
   type: AT.ORDER_APPROVE_ORDER,
   payload: Api.approveOrder(orderId)
 })
-export const disapproveOrder = orderId => ({
-  type: AT.ORDER_DISAPPROVE_ORDER,
-  payload: Api.disapproveOrder(orderId)
+export const discardOrder = orderId => ({
+  type: AT.ORDER_DISCARD_ORDER,
+  payload: Api.discardOrder(orderId)
 })
 export const openPopupName = name => ({
   type: AT.ORDER_OPEN_POPUP_NAME,
@@ -168,4 +168,7 @@ export const returnShipmentOrder = (orderId, deliveryRemarks, pickupRemarks, quo
 export const getManualShippingQuote = (orderId, pickupDate) => ({
   type: AT.REQUEST_MANUAL_SHIPMENT,
   payload: Api.getManualShippingQuote(orderId, pickupDate)
+export const rejectPurchaseOrder = (orderId, reason, reasonText, files) => ({
+  type: AT.REJECT_PURCHASE_ORDER,
+  payload: Api.rejectPurchaseOrder(orderId, reason, reasonText, files)
 })

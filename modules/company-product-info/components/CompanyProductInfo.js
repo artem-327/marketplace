@@ -744,7 +744,7 @@ class CompanyProductInfo extends Component {
             {this.getInput({
               id: 'global.unNumber',
               defaultMessage: 'UN Number',
-              name: `echoProduct.${this.state.echoProductGroup}UnNumber`
+              name: `echoProduct.${this.state.echoProductGroup}UnNumber.unNumberCode`
             })}
             {this.getInput({
               id: 'global.properShippingName',
@@ -759,12 +759,12 @@ class CompanyProductInfo extends Component {
             {this.getInput({
               id: 'global.hazardClass',
               defaultMessage: 'Hazard Class',
-              name: `echoProduct.${this.state.echoProductGroup}HazardClass`
+              name: `echoProduct.${this.state.echoProductGroup}HazardClass.classCode`
             })}
             {this.getInput({
               id: 'global.packagingGroup',
               defaultMessage: 'Packaging Group',
-              name: `echoProduct.${this.state.echoProductGroup}PackagingGroup`
+              name: `echoProduct.${this.state.echoProductGroup}PackagingGroup.groupCode`
             })}
             {this.getInput({
               id: 'global.reportableQuantity',

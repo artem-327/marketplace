@@ -8,9 +8,8 @@ import { FormattedAssay } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
 import moment from 'moment/moment'
 import { getSafe } from '~/utils/functions'
-import styled from "styled-components";
+import styled from 'styled-components'
 import { FormattedUnit } from '~/components/formatted-messages'
-
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -36,45 +35,45 @@ export default class ItemCartBody extends Component {
         <Grid className='item-cart-body'>
           <GridColumn width={9}>
             <div className='item-cart-body-section'>
-              <GridRow className='item-cart-body-section-name'>
-                {productOffer.companyProduct.echoProduct.name}
-              </GridRow>
+              <GridRow className='item-cart-body-section-name'>{productOffer.companyProduct.echoProduct.name}</GridRow>
               <Grid columns={2}>
                 <GridColumn width={leftWidth1}>
-                  <FormattedMessage id='cart.packaging' defaultMessage='Packaging:'/>
+                  <FormattedMessage id='cart.packaging' defaultMessage='Packaging:' />
                 </GridColumn>
                 <GridColumn width={rightWidth1}>
                   <>
-                    <FormattedNumber minimumFractionDigits={0} value={packagingSize}/>
+                    <FormattedNumber minimumFractionDigits={0} value={packagingSize} />
                     {` ${unitName} `}
                     <CapitalizedText>{packagingType}</CapitalizedText>{' '}
                   </>
                 </GridColumn>
 
                 <GridColumn width={leftWidth1}>
-                  <FormattedMessage id='cart.numOfPackages' defaultMessage='# of Packages:'/>
+                  <FormattedMessage id='cart.numOfPackages' defaultMessage='# of Packages:' />
                 </GridColumn>
                 <GridColumn width={rightWidth1}>
-                  <FormattedNumber minimumFractionDigits={0} value={pkgAmount}/>
+                  <FormattedNumber minimumFractionDigits={0} value={pkgAmount} />
                 </GridColumn>
 
                 <GridColumn width={leftWidth1}>
-                  <FormattedMessage id='cart.totalQuantity' defaultMessage='Total Quantity:'/>
+                  <FormattedMessage id='cart.totalQuantity' defaultMessage='Total Quantity:' />
                 </GridColumn>
                 <GridColumn width={rightWidth1}>
                   <>
-                    <FormattedNumber minimumFractionDigits={0} value={pkgAmount * packagingSize}/>
+                    <FormattedNumber minimumFractionDigits={0} value={pkgAmount * packagingSize} />
                     {unitName && ` ${unitName}`}
                   </>
                 </GridColumn>
 
                 <GridColumn width={leftWidth1}>
-                  <FormattedMessage id='cart.fobPrice' defaultMessage='FOB Price:'/>
+                  <FormattedMessage id='cart.fobPrice' defaultMessage='FOB Price:' />
                 </GridColumn>
                 <GridColumn width={rightWidth1}>
                   <>
                     <FormattedNumber
-                      id='cart.fobPrice' style='currency' currency={currency}
+                      id='cart.fobPrice'
+                      style='currency'
+                      currency={currency}
                       value={cartItem.cfPricePerUOM}
                     />
                     {unitName && ` / ${unitName}`}
@@ -82,12 +81,14 @@ export default class ItemCartBody extends Component {
                 </GridColumn>
 
                 <GridColumn width={leftWidth1}>
-                  <FormattedMessage id='cart.totalPerItem' defaultMessage='Total per Item:'/>
+                  <FormattedMessage id='cart.totalPerItem' defaultMessage='Total per Item:' />
                 </GridColumn>
                 <GridColumn width={rightWidth1}>
                   <FormattedNumber
-                    id='cart.totalPerItem' style='currency'
-                    currency={currency} value={cartItem.cfPriceSubtotal}
+                    id='cart.totalPerItem'
+                    style='currency'
+                    currency={currency}
+                    value={cartItem.cfPriceSubtotal}
                   />
                 </GridColumn>
               </Grid>
@@ -95,66 +96,54 @@ export default class ItemCartBody extends Component {
           </GridColumn>
           <GridColumn width={7}>
             <div className='item-cart-body-section'>
-
               <Grid columns={2}>
-                <GridRow/>
+                <GridRow />
                 <GridColumn width={leftWidth2}>
-                  <FormattedMessage id='cart.manufacturer' defaultMessage='Manufacturer:'/>
+                  <FormattedMessage id='cart.manufacturer' defaultMessage='Manufacturer:' />
                 </GridColumn>
                 <GridColumn width={rightWidth2}>
-                  {productOffer.companyProduct.echoProduct.manufacturer.name}
+                  {getSafe(() => productOffer.companyProduct.echoProduct.manufacturer.name, '')}
                 </GridColumn>
 
                 <GridColumn width={leftWidth2}>
-                  <FormattedMessage id='cart.origin' defaultMessage='Origin:'/>
+                  <FormattedMessage id='cart.origin' defaultMessage='Origin:' />
+                </GridColumn>
+                <GridColumn width={rightWidth2}>{productOffer.origin ? productOffer.origin.name : 'N/A'}</GridColumn>
+
+                <GridColumn width={leftWidth2}>
+                  <FormattedMessage id='cart.location' defaultMessage='Location:' />
+                </GridColumn>
+                <GridColumn width={rightWidth2}>{cartItem.locationStr ? cartItem.locationStr : 'N/A'}</GridColumn>
+
+                <GridColumn width={leftWidth2}>
+                  <FormattedMessage id='cart.expiration' defaultMessage='Expiration:' />
                 </GridColumn>
                 <GridColumn width={rightWidth2}>
-                  {productOffer.origin ? productOffer.origin.name : 'N/A'}
+                  {productOffer.lotExpirationDate ? moment(productOffer.lotExpirationDate).format('MM/DD/YYYY') : 'N/A'}
                 </GridColumn>
 
                 <GridColumn width={leftWidth2}>
-                  <FormattedMessage id='cart.location' defaultMessage='Location:'/>
+                  <FormattedMessage id='cart.productForm' defaultMessage='Form:' />
                 </GridColumn>
-                <GridColumn width={rightWidth2}>
-                  {cartItem.locationStr ? cartItem.locationStr : 'N/A'}
-                </GridColumn>
+                <GridColumn width={rightWidth2}>{productOffer.form ? productOffer.form.name : 'N/A'}</GridColumn>
 
                 <GridColumn width={leftWidth2}>
-                  <FormattedMessage id='cart.expiration' defaultMessage='Expiration:'/>
-                </GridColumn>
-                <GridColumn width={rightWidth2}>
-                  {productOffer.lotExpirationDate ?
-                    moment(productOffer.lotExpirationDate).format('MM/DD/YYYY') : 'N/A'
-                  }
-                </GridColumn>
-
-                <GridColumn width={leftWidth2}>
-                  <FormattedMessage id='cart.productForm' defaultMessage='Form:'/>
-                </GridColumn>
-                <GridColumn width={rightWidth2}>
-                  {productOffer.form ? productOffer.form.name : 'N/A'}
-                </GridColumn>
-
-                <GridColumn width={leftWidth2}>
-                  <FormattedMessage id='cart.condition' defaultMessage='Condition:'/>
+                  <FormattedMessage id='cart.condition' defaultMessage='Condition:' />
                 </GridColumn>
                 <GridColumn width={rightWidth2}>
                   {productOffer.conforming ? (
-                      <FormattedMessage id='global.conforming' defaultMessage='Conforming'/>
-                    ) : (
-                      <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming'/>
-                    )
-                  }
+                    <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
+                  ) : (
+                    <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+                  )}
                 </GridColumn>
 
                 {productOffer.companyProduct.conditionNotes && (
                   <>
                     <GridColumn width={leftWidth2}>
-                      <FormattedMessage id='cart.conditionNotes' defaultMessage='Condition Notes:'/>
+                      <FormattedMessage id='cart.conditionNotes' defaultMessage='Condition Notes:' />
                     </GridColumn>
-                    <GridColumn width={rightWidth2}>
-                      {productOffer.companyProduct.conditionNotes}
-                    </GridColumn>
+                    <GridColumn width={rightWidth2}>{productOffer.companyProduct.conditionNotes}</GridColumn>
                   </>
                 )}
               </Grid>

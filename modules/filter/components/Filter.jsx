@@ -101,15 +101,16 @@ class Filter extends Component {
   }
 
   generateRequestData = ({ notifications, checkboxes, name, ...rest }) => {
-    let { notificationMail } = notifications
-    let { notifyMail, notifyPhone, notifySystem } = checkboxes
+    let { notificationMail, notificationPhone } = notifications
+    let { notifyMail, notifyPhone, notifySystem, notificationEnabled } = checkboxes
     let { filters } = this.toSavedFilter(rest)
 
     return {
       filters,
       name,
-      notificationEnabled: notifyMail || notifyPhone || notifySystem,
-      notificationMail,
+      notificationEnabled: notificationEnabled,
+      ...(notificationMail === undefined || notificationMail === '' ? null : {notificationMail}),
+      ...(notificationPhone === undefined || notificationPhone === '' ? null : {notificationPhone}),
       notifyMail,
       notifyPhone,
       notifySystem
@@ -152,7 +153,6 @@ class Filter extends Component {
         }
       }
     })
-
     return datagridFilter
   }
 
@@ -188,32 +188,34 @@ class Filter extends Component {
     async function callback(id) {
       let requestData = self.generateRequestData(params)
 
-      if (id) await self.props.updateFilter(id, requestData)
-      else {
-        await self.props.saveFilter(self.props.savedUrl, {
-          ...requestData,
-          filters: requestData.filters.map(filter => ({
-            operator: filter.operator,
-            path: filter.path,
-            values: filter.values
-          }))
-        })
-      }
+      try {
+        if (id) await self.props.updateFilter(id, requestData)
+        else {
+          await self.props.saveFilter(self.props.savedUrl, {
+            ...requestData,
+            filters: requestData.filters.map(filter => ({
+              operator: filter.operator,
+              path: filter.path,
+              values: filter.values
+            }))
+          })
+        }
 
-      toastManager.add(
-        <div>
-          <strong>
-            <FormattedMessage id={`confirm.filter.${id ? 'updated' : 'saved'}`} values={{ name: params.name }} />
-          </strong>
-        </div>,
-        { appearance: 'success', pauseOnHover: true }
-      )
+        toastManager.add(
+          <div>
+            <strong>
+              <FormattedMessage id={`confirm.filter.${id ? 'updated' : 'saved'}`} values={{name: params.name}}/>
+            </strong>
+          </div>,
+          {appearance: 'success', pauseOnHover: true}
+        )
 
-      if (params.checkboxes.automaticallyApply) {
-        let filter = self.toDatagridFilter(requestData)
-        self.props.onApply(filter)
-        self.props.applyFilter(requestData)
-      }
+        if (params.checkboxes.automaticallyApply) {
+          let filter = self.toDatagridFilter(requestData)
+          self.props.onApply(filter)
+          self.props.applyFilter(requestData)
+        }
+      } catch (err) { }
     }
 
     let filter = this.props.savedFilters.find(filter => filter.name === params.name)
@@ -225,11 +227,15 @@ class Filter extends Component {
       )
         .then(() => {
           callback(filter.id)
+          this.setState({ openedSaveFilter: false })
         })
         .catch(() => {
           return
         })
-    } else callback()
+    } else {
+      callback()
+      this.setState({openedSaveFilter: false})
+    }
   }
 
   fetchIfNoData = (fn, propertyName) => {
@@ -240,7 +246,9 @@ class Filter extends Component {
   }
 
   toggleFilter = savedFiltersActive => {
-    if (this.state.savedFiltersActive !== savedFiltersActive) this.setState({ savedFiltersActive })
+    if (this.state.savedFiltersActive !== savedFiltersActive)
+      this.setState({ savedFiltersActive, openedSaveFilter: false })
+    else this.setState({ openedSaveFilter: false })
   }
 
   generateCheckboxes = (data, values, groupName = null) => {
@@ -262,7 +270,7 @@ class Filter extends Component {
               setFieldValue(path, data.checked ? { id: el.id, name: el.name } : false)
             }}
             component={Checkbox}
-            checked={!!values[groupName] && values[groupName][name]}
+            checked={!!values[groupName] && !!values[groupName][name]}
             name={path}
             label={el.name}
             data-test='filter_FormikField_change'
@@ -306,7 +314,7 @@ class Filter extends Component {
       })
     }
 
-    let { notifyMail, notifyPhone, notifySystem, notificationMail } = rest
+    let { notifyMail, notifyPhone, notifySystem, notificationMail, notificationPhone } = rest
 
     formikValues = {
       name,
@@ -316,11 +324,13 @@ class Filter extends Component {
         notifySystem,
         notificationEnabled: notifyMail || notifyPhone || notifySystem
       },
-      notifications: { notificationMail },
+      notifications: { notificationMail, notificationPhone },
       ...formikValues
     }
 
     Object.keys(formikValues).forEach(key => setFieldValue(key, formikValues[key]))
+
+    this.toggleFilter(false)
 
     this.handleSubmit(formikValues)
   }
@@ -365,8 +375,8 @@ class Filter extends Component {
     </AccordionTitle>
   )
 
-  toggleSaveFilter = e => {
-    e.preventDefault()
+  toggleSaveFilter = () => {
+    //e.preventDefault()
     this.setState(prevState => ({ openedSaveFilter: !prevState.openedSaveFilter }))
   }
 
@@ -418,9 +428,9 @@ class Filter extends Component {
     )
   }
 
-  formSaveFilter = ({ values, setFieldError }) => {
-    let { intl, isFilterSaving } = this.props
-
+  formSaveFilter = (formikProps) => {
+    let { intl } = this.props
+    let { values } = formikProps
     const { formatMessage } = intl
 
     return (
@@ -439,7 +449,7 @@ class Filter extends Component {
           </SaveFilterRow>
 
           <GridRow>
-            <GridColumn computer={12} data-test='filter_name_inp'>
+            <GridColumn computer={16} data-test='filter_name_inp'>
               <Input
                 inputProps={{
                   placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Enter Filter Name' })
@@ -447,22 +457,6 @@ class Filter extends Component {
                 name='name'
                 fluid
               />
-            </GridColumn>
-
-            <GridColumn computer={4}>
-              <Button
-                onClick={e => {
-                  e.preventDefault()
-                  if (!values.name) setFieldError('name', <FormattedMessage id='validation.required' />)
-                  else this.handleFilterSave(values)
-                }}
-                positive
-                basic
-                loading={isFilterSaving}
-                style={{ marginRight: '0' }}
-                data-test='filter_name_save'>
-                Save
-              </Button>
             </GridColumn>
           </GridRow>
 
@@ -478,7 +472,7 @@ class Filter extends Component {
             </GridColumn>
           </LessPaddedRow>
         </Grid>
-        <Notifications values={values} />
+        <Notifications values={values} formikProps={formikProps}/>
       </>
     )
   }
@@ -549,7 +543,7 @@ class Filter extends Component {
       noResultsMessage,
       onSearchChange: (_, data) => this.handleSearch(data),
       value: values.search,
-      onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null)
+      onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : [])
     }
 
     let noWarehouseResultsMessage = null
@@ -766,19 +760,23 @@ class Filter extends Component {
       animation,
       additionalSidebarProps,
       isFilterApplying,
-      intl: { formatMessage }
+      isFilterSaving,
+      intl: { formatMessage },
+      toggleFilter
     } = this.props
 
-    const { toggleFilter } = this.props
+    const { savedFiltersActive, openedSaveFilter } = this.state
 
     return (
       <Form
         enableReinitialize={true}
         initialValues={initialValues}
         validateOnChange={true}
-        validationSchema={validationSchema}
+        validationSchema={validationSchema(openedSaveFilter)}
         onSubmit={(values, { setSubmitting }) => {
-          this.handleSubmit(values)
+          if (!openedSaveFilter) {
+            this.handleSubmit(values)
+          }
           setSubmitting(false)
         }}>
         {props => {
@@ -813,7 +811,7 @@ class Filter extends Component {
                   onClick={() => this.toggleFilter(false)}
                   primary={!this.state.savedFiltersActive}
                   data-test='filter_set_filters'>
-                  {formatMessage({ id: 'filter.setFilters', defaultMessage: 'SET FILTERS' })}
+                  {formatMessage({ id: 'filter.activeFilters', defaultMessage: 'ACTIVE FILTER' })}
                 </Button>
 
                 <Button
@@ -843,15 +841,36 @@ class Filter extends Component {
                 </Segment>
               </FlexContent>
               <GraySegment basic>
-                <Transition visible={this.state.openedSaveFilter} animation='fade down' duration={500}>
+                <Transition visible={openedSaveFilter} animation='fade down' duration={500}>
                   <WhiteSegment basic>{this.formSaveFilter(props)}</WhiteSegment>
                 </Transition>
                 <Grid>
                   <GridRow>
                     <GridColumn computer={6} textAlign='left'>
                       <Button
+                        disabled={savedFiltersActive}
+                        type={'button'}
                         size='large'
-                        onClick={this.toggleSaveFilter}
+                        loading={isFilterSaving}
+                        primary={openedSaveFilter}
+                        onClick={ async () => {
+                          if (openedSaveFilter) {
+                            let { values } = props
+                            const { validateForm, submitForm } = props
+
+                            validateForm().then(err => {
+                              const errors = Object.keys(err)
+                              if (errors.length && errors[0] !== 'isCanceled') {    // Errors found
+                                submitForm()    // to show errors
+                                return
+                              } else {  // No errors found
+                                this.handleFilterSave(values)
+                              }
+                            })
+                          } else {
+                            this.toggleSaveFilter()
+                          }
+                        }}
                         inputProps={{ type: 'button' }}
                         data-test='filter_save_new'>
                         {formatMessage({ id: 'filter.saveFilter', defaultMessage: 'Save Filter' })}
@@ -859,6 +878,7 @@ class Filter extends Component {
                     </GridColumn>
                     <GridColumn computer={10} textAlign='right'>
                       <Button
+                        disabled={openedSaveFilter}
                         type='button'
                         size='large'
                         onClick={(e, data) => {
@@ -871,10 +891,11 @@ class Filter extends Component {
                         {formatMessage({ id: 'filter.clearFilter', defaultMessage: 'Clear Filter' })}
                       </Button>
                       <Button
+                        disabled={openedSaveFilter}
                         size='large'
                         loading={isFilterApplying}
-                        primary
-                        onClick={() => this.submitForm()}
+                        type='submit'
+                        primary={!openedSaveFilter}
                         inputProps={{ type: 'button' }}
                         data-test='filter_apply'>
                         {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}

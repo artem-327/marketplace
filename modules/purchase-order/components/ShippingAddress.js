@@ -22,6 +22,7 @@ export default class ShippingAddress extends Component {
       )
     )
   }
+
   render() {
     let { selectedAddress, addressOnly, header } = this.props
 
@@ -36,6 +37,12 @@ export default class ShippingAddress extends Component {
             </GridColumn>
           </RelaxedRow>
 
+          <RelaxedRow>
+            <GridColumn>
+              <strong>{this.props.companyName}</strong>
+            </GridColumn>
+          </RelaxedRow>
+
           {selectedAddress['firstName'] && selectedAddress['lastName'] && (
             <RelaxedRow>
               <GridColumn>
@@ -45,14 +52,13 @@ export default class ShippingAddress extends Component {
           )}
 
           <RelaxedRow>
-            <GridColumn>{selectedAddress.address.streetAddress}</GridColumn>
-          </RelaxedRow>
-
-          <RelaxedRow>
-            <GridColumn>
-              {selectedAddress.address.city}
-              {selectedAddress.address.province && `, ${selectedAddress.address.province.name}`},{' '}
-              {selectedAddress.address.zip.zip}
+            <GridColumn computer={16}>{selectedAddress.address && selectedAddress.address.streetAddress}</GridColumn>
+            <GridColumn computer={16}>
+              {selectedAddress.address && selectedAddress.address.city}
+              {selectedAddress.address &&
+                selectedAddress.address.province &&
+                `, ${selectedAddress.address.province.name}`}
+              , {selectedAddress.address && selectedAddress.address.zip.zip}
             </GridColumn>
           </RelaxedRow>
 

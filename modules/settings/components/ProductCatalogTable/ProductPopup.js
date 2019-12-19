@@ -68,11 +68,15 @@ const formValidation = Yup.object().shape({
   packagingType: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
   nmfcNumber: Yup.number().required(errorMessages.requiredMessage),
   freightClass: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
-  packageWeight: Yup.number().typeError(errorMessages.mustBeNumber)
-    .required(errorMessages.requiredMessage).positive(errorMessages.positive),
+  packageWeight: Yup.number()
+    .typeError(errorMessages.mustBeNumber)
+    .required(errorMessages.requiredMessage)
+    .positive(errorMessages.positive),
   packageWeightUnit: Yup.number().required(errorMessages.requiredMessage),
-  packagesPerPallet: Yup.number().typeError(errorMessages.mustBeNumber)
-    .positive(errorMessages.positive).integer(errorMessages.integer)
+  packagesPerPallet: Yup.number()
+    .typeError(errorMessages.mustBeNumber)
+    .positive(errorMessages.positive)
+    .integer(errorMessages.integer)
 })
 
 class ProductPopup extends React.Component {
@@ -80,8 +84,6 @@ class ProductPopup extends React.Component {
     advanced: false
   }
   componentDidMount() {
-
-
     this.props.getProductsCatalogRequest()
 
     if (this.props.popupValues && this.props.popupValues.nmfcNumber)
@@ -149,8 +151,8 @@ class ProductPopup extends React.Component {
       inciName: values.inciName === null || values.inciName === '' ? null : values.inciName,
       packagingSize: Number(values.packagingSize),
       packageWeight: Number(values.packageWeight),
-      packagesPerPallet: values.packagesPerPallet === null || values.packagesPerPallet === ''
-        ? null : Number(values.packagesPerPallet)
+      packagesPerPallet:
+        values.packagesPerPallet === null || values.packagesPerPallet === '' ? null : Number(values.packagesPerPallet)
     }
 
     try {
@@ -235,7 +237,7 @@ class ProductPopup extends React.Component {
       casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.echoProduct.elements, [])),
       echoProduct: getSafe(() => popupValues.echoProduct.id),
       nmfcNumber: getSafe(() => popupValues.nmfcNumber.id, ''),
-      packageWeightUnit: getSafe(() => popupValues.packageWeightUnit.id),
+      packageWeightUnit: getSafe(() => popupValues.packageWeightUnit.id, '')
     }
   }
 
@@ -336,7 +338,7 @@ class ProductPopup extends React.Component {
                   <FormGroup data-test='settings_product_popup_packagingSize_inp'>
                     <Input
                       fieldProps={{
-                        width: 4,
+                        width: 4
                       }}
                       type='number'
                       label={formatMessage({ id: 'global.packagingSize', defaultMessage: 'Packaging Size' })}
@@ -381,7 +383,7 @@ class ProductPopup extends React.Component {
                       name='packageWeightUnit'
                       options={packageWeightUnits}
                       inputProps={{
-                        'data-test': 'settings_product_popup_packageWeightUnit_drpdn',
+                        'data-test': 'settings_product_popup_packageWeightUnit_drpdn'
                       }}
                     />
                     <Input

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { string, object, bool, func, oneOfType, node } from 'prop-types'
-import { FormField, Dropdown, Label, List, Popup } from 'semantic-ui-react'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { string, object, bool, func } from 'prop-types'
+import { FormField, Dropdown } from 'semantic-ui-react'
 import styled from 'styled-components'
 //import { InputMask } from 'react-input-mask'
 const InputMask = require('react-input-mask')
@@ -17,7 +16,7 @@ const StyledDropdown = styled(Dropdown)`
   outline: 0;
   min-width: 14em;
   min-height: 2.71428571em;
-  background: #FFFFFF;
+  background: #ffffff;
   display: inline-block;
   padding: 0.78571429em 0.4em 0.78571429em 0.2em;
   color: rgba(0, 0, 0, 0.87);
@@ -26,7 +25,7 @@ const StyledDropdown = styled(Dropdown)`
   transition: width 0.1s ease, -webkit-box-shadow 0.1s ease;
   transition: box-shadow 0.1s ease, width 0.1s ease;
   transition: box-shadow 0.1s ease, width 0.1s ease, -webkit-box-shadow 0.1s ease;
-  text-align:right !important;
+  text-align: right !important;
   > .search.icon,
   > .delete.icon,
   > .dropdown.icon {
@@ -38,6 +37,9 @@ const StyledDropdown = styled(Dropdown)`
     opacity: 0.8;
     transition: opacity 0.1s ease;
   }
+  > .menu {
+    left: -100% !important;
+  }
 `
 
 const StyledInputMask = styled(InputMask)`
@@ -47,19 +49,22 @@ const StyledInputMask = styled(InputMask)`
 `
 
 function splitPhoneNumber(phone, phoneCountryCodes) {
-  let filtered = phoneCountryCodes.filter(d => (    // filter possible country codes
-    d.value === phone.slice(0, d.value.length)
-  ))
+  let filtered = phoneCountryCodes.filter(
+    (
+      d // filter possible country codes
+    ) => d.value === phone.slice(0, d.value.length)
+  )
 
-  let sorted = filtered.sort(function (a, b) { return b.value.length - a.value.length }) // sort by longest
+  let sorted = filtered.sort(function(a, b) {
+    return b.value.length - a.value.length
+  }) // sort by longest
 
   if (sorted.length > 0) {
     return {
       phoneCountryCode: sorted[0].value,
       phoneNumber: phone.slice(sorted[0].value.length)
     }
-  }
-  else {
+  } else {
     return { phoneCountryCode: '', phoneNumber: phone }
   }
 }
@@ -84,7 +89,7 @@ export default class PhoneNumber extends Component {
       phoneFull: phone.phoneCountryCode.length ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
     })
 
-    setFieldValue(name, phone.phoneCountryCode.length ? ('+' + phone.phoneCountryCode + phone.phoneNumber) : phone.phoneNumber)
+    //setFieldValue(name, phone.phoneCountryCode.length ? ('+' + phone.phoneCountryCode + phone.phoneNumber) : phone.phoneNumber)
     // setFieldTouched(name, true, true)
   }
 
@@ -102,16 +107,53 @@ export default class PhoneNumber extends Component {
     }
   }
 
-  handleChange = async (fieldName, value) => {
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    return ( this.state.phoneFull !== nextState.phoneFull
+      || get(this.props.values, this.props.name, '') !== get(nextProps.values, nextProps.name, '')
+      || get(this.props.errors, this.props.name, '') !== get(nextProps.errors, nextProps.name, '')
+      || get(this.props.touched, this.props.name, '') !== get(nextProps.touched, nextProps.name, '')
+      || this.props.phoneCountryCodes.length !== nextProps.phoneCountryCodes.length
+    )
+  }
+
+  handleChangeDropdown = (e, { value }) => {
     const { name, setFieldValue, setFieldTouched } = this.props
-    if (fieldName === 'phoneNumber') value = value.replace(/\s+/g, '')
+    const phone = { ...this.state, ...{ phoneCountryCode: value } }
+    const phoneFull =
+      phone.phoneCountryCode && phone.phoneCountryCode.length
+        ? phone.phoneCountryCode + phone.phoneNumber
+        : phone.phoneNumber
 
-    const phone = { ...this.state, ...{ [fieldName]: value } }
-    const phoneFull = phone.phoneCountryCode.length ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
+    this.setState({ phoneCountryCode: value, phoneFull })
 
-    this.setState({ [fieldName]: value, phoneFull })
+    setFieldValue(
+      name,
+      phone.phoneCountryCode && phone.phoneCountryCode.length
+        ? '+' + phone.phoneCountryCode + phone.phoneNumber
+        : phone.phoneNumber
+    )
+    setFieldTouched(name, true, true)
+  }
 
-    setFieldValue(name, phone.phoneCountryCode.length ? ('+' + phone.phoneCountryCode + phone.phoneNumber) : phone.phoneNumber)
+  handleChangeInput = data => {
+    const { name, setFieldValue, setFieldTouched } = this.props
+    const { value } = data && data.target
+    const newValue = value.replace(/\s+/g, '')
+
+    const phone = { ...this.state, ...{ phoneNumber: newValue } }
+    const phoneFull =
+      phone.phoneCountryCode && phone.phoneCountryCode.length
+        ? phone.phoneCountryCode + phone.phoneNumber
+        : phone.phoneNumber
+
+    this.setState({ phoneNumber: newValue, phoneFull })
+
+    setFieldValue(
+      name,
+      phone.phoneCountryCode && phone.phoneCountryCode.length
+        ? '+' + phone.phoneCountryCode + phone.phoneNumber
+        : phone.phoneNumber
+    )
     setFieldTouched(name, true, true)
   }
 
@@ -123,13 +165,13 @@ export default class PhoneNumber extends Component {
       errors,
       name,
       touched,
-      isSubmitting
+      isSubmitting,
+      disabled,
+      clearable,
+      placeholder
     } = this.props
 
-    let {
-      phoneCountryCode,
-      phoneNumber,
-    } = this.state
+    let { phoneCountryCode, phoneNumber } = this.state
 
     let error = (get(touched, name, null) || isSubmitting) && get(errors, name, null)
 
@@ -139,19 +181,22 @@ export default class PhoneNumber extends Component {
         <span style={{ display: 'flex' }}>
           <StyledDropdown
             options={phoneCountryCodes}
-            onChange={(e, data) => this.handleChange('phoneCountryCode', data.value)}
+            onChange={this.handleChangeDropdown}
             search
+            disabled={disabled}
+            clearable={clearable}
             placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+CCC' })}
             value={phoneCountryCode}
           />
           <StyledInputMask
             mask='999 999 9999'
             maskChar=' '
-            compact
+            compact='true'
+            disabled={disabled}
             type='text'
             value={phoneNumber}
-            onChange={(data) => this.handleChange('phoneNumber', data.target.value)}
-            placeholder={formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
+            onChange={this.handleChangeInput}
+            placeholder={placeholder || formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
           />
         </span>
         {error && <span className='sui-error-message'>{error}</span>}
@@ -169,7 +214,10 @@ PhoneNumber.propTypes = {
   search: bool,
   errors: object,
   isSubmitting: bool,
-  touched: object
+  touched: object,
+  disabled: bool,
+  clearable: bool,
+  placeholder: string
 }
 
 PhoneNumber.defaultProps = {
@@ -181,5 +229,8 @@ PhoneNumber.defaultProps = {
   label: 'Phone',
   errors: {},
   isSubmitting: false,
-  touched: {}
+  touched: {},
+  disabled: false,
+  clearable: false,
+  placeholder: null
 }

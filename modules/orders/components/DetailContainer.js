@@ -47,7 +47,7 @@ function prepareDetail(data, type) {
         ? moment(data.buyerRejectionDate).format('MMM Do, YYYY h:mm:ss A')
         : null,
     carrier: data.shippingCourierName ? data.shippingCourierName : 'N/A',
-    chemicalName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')).join('; '),
+    chemicalName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
     confirmationDate:
       typeof data.confirmationDate !== 'undefined'
         ? moment(data.confirmationDate).format('MMM Do, YYYY h:mm:ss A')
@@ -75,13 +75,11 @@ function prepareDetail(data, type) {
     orderDate: moment(data.orderDate).format('MMM Do, YYYY h:mm:ss A'),
     orderStatus: OrdersHelper.getOrderStatus(data.orderStatus),
     orderType: type === 'sales' ? 'Sales' : 'Purchase',
-    packaging: orderItems
-      .map(d =>
-        d.packagingSize && d.packagingType && d.packagingUnit
-          ? d.packagingSize + ' ' + d.packagingUnit.name.toLowerCase() + ' ' + d.packagingType.name
-          : 'N/A'
-      )
-      .join('; '),
+    packaging: orderItems.map(d =>
+      d.packagingSize && d.packagingType && d.packagingUnit
+        ? d.packagingSize + ' ' + d.packagingUnit.name.toLowerCase() + ' ' + d.packagingType.name
+        : 'N/A'
+    ),
     paymentInitiationDate:
       typeof data.paymentInitiationDate !== 'undefined'
         ? moment(data.paymentInitiationDate).format('MMM Do, YYYY h:mm:ss A')
@@ -105,17 +103,15 @@ function prepareDetail(data, type) {
       data.sellerCompanyAddressZip +
       ', ' +
       data.sellerCompanyAddressCountry,
-    productCode: orderItems.map(d => (d.intProductCode ? d.intProductCode : 'N/A')).join('; '),
-    productName: orderItems.map(d => (d.intProductName ? d.intProductName : 'N/A')).join('; '),
+    productCode: orderItems.map(d => (d.intProductCode ? d.intProductCode : 'N/A')),
+    productName: orderItems.map(d => (d.intProductName ? d.intProductName : 'N/A')),
     productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
     proNumber: 'N/A', // ! ! TBD
-    quantityOrdered: orderItems
-      .map(d =>
-        d.pkgAmount && d.packagingSize && d.packagingUnit
-          ? `${d.pkgAmount * d.packagingSize} ${d.packagingUnit.nameAbbreviation}`
-          : 'N/A'
-      )
-      .join('; '),
+    quantityOrdered: orderItems.map(d =>
+      d.pkgAmount && d.packagingSize && d.packagingUnit
+        ? `${d.pkgAmount * d.packagingSize} ${d.packagingUnit.nameAbbreviation}`
+        : 'N/A'
+    ),
     refundDate:
       typeof data.refundDate !== 'undefined' ? moment(data.refundDate).format('MMM Do, YYYY h:mm:ss A') : null,
     returnDeliveryDate:
@@ -147,28 +143,31 @@ function prepareDetail(data, type) {
       data.buyerCompanyAddressZip +
       ', ' +
       data.buyerCompanyAddressCountry,
-    subtotal: <FormattedNumber style='currency' currency={currency} value={subtotal} />, //"$" + totalPrice.formatMoney(2),
+    subtotal: subtotal, //"$" + totalPrice.formatMoney(2),
     terms: 'Net 30', // ! ! TBD
     total: <FormattedNumber style='currency' currency={currency} value={totalPriceWithShipping} />, //"$" + totalPriceWithShipping.formatMoney(2),
-    totalPkg: orderItems.map(d => (d.pkgAmount ? d.pkgAmount : 'N/A')).join('; '),
-    unit: orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A')).join('; '),
-    unitCost: (
-      <ArrayToMultiple
-        values={orderItems.map(d =>
-          d.orderItemProductOffers && d.orderItemProductOffers.length && d.orderItemProductOffers[0].costPerUOM ? (
-            <FormattedNumber style='currency' currency={currency} value={d.orderItemProductOffers[0].costPerUOM} />
-          ) : (
-            'N/A'
-          )
-        )}
-      />
-    ),
-    unitPrice: orderItems.map((d, i) => (
-      <span>
-        <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} />
-        {i < orderItems.length - 1 && '; '}
-      </span>
-    )),
+    totalPkg: orderItems.map(d => (d.pkgAmount ? d.pkgAmount : 'N/A')),
+    unit: orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A')),
+    unitCost: orderItems.map(d => {
+      let sum = 0
+      if (d.orderItemProductOffers && d.orderItemProductOffers.length) {
+        //calculate average
+        for (const i in d.orderItemProductOffers) {
+          sum += parseInt(d.orderItemProductOffers[i].costPerUOM, 10)
+        }
+        return sum / d.orderItemProductOffers.length
+      } else {
+        return sum
+      }
+    }),
+    unitPrice: orderItems.map((d, i) => <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} />),
+    itemTotal: orderItems.map(d => {
+      if (d.pkgAmount && d.packagingSize && d.pricePerUOM) {
+        return d.pkgAmount * d.packagingSize * d.pricePerUOM
+      } else {
+        return 'N/A'
+      }
+    }),
     //<FormattedNumber style='currency' currency={currency} value={0} />, //"$" + getSafe(() => data.orderItems[0].price, 0).formatMoney(2),
     // Vendor or Customer
     paymentType: type === 'sales' ? 'Customer' : 'Vendor',
@@ -216,7 +215,7 @@ function mapStateToProps(state, ownProps) {
     openedPurchaseReviewCreditRequest: orders.openedPurchaseReviewCreditRequest,
     openedSaleReturnShipping: orders.openedSaleReturnShipping,
     openedSaleReviewCreditRequest: orders.openedSaleReviewCreditRequest,
-    openedSaleNewShipping: orders.openedSaleNewShipping,
+    openedPurchaseOrderShipping: orders.openedPurchaseOrderShipping,
     action: actionRequired(orders.detail),
     reloadPage: orders.reloadPage
   }

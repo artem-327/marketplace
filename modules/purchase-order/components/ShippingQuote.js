@@ -21,6 +21,17 @@ const RelaxedRow = styled(GridRow)`
   padding-top: 0px !important;
 `
 
+const RelaxedRowPaddingTop = styled(GridRow)`
+  padding-bottom: 0px !important;
+  padding-top: 5px !important;
+`
+
+const EllipsisColumn = styled(GridColumn)`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
 export default class ShippingQuote extends Component {
   state = {
     selectedItem: null
@@ -44,7 +55,7 @@ export default class ShippingQuote extends Component {
               data-test={`purchase_order_shipping_quote_${index}_rad`}
             />
           </GridColumn>
-          <GridColumn computer={4}>{item.carrierName}</GridColumn>
+          <EllipsisColumn computer={4}>{item.carrierName}</EllipsisColumn>
           <GridColumn computer={2}>
             <FormattedNumber style='currency' currency={currency} value={item.estimatedPrice} />
           </GridColumn>
@@ -88,18 +99,14 @@ export default class ShippingQuote extends Component {
 
     if (!shippingQuotes || shippingQuotes.length === 0) {
       return (
-        <GridColumn computer={16}>
-          <Grid>
-            <GridRow>
-              <GridColumn computer={16}>
-                <FormattedMessage
-                  id='cart.noShippingQuotes'
-                  defaultMessage='We are sorry, but not matching Shipping Quotes has been found.'
-                />
-              </GridColumn>
-            </GridRow>
-          </Grid>
-        </GridColumn>
+        <RelaxedRowPaddingTop>
+          <GridColumn computer={16}>
+            <FormattedMessage
+              id='cart.noShippingQuotes'
+              defaultMessage='We are sorry, but no matching Shipping Quotes were provided by logistics company.'
+            />
+          </GridColumn>
+        </RelaxedRowPaddingTop>
       )
     }
 
