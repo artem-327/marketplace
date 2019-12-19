@@ -285,7 +285,6 @@ class SaleReturnShipping extends React.Component {
                                   {...this.props}
                                   name='attachments'
                                   attachments={values.attachments}
-                                  filesLimit={1}
                                   fileMaxSize={20}
                                   onChange={files => {
                                     files.map((file, i) => {
