@@ -33,6 +33,7 @@ export class DatagridProvider extends Component {
     this.state = initialState
 
     Datagrid = this
+    
   }
 
   // componentWillReceiveProps({apiConfig}) {
@@ -71,7 +72,7 @@ export class DatagridProvider extends Component {
     this.setState({ loading: true })
 
     try {
-      const { data } = await api.request({
+      const response = await api.request({
         url: apiConfig.url,
         method: apiConfig.method || 'POST',
         params: query,
@@ -79,6 +80,11 @@ export class DatagridProvider extends Component {
           ...datagridParams
         }
       })
+      
+
+      if (response.config.url !== this.props.apiConfig.url) return
+
+      const { data } = response
       const allLoaded = data.length < datagridParams.pageSize || data.length === 0
 
       this.setState(s => ({
@@ -131,6 +137,7 @@ export class DatagridProvider extends Component {
   }
 
   loadData = (params = {}, query = {}) => {
+    
     this.setState(
       s => ({
         datagridParams: {
