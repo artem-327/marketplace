@@ -57,6 +57,8 @@ export function getPaymentStatus(paymentStatus) {
       return 'Canceled'
     case 5:
       return 'Failed'
+    case 6:
+      return 'Initiated'
     default:
       return 'N/A'
   }
