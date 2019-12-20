@@ -154,9 +154,9 @@ export const acceptDelivery = orderId => ({
   type: AT.ORDER_ACCEPT_DELIVERY_ORDER,
   payload: Api.accept(orderId)
 })
-export const rejectPurchaseOrder = (orderId, reason, reasonText, files) => ({
+export const rejectPurchaseOrder = (orderId, request, files) => ({
   type: AT.REJECT_PURCHASE_ORDER,
-  payload: Api.rejectPurchaseOrder(orderId, reason, reasonText, files)
+  payload: Api.rejectPurchaseOrder(orderId, request, files)
 })
 export const acceptCredit = orderId => ({
   type: AT.ACCEPT_CREDIT,
@@ -165,4 +165,13 @@ export const acceptCredit = orderId => ({
 export const creditCounter = (orderId, request, files) => ({
   type: AT.CREDIT_COUNTER,
   payload: Api.creditCounter(orderId, request, files)
+})
+export const creditCounterReject = orderId => ({
+  type: AT.CREDIT_COUNTER_REJECT,
+  payload: Api.creditCounter(orderId)
+})
+
+export const creditRequestUpdate = (orderId, request, files) => ({
+  type: AT.CREDIT_REQUEST_UPDATE,
+  payload: Api.creditRequestUpdate(orderId, request, files)
 })

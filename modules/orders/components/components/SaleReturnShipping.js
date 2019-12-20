@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
-import {Modal, ModalContent, Button, Grid, Dimmer, Loader} from 'semantic-ui-react'
+import { Modal, ModalContent, Button, Grid, Dimmer, Loader } from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -14,17 +14,13 @@ const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `
 
-const initValues = {
-}
+const initValues = {}
 
-class SaleReviewCreditRequest extends React.Component {
-
+class SaleReturnShipping extends React.Component {
   submitHandler = async (values, actions) => {
     const { closePopup } = this.props
 
     try {
-
-
       closePopup()
     } catch {
     } finally {
@@ -36,7 +32,7 @@ class SaleReviewCreditRequest extends React.Component {
     const {
       intl: { formatMessage },
       orderId,
-      isSending,
+      isSending
     } = this.props
 
     return (
@@ -63,25 +59,21 @@ class SaleReviewCreditRequest extends React.Component {
                       <Grid>
                         <Grid.Row>
                           <Grid.Column width={16}>
-
                             <div>SaleReviewCreditRequest body</div>
-
-
-
                           </Grid.Column>
                         </Grid.Row>
                         <Grid.Row>
                           <Grid.Column width={10}></Grid.Column>
                           <Grid.Column floated='right' width={3}>
                             <Button basic fluid onClick={() => this.props.closePopup()}>
-                              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' >
+                              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span'>
                                 {text => text}
                               </FormattedMessage>
                             </Button>
                           </Grid.Column>
                           <Grid.Column floated='right' width={3}>
                             <Button primary fluid type='submit'>
-                              <FormattedMessage id='global.save' defaultMessage='Save' tagName='span' >
+                              <FormattedMessage id='global.save' defaultMessage='Save' tagName='span'>
                                 {text => text}
                               </FormattedMessage>
                             </Button>
@@ -108,4 +100,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(SaleReviewCreditRequest)))
+export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(SaleReturnShipping)))

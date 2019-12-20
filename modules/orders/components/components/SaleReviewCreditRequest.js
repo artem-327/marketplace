@@ -68,7 +68,7 @@ const reasons = [
     ]
   }
 ]
-class SaleReturnShipping extends React.Component {
+class SaleReviewCreditRequest extends React.Component {
   state = {
     counterValue: null,
     messageBuyer: '',
@@ -123,11 +123,6 @@ class SaleReturnShipping extends React.Component {
     setFieldValue(name, value)
   }
 
-  rejectRequestCredit = async e => {
-    e.preventDefault()
-    //TODO
-  }
-
   acceptRequestCredit = async e => {
     e.preventDefault()
     const { closePopup, orderId, toastManager, acceptCredit } = this.props
@@ -150,8 +145,6 @@ class SaleReturnShipping extends React.Component {
       closePopup()
     } catch (e) {
       console.error(e)
-    } finally {
-      actions.setSubmitting(false)
     }
   }
 
@@ -345,7 +338,7 @@ class SaleReturnShipping extends React.Component {
                         <br /> <br />
                         {!this.state.counter ? (
                           <Grid.Row>
-                            <Grid.Column width={7}></Grid.Column>
+                            <Grid.Column width={10}></Grid.Column>
                             <Grid.Column floated='right' width={3}>
                               <Button
                                 type='button'
@@ -355,13 +348,6 @@ class SaleReturnShipping extends React.Component {
                                   this.setState({ counter: true })
                                 }}>
                                 <FormattedMessage id='global.counter' defaultMessage='Counter' tagName='span'>
-                                  {text => text}
-                                </FormattedMessage>
-                              </Button>
-                            </Grid.Column>
-                            <Grid.Column floated='right' width={3}>
-                              <Button color='red' type='button' fluid onClick={this.rejectRequestCredit}>
-                                <FormattedMessage id='global.reject' defaultMessage='Reject' tagName='span'>
                                   {text => text}
                                 </FormattedMessage>
                               </Button>
@@ -519,5 +505,5 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, { ...Actions, downloadAttachment })(
-  withToastManager(injectIntl(SaleReturnShipping))
+  withToastManager(injectIntl(SaleReviewCreditRequest))
 )
