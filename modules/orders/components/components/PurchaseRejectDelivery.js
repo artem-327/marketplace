@@ -13,7 +13,7 @@ import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `
-
+//temporary
 const reasons = [
   {
     value: 1,

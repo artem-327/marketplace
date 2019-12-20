@@ -71,7 +71,7 @@ class PurchaseRequestCreditDelivery extends React.Component {
     const { closePopup, orderId, toastManager, rejectPurchaseOrder } = this.props
     const { reason, reasonText, attachments, credit } = values
     try {
-      // TODO až bude hotové https://pm.artio.net/issues/32104 můžu předělat podle endpointu
+      // TODO až bude hotové https://pm.artio.net/issues/32271
       await rejectPurchaseOrder(orderId, reason, reasonText, attachments)
       toastManager.add(
         generateToastMarkup(

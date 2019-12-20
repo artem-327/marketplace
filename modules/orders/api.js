@@ -44,19 +44,30 @@ export default {
   accept: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/accept`),
   rejectPurchaseOrder: (orderId, reason, reasonText, files) => {
     const reasonComment = reasonText ? `&reasonComment=${reasonText.trim()}` : ''
-    if (!files || !files.length) {
-      return api.patch(`/prodex/api/purchase-orders/${orderId}/reject?reason=${reason}${reasonComment}`)
-    } else {
-      const formData = new FormData()
-      formData.append('file', files)
+    const formData = new FormData()
+    formData.append('file', files)
 
-      return api.patch(`/prodex/api/purchase-orders/${orderId}/reject?reason=${reason}${reasonComment}`, formData, {
-        headers: {
-          accept: 'application/json',
-          'Accept-Language': 'en-US,en;q=0.8',
-          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
-        }
-      })
-    }
+    return api.patch(`/prodex/api/purchase-orders/${orderId}/reject?reason=${reason}${reasonComment}`, formData, {
+      headers: {
+        accept: 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+      }
+    })
+  },
+  acceptCredit: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/credit-accept`),
+  creditCounter: (orderId, request, files) => {
+    let params = { ...request, type: docType }
+    const formData = new FormData()
+    formData.append('file', files)
+    let queryParams = generateQueryString(params)
+
+    return api.patch(`/prodex/api/sale-orders/${orderId}/credit-counter${queryParams}`, formData, {
+      headers: {
+        accept: 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+      }
+    })
   }
 }

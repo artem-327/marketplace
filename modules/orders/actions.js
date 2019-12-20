@@ -158,3 +158,11 @@ export const rejectPurchaseOrder = (orderId, reason, reasonText, files) => ({
   type: AT.REJECT_PURCHASE_ORDER,
   payload: Api.rejectPurchaseOrder(orderId, reason, reasonText, files)
 })
+export const acceptCredit = orderId => ({
+  type: AT.ACCEPT_CREDIT,
+  payload: Api.acceptCredit(orderId)
+})
+export const creditCounter = (orderId, request, files) => ({
+  type: AT.CREDIT_COUNTER,
+  payload: Api.creditCounter(orderId, request, files)
+})
