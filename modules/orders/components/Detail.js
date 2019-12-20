@@ -618,9 +618,9 @@ class Detail extends Component {
                         <Table.HeaderCell>
                           <FormattedMessage id='order.name' defaultMessage='Name' />
                         </Table.HeaderCell>
-                        <Table.HeaderCell>
+                        {false && (<Table.HeaderCell>
                           <FormattedMessage id='order.code' defaultMessage='Code' />
-                        </Table.HeaderCell>
+                        </Table.HeaderCell>)}
                         <Table.HeaderCell>
                           <FormattedMessage id='order.packaging' defaultMessage='Packaging' />
                         </Table.HeaderCell>
@@ -651,7 +651,7 @@ class Detail extends Component {
                         order.productName.map((element, index) => (
                           <Table.Row>
                             <Table.Cell>{element}</Table.Cell>
-                            <Table.Cell>{order.productCode[index]}</Table.Cell>
+                            {false && (<Table.Cell>{order.productCode[index]}</Table.Cell>)}
                             <Table.Cell>{order.packaging[index]}</Table.Cell>
                             <Table.Cell textAlign='right'>{order.totalPkg[index]}</Table.Cell>
                             <Table.Cell textAlign='right'>{order.quantityOrdered[index]}</Table.Cell>

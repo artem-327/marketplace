@@ -103,8 +103,8 @@ function prepareDetail(data, type) {
       data.sellerCompanyAddressZip +
       ', ' +
       data.sellerCompanyAddressCountry,
-    productCode: orderItems.map(d => (d.intProductCode ? d.intProductCode : 'N/A')),
-    productName: orderItems.map(d => (d.intProductName ? d.intProductName : 'N/A')),
+    productCode: orderItems.map(d => (d.echoProductCode ? d.echoProductCode : 'N/A')),
+    productName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
     productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
     proNumber: 'N/A', // ! ! TBD
     quantityOrdered: orderItems.map(d =>

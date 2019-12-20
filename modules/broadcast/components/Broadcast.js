@@ -687,7 +687,7 @@ class Broadcast extends Component {
           <Grid.Column
             width={asSidebar ? 16 : 10}
             stretched
-            style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : null}>
+            style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : { height: '80vh' }}>
             <Rule.Root>
               <Rule.Header style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
                 <Rule.RowContent>
@@ -722,7 +722,7 @@ class Broadcast extends Component {
                 />
               </Rule.Content>
             </Rule.Root>
-            {!asModal && <RightAlignedDiv>{this.getButtons()}</RightAlignedDiv>}
+            {/* {!asModal && <RightAlignedDiv>{this.getButtons()}</RightAlignedDiv>} */}
           </Grid.Column>
         </Grid.Row>
       </StretchedGrid>
