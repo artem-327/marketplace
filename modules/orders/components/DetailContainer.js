@@ -14,6 +14,20 @@ function actionRequired(data) {
   return getSafe(() => data.orderStatus.toString(), 0) + getSafe(() => data.shippingStatus.toString(), 0)
 }
 
+function getReturnAddress(data) {
+  let returnAddr = ''
+  if (data.returnAddressStreet) {
+    returnAddr = data.returnAddressStreet + ', '
+  }
+  if (data.returnAddressCity) {
+    returnAddr += data.returnAddressCity + ', '
+  }
+  if (data.returnAddressCountry) {
+    returnAddr += data.returnAddressCountry
+  }
+  return returnAddr
+}
+
 function prepareDetail(data, type) {
   if (typeof data.id === 'undefined') return {}
 
@@ -31,9 +45,9 @@ function prepareDetail(data, type) {
     buyerRejectionDate:
       typeof data.buyerRejectionDate !== 'undefined'
         ? moment(data.buyerRejectionDate).format('MMM Do, YYYY h:mm:ss A')
-        : 'N/A',
+        : null,
     carrier: data.shippingCourierName ? data.shippingCourierName : 'N/A',
-    chemicalName: <ArrayToMultiple values={orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))} />,
+    chemicalName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
     confirmationDate:
       typeof data.confirmationDate !== 'undefined'
         ? moment(data.confirmationDate).format('MMM Do, YYYY h:mm:ss A')
@@ -57,18 +71,14 @@ function prepareDetail(data, type) {
       />
     ), // ! ! TBD
     id: data.id,
-    incoterms: 'N/A', // ! ! TBD
+    incoterms: 'FOB', // ! ! TBD
     orderDate: moment(data.orderDate).format('MMM Do, YYYY h:mm:ss A'),
     orderStatus: OrdersHelper.getOrderStatus(data.orderStatus),
     orderType: type === 'sales' ? 'Sales' : 'Purchase',
-    packaging: (
-      <ArrayToMultiple
-        values={orderItems.map(d =>
-          d.packagingSize && d.packagingType && d.packagingUnit
-            ? d.packagingSize + ' ' + d.packagingUnit.name.toLowerCase() + ' ' + d.packagingType.name
-            : 'N/A'
-        )}
-      />
+    packaging: orderItems.map(d =>
+      d.packagingSize && d.packagingType && d.packagingUnit
+        ? d.packagingSize + ' ' + d.packagingUnit.name.toLowerCase() + ' ' + d.packagingType.name
+        : 'N/A'
     ),
     paymentInitiationDate:
       typeof data.paymentInitiationDate !== 'undefined'
@@ -84,6 +94,8 @@ function prepareDetail(data, type) {
         : 'N/A',
     paymentStatus: OrdersHelper.getPaymentStatus(data.paymentStatus),
     pickUpAddress:
+      data.sellerCompanyName +
+      ', ' +
       data.sellerCompanyAddressStreet +
       ', ' +
       data.sellerCompanyAddressCity +
@@ -91,29 +103,33 @@ function prepareDetail(data, type) {
       data.sellerCompanyAddressZip +
       ', ' +
       data.sellerCompanyAddressCountry,
-    productCode: <ArrayToMultiple values={orderItems.map(d => (d.intProductCode ? d.intProductCode : 'N/A'))} />,
-    productName: <ArrayToMultiple values={orderItems.map(d => (d.intProductName ? d.intProductName : 'N/A'))} />,
+    productCode: orderItems.map(d => (d.echoProductCode ? d.echoProductCode : 'N/A')),
+    productName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
     productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
     proNumber: 'N/A', // ! ! TBD
-    quantityOrdered: (
-      <ArrayToMultiple
-        values={orderItems.map(d => (d.pkgAmount && d.packagingSize ? d.pkgAmount * d.packagingSize : 'N/A'))}
-      />
+    quantityOrdered: orderItems.map(d =>
+      d.pkgAmount && d.packagingSize && d.packagingUnit
+        ? `${d.pkgAmount * d.packagingSize} ${d.packagingUnit.nameAbbreviation}`
+        : 'N/A'
     ),
     refundDate:
-      typeof data.refundDate !== 'undefined' ? moment(data.refundDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A',
+      typeof data.refundDate !== 'undefined' ? moment(data.refundDate).format('MMM Do, YYYY h:mm:ss A') : null,
     returnDeliveryDate:
       typeof data.returnDeliveryDate !== 'undefined'
         ? moment(data.returnDeliveryDate).format('MMM Do, YYYY h:mm:ss A')
-        : 'N/A',
+        : null,
     returnShipDate:
-      typeof data.returnShipDate !== 'undefined' ? moment(data.returnShipDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A',
+      typeof data.returnShipDate !== 'undefined' ? moment(data.returnShipDate).format('MMM Do, YYYY h:mm:ss A') : null,
     returnStatus: OrdersHelper.getReturnStatus(data.returnStatus),
+    returnTo: data.sellerCompanyName,
+    returnAddressName: data.returnAddressName,
+    returnAddress: getReturnAddress(data),
+    returnCourierName: data.returnCourierName,
     reviewStatus: OrdersHelper.getReviewStatus(data.reviewStatus),
     sellerRejectionDate:
       typeof data.sellerRejectionDate !== 'undefined'
         ? moment(data.sellerRejectionDate).format('MMM Do, YYYY h:mm:ss A')
-        : 'N/A',
+        : null,
     service: 'N/A', // ! ! TBD
     shipDate: typeof data.shipDate !== 'undefined' ? moment(data.shipDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A',
     shippingContact: data.sellerCompanyContactName ? data.sellerCompanyContactName : 'N/A',
@@ -127,33 +143,31 @@ function prepareDetail(data, type) {
       data.buyerCompanyAddressZip +
       ', ' +
       data.buyerCompanyAddressCountry,
-    subtotal: <FormattedNumber style='currency' currency={currency} value={subtotal} />, //"$" + totalPrice.formatMoney(2),
-    terms: 'N/A', // ! ! TBD
+    subtotal: subtotal, //"$" + totalPrice.formatMoney(2),
+    terms: 'Net 30', // ! ! TBD
     total: <FormattedNumber style='currency' currency={currency} value={totalPriceWithShipping} />, //"$" + totalPriceWithShipping.formatMoney(2),
-    totalPkg: <ArrayToMultiple values={orderItems.map(d => (d.pkgAmount ? d.pkgAmount : 'N/A'))} />,
-    unit: (
-      <ArrayToMultiple values={orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A'))} />
-    ),
-    unitCost: (
-      <ArrayToMultiple
-        values={orderItems.map(d =>
-          d.orderItemProductOffers && d.orderItemProductOffers.length && d.orderItemProductOffers[0].costPerUOM ? (
-            <FormattedNumber style='currency' currency={currency} value={d.orderItemProductOffers[0].costPerUOM} />
-          ) : (
-            'N/A'
-          )
-        )}
-      />
-    ),
-    unitPrice: (
-      <ArrayToMultiple
-        values={orderItems.map(d => (
-          <div>
-            <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} />
-          </div>
-        ))}
-      />
-    ),
+    totalPkg: orderItems.map(d => (d.pkgAmount ? d.pkgAmount : 'N/A')),
+    unit: orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A')),
+    unitCost: orderItems.map(d => {
+      let sum = 0
+      if (d.orderItemProductOffers && d.orderItemProductOffers.length) {
+        //calculate average
+        for (const i in d.orderItemProductOffers) {
+          sum += parseInt(d.orderItemProductOffers[i].costPerUOM, 10)
+        }
+        return sum / d.orderItemProductOffers.length
+      } else {
+        return sum
+      }
+    }),
+    unitPrice: orderItems.map((d, i) => <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} />),
+    itemTotal: orderItems.map(d => {
+      if (d.pkgAmount && d.packagingSize && d.pricePerUOM) {
+        return d.pkgAmount * d.packagingSize * d.pricePerUOM
+      } else {
+        return 'N/A'
+      }
+    }),
     //<FormattedNumber style='currency' currency={currency} value={0} />, //"$" + getSafe(() => data.orderItems[0].price, 0).formatMoney(2),
     // Vendor or Customer
     paymentType: type === 'sales' ? 'Customer' : 'Vendor',
@@ -178,7 +192,7 @@ function prepareDetail(data, type) {
     paymentPhone: type === 'sales' ? data.buyerCompanyContactPhone : data.sellerCompanyContactPhone,
     paymentContact: type === 'sales' ? data.buyerCompanyContactName : data.sellerCompanyContactName,
     shippingTrackingCode: data.shippingTrackingCode ? data.shippingTrackingCode : '',
-    returnShippingTrackingCode: data.returnShippingTrackingCode ? data.returnShippingTrackingCode : '',
+    returnShippingTrackingCode: data.returnShippingTrackingCode ? data.returnShippingTrackingCode : ''
   }
 }
 
@@ -207,4 +221,4 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-export default connect(mapStateToProps, {...Actions})(Detail)
+export default connect(mapStateToProps, { ...Actions })(Detail)

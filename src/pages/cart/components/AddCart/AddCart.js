@@ -5,6 +5,7 @@ import { checkToken } from '../../../../utils/auth'
 import styled from 'styled-components'
 import React, { Component } from 'react'
 import { object, func } from 'prop-types'
+import moment from 'moment/moment'
 import {
   Sidebar,
   Button,
@@ -57,8 +58,17 @@ const ListHeader = styled(List.Header)`
   font-size: 1rem !important;
   padding-bottom: 15px;
 `
+const CustomSpanShowMore = styled.span`
+  font-size: medium;
+  float: right;
+  color: #2599d5;
+  cursor: pointer;
+`
 
 export default class AddCart extends Component {
+  state = {
+    showMore: false
+  }
   componentDidMount() {
     // this.props.getProductOffer(this.props.id, this.props.isEdit)
     // if (this.props.isEdit) this.props.getOrderDetail(this.props.orderId)
@@ -128,8 +138,9 @@ export default class AddCart extends Component {
         let text = (
           <>
             <FormattedUnit unit='' separator=' - ' value={tier.quantityFrom} />
-            <FormattedUnit unit='' value={quantityTo} />
+            <FormattedUnit unit='' separator=' : ' value={quantityTo} />
             <FormattedNumber style='currency' value={tier.pricePerUOM} currency={currencyCode} />
+            {nameAbbreviation && ` / ${nameAbbreviation}`}
           </>
         )
         dropdownOptions.push({
@@ -147,6 +158,7 @@ export default class AddCart extends Component {
         text: (
           <>
             <FormattedNumber minimumFractionDigits={0} value={value} style='currency' currency={currencyCode} />
+            {nameAbbreviation && ` / ${nameAbbreviation}`}
           </>
         )
       })
@@ -190,6 +202,17 @@ export default class AddCart extends Component {
               <GridColumn>
                 <Header>
                   <FormattedMessage id='cart.InfoHeader' defaultMessage='1. Product Information' />
+
+                  <CustomSpanShowMore
+                    positive={this.state.showMore}
+                    onClick={() => {
+                      this.setState(prevState => ({ showMore: !prevState.showMore }))
+                    }}
+                    data-test='cart_show_less_or_more'>
+                    <FormattedMessage id={`global.show${this.state.showMore ? 'Less' : 'More'}`}>
+                      {text => text}
+                    </FormattedMessage>
+                  </CustomSpanShowMore>
                 </Header>
               </GridColumn>
             </GridRow>
@@ -218,26 +241,25 @@ export default class AddCart extends Component {
 
             <GridRow>
               <GridColumn computer={6}>
-                <FormattedMessage id='cart.productCode' defaultMessage='Product Code:' />
+                <FormattedMessage id='cart.availablePkgs' defaultMessage='Available Packages:' />
               </GridColumn>
-              <GridColumn computer={10}>{offer.companyProduct.echoProduct.code}</GridColumn>
+              <GridColumn computer={10}>
+                <FormattedNumber minimumFractionDigits={0} value={pkgAvailable} />
+                {'x '}
+                <FormattedUnit unit={nameAbbreviation} separator={' '} value={packagingSize} />{' '}
+                <UnitOfPackaging value={packagingType.name} />
+              </GridColumn>
             </GridRow>
 
             <GridRow>
               <GridColumn computer={6}>
-                <FormattedMessage id='cart.mixtures' defaultMessage='Mixtures:' />
+                <FormattedMessage id='cart.availableQuantity' defaultMessage='Available Quantity:' />
               </GridColumn>
-              <GridColumn computer={10}>{this.props.casProductsChemNames}</GridColumn>
-            </GridRow>
 
-            {/*<GridRow>
-              <GridColumn computer={6}>
-                Product Code:
+              <GridColumn company={10}>
+                <FormattedUnit unit={nameAbbreviation} separator={' '} value={packagingSize * pkgAvailable} />{' '}
               </GridColumn>
-              <GridColumn computer={10}>
-                {offer.companyProduct.echoProduct.code}
-              </GridColumn>
-            </GridRow>*/}
+            </GridRow>
 
             <GridRow>
               <GridColumn computer={6}>
@@ -245,36 +267,54 @@ export default class AddCart extends Component {
               </GridColumn>
               <GridColumn computer={10}>{offer.locationStr}</GridColumn>
             </GridRow>
-
-            <GridRow>
-              <GridColumn computer={6}>
-                <FormattedMessage id='cart.availableProduct' defaultMessage='Available Product:' />
-              </GridColumn>
-              <GridColumn computer={10}>
-                <FormattedNumber minimumFractionDigits={0} value={pkgAvailable} />{' '}
-                <UnitOfPackaging value={packagingType.name} /> /{' '}
-                <FormattedUnit unit={nameAbbreviation} separator={' '} value={pkgAvailable * packagingSize} />
-              </GridColumn>
-            </GridRow>
-
-            <GridRow>
-              <GridColumn computer={6}>
-                <FormattedMessage id='cart.form' defaultMessage='Form:' />
-              </GridColumn>
-              <GridColumn computer={10}>{offer.form ? offer.form.name : 'N/A'}</GridColumn>
-            </GridRow>
-
-            <GridRow>
-              <GridColumn computer={6}>
-                <FormattedMessage id='cart.packaging' defaultMessage='Packaging:' />
-              </GridColumn>
-
-              <GridColumn company={10}>
-                <FormattedUnit unit={nameAbbreviation} separator={' '} value={packagingSize} />{' '}
-                <UnitOfPackaging value={packagingType.name} />
-              </GridColumn>
-            </GridRow>
-
+            {this.state.showMore && (
+              <>
+                <GridRow>
+                  <GridColumn computer={6}>
+                    <FormattedMessage id='cart.manufacturer' defaultMessage='Manufacturer:' />
+                  </GridColumn>
+                  <GridColumn computer={10}>
+                    {getSafe(() => offer.companyProduct.echoProduct.manufacturer.name, '')}
+                  </GridColumn>
+                </GridRow>
+                <GridRow>
+                  <GridColumn computer={6}>
+                    <FormattedMessage id='cart.contryOrigin' defaultMessage='Country of Origin:' />
+                  </GridColumn>
+                  <GridColumn computer={10}>{getSafe(() => offer.origin.name, '')}</GridColumn>
+                </GridRow>
+                <GridRow>
+                  <GridColumn computer={6}>
+                    <FormattedMessage id='cart.condition' defaultMessage='Condition:' />
+                  </GridColumn>
+                  <GridColumn computer={10}>
+                    {getSafe(() => offer.conforming, '') === true ? 'Conforming' : 'Non Conforming'}
+                  </GridColumn>
+                </GridRow>
+                {offer && offer.conditionNotes && !offer.conforming && (
+                  <GridRow>
+                    <GridColumn computer={6}>
+                      <FormattedMessage id='cart.conditionNotes' defaultMessage='Condition Notes:' />
+                    </GridColumn>
+                    <GridColumn computer={10}>{getSafe(() => offer.conditionNotes, '')}</GridColumn>
+                  </GridRow>
+                )}
+                <GridRow>
+                  <GridColumn computer={6}>
+                    <FormattedMessage id='cart.expirationDate' defaultMessage='Expiration Date:' />
+                  </GridColumn>
+                  <GridColumn computer={10}>
+                    {offer.lotExpirationDate ? moment(offer.lotExpirationDate).format('MM/DD/YYYY') : 'N/A'}
+                  </GridColumn>
+                </GridRow>
+                <GridRow>
+                  <GridColumn computer={6}>
+                    <FormattedMessage id='cart.form' defaultMessage='Form:' />
+                  </GridColumn>
+                  <GridColumn computer={10}>{getSafe(() => offer.form.name, '')}</GridColumn>
+                </GridRow>{' '}
+              </>
+            )}
             {/* <GridRow>
               <GridColumn computer={6}>
                 Attachments:
@@ -295,7 +335,7 @@ export default class AddCart extends Component {
 
             <CustomList selection>
               <ListHeader>
-                <FormattedMessage id='cart.pricingLevel' defaultMessage='Pricing Level:' />
+                <FormattedMessage id='cart.fobPricing' defaultMessage='FOB Pricing:' />
               </ListHeader>
               {dropdownOptions.map(el => (
                 <List.Item active={el.value.price === this.props.sidebar.pricing.price}>
@@ -307,7 +347,7 @@ export default class AddCart extends Component {
               <Popup
                 trigger={
                   <GridColumn>
-                    <FormattedMessage id='cart.minimumQQ' defaultMessage='Minimum Order QQ' />:
+                    <FormattedMessage id='cart.minimumPackges' defaultMessage='Minimum Packages' />:
                   </GridColumn>
                 }
                 content={<FormattedMessage id='cart.minimumOrderQQ' defaultMessage='Minimum Order Quantity' />}
@@ -324,7 +364,7 @@ export default class AddCart extends Component {
 
             <GridRow verticalAlign='middle' columns={2}>
               <GridColumn>
-                <FormattedMessage id='cart.selectQuantity' defaultMessage='Select Quantity:' />
+                <FormattedMessage id='cart.packagesRequested' defaultMessage='Packages Requested:' />
               </GridColumn>
               <GridColumn data-test='add_cart_quantity_inp'>
                 <Input
@@ -357,22 +397,28 @@ export default class AddCart extends Component {
 
             <GridRow>
               <GridColumn computer={6}>
-                <FormattedMessage id='cart.totalQuantity' defaultMessage='Total Quantity:' />
+                <FormattedMessage id='cart.requestedQuantity' defaultMessage='Requested Quantity:' />
               </GridColumn>
               <GridColumn computer={10}>
                 {(pkgAmount && pkgAmount > 0 ? (
                   <>
                     {' '}
-                    <FormattedNumber minimumFractionDigits={0} value={pkgAmount} />{' '}
-                    <UnitOfPackaging value={packagingType.name} />{' '}
+                    <FormattedUnit unit={nameAbbreviation} separator={' '} value={packagingSize * pkgAmount} />{' '}
                   </>
-                ) : null) ||
-                  (isEdit && (
+                ) : (
+                  <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
+                )) ||
+                  (isEdit ? (
                     <>
                       {' '}
-                      <FormattedNumber minimumFractionDigits={0} value={order.pkgAmount} />{' '}
-                      <UnitOfPackaging value={packagingType.name} />{' '}
+                      <FormattedUnit
+                        unit={nameAbbreviation}
+                        separator={' '}
+                        value={packagingSize * order.pkgAmount}
+                      />{' '}
                     </>
+                  ) : (
+                    <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
                   ))}
               </GridColumn>
             </GridRow>
@@ -396,7 +442,11 @@ export default class AddCart extends Component {
                 <FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />:
               </GridColumn>
               <GridColumn computer={10}>
-                {totalPrice ? <FormattedNumber style='currency' currency={currencyCode} value={totalPrice} /> : null}
+                {totalPrice ? (
+                  <FormattedNumber style='currency' currency={currencyCode} value={totalPrice} />
+                ) : (
+                  <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
+                )}
               </GridColumn>
             </GridRow>
           </Grid>
@@ -409,7 +459,10 @@ export default class AddCart extends Component {
                 <Button
                   fluid
                   floated='right'
-                  onClick={() => this.props.sidebarChanged({ isOpen: false })}
+                  onClick={() => {
+                    this.props.sidebarChanged({ isOpen: false })
+                    this.setState({ showMore: false })
+                  }}
                   data-test='add_cart_cancel_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                     {text => text}

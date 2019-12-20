@@ -227,8 +227,12 @@ class LoginForm extends Component {
               }}
             </StyledForm>
 
-            <Message error content={message} hidden={!message} />
-            {router.query.auto && <Message info content={'You have been automatically logged out.'} />}
+            {message ? (
+              <Message error content={message} />
+            ) : (
+              router.query.auto && <Message info content={'You have been automatically logged out.'} />
+            )}
+
             <Grid>
               <GridRow>
                 <GridColumn computer={12}>

@@ -94,6 +94,7 @@ export default {
     return api
       .post(`/prodex/api/imports/company-products/csv-import?temporaryFileId=${id}`, body)
       .then(response => response.data)
+      .catch(error => console.error(error))
   },
   postImportEchoProductCSV: (body, id) => {
     return api

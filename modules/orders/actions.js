@@ -21,11 +21,11 @@ export const rejectOrder = orderId => ({
   type: AT.ORDER_REJECT_FETCH,
   payload: Api.reject(orderId)
 })
-export const shipOrder = (orderId, trackingId='') => ({
+export const shipOrder = (orderId, trackingId = '') => ({
   type: AT.ORDER_SHIP_FETCH,
   payload: Api.ship(orderId, trackingId)
 })
-export const returnShipOrder = (orderId, trackingId='') => ({
+export const returnShipOrder = (orderId, trackingId = '') => ({
   type: AT.ORDER_RETURN_SHIP_FETCH,
   payload: Api.returnShip(orderId, trackingId)
 })
@@ -134,11 +134,11 @@ export const approveOrder = orderId => ({
   type: AT.ORDER_APPROVE_ORDER,
   payload: Api.approveOrder(orderId)
 })
-export const disapproveOrder = orderId => ({
-  type: AT.ORDER_DISAPPROVE_ORDER,
-  payload: Api.disapproveOrder(orderId)
+export const discardOrder = orderId => ({
+  type: AT.ORDER_DISCARD_ORDER,
+  payload: Api.discardOrder(orderId)
 })
-export const openPopupName = (name) => ({
+export const openPopupName = name => ({
   type: AT.ORDER_OPEN_POPUP_NAME,
   payload: name
 })
@@ -153,6 +153,10 @@ export const receivedOrder = orderId => ({
 export const acceptDelivery = orderId => ({
   type: AT.ORDER_ACCEPT_DELIVERY_ORDER,
   payload: Api.accept(orderId)
+})
+export const rejectPurchaseOrder = (orderId, reason, reasonText, files) => ({
+  type: AT.REJECT_PURCHASE_ORDER,
+  payload: Api.rejectPurchaseOrder(orderId, reason, reasonText, files)
 })
 export const getShippingQuotes = (orderId, pickupDate) => ({
   type: AT.ORDER_SHIPPING_QUOTES_FETCH,

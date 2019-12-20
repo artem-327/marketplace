@@ -4,7 +4,7 @@ import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { Grid, GridRow, GridColumn, Header, Divider, Segment, Button } from 'semantic-ui-react'
 
 import './styles.scss'
-import { RelaxedRow, HeaderTextRow, WiderPopup, CustomSpan, CustomHeader } from './styledComponents'
+import { RelaxedRow, HeaderTextRow, WiderModal, CustomSpan, CustomHeader } from './styledComponents'
 import { FormattedUnit, ArrayToMultiple } from '~/components/formatted-messages'
 import { Form, Input, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 
@@ -33,7 +33,8 @@ class CartItemSummary extends Component {
     edittingHazmatInfo: false,
     loadCartRequired: false,
     nmfcNumberInitOptions: [],
-    unNumberInitOptions: []
+    unNumberInitOptions: [],
+    openModal: false
   }
 
   async componentDidMount() {
@@ -76,7 +77,7 @@ class CartItemSummary extends Component {
       }
     })
 
-    this.setState({ nmfcNumberInitOptions: nmfcNumbers, unNumberInitOptions: unNumbers })
+    this.setState({ nmfcNumberInitOptions: nmfcNumbers, unNumberInitOptions: unNumbers, openModal: true })
   }
 
   handleUnNumberChange = debounce((_, { searchQuery }) => {
@@ -179,22 +180,8 @@ class CartItemSummary extends Component {
               <GridRow>
                 <GridColumn computer={12}>
                   <CustomHeader as='h2'>
-                    <FormattedMessage id='cart.hazmatInfo' defaultMessage='Hazmat Information' />
+                    <FormattedMessage id='cart.shippingtInfo' defaultMessage='Shipping Information' />
                   </CustomHeader>
-                </GridColumn>
-
-                <GridColumn computer={4}>
-                  <CustomSpan
-                    positive={this.state.edittingHazmatInfo}
-                    onClick={() => {
-                      if (this.state.edittingHazmatInfo) handleSubmit()
-                      else this.setState({ edittingHazmatInfo: !this.state.edittingHazmatInfo })
-                    }}
-                    data-test='shopping_cart_hazmat'>
-                    <FormattedMessage id={`global.${this.state.edittingHazmatInfo ? 'save' : 'edit'}`}>
-                      {text => text}
-                    </FormattedMessage>
-                  </CustomSpan>
                 </GridColumn>
               </GridRow>
 
@@ -285,12 +272,44 @@ class CartItemSummary extends Component {
               </GridRow>
 
               <GridRow>
-                <GridColumn>
+                <GridColumn width={8}>
                   <Checkbox
                     inputProps={{ disabled, 'data-test': 'shopping_cart_stackable_chckb' }}
                     name='stackable'
                     label={formatMessage({ id: 'cart.stackable', defaultMessage: 'Stackable' })}
                   />
+                </GridColumn>
+                <GridColumn width={4}>
+                  <Button
+                    type='button'
+                    style={{ paddingRight: '17px', paddingLeft: '17px' }}
+                    size={'small'}
+                    secondary
+                    onClick={e => {
+                      this.setState({ edittingHazmatInfo: false, openModal: false })
+                    }}
+                    data-test='shopping_cart_hazmat_cancel'>
+                    <FormattedMessage id='global.close' defaultMessage='Close'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button>
+                </GridColumn>
+                <GridColumn width={4}>
+                  <Button
+                    type='button'
+                    style={{ paddingRight: '17px', paddingLeft: '17px' }}
+                    size={'small'}
+                    primary
+                    positive={this.state.edittingHazmatInfo}
+                    onClick={() => {
+                      if (this.state.edittingHazmatInfo) handleSubmit()
+                      else this.setState(prevState => ({ edittingHazmatInfo: !prevState.edittingHazmatInfo }))
+                    }}
+                    data-test='shopping_cart_hazmat'>
+                    <FormattedMessage id={`global.${this.state.edittingHazmatInfo ? 'save' : 'edit'}`}>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button>
                 </GridColumn>
               </GridRow>
             </Grid>
@@ -304,7 +323,7 @@ class CartItemSummary extends Component {
     let { productOffer } = item
     let { deleteCart } = this.props
     // let currency = this.props.currency
-    
+
     return (
       <>
         <GridColumn computer={16}>
@@ -354,19 +373,17 @@ class CartItemSummary extends Component {
                 <FormattedMessage id='cart.shipingInformation' defaultMessage='Shipping Information' />
               </GridColumn>
               <GridColumn floated='right'>
-                <WiderPopup
+                <WiderModal
+                  open={this.state.openModal}
+                  closeIcon
                   wide
                   onOpen={() => this.onHazmatPopup(item)}
                   onClose={() => {
                     if (this.state.loadCartRequired) this.props.getCart()
-                    this.setState({ edittingHazmatInfo: false, loadCartRequired: false })
+                    this.setState({ edittingHazmatInfo: false, loadCartRequired: false, openModal: false })
                   }}
-                  position='left center'
-                  on='click'
                   trigger={
-                    <span
-                      className='headerAddtext'
-                      data-test={`shopping_cart_viewEdit_${item.id}_btn`}>
+                    <span className='headerAddtext' data-test={`shopping_cart_viewEdit_${item.id}_btn`}>
                       <FormattedMessage id='global.viewEdit' defaultMessage='View/Edit'>
                         {text => text}
                       </FormattedMessage>

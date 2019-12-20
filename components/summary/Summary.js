@@ -48,6 +48,7 @@ export default class Summary extends Component {
                 </GridColumn>
               </RelaxedRow>
 
+              {/*
               <RelaxedRow columns={2}>
                 <GridColumn>
                   <FormattedMessage id='cart.estimatedShipping' defaultMessage='Estimated Shipping' />
@@ -57,6 +58,7 @@ export default class Summary extends Component {
                   {shipping > 0 && <FormattedNumber style='currency' currency={currency} value={shipping} />}
                 </GridColumn>
               </RelaxedRow>
+              */}
 
               <RelaxedRow columns={2}>
                 <GridColumn>
