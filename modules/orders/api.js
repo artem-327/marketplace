@@ -58,11 +58,16 @@ export default {
         }
       })
     }
-  }
+  },
   getShippingQuotes: (orderId, pickupDate) => api.get(`/prodex/api/shipment/order/${orderId}/shipment-rates`
     + (pickupDate ? `?pickupDate=${pickupDate}` : '')), // ! ! TODO: date not working?
   getManualShippingQuote: (orderId, countryId, zip) => api.get(`/prodex/api/shipment/order/${orderId}/manual-quote?`
     + `destinationCountryId=${countryId}&destinationZIP=${zip}`
   ),  //! ! TODO: endpoint seems not working
-  purchaseShipmentOrder: (orderId, body) => api.patch(`/api/shipment/order/${orderId}/shipment-order`, body),  //! ! TODO: when after endpoint is created
+  purchaseShipmentOrder: (orderId, body) => api.patch(`/api/shipment/order/${orderId}/shipment-order`
+    + `?deliveryRemarks=${body.deliveryRemarks}`
+    + `&pickupRemarks=${body.pickupRemarks}`
+    + `&quoteId=${body.shipmentQuoteId}`
+    + `&shipperRefNo=${body.shipperRefNo}`
+  ),  //! ! TODO: when after endpoint is created
 }
