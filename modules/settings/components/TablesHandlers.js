@@ -5,14 +5,17 @@ import { Header, Menu, Button, Checkbox, Input, Dropdown, Grid, GridRow, GridCol
 import { debounce } from 'lodash'
 import Router from 'next/router'
 import styled from 'styled-components'
+import TreeModel from 'tree-model'
+import { withToastManager } from 'react-toast-notifications'
 
 import * as Actions from '../actions'
-import { openGlobalBroadcast } from '~/modules/broadcast/actions'
+import { openGlobalBroadcast, saveRules, initGlobalBroadcast } from '~/modules/broadcast/actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
 import { currency } from '~/constants/index'
 import { SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP_FULFILLED } from '../action-types'
+import { generateToastMarkup } from '~/utils/functions'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -75,7 +78,8 @@ class TablesHandlers extends Component {
   }
 
   async componentDidMount() {
-    const { documentTypes, getDocumentTypes } = this.props
+    const { documentTypes, getDocumentTypes, initGlobalBroadcast } = this.props
+    await initGlobalBroadcast()
     if (!documentTypes || documentTypes.length === 0) await getDocumentTypes()
     this.setState({
       options: [
@@ -129,6 +133,17 @@ class TablesHandlers extends Component {
     </GridColumn>
   )
 
+  saveRulesBroadcast = async (model, toastManager) => {
+    try {
+      await this.props.saveRules(null, model)
+      toastManager.add(generateToastMarkup('Saved successfully!', 'New broadcast rules have been saved.'), {
+        appearance: 'success'
+      })
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   renderHandler = () => {
     const {
       currentTab,
@@ -141,6 +156,8 @@ class TablesHandlers extends Component {
       dwollaAccBalance,
       // openGlobalBroadcast,
       bankAccounts,
+      treeData,
+      toastManager,
       intl: { formatMessage }
     } = this.props
 
@@ -238,6 +255,19 @@ class TablesHandlers extends Component {
             )}
           </>
         )}
+        {currentTab.type === 'global-broadcast' && (
+          <GridColumn floated='right' widescreen={2} computer={2} tablet={3}>
+            <Button
+              fluid
+              primary
+              onClick={() => this.saveRulesBroadcast(treeData.model, toastManager)}
+              data-test='settings_open_import_popup_btn'>
+              <FormattedMessage id='global.save' defaultMessage='Save'>
+                {text => text}
+              </FormattedMessage>
+            </Button>
+          </GridColumn>
+        )}
       </>
     )
   }
@@ -259,6 +289,12 @@ class TablesHandlers extends Component {
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
   const dwollaAccountStatus = (company && company.dwollaAccountStatus) || 'none'
+  const {
+    broadcast: { data, filter, ...rest }
+  } = state
+  const treeData = data
+    ? new TreeModel({ childrenPropertyName: 'elements' }).parse(data)
+    : new TreeModel().parse({ model: { rule: {} } })
   //const dwollaAccountStatus = 'document'
 
   return {
@@ -271,8 +307,17 @@ const mapStateToProps = state => {
     filterValue: state.settings.filterValue,
     dwollaAccBalance: state.settings.dwollaAccBalance
       ? state.settings.dwollaAccBalance.balance
-      : { value: '', currency }
+      : { value: '', currency },
+    treeData,
+    filter,
+    ...rest
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions, openGlobalBroadcast })(injectIntl(TablesHandlers)))
+export default withDatagrid(
+  withToastManager(
+    connect(mapStateToProps, { ...Actions, openGlobalBroadcast, saveRules, initGlobalBroadcast })(
+      injectIntl(TablesHandlers)
+    )
+  )
+)
