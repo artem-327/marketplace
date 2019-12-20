@@ -44,10 +44,17 @@ export default {
   accept: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/accept`),
   returnShipmentRates: (orderId, pickupDate) =>
     api.get(`/prodex/api/shipment/order/${orderId}/return-shipment-rates?pickupDate=${pickupDate}`),
-  returnShipmentOrder: (orderId, deliveryRemarks, pickupRemarks, quoteId, shipperRefNo) =>
+  returnShipmentOrder: (orderId, body) =>
     api.patch(
-      `/prodex/api/shipment/order/${orderId}/return-shipment-order?deliveryRemarks=${deliveryRemarks}&pickupRemarks=${pickupRemarks}&quoteId=${quoteId}&shipperRefNo=${shipperRefNo}`
+      `/prodex/api/shipment/order/${orderId}/return-shipment-order
+      ?deliveryRemarks=${body.deliveryRemarks}
+      &pickupRemarks=${body.pickupRemarks}
+      &quoteId=${body.shipmentQuoteId}
+      &shipperRefNo=${body.shipperRefNo}`
     ),
+  getShippingQuotes: (orderId, pickupDate) =>
+    api.get(`/prodex/api/shipment/order/${orderId}/shipment-rates` + (pickupDate ? `?pickupDate=${pickupDate}` : '')), // ! ! TODO: date not working?
+
   getManualShippingQuote: (orderId, pickupDate) =>
     api.get(`/prodex/api/shipment/${orderId}/manual-quote?pickupDate${pickupDate}`), //! ! TODO: when after endpoint is created
   rejectPurchaseOrder: (orderId, reason, reasonText, files) => {
