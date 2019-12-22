@@ -35,8 +35,8 @@ class PurchaseOrderShipping extends React.Component {
   componentDidMount() {
     if (!this.props.order.cfWeightExceeded) {
       let pickupDate = moment().add(1, 'minutes').format()
-      //this.props.getShippingQuotes(this.props.orderId, pickupDate)  // ! ! Not working properly yet
-      this.props.getShippingQuotes(this.props.orderId, null)
+      //this.props.getShippingQuotes(this.props.orderId, { pickupDate })  // ! ! Not working properly yet
+      this.props.getShippingQuotes(this.props.orderId, '')
     }
   }
 
@@ -45,7 +45,7 @@ class PurchaseOrderShipping extends React.Component {
 
     try {
       let formValues = {
-        shipmentQuoteId: (order.cfWeightExceeded || !shippingQuotes.length
+        quoteId: (order.cfWeightExceeded || !shippingQuotes.length
           ? values.shipmentQuoteId
           : shippingQuotes[this.state.selectedShippingQuote].quoteId
         ).trim(),
@@ -72,7 +72,7 @@ class PurchaseOrderShipping extends React.Component {
   onDateChange = async (event, {name, value}) => {
     if (!this.props.order.cfWeightExceeded) {
       try {
-        await this.props.getShippingQuotes(this.props.order.id, value + 'T00:00:00.00000Z')
+        await this.props.getShippingQuotes(this.props.order.id, { pickupDate: value + 'T00:00:00.00000Z' })
       } catch {
       } finally {}
     }
@@ -81,8 +81,10 @@ class PurchaseOrderShipping extends React.Component {
   requestManualShippingQuote = async () => {
     const { order } = this.props
 
-    try {                                    //orderId, countryId, zip
-      await this.props.getManualShippingQuote(order.id, 1, order.shippingAddressZip)
+    try {
+      await this.props.getManualShippingQuote(order.id, {
+        destinationCountryId: 1, destinationZIP: order.shippingAddressZip
+      })
     } catch {
     } finally {}
   }

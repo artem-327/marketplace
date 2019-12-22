@@ -158,15 +158,15 @@ export const rejectPurchaseOrder = (orderId, reason, reasonText, files) => ({
   type: AT.REJECT_PURCHASE_ORDER,
   payload: Api.rejectPurchaseOrder(orderId, reason, reasonText, files)
 })
-export const getShippingQuotes = (orderId, pickupDate) => ({
+export const getShippingQuotes = (orderId, query) => ({
   type: AT.ORDER_SHIPPING_QUOTES_FETCH,
-  payload: Api.getShippingQuotes(orderId, pickupDate)
+  payload: Api.getShippingQuotes(orderId, query)
 })
-export const getManualShippingQuote = (orderId, countryId, zip) => ({
+export const getManualShippingQuote = (orderId, query) => ({
   type: AT.ORDER_MANUAL_SHIPPING_QUOTE,
-  payload: Api.getManualShippingQuote(orderId, countryId, zip)
+  payload: Api.getManualShippingQuote(orderId, query)
 })
-export const purchaseShipmentOrder = (orderId, body) => ({
+export const purchaseShipmentOrder = (orderId, query) => ({
   type: AT.ORDER_PURCHASE_SHIPMENT_ORDER,
-  payload: Api.purchaseShipmentOrder(orderId, body)
+  payload: Api.purchaseShipmentOrder(orderId, query)
 })
