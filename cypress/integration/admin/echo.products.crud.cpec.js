@@ -133,8 +133,9 @@ context("Echo Product CRUD", () => {
     it("Checks error messages", () => {
         cy.clickAdd()
 
+        cy.get("#code").click()
         cy.get("#name").click()
-        cy.contains("Product Name").click()
+        
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
         cy.get(".error")

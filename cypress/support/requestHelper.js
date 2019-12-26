@@ -186,6 +186,34 @@ Cypress.Commands.add("getMarketPlaceDatagridBody", (token) => {
     })
 })
 
+Cypress.Commands.add("getMarketPlaceFilteredDatagridBody", (token, filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/product-offers/broadcasted/datagrid/',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: filter, pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body
+    })
+})
+
+Cypress.Commands.add("getInventoryDatagridBody", (token) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/product-offers/own/datagrid/',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: [], pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body
+    })
+})
+
 Cypress.Commands.add("getExpectedCartPrice", (token) => {
     cy.request({
         method: 'POST',

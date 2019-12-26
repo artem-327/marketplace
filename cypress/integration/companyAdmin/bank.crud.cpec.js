@@ -79,7 +79,7 @@ context("Prodex Bank Account CRUD", () => {
         cy.get(".error")
             .should("have.length",4)
             .find(".sui-error-message").each((element) => {
-            expect(element.text()).to.match(/(Required)|(Must be an number)/i)
+            expect(element.text()).to.match(/(Required)|(Must be a number)/i)
         })
     })
 

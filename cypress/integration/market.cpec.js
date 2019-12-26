@@ -17,6 +17,8 @@ context("Market place tests",() => {
     })
 
     it("Filter marketplace", () =>{
+        let searchedValue = null
+
         cy.server()
         cy.route("GET","/prodex/api/echo-products/search/all-alternatives?**").as("search")
 
@@ -24,27 +26,30 @@ context("Market place tests",() => {
 
         cy.waitForUI()
 
-        cy.get("div[name=search]")
-            .children("input")
-            .type("ABEX",{force: true} )
-
-        cy.wait("@search")
-
-        cy.get(".layout__AccordionItem-sc-1doi5p4-5").within(() => {
-            cy.contains("ABEX 18 S").click()
-        })
-
-        cy.contains("Apply").click()
-
-        let filter = [{"operator":"EQUALS","path":"ProductOffer.companyProduct.echoProduct.id","values":[15]}]
-
         cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
-            cy.getFirstMarketIdWithFilter(token,filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]")
+            cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
+                searchedValue = marketPlaceBody[0].pkgAvailable
+
+                cy.get("div[name=search]")
+                    .children("input")
+                    .type(marketPlaceBody[0].companyProduct.intProductName,{force: true} )
             })
         })
 
-        cy.get("#field_input_quantityTo").type("10")
+        cy.wait("@search")
+        cy.waitForUI()
+
+        cy.get(".visible > .item").eq(0).click()
+
+        cy.contains("Apply").click()
+
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
+                cy.get("[data-test=action_" + marketPlaceBody[0].id + "]")
+            })
+        })
+
+        cy.get("#field_input_quantityTo").type((parseInt(searchedValue) + 5))
         cy.contains("Apply").click()
 
         cy.get(".submenu-filter").click()
