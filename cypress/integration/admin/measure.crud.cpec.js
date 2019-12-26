@@ -33,6 +33,8 @@ context("Units of measure CRUD", () => {
         cy.get("#field_dropdown_val2").click()
         cy.get("#2").click()
 
+        cy.enterText("#field_input_val3", "0.5")
+
         cy.clickSave()
 
         cy.contains("Unit of Measurement created")
@@ -62,9 +64,9 @@ context("Units of measure CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length", 3)
+            .should("have.length", 4)
             .find(".sui-error-message").each((element) => {
-            expect(element.text()).to.match(/(Required)/i)
+            expect(element.text()).to.match(/(Required)|(Field should have at least 1 characters)/i)
         })
     })
 
