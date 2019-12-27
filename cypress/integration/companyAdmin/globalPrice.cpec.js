@@ -1,5 +1,4 @@
 context("Prodex Global Price", () => {
-    let branchId = null
 
     beforeEach(function () {
         cy.server()
@@ -28,7 +27,7 @@ context("Prodex Global Price", () => {
             .eq(0)
             .should("have.class", "ui fitted toggle checkbox")
             .click()
-        cy.get("[data-test='broadcast_modal_save_btn']").click()
+        cy.get("[data-test='settings_open_import_popup_btn']").click()
 
         cy.wait("@rulesSaving")
         cy.contains("Saved successfully!")
@@ -52,7 +51,7 @@ context("Prodex Global Price", () => {
             .eq(0)
             .should("have.class", "ui checked fitted toggle checkbox")
             .click()
-        cy.get("[data-test='broadcast_modal_save_btn']").click()
+        cy.get("[data-test='settings_open_import_popup_btn']").click()
 
         cy.wait("@rulesSaving")
         cy.contains("Saved successfully!")
@@ -84,7 +83,7 @@ context("Prodex Global Price", () => {
             .should("have.class", "ui fitted toggle checkbox")
             .click()
 
-        cy.get("[data-test='broadcast_modal_save_btn']").click()
+        cy.get("[data-test='settings_open_import_popup_btn']").click()
 
         cy.wait("@rulesSaving")
         cy.contains("Saved successfully!")
@@ -116,7 +115,7 @@ context("Prodex Global Price", () => {
             .eq(0)
             .should("have.class", "ui fitted toggle checkbox")
             .click()
-        cy.get("[data-test='broadcast_modal_save_btn']").click()
+        cy.get("[data-test='settings_open_import_popup_btn']").click()
 
         cy.wait("@rulesSaving")
         cy.contains("Saved successfully!")

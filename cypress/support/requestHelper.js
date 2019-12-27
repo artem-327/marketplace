@@ -1,15 +1,3 @@
-Cypress.Commands.add("deleteBroadcastRule", (token, ruleId) => {
-    cy.request({
-        method: 'DELETE',
-        url: '/prodex/api/broadcast-rules/' + ruleId,
-        headers: {
-            authorization: "Bearer " + token
-        }
-    }).then((response) => {
-        expect(response.status).to.eq(200)
-    })
-})
-
 Cypress.Commands.add("deleteWholeCart", (token) => {
     cy.request({
         method: 'DELETE',
@@ -19,23 +7,6 @@ Cypress.Commands.add("deleteWholeCart", (token) => {
         }
     }).then((response) => {
         expect(response.status).to.eq(200)
-    })
-})
-
-Cypress.Commands.add("getBroadcastRuleId", (token, offerId) => {
-    cy.request({
-        method: 'GET',
-        url: '/prodex/api/broadcast-rules/productOffer/' + offerId,
-        headers: {
-            authorization: "Bearer " + token
-        }
-    }).then((response) => {
-        expect(response.status).to.eq(200)
-        if (response.body[0] === undefined) {
-            return -1
-        } else {
-            return response.body[0].id
-        }
     })
 })
 
@@ -517,13 +488,15 @@ Cypress.Commands.add("turnOnGlobalBroadcasting", (token) => {
 })
 
 Cypress.Commands.add("turnOffGlobalBroadcasting", (token) => {
+    let bodys = cy.returnTurnOffJson()
+
     cy.request({
         method: 'POST',
         url: '/prodex/api/broadcast-rules/general',
         headers: {
             authorization: "Bearer " + token
         },
-        body: {anonymous: 0, broadcast: 0, priceAddition: 5, priceMultiplier: 0, priceOverride: 0, type: "root"}
+        body: bodys
     }).then((response) => {
         expect(response.status).to.eq(200)
     })
@@ -539,5 +512,30 @@ Cypress.Commands.add("getDeliveryAddresses", (token) => {
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body
+    })
+})
+
+Cypress.Commands.add("setOfferBroadcasting", (token, id, state) => {
+    cy.request({
+        method: 'PATCH',
+        url: '/prodex/api/product-offers/' + id +'/broadcast?broadcasted='+ state,
+        headers: {
+            authorization: "Bearer " + token
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+    })
+})
+
+Cypress.Commands.add("setOfferPriceBook", (token, id, broadcastBody) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/broadcast-rules/' + id,
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: broadcastBody
+    }).then((response) => {
+        expect(response.status).to.eq(200)
     })
 })

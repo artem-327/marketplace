@@ -1,16 +1,36 @@
 context("Inventory Broadcasting", () => {
+    let offerId = null
+
+    before(function () {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.getInventoryDatagridBody(token).then(inventoryBody => {
+                //TODO Found out why some assigning doesn't work
+                let idHelper = inventoryBody[0].id
+
+                offerId = idHelper
+            })
+        })
+    })
+
 
     beforeEach(function () {
+        cy.viewport(1620, 2000)
+
         cy.server()
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.route("PATCH", '/prodex/api/product-offers/*/broadcast?broadcasted=***').as('broadcast')
+        cy.route("POST", '/prodex/api/broadcast-rules/*').as('rulesSaving')
 
-        cy.login("user1@example.com", "echopass123")
+        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
-        cy.wait('@inventoryLoading')
+        cy.wait("@inventoryLoading", {timeout: 100000})
+        cy.url().should("include", "inventory")
     })
 
     it('Start/stop item broadcasting', () => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.setOfferBroadcasting(token,offerId,"false")
+        })
         cy.get(".table-responsive").scrollTo("right")
         cy.waitForUI()
 
@@ -25,40 +45,119 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test=my_inventory_broadcast_chckb]").eq(0).should("not.have.class", "checked")
     })
 
-    it('Set custom broadcasting', () => {
-        cy.getToken().then(token => {
-            cy.getFirstItemId(token).then(itemId => {
-                cy.getBroadcastRuleId(token, itemId).then(ruleId => {
-                    if(ruleId != -1) {
-                        cy.deleteBroadcastRule(token, ruleId)
-                    }
-
-                    cy.get('[data-test=action_' + itemId + ']').click()
-                    cy.get('[data-test=action_' + itemId + '_1]').click()
-
-                    cy.get('div[type=region]').eq(0).within(() => {
-                        cy.get("input[type=checkbox]").click({force: true})
-                        cy.get("input[type=number]").type("5",{force: true})
-                    })
-
-                    cy.get("div[class=actions]").within(($region) => {
-                        cy.contains("Save").click()
-                    })
-
-                    cy.contains("Saved successfully!")
-
-                    cy.get('[data-test=action_' + itemId + ']').click()
-                    cy.get('[data-test=action_' + itemId + '_1]').click()
-
-                    cy.waitForUI()
-
-                    cy.get('div[type=region]').eq(0).within(($region) => {
-                        cy.get(".ui.fitted.toggle.checkbox").should("have.class", "checked")
-                        cy.get("input[type=number]").should("have.value", "5")
-                    })
-                })
+    it('Turn on custom broadcasting', () => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.returnTurnOffJson().then(jsonBody => {
+                cy.setOfferPriceBook(token,offerId,jsonBody)
             })
-
         })
+
+        cy.openElement(offerId,2)
+
+        cy.get("[data-test=broadcast_rule_row_click]").should("be.visible")
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(0)
+            .should("have.class", "ui fitted toggle checkbox")
+            .click()
+        cy.get("[data-test='sidebar_inventory_save_new']").click()
+
+        cy.wait("@rulesSaving")
+        cy.contains("Saved successfully!")
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(0)
+            .should("have.class", "ui checked fitted toggle checkbox")
+    })
+
+    it("Turns off the broadcasting", () => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.returnTurnOnJson().then(jsonBody => {
+                cy.setOfferPriceBook(token,offerId,jsonBody)
+            })
+        })
+
+        cy.openElement(offerId,2)
+
+        cy.get("[data-test=broadcast_rule_row_click]").should("be.visible")
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(0)
+            .should("have.class", "ui checked fitted toggle checkbox")
+            .click()
+        cy.get("[data-test='sidebar_inventory_save_new']").click()
+
+        cy.wait("@rulesSaving")
+        cy.contains("Saved successfully!")
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(0)
+            .should("have.class", "ui fitted toggle checkbox")
+    })
+
+    it("Turns on the broadcasting for Albreta and USA only", () => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.returnTurnOffJson().then(jsonBody => {
+                cy.setOfferPriceBook(token,offerId,jsonBody)
+            })
+        })
+
+        cy.openElement(offerId,2)
+
+        cy.get("[data-test=broadcast_rule_row_click]").should("be.visible")
+
+        cy.contains("Canada").click()
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(1)
+            .should("have.class", "ui fitted toggle checkbox")
+            .click()
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(3)
+            .should("have.class", "ui fitted toggle checkbox")
+            .click()
+
+        cy.get("[data-test='sidebar_inventory_save_new']").click()
+
+        cy.wait("@rulesSaving")
+        cy.contains("Saved successfully!")
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(1)
+            .should("have.class", "ui checked fitted toggle checkbox")
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(2)
+            .should("have.class", "ui indeterminate fitted toggle checkbox")
+
+    })
+
+    it("Switch to company broadcasting", () => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.returnTurnOffJson().then(jsonBody => {
+                cy.setOfferPriceBook(token,offerId,jsonBody)
+            })
+        })
+
+        cy.openElement(offerId,2)
+
+        cy.get("[data-test=broadcast_rule_row_click]").should("be.visible")
+
+        cy.get("[data-test=broadcast_modal_category_drpdn]").click()
+        cy.contains("By Company").click()
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(0)
+            .should("have.class", "ui fitted toggle checkbox")
+            .click()
+        cy.get("[data-test='sidebar_inventory_save_new']").click()
+
+        cy.wait("@rulesSaving")
+        cy.contains("Saved successfully!")
+
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(0)
+            .should("have.class", "ui checked fitted toggle checkbox")
     })
 })

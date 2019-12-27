@@ -219,12 +219,26 @@ context("Inventory CRUD", () => {
         cy.get(".submenu-filter").click()
         cy.contains("No records found.")
     })
-/*
-    it("Set price triers", () => {
 
+    it("Set price triers", () => {
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
+                cy.get("[data-test=action_" + itemId + "]").click()
+                cy.get("[data-test=action_" + itemId + "_3]").click()
+            })
+        })
+
+        cy.get("[data-test='new_inventory_price_tiers_drpdn']").click()
+        cy.get("[data-test='new_inventory_price_tiers_drpdn']").within(() => {
+            cy.contains("2").click()
+        })
+
+        cy.setNumberInput("[id='field_input_priceTiers.pricingTiers[1].quantityFrom']", 10)
+        cy.setNumberInput("[id='field_input_priceTiers.pricingTiers[1].price']", 30)
+
+        cy.get("[data-test='sidebar_inventory_save_new']").click()
+
+        cy.contains("Success")
     })
 
-    it("Set price book", () => {
-
-    })*/
 })
