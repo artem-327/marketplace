@@ -18,5 +18,6 @@ import './commands'
 import './inventoryHelper'
 import './formHelper'
 import './requestHelper'
+import './jsonHelper'
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
