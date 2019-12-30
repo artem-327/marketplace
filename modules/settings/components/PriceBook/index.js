@@ -8,7 +8,11 @@ class PriceBook extends Component {
   state = { loading: true }
 
   async componentDidMount() {
-    await this.props.initGlobalBroadcast()
+    try {
+      await this.props.initGlobalBroadcast()
+    } catch (err) {
+      console.error(err.response)
+    }
     this.setState({ loading: false })
   }
   render() {
