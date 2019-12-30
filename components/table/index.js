@@ -518,23 +518,24 @@ class _Table extends Component {
   compareMaxWidths = (dataWidths, stateWidths) => {
     const result = []
 
-    dataWidths.forEach(dataWidth =>
-      stateWidths.forEach(stateWidth => {
-        if (dataWidth.columnName === stateWidth.columnName) {
-          if (stateWidth.maxWidth && dataWidth.width > stateWidth.maxWidth) {
-            result.push({ ...stateWidth, width: stateWidth.maxWidth })
-          } else if (!stateWidth.maxWidth && dataWidth.width > 400) {
-            result.push({ ...stateWidth, width: 400 })
-          } else if (!stateWidth.maxWidth && dataWidth.width < 400) {
-            result.push({ ...stateWidth, width: dataWidth.width })
-          } else if (stateWidth.maxWidth && dataWidth.width < stateWidth.maxWidth) {
-            result.push({ ...stateWidth, width: dataWidth.width })
-          } else {
-            result.push({ ...stateWidth })
+    dataWidths &&
+      dataWidths.forEach(dataWidth =>
+        stateWidths.forEach(stateWidth => {
+          if (dataWidth.columnName === stateWidth.columnName) {
+            if (stateWidth.maxWidth && dataWidth.width > stateWidth.maxWidth) {
+              result.push({ ...stateWidth, width: stateWidth.maxWidth })
+            } else if (!stateWidth.maxWidth && dataWidth.width > 400) {
+              result.push({ ...stateWidth, width: 400 })
+            } else if (!stateWidth.maxWidth && dataWidth.width < 400) {
+              result.push({ ...stateWidth, width: dataWidth.width })
+            } else if (stateWidth.maxWidth && dataWidth.width < stateWidth.maxWidth) {
+              result.push({ ...stateWidth, width: dataWidth.width })
+            } else {
+              result.push({ ...stateWidth })
+            }
           }
-        }
-      })
-    )
+        })
+      )
     return result
   }
 
