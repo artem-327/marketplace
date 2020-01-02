@@ -258,6 +258,20 @@ export default function(state = initialState, action) {
     case AT.ORDER_REJECT_FETCH_FULFILLED:
     case AT.ORDER_CANCEL_ORDER_FULFILLED:
     case AT.ORDER_APPROVE_ORDER_FULFILLED:
+      return {
+        ...state,
+        detail: action.payload.data
+      }
+    case AT.RETURN_SHIPMENT_RATES_FULFILLED:
+      return {
+        ...state,
+        returnShipmentRates: action.payload.data
+      }
+    case AT.RETURN_SHIPMENT_ORDER_FULFILLED:
+      return {
+        ...state,
+        returnShipmentOrder: action.payload.data
+      }
     case AT.ORDER_CONFIRM_RETURNED_FETCH_FULFILLED:
     case AT.ORDER_ACCEPT_DELIVERY_ORDER_FULFILLED:
     case AT.ORDER_RECEIVED_ORDER_FULFILLED:

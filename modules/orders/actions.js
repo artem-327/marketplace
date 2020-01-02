@@ -154,13 +154,24 @@ export const acceptDelivery = orderId => ({
   type: AT.ORDER_ACCEPT_DELIVERY_ORDER,
   payload: Api.accept(orderId)
 })
+
+export const returnShipmentRates = (orderId, pickupDate) => ({
+  type: AT.RETURN_SHIPMENT_RATES,
+  payload: Api.returnShipmentRates(orderId, pickupDate)
+})
+
+export const returnShipmentOrder = (orderId, query) => ({
+  type: AT.RETURN_SHIPMENT_ORDER,
+  payload: Api.returnShipmentOrder(orderId, query)
+})
+
 export const rejectPurchaseOrder = (orderId, reason, reasonText, files) => ({
   type: AT.REJECT_PURCHASE_ORDER,
   payload: Api.rejectPurchaseOrder(orderId, reason, reasonText, files)
 })
-export const getShippingQuotes = (orderId, query) => ({
+export const getShippingQuotes = (orderId, pickupDate) => ({
   type: AT.ORDER_SHIPPING_QUOTES_FETCH,
-  payload: Api.getShippingQuotes(orderId, query)
+  payload: Api.getShippingQuotes(orderId, pickupDate)
 })
 export const getManualShippingQuote = (orderId, query) => ({
   type: AT.ORDER_MANUAL_SHIPPING_QUOTE,

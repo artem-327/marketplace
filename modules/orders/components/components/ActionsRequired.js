@@ -360,13 +360,13 @@ class ActionsRequired extends React.Component {
               : null}
             {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
               ? this.renderSegment(null, 14, null, 'order.shipFailed.description', [
-                {
-                  buttonType: 'primary',
-                  onClick: () => openPopupName('openedPurchaseOrderShipping'),
-                  dataTest: 'orders_detail_orderShipping_btn',
-                  text: 'order.orderShipping'
-                }
-              ])
+                  {
+                    buttonType: 'primary',
+                    onClick: () => openPopupName('openedPurchaseOrderShipping'),
+                    dataTest: 'orders_detail_orderShipping_btn',
+                    text: 'order.orderShipping'
+                  }
+                ])
               : null}
             {orderStatus === 2 && shippingStatus === 2 // Confirmed && In transit
               ? this.renderSegment(null, 13, null, 'order.transit.description', [
