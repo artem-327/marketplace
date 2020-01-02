@@ -413,7 +413,8 @@ class _Table extends Component {
     return columns.map(c => ({
       columnName: c.name,
       width: c.width || 1280 / columns.length,
-      align: c.align ? c.align : 'left'
+      align: c.align ? c.align : 'left',
+      maxWidth: c.maxWidth ? c.maxWidth : null
     }))
   }
 
@@ -514,14 +515,41 @@ class _Table extends Component {
       })
   }
 
+  compareMaxWidths = (dataWidths, stateWidths) => {
+    const result = []
+
+    dataWidths &&
+      dataWidths.forEach(dataWidth =>
+        stateWidths.forEach(stateWidth => {
+          if (dataWidth.columnName === stateWidth.columnName) {
+            if (stateWidth.maxWidth && dataWidth.width > stateWidth.maxWidth) {
+              result.push({ ...stateWidth, width: stateWidth.maxWidth })
+            } else if (!stateWidth.maxWidth && dataWidth.width > 400) {
+              result.push({ ...stateWidth, width: 400 })
+            } else if (!stateWidth.maxWidth && dataWidth.width < 400) {
+              result.push({ ...stateWidth, width: dataWidth.width })
+            } else if (stateWidth.maxWidth && dataWidth.width < stateWidth.maxWidth) {
+              result.push({ ...stateWidth, width: dataWidth.width })
+            } else {
+              result.push({ ...stateWidth })
+            }
+          }
+        })
+      )
+    return result
+  }
+
   handleColumnsSettings = data => {
     const { tableName } = this.props
+    const newData = data
+      ? { ...data, widths: this.compareMaxWidths(data.widths, this.state.columnsSettings.widths) }
+      : {}
 
     this.setState(
       state => ({
         columnsSettings: {
           ...state.columnsSettings,
-          ...data
+          ...newData
         }
       }),
       () => {

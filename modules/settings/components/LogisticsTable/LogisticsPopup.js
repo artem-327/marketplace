@@ -20,12 +20,34 @@ import {
   updateLogisticsAccount
 } from '~/modules/settings/actions'
 
-const validationSchema = Yup.object().shape({
-  provider: Yup.string(requiredMessage).required(requiredMessage),
-  apiKey: Yup.string(requiredMessage).required(requiredMessage),
-  username: Yup.string(requiredMessage).required(requiredMessage),
-  password: Yup.string(requiredMessage).required(requiredMessage)
-})
+const validationSchema = Yup.object().shape(
+  {
+    provider: Yup.string(requiredMessage).required(requiredMessage),
+    apiKey: Yup.string().when(['username', 'password'], {
+      is: (username, password) => username || password,
+      then: Yup.string().notRequired(),
+      otherwise: Yup.string(requiredMessage).required(requiredMessage)
+    }),
+    username: Yup.string().when('apiKey', {
+      is: apiKey => !apiKey,
+      then: Yup.string(requiredMessage).required(requiredMessage),
+      otherwise: Yup.string().notRequired()
+    }),
+    password: Yup.string().when('apiKey', {
+      is: apiKey => !apiKey,
+      then: Yup.string(requiredMessage).required(requiredMessage),
+      otherwise: Yup.string().notRequired(),
+    })
+    // apiKey: Yup.string(requiredMessage).required(requiredMessage),
+    // username: Yup.string(requiredMessage).required(requiredMessage),
+    // password: Yup.string(requiredMessage).required(requiredMessage)
+  },
+  [
+    ['username', 'apiKey'],
+    // ['username', 'password'],
+    ['password', 'apiKey']
+  ]
+)
 
 const initialValues = {
   provider: '',

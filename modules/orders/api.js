@@ -1,4 +1,5 @@
 import api from '~/api'
+import { generateQueryString } from '~/utils/functions'
 
 export default {
   getAll: (endpointType, filter = {}) =>
@@ -73,5 +74,11 @@ export default {
         }
       })
     }
-  }
+  },
+  getShippingQuotes: (orderId, query) => // ! ! TODO: 500 Internal Server Error, date not working?
+    api.get(`/prodex/api/shipment/order/${orderId}/shipment-rates${generateQueryString(query)}`),
+  getManualShippingQuote: (orderId, query) => //! ! TODO: 500 Internal Server Error
+    api.post(`/prodex/api/shipment/order/${orderId}/manual-quote${generateQueryString(query)}`),
+  purchaseShipmentOrder: (orderId, query) => // ! ! TODO: 501 Not Implemented
+    api.patch(`/api/shipment/order/${orderId}/shipment-order${generateQueryString(query)}`),
 }

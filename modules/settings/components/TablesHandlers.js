@@ -79,8 +79,18 @@ class TablesHandlers extends Component {
 
   async componentDidMount() {
     const { documentTypes, getDocumentTypes, initGlobalBroadcast } = this.props
-    await initGlobalBroadcast()
-    if (!documentTypes || documentTypes.length === 0) await getDocumentTypes()
+    try {
+      await initGlobalBroadcast()
+    } catch (err) {
+      console.error(err.response)
+    }
+    if (!documentTypes || documentTypes.length === 0) {
+      try {
+        await getDocumentTypes()
+      } catch (err) {
+        console.error(err.response)
+      }
+    }
     this.setState({
       options: [
         {

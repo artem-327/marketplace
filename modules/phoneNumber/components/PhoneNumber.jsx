@@ -113,6 +113,8 @@ export default class PhoneNumber extends Component {
       || get(this.props.errors, this.props.name, '') !== get(nextProps.errors, nextProps.name, '')
       || get(this.props.touched, this.props.name, '') !== get(nextProps.touched, nextProps.name, '')
       || this.props.phoneCountryCodes.length !== nextProps.phoneCountryCodes.length
+      || this.props.disabled !== nextProps.disabled
+      || this.props.isSubmitting !== nextProps.isSubmitting
     )
   }
 
