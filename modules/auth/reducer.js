@@ -299,9 +299,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         identity: {
           ...state.identity,
-          tosAgreementDate: moment()
-            .utc()
-            .format()
+          tosAgreementDate: moment().format()
         }
       }
     }

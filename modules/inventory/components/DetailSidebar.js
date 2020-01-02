@@ -263,7 +263,11 @@ const validationScheme = val.object().shape({
       is: true,
       then: val
         .string()
-        .test('min-date', errorMessages.mustBeInFuture, val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1)
+        .test(
+          'min-date',
+          errorMessages.mustBeInFuture,
+          val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
+        )
     })
   }),
   priceTiers: val.object().shape({
@@ -741,12 +745,14 @@ class DetailSidebar extends Component {
         internalNotes: getSafe(() => sidebarValues.internalNotes, ''),
         leadTime: getSafe(() => sidebarValues.leadTime, 1),
         lotNumber: getSafe(() => sidebarValues.lotNumber, ''),
-        lotExpirationDate: sidebarValues.lotExpirationDate
-          ? moment(sidebarValues.lotExpirationDate).format(getLocaleDateFormat())
-          : '',
-        lotManufacturedDate: sidebarValues.lotManufacturedDate
-          ? moment(sidebarValues.lotManufacturedDate).format(getLocaleDateFormat())
-          : '',
+        lotExpirationDate:
+          sidebarValues && sidebarValues.lotExpirationDate
+            ? moment(sidebarValues.lotExpirationDate).format(getLocaleDateFormat())
+            : '',
+        lotManufacturedDate:
+          sidebarValues && sidebarValues.lotManufacturedDate
+            ? moment(sidebarValues.lotManufacturedDate).format(getLocaleDateFormat())
+            : '',
         minimum: getSafe(() => sidebarValues.minPkg, 1),
         origin: getSafe(() => sidebarValues.origin.id, null),
         pkgAvailable: getSafe(() => sidebarValues.pkgAvailable, ''),
@@ -756,9 +762,10 @@ class DetailSidebar extends Component {
         productGrades: getSafe(() => sidebarValues.grades.map(grade => grade.id), []),
         splits: getSafe(() => sidebarValues.splitPkg, 1),
         doesExpire: getSafe(() => sidebarValues.validityDate.length > 0, false),
-        expirationDate: sidebarValues.validityDate
-          ? moment(sidebarValues.validityDate).format(getLocaleDateFormat())
-          : '',
+        expirationDate:
+          sidebarValues && sidebarValues.validityDate
+            ? moment(sidebarValues.validityDate).format(getLocaleDateFormat())
+            : '',
         warehouse: getSafe(() => sidebarValues.warehouse.id, null)
       },
       priceTiers: {

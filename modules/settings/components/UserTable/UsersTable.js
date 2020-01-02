@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
-import { FormattedDateTime, FormattedPhone } from '~/components/formatted-messages/'
+import moment from 'moment'
 
+import { FormattedDateTime, FormattedPhone } from '~/components/formatted-messages/'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 // import { TablePopUp } from '~/components/tablePopup'
@@ -158,12 +159,12 @@ class UsersTable extends Component {
           rowActions={[
             {
               text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openPopup(row),
+              callback: row => openPopup(row)
               // hidden: row => currentUserId === row.id
             },
             {
               text: formatMessage({ id: 'settings.editRoles', defaultMessage: 'Edit Roles' }),
-              callback: row => openRolesPopup(row),
+              callback: row => openRolesPopup(row)
               // hidden: row => currentUserId === row.id
             },
             {
@@ -240,32 +241,30 @@ const userEnableDisableStatus = (r, currentUserId) => {
   )
 }
 
-const displayUserRoles = (roles) => {
+const displayUserRoles = roles => {
   const rolesList = (
     <List>
-      {roles.map((rol) => (
+      {roles.map(rol => (
         <List.Item key={rol.id}>
-          <List.Content>
-            {rol.name}
-          </List.Content>
+          <List.Content>{rol.name}</List.Content>
         </List.Item>
       ))}
     </List>
   )
 
-  return (
-    roles.map((rol) => (
-      <Popup
-        wide='very'
-        data-test='array_to_multiple_list'
-        content={rolesList}
-        key={rol.id}
-        trigger={
-          <Label size='small' key={rol.id}>{rol.name}</Label>
-        }
-      />
-    ))
-  )
+  return roles.map(rol => (
+    <Popup
+      wide='very'
+      data-test='array_to_multiple_list'
+      content={rolesList}
+      key={rol.id}
+      trigger={
+        <Label size='small' key={rol.id}>
+          {rol.name}
+        </Label>
+      }
+    />
+  ))
 }
 
 const mapStateToProps = (state, { datagrid }) => {
@@ -288,7 +287,11 @@ const mapStateToProps = (state, { datagrid }) => {
       allUserRoles: user.roles || [],
       userRoles: displayUserRoles(user.roles),
       switchEnable: userEnableDisableStatus(user, currentUserId),
-      lastLoginAt: user.lastLoginAt ? <FormattedDateTime dateTime={user.lastLoginAt} /> : ''
+      lastLoginAt: user.lastLoginAt
+        ? moment(user.lastLoginAt)
+            .toDate()
+            .toLocaleString()
+        : ''
     })),
     currentUserId,
     addedItem: state.settings.addedItem,

@@ -1,18 +1,19 @@
+import React from 'react'
+import { FormattedNumber } from 'react-intl'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { withRouter } from 'next/router'
+import moment from 'moment/moment'
+
 import Orders from './Orders'
 import * as OrdersHelper from '~/src/helpers/Orders'
 import * as Actions from '../actions'
-import { formatMoney } from '~/src/utils/functions'
-import moment from 'moment/moment'
 import { withDatagrid } from '~/modules/datagrid'
-import { withRouter } from 'next/router'
 import { applyFilter } from '~/modules/filter/actions'
 import { ArrayToMultiple } from '~/components/formatted-messages'
-import React from 'react'
-import { FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
 import { downloadAttachmentPdf } from '~/modules/inventory/actions'
+import { getLocaleDateFormat } from '~/components/date-format'
 
 function mapStateToProps(state, { router, datagrid }) {
   const { orders } = state
@@ -32,7 +33,7 @@ function mapStateToProps(state, { router, datagrid }) {
     rows: datagrid.rows.map(r => ({
       id: r.id,
       globalStatus: r.cfGlobalStatus,
-      date: moment(r.orderDate).format('MM/DD/YYYY'),
+      date: r.orderDate && moment(r.orderDate).format(getLocaleDateFormat()),
       customerName: type === 'sales' ? r.buyerCompanyName : r.sellerCompanyName,
       productName: <ArrayToMultiple values={r.orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))} />,
       orderStatus: OrdersHelper.getOrderStatus(r.orderStatus),
