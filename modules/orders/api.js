@@ -50,12 +50,12 @@ export default {
   rejectPurchaseOrder: (orderId, reason, reasonText, files) => {
     const reasonComment = reasonText ? `&reasonComment=${reasonText.trim()}` : ''
     if (!files || !files.length) {
-      return api.patch(`/prodex/api/purchase-orders/${orderId}/reject?reason=${reason}${reasonComment}`)
+      return api.post(`/prodex/api/purchase-orders/${orderId}/reject?reason=${reason}${reasonComment}`)
     } else {
       const formData = new FormData()
       formData.append('file', files)
 
-      return api.patch(`/prodex/api/purchase-orders/${orderId}/reject?reason=${reason}${reasonComment}`, formData, {
+      return api.post(`/prodex/api/purchase-orders/${orderId}/reject?reason=${reason}${reasonComment}`, formData, {
         headers: {
           accept: 'application/json',
           'Accept-Language': 'en-US,en;q=0.8',
