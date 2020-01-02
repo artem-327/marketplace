@@ -29,7 +29,9 @@ const initialState = {
   relatedOrders: [],
   returnShipmentRates: [],
   returnShipmentOrder: {},
-  loadRelatedOrders: false
+  loadRelatedOrders: false,
+  shippingQuotesAreFetching: false,
+  shippingQuotes: [],
 }
 
 export default function(state = initialState, action) {
@@ -92,11 +94,14 @@ export default function(state = initialState, action) {
 
     case AT.ORDER_CONFIRM_FETCH_REJECTED:
     case AT.ORDER_REJECT_FETCH_REJECTED:
+    case AT.ORDER_PURCHASE_SHIPMENT_ORDER_REJECTED:
     case AT.ORDER_RETURN_SHIP_FETCH_REJECTED:
     case AT.ORDER_SHIP_FETCH_REJECTED:
       return {
         ...state,
-        isSending: false
+        isSending: false,
+        //reloadPage: true,//! ! TODO ?
+        //detail: action.payload.data,//?
       }
     case AT.ORDER_DOWNLOAD_PDF_FULFILLED:
       return {
@@ -246,6 +251,7 @@ export default function(state = initialState, action) {
         relatedOrders: action.payload.data
       }
 
+    case AT.ORDER_PURCHASE_SHIPMENT_ORDER_FULFILLED:
     case AT.ORDER_RETURN_SHIP_FETCH_FULFILLED:
     case AT.ORDER_SHIP_FETCH_FULFILLED:
     case AT.ORDER_CONFIRM_FETCH_FULFILLED:
@@ -262,6 +268,28 @@ export default function(state = initialState, action) {
         detail: action.payload.data,
         isSending: false
       }
+    case AT.ORDER_SHIPPING_QUOTES_FETCH_PENDING: {
+      return {
+        ...state,
+        shippingQuotesAreFetching: true,
+      }
+    }
+    case AT.ORDER_SHIPPING_QUOTES_FETCH_FULFILLED: {
+      return {
+        ...state,
+        shippingQuotes: action.payload,
+        shippingQuotesAreFetching: false
+      }
+    }
+    case AT.ORDER_SHIPPING_QUOTES_FETCH_REJECTED: {
+      return {
+        ...state,
+        shippingQuotesAreFetching: false,
+        shippingQuotes: []
+      }
+    }
+
+
     default:
       return state
   }
