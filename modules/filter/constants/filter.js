@@ -26,6 +26,7 @@ export const filterPresets = {
 export const paths = {
   productOffers: {
     productId: 'ProductOffer.companyProduct.id',
+    marketplaceProductId: 'ProductOffer.companyProduct.echoProduct.id',
     quantity: 'ProductOffer.quantity',
     price: 'ProductOffer.cfPricePerUOM',
     packagingTypes: 'ProductOffer.companyProduct.packagingType.id',
@@ -166,7 +167,7 @@ export const datagridValues = {
         }
 
         case filterTypes.MARKETPLACE: {
-          var path = paths.productOffers.productId
+          var path = paths.productOffers.marketplaceProductId
           break
         }
 
