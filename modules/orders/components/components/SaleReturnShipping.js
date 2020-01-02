@@ -53,9 +53,9 @@ class SaleReviewCreditRequest extends React.Component {
     if (!this.props.order.cfWeightExceeded) {
       let pickupDate = moment()
         .add(1, 'minutes')
-        .format()
-      //this.props.getShippingQuotes(this.props.orderId, pickupDate)  // ! ! Not working properly yet
-      this.props.getShippingQuotes(this.props.orderId, null)
+        .toISOString()
+      this.props.getShippingQuotes(this.props.orderId, pickupDate) // ! ! Not working properly yet
+      //this.props.getShippingQuotes(this.props.orderId, null)
     }
   }
 
@@ -63,7 +63,7 @@ class SaleReviewCreditRequest extends React.Component {
     const { closePopup, order, orderId, toastManager, shippingQuotes } = this.props
 
     let formValues = {
-      shipmentQuoteId: (order.cfWeightExceeded || !shippingQuotes.length
+      quoteId: (order.cfWeightExceeded || !shippingQuotes.length
         ? values.shipmentQuoteId
         : shippingQuotes[this.state.selectedShippingQuote].quoteId
       ).trim(),
@@ -72,11 +72,8 @@ class SaleReviewCreditRequest extends React.Component {
       shipperRefNo: values.shipperRefNo.trim()
     }
 
-    console.log('formValues====================================')
-    console.log(formValues)
-    console.log('====================================')
-    return
     try {
+      //Does not work yet, because does not work endpoint manual-quote and shipment-rates
       await this.props.returnShipmentOrder(orderId, formValues)
       toastManager.add(
         generateToastMarkup(
@@ -96,13 +93,11 @@ class SaleReviewCreditRequest extends React.Component {
   }
 
   onDateChange = async (event, { name, value }) => {
-    console.log('value====================================')
-    console.log(value)
-    console.log('====================================')
+    const pickupDate = moment(value)
     if (!this.props.order.cfWeightExceeded) {
       try {
         // ! ! TODO: date not working in getShippingQuotes?
-        await this.props.getShippingQuotes(this.props.order.id, value + 'T00:00:00.00000Z')
+        await this.props.getShippingQuotes(this.props.order.id, pickupDate.toISOString())
       } catch {
       } finally {
       }
@@ -114,7 +109,10 @@ class SaleReviewCreditRequest extends React.Component {
 
     try {
       //orderId, countryId, zip
-      await this.props.getManualShippingQuote(order.id, 1, order.shippingAddressZip)
+      await this.props.getManualShippingQuote(order.id, {
+        destinationCountryId: 1,
+        destinationZIP: order.shippingAddressZip
+      })
     } catch {
     } finally {
     }

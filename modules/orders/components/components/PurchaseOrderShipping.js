@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
-import {Modal, ModalContent, Button, Grid, Dimmer, Loader, GridColumn, GridRow} from 'semantic-ui-react'
+import { Modal, ModalContent, Button, Grid, Dimmer, Loader, GridColumn, GridRow } from 'semantic-ui-react'
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -24,17 +24,22 @@ class PurchaseOrderShipping extends React.Component {
     shipmentQuoteId: ''
   }
 
-  validationSchema = (manualShipmentQuoteId) => Yup.lazy(values =>
-    Yup.object().shape({
-      shipmentQuoteId: manualShipmentQuoteId
-        ? Yup.string().trim().required(errorMessages.requiredMessage)
-        : Yup.string().notRequired()
-    })
-  )
+  validationSchema = manualShipmentQuoteId =>
+    Yup.lazy(values =>
+      Yup.object().shape({
+        shipmentQuoteId: manualShipmentQuoteId
+          ? Yup.string()
+              .trim()
+              .required(errorMessages.requiredMessage)
+          : Yup.string().notRequired()
+      })
+    )
 
   componentDidMount() {
     if (!this.props.order.cfWeightExceeded) {
-      let pickupDate = moment().add(1, 'minutes').format()
+      let pickupDate = moment()
+        .add(1, 'minutes')
+        .toISOString()
       //this.props.getShippingQuotes(this.props.orderId, { pickupDate })  // ! ! Not working properly yet
       this.props.getShippingQuotes(this.props.orderId, '')
     }
@@ -60,7 +65,8 @@ class PurchaseOrderShipping extends React.Component {
         generateToastMarkup(
           <FormattedMessage id='order.success' defaultMessage='Success' />,
           <FormattedMessage id='order.shippingOrdered' defaultMessage='Order Shipping was successfully ordered.' />
-        ), { appearance: 'success' }
+        ),
+        { appearance: 'success' }
       )
       closePopup()
     } catch {
@@ -69,12 +75,14 @@ class PurchaseOrderShipping extends React.Component {
     }
   }
 
-  onDateChange = async (event, {name, value}) => {
+  onDateChange = async (event, { name, value }) => {
+    const pickupDate = moment(value)
     if (!this.props.order.cfWeightExceeded) {
       try {
-        await this.props.getShippingQuotes(this.props.order.id, { pickupDate: value + 'T00:00:00.00000Z' })
+        await this.props.getShippingQuotes(this.props.order.id, pickupDate.toISOString())
       } catch {
-      } finally {}
+      } finally {
+      }
     }
   }
 
@@ -83,10 +91,12 @@ class PurchaseOrderShipping extends React.Component {
 
     try {
       await this.props.getManualShippingQuote(order.id, {
-        destinationCountryId: 1, destinationZIP: order.shippingAddressZip
+        destinationCountryId: 1,
+        destinationZIP: order.shippingAddressZip
       })
     } catch {
-    } finally {}
+    } finally {
+    }
   }
 
   getInitialFormValues = () => {
@@ -97,13 +107,12 @@ class PurchaseOrderShipping extends React.Component {
       shipmentQuoteId: '',
       pickupRemarks: '',
       deliveryRemarks: '',
-      shipperRefNo: '',
+      shipperRefNo: ''
     }
 
     if (initialValues.pickupDate && moment(initialValues.pickupDate).isAfter(moment()))
       initialValues.pickupDate = moment(initialValues.pickupDate).format('YYYY-MM-DD')
-    else
-      initialValues.pickupDate = moment().format('YYYY-MM-DD')
+    else initialValues.pickupDate = moment().format('YYYY-MM-DD')
 
     return initialValues
   }
@@ -139,7 +148,7 @@ class PurchaseOrderShipping extends React.Component {
                 onSubmit={this.submitHandler}
                 className='flex stretched'
                 style={{ padding: '0' }}>
-                { formikProps => {
+                {formikProps => {
                   let { touched, validateForm, resetForm, values } = formikProps
                   return (
                     <>
@@ -188,7 +197,10 @@ class PurchaseOrderShipping extends React.Component {
                             <Grid.Row>
                               <Grid.Column width={8}>
                                 <Button type='button' fluid onClick={() => this.requestManualShippingQuote()}>
-                                  <FormattedMessage id='cart.requestShippingQuote' defaultMessage='Request Shipping Quote' tagName='span'>
+                                  <FormattedMessage
+                                    id='cart.requestShippingQuote'
+                                    defaultMessage='Request Shipping Quote'
+                                    tagName='span'>
                                     {text => text}
                                   </FormattedMessage>
                                 </Button>
@@ -220,7 +232,7 @@ class PurchaseOrderShipping extends React.Component {
                               <ShippingQuote
                                 currency={currency}
                                 selectedShippingQuote={{ index: this.state.selectedShippingQuote }}
-                                handleQuoteSelect={(index) => this.setState({ selectedShippingQuote: index})}
+                                handleQuoteSelect={index => this.setState({ selectedShippingQuote: index })}
                                 selectedAddress={1}
                                 shippingQuotes={shippingQuotes}
                                 shippingQuotesAreFetching={shippingQuotesAreFetching}
@@ -292,7 +304,7 @@ function mapStateToProps(state) {
     orderId: detail.id,
     isSending: orders.isSending,
     shippingQuotesAreFetching: orders.shippingQuotesAreFetching,
-    shippingQuotes: orders.shippingQuotes,
+    shippingQuotes: orders.shippingQuotes
     /*
     shippingQuotes: [ // ! ! temporary
       {
@@ -317,7 +329,6 @@ function mapStateToProps(state) {
       }
     ]
     */
-
   }
 }
 

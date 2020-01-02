@@ -307,7 +307,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 2 && returnStatus === 0 // CONFIRMED && Rejected && null TODO změnit na reviewStatus === 3
+            {orderStatus === 2 && reviewStatus === 3 && returnStatus === 0 // CONFIRMED && Rejected && null
               ? this.renderSegment(null, 14, null, 'order.returnShipmentSale.description', [
                   {
                     // FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
@@ -360,13 +360,13 @@ class ActionsRequired extends React.Component {
               : null}
             {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
               ? this.renderSegment(null, 14, null, 'order.shipFailed.description', [
-                {
-                  buttonType: 'primary',
-                  onClick: () => openPopupName('openedPurchaseOrderShipping'),
-                  dataTest: 'orders_detail_orderShipping_btn',
-                  text: 'order.orderShipping'
-                }
-              ])
+                  {
+                    buttonType: 'primary',
+                    onClick: () => openPopupName('openedPurchaseOrderShipping'),
+                    dataTest: 'orders_detail_orderShipping_btn',
+                    text: 'order.orderShipping'
+                  }
+                ])
               : null}
             {orderStatus === 2 && shippingStatus === 2 // Confirmed && In transit
               ? this.renderSegment(null, 13, null, 'order.transit.description', [
