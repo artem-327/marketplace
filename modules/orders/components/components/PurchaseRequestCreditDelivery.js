@@ -9,6 +9,7 @@ import { withToastManager } from 'react-toast-notifications'
 
 import { generateToastMarkup } from '~/utils/functions'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import { getSafe } from '~/utils/functions'
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
@@ -68,15 +69,19 @@ class PurchaseRequestCreditDelivery extends React.Component {
   }
 
   submitHandler = async (values, actions) => {
-    const { closePopup, orderId, toastManager, rejectPurchaseOrder } = this.props
+    const { closePopup, orderId, toastManager, creditRequest } = this.props
     const { reason, reasonText, attachments, credit } = values
+    const request = {
+      amount: credit,
+      message: reason > 0 && reason < 7 ? `${getSafe(() => reasons[reason - 1].label.defaultMessage, '')}.` : reasonText
+    }
+
     try {
-      // TODO až bude hotové https://pm.artio.net/issues/32271
-      await rejectPurchaseOrder(orderId, reason, reasonText, attachments)
+      await creditRequest(orderId, request, attachments)
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id='order.success' defaultMessage='Success' />,
-          <FormattedMessage id='order.rejected' defaultMessage='Order was successfully rejected' />
+          <FormattedMessage id='order.requestCreditSend' defaultMessage='Request credit was successfully send' />
         ),
         {
           appearance: 'success'
@@ -164,22 +169,14 @@ class PurchaseRequestCreditDelivery extends React.Component {
                                 {...this.props}
                                 name='attachments'
                                 attachments={values.attachments}
-                                filesLimit={1}
                                 fileMaxSize={20}
                                 onChange={files => {
-                                  setFieldValue(
-                                    `attachments[${
-                                      values.attachments && values.attachments.length ? values.attachments.length : 0
-                                    }]`,
-                                    {
-                                      id: files[0].lastModified,
-                                      name: files[0].name,
-                                      documentType: files[0].type
-                                    }
-                                  )
+                                  files.map((file, i) => {
+                                    setFieldValue(`attachments[${i}]`, file)
+                                  })
                                   this.setState({ changedForm: true })
                                 }}
-                                data-test='settings_product_import_attachments'
+                                data-test='detail_request_credit_attachments'
                                 emptyContent={
                                   <label>
                                     <FormattedMessage
@@ -248,8 +245,7 @@ class PurchaseRequestCreditDelivery extends React.Component {
                               }
                               primary
                               fluid
-                              type='submit'
-                              onClick={submitForm}>
+                              type='submit'>
                               <FormattedMessage id='global.confirm' defaultMessage='Confirm' tagName='span'>
                                 {text => text}
                               </FormattedMessage>

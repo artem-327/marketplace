@@ -1788,9 +1788,10 @@
   "order.success": "Success",
   "order.rejected": "Order was successfully rejected",
   "order.reject.enterReasonHere": "Enter reason here:",
-  "order.messageningHistory": "Messaging History",
+  "order.messageningHistory": "Messaging History:",
   "order.messageBuyer": "Message to Buyer",
   "order.acceptedCredit": "Credit was accepted",
   "order.successfullySent": "Successfully sent",
-  "order.creditCounterReject": "Credit counter was rejected"
+  "order.creditCounterReject": "Credit counter was rejected",
+  "order.requestCreditSend": "Request credit was successfully send"
 }

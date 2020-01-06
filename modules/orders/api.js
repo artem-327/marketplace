@@ -15,11 +15,13 @@ export default {
   update: (orderId, model) => api.put(`/prodex/api/orders/${orderId}`, model),
   confirm: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/confirm`),
   confirmReturned: (orderId, fundingSourceId) =>
-    api.patch(`/prodex/api/sale-orders/${orderId}/return-shipment/delivered?fundingSourceId=${fundingSourceId}`),
+    api.patch(
+      `/prodex/api/sale-orders/${orderId}/return-shipment/return-shipment-delivered?fundingSourceId=${fundingSourceId}`
+    ),
   reject: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/reject`),
   ship: (orderId, trackingId) => api.patch(`/prodex/api/sale-orders/${orderId}/ship?trackingId=${trackingId}`),
   returnShip: (orderId, trackingId) =>
-    api.patch(`/prodex/api/purchase-orders/${orderId}/return-shipment?trackingId=${trackingId}`),
+    api.patch(`/prodex/api/purchase-orders/${orderId}/return-shipment-shipped?trackingId=${trackingId}`),
   downloadPdf: (endpointType, orderId) =>
     api.get(`/prodex/api/${endpointType}-orders/${orderId}/download-pdf`, {
       responseType: 'blob'
@@ -57,14 +59,14 @@ export default {
       }
     })
   },
-  acceptCredit: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/credit-accept`),
+  creditCounterAccept: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/credit-counter-accept`),
   creditCounter: (orderId, request, files) => {
-    let params = { ...request, type: docType }
+    let params = { ...request }
     const formData = new FormData()
     formData.append('file', files)
     let queryParams = generateQueryString(params)
 
-    return api.patch(`/prodex/api/sale-orders/${orderId}/credit-counter${queryParams}`, formData, {
+    return api.post(`/prodex/api/sale-orders/${orderId}/credit-counter${queryParams}`, formData, {
       headers: {
         accept: 'application/json',
         'Accept-Language': 'en-US,en;q=0.8',
@@ -74,13 +76,13 @@ export default {
   },
   creditCounterReject: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/credit-counter-reject`),
   //TODO není hotový na BE
-  creditRequestUpdate: (orderId, request, files) => {
-    let params = { ...request, type: docType }
+  creditRequest: (orderId, request, files) => {
+    let params = { ...request }
     const formData = new FormData()
     formData.append('file', files)
     let queryParams = generateQueryString(params)
 
-    return api.patch(`/prodex/api/purchase-orders/${orderId}/credit-request-update${queryParams}`, formData, {
+    return api.post(`/prodex/api/purchase-orders/${orderId}/credit-request${queryParams}`, formData, {
       headers: {
         accept: 'application/json',
         'Accept-Language': 'en-US,en;q=0.8',
@@ -92,7 +94,6 @@ export default {
     api.get(`/prodex/api/shipment/order/${orderId}/return-shipment-rates?pickupDate=${pickupDate}`),
   returnShipmentOrder: (orderId, query) =>
     api.patch(`/prodex/api/shipment/order/${orderId}/return-shipment-order${generateQueryString(query)}`),
-
   getShippingQuotes: (
     orderId,
     pickupDate // ! ! TODO: 500 Internal Server Error, date not working?
@@ -104,5 +105,10 @@ export default {
   purchaseShipmentOrder: (
     orderId,
     query // ! ! TODO: 501 Not Implemented
-  ) => api.patch(`/api/shipment/order/${orderId}/shipment-order${generateQueryString(query)}`)
+  ) => api.patch(`prodex/api/shipment/order/${orderId}/shipment-order${generateQueryString(query)}`),
+  downloadCreditRequestAttachments: (endpointType, orderId, creditRequestAttachmentId) =>
+    api.get(
+      `prodex/api/${endpointType}-orders/${orderId}/attachments/download-credit-request-attachment/${creditRequestAttachmentId}`
+    ),
+  creditAccept: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/credit-accept`)
 }

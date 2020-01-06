@@ -8,7 +8,6 @@ import { withToastManager } from 'react-toast-notifications'
 import moment from 'moment'
 
 import * as Actions from '../../actions'
-import { downloadAttachment } from '~/modules/inventory/actions'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
@@ -31,7 +30,7 @@ const AccordionTitle = styled(Accordion.Title)`
     vertical-align: center;
   }
 `
-
+const initValues = {}
 //TODO nahradit realnymy hodnotami z props
 const discount = '500.00'
 const reasons = [
@@ -89,18 +88,15 @@ class PurchaseReviewCreditRequest extends React.Component {
   submitHandler = async (values, actions) => {
     const { closePopup, orderId, toastManager, creditCounter } = this.props
     const { counterValue, messageBuyer, attachments } = values
-    console.log('values====================================')
-    console.log(values)
-    console.log('====================================')
-    return
+
     try {
       const request = {
         amount: counterValue,
-        notes: messageBuyer
+        message: messageBuyer
       }
       // TODO tady se volá api/purchase-orders/{orderId}/credit-request-update nebo
       ///api/purchase-orders/{orderId}/credit-request
-      await creditRequestUpdate(orderId, request, attachments)
+      await creditRequest(orderId, request, attachments)
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id='order.success' defaultMessage='Success' />,
@@ -145,14 +141,10 @@ class PurchaseReviewCreditRequest extends React.Component {
 
   acceptRequestCredit = async e => {
     e.preventDefault()
-    const { closePopup, orderId, toastManager, acceptCredit } = this.props
+    const { closePopup, orderId, toastManager, creditCounterAccept } = this.props
 
-    console.log('orderId====================================')
-    console.log(orderId)
-    console.log('====================================')
-    return
     try {
-      await acceptCredit(orderId) //TODO opravdu se tady má volat /api/sale-orders/${orderId}/credit-accept
+      await creditCounterAccept(orderId) //TODO opravdu se tady má volat /api/sale-orders/${orderId}/credit-accept
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id='order.success' defaultMessage='Success' />,
@@ -231,8 +223,8 @@ class PurchaseReviewCreditRequest extends React.Component {
     return filename
   }
 
-  prepareLinkToAttachment = async documentId => {
-    let downloadedFile = await this.props.downloadAttachment(documentId)
+  prepareLinkToAttachment = async attachmentId => {
+    let downloadedFile = await this.props.downloadCreditRequestAttachments('purchase', this.props.orderId, attachmentId)
     const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
     const mimeType = fileName && this.getMimeType(fileName)
     const element = document.createElement('a')
@@ -243,8 +235,8 @@ class PurchaseReviewCreditRequest extends React.Component {
     return element
   }
 
-  downloadAttachment = async (documentName, documentId) => {
-    const element = await this.prepareLinkToAttachment(documentId)
+  downloadAttachment = async (documentName, attachmentId) => {
+    const element = await this.prepareLinkToAttachment(attachmentId)
 
     element.download = documentName
     document.body.appendChild(element) // Required for this to work in FireFox
@@ -255,7 +247,8 @@ class PurchaseReviewCreditRequest extends React.Component {
     const {
       intl: { formatMessage },
       orderId,
-      isSending
+      isSending,
+      creditRequestHistory
     } = this.props
 
     const { activeIndexes } = this.state
@@ -284,17 +277,21 @@ class PurchaseReviewCreditRequest extends React.Component {
                       <Grid>
                         <Grid.Row>
                           <Grid.Column width={16}>
-                            <strong style={{ fontSize: '16px' }}>
-                              <FormattedMessage
-                                id='order.sellerRequesting'
-                                defaultMessage={'Seller is requesting a discount of $'}
-                              />
-                              {`${discount}. `}
-                              <FormattedMessage
-                                id='order.viewRequesting'
-                                defaultMessage={'Please view reasoning and images below:'}
-                              />
-                            </strong>
+                            {creditRequestHistory &&
+                            creditRequestHistory.length &&
+                            creditRequestHistory[creditRequestHistory.length - 1].amount ? (
+                              <strong style={{ fontSize: '16px' }}>
+                                <FormattedMessage
+                                  id='order.sellerRequesting'
+                                  defaultMessage={'Seller is requesting a discount of $'}
+                                />
+                                {`${creditRequestHistory[creditRequestHistory.length - 1].amount}. `}
+                                <FormattedMessage
+                                  id='order.viewRequesting'
+                                  defaultMessage={'Please view reasoning and images below:'}
+                                />
+                              </strong>
+                            ) : null}
                           </Grid.Column>
                         </Grid.Row>
                         <Grid.Row>
@@ -302,11 +299,11 @@ class PurchaseReviewCreditRequest extends React.Component {
                             <strong style={{ textDecoration: 'underline', fontSize: '16px' }}>
                               <FormattedMessage id='order.messageningHistory' defaultMessage={'Messaging History: '} />
                             </strong>
-                            {reasons && reasons.length && (
+                            {creditRequestHistory && creditRequestHistory.length ? (
                               <Accordion fluid>
-                                {reasons.map((reason, i) => {
+                                {creditRequestHistory.map((reason, i) => {
                                   return (
-                                    <>
+                                    <div key={reason.id}>
                                       <AccordionTitle active={activeIndexes[i]} index={i} onClick={this.handleClick}>
                                         <Icon
                                           name={'chevron ' + (activeIndexes[i] ? 'down' : 'right')}
@@ -319,7 +316,7 @@ class PurchaseReviewCreditRequest extends React.Component {
                                             fontStyle: 'italic',
                                             color: 'grey'
                                           }}>
-                                          {reason.timestamp && `${moment(reason.timestamp).format('LLL')}: `}
+                                          {reason.createdAt && `${moment(reason.createdAt).format('LLL')}: `}
                                         </span>
                                         <span style={{ fontStyle: 'italic', textDecoration: 'underline' }}>
                                           {` ${reason.message.substring(0, 20)}...`}
@@ -338,7 +335,7 @@ class PurchaseReviewCreditRequest extends React.Component {
                                                   <Button
                                                     as='a'
                                                     onClick={() =>
-                                                      this.downloadAttachment(attachment.name, attachment.id)
+                                                      this.downloadAttachment(attachment.fileName, attachment.id)
                                                     }>
                                                     <Icon name='download' />
                                                     {attachment.name}
@@ -348,11 +345,11 @@ class PurchaseReviewCreditRequest extends React.Component {
                                           </Grid.Column>
                                         </Grid.Row>
                                       </Accordion.Content>
-                                    </>
+                                    </div>
                                   )
                                 })}
                               </Accordion>
-                            )}
+                            ) : null}
                           </Grid.Column>
                         </Grid.Row>
                         <br /> <br />
@@ -425,7 +422,7 @@ class PurchaseReviewCreditRequest extends React.Component {
                                     })
                                     this.setState({ changedForm: true })
                                   }}
-                                  data-test='settings_product_import_attachments'
+                                  data-test='detail_review_credit_attachments'
                                   emptyContent={
                                     <label>
                                       <FormattedMessage
@@ -473,6 +470,7 @@ class PurchaseReviewCreditRequest extends React.Component {
                               <Grid.Column width={6}></Grid.Column>
                               <Grid.Column floated='right' width={3}>
                                 <Button
+                                  type='button'
                                   basic
                                   fluid
                                   onClick={() => {
@@ -527,7 +525,8 @@ function mapStateToProps(state) {
   const { detail } = state.orders
   return {
     orderId: detail.id,
-    isSending: state.orders.isSending
+    isSending: detail.isSending,
+    creditRequestHistory: detail.creditRequestHistory
   }
 }
 

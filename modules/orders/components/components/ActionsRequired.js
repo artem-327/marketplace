@@ -249,11 +249,20 @@ class ActionsRequired extends React.Component {
       ordersType,
       detail,
       openReinitiateTransfer,
-      openPopupName
+      openPopupName,
+      orderCreditHistoryOpen
     } = this.props
     const repayUntil = moment(detail.orderDate)
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
     // Some switch might do the trick
+    const requestCreditButton = orderCreditHistoryOpen
+      ? {
+          buttonType: 'basic',
+          onClick: () => openPopupName('openedPurchaseRequestCreditDelivery'),
+          dataTest: 'orders_detail_requestCredit_btn',
+          text: 'order.requestCredit'
+        }
+      : null
 
     return (
       <>
@@ -306,7 +315,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 2 && creditStatus === 0 // CONFIRMED && PENDING && PENDING TODO zmenit zpet na reviewStatus === 1 a creditStatus === 1
+            {orderStatus === 2 && creditStatus === 1 // CONFIRMED && PENDING
               ? this.renderSegment(null, 14, null, 'order.reviewCreditRequest.description', [
                   {
                     // FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
@@ -402,15 +411,10 @@ class ActionsRequired extends React.Component {
                     dataTest: 'orders_detail_reject_btn',
                     text: 'global.reject'
                   },
-                  {
-                    buttonType: 'basic',
-                    onClick: () => openPopupName('openedPurchaseRequestCreditDelivery'),
-                    dataTest: 'orders_detail_requestCredit_btn',
-                    text: 'order.requestCredit'
-                  }
+                  requestCreditButton
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 1 && creditStatus === 2 // Confirmed && PENDING && COUNTER_OFFER_PENDING
+            {orderStatus === 2 && creditStatus === 2 // Confirmed && COUNTER_OFFER_PENDING
               ? this.renderSegment(null, 13, null, 'order.reviewCreditRequest.description', [
                   {
                     buttonType: 'primary',
@@ -479,7 +483,10 @@ function mapStateToProps(state, ownProps) {
     detail: orders.detail,
     ordersType: ownProps.ordersType,
     shippingTrackingCode: orders.detail.shippingTrackingCode ? orders.detail.shippingTrackingCode : '',
-    returnShippingTrackingCode: orders.detail.returnShippingTrackingCode ? orders.detail.returnShippingTrackingCode : ''
+    returnShippingTrackingCode: orders.detail.returnShippingTrackingCode
+      ? orders.detail.returnShippingTrackingCode
+      : '',
+    orderCreditHistoryOpen: getSafe(() => orders.detail.orderCreditHistoryOpen, false)
   }
 }
 
