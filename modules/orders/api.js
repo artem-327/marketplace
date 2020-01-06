@@ -1,4 +1,5 @@
 import api from '~/api'
+import { generateQueryString } from '~/utils/functions'
 
 export default {
   getAll: (endpointType, filter = {}) =>
@@ -86,5 +87,22 @@ export default {
         'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
       }
     })
-  }
+  },
+  returnShipmentRates: (orderId, pickupDate) =>
+    api.get(`/prodex/api/shipment/order/${orderId}/return-shipment-rates?pickupDate=${pickupDate}`),
+  returnShipmentOrder: (orderId, query) =>
+    api.patch(`/prodex/api/shipment/order/${orderId}/return-shipment-order${generateQueryString(query)}`),
+
+  getShippingQuotes: (
+    orderId,
+    pickupDate // ! ! TODO: 500 Internal Server Error, date not working?
+  ) => api.get(`/prodex/api/shipment/order/${orderId}/shipment-rates?pickupDate=${pickupDate}`),
+  getManualShippingQuote: (
+    orderId,
+    query //! ! TODO: 500 Internal Server Error
+  ) => api.post(`/prodex/api/shipment/order/${orderId}/manual-quote${generateQueryString(query)}`),
+  purchaseShipmentOrder: (
+    orderId,
+    query // ! ! TODO: 501 Not Implemented
+  ) => api.patch(`/api/shipment/order/${orderId}/shipment-order${generateQueryString(query)}`)
 }

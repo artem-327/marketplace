@@ -373,8 +373,8 @@ class ActionsRequired extends React.Component {
                   {
                     buttonType: 'primary',
                     onClick: () => openPopupName('openedPurchaseOrderShipping'),
-                    dataTest: 'orders_detail_newShipmentPurchase_btn',
-                    text: 'order.NewShipmentPurchase'
+                    dataTest: 'orders_detail_orderShipping_btn',
+                    text: 'order.orderShipping'
                   }
                 ])
               : null}
