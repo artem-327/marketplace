@@ -32,7 +32,7 @@ import '~/modules/purchase-order/styles/PurchaseOrder.scss'
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `
-class SaleReviewCreditRequest extends React.Component {
+class SaleReturnShipping extends React.Component {
   state = {
     selectedShippingQuote: 0,
     shipmentQuoteId: ''
@@ -58,7 +58,6 @@ class SaleReviewCreditRequest extends React.Component {
       //this.props.getShippingQuotes(this.props.orderId, null)
     }
   }
-
   submitHandler = async (values, actions) => {
     const { closePopup, order, orderId, toastManager, shippingQuotes } = this.props
 
@@ -353,4 +352,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(SaleReviewCreditRequest)))
+export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(SaleReturnShipping)))
