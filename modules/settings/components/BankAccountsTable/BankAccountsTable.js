@@ -241,7 +241,6 @@ class BankAccountsTable extends Component {
                       { item: row.name }
                     )
                   ).then(() => deleteBankAccount(row.id)),
-                disabled: row => row.status === 'verification_in_process'
               },
               {
                 text: formatMessage({
