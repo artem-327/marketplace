@@ -1782,7 +1782,7 @@
   "order.counterValue": "Counter Value",
   "order.attachments": "Attachments: ",
   "order.reasons": "Reasons:",
-  "order.viewRequesting": "Please view reasoning and images below:",
+  "order.viewRequesting": "Please view reasoning and images below.",
   "order.rejectOrder": "REJECT ORDED",
   "order.selectReason": "Please select the reason for rejecting this order",
   "order.success": "Success",

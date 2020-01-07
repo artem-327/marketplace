@@ -244,7 +244,7 @@ class ActionsRequired extends React.Component {
       shippingStatus,
       reviewStatus,
       assignLotsRequired,
-      creditStatus,
+      creditReviewStatus,
       returnStatus,
       ordersType,
       detail,
@@ -255,6 +255,9 @@ class ActionsRequired extends React.Component {
     const repayUntil = moment(detail.orderDate)
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
     // Some switch might do the trick
+    console.log('creditReviewStatus====================================')
+    console.log(creditReviewStatus)
+    console.log('====================================')
     const requestCreditButton = orderCreditHistoryOpen
       ? {
           buttonType: 'basic',
@@ -315,7 +318,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && creditStatus === 1 // CONFIRMED && PENDING
+            {orderStatus === 2 && creditReviewStatus === 1 // CONFIRMED && PENDING
               ? this.renderSegment(null, 14, null, 'order.reviewCreditRequest.description', [
                   {
                     // FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
@@ -397,7 +400,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 1 && creditStatus === 0 // Confirmed && Pending
+            {orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 0 // Confirmed && Pending
               ? this.renderSegment(null, 10, null, 'order.delivered.description', [
                   {
                     buttonType: 'primary',
@@ -414,7 +417,7 @@ class ActionsRequired extends React.Component {
                   requestCreditButton
                 ])
               : null}
-            {orderStatus === 2 && creditStatus === 2 // Confirmed && COUNTER_OFFER_PENDING
+            {orderStatus === 2 && creditReviewStatus === 2 // Confirmed && COUNTER_OFFER_PENDING
               ? this.renderSegment(null, 13, null, 'order.reviewCreditRequest.description', [
                   {
                     buttonType: 'primary',
@@ -424,7 +427,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 3 && creditStatus === 2 // Confirmed && Rejected && COUNTER_OFFER_PENDING
+            {orderStatus === 2 && reviewStatus === 3 && creditReviewStatus === 2 // Confirmed && Rejected && COUNTER_OFFER_PENDING
               ? this.renderSegment(null, 13, null, 'order.waitToReturn.description', [
                   {
                     buttonType: 'primary',
@@ -473,7 +476,7 @@ function mapStateToProps(state, ownProps) {
     orderStatus: getSafe(() => orders.detail.orderStatus, 0),
     shippingStatus: getSafe(() => orders.detail.shippingStatus, 0),
     reviewStatus: getSafe(() => orders.detail.reviewStatus, 0),
-    creditStatus: getSafe(() => orders.detail.creditStatus, 0),
+    creditReviewStatus: getSafe(() => orders.detail.creditReviewStatus, 0),
     returnStatus: getSafe(() => orders.detail.returnStatus, 0),
     assignLotsRequired: false, //checkAssignLotsRequired(orders.detail),
 

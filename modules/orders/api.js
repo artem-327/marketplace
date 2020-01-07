@@ -45,6 +45,7 @@ export default {
   discardOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/discard`),
   receivedOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/received`),
   accept: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/accept`),
+  //TODO fixed sending files
   rejectPurchaseOrder: (orderId, request, files) => {
     let params = { ...request, type: docType }
     const formData = new FormData()
@@ -60,10 +61,11 @@ export default {
     })
   },
   creditCounterAccept: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/credit-counter-accept`),
+  //TODO fixed sending files
   creditCounter: (orderId, request, files) => {
     let params = { ...request }
     const formData = new FormData()
-    formData.append('file', files)
+    formData.append('files', files)
     let queryParams = generateQueryString(params)
 
     return api.post(`/prodex/api/sale-orders/${orderId}/credit-counter${queryParams}`, formData, {
@@ -75,12 +77,21 @@ export default {
     })
   },
   creditCounterReject: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/credit-counter-reject`),
-  //TODO není hotový na BE
+  //TODO fixed sending files
   creditRequest: (orderId, request, files) => {
     let params = { ...request }
     const formData = new FormData()
-    formData.append('file', files)
+    // for (var i = 0; i < files.length; i++) {
+    //   let file = files[i]
+    //   formData.append('file[' + i + ']', file)
+    // }
+    formData.append('files', files)
     let queryParams = generateQueryString(params)
+
+    // Log the key/value pairs
+    for (var pair of formData.entries()) {
+      console.log(pair[0] + ' - ' + pair[1])
+    }
 
     return api.post(`/prodex/api/purchase-orders/${orderId}/credit-request${queryParams}`, formData, {
       headers: {

@@ -236,7 +236,7 @@ class SaleReviewCreditRequest extends React.Component {
                                 {`${creditRequestHistory[creditRequestHistory.length - 1].amount}. `}
                                 <FormattedMessage
                                   id='order.viewRequesting'
-                                  defaultMessage={'Please view reasoning and images below:'}
+                                  defaultMessage={'Please view reasoning and images below.'}
                                 />
                               </strong>
                             ) : null}
@@ -276,20 +276,20 @@ class SaleReviewCreditRequest extends React.Component {
                                         </Grid.Row>
                                         <Grid.Row style={{ paddingLeft: '26px' }}>
                                           <Grid.Column width={16}>
-                                            {reason.attachments &&
-                                              reason.attachments.length &&
-                                              reason.attachments.map(attachment => {
-                                                return (
-                                                  <Button
-                                                    as='a'
-                                                    onClick={() =>
-                                                      this.downloadAttachment(attachment.fileName, attachment.id)
-                                                    }>
-                                                    <Icon name='download' />
-                                                    {attachment.name}
-                                                  </Button>
-                                                )
-                                              })}
+                                            {reason.attachments && reason.attachments.length
+                                              ? reason.attachments.map(attachment => {
+                                                  return (
+                                                    <Button
+                                                      as='a'
+                                                      onClick={() =>
+                                                        this.downloadAttachment(attachment.fileName, attachment.id)
+                                                      }>
+                                                      <Icon name='download' />
+                                                      {attachment.name}
+                                                    </Button>
+                                                  )
+                                                })
+                                              : null}
                                           </Grid.Column>
                                         </Grid.Row>
                                       </Accordion.Content>
