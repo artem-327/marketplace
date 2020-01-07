@@ -13,7 +13,7 @@ import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `
-
+//temporary
 const reasons = [
   {
     value: 1,
@@ -58,9 +58,10 @@ class PurchaseRejectDelivery extends React.Component {
 
   submitHandler = async (values, actions) => {
     const { closePopup, orderId, toastManager, rejectPurchaseOrder } = this.props
-    const { reason, reasonText, attachments } = values
+    const { reason, reasonComment, attachments } = values
     try {
-      await rejectPurchaseOrder(orderId, reason, reasonText, attachments)
+      const request = { reason, reasonComment }
+      await rejectPurchaseOrder(orderId, request, attachments)
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id='order.success' defaultMessage='Success' />,
@@ -137,7 +138,7 @@ class PurchaseRejectDelivery extends React.Component {
                               <Form.TextArea
                                 required={this.state.reason === 7}
                                 onChange={(e, { value, name }) => this.handleChange(e, value, name, setFieldValue)}
-                                name='reasonText'
+                                name='reasonComment'
                                 label={formatMessage({
                                   id: 'order.reject.enterReasonHere',
                                   defaultMessage: 'Enter reason here:'
@@ -221,7 +222,8 @@ class PurchaseRejectDelivery extends React.Component {
                               disabled={
                                 typeof this.state.reason !== 'number' ||
                                 (this.state.reason === 7 &&
-                                  (!this.state.reasonText || (this.state.reasonText && !this.state.reasonText.trim())))
+                                  (!this.state.reasonComment ||
+                                    (this.state.reasonComment && !this.state.reasonComment.trim())))
                               }
                               primary
                               fluid>
