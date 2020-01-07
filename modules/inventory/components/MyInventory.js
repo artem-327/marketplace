@@ -158,7 +158,7 @@ class MyInventory extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 130,
+        width: 100,
         align: 'right',
         sortPath: 'ProductOffer.broadcasted'
       },
