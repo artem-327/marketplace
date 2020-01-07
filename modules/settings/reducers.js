@@ -101,7 +101,7 @@ export const initialState = {
           tos: (
             <FormattedMessage id='verification.termsOfService'>
               {text => (
-                <Link href='https://echoexchange.net/legal'>
+                <Link href='https://www.echosystem.com/terms-of-service'>
                   <a target='_blank'>{text}</a>
                 </Link>
               )}
