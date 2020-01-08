@@ -21,7 +21,9 @@ import {
   deleteBankAccount,
   dwollaInitiateVerification,
   dwollaFinalizeVerification,
-  dwollaFinalizeVerificationConfirmOpen
+  dwollaFinalizeVerificationConfirmOpen,
+  getCurrentUser,
+  dwollaSetPreferred
 } from '../../actions'
 import Router from 'next/router'
 
@@ -190,6 +192,7 @@ class BankAccountsTable extends Component {
   componentDidMount() {
     this.props.getBankAccountsDataRequest()
     if (this.props.company.hasDwollaAccount) this.props.getDwollaAccBalance()
+    if (!this.props.currentUser) this.props.getCurrentUser()
   }
 
   render() {
@@ -205,7 +208,9 @@ class BankAccountsTable extends Component {
       intl,
       bankAccounts,
       dwollaAccountStatus,
-      dwollaDocumentRequired
+      dwollaDocumentRequired,
+      dwollaSetPreferred,
+      preferredBankAccountId
     } = this.props
 
     let { columns } = this.state
@@ -259,6 +264,14 @@ class BankAccountsTable extends Component {
                   finalizeConfirm().then(v => dwollaFinalizeVerification(row.id, v.amount1, v.amount2))
                 },
                 hidden: row => row.status !== 'verification_in_process'
+              },
+              {
+                text: formatMessage({
+                  id: 'settings.setAsPreferredBankAccount',
+                  defaultMessage: 'Set as Preferred Bank Account'
+                }),
+                callback: row => dwollaSetPreferred(row.id),
+                hidden: row => row.status !== 'verified' || row.id === preferredBankAccountId
               }
             ]}
           />
@@ -346,7 +359,9 @@ const mapDispatchToProps = {
   deleteBankAccount,
   dwollaInitiateVerification,
   dwollaFinalizeVerification,
-  dwollaFinalizeVerificationConfirmOpen
+  dwollaFinalizeVerificationConfirmOpen,
+  getCurrentUser,
+  dwollaSetPreferred
 }
 
 const statusToLabel = {
@@ -366,8 +381,24 @@ const statusToLabel = {
     </Label>
   )
 }
+
+const displayStatus = (r, preferredBankAccountId) => {
+  return (
+    <>
+      {statusToLabel[r.status]}
+      {preferredBankAccountId === r.id ? (
+        <Label color='blue' horizontal>
+          <FormattedMessage id='settings.preferred' defaultMessage='Preferred' />
+        </Label>
+        ) : null
+      }
+    </>
+  )
+}
+
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
+  const preferredBankAccountId = get(state, 'settings.currentUser.company.preferredBankAccountId', '')
 
   let dwollaDocumentRequired =
     company && company.dwollaDocumentRequired ? company.dwollaDocumentRequired : 'verify-with-document'
@@ -384,9 +415,10 @@ const mapStateToProps = state => {
     loading: state.settings.loading,
     rows: state.settings.bankAccountsRows.map(r => ({
       ...r,
-      statusLabel: statusToLabel[r.status]
+      statusLabel: displayStatus(r, preferredBankAccountId),
       // some changes here
     })),
+    preferredBankAccountId,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
@@ -394,7 +426,8 @@ const mapStateToProps = state => {
       Router && Router.router && Router.router.query && Router.router.query.type
         ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
         : state.settings.tabsNames[0],
-    company: company
+    company: company,
+    currentUser: state.settings.currentUser
   }
 }
 
