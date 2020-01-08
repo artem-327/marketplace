@@ -179,7 +179,7 @@ export const creditCounter = (orderId, request, files) => ({
 })
 export const creditCounterReject = orderId => ({
   type: AT.CREDIT_COUNTER_REJECT,
-  payload: Api.creditCounter(orderId)
+  payload: Api.creditCounterReject(orderId)
 })
 
 export const creditRequest = (orderId, request, files) => ({

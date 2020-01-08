@@ -1777,6 +1777,7 @@
   "order.requestingCreditBecause": " because",
   "order.saleReviewCreditRequestHeader": "REVIEW CREDIT REQUEST",
   "order.sellerRequesting": "Seller is requesting a discount of $",
+  "order.buyerRequesting": "Buyer is requesting a discount of $",
   "order.sellerRequestingDetail": "You have selected to Counter the credit request. Please fill in the counter details below.",
   "order.notes": "Notes:",
   "order.counterValue": "Counter Value",
