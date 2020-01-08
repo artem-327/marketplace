@@ -44,7 +44,7 @@ export const initialState = {
   systemSettingsModalOpen: false,
   sysSettingsUpdating: false,
   tabsNames: defaultTabs,
-  currentTab: defaultTabs[1],
+  currentTab: defaultTabs[0],
   isOpenImportPopup: false,
   isDwollaOpenPopup: false,
   currentEditForm: null,
@@ -611,14 +611,14 @@ export default function reducer(state = initialState, action) {
         }
       })
       const packageWeightUnits = action.payload.units
-        .filter(unit => unit.measureType.id === 1)    // Weight only
+        .filter(unit => unit.measureType.id === 1) // Weight only
         .map((type, id) => {
-        return {
-          key: id,
-          text: type.name,
-          value: type.id
-        }
-      })
+          return {
+            key: id,
+            text: type.name,
+            value: type.id
+          }
+        })
 
       return {
         ...state,
