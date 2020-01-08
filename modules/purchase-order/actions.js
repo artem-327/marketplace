@@ -79,3 +79,5 @@ export const requestManualShipment = params => ({
   type: AT.REQUEST_MANUAL_SHIPMENT,
   payload: api.requestManualShipment(generateQueryString(params))
 })
+
+export const getIdentity = () => ({ type: AT.PURCHASE_GET_IDENTITY, payload: api.getIdentity() })

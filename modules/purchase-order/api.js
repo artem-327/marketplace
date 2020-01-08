@@ -37,3 +37,4 @@ export const updateHazmatInfo = (cartItemId, payload) =>
 export const postPurchaseOrder = data => api.post('/prodex/api/purchase-orders', data).then(response => response.data)
 
 export const requestManualShipment = queryString => api.post(`/prodex/api/shipment/manual-quote${queryString}`)
+export const getIdentity = () => api.get('/prodex/api/users/me').then(response => response.data)

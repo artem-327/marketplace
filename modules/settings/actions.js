@@ -64,6 +64,23 @@ export function dwollaFinalizeVerification(id, value1, value2) {
   }
 }
 
+export function dwollaSetPreferred(id) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.DWOLLA_SET_PREFERRED,
+      payload: api.dwollaSetPreferred(id)
+    })
+    dispatch(getCurrentUser())
+  }
+}
+
+export function getCurrentUser() {
+  return {
+    type: AT.GET_CURRENT_USER_DATA,
+    payload: api.getCurrentUser()
+  }
+}
+
 export function openImportPopup() {
   return {
     type: AT.OPEN_IMPORT_POPUP
@@ -406,7 +423,7 @@ export function getUsersDataRequest() {
           payload: roles
         })
         dispatch({
-          type: AT.GET_CURRENT_USER_DATA,
+          type: AT.GET_CURRENT_USER_DATA_FULFILLED,
           payload: currentUser
         })
         return users

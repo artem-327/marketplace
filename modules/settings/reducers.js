@@ -364,7 +364,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_CURRENT_USER_DATA: {
+    case AT.GET_CURRENT_USER_DATA_FULFILLED: {
       return {
         ...state,
         currentUser: action.payload
@@ -998,6 +998,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.DWOLLA_SET_PREFERRED_FULFILLED:
     case AT.DELETE_BANK_ACCOUNT_REJECTED: {
       return {
         ...state,
@@ -1005,6 +1006,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.DWOLLA_SET_PREFERRED_PENDING:
     case AT.DWOLLA_START_VERIFICATION_PENDING: {
       return {
         ...state,
