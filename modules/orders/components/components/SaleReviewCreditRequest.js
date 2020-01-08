@@ -85,7 +85,7 @@ class SaleReviewCreditRequest extends React.Component {
 
   acceptRequestCredit = async e => {
     e.preventDefault()
-    const { closePopup, orderId, toastManager, acceptCredit } = this.props
+    const { closePopup, orderId, toastManager, creditAccept } = this.props
 
     try {
       await creditAccept(orderId)
@@ -230,8 +230,8 @@ class SaleReviewCreditRequest extends React.Component {
                             creditRequestHistory[creditRequestHistory.length - 1].amount ? (
                               <strong style={{ fontSize: '16px' }}>
                                 <FormattedMessage
-                                  id='order.sellerRequesting'
-                                  defaultMessage={'Seller is requesting a discount of $'}
+                                  id='order.buyerRequesting'
+                                  defaultMessage={'Buyer is requesting a discount of $'}
                                 />
                                 {`${creditRequestHistory[creditRequestHistory.length - 1].amount}. `}
                                 <FormattedMessage
