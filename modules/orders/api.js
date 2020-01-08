@@ -14,10 +14,7 @@ export default {
   getOrder: (endpointType, orderId) => api.get(`/prodex/api/${endpointType}-orders/${orderId}`),
   update: (orderId, model) => api.put(`/prodex/api/orders/${orderId}`, model),
   confirm: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/confirm`),
-  confirmReturned: (orderId, fundingSourceId) =>
-    api.patch(
-      `/prodex/api/sale-orders/${orderId}/return-shipment/return-shipment-delivered?fundingSourceId=${fundingSourceId}`
-    ),
+  confirmReturned: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/return-shipment/return-shipment-delivered`),
   reject: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/reject`),
   ship: (orderId, trackingId) => api.patch(`/prodex/api/sale-orders/${orderId}/ship?trackingId=${trackingId}`),
   returnShip: (orderId, trackingId) =>
@@ -45,11 +42,13 @@ export default {
   discardOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/discard`),
   receivedOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/received`),
   accept: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/accept`),
-  //TODO fixed sending files
+
   rejectPurchaseOrder: (orderId, request, files) => {
     let params = { ...request, type: docType }
     const formData = new FormData()
-    formData.append('file', files)
+    for (let i in files) {
+      formData.append('files', files[i])
+    }
     let queryParams = generateQueryString(params)
 
     return api.patch(`/prodex/api/purchase-orders/${orderId}/reject${queryParams}`, formData, {
@@ -61,11 +60,13 @@ export default {
     })
   },
   creditCounterAccept: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/credit-counter-accept`),
-  //TODO fixed sending files
+
   creditCounter: (orderId, request, files) => {
     let params = { ...request }
     const formData = new FormData()
-    formData.append('files', files)
+    for (let i in files) {
+      formData.append('files', files[i])
+    }
     let queryParams = generateQueryString(params)
 
     return api.post(`/prodex/api/sale-orders/${orderId}/credit-counter${queryParams}`, formData, {
@@ -77,21 +78,14 @@ export default {
     })
   },
   creditCounterReject: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/credit-counter-reject`),
-  //TODO fixed sending files
+
   creditRequest: (orderId, request, files) => {
     let params = { ...request }
     const formData = new FormData()
-    // for (var i = 0; i < files.length; i++) {
-    //   let file = files[i]
-    //   formData.append('file[' + i + ']', file)
-    // }
-    formData.append('files', files)
-    let queryParams = generateQueryString(params)
-
-    // Log the key/value pairs
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ' - ' + pair[1])
+    for (let i in files) {
+      formData.append('files', files[i])
     }
+    let queryParams = generateQueryString(params)
 
     return api.post(`/prodex/api/purchase-orders/${orderId}/credit-request${queryParams}`, formData, {
       headers: {

@@ -122,9 +122,9 @@ class ActionsRequired extends React.Component {
   }
 
   markReturned = () => {
-    const { order, confirmReturned, fundingSourceId } = this.props
+    const { order, confirmReturned } = this.props
     this.toastCall({
-      action: () => confirmReturned(order.id, fundingSourceId),
+      action: () => confirmReturned(order.id),
       toastTitleId: 'notifications.order.actions.confirmReturned.success.header',
       toastTitleDefaultMessage: 'Order Marked as Returned',
       toastContentId: 'notifications.order.actions.confirmReturned.success.content',

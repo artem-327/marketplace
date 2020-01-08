@@ -337,7 +337,7 @@ class PurchaseReviewCreditRequest extends React.Component {
                                                         this.downloadAttachment(attachment.fileName, attachment.id)
                                                       }>
                                                       <Icon name='download' />
-                                                      {attachment.name}
+                                                      {attachment.fileName}
                                                     </Button>
                                                   )
                                                 })
