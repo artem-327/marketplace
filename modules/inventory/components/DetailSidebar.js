@@ -215,11 +215,7 @@ const validationScheme = val.object().shape({
       .min(0, errorMessages.minimum(0))
       .typeError(errorMessages.mustBeNumber)
       .required(errorMessages.requiredMessage),
-    costPerUOM: val
-      .number()
-      .min(0)
-      .typeError(errorMessages.mustBeNumber)
-      .required(errorMessages.requiredMessage),
+    costPerUOM: val.number().nullable().min(0, errorMessages.minimum(0)),
     lotNumber: val
       .string()
       .typeError(errorMessages.invalidString)
@@ -733,7 +729,7 @@ class DetailSidebar extends Component {
         condition: getSafe(() => sidebarValues.condition, null),
         conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
         conforming: getSafe(() => sidebarValues.conforming, true),
-        costPerUOM: getSafe(() => sidebarValues.costPerUOM, ''),
+        costPerUOM: getSafe(() => sidebarValues.costPerUOM, null),
         externalNotes: getSafe(() => sidebarValues.externalNotes, ''),
         fobPrice: getSafe(() => sidebarValues.pricingTiers[0].pricePerUOM, ''),
         inStock: getSafe(() => sidebarValues.inStock, false),

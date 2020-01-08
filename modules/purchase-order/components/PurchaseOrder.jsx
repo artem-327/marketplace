@@ -49,6 +49,7 @@ class PurchaseOrder extends Component {
     this.props.getCart()
     this.props.getDeliveryAddresses()
     this.props.getPayments()
+    this.props.getIdentity()
   }
 
   handleQuoteSelect = index => {
@@ -252,7 +253,6 @@ class PurchaseOrder extends Component {
       payment,
       address: '',
       shipmentQuoteId: '',
-      address: ''
     }
 
     let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit}` : ''

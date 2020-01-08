@@ -83,6 +83,8 @@ export default function(state = initialState, action) {
         isDetailFetching: false,
         reloadPage: false
       }
+    case AT.CREDIT_COUNTER_REJECT_PENDING:
+    case AT.CREDIT_ACCEPT_PENDING:
     case AT.ORDER_CONFIRM_FETCH_PENDING:
     case AT.ORDER_REJECT_FETCH_PENDING:
     case AT.ORDER_RETURN_SHIP_FETCH_PENDING:
@@ -91,7 +93,8 @@ export default function(state = initialState, action) {
         ...state,
         isSending: true
       }
-
+    case AT.CREDIT_COUNTER_REJECT_REJECTED:
+    case AT.CREDIT_ACCEPT_REJECTED:
     case AT.ORDER_CONFIRM_FETCH_REJECTED:
     case AT.ORDER_REJECT_FETCH_REJECTED:
     case AT.ORDER_PURCHASE_SHIPMENT_ORDER_REJECTED:
@@ -250,7 +253,7 @@ export default function(state = initialState, action) {
         loadRelatedOrders: false,
         relatedOrders: action.payload.data
       }
-
+    case AT.CREDIT_ACCEPT_FULFILLED:
     case AT.ORDER_PURCHASE_SHIPMENT_ORDER_FULFILLED:
     case AT.ORDER_RETURN_SHIP_FETCH_FULFILLED:
     case AT.ORDER_SHIP_FETCH_FULFILLED:
@@ -260,17 +263,20 @@ export default function(state = initialState, action) {
     case AT.ORDER_APPROVE_ORDER_FULFILLED:
       return {
         ...state,
-        detail: action.payload.data
+        detail: action.payload.data,
+        isSending: false
       }
     case AT.RETURN_SHIPMENT_RATES_FULFILLED:
       return {
         ...state,
-        returnShipmentRates: action.payload.data
+        returnShipmentRates: action.payload.data,
+        isSending: false
       }
     case AT.RETURN_SHIPMENT_ORDER_FULFILLED:
       return {
         ...state,
-        returnShipmentOrder: action.payload.data
+        returnShipmentOrder: action.payload.data,
+        isSending: false
       }
     case AT.ORDER_CONFIRM_RETURNED_FETCH_FULFILLED:
     case AT.ORDER_ACCEPT_DELIVERY_ORDER_FULFILLED:

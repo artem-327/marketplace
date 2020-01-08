@@ -86,7 +86,7 @@ class PurchaseReviewCreditRequest extends React.Component {
   }
 
   submitHandler = async (values, actions) => {
-    const { closePopup, orderId, toastManager, creditCounter } = this.props
+    const { closePopup, orderId, toastManager, creditRequest } = this.props
     const { counterValue, messageBuyer, attachments } = values
 
     try {
@@ -124,7 +124,7 @@ class PurchaseReviewCreditRequest extends React.Component {
     e.preventDefault()
 
     try {
-      await creditCounterReject(this.props.orderId)
+      await this.props.creditCounterReject(this.props.orderId)
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id='order.success' defaultMessage='Success' />,
