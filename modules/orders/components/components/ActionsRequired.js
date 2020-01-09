@@ -255,9 +255,11 @@ class ActionsRequired extends React.Component {
     const repayUntil = moment(detail.orderDate)
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
     // Some switch might do the trick
+    /* ! !
     console.log('creditReviewStatus====================================')
     console.log(creditReviewStatus)
     console.log('====================================')
+    */
     const requestCreditButton = orderCreditHistoryOpen
       ? {
           buttonType: 'basic',
@@ -329,10 +331,9 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 3 && returnStatus === 0 // CONFIRMED && Rejected && null
+            {orderStatus === 2 && creditReviewStatus === 4 && returnStatus === 0 // CONFIRMED && Rejected && null
               ? this.renderSegment(null, 14, null, 'order.returnShipmentSale.description', [
                   {
-                    // FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
                     buttonType: 'primary',
                     onClick: () => openPopupName('openedSaleReturnShipping'),
                     dataTest: 'orders_detail_returnShipmentSale_btn',

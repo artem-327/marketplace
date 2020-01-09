@@ -107,8 +107,9 @@ export default {
     api.patch(`/prodex/api/shipment/order/${orderId}/return-shipment-order${generateQueryString(query)}`),
   getShippingQuotes: (
     orderId,
-    pickupDate // ! ! TODO: 500 Internal Server Error, date not working?
-  ) => api.get(`/prodex/api/shipment/order/${orderId}/shipment-rates?pickupDate=${pickupDate}`),
+    pickupDate
+  ) => api.get(`/prodex/api/shipment/order/${orderId}/shipment-rates`
+    + (pickupDate ? `?pickupDate=${encodeURIComponent(pickupDate)}` : '')),
   getManualShippingQuote: (
     orderId,
     query //! ! TODO: 500 Internal Server Error
