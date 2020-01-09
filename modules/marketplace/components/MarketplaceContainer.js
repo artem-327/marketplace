@@ -61,7 +61,7 @@ function mapStateToProps(store, { datagrid }) {
           ),
         manufacturer: getSafe(() => po.companyProduct.echoProduct.manufacturer.name, 'N/A'),
         origin: getSafe(() => po.origin.name),
-        expiration: moment(po.expirationDate).format('MM/DD/YYYY'),
+        expiration: po.lotExpirationDate ? moment(po.lotExpirationDate).format('MM/DD/YYYY') : 'N/A',
         assay: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
         condition: !getSafe(() => po.conforming),
         form: getSafe(() => po.form.name),
@@ -74,5 +74,7 @@ function mapStateToProps(store, { datagrid }) {
 }
 
 export default withDatagrid(
-  connect(mapStateToProps, { ...Actions, sidebarChanged, openPopup, closePopup, getProductOffer, applyFilter })(Marketplace)
+  connect(mapStateToProps, { ...Actions, sidebarChanged, openPopup, closePopup, getProductOffer, applyFilter })(
+    Marketplace
+  )
 )

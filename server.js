@@ -11,7 +11,7 @@ let downloadRouter = express()
 
 downloadRouter.get('/attachments/:id', (req, res) => {
   request
-    .get(`https://dev.echoexchange.net/prodex/api/attachments/${req.params.id}/download`, {
+    .get(`${(process && process.env && process.env.REACT_APP_API_URL && process.env.REACT_APP_API_URL.replace(/\/\s*$/, "")) || 'http://127.0.0.1:8080'}/prodex/api/attachments/${req.params.id}/download`, {
       auth: {
         bearer: JSON.parse(req.cookies.auth).access_token
       }

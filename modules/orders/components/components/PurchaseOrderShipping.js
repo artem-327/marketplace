@@ -1,38 +1,24 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
-import {
-  Modal,
-  ModalContent,
-  Button,
-  Grid,
-  Dimmer,
-  Header,
-  Loader,
-  Segment,
-  GridColumn,
-  GridRow,
-  Table
-} from 'semantic-ui-react'
+import { Modal, ModalContent, Button, Grid, Dimmer, Loader, GridColumn, GridRow } from 'semantic-ui-react'
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
-import * as Yup from 'yup'
-import moment from 'moment'
-
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { errorMessages } from '~/constants/yupValidation'
-import confirm from '~/src/components/Confirmable/confirm'
 import { withToastManager } from 'react-toast-notifications'
 import { DateInput } from '~/components/custom-formik'
+import moment from 'moment'
 import { currency } from '~/constants/index'
 import ShippingQuote from '~/modules/purchase-order/components/ShippingQuote'
-import '~/modules/purchase-order/styles/PurchaseOrder.scss'
+import * as Yup from 'yup'
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `
-class SaleReturnShipping extends React.Component {
+
+class PurchaseOrderShipping extends React.Component {
   state = {
     selectedShippingQuote: 0,
     shipmentQuoteId: ''
@@ -54,38 +40,36 @@ class SaleReturnShipping extends React.Component {
       let pickupDate = moment()
         .add(1, 'minutes')
         .toISOString()
-      this.props.getShippingQuotes(this.props.orderId, pickupDate) // ! ! Not working properly yet
-      //this.props.getShippingQuotes(this.props.orderId, null)
+      //this.props.getShippingQuotes(this.props.orderId, { pickupDate })  // ! ! Not working properly yet
+      this.props.getShippingQuotes(this.props.orderId, '')
     }
   }
+
   submitHandler = async (values, actions) => {
     const { closePopup, order, orderId, toastManager, shippingQuotes } = this.props
 
-    let formValues = {
-      quoteId: (order.cfWeightExceeded || !shippingQuotes.length
-        ? values.shipmentQuoteId
-        : shippingQuotes[this.state.selectedShippingQuote].quoteId
-      ).trim(),
-      pickupRemarks: values.pickupRemarks.trim(),
-      deliveryRemarks: values.deliveryRemarks.trim(),
-      shipperRefNo: values.shipperRefNo.trim()
-    }
-
     try {
-      //Does not work yet, because does not work endpoint manual-quote and shipment-rates
-      await this.props.returnShipmentOrder(orderId, formValues)
+      let formValues = {
+        quoteId: (order.cfWeightExceeded || !shippingQuotes.length
+          ? values.shipmentQuoteId
+          : shippingQuotes[this.state.selectedShippingQuote].quoteId
+        ).trim(),
+        pickupRemarks: values.pickupRemarks.trim(),
+        deliveryRemarks: values.deliveryRemarks.trim(),
+        shipperRefNo: values.shipperRefNo.trim()
+      }
+
+      await this.props.purchaseShipmentOrder(orderId, formValues)
+
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id='order.success' defaultMessage='Success' />,
-          <FormattedMessage id='order.rejected' defaultMessage='Order was successfully rejected' />
+          <FormattedMessage id='order.shippingOrdered' defaultMessage='Order Shipping was successfully ordered.' />
         ),
-        {
-          appearance: 'success'
-        }
+        { appearance: 'success' }
       )
       closePopup()
-    } catch (e) {
-      console.error(e.response)
+    } catch {
     } finally {
       actions.setSubmitting(false)
     }
@@ -95,7 +79,6 @@ class SaleReturnShipping extends React.Component {
     const pickupDate = moment(value)
     if (!this.props.order.cfWeightExceeded) {
       try {
-        // ! ! TODO: date not working in getShippingQuotes?
         await this.props.getShippingQuotes(this.props.order.id, pickupDate.toISOString())
       } catch {
       } finally {
@@ -107,7 +90,6 @@ class SaleReturnShipping extends React.Component {
     const { order } = this.props
 
     try {
-      //orderId, countryId, zip
       await this.props.getManualShippingQuote(order.id, {
         destinationCountryId: 1,
         destinationZIP: order.shippingAddressZip
@@ -139,13 +121,13 @@ class SaleReturnShipping extends React.Component {
     const {
       intl: { formatMessage },
       orderId,
-      isSending,
       order,
+      isSending,
       shippingQuotesAreFetching,
       shippingQuotes
     } = this.props
 
-    const manualShipmentQuoteId = (order && order.cfWeightExceeded) || (shippingQuotes && !shippingQuotes.length)
+    const manualShipmentQuoteId = order.cfWeightExceeded || !shippingQuotes.length
 
     return (
       <>
@@ -154,7 +136,7 @@ class SaleReturnShipping extends React.Component {
             <Loader />
           </Dimmer>
           <Modal.Header>
-            <FormattedMessage id='order.returnShipping' defaultMessage='ORDER RETURN SHIPPING' />
+            <FormattedMessage id='order.orderShippingCap' defaultMessage='ORDER SHIPPING' />
           </Modal.Header>
           <ModalBody>
             <Modal.Description>
@@ -179,20 +161,18 @@ class SaleReturnShipping extends React.Component {
                                 fluid: true,
                                 clearable: true,
                                 placeholder: formatMessage({ id: 'global.selectDate', defaultMessage: 'Select Date' }),
-                                onChange: (event, val) => this.onDateChange(event, val),
-                                'data-test': 'return_shipping_pickup_date'
+                                onChange: (event, val) => this.onDateChange(event, val)
                               }}
                               label={
                                 <FormattedMessage
-                                  id='order.return.pickupDate'
-                                  defaultMessage='Preferred pick-up date:'
+                                  id='order.preferredPickupDate'
+                                  defaultMessage='Preferred pick-up date'
                                 />
                               }
                               name='pickupDate'
                             />
                           </Grid.Column>
                         </Grid.Row>
-
                         {manualShipmentQuoteId ? (
                           <>
                             {order.cfWeightExceeded ? (
@@ -326,30 +306,30 @@ function mapStateToProps(state) {
     shippingQuotesAreFetching: orders.shippingQuotesAreFetching,
     shippingQuotes: orders.shippingQuotes
     /*
-    shippingQuotes: [
-      // ! ! temporary
+    shippingQuotes: [ // ! ! temporary
       {
-        carrierName: 'Carrier name 1',
-        estimatedDeliveryDate: '2019-12-04T04:11:50.266Z',
-        estimatedPrice: 100,
-        fobPricePerLb: 10,
-        freightPricePerLb: 51,
-        quoteId: 'Quote Id String 1',
-        serviceType: 'Service Type 1',
-        totalPricePerLb: 11
+        "carrierName": "Carrier name 1",
+        "estimatedDeliveryDate": "2019-12-04T04:11:50.266Z",
+        "estimatedPrice": 100,
+        "fobPricePerLb": 10,
+        "freightPricePerLb": 51,
+        "quoteId": "Quote Id String 1",
+        "serviceType": "Service Type 1",
+        "totalPricePerLb": 11
       },
       {
-        carrierName: 'Carrier name 2',
-        estimatedDeliveryDate: '2019-12-03T04:11:50.266Z',
-        estimatedPrice: 200,
-        fobPricePerLb: 20,
-        freightPricePerLb: 52,
-        quoteId: 'Quote Id String 2',
-        serviceType: 'Service Type 2',
-        totalPricePerLb: 22
+        "carrierName": "Carrier name 2",
+        "estimatedDeliveryDate": "2019-12-03T04:11:50.266Z",
+        "estimatedPrice": 200,
+        "fobPricePerLb": 20,
+        "freightPricePerLb": 52,
+        "quoteId": "Quote Id String 2",
+        "serviceType": "Service Type 2",
+        "totalPricePerLb": 22
       }
-    ]*/
+    ]
+    */
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(SaleReturnShipping)))
+export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(PurchaseOrderShipping)))

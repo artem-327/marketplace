@@ -44,7 +44,7 @@ export const initialState = {
   systemSettingsModalOpen: false,
   sysSettingsUpdating: false,
   tabsNames: defaultTabs,
-  currentTab: defaultTabs[1],
+  currentTab: defaultTabs[0],
   isOpenImportPopup: false,
   isDwollaOpenPopup: false,
   currentEditForm: null,
@@ -101,7 +101,7 @@ export const initialState = {
           tos: (
             <FormattedMessage id='verification.termsOfService'>
               {text => (
-                <Link href='https://echoexchange.net/legal'>
+                <Link href='https://www.echosystem.com/terms-of-service'>
                   <a target='_blank'>{text}</a>
                 </Link>
               )}
@@ -364,7 +364,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_CURRENT_USER_DATA: {
+    case AT.GET_CURRENT_USER_DATA_FULFILLED: {
       return {
         ...state,
         currentUser: action.payload
@@ -611,14 +611,14 @@ export default function reducer(state = initialState, action) {
         }
       })
       const packageWeightUnits = action.payload.units
-        .filter(unit => unit.measureType.id === 1)    // Weight only
+        .filter(unit => unit.measureType.id === 1) // Weight only
         .map((type, id) => {
-        return {
-          key: id,
-          text: type.name,
-          value: type.id
-        }
-      })
+          return {
+            key: id,
+            text: type.name,
+            value: type.id
+          }
+        })
 
       return {
         ...state,
@@ -893,6 +893,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.DWOLLA_FINALIZE_VERIFICATION_REJECTED:
     case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_REJECTED:
     case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_REJECTED:
     case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_REJECTED:
@@ -997,6 +998,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.DWOLLA_SET_PREFERRED_FULFILLED:
     case AT.DELETE_BANK_ACCOUNT_REJECTED: {
       return {
         ...state,
@@ -1004,6 +1006,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.DWOLLA_SET_PREFERRED_PENDING:
     case AT.DWOLLA_START_VERIFICATION_PENDING: {
       return {
         ...state,

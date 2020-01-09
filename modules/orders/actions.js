@@ -154,23 +154,57 @@ export const acceptDelivery = orderId => ({
   type: AT.ORDER_ACCEPT_DELIVERY_ORDER,
   payload: Api.accept(orderId)
 })
-export const rejectPurchaseOrder = (orderId, reason, reasonText, file) => ({
+
+export const returnShipmentRates = (orderId, pickupDate) => ({
+  type: AT.RETURN_SHIPMENT_RATES,
+  payload: Api.returnShipmentRates(orderId, pickupDate)
+})
+
+export const returnShipmentOrder = (orderId, query) => ({
+  type: AT.RETURN_SHIPMENT_ORDER,
+  payload: Api.returnShipmentOrder(orderId, query)
+})
+
+export const rejectPurchaseOrder = (orderId, request, files) => ({
   type: AT.REJECT_PURCHASE_ORDER,
-  payload: Api.rejectPurchaseOrder(orderId, reason, reasonText, file)
+  payload: Api.rejectPurchaseOrder(orderId, request, files)
 })
-export const openPopupName = name => ({
-  type: AT.ORDER_OPEN_POPUP_NAME,
-  payload: name
+export const creditCounterAccept = orderId => ({
+  type: AT.ACCEPT_CREDIT,
+  payload: Api.creditCounterAccept(orderId)
 })
-export const closePopup = () => ({
-  type: AT.ORDER_CLOSE_POPUP,
-  payload: {}
+export const creditCounter = (orderId, request, files) => ({
+  type: AT.CREDIT_COUNTER,
+  payload: Api.creditCounter(orderId, request, files)
 })
-export const receivedOrder = orderId => ({
-  type: AT.ORDER_RECEIVED_ORDER,
-  payload: Api.receivedOrder(orderId)
+export const creditCounterReject = orderId => ({
+  type: AT.CREDIT_COUNTER_REJECT,
+  payload: Api.creditCounterReject(orderId)
 })
-export const acceptDelivery = orderId => ({
-  type: AT.ORDER_ACCEPT_DELIVERY_ORDER,
-  payload: Api.accept(orderId)
+
+export const creditRequest = (orderId, request, files) => ({
+  type: AT.CREDIT_REQUEST_UPDATE,
+  payload: Api.creditRequest(orderId, request, files)
+})
+export const getShippingQuotes = (orderId, pickupDate) => ({
+  type: AT.ORDER_SHIPPING_QUOTES_FETCH,
+  payload: Api.getShippingQuotes(orderId, pickupDate)
+})
+export const getManualShippingQuote = (orderId, query) => ({
+  type: AT.ORDER_MANUAL_SHIPPING_QUOTE,
+  payload: Api.getManualShippingQuote(orderId, query)
+})
+export const purchaseShipmentOrder = (orderId, query) => ({
+  type: AT.ORDER_PURCHASE_SHIPMENT_ORDER,
+  payload: Api.purchaseShipmentOrder(orderId, query)
+})
+
+export const downloadCreditRequestAttachments = (endpointType, orderId, creditRequestAttachmentId) => ({
+  type: AT.DOWNLOAD_CREDIT_REQUEST_ATTACHMENTS,
+  payload: Api.downloadCreditRequestAttachments(endpointType, orderId, creditRequestAttachmentId)
+})
+
+export const creditAccept = orderId => ({
+  type: AT.CREDIT_ACCEPT,
+  payload: Api.creditAccept(orderId)
 })

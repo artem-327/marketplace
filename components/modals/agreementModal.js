@@ -46,17 +46,17 @@ class AgreementModal extends Component {
                   id='agree.withTOS.companyAdmin'
                   values={{
                     echosTermsOfService: (
-                      <a href='https://www.echoexchange.net/legal' target='_blank'>
+                      <a href='https://www.echosystem.com/terms-of-service' target='_blank'>
                         {formatMessage({ id: 'verification.echosTOS' })}
                       </a>
                     ),
                     echosTermsOfUse: (
-                      <a href='https://www.echoexchange.net/legal' target='_blank'>
+                      <a href='https://www.echosystem.com/terms-of-use' target='_blank'>
                         {formatMessage({ id: 'verification.termsOfUse' })}
                       </a>
                     ),
                     echosPrivacyPolicy: (
-                      <a href='https://www.echoexchange.net/legal' target='_blank'>
+                      <a href='https://www.echosystem.com/privacy-policy' target='_blank'>
                         {formatMessage({ id: 'verification.privacyPolicy' })}
                       </a>
                     ),
@@ -80,17 +80,17 @@ class AgreementModal extends Component {
                   id='agree.withTOS.nonCompanyAdmin'
                   values={{
                     echosTermsOfService: (
-                      <a href='https://www.echoexchange.net/legal' target='_blank'>
+                      <a href='https://www.echosystem.com/terms-of-service' target='_blank'>
                         {formatMessage({ id: 'verification.echosTOS' })}
                       </a>
                     ),
                     echosTermsOfUse: (
-                      <a href='https://www.echoexchange.net/legal' target='_blank'>
+                      <a href='https://www.echosystem.com/terms-of-use' target='_blank'>
                         {formatMessage({ id: 'verification.termsOfUse' })}
                       </a>
                     ),
                     echosPrivacyPolicy: (
-                      <a href='https://www.echoexchange.net/legal' target='_blank'>
+                      <a href='https://www.echosystem.com/privacy-policy' target='_blank'>
                         {formatMessage({ id: 'verification.privacyPolicy' })}
                       </a>
                     )

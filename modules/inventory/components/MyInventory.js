@@ -139,7 +139,7 @@ class MyInventory extends Component {
         ),
         width: 180,
         align: 'right',
-        sortPath: 'ProductOffer.price'
+        sortPath: 'ProductOffer.cfPricePerUOM'
       },
       {
         name: 'manufacturer',

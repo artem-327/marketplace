@@ -47,6 +47,7 @@ import { validationSchema } from '~/modules/company-form/constants'
 import { DatagridProvider } from '~/modules/datagrid'
 
 import { withToastManager } from 'react-toast-notifications'
+import { getSafe } from '~/utils/functions'
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
@@ -67,13 +68,33 @@ class Settings extends Component {
   }
 
   componentDidMount() {
-    let { isCompanyAdmin, addTab, tabsNames, tabChanged, currentTab } = this.props
+    let { isCompanyAdmin, addTab, tabsNames, tabChanged, currentTab, isUserAdmin, isProductCatalogAdmin } = this.props
     if (isCompanyAdmin) addTab(companyDetailsTab)
     let queryTab =
       (Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) : false) ||
       (isCompanyAdmin ? companyDetailsTab : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
 
-    if (!queryTab.type !== currentTab.type) tabChanged(queryTab)
+    // array of tabsNames converted to Map
+    let tabsNamesMap = new Map()
+    for (let i in tabsNames) {
+      tabsNamesMap.set(tabsNames[i].type, tabsNames[i])
+    }
+    // marked tab based on role of user or if tab changed.
+    if (isCompanyAdmin) {
+      tabChanged(queryTab)
+    } else {
+      if (isUserAdmin) {
+        if (isProductCatalogAdmin && getSafe(() => Router.router.query.type, '') === 'products') {
+          tabChanged(tabsNamesMap.get('products'))
+        } else {
+          tabChanged(tabsNamesMap.get('users'))
+        }
+      } else if (isProductCatalogAdmin) {
+        tabChanged(tabsNamesMap.get('products'))
+      } else if (queryTab.type !== currentTab.type) {
+        tabChanged(queryTab)
+      }
+    }
   }
 
   companyUpdated = name => {
@@ -165,7 +186,9 @@ class Settings extends Component {
       isOpenPopup,
       isOpenImportPopup,
       isOpenUploadDocumentsPopup,
-      isDwollaOpenPopup
+      isDwollaOpenPopup,
+      isUserAdmin,
+      isProductCatalogAdmin
     } = this.props
 
     const tables = {
@@ -224,7 +247,7 @@ class Settings extends Component {
   }
 
   getApiConfig = () => {
-    const { currentTab } = this.props
+    const { currentTab, isProductCatalogAdmin, isUserAdmin } = this.props
     const datagridApiMap = {
       // 'company-details': this.companyDetails(),
       users: {
@@ -404,7 +427,9 @@ const mapStateToProps = ({ settings, auth }) => {
   return {
     ...settings,
     isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
-    company: auth.identity ? auth.identity.company : null
+    company: auth.identity ? auth.identity.company : null,
+    isProductCatalogAdmin: getSafe(() => auth.identity.isProductCatalogAdmin, false),
+    isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false)
   }
 }
 

@@ -164,11 +164,11 @@ class ActionsRequired extends React.Component {
     })
   }
 
-  disapproveOrder = () => {
-    const { order, disapproveOrder } = this.props
+  discardOrder = () => {
+    const { order, discardOrder } = this.props
 
     this.toastCall({
-      action: () => disapproveOrder(order.id),
+      action: () => discardOrder(order.id),
       toastTitleId: 'notifications.order.actions.disapproved.success.header',
       toastTitleDefaultMessage: 'Order Discarded',
       toastContentId: 'notifications.order.actions.disapproved.success.content',
@@ -244,16 +244,28 @@ class ActionsRequired extends React.Component {
       shippingStatus,
       reviewStatus,
       assignLotsRequired,
-      creditStatus,
+      creditReviewStatus,
       returnStatus,
       ordersType,
       detail,
       openReinitiateTransfer,
-      openPopupName
+      openPopupName,
+      orderCreditHistoryOpen
     } = this.props
     const repayUntil = moment(detail.orderDate)
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
     // Some switch might do the trick
+    console.log('creditReviewStatus====================================')
+    console.log(creditReviewStatus)
+    console.log('====================================')
+    const requestCreditButton = orderCreditHistoryOpen
+      ? {
+          buttonType: 'basic',
+          onClick: () => openPopupName('openedPurchaseRequestCreditDelivery'),
+          dataTest: 'orders_detail_requestCredit_btn',
+          text: 'order.requestCredit'
+        }
+      : null
 
     return (
       <>
@@ -306,7 +318,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 1 && creditStatus === 1 // CONFIRMED && PENDING && PENDING
+            {orderStatus === 2 && creditReviewStatus === 1 // CONFIRMED && PENDING
               ? this.renderSegment(null, 14, null, 'order.reviewCreditRequest.description', [
                   {
                     // FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
@@ -368,6 +380,16 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
+            {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
+              ? this.renderSegment(null, 14, null, 'order.shipFailed.description', [
+                  {
+                    buttonType: 'primary',
+                    onClick: () => openPopupName('openedPurchaseOrderShipping'),
+                    dataTest: 'orders_detail_orderShipping_btn',
+                    text: 'order.orderShipping'
+                  }
+                ])
+              : null}
             {orderStatus === 2 && shippingStatus === 2 // Confirmed && In transit
               ? this.renderSegment(null, 13, null, 'order.transit.description', [
                   {
@@ -378,7 +400,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 1 && creditStatus === 0 // Confirmed && Pending
+            {orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 0 // Confirmed && Pending
               ? this.renderSegment(null, 10, null, 'order.delivered.description', [
                   {
                     buttonType: 'primary',
@@ -392,15 +414,10 @@ class ActionsRequired extends React.Component {
                     dataTest: 'orders_detail_reject_btn',
                     text: 'global.reject'
                   },
-                  {
-                    buttonType: 'basic',
-                    onClick: () => openPopupName('openedPurchaseRequestCreditDelivery'),
-                    dataTest: 'orders_detail_requestCredit_btn',
-                    text: 'order.requestCredit'
-                  }
+                  requestCreditButton
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 1 && creditStatus === 2 // Confirmed && PENDING && COUNTER_OFFER_PENDING
+            {orderStatus === 2 && creditReviewStatus === 2 // Confirmed && COUNTER_OFFER_PENDING
               ? this.renderSegment(null, 13, null, 'order.reviewCreditRequest.description', [
                   {
                     buttonType: 'primary',
@@ -410,7 +427,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 3 && creditStatus === 2 // Confirmed && Rejected && COUNTER_OFFER_PENDING
+            {orderStatus === 2 && reviewStatus === 3 && creditReviewStatus === 2 // Confirmed && Rejected && COUNTER_OFFER_PENDING
               ? this.renderSegment(null, 13, null, 'order.waitToReturn.description', [
                   {
                     buttonType: 'primary',
@@ -459,7 +476,7 @@ function mapStateToProps(state, ownProps) {
     orderStatus: getSafe(() => orders.detail.orderStatus, 0),
     shippingStatus: getSafe(() => orders.detail.shippingStatus, 0),
     reviewStatus: getSafe(() => orders.detail.reviewStatus, 0),
-    creditStatus: getSafe(() => orders.detail.creditStatus, 0),
+    creditReviewStatus: getSafe(() => orders.detail.creditReviewStatus, 0),
     returnStatus: getSafe(() => orders.detail.returnStatus, 0),
     assignLotsRequired: false, //checkAssignLotsRequired(orders.detail),
 
@@ -469,7 +486,10 @@ function mapStateToProps(state, ownProps) {
     detail: orders.detail,
     ordersType: ownProps.ordersType,
     shippingTrackingCode: orders.detail.shippingTrackingCode ? orders.detail.shippingTrackingCode : '',
-    returnShippingTrackingCode: orders.detail.returnShippingTrackingCode ? orders.detail.returnShippingTrackingCode : ''
+    returnShippingTrackingCode: orders.detail.returnShippingTrackingCode
+      ? orders.detail.returnShippingTrackingCode
+      : '',
+    orderCreditHistoryOpen: getSafe(() => orders.detail.orderCreditHistoryOpen, false)
   }
 }
 

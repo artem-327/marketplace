@@ -36,6 +36,12 @@ class Navigation extends Component {
       router: { pathname }
     } = this.props
 
+    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin } = getSafe(() => auth.identity, {
+      isCompanyAdmin: null,
+      isUserAdmin: null,
+      isProductCatalogAdmin: null
+    })
+
     return !isAdmin || takeover ? (
       <>
         <DropdownItem text={formatMessage({ id: 'navigation.inventory', defaultMessage: 'Inventory' })}>
@@ -77,7 +83,7 @@ class Navigation extends Component {
             </Dropdown.Item>
           </Dropdown.Menu>
         </DropdownItem>
-        {getSafe(() => auth.identity.isCompanyAdmin, false) && (
+        {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin) && (
           <MenuLink to='/settings' data-test='navigation_menu_settings_lnk'>
             <>{formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}</>
           </MenuLink>

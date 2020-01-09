@@ -237,7 +237,7 @@ class ProductPopup extends React.Component {
       casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.echoProduct.elements, [])),
       echoProduct: getSafe(() => popupValues.echoProduct.id),
       nmfcNumber: getSafe(() => popupValues.nmfcNumber.id, ''),
-      packageWeightUnit: getSafe(() => popupValues.packageWeightUnit.id)
+      packageWeightUnit: getSafe(() => popupValues.packageWeightUnit.id, '')
     }
   }
 
