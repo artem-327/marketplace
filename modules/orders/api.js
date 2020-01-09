@@ -113,10 +113,9 @@ export default {
     query // ! ! TODO: 501 Not Implemented
   ) => api.patch(`prodex/api/shipment/order/${orderId}/shipment-order${generateQueryString(query)}`),
   downloadCreditRequestAttachments: (endpointType, orderId, creditRequestAttachmentId) =>
-    api({
-      method: 'get',
-      url: `${process.env.REACT_APP_API_URL}prodex/api/${endpointType}-orders/${orderId}/attachments/download-credit-request-attachment/${creditRequestAttachmentId}`,
-      responseType: 'blob'
-    }),
+    api.get(
+      `/prodex/api/${endpointType}-orders/${orderId}/attachments/download-credit-request-attachment/${creditRequestAttachmentId}`,
+      { responseType: 'blob' }
+    ),
   creditAccept: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/credit-accept`)
 }
