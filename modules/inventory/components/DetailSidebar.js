@@ -53,9 +53,6 @@ import moment from 'moment'
 import UploadLot from './upload/UploadLot'
 import { withDatagrid } from '~/modules/datagrid'
 import { AttachmentManager } from '~/modules/attachments'
-import confirm from '~/src/components/Confirmable/confirm'
-import _ from 'lodash'
-
 import _ from 'lodash'
 
 export const FlexSidebar = styled(Sidebar)`
