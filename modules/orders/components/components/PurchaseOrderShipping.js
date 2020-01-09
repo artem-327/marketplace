@@ -40,8 +40,7 @@ class PurchaseOrderShipping extends React.Component {
       let pickupDate = moment()
         .add(1, 'minutes')
         .toISOString()
-      //this.props.getShippingQuotes(this.props.orderId, { pickupDate })  // ! ! Not working properly yet
-      this.props.getShippingQuotes(this.props.orderId, '')
+      this.props.getShippingQuotes(this.props.orderId, pickupDate)
     }
   }
 
@@ -76,7 +75,9 @@ class PurchaseOrderShipping extends React.Component {
   }
 
   onDateChange = async (event, { name, value }) => {
-    const pickupDate = moment(value)
+    let pickupDate = moment(value)                                    // Value is date only (it means time = 00:00:00)
+    if (pickupDate.isBefore(moment().add(1, 'minutes'))) // if current date (today) is selected the pickupDate (datetime) is in past
+      pickupDate = moment().add(1, 'minutes')            // BE needs to have pickupDate always in future
     if (!this.props.order.cfWeightExceeded) {
       try {
         await this.props.getShippingQuotes(this.props.order.id, pickupDate.toISOString())
