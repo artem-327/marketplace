@@ -80,18 +80,20 @@ class Settings extends Component {
       tabsNamesMap.set(tabsNames[i].type, tabsNames[i])
     }
     // marked tab based on role of user or if tab changed.
-    if (isProductCatalogAdmin && !isUserAdmin) {
-      tabChanged(tabsNamesMap.get('products'))
-    } else if (isUserAdmin && !isProductCatalogAdmin) {
-      tabChanged(tabsNamesMap.get('users'))
-    } else if (isUserAdmin && isProductCatalogAdmin && !isCompanyAdmin) {
-      if (queryTab.type === 'users') {
-        tabChanged(tabsNamesMap.get('users'))
-      } else {
-        tabChanged(tabsNamesMap.get('products'))
-      }
-    } else if (!queryTab.type !== currentTab.type) {
+    if (isCompanyAdmin) {
       tabChanged(queryTab)
+    } else {
+      if (isUserAdmin) {
+        if (isProductCatalogAdmin && getSafe(() => Router.router.query.type, '') === 'products') {
+          tabChanged(tabsNamesMap.get('products'))
+        } else {
+          tabChanged(tabsNamesMap.get('users'))
+        }
+      } else if (isProductCatalogAdmin) {
+        tabChanged(tabsNamesMap.get('products'))
+      } else if (queryTab.type !== currentTab.type) {
+        tabChanged(queryTab)
+      }
     }
   }
 
