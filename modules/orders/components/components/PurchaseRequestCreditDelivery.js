@@ -2,12 +2,14 @@ import React from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader, FormGroup } from 'semantic-ui-react'
-import { Form } from 'formik-semantic-ui-fixed-validation'
+import { Form, TextArea, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
+import * as val from 'yup'
 
 import { generateToastMarkup } from '~/utils/functions'
+import { errorMessages } from '~/constants/yupValidation'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import { getSafe } from '~/utils/functions'
 
@@ -18,12 +20,6 @@ const ModalBody = styled(ModalContent)`
 const StrongTitle = styled.strong`
   display: flex;
   align-items: center;
-`
-
-const FormInputCredit = styled(Form.Input)`
-  padding-right: 10px;
-  padding-left: 10px;
-  font-size: 12px;
 `
 
 const reasons = [
@@ -63,6 +59,20 @@ const reasons = [
   }
 ]
 
+const initValues = {
+  reasonText: null,
+  reason: null,
+  credit: null
+}
+
+const validationSchema = val.object().shape({
+  credit: val
+    .number()
+    .min(0, errorMessages.minimum(0))
+    .typeError(errorMessages.mustBeNumber)
+    .required(errorMessages.requiredMessage)
+})
+
 class PurchaseRequestCreditDelivery extends React.Component {
   state = {
     reason: null
@@ -73,9 +83,26 @@ class PurchaseRequestCreditDelivery extends React.Component {
     const { reason, reasonText, attachments, credit } = values
     const request = {
       amount: credit,
-      message: reason > 0 && reason < 7 ? `${getSafe(() => reasons[reason - 1].label.defaultMessage, '')}.` : reasonText
+      message:
+        reason > 0 && reason < 7
+          ? `${getSafe(() => reasons[reason - 1].label.defaultMessage, '')}. ${reasonText}`
+          : reasonText
     }
-
+    if (!request.message) {
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage id='order.requestCreditNotSend' defaultMessage='Not send' />,
+          <FormattedMessage
+            id='order.requestCredit.atLeastReasonOrReasonText'
+            defaultMessage='Has to be selected reason or write reason message.'
+          />
+        ),
+        {
+          appearance: 'error'
+        }
+      )
+      return
+    }
     try {
       await creditRequest(orderId, request, attachments)
       toastManager.add(
@@ -120,6 +147,9 @@ class PurchaseRequestCreditDelivery extends React.Component {
             <Modal.Description>
               <Form
                 enableReinitialize
+                validateOnChange={true}
+                validationSchema={validationSchema}
+                initialValues={{ ...initValues }}
                 onSubmit={this.submitHandler}
                 className='flex stretched'
                 style={{ padding: '0' }}>
@@ -134,11 +164,20 @@ class PurchaseRequestCreditDelivery extends React.Component {
                                 id='order.requestingCredit'
                                 defaultMessage={'Requesting a credit of '}
                               />
-                              <FormInputCredit
-                                onChange={(e, { value, name }) => this.handleChange(e, value, name, setFieldValue)}
+                              <Input
                                 name='credit'
-                                placeholder='$'
+                                inputProps={{
+                                  onChange: (e, { value, name }) => this.handleChange(e, value, name, setFieldValue),
+                                  label: formatMessage({
+                                    id: 'order.credit',
+                                    defaultMessage: 'Credit:'
+                                  }),
+                                  placeholder: '$',
+                                  type: 'number',
+                                  min: 0
+                                }}
                               />
+
                               <FormattedMessage id='order.requestingCreditBecause' defaultMessage={' because'} />
                             </StrongTitle>
                             <FormGroup grouped>
@@ -155,9 +194,8 @@ class PurchaseRequestCreditDelivery extends React.Component {
                                 />
                               ))}
 
-                              <Form.TextArea
-                                required
-                                disabled={this.state.reason !== 7}
+                              <TextArea
+                                required={this.state.reason === 7}
                                 onChange={(e, { value, name }) => this.handleChange(e, value, name, setFieldValue)}
                                 name='reasonText'
                                 label={formatMessage({

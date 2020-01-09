@@ -99,11 +99,11 @@ export default {
     api.get(`/prodex/api/shipment/order/${orderId}/return-shipment-rates?pickupDate=${pickupDate}`),
   returnShipmentOrder: (orderId, query) =>
     api.patch(`/prodex/api/shipment/order/${orderId}/return-shipment-order${generateQueryString(query)}`),
-  getShippingQuotes: (
-    orderId,
-    pickupDate
-  ) => api.get(`/prodex/api/shipment/order/${orderId}/shipment-rates`
-    + (pickupDate ? `?pickupDate=${encodeURIComponent(pickupDate)}` : '')),
+  getShippingQuotes: (orderId, pickupDate) =>
+    api.get(
+      `/prodex/api/shipment/order/${orderId}/shipment-rates` +
+        (pickupDate ? `?pickupDate=${encodeURIComponent(pickupDate)}` : '')
+    ),
   getManualShippingQuote: (
     orderId,
     query //! ! TODO: 500 Internal Server Error
@@ -113,8 +113,10 @@ export default {
     query // ! ! TODO: 501 Not Implemented
   ) => api.patch(`prodex/api/shipment/order/${orderId}/shipment-order${generateQueryString(query)}`),
   downloadCreditRequestAttachments: (endpointType, orderId, creditRequestAttachmentId) =>
-    api.get(
-      `prodex/api/${endpointType}-orders/${orderId}/attachments/download-credit-request-attachment/${creditRequestAttachmentId}`
-    ),
+    api({
+      method: 'get',
+      url: `${process.env.REACT_APP_API_URL}prodex/api/${endpointType}-orders/${orderId}/attachments/download-credit-request-attachment/${creditRequestAttachmentId}`,
+      responseType: 'blob'
+    }),
   creditAccept: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/credit-accept`)
 }

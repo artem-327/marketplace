@@ -255,11 +255,7 @@ class ActionsRequired extends React.Component {
     const repayUntil = moment(detail.orderDate)
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
     // Some switch might do the trick
-    /* ! !
-    console.log('creditReviewStatus====================================')
-    console.log(creditReviewStatus)
-    console.log('====================================')
-    */
+
     const requestCreditButton = orderCreditHistoryOpen
       ? {
           buttonType: 'basic',
