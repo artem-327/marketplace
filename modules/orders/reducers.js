@@ -102,9 +102,7 @@ export default function(state = initialState, action) {
     case AT.ORDER_SHIP_FETCH_REJECTED:
       return {
         ...state,
-        isSending: false,
-        //reloadPage: true,//! ! TODO ?
-        //detail: action.payload.data,//?
+        isSending: false
       }
     case AT.ORDER_DOWNLOAD_PDF_FULFILLED:
       return {
@@ -267,6 +265,11 @@ export default function(state = initialState, action) {
         isSending: false
       }
     case AT.RETURN_SHIPMENT_RATES_FULFILLED:
+    case AT.ORDER_CONFIRM_RETURNED_FETCH_FULFILLED:
+    case AT.ORDER_ACCEPT_DELIVERY_ORDER_FULFILLED:
+    case AT.ORDER_RECEIVED_ORDER_FULFILLED:
+    case AT.ORDER_DISCARD_ORDER:
+    case AT.REJECT_PURCHASE_ORDER_FULFILLED:
       return {
         ...state,
         returnShipmentRates: action.payload.data,

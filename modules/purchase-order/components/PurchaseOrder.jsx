@@ -189,7 +189,7 @@ class PurchaseOrder extends Component {
   }
 
   handleManualShipment = async formikProps => {
-    let { values, setSubmitting, errors, validateForm, setFieldTouched } = formikProps
+    let { values, setSubmitting, setFieldTouched } = formikProps
     let {
       requestManualShipment,
       shipping: { selectedAddress },
