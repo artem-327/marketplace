@@ -39,7 +39,8 @@ export const initialState = {
     isNewAddress: true,
     savedShippingPreferences: true,
     selectedShippingQuote: null
-  }
+  },
+  identity: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -467,6 +468,13 @@ export default function reducer(state = initialState, action) {
         ...state,
         manualShipmentPending: false,
         manualShipmentError: true
+      }
+    }
+
+    case AT.PURCHASE_GET_IDENTITY_FULFILLED: {
+      return {
+        ...state,
+        identity: action.payload,
       }
     }
 

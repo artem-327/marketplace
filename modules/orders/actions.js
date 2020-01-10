@@ -165,9 +165,26 @@ export const returnShipmentOrder = (orderId, query) => ({
   payload: Api.returnShipmentOrder(orderId, query)
 })
 
-export const rejectPurchaseOrder = (orderId, reason, reasonText, files) => ({
+export const rejectPurchaseOrder = (orderId, request, files) => ({
   type: AT.REJECT_PURCHASE_ORDER,
-  payload: Api.rejectPurchaseOrder(orderId, reason, reasonText, files)
+  payload: Api.rejectPurchaseOrder(orderId, request, files)
+})
+export const creditCounterAccept = orderId => ({
+  type: AT.ACCEPT_CREDIT,
+  payload: Api.creditCounterAccept(orderId)
+})
+export const creditCounter = (orderId, request, files) => ({
+  type: AT.CREDIT_COUNTER,
+  payload: Api.creditCounter(orderId, request, files)
+})
+export const creditCounterReject = orderId => ({
+  type: AT.CREDIT_COUNTER_REJECT,
+  payload: Api.creditCounterReject(orderId)
+})
+
+export const creditRequest = (orderId, request, files) => ({
+  type: AT.CREDIT_REQUEST_UPDATE,
+  payload: Api.creditRequest(orderId, request, files)
 })
 export const getShippingQuotes = (orderId, pickupDate) => ({
   type: AT.ORDER_SHIPPING_QUOTES_FETCH,
@@ -180,4 +197,14 @@ export const getManualShippingQuote = (orderId, query) => ({
 export const purchaseShipmentOrder = (orderId, query) => ({
   type: AT.ORDER_PURCHASE_SHIPMENT_ORDER,
   payload: Api.purchaseShipmentOrder(orderId, query)
+})
+
+export const downloadCreditRequestAttachments = (endpointType, orderId, creditRequestAttachmentId) => ({
+  type: AT.DOWNLOAD_CREDIT_REQUEST_ATTACHMENTS,
+  payload: Api.downloadCreditRequestAttachments(endpointType, orderId, creditRequestAttachmentId)
+})
+
+export const creditAccept = orderId => ({
+  type: AT.CREDIT_ACCEPT,
+  payload: Api.creditAccept(orderId)
 })

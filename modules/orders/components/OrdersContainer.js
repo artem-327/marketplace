@@ -39,7 +39,7 @@ function mapStateToProps(state, { router, datagrid }) {
       orderStatus: OrdersHelper.getOrderStatus(r.orderStatus),
       shippingStatus: OrdersHelper.getShippingStatus(r.shippingStatus),
       reviewStatus: OrdersHelper.getReviewStatus(r.reviewStatus),
-      creditStatus: OrdersHelper.getCreditStatus(r.creditStatus),
+      creditStatus: OrdersHelper.getCreditStatus(r.creditReviewStatus),
       paymentStatus: OrdersHelper.getPaymentStatus(r.paymentStatus),
       bl: '',
       sds: '',

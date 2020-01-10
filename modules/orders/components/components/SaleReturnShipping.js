@@ -32,7 +32,7 @@ import '~/modules/purchase-order/styles/PurchaseOrder.scss'
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `
-class SaleReviewCreditRequest extends React.Component {
+class SaleReturnShipping extends React.Component {
   state = {
     selectedShippingQuote: 0,
     shipmentQuoteId: ''
@@ -58,7 +58,6 @@ class SaleReviewCreditRequest extends React.Component {
       //this.props.getShippingQuotes(this.props.orderId, null)
     }
   }
-
   submitHandler = async (values, actions) => {
     const { closePopup, order, orderId, toastManager, shippingQuotes } = this.props
 
@@ -93,7 +92,9 @@ class SaleReviewCreditRequest extends React.Component {
   }
 
   onDateChange = async (event, { name, value }) => {
-    const pickupDate = moment(value)
+    let pickupDate = moment(value)                                    // Value is date only (it means time = 00:00:00)
+    if (pickupDate.isBefore(moment().add(1, 'minutes'))) // if current date (today) is selected the pickupDate (datetime) is in past
+      pickupDate = moment().add(1, 'minutes')            // BE needs to have pickupDate always in future
     if (!this.props.order.cfWeightExceeded) {
       try {
         // ! ! TODO: date not working in getShippingQuotes?
@@ -353,4 +354,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(SaleReviewCreditRequest)))
+export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(SaleReturnShipping)))

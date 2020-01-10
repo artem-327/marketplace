@@ -242,6 +242,10 @@ const userEnableDisableStatus = (r, currentUserId) => {
 }
 
 const displayUserRoles = roles => {
+<<<<<<< HEAD
+=======
+  if (!roles) return
+>>>>>>> 1.0.1
   const rolesList = (
     <List>
       {roles.map(rol => (

@@ -34,7 +34,9 @@ export const uniqueArrayByKey = (array, key) => {
 export const generateToastMarkup = (header, content) => (
   <div>
     <strong>{header}</strong>
-    <div>{content}</div>
+    <div style={{ wordBreak: 'break-word' }}>
+      {content}
+    </div>
   </div>
 )
 

@@ -7,5 +7,7 @@ export const PHONE_REGEXP = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3
 export const ROLES_ENUM = [
   { name: 'SuperAdmin', id: 1, propertyName: 'isAdmin' },
   { name: 'CompanyAdmin', id: 2, propertyName: 'isCompanyAdmin' },
-  { name: 'Merchant', id: 3, propertyName: 'isMerchant' }
+  { name: 'Merchant', id: 3, propertyName: 'isMerchant' },
+  { name: 'UserAdmin', id: 4, propertyName: 'isUserAdmin' },
+  { name: 'ProductCatalogAdmin', id: 6, propertyName: 'isProductCatalogAdmin' }
 ]

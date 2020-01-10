@@ -178,7 +178,7 @@ class Layout extends Component {
                   )}
                   <Dropdown.Item
                     as={Menu.Item}
-                    onClick={() => window.open('https://www.echoexchange.net/legal')}
+                    onClick={() => window.open('https://www.echosystem.com/terms-of-service')}
                     data-test='navigation_menu_user_terms_of_service_drpdn'>
                     {formatMessage({
                       id: 'global.termsOfService',

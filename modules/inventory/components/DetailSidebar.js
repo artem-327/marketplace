@@ -218,9 +218,8 @@ const validationScheme = val.object().shape({
       .required(errorMessages.requiredMessage),
     costPerUOM: val
       .number()
-      .min(0)
-      .typeError(errorMessages.mustBeNumber)
-      .required(errorMessages.requiredMessage),
+      .nullable()
+      .min(0, errorMessages.minimum(0)),
     lotNumber: val
       .string()
       .typeError(errorMessages.invalidString)
@@ -738,7 +737,7 @@ class DetailSidebar extends Component {
         condition: getSafe(() => sidebarValues.condition, null),
         conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
         conforming: getSafe(() => sidebarValues.conforming, true),
-        costPerUOM: getSafe(() => sidebarValues.costPerUOM, ''),
+        costPerUOM: getSafe(() => sidebarValues.costPerUOM, null),
         externalNotes: getSafe(() => sidebarValues.externalNotes, ''),
         fobPrice: getSafe(() => sidebarValues.pricingTiers[0].pricePerUOM, ''),
         inStock: getSafe(() => sidebarValues.inStock, false),
@@ -1294,7 +1293,9 @@ class DetailSidebar extends Component {
                                             value = parseInt(value)
                                             if (value > 1 && !isNaN(value)) {
                                               setFieldValue('minimumRequirement', true)
-                                              setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
+                                              // It seems to do bug when created new inventory
+                                              // value is adding in handleSubmit 
+                                              //setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
                                             }
                                           }
                                         }}

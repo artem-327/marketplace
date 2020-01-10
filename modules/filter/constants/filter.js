@@ -26,6 +26,7 @@ export const filterPresets = {
 export const paths = {
   productOffers: {
     productId: 'ProductOffer.companyProduct.id',
+    marketplaceProductId: 'ProductOffer.companyProduct.echoProduct.id',
     quantity: 'ProductOffer.quantity',
     price: 'ProductOffer.cfPricePerUOM',
     packagingTypes: 'ProductOffer.companyProduct.packagingType.id',
@@ -166,7 +167,7 @@ export const datagridValues = {
         }
 
         case filterTypes.MARKETPLACE: {
-          var path = paths.productOffers.productId
+          var path = paths.productOffers.marketplaceProductId
           break
         }
 
@@ -725,13 +726,13 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
   })
 
   // Take rest elements (those who aren't grouped) and push them to array
-
   filters.forEach((filter, i) => {
+    const description = JSON.parse(filter.values[i].description)
     if (!indexes.includes(i)) {
       results.push({
         description: filter.description,
         valuesDescription: filter.valuesDescription,
-        tagDescription: filter.tagDescription,
+        tagDescription: description.name,
         indexes: [i]
       })
     }
