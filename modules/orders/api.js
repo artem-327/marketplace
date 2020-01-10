@@ -108,10 +108,8 @@ export default {
     orderId,
     query //! ! TODO: 500 Internal Server Error
   ) => api.post(`/prodex/api/shipment/order/${orderId}/manual-quote${generateQueryString(query)}`),
-  purchaseShipmentOrder: (
-    orderId,
-    query // ! ! TODO: 501 Not Implemented
-  ) => api.patch(`prodex/api/shipment/order/${orderId}/shipment-order${generateQueryString(query)}`),
+  purchaseShipmentOrder: (orderId, query) =>
+    api.patch(`/prodex/api/shipment/order/${orderId}/shipment-order${generateQueryString(query)}`),
   downloadCreditRequestAttachments: (endpointType, orderId, creditRequestAttachmentId) =>
     api.get(
       `/prodex/api/${endpointType}-orders/${orderId}/attachments/download-credit-request-attachment/${creditRequestAttachmentId}`,

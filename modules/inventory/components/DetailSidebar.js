@@ -215,7 +215,10 @@ const validationScheme = val.object().shape({
       .min(0, errorMessages.minimum(0))
       .typeError(errorMessages.mustBeNumber)
       .required(errorMessages.requiredMessage),
-    costPerUOM: val.number().nullable().min(0, errorMessages.minimum(0)),
+    costPerUOM: val
+      .number()
+      .nullable()
+      .min(0, errorMessages.minimum(0)),
     lotNumber: val
       .string()
       .typeError(errorMessages.invalidString)
@@ -1277,7 +1280,9 @@ class DetailSidebar extends Component {
                                             value = parseInt(value)
                                             if (value > 1 && !isNaN(value)) {
                                               setFieldValue('minimumRequirement', true)
-                                              setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
+                                              // It seems to do bug when created new inventory
+                                              // value is adding in handleSubmit 
+                                              //setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
                                             }
                                           }
                                         }}
