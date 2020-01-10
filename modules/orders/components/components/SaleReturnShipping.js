@@ -108,11 +108,15 @@ class SaleReturnShipping extends React.Component {
   requestManualShippingQuote = async () => {
     const { order } = this.props
 
+    const returnAddressCountryId = order.returnAddressCountryId
+      ? order.returnAddressCountryId
+      : 1
+
     try {
       //orderId, countryId, zip
       await this.props.getManualShippingQuote(order.id, {
-        destinationCountryId: 1,
-        destinationZIP: order.shippingAddressZip
+        destinationCountryId: returnAddressCountryId,
+        destinationZIP: order.returnAddressZip
       })
     } catch {
     } finally {
