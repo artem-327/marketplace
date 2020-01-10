@@ -44,7 +44,7 @@ export default {
   accept: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/accept`),
 
   rejectPurchaseOrder: (orderId, request, files) => {
-    let params = { ...request, type: docType }
+    let params = { ...request }
     const formData = new FormData()
     for (let i in files) {
       formData.append('files', files[i])

@@ -256,7 +256,7 @@ class ActionsRequired extends React.Component {
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
     // Some switch might do the trick
 
-    const requestCreditButton = orderCreditHistoryOpen
+    const requestCreditButton = !orderCreditHistoryOpen
       ? {
           buttonType: 'basic',
           onClick: () => openPopupName('openedPurchaseRequestCreditDelivery'),

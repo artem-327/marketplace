@@ -51,6 +51,11 @@ const reasons = [
   }
 ]
 
+const initValues = {
+  reasonComment: null,
+  reason: null
+}
+
 class PurchaseRejectDelivery extends React.Component {
   state = {
     reason: null
@@ -59,6 +64,7 @@ class PurchaseRejectDelivery extends React.Component {
   submitHandler = async (values, actions) => {
     const { closePopup, orderId, toastManager, rejectPurchaseOrder } = this.props
     const { reason, reasonComment, attachments } = values
+
     try {
       const request = { reason, reasonComment }
       await rejectPurchaseOrder(orderId, request, attachments)
@@ -104,6 +110,7 @@ class PurchaseRejectDelivery extends React.Component {
             <Modal.Description>
               <Form
                 enableReinitialize
+                initialValues={{ ...initValues }}
                 onSubmit={this.submitHandler}
                 className='flex stretched'
                 style={{ padding: '0' }}>
