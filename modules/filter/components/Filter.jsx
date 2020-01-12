@@ -109,8 +109,8 @@ class Filter extends Component {
       filters,
       name,
       notificationEnabled: notificationEnabled,
-      ...(notificationMail === undefined || notificationMail === '' ? null : {notificationMail}),
-      ...(notificationPhone === undefined || notificationPhone === '' ? null : {notificationPhone}),
+      ...(notificationMail === undefined || notificationMail === '' ? null : { notificationMail }),
+      ...(notificationPhone === undefined || notificationPhone === '' ? null : { notificationPhone }),
       notifyMail,
       notifyPhone,
       notifySystem
@@ -204,10 +204,10 @@ class Filter extends Component {
         toastManager.add(
           <div>
             <strong>
-              <FormattedMessage id={`confirm.filter.${id ? 'updated' : 'saved'}`} values={{name: params.name}}/>
+              <FormattedMessage id={`confirm.filter.${id ? 'updated' : 'saved'}`} values={{ name: params.name }} />
             </strong>
           </div>,
-          {appearance: 'success', pauseOnHover: true}
+          { appearance: 'success', pauseOnHover: true }
         )
 
         if (params.checkboxes.automaticallyApply) {
@@ -215,7 +215,7 @@ class Filter extends Component {
           self.props.onApply(filter)
           self.props.applyFilter(requestData)
         }
-      } catch (err) { }
+      } catch (err) {}
     }
 
     let filter = this.props.savedFilters.find(filter => filter.name === params.name)
@@ -234,7 +234,7 @@ class Filter extends Component {
         })
     } else {
       callback()
-      this.setState({openedSaveFilter: false})
+      this.setState({ openedSaveFilter: false })
     }
   }
 
@@ -428,7 +428,7 @@ class Filter extends Component {
     )
   }
 
-  formSaveFilter = (formikProps) => {
+  formSaveFilter = formikProps => {
     let { intl } = this.props
     let { values } = formikProps
     const { formatMessage } = intl
@@ -472,7 +472,7 @@ class Filter extends Component {
             </GridColumn>
           </LessPaddedRow>
         </Grid>
-        <Notifications values={values} formikProps={formikProps}/>
+        <Notifications values={values} formikProps={formikProps} />
       </>
     )
   }
@@ -536,7 +536,7 @@ class Filter extends Component {
       selection: true,
       multiple: true,
       fluid: true,
-      options: this.getOptions(uniqueArrayByKey(autocompleteData.concat(savedAutocompleteData), 'key')),
+      options: this.getOptions(uniqueArrayByKey(autocompleteData, 'key')),
       loading: autocompleteDataLoading,
       name: 'search',
       placeholder: <FormattedMessage id='filter.searchProducts' defaultMessage='Search Products' />,
@@ -853,17 +853,19 @@ class Filter extends Component {
                         size='large'
                         loading={isFilterSaving}
                         primary={openedSaveFilter}
-                        onClick={ async () => {
+                        onClick={async () => {
                           if (openedSaveFilter) {
                             let { values } = props
                             const { validateForm, submitForm } = props
 
                             validateForm().then(err => {
                               const errors = Object.keys(err)
-                              if (errors.length && errors[0] !== 'isCanceled') {    // Errors found
-                                submitForm()    // to show errors
+                              if (errors.length && errors[0] !== 'isCanceled') {
+                                // Errors found
+                                submitForm() // to show errors
                                 return
-                              } else {  // No errors found
+                              } else {
+                                // No errors found
                                 this.handleFilterSave(values)
                               }
                             })

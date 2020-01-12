@@ -435,7 +435,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         autocompleteDataLoading: false,
-        autocompleteData: uniqueArrayByKey(payload.concat(state.autocompleteData), 'id').map(el => {
+        autocompleteData: uniqueArrayByKey(action.payload, 'id').map(el => {
           const productCode = getSafe(() => el.intProductCode, el.mfrProductCode)
           const productName = getSafe(() => el.intProductName, el.mfrProductName)
           return {
@@ -500,6 +500,7 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
+        autocompleteData: [],
         sidebarValues: payload, // newest data from db
         sidebarActiveTab
       }
