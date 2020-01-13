@@ -60,7 +60,8 @@ const ScrollableSegment = styled(Segment)`
 
 class Settings extends Component {
   state = {
-    companyLogo: null
+    companyLogo: null,
+    wrongUrl: true
   }
 
   componentWillMount() {
@@ -79,55 +80,6 @@ class Settings extends Component {
       toastManager
     } = this.props
 
-    if (
-      isUserAdmin &&
-      !isProductCatalogAdmin &&
-      !isCompanyAdmin &&
-      getSafe(() => Router.router.query.type, '') !== 'users'
-    ) {
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='settings.wrongUrl' defaultMessage='Wrong URL' />,
-          <FormattedMessage
-            id='settings.rerenderToUsers'
-            defaultMessage='You do not have the necessary rights. Return back to Users.'
-          />
-        ),
-        { appearance: 'warning' }
-      )
-      Router.push('/settings?type=users')
-    } else if (
-      isProductCatalogAdmin &&
-      !isUserAdmin &&
-      !isCompanyAdmin &&
-      getSafe(() => Router.router.query.type, '') !== 'products'
-    ) {
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='settings.wrongUrl' defaultMessage='Wrong URL' />,
-          <FormattedMessage
-            id='settings.rerenderToProducts'
-            defaultMessage='You do not have the necessary rights. Return back to Products.'
-          />
-        ),
-        { appearance: 'warning' }
-      )
-      Router.push('/settings?type=products')
-    } else if (isProductCatalogAdmin === false && isUserAdmin === false && isCompanyAdmin === false) {
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='settings.wrongUrl' defaultMessage='Wrong URL' />,
-          <FormattedMessage
-            id='settings.rerenderToMtInventory'
-            defaultMessage='You do not have the necessary rights. Return back to My Inventory.'
-          />
-        ),
-        { appearance: 'warning' }
-      )
-      Router.push('/')
-      return
-    }
-
     if (isCompanyAdmin) addTab(companyDetailsTab)
     let queryTab =
       (Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) : false) ||
@@ -143,16 +95,77 @@ class Settings extends Component {
       tabChanged(queryTab)
     } else {
       if (isUserAdmin) {
-        if (isProductCatalogAdmin && getSafe(() => Router.router.query.type, '') === 'products') {
+        if (
+          isProductCatalogAdmin &&
+          (getSafe(() => queryTab.type, '') === 'products' || getSafe(() => queryTab.type, '') === 'system-settings')
+        ) {
           tabChanged(tabsNamesMap.get('products'))
+          Router.push('/settings?type=products')
         } else {
           tabChanged(tabsNamesMap.get('users'))
+          Router.push('/settings?type=users')
         }
       } else if (isProductCatalogAdmin) {
         tabChanged(tabsNamesMap.get('products'))
+        Router.push('/settings?type=products')
+        this.setState({ wrongUrl: false })
       } else if (queryTab.type !== currentTab.type) {
         tabChanged(queryTab)
+        Router.push(`/settings?type=${currentTab.type}`)
       }
+    }
+
+    if (
+      isUserAdmin &&
+      !isProductCatalogAdmin &&
+      !isCompanyAdmin &&
+      queryTab.type !== 'users' &&
+      queryTab.type !== 'system-settings'
+    ) {
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage id='settings.wrongUrl' defaultMessage='Wrong URL' />,
+          <FormattedMessage
+            id='settings.rerenderToUsers'
+            defaultMessage='You are not authorized to view this page. Return back to Users.'
+          />
+        ),
+        { appearance: 'warning' }
+      )
+      this.setState({ wrongUrl: false })
+    } else if (
+      isProductCatalogAdmin &&
+      !isUserAdmin &&
+      !isCompanyAdmin &&
+      queryTab.type !== 'products' &&
+      queryTab.type !== 'system-settings'
+    ) {
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage id='settings.wrongUrl' defaultMessage='Wrong URL' />,
+          <FormattedMessage
+            id='settings.rerenderToProducts'
+            defaultMessage='You are not authorized to view this page. Return back to Product Catalog.'
+          />
+        ),
+        { appearance: 'warning' }
+      )
+      this.setState({ wrongUrl: false })
+    } else if (isProductCatalogAdmin === false && isUserAdmin === false && isCompanyAdmin === false) {
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage id='settings.wrongUrl' defaultMessage='Wrong URL' />,
+          <FormattedMessage
+            id='settings.rerenderToMtInventory'
+            defaultMessage='You are not authorized to view this page. Return back to My Inventory.'
+          />
+        ),
+        { appearance: 'warning' }
+      )
+      Router.push('/')
+      return
+    } else {
+      this.setState({ wrongUrl: false })
     }
   }
 
@@ -461,23 +474,25 @@ class Settings extends Component {
     const { currentTab } = this.props
 
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}>
-        <Container fluid className='flex stretched'>
-          <Container fluid style={{ padding: '0 1.5vh' }}>
-            <TablesHandlers currentTab={currentTab} />
+      !this.state.wrongUrl && (
+        <DatagridProvider apiConfig={this.getApiConfig()}>
+          <Container fluid className='flex stretched'>
+            <Container fluid style={{ padding: '0 1.5vh' }}>
+              <TablesHandlers currentTab={currentTab} />
+            </Container>
+            <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
+              <Grid.Row>
+                <Grid.Column width={3}>
+                  <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />
+                </Grid.Column>
+                <Grid.Column className='flex stretched' style={{ marginTop: '10px' }}>
+                  {this.renderContent()}
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
           </Container>
-          <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
-            <Grid.Row>
-              <Grid.Column width={3}>
-                <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />
-              </Grid.Column>
-              <Grid.Column className='flex stretched' style={{ marginTop: '10px' }}>
-                {this.renderContent()}
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Container>
-      </DatagridProvider>
+        </DatagridProvider>
+      )
     )
   }
 }
