@@ -131,6 +131,15 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 160
+      },
+      {
+        name: 'nacdMember',
+        title: (
+          <FormattedMessage id='marketplace.nacdMember' defaultMessage='NACD Member'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160
       }
     ],
     selectedRows: [],
@@ -158,14 +167,9 @@ class Marketplace extends Component {
       '': r.condition && (
         <Popup
           content={
-            <FormattedMessage
-              id='global.nonConforming.tooltip'
-              defaultMessage='This is a non-conforming product.'
-            />
+            <FormattedMessage id='global.nonConforming.tooltip' defaultMessage='This is a non-conforming product.' />
           }
-          trigger={
-            <Icon name='exclamation triangle' color='red'/>
-          }
+          trigger={<Icon name='exclamation triangle' color='red' />}
         />
       ),
       condition: r.condition ? (
@@ -201,6 +205,10 @@ class Marketplace extends Component {
     this.props.datagrid.setFilter({ filters: [] })
   }
 
+  handleClearAutocompleteData = () => {
+    this.props.clearAutocompleteData()
+  }
+
   isSelectedMultipleEcho = (rows, selectedRows) => {
     if (!rows || !selectedRows) return
     const filteredRows = rows.reduce((filtered, row, rowIndex) => {
@@ -230,7 +238,6 @@ class Marketplace extends Component {
     const { datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading, openPopup } = this.props
     const { columns, selectedRows } = this.state
     let { formatMessage } = intl
-
     const rows = this.getRows()
     return (
       <>
@@ -307,7 +314,7 @@ class Marketplace extends Component {
                 }
               />
               <Menu.Item>
-                <SubMenu />
+                <SubMenu clearAutocompleteData={this.handleClearAutocompleteData} />
               </Menu.Item>
             </Menu.Menu>
           </Menu>

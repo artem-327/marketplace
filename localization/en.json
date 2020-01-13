@@ -1797,5 +1797,6 @@
   "order.acceptedCredit": "Credit was accepted",
   "order.successfullySent": "Successfully sent",
   "order.creditCounterReject": "Credit counter was rejected",
-  "order.requestCreditSend": "Request credit was successfully send"
+  "order.requestCreditSend": "Request credit was successfully sent",
+  "global.nacdMember": "NACD Member"
 }

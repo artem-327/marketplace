@@ -169,21 +169,6 @@ class PurchaseOrder extends Component {
       Router.push('/orders?type=purchase')
     } catch (e) {
       console.error(e)
-
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='notifications.purchaseOrderError.header' defaultMessage='Order Error' />,
-          <FormattedMessage
-            id='notifications.purchaseOrderError.contentWithText'
-            defaultMessage='Error occurred while placing an order:'
-            values={{ clientMessage: e.clientMessage }}>
-            {text => text.split('\n').map((item, i) => <p key={i}>{item}</p>)}
-          </FormattedMessage>
-        ),
-        {
-          appearance: 'error'
-        }
-      )
     }
     this.setState({ submitting: false })
   }
@@ -252,7 +237,7 @@ class PurchaseOrder extends Component {
     let initialValues = {
       payment,
       address: '',
-      shipmentQuoteId: '',
+      shipmentQuoteId: ''
     }
 
     let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit}` : ''
