@@ -47,7 +47,7 @@ import { validationSchema } from '~/modules/company-form/constants'
 import { DatagridProvider } from '~/modules/datagrid'
 
 import { withToastManager } from 'react-toast-notifications'
-import { getSafe } from '~/utils/functions'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
@@ -68,7 +68,66 @@ class Settings extends Component {
   }
 
   componentDidMount() {
-    let { isCompanyAdmin, addTab, tabsNames, tabChanged, currentTab, isUserAdmin, isProductCatalogAdmin } = this.props
+    let {
+      isCompanyAdmin,
+      addTab,
+      tabsNames,
+      tabChanged,
+      currentTab,
+      isUserAdmin,
+      isProductCatalogAdmin,
+      toastManager
+    } = this.props
+
+    if (
+      isUserAdmin &&
+      !isProductCatalogAdmin &&
+      !isCompanyAdmin &&
+      getSafe(() => Router.router.query.type, '') !== 'users'
+    ) {
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage id='settings.wrongUrl' defaultMessage='Wrong URL' />,
+          <FormattedMessage
+            id='settings.rerenderToUsers'
+            defaultMessage='You do not have the necessary rights. Return back to Users.'
+          />
+        ),
+        { appearance: 'warning' }
+      )
+      Router.push('/settings?type=users')
+    } else if (
+      isProductCatalogAdmin &&
+      !isUserAdmin &&
+      !isCompanyAdmin &&
+      getSafe(() => Router.router.query.type, '') !== 'products'
+    ) {
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage id='settings.wrongUrl' defaultMessage='Wrong URL' />,
+          <FormattedMessage
+            id='settings.rerenderToProducts'
+            defaultMessage='You do not have the necessary rights. Return back to Products.'
+          />
+        ),
+        { appearance: 'warning' }
+      )
+      Router.push('/settings?type=products')
+    } else if (isProductCatalogAdmin === false && isUserAdmin === false && isCompanyAdmin === false) {
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage id='settings.wrongUrl' defaultMessage='Wrong URL' />,
+          <FormattedMessage
+            id='settings.rerenderToMtInventory'
+            defaultMessage='You do not have the necessary rights. Return back to My Inventory.'
+          />
+        ),
+        { appearance: 'warning' }
+      )
+      Router.push('/')
+      return
+    }
+
     if (isCompanyAdmin) addTab(companyDetailsTab)
     let queryTab =
       (Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) : false) ||
