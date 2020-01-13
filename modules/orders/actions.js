@@ -13,9 +13,9 @@ export const confirmOrder = orderId => ({
   type: AT.ORDER_CONFIRM_FETCH,
   payload: Api.confirm(orderId)
 })
-export const confirmReturned = (orderId, fundingSourceId) => ({
+export const confirmReturned = orderId => ({
   type: AT.ORDER_CONFIRM_RETURNED_FETCH,
-  payload: Api.confirmReturned(orderId, fundingSourceId)
+  payload: Api.confirmReturned(orderId)
 })
 export const rejectOrder = orderId => ({
   type: AT.ORDER_REJECT_FETCH,
