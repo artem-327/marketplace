@@ -98,10 +98,10 @@ class PurchaseRequestCreditDelivery extends React.Component {
     if (!request.message) {
       toastManager.add(
         generateToastMarkup(
-          <FormattedMessage id='order.requestCreditNotSend' defaultMessage='Not send' />,
+          <FormattedMessage id='order.requestCreditNotSent' defaultMessage='Not sent' />,
           <FormattedMessage
             id='order.requestCredit.atLeastReasonOrReasonText'
-            defaultMessage='Has to be selected reason or write reason message.'
+            defaultMessage='Reason has to be selected or write reason message.'
           />
         ),
         {
@@ -116,7 +116,7 @@ class PurchaseRequestCreditDelivery extends React.Component {
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id='order.success' defaultMessage='Success' />,
-          <FormattedMessage id='order.requestCreditSend' defaultMessage='Request credit was successfully send' />
+          <FormattedMessage id='order.requestCreditSent' defaultMessage='Request credit was successfully sent' />
         ),
         {
           appearance: 'success'

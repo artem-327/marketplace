@@ -1796,7 +1796,7 @@
   "order.acceptedCredit": "Credit was accepted",
   "order.successfullySent": "Successfully sent",
   "order.creditCounterReject": "Credit counter was rejected",
-  "order.requestCreditSend": "Request credit was successfully send",
-  "order.requestCreditNotSend": "Not send",
-  "order.requestCredit.atLeastReasonOrReasonText": "Has to be selected reason or write reason message."
+  "order.requestCreditSent": "Request credit was successfully sent",
+  "order.requestCreditNotSent": "Not sent",
+  "order.requestCredit.atLeastReasonOrReasonText": "Reason has to be selected or write reason message."
 }
