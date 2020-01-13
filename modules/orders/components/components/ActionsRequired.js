@@ -215,22 +215,24 @@ class ActionsRequired extends React.Component {
           </Grid.Column>
           <Grid.Column>
             <Grid verticalAlign='middle' columns='equal'>
-              {buttons.map(button => {
-                return (
-                  <Grid.Column>
-                    <Button
-                      primary={button.buttonType === 'primary'}
-                      basic={button.buttonType === 'basic'}
-                      fluid
-                      size='large'
-                      color={color ? color : null}
-                      onClick={() => button.onClick()}
-                      data-test={button.dataTest}>
-                      <FormattedMessage id={button.text} tagName='span' />
-                    </Button>
-                  </Grid.Column>
-                )
-              })}
+              {buttons &&
+                buttons.map(button => {
+                  if (!button) return
+                  return (
+                    <Grid.Column>
+                      <Button
+                        primary={button.buttonType === 'primary'}
+                        basic={button.buttonType === 'basic'}
+                        fluid
+                        size='large'
+                        color={color ? color : null}
+                        onClick={() => button.onClick()}
+                        data-test={button.dataTest}>
+                        <FormattedMessage id={button.text} tagName='span' />
+                      </Button>
+                    </Grid.Column>
+                  )
+                })}
             </Grid>
           </Grid.Column>
         </Grid>
@@ -256,7 +258,7 @@ class ActionsRequired extends React.Component {
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
     // Some switch might do the trick
 
-    const requestCreditButton = !orderCreditHistoryOpen
+    const requestCreditButton = orderCreditHistoryOpen
       ? {
           buttonType: 'basic',
           onClick: () => openPopupName('openedPurchaseRequestCreditDelivery'),
