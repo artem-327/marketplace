@@ -198,11 +198,14 @@ class Marketplace extends Component {
     this.props.datagrid.setFilter({ filters: [] })
   }
 
+  handleClearAutocompleteData = () => {
+    this.props.clearAutocompleteData()
+  }
+
   render() {
     const { datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading, openPopup } = this.props
     const { columns, selectedRows } = this.state
     let { formatMessage } = intl
-
     const rows = this.getRows()
 
     return (
@@ -270,7 +273,7 @@ class Marketplace extends Component {
                 }
               />
               <Menu.Item>
-                <SubMenu />
+                <SubMenu clearAutocompleteData={this.handleClearAutocompleteData} />
               </Menu.Item>
             </Menu.Menu>
           </Menu>

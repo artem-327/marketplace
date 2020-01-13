@@ -74,7 +74,12 @@ function mapStateToProps(store, { datagrid }) {
 }
 
 export default withDatagrid(
-  connect(mapStateToProps, { ...Actions, sidebarChanged, openPopup, closePopup, getProductOffer, applyFilter })(
-    Marketplace
-  )
+  connect(mapStateToProps, {
+    ...Actions,
+    sidebarChanged,
+    openPopup,
+    closePopup,
+    getProductOffer,
+    applyFilter
+  })(Marketplace)
 )

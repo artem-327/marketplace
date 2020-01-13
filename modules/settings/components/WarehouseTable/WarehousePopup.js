@@ -86,7 +86,7 @@ class WarehousePopup extends React.Component {
         })
       }
 
-      let status = currentTab === 'branches' ? 'branch' : 'warehouse'
+      let status = currentTab.type === 'branches' ? 'branch' : 'warehouse'
 
       status += popupValues ? 'Updated' : 'Created'
 
@@ -208,47 +208,52 @@ class WarehousePopup extends React.Component {
                   />
                   <Input type='text' label='Email' name='deliveryAddress.contactEmail' />
                 </FormGroup>
-                <Header as='h3'>
-                  <FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' />
-                </Header>
-                <FormGroup
-                  widths='equal'
-                  data-test='settings_delivery_address_notes_inp'
-                  style={{ alignItems: 'center' }}>
-                  <Input
-                    type='text'
-                    label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
-                    name='deliveryAddress.readyTime'
-                  />
-                  <Input
-                    type='text'
-                    label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
-                    name='deliveryAddress.closeTime'
-                  />
-                </FormGroup>
-                <FormGroup widths='equal'>
-                  <Checkbox
-                    label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
-                    name='deliveryAddress.liftGate'
-                    inputProps={{ 'data-test': 'settings_delivery_address_liftGate_inp' }}
-                  />
-                  <Checkbox
-                    label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
-                    name='deliveryAddress.forkLift'
-                    inputProps={{ 'data-test': 'settings_delivery_address_forklift_inp' }}
-                  />
-                  <Checkbox
-                    label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
-                    name='deliveryAddress.callAhead'
-                    inputProps={{ 'data-test': 'settings_delivery_address_callAhead_inp' }}
-                  />
-                </FormGroup>
-                <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
-                  <TextArea
-                    name='deliveryAddress.deliveryNotes'
-                    label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
-                  />
-                </FormGroup>
+                {getSafe(() => currentTab.type, '') === 'warehouses' ? (
+                  <>
+                    {' '}
+                    <Header as='h3'>
+                      <FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' />
+                    </Header>
+                    <FormGroup
+                      widths='equal'
+                      data-test='settings_delivery_address_notes_inp'
+                      style={{ alignItems: 'center' }}>
+                      <Input
+                        type='text'
+                        label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
+                        name='deliveryAddress.readyTime'
+                      />
+                      <Input
+                        type='text'
+                        label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
+                        name='deliveryAddress.closeTime'
+                      />
+                    </FormGroup>
+                    <FormGroup widths='equal'>
+                      <Checkbox
+                        label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
+                        name='deliveryAddress.liftGate'
+                        inputProps={{ 'data-test': 'settings_delivery_address_liftGate_inp' }}
+                      />
+                      <Checkbox
+                        label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
+                        name='deliveryAddress.forkLift'
+                        inputProps={{ 'data-test': 'settings_delivery_address_forklift_inp' }}
+                      />
+                      <Checkbox
+                        label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
+                        name='deliveryAddress.callAhead'
+                        inputProps={{ 'data-test': 'settings_delivery_address_callAhead_inp' }}
+                      />
+                    </FormGroup>
+                    <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
+                      <TextArea
+                        name='deliveryAddress.deliveryNotes'
+                        label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
+                      />
+                    </FormGroup>
+                  </>
+                ) : null}
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset onClick={closePopup} data-test='settings_warehouse_popup_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
