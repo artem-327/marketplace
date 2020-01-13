@@ -1441,6 +1441,7 @@
   "inventory.certOfAnalysis": "Certification of Analysis",
   "marketplace.buy": "Buy Product Offer",
   "marketplace.shippingQuoteTooltip": "Select one or more Product Offers to calculate a Shipping Quote. Multiple ProductOffers can be choosed only if they are at the same Location.",
+  "marketplace.multipleEchoProduct": "Please, only select inventory for the same product to get a Shipping Quote",
   "orders.detail": "Detail",
   "settings.addUser": "Add User",
   "settings.product.offerExists": "Product cannot be edited, as it already has ProductOffers linked to it.",
