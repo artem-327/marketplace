@@ -16,9 +16,8 @@ const CapitalizedText = styled.span`
   text-transform: capitalize;
 `
 
-const DivIconTooltip = styled.div`
-  position: fixed;
-  z-index: 500;
+const DivButtonWithToolTip = styled.div`
+  z-index: 501;
 `
 
 class Marketplace extends Component {
@@ -156,14 +155,13 @@ class Marketplace extends Component {
 
     return rows.map(r => ({
       ...r,
-      '': !r.condition && (
-        <DivIconTooltip
-          data-tooltip={formatMessage({
-            id: 'global.nonConforming.tooltip',
-            defaultMessage: 'This is a non-conforming product'
-          })}>
-          <Icon name='exclamation triangle' color='red' />
-        </DivIconTooltip>
+      '': r.condition && (
+        <Popup
+          content={
+            <FormattedMessage id='global.nonConforming.tooltip' defaultMessage='This is a non-conforming product.' />
+          }
+          trigger={<Icon name='exclamation triangle' color='red' />}
+        />
       ),
       condition: r.condition ? (
         <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
@@ -202,12 +200,36 @@ class Marketplace extends Component {
     this.props.clearAutocompleteData()
   }
 
+  isSelectedMultipleEcho = (rows, selectedRows) => {
+    if (!rows || !selectedRows) return
+    const filteredRows = rows.reduce((filtered, row, rowIndex) => {
+      if (selectedRows.includes(rowIndex)) {
+        filtered.push(row.companyProduct.echoProduct.id)
+      }
+      return [...new Set(filtered)]
+    }, [])
+    if (filteredRows.length <= 1) {
+      return false
+    } else {
+      return true
+    }
+  }
+
+  getEchoProducts = (rows, selectedRows) => {
+    if (!rows || !selectedRows) return
+    return rows.reduce((filtered, row, rowIndex) => {
+      if (selectedRows.includes(rowIndex)) {
+        filtered.push(row.companyProduct.echoProduct)
+      }
+      return filtered
+    }, [])
+  }
+
   render() {
     const { datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading, openPopup } = this.props
     const { columns, selectedRows } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
-
     return (
       <>
         <Container fluid style={{ padding: '0 32px' }}>
@@ -233,6 +255,7 @@ class Marketplace extends Component {
               return filtered
             }, [])}
             removePopup={this.props.removePopup}
+            echoProducts={this.getEchoProducts(rows, selectedRows)}
             {...this.props}
           />
 
@@ -253,15 +276,24 @@ class Marketplace extends Component {
                 content={
                   <FormattedMessage
                     id='marketplace.shippingQuoteTooltip'
-                    defaultMessage='Select one or more ProudctOffers to calculate a Shipping Quote. Multiple ProductOffers can be choosed only if they are at the same Location.'
+                    defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
                   />
                 }
                 disabled={selectedRows.length !== 0}
                 position='bottom right'
                 trigger={
-                  <div>
+                  <DivButtonWithToolTip
+                    data-tooltip={
+                      this.isSelectedMultipleEcho(rows, selectedRows)
+                        ? formatMessage({
+                            id: 'marketplace.multipleEchoProduct',
+                            defaultMessage: 'Multiple ProductOffers can not be calculate.'
+                          })
+                        : null
+                    }
+                    data-position='bottom right'>
                     <Button
-                      disabled={selectedRows.length === 0}
+                      disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
                       primary
                       onClick={() => this.setState({ open: true })}
                       data-test='marketplace_shipping_quote_btn'>
@@ -269,7 +301,7 @@ class Marketplace extends Component {
                         {text => text}
                       </FormattedMessage>
                     </Button>
-                  </div>
+                  </DivButtonWithToolTip>
                 }
               />
               <Menu.Item>
