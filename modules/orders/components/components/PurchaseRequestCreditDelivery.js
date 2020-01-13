@@ -81,7 +81,7 @@ class PurchaseRequestCreditDelivery extends React.Component {
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id='order.success' defaultMessage='Success' />,
-          <FormattedMessage id='order.requestCreditSend' defaultMessage='Request credit was successfully send' />
+          <FormattedMessage id='order.requestCreditSend' defaultMessage='Request credit was successfully sent' />
         ),
         {
           appearance: 'success'
