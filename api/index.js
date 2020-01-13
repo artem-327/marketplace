@@ -2,7 +2,7 @@ import axios from 'axios'
 import Cookie from 'js-cookie'
 import Router from 'next/router'
 import { Message } from '~/modules/messages'
-// axios.defaults.baseURL = process.env.REACT_APP_API_URL
+//axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
 axios.defaults.validateStatus = status => {
   return status < 400
@@ -64,7 +64,7 @@ axios.interceptors.response.use(
         Router.push('/auth/logout?auto=true')
       }
     }
-    
+
     // const errData = error && error.response && error.response.data
     Message.checkForMessages(error.response)
 
