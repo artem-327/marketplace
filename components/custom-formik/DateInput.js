@@ -5,7 +5,7 @@ import { FastField, Field, getIn } from 'formik'
 import { getFieldError, setFieldValue } from './helpers'
 
 import { DateInput } from 'semantic-ui-calendar-react'
-
+import { getLocaleDateFormat } from '../date-format'
 class FormikInput extends Component {
   constructor(props) {
     super(props)
@@ -41,6 +41,7 @@ class FormikInput extends Component {
                 name={name}
                 {...safeInputProps}
                 value={field.value}
+                dateFormat={getLocaleDateFormat()}
                 animation='none'
                 onChange={(e, { name, value }) => {
                   setFieldValue(form, name, value, true)
@@ -49,8 +50,8 @@ class FormikInput extends Component {
                   })
                 }}
                 onBlur={form.handleBlur}
-                dateFormat='YYYY-MM-DD'
                 ref={this.handleRef}
+                localization={window.navigator.language.slice(0, 2)}
               />
               {/* </InputRef> */}
 

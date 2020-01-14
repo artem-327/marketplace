@@ -17,6 +17,7 @@ import { currency } from '~/constants/index'
 import { FormattedUnit, UnitOfPackaging, ArrayToMultiple, FormattedAssay } from '~/components/formatted-messages'
 import { getSafe } from '~/utils/functions'
 import moment from 'moment/moment'
+import { getLocaleDateFormat } from '~/components/date-format'
 
 function mapStateToProps(store, { datagrid }) {
   return {
@@ -97,16 +98,16 @@ function mapStateToProps(store, { datagrid }) {
         origin: getSafe(() => po.origin.name, ''),
         form: getSafe(() => po.form.name, ''),
         assayString: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
-        mfgDate: po.manufacturedDate ? moment(po.manufacturedDate).format('MM/DD/YYYY') : 'N/A',
-        expDate: po.lotExpirationDate ? moment(po.lotExpirationDate).format('MM/DD/YYYY') : 'N/A',
+        mfgDate: po.lotManufacturedDate ? moment(po.lotManufacturedDate).format(getLocaleDateFormat()) : 'N/A',
+        expDate: po.lotExpirationDate ? moment(po.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A',
         allocatedPkg: po.pkgAllocated,
         // processingTimeDays: po.processingTimeDays,
-        offerExpiration: po.validityDate ? moment(po.validityDate).format('MM/DD/YYYY') : 'N/A',
+        offerExpiration: po.validityDate ? moment(po.validityDate).format(getLocaleDateFormat()) : 'N/A'
       }
     }),
     unmappedRows: datagrid.rows,
     isOpenImportPopup: store.settings.isOpenImportPopup,
-    isProductInfoOpen: store.companyProductInfo.isOpen 
+    isProductInfoOpen: store.companyProductInfo.isOpen
   }
 }
 

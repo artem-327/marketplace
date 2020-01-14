@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import moment from 'moment'
-
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { Grid, GridRow, GridColumn, Header, Divider, Radio, Dimmer, Loader } from 'semantic-ui-react'
 import styled from 'styled-components'
+
+import { getLocaleDateFormat } from '~/components/date-format'
 
 const InnerGrid = styled(Grid)`
   display: block !important;
@@ -38,9 +39,10 @@ export default class ShippingQuote extends Component {
   }
 
   renderItem = (item, index) => {
-    let timeObj = moment(item.estimatedDeliveryDate)
-    let deliveryTime = timeObj.format('MMM D, YYYY')
-    let daysLeft = timeObj.fromNow()
+    let timeObj = item && item.estimatedDeliveryDate && moment(item.estimatedDeliveryDate)
+    let deliveryTime =
+      item && item.estimatedDeliveryDate && moment(item.estimatedDeliveryDate).format(getLocaleDateFormat())
+    let daysLeft = timeObj && timeObj.fromNow()
 
     let { handleQuoteSelect, selectedShippingQuote, currency } = this.props
 
