@@ -210,7 +210,6 @@ class WarehousePopup extends React.Component {
                 </FormGroup>
                 {getSafe(() => currentTab.type, '') === 'warehouses' ? (
                   <>
-                    {' '}
                     <Header as='h3'>
                       <FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' />
                     </Header>

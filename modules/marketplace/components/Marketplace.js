@@ -131,6 +131,15 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 160
+      },
+      {
+        name: 'nacdMember',
+        title: (
+          <FormattedMessage id='marketplace.nacdMember' defaultMessage='NACD Member'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160
       }
     ],
     selectedRows: [],

@@ -65,7 +65,11 @@ function mapStateToProps(store, { datagrid }) {
         assay: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
         condition: !getSafe(() => po.conforming),
         form: getSafe(() => po.form.name),
-        location: getLocationString(po)
+        location: getLocationString(po),
+        nacdMember:
+          (po && po.owner && po.owner.nacdMember) || (po && po.owner && po.owner.nacdMember === false)
+            ? `${po.owner.nacdMember}`
+            : ''
       }
     }),
     sidebar: store.cart.sidebar,
