@@ -122,9 +122,9 @@ class ActionsRequired extends React.Component {
   }
 
   markReturned = () => {
-    const { order, confirmReturned, fundingSourceId } = this.props
+    const { order, confirmReturned } = this.props
     this.toastCall({
-      action: () => confirmReturned(order.id, fundingSourceId),
+      action: () => confirmReturned(order.id),
       toastTitleId: 'notifications.order.actions.confirmReturned.success.header',
       toastTitleDefaultMessage: 'Order Marked as Returned',
       toastContentId: 'notifications.order.actions.confirmReturned.success.content',
@@ -215,22 +215,24 @@ class ActionsRequired extends React.Component {
           </Grid.Column>
           <Grid.Column>
             <Grid verticalAlign='middle' columns='equal'>
-              {buttons.map(button => {
-                return (
-                  <Grid.Column>
-                    <Button
-                      primary={button.buttonType === 'primary'}
-                      basic={button.buttonType === 'basic'}
-                      fluid
-                      size='large'
-                      color={color ? color : null}
-                      onClick={() => button.onClick()}
-                      data-test={button.dataTest}>
-                      <FormattedMessage id={button.text} tagName='span' />
-                    </Button>
-                  </Grid.Column>
-                )
-              })}
+              {buttons &&
+                buttons.map(button => {
+                  if (!button) return
+                  return (
+                    <Grid.Column>
+                      <Button
+                        primary={button.buttonType === 'primary'}
+                        basic={button.buttonType === 'basic'}
+                        fluid
+                        size='large'
+                        color={color ? color : null}
+                        onClick={() => button.onClick()}
+                        data-test={button.dataTest}>
+                        <FormattedMessage id={button.text} tagName='span' />
+                      </Button>
+                    </Grid.Column>
+                  )
+                })}
             </Grid>
           </Grid.Column>
         </Grid>
@@ -255,11 +257,7 @@ class ActionsRequired extends React.Component {
     const repayUntil = moment(detail.orderDate)
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
     // Some switch might do the trick
-    /* ! !
-    console.log('creditReviewStatus====================================')
-    console.log(creditReviewStatus)
-    console.log('====================================')
-    */
+
     const requestCreditButton = orderCreditHistoryOpen
       ? {
           buttonType: 'basic',

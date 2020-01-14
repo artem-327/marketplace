@@ -82,13 +82,13 @@ class TablesHandlers extends Component {
     try {
       await initGlobalBroadcast()
     } catch (err) {
-      console.error(err.response)
+      console.error(err)
     }
     if (!documentTypes || documentTypes.length === 0) {
       try {
         await getDocumentTypes()
       } catch (err) {
-        console.error(err.response)
+        console.error(err)
       }
     }
     this.setState({

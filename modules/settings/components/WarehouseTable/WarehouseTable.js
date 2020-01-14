@@ -3,13 +3,10 @@ import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import {
-  getWarehousesDataRequest,
-  getBranchesDataRequest,
-  openPopup,
-  deleteBranch
-} from '../../actions'
+import { getWarehousesDataRequest, getBranchesDataRequest, openPopup, deleteBranch } from '../../actions'
 import Router from 'next/router'
+import { generateToastMarkup } from '~/utils/functions'
+import { withToastManager } from 'react-toast-notifications'
 
 import { getSafe } from '~/utils/functions'
 
@@ -101,7 +98,7 @@ class WarehouseTable extends Component {
           {text => text}
         </FormattedMessage>
       )
-      this.setState((prevState) => ({
+      this.setState(prevState => ({
         tab: 'warehouses',
         columns
       }))
@@ -111,7 +108,7 @@ class WarehouseTable extends Component {
           {text => text}
         </FormattedMessage>
       )
-      this.setState((prevState) => ({
+      this.setState(prevState => ({
         tab: 'branches',
         columns
       }))
@@ -119,23 +116,13 @@ class WarehouseTable extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.state.tab !== this.props.currentTab.type
-      && this.props.currentTab.type !== prevProps.currentTab.type) {
+    if (this.state.tab !== this.props.currentTab.type && this.props.currentTab.type !== prevProps.currentTab.type) {
       this.handlerLoadPage()
     }
   }
 
   render() {
-    const {
-      filterValue,
-      rows,
-      datagrid,
-      loading,
-      openPopup,
-      deleteBranch,
-      intl,
-      currentTab
-    } = this.props
+    const { filterValue, rows, datagrid, loading, openPopup, deleteBranch, intl, currentTab, toastManager } = this.props
 
     let message =
       currentTab.type === 'branches'
@@ -168,7 +155,19 @@ class WarehouseTable extends Component {
                     { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}! ? ` },
                     { item: row.name }
                   )
-                ).then(() => deleteBranch(row.id))
+                )
+                  .then(() => deleteBranch(row.id))
+                  .then(() =>
+                    toastManager.add(
+                      generateToastMarkup(
+                        <FormattedMessage id='settings.headerDeleteWarehouse' defaultMessage='Successfully deleted' />,
+                        null
+                      ),
+                      {
+                        appearance: 'success'
+                      }
+                    )
+                  )
             }
           ]}
         />
@@ -252,4 +251,4 @@ const mapStateToProps = (state, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(WarehouseTable)))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(WarehouseTable))))

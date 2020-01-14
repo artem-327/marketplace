@@ -68,6 +68,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.CLEAR_AUTOCOMPLETE_DATA: {
+      return {
+        ...state,
+        autocompleteData: []
+      }
+    }
+
     default: {
       return state
     }

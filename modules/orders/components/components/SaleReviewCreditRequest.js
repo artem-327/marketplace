@@ -1,23 +1,21 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Modal, ModalContent, Accordion, Button, Icon, Grid, Dimmer, Loader } from 'semantic-ui-react'
-import { Form } from 'formik-semantic-ui-fixed-validation'
+import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
 import moment from 'moment'
+import * as val from 'yup'
 
 import * as Actions from '../../actions'
+import { errorMessages } from '~/constants/yupValidation'
 import { downloadAttachment } from '~/modules/inventory/actions'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import { generateToastMarkup } from '~/utils/functions'
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
-`
-
-const InputCounterValue = styled(Form.Input)`
-  width: fit-content;
 `
 
 const AccordionTitle = styled(Accordion.Title)`
@@ -30,7 +28,22 @@ const AccordionTitle = styled(Accordion.Title)`
   }
 `
 
-const initValues = {}
+const initValues = {
+  counterValue: null,
+  messageBuyer: null
+}
+
+const validationSchema = val.object().shape({
+  counterValue: val
+    .number()
+    .min(0, errorMessages.minimum(0))
+    .typeError(errorMessages.mustBeNumber)
+    .required(errorMessages.requiredMessage),
+  messageBuyer: val
+    .string()
+    .typeError(errorMessages.invalidString)
+    .required(errorMessages.requiredMessage)
+})
 
 class SaleReviewCreditRequest extends React.Component {
   state = {
@@ -52,7 +65,6 @@ class SaleReviewCreditRequest extends React.Component {
   submitHandler = async (values, actions) => {
     const { closePopup, orderId, toastManager, creditCounter } = this.props
     const { counterValue, messageBuyer, attachments } = values
-
     try {
       const request = {
         amount: counterValue,
@@ -113,67 +125,10 @@ class SaleReviewCreditRequest extends React.Component {
     this.setState({ activeIndexes })
   }
 
-  getMimeType = documentName => {
-    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
-
-    switch (documentExtension) {
-      case 'doc':
-        return 'application/msword'
-      case 'docx':
-        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-      case 'ppt':
-        return 'application/vnd.ms-powerpoint'
-      case 'pptx':
-        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-      case 'xls':
-        return 'application/vnd.ms-excel'
-      case 'xlsx':
-        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      case 'gif':
-        return 'image/gif'
-      case 'png':
-        return 'image/png'
-      case 'jpg':
-      case 'jpeg':
-        return 'image/jpeg'
-      case 'svg':
-        return 'image/svg'
-      case 'pdf':
-        return 'application/pdf'
-      case '7z':
-        return 'application/x-7z-compressed'
-      case 'zip':
-        return 'application/zip'
-      case 'tar':
-        return 'application/x-tar'
-      case 'rar':
-        return 'application/x-rar-compressed'
-      case 'xml':
-        return 'application/xml'
-      default:
-        return 'text/plain'
-    }
-  }
-
-  extractFileName = contentDispositionValue => {
-    var filename = ''
-    if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
-      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
-      var matches = filenameRegex.exec(contentDispositionValue)
-      if (matches != null && matches[1]) {
-        filename = matches[1].replace(/['"]/g, '')
-      }
-    }
-    return filename
-  }
-
   prepareLinkToAttachment = async attachmentId => {
-    let downloadedFile = await this.props.downloadCreditRequestAttachments('sale', this.props.orderId, attachmentId)
-    const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
-    const mimeType = fileName && this.getMimeType(fileName)
+    let downloadedFile = await this.props.downloadCreditRequestAttachments('purchase', this.props.orderId, attachmentId)
     const element = document.createElement('a')
-    const file = new Blob([downloadedFile.value.data], { type: mimeType })
-    let fileURL = URL.createObjectURL(file)
+    let fileURL = URL.createObjectURL(downloadedFile.value.data)
     element.href = fileURL
 
     return element
@@ -181,9 +136,8 @@ class SaleReviewCreditRequest extends React.Component {
 
   downloadAttachment = async (documentName, attachmentId) => {
     const element = await this.prepareLinkToAttachment(attachmentId)
-
     element.download = documentName
-    document.body.appendChild(element) // Required for this to work in FireFox
+    document.body.appendChild(element) // Required for this to work in FireFoxs
     element.click()
   }
 
@@ -194,10 +148,6 @@ class SaleReviewCreditRequest extends React.Component {
       isSending,
       creditRequestHistory
     } = this.props
-
-    console.log('creditRequestHistory====================================')
-    console.log(creditRequestHistory)
-    console.log('====================================')
 
     const { activeIndexes } = this.state
 
@@ -214,7 +164,8 @@ class SaleReviewCreditRequest extends React.Component {
             <Modal.Description>
               <Form
                 enableReinitialize
-                validateOnChange={false}
+                validateOnChange={true}
+                validationSchema={validationSchema}
                 initialValues={{ ...initValues }}
                 onSubmit={this.submitHandler}
                 className='flex stretched'
@@ -285,7 +236,7 @@ class SaleReviewCreditRequest extends React.Component {
                                                         this.downloadAttachment(attachment.fileName, attachment.id)
                                                       }>
                                                       <Icon name='download' />
-                                                      {attachment.name}
+                                                      {attachment.fileName}
                                                     </Button>
                                                   )
                                                 })
@@ -335,16 +286,28 @@ class SaleReviewCreditRequest extends React.Component {
                                     'You have selected to Counter the credit request. Please fill in the counter details below.'
                                   }
                                 />
-                                <InputCounterValue
-                                  onChange={(e, { value, name }) => this.handleChange(e, value, name, setFieldValue)}
-                                  label={formatMessage({
-                                    id: 'order.counterValue',
-                                    defaultMessage: 'Counter Value:'
-                                  })}
+                              </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <Grid.Column width={7}>
+                                <Input
                                   name='counterValue'
-                                  placeholder='$'
+                                  inputProps={{
+                                    onChange: (e, { value, name }) => this.handleChange(e, value, name, setFieldValue),
+                                    label: formatMessage({
+                                      id: 'order.counterValue',
+                                      defaultMessage: 'Counter Value:'
+                                    }),
+                                    placeholder: '$',
+                                    type: 'number',
+                                    min: 0
+                                  }}
                                 />
-                                <Form.TextArea
+                              </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <Grid.Column>
+                                <TextArea
                                   onChange={(e, { value, name }) => this.handleChange(e, value, name, setFieldValue)}
                                   name='messageBuyer'
                                   label={formatMessage({
@@ -352,6 +315,10 @@ class SaleReviewCreditRequest extends React.Component {
                                     defaultMessage: 'Message to Buyer:'
                                   })}
                                 />
+                              </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <Grid.Column>
                                 <UploadLot
                                   {...this.props}
                                   name='attachments'
@@ -439,7 +406,7 @@ class SaleReviewCreditRequest extends React.Component {
                                 </Button>
                               </Grid.Column>
                               <Grid.Column floated='right' width={3}>
-                                <Button color='blue' fluid type='submit'>
+                                <Button primary fluid type='submit'>
                                   <FormattedMessage id='global.send' defaultMessage='Send' tagName='span'>
                                     {text => text}
                                   </FormattedMessage>
