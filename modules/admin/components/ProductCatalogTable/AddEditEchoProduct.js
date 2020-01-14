@@ -39,6 +39,7 @@ import { uniqueArrayByKey } from '~/utils/functions'
 import escapeRegExp from 'lodash/escapeRegExp'
 import { Datagrid } from '~/modules/datagrid'
 import confirm from '~/src/components/Confirmable/confirm'
+import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 
 export const MyContainer = styled.div`
   margin: 0 15px 0 0;
@@ -380,13 +381,13 @@ class AddEditEchoProduct extends React.Component {
     }
 
     if (initialValues.sdsIssuedDate)
-      initialValues.sdsIssuedDate = moment(initialValues.sdsIssuedDate).format('YYYY-MM-DD')
+      initialValues.sdsIssuedDate = moment(initialValues.sdsIssuedDate).format(getLocaleDateFormat())
     if (initialValues.sdsRevisionDate)
-      initialValues.sdsRevisionDate = moment(initialValues.sdsRevisionDate).format('YYYY-MM-DD')
+      initialValues.sdsRevisionDate = moment(initialValues.sdsRevisionDate).format(getLocaleDateFormat())
     if (initialValues.tdsIssuedDate)
-      initialValues.tdsIssuedDate = moment(initialValues.tdsIssuedDate).format('YYYY-MM-DD')
+      initialValues.tdsIssuedDate = moment(initialValues.tdsIssuedDate).format(getLocaleDateFormat())
     if (initialValues.tdsRevisionDate)
-      initialValues.tdsRevisionDate = moment(initialValues.tdsRevisionDate).format('YYYY-MM-DD')
+      initialValues.tdsRevisionDate = moment(initialValues.tdsRevisionDate).format(getLocaleDateFormat())
 
     if (initialValues.elements.length === 0) {
       initialValues.elements = [{ name: '', casProduct: null, assayMin: 100, assayMax: 100, proprietary: false }]
@@ -499,10 +500,10 @@ class AddEditEchoProduct extends React.Component {
               assayMax: e.assayMax === null || e.assayMax === '' ? null : Number(e.assayMax)
             }
       ),
-      sdsIssuedDate: values.sdsIssuedDate ? values.sdsIssuedDate + 'T00:00:00.00000Z' : '',
-      sdsRevisionDate: values.sdsRevisionDate ? values.sdsRevisionDate + 'T00:00:00.00000Z' : '',
-      tdsIssuedDate: values.tdsIssuedDate ? values.tdsIssuedDate + 'T00:00:00.00000Z' : '',
-      tdsRevisionDate: values.tdsRevisionDate ? values.tdsRevisionDate + 'T00:00:00.00000Z' : ''
+      sdsIssuedDate: values.sdsIssuedDate ? getStringISODate(values.sdsIssuedDate) : '',
+      sdsRevisionDate: values.sdsRevisionDate ? getStringISODate(values.sdsRevisionDate) : '',
+      tdsIssuedDate: values.tdsIssuedDate ? getStringISODate(values.tdsIssuedDate) : '',
+      tdsRevisionDate: values.tdsRevisionDate ? getStringISODate(values.tdsRevisionDate) : ''
     }
     delete formValues.attachments
 

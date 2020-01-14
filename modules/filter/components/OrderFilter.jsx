@@ -21,12 +21,13 @@ import {
 } from '../constants/layout'
 import { func, oneOf } from 'prop-types'
 import moment from 'moment'
+import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 
 const RightAlignedDiv = styled.div`
   text-align: right !important;
 `
 
-const formatDate = date => moment(date).toISOString()
+const formatDate = date => moment(getStringISODate(date)).toISOString()
 
 const initialValues = {
   orderFrom: {

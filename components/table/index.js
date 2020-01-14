@@ -555,9 +555,9 @@ class _Table extends Component {
 
   handleColumnsSettings = data => {
     const { tableName } = this.props
-    const newData = data
+    const newData = data.widths
       ? { ...data, widths: this.compareMaxWidths(data.widths, this.state.columnsSettings.widths) }
-      : {}
+      : { ...data }
 
     this.setState(
       state => ({

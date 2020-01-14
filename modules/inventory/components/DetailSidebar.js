@@ -9,6 +9,7 @@ import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
 import confirm from '~/src/components/Confirmable/confirm'
+import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 
 import {
   Sidebar,
@@ -260,7 +261,11 @@ const validationScheme = val.object().shape({
       is: true,
       then: val
         .string()
-        .test('min-date', errorMessages.mustBeInFuture, val => moment('00:00:00', 'hh:mm:ss').diff(val, 'days') <= -1)
+        .test(
+          'min-date',
+          errorMessages.mustBeInFuture,
+          val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
+        )
     })
   }),
   priceTiers: val.object().shape({
@@ -521,12 +526,12 @@ class DetailSidebar extends Component {
         props = {
           ...values.edit,
           ...values.documents,
-          expirationDate: values.edit.doesExpire ? values.edit.expirationDate + 'T00:00:00.000Z' : null,
+          expirationDate: values.edit.doesExpire ? getStringISODate(values.edit.expirationDate) : null,
           leadTime: values.edit.leadTime,
-          lotExpirationDate: values.edit.lotExpirationDate ? values.edit.lotExpirationDate + 'T00:00:00.000Z' : null,
+          lotExpirationDate: values.edit.lotExpirationDate ? getStringISODate(values.edit.lotExpirationDate) : null,
           lotNumber: values.edit.lotNumber,
           lotManufacturedDate: values.edit.lotManufacturedDate
-            ? values.edit.lotManufacturedDate + 'T00:00:00.000Z'
+            ? getStringISODate(values.edit.lotManufacturedDate)
             : null,
           pkgAvailable: parseInt(values.edit.pkgAvailable),
           pricingTiers: values.priceTiers.pricingTiers.length
@@ -738,8 +743,14 @@ class DetailSidebar extends Component {
         internalNotes: getSafe(() => sidebarValues.internalNotes, ''),
         leadTime: getSafe(() => sidebarValues.leadTime, 1),
         lotNumber: getSafe(() => sidebarValues.lotNumber, ''),
-        lotExpirationDate: getSafe(() => sidebarValues.lotExpirationDate.substring(0, 10), ''),
-        lotManufacturedDate: getSafe(() => sidebarValues.lotManufacturedDate.substring(0, 10), ''),
+        lotExpirationDate:
+          sidebarValues && sidebarValues.lotExpirationDate
+            ? moment(sidebarValues.lotExpirationDate).format(getLocaleDateFormat())
+            : '',
+        lotManufacturedDate:
+          sidebarValues && sidebarValues.lotManufacturedDate
+            ? moment(sidebarValues.lotManufacturedDate).format(getLocaleDateFormat())
+            : '',
         minimum: getSafe(() => sidebarValues.minPkg, 1),
         origin: getSafe(() => sidebarValues.origin.id, null),
         pkgAvailable: getSafe(() => sidebarValues.pkgAvailable, ''),
@@ -749,7 +760,10 @@ class DetailSidebar extends Component {
         productGrades: getSafe(() => sidebarValues.grades.map(grade => grade.id), []),
         splits: getSafe(() => sidebarValues.splitPkg, 1),
         doesExpire: getSafe(() => sidebarValues.validityDate.length > 0, false),
-        expirationDate: getSafe(() => sidebarValues.validityDate.substring(0, 10), ''),
+        expirationDate:
+          sidebarValues && sidebarValues.validityDate
+            ? moment(sidebarValues.validityDate).format(getLocaleDateFormat())
+            : '',
         warehouse: getSafe(() => sidebarValues.warehouse.id, null)
       },
       priceTiers: {
@@ -1316,7 +1330,6 @@ class DetailSidebar extends Component {
                                       <DateInput
                                         inputProps={{
                                           disabled: !values.edit.doesExpire,
-                                          minDate: moment().add(1, 'day'),
                                           'data-test': 'sidebar_detail_expiration_date'
                                           //! ! crashes on component calendar open if expirationDate is in past:
                                           //! ! minDate: moment().add(1, 'days')

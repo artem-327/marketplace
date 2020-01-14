@@ -11,6 +11,7 @@ import { openPopup } from '~/modules/settings/actions'
 import { removeAttachment } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
 import { bool, array } from 'prop-types'
+import { getLocaleDateFormat } from '~/components/date-format'
 
 const BasicLink = styled.a`
   color: black !important;
@@ -62,7 +63,7 @@ class DocumentManager extends Component {
     data.map(row => ({
       ...row,
       documentTypeName: getSafe(() => row.documentType.name, ''),
-      expirationDate: row.expirationDate && moment(row.expirationDate).format('YYYY-MM-DD'),
+      expirationDate: row.expirationDate && moment(row.expirationDate).format(getLocaleDateFormat()),
       customName: getSafe(() => row.customName, row.name)
     }))
 
