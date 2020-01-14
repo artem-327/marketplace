@@ -54,7 +54,6 @@ import moment from 'moment'
 import UploadLot from './upload/UploadLot'
 import { withDatagrid } from '~/modules/datagrid'
 import { AttachmentManager } from '~/modules/attachments'
-
 import _ from 'lodash'
 
 export const FlexSidebar = styled(Sidebar)`
@@ -783,6 +782,69 @@ class DetailSidebar extends Component {
         attachments: getSafe(() => sidebarValues.attachments.map(att => ({ ...att, linked: true })), [])
       }
     }
+  }
+  onChange = debounce(() => this.setState({ edited: true, saved: false, oldProductOffer: this.values }), 200)
+
+  render() {
+    let {
+      // addProductOffer,
+      listConditions,
+      listForms,
+      listGrades,
+      loading,
+      // openBroadcast,
+      // sidebarDetailOpen,
+      sidebarValues,
+      // searchedManufacturers,
+      // searchedManufacturersLoading,
+      searchedOrigins,
+      searchedOriginsLoading,
+      // searchedProducts,
+      // searchedProductsLoading,
+      searchOrigins,
+      warehousesList,
+      listDocumentTypes,
+      intl: { formatMessage },
+      toastManager,
+      removeAttachment
+    } = this.props
+
+    const leftWidth = 6
+    const rightWidth = 10
+
+    element.download = documentName
+    document.body.appendChild(element) // Required for this to work in FireFox
+    element.click()
+  }
+
+  prepareLinkToAttachment = async documentId => {
+    let downloadedFile = await this.props.downloadAttachment(documentId)
+    const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
+    const mimeType = fileName && this.getMimeType(fileName)
+    const element = document.createElement('a')
+    const file = new Blob([downloadedFile.value.data], { type: mimeType })
+    let fileURL = URL.createObjectURL(file)
+    element.href = fileURL
+
+    return element
+  }
+
+  extractFileName = contentDispositionValue => {
+    var filename = ''
+    if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
+      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+      var matches = filenameRegex.exec(contentDispositionValue)
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, '')
+      }
+    }
+    return filename
+  }
+
+  getMimeType = documentName => {
+    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
+
+    let editValues = this.getEditValues()
   }
   onChange = debounce(() => this.setState({ edited: true, saved: false, oldProductOffer: this.values }), 200)
 

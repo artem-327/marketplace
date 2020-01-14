@@ -637,8 +637,7 @@ class CompanyProductInfo extends Component {
   }
 
   getContent = ({ values }) => {
-    let { activeIndex } = this.props
-
+    let { activeIndex, readOnly } = this.props
 
     switch (activeIndex) {
       case 0: {
@@ -917,7 +916,6 @@ class CompanyProductInfo extends Component {
           echoProduct && echoProduct.sdsRevisionDate ? moment(echoProduct.sdsRevisionDate).format('MM/DD/YYYY') : ''
       }
     }
-
 
     return (
       <Form
