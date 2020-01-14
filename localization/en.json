@@ -1802,5 +1802,9 @@
   "order.requestCreditNotSent": "Not sent",
   "order.requestCredit.atLeastReasonOrReasonText": "Reason has to be selected or write reason message.",
   "order.requestCreditSend": "Request credit was successfully sent",
-  "global.nacdMember": "NACD Member"
+  "global.nacdMember": "NACD Member",
+  "settings.wrongUrl": "Wrong URL",
+  "settings.rerenderToInventory": "You are not authorized to view this page. You will be automatically redirected to Inventory.",
+  "settings.rerenderToUsers": "You are not authorized to view this page. You will be automatically redirected to Users.",
+  "settings.rerenderToProducts": "You are not authorized to view this page. You will be automatically redirected to Products."
 }

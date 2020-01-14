@@ -91,6 +91,7 @@ class WarehouseTable extends Component {
   handlerLoadPage() {
     const { currentTab } = this.props
     let { columns } = this.state
+    if (!columns) return
 
     if (currentTab.type === 'warehouses') {
       columns[0].title = (
