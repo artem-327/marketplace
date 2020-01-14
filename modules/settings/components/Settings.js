@@ -67,30 +67,15 @@ class Settings extends Component {
   componentWillMount() {
     this.props.resetSettings()
   }
-
-  componentDidMount() {
-    let {
-      isCompanyAdmin,
-      addTab,
-      tabsNames,
-      tabChanged,
-      currentTab,
-      isUserAdmin,
-      isProductCatalogAdmin,
-      toastManager
-    } = this.props
-
-    if (isCompanyAdmin) addTab(companyDetailsTab)
-    let queryTab =
-      (Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) : false) ||
-      (isCompanyAdmin ? companyDetailsTab : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
-
+  // marked tab based on role of user or if tab changed.
+  changeRoute = queryTab => {
+    const { isCompanyAdmin, tabsNames, tabChanged, currentTab, isUserAdmin, isProductCatalogAdmin } = this.props
     // array of tabsNames converted to Map
     let tabsNamesMap = new Map()
     for (let i in tabsNames) {
       tabsNamesMap.set(tabsNames[i].type, tabsNames[i])
     }
-    // marked tab based on role of user or if tab changed.
+
     if (isCompanyAdmin) {
       tabChanged(queryTab)
     } else {
@@ -99,71 +84,58 @@ class Settings extends Component {
           isProductCatalogAdmin &&
           (getSafe(() => queryTab.type, '') === 'products' || getSafe(() => queryTab.type, '') === 'system-settings')
         ) {
-          tabChanged(tabsNamesMap.get('products'))
           Router.push('/settings?type=products')
+          tabChanged(tabsNamesMap.get('products'))
         } else {
-          tabChanged(tabsNamesMap.get('users'))
           Router.push('/settings?type=users')
+          tabChanged(tabsNamesMap.get('users'))
         }
       } else if (isProductCatalogAdmin) {
-        tabChanged(tabsNamesMap.get('products'))
         Router.push('/settings?type=products')
-        this.setState({ wrongUrl: false })
+        tabChanged(tabsNamesMap.get('products'))
       } else if (queryTab.type !== currentTab.type) {
-        tabChanged(queryTab)
         Router.push(`/settings?type=${currentTab.type}`)
+        tabChanged(queryTab)
       }
     }
+  }
 
-    if (
-      isUserAdmin &&
-      !isProductCatalogAdmin &&
-      !isCompanyAdmin &&
-      queryTab.type !== 'users' &&
-      queryTab.type !== 'system-settings'
-    ) {
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='settings.wrongUrl' defaultMessage='Wrong URL' />,
-          <FormattedMessage
-            id='settings.rerenderToUsers'
-            defaultMessage='You are not authorized to view this page. Return back to Users.'
-          />
-        ),
-        { appearance: 'warning' }
-      )
-      this.setState({ wrongUrl: false })
-    } else if (
-      isProductCatalogAdmin &&
-      !isUserAdmin &&
-      !isCompanyAdmin &&
-      queryTab.type !== 'products' &&
-      queryTab.type !== 'system-settings'
-    ) {
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='settings.wrongUrl' defaultMessage='Wrong URL' />,
-          <FormattedMessage
-            id='settings.rerenderToProducts'
-            defaultMessage='You are not authorized to view this page. Return back to Product Catalog.'
-          />
-        ),
-        { appearance: 'warning' }
-      )
-      this.setState({ wrongUrl: false })
-    } else if (isProductCatalogAdmin === false && isUserAdmin === false && isCompanyAdmin === false) {
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='settings.wrongUrl' defaultMessage='Wrong URL' />,
-          <FormattedMessage
-            id='settings.rerenderToMtInventory'
-            defaultMessage='You are not authorized to view this page. Return back to My Inventory.'
-          />
-        ),
-        { appearance: 'warning' }
-      )
-      Router.push('/')
-      return
+  messageRedirect = tab => {
+    const { toastManager } = this.props
+    toastManager.add(
+      generateToastMarkup(
+        <FormattedMessage id='settings.wrongUrl' defaultMessage='Wrong URL' />,
+        <FormattedMessage
+          id={`settings.rerenderTo${tab}`}
+          defaultMessage={`You are not authorized to view this page. You will be automatically redirected to ${tab}.`}
+        />
+      ),
+      { appearance: 'warning' }
+    )
+  }
+
+  redirectPage = queryTab => {
+    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin } = this.props
+    const tab = getSafe(() => queryTab.type, '')
+
+    if (!isCompanyAdmin && tab !== 'system-settings') {
+      if ((isUserAdmin && tab === 'users') || (isProductCatalogAdmin && tab === 'products')) {
+        this.setState({ wrongUrl: false })
+      } else if (!isProductCatalogAdmin && !isUserAdmin) {
+        this.messageRedirect('Inventory')
+        Router.push('/')
+        return
+      } else {
+        if (isProductCatalogAdmin && tab !== 'products') {
+          if (isUserAdmin && tab !== 'users') {
+            this.messageRedirect('Users')
+            this.setState({ wrongUrl: false })
+          } else {
+            this.messageRedirect('Products')
+            this.setState({ wrongUrl: false })
+          }
+        }
+      }
     } else {
       this.setState({ wrongUrl: false })
     }
@@ -180,6 +152,18 @@ class Settings extends Component {
       </div>,
       { appearance: 'success', pauseOnHover: true }
     )
+  }
+
+  componentDidMount() {
+    const { isCompanyAdmin, addTab, tabsNames } = this.props
+
+    if (isCompanyAdmin) addTab(companyDetailsTab)
+    let queryTab =
+      (Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) : false) ||
+      (isCompanyAdmin ? companyDetailsTab : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
+
+    this.changeRoute(queryTab)
+    this.redirectPage(queryTab)
   }
 
   selectLogo = logo => {

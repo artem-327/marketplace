@@ -91,18 +91,12 @@ class Navigation extends Component {
             <>{formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}</>
           </MenuLink>
         )}
-        {isAdmin && (
-          <MenuLink to='/admin' data-test='navigation_menu_admin_lnk'>
-            {formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}
-          </MenuLink>
-        )}
       </>
     ) : (
       isAdmin && (
         <>
           <MenuLink to='/admin' data-test='navigation_menu_admin_lnk'>
-            {' '}
-            {formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}{' '}
+            {formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}
           </MenuLink>
         </>
       )
