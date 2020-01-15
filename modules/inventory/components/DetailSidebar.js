@@ -350,12 +350,10 @@ class DetailSidebar extends Component {
     initValues: initValues
   }
 
-  componentDidMount = () => {
-    this.switchTab(this.props.sidebarActiveTab)
+  componentDidMount = async () => {
     if (this.props.sidebarValues) {
-      this.loadProductOffer(this.props.sidebarValues.id) // Start editing, reload product offer
-    }
-    else {
+      await this.loadProductOffer(this.props.sidebarValues.id) // Start editing, reload product offer
+    } else {
       this.props.searchOrigins('', 200)
     }
     this.fetchIfNoData('listConditions', this.props.getProductConditions)
@@ -364,14 +362,14 @@ class DetailSidebar extends Component {
     this.fetchIfNoData('warehousesList', this.props.getWarehouses)
     this.fetchIfNoData('listDocumentTypes', this.props.getDocumentTypes)
     this.props.searchManufacturers('', 200)
+    this.switchTab(this.props.sidebarActiveTab)
   }
 
   fetchIfNoData = (name, fn) => {
     if (this.props[name].length === 0) fn()
   }
 
-
-  loadProductOffer = async (id) => {
+  loadProductOffer = async id => {
     const data = await this.props.getProductOffer(id)
     this.props.searchOrigins(
       getSafe(() => data.value.data.origin.name, ''),
@@ -380,10 +378,13 @@ class DetailSidebar extends Component {
     if (data.value.data.companyProduct) {
       this.searchProducts(data.value.data.companyProduct.intProductName)
     }
-    this.setState({
-      sidebarValues: data.value.data,
-      initValues: { ...initValues, ...this.getEditValues(data.value.data)}
-    }, () => this.resetForm())
+    this.setState(
+      {
+        sidebarValues: data.value.data,
+        initValues: { ...initValues, ...this.getEditValues(data.value.data) }
+      },
+      () => this.resetForm()
+    )
   }
 
   validateSaveOrSwitchToErrors = async (callback = null) => {
@@ -445,16 +446,14 @@ class DetailSidebar extends Component {
             this.loadProductOffer(this.props.sidebarValues.id)
           })
           return
-        }
-        else {
+        } else {
           // Edit to Edit mode
           this.validateSaveOrSwitchToErrors(() => {
             this.loadProductOffer(this.props.sidebarValues.id)
           })
           return
         }
-      }
-      else {
+      } else {
         // Add new mode
         this.validateSaveOrSwitchToErrors(() => {
           this.setState({ sidebarValues: null, initValues: initValues }, () => {
@@ -606,8 +605,6 @@ class DetailSidebar extends Component {
     })
   }, 250)
 
-
-
   submitForm = async (values, setSubmitting, setTouched, savedButtonClicked = false) => {
     const { addProductOffer, datagrid, toastManager } = this.props
     const { sidebarValues } = this.state
@@ -642,8 +639,8 @@ class DetailSidebar extends Component {
                 }
               ],
           productGrades: values.edit.productGrades.length ? values.edit.productGrades : [],
-          costPerUOM: values.edit.costPerUOM === null || values.edit.costPerUOM === ''
-            ? null : Number(values.edit.costPerUOM)
+          costPerUOM:
+            values.edit.costPerUOM === null || values.edit.costPerUOM === '' ? null : Number(values.edit.costPerUOM)
         }
         break
       case 2:
@@ -654,7 +651,6 @@ class DetailSidebar extends Component {
     }
     if (Object.keys(props).length) {
       try {
-
         let data = await addProductOffer(props, isEdit)
         if (isEdit) {
           datagrid.updateRow(data.value.id, () => data.value)
@@ -662,7 +658,7 @@ class DetailSidebar extends Component {
         } else {
           this.setState({
             sidebarValues: data.value,
-            initValues: { ...initValues, ...this.getEditValues(data.value)},
+            initValues: { ...initValues, ...this.getEditValues(data.value) },
             edited: false
           })
           datagrid.loadData()
@@ -697,7 +693,7 @@ class DetailSidebar extends Component {
               datagrid.updateRow(entityId, () => po.value)
               this.setState({
                 sidebarValues: po.value,
-                initValues: { ...initValues, ...this.getEditValues(po.value)},
+                initValues: { ...initValues, ...this.getEditValues(po.value) },
                 edited: false
               })
               sendSuccess = true
@@ -712,15 +708,18 @@ class DetailSidebar extends Component {
     return sendSuccess
   }
 
-  switchTab = newTab => {
+  switchTab = async newTab => {
     this.setState({
       activeTab: newTab
     })
-
-    if (newTab === 2) {
-      this.props.openBroadcast(this.state.sidebarValues).then(async () => {
-        this.setState({ broadcastLoading: false })
-      })
+    try {
+      if (newTab === 2) {
+        await this.props.openBroadcast(this.state.sidebarValues).then(async () => {
+          this.setState({ broadcastLoading: false })
+        })
+      }
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -842,12 +841,10 @@ class DetailSidebar extends Component {
     }
   }
   hasEdited = values => {
-    return (
-    !_.isEqual(this.getEditValues(this.state.sidebarValues), values)
-    )
+    return !_.isEqual(this.getEditValues(this.state.sidebarValues), values)
   }
 
-  getEditValues = (sidebarValues) => {
+  getEditValues = sidebarValues => {
     return {
       edit: {
         broadcasted: getSafe(() => sidebarValues.broadcasted, false),
@@ -941,7 +938,16 @@ class DetailSidebar extends Component {
           this.submitForm(values, setSubmitting, setTouched)
         }}>
         {formikProps => {
-          let { values, touched, setTouched, setFieldValue, validateForm, submitForm, setSubmitting, resetForm } = formikProps
+          let {
+            values,
+            touched,
+            setTouched,
+            setFieldValue,
+            validateForm,
+            submitForm,
+            setSubmitting,
+            resetForm
+          } = formikProps
           this.values = values
           this.resetForm = resetForm
           this.formikProps = formikProps
@@ -1383,7 +1389,7 @@ class DetailSidebar extends Component {
                                             if (value > 1 && !isNaN(value)) {
                                               setFieldValue('minimumRequirement', true)
                                               // It seems to do bug when created new inventory
-                                              // value is adding in handleSubmit 
+                                              // value is adding in handleSubmit
                                               //setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
                                             }
                                           }
