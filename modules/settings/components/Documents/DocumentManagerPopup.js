@@ -18,6 +18,7 @@ import { getSafe, generateToastMarkup, removeEmpty } from '~/utils/functions'
 import { closePopup } from '~/modules/settings/actions'
 import { getDocumentTypes, addAttachment, updateAttachment } from '~/modules/inventory/actions'
 import { func } from 'prop-types'
+import { getStringISODate } from '~/components/date-format'
 
 const validationSchema = Yup.lazy(values => {
   let validationObject = {
@@ -93,15 +94,7 @@ class DocumentPopup extends Component {
               let payload = {
                 customName: values.customName,
                 description: values.description,
-                expirationDate:
-                  values.expirationDate &&
-                  getSafe(
-                    () =>
-                      moment()
-                        .utc(values.expirationDate)
-                        .format(),
-                    null
-                  ),
+                expirationDate: values.expirationDate && getSafe(() => getStringISODate(values.expirationDate), null),
                 isTemporary: getSafe(() => values.isTemporary, false),
                 othersPermissions: values.othersPermissions,
                 sharedTo: values.sharedTo

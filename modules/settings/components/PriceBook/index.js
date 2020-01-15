@@ -11,7 +11,7 @@ class PriceBook extends Component {
     try {
       await this.props.initGlobalBroadcast()
     } catch (err) {
-      console.error(err.response)
+      console.error(err)
     }
     this.setState({ loading: false })
   }

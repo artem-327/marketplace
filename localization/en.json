@@ -1796,5 +1796,8 @@
   "order.acceptedCredit": "Credit was accepted",
   "order.successfullySent": "Successfully sent",
   "order.creditCounterReject": "Credit counter was rejected",
-  "order.requestCreditSend": "Request credit was successfully send"
+  "order.requestCreditSent": "Request credit was successfully sent",
+  "settings.headerDeleteWarehouse": "Successfully deleted",
+  "order.requestCreditNotSent": "Not sent",
+  "order.requestCredit.atLeastReasonOrReasonText": "Reason has to be selected or write reason message."
 }

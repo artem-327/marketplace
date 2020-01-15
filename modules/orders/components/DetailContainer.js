@@ -40,11 +40,17 @@ function prepareDetail(data, type) {
 
   return {
     acceptanceDate:
-      typeof data.acceptanceDate !== 'undefined' ? moment(data.acceptanceDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A',
+      typeof data.acceptanceDate !== 'undefined'
+        ? moment(data.acceptanceDate)
+            .toDate()
+            .toLocaleString()
+        : 'N/A',
     amount: <FormattedNumber style='currency' currency={currency} value={subtotal} />,
     buyerRejectionDate:
       typeof data.buyerRejectionDate !== 'undefined'
-        ? moment(data.buyerRejectionDate).format('MMM Do, YYYY h:mm:ss A')
+        ? moment(data.buyerRejectionDate)
+            .toDate()
+            .toLocaleString()
         : null,
     carrier: data.shippingCourierName ? data.shippingCourierName : 'N/A',
     chemicalName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
@@ -57,7 +63,11 @@ function prepareDetail(data, type) {
     createdBy: data.buyerName ? data.buyerName : 'N/A',
     creditStatus: OrdersHelper.getCreditStatus(data.creditStatus),
     deliveryDate:
-      typeof data.deliveryDate !== 'undefined' ? moment(data.deliveryDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A',
+      typeof data.deliveryDate !== 'undefined'
+        ? moment(data.deliveryDate)
+            .toDate()
+            .toLocaleString()
+        : 'N/A',
     feesAmount: <FormattedNumber style='currency' currency={currency} value={subtotal * (0 / 100)} />, // ! ! TBD
     feesPercent: 0, // ! ! TBD
     freight: (
@@ -72,7 +82,11 @@ function prepareDetail(data, type) {
     ), // ! ! TBD
     id: data.id,
     incoterms: 'FOB', // ! ! TBD
-    orderDate: moment(data.orderDate).format('MMM Do, YYYY h:mm:ss A'),
+    orderDate:
+      data.orderDate &&
+      moment(data.orderDate)
+        .toDate()
+        .toLocaleString(),
     orderStatus: OrdersHelper.getOrderStatus(data.orderStatus),
     orderType: type === 'sales' ? 'Sales' : 'Purchase',
     packaging: orderItems.map(d =>
@@ -82,15 +96,21 @@ function prepareDetail(data, type) {
     ),
     paymentInitiationDate:
       typeof data.paymentInitiationDate !== 'undefined'
-        ? moment(data.paymentInitiationDate).format('MMM Do, YYYY h:mm:ss A')
+        ? moment(data.paymentInitiationDate)
+            .toDate()
+            .toLocaleString()
         : 'N/A',
     paymentReceivedDate:
       typeof data.paymentReceivedDate !== 'undefined'
-        ? moment(data.paymentReceivedDate).format('MMM Do, YYYY h:mm:ss A')
+        ? moment(data.paymentReceivedDate)
+            .toDate()
+            .toLocaleString()
         : 'N/A',
     paymentSendDate:
       typeof data.paymentSendDate !== 'undefined'
-        ? moment(data.paymentSendDate).format('MMM Do, YYYY h:mm:ss A')
+        ? moment(data.paymentSendDate)
+            .toDate()
+            .toLocaleString()
         : 'N/A',
     paymentStatus: OrdersHelper.getPaymentStatus(data.paymentStatus),
     pickUpAddress:
@@ -113,13 +133,23 @@ function prepareDetail(data, type) {
         : 'N/A'
     ),
     refundDate:
-      typeof data.refundDate !== 'undefined' ? moment(data.refundDate).format('MMM Do, YYYY h:mm:ss A') : null,
+      typeof data.refundDate !== 'undefined'
+        ? moment(data.refundDate)
+            .toDate()
+            .toLocaleString()
+        : null,
     returnDeliveryDate:
       typeof data.returnDeliveryDate !== 'undefined'
-        ? moment(data.returnDeliveryDate).format('MMM Do, YYYY h:mm:ss A')
+        ? moment(data.returnDeliveryDate)
+            .toDate()
+            .toLocaleString()
         : null,
     returnShipDate:
-      typeof data.returnShipDate !== 'undefined' ? moment(data.returnShipDate).format('MMM Do, YYYY h:mm:ss A') : null,
+      typeof data.returnShipDate !== 'undefined'
+        ? moment(data.returnShipDate)
+            .toDate()
+            .toLocaleString()
+        : null,
     returnStatus: OrdersHelper.getReturnStatus(data.returnStatus),
     returnTo: data.sellerCompanyName,
     returnAddressName: data.returnAddressName,
@@ -128,10 +158,17 @@ function prepareDetail(data, type) {
     reviewStatus: OrdersHelper.getReviewStatus(data.reviewStatus),
     sellerRejectionDate:
       typeof data.sellerRejectionDate !== 'undefined'
-        ? moment(data.sellerRejectionDate).format('MMM Do, YYYY h:mm:ss A')
+        ? moment(data.sellerRejectionDate)
+            .toDate()
+            .toLocaleString()
         : null,
     service: 'N/A', // ! ! TBD
-    shipDate: typeof data.shipDate !== 'undefined' ? moment(data.shipDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A',
+    shipDate:
+      typeof data.shipDate !== 'undefined'
+        ? moment(data.shipDate)
+            .toDate()
+            .toLocaleString()
+        : 'N/A',
     shippingContact: data.sellerCompanyContactName ? data.sellerCompanyContactName : 'N/A',
     shippingStatus: OrdersHelper.getShippingStatus(data.shippingStatus),
     shipTo: data.buyerCompanyName,

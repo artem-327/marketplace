@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
+import moment from 'moment'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { getLanguages } from '~/modules/settings/actions'
@@ -183,7 +184,15 @@ const mapStateToProps = state => {
           jobTitle: popupValues.jobTitle,
           // preferredCurrency: popupValues.preferredCurrency && popupValues.preferredCurrency.id,
           language: getSafe(() => popupValues.preferredLanguage.language),
-          lastLoginAt: <FormattedDateTime dateTime={getSafe(() => state.auth.identity.lastLoginAt, null)} />
+          lastLoginAt:
+            state.auth.identity.lastLoginAt &&
+            getSafe(
+              () =>
+                moment(state.auth.identity.lastLoginAt)
+                  .toDate()
+                  .toLocaleString(),
+              null
+            )
         }
       : null,
     // currencies: state.profile.currency && state.profile.currency.map(d => {

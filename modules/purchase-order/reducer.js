@@ -38,7 +38,6 @@ export const initialState = {
     isShippingEdit: false,
     isNewAddress: true,
     savedShippingPreferences: true,
-    shippingQuotes: [],
     selectedShippingQuote: null
   },
   identity: null

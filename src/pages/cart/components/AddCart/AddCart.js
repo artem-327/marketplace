@@ -1,9 +1,7 @@
-import './AddCart.scss'
-// import file from '../../../../images/file.svg'
-import { checkToken } from '../../../../utils/auth'
-
-import styled from 'styled-components'
 import React, { Component } from 'react'
+import Router from 'next/router'
+import { FormattedNumber, FormattedMessage } from 'react-intl'
+import styled from 'styled-components'
 import { object, func } from 'prop-types'
 import moment from 'moment/moment'
 import {
@@ -22,13 +20,15 @@ import {
   List,
   Popup
 } from 'semantic-ui-react'
-import Router from 'next/router'
-import { FormattedNumber, FormattedMessage } from 'react-intl'
+
 import { FormattedUnit, UnitOfPackaging } from '~/components/formatted-messages'
 import { errorMessages } from '~/constants/yupValidation'
-
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
+import { getLocaleDateFormat } from '~/components/date-format'
+import './AddCart.scss'
+// import file from '../../../../images/file.svg'
+import { checkToken } from '../../../../utils/auth'
 
 const CapitalizedColumn = styled(GridColumn)`
   text-transform: capitalize;
@@ -304,7 +304,9 @@ export default class AddCart extends Component {
                     <FormattedMessage id='cart.expirationDate' defaultMessage='Expiration Date:' />
                   </GridColumn>
                   <GridColumn computer={10}>
-                    {offer.lotExpirationDate ? moment(offer.lotExpirationDate).format('MM/DD/YYYY') : 'N/A'}
+                    {offer && offer.lotExpirationDate
+                      ? moment(offer.lotExpirationDate).format(getLocaleDateFormat())
+                      : 'N/A'}
                   </GridColumn>
                 </GridRow>
                 <GridRow>

@@ -1,20 +1,20 @@
+import React from 'react'
+import { FormattedNumber } from 'react-intl'
 import { connect } from 'react-redux'
+import moment from 'moment/moment'
+
+import { getLocationString } from '~/src/utils/functions'
+import { withDatagrid } from '~/modules/datagrid'
+import { applyFilter } from '~/modules/filter/actions'
 import Marketplace from './Marketplace'
 import * as Actions from '../actions'
 import { sidebarChanged } from '~/src/modules/cart'
 import { getProductOffer } from '~/modules/purchase-order/actions'
-import moment from 'moment/moment'
-import { getLocationString } from '~/src/utils/functions'
-import { withDatagrid } from '~/modules/datagrid'
-import { applyFilter } from '~/modules/filter/actions'
-import { FormattedNumber } from 'react-intl'
-
 import { openPopup, closePopup } from '~/modules/company-product-info/actions'
-
 import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
-import React from 'react'
+import { getLocaleDateFormat } from '~/components/date-format'
 
 function mapStateToProps(store, { datagrid }) {
   return {
@@ -61,7 +61,7 @@ function mapStateToProps(store, { datagrid }) {
           ),
         manufacturer: getSafe(() => po.companyProduct.echoProduct.manufacturer.name, 'N/A'),
         origin: getSafe(() => po.origin.name),
-        expiration: po.lotExpirationDate ? moment(po.lotExpirationDate).format('MM/DD/YYYY') : 'N/A',
+        expiration: po.lotExpirationDate ? moment(po.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A',
         assay: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
         condition: getSafe(() => po.conforming),
         form: getSafe(() => po.form.name),
@@ -74,7 +74,12 @@ function mapStateToProps(store, { datagrid }) {
 }
 
 export default withDatagrid(
-  connect(mapStateToProps, { ...Actions, sidebarChanged, openPopup, closePopup, getProductOffer, applyFilter })(
-    Marketplace
-  )
+  connect(mapStateToProps, {
+    ...Actions,
+    sidebarChanged,
+    openPopup,
+    closePopup,
+    getProductOffer,
+    applyFilter
+  })(Marketplace)
 )

@@ -28,6 +28,7 @@ import { DateInput } from '~/components/custom-formik'
 import { currency } from '~/constants/index'
 import ShippingQuote from '~/modules/purchase-order/components/ShippingQuote'
 import '~/modules/purchase-order/styles/PurchaseOrder.scss'
+import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
@@ -53,9 +54,8 @@ class SaleReturnShipping extends React.Component {
     if (!this.props.order.cfWeightExceeded) {
       let pickupDate = moment()
         .add(1, 'minutes')
-        .toISOString()
-      this.props.getShippingQuotes(this.props.orderId, pickupDate) // ! ! Not working properly yet
-      //this.props.getShippingQuotes(this.props.orderId, null)
+        .format()
+      this.props.getShippingQuotes(this.props.orderId, pickupDate)
     }
   }
   submitHandler = async (values, actions) => {
@@ -92,13 +92,14 @@ class SaleReturnShipping extends React.Component {
   }
 
   onDateChange = async (event, { name, value }) => {
-    let pickupDate = moment(value)                                    // Value is date only (it means time = 00:00:00)
-    if (pickupDate.isBefore(moment().add(1, 'minutes'))) // if current date (today) is selected the pickupDate (datetime) is in past
-      pickupDate = moment().add(1, 'minutes')            // BE needs to have pickupDate always in future
+    let pickupDate = moment(getStringISODate(value)) // Value is date only (it means time = 00:00:00)
+    if (pickupDate.isBefore(moment().add(1, 'minutes'))) {
+      // if current date (today) is selected the pickupDate (datetime) is in past
+      pickupDate = moment().add(1, 'minutes') // BE needs to have pickupDate always in future
+    }
     if (!this.props.order.cfWeightExceeded) {
       try {
-        // ! ! TODO: date not working in getShippingQuotes?
-        await this.props.getShippingQuotes(this.props.order.id, pickupDate.toISOString())
+        await this.props.getShippingQuotes(this.props.order.id, pickupDate.format())
       } catch {
       } finally {
       }
@@ -111,8 +112,8 @@ class SaleReturnShipping extends React.Component {
     try {
       //orderId, countryId, zip
       await this.props.getManualShippingQuote(order.id, {
-        destinationCountryId: 1,
-        destinationZIP: order.shippingAddressZip
+        destinationCountryId: order.returnAddressCountryId.id,
+        destinationZIP: order.returnAddressZip
       })
     } catch {
     } finally {
@@ -131,8 +132,8 @@ class SaleReturnShipping extends React.Component {
     }
 
     if (initialValues.pickupDate && moment(initialValues.pickupDate).isAfter(moment()))
-      initialValues.pickupDate = moment(initialValues.pickupDate).format('YYYY-MM-DD')
-    else initialValues.pickupDate = moment().format('YYYY-MM-DD')
+      initialValues.pickupDate = moment(initialValues.pickupDate).format(getLocaleDateFormat())
+    else initialValues.pickupDate = moment().format(getLocaleDateFormat())
 
     return initialValues
   }
