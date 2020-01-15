@@ -96,7 +96,6 @@ export function addProductOffer(values, poId = false, simple = false) {
       lotExpirationDate: getSafe(() => values.lotExpirationDate, null),
       lotManufacturedDate: getSafe(() => values.lotManufacturedDate, null),
       lotNumber: getSafe(() => values.lotNumber, null),
-      // ! ! otestovat manufacturer: getSafe(() => values.manufacturer),
       minPkg: parseInt(values.minimum),
       origin: getSafe(() => values.origin),
       pkgAvailable: getSafe(() => values.pkgAvailable, 10),
@@ -115,7 +114,6 @@ export function addProductOffer(values, poId = false, simple = false) {
       form: getSafe(() => parseInt(values.productForm)),
       grades: values.productGrades,
       splitPkg: parseInt(values.splits),
-      // ! ! otestovat tradeName: getSafe(() => values.tradeName),
       validityDate: values.expirationDate
         ? moment(values.expirationDate)
             .utc(values.expirationDate)
@@ -397,21 +395,21 @@ export const getAutocompleteData = ({ searchUrl }) => ({
   payload: api.getAutocompleteData(searchUrl)
 })
 
-export const simpleEditTrigger = (popupValues = {}, force = null) => ({
+export const simpleEditTrigger = (popupValues = {}, force = false) => ({
   type: AT.SIMPLE_EDIT_TRIGGER,
   payload: { popupValues, force }
 })
 
-export const sidebarDetailTrigger = (row = {}, force = null, activeTab = 0) => {
+export const sidebarDetailTrigger = (row = null, force = false, activeTab = 0) => {
   return {
     type: AT.SIDEBAR_DETAIL_TRIGGER,
-    meta: { force: force, activeTab: activeTab, row: row },
-    async payload() {
-      let sidebarValues = {}
-
-      if (getSafe(() => row.id, false)) sidebarValues = await api.getProductOffer(row.id)
-
-      return getSafe(() => sidebarValues.data, {})
-    }
+    payload: { force: force, activeTab: activeTab, row: row }
   }
 }
+
+export function closeSidebarDetail() {
+  return {
+    type: AT.INVENTORY_CLOSE_SIDEBAR
+  }
+}
+
