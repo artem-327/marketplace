@@ -507,7 +507,7 @@ class _Table extends Component {
         newSorting = [
           {
             columnName: sort[0].columnName,
-            direction: 'ASC'
+            direction: sorting[0].direction.toUpperCase() === 'ASC' ? 'ASC' : 'DESC'
           }
         ]
       }
