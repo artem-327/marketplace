@@ -753,11 +753,13 @@ class Broadcast extends Component {
   }
 
   saveBroadcastRules = async () => {
-    const { saveRules, id, treeData, toastManager, filter, initGlobalBroadcast } = this.props
+    const { saveRules, id, treeData, toastManager, filter, initGlobalBroadcast, asSidebar } = this.props
 
     try {
       await saveRules(id, this.state.tree.model.rule)
-      await initGlobalBroadcast()
+      if (!asSidebar) {
+        await initGlobalBroadcast()
+      }
       this.setState({
         saved: true,
         initialize: true
