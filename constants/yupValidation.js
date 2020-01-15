@@ -5,6 +5,7 @@ import { getSafe, deepSearch } from '~/utils/functions'
 import { isValid } from 'ein-validator'
 import validator from 'validator'
 import React from 'react'
+import { getLocaleDateFormat } from '~/components/date-format'
 
 const allowedFreightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500]
 
@@ -17,7 +18,9 @@ export const errorMessages = {
   lotHasToBeSelected: <FormattedMessage id='validation.lostHasToBeSelected' defaultMessage='Lot has to be selected' />,
   lotUnique: <FormattedMessage id='validation.lotUnique' defaultMessage='Lot has to be unique' />,
   requiredMessage: <FormattedMessage id='validation.required' defaultMessage='Required' />,
-  requiredNonConforming: <FormattedMessage id='validation.requiredNonConforming' defaultMessage='Required if Condition is Non Conforming' />,
+  requiredNonConforming: (
+    <FormattedMessage id='validation.requiredNonConforming' defaultMessage='Required if Condition is Non Conforming' />
+  ),
   invalidPhoneNumber: (
     <FormattedMessage id='validation.phoneNumber' defaultMessage={`Please, enter valid phone number.`} />
   ),
@@ -123,7 +126,7 @@ export const errorMessages = {
       values={{ split }}
     />
   ),
-  positive: <FormattedMessage id='validation.positive' defaultMessage='Number value should be positive' />,
+  positive: <FormattedMessage id='validation.positive' defaultMessage='Number value should be positive' />
 }
 
 export const provinceObjectRequired = hasProvinces =>
@@ -152,7 +155,7 @@ export const dateValidation = (required = true) => {
   let isValid = Yup.string().test(
     'date-format',
     errorMessages.invalidDateFormat(),
-    value => moment(value, 'YYYY-MM-DD', true).isValid() || (!required && !value)
+    value => moment(value, getLocaleDateFormat(), true).isValid() || (!required && !value)
   )
 
   if (required) return isValid.concat(Yup.string().required(errorMessages.requiredMessage))

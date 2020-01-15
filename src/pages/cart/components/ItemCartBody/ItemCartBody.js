@@ -10,6 +10,7 @@ import moment from 'moment/moment'
 import { getSafe } from '~/utils/functions'
 import styled from 'styled-components'
 import { FormattedUnit } from '~/components/formatted-messages'
+import { getLocaleDateFormat } from '~/components/date-format'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -119,7 +120,9 @@ export default class ItemCartBody extends Component {
                   <FormattedMessage id='cart.expiration' defaultMessage='Expiration:' />
                 </GridColumn>
                 <GridColumn width={rightWidth2}>
-                  {productOffer.lotExpirationDate ? moment(productOffer.lotExpirationDate).format('MM/DD/YYYY') : 'N/A'}
+                  {productOffer && productOffer.lotExpirationDate
+                    ? moment(productOffer.lotExpirationDate).format(getLocaleDateFormat())
+                    : 'N/A'}
                 </GridColumn>
 
                 <GridColumn width={leftWidth2}>

@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
-import { FormattedDateTime, FormattedPhone } from '~/components/formatted-messages/'
+import moment from 'moment'
 
+import { FormattedDateTime, FormattedPhone } from '~/components/formatted-messages/'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 // import { TablePopUp } from '~/components/tablePopup'
@@ -287,7 +288,11 @@ const mapStateToProps = (state, { datagrid }) => {
       allUserRoles: user.roles || [],
       userRoles: displayUserRoles(user.roles),
       switchEnable: userEnableDisableStatus(user, currentUserId),
-      lastLoginAt: user.lastLoginAt ? <FormattedDateTime dateTime={user.lastLoginAt} /> : ''
+      lastLoginAt: user.lastLoginAt
+        ? moment(user.lastLoginAt)
+            .toDate()
+            .toLocaleString()
+        : ''
     })),
     currentUserId,
     addedItem: state.settings.addedItem,
