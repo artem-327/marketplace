@@ -238,12 +238,12 @@ class WarehousePopup extends React.Component {
                       data-test='settings_delivery_address_notes_inp'
                       style={{ alignItems: 'center' }}>
                       <Input
-                        type='text'
+                        inputProps={{ type: 'time' }}
                         label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
                         name='deliveryAddress.readyTime'
                       />
                       <Input
-                        type='text'
+                        inputProps={{ type: 'time' }}
                         label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
                         name='deliveryAddress.closeTime'
                       />
