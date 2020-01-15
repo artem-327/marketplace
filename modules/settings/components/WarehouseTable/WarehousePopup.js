@@ -59,16 +59,35 @@ class WarehousePopup extends React.Component {
     const { handlerSubmitWarehouseEditPopup, postNewWarehouseRequest } = this.props
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
 
-    let requestData = {
-      ...values,
-      deliveryAddress: {
-        ...values.deliveryAddress,
-        address: {
-          ...values.deliveryAddress.address,
-          country
-        }
-      },
-      warehouse: currentTab.type !== 'branches'
+    let requestData = {}
+    if (currentTab.type === 'branches') {
+      requestData = {
+        deliveryAddress: {
+          address: {
+            ...values.deliveryAddress.address,
+            country
+          },
+          addressName: values.deliveryAddress.addressName,
+          contactName: values.deliveryAddress.contactName,
+          contactPhone: values.deliveryAddress.contactPhone,
+          contactEmail: values.deliveryAddress.contactEmail
+        },
+        warehouse: false
+      }
+    }
+
+    if (currentTab.type === 'warehouses') {
+      requestData = {
+        ...values,
+        deliveryAddress: {
+          ...values.deliveryAddress,
+          address: {
+            ...values.deliveryAddress.address,
+            country
+          }
+        },
+        warehouse: true
+      }
     }
 
     try {
@@ -117,8 +136,8 @@ class WarehousePopup extends React.Component {
           zip: '',
           province: ''
         },
-        readyTime: '',
-        closeTime: '',
+        readyTime: null,
+        closeTime: null,
         liftGate: false,
         forkLift: false,
         deliveryNotes: '',
