@@ -115,8 +115,15 @@ class PurchaseRequestCreditDelivery extends React.Component {
       await creditRequest(orderId, request, attachments)
       toastManager.add(
         generateToastMarkup(
-          <FormattedMessage id='order.success' defaultMessage='Success' />,
-          <FormattedMessage id='order.requestCreditSent' defaultMessage='Request credit was successfully sent' />
+          <FormattedMessage
+            id='notifications.order.actions.requestCreditSent.header'
+            defaultMessage='Credit Request Sent'
+          />,
+          <FormattedMessage
+            id='notifications.order.actions.requestCreditSent.content'
+            defaultMessage={`Credit Request for Order ${orderId} was sent.`}
+            values={{ orderId: orderId }}
+          />
         ),
         {
           appearance: 'success'

@@ -157,7 +157,7 @@ class SaleReturnShipping extends React.Component {
             <Loader />
           </Dimmer>
           <Modal.Header>
-            <FormattedMessage id='order.returnShipping' defaultMessage='ORDER RETURN SHIPPING' />
+            <FormattedMessage id='order.returnShippingSale' defaultMessage='ORDER RETURN SHIPPING' />
           </Modal.Header>
           <ModalBody>
             <Modal.Description>

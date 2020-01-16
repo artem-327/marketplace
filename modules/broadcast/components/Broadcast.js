@@ -109,7 +109,7 @@ class Broadcast extends Component {
       if (priceAddition || priceMultiplier) node.model.rule.priceOverride = 1
     }
 
-    this.setState({ tree: this.state.tree, change: true, saved: false })
+    this.setState(prevState => ({ tree: prevState.tree, change: true, saved: false }))
 
     this.formChanged()
   }
@@ -133,17 +133,17 @@ class Broadcast extends Component {
   }
 
   handleChange = node => {
-    const { treeData } = this.props
+    //const { treeData } = this.props
     const findInData = node =>
       getSafe(
-        () => treeData.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type),
+        () => this.state.tree.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type),
         null
       )
 
     let path = getSafe(() => findInData(node).getPath(), [])
     for (let i = path.length - 2; i >= 0; i--) setBroadcast(path[i])
 
-    this.setState({ tree: this.state.tree, change: true, saved: false })
+    this.setState(prevState => ({ tree: prevState.tree, change: true, saved: false }))
     // Hotfix - Changes were not applied to data structure when clicking on nodes with childs with 'By Company' filter applied
     // This fixes it, but causes a delay when clicking on root as it iterates through every node and it's path in data structure
 
@@ -164,8 +164,7 @@ class Broadcast extends Component {
     node.model.expanded = !node.model.expanded
 
     if (!node.model.expanded) node.all(n => (n.model.expanded = false))
-
-    this.setState({ tree: this.state.tree })
+    this.setState(prevState => ({ tree: prevState.tree }))
   }
 
   handleSearchChange = (e, { name, value }) => {
@@ -458,7 +457,7 @@ class Broadcast extends Component {
                 onSubmit={async (values, { setSubmitting, setFieldValue }) => {
                   let payload = {
                     mappedBroadcastRules: {
-                      ...treeData.model
+                      ...this.state.tree.model.rule
                     },
                     ...values
                   }
@@ -722,7 +721,7 @@ class Broadcast extends Component {
                 />
               </Rule.Content>
             </Rule.Root>
-            {/* {!asModal && <RightAlignedDiv>{this.getButtons()}</RightAlignedDiv>} */}
+            {!asModal && <RightAlignedDiv>{this.getButtons()}</RightAlignedDiv>}
           </Grid.Column>
         </Grid.Row>
       </StretchedGrid>
@@ -754,12 +753,20 @@ class Broadcast extends Component {
   }
 
   saveBroadcastRules = async () => {
-    const { saveRules, id, treeData, toastManager, filter } = this.props
-    this.setState({ initialize: false })
+    const { saveRules, id, treeData, toastManager, filter, initGlobalBroadcast, asSidebar } = this.props
 
-    await saveRules(id, treeData.model)
-
-    this.setState({ saved: true, initialize: true })
+    try {
+      await saveRules(id, this.state.tree.model.rule)
+      if (!asSidebar) {
+        await initGlobalBroadcast()
+      }
+      this.setState({
+        saved: true,
+        initialize: true
+      })
+    } catch (err) {
+      console.error(err)
+    }
 
     toastManager.add(generateToastMarkup('Saved successfully!', 'New broadcast rules have been saved.'), {
       appearance: 'success'

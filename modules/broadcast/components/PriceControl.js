@@ -117,8 +117,8 @@ export default class PriceControl extends Component {
     const r = rule //rootRule || rule
     const calc = p => p + p * (getSafe(() => r.priceMultiplier, 0) / 100) + getSafe(() => r.priceAddition, 0)
 
-    let high = calc(offer.pricingTiers[0].pricePerUOM),
-      low = calc(offer.pricingTiers[offer.pricingTiers.length - 1].pricePerUOM)
+    let high = calc(getSafe(() => offer.pricingTiers[0].pricePerUOM, null)),
+      low = calc(getSafe(() => offer.pricingTiers[offer.pricingTiers.length - 1].pricePerUOM, null))
 
     return {
       highStr: <FormattedNumber style='currency' currency={currency} value={high ? high : 0} />,

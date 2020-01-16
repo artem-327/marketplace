@@ -4,8 +4,7 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
-import { withToastManager } from 'react-toast-notifications'
+import { getSafe } from '~/utils/functions'
 import { downloadAttachment } from '~/modules/inventory/actions'
 import { Button, Icon } from 'semantic-ui-react'
 
@@ -116,7 +115,8 @@ class ProductCatalogTable extends Component {
       intl: { formatMessage },
       openEditEchoProduct,
       openEditEchoAltNamesPopup,
-      deleteEchoProduct
+      deleteEchoProduct,
+      editedId,
     } = this.props
 
     return (
@@ -138,21 +138,23 @@ class ProductCatalogTable extends Component {
               callback: row => openEditEchoAltNamesPopup(row)
             },
             {
-              text: formatMessage({ id: 'admin.deleteEchoProduct', defaultMessage: 'Delete Echo Product' }),
-              callback: row =>
+              text: formatMessage({id: 'admin.deleteEchoProduct', defaultMessage: 'Delete Echo Product'}),
+              disabled: row => editedId === row.id,
+              callback: row => {
                 confirm(
-                  formatMessage({ id: 'confirm.deleteEchoProduct.title', defaultMessage: 'Delete Echo Product?' }),
+                  formatMessage({id: 'confirm.deleteEchoProduct.title', defaultMessage: 'Delete Echo Product?'}),
                   formatMessage(
                     {
                       id: 'confirm.deleteEchoProduct.content',
                       defaultMessage: `Do you really want to delete '${row.name}' echo product?`
                     },
-                    { name: row.name }
+                    {name: row.name}
                   )
                 ).then(() => {
                   deleteEchoProduct(row.id)
                   datagrid.removeRow(row.id)
                 })
+              }
             }
           ]}
         />
@@ -162,7 +164,14 @@ class ProductCatalogTable extends Component {
 }
 
 const mapStateToProps = ({ admin }, { datagrid }) => {
+
+  const editedId =
+    admin.currentTab.name === 'Product Catalog'
+    && (!!admin.currentAddForm || !!admin.currentEditForm)
+    && admin.popupValues ? admin.popupValues.id : -1
+
   return {
+    editedId,
     columns: admin.config[admin.currentTab.name].display.columns,
     productListDataRequest: admin.productListDataRequest,
     filterValue: admin.filterValue,
@@ -176,5 +185,5 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
 }
 
 export default withDatagrid(
-  connect(mapStateToProps, { ...Actions, downloadAttachment })(injectIntl(withToastManager(ProductCatalogTable)))
+  connect(mapStateToProps, { ...Actions, downloadAttachment })(injectIntl(ProductCatalogTable))
 )

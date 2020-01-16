@@ -43,7 +43,9 @@ import {
   loadFile,
   removeAttachmentLink,
   removeAttachment,
-  downloadAttachment
+  downloadAttachment,
+  closeSidebarDetail,
+  getProductOffer
 } from '../actions'
 import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
@@ -114,33 +116,39 @@ const CloceIcon = styled(Icon)`
 
 const initValues = {
   edit: {
-    product: null,
-    fobPrice: null,
-    cost: null,
-    lotNumber: '',
-    lotExpDate: '',
-    lotMfgDate: '',
-    pkgAvailable: 1,
-    warehouse: '',
-    productGrades: [],
-    productForm: '',
-    origin: '',
-    productCondition: '',
+    broadcasted: false,
+    condition: null,
     conditionNotes: '',
-    inStock: false,
-    leadTime: '',
-    offerExpire: false,
-    expirationDate: '',
-    minimum: 1, // minPkg
-    splits: 1, // splitPkg
+    conforming: true,
+    costPerUOM: '',
     externalNotes: '',
+    fobPrice: '',
+    inStock: false,
     internalNotes: '',
-    documentType: '',
-    broadcasted: false
+    leadTime: 1,
+    lotNumber: '',
+    lotExpirationDate: '',
+    lotManufacturedDate: '',
+    minimum: 1, // minPkg
+    origin: null,
+    pkgAvailable: '',
+    product: null,
+    productCondition: null,
+    productForm: null,
+    productGrades: [],
+    splits: 1, // splitPkg
+    doesExpire: false,
+    expirationDate: '',
+    warehouse: null,
+    documentType: ''
   },
   priceTiers: {
     priceTiers: 1,
     pricingTiers: []
+  },
+  documents: {
+    documentType: null,
+    attachments: []
   }
 }
 
@@ -162,6 +170,32 @@ const columns = [
       </FormattedMessage>
     ),
     width: 160
+  }
+]
+
+const optionsYesNo = [
+  {
+    key: 1,
+    text: <FormattedMessage id='global.yes' defaultMessage='Yes' />,
+    value: true
+  },
+  {
+    key: 0,
+    text: <FormattedMessage id='global.no' defaultMessage='No' />,
+    value: false
+  }
+]
+
+const listConforming = [
+  {
+    key: 1,
+    text: <FormattedMessage id='global.conforming' defaultMessage='Conforming' />,
+    value: true
+  },
+  {
+    key: 0,
+    text: <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />,
+    value: false
   }
 ]
 
@@ -217,9 +251,13 @@ const validationScheme = val.object().shape({
       .typeError(errorMessages.mustBeNumber)
       .required(errorMessages.requiredMessage),
     costPerUOM: val
-      .number()
-      .nullable()
-      .min(0, errorMessages.minimum(0)),
+      .string()
+      .test('v', errorMessages.mustBeNumber, function(v) {
+        return v === null || v === '' || !isNaN(v)
+      })
+      .test('v', errorMessages.minimum(0), function(v) {
+        return v === null || v === '' || isNaN(v) || Number(v) >= 0
+      }),
     lotNumber: val
       .string()
       .typeError(errorMessages.invalidString)
@@ -308,66 +346,122 @@ class DetailSidebar extends Component {
     documentType: 1,
     openUploadLot: false,
     edited: false,
-    saved: false,
-    oldProductOffer: null
+    sidebarValues: null,
+    initValues: initValues
   }
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
+    if (this.props.sidebarValues) {
+      await this.loadProductOffer(this.props.sidebarValues.id) // Start editing, reload product offer
+    } else {
+      this.props.searchOrigins('', 200)
+    }
     this.fetchIfNoData('listConditions', this.props.getProductConditions)
     this.fetchIfNoData('listForms', this.props.getProductForms)
     this.fetchIfNoData('listGrades', this.props.getProductGrades)
     this.fetchIfNoData('warehousesList', this.props.getWarehouses)
     this.fetchIfNoData('listDocumentTypes', this.props.getDocumentTypes)
-  }
-
-  componentWillUnmount() {
-    this.askForSave()
-  }
-
-  askForSave = (oldProductOffer = null) => {
-    if (this.state.edited && !this.state.saved) {
-      confirm(
-        <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
-        <FormattedMessage
-          id='confirm.global.unsavedChanges.content'
-          defaultMessage='You have unsaved changes. Do you wish to save them?'
-        />
-      )
-        .then(() => {
-          // this.setState({ oldProductOffer }, this.submitRef)
-          this.submitRef()
-        })
-        .catch(() => {})
-        .finally(() => this.setState({ edited: false }))
-    }
+    this.props.searchManufacturers('', 200)
+    this.switchTab(this.props.sidebarActiveTab)
   }
 
   fetchIfNoData = (name, fn) => {
     if (this.props[name].length === 0) fn()
   }
 
-  componentDidUpdate = oldProps => {
-    let oldId = getSafe(() => oldProps.sidebarValues.id, null)
-    let newId = getSafe(() => this.props.sidebarValues.id, null)
-
-    if ((oldId || newId) && newId !== oldId) {
-      this.setState({ oldId })
-      this.askForSave(oldProps.sidebarValues)
+  loadProductOffer = async id => {
+    const data = await this.props.getProductOffer(id)
+    this.props.searchOrigins(
+      getSafe(() => data.value.data.origin.name, ''),
+      200
+    )
+    if (data.value.data.companyProduct) {
+      this.searchProducts(data.value.data.companyProduct.intProductName)
     }
+    this.setState(
+      {
+        sidebarValues: data.value.data,
+        initValues: { ...initValues, ...this.getEditValues(data.value.data) }
+      },
+      () => this.resetForm()
+    )
+  }
 
-    if (getSafe(() => this.props.sidebarValues.id, false) && oldProps.sidebarValues !== this.props.sidebarValues) {
-      this.props.getDocumentTypes()
-      this.props.searchManufacturers('', 200)
-      this.props.searchOrigins(
-        getSafe(() => this.props.sidebarValues.origin.name, ''),
-        200
-      )
-      if (this.props.sidebarValues.companyProduct)
-        this.searchProducts(this.props.sidebarValues.companyProduct.intProductName)
+  validateSaveOrSwitchToErrors = async (callback = null) => {
+    const { touched, validateForm, submitForm, values, setSubmitting, setTouched } = this.formikProps
+
+    //! !if (Object.keys(touched).length || this.state.edited && !this.state.saved) {
+    if (this.state.edited) {
+      // Form edited and not saved yet
+      validateForm().then(err => {
+        const errors = Object.keys(err)
+        if (errors.length && errors[0] !== 'isCanceled') {
+          // Edited, Errors found
+          submitForm() // to show errors
+          this.switchToErrors(Object.keys(err))
+          return
+        } else {
+          // Edited, Errors not found, try to save
+          confirm(
+            <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
+            <FormattedMessage
+              id='confirm.global.unsavedChanges.content'
+              defaultMessage='You have unsaved changes. Do you wish to save them?'
+            />
+          )
+            .then(
+              async () => {
+                // Confirm
+                if (await this.submitForm(values, setSubmitting, setTouched)) {
+                  if (callback) callback()
+                }
+              },
+              () => {
+                // Cancel
+                if (callback) callback()
+              }
+            )
+            .catch(() => {})
+            .finally(() => this.setState({ edited: false }))
+          return
+        }
+      })
+    } else {
+      // Form not modified
+      if (callback) callback()
     }
+  }
 
-    if (this.props.sidebarActiveTab > -1 && oldProps.sidebarActiveTab !== this.props.sidebarActiveTab) {
+  componentDidUpdate = (prevProps, prevState, snapshot) => {
+    if (this.props.sidebarActiveTab > -1 && prevProps.sidebarActiveTab !== this.props.sidebarActiveTab) {
       this.switchTab(this.props.sidebarActiveTab)
+    }
+
+    if (prevProps.editProductOfferInitTrig !== this.props.editProductOfferInitTrig) {
+      if (this.props.sidebarValues) {
+        // Edit mode
+        if (!prevProps.sidebarValues) {
+          // Add new to Edit mode
+          this.validateSaveOrSwitchToErrors(() => {
+            this.loadProductOffer(this.props.sidebarValues.id)
+          })
+          return
+        } else {
+          // Edit to Edit mode
+          this.validateSaveOrSwitchToErrors(() => {
+            this.loadProductOffer(this.props.sidebarValues.id)
+          })
+          return
+        }
+      } else {
+        // Add new mode
+        this.validateSaveOrSwitchToErrors(() => {
+          this.setState({ sidebarValues: null, initValues: initValues }, () => {
+            this.resetForm()
+            this.props.searchOrigins('', 200)
+          })
+        })
+      }
     }
   }
 
@@ -511,12 +605,13 @@ class DetailSidebar extends Component {
     })
   }, 250)
 
-  submitForm = async (formValues, setSubmitting, setTouched, savedButtonClicked = false) => {
-    const { addProductOffer, datagrid, toastManager, sidebarValues } = this.props
+  submitForm = async (values, setSubmitting, setTouched, savedButtonClicked = false) => {
+    const { addProductOffer, datagrid, toastManager } = this.props
+    const { sidebarValues } = this.state
     let isEdit = getSafe(() => sidebarValues.id, null)
-    let values = !savedButtonClicked ? { ...this.getEditValues(), ...this.state.oldProductOffer } : formValues
+    let sendSuccess = false
 
-    await new Promise(resolve => this.setState({ edited: false, saved: true }, resolve))
+    await new Promise(resolve => this.setState({ edited: false }, resolve))
 
     setSubmitting(false)
     let props = {}
@@ -543,24 +638,31 @@ class DetailSidebar extends Component {
                   price: values.edit.fobPrice
                 }
               ],
-          productGrades: values.edit.productGrades.length ? values.edit.productGrades : []
+          productGrades: values.edit.productGrades.length ? values.edit.productGrades : [],
+          costPerUOM:
+            values.edit.costPerUOM === null || values.edit.costPerUOM === '' ? null : Number(values.edit.costPerUOM)
         }
         break
       case 2:
         this.saveBroadcastRules()
         setTouched({})
-        this.setState({ changedForm: false })
+        this.setState({ changedForm: false, edited: false })
         break
     }
     if (Object.keys(props).length) {
       try {
-        let data = await addProductOffer(props, this.state.oldId ? this.state.oldId : isEdit)
+        let data = await addProductOffer(props, isEdit)
         if (isEdit) {
           datagrid.updateRow(data.value.id, () => data.value)
+          this.setState({ edited: false })
         } else {
+          this.setState({
+            sidebarValues: data.value,
+            initValues: { ...initValues, ...this.getEditValues(data.value) },
+            edited: false
+          })
           datagrid.loadData()
         }
-
         toastManager.add(
           generateToastMarkup(
             <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
@@ -570,6 +672,7 @@ class DetailSidebar extends Component {
             appearance: 'success'
           }
         )
+        sendSuccess = true
       } catch (e) {
         console.error(e)
         let entityId = getSafe(() => e.response.data.entityId, null)
@@ -588,6 +691,12 @@ class DetailSidebar extends Component {
             .then(async () => {
               let po = await addProductOffer(props, entityId)
               datagrid.updateRow(entityId, () => po.value)
+              this.setState({
+                sidebarValues: po.value,
+                initValues: { ...initValues, ...this.getEditValues(po.value) },
+                edited: false
+              })
+              sendSuccess = true
             })
             .catch(_)
         }
@@ -596,17 +705,21 @@ class DetailSidebar extends Component {
         this.setState({ changedForm: false })
       }
     }
+    return sendSuccess
   }
 
-  switchTab = newTab => {
+  switchTab = async newTab => {
     this.setState({
       activeTab: newTab
     })
-
-    if (newTab === 2) {
-      this.props.openBroadcast(this.props.sidebarValues).then(async () => {
-        this.setState({ broadcastLoading: false })
-      })
+    try {
+      if (newTab === 2) {
+        await this.props.openBroadcast(this.state.sidebarValues).then(async () => {
+          this.setState({ broadcastLoading: false })
+        })
+      }
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -727,17 +840,18 @@ class DetailSidebar extends Component {
         return 'text/plain'
     }
   }
-  hasEdited = values => !_.isEqual(this.getEditValues(), values)
+  hasEdited = values => {
+    return !_.isEqual(this.getEditValues(this.state.sidebarValues), values)
+  }
 
-  getEditValues = () => {
-    const { sidebarValues } = this.props
+  getEditValues = sidebarValues => {
     return {
       edit: {
         broadcasted: getSafe(() => sidebarValues.broadcasted, false),
         condition: getSafe(() => sidebarValues.condition, null),
         conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
         conforming: getSafe(() => sidebarValues.conforming, true),
-        costPerUOM: getSafe(() => sidebarValues.costPerUOM, null),
+        costPerUOM: getSafe(() => sidebarValues.costPerUOM, ''),
         externalNotes: getSafe(() => sidebarValues.externalNotes, ''),
         fobPrice: getSafe(() => sidebarValues.pricingTiers[0].pricePerUOM, ''),
         inStock: getSafe(() => sidebarValues.inStock, false),
@@ -784,7 +898,7 @@ class DetailSidebar extends Component {
       }
     }
   }
-  onChange = debounce(() => this.setState({ edited: true, saved: false, oldProductOffer: this.values }), 200)
+  onChange = debounce(() => this.setState({ edited: true }), 200)
 
   render() {
     let {
@@ -795,7 +909,6 @@ class DetailSidebar extends Component {
       loading,
       // openBroadcast,
       // sidebarDetailOpen,
-      sidebarValues,
       // searchedManufacturers,
       // searchedManufacturersLoading,
       searchedOrigins,
@@ -809,54 +922,35 @@ class DetailSidebar extends Component {
       toastManager,
       removeAttachment
     } = this.props
+    const { sidebarValues } = this.state
 
     const leftWidth = 6
     const rightWidth = 10
 
-    const optionsYesNo = [
-      {
-        key: 1,
-        text: <FormattedMessage id='global.yes' defaultMessage='Yes' />,
-        value: true
-      },
-      {
-        key: 0,
-        text: <FormattedMessage id='global.no' defaultMessage='No' />,
-        value: false
-      }
-    ]
-
-    const listConforming = [
-      {
-        key: 1,
-        text: <FormattedMessage id='global.conforming' defaultMessage='Conforming' />,
-        value: true
-      },
-      {
-        key: 0,
-        text: <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />,
-        value: false
-      }
-    ]
-
     const { toggleFilter } = this.props
-
-    let editValues = this.getEditValues()
 
     return (
       <Formik
         enableReinitialize
-        initialValues={{
-          ...initValues,
-          ...editValues
-        }}
+        initialValues={this.state.initValues}
         validationSchema={validationScheme}
         onSubmit={async (values, { setSubmitting, setTouched }) => {
           this.submitForm(values, setSubmitting, setTouched)
         }}>
-        {({ values, touched, setTouched, setFieldValue, validateForm, submitForm, setSubmitting }) => {
-          this.submitRef = submitForm
+        {formikProps => {
+          let {
+            values,
+            touched,
+            setTouched,
+            setFieldValue,
+            validateForm,
+            submitForm,
+            setSubmitting,
+            resetForm
+          } = formikProps
           this.values = values
+          this.resetForm = resetForm
+          this.formikProps = formikProps
           return (
             <Form onChange={this.onChange}>
               <FlexSidebar
@@ -866,6 +960,7 @@ class DetailSidebar extends Component {
                 direction='right'
                 animation='overlay'
                 onHide={e => {
+                  /*
                   // Workaround, close if you haven't clicked on calendar item or filter icon
                   try {
                     if (
@@ -878,7 +973,7 @@ class DetailSidebar extends Component {
                     }
                   } catch (e) {
                     console.error(e)
-                  }
+                  }*/
                 }}>
                 <Dimmer inverted active={loading}>
                   <Loader />
@@ -1294,7 +1389,7 @@ class DetailSidebar extends Component {
                                             if (value > 1 && !isNaN(value)) {
                                               setFieldValue('minimumRequirement', true)
                                               // It seems to do bug when created new inventory
-                                              // value is adding in handleSubmit 
+                                              // value is adding in handleSubmit
                                               //setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
                                             }
                                           }
@@ -1777,7 +1872,7 @@ class DetailSidebar extends Component {
                           size='large'
                           inputProps={{ type: 'button' }}
                           onClick={() => {
-                            this.setState({ edited: false }, () => this.props.sidebarDetailTrigger(null, false))
+                            this.setState({ edited: false }, () => this.props.closeSidebarDetail())
                           }}
                           data-test='sidebar_inventory_cancel'>
                           {Object.keys(touched).length || this.state.changedForm
@@ -1797,7 +1892,7 @@ class DetailSidebar extends Component {
                                 this.switchToErrors(r)
                                 submitForm() // to show errors
                               } else {
-                                this.submitForm(values, setSubmitting, setTouched, true)
+                                this.submitForm(values, setSubmitting, setTouched)
                               }
                             })
                           }
@@ -1833,7 +1928,9 @@ const mapDispatchToProps = {
   loadFile,
   removeAttachmentLink,
   removeAttachment,
-  downloadAttachment
+  downloadAttachment,
+  closeSidebarDetail,
+  getProductOffer
 }
 
 const mapStateToProps = ({
@@ -1854,7 +1951,8 @@ const mapStateToProps = ({
     searchedProducts,
     searchedProductsLoading,
     warehousesList,
-    listDocumentTypes
+    listDocumentTypes,
+    editProductOfferInitTrig
   }
 }) => ({
   autocompleteData,
@@ -1873,7 +1971,8 @@ const mapStateToProps = ({
   searchedProducts,
   searchedProductsLoading,
   warehousesList,
-  listDocumentTypes
+  listDocumentTypes,
+  editProductOfferInitTrig
 })
 
 export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(DetailSidebar))))

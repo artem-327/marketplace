@@ -29,7 +29,8 @@ export const initialState = {
   sidebarDetailOpen: false,
   sidebarActiveTab: -1,
   sidebarValues: {},
-  product: null
+  product: null,
+  editProductOfferInitTrig: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -62,7 +63,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         poCreated: true,
         loading: false,
-        sidebarValues: payload
+        //sidebarValues: payload
       }
     }
 
@@ -85,7 +86,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         poCreated: true,
         loading: false,
-        sidebarValues: payload.id === state.sidebarValues.id ? payload : state.sidebarValues
+        //sidebarValues: payload
       }
     }
 
@@ -143,6 +144,13 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.INVENTORY_GET_PRODUCT_OFFER_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        sidebarValues: payload.data
+      }
+
+      /* Not used anymore
       let { data } = action.payload
       let expirationDate = getSafe(() => data.validityDate)
 
@@ -216,7 +224,7 @@ export default function reducer(state = initialState, action) {
         },
         product: data
       }
-
+      */
       // let searchedLists = {}
       // if (action.payload.data.manufacturer) {
       //   searchedLists.searchedManufacturers = [{
@@ -298,6 +306,13 @@ export default function reducer(state = initialState, action) {
       //     warehouse: state.warehousesList.find((wh) => wh.id === data.warehouse.id) ? data.warehouse.id : null // data.warehouse.id
       //   }
       // }
+    }
+
+    case AT.INVENTORY_GET_PRODUCT_OFFER_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
     }
 
     case AT.INVENTORY_DELETE_PRODUCT_OFFER_PENDING: {
@@ -475,34 +490,22 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.SIDEBAR_DETAIL_TRIGGER_PENDING: {
-      let sidebarDetailOpen = !state.sidebarDetailOpen
-      if (action.meta.force !== null) sidebarDetailOpen = action.meta.force
-
-      if (!sidebarDetailOpen)
-        return {
-          ...state,
-          sidebarDetailOpen,
-          sidebarValues: {},
-          sidebarActiveTab: -1
-        }
-      else
-        return {
-          ...state,
-          sidebarDetailOpen,
-          sidebarValues: action.meta.row, // immediate data from table for price book
-          sidebarActiveTab: -1
-        }
-    }
-
-    case AT.SIDEBAR_DETAIL_TRIGGER_FULFILLED: {
-      let sidebarActiveTab = action.meta.activeTab
-
+    case AT.SIDEBAR_DETAIL_TRIGGER: {
       return {
         ...state,
-        autocompleteData: [],
-        sidebarValues: payload, // newest data from db
-        sidebarActiveTab
+        editProductOfferInitTrig: !state.editProductOfferInitTrig,
+        sidebarDetailOpen: true,
+        sidebarValues: payload.row,   // null (Add new) or object (Edit)
+        sidebarActiveTab: payload.activeTab
+      }
+    }
+
+    case AT.INVENTORY_CLOSE_SIDEBAR:
+    {
+      return {
+        ...state,
+        sidebarDetailOpen: false,
+        sidebarValues: null
       }
     }
 
