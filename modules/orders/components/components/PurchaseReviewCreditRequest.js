@@ -69,7 +69,7 @@ class PurchaseReviewCreditRequest extends React.Component {
         amount: counterValue,
         message: messageBuyer
       }
-      // TODO tady se vol√° api/purchase-orders/{orderId}/credit-request-update nebo
+      // TODO tady se vol· api/purchase-orders/{orderId}/credit-request-update nebo
       ///api/purchase-orders/{orderId}/credit-request
       await creditRequest(orderId, request, attachments)
       toastManager.add(
@@ -128,7 +128,7 @@ class PurchaseReviewCreditRequest extends React.Component {
     const { closePopup, orderId, toastManager, creditCounterAccept } = this.props
 
     try {
-      await creditCounterAccept(orderId) //TODO opravdu se tady m√° volat /api/sale-orders/${orderId}/credit-accept
+      await creditCounterAccept(orderId) //TODO opravdu se tady m· volat /api/sale-orders/${orderId}/credit-accept
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage

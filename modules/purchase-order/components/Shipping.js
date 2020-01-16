@@ -49,7 +49,7 @@ class Shipping extends Component {
   }
 
   render() {
-    let { deliveryAddresses, branches, warehouses, getAddress, selectedAddress, intl } = this.props
+    let { deliveryAddresses, /* branches, */ warehouses, getAddress, selectedAddress, intl } = this.props
     let { formatMessage } = intl
 
     let addresses = this.props.otherAddresses ? deliveryAddresses : warehouses // branches

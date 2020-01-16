@@ -109,6 +109,14 @@ export const config = {
               {text => text}
             </FormattedMessage>
           )
+        },
+        {
+          name: 'nacdMember',
+          title: (
+            <FormattedMessage id='global.nacdMember' defaultMessage='NACD Member'>
+              {text => text}
+            </FormattedMessage>
+          )
         }
       ]
     }
@@ -218,7 +226,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           )
-        },
+        }
       ]
     },
     edit: [
