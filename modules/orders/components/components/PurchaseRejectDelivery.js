@@ -70,8 +70,15 @@ class PurchaseRejectDelivery extends React.Component {
       await rejectPurchaseOrder(orderId, request, attachments)
       toastManager.add(
         generateToastMarkup(
-          <FormattedMessage id='order.success' defaultMessage='Success' />,
-          <FormattedMessage id='order.rejected' defaultMessage='Order was successfully rejected' />
+          <FormattedMessage
+      id='notifications.order.actions.rejected.success.header'
+      defaultMessage='Order Rejected'
+        />,
+        <FormattedMessage
+          id='notifications.order.actions.rejected.success.content'
+          defaultMessage={`Order ${orderId} was rejected.`}
+          values={{ orderId: orderId }}
+        />
         ),
         {
           appearance: 'success'
