@@ -318,8 +318,8 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && creditReviewStatus === 1 // CONFIRMED && PENDING
-              ? this.renderSegment(null, 14, null, 'order.reviewCreditRequest.description', [
+            {orderStatus === 2 && creditReviewStatus === 1 && creditReviewStatus === 1// CONFIRMED && PENDING && PENDING
+              ? this.renderSegment(null, 14, null, 'order.reviewCreditRequestSales.description', [
                   {
                     // FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
                     buttonType: 'primary',
@@ -329,7 +329,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && creditReviewStatus === 4 && returnStatus === 0 // CONFIRMED && Rejected && null
+            {orderStatus === 2 && reviewStatus === 3 && returnStatus === 0 // CONFIRMED && Rejected && null
               ? this.renderSegment(null, 14, null, 'order.returnShipmentSale.description', [
                   {
                     buttonType: 'primary',
@@ -416,8 +416,9 @@ class ActionsRequired extends React.Component {
                   requestCreditButton
                 ])
               : null}
-            {orderStatus === 2 && creditReviewStatus === 2 // Confirmed && COUNTER_OFFER_PENDING
-              ? this.renderSegment(null, 13, null, 'order.reviewCreditRequest.description', [
+            {orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 2
+              // Confirmed && PENDING && COUNTER_OFFER_PENDING
+              ? this.renderSegment(null, 13, null, 'order.reviewCreditRequestPurchase.description', [
                   {
                     buttonType: 'primary',
                     onClick: () => openPopupName('openedPurchaseReviewCreditRequest'),
@@ -426,7 +427,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 3 && creditReviewStatus === 2 // Confirmed && Rejected && COUNTER_OFFER_PENDING
+            {orderStatus === 2 && reviewStatus === 3 && returnStatus === 1 // Confirmed && Rejected && COUNTER_OFFER_PENDING
               ? this.renderSegment(null, 13, null, 'order.waitToReturn.description', [
                   {
                     buttonType: 'primary',
@@ -436,7 +437,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {(detail.paymentStatus === 5 || detail.paymentStatus === 4) && moment().isBefore(repayUntil.add(3, 'days'))
+            {(detail.paymentStatus === 5 || detail.paymentStatus === 40) && moment().isBefore(repayUntil.add(3, 'days')) // ! ! ???? spatna podminka - zmenil jsem ze 4 na 40 at se zatim nezobrazuje ! !
               ? this.renderSegment('red', 14, null, 'order.payment.failed.description', [
                   {
                     buttonType: 'primary',

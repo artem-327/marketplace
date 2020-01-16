@@ -97,13 +97,21 @@ class PurchaseReviewCreditRequest extends React.Component {
 
   rejectRequestCredit = async e => {
     e.preventDefault()
+    const { closePopup, orderId, toastManager, creditCounterReject } = this.props
 
     try {
-      await this.props.creditCounterReject(this.props.orderId)
+      await creditCounterReject(orderId)
       toastManager.add(
         generateToastMarkup(
-          <FormattedMessage id='order.success' defaultMessage='Success' />,
-          <FormattedMessage id='order.creditCounterReject' defaultMessage='Credit counter was rejected' />
+          <FormattedMessage
+            id='notifications.order.actions.counterOfferRejected.header'
+            defaultMessage='Counter Offer Rejected'
+          />,
+          <FormattedMessage
+            id='notifications.order.actions.counterOfferRejected.content'
+            defaultMessage={`Counter Offer for Order ${orderId} was rejected.`}
+            values={{ orderId: orderId }}
+          />
         ),
         {
           appearance: 'success'
@@ -123,8 +131,15 @@ class PurchaseReviewCreditRequest extends React.Component {
       await creditCounterAccept(orderId) //TODO opravdu se tady má volat /api/sale-orders/${orderId}/credit-accept
       toastManager.add(
         generateToastMarkup(
-          <FormattedMessage id='order.success' defaultMessage='Success' />,
-          <FormattedMessage id='order.acceptedCredit' defaultMessage='Credit was accepted' />
+          <FormattedMessage
+            id='notifications.order.actions.counterOfferAccepted.header'
+            defaultMessage='Counter Offer Accepted'
+          />,
+          <FormattedMessage
+            id='notifications.order.actions.counterOfferAccepted.content'
+            defaultMessage={`Counter Offer for Order ${orderId} was accepted.`}
+            values={{ orderId: orderId }}
+          />
         ),
         {
           appearance: 'success'
@@ -201,8 +216,8 @@ class PurchaseReviewCreditRequest extends React.Component {
                             creditRequestHistory[creditRequestHistory.length - 1].amount ? (
                               <strong style={{ fontSize: '16px' }}>
                                 <FormattedMessage
-                                  id='order.sellerRequesting'
-                                  defaultMessage={'Seller is requesting a discount of $'}
+                                  id='order.sellerOffering'
+                                  defaultMessage={'Seller is offering a discount of $'}
                                 />
                                 {`${creditRequestHistory[creditRequestHistory.length - 1].amount}. `}
                                 <FormattedMessage
@@ -283,7 +298,7 @@ class PurchaseReviewCreditRequest extends React.Component {
                                 onClick={() => {
                                   this.setState({ counter: true })
                                 }}>
-                                <FormattedMessage id='global.counter' defaultMessage='Counter' tagName='span'>
+                                <FormattedMessage id='global.update' defaultMessage='Update' tagName='span'>
                                   {text => text}
                                 </FormattedMessage>
                               </Button>

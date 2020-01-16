@@ -14,7 +14,7 @@ export default {
   getOrder: (endpointType, orderId) => api.get(`/prodex/api/${endpointType}-orders/${orderId}`),
   update: (orderId, model) => api.put(`/prodex/api/orders/${orderId}`, model),
   confirm: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/confirm`),
-  confirmReturned: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/return-shipment/return-shipment-delivered`),
+  confirmReturned: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/return-shipment-delivered`),
   reject: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/reject`),
   ship: (orderId, trackingId) => api.patch(`/prodex/api/sale-orders/${orderId}/ship?trackingId=${trackingId}`),
   returnShip: (orderId, trackingId) =>
