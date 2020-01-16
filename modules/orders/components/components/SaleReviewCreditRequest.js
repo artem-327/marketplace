@@ -74,8 +74,15 @@ class SaleReviewCreditRequest extends React.Component {
       await creditCounter(orderId, request, attachments)
       toastManager.add(
         generateToastMarkup(
-          <FormattedMessage id='order.success' defaultMessage='Success' />,
-          <FormattedMessage id='order.successfullySent' defaultMessage='Successfully sent' />
+          <FormattedMessage
+            id='notifications.order.actions.counterOfferSent.header'
+            defaultMessage='Counter Credit Offer Sent'
+          />,
+          <FormattedMessage
+            id='notifications.order.actions.counterOfferSent.content'
+            defaultMessage={`Counter Credit Offer for Order ${orderId} was sent.`}
+            values={{ orderId: orderId }}
+          />
         ),
         {
           appearance: 'success'
@@ -103,8 +110,15 @@ class SaleReviewCreditRequest extends React.Component {
       await creditAccept(orderId)
       toastManager.add(
         generateToastMarkup(
-          <FormattedMessage id='order.success' defaultMessage='Success' />,
-          <FormattedMessage id='order.acceptedCredit' defaultMessage='Credit was accepted' />
+          <FormattedMessage
+            id='notifications.order.actions.requestCreditAccepted.header'
+            defaultMessage='Credit Request Accepted'
+          />,
+          <FormattedMessage
+            id='notifications.order.actions.requestCreditAccepted.content'
+            defaultMessage={`Credit Request for Order ${orderId} was accepted.`}
+            values={{ orderId: orderId }}
+          />
         ),
         {
           appearance: 'success'

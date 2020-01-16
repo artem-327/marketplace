@@ -265,7 +265,7 @@ class TablesHandlers extends Component {
             )}
           </>
         )}
-        {currentTab.type === 'global-broadcast' && (
+        {/*{currentTab.type === 'global-broadcast' && (
           <GridColumn floated='right' widescreen={2} computer={2} tablet={3}>
             <Button
               fluid
@@ -277,7 +277,7 @@ class TablesHandlers extends Component {
               </FormattedMessage>
             </Button>
           </GridColumn>
-        )}
+        )}*/}
       </>
     )
   }

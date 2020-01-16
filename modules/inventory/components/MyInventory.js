@@ -14,8 +14,8 @@ import cn from 'classnames'
 import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
-import { getSafe } from '~/utils/functions'
 import moment from 'moment/moment'
+import { getSafe } from '~/utils/functions'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -259,7 +259,6 @@ class MyInventory extends Component {
 
   componentDidMount() {
     const { sidebarDetailTrigger } = this.props
-
     if (window) {
       const searchParams = new URLSearchParams(getSafe(() => window.location.href, ''))
 
@@ -274,7 +273,6 @@ class MyInventory extends Component {
             ? Number(searchParams.get('tab'))
             : Number(searchParams.get(`${window.location.href.split('?')[0]}?tab`))
         }
-
         sidebarDetailTrigger(idOffer, true, tabOffer)
       }
     }
@@ -432,7 +430,9 @@ class MyInventory extends Component {
       simpleEditTrigger,
       sidebarDetailTrigger,
       sidebarValues,
-      openPopup
+      openPopup,
+      editedId,
+      closeSidebarDetail
     } = this.props
     const { columns, selectedRows } = this.state
     
@@ -464,7 +464,7 @@ class MyInventory extends Component {
                 <Button
                   size='large'
                   primary
-                  onClick={() => sidebarDetailTrigger(null, true)}
+                  onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
                   data-test='my_inventory_add_btn'>
                   <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
                     {text => text}
@@ -476,7 +476,7 @@ class MyInventory extends Component {
                   <Button
                     size='large'
                     primary
-                    onClick={() => simpleEditTrigger({}, true)}
+                    onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
                     data-test='my_inventory_add_btn'>
                     <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
                       {text => text}
@@ -541,7 +541,8 @@ class MyInventory extends Component {
                 rows,
                 values[values.length - 1],
                 sidebarDetailOpen,
-                sidebarDetailTrigger,
+                //! ! sidebarDetailTrigger,
+                closeSidebarDetail,
                 openPopup
               ).map(a => ({
                 ...a,
@@ -588,6 +589,7 @@ class MyInventory extends Component {
                   id: 'global.delete',
                   defaultMessage: 'Delete'
                 }),
+                disabled: row => editedId === row.id,
                 callback: row => {
                   confirm(
                     formatMessage({
@@ -599,7 +601,7 @@ class MyInventory extends Component {
                         id: 'confirm.deleteItem',
                         defaultMessage: `Do you really want to remove ${row.chemicalName}?`
                       },
-                      { item: row.chemicalName }
+                      {item: row.chemicalName}
                     )
                   ).then(() => {
                     this.props.deleteProductOffer(row.id)
