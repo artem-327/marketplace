@@ -182,7 +182,7 @@ class Detail extends Component {
                       fontSize: '1.14285714em',
                       fontWeight: '500'
                     }}>
-                    {ordersType} <FormattedMessage id='order' defaultMessage='Order' />{' '}
+                    {ordersType} <FormattedMessage id='order' defaultMessage='Order' />
                     {isDetailFetching ? '' : '# ' + order.id}
                   </Header>
                   <a
@@ -210,12 +210,16 @@ class Detail extends Component {
                           circular
                           empty
                           color={
-                            order.orderStatus === 'Declined' || order.orderStatus === 'Rejected'
+                            order.orderStatus === 'Discarded' ||
+                            order.orderStatus === 'Rejected' ||
+                            order.orderStatus === 'Cancelled'
                               ? 'red'
                               : order.orderStatus === 'Confirmed'
                               ? 'green'
+                              : order.orderStatus === 'Pending' || order.orderStatus === 'Draft'
+                              ? 'blue'
                               : false
-                          }></Label>{' '}
+                          }></Label>
                         {order.orderStatus}
                       </List.Description>
                     </List.Content>
@@ -226,7 +230,18 @@ class Detail extends Component {
                         <FormattedMessage id='order.shippingStatus' defaultMessage='Shipping Status' />
                       </List.Header>
                       <List.Description as='span'>
-                        <Label circular empty color={order.shippingStatus !== 'N/A' ? 'blue' : false}></Label>{' '}
+                        <Label
+                          circular
+                          empty
+                          color={
+                            order.shippingStatus === 'Delivered'
+                              ? 'green'
+                              : order.shippingStatus === 'Returned'
+                              ? 'red'
+                              : order.shippingStatus === 'In Transit'
+                              ? 'blue'
+                              : false
+                          }></Label>
                         {order.shippingStatus}
                       </List.Description>
                     </List.Content>
@@ -237,7 +252,18 @@ class Detail extends Component {
                         <FormattedMessage id='order.reviewStatus' defaultMessage='Review Status' />
                       </List.Header>
                       <List.Description as='span'>
-                        <Label circular empty color={order.reviewStatus !== 'N/A' ? 'blue' : false}></Label>{' '}
+                        <Label
+                          circular
+                          empty
+                          color={
+                            order.reviewStatus === 'Accepted'
+                              ? 'green'
+                              : order.reviewStatus === 'Rejected'
+                              ? 'red'
+                              : order.reviewStatus === 'Pending'
+                              ? 'blue'
+                              : false
+                          }></Label>
                         {order.reviewStatus}
                       </List.Description>
                     </List.Content>
@@ -257,8 +283,10 @@ class Detail extends Component {
                                 ? 'blue'
                                 : order.creditStatus === 'Accepted'
                                 ? 'green'
-                                : 'red'
-                            }></Label>{' '}
+                                : order.creditStatus === 'Rejected'
+                                ? 'red'
+                                : false
+                            }></Label>
                           {order.creditStatus}
                         </List.Description>
                       </List.Content>
@@ -279,8 +307,10 @@ class Detail extends Component {
                                 ? 'blue'
                                 : order.returnStatus === 'Delivered'
                                 ? 'green'
-                                : 'red'
-                            }></Label>{' '}
+                                : order.returnStatus === 'Not Shipped'
+                                ? 'red'
+                                : false
+                            }></Label>
                           {order.returnStatus}
                         </List.Description>
                       </List.Content>
@@ -296,8 +326,16 @@ class Detail extends Component {
                           circular
                           empty
                           color={
-                            order.paymentStatus === 'Failed' ? 'red' : order.paymentStatus !== 'N/A' ? 'blue' : false
-                          }></Label>{' '}
+                            order.paymentStatus === 'Failed' || order.paymentStatus === 'Canceled'
+                              ? 'red'
+                              : order.paymentStatus === 'Pending' ||
+                                order.paymentStatus === 'Refunded' ||
+                                order.paymentStatus === 'Initiated'
+                              ? 'blue'
+                              : order.paymentStatus === 'Paid'
+                              ? 'green'
+                              : false
+                          }></Label>
                         {order.orderType === 'Purchase' && order.paymentStatus === 'Pending' && isPaymentCancellable ? (
                           <Popup
                             content={
