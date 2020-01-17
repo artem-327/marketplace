@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce'
 import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { Modal, FormGroup, Popup, Grid, Divider } from 'semantic-ui-react'
+import {Modal, FormGroup, Popup, Grid, GridRow, GridColumn, Divider, Icon} from 'semantic-ui-react'
 
 import { CompanyProductMixtures } from '~/components/shared-components/'
 import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
@@ -21,16 +21,36 @@ import {
   getDocumentTypes,
   searchEchoProducts,
   getNmfcNumbersByString,
-  addNmfcNumber
+  addNmfcNumber,
+  removeAttachmentLinkCompanyProduct,
+  loadFile,
 } from '../../actions'
+import { addAttachment } from '~/modules/inventory/actions'
+
 import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import './styles.scss'
 import Router from 'next/router'
 
 import { UnitOfPackaging } from '~/components/formatted-messages'
-
 import { errorMessages } from '~/constants/yupValidation'
+import { AttachmentManager } from '~/modules/attachments'
+import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import styled from "styled-components"
+import ProdexGrid from '~/components/table'
+import { Datagrid } from '~/modules/datagrid'
+
+export const DivIcon = styled.div`
+  display: block;
+  height: 20px;
+  position: relative;
+`
+
+const CloceIcon = styled(Icon)`
+  position: absolute;
+  top: -10px;
+  right: -10px;
+`
 
 const initialValues = {
   echoProduct: null,
@@ -47,8 +67,33 @@ const initialValues = {
   packageWeight: '',
   packageWeightUnit: '',
   packagesPerPallet: '',
-  inciName: ''
+  inciName: '',
+  documents: {
+    documentType: null,
+    attachments: []
+  }
 }
+
+const columns = [
+  {
+    name: 'name',
+    title: (
+      <FormattedMessage id='global.name' defaultMessage='Name'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 300
+  },
+  {
+    name: 'documentTypeName',
+    title: (
+      <FormattedMessage id='global.docType' defaultMessage='Document Type'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 300
+  }
+]
 
 const formValidation = Yup.object().shape({
   intProductName: Yup.string()
@@ -81,7 +126,11 @@ const formValidation = Yup.object().shape({
 
 class ProductPopup extends React.Component {
   state = {
-    advanced: false
+    advanced: false,
+    openUpload: false,
+    documentType: null,
+    changedForm: false,
+    attachments: []
   }
   componentDidMount() {
     this.props.getProductsCatalogRequest()
@@ -90,6 +139,16 @@ class ProductPopup extends React.Component {
       this.props.addNmfcNumber(this.props.popupValues.nmfcNumber)
 
     if (this.props.documentTypes.length === 0) this.props.getDocumentTypes()
+
+    if (this.props.popupValues) {
+      const attachments = this.props.popupValues.attachments.map(att => ({
+        id: att.id,
+        name: att.name,
+        documentType: att.documentType.name,
+        linked: true
+      }))
+      this.setState({ changedForm: true, attachments })
+    }
   }
 
   componentWillMount() {
@@ -152,7 +211,8 @@ class ProductPopup extends React.Component {
       packagingSize: Number(values.packagingSize),
       packageWeight: Number(values.packageWeight),
       packagesPerPallet:
-        values.packagesPerPallet === null || values.packagesPerPallet === '' ? null : Number(values.packagesPerPallet)
+        values.packagesPerPallet === null || values.packagesPerPallet === '' ? null : Number(values.packagesPerPallet),
+      attachments: this.state.attachments.filter(o => o.linked === false)
     }
 
     try {
@@ -241,6 +301,33 @@ class ProductPopup extends React.Component {
     }
   }
 
+  handleChangeDocumentType = (e, name, value) => {
+    this.setState({ openUpload: true, documentType: value })
+  }
+
+  attachDocumentsManager = (newDocuments, values, setFieldValue) => {
+    const newDocArray = newDocuments.map(att => ({
+      id: att.id,
+      name: att.name,
+      documentType: att.documentType.name,
+      linked: false
+    }))
+    const docArray = uniqueArrayByKey(this.state.attachments.concat(newDocArray), 'id')
+    this.setState({ changedForm: true, attachments: docArray })
+  }
+
+  attachDocumentsUploadLot = (att, values, setFieldValue) => {
+    const newDocArray = [{
+      id: att.id,
+      name: att.name,
+      documentType: att.documentType.name,
+      linked: false
+    }]
+    const docArray = uniqueArrayByKey(this.state.attachments.concat(newDocArray), 'id')
+    this.setState({ changedForm: true, attachments: docArray })
+  }
+
+
   render() {
     const {
       closePopup,
@@ -252,7 +339,9 @@ class ProductPopup extends React.Component {
       echoProductsFetching,
       nmfcNumbersFetching,
       nmfcNumbersFiltered,
-      packageWeightUnits
+      packageWeightUnits,
+      documentTypes,
+      toastManager
     } = this.props
 
     const { packagingTypesReduced } = this.state
@@ -263,6 +352,9 @@ class ProductPopup extends React.Component {
       echoProducts.concat(getSafe(() => popupValues.echoProduct) ? popupValues.echoProduct : []),
       'id'
     )
+
+    const leftWidth = 6
+    const rightWidth = 10
 
     return (
       <Modal closeIcon onClose={() => closePopup()} size='small' open centered={false}>
@@ -445,7 +537,177 @@ class ProductPopup extends React.Component {
                       name='freezeProtect'
                     />
                   </FormGroup>
+                  <Grid>
+                    {documentTypes.length ? (
+                      <GridRow>
+                        <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                          <FormattedMessage id='global.uploadDocument' defaultMessage='Upload document: '>
+                            {text => text}
+                          </FormattedMessage>
+                        </GridColumn>
+                        <GridColumn style={{ zIndex: '501' }} mobile={rightWidth} computer={rightWidth}>
+                          <Dropdown
+                            name='documents.documentType'
+                            closeOnChange
+                            options={documentTypes}
+                            inputProps={{
+                              placeholder: (
+                                <FormattedMessage
+                                  id='global.documentType.choose'
+                                  defaultMessage='Choose document type'
+                                />
+                              ),
+                              onChange: (e, { name, value }) => {
+                                this.handleChangeDocumentType(e, name, value)
+                              }
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+                    ) : null}
 
+                    <GridRow>
+                      <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                        <FormattedMessage
+                          id='global.existingDocuments'
+                          defaultMessage='Existing documents: '>
+                          {text => text}
+                        </FormattedMessage>
+                      </GridColumn>
+                      <GridColumn mobile={rightWidth} computer={rightWidth}>
+                        <AttachmentManager
+                          asModal
+                          returnSelectedRows={rows => this.attachDocumentsManager(rows, values, setFieldValue)}
+                        />
+                      </GridColumn>
+                    </GridRow>
+                    {values.documents.documentType && this.state.openUpload ? (
+                      <GridRow>
+                        <GridColumn>
+                          <UploadLot
+                            {...this.props}
+                            header={
+                              <DivIcon
+                                onClick={() =>
+                                  this.setState(prevState => ({
+                                    openUpload: !prevState.openUpload
+                                  }))
+                                }>
+                                <CloceIcon name='close' color='grey' />
+                              </DivIcon>
+                            }
+                            hideAttachments
+                            edit={getSafe(() => popupValues.id, 0)}
+                            attachments={values.documents.attachments}
+                            name='documents.attachments'
+                            type={this.state.documentType}
+                            fileMaxSize={20}
+                            onChange={files => {
+                              this.attachDocumentsUploadLot(files, values, setFieldValue)
+                            }}
+                            data-test='settings_product_catalog_attachments_drop'
+                            emptyContent={
+                              <>
+                                {formatMessage({ id: 'addInventory.dragDrop' })}
+                                <br />
+                                <FormattedMessage
+                                  id='addInventory.dragDropOr'
+                                  defaultMessage={'or {link} to select from computer'}
+                                  values={{
+                                    link: (
+                                      <a>
+                                        <FormattedMessage
+                                          id='global.clickHere'
+                                          defaultMessage={'click here'}
+                                        />
+                                      </a>
+                                    )
+                                  }}
+                                />
+                              </>
+                            }
+                            uploadedContent={
+                              <label>
+                                <FormattedMessage
+                                  id='addInventory.dragDrop'
+                                  defaultMessage={'Drag and drop to add file here'}
+                                />
+                                <br />
+                                <FormattedMessage
+                                  id='addInventory.dragDropOr'
+                                  defaultMessage={'or {link} to select from computer'}
+                                  values={{
+                                    link: (
+                                      <a>
+                                        <FormattedMessage
+                                          id='global.clickHere'
+                                          defaultMessage={'click here'}
+                                        />
+                                      </a>
+                                    )
+                                  }}
+                                />
+                              </label>
+                            }
+                          />
+                        </GridColumn>
+                      </GridRow>
+                    ) : null}
+                    {values.documents.attachments && (
+                      <GridRow>
+                        <GridColumn>
+                          <ProdexGrid
+                            virtual={false}
+                            tableName='company_product_documents'
+                            onTableReady={() => {}}
+                            columns={columns}
+                            rows={this.state.attachments
+                              .map(row => ({
+                                ...row,
+                                documentTypeName: row.documentType
+                              }))
+                              .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))}
+                            rowActions={[
+                              {
+                                text: (
+                                  <FormattedMessage id='global.unlink' defaultMessage='Unlink'>
+                                    {text => text}
+                                  </FormattedMessage>
+                                ),
+                                callback: async row => {
+                                  try {
+                                    if (row.linked) {
+                                      await this.props.removeAttachmentLinkCompanyProduct(popupValues.id, row.id)
+                                      toastManager.add(
+                                        generateToastMarkup(
+                                          <FormattedMessage
+                                            id='addInventory.success'
+                                            defaultMessage='Success'
+                                          />,
+                                          <FormattedMessage
+                                            id='addInventory.unlinkeAttachment'
+                                            defaultMessage='Attachment was successfully unlinked.'
+                                          />
+                                        ),
+                                        {
+                                          appearance: 'success'
+                                        }
+                                      )
+                                    }
+                                    this.setState({
+                                      attachments: this.state.attachments.filter(o => o.id !== row.id)
+                                    })
+                                  } catch (e) {
+                                    console.error(e)
+                                  }
+                                },
+                              }
+                            ]}
+                          />
+                        </GridColumn>
+                      </GridRow>
+                    )}
+                  </Grid>
                   <div style={{ textAlign: 'right' }}>
                     <Button.Reset onClick={closePopup} data-test='settings_product_popup_reset_btn'>
                       <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
@@ -491,10 +753,14 @@ const mapDispatchToProps = {
   getDocumentTypes,
   searchEchoProducts,
   getNmfcNumbersByString,
-  addNmfcNumber
+  addNmfcNumber,
+  removeAttachmentLinkCompanyProduct,
+  loadFile,
+  addAttachment
 }
 const mapStateToProps = ({ settings }) => {
   return {
+    attachments: getSafe(() => settings.popupValues.attachments, []),
     popupValues: settings.popupValues,
     echoProducts: settings.echoProducts,
     echoProductsFetching: settings.echoProductsFetching,
@@ -532,7 +798,7 @@ const mapStateToProps = ({ settings }) => {
           </>
         )
       }
-    })
+    }),
   }
 }
 

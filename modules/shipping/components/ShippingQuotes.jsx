@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import NumberFormat from 'react-number-format'
 import moment from 'moment/moment'
-import { bool, objectOf, func } from 'prop-types'
+import { bool, objectOf, func, array } from 'prop-types'
 
 import { Modal, Button, Segment, Divider, FormGroup, FormField, Table, Checkbox } from 'semantic-ui-react'
 import { Form, Button as FButton, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
@@ -14,7 +14,9 @@ import { currency } from '~/constants/index'
 import { FormattedNumber } from 'react-intl'
 import styled from 'styled-components'
 
-const CustomContainer = styled.div``
+const CustomHr = styled.hr`
+  opacity: 0.4;
+`
 
 const formValidation = (min, split) =>
   Yup.object().shape({
@@ -57,7 +59,7 @@ export default class ShippingQuotes extends Component {
       },
       allZips: zipCodes.includes(defaultZip)
         ? [...zipCodes]
-        : [...zipCodes, { value: defaultZip, text: defaultZip, key: zipCodes.length }]
+        : [...zipCodes, { value: defaultZip, text: defaultZip, key: zipCodes.length + 1 }]
     })
     initShipingForm()
   }
@@ -109,8 +111,17 @@ export default class ShippingQuotes extends Component {
   }
 
   renderForm() {
-    const { loading } = this.props
+    const { loading, echoProducts, zipCodes, defaultZip } = this.props
     const { initialValues, min, split, allZips } = this.state
+
+    // comparison if state has all zips from zipCodes
+    if (zipCodes.length > allZips.length - 1) {
+      this.setState({
+        allZips: zipCodes.includes(defaultZip)
+          ? [...zipCodes]
+          : [...zipCodes, { value: defaultZip, text: defaultZip, key: zipCodes.length + 1 }]
+      })
+    }
     const { closeModal } = this.props.modalProps
 
     return (
@@ -129,6 +140,8 @@ export default class ShippingQuotes extends Component {
 
           return (
             <>
+              <div>{`Product Info: ${getSafe(() => echoProducts[0].name, '')}`}</div>
+              <CustomHr />
               <FormGroup widths='equal' data-test='ShippingQuotes_quantity_inp'>
                 <Input
                   name='destination.quantity'
@@ -155,16 +168,24 @@ export default class ShippingQuotes extends Component {
                   options={allZips}
                   inputProps={{
                     allowAdditions: true,
-                    additionLabel: <FormattedMessage id='global.dropdown.add' defaultMessage='Add '>{text => text}</FormattedMessage>,
+                    additionLabel: (
+                      <FormattedMessage id='global.dropdown.add' defaultMessage='Add '>
+                        {text => text}
+                      </FormattedMessage>
+                    ),
                     search: true,
                     onAddItem: (e, { value }) => {
                       const newValue = { text: value, value: value, key: allZips.length + 1 }
                       allZips.push(newValue)
                       this.setState({ allZips: allZips })
                     },
-                    noResultsMessage: <FormattedMessage id='global.dropdown.startTyping'
-                                                        defaultMessage='Start typing to add {typeName}.'
-                                                        values={{ typeName: <FormattedMessage id='global.ZipCode' defaultMessage='ZIP Code' /> }} />,
+                    noResultsMessage: (
+                      <FormattedMessage
+                        id='global.dropdown.startTyping'
+                        defaultMessage='Start typing to add {typeName}.'
+                        values={{ typeName: <FormattedMessage id='global.ZipCode' defaultMessage='ZIP Code' /> }}
+                      />
+                    ),
                     'data-test': 'ShippingQuotes_zip_drpdn'
                   }}
                 />
@@ -347,14 +368,14 @@ export default class ShippingQuotes extends Component {
           </Table.Body>
         </Table>
         {this.props.quotes.length === 0 && !loading && (
-          <CustomContainer className='dx-g-bs4-fixed-block'>
+          <div className='dx-g-bs4-fixed-block'>
             <big className='text-muted'>
               <FormattedMessage
                 id='global.noShippingOptions'
                 defaultMessage='No shipping options available based on parameters provided.'
               />
             </big>
-          </CustomContainer>
+          </div>
         )}
       </Segment>
     )
@@ -408,12 +429,14 @@ ShippingQuotes.propTypes = {
     open: bool,
     centered: bool,
     closeModal: func
-  })
+  }),
+  echoProducts: array
 }
 
 ShippingQuotes.defaultProps = {
   modalProps: {
     open: false,
     centered: false
-  }
+  },
+  echoProducts: []
 }
