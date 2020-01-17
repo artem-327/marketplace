@@ -1,5 +1,6 @@
 import moment from 'moment'
 import { FormattedNumber, FormattedDate } from 'react-intl'
+import { getLocaleDateFormat } from '~/components/date-format'
 
 export const operators = {
   CONTAINS: 'CONTAINS',
@@ -37,7 +38,9 @@ export const paths = {
     assayFrom: 'ProductOffer.assayMin',
     assayTo: 'ProductOffer.assayMax',
     manufacturedDate: 'ProductOffer.lotManufacturedDate',
-    warehouseId: 'ProductOffer.warehouse.id'
+    warehouseId: 'ProductOffer.warehouse.id',
+    manufacturerId: 'ProductOffer.companyProduct.echoProduct.manufacturer.id',
+    broadcast: 'ProductOffer.broadcasted'
   },
   orders: {
     orderDate: 'Order.orderDate',
@@ -150,7 +153,7 @@ export const datagridValues = {
     toFilter: function(values, filterType = filterTypes.INVENTORY) {
       let modifiedValues = values.map(val => {
         let parsed = JSON.parse(val)
-        
+
         return {
           value: parsed.id,
           description: JSON.stringify({
@@ -608,6 +611,107 @@ export const datagridValues = {
 
     valuesDescription: val => val,
     tagDescription: val => `Vendor: ${val}`
+  },
+
+  manufacturer: {
+    paths: [paths.productOffers.manufacturerId],
+    description: 'Manufacturer',
+    operator: operators.EQUALS,
+
+    toFilter: function(values) {
+      let data
+      if (Array.isArray(values)) {
+        data = values.map(val => {
+          let parsed = JSON.parse(val)
+          return {
+            value: parsed.id,
+            //description: parsed.name
+            description: JSON.stringify({
+              name: parsed.name,
+              text: parsed.text
+            })
+          }
+        })
+      } else {
+        let parsed = JSON.parse(values)
+        data = [
+          {
+            value: parsed.id,
+            description: JSON.stringify({
+              name: parsed.name,
+              text: parsed.text
+            })
+          }
+        ]
+      }
+
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: data,
+        description: this.description
+      }
+    },
+
+    valuesDescription: function(values) {
+      return values.map(val => {
+        try {
+          return JSON.parse(val.description).text
+        } catch {
+          return val.description
+        }
+      })
+    },
+
+    tagDescription: function(values) {
+      return `Manufacturer: ${this.valuesDescription(values)[0]}`
+    },
+
+    toFormik: function({ values }) {
+      let parsed = JSON.parse(values[0].description)
+      return JSON.stringify({
+        id: parseInt(values[0].value),
+        text: parsed.text
+      })
+    }
+  },
+
+  broadcast: {
+    paths: [paths.productOffers.broadcast],
+    description: 'Broadcast',
+    operator: operators.EQUALS,
+
+    toFilter: function(values) {
+      const data = [
+        {
+          value: values
+        }
+      ]
+
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: data,
+        description: this.description
+      }
+    },
+
+    valuesDescription: function(values) {
+      const result = values[0].value === false ? ['No'] : values[0].value === true ? ['Yes'] : ''
+      return result
+    },
+
+    tagDescription: function(values) {
+      return `Broadcast: ${this.valuesDescription(values)[0]}`
+    },
+
+    toFormik: function({ values }) {
+      const text = values[0].value === false ? ['No'] : values[0].value === true ? ['Yes'] : ''
+      return JSON.stringify({
+        id: 'broadcast',
+        text: text
+      })
+    }
   }
 }
 

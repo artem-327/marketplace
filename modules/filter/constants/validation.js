@@ -29,7 +29,9 @@ export const initialValues = {
     notificationMail: '',
     notificationPhone: ''
   },
-  warehouse: ''
+  warehouse: '',
+  broadcast: '',
+  manufacturer: ''
 }
 
 const errorMessages = {
@@ -71,7 +73,7 @@ const comparationHelper = (fieldOne, fieldTwo, values, options = {}) => {
   }
 }
 
-export const validationSchema = (openedSaveFilter) =>
+export const validationSchema = openedSaveFilter =>
   Yup.lazy(values => {
     return Yup.object().shape({
       ...comparationHelper(
@@ -112,7 +114,7 @@ export const validationSchema = (openedSaveFilter) =>
         .moreThan(0, errorMessages.greaterThan(0))
         .notRequired(),
 
-      ...( openedSaveFilter && {
+      ...(openedSaveFilter && {
         name: Yup.string()
           .trim()
           .min(2, errorMessagesGlobal.minLength(2))
@@ -131,7 +133,7 @@ export const savedFilterValidation = Yup.lazy(values => {
   if (values.checkboxes.notifyMail) {
     return Yup.object().shape({
       notifications: Yup.object().shape({
-        notificationMail:  Yup.string()
+        notificationMail: Yup.string()
           .trim()
           .email(errorMessagesGlobal.invalidEmail),
         notificationPhone: phoneValidation()

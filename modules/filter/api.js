@@ -18,3 +18,6 @@ export const deleteFilter = templateId =>
 
 export const updateFilterNotifications = (templateId, notifications) =>
   api.patch(`/prodex/api/data-grid-templates/${templateId}`, notifications).then(response => response.data)
+
+export const getAutocompleteManufacturer = searchManufacturerUrl =>
+  api.get(searchManufacturerUrl).then(response => response.data)

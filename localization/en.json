@@ -1815,5 +1815,12 @@
   "settings.wrongUrl": "Wrong URL",
   "settings.rerenderToInventory": "You are not authorized to view this page. You will be automatically redirected to Inventory.",
   "settings.rerenderToUsers": "You are not authorized to view this page. You will be automatically redirected to Users.",
-  "settings.rerenderToProducts": "You are not authorized to view this page. You will be automatically redirected to Products."
+  "settings.rerenderToProducts": "You are not authorized to view this page. You will be automatically redirected to Products.",
+  "filter.keywordSearch": "Keyword Search",
+  "filter.broadcast": "Broadcast Status",
+  "filter.manufacturer": "Manufacturer",
+  "filter.searchManufacturer": "Search Manufacturer",
+  "filter.origin": "Origin",
+  "filter.searchOrigin": "Search Origin",
+  "filter.selectOption": "Select Option"
 }

@@ -45,7 +45,9 @@ export const initialState = {
   savedAutocompleteData: [],
   params: {
     currencyCode: currency
-  }
+  },
+  autocompleteManufacturer: [],
+  autocompleteManufacturerLoading: false
 }
 
 export default typeToReducer(
@@ -199,7 +201,6 @@ export default typeToReducer(
 
     [a.applyFilter]: (state, { payload }) => {
       let appliedFilter = asignFiltersDescription(payload, state.params)
-
       return {
         ...state,
         appliedFilter: {
@@ -288,6 +289,29 @@ export default typeToReducer(
       return {
         ...state,
         isFilterSaving: false
+      }
+    },
+
+    /* GET_AUTOCOMPLETE_MANUFACTURER_DATA */
+
+    [a.getAutocompleteManufacturer.pending]: state => {
+      return {
+        ...state,
+        autocompleteManufacturerLoading: true
+      }
+    },
+    [a.getAutocompleteManufacturer.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        autocompleteManufacturerLoading: false,
+        autocompleteManufacturer: uniqueArrayByKey(payload.concat(state.autocompleteManufacturer), 'id')
+      }
+    },
+    [a.getAutocompleteManufacturer.rejected]: state => {
+      return {
+        ...state,
+        autocompleteManufacturerLoading: false,
+        autocompleteManufacturer: []
       }
     }
   },
