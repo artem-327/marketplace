@@ -1263,6 +1263,14 @@ class AddEditEchoProduct extends React.Component {
             {this.RowDocument(formikProps, formikProps.values, popupValues, 11)}
           </GridColumn>
         </GridRow>
+        <GridRow>
+          <GridColumn width={16}>
+            <label>
+              <FormattedMessage id='global.dhsDocument' defaultMessage='DHS Document' />
+            </label>
+            {this.RowDocument(formikProps, formikProps.values, popupValues, 12)}
+          </GridColumn>
+        </GridRow>
       </Grid>
     )
   }

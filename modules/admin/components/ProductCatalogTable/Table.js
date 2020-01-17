@@ -10,6 +10,7 @@ import { Button, Icon } from 'semantic-ui-react'
 
 import * as Actions from '../../actions'
 import moment from 'moment/moment'
+import { getLocaleDateFormat } from '~/components/date-format'
 
 import { echoRowActions } from './constants'
 
@@ -32,7 +33,7 @@ class ProductCatalogTable extends Component {
           ),
         manufacturerName: row.manufacturer ? row.manufacturer.name : '',
         sdsRevisionDate: row.sdsRevisionDate
-          ? moment(row.sdsRevisionDate).format(formatMessage({ id: 'date.standardFormat', date: 'MM/DD/YYYY' }))
+          ? moment(row.sdsRevisionDate).format(getLocaleDateFormat())
           : ''
       }
     })

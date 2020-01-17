@@ -391,8 +391,8 @@ export function handleSubmitProductEditPopup(payload, id, reloadFilter) {
         })
       }
     }
-    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value)) // Reload Products list using string filters or page display
-    Datagrid.updateRow(id, () => response.data)
+    //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value)) // Reload Products list using string filters or page display
+    Datagrid.loadData()
     dispatch(closePopup())
   }
 }
@@ -971,6 +971,13 @@ export function removeAttachmentLink(isLot, itemId, aId) {
   return {
     type: AT.SETTINGS_REMOVE_ATTACHMENT_LINK,
     payload: api.removeAttachmentLink(itemId, aId)
+  }
+}
+
+export function removeAttachmentLinkCompanyProduct(itemId, aId) {
+  return {
+    type: AT.SETTINGS_REMOVE_ATTACHMENT_LINK_PRODUCT,
+    payload: api.removeAttachmentLinkCompanyProduct(itemId, aId)
   }
 }
 
