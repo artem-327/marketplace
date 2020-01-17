@@ -51,7 +51,7 @@ class FormikInput extends Component {
                 }}
                 onBlur={form.handleBlur}
                 ref={this.handleRef}
-                localization={window.navigator.language.slice(0, 2)}
+                localization={typeof navigator !== 'undefined' ? window.navigator.language.slice(0, 2) : 'en'}
               />
               {/* </InputRef> */}
 
