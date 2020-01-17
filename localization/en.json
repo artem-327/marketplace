@@ -525,6 +525,7 @@
   "global.reactiveHazard": "Reactive Hazard",
   "global.recommendedUse": "Recommended Use",
   "global.reproductiveEffects": "Reproductive Effects",
+  "global.dhsDocument": "DHS Document",
   "global.sdsDocument": "SDS Document",
   "global.sdsIssuedDate": "SDS Issued Date",
   "global.sdsPreparedBy": "SDS Prepared by",
