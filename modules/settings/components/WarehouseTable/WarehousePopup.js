@@ -81,6 +81,14 @@ class WarehousePopup extends React.Component {
         ...values,
         deliveryAddress: {
           ...values.deliveryAddress,
+          readyTime:
+            !values.deliveryAddress.readyTime || values.deliveryAddress.readyTime === ''
+              ? null
+              : values.deliveryAddress.readyTime,
+          closeTime:
+            !values.deliveryAddress.closeTime || values.deliveryAddress.closeTime === ''
+              ? null
+              : values.deliveryAddress.closeTime,
           address: {
             ...values.deliveryAddress.address,
             country
