@@ -118,7 +118,7 @@ export default class ShippingQuotes extends Component {
       defaultZip
     } = this.props
     const { initialValues, min, split, allZips } = this.state
-    
+
     // comparison if state has all zips from zipCodes
     if (zipCodes.length > allZips.length - 1) {
       this.setState({
@@ -127,6 +127,7 @@ export default class ShippingQuotes extends Component {
           : [...zipCodes, { value: defaultZip, text: defaultZip, key: zipCodes.length + 1 }]
       })
     }
+    const { closeModal } = this.props.modalProps
 
     return (
       <Form
