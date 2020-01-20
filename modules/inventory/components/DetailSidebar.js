@@ -5,7 +5,7 @@ import { Button, Input, TextArea, Dropdown } from 'formik-semantic-ui-fixed-vali
 import { Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import { DateInput } from '~/components/custom-formik'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
 import confirm from '~/src/components/Confirmable/confirm'
@@ -369,8 +369,12 @@ class DetailSidebar extends Component {
     if (this.props[name].length === 0) fn()
   }
 
-  loadProductOffer = async id => {
+  loadProductOffer = async (id, shouldSwitchTab) => {
     const data = await this.props.getProductOffer(id)
+    if (shouldSwitchTab) {
+      this.switchTab(this.props.sidebarActiveTab, data.value.data)
+    }
+
     this.props.searchOrigins(
       getSafe(() => data.value.data.origin.name, ''),
       200
@@ -433,25 +437,22 @@ class DetailSidebar extends Component {
   }
 
   componentDidUpdate = (prevProps, prevState, snapshot) => {
-    if (this.props.sidebarActiveTab > -1 && prevProps.sidebarActiveTab !== this.props.sidebarActiveTab) {
-      this.switchTab(this.props.sidebarActiveTab)
-    }
-
     if (prevProps.editProductOfferInitTrig !== this.props.editProductOfferInitTrig) {
+      const shouldSwitchTab =
+        this.props.sidebarActiveTab > -1 && prevProps.sidebarActiveTab !== this.props.sidebarActiveTab
+
       if (this.props.sidebarValues) {
         // Edit mode
         if (!prevProps.sidebarValues) {
           // Add new to Edit mode
           this.validateSaveOrSwitchToErrors(() => {
-            this.loadProductOffer(this.props.sidebarValues.id)
+            this.loadProductOffer(this.props.sidebarValues.id, shouldSwitchTab)
           })
-          return
         } else {
           // Edit to Edit mode
           this.validateSaveOrSwitchToErrors(() => {
-            this.loadProductOffer(this.props.sidebarValues.id)
+            this.loadProductOffer(this.props.sidebarValues.id, shouldSwitchTab)
           })
-          return
         }
       } else {
         // Add new mode
@@ -459,6 +460,9 @@ class DetailSidebar extends Component {
           this.setState({ sidebarValues: null, initValues: initValues }, () => {
             this.resetForm()
             this.props.searchOrigins('', 200)
+            if (shouldSwitchTab) {
+              this.switchTab(this.props.sidebarActiveTab)
+            }
           })
         })
       }
@@ -708,13 +712,13 @@ class DetailSidebar extends Component {
     return sendSuccess
   }
 
-  switchTab = async newTab => {
+  switchTab = async (newTab, data = null) => {
     this.setState({
       activeTab: newTab
     })
     try {
       if (newTab === 2) {
-        await this.props.openBroadcast(this.state.sidebarValues).then(async () => {
+        await this.props.openBroadcast(data ? data : this.state.sidebarValues).then(async () => {
           this.setState({ broadcastLoading: false })
         })
       }
@@ -736,7 +740,7 @@ class DetailSidebar extends Component {
           break
         case 'documents':
           this.switchTab(1)
-          document.getElementsByName('documents.' + Object.keys(errors.priceBook)[0])[0].focus()
+          document.getElementsByName('documents.' + Object.keys(errors.documents)[0])[0].focus()
           break
         case 'priceBook':
           this.switchTab(2)
@@ -744,7 +748,15 @@ class DetailSidebar extends Component {
           break
         case 'priceTiers':
           this.switchTab(3)
-          document.getElementsByName('priceTiers.' + Object.keys(errors.priceTiers)[0])[0].focus()
+          const priceErrors = errors.priceTiers[Object.keys(errors.priceTiers)[0]]
+          if (Array.isArray(priceErrors)) {
+            const index = priceErrors.findIndex(o => typeof o !== 'undefined')
+            document.getElementsByName(
+              `priceTiers.pricingTiers[${index}].${Object.keys(priceErrors[index])[0]}`)[0].focus()
+          }
+          else {
+            document.getElementsByName('priceTiers.' + Object.keys(errors.priceTiers)[0])[0].focus()
+          }
           break
       }
       toastManager.add(
@@ -762,8 +774,15 @@ class DetailSidebar extends Component {
     }
   }
 
-  attachDocuments = (newDocuments, values, setFieldValue) => {
-    setFieldValue(`documents.attachments`, values.documents.attachments.concat(newDocuments))
+  attachDocumentsManager = (newDocuments, values, setFieldValue) => {
+    const docArray = uniqueArrayByKey(values.documents.attachments.concat(newDocuments), 'id')
+    setFieldValue(`documents.attachments`, docArray)
+    this.setState({ changedForm: true })
+  }
+
+  attachDocumentsUploadLot = (newDocument, values, setFieldValue) => {
+    const docArray = uniqueArrayByKey(values.documents.attachments.concat([newDocument]), 'id')
+    setFieldValue(`documents.attachments`, docArray)
     this.setState({ changedForm: true })
   }
 
@@ -1539,7 +1558,7 @@ class DetailSidebar extends Component {
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <AttachmentManager
                                         asModal
-                                        returnSelectedRows={rows => this.attachDocuments(rows, values, setFieldValue)}
+                                        returnSelectedRows={rows => this.attachDocumentsManager(rows, values, setFieldValue)}
                                       />
                                     </GridColumn>
                                   </GridRow>
@@ -1567,17 +1586,7 @@ class DetailSidebar extends Component {
                                           filesLimit={1}
                                           fileMaxSize={20}
                                           onChange={files => {
-                                            setFieldValue(
-                                              `documents.attachments`,
-                                              values.documents.attachments.concat([
-                                                {
-                                                  id: files.id,
-                                                  name: files.name,
-                                                  documentType: files.documentType
-                                                }
-                                              ])
-                                            )
-                                            this.setState({ changedForm: true })
+                                            this.attachDocumentsUploadLot(files, values, setFieldValue)
                                           }}
                                           data-test='new_inventory_attachments_drop'
                                           emptyContent={
@@ -1650,22 +1659,31 @@ class DetailSidebar extends Component {
                                               ),
                                               callback: async row => {
                                                 try {
-                                                  await this.props.removeAttachmentLink(false, sidebarValues.id, row.id)
-                                                  this.props.sidebarDetailTrigger(sidebarValues, true, 1)
-                                                  toastManager.add(
-                                                    generateToastMarkup(
-                                                      <FormattedMessage
-                                                        id='addInventory.success'
-                                                        defaultMessage='Success'
-                                                      />,
-                                                      <FormattedMessage
-                                                        id='addInventory.unlinkeAttachment'
-                                                        defaultMessage='Attachment was successfully unlinked.'
-                                                      />
-                                                    ),
-                                                    {
-                                                      appearance: 'success'
-                                                    }
+
+                                                  if (row.linked) {
+                                                    await this.props.removeAttachmentLink(
+                                                      false,
+                                                      sidebarValues.id,
+                                                      row.id
+                                                    )
+                                                    toastManager.add(
+                                                      generateToastMarkup(
+                                                        <FormattedMessage
+                                                          id='addInventory.success'
+                                                          defaultMessage='Success'
+                                                        />,
+                                                        <FormattedMessage
+                                                          id='addInventory.unlinkeAttachment'
+                                                          defaultMessage='Attachment was successfully unlinked.'
+                                                        />
+                                                      ),
+                                                      {
+                                                        appearance: 'success'
+                                                      }
+                                                    )
+                                                  }
+                                                  setFieldValue(`documents.attachments`,
+                                                    values.documents.attachments.filter(o => o.id !== row.id)
                                                   )
                                                 } catch (e) {
                                                   console.error(e)
@@ -1822,7 +1840,7 @@ class DetailSidebar extends Component {
                                       this.onChange()
                                       let pricingTiers = values.priceTiers.pricingTiers.slice()
                                       let difference = value - pricingTiers.length
-                                      if (difference < 0) pricingTiers.splice(pricingTiers.length - value)
+                                      if (difference < 0) pricingTiers.splice(value)
                                       else
                                         for (let i = 0; i < difference; i++)
                                           pricingTiers.push({ price: '', quantityFrom: '' })
