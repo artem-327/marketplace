@@ -36,10 +36,11 @@ class Navigation extends Component {
       router: { pathname }
     } = this.props
 
-    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin } = getSafe(() => auth.identity, {
+    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, company } = getSafe(() => auth.identity, {
       isCompanyAdmin: null,
       isUserAdmin: null,
-      isProductCatalogAdmin: null
+      isProductCatalogAdmin: null,
+      company: null
     })
 
     return !isAdmin || takeover ? (
@@ -62,16 +63,18 @@ class Navigation extends Component {
             </Dropdown.Item>
           </Dropdown.Menu>
         </DropdownItem>
-        <DropdownItem text={formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}>
-          <Dropdown.Menu data-test='navigation_menu_marketplace_drpdn'>
-            <Dropdown.Item as={MenuLink} to='/marketplace/all' data-test='navigation_marketplace_all_drpdn'>
-              {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
-            </Dropdown.Item>
-            <Dropdown.Item as={MenuLink} to='/cart' data-test='navigation_marketplace_cart_drpdn'>
-              {formatMessage({ id: 'navigation.shoppingCart', defaultMessage: 'Shopping Cart' })}
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </DropdownItem>
+        {getSafe(() => company.nacdMember, false) ? (
+          <DropdownItem text={formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}>
+            <Dropdown.Menu data-test='navigation_menu_marketplace_drpdn'>
+              <Dropdown.Item as={MenuLink} to='/marketplace/all' data-test='navigation_marketplace_all_drpdn'>
+                {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
+              </Dropdown.Item>
+              <Dropdown.Item as={MenuLink} to='/cart' data-test='navigation_marketplace_cart_drpdn'>
+                {formatMessage({ id: 'navigation.shoppingCart', defaultMessage: 'Shopping Cart' })}
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </DropdownItem>
+        ) : null}
         <DropdownItem text={formatMessage({ id: 'navigation.orders', defaultMessage: 'Orders' })}>
           <Dropdown.Menu data-test='navigation_menu_orders_drpdn'>
             <Dropdown.Item as={MenuLink} to='/orders?type=sales' data-test='navigation_menu_orders_sales_drpdn'>
@@ -88,18 +91,12 @@ class Navigation extends Component {
             <>{formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}</>
           </MenuLink>
         )}
-        {isAdmin && (
-          <MenuLink to='/admin' data-test='navigation_menu_admin_lnk'>
-            {formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}
-          </MenuLink>
-        )}
       </>
     ) : (
       isAdmin && (
         <>
           <MenuLink to='/admin' data-test='navigation_menu_admin_lnk'>
-            {' '}
-            {formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}{' '}
+            {formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}
           </MenuLink>
         </>
       )
