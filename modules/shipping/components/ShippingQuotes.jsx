@@ -372,10 +372,6 @@ export default class ShippingQuotes extends Component {
     const { closeModal } = this.props.modalProps
     const { min, split, allZips } = this.state
 
-    console.log('allZips====================================')
-    console.log(allZips)
-    console.log('====================================')
-
     let quantity = Number(this.state.quantity)
     let disableSubmitButton = !(
       quantity &&
