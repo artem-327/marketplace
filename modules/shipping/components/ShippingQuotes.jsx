@@ -59,7 +59,7 @@ export default class ShippingQuotes extends Component {
       },
       allZips: zipCodes.includes(defaultZip)
         ? [...zipCodes]
-        : [...zipCodes, { value: defaultZip, text: defaultZip, key: zipCodes.length + 1 }]
+        : [...zipCodes, { value: defaultZip, text: defaultZip, key: new Date().getTime() }]
     })
     initShipingForm()
   }
@@ -174,7 +174,7 @@ export default class ShippingQuotes extends Component {
                     ),
                     search: true,
                     onAddItem: (e, { value }) => {
-                      const newValue = { text: value, value: value, key: allZips.length + 1 }
+                      const newValue = { text: value, value: value, key: new Date().getTime() }
                       allZips.push(newValue)
                       this.setState({ allZips: allZips })
                     },
@@ -382,7 +382,7 @@ export default class ShippingQuotes extends Component {
 
   render() {
     const { closeModal } = this.props.modalProps
-    const { min, split } = this.state
+    const { min, split, allZips } = this.state
 
     let quantity = Number(this.state.quantity)
     let disableSubmitButton = !(

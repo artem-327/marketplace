@@ -287,7 +287,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
+            {/*{orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
               ? this.renderSegment(null, 14, null, 'order.shipFailed.description', [
                   {
                     buttonType: 'primary',
@@ -296,7 +296,7 @@ class ActionsRequired extends React.Component {
                     text: 'order.NewShipmentSale'
                   }
                 ])
-              : null}
+              : null}*/}
             {orderStatus === 2 && shippingStatus === 1 && !assignLotsRequired // Confirmed && Not shipped
               ? this.renderSegment(null, 14, null, 'order.ship.description', [
                   {
