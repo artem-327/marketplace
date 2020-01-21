@@ -6,7 +6,9 @@ import moment from 'moment'
     Returns string short date format based on country (For example: 'D. M. YYYY')
 */
 export const getLocaleDateFormat = () => {
-  if(!navigator) return
+  if (typeof navigator === 'undefined') {
+    return
+  }
   const formats = {
     'ar-SA': 'DD/MM/YY',
     'bg-BG': 'DD.M.YYYY',
@@ -239,6 +241,9 @@ export const getLocaleDateFormat = () => {
     }
 */
 export const getStringISODate = (stringDate = '') => {
+  if (typeof navigator === 'undefined') {
+    return
+  }
   const getYear = stringYear => {
     if (stringYear && stringYear.length === 2) {
       return `20${stringYear}`

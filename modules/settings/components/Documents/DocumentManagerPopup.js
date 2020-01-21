@@ -76,7 +76,7 @@ class DocumentPopup extends Component {
     } = this.props
 
     return (
-      <Modal closeIcon onClose={() => closePopup()} open>
+      <Modal closeIcon onClose={() => { closePopup(); onClose()}} open>
         <Modal.Header>
           <FormattedMessage
             id={edit ? 'editDocument' : 'addDocument'}

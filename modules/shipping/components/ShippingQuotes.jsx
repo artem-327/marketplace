@@ -59,7 +59,7 @@ export default class ShippingQuotes extends Component {
       },
       allZips: zipCodes.includes(defaultZip)
         ? [...zipCodes]
-        : [...zipCodes, { value: defaultZip, text: defaultZip, key: zipCodes.length + 1 }]
+        : [...zipCodes, { value: defaultZip, text: defaultZip, key: new Date().getTime() }]
     })
     initShipingForm()
   }
@@ -111,14 +111,9 @@ export default class ShippingQuotes extends Component {
   }
 
   renderForm() {
-    const {
-      loading,
-      echoProducts,
-      zipCodes,
-      defaultZip
-    } = this.props
+    const { loading, echoProducts, zipCodes, defaultZip } = this.props
     const { initialValues, min, split, allZips } = this.state
-    
+
     // comparison if state has all zips from zipCodes
     if (zipCodes.length > allZips.length - 1) {
       this.setState({
@@ -127,6 +122,7 @@ export default class ShippingQuotes extends Component {
           : [...zipCodes, { value: defaultZip, text: defaultZip, key: zipCodes.length + 1 }]
       })
     }
+    const { closeModal } = this.props.modalProps
 
     return (
       <Form
@@ -172,16 +168,24 @@ export default class ShippingQuotes extends Component {
                   options={allZips}
                   inputProps={{
                     allowAdditions: true,
-                    additionLabel: <FormattedMessage id='global.dropdown.add' defaultMessage='Add '>{text => text}</FormattedMessage>,
+                    additionLabel: (
+                      <FormattedMessage id='global.dropdown.add' defaultMessage='Add '>
+                        {text => text}
+                      </FormattedMessage>
+                    ),
                     search: true,
                     onAddItem: (e, { value }) => {
-                      const newValue = { text: value, value: value, key: allZips.length + 1 }
+                      const newValue = { text: value, value: value, key: new Date().getTime() }
                       allZips.push(newValue)
                       this.setState({ allZips: allZips })
                     },
-                    noResultsMessage: <FormattedMessage id='global.dropdown.startTyping'
-                                                        defaultMessage='Start typing to add {typeName}.'
-                                                        values={{ typeName: <FormattedMessage id='global.ZipCode' defaultMessage='ZIP Code' /> }} />,
+                    noResultsMessage: (
+                      <FormattedMessage
+                        id='global.dropdown.startTyping'
+                        defaultMessage='Start typing to add {typeName}.'
+                        values={{ typeName: <FormattedMessage id='global.ZipCode' defaultMessage='ZIP Code' /> }}
+                      />
+                    ),
                     'data-test': 'ShippingQuotes_zip_drpdn'
                   }}
                 />
@@ -379,7 +383,7 @@ export default class ShippingQuotes extends Component {
 
   render() {
     const { closeModal } = this.props.modalProps
-    const { min, split } = this.state
+    const { min, split, allZips } = this.state
 
     let quantity = Number(this.state.quantity)
     let disableSubmitButton = !(
