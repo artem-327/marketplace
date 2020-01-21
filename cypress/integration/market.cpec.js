@@ -49,7 +49,7 @@ context("Market place tests",() => {
             })
         })
 
-        cy.get("#field_input_quantityTo").type((parseInt(searchedValue) + 5))
+        cy.get("#field_input_quantityTo").type(searchedValue + 5)
         cy.contains("Apply").click()
 
         cy.get(".submenu-filter").click()

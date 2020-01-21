@@ -7,7 +7,7 @@ context("Prodex Warehouse CRUD", () => {
     beforeEach(function () {
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.route("GET", "/prodex/api/users").as("settingsLoading")
+        cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.route("POST", "/prodex/api/branches/warehouses/datagrid").as("warehouseLoading")
 
         cy.FElogin("mackenzie@echoexchange.net", "echopass123")
@@ -55,7 +55,7 @@ context("Prodex Warehouse CRUD", () => {
         cy.searchInList("Central")
 
         cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
-            cy.getFirstBranchIdWithFilter(token, filter).then(itemId => {
+            cy.getFirstEntityWithFilter(token, 'branches/warehouses',filter).then(itemId => {
                 cy.openElement(itemId, 0)
 
                 branchId = itemId
@@ -91,12 +91,12 @@ context("Prodex Warehouse CRUD", () => {
     })
 
     it("Checks error messages", () => {
-        cy.clickAdd()
+        cy.get("[data-test='settings_open_popup_btn']").click()
 
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",8)
+            .should("have.length",7)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

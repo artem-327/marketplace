@@ -5,14 +5,14 @@ context("Company Product Catalog CRUD", () => {
     beforeEach(function () {
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.route("GET", "/prodex/api/users").as("addressLoading")
+        cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.route("POST", "/prodex/api/company-products/datagrid").as("productLoading")
 
         cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.contains("Settings").click()
-        cy.wait("@addressLoading", {timeout: 100000})
+        cy.wait("@settingsLoading", {timeout: 100000})
 
         cy.contains("PRODUCT CATALOG").click()
 
