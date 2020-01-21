@@ -1,9 +1,21 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { withRouter } from 'next/router'
-import { Container, Menu, Image, Dropdown, Icon, Label } from 'semantic-ui-react'
+import {
+  TopMenu,
+  TopMenuContainer,
+  LeftMenu,
+  LeftMenuContainer,
+  MainContainer,
+  ContentContainer,
+  FlexContainer,
+  LogoImage,
+  CircularLabel,
+  MainTitle
+} from '~/components/constants/layout'
+import { Menu, Dropdown, Icon } from 'semantic-ui-react'
 import styled from 'styled-components'
-import Logo from '~/assets/images/nav/logo-echo.png'
+import Logo from '~/assets/images/nav/logo-echosystem.png'
 // import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
@@ -30,56 +42,7 @@ import { chatWidgetToggle } from '~/modules/chatWidget/actions'
 import { withToastManager } from 'react-toast-notifications'
 
 import ChatWidget from '~/modules/chatWidget/components/ChatWidgetContainer'
-
-const TopMenu = styled(Menu)`
-  background-color: #1b3454 !important;
-  position: fixed;
-  height: 49px;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-`
-const TopMenuContainer = styled(Container)`
-  padding: 0 29px;
-`
-const MainContainer = styled(Container)`
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-`
-const ContentContainer = styled(Container)`
-  /* padding: 0 20px; */
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-`
-const FlexContainer = styled.div`
-  position: fixed;
-  top: 49px;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-`
-const LogoImage = styled(Image)`
-  height: 30px;
-  margin: 8px 10px 4px 0;
-`
-const CircularLabel = styled(Label)`
-  position: absolute;
-  top: -0.7em;
-  left: auto;
-  right: -0.7em;
-  bottom: auto;
-  font-size: 0.7142857rem !important;
-  font-style: normal !important;
-  font-weight: 400 !important;
-`
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
@@ -120,20 +83,22 @@ class Layout extends Component {
             {formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo exchange' })} / {title}
           </title>
         </Head>
-        <TopMenu fixed='top' inverted size='large' borderless>
+
+        <TopMenu fixed='top' size='large' borderless>
           <TopMenuContainer fluid>
-            <LogoImage src={Logo} />
-
-            <NavigationMenu takeover={takeover} />
-
+            <MainTitle>{title}</MainTitle>
             <Menu.Menu position='right' className='black'>
               {auth && auth.identity && !auth.identity.isAdmin && (
-                <Menu.Item onClick={() => Router.push('/cart')} data-test='navigation_menu_cart'>
+                <Menu.Item onClick={() => Router.push('/cart')} data-test='navigation_menu_cart' className='item-cart'>
                   <MiniCart />
                 </Menu.Item>
               )}
-              <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
+              <Dropdown className='user-menu-wrapper' item icon={{ className: 'user thick' }}>
                 <Dropdown.Menu data-test='navigation_menu_user_drpdn'>
+                  <Dropdown.Item>
+                    <Dropdown.Header>{getSafe(() => auth.identity.name, '')}</Dropdown.Header>
+                    {getSafe(() => auth.identity.jobTitle, '')}
+                  </Dropdown.Item>
                   <Dropdown.Item
                     as={Menu.Item}
                     onClick={() => openProfilePopup()}
@@ -185,7 +150,8 @@ class Layout extends Component {
                       defaultMessage: 'Terms of Service'
                     })}
                   </Dropdown.Item>
-                  <Dropdown.Item as={MenuLink} to='/auth/logout' data-test='navigation_menu_user_logout_drpdn'>
+                  <Dropdown.Item as={Menu.Item} to='/auth/logout' data-test='navigation_menu_user_logout_drpdn' className='logout'>
+                    <Icon className='power thick' />
                     {formatMessage({
                       id: 'global.logout',
                       defaultMessage: 'Logout'
@@ -196,6 +162,16 @@ class Layout extends Component {
             </Menu.Menu>
           </TopMenuContainer>
         </TopMenu>
+
+        <LeftMenu vertical fixed='left' inverted size='large' borderless>
+          <LeftMenuContainer fluid>
+            <PerfectScrollbar>
+              <LogoImage src={Logo} />
+
+              <NavigationMenu takeover={takeover} />
+            </PerfectScrollbar>
+          </LeftMenuContainer>
+        </LeftMenu>
 
         {profile && profile.profilePopup && <Profile />}
         <ChatWidget />

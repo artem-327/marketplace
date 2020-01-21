@@ -5,6 +5,9 @@ import { getCart } from '~/modules/purchase-order/actions'
 import { Icon, Label } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
 
+const IconCart = styled(Icon)`
+  color: #848893 !important;
+`
 const CircularLabel = styled(Label)`
   position: absolute;
   top: -0.7em;
@@ -26,8 +29,8 @@ class MiniCart extends Component {
 
     return (
       <Icon.Group>
-        <Icon name='shopping cart' color='white' size='large' />
-        <CircularLabel circular color='blue'>
+        <IconCart name='shopping cart' color='white' size='large' />
+        <CircularLabel circular color='orange'>
           {cartItems}
         </CircularLabel>
       </Icon.Group>

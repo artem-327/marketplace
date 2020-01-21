@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Link from 'next/link'
 import Router, { withRouter } from 'next/router'
 
-import { Menu, Dropdown } from 'semantic-ui-react'
+import { Menu, Dropdown, Icon } from 'semantic-ui-react'
 import { withAuth } from '~/hocs'
 import { injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
@@ -45,7 +45,7 @@ class Navigation extends Component {
 
     return !isAdmin || takeover ? (
       <>
-        <DropdownItem text={formatMessage({ id: 'navigation.inventory', defaultMessage: 'Inventory' })}>
+        <DropdownItem icon={<Icon className='hexagon' />} text={formatMessage({ id: 'navigation.inventory', defaultMessage: 'Inventory' })}>
           <Dropdown.Menu data-test='navigation_menu_inventory_drpdn'>
             <Dropdown.Item as={MenuLink} to='/inventory/my' data-test='navigation_menu_inventory_my_drpdn'>
               {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
@@ -64,7 +64,7 @@ class Navigation extends Component {
           </Dropdown.Menu>
         </DropdownItem>
         {getSafe(() => company.nacdMember, false) ? (
-          <DropdownItem text={formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}>
+          <DropdownItem icon={<Icon className='hexagon' />} text={formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}>
             <Dropdown.Menu data-test='navigation_menu_marketplace_drpdn'>
               <Dropdown.Item as={MenuLink} to='/marketplace/all' data-test='navigation_marketplace_all_drpdn'>
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
@@ -75,7 +75,7 @@ class Navigation extends Component {
             </Dropdown.Menu>
           </DropdownItem>
         ) : null}
-        <DropdownItem text={formatMessage({ id: 'navigation.orders', defaultMessage: 'Orders' })}>
+        <DropdownItem icon={<Icon className='hexagon' />} text={formatMessage({ id: 'navigation.orders', defaultMessage: 'Orders' })}>
           <Dropdown.Menu data-test='navigation_menu_orders_drpdn'>
             <Dropdown.Item as={MenuLink} to='/orders?type=sales' data-test='navigation_menu_orders_sales_drpdn'>
               {/* <FormattedMessage id='navigation.salesOrders' defaultMessage='Sales Orders' /> */}
@@ -88,15 +88,21 @@ class Navigation extends Component {
         </DropdownItem>
         {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin) && (
           <MenuLink to='/settings' data-test='navigation_menu_settings_lnk'>
-            <>{formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}</>
+            <>
+              <Icon className='hexagon' />
+              {formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}
+            </>
           </MenuLink>
         )}
       </>
     ) : (
       isAdmin && (
         <>
-          <MenuLink to='/admin' data-test='navigation_menu_admin_lnk'>
-            {formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}
+          <MenuLink icon={<Icon className='hexagon' />} to='/admin' data-test='navigation_menu_admin_lnk'>
+            <>
+              <Icon className='hexagon' />
+              {formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}
+            </>
           </MenuLink>
         </>
       )
