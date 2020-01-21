@@ -5,7 +5,7 @@ context("Prodex Bank Account CRUD", () => {
         cy.server()
         cy.route("POST","/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("GET", "/prodex/api/payments/*").as("accountsLoading")
-        cy.route("GET", "/prodex/api/branches").as("addressLoading")
+        cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.route("POST","/prodex/api/payments/**").as("verifyLoading")
 
         cy.FElogin("mackenzie@echoexchange.net", "echopass123")
@@ -13,7 +13,7 @@ context("Prodex Bank Account CRUD", () => {
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.contains("Settings").click()
 
-        cy.wait("@addressLoading", {timeout: 100000})
+        cy.wait("@settingsLoading", {timeout: 100000})
         cy.contains("BANK ACCOUNTS").click()
 
         cy.wait("@accountsLoading")

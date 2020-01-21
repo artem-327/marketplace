@@ -3,7 +3,7 @@ context("Shopping cart CRUD", () => {
     let marketPlaceId = null
 
     beforeEach(function () {
-        cy.viewport(1200, 800)
+        cy.viewport(1620, 2000)
         cy.server()
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
@@ -183,6 +183,11 @@ context("Shopping cart CRUD", () => {
         })
 
         cy.get("[data-test='purchase_order_shipping_quote_0_rad']", {timeout: 60000}).click()
+
+        cy.get("#field_dropdown_payment").click()
+        cy.get("#field_dropdown_payment").within(($form) => {
+            cy.get("[role=option]").eq(0).click()
+        })
 
         cy.contains("Place Order").should('be.enabled')
     })

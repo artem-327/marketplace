@@ -128,7 +128,7 @@ context("Inventory CRUD", () => {
 
         cy.get("[data-test=sidebar_inventory_save_new]").click()
         cy.get(".error")
-            .should("have.length", 5)
+            .should("have.length", 4)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)|(Must be a number)/i)
         })

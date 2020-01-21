@@ -7,7 +7,7 @@ context("Prodex Branches CRUD", () => {
     beforeEach(function () {
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.route("GET", "/prodex/api/branches").as("branchesLoading")
+        cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.route("POST", "/prodex/api/branches/datagrid").as("branchesLoadingPOST")
 
         cy.FElogin("mackenzie@echoexchange.net", "echopass123")
@@ -15,7 +15,7 @@ context("Prodex Branches CRUD", () => {
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.contains("Settings").click()
 
-        cy.wait("@branchesLoading", {timeout: 100000})
+        cy.wait("@settingsLoading", {timeout: 100000})
 
         cy.contains("BRANCHES").click()
 
@@ -50,7 +50,7 @@ context("Prodex Branches CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Created Warehouse")
+        cy.contains("Created Branch")
 
         cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.getFirstBranchIdWithFilter(token, filter).then(itemId => {
