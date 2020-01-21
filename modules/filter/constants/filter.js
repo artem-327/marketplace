@@ -698,8 +698,13 @@ export const datagridValues = {
     },
 
     valuesDescription: function(values) {
-      const result = values[0].value === false ? ['No'] : values[0].value === true ? ['Yes'] : ''
-      return result
+      return values.map(val => {
+        if (JSON.parse(val.value).text) {
+          return JSON.parse(val.value).text
+        } else {
+          return val.value === false ? 'No' : values[0].value === true ? 'Yes' : ''
+        }
+      })
     },
 
     tagDescription: function(values) {
@@ -707,7 +712,7 @@ export const datagridValues = {
     },
 
     toFormik: function({ values }) {
-      const text = values[0].value === false ? ['No'] : values[0].value === true ? ['Yes'] : ''
+      const text = values[0].value === 'false' ? 'No' : values[0].value === 'true' ? 'Yes' : ''
       return JSON.stringify({
         id: 'broadcast',
         text: text
