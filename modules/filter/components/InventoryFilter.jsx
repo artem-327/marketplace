@@ -71,7 +71,8 @@ class InventoryFilter extends Component {
     searchQuery: '',
     searchWarehouseQuery: '',
     isTyping: false,
-    searchManufacturerQuery: ''
+    searchManufacturerQuery: '',
+    searchOriginQuery: ''
   }
 
   componentDidMount() {
@@ -379,6 +380,13 @@ class InventoryFilter extends Component {
     }
   }, 250)
 
+  handleSearchOrigin = debounce(({ searchQuery, name }) => {
+    if (searchQuery.length > 1) {
+      this.props.getAutocompleteOrigin(this.props.searchOriginUrl(searchQuery))
+      this.setState({ searchOriginQuery: searchQuery })
+    }
+  }, 250)
+
   accordionTitle = (name, text) => (
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
       <Icon
@@ -531,7 +539,9 @@ class InventoryFilter extends Component {
       layout,
       savedAutocompleteData,
       autocompleteManufacturer,
-      autocompleteManufacturerLoading
+      autocompleteManufacturerLoading,
+      autocompleteOrigin,
+      autocompleteOriginLoading
     } = this.props
 
     const optionsYesNo = [
@@ -630,7 +640,7 @@ class InventoryFilter extends Component {
       )
     if (autocompleteManufacturerLoading)
       noManufacturerResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
-    //TODO adjust for manufacturer
+
     let dropdownManufacturerProps = {
       search: true,
       selection: true,
@@ -655,40 +665,36 @@ class InventoryFilter extends Component {
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null)
     }
 
-    //TODO adjust for origin
+    let noOriginResultsMessage = null
+    if (this.state.searchOriginQuery.length <= 1)
+      noOriginResultsMessage = (
+        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+      )
+    if (autocompleteOriginLoading)
+      noOriginResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
+
     let dropdownOriginProps = {
       search: true,
       selection: true,
       multiple: false,
       fluid: true,
       clearable: true,
-      options: autocompleteWarehouse.map(warehouse => {
-        if (warehouse.text) {
-          var { text } = warehouse
-        } else {
-          var text = warehouse.deliveryAddress
-            ? `${warehouse.deliveryAddress.address.streetAddress}, ${warehouse.deliveryAddress.address.city}, ${
-                warehouse.deliveryAddress.address.zip.zip
-              }${
-                warehouse.deliveryAddress.address.province ? `, ${warehouse.deliveryAddress.address.province.name}` : ''
-              }, ${warehouse.deliveryAddress.address.country.name}`
-            : ''
-        }
-
+      options: autocompleteOrigin.map(origin => {
+        if (!origin) return
         return {
-          key: warehouse.id,
-          text: text,
-          value: JSON.stringify({ id: warehouse.id, name: warehouse.name, text: text })
+          key: origin.id,
+          text: origin.name,
+          value: JSON.stringify({ id: origin.id, name: origin.name, text: origin.name })
         }
       }),
-      loading: autocompleteWarehouseLoading,
-      name: 'warehouse',
+      loading: autocompleteOriginLoading,
+      name: 'origin',
       placeholder: <FormattedMessage id='filter.searchOrigin' defaultMessage='Search Origin' />,
-      noWarehouseResultsMessage,
+      noOriginResultsMessage,
       onSearchChange: (_, data) => {
-        this.handleSearchWarehouse(data)
+        this.handleSearchOrigin(data)
       },
-      value: values.warehouse,
+      value: values.origin,
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null)
     }
 
@@ -1042,7 +1048,10 @@ InventoryFilter.propTypes = {
   filterType: string,
   autocompleteManufacturer: array,
   getAutocompleteManufacturer: func,
-  searchManufacturerUrl: func
+  searchManufacturerUrl: func,
+  autocompleteOrigin: array,
+  getAutocompleteOrigin: func,
+  searchOriginUrl: func
 }
 
 InventoryFilter.defaultProps = {
@@ -1058,7 +1067,8 @@ InventoryFilter.defaultProps = {
   savedFiltersLoading: false,
   layout: '',
   filterType: filterTypes.INVENTORY,
-  autocompleteManufacturer: []
+  autocompleteManufacturer: [],
+  autocompleteOrigin: []
 }
 
 export default withToastManager(injectIntl(InventoryFilter))

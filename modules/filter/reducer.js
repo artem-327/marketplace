@@ -47,7 +47,9 @@ export const initialState = {
     currencyCode: currency
   },
   autocompleteManufacturer: [],
-  autocompleteManufacturerLoading: false
+  autocompleteManufacturerLoading: false,
+  autocompleteOrigin: [],
+  autocompleteOriginLoading: false
 }
 
 export default typeToReducer(
@@ -312,6 +314,29 @@ export default typeToReducer(
         ...state,
         autocompleteManufacturerLoading: false,
         autocompleteManufacturer: []
+      }
+    },
+
+    /* GET_AUTOCOMPLETE_ORIGIN_DATA */
+
+    [a.getAutocompleteOrigin.pending]: state => {
+      return {
+        ...state,
+        autocompleteOriginLoading: true
+      }
+    },
+    [a.getAutocompleteOrigin.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        autocompleteOriginLoading: false,
+        autocompleteOrigin: uniqueArrayByKey(payload.concat(state.autocompleteOrigin), 'id')
+      }
+    },
+    [a.getAutocompleteOrigin.rejected]: state => {
+      return {
+        ...state,
+        autocompleteOriginLoading: false,
+        autocompleteOrigin: []
       }
     }
   },

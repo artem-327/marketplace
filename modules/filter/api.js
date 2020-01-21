@@ -21,3 +21,5 @@ export const updateFilterNotifications = (templateId, notifications) =>
 
 export const getAutocompleteManufacturer = searchManufacturerUrl =>
   api.get(searchManufacturerUrl).then(response => response.data)
+
+export const getAutocompleteOrigin = searchOriginUrl => api.get(searchOriginUrl).then(response => response.data)

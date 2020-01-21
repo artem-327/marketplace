@@ -40,7 +40,8 @@ export const paths = {
     manufacturedDate: 'ProductOffer.lotManufacturedDate',
     warehouseId: 'ProductOffer.warehouse.id',
     manufacturerId: 'ProductOffer.companyProduct.echoProduct.manufacturer.id',
-    broadcast: 'ProductOffer.broadcasted'
+    broadcast: 'ProductOffer.broadcasted',
+    origin: 'ProductOffer.origin.id'
   },
   orders: {
     orderDate: 'Order.orderDate',
@@ -710,6 +711,69 @@ export const datagridValues = {
       return JSON.stringify({
         id: 'broadcast',
         text: text
+      })
+    }
+  },
+
+  origin: {
+    paths: [paths.productOffers.origin],
+    description: 'Origin',
+    operator: operators.EQUALS,
+
+    toFilter: function(values) {
+      let data
+      if (Array.isArray(values)) {
+        data = values.map(val => {
+          let parsed = JSON.parse(val)
+          return {
+            value: parsed.id,
+            //description: parsed.name
+            description: JSON.stringify({
+              name: parsed.name,
+              text: parsed.text
+            })
+          }
+        })
+      } else {
+        let parsed = JSON.parse(values)
+        data = [
+          {
+            value: parsed.id,
+            description: JSON.stringify({
+              name: parsed.name,
+              text: parsed.text
+            })
+          }
+        ]
+      }
+
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: data,
+        description: this.description
+      }
+    },
+
+    valuesDescription: function(values) {
+      return values.map(val => {
+        try {
+          return JSON.parse(val.description).text
+        } catch {
+          return val.description
+        }
+      })
+    },
+
+    tagDescription: function(values) {
+      return `Origin: ${this.valuesDescription(values)[0]}`
+    },
+
+    toFormik: function({ values }) {
+      let parsed = JSON.parse(values[0].description)
+      return JSON.stringify({
+        id: parseInt(values[0].value),
+        text: parsed.text
       })
     }
   }
