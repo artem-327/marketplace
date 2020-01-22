@@ -680,7 +680,7 @@ class InventoryFilter extends Component {
       fluid: true,
       clearable: true,
       options: autocompleteOrigin.map(origin => {
-        if (!origin) return
+        if (!origin && !origin.id) return
         return {
           key: origin.id,
           text: origin.name,
@@ -703,6 +703,7 @@ class InventoryFilter extends Component {
       selection: true,
       multiple: false,
       fluid: true,
+      clearable: true,
       options: optionsYesNo,
       name: 'broadcast',
       placeholder: <FormattedMessage id='filter.selectOption' defaultMessage='Select Option' />,
@@ -711,7 +712,7 @@ class InventoryFilter extends Component {
     }
 
     if (!autocompleteDataLoading) dropdownProps.icon = null
-    if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
+    //if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
 
     let currencySymbol = getSafe(() => this.props.preferredCurrency.symbol, '$')
 

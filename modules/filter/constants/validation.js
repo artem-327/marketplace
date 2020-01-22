@@ -31,7 +31,8 @@ export const initialValues = {
   },
   warehouse: '',
   broadcast: '',
-  manufacturer: ''
+  manufacturer: '',
+  origin: ''
 }
 
 const errorMessages = {

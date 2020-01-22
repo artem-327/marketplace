@@ -702,7 +702,11 @@ export const datagridValues = {
         if (JSON.parse(val.value).text) {
           return JSON.parse(val.value).text
         } else {
-          return val.value === false ? 'No' : values[0].value === true ? 'Yes' : ''
+          return val.value === false || val.value === 'false'
+            ? 'No'
+            : val.value === true || val.value === 'true'
+            ? 'Yes'
+            : ''
         }
       })
     },
