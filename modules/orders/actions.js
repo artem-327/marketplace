@@ -155,9 +155,9 @@ export const acceptDelivery = orderId => ({
   payload: Api.accept(orderId)
 })
 
-export const returnShipmentRates = (orderId, pickupDate) => ({
+export const getReturnShipmentRates = (orderId, pickupDate) => ({
   type: AT.RETURN_SHIPMENT_RATES,
-  payload: Api.returnShipmentRates(orderId, pickupDate)
+  payload: Api.getReturnShipmentRates(orderId, pickupDate)
 })
 
 export const returnShipmentOrder = (orderId, query) => ({
