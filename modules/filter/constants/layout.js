@@ -7,8 +7,8 @@ export const FlexSidebar = styled(Sidebar)`
   display: flex;
   flex-direction: column;
   background-color: #fbfbfb;
-  top: 105px !important;
-  padding-bottom: 105px;
+  top: 80px !important;
+  padding-bottom: 80px;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
   z-index: 4;
   text-align: left;

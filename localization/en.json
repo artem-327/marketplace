@@ -96,7 +96,9 @@
   "navigation.marketplace": "Marketplace",
   "navigation.shoppingCart": "Shopping Cart",
   "navigation.salesOrders": "Sales Orders",
+  "navigation.salesOrdersDetail": "Sales Orders Detail",
   "navigation.purchaseOrders": "Purchase Orders",
+  "navigation.purchaseOrdersDetail": "Purchase Orders Detail",
   "navigation.settings": "Settings",
   "navigation.userSettings": "User Settings",
   "navigation.admin": "Admin",
@@ -1816,5 +1818,17 @@
   "settings.wrongUrl": "Wrong URL",
   "settings.rerenderToInventory": "You are not authorized to view this page. You will be automatically redirected to Inventory.",
   "settings.rerenderToUsers": "You are not authorized to view this page. You will be automatically redirected to Users.",
-  "settings.rerenderToProducts": "You are not authorized to view this page. You will be automatically redirected to Products."
+  "settings.rerenderToProducts": "You are not authorized to view this page. You will be automatically redirected to Products.",
+  "title.settings": "Settings - {tab}",
+  "title.settings.bank-accounts": "Bank Accounts",
+  "title.settings.branches": "Branches",
+  "title.settings.company-details": "Company Details",
+  "title.settings.delivery-addresses": "Delivery Addresses",
+  "title.settings.documents": "Documents",
+  "title.settings.global-broadcast": "Global Price Book",
+  "title.settings.logistics": "Logistics",
+  "title.settings.products": "Product Catalog",
+  "title.settings.system-settings": "Company Settings",
+  "title.settings.users": "Users",
+  "title.settings.warehouses": "Warehouses"
 }

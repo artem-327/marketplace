@@ -84,9 +84,9 @@ class Layout extends Component {
           </title>
         </Head>
 
-        <TopMenu fixed='top' size='large' borderless>
+        <TopMenu fixed='top' size='large' borderless className='topbar'>
           <TopMenuContainer fluid>
-            <MainTitle>{title}</MainTitle>
+            <MainTitle as='h1'>{title}</MainTitle>
             <Menu.Menu position='right' className='black'>
               {auth && auth.identity && !auth.identity.isAdmin && (
                 <Menu.Item onClick={() => Router.push('/cart')} data-test='navigation_menu_cart' className='item-cart'>
@@ -150,7 +150,11 @@ class Layout extends Component {
                       defaultMessage: 'Terms of Service'
                     })}
                   </Dropdown.Item>
-                  <Dropdown.Item as={Menu.Item} to='/auth/logout' data-test='navigation_menu_user_logout_drpdn' className='logout'>
+                  <Dropdown.Item
+                    as={Menu.Item}
+                    onClick={() => Router.push('/auth/logout')}
+                    data-test='navigation_menu_user_logout_drpdn'
+                    className='logout'>
                     <Icon className='power thick' />
                     {formatMessage({
                       id: 'global.logout',

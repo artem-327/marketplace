@@ -10,6 +10,7 @@ export const TopMenu = styled(Menu)`
   right: 0 !important;
   bottom: 0;
   left: 300px !important;
+  border: 0 none !important;
         
   &.ui.menu.fixed .item-cart {
     margin-right: 5px;
@@ -172,12 +173,21 @@ export const LeftMenu = styled(Menu)`
     }
   
     .scrollbar-container > a.item {
+      border-radius: 4px;
       text-transform: uppercase;
       font-weight: 700 !important;
       
       &:hover,
-      &:hover i.hexagon {
+      &:hover i {
         color: #fff !important;
+      }
+      
+      &.active {
+        background: #132947 !important;
+      }
+      
+      &.active i {
+        color: #2599d5 !important;
       }
     }
     
@@ -187,13 +197,13 @@ export const LeftMenu = styled(Menu)`
       min-height: 50px;
       max-height: 50px;
       margin: 4px 0;
-      border-radius: 8px;
+      border-radius: 4px !important;
       padding: 12px 40px 12px 55px;
       text-align: left;
       color: #546f93 !important;
       line-height: 26px;
       
-      &.active {
+      &.opened {
         max-height: none;
       }
       
@@ -237,7 +247,7 @@ export const LeftMenu = styled(Menu)`
             padding: 0 !important;
           }
           
-          &.active {
+          &.opened {
             border-radius: 4px;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
@@ -260,18 +270,21 @@ export const LeftMenu = styled(Menu)`
         }
       }
       
-      i.hexagon {
+      i {
         position: absolute;
         top: 14px;
         left: 15px;
-        transform-origin: 60% 50%;
-        transform: rotate(30deg);
         width: 20px;
         height: 22px;
         margin: 0 !important;
         vertical-align: top;
         font-size: 22px;
         line-height: 22px;
+        
+        &.hexagon {
+          transform-origin: 60% 50%;
+          transform: rotate(30deg);
+        }
       }
       
       > .text {
@@ -285,18 +298,46 @@ export const LeftMenu = styled(Menu)`
           height: 26px;
         }
       }
-        
-      &:hover,
+
+      &,        
       &.active {
-        background-color: transparent !important;
+        background: transparent !important;
         
         > .text,
-        > .text ~ i.hexagon {
+        > .text ~ i {
+          color: #546f93 !important;
+          
+          &.hexagon {
+            color: #2599d5 !important;
+          }
+        }
+      }
+        
+      &:hover {
+        background-color: transparent !important;
+        
+        > .text {
+          color: #fff !important;
+        }
+        
+        > .text ~ i {
           color: #fff !important;
         }
       }
       
-      &.active {
+      &.opened {
+        background-color: transparent !important;
+        
+        > .text {
+          color: #fff !important;
+        }
+        
+        > .text ~ i {
+          color: #2599d5 !important;
+        }
+      }
+      
+      &.opened {
         
         > .text ~ i.hexagon {
           color: #2599d5 !important;
@@ -356,7 +397,7 @@ export const MainTitle = styled(Header)`
   margin: 0 !important;
   padding: 24px 0 !important;
   font-size: 25px !important;
-  font-weight: 700;
+  font-weight: 400 !important;
   color: #000;
   line-height: 31px;
 `
