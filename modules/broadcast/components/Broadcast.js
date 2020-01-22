@@ -362,7 +362,7 @@ class Broadcast extends Component {
                   content={
                     <FormattedMessage
                       id='broadcast.broadcastingTooltip'
-                      defaultMessage='Shows number of company branches your are currently broadcasting to out of the total number of company branches.'
+                      defaultMessage='Shows number of company branches out of the total company branches you will Broadcast to, once you turn Broadcasting on.'
                     />
                   }
                 />
