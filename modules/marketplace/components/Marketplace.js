@@ -268,13 +268,7 @@ class Marketplace extends Component {
             {...this.props}
           />
 
-          <Menu secondary>
-            <Menu.Item header>
-              <Header as='h1' size='medium'>
-                <FormattedMessage id='allInventory.marketplace' defaultMessage='MARKETPLACE' />
-              </Header>
-            </Menu.Item>
-
+          <Menu secondary className='page-part'>
             <Menu.Menu position='right'>
               <Menu.Item>
                 <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />

@@ -278,10 +278,7 @@ export const datagridValues = {
     },
 
     tagDescription: (values, { currencyCode } = '$') => (
-      <label>
-        {'>= '}
-        {<FormattedNumber style='currency' currency={currencyCode} value={values[0].description} />}
-      </label>
+      <label>{<FormattedNumber style='currency' currency={currencyCode} value={values[0].description} />}</label>
     ),
 
     valuesDescription: function(values) {
@@ -307,10 +304,7 @@ export const datagridValues = {
     },
 
     tagDescription: (values, { currencyCode } = '$') => (
-      <label>
-        {'<= '}
-        {<FormattedNumber style='currency' currency={currencyCode} value={values[0].description} />}
-      </label>
+      <label>{<FormattedNumber style='currency' currency={currencyCode} value={values[0].description} />}</label>
     ),
 
     valuesDescription: function(values) {
@@ -815,7 +809,25 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
         path: paths.productOffers.quantity,
         operator: operators.LESS_THAN_OR_EQUAL_TO
       },
-      tagDescription: (from, to) => `${from} - ${to} pkgs`
+      tagDescription: (from, to) => {
+        let sign = from && !to ? '≥ ' : !from && to ? '≤ ' : null
+        let dash = from && to ? ' - ' : null
+        return (
+          <label>
+            {from ? (
+              <>
+                {sign} {from}
+              </>
+            ) : null}
+            {to ? (
+              <>
+                {dash} {sign} {to}
+              </>
+            ) : null}
+            {' pkgs'}
+          </label>
+        )
+      }
     },
     {
       description: 'Price',
@@ -827,12 +839,27 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
         path: paths.productOffers.price,
         operator: operators.LESS_THAN_OR_EQUAL_TO
       },
-      tagDescription: (from, to) => (
-        <label>
-          <FormattedNumber style='currency' currency={currencyCode} value={from} /> -{' '}
-          <FormattedNumber style='currency' currency={currencyCode} value={to} />
-        </label>
-      )
+      tagDescription: (from, to) => {
+        let sign = from && !to ? '≥ ' : !from && to ? '≤ ' : null
+        let dash = from && to ? ' - ' : null
+        return (
+          <label>
+            {from ? (
+              <>
+                {sign}
+                <FormattedNumber style='currency' currency={currencyCode} value={from} />
+              </>
+            ) : null}
+            {to ? (
+              <>
+                {dash}
+                {sign}
+                <FormattedNumber style='currency' currency={currencyCode} value={to} />
+              </>
+            ) : null}
+          </label>
+        )
+      }
     },
     {
       description: 'Assay',
@@ -844,7 +871,25 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
         path: paths.productOffers.assayTo,
         operator: operators.LESS_THAN_OR_EQUAL_TO
       },
-      tagDescription: (from, to) => `${from}% - ${to}% `
+      tagDescription: (from, to) => {
+        let sign = from && !to ? '≥ ' : !from && to ? '≤ ' : null
+        let dash = from && to ? ' - ' : null
+        return (
+          <label>
+            {from ? (
+              <>
+                {sign} {from}
+              </>
+            ) : null}
+            {to ? (
+              <>
+                {dash} {sign} {to}
+              </>
+            ) : null}
+            {'%'}
+          </label>
+        )
+      }
     },
     {
       description: 'Order Date',
@@ -856,12 +901,27 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
         path: paths.orders.orderDate,
         operator: operators.LESS_THAN_OR_EQUAL_TO
       },
-      tagDescription: (from, to) => (
-        <>
-          <FormattedDate value={from}>{text => `${text} - `}</FormattedDate>
-          <FormattedDate value={to}>{text => text}</FormattedDate>
-        </>
-      )
+      tagDescription: (from, to) => {
+        let sign = from && !to ? '≥ ' : !from && to ? '≤ ' : null
+        let dash = from && to ? ' - ' : null
+        return (
+          <label>
+            {from ? (
+              <>
+                {sign}
+                <FormattedDate value={from}>{text => text}</FormattedDate>
+              </>
+            ) : null}
+            {to ? (
+              <>
+                {dash}
+                {sign}
+                <FormattedDate value={to}>{text => text}</FormattedDate>
+              </>
+            ) : null}
+          </label>
+        )
+      }
     }
 
     // {
@@ -886,19 +946,38 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
     let from = filters.findIndex(el => el.operator === group.from.operator && el.path === group.from.path)
     let to = filters.findIndex(el => el.operator === group.to.operator && el.path === group.to.path)
 
-    if (from !== -1 && to !== -1) {
-      results.push({
-        description: group.description,
-        valuesDescription: `${filters[from].valuesDescription.toString()} - ${filters[
+    if (from !== -1 || to !== -1) {
+      let valuesDescription
+      let tagDescription
+      let indexesResult
+      if (from !== -1 && to !== -1) {
+        valuesDescription = `${filters[from].valuesDescription.toString()} - ${filters[
           to
-        ].valuesDescription.toString()}`,
-        tagDescription: group.tagDescription(
+        ].valuesDescription.toString()}`
+        tagDescription = group.tagDescription(
           filters[from].valuesDescription.toString(),
           filters[to].valuesDescription.toString()
-        ),
-        indexes: [from, to]
+        )
+        indexesResult = [from, to]
+        indexes.push(from, to)
+      } else if (from !== -1 && to === -1) {
+        valuesDescription = `${filters[from].valuesDescription.toString()} `
+        tagDescription = group.tagDescription(filters[from].valuesDescription.toString())
+        indexesResult = [from]
+        indexes.push(from)
+      } else if (from === -1 && to !== -1) {
+        valuesDescription = `${filters[to].valuesDescription.toString()}`
+        tagDescription = group.tagDescription(null, filters[to].valuesDescription.toString())
+        indexesResult = [to]
+        indexes.push(to)
+      }
+
+      results.push({
+        description: group.description,
+        valuesDescription: valuesDescription,
+        tagDescription: tagDescription,
+        indexes: indexesResult
       })
-      indexes.push(from, to)
     }
   })
 
