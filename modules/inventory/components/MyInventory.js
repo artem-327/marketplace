@@ -439,12 +439,7 @@ class MyInventory extends Component {
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
 
         <Container fluid style={{ padding: '0 32px' }}>
-          <Menu secondary>
-            <Menu.Item header>
-              <Header as='h1' size='medium'>
-                <FormattedMessage id='myInventory.myInventory' defaultMessage='MY INVENTORY' />
-              </Header>
-            </Menu.Item>
+          <Menu secondary className='page-part'>
             {/*selectedRows.length > 0 ? (
               <Menu.Item>
                 <Header as='h3' size='small' color='grey'>

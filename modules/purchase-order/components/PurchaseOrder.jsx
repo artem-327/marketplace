@@ -246,13 +246,7 @@ class PurchaseOrder extends Component {
       <div className='app-inner-main flex stretched'>
         <div className='header-top' style={{ zIndex: 10, backgroundColor: '#FFF' }}>
           <Container fluid style={{ padding: '0 32px' }}>
-            <Menu secondary>
-              <Menu.Item header>
-                <Header as='h1' size='medium'>
-                  <FormattedMessage id='cart.checkout' defaultMessage='Checkout' />
-                </Header>
-              </Menu.Item>
-
+            <Menu secondary className='page-part'>
               <Menu.Menu position='right'>
                 <Menu.Item>
                   <Button

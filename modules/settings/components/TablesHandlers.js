@@ -135,14 +135,6 @@ class TablesHandlers extends Component {
     this.handleFiltersValue(value)
   }
 
-  renderHeader = () => (
-    <GridColumn widescreen={2} computer={3} tablet={3}>
-      <Header as='h1' size='medium'>
-        {this.props.currentTab.name}
-      </Header>
-    </GridColumn>
-  )
-
   saveRulesBroadcast = async (model, toastManager) => {
     try {
       await this.props.saveRules(null, model)
@@ -285,9 +277,8 @@ class TablesHandlers extends Component {
   render() {
     return (
       <PositionHeaderSettings>
-        <Grid as={Menu} secondary verticalAlign='middle'>
+        <Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
           <GridRow>
-            {this.renderHeader()}
             {!this.props.currentTab.hideHandler && this.renderHandler()}
           </GridRow>
         </Grid>

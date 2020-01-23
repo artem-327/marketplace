@@ -466,9 +466,6 @@ class Settings extends Component {
             </Container>
             <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
               <Grid.Row>
-                <Grid.Column width={3}>
-                  <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />
-                </Grid.Column>
                 <Grid.Column className='flex stretched' style={{ marginTop: '10px' }}>
                   {this.renderContent()}
                 </Grid.Column>
@@ -486,6 +483,7 @@ const mapStateToProps = ({ settings, auth }) => {
     ...settings,
     isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
     company: auth.identity ? auth.identity.company : null,
+    currentTab: settings.currentTab,
     isProductCatalogAdmin: getSafe(() => auth.identity.isProductCatalogAdmin, false),
     isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false)
   }
