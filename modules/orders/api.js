@@ -95,8 +95,11 @@ export default {
       }
     })
   },
-  returnShipmentRates: (orderId, pickupDate) =>
-    api.get(`/prodex/api/shipment/order/${orderId}/return-shipment-rates?pickupDate=${pickupDate}`),
+  getReturnShipmentRates: (orderId, pickupDate) =>
+    api.get(
+      `/prodex/api/shipment/order/${orderId}/return-shipment-rates` +
+      (pickupDate ? `?pickupDate=${encodeURIComponent(pickupDate)}` : '')
+    ),
   returnShipmentOrder: (orderId, query) =>
     api.patch(`/prodex/api/shipment/order/${orderId}/return-shipment-order${generateQueryString(query)}`),
   getShippingQuotes: (orderId, pickupDate) =>
