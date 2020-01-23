@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { Icon, Grid, GridColumn } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 
-import { FilterTag, PopupRow, WiderPopup } from '../constants/layout'
+import { FilterTag, PopupRow, WiderTooltip } from '../constants/layout'
 import { groupFilters } from '../constants/filter'
 import { string } from 'postcss-selector-parser'
 
@@ -26,10 +26,9 @@ class FilterTags extends Component {
   tagMarkup = filters => {
     return filters.map((filter, i) => {
       let { tagDescription } = filter
-
       if (tagDescription instanceof Array && tagDescription.length > MAX_TAG_ENTITIES) {
         return (
-          <WiderPopup
+          <WiderTooltip
             key={i}
             position='bottom center'
             trigger={
@@ -46,7 +45,7 @@ class FilterTags extends Component {
                 <GridColumn>{tagDescription.toString().replace(/,/g, ', ')}</GridColumn>
               </PopupRow>
             </Grid>
-          </WiderPopup>
+          </WiderTooltip>
         )
         // {tagDescription.toString().replace(/,/g, ', ')}
       } else {
@@ -75,7 +74,7 @@ class FilterTags extends Component {
       tagsToDisplay = this.tagMarkup(filters.slice(0, TAGS_TO_DISPLAY))
 
       tagsToDisplay.push(
-        <WiderPopup
+        <WiderTooltip
           key={TAGS_TO_DISPLAY}
           disabled={!!!filters[0].description}
           trigger={
@@ -96,7 +95,7 @@ class FilterTags extends Component {
                 )
             })}
           </Grid>
-        </WiderPopup>
+        </WiderTooltip>
       )
     } else tagsToDisplay = this.tagMarkup(filters)
 

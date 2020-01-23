@@ -1,5 +1,6 @@
 import styled from 'styled-components'
-import { Sidebar, Accordion, Segment, GridRow, Icon, Popup, Dropdown, Grid, GridColumn } from 'semantic-ui-react'
+import { Sidebar, Accordion, Segment, GridRow, Icon, Dropdown, Grid, GridColumn } from 'semantic-ui-react'
+import Tooltip from '~/components/tooltip'
 
 const popupWidth = 400
 
@@ -130,7 +131,7 @@ export const PopupRow = styled(GridRow)`
   padding-bottom: 0.6rem !important;
 `
 
-export const WiderPopup = styled(Popup)`
+export const WiderTooltip = styled(Tooltip)`
   min-width: ${popupWidth}px !important;
   ::before {
     left: ${popupWidth * 0.5}px !important;
