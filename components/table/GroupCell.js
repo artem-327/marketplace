@@ -27,6 +27,7 @@ const Cell = ({
   rowSelection,
   checked,
   indeterminate,
+  hideCheckboxes,
   ...restProps
 }) => {
   const handleClick = () => onToggle()
@@ -39,7 +40,7 @@ const Cell = ({
       className={cn('dx-g-bs4-cursor-pointer', className)}
       onClick={handleClick}
       {...restProps}>
-      {rowSelection && (
+      {rowSelection && !hideCheckboxes && (
         <GroupCheckbox
           checked={checked}
           indeterminate={indeterminate}

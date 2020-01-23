@@ -335,8 +335,21 @@ class _Table extends Component {
   }
 
   handleSelectionChange = selection => {
-    const { onSelectionChange, getChildGroups, rows, sameGroupSelectionOnly, singleSelection } = this.props
+    const {
+      onSelectionChange,
+      getChildGroups,
+      rows,
+      sameGroupSelectionOnly,
+      singleSelection,
+      singleSelectionRow
+    } = this.props
     const lastSelected = selection.find(selected => this.state.selection.indexOf(selected) === -1)
+
+    if (singleSelectionRow) {
+      this.setState({ selection: [lastSelected] })
+      onSelectionChange([lastSelected])
+      return true
+    }
 
     const groups = getChildGroups(rows)
     const selectionGroups = selection.map(s => groups.find(g => g.childRows.indexOf(rows[s]) > -1))
@@ -383,7 +396,6 @@ class _Table extends Component {
 
   getColumns = () => {
     const { rowActions, columns, hideSettingsIcon } = this.props
-
     return rowActions
       ? [
           {
@@ -599,6 +611,9 @@ class _Table extends Component {
       lockSelection,
       groupActions,
       hideSettingsIcon,
+      highlightRow,
+      showSelectionColumn,
+      hideCheckboxes,
       ...restProps
     } = this.props
 
@@ -724,7 +739,9 @@ class _Table extends Component {
               rowSelection && (
                 <TableSelection
                   showSelectAll={showSelectAll && !sameGroupSelectionOnly}
-                  selectByRowClick={selectByRowClick}
+                  selectByRowClick={selectByRowClick ? selectByRowClick : false}
+                  showSelectionColumn={showSelectionColumn ? showSelectionColumn : false}
+                  highlightRow={highlightRow}
                 />
               )
             )}
@@ -765,6 +782,7 @@ class _Table extends Component {
                   <GroupCell
                     {...this.getGroupRowCheckboxState(props.row.key)}
                     rowSelection={rowSelection}
+                    hideCheckboxes={hideCheckboxes}
                     onSelectionChange={this.handleGroupSelectionChange}
                     {...props}
                   />
