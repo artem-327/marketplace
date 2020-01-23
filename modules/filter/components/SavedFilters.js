@@ -45,9 +45,6 @@ class SavedFilters extends Component {
 
   handleFilterApply = filter => {
     let { onApply } = this.props
-    console.log('filter====================================')
-    console.log(filter)
-    console.log('====================================')
     onApply(filter)
   }
 
@@ -96,19 +93,21 @@ class SavedFilters extends Component {
               <GridColumn computer={8}>
                 <StyledGrid verticalAlign='top'>
                   {filterDescription && filterDescription.length > 0 ? (
-                    filterDescription.map((f, index) => (
-                      <GridRow key={index}>
-                        <GridColumn computer={8}>{f.description}:</GridColumn>
+                    filterDescription.map((f, index) => {
+                      return (
+                        <GridRow key={index}>
+                          <GridColumn computer={8}>{f.description}:</GridColumn>
 
-                        <GridColumn computer={8}>
-                          {f.valuesDescription instanceof Array
-                            ? f.valuesDescription.map(v => v)
-                            : typeof f.valuesDescription === 'string'
-                            ? f.valuesDescription
-                            : f.tagDescription}
-                        </GridColumn>
-                      </GridRow>
-                    ))
+                          <GridColumn computer={8}>
+                            {f.valuesDescription instanceof Array
+                              ? f.valuesDescription.map(v => v)
+                              : typeof f.valuesDescription === 'string'
+                              ? f.valuesDescription
+                              : f.tagDescription}
+                          </GridColumn>
+                        </GridRow>
+                      )
+                    })
                   ) : (
                     <GridRow>
                       <GridColumn>

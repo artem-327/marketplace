@@ -622,7 +622,6 @@ export const datagridValues = {
             value: parsed.id,
             //description: parsed.name
             description: JSON.stringify({
-              name: parsed.name,
               text: parsed.text
             })
           }
@@ -633,7 +632,6 @@ export const datagridValues = {
           {
             value: parsed.id,
             description: JSON.stringify({
-              name: parsed.name,
               text: parsed.text
             })
           }
@@ -693,9 +691,7 @@ export const datagridValues = {
 
     valuesDescription: function(values) {
       return values.map(val => {
-        if (JSON.parse(val.value).text) {
-          return JSON.parse(val.value).text
-        } else {
+        if (val.value) {
           return val.value === false || val.value === 'false'
             ? 'No'
             : val.value === true || val.value === 'true'
@@ -710,11 +706,13 @@ export const datagridValues = {
     },
 
     toFormik: function({ values }) {
-      const text = values[0].value === 'false' ? 'No' : values[0].value === 'true' ? 'Yes' : ''
-      return JSON.stringify({
-        id: 'broadcast',
-        text: text
-      })
+      const text =
+        values[0].value === 'false' || values[0].value === false || values[0].value === 'No'
+          ? false
+          : values[0].value === 'true' || values[0].value === true || values[0].value === 'Yes'
+          ? true
+          : ''
+      return text
     }
   },
 
@@ -732,7 +730,6 @@ export const datagridValues = {
             value: parsed.id,
             //description: parsed.name
             description: JSON.stringify({
-              name: parsed.name,
               text: parsed.text
             })
           }
@@ -743,7 +740,6 @@ export const datagridValues = {
           {
             value: parsed.id,
             description: JSON.stringify({
-              name: parsed.name,
               text: parsed.text
             })
           }

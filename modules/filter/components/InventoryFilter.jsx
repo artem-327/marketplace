@@ -59,6 +59,23 @@ import {
   SmallerTextColumn
 } from '../constants/layout'
 
+const optionsYesNo = [
+  {
+    id: 0,
+    text: 'Select Option',
+    value: ''
+  },
+  {
+    id: 1,
+    text: 'Yes',
+    value: true
+  },
+  {
+    id: 2,
+    text: 'No',
+    value: false
+  }
+]
 class InventoryFilter extends Component {
   state = {
     savedFiltersActive: false,
@@ -83,7 +100,6 @@ class InventoryFilter extends Component {
       fetchWarehouseDistances,
       fetchProductGrade,
       fetchWarehouses,
-      fetchManufacturer,
       setParams
     } = this.props
 
@@ -92,6 +108,9 @@ class InventoryFilter extends Component {
 
     if (typeof this.props.searchManufacturerUrl !== 'undefined')
       this.props.getAutocompleteManufacturer(this.props.searchManufacturerUrl(''))
+
+    if (typeof this.props.searchOriginUrl !== 'undefined')
+      this.props.getAutocompleteOrigin(this.props.searchOriginUrl(''))
 
     this.handleGetSavedFilters()
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
@@ -102,8 +121,7 @@ class InventoryFilter extends Component {
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
       this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
       this.fetchIfNoData(fetchProductGrade, 'productGrade'),
-      this.fetchIfNoData(fetchWarehouses, 'warehouses'),
-      this.fetchIfNoData(fetchManufacturer, 'manufacturer')
+      this.fetchIfNoData(fetchWarehouses, 'warehouses')
     ]).finally(() => this.setState({ loaded: true }))
   }
 
@@ -321,39 +339,11 @@ class InventoryFilter extends Component {
     for (let i = 0; i < filters.length; i++) {
       datagridKeys.forEach(key => {
         let datagrid = datagridValues[key]
-        console.log('filters[i]====================================')
-        console.log(filters[i])
-        console.log('====================================')
-        console.log('datagrid====================================')
-        console.log(datagrid)
-        console.log('====================================')
-        console.log('datagrid.paths.includes(filters[i].path)====================================')
-        console.log(datagrid.paths.includes(filters[i].path))
-        console.log('====================================')
-        console.log('filters[i].operator====================================')
-        console.log(filters[i].operator)
-        console.log('====================================')
-        console.log('datagrid.operator====================================')
-        console.log(datagrid.operator)
-        console.log('====================================')
         if (datagrid.paths.includes(filters[i].path) && filters[i].operator === datagrid.operator) {
-          console.log('datagrid.nested====================================')
-          console.log(datagrid.nested)
-          console.log('====================================')
-          console.log('this.props[key]====================================')
-          console.log(this.props[key])
-          console.log('====================================')
           formikValues[key] = datagrid.toFormik(filters[i], datagrid.nested && this.props[key])
-
-          console.log('formikValues[key]====================================')
-          console.log(formikValues[key])
-          console.log('====================================')
         }
       })
     }
-    console.log('formikValues====================================')
-    console.log(formikValues)
-    console.log('====================================')
 
     let { notifyMail, notifyPhone, notifySystem, notificationMail, notificationPhone } = rest
 
@@ -370,13 +360,6 @@ class InventoryFilter extends Component {
     }
 
     Object.keys(formikValues).forEach(key => {
-      console.log('key====================================')
-      console.log(key)
-      console.log('====================================')
-      console.log('formikValues[key]12====================================')
-      console.log(formikValues[key])
-      console.log('====================================')
-
       setFieldValue(key, formikValues[key])
     })
 
@@ -412,20 +395,6 @@ class InventoryFilter extends Component {
     if (searchQuery.length > 1) {
       this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(searchQuery))
       this.setState({ searchWarehouseQuery: searchQuery })
-    }
-  }, 250)
-
-  handleSearchManufacturer = debounce(({ searchQuery, name }) => {
-    if (searchQuery.length > 1) {
-      this.props.getAutocompleteManufacturer(this.props.searchManufacturerUrl(searchQuery))
-      this.setState({ searchManufacturerQuery: searchQuery })
-    }
-  }, 250)
-
-  handleSearchOrigin = debounce(({ searchQuery, name }) => {
-    if (searchQuery.length > 1) {
-      this.props.getAutocompleteOrigin(this.props.searchOriginUrl(searchQuery))
-      this.setState({ searchOriginQuery: searchQuery })
     }
   }, 250)
 
@@ -586,22 +555,6 @@ class InventoryFilter extends Component {
       autocompleteOriginLoading
     } = this.props
 
-    const optionsYesNo = [
-      {
-        text: <FormattedMessage id='global.selectOption' defaultMessage='Select Option' />
-      },
-      {
-        key: 1,
-        text: <FormattedMessage id='global.yes' defaultMessage='Yes' />,
-        value: true
-      },
-      {
-        key: 0,
-        text: <FormattedMessage id='global.no' defaultMessage='No' />,
-        value: false
-      }
-    ]
-
     const { formatMessage } = intl
 
     let packagingTypesRows = this.generateCheckboxes(packagingTypes, values, 'packagingTypes')
@@ -646,13 +599,7 @@ class InventoryFilter extends Component {
       fluid: true,
       clearable: true,
       options: autocompleteWarehouse.map(warehouse => {
-        console.log('warehouse====================================')
-        console.log(warehouse)
-        console.log('====================================')
         if (warehouse.text) {
-          console.log('warehouse.text====================================')
-          console.log(warehouse.text)
-          console.log('====================================')
           var { text } = warehouse
         } else {
           var text = warehouse.deliveryAddress
@@ -696,30 +643,16 @@ class InventoryFilter extends Component {
       fluid: true,
       clearable: true,
       options: autocompleteManufacturer.map(manufacturer => {
-        console.log('manufacturer====================================')
-        console.log(manufacturer)
-        console.log('====================================')
-        let text
-        if (manufacturer.text) {
-          console.log('manufacturer.text====================================')
-          console.log(manufacturer.text)
-          console.log('====================================')
-          text = manufacturer.text
-        } else {
-          text = manufacturer.name
-        }
-
         return {
           key: manufacturer.id,
-          text: text,
-          value: JSON.stringify({ id: manufacturer.id, name: text, text: text })
+          text: manufacturer.name,
+          value: JSON.stringify({ id: manufacturer.id, text: manufacturer.name })
         }
       }),
       loading: autocompleteManufacturerLoading,
       name: 'manufacturer',
       placeholder: <FormattedMessage id='filter.searchManufacturer' defaultMessage='Search Manufacturer' />,
       noManufacturerResultsMessage,
-      onSearchChange: (_, data) => this.handleSearchManufacturer(data),
       value: values.manufacturer,
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null)
     }
@@ -743,16 +676,13 @@ class InventoryFilter extends Component {
         return {
           key: origin.id,
           text: origin.name,
-          value: JSON.stringify({ id: origin.id, name: origin.name, text: origin.name })
+          value: JSON.stringify({ id: origin.id, text: origin.name })
         }
       }),
       loading: autocompleteOriginLoading,
       name: 'origin',
       placeholder: <FormattedMessage id='filter.searchOrigin' defaultMessage='Search Origin' />,
       noOriginResultsMessage,
-      onSearchChange: (_, data) => {
-        this.handleSearchOrigin(data)
-      },
       value: values.origin,
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null)
     }
@@ -763,7 +693,13 @@ class InventoryFilter extends Component {
       multiple: false,
       fluid: true,
       clearable: true,
-      options: optionsYesNo,
+      options: optionsYesNo.map(option => {
+        return {
+          key: option.id,
+          text: option.text,
+          value: option.value
+        }
+      }),
       name: 'broadcast',
       placeholder: <FormattedMessage id='filter.selectOption' defaultMessage='Select Option' />,
       value: values.broadcast,

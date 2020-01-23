@@ -33,7 +33,6 @@ const mapDispatchToProps = {
   fetchWarehouseDistances,
   fetchProductGrade,
   fetchWarehouses,
-  fetchManufacturer,
   ...Actions
 }
 
