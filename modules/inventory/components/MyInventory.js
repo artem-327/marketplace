@@ -445,7 +445,7 @@ class MyInventory extends Component {
                 <FormattedMessage id='myInventory.myInventory' defaultMessage='MY INVENTORY' />
               </Header>
             </Menu.Item>
-            {selectedRows.length > 0 ? (
+            {/*selectedRows.length > 0 ? (
               <Menu.Item>
                 <Header as='h3' size='small' color='grey'>
                   <FormattedMessage
@@ -455,7 +455,7 @@ class MyInventory extends Component {
                   />
                 </Header>
               </Menu.Item>
-            ) : null}
+            ) : null*/}
 
             <Menu.Menu position='right'>
               <Menu.Item>
@@ -507,7 +507,11 @@ class MyInventory extends Component {
             tableName='my_inventory_grid'
             columns={columns}
             rows={this.getRows(rows)}
-            // rowSelection
+            selectByRowClick
+            rowSelection
+            highlightRow
+            hideCheckboxes
+            singleSelectionRow
             groupBy={['echoCode']}
             getChildGroups={rows =>
               _(rows)

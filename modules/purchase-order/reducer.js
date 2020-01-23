@@ -348,22 +348,18 @@ export default function reducer(state = initialState, action) {
     }
 
     /* DELETE_CART_ITEM */
-
     case AT.DELETE_CART_ITEM_FULFILLED: {
-      let cart = { ...state.cart, cartItems: state.cart.cartItems.filter(item => item.id !== action.payload) }
-
       return {
         ...state,
-        cart: calculateTotalPrice(cart)
+        cart: action.payload.data
       }
     }
 
     /* DELETE_CART */
-
     case AT.DELETE_CART_FULFILLED: {
       return {
         ...state,
-        cart: { ...state.cart, cartItems: [] }
+        cart: action.payload.data
       }
     }
 
