@@ -83,11 +83,15 @@ class InventoryFilter extends Component {
       fetchWarehouseDistances,
       fetchProductGrade,
       fetchWarehouses,
+      fetchManufacturer,
       setParams
     } = this.props
 
     if (typeof this.props.searchWarehouseUrl !== 'undefined')
       this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
+
+    if (typeof this.props.searchManufacturerUrl !== 'undefined')
+      this.props.getAutocompleteManufacturer(this.props.searchManufacturerUrl(''))
 
     this.handleGetSavedFilters()
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
@@ -98,7 +102,8 @@ class InventoryFilter extends Component {
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
       this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
       this.fetchIfNoData(fetchProductGrade, 'productGrade'),
-      this.fetchIfNoData(fetchWarehouses, 'warehouses')
+      this.fetchIfNoData(fetchWarehouses, 'warehouses'),
+      this.fetchIfNoData(fetchManufacturer, 'manufacturer')
     ]).finally(() => this.setState({ loaded: true }))
   }
 
@@ -316,11 +321,39 @@ class InventoryFilter extends Component {
     for (let i = 0; i < filters.length; i++) {
       datagridKeys.forEach(key => {
         let datagrid = datagridValues[key]
+        console.log('filters[i]====================================')
+        console.log(filters[i])
+        console.log('====================================')
+        console.log('datagrid====================================')
+        console.log(datagrid)
+        console.log('====================================')
+        console.log('datagrid.paths.includes(filters[i].path)====================================')
+        console.log(datagrid.paths.includes(filters[i].path))
+        console.log('====================================')
+        console.log('filters[i].operator====================================')
+        console.log(filters[i].operator)
+        console.log('====================================')
+        console.log('datagrid.operator====================================')
+        console.log(datagrid.operator)
+        console.log('====================================')
         if (datagrid.paths.includes(filters[i].path) && filters[i].operator === datagrid.operator) {
+          console.log('datagrid.nested====================================')
+          console.log(datagrid.nested)
+          console.log('====================================')
+          console.log('this.props[key]====================================')
+          console.log(this.props[key])
+          console.log('====================================')
           formikValues[key] = datagrid.toFormik(filters[i], datagrid.nested && this.props[key])
+
+          console.log('formikValues[key]====================================')
+          console.log(formikValues[key])
+          console.log('====================================')
         }
       })
     }
+    console.log('formikValues====================================')
+    console.log(formikValues)
+    console.log('====================================')
 
     let { notifyMail, notifyPhone, notifySystem, notificationMail, notificationPhone } = rest
 
@@ -336,7 +369,16 @@ class InventoryFilter extends Component {
       ...formikValues
     }
 
-    Object.keys(formikValues).forEach(key => setFieldValue(key, formikValues[key]))
+    Object.keys(formikValues).forEach(key => {
+      console.log('key====================================')
+      console.log(key)
+      console.log('====================================')
+      console.log('formikValues[key]12====================================')
+      console.log(formikValues[key])
+      console.log('====================================')
+
+      setFieldValue(key, formikValues[key])
+    })
 
     this.toggleFilter(false)
 
@@ -604,7 +646,13 @@ class InventoryFilter extends Component {
       fluid: true,
       clearable: true,
       options: autocompleteWarehouse.map(warehouse => {
+        console.log('warehouse====================================')
+        console.log(warehouse)
+        console.log('====================================')
         if (warehouse.text) {
+          console.log('warehouse.text====================================')
+          console.log(warehouse.text)
+          console.log('====================================')
           var { text } = warehouse
         } else {
           var text = warehouse.deliveryAddress
@@ -648,12 +696,23 @@ class InventoryFilter extends Component {
       fluid: true,
       clearable: true,
       options: autocompleteManufacturer.map(manufacturer => {
-        if (!manufacturer && !manufacturer.name) return
+        console.log('manufacturer====================================')
+        console.log(manufacturer)
+        console.log('====================================')
+        let text
+        if (manufacturer.text) {
+          console.log('manufacturer.text====================================')
+          console.log(manufacturer.text)
+          console.log('====================================')
+          text = manufacturer.text
+        } else {
+          text = manufacturer.name
+        }
 
         return {
           key: manufacturer.id,
-          text: manufacturer.name,
-          value: JSON.stringify({ id: manufacturer.id, name: manufacturer.name, text: manufacturer.name })
+          text: text,
+          value: JSON.stringify({ id: manufacturer.id, name: text, text: text })
         }
       }),
       loading: autocompleteManufacturerLoading,

@@ -9,7 +9,8 @@ import {
   fetchProductForms,
   fetchPackagingTypes,
   fetchProductGrade,
-  fetchWarehouses
+  fetchWarehouses,
+  fetchManufacturer
 } from '~/src/modules/products'
 
 import { getSafe } from '~/utils/functions'
@@ -32,6 +33,7 @@ const mapDispatchToProps = {
   fetchWarehouseDistances,
   fetchProductGrade,
   fetchWarehouses,
+  fetchManufacturer,
   ...Actions
 }
 

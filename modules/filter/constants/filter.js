@@ -989,7 +989,7 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
         description =
           filter && filter.values[i] && filter.values[i].description && JSON.parse(filter.values[i].description).name
       } else {
-        description = filter && filter.tagDescription.toString()
+        description = filter && filter.tagDescription && filter.tagDescription.toString()
       }
 
       results.push({

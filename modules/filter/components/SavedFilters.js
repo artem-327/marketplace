@@ -45,7 +45,9 @@ class SavedFilters extends Component {
 
   handleFilterApply = filter => {
     let { onApply } = this.props
-
+    console.log('filter====================================')
+    console.log(filter)
+    console.log('====================================')
     onApply(filter)
   }
 
