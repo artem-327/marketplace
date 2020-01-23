@@ -36,13 +36,7 @@ export const addCartItem = payload => ({ type: AT.ADD_CART_ITEM, payload: api.ad
 
 export const updateCartItem = payload => ({ type: AT.UPDATE_CART_ITEM, payload: api.updateCartItem({ ...payload }) })
 
-export const deleteCartItem = id => ({
-  type: AT.DELETE_CART_ITEM,
-  async payload() {
-    await api.deleteCartItem(id)
-    return id
-  }
-})
+export const deleteCartItem = id => ({ type: AT.DELETE_CART_ITEM, payload: api.deleteCartItem(id) })
 
 export const deleteCart = id => ({ type: AT.DELETE_CART, payload: api.deleteCart(id) })
 
