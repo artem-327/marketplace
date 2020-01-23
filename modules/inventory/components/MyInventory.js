@@ -300,6 +300,7 @@ class MyInventory extends Component {
     let title = ''
 
     return rows.map(r => {
+      if (!r || !r.cfStatus) return
       const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
 
       if (this.props.sellEligible) {
@@ -433,7 +434,7 @@ class MyInventory extends Component {
       closeSidebarDetail
     } = this.props
     const { columns, selectedRows } = this.state
-    
+
     return (
       <>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
@@ -598,7 +599,7 @@ class MyInventory extends Component {
                         id: 'confirm.deleteItem',
                         defaultMessage: `Do you really want to remove ${row.chemicalName}?`
                       },
-                      {item: row.chemicalName}
+                      { item: row.chemicalName }
                     )
                   ).then(() => {
                     this.props.deleteProductOffer(row.id)
