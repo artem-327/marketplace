@@ -327,6 +327,7 @@ class Marketplace extends Component {
             rows={rows}
             columns={columns}
             rowSelection
+            showSelectionColumn
             groupBy={['productNumber']}
             // sameGroupSelectionOnly
             getChildGroups={rows =>

@@ -375,7 +375,7 @@ export function postNewWarehouseRequest(payload) {
   }
 }
 
-export function handleSubmitProductEditPopup(payload, id, reloadFilter) {
+export function handleSubmitProductEditPopup(payload, id) {
   return async dispatch => {
     //removeEmpty(payload)
     const response = await api.updateProduct(id, payload)
@@ -391,8 +391,6 @@ export function handleSubmitProductEditPopup(payload, id, reloadFilter) {
         })
       }
     }
-    //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value)) // Reload Products list using string filters or page display
-    Datagrid.loadData()
     dispatch(closePopup())
   }
 }
@@ -641,7 +639,7 @@ export function userSwitchEnableDisable(id) {
   }
 }
 
-export function handleSubmitProductAddPopup(payload, reloadFilter) {
+export function handleSubmitProductAddPopup(payload) {
   return async dispatch => {
     //removeEmpty(payload)
     const newProd = await dispatch({
@@ -656,8 +654,6 @@ export function handleSubmitProductAddPopup(payload, reloadFilter) {
         })
       }
     }
-    //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
-    Datagrid.loadData()
     dispatch(closePopup())
   }
 }
