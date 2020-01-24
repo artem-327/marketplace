@@ -161,8 +161,7 @@ export default class ShippingQuotes extends Component {
   }
 
   renderForm() {
-    const { loading, loadingZip, loadingCountries, countries } = this.props
-    const { loading, echoProducts, zipCodes, defaultZip } = this.props
+    const { loading, loadingZip, loadingCountries, countries, echoProducts, zipCodes, defaultZip } = this.props
     const { initialValues, min, split, allZips } = this.state
 
     // comparison if state has all zips from zipCodes
