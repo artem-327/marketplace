@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { func, array, bool, object } from 'prop-types'
-import { Accordion, Segment, Grid, GridRow, GridColumn, Popup, Dimmer, Loader } from 'semantic-ui-react'
+import { Accordion, Segment, Grid, GridRow, GridColumn, Dimmer, Loader } from 'semantic-ui-react'
 import { Form, Button } from 'formik-semantic-ui-fixed-validation'
 import { withToastManager } from 'react-toast-notifications'
 
@@ -19,6 +19,7 @@ import Notifications from './Notifications'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { savedFilterValidation } from '../constants/validation'
 import { groupFilters } from '../constants/filter'
+import Tooltip from '~/components/tooltip'
 
 const StyledGrid = styled(Grid)`
   word-break: break-word;
@@ -55,7 +56,7 @@ class SavedFilters extends Component {
       <SavedFilterTitle>
         <Grid>
           <GridRow>
-            <Popup
+            <Tooltip
               trigger={
                 <GridColumn
                   computer={10}
@@ -66,9 +67,9 @@ class SavedFilters extends Component {
               }
               position='top center'>
               <FormattedMessage id='filter.activateFilter' />
-            </Popup>
+            </Tooltip>
 
-            <Popup
+            <Tooltip
               trigger={
                 <GridColumn computer={2} onClick={() => this.toggle(id)} data-test={`filter_editNotifications_${i}`}>
                   <SavedFilterIcon
@@ -79,8 +80,8 @@ class SavedFilters extends Component {
                 </GridColumn>
               }>
               <FormattedMessage id='filter.editNotifications' />
-            </Popup>
-            <Popup
+            </Tooltip>
+            <Tooltip
               trigger={
                 <GridColumn
                   onClick={() => this.toggle(i, 'activeTooltip')}
@@ -118,8 +119,8 @@ class SavedFilters extends Component {
                   )}
                 </StyledGrid>
               </GridColumn>
-            </Popup>
-            <Popup
+            </Tooltip>
+            <Tooltip
               trigger={
                 <GridColumn
                   onClick={() => this.props.deleteFilter(id)}
@@ -130,7 +131,7 @@ class SavedFilters extends Component {
               }
               position='left center'>
               <FormattedMessage id='filter.deleteFilter' />
-            </Popup>
+            </Tooltip>
           </GridRow>
         </Grid>
       </SavedFilterTitle>

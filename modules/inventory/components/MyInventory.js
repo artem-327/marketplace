@@ -300,6 +300,7 @@ class MyInventory extends Component {
     let title = ''
 
     return rows.map(r => {
+      if (!r || !r.cfStatus) return
       const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
 
       if (this.props.sellEligible) {

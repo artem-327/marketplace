@@ -13,6 +13,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { currency } from '~/constants/index'
 import { FormattedNumber } from 'react-intl'
 import styled from 'styled-components'
+import { debounce } from 'lodash'
 
 const CustomHr = styled.hr`
   opacity: 0.4;
@@ -36,10 +37,12 @@ export default class ShippingQuotes extends Component {
     quantity: 1,
     min: 1,
     split: 1,
+    country: 0,
     initialValues: {
       destination: {
-        quantity: null,
+        quantity: 1,
         zip: '',
+        country: 1,
         maxTransit: -1
       }
     },
@@ -47,17 +50,18 @@ export default class ShippingQuotes extends Component {
   }
 
   componentDidMount() {
-    const { initShipingForm, defaultZip, zipCodes } = this.props
-
+    const { initShipingForm, defaultZip, defaultCountry, zipCodes, getCountries } = this.props
+    getCountries()
     this.setState({
       initialValues: {
         ...this.state.initialValues,
         destination: {
           ...this.state.initialValues.destination,
-          zip: defaultZip
+          zip: defaultZip,
+          country: defaultCountry
         }
       },
-      allZips: zipCodes.includes(defaultZip)
+      allZips: zipCodes.some(zipObj => zipObj.value === defaultZip)
         ? [...zipCodes]
         : [...zipCodes, { value: defaultZip, text: defaultZip, key: new Date().getTime() }]
     })
@@ -65,9 +69,37 @@ export default class ShippingQuotes extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    const { defaultZip, defaultCountry, zipCodes } = this.props
     if (!prevProps.modalProps.open && this.props.modalProps.open) {
-      this.setState({ selectedIndex: null, sQuote: null, min: 1, split: 1 })
+      this.setState({
+        selectedIndex: null,
+        sQuote: null,
+        min: 1,
+        split: 1,
+        initialValues: {
+          destination: {
+            quantity: 1,
+            maxTransit: -1,
+            zip: defaultZip,
+            country: defaultCountry
+          }
+        },
+        allZips: zipCodes.some(zipObj => zipObj.value === defaultZip)
+          ? [...zipCodes]
+          : [...zipCodes, { value: defaultZip, text: defaultZip, key: new Date().getTime() }]
+      })
       this.props.clearShippingQuotes()
+    }
+
+    if (prevProps.zipCodes !== this.props.zipCodes || this.state.country !== prevState.country) {
+      const { defaultZip, defaultCountry, zipCodes } = this.props
+
+      this.setState({
+        allZips:
+          this.state.country === defaultCountry && !zipCodes.some(zipObj => zipObj.value === defaultZip)
+            ? [...zipCodes, { value: defaultZip, text: defaultZip, key: new Date().getTime() }]
+            : [...zipCodes]
+      })
     }
   }
 
@@ -88,7 +120,7 @@ export default class ShippingQuotes extends Component {
     const params = {
       productOfferIds: productOfferIds,
       destinationZIP: inputs.destination.zip,
-      destinationCountry: 1,
+      destinationCountry: inputs.destination.country,
       quantity: parseInt(inputs.destination.quantity),
       maxTransitDays: inputs.destination.maxTransit
     }
@@ -99,7 +131,7 @@ export default class ShippingQuotes extends Component {
 
   handleQuoteSelect = async (i, sQuote, setFieldTouched) => {
     const { productOffersSelected } = this.props
-    const po = productOffersSelected[i] // ! ! mozna najit index z sQuote v productOffersSelected ?
+    const po = productOffersSelected[i]
 
     await this.setState({
       selectedIndex: i,
@@ -110,8 +142,26 @@ export default class ShippingQuotes extends Component {
     setFieldTouched('destination.quantity', true, true)
   }
 
+  handleSearchZipCode = debounce(({ searchQuery }, country) => {
+    const queryParams = searchQuery
+      ? {
+          countryId: country,
+          pattern: searchQuery,
+          limit: 5
+        }
+      : { countryId: country }
+
+    this.props.getZipCodes(queryParams)
+  }, 250)
+
+  handleCountryChange = (country, setFieldValue) => {
+    this.setState({ country })
+    setFieldValue('destination.zip', '')
+    this.props.getZipCodes({ countryId: country })
+  }
+
   renderForm() {
-    const { loading, echoProducts, zipCodes, defaultZip } = this.props
+    const { loading, loadingZip, loadingCountries, countries, echoProducts, zipCodes, defaultZip } = this.props
     const { initialValues, min, split, allZips } = this.state
 
     // comparison if state has all zips from zipCodes
@@ -135,7 +185,11 @@ export default class ShippingQuotes extends Component {
         {({ values, errors, setFieldValue, validateForm, setFieldTouched, submitForm }) => {
           let quantity = Number(values.destination.quantity)
           let disableCalcButton =
-            loading || (errors.destination && errors.destination.zip) || !quantity || !Number.isInteger(quantity)
+            loading ||
+            (errors.destination && errors.destination.zip) ||
+            !quantity ||
+            !Number.isInteger(quantity) ||
+            !values.destination.zip
 
           return (
             <>
@@ -155,6 +209,21 @@ export default class ShippingQuotes extends Component {
                     step: 1,
                     min: 1,
                     onChange: (_, { value }) => this.setState({ quantity: value })
+                  }}
+                />
+                <Dropdown
+                  name='destination.country'
+                  label={
+                    <FormattedMessage id='global.country' defaultMessage='Country'>
+                      {text => text}
+                    </FormattedMessage>
+                  }
+                  options={countries}
+                  inputProps={{
+                    search: true,
+                    loading: loadingCountries,
+                    onChange: (_, { value }) => this.handleCountryChange(value, setFieldValue),
+                    'data-test': 'ShippingQuotes_country_drpdn'
                   }}
                 />
                 <Dropdown
@@ -178,6 +247,9 @@ export default class ShippingQuotes extends Component {
                       allZips.push(newValue)
                       this.setState({ allZips: allZips })
                     },
+                    onSearchChange: (e, data) => {
+                      this.handleSearchZipCode(data, values.destination.country)
+                    },
                     noResultsMessage: (
                       <FormattedMessage
                         id='global.dropdown.startTyping'
@@ -185,6 +257,7 @@ export default class ShippingQuotes extends Component {
                         values={{ typeName: <FormattedMessage id='global.ZipCode' defaultMessage='ZIP Code' /> }}
                       />
                     ),
+                    loading: loadingZip,
                     'data-test': 'ShippingQuotes_zip_drpdn'
                   }}
                 />
