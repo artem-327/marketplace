@@ -30,7 +30,8 @@ class Nav extends Component {
         orders: false,
         inventory: false,
         dashboard: false,
-        profile: false
+        profile: false,
+        operations: false
       }
     }
   }
@@ -47,7 +48,8 @@ class Nav extends Component {
           orders: false,
           inventory: false,
           dashboard: false,
-          profile: false
+          profile: false,
+          operations: false
         }
       },
       () => document.removeEventListener('click', this.handleClickOutside, false)
@@ -228,6 +230,7 @@ class Nav extends Component {
           {this.renderMenuItem('reports', [{ name: 'Reports', url: '/reports' }], 'Reports')}
           {this.renderMenuItem('settings', [{ name: 'Settings', url: '/settings' }], 'Settings')}
           {this.renderMenuItem('admin', [{ name: 'Admin', url: '/admin' }], 'Admin')}
+          {this.renderMenuItem('operations', [{ name: 'Operations', url: '/operations' }], 'Operations')}
         </div>
         <div className='logout'>{this.renderMyAccount('myaccount', [{ name: 'Logout' }], 'My Account')}</div>
       </div>

@@ -31,6 +31,7 @@ export const initialState = {
   productsFreightClasses: [],
   productsHazardClasses: [],
   productsPackagingGroups: [],
+  productDataLoading: false,
   deliveryAddressesRows: [],
   countries: [],
   provinces: [],
@@ -536,43 +537,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_FULFILLED: {
-      /*const rows = action.payload.products.map(product => {
-        return {
-          id: product.id,
-          description: product.description ? product.description : '',
-          productName: product.productName,
-          productNumber: product.productCode,
-          casName: product.casProduct
-            ? product.casProduct.casIndexName
-              ? product.casProduct.casIndexName
-              : null
-            : null,
-          casNumber: product.casProduct
-            ? product.casProduct.casNumber
-              ? product.casProduct.casNumber
-              : null
-            : null,
-          casProducts: product.casProducts ? product.casProducts : [],
-          packagingType: product.packagingType
-            ? product.packagingType.name
-            : null,
-          packageID: product.packagingType ? product.packagingType.id : null,
-          packagingSize: product.packagingSize,
-          packagingGroup: product.packagingGroup ? product.packagingGroup.id : null,
-          unit: product.packagingUnit
-            ? product.packagingUnit.nameAbbreviation
-            : null,
-          unitID: product.packagingUnit ? product.packagingUnit.id : null,
-          freightClass: product.freightClass ? product.freightClass : null,
-          hazardous: product.hazardous,
-          hazardClass: product.hazardClasses && product.hazardClasses.length ? product.hazardClasses.map(d => (
-            d.id
-          )) : null,
-          nmfcNumber: product.nmfcNumber ? product.nmfcNumber : null,
-          stackable: product.stackable,
-          unNumber: product.unNumber ? product.unNumber : null
-        }
-      })*/
       const packagingType = action.payload.productsTypes.map((type, id) => {
         return {
           key: id,
@@ -622,7 +586,7 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
-        loading: false,
+        productDataLoading: false,
         loaded: true,
         //productsCatalogRows: rows,
         productsPackagingType: packagingType,
@@ -842,10 +806,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_PENDING:
     case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_PENDING:
     case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_PENDING:
-
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING_PENDING:
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_PENDING: {
       return {
@@ -894,7 +856,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.DWOLLA_FINALIZE_VERIFICATION_REJECTED:
-    case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_REJECTED:
     case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_REJECTED:
     case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_REJECTED:
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING_REJECTED:
@@ -902,6 +863,20 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false
+      }
+    }
+
+    case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_PENDING: {
+      return {
+        ...state,
+        productDataLoading: true
+      }
+    }
+
+    case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_REJECTED: {
+      return {
+        ...state,
+        productDataLoading: false
       }
     }
 
