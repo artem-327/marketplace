@@ -178,7 +178,8 @@ export const LeftMenu = styled(Menu)`
       font-weight: 700 !important;
       
       &:hover,
-      &:hover i {
+      &:hover i,
+      &:hover svg {
         color: #fff !important;
       }
       
@@ -186,7 +187,8 @@ export const LeftMenu = styled(Menu)`
         background: #132947 !important;
       }
       
-      &.active i {
+      &.active i,
+      &.active svg {
         color: #2599d5 !important;
       }
     }
@@ -203,8 +205,38 @@ export const LeftMenu = styled(Menu)`
       color: #546f93 !important;
       line-height: 26px;
       
+      &:before,
+      &:after {
+        content: "";
+        position: absolute !important;
+        top: 20px !important;
+        left: auto !important;
+        right: 18px !important;
+        bottom: auto !important;
+        transform-origin: 50% 50%;
+        transition: transform 250ms linear;
+        display: block;
+        width: 2px !important;
+        height: 10px !important;
+        border-radius: 1px;
+        background: #546f93 !important;
+      }
+      
+      &:after {
+        top: 24px !important;
+        right: 14px !important;
+        width: 10px !important;
+        height: 2px !important;
+      }
+      
       &.opened {
         max-height: none;
+        
+        &:before,
+        &:after {
+          transform: rotate(135deg);
+          background: #fff !important;
+        }
       }
       
       &.dropdown {
@@ -270,11 +302,12 @@ export const LeftMenu = styled(Menu)`
         }
       }
       
-      i {
+      i,
+      svg {
         position: absolute;
         top: 14px;
         left: 15px;
-        width: 20px;
+        width: 22px !important;
         height: 22px;
         margin: 0 !important;
         vertical-align: top;
@@ -294,7 +327,7 @@ export const LeftMenu = styled(Menu)`
         
         ~ .chevron {
           margin-right: -33px;
-          width: 26px;
+          width: 26px !important;
           height: 26px;
         }
       }
@@ -304,12 +337,21 @@ export const LeftMenu = styled(Menu)`
         background: transparent !important;
         
         > .text,
-        > .text ~ i {
+        > .text ~ i,
+        > .text ~ svg {
           color: #546f93 !important;
           
           &.hexagon {
             color: #2599d5 !important;
           }
+        }
+      }
+      
+      &.active {
+        
+        &:before,
+        &:after {
+          background: #fff !important;
         }
       }
         
@@ -320,8 +362,14 @@ export const LeftMenu = styled(Menu)`
           color: #fff !important;
         }
         
-        > .text ~ i {
+        > .text ~ i,
+        > .text ~ svg {
           color: #fff !important;
+        }
+        
+        &:before,
+        &:after {
+          background: #fff !important;
         }
       }
       
@@ -332,14 +380,21 @@ export const LeftMenu = styled(Menu)`
           color: #fff !important;
         }
         
-        > .text ~ i {
+        > .text ~ i,
+        > .text ~ svg {
           color: #2599d5 !important;
+        }
+        
+        &:before,
+        &:after {
+          background: #fff !important;
         }
       }
       
       &.opened {
         
-        > .text ~ i.hexagon {
+        > .text ~ i.hexagon,
+        > .text ~ svg.hexagon {
           color: #2599d5 !important;
         }
       }

@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
+import { ArrowLeftCircle, ArrowRightCircle, Layers, Settings, ShoppingBag } from 'react-feather';
 
 const DropdownItem = ({ children, ...props }) => (
   <Dropdown item icon='chevron down' {...props}>
@@ -75,32 +76,32 @@ class Navigation extends Component {
       <>
         <MenuLink to='/inventory/my' data-test='navigation_menu_inventory_my_drpdn'>
           <>
-            <Icon name='layer group' />
+            <Layers size={22} />
             {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
           </>
         </MenuLink>
         {getSafe(() => company.nacdMember, false) ? (
           <MenuLink to='/marketplace/all' data-test='navigation_menu_marketplace_drpdn'>
             <>
-              <Icon name='archive' />
+              <ShoppingBag size={22} />
               {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
             </>
           </MenuLink>
         ) : null}
         <MenuLink to='/orders?type=sales' data-test='navigation_menu_orders_sales_drpdn'>
           <>
-            <Icon name='arrow circle right' />
+            <ArrowRightCircle size={22} />
             {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
           </>
         </MenuLink>
         <MenuLink to='/orders?type=purchase' data-test='navigation_menu_orders_purchase_drpdn'>
           <>
-            <Icon name='arrow circle left' />
+            <ArrowLeftCircle />
             {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
           </>
         </MenuLink>
         {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin) && (
-          <DropdownItem icon={<Icon className='cog' />}
+          <DropdownItem icon={<Settings size={22} />}
                         text={formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}
                         className={settings ? 'opened' : null}
                         opened={settings}
