@@ -23,6 +23,7 @@ function mapStateToProps(store, { datagrid }) {
     ...datagrid,
     appliedFilter: store.filter.filter.appliedFilter,
     defaultZip: getSafe(() => store.auth.identity.homeBranch.deliveryAddress.address.zip.zip, ''),
+    defaultCountry: getSafe(() => store.auth.identity.homeBranch.deliveryAddress.address.country.id, 1),
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
       return {
