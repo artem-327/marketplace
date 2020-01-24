@@ -46,6 +46,7 @@ class Navigation extends Component {
   render() {
     const {
       isAdmin,
+      isEchoOperator,
       auth,
       takeover,
       intl: { formatMessage },
@@ -193,16 +194,19 @@ class Navigation extends Component {
         )}
       </>
     ) : (
-      isAdmin && (
-        <>
-          <MenuLink icon={<Icon className='hexagon' />} to='/admin' data-test='navigation_menu_admin_lnk'>
-            <>
-              <Icon className='hexagon' />
-              {formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}
-            </>
+      <>
+        {isAdmin && (
+          <MenuLink to='/admin' data-test='navigation_menu_admin_lnk'>
+            {' '}
+            {formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}{' '}
           </MenuLink>
-        </>
-      )
+        )}
+        {(isAdmin || isEchoOperator) && (
+          <MenuLink to='/operations' data-test='navigation_menu_operations_lnk'>
+            {formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
+          </MenuLink>
+        )}
+      </>
     )
   }
 }
