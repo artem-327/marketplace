@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 
-import { GridColumn, Grid, GridRow, Popup } from 'semantic-ui-react'
+import { GridColumn, Grid, GridRow } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Input, Checkbox as FormikCheckbox } from 'formik-semantic-ui-fixed-validation'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { LessPaddedRow } from '../constants/layout'
+import Tooltip from '~/components/tooltip'
 
 class Notifications extends Component {
   render() {
@@ -42,7 +43,7 @@ class Notifications extends Component {
               label={formatMessage({id: 'filter.notifications.email', defaultMessage: 'Email Notifications:'})}
             />
           </GridColumn>
-          <Popup
+          <Tooltip
             disabled={!(values.checkboxes && values.checkboxes.notifyMail) || disabled}
             wide='very'
             offset='10px, 0'
@@ -65,7 +66,7 @@ class Notifications extends Component {
             <p><FormattedMessage id='filter.notifications.email.tooltipHead' /></p>
             <p><FormattedMessage id='filter.notifications.email.tooltipText' /></p>
           </div>
-        </Popup>
+        </Tooltip>
         </LessPaddedRow>
         <LessPaddedRow>
           <GridColumn computer={7}>
@@ -75,7 +76,7 @@ class Notifications extends Component {
               label={formatMessage({ id: 'filter.notifications.mobile', defaultMessage: 'Mobile Notifications:' })}
             />
           </GridColumn>
-          <Popup
+          <Tooltip
             disabled={!(values.checkboxes && values.checkboxes.notifyPhone) || disabled}
             wide='very'
             offset='10px, 0'
@@ -101,7 +102,7 @@ class Notifications extends Component {
               <p><FormattedMessage id='filter.notifications.mobile.tooltipHead' /></p>
               <p><FormattedMessage id='filter.notifications.mobile.tooltipText' /></p>
             </GridColumn>
-          </Popup>
+          </Tooltip>
         </LessPaddedRow>
         {false && (<LessPaddedRow>
           <GridColumn computer={7}>
