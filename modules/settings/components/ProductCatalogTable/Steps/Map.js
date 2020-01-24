@@ -25,8 +25,21 @@ import _invert from 'lodash/invert'
 import { withToastManager } from 'react-toast-notifications'
 import styled from 'styled-components'
 
+const MapTable = styled(Table)`
+  width: 100%;
+  max-width: 100%;
+`
+
 const SmallerTableCell = styled(Table.Cell)`
   font-size: 0.8em;
+`
+
+const ColumnName = styled(Table.Cell)`
+  width: 12.5%;
+`
+
+const Mapping = styled(Table.Cell)`
+  width: 25%;
 `
 
 const simpleEchoProductList = {
@@ -529,7 +542,7 @@ class Map extends Component {
             </Grid.Row>
           </Grid>
         )}
-        <Table celled padded textAlign='center'>
+        <MapTable celled padded textAlign='center'>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>
@@ -547,7 +560,7 @@ class Map extends Component {
             <Table.Body>
               {CSV.headerCSV.map((lineHeader, lineIndex) => (
                 <Table.Row key={lineHeader.columnNumber}>
-                  <Table.Cell>{lineHeader.content}</Table.Cell>
+                  <ColumnName>{lineHeader.content}</ColumnName>
                   {CSV.bodyCSV.map(line => {
                     return line.columns.map(lineBody => {
                       return (
@@ -557,7 +570,7 @@ class Map extends Component {
                       )
                     })
                   })}
-                  <Table.Cell>
+                  <Mapping>
                     <Dropdown
                       placeholder={formatMessage({ id: 'settings.selectColumn', defaultMessage: 'Select Column' })}
                       column_number={lineHeader.columnNumber}
@@ -570,12 +583,12 @@ class Map extends Component {
                       data-test='settings_product_import_csv_column_drpdn'
                       value={getSafe(() => values[lineIndex], '')}
                     />
-                  </Table.Cell>
+                  </Mapping>
                 </Table.Row>
               ))}
             </Table.Body>
           )}
-        </Table>
+        </MapTable>
       </React.Fragment>
     )
   }
