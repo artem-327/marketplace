@@ -44,7 +44,7 @@ export const initialState = {
   systemSettingsModalOpen: false,
   sysSettingsUpdating: false,
   tabsNames: defaultTabs,
-  currentTab: defaultTabs[0],
+  currentTab: [],
   isOpenImportPopup: false,
   isDwollaOpenPopup: false,
   currentEditForm: null,

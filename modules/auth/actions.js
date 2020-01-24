@@ -58,7 +58,7 @@ export function login(username, password) {
 
         setAuth(authPayload)
         let urlPage = '/inventory/my'
-        if (window) {
+        if (typeof window !== 'undefined') {
           const searchParams = new URLSearchParams(getSafe(() => window.location.search, ''))
 
           if (searchParams.has('redirectUrl')) {
@@ -66,6 +66,16 @@ export function login(username, password) {
           }
         }
         // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
+        // user is first login as companyAdmin then redirect to settings
+        if (
+          identity &&
+          identity.isCompanyAdmin &&
+          identity.company &&
+          !identity.company.reviewRequested &&
+          !identity.lastLoginAt
+        ) {
+          urlPage = '/settings'
+        }
         if (
           !(
             identity.roles.find(role => role.name === 'Company Admin') &&

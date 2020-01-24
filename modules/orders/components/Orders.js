@@ -702,18 +702,6 @@ class Orders extends Component {
           </Menu>
         </Container>
         <Container fluid style={{ padding: '20px 32px 0 32px' }} className='flex stretched'>
-          <Header as='h1' size='medium'>
-            {activeStatus
-              ? activeStatus.toUpperCase()
-              : formatMessage({
-                  id: 'order.menu.all',
-                  defaultMessage: 'ALL'
-                })}{' '}
-            {`${ordersType.toUpperCase()} ${formatMessage({
-              id: 'order.orders',
-              defaultMessage: 'ORDERS'
-            })}`}
-          </Header>
           <OrderFilter
             ordersType={ordersType.toLowerCase()}
             sortPath={this.state.sorting.sortPath}

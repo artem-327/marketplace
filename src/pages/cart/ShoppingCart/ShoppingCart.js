@@ -85,26 +85,6 @@ export default class ShoppingCart extends Component {
 
     return (
       <div className='app-inner-main flex stretched'>
-        <div className='header-top' style={{ padding: '0 32px', zIndex: 10, backgroundColor: '#FFF' }}>
-          <Container fluid>
-            <Menu secondary>
-              <Menu.Item header>
-                <Header as='h1' size='medium'>
-                  <FormattedMessage id='cart.shoppingCart' defaultMessage='SHOPPING CART' />
-                </Header>
-              </Menu.Item>
-
-              {/* <Menu.Menu position='right'>
-                <Menu.Item>
-                  <Button icon basic labelPosition='left' data-test="shopping_cart_back_btn" onClick={() => { Router.push('/marketplace/all') }}>
-                    <Icon name='chevron left' />
-                    <FormattedMessage id='cart.backToProductPurchaseInfo' defaultMessage='Back to Product/Purchase info'>{(text) => text}</FormattedMessage>
-                  </Button>
-                </Menu.Item>
-              </Menu.Menu> */}
-            </Menu>
-          </Container>
-        </div>
         <div className='shopping-cart flex stretched' style={{ overflow: 'auto' }}>
           <div className='shopping-cart-body' style={{ width: '83.25%' }}>
             <div className='shopping-cart-items'>

@@ -158,7 +158,7 @@ class MyInventory extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 130,
+        width: 100,
         align: 'right',
         sortPath: 'ProductOffer.broadcasted'
       },
@@ -300,6 +300,7 @@ class MyInventory extends Component {
     let title = ''
 
     return rows.map(r => {
+      if (!r || !r.cfStatus) return
       const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
 
       if (this.props.sellEligible) {
@@ -373,9 +374,7 @@ class MyInventory extends Component {
                   data-test='my_inventory_broadcast_chckb'
                   toggle
                   defaultChecked={
-                    r.cfStatus.toLowerCase() === 'broadcasting'
-                    && this.props.sellEligible !== false
-                    && isOfferValid
+                    r.cfStatus.toLowerCase() === 'broadcasting' && this.props.sellEligible !== false && isOfferValid
                   }
                   className={cn({
                     error:
@@ -435,19 +434,14 @@ class MyInventory extends Component {
       closeSidebarDetail
     } = this.props
     const { columns, selectedRows } = this.state
-    
+
     return (
       <>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
 
         <Container fluid style={{ padding: '0 32px' }}>
-          <Menu secondary>
-            <Menu.Item header>
-              <Header as='h1' size='medium'>
-                <FormattedMessage id='myInventory.myInventory' defaultMessage='MY INVENTORY' />
-              </Header>
-            </Menu.Item>
-            {selectedRows.length > 0 ? (
+          <Menu secondary className='page-part'>
+            {/*selectedRows.length > 0 ? (
               <Menu.Item>
                 <Header as='h3' size='small' color='grey'>
                   <FormattedMessage
@@ -457,7 +451,7 @@ class MyInventory extends Component {
                   />
                 </Header>
               </Menu.Item>
-            ) : null}
+            ) : null*/}
 
             <Menu.Menu position='right'>
               <Menu.Item>
@@ -509,7 +503,11 @@ class MyInventory extends Component {
             tableName='my_inventory_grid'
             columns={columns}
             rows={this.getRows(rows)}
-            // rowSelection
+            selectByRowClick
+            rowSelection
+            highlightRow
+            hideCheckboxes
+            singleSelectionRow
             groupBy={['echoCode']}
             getChildGroups={rows =>
               _(rows)
@@ -601,7 +599,7 @@ class MyInventory extends Component {
                         id: 'confirm.deleteItem',
                         defaultMessage: `Do you really want to remove ${row.chemicalName}?`
                       },
-                      {item: row.chemicalName}
+                      { item: row.chemicalName }
                     )
                   ).then(() => {
                     this.props.deleteProductOffer(row.id)

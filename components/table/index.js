@@ -335,8 +335,21 @@ class _Table extends Component {
   }
 
   handleSelectionChange = selection => {
-    const { onSelectionChange, getChildGroups, rows, sameGroupSelectionOnly, singleSelection } = this.props
+    const {
+      onSelectionChange,
+      getChildGroups,
+      rows,
+      sameGroupSelectionOnly,
+      singleSelection,
+      singleSelectionRow
+    } = this.props
     const lastSelected = selection.find(selected => this.state.selection.indexOf(selected) === -1)
+
+    if (singleSelectionRow) {
+      this.setState({ selection: [lastSelected] })
+      onSelectionChange([lastSelected])
+      return true
+    }
 
     const groups = getChildGroups(rows)
     const selectionGroups = selection.map(s => groups.find(g => g.childRows.indexOf(rows[s]) > -1))
@@ -383,7 +396,6 @@ class _Table extends Component {
 
   getColumns = () => {
     const { rowActions, columns, hideSettingsIcon } = this.props
-
     return rowActions
       ? [
           {
@@ -491,22 +503,36 @@ class _Table extends Component {
   }
 
   handleSortingChange = sort => {
-    if (this.state.columnsSettings.sorting.length === 0) {
-      var sorting = sort
-    } else var { sorting } = this.state.columnsSettings
+    let { sorting } = this.state.columnsSettings
+    let newSorting = []
 
-    let columnName = sort[0].columnName
-    let [s] = sorting
-    s.columnName = columnName
+    if (sorting.length === 0) {
+      newSorting = sort
+    } else {
+      if (sorting[0].columnName === sort[0].columnName) {
+        // Just switch directions
+        newSorting = [
+          { columnName: sort[0].columnName, direction: sorting[0].direction.toUpperCase() === 'ASC' ? 'DESC' : 'ASC' }
+        ]
+      } else {
+        // Just switch columnName and set to ASC as is default
+        newSorting = [
+          {
+            columnName: sort[0].columnName,
+            direction: sorting[0].direction.toUpperCase() === 'ASC' ? 'ASC' : 'DESC'
+          }
+        ]
+      }
+    }
+
+    let [s] = newSorting
 
     const { onSortingChange, columns } = this.props
     const column = columns.find(c => c.name === s.columnName)
 
     if (!column || !column.sortPath) return
 
-    s.direction = s.direction.toUpperCase() === 'ASC' ? 'DESC' : 'ASC'
-
-    this.handleColumnsSettings({ sorting })
+    this.handleColumnsSettings({ sorting: newSorting })
 
     onSortingChange &&
       onSortingChange({
@@ -585,6 +611,9 @@ class _Table extends Component {
       lockSelection,
       groupActions,
       hideSettingsIcon,
+      highlightRow,
+      showSelectionColumn,
+      hideCheckboxes,
       ...restProps
     } = this.props
 
@@ -710,7 +739,9 @@ class _Table extends Component {
               rowSelection && (
                 <TableSelection
                   showSelectAll={showSelectAll && !sameGroupSelectionOnly}
-                  selectByRowClick={selectByRowClick}
+                  selectByRowClick={selectByRowClick ? selectByRowClick : false}
+                  showSelectionColumn={showSelectionColumn ? showSelectionColumn : false}
+                  highlightRow={highlightRow}
                 />
               )
             )}
@@ -751,6 +782,7 @@ class _Table extends Component {
                   <GroupCell
                     {...this.getGroupRowCheckboxState(props.row.key)}
                     rowSelection={rowSelection}
+                    hideCheckboxes={hideCheckboxes}
                     onSelectionChange={this.handleGroupSelectionChange}
                     {...props}
                   />

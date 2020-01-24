@@ -56,15 +56,14 @@ import moment from 'moment'
 import UploadLot from './upload/UploadLot'
 import { withDatagrid } from '~/modules/datagrid'
 import { AttachmentManager } from '~/modules/attachments'
-
 import _ from 'lodash'
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
   flex-direction: column;
   background-color: #fbfbfb;
-  top: 105px !important;
-  padding-bottom: 105px;
+  top: 80px !important;
+  padding-bottom: 80px;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
   z-index: 1000 !important;
   text-align: left;
@@ -945,6 +944,95 @@ class DetailSidebar extends Component {
 
     const leftWidth = 6
     const rightWidth = 10
+
+    element.download = documentName
+    document.body.appendChild(element) // Required for this to work in FireFox
+    element.click()
+  }
+
+  prepareLinkToAttachment = async documentId => {
+    let downloadedFile = await this.props.downloadAttachment(documentId)
+    const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
+    const mimeType = fileName && this.getMimeType(fileName)
+    const element = document.createElement('a')
+    const file = new Blob([downloadedFile.value.data], { type: mimeType })
+    let fileURL = URL.createObjectURL(file)
+    element.href = fileURL
+
+    return element
+  }
+
+  extractFileName = contentDispositionValue => {
+    var filename = ''
+    if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
+      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+      var matches = filenameRegex.exec(contentDispositionValue)
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, '')
+      }
+    }
+    return filename
+  }
+
+  getMimeType = documentName => {
+    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
+
+    let editValues = this.getEditValues()
+  }
+  onChange = debounce(() => this.setState({ edited: true, saved: false, oldProductOffer: this.values }), 200)
+
+  render() {
+    let {
+      // addProductOffer,
+      listConditions,
+      listForms,
+      listGrades,
+      loading,
+      // openBroadcast,
+      // sidebarDetailOpen,
+      sidebarValues,
+      // searchedManufacturers,
+      // searchedManufacturersLoading,
+      searchedOrigins,
+      searchedOriginsLoading,
+      // searchedProducts,
+      // searchedProductsLoading,
+      searchOrigins,
+      warehousesList,
+      listDocumentTypes,
+      intl: { formatMessage },
+      toastManager,
+      removeAttachment
+    } = this.props
+
+    const leftWidth = 6
+    const rightWidth = 10
+
+    const optionsYesNo = [
+      {
+        key: 1,
+        text: <FormattedMessage id='global.yes' defaultMessage='Yes' />,
+        value: true
+      },
+      {
+        key: 0,
+        text: <FormattedMessage id='global.no' defaultMessage='No' />,
+        value: false
+      }
+    ]
+
+    const listConforming = [
+      {
+        key: 1,
+        text: <FormattedMessage id='global.conforming' defaultMessage='Conforming' />,
+        value: true
+      },
+      {
+        key: 0,
+        text: <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />,
+        value: false
+      }
+    ]
 
     const { toggleFilter } = this.props
 
