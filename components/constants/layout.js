@@ -144,7 +144,8 @@ export const LeftMenu = styled(Menu)`
   height: auto;
   background-color: #1b3454 !important;
   
-  &.vertical {
+  &.vertical,
+  &.vertical.borderless {
     
     &,
     > .container {
@@ -348,6 +349,7 @@ export const LeftMenu = styled(Menu)`
       }
       
       &.active {
+        color: #fff !important;
         
         &:before,
         &:after {
