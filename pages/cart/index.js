@@ -1,10 +1,19 @@
+import React, { Component } from 'react'
 import securePage from '~/hocs/securePage'
 import Layout from 'components/Layout'
 import ShoppingCart from '~/src/pages/cart/ShoppingCart'
-import { FormattedMessage } from "react-intl"
+import { injectIntl } from "react-intl"
 
-export default securePage(() => (
-  <Layout title={<FormattedMessage id='cart.shoppingCart' defaultMessage='Shopping Cart' />}>
-    <ShoppingCart />
-  </Layout>
-))
+class CartPage extends Component {
+  render() {
+    const { intl: { formatMessage } } = this.props
+
+    return (
+      <Layout title={formatMessage({ id: 'cart.shoppingCart', defaultMessage: 'Shopping Cart' })}>
+        <ShoppingCart />
+      </Layout>
+    )
+  }
+}
+
+export default securePage(injectIntl(CartPage))
