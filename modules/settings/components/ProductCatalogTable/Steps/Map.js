@@ -34,14 +34,6 @@ const SmallerTableCell = styled(Table.Cell)`
   font-size: 0.8em;
 `
 
-const ColumnName = styled(Table.Cell)`
-  width: 12.5%;
-`
-
-const Mapping = styled(Table.Cell)`
-  width: 25%;
-`
-
 const simpleEchoProductList = {
   constant: 'global',
   required: ['codeMapper', 'elementsMapper', 'nameMapper'],
@@ -545,13 +537,13 @@ class Map extends Component {
         <MapTable celled padded textAlign='center'>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>
+              <Table.HeaderCell style={{ width: '12%' }}>
                 <FormattedMessage id='settings.csvColumns' defaultMessage='CSV Columns' />
               </Table.HeaderCell>
-              <Table.HeaderCell colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}>
+              <Table.HeaderCell style={{ width: '63%' }} colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}>
                 <FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' />
               </Table.HeaderCell>
-              <Table.HeaderCell>
+              <Table.HeaderCell style={{ width: '25%' }}>
                 <FormattedMessage id='settings.mapping' defaultMessage='Mapping' />
               </Table.HeaderCell>
             </Table.Row>
@@ -560,17 +552,17 @@ class Map extends Component {
             <Table.Body>
               {CSV.headerCSV.map((lineHeader, lineIndex) => (
                 <Table.Row key={lineHeader.columnNumber}>
-                  <ColumnName>{lineHeader.content}</ColumnName>
+                  <Table.Cell style={{ width: '12%' }}>{lineHeader.content}</Table.Cell>
                   {CSV.bodyCSV.map(line => {
                     return line.columns.map(lineBody => {
                       return (
                         lineHeader.columnNumber === lineBody.columnNumber && (
-                          <SmallerTableCell>{lineBody.content}</SmallerTableCell>
+                          <SmallerTableCell style={{ width: `${63 / CSV.bodyCSV.length}%` }}>{lineBody.content}</SmallerTableCell>
                         )
                       )
                     })
                   })}
-                  <Mapping>
+                  <Table.Cell style={{ width: '25%' }}>
                     <Dropdown
                       placeholder={formatMessage({ id: 'settings.selectColumn', defaultMessage: 'Select Column' })}
                       column_number={lineHeader.columnNumber}
@@ -583,7 +575,7 @@ class Map extends Component {
                       data-test='settings_product_import_csv_column_drpdn'
                       value={getSafe(() => values[lineIndex], '')}
                     />
-                  </Mapping>
+                  </Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
