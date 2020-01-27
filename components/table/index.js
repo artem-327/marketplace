@@ -258,7 +258,8 @@ class _Table extends Component {
       columnName: pt.string,
       sortPath: pt.string,
       direction: pt.oneOf(['ASC', 'asc', 'DESC', 'desc'])
-    })
+    }),
+    editingRowId: pt.number
   }
 
   static defaultProps = {
@@ -277,7 +278,8 @@ class _Table extends Component {
     onSelectionChange: () => {},
     onScrollToEnd: () => {},
     onTableReady: () => {},
-    defaultSorting: null
+    defaultSorting: null,
+    editingRowId: null
   }
 
   constructor(props) {
@@ -352,7 +354,7 @@ class _Table extends Component {
     }
 
     const groups = getChildGroups(rows)
-    const selectionGroups = selection.map(s => groups.find(g => g.childRows.indexOf(rows[s]) > -1))
+    const selectionGroups = selection.map(s => groups.find(g => g.childRows.find(child => child.id === s)))
 
     const sameGroup = selectionGroups.every(sg => sg === selectionGroups[0])
     const finalSelection = singleSelection ? [lastSelected] : selection
@@ -369,7 +371,7 @@ class _Table extends Component {
     const { getChildGroups, rows } = this.props
     const { selection } = this.state
     const group = getChildGroups(rows).find(g => g.key === groupKey)
-    const groupRowsIds = group.childRows.map(r => rows.indexOf(r))
+    const groupRowsIds = group.childRows.map(r => r.id)
 
     const newSelection = value
       ? _.uniq([...selection, ...groupRowsIds])
@@ -383,7 +385,7 @@ class _Table extends Component {
     const { getChildGroups, rows } = this.props
     const { selection } = this.state
     const group = getChildGroups(rows).find(g => g.key === groupKey)
-    const groupRowsIds = group.childRows.map(r => rows.indexOf(r))
+    const groupRowsIds = group.childRows.map(r => r.id)
 
     const checked = groupRowsIds.every(gr => selection.indexOf(gr) > -1)
     const indeterminate = !checked && _.intersection(groupRowsIds, selection).length > 0
@@ -614,6 +616,7 @@ class _Table extends Component {
       highlightRow,
       showSelectionColumn,
       hideCheckboxes,
+      editingRowId,
       ...restProps
     } = this.props
 
@@ -632,7 +635,6 @@ class _Table extends Component {
         .map(c => c.name),
       ...(columnsSettings.hiddenColumnNames || [])
     ]
-
     return (
       <Segment basic loading={loading} {...restProps} className='flex stretched' style={{ padding: 0 }}>
         <GlobalTableOverrideStyle />
@@ -656,7 +658,7 @@ class _Table extends Component {
             }}
             data-test='table_columns_setting_modal'
           />
-          <Grid rows={rows} columns={this.getColumns()} rootComponent={GridRoot}>
+          <Grid rows={rows} getRowId={row => row.id} columns={this.getColumns()} rootComponent={GridRoot}>
             {sorting && (
               <SortingState
                 // sorting={[columnsSettings.sorting.map(el => ({ ...el, direction: el.direction.toLowerCase() }))]}
@@ -684,10 +686,16 @@ class _Table extends Component {
                 onSelectionChange={this.handleSelectionChange}
               />
             )}
+            {editingRowId && (
+              <SelectionState
+                selection={editingRowId ? [editingRowId] : []}
+              />
+            )}
+
             {rowSelection && lockSelection ? (
               <PatchedIntegratedSelection lockSelection={lockSelection} />
             ) : (
-              rowSelection && <IntegratedSelection />
+              (rowSelection || editingRowId) && <IntegratedSelection />
             )}
 
             <SearchState value={filterValue} />
@@ -744,6 +752,14 @@ class _Table extends Component {
                   highlightRow={highlightRow}
                 />
               )
+            )}
+            {editingRowId && (
+              <TableSelection
+                showSelectAll={showSelectAll && !sameGroupSelectionOnly}
+                selectByRowClick={false}
+                showSelectionColumn={false}
+                highlightRow={true}
+              />
             )}
             <DropdownFormatterProvider for={columns.filter(c => c.options).map(c => c.name)} />
             {groupBy && (

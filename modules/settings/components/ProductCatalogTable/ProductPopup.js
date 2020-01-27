@@ -342,7 +342,8 @@ class ProductPopup extends React.Component {
       packageWeightUnits,
       documentTypes,
       toastManager,
-      loading
+      loading,
+      datagrid
     } = this.props
 
     const { packagingTypesReduced } = this.state
@@ -680,6 +681,7 @@ class ProductPopup extends React.Component {
                                   try {
                                     if (row.linked) {
                                       await this.props.removeAttachmentLinkCompanyProduct(popupValues.id, row.id)
+                                      datagrid.loadData() // Reload product with updated attachments
                                       toastManager.add(
                                         generateToastMarkup(
                                           <FormattedMessage

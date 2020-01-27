@@ -30,7 +30,8 @@ export const initialState = {
   sidebarActiveTab: -1,
   sidebarValues: {},
   product: null,
-  editProductOfferInitTrig: false
+  editProductOfferInitTrig: false,
+  editedId: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -147,7 +148,8 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        sidebarValues: payload.data
+        sidebarValues: payload.data,
+        editedId: payload.data.id
       }
 
       /* Not used anymore
@@ -505,7 +507,8 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         sidebarDetailOpen: false,
-        sidebarValues: null
+        sidebarValues: null,
+        editedId: null
       }
     }
 
