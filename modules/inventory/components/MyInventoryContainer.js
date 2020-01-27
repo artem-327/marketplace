@@ -21,7 +21,7 @@ import { getLocaleDateFormat } from '~/components/date-format'
 
 function mapStateToProps(store, { datagrid }) {
   const sidebarValues = store.simpleAdd.sidebarValues
-  const editedId = (store.simpleAdd.sidebarDetailOpen && sidebarValues && sidebarValues.id) ? sidebarValues.id : -1
+  const editedId = (store.simpleAdd.sidebarDetailOpen && store.simpleAdd.editedId) ? store.simpleAdd.editedId : -1
 
   return {
     ...store.simpleAdd,
