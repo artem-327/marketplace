@@ -94,14 +94,12 @@ const initValues = {
       zip: ''
     },
     callAhead: false,
-    closeTime: '',
     contactEmail: '',
     contactName: '',
     contactPhone: '',
     deliveryNotes: '',
     forkLift: false,
-    liftGate: false,
-    readyTime: ''
+    liftGate: false
   },
   companyAdminUser: {
     name: '',

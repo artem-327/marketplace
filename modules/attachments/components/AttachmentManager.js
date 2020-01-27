@@ -31,10 +31,9 @@ const AttachmentModal = withDatagrid(
 
     returnSelectedRows = async () => {
       const { datagrid } = this.props
-
       this.props.returnSelectedRows(
-        this.state.selectedRows.map(srIndex => {
-          return { ...datagrid.rows[srIndex], index: srIndex }
+        this.state.selectedRows.map(id => {
+          return {...datagrid.rows.find(att => att.id === id)}
         })
       )
       this.setState({ open: false })
@@ -67,6 +66,7 @@ const AttachmentModal = withDatagrid(
           rowSelection={selectable}
           lockSelection={false}
           showSelectAll={false}
+          showSelectionColumn
           onSelectionChange={selectedRows => this.setState({ selectedRows })}
           getChildGroups={rows =>
             _(rows)

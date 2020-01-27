@@ -30,7 +30,6 @@ import { addAttachment } from '~/modules/inventory/actions'
 import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import './styles.scss'
-import Router from 'next/router'
 
 import { UnitOfPackaging } from '~/components/formatted-messages'
 import { errorMessages } from '~/constants/yupValidation'
@@ -38,7 +37,7 @@ import { AttachmentManager } from '~/modules/attachments'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import styled from "styled-components"
 import ProdexGrid from '~/components/table'
-import { Datagrid } from '~/modules/datagrid'
+import { withDatagrid } from '~/modules/datagrid'
 
 export const DivIcon = styled.div`
   display: block;
@@ -188,10 +187,10 @@ class ProductPopup extends React.Component {
   handlerSubmit = async (values, actions) => {
     const {
       popupValues,
-      reloadFilter,
       handleSubmitProductEditPopup,
       handleSubmitProductAddPopup,
-      toastManager
+      toastManager,
+      datagrid
     } = this.props
     delete values.casProducts
 
@@ -212,16 +211,17 @@ class ProductPopup extends React.Component {
       packageWeight: Number(values.packageWeight),
       packagesPerPallet:
         values.packagesPerPallet === null || values.packagesPerPallet === '' ? null : Number(values.packagesPerPallet),
-      attachments: this.state.attachments.filter(o => o.linked === false)
+      attachments: this.state.attachments
     }
 
     try {
       if (popupValues) {
-        await handleSubmitProductEditPopup(formValues, popupValues.id, reloadFilter)
+        await handleSubmitProductEditPopup(formValues, popupValues.id)
       } else {
-        await handleSubmitProductAddPopup(formValues, reloadFilter)
+        await handleSubmitProductAddPopup(formValues)
       }
       let status = popupValues ? 'productUpdated' : 'productCreated'
+      datagrid.loadData()
 
       toastManager.add(
         generateToastMarkup(
@@ -341,7 +341,9 @@ class ProductPopup extends React.Component {
       nmfcNumbersFiltered,
       packageWeightUnits,
       documentTypes,
-      toastManager
+      toastManager,
+      loading,
+      datagrid
     } = this.props
 
     const { packagingTypesReduced } = this.state
@@ -370,6 +372,7 @@ class ProductPopup extends React.Component {
             initialValues={this.getInitialFormValues()}
             validationSchema={formValidation}
             onReset={closePopup}
+            loading={loading}
             onSubmit={this.handlerSubmit}>
             {({ setFieldValue, values }) => {
               let casProducts = getSafe(() => values.casProducts, [])
@@ -545,7 +548,7 @@ class ProductPopup extends React.Component {
                             {text => text}
                           </FormattedMessage>
                         </GridColumn>
-                        <GridColumn style={{ zIndex: '501' }} mobile={rightWidth} computer={rightWidth}>
+                        <GridColumn mobile={rightWidth} computer={rightWidth}>
                           <Dropdown
                             name='documents.documentType'
                             closeOnChange
@@ -678,6 +681,7 @@ class ProductPopup extends React.Component {
                                   try {
                                     if (row.linked) {
                                       await this.props.removeAttachmentLinkCompanyProduct(popupValues.id, row.id)
+                                      datagrid.loadData() // Reload product with updated attachments
                                       toastManager.add(
                                         generateToastMarkup(
                                           <FormattedMessage
@@ -773,17 +777,7 @@ const mapStateToProps = ({ settings }) => {
     hazardClasses: settings.productsHazardClasses,
     packagingGroups: settings.productsPackagingGroups,
     searchedUnNumbers: settings.searchedUnNumbers,
-    reloadFilter: {
-      props: {
-        currentTab:
-          Router && Router.router && Router.router.query && Router.router.query.type
-            ? settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-            : settings.tabsNames[0],
-        productCatalogUnmappedValue: settings.productCatalogUnmappedValue,
-        productsFilter: settings.productsFilter
-      },
-      value: settings.filterValue
-    },
+    loading: settings.productDataLoading,
     documentTypes: settings.documentTypes,
     nmfcNumbersFetching: settings.nmfcNumbersFetching,
     nmfcNumbersFiltered: settings.nmfcNumbersFiltered.map(d => {
@@ -802,4 +796,4 @@ const mapStateToProps = ({ settings }) => {
   }
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withToastManager(ProductPopup)))
+export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(withToastManager(ProductPopup))))

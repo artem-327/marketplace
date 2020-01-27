@@ -36,8 +36,8 @@ const initialValues = {
     province: '',
     country: ''
   },
-  readyTime: '',
-  closeTime: '',
+  readyTime: null,
+  closeTime: null,
   liftGate: false,
   forkLift: false,
   callAhead: false,
@@ -111,12 +111,12 @@ class ShippingEdit extends Component {
         </Header>
         <FormGroup widths='3' data-test='settings_delivery_address_notes_inp' style={{ marginBottom: '0' }}>
           <Input
-            type='text'
+            inputProps={{ type: 'time' }}
             label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
             name='readyTime'
           />
           <Input
-            type='text'
+            inputProps={{ type: 'time' }}
             label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
             name='closeTime'
           />

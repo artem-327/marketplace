@@ -19,6 +19,7 @@ import { closePopup } from '~/modules/settings/actions'
 import { getDocumentTypes, addAttachment, updateAttachment } from '~/modules/inventory/actions'
 import { func } from 'prop-types'
 import { getStringISODate } from '~/components/date-format'
+import Router from 'next/router'
 
 const validationSchema = Yup.lazy(values => {
   let validationObject = {
@@ -72,11 +73,12 @@ class DocumentPopup extends Component {
       toastManager,
       addAttachment,
       updateAttachment,
-      onClose
+      onClose,
+      enableClose
     } = this.props
 
     return (
-      <Modal closeIcon onClose={() => { closePopup(); onClose()}} open>
+      <Modal closeIcon onClose={() => { if (enableClose) closePopup(); onClose()}} open>
         <Modal.Header>
           <FormattedMessage
             id={edit ? 'editDocument' : 'addDocument'}
@@ -130,7 +132,7 @@ class DocumentPopup extends Component {
                 console.error(e)
               } finally {
                 setSubmitting(false)
-                closePopup()
+                if (enableClose) closePopup()
                 onClose()
               }
             }}
@@ -220,7 +222,7 @@ class DocumentPopup extends Component {
           <Button
             basic
             onClick={() => {
-              closePopup()
+              if (enableClose) closePopup()
               onClose()
             }}>
             <FormattedMessage id='global.close' defaultMessage='Close'>
@@ -248,11 +250,17 @@ DocumentPopup.defaultProps = {
 }
 
 const mapStateToProps = ({ simpleAdd, settings }) => {
+  const currentTab = Router && Router.router && Router.router.query && Router.router.query.type
+    ? settings.tabsNames.find(tab => tab.type === Router.router.query.type)
+    : settings.tabsNames[0]
+  const documentTab = currentTab.type === 'documents'
+
   return {
-    popupValues: settings.popupValues,
+    popupValues: documentTab ? settings.popupValues : null,
     documentTypes: simpleAdd.listDocumentTypes,
     documentTypesFetching: simpleAdd.documentTypesFetching,
-    edit: getSafe(() => settings.popupValues.id, false)
+    edit: documentTab & getSafe(() => settings.popupValues.id, false),
+    enableClose: documentTab
   }
 }
 

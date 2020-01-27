@@ -4,17 +4,19 @@ import OrdersModule from '~/modules/orders/detail'
 import Layout from 'components/Layout'
 import Router, { withRouter } from 'next/router'
 import { getSafe } from '~/utils/functions'
-import { FormattedMessage } from 'react-intl'
+import { injectIntl } from 'react-intl'
 
 const OrderWithRouter = withRouter(OrdersModule)
 
 class OrderDetail extends Component {
   render() {
+    const { intl: { formatMessage } } = this.props
+
     return (
       <Layout title={
         getSafe(() => Router.router.query.type, 'sales') === 'sales'
-          ? (<FormattedMessage id='global.salesOrdersDetail' defaultMessage='Sales Order Detail' />)
-          : (<FormattedMessage id='global.purchaseOrdersDetail' defaultMessage='Purchase Order Detail' />)
+          ? formatMessage({ id: 'global.salesOrdersDetail', defaultMessage: 'Sales Order Detail' })
+          : formatMessage({ id: 'global.purchaseOrdersDetail', defaultMessage: 'Purchase Order Detail' })
       }>
         <OrderWithRouter />
       </Layout>
@@ -22,4 +24,4 @@ class OrderDetail extends Component {
   }
 }
 
-export default securePage(OrderDetail)
+export default securePage(injectIntl(OrderDetail))

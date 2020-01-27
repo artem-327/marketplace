@@ -1,9 +1,19 @@
+import React, { Component } from 'react'
 import securePage from '~/hocs/securePage'
 import Layout from 'components/Layout'
 import { MyInventory } from '~/modules/inventory/my'
+import { injectIntl } from 'react-intl'
 
-export default securePage(() => (
-  <Layout title='My Inventory'>
-    <MyInventory />
-  </Layout>
-))
+class MyInventoryPage extends Component {
+  render() {
+    const { intl: { formatMessage } } = this.props
+
+    return (
+      <Layout title={formatMessage({ id: 'global.myInventory', defaultMessage: 'My Inventory' })}>
+        <MyInventory />
+      </Layout>
+    )
+  }
+}
+
+export default securePage(injectIntl(MyInventoryPage))
