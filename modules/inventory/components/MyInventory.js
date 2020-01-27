@@ -431,7 +431,7 @@ class MyInventory extends Component {
       sidebarValues,
       openPopup,
       editedId,
-      closeSidebarDetail
+      closeSidebarDetail,
     } = this.props
     const { columns, selectedRows } = this.state
 
@@ -504,10 +504,7 @@ class MyInventory extends Component {
             columns={columns}
             rows={this.getRows(rows)}
             selectByRowClick
-            rowSelection
-            highlightRow
             hideCheckboxes
-            singleSelectionRow
             groupBy={['echoCode']}
             getChildGroups={rows =>
               _(rows)
@@ -615,6 +612,7 @@ class MyInventory extends Component {
               Router.push({ pathname: '/inventory/edit', query: { id: row.id } })
             }
           }}*/
+            editingRowId={editedId}
           />
         </div>
         {sidebarDetailOpen && <DetailSidebar />}

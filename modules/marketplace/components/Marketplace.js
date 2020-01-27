@@ -212,7 +212,7 @@ class Marketplace extends Component {
   isSelectedMultipleEcho = (rows, selectedRows) => {
     if (!rows || !selectedRows) return
     const filteredRows = rows.reduce((filtered, row, rowIndex) => {
-      if (selectedRows.includes(rowIndex)) {
+      if (selectedRows.includes(row.id)) {
         filtered.push(row.companyProduct.echoProduct.id)
       }
       return [...new Set(filtered)]
@@ -227,7 +227,7 @@ class Marketplace extends Component {
   getEchoProducts = (rows, selectedRows) => {
     if (!rows || !selectedRows) return
     return rows.reduce((filtered, row, rowIndex) => {
-      if (selectedRows.includes(rowIndex)) {
+      if (selectedRows.includes(row.id)) {
         filtered.push(row.companyProduct.echoProduct)
       }
       return filtered
@@ -247,14 +247,14 @@ class Marketplace extends Component {
               open: this.state.open,
               closeModal: () => this.setState({ open: false })
             }}
-            productOfferIds={rows.reduce(function(filtered, row, rowIndex) {
-              if (selectedRows.includes(rowIndex)) {
+            productOfferIds={rows.reduce(function(filtered, row) {
+              if (selectedRows.includes(row.id)) {
                 filtered.push(row.id)
               }
               return filtered
             }, [])}
-            productOffersSelected={rows.reduce(function(filtered, row, rowIndex) {
-              if (selectedRows.includes(rowIndex)) {
+            productOffersSelected={rows.reduce(function(filtered, row) {
+              if (selectedRows.includes(row.id)) {
                 filtered.push({
                   id: row.id,
                   min: row.minPkg,
