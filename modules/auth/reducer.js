@@ -32,14 +32,14 @@ export const initialState = {
       },
       addressName: '',
       callAhead: false,
-      closeTime: '',
+      closeTime: null,
       contactEmail: '',
       contactName: '',
       contactPhone: '',
       deliveryNotes: '',
       forkLift: false,
       liftGate: false,
-      readyTime: ''
+      readyTime: null
     },
     companyAdminUser: {
       name: '',
@@ -113,14 +113,14 @@ export default function reducer(state = initialState, action) {
                   },
                   addressName: deliveryAddress.cfName || '',
                   callAhead: !!deliveryAddress.callAhead,
-                  closeTime: deliveryAddress.closeTime || '',
+                  closeTime: deliveryAddress.closeTime || null,
                   contactEmail: deliveryAddress.contactEmail || primaryUser.email || '',
                   contactName: deliveryAddress.contactName || primaryUser.name || '',
                   contactPhone: deliveryAddress.contactPhone || primaryUser.phone || '',
                   deliveryNotes: deliveryAddress.deliveryNotes || '',
                   forkLift: !!deliveryAddress.forkLift,
                   liftGate: !!deliveryAddress.liftGate,
-                  readyTime: deliveryAddress.readyTime || ''
+                  readyTime: deliveryAddress.readyTime || null
                 },
                 companyAdminUser: {
                   name: payload.identity.name,

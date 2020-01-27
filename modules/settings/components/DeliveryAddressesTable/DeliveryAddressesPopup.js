@@ -35,8 +35,8 @@ const initialFormValues = {
     streetAddress: '',
     zip: ''
   },
-  readyTime: '',
-  closeTime: '',
+  readyTime: null,
+  closeTime: null,
   liftGate: false,
   forkLift: false,
   callAhead: false,
@@ -186,12 +186,12 @@ class DeliveryAddressesPopup extends React.Component {
                     data-test='settings_delivery_address_notes_inp'
                     style={{ alignItems: 'center' }}>
                     <Input
-                      type='text'
+                      inputProps={{ type: 'time' }}
                       label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
                       name='readyTime'
                     />
                     <Input
-                      type='text'
+                      inputProps={{ type: 'time' }}
                       label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
                       name='closeTime'
                     />
@@ -286,8 +286,8 @@ const mapStateToProps = state => {
               streetAddress: address.streetAddress,
               zip: address.zip.zip
             },
-            readyTime: getSafe(() => popupValues.readyTime, ''),
-            closeTime: getSafe(() => popupValues.closeTime, ''),
+            readyTime: getSafe(() => popupValues.readyTime, null),
+            closeTime: getSafe(() => popupValues.closeTime, null),
             liftGate: getSafe(() => popupValues.liftGate, false),
             forkLift: getSafe(() => popupValues.forkLift, false),
             callAhead: getSafe(() => popupValues.callAhead, false),
