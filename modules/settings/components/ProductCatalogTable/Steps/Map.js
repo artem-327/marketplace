@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { Table, Dropdown, Grid, Input, Select, Checkbox, Button } from 'semantic-ui-react'
+import { Table, Dropdown, Grid, Input, Select, Button } from 'semantic-ui-react'
 
 import {
   changeHeadersCSV,
@@ -23,16 +23,10 @@ import {
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import _invert from 'lodash/invert'
 import { withToastManager } from 'react-toast-notifications'
-import styled from 'styled-components'
-
-const MapTable = styled(Table)`
-  width: 100%;
-  max-width: 100%;
-`
-
-const SmallerTableCell = styled(Table.Cell)`
-  font-size: 0.8em;
-`
+import {
+  MapTable,
+  SmallerTableCell
+} from '~/modules/settings/components/ProductCatalogTable/Steps/constants/layout'
 
 const simpleEchoProductList = {
   constant: 'global',
@@ -537,13 +531,13 @@ class Map extends Component {
         <MapTable celled padded textAlign='center'>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell style={{ width: '12%' }}>
+              <Table.HeaderCell style={{ width: '130px', minWidth: '130px' }}>
                 <FormattedMessage id='settings.csvColumns' defaultMessage='CSV Columns' />
               </Table.HeaderCell>
-              <Table.HeaderCell style={{ width: '63%' }} colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}>
+              <Table.HeaderCell colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}>
                 <FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' />
               </Table.HeaderCell>
-              <Table.HeaderCell style={{ width: '25%' }}>
+              <Table.HeaderCell style={{ width: '229px', minWidth: '229px' }}>
                 <FormattedMessage id='settings.mapping' defaultMessage='Mapping' />
               </Table.HeaderCell>
             </Table.Row>
@@ -552,17 +546,19 @@ class Map extends Component {
             <Table.Body>
               {CSV.headerCSV.map((lineHeader, lineIndex) => (
                 <Table.Row key={lineHeader.columnNumber}>
-                  <Table.Cell style={{ width: '12%' }}>{lineHeader.content}</Table.Cell>
+                  <Table.Cell style={{ width: '130px' }}>{lineHeader.content}</Table.Cell>
                   {CSV.bodyCSV.map(line => {
                     return line.columns.map(lineBody => {
                       return (
                         lineHeader.columnNumber === lineBody.columnNumber && (
-                          <SmallerTableCell style={{ width: `${63 / CSV.bodyCSV.length}%` }}>{lineBody.content}</SmallerTableCell>
+                          <SmallerTableCell className={`cols${CSV.bodyCSV.length}`}>
+                            <div>{lineBody.content}</div>
+                          </SmallerTableCell>
                         )
                       )
                     })
                   })}
-                  <Table.Cell style={{ width: '25%' }}>
+                  <Table.Cell style={{ width: '229px' }}>
                     <Dropdown
                       placeholder={formatMessage({ id: 'settings.selectColumn', defaultMessage: 'Select Column' })}
                       column_number={lineHeader.columnNumber}
