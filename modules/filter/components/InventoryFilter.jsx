@@ -100,18 +100,22 @@ class InventoryFilter extends Component {
       fetchWarehouseDistances,
       fetchProductGrade,
       fetchWarehouses,
-      setParams
+      setParams,
+      autocompleteManufacturer,
+      autocompleteOrigin
     } = this.props
 
     if (typeof this.props.searchWarehouseUrl !== 'undefined')
       this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
 
-    if (typeof this.props.searchManufacturerUrl !== 'undefined')
+    //It is nessery to get all manufacturer to options in dropdown if user select saved filter and want to see parametr in dropdown
+    //In the future if will be a lot of manufacturer we can added search to the dropdown and here we can specify pattern to the searchManufacturerUrl
+    if (!autocompleteManufacturer || !autocompleteManufacturer.length)
       this.props.getAutocompleteManufacturer(this.props.searchManufacturerUrl(''))
 
-    if (typeof this.props.searchOriginUrl !== 'undefined')
-      this.props.getAutocompleteOrigin(this.props.searchOriginUrl(''))
-
+    if (!autocompleteOrigin || !autocompleteOrigin.length) {
+      this.props.getAutocompleteOrigin(this.props.getOriginUrl)
+    }
     this.handleGetSavedFilters()
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
@@ -129,7 +133,6 @@ class InventoryFilter extends Component {
     let { notificationMail, notificationPhone } = notifications
     let { notifyMail, notifyPhone, notifySystem, notificationEnabled } = checkboxes
     let { filters } = this.toSavedFilter(rest)
-
     return {
       filters,
       name,
@@ -153,14 +156,15 @@ class InventoryFilter extends Component {
       if (
         (inputs[key] || inputs[key] === false) &&
         inputs[key] !== '' &&
-        (Object.keys(inputs[key]).length > 0 || typeof inputs[key] === 'boolean')
+        (Object.keys(inputs[key]).length > 0 || typeof inputs[key] === 'boolean' || typeof inputs[key] === 'number') &&
+        key !== 'expiration' &&
+        key !== 'mfg'
       ) {
         if (datagridValues[key] && !!datagridValues[key].nested) {
           var ids = [],
             names = []
 
           // If nested (checkboxes) take their id's and push them to an array
-
           Object.keys(inputs[key]).forEach(k => {
             if (inputs[key][k]) {
               ids.push(inputs[key][k].id)
@@ -174,6 +178,7 @@ class InventoryFilter extends Component {
           try {
             if (typeof datagridValues[key] !== 'undefined') {
               let filter = datagridValues[key] && datagridValues[key].toFilter(inputs[key], this.props.filterType)
+
               if (!(filter.values instanceof Array)) filter.values = [filter.values] // We need values to be an array
 
               datagridFilter.filters.push(filter)
@@ -218,7 +223,6 @@ class InventoryFilter extends Component {
 
     async function callback(id) {
       let requestData = self.generateRequestData(params)
-
       try {
         if (id) await self.props.updateFilter(id, requestData)
         else {
@@ -339,7 +343,19 @@ class InventoryFilter extends Component {
     for (let i = 0; i < filters.length; i++) {
       datagridKeys.forEach(key => {
         let datagrid = datagridValues[key]
-        if (datagrid.paths.includes(filters[i].path) && filters[i].operator === datagrid.operator) {
+        if (
+          datagrid &&
+          datagrid.paths &&
+          datagrid.paths.includes(filters[i].path) &&
+          filters[i].operator === datagrid.operator
+        ) {
+          if (filters[i].path === 'ProductOffer.lotExpirationDate') {
+            formikValues['expiration'] = datagridValues['expiration'].toFormik(filters[i].operator)
+          }
+          if (filters[i].path === 'ProductOffer.lotManufacturedDate') {
+            formikValues['mfg'] = datagridValues['mfg'].toFormik(filters[i].operator)
+          }
+
           formikValues[key] = datagrid.toFormik(filters[i], datagrid.nested && this.props[key])
         }
       })
@@ -414,7 +430,7 @@ class InventoryFilter extends Component {
   }
 
   dateField = (name, { values, setFieldValue, handleChange, min }) => {
-    let inputName = `${name}${this.state.dateDropdown[name]}`
+    let inputName = `${name}${values[name]}`
 
     return (
       <>
@@ -426,12 +442,9 @@ class InventoryFilter extends Component {
             onChange={handleChange}
             inputProps={{
               'data-test': 'filter_dateField_drpdn',
-              value: this.state.dateDropdown[name],
+              value: values[name],
               onChange: (_, data) => {
-                Object.keys(values).forEach(key => {
-                  if (typeof values[key] === 'string' && values[key].startsWith(name)) setFieldValue(key, '')
-                })
-
+                setFieldValue(data.name, data.value)
                 setFieldValue(inputName, '')
                 this.setState(state => ({
                   ...state,
@@ -1047,7 +1060,8 @@ InventoryFilter.propTypes = {
   searchManufacturerUrl: func,
   autocompleteOrigin: array,
   getAutocompleteOrigin: func,
-  searchOriginUrl: func
+  searchOriginUrl: func,
+  getOriginUrl: string
 }
 
 InventoryFilter.defaultProps = {
@@ -1064,7 +1078,8 @@ InventoryFilter.defaultProps = {
   layout: '',
   filterType: filterTypes.INVENTORY,
   autocompleteManufacturer: [],
-  autocompleteOrigin: []
+  autocompleteOrigin: [],
+  getOriginUrl: ''
 }
 
 export default withToastManager(injectIntl(InventoryFilter))

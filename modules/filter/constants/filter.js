@@ -41,7 +41,9 @@ export const paths = {
     warehouseId: 'ProductOffer.warehouse.id',
     manufacturerId: 'ProductOffer.companyProduct.echoProduct.manufacturer.id',
     broadcast: 'ProductOffer.broadcasted',
-    origin: 'ProductOffer.origin.id'
+    origin: 'ProductOffer.origin.id',
+    expiration: 'ProductOffer.lotExpirationDate',
+    mfg: 'ProductOffer.lotManufacturedDate'
   },
   orders: {
     orderDate: 'Order.orderDate',
@@ -58,7 +60,7 @@ export const dateDropdownOptions = [
   { key: 1, value: 'To', text: 'Less Than' }
 ]
 
-export const dateFormat = 'YYYY-MM-DD'
+export const dateFormat = getLocaleDateFormat()
 
 export const replaceAmbigiousCharacters = text =>
   text
@@ -457,7 +459,8 @@ export const datagridValues = {
     },
 
     toFormik: function({ values }) {
-      return moment(values[0].value.toString()).format(dateFormat)
+      const days = moment().diff(values[0].value, 'days') * -1 + 1
+      return days
     }
   },
   expirationTo: {
@@ -481,7 +484,8 @@ export const datagridValues = {
     },
 
     toFormik: function({ values }) {
-      return moment(values[0].value.toString()).format(dateFormat)
+      const days = moment().diff(values[0].value, 'days') * -1 + 1
+      return days
     }
   },
 
@@ -506,7 +510,8 @@ export const datagridValues = {
     },
 
     toFormik: function({ values }) {
-      return moment(values[0].value.toString()).format(dateFormat)
+      const days = moment().diff(values[0].value, 'days')
+      return days
     }
   },
 
@@ -531,7 +536,8 @@ export const datagridValues = {
     },
 
     toFormik: function({ values }) {
-      return moment(values[0].value.toString()).format(dateFormat)
+      const days = moment().diff(values[0].value, 'days')
+      return days
     }
   },
 
@@ -774,6 +780,61 @@ export const datagridValues = {
         id: parseInt(values[0].value),
         text: parsed.text
       })
+    }
+  },
+
+  expiration: {
+    paths: [paths.productOffers.expiration],
+    description: 'Expiration',
+
+    toFilter: function(values) {
+      const data = [
+        {
+          value: values
+        }
+      ]
+
+      return {
+        path: this.paths[0],
+        values: data,
+        description: this.description
+      }
+    },
+    toFormik: function(operator) {
+      let result
+      if (operator === 'LESS_THAN') {
+        result = 'To'
+      } else if (operator === 'GREATER_THAN') {
+        result = 'From'
+      }
+      return result
+    }
+  },
+
+  mfg: {
+    paths: [paths.productOffers.mfg],
+    description: 'Mfg',
+    toFilter: function(values) {
+      const data = [
+        {
+          value: values
+        }
+      ]
+
+      return {
+        path: this.paths[0],
+        values: data,
+        description: this.description
+      }
+    },
+    toFormik: function(operator) {
+      let result = null
+      if (operator === 'LESS_THAN') {
+        result = 'From'
+      } else if (operator === 'GREATER_THAN') {
+        result = 'To'
+      }
+      return result
     }
   }
 }

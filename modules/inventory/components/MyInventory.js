@@ -623,7 +623,7 @@ class MyInventory extends Component {
           searchUrl={text => `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`}
           searchWarehouseUrl={text => `/prodex/api/branches/warehouses/search?pattern=${text}`}
           searchManufacturerUrl={text => `/prodex/api/manufacturers/search?search=${text}`}
-          searchOriginUrl={text => `/prodex/api/countries/search?pattern=${text}`}
+          getOriginUrl={`/prodex/api/countries`}
           apiUrl={datagrid.apiUrl}
           filters={datagrid.filters}
           layout='MyInventory'
