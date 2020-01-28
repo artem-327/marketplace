@@ -49,6 +49,16 @@ class SavedFilters extends Component {
     onApply(filter)
   }
 
+  handleValuesDescription = f => {
+    const result =
+      f.valuesDescription instanceof Array
+        ? f.valuesDescription.map(v => v)
+        : typeof f.valuesDescription === 'string'
+        ? f.valuesDescription.replace(/,/g, ', ')
+        : f.tagDescription
+    return result
+  }
+
   getTitle = (filter, i) => {
     let { id, name } = filter
     let filterDescription = groupFilters(filter.filters, this.props.params)
@@ -99,13 +109,7 @@ class SavedFilters extends Component {
                         <GridRow key={index}>
                           <GridColumn computer={8}>{f.description}:</GridColumn>
 
-                          <GridColumn computer={8}>
-                            {f.valuesDescription instanceof Array
-                              ? f.valuesDescription.map(v => v)
-                              : typeof f.valuesDescription === 'string'
-                              ? f.valuesDescription
-                              : f.tagDescription}
-                          </GridColumn>
+                          <GridColumn computer={8}>{this.handleValuesDescription(f)}</GridColumn>
                         </GridRow>
                       )
                     })
