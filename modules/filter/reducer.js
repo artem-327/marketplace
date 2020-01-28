@@ -5,6 +5,7 @@ import { uniqueArrayByKey, mapAutocompleteData } from '~/utils/functions'
 
 import { datagridValues, paths, filterPresets } from './constants/filter'
 import { currency } from '~/constants/index'
+import { getSafe } from '~/utils/functions'
 
 const asignFiltersDescription = (filter, params) => {
   let datagridKeys = Object.keys(datagridValues)
@@ -22,11 +23,11 @@ const asignFiltersDescription = (filter, params) => {
           datagrid.operator === filter.operator
         ) {
           filter.description = datagrid.description
-          filter.valuesDescription = datagridValues[key].valuesDescription(filter.values, params)
+          filter.valuesDescription = getSafe(() => datagridValues[key].valuesDescription(filter.values, params), null)
           try {
-            filter.tagDescription = datagridValues[key].tagDescription(filter.values, params)
+            filter.tagDescription = getSafe(() => datagridValues[key].tagDescription(filter.values, params), null)
           } catch (_) {
-            filter.tagDescription = datagridValues[key].valuesDescription(filter.values, params)
+            filter.tagDescription = getSafe(() => datagridValues[key].valuesDescription(filter.values, params), null)
           }
         }
       })

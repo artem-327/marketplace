@@ -125,7 +125,13 @@ class Filter extends Component {
     let keys = Object.keys(inputs)
 
     keys.forEach(key => {
-      if (inputs[key] && inputs[key] !== '' && Object.keys(inputs[key]).length > 0) {
+      if (
+        (inputs[key] || inputs[key] === false) &&
+        inputs[key] !== '' &&
+        (Object.keys(inputs[key]).length > 0 || typeof inputs[key] === 'boolean' || typeof inputs[key] === 'number') &&
+        key !== 'expiration' &&
+        key !== 'mfg'
+      ) {
         if (datagridValues[key] && !!datagridValues[key].nested) {
           var ids = [],
             names = []
