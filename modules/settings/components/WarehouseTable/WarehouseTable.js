@@ -207,8 +207,8 @@ const mapStateToProps = (state, { datagrid }) => {
                 country: JSON.stringify({ countryId, hasProvinces }),
                 zip
               },
-              readyTime: getSafe(() => r.deliveryAddress.readyTime, ''),
-              closeTime: getSafe(() => r.deliveryAddress.closeTime, ''),
+              readyTime: getSafe(() => r.deliveryAddress.readyTime, null),
+              closeTime: getSafe(() => r.deliveryAddress.closeTime, null),
               liftGate: getSafe(() => r.deliveryAddress.liftGate, false),
               forkLift: getSafe(() => r.deliveryAddress.forkLift, false),
               callAhead: getSafe(() => r.deliveryAddress.callAhead, false),
