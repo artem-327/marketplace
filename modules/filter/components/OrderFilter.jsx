@@ -164,7 +164,8 @@ class OrderFilter extends Component {
                           <DateInput
                             inputProps={{
                               fluid: true,
-                              placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
+                              placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }),
+                              clearable: true
                             }}
                             label={<FormattedMessage id='global.from' defaultMessage='From' />}
                             name='orderFrom.value'
@@ -172,7 +173,8 @@ class OrderFilter extends Component {
                           <DateInput
                             inputProps={{
                               fluid: true,
-                              placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
+                              placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }),
+                              clearable: true
                             }}
                             label={<FormattedMessage id='global.to' defaultMessage='To' />}
                             name='orderTo.value'
