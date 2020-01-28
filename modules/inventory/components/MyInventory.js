@@ -278,6 +278,7 @@ class MyInventory extends Component {
     }
     // Because of #31767
     this.props.setCompanyElligible()
+    this.handleFilterClear()
   }
 
   filterInventory = async filter => {
@@ -431,7 +432,7 @@ class MyInventory extends Component {
       sidebarValues,
       openPopup,
       editedId,
-      closeSidebarDetail,
+      closeSidebarDetail
     } = this.props
     const { columns, selectedRows } = this.state
 
