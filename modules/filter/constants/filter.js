@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { FormattedNumber, FormattedDate } from 'react-intl'
+import { FormattedNumber } from 'react-intl'
 import { getLocaleDateFormat } from '~/components/date-format'
 
 export const operators = {
@@ -503,7 +503,7 @@ export const datagridValues = {
       }
     },
 
-    tagDescription: values => `Manufactured > ${values[0].description}`,
+    tagDescription: values => `Manufactured < ${values[0].description}`,
 
     valuesDescription: function(values) {
       return values.map(val => val.description)
@@ -529,7 +529,7 @@ export const datagridValues = {
       }
     },
 
-    tagDescription: values => `Manufactured < ${values[0].description}`,
+    tagDescription: values => `Manufactured > ${values[0].description}`,
 
     valuesDescription: function(values) {
       return values.map(val => val.description)
@@ -592,8 +592,14 @@ export const datagridValues = {
     paths: [paths.orders.orderDate],
     description: 'Order Date',
 
-    valuesDescription: val => val,
-    tagDescription: val => <FormattedDate value={val}>{text => `>= ${text}`}</FormattedDate>
+    valuesDescription: val => {
+      if (val.length < 1) return
+      return moment(val[0]).format(dateFormat)
+    },
+    tagDescription: val => {
+      if (val.length < 1) return
+      return moment(val[0]).format(dateFormat)
+    }
   },
 
   orderTo: {
@@ -601,8 +607,14 @@ export const datagridValues = {
     paths: [paths.orders.orderDate],
     description: 'Order Date',
 
-    valuesDescription: val => val,
-    tagDescription: val => <FormattedDate value={val}>{text => `<= ${text}`}</FormattedDate>
+    valuesDescription: val => {
+      if (val.length < 1) return
+      return moment(val[0]).format(dateFormat)
+    },
+    tagDescription: val => {
+      if (val.length < 1) return
+      return moment(val[0]).format(dateFormat)
+    }
   },
 
   vendor: {
@@ -959,21 +971,21 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
         operator: operators.LESS_THAN_OR_EQUAL_TO
       },
       tagDescription: (from, to) => {
-        let sign = from && !to ? '≥ ' : !from && to ? '≤ ' : null
+        let sign = from && !to ? '> ' : !from && to ? '< ' : null
         let dash = from && to ? ' - ' : null
         return (
           <label>
             {from ? (
               <>
                 {sign}
-                <FormattedDate value={from}>{text => text}</FormattedDate>
+                {from}
               </>
             ) : null}
             {to ? (
               <>
                 {dash}
                 {sign}
-                <FormattedDate value={to}>{text => text}</FormattedDate>
+                {to}
               </>
             ) : null}
           </label>
