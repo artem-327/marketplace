@@ -22,7 +22,9 @@ export function rowActionsCellFormatter({ column: { actions }, row }) {
   const displayMenu = dropdownItems.findIndex(p => p !== null) >= 0
 
   return displayMenu ? (
-    <Dropdown icon='' trigger={<Icon data-test={`action_${row.id}`} name='ellipsis vertical' size='large' />}>
+    <Dropdown icon='' trigger={
+      <Icon data-test={`action_${row.id}`} name='ellipsis vertical' size='large' style={{ color: '#848893' }} />
+    }>
       <Dropdown.Menu>{dropdownItems}</Dropdown.Menu>
     </Dropdown>
   ) : null

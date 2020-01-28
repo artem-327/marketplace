@@ -10,3 +10,21 @@
     }
   }
 }
+
+.bootstrapiso {
+  color: #20273a;
+  th {
+    color: #848893;
+  }
+  .table-active {
+    background-color: #eff9ff;
+    > td {
+      background-color: #eff9ff;
+    }
+  }
+}
+
+.group-row {
+  background: #edeef2;
+  color: #848893;
+}

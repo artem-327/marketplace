@@ -768,9 +768,8 @@ class _Table extends Component {
                 indentColumnWidth={1}
                 iconComponent={({ expanded }) => (
                   <Icon
-                    style={{ float: 'right' }}
+                    style={{ float: 'right', color: '#2599d5' }}
                     size='large'
-                    color='blue'
                     name={expanded ? 'chevron down' : 'chevron right'}
                   />
                 )}
