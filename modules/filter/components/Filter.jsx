@@ -315,6 +315,12 @@ class Filter extends Component {
       datagridKeys.forEach(key => {
         let datagrid = datagridValues[key]
         if (datagrid.paths.includes(filters[i].path) && filters[i].operator === datagrid.operator) {
+          if (filters[i].path === 'ProductOffer.lotExpirationDate') {
+            formikValues['expiration'] = datagridValues['expiration'].toFormik(filters[i].operator)
+          }
+          if (filters[i].path === 'ProductOffer.lotManufacturedDate') {
+            formikValues['mfg'] = datagridValues['mfg'].toFormik(filters[i].operator)
+          }
           formikValues[key] = datagrid.toFormik(filters[i], datagrid.nested && this.props[key])
         }
       })
@@ -387,7 +393,7 @@ class Filter extends Component {
   }
 
   dateField = (name, { values, setFieldValue, handleChange, min }) => {
-    let inputName = `${name}${this.state.dateDropdown[name]}`
+    let inputName = `${name}${values[name]}`
 
     return (
       <>
@@ -401,10 +407,7 @@ class Filter extends Component {
               'data-test': 'filter_dateField_drpdn',
               value: this.state.dateDropdown[name],
               onChange: (_, data) => {
-                Object.keys(values).forEach(key => {
-                  if (typeof values[key] === 'string' && values[key].startsWith(name)) setFieldValue(key, '')
-                })
-
+                setFieldValue(data.name, data.value)
                 setFieldValue(inputName, '')
                 this.setState(state => ({
                   ...state,
