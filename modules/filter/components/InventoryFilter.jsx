@@ -355,6 +355,13 @@ class InventoryFilter extends Component {
           if (filters[i].path === 'ProductOffer.lotManufacturedDate') {
             formikValues['mfg'] = datagridValues['mfg'].toFormik(filters[i].operator)
           }
+          if (filters[i].path === 'ProductOffer.companyProduct.id') {
+            const searchQuery = JSON.parse(
+              getSafe(() => filters[i].values[0].description),
+              null
+            )
+            if (searchQuery && searchQuery.name) this.handleSearch({ searchQuery: searchQuery.name })
+          }
 
           formikValues[key] = datagrid.toFormik(filters[i], datagrid.nested && this.props[key])
         }
@@ -528,11 +535,11 @@ class InventoryFilter extends Component {
 
   getOptions = options => {
     return options.map(option => {
-      let parsed = JSON.parse(option.value)
+      let parsed = option.value ? JSON.parse(option.value) : JSON.parse(option)
       return {
-        key: option.key,
-        text: option.text,
-        value: option.value,
+        key: option.key || parseInt(parsed.id),
+        text: option.text || parsed.name + ` ${parsed.casNumber}`,
+        value: option.value || JSON.stringify({ ...parsed, id: parseInt(parsed.id) }),
         content: (
           <StyledGrid>
             <GridRow>
