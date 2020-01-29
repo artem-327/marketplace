@@ -664,6 +664,7 @@ class ProductPopup extends React.Component {
                             tableName='company_product_documents'
                             onTableReady={() => {}}
                             columns={columns}
+                            normalWidth={true}
                             rows={this.state.attachments
                               .map(row => ({
                                 ...row,
