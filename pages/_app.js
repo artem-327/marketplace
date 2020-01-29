@@ -16,7 +16,7 @@ import 'nprogress/nprogress.css'
 import shortid from 'shortid'
 import { ToastProvider } from 'react-toast-notifications'
 import TagManager from 'react-gtm-module'
-import { AlertCircle, AlertTriangle, CheckCircle, X } from 'react-feather'
+import { AlertCircle, AlertTriangle, CheckCircle, Info, X } from 'react-feather'
 
 const gtmId = process.env.REACT_APP_GTM_ID || 'GTM-MKSVRW4'
 
@@ -37,6 +37,8 @@ const ProdexToast = (toast) => {
       icon = (<CheckCircle />)
       break
     case 'info':
+      icon = (<Info />)
+      break
     case 'warning':
       icon = (<AlertCircle />)
       break
