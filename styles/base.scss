@@ -65,8 +65,11 @@ a.ui.button {
   z-index: 601;
 }
 
-body > *:not(.modals) .bootstrapiso .table-responsive {
+.table-responsive-wider .table-responsive {
   width: calc(100% + 2.2857143em);
+}
+
+body > *:not(.modals) .bootstrapiso .table-responsive {
   margin-right: -2.2857143em;
   border: 0 none;
   padding-right: 2.2857143em;
