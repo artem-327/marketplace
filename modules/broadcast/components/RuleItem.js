@@ -13,21 +13,21 @@ const RuleItem = props => {
     onChange,
     onPriceChange,
     onRowClick,
-    item,
+    // item,
     offer,
-    item: {
-      model: { name, rule }
-    },
     hideFobPrice,
     filter,
     loadingChanged,
     asSidebar
     // tree,
   } = props
+  // let item = _.cloneDeep(props.item)
+  let { item } = props
+  let {
+    model: { name, rule }
+  } = item
 
   const handleChange = (propertyName, e) => {
-    // loadingChanged(true)
-
     e.preventDefault()
     e.stopPropagation()
 
@@ -38,13 +38,13 @@ const RuleItem = props => {
 
     if (item.hasChildren()) {
       item.walk(node => {
-        node.model.rule.broadcast = newValue
+        node.model.rule[propertyName] = newValue
       })
-    }
 
-    // let path = item.getPath()
-    // path.pop()
-    // path.forEach(n => setBroadcast(n))
+      // Hack...
+      // For some reason walk above doesn't change broadcast value of regions...
+      item.model.rule.elements.forEach(element => (element[propertyName] = newValue))
+    }
     onChange(item)
   }
 
@@ -52,33 +52,32 @@ const RuleItem = props => {
     onRowClick(i)
   }
 
+  //get company name from item based on id with 2 loops. When find the same id then has companyName and breaks all loops
+  const findCompany = () => {
+    if (getSafe(() => item.model.rule.type, null) === 'branch') {
+      for (let i in getSafe(() => item.parent.model.rule.elements, [])) {
+        if (item.parent.model.rule.elements[i].elements.length) {
+          for (let j in item.parent.model.rule.elements[i].elements) {
+            if (item.parent.model.rule.elements[i].elements[j].id === getSafe(() => item.model.rule.id, '')) {
+              return item.parent.model.rule.elements[i].name
+            }
+          }
+        }
+      }
+    }
+    return ''
+  }
+
   const nodePath = item.getPath()
-  let { allChildrenBroadcasting, anyChildBroadcasting } = getNodeStatus(item)
 
   const broadcastedParents = nodePath
     .reverse()
     .slice(1)
     .filter(n => n.model.rule.broadcast === 1)
   const parentBroadcasted = broadcastedParents.reverse()[0]
-  const nodeBroadcast = rule.broadcast === 1 || allChildrenBroadcasting ? 1 : 0
+  const nodeBroadcast = rule.broadcast
 
-  let companyName = ''
-  //get company name from item based on id with 2 loops. When find the same id then has companyName and breaks all loops
-  if (getSafe(() => item.model.rule.type, null) === 'branch') {
-    loop1: for (let i in getSafe(() => item.parent.model.rule.elements, [])) {
-      if (item.parent.model.rule.elements[i].elements.length) {
-        loop2: for (let j in item.parent.model.rule.elements[i].elements) {
-          if (item.parent.model.rule.elements[i].elements[j].id === getSafe(() => item.model.rule.id, '')) {
-            companyName = item.parent.model.rule.elements[i].name
-            break loop1
-          }
-        }
-      }
-    }
-  }
-
-  // const toggleDisabled = !!parentBroadcasted
-  // const priceDisabled = rule.broadcast === 0 //!(rule.broadcast === 1 && !parentBroadcasted) //allChildrenBroadcasting || rule.broadcast !== 1 || toggleDisabled
+  let companyName = findCompany()
 
   return (
     <>
@@ -90,7 +89,7 @@ const RuleItem = props => {
         style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
         <Rule.RowContent>
           {item.children.length > 0 && rule.type !== 'root' ? (
-            <Icon name={`chevron ${item.model.expanded ? 'down' : 'right'}`} />
+            <Icon name={`chevron ${item.model.rule.expanded ? 'down' : 'right'}`} />
           ) : (
             <EmptyIconSpace />
           )}
@@ -103,8 +102,8 @@ const RuleItem = props => {
             data-test='broadcast_rule_toggle_chckb'
             toggle
             fitted
-            indeterminate={!allChildrenBroadcasting && anyChildBroadcasting}
-            checked={rule.broadcast === 1 || allChildrenBroadcasting}
+            indeterminate={nodeBroadcast === 2}
+            checked={nodeBroadcast === 1}
             // disabled={toggleDisabled}
             onClick={e => handleChange('broadcast', e)}
           />
@@ -114,15 +113,14 @@ const RuleItem = props => {
           hideFobPrice={hideFobPrice}
           data-test='broadcast_price_control'
           offer={offer}
-          disabled={rule.broadcast === 0}
+          disabled={nodeBroadcast === 0}
           rootRule={parentBroadcasted ? parentBroadcasted.model.rule : null}
-          rule={rule}
           item={item}
           onChange={onPriceChange}
         />
       </Rule.Row>
 
-      {(item.model.expanded || rule.type === 'root') &&
+      {(item.model.rule.expanded || rule.type === 'root') &&
         item.children.map((i, idx) => (
           <RuleItem
             loadingChanged={loadingChanged}
