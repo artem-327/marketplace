@@ -166,8 +166,8 @@ class Detail extends Component {
     let orderDate = moment(order.orderDate, 'MMM Do, YYYY h:mm:ss A')
 
     return (
-      <div id='page' className='scrolling'>
-        <PerfectScrollbar>
+      <div id='page' className='auto-scrolling'>
+        <div class='scroll-area'>
           <Divider hidden />
           <Grid verticalAlign='middle' style={{ padding: '0 32px' }}>
             <GridRow>
@@ -1116,7 +1116,7 @@ class Detail extends Component {
               </Accordion>
             </>
           )}
-        </PerfectScrollbar>
+        </div>
       </div>
     )
   }

@@ -66,6 +66,7 @@ const AttachmentModal = withDatagrid(
           rowSelection={selectable}
           lockSelection={false}
           showSelectAll={false}
+          normalWidth={true}
           showSelectionColumn
           onSelectionChange={selectedRows => this.setState({ selectedRows })}
           getChildGroups={rows =>

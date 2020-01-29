@@ -265,14 +265,21 @@ export default function(state = initialState, action) {
         isSending: false
       }
     case AT.RETURN_SHIPMENT_RATES_FULFILLED:
-    case AT.ORDER_CONFIRM_RETURNED_FETCH_FULFILLED:
-    case AT.ORDER_ACCEPT_DELIVERY_ORDER_FULFILLED:
-    case AT.ORDER_RECEIVED_ORDER_FULFILLED:
-    case AT.ORDER_DISCARD_ORDER:
-    case AT.REJECT_PURCHASE_ORDER_FULFILLED:
       return {
         ...state,
         returnShipmentRates: action.payload.data,
+        isSending: false
+      }
+    case AT.RETURN_SHIPMENT_RATES_PENDING:
+      return {
+        ...state,
+        returnShipmentRates: [],
+        isSending: true
+      }
+    case AT.RETURN_SHIPMENT_RATES_REJECTED:
+      return {
+        ...state,
+        returnShipmentRates: [],
         isSending: false
       }
     case AT.RETURN_SHIPMENT_ORDER_FULFILLED:
@@ -299,6 +306,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         shippingQuotesAreFetching: true,
+        shippingQuotes: []
       }
     }
     case AT.ORDER_SHIPPING_QUOTES_FETCH_FULFILLED: {

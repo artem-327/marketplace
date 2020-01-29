@@ -92,21 +92,20 @@ class SaleReturnShipping extends React.Component {
   }
 
   onDateChange = async (event, { name, value }) => {
-    let pickupDate = null
-    if (value) {
-      pickupDate = moment(getStringISODate(value)) // Value is date only (it means time = 00:00:00)
-      if (pickupDate.isBefore(moment().add(1, 'minutes'))) {
-        // if current date (today) is selected the pickupDate (datetime) is in past
-        pickupDate = moment().add(1, 'minutes') // BE needs to have pickupDate always in future
-      }
-      pickupDate = pickupDate.format()
+    let pickupDate = moment(getStringISODate(value)) // Value is date only (it means time = 00:00:00)
+    if (pickupDate.isBefore(moment().add(1, 'minutes'))) {
+      // if current date (today) is selected the pickupDate (datetime) is in past
+      pickupDate = moment().add(1, 'minutes') // BE needs to have pickupDate always in future
     }
+    pickupDate = pickupDate.format()
+
     if (!this.props.order.cfWeightExceeded) {
       try {
         await this.props.getReturnShipmentRates(this.props.order.id, pickupDate)
       } catch {
       } finally {
       }
+      this.setState({ selectedShippingQuote: 0 })
     }
   }
 
@@ -184,7 +183,6 @@ class SaleReturnShipping extends React.Component {
                               inputProps={{
                                 minDate: moment(),
                                 fluid: true,
-                                clearable: true,
                                 placeholder: formatMessage({ id: 'global.selectDate', defaultMessage: 'Select Date' }),
                                 onChange: (event, val) => this.onDateChange(event, val),
                                 'data-test': 'return_shipping_pickup_date'
@@ -332,30 +330,6 @@ function mapStateToProps(state) {
     isSending: orders.isSending,
     shippingQuotesAreFetching: orders.shippingQuotesAreFetching,
     shippingQuotes: orders.returnShipmentRates
-    /*
-    shippingQuotes: [
-      // ! ! temporary
-      {
-        carrierName: 'Carrier name 1',
-        estimatedDeliveryDate: '2019-12-04T04:11:50.266Z',
-        estimatedPrice: 100,
-        fobPricePerLb: 10,
-        freightPricePerLb: 51,
-        quoteId: 'Quote Id String 1',
-        serviceType: 'Service Type 1',
-        totalPricePerLb: 11
-      },
-      {
-        carrierName: 'Carrier name 2',
-        estimatedDeliveryDate: '2019-12-03T04:11:50.266Z',
-        estimatedPrice: 200,
-        fobPricePerLb: 20,
-        freightPricePerLb: 52,
-        quoteId: 'Quote Id String 2',
-        serviceType: 'Service Type 2',
-        totalPricePerLb: 22
-      }
-    ]*/
   }
 }
 

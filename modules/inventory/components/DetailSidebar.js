@@ -1732,6 +1732,7 @@ class DetailSidebar extends Component {
                                           tableName='inventory_documents'
                                           onTableReady={() => {}}
                                           columns={columns}
+                                          normalWidth={false}
                                           rows={values.documents.attachments
                                             .map(row => ({
                                               ...row,

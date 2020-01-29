@@ -68,7 +68,9 @@ class DocumentManager extends Component {
     }))
 
   render() {
-    const { datagrid, openPopup, removeAttachment, edit, download, deletable, loading, items } = this.props
+    const {
+      datagrid, openPopup, removeAttachment, edit, download, deletable, loading, items, normalWidth
+    } = this.props
 
     let rows = this.getRows(items ? items : this.props.rows)
 
@@ -80,6 +82,7 @@ class DocumentManager extends Component {
         rows={rows}
         loading={items ? false : loading || datagrid.loading}
         style={{ marginTop: '5px' }}
+        normalWidth={normalWidth}
         rowActions={[
           ...(edit
             ? [
@@ -132,13 +135,15 @@ DocumentManager.propTypes = {
   edit: bool,
   download: bool,
   delete: bool,
-  items: array
+  items: array,
+  normalWidth: bool
 }
 
 DocumentManager.defaultProps = {
   edit: true,
   download: true,
-  deletable: true
+  deletable: true,
+  normalWidth: false
 }
 
 const mapStateToProps = (store, { datagrid }) => {

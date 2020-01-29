@@ -300,7 +300,7 @@ class MyInventory extends Component {
   getRows = rows => {
     let title = ''
 
-    return rows.map(r => {
+    return rows.map((r, rIndex) => {
       if (!r || !r.cfStatus) return
       const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
 
@@ -370,6 +370,7 @@ class MyInventory extends Component {
           <div style={{ float: 'right' }}>
             <Popup
               id={r.id}
+              position={rIndex === 0 ? 'bottom right' : 'top right'}
               trigger={
                 <Checkbox
                   data-test='my_inventory_broadcast_chckb'

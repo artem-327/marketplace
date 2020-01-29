@@ -852,7 +852,7 @@ class CompanyProductInfo extends Component {
 
       case 4: {
         // Documents
-        return <DocumentManager items={values.attachments} edit={false} deletable={false} />
+        return <DocumentManager items={values.attachments} edit={false} deletable={false} normalWidth={true} />
       }
 
       default:

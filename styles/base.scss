@@ -65,8 +65,11 @@ a.ui.button {
   z-index: 601;
 }
 
-body > *:not(.modals) .bootstrapiso .table-responsive {
+.table-responsive-wider .table-responsive {
   width: calc(100% + 2.2857143em);
+}
+
+body > *:not(.modals) .bootstrapiso .table-responsive {
   margin-right: -2.2857143em;
   border: 0 none;
   padding-right: 2.2857143em;
@@ -304,6 +307,23 @@ i.icon.clickable:hover {
         background: rgba(0,0,0,0.15);
       }
     }
+  }
+}
+
+#page.auto-scrolling {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+
+  > .scroll-area {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  > *:last-child {
+    padding-bottom: 32px;
   }
 }
 
