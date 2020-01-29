@@ -17,84 +17,70 @@ export default class PriceControl extends Component {
   }
 
   state = {
-    value: '',
-    type: ''
+    type: 'multiplier'
   }
 
-  constructor(props) {
-    super(props)
-
-    this.onChange = this.props.onChange
-    // this.onChange = _.debounce(props.onChange, 250)
-  }
-
-  componentWillMount() {
-    const { item } = this.props
-    const {
-      model: { rule }
-    } = item
-
-    this.setState({
-      type: rule.priceAddition !== 0 ? 'addition' : rule.priceMultiplier !== 0 ? 'multiplier' : 'multiplier',
-      value: rule.priceAddition !== 0 ? rule.priceAddition : rule.priceMultiplier !== 0 ? rule.priceMultiplier : ''
-    })
-  }
-
-  componentWillReceiveProps({ rule }) {
-    this.setState({
-      //type: model.priceAddition > 0 ? 'addition' : model.priceMultiplier > 0 ? 'multiplier' : '',
-      value: rule.priceAddition !== 0 ? rule.priceAddition : rule.priceMultiplier !== 0 ? rule.priceMultiplier : ''
-    })
-  }
-
-  componentDidUpdate({ item }, next) {
-    let { rule } = item.model
-    if (rule.priceType && rule.priceType !== this.state.type) this.setState({ type: rule.priceType })
-  }
+  componentDidMount() {}
 
   handleChange = (e, { name, value }) => {
     e.preventDefault()
     e.stopPropagation()
 
-    const { item } = this.props
-    const {
+    // helper
+    const asignValues = (values, rule) => {
+      Object.keys(values).forEach(key => {
+        rule[key] = values[key]
+      })
+    }
+
+    let { item } = this.props
+
+    let {
       model: { rule }
     } = item
 
-    if (name === 'type' && item.hasChildren()) {
+    let type = name === 'type' ? value : this.state.type
+    let val = rule.priceAddition !== 0 ? rule.priceAddition : rule.priceMultiplier !== 0 ? rule.priceMultiplier : ''
+
+    let minimum = name === 'type' ? this.calculateMinimum(value) : this.calculateMinimum(type)
+
+    if (this.state.type !== type) this.setState({ type })
+
+    let values = {}
+    if (name === 'value' && value < minimum) value = minimum
+    if (name === 'type' && val < minimum) value = minimum
+
+    if (name === 'type') {
+      if (type === 'multiplier' && rule.priceMultiplier) return
+      values = {
+        priceAddition: rule.priceMultiplier,
+        priceMultiplier: rule.priceAddition
+      }
+    } else {
+      if (type === 'addition') {
+        values = { priceAddition: value ? parseFloat(value, 10) : 0, priceMultiplier: 0 }
+      } else {
+        values = { priceMultiplier: value ? parseFloat(value, 10) : 0, priceAddition: 0 }
+      }
+    }
+
+    asignValues(values, rule)
+
+    if (item.hasChildren()) {
       item.walk(n => {
-        if (!n.model.rule.priceOverride) {
-          n.model.rule.priceType = value
-        }
+        if (!n.model.rule.priceOverride) asignValues(values, n.model.rule)
+      })
+      // Same hack as in RuleItem.handleChange
+      item.model.rule.elements.forEach(el => {
+        if (!el.priceOverride) asignValues(values, el)
       })
     }
-    rule.priceType === value
 
-    let minimum = name === 'type' ? this.calculateMinimum(value) : this.calculateMinimum()
-
-    if (name === 'value' && value < minimum) value = minimum
-    if (name === 'type' && this.state.value < minimum) this.setState({ value: minimum })
-
-    this.setState({ [name]: value }, () => {
-      const { value, type } = this.state
-
-      if (type === 'addition') {
-        rule.priceAddition = value ? parseFloat(value, 10) : 0
-        rule.priceMultiplier = 0
-
-        this.onChange(item)
-      } else if (type === 'multiplier') {
-        rule.priceMultiplier = value ? parseFloat(value, 10) : 0
-        rule.priceAddition = 0
-
-        this.onChange(item)
-      }
-    })
-
+    this.props.onChange(item)
     return false
   }
 
-  calculateMinimum = (type = this.state.type) => {
+  calculateMinimum = type => {
     const { offer } = this.props
     if (type === 'multiplier') {
       return -99.9
@@ -129,9 +115,15 @@ export default class PriceControl extends Component {
   }
 
   render() {
-    const { disabled, offer, hideFobPrice } = this.props
-    const { type, value } = this.state
+    const { disabled, offer, item, hideFobPrice } = this.props
+    const {
+      model: { rule }
+    } = item
+
     const prices = hideFobPrice ? null : this.getPrices()
+    let type = rule.priceAddition ? 'addition' : this.state.type
+
+    let value = rule.priceAddition !== 0 ? rule.priceAddition : rule.priceMultiplier !== 0 ? rule.priceMultiplier : ''
 
     return (
       <Box>
@@ -139,7 +131,7 @@ export default class PriceControl extends Component {
           disabled={disabled}
           name='value'
           type='number'
-          min={hideFobPrice ? null : this.calculateMinimum()}
+          min={hideFobPrice ? null : this.calculateMinimum(type)}
           value={value}
           step={type === 'multiplier' ? 0.1 : 0.001}
           onClick={e => {
