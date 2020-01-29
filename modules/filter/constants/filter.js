@@ -149,7 +149,7 @@ export const datagridValues = {
   },
 
   search: {
-    paths: [paths.productOffers.productId, paths.casProduct.id],
+    paths: [paths.productOffers.productId, paths.casProduct.id, paths.productOffers.marketplaceProductId],
     description: 'Chemical Name',
     operator: operators.EQUALS,
 

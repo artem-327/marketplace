@@ -567,7 +567,18 @@ class InventoryFilter extends Component {
       return {
         key: option.key || parsed.id,
         text: option.text || parsed.name + ` ${parsed.casNumber}`,
-        value: option.value || option
+        value: option.value || option,
+        content: (
+          <StyledGrid>
+            <GridRow>
+              <GridColumn computer={8}>{parsed.name}</GridColumn>
+
+              <SmallerTextColumn computer={8} textAlign='right'>
+                {parsed.casNumber}
+              </SmallerTextColumn>
+            </GridRow>
+          </StyledGrid>
+        )
       }
     })
   }
