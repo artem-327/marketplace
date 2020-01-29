@@ -36,3 +36,11 @@ export const deleteFilter = createAsyncAction('DELETE_FILTER', templateId => api
 export const updateFilterNotifications = createAsyncAction('UPDATE_FILTER_NOTIFICATIONS', (templateId, notifications) =>
   api.updateFilterNotifications(templateId, notifications)
 )
+
+export const getAutocompleteManufacturer = createAsyncAction('GET_AUTOCOMPLETE_MANUFACTURER_DATA', url =>
+  api.getAutocompleteManufacturer(url)
+)
+
+export const getAutocompleteOrigin = createAsyncAction('GET_AUTOCOMPLETE_ORIGIN_DATA', url =>
+  api.getAutocompleteOrigin(url)
+)

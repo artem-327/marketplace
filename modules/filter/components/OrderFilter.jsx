@@ -27,7 +27,7 @@ const RightAlignedDiv = styled.div`
   text-align: right !important;
 `
 
-const formatDate = date => moment(getStringISODate(date)).toISOString()
+const formatDate = date => getStringISODate(date)
 
 const initialValues = {
   orderFrom: {
@@ -65,23 +65,24 @@ class OrderFilter extends Component {
 
     Object.keys(values).forEach(key => {
       let input = values[key]
-      if (input.value)
+      if (input.value) {
+        const inputValue = input.formatValue ? input.formatValue(input.value) : [input.value]
         payload.filters.push({
           operator: input.operator,
           path: input.path,
-          values: input.formatValue ? input.formatValue(input.value) : [input.value],
-          ...(input.value
+          values: inputValue,
+          ...(inputValue
             ? {
-                tagDescription: datagridValues[key].tagDescription(input.value),
-                valuesDescription: datagridValues[key].valuesDescription(input.value)
+                tagDescription: datagridValues[key].tagDescription(inputValue),
+                valuesDescription: datagridValues[key].valuesDescription(inputValue)
               }
             : {})
         })
+      }
     })
 
     if (!payload.sortDirection) delete payload.sortDirection
     if (!payload.sortPath) delete payload.sortPath
-
     this.props.applyFilter(payload)
     this.props.onApply(payload)
   }
@@ -163,7 +164,8 @@ class OrderFilter extends Component {
                           <DateInput
                             inputProps={{
                               fluid: true,
-                              placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
+                              placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }),
+                              clearable: true
                             }}
                             label={<FormattedMessage id='global.from' defaultMessage='From' />}
                             name='orderFrom.value'
@@ -171,7 +173,8 @@ class OrderFilter extends Component {
                           <DateInput
                             inputProps={{
                               fluid: true,
-                              placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
+                              placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }),
+                              clearable: true
                             }}
                             label={<FormattedMessage id='global.to' defaultMessage='To' />}
                             name='orderTo.value'

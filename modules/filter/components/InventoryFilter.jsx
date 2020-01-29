@@ -59,7 +59,24 @@ import {
   SmallerTextColumn
 } from '../constants/layout'
 
-class Filter extends Component {
+const optionsYesNo = [
+  {
+    id: 0,
+    text: 'Select Option',
+    value: ''
+  },
+  {
+    id: 1,
+    text: 'Yes',
+    value: true
+  },
+  {
+    id: 2,
+    text: 'No',
+    value: false
+  }
+]
+class InventoryFilter extends Component {
   state = {
     savedFiltersActive: false,
     openedSaveFilter: false,
@@ -70,7 +87,9 @@ class Filter extends Component {
     },
     searchQuery: '',
     searchWarehouseQuery: '',
-    isTyping: false
+    isTyping: false,
+    searchManufacturerQuery: '',
+    searchOriginQuery: ''
   }
 
   componentDidMount() {
@@ -81,12 +100,22 @@ class Filter extends Component {
       fetchWarehouseDistances,
       fetchProductGrade,
       fetchWarehouses,
-      setParams
+      setParams,
+      autocompleteManufacturer,
+      autocompleteOrigin
     } = this.props
 
     if (typeof this.props.searchWarehouseUrl !== 'undefined')
       this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
 
+    //It is nessery to get all manufacturer to options in dropdown if user select saved filter and want to see parametr in dropdown
+    //In the future if will be a lot of manufacturer we can added search to the dropdown and here we can specify pattern to the searchManufacturerUrl
+    if (!autocompleteManufacturer || !autocompleteManufacturer.length)
+      this.props.getAutocompleteManufacturer(this.props.searchManufacturerUrl(''))
+
+    if (!autocompleteOrigin || !autocompleteOrigin.length) {
+      this.props.getAutocompleteOrigin(this.props.getOriginUrl)
+    }
     this.handleGetSavedFilters()
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
@@ -104,7 +133,6 @@ class Filter extends Component {
     let { notificationMail, notificationPhone } = notifications
     let { notifyMail, notifyPhone, notifySystem, notificationEnabled } = checkboxes
     let { filters } = this.toSavedFilter(rest)
-
     return {
       filters,
       name,
@@ -143,12 +171,14 @@ class Filter extends Component {
               names.push(inputs[key][k].name)
             }
           })
-
-          if (ids.length > 0) datagridFilter.filters.push(datagridValues[key].toFilter(ids, names))
+          if (ids.length > 0) {
+            datagridFilter.filters.push(datagridValues[key].toFilter(ids, names))
+          }
         } else {
           try {
             if (typeof datagridValues[key] !== 'undefined') {
               let filter = datagridValues[key] && datagridValues[key].toFilter(inputs[key], this.props.filterType)
+
               if (!(filter.values instanceof Array)) filter.values = [filter.values] // We need values to be an array
 
               datagridFilter.filters.push(filter)
@@ -193,7 +223,6 @@ class Filter extends Component {
 
     async function callback(id) {
       let requestData = self.generateRequestData(params)
-
       try {
         if (id) await self.props.updateFilter(id, requestData)
         else {
@@ -314,16 +343,22 @@ class Filter extends Component {
     for (let i = 0; i < filters.length; i++) {
       datagridKeys.forEach(key => {
         let datagrid = datagridValues[key]
-        if (datagrid.paths.includes(filters[i].path) && filters[i].operator === datagrid.operator) {
+        if (
+          datagrid &&
+          datagrid.paths &&
+          datagrid.paths.includes(filters[i].path) &&
+          filters[i].operator === datagrid.operator
+        ) {
           if (filters[i].path === 'ProductOffer.lotExpirationDate') {
             formikValues['expiration'] = datagridValues['expiration'].toFormik(filters[i].operator)
           }
           if (filters[i].path === 'ProductOffer.lotManufacturedDate') {
             formikValues['mfg'] = datagridValues['mfg'].toFormik(filters[i].operator)
           }
-          if (filters[i].path === 'ProductOffer.companyProduct.echoProduct.id') {
+          if (filters[i].path === 'ProductOffer.companyProduct.id') {
             this.searchProductOffer(filters[i].values)
           }
+
           formikValues[key] = datagrid.toFormik(filters[i], datagrid.nested && this.props[key])
         }
       })
@@ -343,7 +378,9 @@ class Filter extends Component {
       ...formikValues
     }
 
-    Object.keys(formikValues).forEach(key => setFieldValue(key, formikValues[key]))
+    Object.keys(formikValues).forEach(key => {
+      setFieldValue(key, formikValues[key])
+    })
 
     this.toggleFilter(false)
 
@@ -366,7 +403,7 @@ class Filter extends Component {
     this.setState({ inactiveAccordion: { ...this.state.inactiveAccordion, [name]: !inactive } })
   }
 
-  handleSearch = debounce(({ searchQuery, name }) => {
+  handleSearch = debounce(({ searchQuery }) => {
     if (searchQuery.length > 1) {
       let params = { searchUrl: this.props.searchUrl(searchQuery), searchQuery }
       this.props.getAutocompleteData(params)
@@ -440,7 +477,7 @@ class Filter extends Component {
             onChange={handleChange}
             inputProps={{
               'data-test': 'filter_dateField_drpdn',
-              value: this.state.dateDropdown[name],
+              value: values[name],
               onChange: (_, data) => {
                 setFieldValue(data.name, data.value)
                 setFieldValue(inputName, '')
@@ -526,11 +563,11 @@ class Filter extends Component {
 
   getOptions = options => {
     return options.map(option => {
-      let parsed = JSON.parse(option.value)
+      let parsed = option.value ? JSON.parse(option.value) : JSON.parse(option)
       return {
-        key: option.key,
-        text: option.text,
-        value: option.value,
+        key: option.key || parsed.id,
+        text: option.text || parsed.name + ` ${parsed.casNumber}`,
+        value: option.value || option,
         content: (
           <StyledGrid>
             <GridRow>
@@ -559,7 +596,11 @@ class Filter extends Component {
       autocompleteWarehouse,
       autocompleteWarehouseLoading,
       layout,
-      savedAutocompleteData
+      savedAutocompleteData,
+      autocompleteManufacturer,
+      autocompleteManufacturerLoading,
+      autocompleteOrigin,
+      autocompleteOriginLoading
     } = this.props
 
     const { formatMessage } = intl
@@ -636,8 +677,86 @@ class Filter extends Component {
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null)
     }
 
+    let noManufacturerResultsMessage = null
+    if (this.state.searchManufacturerQuery.length <= 1)
+      noManufacturerResultsMessage = (
+        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+      )
+    if (autocompleteManufacturerLoading)
+      noManufacturerResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
+
+    let dropdownManufacturerProps = {
+      search: true,
+      selection: true,
+      multiple: false,
+      fluid: true,
+      clearable: true,
+      options: autocompleteManufacturer.map(manufacturer => {
+        return {
+          key: manufacturer.id,
+          text: manufacturer.name,
+          value: JSON.stringify({ id: manufacturer.id, text: manufacturer.name })
+        }
+      }),
+      loading: autocompleteManufacturerLoading,
+      name: 'manufacturer',
+      placeholder: <FormattedMessage id='filter.searchManufacturer' defaultMessage='Search Manufacturer' />,
+      noManufacturerResultsMessage,
+      value: values.manufacturer,
+      onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null)
+    }
+
+    let noOriginResultsMessage = null
+    if (this.state.searchOriginQuery.length <= 1)
+      noOriginResultsMessage = (
+        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+      )
+    if (autocompleteOriginLoading)
+      noOriginResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
+
+    let dropdownOriginProps = {
+      search: true,
+      selection: true,
+      multiple: false,
+      fluid: true,
+      clearable: true,
+      options: autocompleteOrigin.map(origin => {
+        if (!origin && !origin.id) return
+        return {
+          key: origin.id,
+          text: origin.name,
+          value: JSON.stringify({ id: origin.id, text: origin.name })
+        }
+      }),
+      loading: autocompleteOriginLoading,
+      name: 'origin',
+      placeholder: <FormattedMessage id='filter.searchOrigin' defaultMessage='Search Origin' />,
+      noOriginResultsMessage,
+      value: values.origin,
+      onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null)
+    }
+
+    let dropdownBroadcastedProps = {
+      search: true,
+      selection: true,
+      multiple: false,
+      fluid: true,
+      clearable: true,
+      options: optionsYesNo.map(option => {
+        return {
+          key: option.id,
+          text: option.text,
+          value: option.value
+        }
+      }),
+      name: 'broadcast',
+      placeholder: <FormattedMessage id='filter.selectOption' defaultMessage='Select Option' />,
+      value: values.broadcast,
+      onChange: (e, data) => setFieldValue(data.name, data.value)
+    }
+
     if (!autocompleteDataLoading) dropdownProps.icon = null
-    if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
+    //if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
 
     let currencySymbol = getSafe(() => this.props.preferredCurrency.symbol, '$')
 
@@ -645,10 +764,82 @@ class Filter extends Component {
       <Accordion>
         <Segment basic>
           <AccordionItem>
-            {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalProductName' />)}
+            {this.accordionTitle('chemicalType', <FormattedMessage id='filter.keywordSearch' />)}
             <AccordionContent active={!this.state.inactiveAccordion.chemicalType}>
               <BottomMargedDropdown {...dropdownProps} />
             </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem>
+            {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
+            <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
+              <BottomMargedDropdown {...dropdownWarehouseProps} />
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem>
+            {this.accordionTitle('broadcasted', <FormattedMessage id='filter.broadcast' />)}
+            <AccordionContent active={!this.state.inactiveAccordion.broadcasted}>
+              <BottomMargedDropdown {...dropdownBroadcastedProps} />
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem>
+            {this.accordionTitle(
+              'mfg',
+              <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
+            )}
+            <AccordionContent active={!this.state.inactiveAccordion.mfg}>
+              <FormGroup widths='equal'>
+                {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
+              </FormGroup>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem>
+            {this.accordionTitle(
+              'expiration',
+              <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
+            )}
+            <AccordionContent active={!this.state.inactiveAccordion.expiration}>
+              <FormGroup widths='equal'>
+                {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
+              </FormGroup>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem>
+            {this.accordionTitle('manufacturer', <FormattedMessage id='filter.manufacturer' />)}
+            <AccordionContent active={!this.state.inactiveAccordion.manufacturer}>
+              <BottomMargedDropdown {...dropdownManufacturerProps} />
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem>
+            {this.accordionTitle('condition', <FormattedMessage id='filter.condition' defaultMessage='Condition' />)}
+            <AccordionContent active={!this.state.inactiveAccordion.condition}>{productConditionRows}</AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem>
+            {this.accordionTitle('origin', <FormattedMessage id='filter.origin' />)}
+            <AccordionContent active={!this.state.inactiveAccordion.origin}>
+              <BottomMargedDropdown {...dropdownOriginProps} />
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem>
+            {this.accordionTitle('productGrades', <FormattedMessage id='filter.grade' defaultMessage='Grade' />)}
+            <AccordionContent active={!this.state.inactiveAccordion.productGrades}>{productGradeRows}</AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem>
+            {this.accordionTitle('productForms', <FormattedMessage id='filter.form' defaultMessage='Form' />)}
+            <AccordionContent active={!this.state.inactiveAccordion.productForms}>{productFormsRows}</AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem>
+            {this.accordionTitle('packaging', <FormattedMessage id='filter.packaging' />)}
+            <AccordionContent active={!this.state.inactiveAccordion.packaging}>{packagingTypesRows}</AccordionContent>
           </AccordionItem>
 
           <AccordionItem>
@@ -676,7 +867,6 @@ class Filter extends Component {
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
-
           <AccordionItem>
             {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
             <AccordionContent active={!this.state.inactiveAccordion.price}>
@@ -710,85 +900,6 @@ class Filter extends Component {
                     name='priceTo'
                   />
                 </FormField>
-              </FormGroup>
-            </AccordionContent>
-          </AccordionItem>
-
-          {layout === 'MyInventory' && (
-            <AccordionItem>
-              {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
-              <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
-                <BottomMargedDropdown {...dropdownWarehouseProps} />
-              </AccordionContent>
-            </AccordionItem>
-          )}
-
-          <AccordionItem>
-            {this.accordionTitle('packaging', <FormattedMessage id='filter.packaging' />)}
-            <AccordionContent active={!this.state.inactiveAccordion.packaging}>{packagingTypesRows}</AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem>
-            {this.accordionTitle('productGrades', <FormattedMessage id='filter.grade' defaultMessage='Grade' />)}
-            <AccordionContent active={!this.state.inactiveAccordion.productGrades}>{productGradeRows}</AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem>
-            {this.accordionTitle('condition', <FormattedMessage id='filter.condition' defaultMessage='Condition' />)}
-            <AccordionContent active={!this.state.inactiveAccordion.condition}>{productConditionRows}</AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem>
-            {this.accordionTitle('productForms', <FormattedMessage id='filter.form' defaultMessage='Form' />)}
-            <AccordionContent active={!this.state.inactiveAccordion.productForms}>{productFormsRows}</AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem>
-            {this.accordionTitle(
-              'expiration',
-              <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
-            )}
-            <AccordionContent active={!this.state.inactiveAccordion.expiration}>
-              <FormGroup widths='equal'>
-                {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
-              </FormGroup>
-            </AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem>
-            {this.accordionTitle('assay', <FormattedMessage id='filter.assay' />)}
-            <AccordionContent active={!this.state.inactiveAccordion.assay}>
-              <FormGroup widths='equal' data-test='filter_assay_inp'>
-                <Input
-                  inputProps={{
-                    type: 'number',
-                    min: 0,
-                    placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
-                  }}
-                  label={<FormattedMessage id='filter.Minimum(%)' defaultMessage='Minimum' />}
-                  name='assayFrom'
-                />
-                <Input
-                  inputProps={{
-                    type: 'number',
-                    min: 0,
-                    placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
-                  }}
-                  label={<FormattedMessage id='filter.Maximum(%)' defaultMessage='Maximum' />}
-                  name='assayTo'
-                />
-              </FormGroup>
-            </AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem>
-            {this.accordionTitle(
-              'mfg',
-              <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
-            )}
-            <AccordionContent active={!this.state.inactiveAccordion.mfg}>
-              <FormGroup widths='equal'>
-                {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
@@ -959,7 +1070,7 @@ class Filter extends Component {
   }
 }
 
-Filter.propTypes = {
+InventoryFilter.propTypes = {
   isOpen: bool,
   width: string,
   direction: string,
@@ -979,10 +1090,17 @@ Filter.propTypes = {
   searchUrl: func,
   searchWarehouseUrl: func,
   layout: string,
-  filterType: string
+  filterType: string,
+  autocompleteManufacturer: array,
+  getAutocompleteManufacturer: func,
+  searchManufacturerUrl: func,
+  autocompleteOrigin: array,
+  getAutocompleteOrigin: func,
+  searchOriginUrl: func,
+  getOriginUrl: string
 }
 
-Filter.defaultProps = {
+InventoryFilter.defaultProps = {
   isOpen: false,
   width: 'very wide',
   direction: 'right',
@@ -994,7 +1112,10 @@ Filter.defaultProps = {
   savedFilters: [],
   savedFiltersLoading: false,
   layout: '',
-  filterType: filterTypes.INVENTORY
+  filterType: filterTypes.INVENTORY,
+  autocompleteManufacturer: [],
+  autocompleteOrigin: [],
+  getOriginUrl: ''
 }
 
-export default withToastManager(injectIntl(Filter))
+export default withToastManager(injectIntl(InventoryFilter))

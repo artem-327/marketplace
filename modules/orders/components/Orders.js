@@ -416,6 +416,7 @@ class Orders extends Component {
   componentDidMount() {
     const { endpointType, filterData } = this.props
     this.props.loadData(endpointType, { status: 'All' })
+    this.handleFilterClear()
   }
 
   componentDidUpdate(prevProps) {
