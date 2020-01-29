@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Button, Popup, List, Icon } from 'semantic-ui-react'
+import { Container, Menu, Header, Button, Popup, List, Icon, Tab } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 
@@ -11,6 +11,7 @@ import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
+import { Holds } from './tab-holds'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -19,7 +20,6 @@ const CapitalizedText = styled.span`
 const DivButtonWithToolTip = styled.div`
   z-index: 501;
 `
-
 class Marketplace extends Component {
   state = {
     columns: [
@@ -234,85 +234,84 @@ class Marketplace extends Component {
     }, [])
   }
 
-  render() {
+  renderTabMarketplace = () => {
     const { datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading, openPopup } = this.props
     const { columns, selectedRows } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
     return (
       <>
-        <Container fluid style={{ padding: '0 32px' }}>
-          <ShippingQuotes
-            modalProps={{
-              open: this.state.open,
-              closeModal: () => this.setState({ open: false })
-            }}
-            productOfferIds={rows.reduce(function(filtered, row) {
-              if (selectedRows.includes(row.id)) {
-                filtered.push(row.id)
-              }
-              return filtered
-            }, [])}
-            productOffersSelected={rows.reduce(function(filtered, row) {
-              if (selectedRows.includes(row.id)) {
-                filtered.push({
-                  id: row.id,
-                  min: row.minPkg,
-                  split: row.splitPkg
-                })
-              }
-              return filtered
-            }, [])}
-            removePopup={this.props.removePopup}
-            echoProducts={this.getEchoProducts(rows, selectedRows)}
-            {...this.props}
-          />
+        <ShippingQuotes
+          modalProps={{
+            open: this.state.open,
+            closeModal: () => this.setState({ open: false })
+          }}
+          productOfferIds={rows.reduce(function(filtered, row) {
+            if (selectedRows.includes(row.id)) {
+              filtered.push(row.id)
+            }
+            return filtered
+          }, [])}
+          productOffersSelected={rows.reduce(function(filtered, row) {
+            if (selectedRows.includes(row.id)) {
+              filtered.push({
+                id: row.id,
+                min: row.minPkg,
+                split: row.splitPkg
+              })
+            }
+            return filtered
+          }, [])}
+          removePopup={this.props.removePopup}
+          echoProducts={this.getEchoProducts(rows, selectedRows)}
+          {...this.props}
+        />
 
-          <Menu secondary className='page-part'>
-            <Menu.Menu position='right'>
-              <Menu.Item>
-                <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
-              </Menu.Item>
-              <Popup
-                wide='very'
-                data-test='array_to_multiple_list'
-                content={
-                  <FormattedMessage
-                    id='marketplace.shippingQuoteTooltip'
-                    defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
-                  />
-                }
-                disabled={selectedRows.length !== 0}
-                position='bottom right'
-                trigger={
-                  <DivButtonWithToolTip
-                    data-tooltip={
-                      this.isSelectedMultipleEcho(rows, selectedRows)
-                        ? formatMessage({
-                            id: 'marketplace.multipleEchoProduct',
-                            defaultMessage: 'Multiple ProductOffers can not be calculate.'
-                          })
-                        : null
-                    }
-                    data-position='bottom right'>
-                    <Button
-                      disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
-                      primary
-                      onClick={() => this.setState({ open: true })}
-                      data-test='marketplace_shipping_quote_btn'>
-                      <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button>
-                  </DivButtonWithToolTip>
-                }
-              />
-              <Menu.Item>
-                <SubMenu clearAutocompleteData={this.handleClearAutocompleteData} />
-              </Menu.Item>
-            </Menu.Menu>
-          </Menu>
-        </Container>
+        <Menu secondary className='page-part'>
+          <Menu.Menu position='right'>
+            <Menu.Item>
+              <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
+            </Menu.Item>
+            <Popup
+              wide='very'
+              data-test='array_to_multiple_list'
+              content={
+                <FormattedMessage
+                  id='marketplace.shippingQuoteTooltip'
+                  defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
+                />
+              }
+              disabled={selectedRows.length !== 0}
+              position='bottom right'
+              trigger={
+                <DivButtonWithToolTip
+                  data-tooltip={
+                    this.isSelectedMultipleEcho(rows, selectedRows)
+                      ? formatMessage({
+                          id: 'marketplace.multipleEchoProduct',
+                          defaultMessage: 'Multiple ProductOffers can not be calculate.'
+                        })
+                      : null
+                  }
+                  data-position='bottom right'>
+                  <Button
+                    disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
+                    primary
+                    onClick={() => this.setState({ open: true })}
+                    data-test='marketplace_shipping_quote_btn'>
+                    <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button>
+                </DivButtonWithToolTip>
+              }
+            />
+            <Menu.Item>
+              <SubMenu clearAutocompleteData={this.handleClearAutocompleteData} />
+            </Menu.Item>
+          </Menu.Menu>
+        </Menu>
+
         <div class='flex stretched' style={{ padding: '10px 32px' }}>
           <ProdexGrid
             groupActions={row => {
@@ -383,6 +382,30 @@ class Marketplace extends Component {
           filters={datagrid.filters}
         />
         <AddCart />
+      </>
+    )
+  }
+
+  render() {
+    const panes = [
+      {
+        menuItem: 'MARKETPLACE',
+        render: () => <Tab.Pane attached={false}>{this.renderTabMarketplace()}</Tab.Pane>
+      },
+      {
+        menuItem: 'WANTED BOARD',
+        render: () => <Tab.Pane attached={false}>Tab 2 Content</Tab.Pane>
+      },
+      {
+        menuItem: 'HOLDS',
+        render: () => <Tab.Pane attached={false}>{<Holds />}</Tab.Pane>
+      }
+    ]
+    return (
+      <>
+        <Container fluid style={{ padding: '0 32px' }}>
+          <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
+        </Container>
       </>
     )
   }
