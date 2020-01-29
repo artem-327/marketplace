@@ -97,8 +97,7 @@ export default {
   },
   getReturnShipmentRates: (orderId, pickupDate) =>
     api.get(
-      `/prodex/api/shipment/order/${orderId}/return-shipment-rates` +
-      (pickupDate ? `?pickupDate=${encodeURIComponent(pickupDate)}` : '')
+      `/prodex/api/shipment/order/${orderId}/return-shipment-rates?pickupDate=${encodeURIComponent(pickupDate)}`
     ),
   returnShipmentOrder: (orderId, query) =>
     api.patch(`/prodex/api/shipment/order/${orderId}/return-shipment-order${generateQueryString(query)}`),
