@@ -1044,3 +1044,99 @@ i.file {
   right: 0.7rem;
   color: #4e5157;
 }
+
+/* -----------------
+  SEGMENTS
+ */
+
+.ui.segment:not(.inverted) {
+
+  > svg {
+    position: absolute;
+    top: 13px;
+    left: 11px;
+    display: block !important;
+    width: 24px;
+    height: 24px;
+  }
+
+  .column {
+    padding-top: 13px;
+    padding-bottom: 13px;
+    font-size: 14px;
+    font-weight: normal;
+    color: #848893;
+    line-height: 1.43;
+
+    .ui.header {
+      margin: 0 0 4px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #20273a !important;
+      line-height: 1.43;
+    }
+  }
+
+  &.blue,
+  &.green,
+  &.red,
+  &.orange,
+  &.yellow {
+    border-radius: 4px;
+    padding: 13px 35px 13px 45px;
+    background-color: #fff;
+    box-shadow: 0 0 0 0 transparent !important;
+    font-size: 14px;
+  }
+
+  &.blue {
+    border: 1px solid #2599d5 !important;
+
+    > svg { color: #2599d5; }
+  }
+
+  .ui.basic.blue.buttons .button,
+  .ui.basic.blue.button {
+    box-shadow: 0px 0px 0px 1px #2599d5 inset !important;
+    color: #2599d5 !important;
+  }
+
+  &.green {
+    border: 1px solid #84c225 !important;
+
+    > svg { color: #84c225; }
+  }
+
+  .ui.basic.green.buttons .button,
+  .ui.basic.green.button {
+    box-shadow: 0px 0px 0px 1px #84c225 inset !important;
+    color: #84c225 !important;
+  }
+
+  &.red {
+    border: 1px solid #f16844 !important;
+
+    > svg { color: #f16844; }
+  }
+
+  .ui.basic.red.buttons .button,
+  .ui.basic.red.button {
+    box-shadow: 0px 0px 0px 1px #f16844 inset !important;
+    color: #f16844 !important;
+  }
+
+  &.orange,
+  &.yellow {
+    border: 1px solid #ff9d42 !important;
+
+    > svg { color: #ff9d42; }
+  }
+
+  .ui.basic.orange.buttons .button,
+  .ui.basic.orange.button,
+  .ui.basic.yellow.buttons .button,
+  .ui.basic.yellow.button {
+    box-shadow: 0px 0px 0px 1px #ff9d42 inset !important;
+    color: #ff9d42 !important;
+  }
+}
