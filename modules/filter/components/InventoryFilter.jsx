@@ -356,11 +356,7 @@ class InventoryFilter extends Component {
             formikValues['mfg'] = datagridValues['mfg'].toFormik(filters[i].operator)
           }
           if (filters[i].path === 'ProductOffer.companyProduct.id') {
-            const searchQuery = JSON.parse(
-              getSafe(() => filters[i].values[0].description),
-              null
-            )
-            if (searchQuery && searchQuery.name) this.handleSearch({ searchQuery: searchQuery.name })
+            this.searchProductOffer(filters[i].values)
           }
 
           formikValues[key] = datagrid.toFormik(filters[i], datagrid.nested && this.props[key])
@@ -407,7 +403,7 @@ class InventoryFilter extends Component {
     this.setState({ inactiveAccordion: { ...this.state.inactiveAccordion, [name]: !inactive } })
   }
 
-  handleSearch = debounce(({ searchQuery, name }) => {
+  handleSearch = debounce(({ searchQuery }) => {
     if (searchQuery.length > 1) {
       let params = { searchUrl: this.props.searchUrl(searchQuery), searchQuery }
       this.props.getAutocompleteData(params)
@@ -420,6 +416,38 @@ class InventoryFilter extends Component {
       this.setState({ searchWarehouseQuery: searchQuery })
     }
   }, 250)
+
+  searchProductOffer = async filters => {
+    let searchQuery = ''
+    if (filters.length > 1) {
+      for (let i = 0; i < filters.length; i++) {
+        searchQuery = JSON.parse(
+          getSafe(() => filters[i].description),
+          null
+        )
+        if (searchQuery && searchQuery.name) {
+          let params = { searchUrl: this.props.searchUrl(searchQuery.name), searchQuery: searchQuery.name }
+          try {
+            await this.props.getAutocompleteData(params)
+          } catch (err) {
+            console.error(err)
+          }
+        }
+      }
+    } else {
+      searchQuery = JSON.parse(
+        getSafe(() => filters[0].description),
+        null
+      )
+      if (searchQuery && searchQuery.name) {
+        try {
+          this.handleSearch({ searchQuery: searchQuery.name })
+        } catch (err) {
+          console.error(err)
+        }
+      }
+    }
+  }
 
   accordionTitle = (name, text) => (
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
@@ -537,20 +565,9 @@ class InventoryFilter extends Component {
     return options.map(option => {
       let parsed = option.value ? JSON.parse(option.value) : JSON.parse(option)
       return {
-        key: option.key || parseInt(parsed.id),
+        key: option.key || parsed.id,
         text: option.text || parsed.name + ` ${parsed.casNumber}`,
-        value: option.value || JSON.stringify({ ...parsed, id: parseInt(parsed.id) }),
-        content: (
-          <StyledGrid>
-            <GridRow>
-              <GridColumn computer={8}>{parsed.name}</GridColumn>
-
-              <SmallerTextColumn computer={8} textAlign='right'>
-                {parsed.casNumber}
-              </SmallerTextColumn>
-            </GridRow>
-          </StyledGrid>
-        )
+        value: option.value || option
       }
     })
   }
@@ -587,13 +604,14 @@ class InventoryFilter extends Component {
     if (this.state.searchQuery.length <= 1)
       noResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
     if (autocompleteDataLoading) noResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
+    const options = this.getOptions(uniqueArrayByKey(autocompleteData, 'key'))
 
     let dropdownProps = {
-      search: _ => this.getOptions(autocompleteData),
+      search: _ => options,
       selection: true,
       multiple: true,
       fluid: true,
-      options: this.getOptions(uniqueArrayByKey(autocompleteData, 'key')),
+      options: options,
       loading: autocompleteDataLoading,
       name: 'search',
       placeholder: <FormattedMessage id='filter.searchProducts' defaultMessage='Search Products' />,

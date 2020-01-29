@@ -206,11 +206,7 @@ export const datagridValues = {
     toFormik: function({ values }) {
       return values.map(val => {
         let parsed = JSON.parse(val.description)
-        return JSON.stringify({
-          id: val.value,
-          name: parsed.name,
-          casNumber: parsed.casNumberCombined || null
-        })
+        return JSON.stringify({ id: parseInt(val.value), name: parsed.name, casNumber: parsed.casNumberCombined })
       })
     }
   },
