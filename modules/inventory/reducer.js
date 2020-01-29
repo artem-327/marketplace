@@ -63,7 +63,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         poCreated: true,
-        loading: false,
+        loading: false
         //sidebarValues: payload
       }
     }
@@ -86,7 +86,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         poCreated: true,
-        loading: false,
+        loading: false
         //sidebarValues: payload
       }
     }
@@ -452,25 +452,27 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         autocompleteDataLoading: false,
-        autocompleteData: uniqueArrayByKey(action.payload, 'id').map(el => {
-          const productCode = getSafe(() => el.intProductCode, el.mfrProductCode)
-          const productName = getSafe(() => el.intProductName, el.mfrProductName)
-          return {
-            ...el,
-            key: el.id,
-            text: `${productName} ${productCode}`,
-            value: JSON.stringify({
-              id: el.id,
-              name: productName,
-              casNumber: productCode
-            }),
-            content: {
-              productCode: productCode,
-              productName: productName,
-              casProducts: getSafe(() => el.echoProduct.elements, [])
+        autocompleteData: state.autocompleteData.concat(
+          uniqueArrayByKey(action.payload, 'id').map(el => {
+            const productCode = getSafe(() => el.intProductCode, el.mfrProductCode)
+            const productName = getSafe(() => el.intProductName, el.mfrProductName)
+            return {
+              ...el,
+              key: el.id,
+              text: `${productName} ${productCode}`,
+              value: JSON.stringify({
+                id: el.id,
+                name: productName,
+                casNumber: productCode
+              }),
+              content: {
+                productCode: productCode,
+                productName: productName,
+                casProducts: getSafe(() => el.echoProduct.elements, [])
+              }
             }
-          }
-        })
+          })
+        )
       }
     }
 
@@ -497,13 +499,12 @@ export default function reducer(state = initialState, action) {
         ...state,
         editProductOfferInitTrig: !state.editProductOfferInitTrig,
         sidebarDetailOpen: true,
-        sidebarValues: payload.row,   // null (Add new) or object (Edit)
+        sidebarValues: payload.row, // null (Add new) or object (Edit)
         sidebarActiveTab: payload.activeTab
       }
     }
 
-    case AT.INVENTORY_CLOSE_SIDEBAR:
-    {
+    case AT.INVENTORY_CLOSE_SIDEBAR: {
       return {
         ...state,
         sidebarDetailOpen: false,

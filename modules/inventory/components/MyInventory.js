@@ -3,7 +3,7 @@ import { Container, Menu, Header, Checkbox, Popup, Button } from 'semantic-ui-re
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import ProdexTable from '~/components/table'
-import { Filter } from '~/modules/filter'
+import { InventoryFilter } from '~/modules/filter'
 
 import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
 
@@ -278,6 +278,7 @@ class MyInventory extends Component {
     }
     // Because of #31767
     this.props.setCompanyElligible()
+    this.handleFilterClear()
   }
 
   filterInventory = async filter => {
@@ -432,7 +433,7 @@ class MyInventory extends Component {
       sidebarValues,
       openPopup,
       editedId,
-      closeSidebarDetail,
+      closeSidebarDetail
     } = this.props
     const { columns, selectedRows } = this.state
 
@@ -617,12 +618,14 @@ class MyInventory extends Component {
           />
         </div>
         {sidebarDetailOpen && <DetailSidebar />}
-        <Filter
+        <InventoryFilter
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}
           savedUrl='/prodex/api/product-offers/own/datagrid/saved-filters'
           searchUrl={text => `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`}
           searchWarehouseUrl={text => `/prodex/api/branches/warehouses/search?pattern=${text}`}
+          searchManufacturerUrl={text => `/prodex/api/manufacturers/search?search=${text}`}
+          getOriginUrl={`/prodex/api/countries`}
           apiUrl={datagrid.apiUrl}
           filters={datagrid.filters}
           layout='MyInventory'

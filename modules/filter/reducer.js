@@ -5,6 +5,7 @@ import { uniqueArrayByKey, mapAutocompleteData } from '~/utils/functions'
 
 import { datagridValues, paths, filterPresets } from './constants/filter'
 import { currency } from '~/constants/index'
+import { getSafe } from '~/utils/functions'
 
 const asignFiltersDescription = (filter, params) => {
   let datagridKeys = Object.keys(datagridValues)
@@ -15,13 +16,18 @@ const asignFiltersDescription = (filter, params) => {
     filters.forEach(filter => {
       datagridKeys.forEach(key => {
         let datagrid = datagridValues[key]
-        if (datagrid.paths.includes(filter.path) && datagrid.operator === filter.operator) {
+        if (
+          datagrid &&
+          datagrid.paths &&
+          datagrid.paths.includes(filter.path) &&
+          datagrid.operator === filter.operator
+        ) {
           filter.description = datagrid.description
-          filter.valuesDescription = datagridValues[key].valuesDescription(filter.values, params)
+          filter.valuesDescription = getSafe(() => datagridValues[key].valuesDescription(filter.values, params), null)
           try {
-            filter.tagDescription = datagridValues[key].tagDescription(filter.values, params)
+            filter.tagDescription = getSafe(() => datagridValues[key].tagDescription(filter.values, params), null)
           } catch (_) {
-            filter.tagDescription = datagridValues[key].valuesDescription(filter.values, params)
+            filter.tagDescription = getSafe(() => datagridValues[key].valuesDescription(filter.values, params), null)
           }
         }
       })
@@ -45,7 +51,11 @@ export const initialState = {
   savedAutocompleteData: [],
   params: {
     currencyCode: currency
-  }
+  },
+  autocompleteManufacturer: [],
+  autocompleteManufacturerLoading: false,
+  autocompleteOrigin: [],
+  autocompleteOriginLoading: false
 }
 
 export default typeToReducer(
@@ -199,7 +209,6 @@ export default typeToReducer(
 
     [a.applyFilter]: (state, { payload }) => {
       let appliedFilter = asignFiltersDescription(payload, state.params)
-
       return {
         ...state,
         appliedFilter: {
@@ -288,6 +297,52 @@ export default typeToReducer(
       return {
         ...state,
         isFilterSaving: false
+      }
+    },
+
+    /* GET_AUTOCOMPLETE_MANUFACTURER_DATA */
+
+    [a.getAutocompleteManufacturer.pending]: state => {
+      return {
+        ...state,
+        autocompleteManufacturerLoading: true
+      }
+    },
+    [a.getAutocompleteManufacturer.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        autocompleteManufacturerLoading: false,
+        autocompleteManufacturer: uniqueArrayByKey(payload.concat(state.autocompleteManufacturer), 'id')
+      }
+    },
+    [a.getAutocompleteManufacturer.rejected]: state => {
+      return {
+        ...state,
+        autocompleteManufacturerLoading: false,
+        autocompleteManufacturer: []
+      }
+    },
+
+    /* GET_AUTOCOMPLETE_ORIGIN_DATA */
+
+    [a.getAutocompleteOrigin.pending]: state => {
+      return {
+        ...state,
+        autocompleteOriginLoading: true
+      }
+    },
+    [a.getAutocompleteOrigin.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        autocompleteOriginLoading: false,
+        autocompleteOrigin: uniqueArrayByKey(payload.concat(state.autocompleteOrigin), 'id')
+      }
+    },
+    [a.getAutocompleteOrigin.rejected]: state => {
+      return {
+        ...state,
+        autocompleteOriginLoading: false,
+        autocompleteOrigin: []
       }
     }
   },

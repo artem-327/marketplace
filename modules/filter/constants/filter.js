@@ -1,5 +1,6 @@
 import moment from 'moment'
-import { FormattedNumber, FormattedDate } from 'react-intl'
+import { FormattedNumber } from 'react-intl'
+import { getLocaleDateFormat } from '~/components/date-format'
 
 export const operators = {
   CONTAINS: 'CONTAINS',
@@ -37,7 +38,12 @@ export const paths = {
     assayFrom: 'ProductOffer.assayMin',
     assayTo: 'ProductOffer.assayMax',
     manufacturedDate: 'ProductOffer.lotManufacturedDate',
-    warehouseId: 'ProductOffer.warehouse.id'
+    warehouseId: 'ProductOffer.warehouse.id',
+    manufacturerId: 'ProductOffer.companyProduct.echoProduct.manufacturer.id',
+    broadcast: 'ProductOffer.broadcasted',
+    origin: 'ProductOffer.origin.id',
+    expiration: 'ProductOffer.lotExpirationDate',
+    mfg: 'ProductOffer.lotManufacturedDate'
   },
   orders: {
     orderDate: 'Order.orderDate',
@@ -54,7 +60,7 @@ export const dateDropdownOptions = [
   { key: 1, value: 'To', text: 'Less Than' }
 ]
 
-export const dateFormat = 'YYYY-MM-DD'
+export const dateFormat = getLocaleDateFormat()
 
 export const replaceAmbigiousCharacters = text =>
   text
@@ -143,7 +149,7 @@ export const datagridValues = {
   },
 
   search: {
-    paths: [paths.productOffers.productId, paths.casProduct.id],
+    paths: [paths.productOffers.productId, paths.casProduct.id, paths.productOffers.marketplaceProductId],
     description: 'Chemical Name',
     operator: operators.EQUALS,
 
@@ -200,11 +206,7 @@ export const datagridValues = {
     toFormik: function({ values }) {
       return values.map(val => {
         let parsed = JSON.parse(val.description)
-        return JSON.stringify({
-          id: val.value,
-          name: parsed.name,
-          casNumber: parsed.casNumberCombined || null
-        })
+        return JSON.stringify({ id: parseInt(val.value), name: parsed.name, casNumber: parsed.casNumberCombined })
       })
     }
   },
@@ -453,7 +455,8 @@ export const datagridValues = {
     },
 
     toFormik: function({ values }) {
-      return moment(values[0].value.toString()).format(dateFormat)
+      const days = moment().diff(values[0].value, 'days') * -1 + 1
+      return days
     }
   },
   expirationTo: {
@@ -477,7 +480,8 @@ export const datagridValues = {
     },
 
     toFormik: function({ values }) {
-      return moment(values[0].value.toString()).format(dateFormat)
+      const days = moment().diff(values[0].value, 'days') * -1 + 1
+      return days
     }
   },
 
@@ -495,14 +499,15 @@ export const datagridValues = {
       }
     },
 
-    tagDescription: values => `Manufactured > ${values[0].description}`,
+    tagDescription: values => `Manufactured < ${values[0].description}`,
 
     valuesDescription: function(values) {
       return values.map(val => val.description)
     },
 
     toFormik: function({ values }) {
-      return moment(values[0].value.toString()).format(dateFormat)
+      const days = moment().diff(values[0].value, 'days')
+      return days
     }
   },
 
@@ -520,14 +525,15 @@ export const datagridValues = {
       }
     },
 
-    tagDescription: values => `Manufactured < ${values[0].description}`,
+    tagDescription: values => `Manufactured > ${values[0].description}`,
 
     valuesDescription: function(values) {
       return values.map(val => val.description)
     },
 
     toFormik: function({ values }) {
-      return moment(values[0].value.toString()).format(dateFormat)
+      const days = moment().diff(values[0].value, 'days')
+      return days
     }
   },
 
@@ -582,8 +588,14 @@ export const datagridValues = {
     paths: [paths.orders.orderDate],
     description: 'Order Date',
 
-    valuesDescription: val => val,
-    tagDescription: val => <FormattedDate value={val}>{text => `>= ${text}`}</FormattedDate>
+    valuesDescription: val => {
+      if (val.length < 1) return
+      return moment(val[0]).format(dateFormat)
+    },
+    tagDescription: val => {
+      if (val.length < 1) return
+      return moment(val[0]).format(dateFormat)
+    }
   },
 
   orderTo: {
@@ -591,8 +603,14 @@ export const datagridValues = {
     paths: [paths.orders.orderDate],
     description: 'Order Date',
 
-    valuesDescription: val => val,
-    tagDescription: val => <FormattedDate value={val}>{text => `<= ${text}`}</FormattedDate>
+    valuesDescription: val => {
+      if (val.length < 1) return
+      return moment(val[0]).format(dateFormat)
+    },
+    tagDescription: val => {
+      if (val.length < 1) return
+      return moment(val[0]).format(dateFormat)
+    }
   },
 
   vendor: {
@@ -602,6 +620,230 @@ export const datagridValues = {
 
     valuesDescription: val => val,
     tagDescription: val => `Vendor: ${val}`
+  },
+
+  manufacturer: {
+    paths: [paths.productOffers.manufacturerId],
+    description: 'Manufacturer',
+    operator: operators.EQUALS,
+
+    toFilter: function(values) {
+      let data
+      if (Array.isArray(values)) {
+        data = values.map(val => {
+          let parsed = JSON.parse(val)
+          return {
+            value: parsed.id,
+            //description: parsed.name
+            description: JSON.stringify({
+              text: parsed.text
+            })
+          }
+        })
+      } else {
+        let parsed = JSON.parse(values)
+        data = [
+          {
+            value: parsed.id,
+            description: JSON.stringify({
+              text: parsed.text
+            })
+          }
+        ]
+      }
+
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: data,
+        description: this.description
+      }
+    },
+
+    valuesDescription: function(values) {
+      return values.map(val => {
+        try {
+          return JSON.parse(val.description).text
+        } catch {
+          return val.description
+        }
+      })
+    },
+
+    tagDescription: function(values) {
+      return `Manufacturer: ${this.valuesDescription(values)[0]}`
+    },
+
+    toFormik: function({ values }) {
+      let parsed = JSON.parse(values[0].description)
+      return JSON.stringify({
+        id: parseInt(values[0].value),
+        text: parsed.text
+      })
+    }
+  },
+
+  broadcast: {
+    paths: [paths.productOffers.broadcast],
+    description: 'Broadcast',
+    operator: operators.EQUALS,
+
+    toFilter: function(values) {
+      const data = [
+        {
+          value: values
+        }
+      ]
+
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: data,
+        description: this.description
+      }
+    },
+
+    valuesDescription: function(values) {
+      return values.map(val => {
+        if (val.value) {
+          return val.value === false || val.value === 'false'
+            ? 'No'
+            : val.value === true || val.value === 'true'
+            ? 'Yes'
+            : ''
+        }
+      })
+    },
+
+    tagDescription: function(values) {
+      return `Broadcast: ${this.valuesDescription(values)[0]}`
+    },
+
+    toFormik: function({ values }) {
+      const text =
+        values[0].value === 'false' || values[0].value === false || values[0].value === 'No'
+          ? false
+          : values[0].value === 'true' || values[0].value === true || values[0].value === 'Yes'
+          ? true
+          : ''
+      return text
+    }
+  },
+
+  origin: {
+    paths: [paths.productOffers.origin],
+    description: 'Origin',
+    operator: operators.EQUALS,
+
+    toFilter: function(values) {
+      let data
+      if (Array.isArray(values)) {
+        data = values.map(val => {
+          let parsed = JSON.parse(val)
+          return {
+            value: parsed.id,
+            //description: parsed.name
+            description: JSON.stringify({
+              text: parsed.text
+            })
+          }
+        })
+      } else {
+        let parsed = JSON.parse(values)
+        data = [
+          {
+            value: parsed.id,
+            description: JSON.stringify({
+              text: parsed.text
+            })
+          }
+        ]
+      }
+
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: data,
+        description: this.description
+      }
+    },
+
+    valuesDescription: function(values) {
+      return values.map(val => {
+        try {
+          return JSON.parse(val.description).text
+        } catch {
+          return val.description
+        }
+      })
+    },
+
+    tagDescription: function(values) {
+      return `Origin: ${this.valuesDescription(values)[0]}`
+    },
+
+    toFormik: function({ values }) {
+      let parsed = JSON.parse(values[0].description)
+      return JSON.stringify({
+        id: parseInt(values[0].value),
+        text: parsed.text
+      })
+    }
+  },
+
+  expiration: {
+    paths: [paths.productOffers.expiration],
+    description: 'Expiration',
+
+    toFilter: function(values) {
+      const data = [
+        {
+          value: values
+        }
+      ]
+
+      return {
+        path: this.paths[0],
+        values: data,
+        description: this.description
+      }
+    },
+    toFormik: function(operator) {
+      let result
+      if (operator === 'LESS_THAN') {
+        result = 'To'
+      } else if (operator === 'GREATER_THAN') {
+        result = 'From'
+      }
+      return result
+    }
+  },
+
+  mfg: {
+    paths: [paths.productOffers.mfg],
+    description: 'Mfg',
+    toFilter: function(values) {
+      const data = [
+        {
+          value: values
+        }
+      ]
+
+      return {
+        path: this.paths[0],
+        values: data,
+        description: this.description
+      }
+    },
+    toFormik: function(operator) {
+      let result = null
+      if (operator === 'LESS_THAN') {
+        result = 'From'
+      } else if (operator === 'GREATER_THAN') {
+        result = 'To'
+      }
+      return result
+    }
   }
 }
 
@@ -725,21 +967,21 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
         operator: operators.LESS_THAN_OR_EQUAL_TO
       },
       tagDescription: (from, to) => {
-        let sign = from && !to ? '≥ ' : !from && to ? '≤ ' : null
+        let sign = from && !to ? '> ' : !from && to ? '< ' : null
         let dash = from && to ? ' - ' : null
         return (
           <label>
             {from ? (
               <>
                 {sign}
-                <FormattedDate value={from}>{text => text}</FormattedDate>
+                {from}
               </>
             ) : null}
             {to ? (
               <>
                 {dash}
                 {sign}
-                <FormattedDate value={to}>{text => text}</FormattedDate>
+                {to}
               </>
             ) : null}
           </label>
