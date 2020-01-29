@@ -54,7 +54,6 @@ const templateValidation = () =>
 class Broadcast extends Component {
   state = {
     filterSearch: '',
-    tree: new TreeModel().parse({ model: { rule: {} } }),
     selectedTemplate: { name: null, id: null },
     broadcastingTo: 0,
     change: false,
@@ -63,23 +62,9 @@ class Broadcast extends Component {
     loading: false
   }
 
-  constructor(props) {
-    super(props)
-
-    // this.handleFilterChange = _.debounce(this.handleFilterChange, 250)
-  }
-
   componentDidMount() {
     if (this.props.filter.category !== 'region') this.handleFilterChange(null, { name: 'category', value: 'region' })
     this.props.getTemplates()
-  }
-
-  componentWillReceiveProps(props, next) {
-    let tree = this.getFilteredTree(props.treeData, props.filter)
-
-    if (!_.isEqual(tree, this.state.tree)) {
-      this.setState({ tree })
-    }
   }
 
   formChanged = () => {
@@ -109,8 +94,8 @@ class Broadcast extends Component {
       if (priceAddition || priceMultiplier) node.model.rule.priceOverride = 1
     }
 
-    this.setState(prevState => ({ tree: prevState.tree, change: true, saved: false }))
-
+    this.setState({ change: true, saved: false })
+    this.updateInTreeData(node)
     this.formChanged()
   }
 
@@ -132,61 +117,37 @@ class Broadcast extends Component {
     }
   }
 
-  handleChange = node => {
-    //const { treeData } = this.props
-    const findInData = node =>
-      getSafe(
-        () => this.state.tree.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type),
-        null
-      )
+  updateInTreeData = node => {
+    let copy = this.props.treeData
+    if (!node.isRoot()) {
+      let found = copy.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type) // && n.model.type === node.model.rule.type
+      let index = found.getIndex()
+      let path = found.getPath()
+      let parent = path[path.length - 2]
 
-    let path = getSafe(() => findInData(node).getPath(), [])
-    for (let i = path.length - 2; i >= 0; i--) setBroadcast(path[i])
+      // Remove node
+      found.drop()
+      // Set proper values
+      found.model = node.model.rule
+      // Add back removed node (with updated data)
+      parent.addChildAtIndex(found, index)
 
-    this.setState(prevState => ({ tree: prevState.tree, change: true, saved: false }))
-    // Hotfix - Changes were not applied to data structure when clicking on nodes with childs with 'By Company' filter applied
-    // This fixes it, but causes a delay when clicking on root as it iterates through every node and it's path in data structure
-
-    if (this.props.filter.category === 'branch') {
-      if (node.hasChildren()) {
-        node.walk(n => {
-          let childPath = getSafe(() => findInData(n).getPath(), [])
-
-          for (let i = childPath.length - 2; i >= 0; i--) setBroadcast(childPath[i])
-        })
-      }
+      this.props.treeDataChanged(copy)
+    } else {
+      normalizeTree(node)
+      this.props.treeDataChanged(node)
     }
-
-    this.formChanged()
+    return copy
   }
 
-  handleRowClick = node => {
-    node.model.expanded = !node.model.expanded
-
-    if (!node.model.expanded) node.all(n => (n.model.expanded = false))
-    this.setState(prevState => ({ tree: prevState.tree }))
-  }
-
-  handleSearchChange = (e, { name, value }) => {
-    this.setState({ filterSearch: value })
-
-    this.handleFilterChange(e, { name, value })
-  }
-
-  handleFilterChange = (_, { name, value }) => {
-    const { updateFilter, filter } = this.props
-
-    updateFilter({
-      ...filter,
-      [name]: value
-    })
-  }
-
-  getFilteredTree = (treeData, filter) => {
-    const fs = filter.search.toLowerCase()
+  getFilteredTree = () => {
     const {
+      treeData,
+      filter,
       intl: { formatMessage }
     } = this.props
+
+    const fs = filter.search.toLowerCase()
 
     const searchFn = n => {
       var found = false
@@ -211,12 +172,10 @@ class Broadcast extends Component {
     const presets = {
       region: () =>
         new TreeModel().parse({
-          // name: 'By region',
           name: formatMessage({
             id: 'broadcast.byRegion',
             defaultMessage: 'By Region'
           }),
-          // rule: treeData.model, // { ...treeData.model, broadcast: getBroadcast(treeData) },
           rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
           depth: 1,
           children: treeData.children
@@ -286,9 +245,59 @@ class Broadcast extends Component {
     }
 
     normalizeTree(tree)
-    // this.setState({ tree: this.state.tree })
 
     return tree
+  }
+
+  handleChange = node => {
+    const { treeData } = this.props
+    const findInData = node =>
+      getSafe(
+        () => treeData.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type),
+        null
+      )
+
+    let path = getSafe(() => findInData(node).getPath(), [])
+    for (let i = path.length - 2; i >= 0; i--) setBroadcast(path[i])
+
+    // Hotfix - Changes were not applied to data structure when clicking on nodes with childs with 'By Company' filter applied
+    // This fixes it, but causes a delay when clicking on root as it iterates through every node and it's path in data structure
+
+    if (this.props.filter.category === 'branch') {
+      if (node.hasChildren()) {
+        node.walk(n => {
+          let childPath = getSafe(() => findInData(n).getPath(), [])
+
+          for (let i = childPath.length - 2; i >= 0; i--) setBroadcast(childPath[i])
+        })
+      }
+    }
+
+    this.updateInTreeData(node)
+    this.formChanged()
+  }
+
+  handleRowClick = node => {
+    node.model.rule.expanded = !node.model.rule.expanded
+
+    this.updateInTreeData(node)
+
+    if (!node.model.rule.expanded) node.all(n => (n.model.rule.expanded = false))
+  }
+
+  handleSearchChange = (e, { name, value }) => {
+    this.setState({ filterSearch: value })
+
+    this.handleFilterChange(e, { name, value })
+  }
+
+  handleFilterChange = (_, { name, value }) => {
+    const { updateFilter, filter } = this.props
+
+    updateFilter({
+      ...filter,
+      [name]: value
+    })
   }
 
   onTemplateSelected = (_, data, setFieldValue) => {
@@ -338,8 +347,6 @@ class Broadcast extends Component {
       asModal,
       hideFobPrice
     } = this.props
-
-    // let total = treeData.all(n => this.props.filter.category === 'branch' || n.model.type === 'state').length
 
     let total =
       this.props.filter.category === 'region'
@@ -457,7 +464,7 @@ class Broadcast extends Component {
                 onSubmit={async (values, { setSubmitting, setFieldValue }) => {
                   let payload = {
                     mappedBroadcastRules: {
-                      ...this.state.tree.model.rule
+                      ...this.getFilteredTree().model.rule
                     },
                     ...values
                   }
@@ -646,7 +653,8 @@ class Broadcast extends Component {
                                   left: '-20000px'
                                 }
                               : null
-                          }>
+                          }
+                          >
                           <GridColumn computer={11}>
                             <FormikInput
                               inputProps={{
@@ -710,7 +718,7 @@ class Broadcast extends Component {
                   loadingChanged={this.props.loadingChanged}
                   filter={filter}
                   hideFobPrice={hideFobPrice}
-                  item={this.state.tree}
+                  item={this.getFilteredTree()}
                   mode={mode}
                   offer={offer}
                   onRowClick={this.handleRowClick}
@@ -753,10 +761,13 @@ class Broadcast extends Component {
   }
 
   saveBroadcastRules = async () => {
-    const { saveRules, id, treeData, toastManager, filter, initGlobalBroadcast, asSidebar } = this.props
+    const { saveRules, id, toastManager, initGlobalBroadcast, asSidebar } = this.props
+
+    // Reinitialize tree via getFilteredTree func so every node has correct value
+    let filteredTree = this.getFilteredTree()
 
     try {
-      await saveRules(id, this.state.tree.model.rule)
+      await saveRules(id, filteredTree.model.rule)
       if (!asSidebar) {
         await initGlobalBroadcast()
       }
@@ -821,15 +832,15 @@ Broadcast.defaultProps = {
 export default injectIntl(
   withToastManager(
     connect(
-      ({ broadcast: { data, filter, ...rest } }) => {
-        const treeData = data
-          ? new TreeModel({ childrenPropertyName: 'elements' }).parse(data)
+      ({ broadcast }) => {
+        const treeData = broadcast.data
+          ? new TreeModel({ childrenPropertyName: 'elements' }).parse(broadcast.data)
           : new TreeModel().parse({ model: { rule: {} } })
 
+        // console.log({ treeData })
         return {
           treeData,
-          filter,
-          ...rest
+          ...broadcast
         }
       },
       { ...Actions }
