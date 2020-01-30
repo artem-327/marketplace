@@ -259,7 +259,8 @@ class _Table extends Component {
       sortPath: pt.string,
       direction: pt.oneOf(['ASC', 'asc', 'DESC', 'desc'])
     }),
-    editingRowId: pt.number
+    editingRowId: pt.number,
+    normalWidth: pt.bool
   }
 
   static defaultProps = {
@@ -279,7 +280,8 @@ class _Table extends Component {
     onScrollToEnd: () => {},
     onTableReady: () => {},
     defaultSorting: null,
-    editingRowId: null
+    editingRowId: null,
+    normalWidth: false,
   }
 
   constructor(props) {
@@ -617,6 +619,7 @@ class _Table extends Component {
       showSelectionColumn,
       hideCheckboxes,
       editingRowId,
+      normalWidth,
       ...restProps
     } = this.props
 
@@ -639,7 +642,7 @@ class _Table extends Component {
       <Segment basic loading={loading} {...restProps} className='flex stretched' style={{ padding: 0 }}>
         <GlobalTableOverrideStyle />
         <div
-          className='bootstrapiso flex stretched'
+          className={`${normalWidth ? '' : 'table-responsive-wider'} bootstrapiso flex stretched`}
           style={{
             flex: '1 300px',
             opacity: loading ? 0 : 1,

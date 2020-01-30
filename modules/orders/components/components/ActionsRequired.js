@@ -7,6 +7,7 @@ import { getSafe, generateToastMarkup } from '~/utils/functions'
 import moment from 'moment/moment'
 import confirm from '~/src/components/Confirmable/confirm'
 import { withToastManager } from 'react-toast-notifications'
+import { AlertCircle, AlertTriangle, CheckCircle, Info } from 'react-feather'
 
 class ActionsRequired extends React.Component {
   confirmCall = d => {
@@ -203,9 +204,24 @@ class ActionsRequired extends React.Component {
     })
   }
 
+  renderIcon(color) {
+    switch (color) {
+      case 'red':
+        return (<AlertTriangle />)
+      case 'green':
+        return (<CheckCircle />)
+      case 'yellow':
+      case 'orange':
+        return (<AlertCircle />)
+      default:
+        return (<Info />)
+    }
+  }
+
   renderSegment(color, columnWidth, title, description, buttons) {
     return (
       <Segment color={color ? color : 'blue'} style={{ marginLeft: '32px', marginRight: '32px' }}>
+        {this.renderIcon(color)}
         <Grid verticalAlign='middle' columns='equal'>
           <Grid.Column width={columnWidth}>
             <Header as='h3' color={color ? color : 'black'} style={{ margin: '0 0 0.3571429rem' }}>

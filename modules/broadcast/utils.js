@@ -1,7 +1,7 @@
 import { getSafe } from '~/utils/functions'
 
-export const normalizeTree = tree => {
-  initTree(tree)
+export const normalizeTree = (tree, init = true) => {
+  if (init) initTree(tree)
 
   tree.walk(n => {
     if (n.hasChildren()) {
@@ -45,7 +45,6 @@ export const getNodeStatus = item => {
 
 export const getBroadcast = node => {
   let { allChildrenBroadcasting, anyChildBroadcasting } = getNodeStatus(node)
-
   let broadcast = 0
   if (allChildrenBroadcasting) broadcast = 1
   else if (anyChildBroadcasting) broadcast = 2

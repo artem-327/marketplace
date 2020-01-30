@@ -46,8 +46,17 @@ class SavedFilters extends Component {
 
   handleFilterApply = filter => {
     let { onApply } = this.props
-
     onApply(filter)
+  }
+
+  handleValuesDescription = f => {
+    const result =
+      f.valuesDescription instanceof Array
+        ? f.valuesDescription.map(v => v)
+        : typeof f.valuesDescription === 'string'
+        ? f.valuesDescription.replace(/,/g, ', ')
+        : f.tagDescription
+    return result
   }
 
   getTitle = (filter, i) => {
@@ -95,15 +104,15 @@ class SavedFilters extends Component {
               <GridColumn computer={8}>
                 <StyledGrid verticalAlign='top'>
                   {filterDescription && filterDescription.length > 0 ? (
-                    filterDescription.map((f, index) => (
-                      <GridRow key={index}>
-                        <GridColumn computer={8}>{f.description}:</GridColumn>
+                    filterDescription.map((f, index) => {
+                      return (
+                        <GridRow key={index}>
+                          <GridColumn computer={8}>{f.description}:</GridColumn>
 
-                        <GridColumn computer={8}>
-                          {f.valuesDescription instanceof Array ? f.valuesDescription.map(v => v) : f.tagDescription}
-                        </GridColumn>
-                      </GridRow>
-                    ))
+                          <GridColumn computer={8}>{this.handleValuesDescription(f)}</GridColumn>
+                        </GridRow>
+                      )
+                    })
                   ) : (
                     <GridRow>
                       <GridColumn>
@@ -152,7 +161,14 @@ class SavedFilters extends Component {
       <SavedFiltersSegment basic>
         <Accordion>
           {this.props.savedFilters.map((filter, i) => {
-            let { notificationEnabled, notifyMail, notifyPhone, notifySystem, notificationMail, notificationPhone } = filter
+            let {
+              notificationEnabled,
+              notifyMail,
+              notifyPhone,
+              notifySystem,
+              notificationMail,
+              notificationPhone
+            } = filter
             let initialValues = {
               checkboxes: {
                 notificationEnabled,
@@ -185,27 +201,30 @@ class SavedFilters extends Component {
                           let body = {
                             name: filter.name,
                             ...values.checkboxes,
-                            ...(notificationMail === undefined || notificationMail === '' ? null : {notificationMail}),
-                            ...(notificationPhone === undefined || notificationPhone === '' ? null : {notificationPhone}),
+                            ...(notificationMail === undefined || notificationMail === ''
+                              ? null
+                              : { notificationMail }),
+                            ...(notificationPhone === undefined || notificationPhone === ''
+                              ? null
+                              : { notificationPhone })
                           }
 
                           await this.props.updateFilterNotifications(this.state.activeIndex, body)
                           this.props.toastManager.add(
                             <div>
                               <strong>
-                                <FormattedMessage id='confirm.filter.updated' values={{name: filter.name}}/>
+                                <FormattedMessage id='confirm.filter.updated' values={{ name: filter.name }} />
                               </strong>
                             </div>,
-                            {appearance: 'success', pauseOnHover: true}
+                            { appearance: 'success', pauseOnHover: true }
                           )
-
-                        } catch (err) { }
+                        } catch (err) {}
                         setSubmitting(false)
                       }}>
-                      {(formikProps) => {
+                      {formikProps => {
                         return (
                           <Grid verticalAlign='middle'>
-                            <Notifications values={formikProps.values} formikProps={formikProps}/>
+                            <Notifications values={formikProps.values} formikProps={formikProps} />
                             <ActionRow>
                               <GridColumn computer={4} floated='right'>
                                 <Button

@@ -153,6 +153,7 @@ class Marketplace extends Component {
   }
 
   componentDidMount() {
+    this.handleFilterClear()
     //this.initData()
   }
 

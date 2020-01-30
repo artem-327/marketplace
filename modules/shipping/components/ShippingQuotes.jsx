@@ -172,7 +172,6 @@ export default class ShippingQuotes extends Component {
           : [...zipCodes, { value: defaultZip, text: defaultZip, key: zipCodes.length + 1 }]
       })
     }
-    const { closeModal } = this.props.modalProps
 
     return (
       <Form
