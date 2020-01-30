@@ -108,76 +108,81 @@ class Holds extends Component {
     const { columns } = this.state
     let { formatMessage } = intl
     return (
-      <>
-        <Container fluid style={{ padding: '0 32px' }}>
-          <HoldDropdown
-            options={[
-              {
-                key: 1,
-                value: 'My holds',
-                text: 'My holds'
-              },
-              {
-                key: 2,
-                value: 'Your holds',
-                text: 'Your holds'
-              },
-              {
-                key: 3,
-                value: 'His holds',
-                text: 'His holds'
-              }
-            ]}
-            clearable
-            selection
-            search
-            name='holdDropdown'
-            placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}
-          />
-          <ProdexGrid
-            groupActions={row => {
-              let values = row.key.split('_')
-              return groupActionsMarketplace(rows, values[values.length - 1], openPopup).map(a => ({
-                ...a,
-                text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
-              }))
-            }}
-            tableName='hold_grid'
-            {...datagrid.tableProps}
-            rows={rows}
-            columns={columns}
-            rowSelection
-            showSelectionColumn
-            onSelectionChange={selectedRows => this.setState({ selectedRows })}
-            getChildGroups={rows =>
-              _(rows)
-                .groupBy('productName')
-                .map(v => ({
-                  key: `${v[0].productName}_${v.length}_${v[0].id}`,
-                  childRows: v
-                }))
-                .value()
+      <Container fluid style={{ padding: '0 32px' }}>
+        <HoldDropdown
+          options={[
+            {
+              key: 1,
+              value: 'My holds',
+              text: 'My holds'
+            },
+            {
+              key: 2,
+              value: 'Your holds',
+              text: 'Your holds'
+            },
+            {
+              key: 3,
+              value: 'His holds',
+              text: 'His holds'
             }
-            data-test='hold_row_action'
-            rowActions={[
-              {
-                text: formatMessage({
-                  id: 'hold.approve',
-                  defaultMessage: 'Approve'
-                }),
-                callback: row => this.handleApprove(row.id)
-              },
-              {
-                text: formatMessage({
-                  id: 'hold.reject',
-                  defaultMessage: 'Reject'
-                }),
-                callback: row => this.handleReject(row.id)
-              }
-            ]}
-          />
-        </Container>
-      </>
+          ]}
+          clearable
+          selection
+          search
+          name='holdDropdown'
+          placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}
+        />
+        <ProdexGrid
+          groupActions={row => {
+            let values = row.key.split('_')
+            return groupActionsMarketplace(rows, values[values.length - 1], openPopup).map(a => ({
+              ...a,
+              text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
+            }))
+          }}
+          tableName='hold_grid'
+          {...datagrid.tableProps}
+          rows={rows}
+          columns={columns}
+          rowSelection
+          showSelectionColumn
+          onSelectionChange={selectedRows => this.setState({ selectedRows })}
+          getChildGroups={rows =>
+            _(rows)
+              .groupBy('productName')
+              .map(v => ({
+                key: `${v[0].productName}_${v.length}_${v[0].id}`,
+                childRows: v
+              }))
+              .value()
+          }
+          data-test='hold_row_action'
+          rowActions={[
+            {
+              text: formatMessage({
+                id: 'hold.requestHold',
+                defaultMessage: 'Request Hold'
+              }),
+              callback: row => this.handleRequestHold(row.id)
+            },
+            {
+              text: formatMessage({
+                id: 'hold.approve',
+                defaultMessage: 'Approve'
+              }),
+              callback: row => this.handleApprove(row.id)
+            },
+            {
+              text: formatMessage({
+                id: 'hold.reject',
+                defaultMessage: 'Reject'
+              }),
+              callback: row => this.handleReject(row.id)
+            }
+          ]}
+        />
+      </Container>
     )
   }
 }

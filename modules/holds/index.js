@@ -1,9 +1,9 @@
-import HoldsContainer from './HoldsContainer'
+import HoldsContainer from './components/HoldsContainer'
 import { DatagridProvider } from '~/modules/datagrid'
-//TODO
+//TODO url
 export const Holds = () => (
   <>
-    <DatagridProvider apiConfig={{ url: '/prodex/api/hold/datagrid/' }}>
+    <DatagridProvider apiConfig={{ url: '/prodex/api/holds/datagrid/' }}>
       <HoldsContainer />
     </DatagridProvider>
   </>

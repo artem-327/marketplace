@@ -12,7 +12,7 @@ import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
 import { currency } from '~/constants'
 import { getSafe } from '~/utils/functions'
 import { getLocaleDateFormat } from '~/components/date-format'
-
+//TODO
 const rows = [
   {
     id: 1,
@@ -42,7 +42,7 @@ const rows = [
     status: 'true'
   }
 ]
-//TODO
+
 function mapStateToProps(store, { datagrid }) {
   return {
     ...datagrid,

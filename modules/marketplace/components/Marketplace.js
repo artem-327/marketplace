@@ -11,7 +11,7 @@ import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
-import { Holds } from './tab-holds'
+import HoldsPage from '~/pages/marketplace/holds'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -399,7 +399,7 @@ class Marketplace extends Component {
       },
       {
         menuItem: 'HOLDS',
-        render: () => <pre>{<Holds />}</pre>
+        render: () => <pre>{<HoldsPage />}</pre>
       }
     ]
     return (
