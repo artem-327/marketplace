@@ -1049,18 +1049,10 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
   // Take rest elements (those who aren't grouped) and push them to array
   filters.forEach((filter, i) => {
     if (!indexes.includes(i)) {
-      let description = ''
-      if (filter.description === 'Chemical Name') {
-        description =
-          filter && filter.values[i] && filter.values[i].description && JSON.parse(filter.values[i].description).name
-      } else {
-        description = filter && filter.tagDescription && filter.tagDescription.toString()
-      }
-
       results.push({
         description: filter && filter.description,
         valuesDescription: filter && filter.valuesDescription && filter.valuesDescription.toString(),
-        tagDescription: description,
+        tagDescription: filter && filter.tagDescription && filter.tagDescription.toString(),
         indexes: [i]
       })
     }
