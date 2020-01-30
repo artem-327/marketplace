@@ -8,17 +8,23 @@ import { getSafe } from '~/utils/functions'
 
 class Index extends Component {
   render() {
-    const { intl: { formatMessage } } = this.props
+    const {
+      intl: { formatMessage }
+    } = this.props
     const tabName = getSafe(() => this.props.router.query.type, '')
-    const titleName = formatMessage({
-      id: 'title.settings',
-      defaultMessage: 'Settings - {tab}',
-    }, {
-      tab: formatMessage({
-        id: tabName ? `title.settings.${tabName}` : '',
-        defaultMessage: 'Preparing'
-      })
-    })
+    const id = tabName ? `title.settings.${tabName}` : 'title.settings.company-details'
+    const titleName = formatMessage(
+      {
+        id: 'title.settings',
+        defaultMessage: 'Settings - {tab}'
+      },
+      {
+        tab: formatMessage({
+          id: id,
+          defaultMessage: 'Preparing'
+        })
+      }
+    )
 
     return (
       <Layout title={titleName}>

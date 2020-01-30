@@ -10,6 +10,8 @@ import { Button, Dropdown, Form } from 'formik-semantic-ui-fixed-validation'
 import * as Actions from '../../actions'
 import Router from 'next/dist/client/router'
 import UploadVerifyFiles from './UploadVerifyFiles'
+import { getIdentity } from '~/modules/auth/actions'
+import { getSafe } from '~/utils/functions'
 
 class BankAccountsUploadDocPopup extends React.Component {
   componentDidMount() {
@@ -24,20 +26,31 @@ class BankAccountsUploadDocPopup extends React.Component {
     return initialValues
   }
 
+  closeUploadDocumentsPopup = async () => {
+    this.props.getBankAccountsDataRequest()
+    this.props.getCurrentUser()
+    const resp = await this.props.getIdentity()
+    const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
+    if (hasDwollaAccount) this.props.getDwollaAccBalance()
+    this.props.closeUploadDocumentsPopup()
+  }
+
   render() {
     const {
-      closeUploadDocumentsPopup,
       verificationDocumentTypes,
       intl: { formatMessage }
     } = this.props
 
     return (
-      <Modal closeIcon onClose={() => closeUploadDocumentsPopup()} open centered={false}>
+      <Modal closeIcon onClose={() => this.closeUploadDocumentsPopup()} open centered={false}>
         <Modal.Header>
           <FormattedMessage id='settings.tables.bankAccounts.uploadDoc' defaultMessage='Upload Documents' />
         </Modal.Header>
         <Modal.Content>
-          <Form initialValues={this.getInitialFormValues()} onReset={closeUploadDocumentsPopup} validateOnBlur={false}>
+          <Form initialValues={this.getInitialFormValues()}
+                onReset={this.closeUploadDocumentsPopup}
+                validateOnBlur={false}
+          >
             {({ values, setFieldValue }) => {
               return (
                 <>
@@ -119,7 +132,7 @@ class BankAccountsUploadDocPopup extends React.Component {
                   </Grid>
                   <div style={{ textAlign: 'right' }}>
                     <Button.Reset
-                      onClick={closeUploadDocumentsPopup}
+                      onClick={this.closeUploadDocumentsPopup}
                       data-test='settings_bank_account_upload_doc_popup_close_btn'>
                       <FormattedMessage id='global.done' defaultMessage='Done'>
                         {text => text}
@@ -137,11 +150,24 @@ class BankAccountsUploadDocPopup extends React.Component {
 }
 
 const mapDispatchToProps = {
-  ...Actions
+  ...Actions,
+  getIdentity
 }
 const mapStateToProps = state => {
   return {
-    verificationDocumentTypes: state.settings.verificationDocumentTypes,
+    //verificationDocumentTypes: state.settings.verificationDocumentTypes,
+
+    verificationDocumentTypes: state.settings.verificationDocumentTypes.map((docType, index) => {
+      return {
+        key: index,
+        text: (
+          <FormattedMessage id={`settings.bankAccounts.uploadDoc.${docType}`} defaultMessage={docType}>
+            {text => text}
+          </FormattedMessage>
+        ),
+        value: docType
+      }
+    }),
     currentTab:
       Router && Router.router && Router.router.query && Router.router.query.type
         ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
