@@ -1,4 +1,6 @@
 import typeToReducer from 'type-to-reducer'
+import { getSafe } from '~/utils/functions'
+
 import {
   openBroadcast,
   closeBroadcast,
@@ -190,10 +192,12 @@ export default typeToReducer(
       ...state,
       loading: typeof payload === 'boolean' ? payload : !state.loading
     }),
-    [treeDataChanged]: (state, { payload }) => ({
-      ...state,
-      data: payload
-    })
+    [treeDataChanged]: (state, { payload }) => {
+      return {
+        ...state,
+        data: getSafe(() => payload.model.rule, payload.model)
+      }
+    }
   },
   initialState
 )
