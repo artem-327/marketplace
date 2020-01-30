@@ -522,7 +522,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.SETTINGS_GET_DWOLLA_BALANCE_FULFILLED: {
-      //console.log('BankAccountTable - reducer Dwolla balance', action.payload);
       return {
         ...state,
         dwollaAccBalance: action.payload
@@ -1305,13 +1304,7 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_GET_VERIFICATION_DOCUMENT_TYPES_FULFILLED: {
       return {
         ...state,
-        verificationDocumentTypes: action.payload.map((docType, index) => {
-          return {
-            key: index,
-            text: docType,
-            value: docType
-          }
-        })
+        verificationDocumentTypes: action.payload
       }
     }
 
