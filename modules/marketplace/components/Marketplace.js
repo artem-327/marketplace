@@ -391,15 +391,15 @@ class Marketplace extends Component {
     const panes = [
       {
         menuItem: 'MARKETPLACE',
-        render: () => <Tab.Pane attached={false}>{this.renderTabMarketplace()}</Tab.Pane>
+        render: () => <pre>{this.renderTabMarketplace()}</pre>
       },
       {
         menuItem: 'WANTED BOARD',
-        render: () => <Tab.Pane attached={false}>Tab 2 Content</Tab.Pane>
+        render: () => <pre>Tab 2 Content</pre>
       },
       {
         menuItem: 'HOLDS',
-        render: () => <Tab.Pane attached={false}>{<Holds />}</Tab.Pane>
+        render: () => <pre>{<Holds />}</pre>
       }
     ]
     return (

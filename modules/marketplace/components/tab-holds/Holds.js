@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Button, Popup, List, Icon, Tab } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
+import { Container, Grid, GridRow, Dropdown, GridColumn, Header, Divider, Segment, Button } from 'semantic-ui-react'
 
 import { ShippingQuotes } from '~/modules/shipping'
 import SubMenu from '~/src/components/SubMenu'
@@ -12,6 +12,9 @@ import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 
+const HoldDropdown = styled(Dropdown)`
+  z-index: 601 !important;
+`
 //TODO all id in formattMessage
 class Holds extends Component {
   //TODO columns
@@ -107,34 +110,72 @@ class Holds extends Component {
     return (
       <>
         <Container fluid style={{ padding: '0 32px' }}>
-          <div class='flex stretched' style={{ padding: '10px 32px' }}>
-            <ProdexGrid
-              tableName='hold_grid'
-              {...datagrid.tableProps}
-              rows={rows}
-              columns={columns}
-              rowSelection
-              showSelectionColumn
-              onSelectionChange={selectedRows => this.setState({ selectedRows })}
-              data-test='hold_row_action'
-              rowActions={[
-                {
-                  text: formatMessage({
-                    id: 'hold.approve',
-                    defaultMessage: 'Approve'
-                  }),
-                  callback: row => this.handleApprove(row.id)
-                },
-                {
-                  text: formatMessage({
-                    id: 'hold.reject',
-                    defaultMessage: 'Reject'
-                  }),
-                  callback: row => this.handleReject(row.id)
-                }
-              ]}
-            />
-          </div>
+          <HoldDropdown
+            options={[
+              {
+                key: 1,
+                value: 'My holds',
+                text: 'My holds'
+              },
+              {
+                key: 2,
+                value: 'Your holds',
+                text: 'Your holds'
+              },
+              {
+                key: 3,
+                value: 'His holds',
+                text: 'His holds'
+              }
+            ]}
+            clearable
+            selection
+            search
+            name='holdDropdown'
+            placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}
+          />
+          <ProdexGrid
+            groupActions={row => {
+              let values = row.key.split('_')
+              return groupActionsMarketplace(rows, values[values.length - 1], openPopup).map(a => ({
+                ...a,
+                text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
+              }))
+            }}
+            tableName='hold_grid'
+            {...datagrid.tableProps}
+            rows={rows}
+            columns={columns}
+            rowSelection
+            showSelectionColumn
+            onSelectionChange={selectedRows => this.setState({ selectedRows })}
+            getChildGroups={rows =>
+              _(rows)
+                .groupBy('productName')
+                .map(v => ({
+                  key: `${v[0].productName}_${v.length}_${v[0].id}`,
+                  childRows: v
+                }))
+                .value()
+            }
+            data-test='hold_row_action'
+            rowActions={[
+              {
+                text: formatMessage({
+                  id: 'hold.approve',
+                  defaultMessage: 'Approve'
+                }),
+                callback: row => this.handleApprove(row.id)
+              },
+              {
+                text: formatMessage({
+                  id: 'hold.reject',
+                  defaultMessage: 'Reject'
+                }),
+                callback: row => this.handleReject(row.id)
+              }
+            ]}
+          />
         </Container>
       </>
     )

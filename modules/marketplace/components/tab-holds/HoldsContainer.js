@@ -24,7 +24,7 @@ const rows = [
     status: 'true'
   },
   {
-    id: 1,
+    id: 2,
     productName: 'ABEX123',
     quantity: '20 Pkgs',
     expires: '2h 54m',
@@ -33,7 +33,7 @@ const rows = [
     status: 'true'
   },
   {
-    id: 1,
+    id: 3,
     productName: 'ABEX123',
     quantity: '20 Pkgs',
     expires: '2h 54m',
