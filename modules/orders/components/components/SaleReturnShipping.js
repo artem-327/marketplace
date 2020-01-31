@@ -22,7 +22,6 @@ import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { errorMessages } from '~/constants/yupValidation'
-import confirm from '~/src/components/Confirmable/confirm'
 import { withToastManager } from 'react-toast-notifications'
 import { DateInput } from '~/components/custom-formik'
 import { currency } from '~/constants/index'
@@ -72,8 +71,8 @@ class SaleReturnShipping extends React.Component {
     }
 
     try {
-      //Does not work yet, because does not work endpoint manual-quote and shipment-rates
       await this.props.returnShipmentOrder(orderId, formValues)
+      this.props.getSaleOrder(orderId)
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id='order.success' defaultMessage='Success' />,

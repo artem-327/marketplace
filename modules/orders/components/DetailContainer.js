@@ -253,8 +253,7 @@ function mapStateToProps(state, ownProps) {
     openedSaleReturnShipping: orders.openedSaleReturnShipping,
     openedSaleReviewCreditRequest: orders.openedSaleReviewCreditRequest,
     openedPurchaseOrderShipping: orders.openedPurchaseOrderShipping,
-    action: actionRequired(orders.detail),
-    reloadPage: orders.reloadPage
+    action: actionRequired(orders.detail)
   }
 }
 
