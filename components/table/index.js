@@ -4,6 +4,7 @@ import { Getter, Plugin } from '@devexpress/dx-react-core'
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css'
 import styled, { createGlobalStyle } from 'styled-components'
 import { Segment, Icon, Dropdown, Modal, Divider, Grid as GridSemantic } from 'semantic-ui-react'
+import { Settings } from 'react-feather'
 import { Form, Checkbox, Button } from 'formik-semantic-ui-fixed-validation'
 import _ from 'lodash'
 import GroupCell from './GroupCell'
@@ -59,12 +60,16 @@ const GlobalTableOverrideStyle = createGlobalStyle`
   }
 `
 
-const SettingButton = styled(Icon)`
+const SettingButton = styled(Settings)`
   position: absolute !important;
   cursor: pointer !important;
-  top: 8px;
-  left: 2px;
+  top: 9px;
+  left: 10px;
   z-index: 601;
+  width: 20px;
+  height: 19px;
+  font-size: 20px;
+  line-height: 20px;
   &:before {
     padding: 10px 16px 10px 10px;
     background-color: white !important;
@@ -416,7 +421,7 @@ class _Table extends Component {
             ) : (
               ''
             ),
-            width: 45,
+            width: 40,
             actions: rowActions
           },
           ...columns
@@ -802,6 +807,12 @@ class _Table extends Component {
                     rowSelection={rowSelection}
                     hideCheckboxes={hideCheckboxes}
                     onSelectionChange={this.handleGroupSelectionChange}
+                    actionsDropdown={groupActions
+                      ? rowActionsCellFormatter({
+                          column: { actions: groupActions(props.row) },
+                          row: props.row
+                        })
+                      : null}
                     {...props}
                   />
                 )}

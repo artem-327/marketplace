@@ -525,7 +525,6 @@ class MyInventory extends Component {
 
               return (
                 <span>
-                  {children}
                   <span style={{ color: '#2599d5' }}>{name ? name : 'Unmapped'}</span>
                   <span className='right'>Product offerings: {count}</span>
                 </span>
