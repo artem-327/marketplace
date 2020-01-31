@@ -63,6 +63,16 @@ export function login(username, password) {
           preferredCurrency
         }
 
+        if (typeof window !== 'undefined' && window.FS) {
+          try {
+            window.FS.identify(identity.id);
+          } catch (e) {
+            console.error(e)
+          }
+        } else {
+          console.error('Google Tag Manager or FullStory not installed')
+        }
+
         const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
 
         let accessRights = {}
