@@ -16,6 +16,7 @@ import ProductImportPopup from '~/modules/settings/components/ProductCatalogTabl
 
 import moment from 'moment/moment'
 import { getSafe } from '~/utils/functions'
+import styled from 'styled-components'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -31,6 +32,10 @@ const defaultHiddenColumns = [
   'offerExpiration',
   'lotNumber'
 ]
+
+const MenuItemFilters = styled(Menu.Item)`
+  max-width: 40vw;
+`
 
 class MyInventory extends Component {
   state = {
@@ -488,9 +493,9 @@ class MyInventory extends Component {
                   })}
                 </Button>
               </Menu.Item>
-              <Menu.Item>
+              <MenuItemFilters>
                 <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
-              </Menu.Item>
+              </MenuItemFilters>
               <Menu.Item>
                 <SubMenu />
               </Menu.Item>
