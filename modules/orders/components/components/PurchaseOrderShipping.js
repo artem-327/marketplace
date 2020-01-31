@@ -60,6 +60,7 @@ class PurchaseOrderShipping extends React.Component {
       }
 
       await this.props.purchaseShipmentOrder(orderId, formValues)
+      this.props.getPurchaseOrder(orderId)
 
       toastManager.add(
         generateToastMarkup(
