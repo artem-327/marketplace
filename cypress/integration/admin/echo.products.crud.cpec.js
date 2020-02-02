@@ -25,8 +25,8 @@ context("Echo Product CRUD", () => {
 
     it("Creates a Echo Product", () => {
         cy.getToken().then(token => {
-            cy.getFirstEntityWithFilter(token, 'echo-products',filter).then(itemId => {
-                if(itemId != null)
+            cy.getFirstEntityWithFilter(token, 'echo-products', filter).then(itemId => {
+                if (itemId != null)
                     cy.deleteEntity(token, 'echo-products/id', itemId)
             })
         })
@@ -135,7 +135,7 @@ context("Echo Product CRUD", () => {
 
         cy.get("#code").click()
         cy.get("#name").click()
-        
+
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
         cy.get(".error")

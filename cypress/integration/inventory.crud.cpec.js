@@ -28,29 +28,29 @@ context("Inventory CRUD", () => {
         cy.url().should("include", "inventory")
     })
 
-        it("Create item",() => {
-            cy.get("[data-test=my_inventory_add_btn]").click()
+    it("Create item", () => {
+        cy.get("[data-test=my_inventory_add_btn]").click()
 
-            cy.selectChemical(productName)
+        cy.selectChemical(productName)
 
-            cy.get("[data-test=new_inventory_warehouse_drpdn]").click()
-            cy.get("[data-test=new_inventory_warehouse_drpdn]").within(() => {
-                cy.contains("CGM Industries, Inc.").click()
-            })
-
-            cy.setNumberInput("[id='field_input_edit.pkgAvailable']","5")
-            cy.setNumberInput("[id='field_input_edit.fobPrice']","20")
-            cy.setNumberInput("[id='field_input_edit.costPerUOM']","0")
-
-            cy.get("[data-test=sidebar_inventory_save_new]").click()
-
-            cy.wait("@inventoryLoading")
-
-            cy.contains("20")
-            cy.contains("Houston Warehouse")
-            cy.contains("5")
-            cy.contains(productName)
+        cy.get("[data-test=new_inventory_warehouse_drpdn]").click()
+        cy.get("[data-test=new_inventory_warehouse_drpdn]").within(() => {
+            cy.contains("CGM Industries, Inc.").click()
         })
+
+        cy.setNumberInput("[id='field_input_edit.pkgAvailable']", "5")
+        cy.setNumberInput("[id='field_input_edit.fobPrice']", "20")
+        cy.setNumberInput("[id='field_input_edit.costPerUOM']", "0")
+
+        cy.get("[data-test=sidebar_inventory_save_new]").click()
+
+        cy.wait("@inventoryLoading")
+
+        cy.contains("20")
+        cy.contains("Houston Warehouse")
+        cy.contains("5")
+        cy.contains(productName)
+    })
 
     it("See item details", () => {
         cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
@@ -201,7 +201,7 @@ context("Inventory CRUD", () => {
 
         cy.wait('@search')
 
-        cy.get("[role=listbox]").within(() =>{
+        cy.get("[role=listbox]").within(() => {
             cy.contains(productName).click()
         })
 

@@ -21,8 +21,8 @@ context("Grades CRUD", () => {
 
     it("Creates a grade", () => {
         cy.getToken().then(token => {
-            cy.getFirstEntityWithFilter(token, 'product-grades',filter).then(itemId => {
-                if(itemId != null)
+            cy.getFirstEntityWithFilter(token, 'product-grades', filter).then(itemId => {
+                if (itemId != null)
                     cy.deleteEntity(token, 'product-grades', itemId)
             })
         })

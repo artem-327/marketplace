@@ -1,20 +1,18 @@
 context("Prodex Bank Account CRUD", () => {
 
     beforeEach(function () {
-        cy.viewport(1200,800)
+        cy.viewport(1200, 800)
         cy.server()
-        cy.route("POST","/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("GET", "/prodex/api/payments/*").as("accountsLoading")
         cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
-        cy.route("POST","/prodex/api/payments/**").as("verifyLoading")
+        cy.route("POST", "/prodex/api/payments/**").as("verifyLoading")
 
         cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.wait("@inventoryLoading", {timeout: 100000})
-        cy.contains("Settings").click()
-
-        cy.wait("@settingsLoading", {timeout: 100000})
-        cy.contains("BANK ACCOUNTS").click()
+        cy.get('.scrollbar-container > .dropdown').click()
+        cy.contains("Bank Accounts").click()
 
         cy.wait("@accountsLoading")
         cy.waitForUI()
@@ -32,8 +30,8 @@ context("Prodex Bank Account CRUD", () => {
             cy.get("div[role='option']").eq(0).click()
         })
 
-        cy.enterText("#field_input_name","David Tester")
-        cy.enterText("#field_input_routingNumber","123103729")
+        cy.enterText("#field_input_name", "David Tester")
+        cy.enterText("#field_input_routingNumber", "123103729")
 
         cy.waitForUI()
         cy.clickSave()
@@ -77,7 +75,7 @@ context("Prodex Bank Account CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",4)
+            .should("have.length", 4)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)|(Must be a number)/i)
         })

@@ -9,10 +9,6 @@ context("Market place tests",() => {
 
         cy.wait("@inventoryLoading")
         cy.contains("Marketplace").click()
-        cy.get("[data-test=navigation_menu_marketplace_drpdn]").within(() => {
-            cy.contains("Marketplace").click()
-        })
-
         cy.wait("@marketplaceLoading")
     })
 

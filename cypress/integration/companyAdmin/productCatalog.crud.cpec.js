@@ -1,6 +1,6 @@
 context("Company Product Catalog CRUD", () => {
     let productId = null
-    let filter = [{"operator":"LIKE","path":"CompanyProduct.intProductCode","values":["%OURPR%"]}]
+    let filter = [{"operator": "LIKE", "path": "CompanyProduct.intProductCode", "values": ["%OURPR%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -11,10 +11,9 @@ context("Company Product Catalog CRUD", () => {
         cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.wait("@inventoryLoading", {timeout: 100000})
-        cy.contains("Settings").click()
-        cy.wait("@settingsLoading", {timeout: 100000})
+        cy.get('.scrollbar-container > .dropdown').click()
 
-        cy.contains("PRODUCT CATALOG").click()
+        cy.contains("Product Catalog").click()
 
         cy.wait("@productLoading")
         cy.waitForUI()
@@ -22,8 +21,8 @@ context("Company Product Catalog CRUD", () => {
 
     it("Creates a product", () => {
         cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
-            cy.getFirstEntityWithFilter(token, 'company-products',filter).then(itemId => {
-                if(itemId != null)
+            cy.getFirstEntityWithFilter(token, 'company-products', filter).then(itemId => {
+                if (itemId != null)
                     cy.deleteEntity(token, 'company-products/id', itemId)
             })
         })
@@ -41,14 +40,14 @@ context("Company Product Catalog CRUD", () => {
         cy.contains("paper bags").click()
 
         cy.get("[data-test='settings_product_popup_packageWeightUnit_drpdn']").click()
-        cy.get("[data-test='settings_product_popup_packageWeightUnit_drpdn']").within( () => {
+        cy.get("[data-test='settings_product_popup_packageWeightUnit_drpdn']").within(() => {
             cy.contains("kilograms").click()
         })
 
-        cy.selectFromDropdown("div[id='field_dropdown_nmfcNumber']","12505")
+        cy.selectFromDropdown("div[id='field_dropdown_nmfcNumber']", "12505")
 
         cy.get("[data-test='settings_product_popup_freightClass_drpdn']").click()
-        cy.get("[data-test='settings_product_popup_freightClass_drpdn']").within( () => {
+        cy.get("[data-test='settings_product_popup_freightClass_drpdn']").within(() => {
             cy.contains("60").click()
         })
 
@@ -66,15 +65,15 @@ context("Company Product Catalog CRUD", () => {
         })
 
         cy.get("#field_input_intProductName")
-            .should("have.value","Our product")
+            .should("have.value", "Our product")
 
         cy.get("#field_input_intProductCode")
-            .should("have.value","OURPR")
+            .should("have.value", "OURPR")
 
         cy.get("#field_input_packagingSize")
-            .should("have.value","70")
+            .should("have.value", "70")
 
-        cy.contains("paper bags")
+        cy.contains("Paper Bags")
         cy.contains("kilograms")
     })
 
@@ -85,7 +84,7 @@ context("Company Product Catalog CRUD", () => {
         cy.get("#field_input_intProductName")
             .clear()
             .type("My product")
-            .should("have.value","My product")
+            .should("have.value", "My product")
 
         cy.clickSave()
 
@@ -93,7 +92,7 @@ context("Company Product Catalog CRUD", () => {
         cy.openElement(productId, 0)
 
         cy.get("#field_input_intProductName")
-            .should("have.value","My product")
+            .should("have.value", "My product")
     })
 
     it("Checks error messages", () => {
@@ -102,7 +101,7 @@ context("Company Product Catalog CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",9)
+            .should("have.length", 9)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

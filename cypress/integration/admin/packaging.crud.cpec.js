@@ -21,8 +21,8 @@ context("Units of packaging CRUD", () => {
 
     it("Creates a package unit", () => {
         cy.getToken().then(token => {
-            cy.getFirstEntityWithFilter(token, 'packaging-types',filter).then(itemId => {
-                if(itemId != null)
+            cy.getFirstEntityWithFilter(token, 'packaging-types', filter).then(itemId => {
+                if (itemId != null)
                     cy.deleteEntity(token, 'packaging-types', itemId)
             })
         })
