@@ -21,8 +21,8 @@ context("Manufacturers CRUD", () => {
 
     it("Creates a manufacturer", () => {
         cy.getToken().then(token => {
-            cy.getFirstEntityWithFilter(token, 'manufacturers',filter).then(itemId => {
-                if(itemId != null)
+            cy.getFirstEntityWithFilter(token, 'manufacturers', filter).then(itemId => {
+                if (itemId != null)
                     cy.deleteEntity(token, 'manufacturers/id', itemId)
             })
         })

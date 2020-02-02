@@ -10,7 +10,7 @@ context("Prodex Global Price", () => {
         cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.wait("@inventoryLoading", {timeout: 100000})
-        cy.contains("Settings").click()
+        cy.get('.scrollbar-container > .dropdown').click()
     })
 
     it("Turns on the broadcasting", () => {
@@ -18,7 +18,7 @@ context("Prodex Global Price", () => {
             cy.turnOffGlobalBroadcasting(token)
         })
 
-        cy.contains("GLOBAL PRICE BOOK").click()
+        cy.contains("Global Price Book").click()
 
         cy.wait("@rulesLoading")
         cy.waitForUI()
@@ -27,7 +27,7 @@ context("Prodex Global Price", () => {
             .eq(0)
             .should("have.class", "ui fitted toggle checkbox")
             .click()
-        cy.get("[data-test='settings_open_import_popup_btn']").click()
+        cy.get("[data-test='broadcast_modal_save_btn']").click()
 
         cy.wait("@rulesSaving")
         cy.contains("Saved successfully!")
@@ -42,7 +42,7 @@ context("Prodex Global Price", () => {
             cy.turnOnGlobalBroadcasting(token)
         })
 
-        cy.contains("GLOBAL PRICE BOOK").click()
+        cy.contains("Global Price Book").click()
 
         cy.wait("@rulesLoading")
         cy.waitForUI()
@@ -51,7 +51,7 @@ context("Prodex Global Price", () => {
             .eq(0)
             .should("have.class", "ui checked fitted toggle checkbox")
             .click()
-        cy.get("[data-test='settings_open_import_popup_btn']").click()
+        cy.get("[data-test='broadcast_modal_save_btn']").click()
 
         cy.wait("@rulesSaving")
         cy.contains("Saved successfully!")
@@ -66,7 +66,7 @@ context("Prodex Global Price", () => {
             cy.turnOffGlobalBroadcasting(token)
         })
 
-        cy.contains("GLOBAL PRICE BOOK").click()
+        cy.contains("Global Price Book").click()
 
         cy.wait("@rulesLoading")
         cy.waitForUI()
@@ -83,7 +83,7 @@ context("Prodex Global Price", () => {
             .should("have.class", "ui fitted toggle checkbox")
             .click()
 
-        cy.get("[data-test='settings_open_import_popup_btn']").click()
+        cy.get("[data-test='broadcast_modal_save_btn']").click()
 
         cy.wait("@rulesSaving")
         cy.contains("Saved successfully!")
@@ -103,7 +103,7 @@ context("Prodex Global Price", () => {
             cy.turnOffGlobalBroadcasting(token)
         })
 
-        cy.contains("GLOBAL PRICE BOOK").click()
+        cy.contains("Global Price Book").click()
 
         cy.wait("@rulesLoading")
         cy.waitForUI()
@@ -115,7 +115,7 @@ context("Prodex Global Price", () => {
             .eq(0)
             .should("have.class", "ui fitted toggle checkbox")
             .click()
-        cy.get("[data-test='settings_open_import_popup_btn']").click()
+        cy.get("[data-test='broadcast_modal_save_btn']").click()
 
         cy.wait("@rulesSaving")
         cy.contains("Saved successfully!")

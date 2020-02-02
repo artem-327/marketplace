@@ -29,7 +29,7 @@ context("Inventory Broadcasting", () => {
 
     it('Start/stop item broadcasting', () => {
         cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
-            cy.setOfferBroadcasting(token,offerId,"false")
+            cy.setOfferBroadcasting(token, offerId, "false")
         })
         cy.get(".table-responsive").scrollTo("right")
         cy.waitForUI()
@@ -48,11 +48,11 @@ context("Inventory Broadcasting", () => {
     it('Turn on custom broadcasting', () => {
         cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.returnTurnOffJson().then(jsonBody => {
-                cy.setOfferPriceBook(token,offerId,jsonBody)
+                cy.setOfferPriceBook(token, offerId, jsonBody)
             })
         })
 
-        cy.openElement(offerId,2)
+        cy.openElement(offerId, 2)
 
         cy.get("[data-test=broadcast_rule_row_click]").should("be.visible")
 
@@ -73,11 +73,11 @@ context("Inventory Broadcasting", () => {
     it("Turns off the broadcasting", () => {
         cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.returnTurnOnJson().then(jsonBody => {
-                cy.setOfferPriceBook(token,offerId,jsonBody)
+                cy.setOfferPriceBook(token, offerId, jsonBody)
             })
         })
 
-        cy.openElement(offerId,2)
+        cy.openElement(offerId, 2)
 
         cy.get("[data-test=broadcast_rule_row_click]").should("be.visible")
 
@@ -98,11 +98,11 @@ context("Inventory Broadcasting", () => {
     it("Turns on the broadcasting for Albreta and USA only", () => {
         cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.returnTurnOffJson().then(jsonBody => {
-                cy.setOfferPriceBook(token,offerId,jsonBody)
+                cy.setOfferPriceBook(token, offerId, jsonBody)
             })
         })
 
-        cy.openElement(offerId,2)
+        cy.openElement(offerId, 2)
 
         cy.get("[data-test=broadcast_rule_row_click]").should("be.visible")
 
@@ -136,11 +136,11 @@ context("Inventory Broadcasting", () => {
     it("Switch to company broadcasting", () => {
         cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
             cy.returnTurnOffJson().then(jsonBody => {
-                cy.setOfferPriceBook(token,offerId,jsonBody)
+                cy.setOfferPriceBook(token, offerId, jsonBody)
             })
         })
 
-        cy.openElement(offerId,2)
+        cy.openElement(offerId, 2)
 
         cy.get("[data-test=broadcast_rule_row_click]").should("be.visible")
 

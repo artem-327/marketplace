@@ -2,20 +2,20 @@
  * Created by ARTIO on 23.5.2019.
  */
 
-context("Login and logout",() => {
-    it('Bad credentials',() => {
+context("Login and logout", () => {
+    it('Bad credentials', () => {
         cy.server()
         //This is the post call we are interested in capturing
         cy.route('POST', '/prodex/oauth/token').as('login')
 
         cy.visit("")
-        cy.url().should("include","login")
+        cy.url().should("include", "login")
         cy.get("input[name=username]")
             .type("admin@example.com")
-            .should("have.value","admin@example.com")
+            .should("have.value", "admin@example.com")
         cy.get("input[name=password]")
             .type("test")
-            .should("have.value","test")
+            .should("have.value", "test")
         cy.get("button[type=submit]").click({force: true})
 
         cy.wait('@login')
@@ -28,24 +28,24 @@ context("Login and logout",() => {
             expect(xhr.responseBody).to.have.property('error')
             expect(xhr.responseBody).to.have.property('error_description')
             cy.get(".error.message p")
-                .should("have.text","Bad credentials")
+                .should("have.text", "Bad credentials")
         })
     })
 
-    it('Admin login and logout',() => {
+    it('Admin login and logout', () => {
         cy.server()
         //This is the post call we are interested in capturing
         cy.route('POST', '/prodex/oauth/token').as('login')
         cy.route('POST', '/auth/logout').as('logout')
 
         cy.visit("")
-        cy.url().should("include","login")
+        cy.url().should("include", "login")
         cy.get("input[name=username]")
             .type("admin@example.com")
-            .should("have.value","admin@example.com")
+            .should("have.value", "admin@example.com")
         cy.get("input[name=password]")
             .type("echopass123")
-            .should("have.value","echopass123")
+            .should("have.value", "echopass123")
         cy.get("button[type=submit]").click({force: true})
 
         cy.wait('@login')
@@ -64,30 +64,29 @@ context("Login and logout",() => {
             expect(xhr.responseBody.token_type).to.eq("bearer")
         })
 
-        cy.url().should("include","/admin")
+        cy.url().should("include", "/admin")
         cy.wait(200)
-        cy.get(".right.menu .user.circle").click("center")
-        cy.get(".right.menu .item.dropdown").should("have.class","visible")
-        cy.get(".right.menu .item.dropdown").contains("Logout").click("center")
-        cy.url().should("include","/login")
+        cy.get(".user-menu-wrapper").click()
+        cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()
+        cy.url().should("include", "/login")
         cy.visit("admin")
-        cy.url().should("include","/login")
+        cy.url().should("include", "/login")
     })
 
-    it('Normal user login and logout',() => {
+    it('Normal user login and logout', () => {
         cy.server()
         //This is the post call we are interested in capturing
         cy.route('POST', '/prodex/oauth/token').as('login')
         cy.route('POST', '/auth/logout').as('logout')
 
         cy.visit("")
-        cy.url().should("include","login")
+        cy.url().should("include", "login")
         cy.get("input[name=username]")
             .type("mackenzie@echoexchange.net")
-            .should("have.value","mackenzie@echoexchange.net")
+            .should("have.value", "mackenzie@echoexchange.net")
         cy.get("input[name=password]")
             .type("echopass123")
-            .should("have.value","echopass123")
+            .should("have.value", "echopass123")
         cy.get("button[type=submit]").click({force: true})
 
         cy.wait('@login')
@@ -107,28 +106,27 @@ context("Login and logout",() => {
         })
 
         cy.waitForUI()
-        cy.get(".right.menu .user.circle").click("center")
-        cy.get(".right.menu .item.dropdown").should("have.class","visible")
-        cy.get(".right.menu .item.dropdown").contains("Logout").click("center")
-        cy.url().should("include","/login")
+        cy.get(".user-menu-wrapper").click()
+        cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()
+        cy.url().should("include", "/login")
         cy.visit("dashboard")
-        cy.url().should("include","/login")
+        cy.url().should("include", "/login")
     })
 
-    it('Disabled user login',() => {
+    it('Disabled user login', () => {
         cy.server()
         //This is the post call we are interested in capturing
         cy.route('POST', '/prodex/oauth/token').as('login')
         cy.route('POST', '/auth/logout').as('logout')
 
         cy.visit("")
-        cy.url().should("include","login")
+        cy.url().should("include", "login")
         cy.get("input[name=username]")
             .type("testUser1@server.com")
-            .should("have.value","testUser1@server.com")
+            .should("have.value", "testUser1@server.com")
         cy.get("input[name=password]")
             .type("echopass123")
-            .should("have.value","echopass123")
+            .should("have.value", "echopass123")
         cy.get("button[type=submit]").click({force: true})
 
         cy.wait('@login')

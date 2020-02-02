@@ -1,6 +1,6 @@
 context("Prodex Branches CRUD", () => {
     let addressId = null
-    let filter = [{"operator":"LIKE","path":"DeliveryAddress.address.streetAddress","values":["%125 N G St%"]}]
+    let filter = [{"operator": "LIKE", "path": "DeliveryAddress.address.streetAddress", "values": ["%125 N G St%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -11,9 +11,8 @@ context("Prodex Branches CRUD", () => {
         cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.wait("@inventoryLoading")
-        cy.contains("Settings").click()
-
-        cy.contains("DELIVERY ADDRESSES").click()
+        cy.get('.scrollbar-container > .dropdown').click()
+        cy.contains("Delivery Addresses").click()
 
         cy.wait("@addressLoading")
         cy.waitForUI()
@@ -21,8 +20,8 @@ context("Prodex Branches CRUD", () => {
 
     it("Creates a delivery address", () => {
         cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
-            cy.getFirstEntityWithFilter(token, 'delivery-addresses',filter).then(itemId => {
-                if(itemId != null)
+            cy.getFirstEntityWithFilter(token, 'delivery-addresses', filter).then(itemId => {
+                if (itemId != null)
                     cy.deleteEntity(token, 'delivery-addresses/id', itemId)
             })
         })
@@ -33,18 +32,18 @@ context("Prodex Branches CRUD", () => {
         cy.enterText("input[id='field_input_address.streetAddress']", "125 N G St")
         cy.enterText("input[id='field_input_address.city']", "Harlingen")
 
-        cy.selectFromDropdown("div[id='field_dropdown_address.country']","Bahamas")
+        cy.selectFromDropdown("div[id='field_dropdown_address.country']", "Bahamas")
         cy.waitForUI()
-        cy.selectFromDropdown("div[id='field_dropdown_address.zip']","75000")
+        cy.selectFromDropdown("div[id='field_dropdown_address.zip']", "75000")
 
-        cy.enterText("#field_input_contactName","Marie Currie")
+        cy.enterText("#field_input_contactName", "Marie Currie")
         cy.get("div[data-test='settings_delivery_address_emailPhone_inp']").within(($form) => {
             cy.get("input[placeholder = 'Phone Number']").type("1234567895")
             cy.contains("+CCC").click()
             cy.contains("USA").click()
         })
 
-        cy.enterText("#field_input_contactEmail","marie@address.com")
+        cy.enterText("#field_input_contactEmail", "marie@address.com")
 
         cy.clickSave()
 
@@ -64,34 +63,34 @@ context("Prodex Branches CRUD", () => {
         cy.contains("75000")
 
         cy.get("input[id='field_input_address.city']")
-            .should("have.value","Harlingen")
+            .should("have.value", "Harlingen")
 
-        cy.get("#field_input_name")
-            .should("have.value","Marie Currie")
+        cy.get("#field_input_contactName")
+            .should("have.value", "Marie Currie")
 
-        cy.get("#field_input_phoneNumber")
-            .should("have.value","123 456 7895")
+        cy.get('.PhoneNumber__StyledInputMask-smr14b-1')
+            .should("have.value", "123 456 7895")
 
         cy.get("#field_input_contactEmail")
-            .should("have.value","marie@address.com")
+            .should("have.value", "marie@address.com")
     })
 
     it("Edits a delivery address", () => {
         cy.get('[data-test=action_' + addressId + ']').click({force: true})
         cy.get('[data-test=action_' + addressId + '_0]').click({force: true})
 
-        cy.get("#field_input_name")
+        cy.get("#field_input_contactName")
             .clear()
             .type("Adolf Schwarzenegger")
-            .should("have.value","Adolf Schwarzenegger")
+            .should("have.value", "Adolf Schwarzenegger")
 
         cy.clickSave()
 
         cy.get('[data-test=action_' + addressId + ']').click()
         cy.get('[data-test=action_' + addressId + '_0]').click()
 
-        cy.get("#field_input_name")
-            .should("have.value","Adolf Schwarzenegger")
+        cy.get("#field_input_contactName")
+            .should("have.value", "Adolf Schwarzenegger")
     })
 
     it("Checks error messages", () => {
@@ -100,7 +99,7 @@ context("Prodex Branches CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length",8)
+            .should("have.length", 7)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

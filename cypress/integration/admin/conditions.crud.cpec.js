@@ -21,8 +21,8 @@ context("Conditions CRUD", () => {
 
     it("Creates a condition", () => {
         cy.getToken().then(token => {
-            cy.getFirstEntityWithFilter(token, 'product-conditions',filter).then(itemId => {
-                if(itemId != null)
+            cy.getFirstEntityWithFilter(token, 'product-conditions', filter).then(itemId => {
+                if (itemId != null)
                     cy.deleteEntity(token, 'product-conditions', itemId)
             })
         })

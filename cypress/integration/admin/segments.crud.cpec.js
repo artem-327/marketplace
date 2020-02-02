@@ -21,8 +21,8 @@ context("Market Segments CRUD", () => {
 
     it("Creates a market segment", () => {
         cy.getToken().then(token => {
-            cy.getFirstEntityWithFilter(token, 'market-segments',filter).then(itemId => {
-                if(itemId != null)
+            cy.getFirstEntityWithFilter(token, 'market-segments', filter).then(itemId => {
+                if (itemId != null)
                     cy.deleteEntity(token, 'market-segments/id', itemId)
             })
         })
@@ -36,7 +36,6 @@ context("Market Segments CRUD", () => {
 
         cy.searchInList("Test")
         cy.waitForUI()
-
 
 
         cy.getToken().then(token => {

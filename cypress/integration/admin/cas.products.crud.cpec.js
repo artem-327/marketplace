@@ -1,8 +1,8 @@
 context("CAS products CRUD", () => {
 
     let productId = null
-    let filter = [{"operator":"LIKE","path":"CasProduct.casIndexName","values":["%Testinonium%"]},
-        {"operator":"LIKE","path":"CasProduct.casNumber","values":["%Testinonium%"]}]
+    let filter = [{"operator": "LIKE", "path": "CasProduct.casIndexName", "values": ["%Testinonium%"]},
+        {"operator": "LIKE", "path": "CasProduct.casNumber", "values": ["%Testinonium%"]}]
 
     beforeEach(function () {
         cy.server()
@@ -17,8 +17,8 @@ context("CAS products CRUD", () => {
     it("Creates a CAS product", () => {
         cy.getToken().then(token => {
             cy.getFirstCasProductWithFilter(token, filter).then(itemId => {
-                if(itemId != null)
-                cy.deleteEntity(token, 'cas-products', itemId)
+                if (itemId != null)
+                    cy.deleteEntity(token, 'cas-products/id', itemId)
             })
         })
 

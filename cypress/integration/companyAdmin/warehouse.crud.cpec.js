@@ -13,11 +13,8 @@ context("Prodex Warehouse CRUD", () => {
         cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.wait("@inventoryLoading", {timeout: 100000})
-        cy.contains("Settings").click()
-
-        cy.wait("@settingsLoading", {timeout: 100000})
-
-        cy.contains("WAREHOUSES").click()
+        cy.get('.scrollbar-container > .dropdown').click()
+        cy.contains("Warehouses").click()
 
         cy.wait("@warehouseLoading")
         cy.waitForUI()
