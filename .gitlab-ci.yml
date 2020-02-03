@@ -6,4 +6,5 @@ before_script:
 
 test:
   script:
-    - docker run -v $PWD:/test -w /test -u node cypress/artio
+    - set -x
+    - docker run -v $PWD:/test -w /test -u appuser cypress/artio
