@@ -299,7 +299,7 @@ class ActionsRequired extends React.Component {
                     dataTest: 'orders_detail_confirm_btn',
                     text: 'global.confirm',
                     loading: isSending === 1,
-                    disabled: isSending !== 1
+                    disabled: isSending && isSending !== 1
                   },
                   {
                     buttonType: 'basic',
@@ -307,7 +307,7 @@ class ActionsRequired extends React.Component {
                     dataTest: 'orders_detail_reject_btn',
                     text: 'global.reject',
                     loading: isSending === 2,
-                    disabled: isSending !== 2
+                    disabled: isSending && isSending !== 2
                   }
                 ])
               : null}
@@ -387,7 +387,7 @@ class ActionsRequired extends React.Component {
                     dataTest: 'orders_detail_approve_btn',
                     text: 'global.approve',
                     loading: isSending === 1,
-                    disabled: isSending !== 1
+                    disabled: isSending && isSending !== 1
                   },
                   {
                     buttonType: 'basic',
@@ -395,7 +395,7 @@ class ActionsRequired extends React.Component {
                     dataTest: 'orders_detail_discard_btn',
                     text: 'global.discard',
                     loading: isSending === 2,
-                    disabled: isSending !== 2
+                    disabled: isSending && isSending !== 2
                   }
                 ])
               : null}
