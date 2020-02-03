@@ -10,6 +10,7 @@ import * as Yup from 'yup'
 import get from 'lodash/get'
 import styled from 'styled-components'
 import { getSafe } from '~/utils/functions'
+import { getIdentity } from '~/modules/auth/actions'
 
 import {
   openPopup,
@@ -197,8 +198,25 @@ class BankAccountsTable extends Component {
 
   componentDidMount() {
     this.props.getBankAccountsDataRequest()
-    if (this.props.hasDwollaAccount) this.props.getDwollaAccBalance()
-    if (!this.props.currentUser) this.props.getCurrentUser()
+    this.props.getCurrentUser()
+    this.props.getIdentity()
+      .then(resp => {
+        const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
+        if (hasDwollaAccount) this.props.getDwollaAccBalance()
+      })
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.tabClicked !== prevProps.tabClicked)
+    {
+      this.props.getBankAccountsDataRequest()
+      this.props.getCurrentUser()
+      this.props.getIdentity()
+        .then(resp => {
+          const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
+          if (hasDwollaAccount) this.props.getDwollaAccBalance()
+        })
+    }
   }
 
   render() {
@@ -372,7 +390,8 @@ const mapDispatchToProps = {
   dwollaFinalizeVerification,
   dwollaFinalizeVerificationConfirmOpen,
   getCurrentUser,
-  dwollaSetPreferred
+  dwollaSetPreferred,
+  getIdentity
 }
 
 const statusToLabel = {
@@ -440,7 +459,8 @@ const mapStateToProps = state => {
         ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
         : state.settings.tabsNames[0],
     company: company,
-    currentUser: state.settings.currentUser
+    currentUser: state.settings.currentUser,
+    tabClicked: state.settings.tabClicked
   }
 }
 
