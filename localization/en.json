@@ -1259,6 +1259,7 @@
   "validation.lessThanOrdered": "Less than ordered",
   "validation.moreThanOrdered": "More than ordered",
   "validation.positive": "Number value should be positive",
+  "validation.shipmentQuoteId": "Value should be in format \"12365-4789\"",
   "password.change": "Change Password",
   "password.current": "Current Password",
   "password.new": "New Password",

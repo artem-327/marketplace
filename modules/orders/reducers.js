@@ -88,17 +88,37 @@ export default function(state = initialState, action) {
         ...state,
         isDetailFetching: false
       }
+    case AT.ORDER_CONFIRM_FETCH_PENDING:
+    case AT.ORDER_APPROVE_ORDER_PENDING:
+      return {
+        ...state,
+        isSending: 1
+      }
+    case AT.ORDER_DISCARD_ORDER_PENDING:
+    case AT.ORDER_REJECT_FETCH_PENDING:
+      return {
+        ...state,
+        isSending: 2
+      }
+    case AT.ORDER_ACCEPT_DELIVERY_ORDER_PENDING:
+    case AT.ORDER_RECEIVED_ORDER_PENDING:
+    case AT.ORDER_CONFIRM_RETURNED_FETCH_PENDING:
+    case AT.ORDER_CANCEL_ORDER_PENDING:
     case AT.ACCEPT_CREDIT_PENDING:
     case AT.CREDIT_COUNTER_REJECT_PENDING:
     case AT.CREDIT_ACCEPT_PENDING:
-    case AT.ORDER_CONFIRM_FETCH_PENDING:
-    case AT.ORDER_REJECT_FETCH_PENDING:
     case AT.ORDER_RETURN_SHIP_FETCH_PENDING:
     case AT.ORDER_SHIP_FETCH_PENDING:
       return {
         ...state,
         isSending: true
       }
+    case AT.ORDER_DISCARD_ORDER_REJECTED:
+    case AT.ORDER_APPROVE_ORDER_REJECTED:
+    case AT.ORDER_ACCEPT_DELIVERY_ORDER_REJECTED:
+    case AT.ORDER_RECEIVED_ORDER_REJECTED:
+    case AT.ORDER_CONFIRM_RETURNED_FETCH_REJECTED:
+    case AT.ORDER_CANCEL_ORDER_REJECTED:
     case AT.ACCEPT_CREDIT_REJECTED:
     case AT.CREDIT_COUNTER_REJECT_REJECTED:
     case AT.CREDIT_ACCEPT_REJECTED:

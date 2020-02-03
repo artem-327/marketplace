@@ -14,6 +14,7 @@ import { currency } from '~/constants/index'
 import ShippingQuote from '~/modules/purchase-order/components/ShippingQuote'
 import * as Yup from 'yup'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
+import { validateShipmentQuoteId } from '~/constants/yupValidation'
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
@@ -29,9 +30,7 @@ class PurchaseOrderShipping extends React.Component {
     Yup.lazy(values =>
       Yup.object().shape({
         shipmentQuoteId: manualShipmentQuoteId
-          ? Yup.string()
-              .trim()
-              .required(errorMessages.requiredMessage)
+          ? validateShipmentQuoteId()
           : Yup.string().notRequired()
       })
     )

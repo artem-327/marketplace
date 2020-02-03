@@ -243,6 +243,8 @@ class ActionsRequired extends React.Component {
                         size='large'
                         color={color ? color : null}
                         onClick={() => button.onClick()}
+                        disabled={typeof button.disabled !== 'undefined' ? button.disabled : false}
+                        loading={typeof button.loading !== 'undefined' ? button.loading : false}
                         data-test={button.dataTest}>
                         <FormattedMessage id={button.text} tagName='span' />
                       </Button>
@@ -268,7 +270,9 @@ class ActionsRequired extends React.Component {
       detail,
       openReinitiateTransfer,
       openPopupName,
-      orderCreditHistoryOpen
+      orderCreditHistoryOpen,
+      isSending,
+      openedPopup
     } = this.props
     const repayUntil = moment(detail.orderDate)
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
@@ -293,13 +297,17 @@ class ActionsRequired extends React.Component {
                     buttonType: 'primary',
                     onClick: this.confirmOrder,
                     dataTest: 'orders_detail_confirm_btn',
-                    text: 'global.confirm'
+                    text: 'global.confirm',
+                    loading: isSending === 1,
+                    disabled: isSending !== 1
                   },
                   {
                     buttonType: 'basic',
                     onClick: this.rejectOrder,
                     dataTest: 'orders_detail_reject_btn',
-                    text: 'global.reject'
+                    text: 'global.reject',
+                    loading: isSending === 2,
+                    disabled: isSending !== 2
                   }
                 ])
               : null}
@@ -319,7 +327,8 @@ class ActionsRequired extends React.Component {
                     buttonType: 'primary',
                     onClick: this.markShipped,
                     dataTest: 'orders_detail_markAsShipped_btn',
-                    text: 'order.markAsShipped'
+                    text: 'order.markAsShipped',
+                    loading: isSending && !openedPopup
                   }
                 ])
               : null}
@@ -361,7 +370,8 @@ class ActionsRequired extends React.Component {
                     buttonType: 'primary',
                     onClick: this.markReturned,
                     dataTest: 'orders_detail_returnInTransit_btn',
-                    text: 'order.returnInTransit'
+                    text: 'order.returnInTransit',
+                    loading: isSending
                   }
                 ])
               : null}
@@ -375,13 +385,17 @@ class ActionsRequired extends React.Component {
                     buttonType: 'primary',
                     onClick: this.approveOrder,
                     dataTest: 'orders_detail_approve_btn',
-                    text: 'global.approve'
+                    text: 'global.approve',
+                    loading: isSending === 1,
+                    disabled: isSending !== 1
                   },
                   {
                     buttonType: 'basic',
                     onClick: this.discardOrder,
                     dataTest: 'orders_detail_discard_btn',
-                    text: 'global.discard'
+                    text: 'global.discard',
+                    loading: isSending === 2,
+                    disabled: isSending !== 2
                   }
                 ])
               : null}
@@ -391,7 +405,8 @@ class ActionsRequired extends React.Component {
                     buttonType: 'basic',
                     onClick: this.cancelOrder,
                     dataTest: 'orders_detail_cancel_btn',
-                    text: 'global.cancel'
+                    text: 'global.cancel',
+                    loading: isSending
                   }
                 ])
               : null}
@@ -411,7 +426,8 @@ class ActionsRequired extends React.Component {
                     buttonType: 'primary',
                     onClick: this.markDelivered,
                     dataTest: 'orders_detail_markAsDelivered_btn',
-                    text: 'order.markAsDelivered'
+                    text: 'order.markAsDelivered',
+                    loading: isSending
                   }
                 ])
               : null}
@@ -421,7 +437,8 @@ class ActionsRequired extends React.Component {
                     buttonType: 'primary',
                     onClick: this.acceptDelivery,
                     dataTest: 'orders_detail_accept_btn',
-                    text: 'global.accept'
+                    text: 'global.accept',
+                    loading: isSending && !openedPopup
                   },
                   {
                     buttonType: 'basic',
@@ -449,7 +466,8 @@ class ActionsRequired extends React.Component {
                     buttonType: 'primary',
                     onClick: this.markShippedReturn,
                     dataTest: 'orders_detail_markAsShippedReturn_btn',
-                    text: 'order.markAsShipped'
+                    text: 'order.markAsShipped',
+                    loading: isSending && !openedPopup
                   }
                 ])
               : null}
@@ -497,7 +515,7 @@ function mapStateToProps(state, ownProps) {
     creditReviewStatus: getSafe(() => orders.detail.creditReviewStatus, 0),
     returnStatus: getSafe(() => orders.detail.returnStatus, 0),
     assignLotsRequired: false, //checkAssignLotsRequired(orders.detail),
-
+    isSending: orders.isSending,
     fundingSourceId: '?', // ! ! which param? (string)
 
     order: ownProps.order,
@@ -507,7 +525,9 @@ function mapStateToProps(state, ownProps) {
     returnShippingTrackingCode: orders.detail.returnShippingTrackingCode
       ? orders.detail.returnShippingTrackingCode
       : '',
-    orderCreditHistoryOpen: getSafe(() => orders.detail.orderCreditHistoryOpen, false)
+    orderCreditHistoryOpen: getSafe(() => orders.detail.orderCreditHistoryOpen, false),
+    openedPopup: orders.openedEnterTrackingIdShip | orders.openedEnterTrackingIdReturnShip
+      | orders.openedPurchaseRejectDelivery | orders.openedPurchaseRequestCreditDelivery
   }
 }
 
