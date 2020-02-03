@@ -27,12 +27,18 @@ class BankAccountsUploadDocPopup extends React.Component {
   }
 
   closeUploadDocumentsPopup = async () => {
-    this.props.getBankAccountsDataRequest()
-    this.props.getCurrentUser()
-    const resp = await this.props.getIdentity()
-    const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
-    if (hasDwollaAccount) this.props.getDwollaAccBalance()
-    this.props.closeUploadDocumentsPopup()
+    try {
+      this.props.getBankAccountsDataRequest()
+      this.props.getCurrentUser()
+      const resp = await this.props.getIdentity()
+      const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
+      if (hasDwollaAccount) this.props.getDwollaAccBalance()
+    } catch (e) {
+      console.error(e)
+    } finally {
+      if (this.setSubmitting) this.setSubmitting(false)
+      this.props.closeUploadDocumentsPopup()
+    }
   }
 
   render() {
@@ -42,7 +48,16 @@ class BankAccountsUploadDocPopup extends React.Component {
     } = this.props
 
     return (
-      <Modal closeIcon onClose={() => this.closeUploadDocumentsPopup()} open centered={false}>
+      <Modal closeIcon
+             onClose={() => {
+               if (!this.isSubmitting) {
+                 if (this.setSubmitting) this.setSubmitting(true)
+                 this.closeUploadDocumentsPopup()
+               }
+             }}
+             open
+             centered={false}
+      >
         <Modal.Header>
           <FormattedMessage id='settings.tables.bankAccounts.uploadDoc' defaultMessage='Upload Documents' />
         </Modal.Header>
@@ -50,8 +65,11 @@ class BankAccountsUploadDocPopup extends React.Component {
           <Form initialValues={this.getInitialFormValues()}
                 onReset={this.closeUploadDocumentsPopup}
                 validateOnBlur={false}
+                onSubmit={this.closeUploadDocumentsPopup}
           >
-            {({ values, setFieldValue }) => {
+            {({ values, setFieldValue, setSubmitting, isSubmitting }) => {
+              this.setSubmitting = setSubmitting
+              this.isSubmitting = isSubmitting
               return (
                 <>
                   <Grid>
@@ -131,13 +149,12 @@ class BankAccountsUploadDocPopup extends React.Component {
                     </GridRow>
                   </Grid>
                   <div style={{ textAlign: 'right' }}>
-                    <Button.Reset
-                      onClick={this.closeUploadDocumentsPopup}
+                    <Button.Submit
                       data-test='settings_bank_account_upload_doc_popup_close_btn'>
                       <FormattedMessage id='global.done' defaultMessage='Done'>
                         {text => text}
                       </FormattedMessage>
-                    </Button.Reset>
+                    </Button.Submit>
                   </div>
                 </>
               )

@@ -126,7 +126,10 @@ export const errorMessages = {
       values={{ split }}
     />
   ),
-  positive: <FormattedMessage id='validation.positive' defaultMessage='Number value should be positive' />
+  positive: <FormattedMessage id='validation.positive' defaultMessage='Number value should be positive' />,
+  invalidShipmentQuoteId:
+    <FormattedMessage id='validation.shipmentQuoteId' defaultMessage='Value should be in format "12365-4789"' />
+
 }
 
 export const provinceObjectRequired = hasProvinces =>
@@ -293,3 +296,14 @@ export const quantityValidation = (min = 1, split = 1) =>
 
 export const minOrZeroLength = min =>
   Yup.string().test('v', errorMessages.minimum(min), v => (v ? v.trim().length >= min : true))
+
+export const validateShipmentQuoteId = () =>
+  Yup.string()
+    .trim()
+    .required(errorMessages.requiredMessage)
+    .test('quoteId', errorMessages.invalidShipmentQuoteId, val => (val ? validShipmentQuoteId(val) : false))
+
+function validShipmentQuoteId(str) {
+  const pattern = new RegExp(/^\d+-\d+$/)
+  return !!pattern.test(str.trim())
+}
