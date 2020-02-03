@@ -187,14 +187,15 @@ class Marketplace extends Component {
     }))
   }
 
-  tableRowClicked = clickedId => {
+  tableRowClicked = (clickedId, isHoldRequest = false) => {
     const { getProductOffer, sidebarChanged, isProductInfoOpen, closePopup } = this.props
     let { isOpen, id } = this.props.sidebar
     getProductOffer(clickedId)
 
     if (isProductInfoOpen) closePopup()
-    if (id !== clickedId && id) sidebarChanged({ isOpen: true, id: clickedId, quantity: 1 })
-    else sidebarChanged({ isOpen: !isOpen, id: clickedId, quantity: 1 })
+    if (id !== clickedId && id)
+      sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest })
+    else sidebarChanged({ isOpen: !isOpen, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest })
   }
 
   handleFilterApply = filter => {
@@ -366,6 +367,14 @@ class Marketplace extends Component {
                   defaultMessage: 'Buy Product Offer'
                 }),
                 callback: row => this.tableRowClicked(row.id)
+              },
+
+              {
+                text: formatMessage({
+                  id: 'hold.requestHold',
+                  defaultMessage: 'Request Hold'
+                }),
+                callback: row => this.tableRowClicked(row.id, true)
               }
             ]}
           />

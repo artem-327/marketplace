@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { getHolds } from '~/modules/purchase-order/actions'
+import { getMyHolds } from '~/modules/marketplace/holds/actions'
 import { Icon, Label } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
 import { Clock } from 'react-feather'
@@ -19,22 +19,18 @@ const CircularLabel = styled(Label)`
   font-style: normal !important;
   font-weight: 400 !important;
 `
-
 class HoldIcon extends Component {
-  //TODO
   componentDidMount() {
-    //this.props.getHolds()
+    this.props.getMyHolds()
   }
 
   render() {
-    //TODO
-    //const { holdItems } = this.props
-    //TODO
+    const { numberHolds } = this.props
     return (
       <Icon.Group>
         <HoldClockIcon />
         <CircularLabel circular color='orange'>
-          2{/* až bude funkční getHolds tak číslo výše smazat a odkomentovat vše s  holdItems a getHolds {holdItems} */}
+          {numberHolds}
         </CircularLabel>
       </Icon.Group>
     )
@@ -43,9 +39,8 @@ class HoldIcon extends Component {
 
 const stateToProps = state => {
   return {
-    //TODO
-    holdItems: getSafe(() => state.cart.cart.holdItems.length, 0)
+    numberHolds: getSafe(() => state.holds.holds.length, 0)
   }
 }
 
-export default connect(stateToProps, { getHolds })(HoldIcon)
+export default connect(stateToProps, { getMyHolds })(HoldIcon)

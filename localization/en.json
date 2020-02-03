@@ -1219,6 +1219,7 @@
   "cart.packagesRequested": "Packages Requested:",
   "cart.requestedQuantity": "Requested Quantity:",
   "cart.selectFirst": "Select Packages Requested first.",
+  "cart.holdRequestInfo": "2. Hold Request Info",
   "validation.required": "Required",
   "validation.dateInFuture": "Date must be in future",
   "validation.requiredNonConforming": "Required if Condition is Non Conforming",
@@ -1862,5 +1863,14 @@
   "title.settings.products": "Product Catalog",
   "title.settings.system-settings": "Company Settings",
   "title.settings.users": "Users",
-  "title.settings.warehouses": "Warehouses"
+  "title.settings.warehouses": "Warehouses",
+  "holds.intProductName": "Product Name",
+  "holds.pkgsHeld": "Quantity",
+  "holds.expirationTime": "Expires",
+  "holds.holdPricePerUOM": "Price/LB",
+  "holds.holdPriceSubtotal": "Subtotal",
+  "holds.status": "Status",
+  "hold.reject": "Reject",
+  "hold.cancel": "Cancel",
+  "hold.approve": "Approve"
 }

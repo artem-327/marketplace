@@ -25,10 +25,11 @@ import { FormattedUnit, UnitOfPackaging } from '~/components/formatted-messages'
 import { errorMessages } from '~/constants/yupValidation'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
-import { getLocaleDateFormat } from '~/components/date-format'
+import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import './AddCart.scss'
 // import file from '../../../../images/file.svg'
 import { checkToken } from '../../../../utils/auth'
+import { DateTimeInput } from 'semantic-ui-calendar-react'
 
 const CapitalizedColumn = styled(GridColumn)`
   text-transform: capitalize;
@@ -65,9 +66,16 @@ const CustomSpanShowMore = styled.span`
   cursor: pointer;
 `
 
+const CustomDateTimeInput = styled(DateTimeInput)`
+  .ui.left.icon.input {
+    max-width: 100%;
+  }
+`
+
 export default class AddCart extends Component {
   state = {
-    showMore: false
+    showMore: false,
+    expirationTime: ''
   }
   componentDidMount() {
     // this.props.getProductOffer(this.props.id, this.props.isEdit)
@@ -76,12 +84,26 @@ export default class AddCart extends Component {
 
   createOrder = async () => {
     if (checkToken(this.props)) return
-    const { addCartItem } = this.props
+    const { addCartItem, createHold } = this.props
     let { sidebar } = this.props
-    let { pkgAmount, id } = sidebar
+    let { pkgAmount, id, isHoldRequest } = sidebar
+    //TODO this.state.expirationTime je tam tkae cas a je potreba ho dostat do ISO y ruznych formatu
 
-    await addCartItem({ productOffer: id, pkgAmount })
-    Router.push('/cart')
+    try {
+      if (isHoldRequest) {
+        const params = {
+          holdTime: this.state.expirationTime,
+          pkgAmount: pkgAmount,
+          productOfferId: id
+        }
+        await createHold(params)
+      } else {
+        await addCartItem({ productOffer: id, pkgAmount })
+        Router.push('/cart')
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   editOrder = async () => {
@@ -110,7 +132,7 @@ export default class AddCart extends Component {
 
   getCartMarkup = () => {
     let { offer, order, isEdit } = this.props
-    let { pkgAmount, pricing, warning } = this.props.sidebar
+    let { pkgAmount, pricing, warning, isHoldRequest } = this.props.sidebar
 
     let { pkgAvailable, pricingTiers } = offer
 
@@ -330,7 +352,11 @@ export default class AddCart extends Component {
             <GridRow className='action'>
               <GridColumn>
                 <Header>
-                  <FormattedMessage id='cart.PurchaseHeader' defaultMessage='2. Purchase Info' />
+                  {isHoldRequest ? (
+                    <FormattedMessage id='cart.holdRequestInfo' defaultMessage='2. Hold Request Info' />
+                  ) : (
+                    <FormattedMessage id='cart.PurchaseHeader' defaultMessage='2. Purchase Info' />
+                  )}
                 </Header>
               </GridColumn>
             </GridRow>
@@ -339,8 +365,8 @@ export default class AddCart extends Component {
               <ListHeader>
                 <FormattedMessage id='cart.fobPricing' defaultMessage='FOB Pricing:' />
               </ListHeader>
-              {dropdownOptions.map(el => (
-                <List.Item active={el.value.price === this.props.sidebar.pricing.price}>
+              {dropdownOptions.map((el, i) => (
+                <List.Item key={i} active={el.value.price === this.props.sidebar.pricing.price}>
                   <List.Content>{el.text}</List.Content>
                 </List.Item>
               ))}
@@ -363,7 +389,6 @@ export default class AddCart extends Component {
               </GridColumn>
               <GridColumn>{offer.splitPkg}</GridColumn>
             </GridRow>
-
             <GridRow verticalAlign='middle' columns={2}>
               <GridColumn>
                 <FormattedMessage id='cart.packagesRequested' defaultMessage='Packages Requested:' />
@@ -386,6 +411,33 @@ export default class AddCart extends Component {
                 <GridColumn> {error}</GridColumn>
               </GridRow>
             )}
+
+            {isHoldRequest ? (
+              <GridRow verticalAlign='middle' columns={2}>
+                <GridColumn>
+                  <FormattedMessage id='global.expirationTime' defaultMessage='Expiration Date:'>
+                    {text => text}
+                  </FormattedMessage>
+                </GridColumn>
+                <GridColumn>
+                  <CustomDateTimeInput
+                    minDate={moment()}
+                    name='expirationTime'
+                    placeholder='Select expiration date'
+                    value={this.state.expirationTime}
+                    iconPosition='left'
+                    animation='none'
+                    onChange={(event, { name, value }) => {
+                      this.setState({ [name]: value })
+                    }}
+                    animation='none'
+                    popupPosition={'top center'}
+                    dateFormat={getLocaleDateFormat()}
+                    localization={typeof navigator !== 'undefined' ? window.navigator.language.slice(0, 2) : 'en'}
+                  />
+                </GridColumn>
+              </GridRow>
+            ) : null}
 
             <GridRow columns={1}></GridRow>
 

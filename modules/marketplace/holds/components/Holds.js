@@ -7,10 +7,10 @@ import { ShippingQuotes } from '~/modules/shipping'
 import SubMenu from '~/src/components/SubMenu'
 import { Filter } from '~/modules/filter'
 import ProdexGrid from '~/components/table'
-import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
+import { getSafe } from '~/utils/functions'
 
 const HoldDropdown = styled(Dropdown)`
   z-index: 601 !important;
@@ -20,93 +20,135 @@ class Holds extends Component {
   //TODO columns
   state = {
     columns: [
-      { name: 'id', disabled: true },
+      { name: 'id', title: '', disabled: true },
       {
-        name: '',
-        title: '',
-        width: 20
-      },
-      {
-        name: 'productName',
+        name: 'intProductName',
         title: (
-          <FormattedMessage id='order.productName' defaultMessage='Product Name'>
+          <FormattedMessage id='holds.intProductName' defaultMessage='Product Name'>
             {text => text}
           </FormattedMessage>
         ),
-        width: 160
+        width: 160,
+        sortPath: 'Holds.intProductName'
       },
       {
-        name: 'quantity',
+        name: 'pkgsHeld',
         title: (
-          <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>
+          <FormattedMessage id='holds.pkgsHeld' defaultMessage='Quantity'>
             {text => text}
           </FormattedMessage>
         ),
         width: 140,
         align: 'right',
-        sortPath: 'ProductOffer.quantity'
+        sortPath: 'Holds.pkgsHeld'
       },
       {
-        name: 'expires',
+        name: 'expirationTime',
         title: (
-          <FormattedMessage id='hold.expires' defaultMessage='Expires'>
+          <FormattedMessage id='holds.expirationTime' defaultMessage='Expires'>
             {text => text}
           </FormattedMessage>
         ),
         width: 160,
         align: 'right',
-        sortPath: 'Hold.expires'
+        sortPath: 'Holds.expirationTime'
       },
       {
-        name: 'pricelb',
+        name: 'holdPricePerUOM',
         title: (
-          <FormattedMessage id='hold.pricelb' defaultMessage='Price/LB'>
+          <FormattedMessage id='holds.holdPricePerUOM' defaultMessage='Price/LB'>
             {text => text}
           </FormattedMessage>
         ),
         width: 160,
         align: 'right',
-        sortPath: 'ProductOffer.cfPricePerUOM'
+        sortPath: 'Holds.holdPricePerUOM'
       },
       {
-        name: 'subtotal',
+        name: 'holdPriceSubtotal',
         title: (
-          <FormattedMessage id='hold.subtotal' defaultMessage='Subtotal'>
+          <FormattedMessage id='holds.holdPriceSubtotal' defaultMessage='Subtotal'>
             {text => text}
           </FormattedMessage>
         ),
         width: 160,
         align: 'right',
-        sortPath: 'Hold.subtotal'
+        sortPath: 'Holds.holdPriceSubtotal'
       },
       {
         name: 'status',
         title: (
-          <FormattedMessage id='hold.status' defaultMessage='Status'>
+          <FormattedMessage id='holds.status' defaultMessage='Status'>
             {text => text}
           </FormattedMessage>
         ),
         width: 120,
-        sortPath: 'Hold.status'
+        sortPath: 'Holds.status'
       }
     ],
     selectedRows: [],
     pageNumber: 0,
     open: false
   }
-  //TODO
-  handleApprove = id => {
-    this.props.approveHold()
+  //TODO toastermessage
+  handleApprove = async id => {
+    try {
+      await this.props.approveHold(id)
+    } catch (error) {
+      console.error(error)
+    }
   }
-  //TODO
-  handleReject = id => {
-    this.props.rejectHold(id)
+  //TODO toastermessage
+  handleReject = async id => {
+    try {
+      await this.props.rejectHold(id)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  //TODO toastermessage
+  handleCancel = async id => {
+    try {
+      await this.props.cancelHold(id)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   render() {
     const { rows, datagrid, intl } = this.props
     const { columns } = this.state
     let { formatMessage } = intl
+    const approveButton = {
+      text: formatMessage({
+        id: 'hold.approve',
+        defaultMessage: 'Approve'
+      }),
+      callback: row => this.handleApprove(row.id)
+    }
+    const buttonCancel = {
+      text: formatMessage({
+        id: 'hold.cancel',
+        defaultMessage: 'Cancel'
+      }),
+      callback: row => this.handleCancel(row.id)
+    }
+    const buttonReject = {
+      text: formatMessage({
+        id: 'hold.reject',
+        defaultMessage: 'Reject'
+      }),
+      callback: row => this.handleReject(row.id)
+    }
+    let rowActions = []
+
+    //TODO rowActions if isMerchant of Companymanager ??
+    if (false) {
+      rowActions.push(buttonCancel)
+    } else if (true) {
+      rowActions.push(approveButton)
+      rowActions.push(buttonReject)
+    }
     return (
       <Container fluid style={{ padding: '0 32px' }}>
         <HoldDropdown
@@ -158,29 +200,7 @@ class Holds extends Component {
               .value()
           }
           data-test='hold_row_action'
-          rowActions={[
-            {
-              text: formatMessage({
-                id: 'hold.requestHold',
-                defaultMessage: 'Request Hold'
-              }),
-              callback: row => this.handleRequestHold(row.id)
-            },
-            {
-              text: formatMessage({
-                id: 'hold.approve',
-                defaultMessage: 'Approve'
-              }),
-              callback: row => this.handleApprove(row.id)
-            },
-            {
-              text: formatMessage({
-                id: 'hold.reject',
-                defaultMessage: 'Reject'
-              }),
-              callback: row => this.handleReject(row.id)
-            }
-          ]}
+          rowActions={rowActions}
         />
       </Container>
     )

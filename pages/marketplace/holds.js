@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Holds } from '~/modules/holds'
+import { Holds } from '~/modules/marketplace/holds'
 import securePage from '~/hocs/securePage'
 
 //TODO
