@@ -1,0 +1,10 @@
+{
+  "baseUrl": "http://review.echoexchange.net",
+  "reporter": "junit",
+  "reporterOptions": {
+    "mochaFile": "results/results-[hash].xml",
+    "toConsole": true
+  },
+  "viewportHeight" : 800,
+  "viewportWidth" : 1600
+}
