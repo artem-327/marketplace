@@ -117,5 +117,7 @@ export default {
       `/prodex/api/${endpointType}-orders/${orderId}/attachments/download-credit-request-attachment/${creditRequestAttachmentId}`,
       { responseType: 'blob' }
     ),
-  creditAccept: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/credit-accept`)
+  creditAccept: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/credit-accept`),
+  getPurchaseOrder: orderId => api.get(`/prodex/api/purchase-orders/${orderId}`),
+  getSaleOrder: orderId => api.get(`/prodex/api/sale-orders/${orderId}`),
 }

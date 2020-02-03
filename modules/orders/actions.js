@@ -208,3 +208,12 @@ export const creditAccept = orderId => ({
   type: AT.CREDIT_ACCEPT,
   payload: Api.creditAccept(orderId)
 })
+
+export const getPurchaseOrder = orderId => ({
+  type: AT.ORDER_GET_PURCHASE_ORDER,
+  payload: Api.getPurchaseOrder(orderId)
+})
+export const getSaleOrder = orderId => ({
+  type: AT.ORDER_GET_SALE_ORDER,
+  payload: Api.getSaleOrder(orderId)
+})
