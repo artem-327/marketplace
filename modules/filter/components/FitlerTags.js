@@ -74,7 +74,9 @@ class FilterTags extends Component {
         return (
           <FilterTag key={i} ref={this.myRef}>
             <span>
-              {filter.tagDescription.replace(/,/g, ', ')}
+              {filter && filter.tagDescription && typeof filter.tagDescription === 'string'
+                ? filter.tagDescription.replace(/,/g, ', ')
+                : filter.tagDescription}
               <Icon onClick={() => this.removeFilter(filter)} name='delete' data-test='filter_tags_remove_filter' />
             </span>
           </FilterTag>
