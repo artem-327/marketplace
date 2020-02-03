@@ -1,12 +1,9 @@
 before_script:
   - docker -D info
+  - cd cypress/
+  - set e+x
+  - docker build -t cypress/artio .
 
 test:
   script:
-    - docker pull cypress/included:3.2.0
-    - docker run -v $PWD:/e2e -w /e2e cypress/included:3.2.0
-
-after_script:
-  - rm -r cypress/screenshots/
-  - chown gitlab-runner:gitlab-runner -R cypress
-  - rm -r cypress/videos/
+    - docker run -v $PWD/src:/test -w /test -u node cypress/artio
