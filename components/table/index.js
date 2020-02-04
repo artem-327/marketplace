@@ -170,9 +170,10 @@ const TableCells = props => <Table.Cell {...props} className={props.column.name 
 const GridRoot = props => <Grid.Root {...props} style={{ height: '100%', flex: 1 }} />
 
 const SortLabel = ({ column, onSort, children, direction }) => (
-  <span onClick={onSort} data-test={`table_sort_action_${column.name}`}>
+  <span onClick={onSort} data-test={`table_sort_action_${column.name}`} className={column.sortPath ? 'sortable' : ''}>
     {children}
     {direction && <Icon className='thick' name={direction.toUpperCase() === 'ASC' ? 'sort up' : 'sort down'} />}
+    {!direction && column.sortPath && <Icon className='thick' name={'sort up inactive'} />}
   </span>
 )
 
