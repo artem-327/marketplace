@@ -87,16 +87,16 @@ export default class AddCart extends Component {
     const { addCartItem, createHold } = this.props
     let { sidebar } = this.props
     let { pkgAmount, id, isHoldRequest } = sidebar
-    //TODO this.state.expirationTime je tam tkae cas a je potreba ho dostat do ISO y ruznych formatu
-
     try {
       if (isHoldRequest) {
         const params = {
-          holdTime: this.state.expirationTime,
+          holdTime: encodeURIComponent(getStringISODate(this.state.expirationTime)),
           pkgAmount: pkgAmount,
           productOfferId: id
         }
         await createHold(params)
+        this.props.sidebarChanged({ isOpen: false, isHoldRequest: false })
+        Router.push('/marketplace/holds')
       } else {
         await addCartItem({ productOffer: id, pkgAmount })
         Router.push('/cart')
@@ -214,7 +214,7 @@ export default class AddCart extends Component {
     //   <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
     // )
 
-    let canProceed = !warning && price && pkgAmount > 0
+    let canProceed = !warning && price && pkgAmount > 0 && this.state.expirationTime
 
     return (
       <>
@@ -421,6 +421,7 @@ export default class AddCart extends Component {
                 </GridColumn>
                 <GridColumn>
                   <CustomDateTimeInput
+                    closable
                     minDate={moment()}
                     name='expirationTime'
                     placeholder='Select expiration date'
@@ -514,7 +515,7 @@ export default class AddCart extends Component {
                   fluid
                   floated='right'
                   onClick={() => {
-                    this.props.sidebarChanged({ isOpen: false })
+                    this.props.sidebarChanged({ isOpen: false, isHoldRequest: false })
                     this.setState({ showMore: false })
                   }}
                   data-test='add_cart_cancel_btn'>
@@ -565,7 +566,21 @@ export default class AddCart extends Component {
 
     return (
       <Sidebar
-        onHide={() => sidebarChanged({ isOpen: false })}
+        onHide={e => {
+          // Workaround, close if you haven't clicked on calendar item or filter icon
+          try {
+            if (
+              e &&
+              !(e.path[0] instanceof HTMLTableCellElement) &&
+              !(e.path[1] instanceof HTMLTableCellElement) &&
+              (!e.target || !e.target.className.includes('js-focus-visible'))
+            ) {
+              sidebarChanged({ isOpen: false, isHoldRequest: false })
+            }
+          } catch (e) {
+            console.error(e)
+          }
+        }}
         width='very wide'
         className='cart-sidebar flex'
         direction='right'

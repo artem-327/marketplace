@@ -2,6 +2,7 @@ import React from 'react'
 import { FormattedNumber } from 'react-intl'
 import { connect } from 'react-redux'
 import moment from 'moment/moment'
+import { Label } from 'semantic-ui-react'
 
 import { withDatagrid } from '~/modules/datagrid'
 import { applyFilter } from '~/modules/filter/actions'
@@ -15,6 +16,27 @@ import { getProductOffer } from '~/modules/purchase-order/actions'
 import { sidebarChanged } from '~/src/modules/cart'
 import { openPopup, closePopup } from '~/modules/company-product-info/actions'
 
+const momentDurationFormatSetup = require('moment-duration-format')
+momentDurationFormatSetup(moment)
+
+function getDurationTime(expTime) {
+  if (expTime && typeof moment.duration.format === 'function' && typeof moment.duration.fn.format === 'function') {
+    const expirationTime = moment(expTime)
+    const today = moment()
+    const difference = moment.duration(expirationTime.diff(today))
+    const durationFormat = difference.format('D[d] H[h] m[m]')
+    return durationFormat
+  }
+  return null
+}
+//TODO adjust colors
+function getColor(status) {
+  let color = 'grey'
+  if (status === 'APPROVED') color = 'green'
+  if (status === 'REJECTED') color = 'red'
+  return color
+}
+
 function mapStateToProps(store, { datagrid }) {
   return {
     ...datagrid,
@@ -26,14 +48,18 @@ function mapStateToProps(store, { datagrid }) {
         id: po.id,
         intProductName: getSafe(() => po.productOffer.companyProduct.intProductName, ''),
         pkgsHeld: po.pkgsHeld ? <FormattedUnit unit={unit} separator=' ' value={po.pkgsHeld} /> : null,
-        expirationTime: po.expirationTime ? moment(po.expirationTime).format(getLocaleDateFormat()) : null,
+        expirationTime: po.expirationTime ? getDurationTime(po.expirationTime) : null,
         holdPricePerUOM: po.holdPricePerUOM ? (
           <FormattedNumber style='currency' currency={currency} value={po.holdPricePerUOM} />
         ) : null,
         holdPriceSubtotal: po.holdPriceSubtotal ? (
           <FormattedNumber style='currency' currency={currency} value={po.holdPriceSubtotal} />
         ) : null,
-        status: po.status
+        status: po.status ? (
+          <Label circular color={getColor(po.status)}>
+            {po.status}
+          </Label>
+        ) : null
       }
     })
   }

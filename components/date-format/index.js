@@ -244,11 +244,29 @@ export const getStringISODate = (stringDate = '') => {
   if (typeof navigator === 'undefined') {
     return
   }
-  const getYear = stringYear => {
-    if (stringYear && stringYear.length === 2) {
-      return `20${stringYear}`
+  let h = '00'
+  let m = '00'
+  //added better regex expresion for time in string
+  const getTime = stringTime => {
+    if (!stringTime) return
+    const pattern = new RegExp(/[0-1][0-9]:[0-5][0-9]/)
+    const resultTime = pattern.exec(stringTime)
+    if (resultTime) {
+      h = resultTime.toString().split(':')[0]
+      m = resultTime.toString().split(':')[1]
     }
-    return stringYear
+  }
+  const getYear = stringYear => {
+    let resultYear = stringYear
+    if (stringYear && stringYear.length === 2) {
+      resultYear`20${stringYear}`
+    } else if (stringYear && stringYear.length > 4) {
+      resultYear = stringYear.substring(0, 4)
+      if (stringYear.includes(':')) {
+        getTime(stringYear)
+      }
+    }
+    return resultYear
   }
 
   const getDateYMD = (stringDate, separator) => {
@@ -282,6 +300,8 @@ export const getStringISODate = (stringDate = '') => {
       parseInt(dayOrMonth) > 0
     ) {
       return `0${dayOrMonth}`
+    } else if (dayOrMonth && dayOrMonth.length > 2 && dayOrMonth.includes(':')) {
+      getTime(dayOrMonth)
     }
     return dayOrMonth
   }
@@ -291,7 +311,12 @@ export const getStringISODate = (stringDate = '') => {
     'bg-BG': { stringISODate: () => moment(getDateDMY(stringDate, '.')).format() },
     'ca-ES': { stringISODate: () => moment(getDateDMY(stringDate, '/')).format() },
     'zh-TW': { stringISODate: () => moment(getDateYMD(stringDate, '/')).format() },
-    'cs-CZ': { stringISODate: () => moment(getDateDMY(stringDate, '. ')).format() },
+    'cs-CZ': {
+      stringISODate: () =>
+        moment(getDateDMY(stringDate, '. '))
+          .set({ h, m })
+          .format()
+    },
     'da-DK': { stringISODate: () => moment(getDateDMY(stringDate, '-')).format() },
     'de-DE': { stringISODate: () => moment(getDateDMY(stringDate, '.')).format() },
     'el-GR': { stringISODate: () => moment(getDateDMY(stringDate, '/')).format() },
