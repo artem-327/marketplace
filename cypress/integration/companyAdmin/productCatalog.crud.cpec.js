@@ -54,6 +54,9 @@ context("Company Product Catalog CRUD", () => {
         cy.clickSave()
 
         cy.contains("Created Product")
+        cy.reload()
+        cy.wait("@productLoading")
+        cy.waitForUI()
         cy.searchInList("Our")
 
         cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
@@ -72,9 +75,6 @@ context("Company Product Catalog CRUD", () => {
 
         cy.get("#field_input_packagingSize")
             .should("have.value", "70")
-
-        cy.contains("Paper Bags")
-        cy.contains("kilograms")
     })
 
     it("Edits a product", () => {

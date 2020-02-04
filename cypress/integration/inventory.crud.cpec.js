@@ -134,7 +134,7 @@ context("Inventory CRUD", () => {
         })
 
         cy.get("[data-test=detail_inventory_tab_documents]").click()
-        cy.contains("Save First").should("not.visible")
+        cy.contains("Save First").should("visible")
 
     })
 
@@ -233,8 +233,8 @@ context("Inventory CRUD", () => {
             cy.contains("2").click()
         })
 
-        cy.setNumberInput("[id='field_input_priceTiers.pricingTiers[1].quantityFrom']", 10)
-        cy.setNumberInput("[id='field_input_priceTiers.pricingTiers[1].price']", 30)
+        cy.setNumberInput("[id='field_input_priceTiers.pricingTiers[1].quantityFrom']", '10')
+        cy.setNumberInput("[id='field_input_priceTiers.pricingTiers[1].price']", '30')
 
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
