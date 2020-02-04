@@ -15,9 +15,6 @@ context("Shopping cart CRUD", () => {
         cy.wait('@inventoryLoading', {timeout: 30000})
         cy.url().should("include", "inventory")
         cy.contains("Marketplace").click()
-        cy.get("[data-test=navigation_menu_marketplace_drpdn]").within(() => {
-            cy.contains("Marketplace").click()
-        })
 
         cy.wait("@marketplaceLoading", {timeout: 30000})
     })
@@ -62,8 +59,7 @@ context("Shopping cart CRUD", () => {
         })
 
         it("Edit item in shopping card", () => {
-            cy.contains("Marketplace").click()
-            cy.contains("Shopping Cart").click()
+            cy.get("[data-test='navigation_menu_cart']").click()
 
             cy.get("[data-test='item_cart_edit_btn']").click()
             cy.get("input")
@@ -111,9 +107,7 @@ context("Shopping cart CRUD", () => {
                     })
 
                     cy.contains("Marketplace").click()
-                    cy.get("[data-test=navigation_menu_marketplace_drpdn]").within(() => {
-                        cy.contains("Marketplace").click()
-                    })
+                    cy.wait("@marketplaceLoading", {timeout: 30000})
 
                     cy.waitForUI()
                     cy.openElement(marketPlaceIdNum2, 0)
@@ -139,8 +133,8 @@ context("Shopping cart CRUD", () => {
     })
 
     it("Delete item in shopping card", () => {
-        cy.contains("Marketplace").click()
-        cy.contains("Shopping Cart").click()
+        cy.wait(10000)
+        cy.get("[data-test='navigation_menu_cart']").click()
 
         cy.get(".item-cart-body-section-name").should("have.length", "2")
 
@@ -165,8 +159,8 @@ context("Shopping cart CRUD", () => {
     })
 
     it("Place an order", () => {
-        cy.contains("Marketplace").click()
-        cy.contains("Shopping Cart").click()
+        cy.wait(10000)
+        cy.get("[data-test='navigation_menu_cart']").click()
 
         cy.get("[data-test=shopping_cart_continue]").click()
 
