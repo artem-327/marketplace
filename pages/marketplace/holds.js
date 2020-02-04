@@ -1,16 +1,21 @@
 import React, { Component } from 'react'
-import { Holds } from '~/modules/marketplace/holds'
+import Layout from 'components/Layout'
 import securePage from '~/hocs/securePage'
+import { Marketplace } from '~/modules/marketplace'
+import { injectIntl } from 'react-intl'
 
-//TODO
 class HoldsPage extends Component {
   render() {
+    const {
+      intl: { formatMessage }
+    } = this.props
+
     return (
-      <>
-        <Holds />
-      </>
+      <Layout title={formatMessage({ id: 'global.marketplace', defaultMessage: 'Marketplace' })}>
+        <Marketplace  />
+      </Layout>
     )
   }
 }
 
-export default securePage(HoldsPage)
+export default securePage(injectIntl(HoldsPage))

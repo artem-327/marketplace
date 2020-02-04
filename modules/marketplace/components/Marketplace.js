@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List, Icon, Tab } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-
+import { withRouter } from 'next/router'
 import { ShippingQuotes } from '~/modules/shipping'
 import SubMenu from '~/src/components/SubMenu'
 import { Filter } from '~/modules/filter'
@@ -11,7 +11,10 @@ import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
-import HoldsPage from '~/pages/marketplace/holds'
+import { Holds } from '~/modules/marketplace/holds'
+
+import { number } from 'prop-types'
+import Link from 'next/link'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -20,6 +23,14 @@ const CapitalizedText = styled.span`
 const DivButtonWithToolTip = styled.div`
   z-index: 501;
 `
+
+const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
+  <Link prefetch href={to}>
+    <Menu.Item as='a' active={pathname === to}>
+      {children}
+    </Menu.Item>
+  </Link>
+))
 class Marketplace extends Component {
   state = {
     columns: [
@@ -399,22 +410,22 @@ class Marketplace extends Component {
   render() {
     const panes = [
       {
-        menuItem: 'MARKETPLACE',
+        menuItem: <MenuLink to='/marketplace/all'>MARKETPLACE</MenuLink>,
         render: () => <pre>{this.renderTabMarketplace()}</pre>
       },
       {
-        menuItem: 'WANTED BOARD',
+        menuItem: <MenuLink to='/marketplace/wanted-board'>WANTED BOARD</MenuLink>,
         render: () => <pre>Tab 2 Content</pre>
       },
       {
-        menuItem: 'HOLDS',
-        render: () => <pre>{<HoldsPage />}</pre>
+        menuItem: <MenuLink to='/marketplace/holds'>HOLDS</MenuLink>,
+        render: () => <pre>{<Holds />}</pre>
       }
     ]
     return (
       <>
         <Container fluid style={{ padding: '0 32px' }}>
-          <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
+          <Tab  menu={{ secondary: true, pointing: true }} panes={panes} />
         </Container>
       </>
     )
