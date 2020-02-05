@@ -12,13 +12,23 @@ import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
 import { ArrowLeftCircle, ArrowRightCircle, Layers, Settings, ShoppingBag } from 'react-feather';
 
-const DropdownItem = ({ children, ...props }) => (
-  <Dropdown item icon='chevron down' {...props}>
-    {children}
-  </Dropdown>
-)
+const DropdownItem = ({ children, refFunc, refId, ...props }) => {
+  return (
+    <Dropdown item
+              icon='chevron down'
+              ref={(dropdownItem) => {
+                if (refFunc && refId !== false)
+                  refFunc(dropdownItem, refId)
+              }}
+              {...props}>
+      {children}
+    </Dropdown>
+  )
+}
 
 class Navigation extends Component {
+
+  dropdowns = {}
 
   state = {
     settings: getSafe(() => Router.router.pathname === '/settings', false)
@@ -106,7 +116,13 @@ class Navigation extends Component {
                         text={formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}
                         className={settings ? 'opened' : null}
                         opened={settings}
-                        onClick={() => this.toggleOpened('settings')}>
+                        onClick={() => this.toggleOpened('settings')}
+                        refFunc={ (dropdownItem, refId) => {
+                          if (getSafe(() => !this.dropdowns[refId], false)) {
+                            this.dropdowns[refId] = (dropdownItem)
+                          }
+                        }}
+                        refId={'settings'}>
             <Dropdown.Menu data-test='navigation_menu_settings_drpdn'>
               {isCompanyAdmin ? (
                 <>

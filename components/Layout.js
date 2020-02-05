@@ -13,7 +13,8 @@ import {
   CircularLabel,
   MainTitle
 } from '~/components/constants/layout'
-import { Menu, Dropdown, Icon } from 'semantic-ui-react'
+import { Container, Menu, Dropdown, Icon } from 'semantic-ui-react'
+import { Sidebar } from 'react-feather'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/logo-echosystem.png'
 // import ErrorsHandler from '~/src/utils/errorsHandler'
@@ -53,8 +54,16 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
 ))
 
 class Layout extends Component {
+  state = {
+    collapsed: false
+  }
+
   componentDidMount() {
     if (!this.props.phoneCountryCodes.length) this.props.getCountryCodes()
+  }
+
+  collapseMenu = () => {
+    this.setState({collapsed: !this.state.collapsed})
   }
 
   render() {
@@ -74,6 +83,7 @@ class Layout extends Component {
       isOpen,
       agreeWithTOS
     } = this.props
+    const { collapsed } = this.state
 
     return (
       <MainContainer fluid>
@@ -167,13 +177,22 @@ class Layout extends Component {
           </TopMenuContainer>
         </TopMenu>
 
-        <LeftMenu vertical fixed='left' inverted size='large' borderless>
+        <LeftMenu vertical fixed='left' inverted size='large' borderless className={collapsed ? 'collapsed' : ''}>
           <LeftMenuContainer fluid>
             <PerfectScrollbar>
               <LogoImage src={Logo} />
 
               <NavigationMenu takeover={takeover} />
             </PerfectScrollbar>
+            <Container className='bottom'>
+              <Menu.Item as='a' onClick={() => this.collapseMenu()} data-test='navigation_menu_collapse_lnk'>
+                <Sidebar />
+                {formatMessage({
+                  id: 'global.collapseMenu',
+                  defaultMessage: 'Collapse Menu'
+                })}
+              </Menu.Item>
+            </Container>
           </LeftMenuContainer>
         </LeftMenu>
 

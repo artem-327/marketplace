@@ -140,9 +140,11 @@ export const LeftMenu = styled(Menu)`
   top: 0;
   left: 0;
   bottom: 0;
+  transition: width 250ms linear;
   width: 300px !important;
   height: auto;
-  background-color: #1b3454 !important;
+  background-color: #fff !important;
+  box-shadow: 1px 0 3px 0 rgba(0, 0, 0, 0.06), inset -1px 0 0 0 #dee2e6 !important;
   
   &.vertical,
   &.vertical.borderless {
@@ -168,34 +170,40 @@ export const LeftMenu = styled(Menu)`
           width: 6px;
           margin: 0 auto;
           border-radius: 3px;
-          background: #132947;
+          background: #edeef2;
         }
       }
     }
   
+    .container > a.item,
     .scrollbar-container > a.item {
       border-radius: 4px;
       text-transform: uppercase;
+      white-space: nowrap;
       font-weight: 700 !important;
       
       &:hover,
       &:hover i,
       &:hover svg {
-        color: #fff !important;
+        color: #20273a !important;
       }
       
       &.active {
-        background: #132947 !important;
+        background: #edeef2 !important;
       }
       
       &.active i,
       &.active svg {
-        color: #2599d5 !important;
+        color: #20273a !important;
       }
     }
     
+    .container > .item,
     .scrollbar-container > .item {
+      overflow: hidden;
+      transition: width 250ms linear 250ms, padding 250ms linear 250ms;
       box-sizing: border-box;
+      width: 280px;
       height: auto;
       min-height: 50px;
       max-height: 50px;
@@ -203,7 +211,7 @@ export const LeftMenu = styled(Menu)`
       border-radius: 4px !important;
       padding: 12px 40px 12px 55px;
       text-align: left;
-      color: #546f93 !important;
+      color: #848893 !important;
       line-height: 26px;
       
       &:before,
@@ -215,19 +223,20 @@ export const LeftMenu = styled(Menu)`
         right: 18px !important;
         bottom: auto !important;
         transform-origin: 50% 50%;
-        transition: transform 250ms linear;
+        transition: transform 250ms linear, opacity 250ms linear;
+        opacity: 1;
         display: block;
-        width: 2px !important;
-        height: 10px !important;
+        width: 1px !important;
+        height: 9px !important;
         border-radius: 1px;
-        background: #546f93 !important;
+        background: #cecfd4 !important;
       }
       
       &:after {
         top: 24px !important;
         right: 14px !important;
-        width: 10px !important;
-        height: 2px !important;
+        width: 9px !important;
+        height: 1px !important;
       }
       
       &.opened {
@@ -236,15 +245,18 @@ export const LeftMenu = styled(Menu)`
         &:before,
         &:after {
           transform: rotate(135deg);
-          background: #fff !important;
+          background: #546fd3 !important;
         }
       }
       
       &.dropdown {
+        box-sizing: border-box;
+        width: 280px;
       
         > .menu {
           padding: 10px 0;
-          background-color: #132947;
+          background-color: #edeef2;
+          box-shadow: 0 0 0 0 transparent;
           
           a {
             display: block;
@@ -252,13 +264,13 @@ export const LeftMenu = styled(Menu)`
             height: 40px;
             margin: 0;
             padding: 12px 40px 12px 55px !important;
-            color: #546f93 !important;
+            color: #848893 !important;
 
             &.active,
             &:hover {
               background: transparent !important;
               font-weight: 400 !important;
-              color: #ffffff !important;
+              color: #20273a !important;
             }
           }
         }
@@ -272,8 +284,9 @@ export const LeftMenu = styled(Menu)`
             display: block;
             width: auto;
             height: 0;
-            margin: 13px -40px 0 -55px;
+            margin: 12px -40px 0 -55px;
             border: none;
+            border-top: 1px solid #dee2e6;
             border-radius: 4px;
             border-top-left-radius: 0;
             border-top-right-radius: 0;
@@ -285,15 +298,15 @@ export const LeftMenu = styled(Menu)`
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
             /*background: #132947 !important;*/
-            background: rgba(19,41,71,1) !important;
-            background: -moz-linear-gradient(top, rgba(19,41,71,1) 0%, rgba(19,41,71,1) 50px, rgba(19,41,71,0) 50px, rgba(19,41,71,0) 100%) !important;
-            background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(19,41,71,1)), color-stop(50px, rgba(19,41,71,1)), color-stop(50px, rgba(19,41,71,0)), color-stop(100%, rgba(19,41,71,0))) !important;
-            background: -webkit-linear-gradient(top, rgba(19,41,71,1) 0%, rgba(19,41,71,1) 50px, rgba(19,41,71,0) 50px, rgba(19,41,71,0) 100%) !important;
-            background: -o-linear-gradient(top, rgba(19,41,71,1) 0%, rgba(19,41,71,1) 50px, rgba(19,41,71,0) 50px, rgba(19,41,71,0) 100%) !important;
-            background: -ms-linear-gradient(top, rgba(19,41,71,1) 0%, rgba(19,41,71,1) 50px, rgba(19,41,71,0) 50px, rgba(19,41,71,0) 100%) !important;
-            background: linear-gradient(to bottom, rgba(19,41,71,1) 0%, rgba(19,41,71,1) 50px, rgba(19,41,71,0) 50px, rgba(19,41,71,0) 100%) !important;
+            background: rgba(237,238,242,1) !important;
+            background: -moz-linear-gradient(top, rgba(237,238,242,1) 0%, rgba(237,238,242,1) 50px, rgba(237,238,242,0) 50px, rgba(237,238,242,0) 100%) !important;
+            background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(237,238,242,1)), color-stop(50px, rgba(237,238,242,1)), color-stop(50px, rgba(237,238,242,0)), color-stop(100%, rgba(237,238,242,0))) !important;
+            background: -webkit-linear-gradient(top, rgba(237,238,242,1) 0%, rgba(237,238,242,1) 50px, rgba(237,238,242,0) 50px, rgba(237,238,242,0) 100%) !important;
+            background: -o-linear-gradient(top, rgba(237,238,242,1) 0%, rgba(237,238,242,1) 50px, rgba(237,238,242,0) 50px, rgba(237,238,242,0) 100%) !important;
+            background: -ms-linear-gradient(top, rgba(237,238,242,1) 0%, rgba(237,238,242,1) 50px, rgba(237,238,242,0) 50px, rgba(237,238,242,0) 100%) !important;
+            background: linear-gradient(to bottom, rgba(237,238,242,1) 0%, rgba(237,238,242,1) 50px, rgba(237,238,242,0) 50px, rgba(237,238,242,0) 100%) !important;
             filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#546f93', endColorstr='#546f93', GradientType=0 ) !important;
-            color: #546f93 !important;
+            color: #848893 !important;
             
             > .menu {
               height: auto;
@@ -323,6 +336,7 @@ export const LeftMenu = styled(Menu)`
       
       > .text {
         text-transform: uppercase;
+        white-space: nowrap;
         font-weight: 700 !important;
         line-height: 26px;
         
@@ -340,7 +354,7 @@ export const LeftMenu = styled(Menu)`
         > .text,
         > .text ~ i,
         > .text ~ svg {
-          color: #546f93 !important;
+          color: #848893 !important;
           
           &.hexagon {
             color: #2599d5 !important;
@@ -349,11 +363,11 @@ export const LeftMenu = styled(Menu)`
       }
       
       &.active {
-        color: #fff !important;
+        color: #20273a !important;
         
         &:before,
         &:after {
-          background: #fff !important;
+          background: #546f93 !important;
         }
       }
         
@@ -361,17 +375,17 @@ export const LeftMenu = styled(Menu)`
         background-color: transparent !important;
         
         > .text {
-          color: #fff !important;
+          color: #20273a !important;
         }
         
         > .text ~ i,
         > .text ~ svg {
-          color: #fff !important;
+          color: #20273a !important;
         }
         
         &:before,
         &:after {
-          background: #fff !important;
+          background: #546f93 !important;
         }
       }
       
@@ -379,17 +393,17 @@ export const LeftMenu = styled(Menu)`
         background-color: transparent !important;
         
         > .text {
-          color: #fff !important;
+          color: #20273a !important;
         }
         
         > .text ~ i,
         > .text ~ svg {
-          color: #2599d5 !important;
+          color: #20273a !important;
         }
         
         &:before,
         &:after {
-          background: #fff !important;
+          background: #546f93 !important;
         }
       }
       
@@ -401,10 +415,125 @@ export const LeftMenu = styled(Menu)`
         }
       }
     }
+    
+    .container > a.item {
+      transition: width 250ms linear 250ms, padding 250ms linear 250ms;
+      overflow: hidden;
+      
+      &:before,
+      &:after {
+        content: none;
+        display: none;
+      }
+    }
+  
+    &.collapsed {
+      width: 70px !important;
+      
+      .container > a.item,
+      .scrollbar-container > a.item,
+      .dropdown {
+        transition: width 250ms linear 0ms, padding 250ms linear 0ms;
+        width: 50px !important;
+        padding: 12px 0 12px 50px;
+        
+        &:before,
+        &:after {
+          opacity: 0;
+        }
+      }
+      
+      .container > a.item {
+        width: 50px !important;
+        transition: width 250ms linear 0ms, padding 250ms linear 0ms;
+      }
+      
+      .scrollbar-container {
+        overflow: visible !important;
+        
+        > .ps__rail-y {
+          display: none !important;
+        }
+      
+        .dropdown.opened {
+          overflow: visible !important;
+          border-width: 1px 0 1px 1px;
+          border-style: solid;
+          border-color: #dee2e6;
+          
+          > .text {
+            position: absolute;
+            top: -1px;
+            left: 43px;
+            box-sizing: border-box;
+            width: 243px;
+            border-width: 1px 1px 1px 0;
+            border-style: solid;
+            border-color: #dee2e6;
+            border-radius: 0;
+            border-top-right-radius: 4px;
+            padding: 11px 40px 11px 55px;
+            background: #edeef2;
+          }
+        
+          > .menu {
+            position: absolute !important;
+            top: 48px !important;
+            left: 58px !important;
+            bottom: auto !important;
+            box-sizing: border-box;
+            width: 228px;
+            margin: 0;
+            border-width: 0 1px 1px 1px;
+            border-style: solid;
+            border-color: #dee2e6;
+            border-radius: 0;
+            border-bottom-right-radius: 4px;
+            padding: 0;
+            
+            a {
+              padding-left: 40px !important;
+            }
+          }
+          
+          &.upward {
+          
+            > .text {
+              border-radius: 0;
+              border-bottom-right-radius: 4px;
+            }
+            
+            > .menu {
+              top: auto !important;
+              bottom: 48px !important;
+              border-width: 1px 1px 0 1px;
+              border-radius: 0;
+              border-top-right-radius: 4px;
+            }
+          }
+        }
+      }
+    }
   }
 `
 export const LeftMenuContainer = styled(Container)`
-  padding: 0 20px;
+  padding: 0 10px;
+  
+  .scrollbar-container {
+    height: calc(100vh - 70px);
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
+  
+  .container.bottom {
+    height: 70px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    
+    a.item {
+      margin: 10px 0 !important;
+    }
+  }
 `
 export const MainContainer = styled(Container)`
   position: fixed;
