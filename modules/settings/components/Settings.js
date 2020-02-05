@@ -464,7 +464,7 @@ class Settings extends Component {
             <Container fluid style={{ padding: '0 1.5vh' }}>
               <TablesHandlers currentTab={currentTab} />
             </Container>
-            <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
+            <Grid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
               <Grid.Row>
                 <Grid.Column className='flex stretched' style={{ marginTop: '10px' }}>
                   {this.renderContent()}

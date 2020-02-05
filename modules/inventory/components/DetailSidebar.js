@@ -1973,41 +1973,39 @@ class DetailSidebar extends Component {
                   basic
                   style={{ position: 'relative', overflow: 'visible', height: '4.57142858em', margin: '0' }}>
                   <Grid>
-                    <GridRow>
-                      <GridColumn computer={6} textAlign='left'>
-                        <Button
-                          size='large'
-                          inputProps={{ type: 'button' }}
-                          onClick={() => {
-                            this.setState({ edited: false }, () => this.props.closeSidebarDetail())
-                          }}
-                          data-test='sidebar_inventory_cancel'>
-                          {Object.keys(touched).length || this.state.changedForm
-                            ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
-                            : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
-                        </Button>
-                      </GridColumn>
-                      <GridColumn computer={10} textAlign='right'>
-                        <Button
-                          disabled={!(Object.keys(touched).length || this.state.changedForm)}
-                          primary
-                          size='large'
-                          type='button'
-                          onClick={() =>
-                            validateForm().then(r => {
-                              if (Object.keys(r).length && this.state.activeTab !== 1) {
-                                this.switchToErrors(r)
-                                submitForm() // to show errors
-                              } else {
-                                this.submitForm(values, setSubmitting, setTouched)
-                              }
-                            })
-                          }
-                          data-test='sidebar_inventory_save_new'>
-                          {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-                        </Button>
-                      </GridColumn>
-                    </GridRow>
+                    <GridColumn computer={6} textAlign='left'>
+                      <Button
+                        size='large'
+                        inputProps={{ type: 'button' }}
+                        onClick={() => {
+                          this.setState({ edited: false }, () => this.props.closeSidebarDetail())
+                        }}
+                        data-test='sidebar_inventory_cancel'>
+                        {Object.keys(touched).length || this.state.changedForm
+                          ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
+                          : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
+                      </Button>
+                    </GridColumn>
+                    <GridColumn computer={10} textAlign='right'>
+                      <Button
+                        disabled={!(Object.keys(touched).length || this.state.changedForm)}
+                        primary
+                        size='large'
+                        type='button'
+                        onClick={() =>
+                          validateForm().then(r => {
+                            if (Object.keys(r).length && this.state.activeTab !== 1) {
+                              this.switchToErrors(r)
+                              submitForm() // to show errors
+                            } else {
+                              this.submitForm(values, setSubmitting, setTouched)
+                            }
+                          })
+                        }
+                        data-test='sidebar_inventory_save_new'>
+                        {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                      </Button>
+                    </GridColumn>
                   </Grid>
                 </GraySegment>
               </FlexSidebar>
