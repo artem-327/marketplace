@@ -8,8 +8,9 @@ import { Formik } from 'formik'
 import { Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import get from 'lodash/get'
-
+import styled from 'styled-components'
 import { getSafe } from '~/utils/functions'
+import { getIdentity } from '~/modules/auth/actions'
 
 import {
   openPopup,
@@ -30,6 +31,12 @@ import Router from 'next/router'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { errorMessages } from '~/constants/yupValidation'
+
+const Container = styled.div`
+  overflow-y: auto;
+  padding: 0 1em 2em 1em;
+  max-height: 70vh;
+`
 
 const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
   <Formik
@@ -191,8 +198,25 @@ class BankAccountsTable extends Component {
 
   componentDidMount() {
     this.props.getBankAccountsDataRequest()
-    if (this.props.company.hasDwollaAccount) this.props.getDwollaAccBalance()
-    if (!this.props.currentUser) this.props.getCurrentUser()
+    this.props.getCurrentUser()
+    this.props.getIdentity()
+      .then(resp => {
+        const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
+        if (hasDwollaAccount) this.props.getDwollaAccBalance()
+      })
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.tabClicked !== prevProps.tabClicked)
+    {
+      this.props.getBankAccountsDataRequest()
+      this.props.getCurrentUser()
+      this.props.getIdentity()
+        .then(resp => {
+          const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
+          if (hasDwollaAccount) this.props.getDwollaAccBalance()
+        })
+    }
   }
 
   render() {
@@ -277,73 +301,78 @@ class BankAccountsTable extends Component {
           />
         )}
 
-        {bankAccounts.accountStatus && (
-          <>
-            <Table style={{ marginTop: 30, marginBottom: 30 }}>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell width={4}>
-                    <FormattedMessage id='dwolla.registrationStatus' defaultMessage='Dwolla Registration Status' />
-                  </Table.HeaderCell>
-                  <Table.HeaderCell width={10}>
-                    <FormattedMessage id='dwolla.info' defaultMessage='Info' />
-                  </Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell>
-                    <FormattedMessage id={`dwolla.registrationStatus.${dwollaAccountStatus}`} />
-                  </Table.Cell>
-                  <Table.Cell>
-                    {bankAccounts.documentStatus ? (
-                      <>
-                        <FormattedMessage id={`dwolla.info.${dwollaAccountStatus}`} />
-                        &nbsp;
-                        <FormattedMessage id={`dwolla.document.${dwollaDocumentRequired}`} />
-                      </>
-                    ) : (
-                      <FormattedMessage id={`dwolla.info.${dwollaAccountStatus}`} />
-                    )}
-                  </Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table>
-          </>
-        )}
+        {(bankAccounts.accountStatus || bankAccounts.documentStatus) && (
+          <Container>
+            {bankAccounts.accountStatus && (
+              <>
+                <Table style={{ marginTop: 0, marginBottom: 30 }}>
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.HeaderCell width={4}>
+                        <FormattedMessage id='dwolla.registrationStatus' defaultMessage='Dwolla Registration Status' />
+                      </Table.HeaderCell>
+                      <Table.HeaderCell width={10}>
+                        <FormattedMessage id='dwolla.info' defaultMessage='Info' />
+                      </Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>
+                    <Table.Row>
+                      <Table.Cell>
+                        <FormattedMessage id={`dwolla.registrationStatus.${dwollaAccountStatus}`} />
+                      </Table.Cell>
+                      <Table.Cell>
+                        {bankAccounts.documentStatus ? (
+                          <>
+                            <FormattedMessage id={`dwolla.info.${dwollaAccountStatus}`} />
+                            &nbsp;
+                            <FormattedMessage id={`dwolla.document.${dwollaDocumentRequired}`} />
+                          </>
+                        ) : (
+                          <FormattedMessage id={`dwolla.info.${dwollaAccountStatus}`} />
+                        )}
+                      </Table.Cell>
+                    </Table.Row>
+                  </Table.Body>
+                </Table>
+              </>
+            )}
 
-        {bankAccounts.documentStatus && (
-          <div>
-            <FormattedMessage id='dwolla.document.explanatory.header1'>{text => <h3>{text}</h3>}</FormattedMessage>
-            <FormattedMessage id='dwolla.document.explanatory.text1'>{text => <div>{text}</div>}</FormattedMessage>
-            <FormattedMessage id='dwolla.document.explanatory.header2'>{text => <h3>{text}</h3>}</FormattedMessage>
-            <FormattedMessage id='dwolla.document.explanatory.text21'>{text => <div>{text}</div>}</FormattedMessage>
-            <br></br>
-            <li>
-              <FormattedMessage id='dwolla.document.explanatory.BoldLi11'>{text => <b>{text}</b>}</FormattedMessage>
-              <FormattedMessage id='dwolla.document.explanatory.TextLi11'>
-                {text => <span>{text}</span>}
-              </FormattedMessage>
-            </li>
-            <li>
-              <FormattedMessage id='dwolla.document.explanatory.BoldLi12'>{text => <b>{text}</b>}</FormattedMessage>
-              <FormattedMessage id='dwolla.document.explanatory.TextLi12'>
-                {text => <span>{text}</span>}
-              </FormattedMessage>
-            </li>
-            <li>
-              <FormattedMessage id='dwolla.document.explanatory.BoldLi13'>{text => <b>{text}</b>}</FormattedMessage>
-              <FormattedMessage id='dwolla.document.explanatory.TextLi13'>
-                {text => <span>{text}</span>}
-              </FormattedMessage>
-            </li>
-            <FormattedMessage id='dwolla.document.explanatory.text22'>{text => <div>{text}</div>}</FormattedMessage>
-            <br></br>
-            <FormattedMessage id='dwolla.document.explanatory.li21'>{text => <li>{text}</li>}</FormattedMessage>
-            <FormattedMessage id='dwolla.document.explanatory.li22'>{text => <li>{text}</li>}</FormattedMessage>
-            <FormattedMessage id='dwolla.document.explanatory.li23'>{text => <li>{text}</li>}</FormattedMessage>
-            <FormattedMessage id='dwolla.document.explanatory.li24'>{text => <li>{text}</li>}</FormattedMessage>
-          </div>
+            {bankAccounts.documentStatus && (
+              <div>
+                <FormattedMessage id='dwolla.document.explanatory.header1'>{text => <h3>{text}</h3>}</FormattedMessage>
+                <FormattedMessage id='dwolla.document.explanatory.text1'>{text => <div>{text}</div>}</FormattedMessage>
+                <FormattedMessage id='dwolla.document.explanatory.header2'>{text => <h3>{text}</h3>}</FormattedMessage>
+                <FormattedMessage id='dwolla.document.explanatory.text21'>{text => <div>{text}</div>}</FormattedMessage>
+                <br></br>
+                <li>
+                  <FormattedMessage id='dwolla.document.explanatory.BoldLi11'>{text => <b>{text}</b>}</FormattedMessage>
+                  <FormattedMessage id='dwolla.document.explanatory.TextLi11'>
+                    {text => <span>{text}</span>}
+                  </FormattedMessage>
+                </li>
+                <li>
+                  <FormattedMessage id='dwolla.document.explanatory.BoldLi12'>{text => <b>{text}</b>}</FormattedMessage>
+                  <FormattedMessage id='dwolla.document.explanatory.TextLi12'>
+                    {text => <span>{text}</span>}
+                  </FormattedMessage>
+                </li>
+                <li>
+                  <FormattedMessage id='dwolla.document.explanatory.BoldLi13'>{text => <b>{text}</b>}</FormattedMessage>
+                  <FormattedMessage id='dwolla.document.explanatory.TextLi13'>
+                    {text => <span>{text}</span>}
+                  </FormattedMessage>
+                </li>
+                <br></br>
+                <FormattedMessage id='dwolla.document.explanatory.text22'>{text => <div>{text}</div>}</FormattedMessage>
+                <br></br>
+                <FormattedMessage id='dwolla.document.explanatory.li21'>{text => <li>{text}</li>}</FormattedMessage>
+                <FormattedMessage id='dwolla.document.explanatory.li22'>{text => <li>{text}</li>}</FormattedMessage>
+                <FormattedMessage id='dwolla.document.explanatory.li23'>{text => <li>{text}</li>}</FormattedMessage>
+                <FormattedMessage id='dwolla.document.explanatory.li24'>{text => <li>{text}</li>}</FormattedMessage>
+              </div>
+            )}
+          </Container>
         )}
       </React.Fragment>
     )
@@ -361,7 +390,8 @@ const mapDispatchToProps = {
   dwollaFinalizeVerification,
   dwollaFinalizeVerificationConfirmOpen,
   getCurrentUser,
-  dwollaSetPreferred
+  dwollaSetPreferred,
+  getIdentity
 }
 
 const statusToLabel = {
@@ -407,8 +437,10 @@ const mapStateToProps = state => {
   //let dwollaDocumentRequired = 'verify-with-document'
 
   dwollaDocumentRequired = dwollaDocumentRequired.replace(/-/g, '')
+  const hasDwollaAccount = getSafe(() => company.dwollaAccountStatus, '') === 'verified'
 
   return {
+    hasDwollaAccount,
     bankAccounts: bankAccountsConfig[dwollaAccountStatus],
     dwollaAccountStatus,
     dwollaDocumentRequired,
@@ -427,7 +459,8 @@ const mapStateToProps = state => {
         ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
         : state.settings.tabsNames[0],
     company: company,
-    currentUser: state.settings.currentUser
+    currentUser: state.settings.currentUser,
+    tabClicked: state.settings.tabClicked
   }
 }
 

@@ -10,7 +10,6 @@ const initialState = {
   isFetching: false,
   isDetailFetching: false,
   isSending: false,
-  reloadPage: false,
   selectedIndex: -1,
   statusFilter: null,
   searchedCompanies: [],
@@ -28,7 +27,8 @@ const initialState = {
   bankAccountsLoading: false,
   relatedOrders: [],
   returnShipmentRates: [],
-  returnShipmentOrder: {},
+  shipmentOrderResult: {},
+  returnShipmentOrderResult: {},
   loadRelatedOrders: false,
   shippingQuotesAreFetching: false,
   shippingQuotes: [],
@@ -40,8 +40,7 @@ export default function(state = initialState, action) {
         case AT.ORDERS_FETCH_REQUESTED:
             return {
                 ...state,
-                isFetching: true,
-                reloadPage: false
+                isFetching: true
             }
         */
     case AT.ORDERS_FETCH_SUCCESS:
@@ -50,7 +49,6 @@ export default function(state = initialState, action) {
         isFetching: false,
         //data: action.payload.data,
         dataType: action.payload.endpointType,
-        reloadPage: false,
         statusFilter: action.payload.filter.status,
         activeStatus: action.payload.filter.status,
         filterData: action.payload.filter
@@ -59,40 +57,69 @@ export default function(state = initialState, action) {
         case AT.ORDERS_FETCH_FAILURE:
             return {
                 ...state,
-                isFetching: false,
-                reloadPage: false
+                isFetching: false
             }
             */
+    case AT.ORDER_GET_SALE_ORDER_FULFILLED:
+    case AT.ORDER_GET_PURCHASE_ORDER_FULFILLED:
+      return {
+        ...state,
+        isDetailFetching: false,
+        detail: action.payload.data
+      }
+    case AT.ORDER_GET_SALE_ORDER_PENDING:
+    case AT.ORDER_GET_PURCHASE_ORDER_PENDING:
     case AT.ORDERS_DETAIL_FETCH_REQUESTED:
       return {
         ...state,
-        isDetailFetching: true,
-        reloadPage: false
+        isDetailFetching: true
       }
     case AT.ORDERS_DETAIL_FETCH_SUCCESS:
       return {
         ...state,
         isDetailFetching: false,
         detail: action.payload.data,
-        detailType: action.payload.detailType === 'sale' ? 'sales' : action.payload.detailType,
-        reloadPage: false
+        detailType: action.payload.detailType === 'sale' ? 'sales' : action.payload.detailType
       }
+    case AT.ORDER_GET_SALE_ORDER_REJECTED:
+    case AT.ORDER_GET_PURCHASE_ORDER_REJECTED:
     case AT.ORDERS_DETAIL_FETCH_FAILURE:
       return {
         ...state,
-        isDetailFetching: false,
-        reloadPage: false
+        isDetailFetching: false
       }
+    case AT.ORDER_CONFIRM_FETCH_PENDING:
+    case AT.ORDER_APPROVE_ORDER_PENDING:
+      return {
+        ...state,
+        isSending: 1
+      }
+    case AT.ORDER_DISCARD_ORDER_PENDING:
+    case AT.ORDER_REJECT_FETCH_PENDING:
+      return {
+        ...state,
+        isSending: 2
+      }
+    case AT.ORDER_ACCEPT_DELIVERY_ORDER_PENDING:
+    case AT.ORDER_RECEIVED_ORDER_PENDING:
+    case AT.ORDER_CONFIRM_RETURNED_FETCH_PENDING:
+    case AT.ORDER_CANCEL_ORDER_PENDING:
+    case AT.ACCEPT_CREDIT_PENDING:
     case AT.CREDIT_COUNTER_REJECT_PENDING:
     case AT.CREDIT_ACCEPT_PENDING:
-    case AT.ORDER_CONFIRM_FETCH_PENDING:
-    case AT.ORDER_REJECT_FETCH_PENDING:
     case AT.ORDER_RETURN_SHIP_FETCH_PENDING:
     case AT.ORDER_SHIP_FETCH_PENDING:
       return {
         ...state,
         isSending: true
       }
+    case AT.ORDER_DISCARD_ORDER_REJECTED:
+    case AT.ORDER_APPROVE_ORDER_REJECTED:
+    case AT.ORDER_ACCEPT_DELIVERY_ORDER_REJECTED:
+    case AT.ORDER_RECEIVED_ORDER_REJECTED:
+    case AT.ORDER_CONFIRM_RETURNED_FETCH_REJECTED:
+    case AT.ORDER_CANCEL_ORDER_REJECTED:
+    case AT.ACCEPT_CREDIT_REJECTED:
     case AT.CREDIT_COUNTER_REJECT_REJECTED:
     case AT.CREDIT_ACCEPT_REJECTED:
     case AT.ORDER_CONFIRM_FETCH_REJECTED:
@@ -252,7 +279,6 @@ export default function(state = initialState, action) {
         relatedOrders: action.payload.data
       }
     case AT.CREDIT_ACCEPT_FULFILLED:
-    case AT.ORDER_PURCHASE_SHIPMENT_ORDER_FULFILLED:
     case AT.ORDER_RETURN_SHIP_FETCH_FULFILLED:
     case AT.ORDER_SHIP_FETCH_FULFILLED:
     case AT.ORDER_CONFIRM_FETCH_FULFILLED:
@@ -282,10 +308,26 @@ export default function(state = initialState, action) {
         returnShipmentRates: [],
         isSending: false
       }
+    case AT.ORDER_PURCHASE_SHIPMENT_ORDER_PENDING:
+      return {
+        ...state,
+        shipmentOrderResult: {}
+      }
+    case AT.ORDER_PURCHASE_SHIPMENT_ORDER_FULFILLED:
+      return {
+        ...state,
+        shipmentOrderResult: action.payload.data,
+        isSending: false
+      }
+    case AT.RETURN_SHIPMENT_ORDER_PENDING:
+      return {
+        ...state,
+        returnShipmentOrderResult: {}
+      }
     case AT.RETURN_SHIPMENT_ORDER_FULFILLED:
       return {
         ...state,
-        returnShipmentOrder: action.payload.data,
+        returnShipmentOrderResult: action.payload.data,
         isSending: false
       }
     case AT.ORDER_CONFIRM_RETURNED_FETCH_FULFILLED:

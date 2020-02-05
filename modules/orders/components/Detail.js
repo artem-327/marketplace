@@ -100,9 +100,6 @@ class Detail extends Component {
 
   componentDidUpdate() {
     let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
-
-    if (this.props.reloadPage) this.props.loadDetail(endpointType, this.props.order.id)
-
     let dataCells = document.querySelectorAll('.data-list dd')
     for (let i = 0; i < dataCells.length; i++) {
       if (dataCells[i].textContent === 'N/A') {

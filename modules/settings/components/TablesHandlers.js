@@ -225,8 +225,12 @@ class TablesHandlers extends Component {
           </GridColumn>
         )}
         {bankAccTab && bankAccounts.uploadDocumentsButton && (
-          <GridColumn>
-            <Button primary onClick={() => openUploadDocumentsPopup()} data-test='settings_dwolla_upload_documents_btn'>
+          <GridColumn computer={3} tablet={4}>
+            <Button
+              fluid
+              primary
+              onClick={() => openUploadDocumentsPopup()}
+              data-test='settings_dwolla_upload_documents_btn'>
               <FormattedMessage id='settings.tables.bankAccounts.uploadDoc' defaultMessage='Upload Documents'>
                 {text => text}
               </FormattedMessage>

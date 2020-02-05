@@ -13,6 +13,26 @@ const TAGS_TO_DISPLAY = 3
 const MAX_TAG_ENTITIES = 2
 
 class FilterTags extends Component {
+  constructor(props) {
+    super(props)
+    this.myRef = React.createRef()
+    this.state = {
+      hasOverflowingChildren: false
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.myRef && this.myRef.current && this.myRef.current.offsetHeight) {
+      const hasOverflowingChildren =
+        this.myRef.current.offsetHeight < this.myRef.current.scrollHeight ||
+        this.myRef.current.offsetWidth < this.myRef.current.scrollWidth
+
+      if (typeof hasOverflowingChildren === 'boolean' && hasOverflowingChildren !== this.state.hasOverflowingChildren) {
+        this.setState({ hasOverflowingChildren })
+      }
+    }
+  }
+
   removeFilter = filter => {
     let { datagrid, appliedFilter } = this.props
 
@@ -26,7 +46,10 @@ class FilterTags extends Component {
   tagMarkup = filters => {
     return filters.map((filter, i) => {
       let { tagDescription } = filter
-      if (tagDescription instanceof Array && tagDescription.length > MAX_TAG_ENTITIES) {
+      if (
+        (tagDescription instanceof Array && tagDescription.length > MAX_TAG_ENTITIES) ||
+        (typeof tagDescription === 'string' && this.state.hasOverflowingChildren)
+      ) {
         return (
           <WiderTooltip
             key={i}
@@ -34,8 +57,7 @@ class FilterTags extends Component {
             trigger={
               <FilterTag>
                 <span>
-                  {' '}
-                  {filter.description} ({tagDescription.length})...
+                  {filter.description} {typeof tagDescription === 'string' ? '...' : `(${tagDescription.length})...`}
                   <Icon onClick={() => this.removeFilter(filter)} name='delete' data-test='filter_tags_remove_filter' />
                 </span>
               </FilterTag>
@@ -50,9 +72,11 @@ class FilterTags extends Component {
         // {tagDescription.toString().replace(/,/g, ', ')}
       } else {
         return (
-          <FilterTag key={i}>
+          <FilterTag key={i} ref={this.myRef}>
             <span>
-              {tagDescription}
+              {filter && filter.tagDescription && typeof filter.tagDescription === 'string'
+                ? filter.tagDescription.replace(/,/g, ', ')
+                : filter.tagDescription}
               <Icon onClick={() => this.removeFilter(filter)} name='delete' data-test='filter_tags_remove_filter' />
             </span>
           </FilterTag>
@@ -72,7 +96,6 @@ class FilterTags extends Component {
 
     if (filters instanceof Array && filters.length > TAGS_TO_DISPLAY) {
       tagsToDisplay = this.tagMarkup(filters.slice(0, TAGS_TO_DISPLAY))
-
       tagsToDisplay.push(
         <WiderTooltip
           key={TAGS_TO_DISPLAY}

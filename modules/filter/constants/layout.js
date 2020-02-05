@@ -92,13 +92,17 @@ export const FilterTag = styled.div`
   border: 1px solid #979797;
   height: 24px;
   font-size: 14px;
-  padding: 5px 5px 5px 15px;
+  padding: 3px 3px 3px 10px;
   margin-bottom: 5px;
   text-align: center;
   color: #979797;
   border-radius: 25px;
   cursor: pointer;
-  margin-right: 10px;
+  margin-right: 5px;
+  max-width: 10vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 export const SavedFiltersSegment = styled(Segment)`
