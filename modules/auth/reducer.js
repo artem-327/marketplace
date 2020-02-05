@@ -90,6 +90,7 @@ export default function reducer(state = initialState, action) {
         }
       }
     }
+    case AT.GET_IDENTITY_FULFILLED:
     case AT.LOGIN_FULFILLED: {
       let deliveryAddress = getSafe(() => payload.identity.company.primaryBranch.deliveryAddress, null)
       let address = getSafe(() => payload.identity.company.primaryBranch.deliveryAddress.address, null)
@@ -239,15 +240,6 @@ export default function reducer(state = initialState, action) {
           ...state.identity,
           company: payload
         }
-      }
-    }
-
-    /* GET_IDENTITY */
-
-    case AT.GET_IDENTITY_FULFILLED: {
-      return {
-        ...state,
-        identity: { ...payload, ...getAccessRights(payload.roles) }
       }
     }
 

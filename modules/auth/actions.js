@@ -8,8 +8,25 @@ import { currency } from '~/constants/index'
 
 export function getIdentity() {
   return {
-    type: AT.GET_IDENTITY,
-    payload: api.getIdentity()
+      type: AT.GET_IDENTITY,
+      async payload() {
+        const identity = await api.getIdentity()
+        const company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
+        const preferredCurrency = getSafe(() => identity.preferredCurrency, currency)
+        return {
+          identity: {
+            ...identity,
+            company:
+              identity.company || company
+                ? {
+                  ...identity.company,
+                  ...company
+                }
+                : null
+          },
+          preferredCurrency
+        }
+      }
   }
 }
 
@@ -44,6 +61,16 @@ export function login(username, password) {
                 : null
           },
           preferredCurrency
+        }
+
+        if (typeof window !== 'undefined' && window.FS) {
+          try {
+            window.FS.identify(identity.id);
+          } catch (e) {
+            console.error(e)
+          }
+        } else {
+          console.error('Google Tag Manager or FullStory not installed')
         }
 
         const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
