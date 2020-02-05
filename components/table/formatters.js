@@ -1,5 +1,6 @@
 import React from 'react'
 import { Dropdown, Icon } from 'semantic-ui-react'
+import { MoreVertical } from 'react-feather'
 import { getSafe } from '~/utils/functions'
 
 const getDropdownItems = (actions = [], row) =>
@@ -23,7 +24,7 @@ export function rowActionsCellFormatter({ column: { actions }, row }) {
 
   return displayMenu ? (
     <Dropdown icon='' trigger={
-      <Icon data-test={`action_${row.id}`} name='ellipsis vertical' size='large' style={{ color: '#848893' }} />
+      <MoreVertical data-text={`action_${row.id}`} />
     }>
       <Dropdown.Menu>{dropdownItems}</Dropdown.Menu>
     </Dropdown>

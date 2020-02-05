@@ -122,7 +122,8 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 80
+        width: 80,
+        align: 'center'
       },
       {
         name: 'sds',
@@ -131,7 +132,8 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 80
+        width: 80,
+        align: 'center'
       },
       {
         name: 'cofA',
@@ -140,7 +142,8 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 80
+        width: 80,
+        align: 'center'
       },
       {
         name: 'related',
@@ -149,7 +152,8 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 80
+        width: 80,
+        align: 'center'
       },
       {
         name: 'orderTotal',
@@ -377,26 +381,10 @@ class Orders extends Component {
       related:
         row.accountingDocumentsCount > 0 ? (
           <span onClick={() => this.openModalWindow(row.id)}>
-            <Icon
-              style={{
-                color: 'green',
-                fontSize: '1.45rem',
-                opacity: '0.7',
-                cursor: 'pointer',
-                lineHeight: 'normal'
-              }}
-              className='invoice file'
-            />
+            <Icon className='file related' />
           </span>
         ) : (
-          <Icon
-            style={{
-              fontSize: '1.45rem',
-              opacity: '0.7',
-              lineHeight: 'normal'
-            }}
-            className='invoice file'
-          />
+          <Icon className='file non-related' />
         )
     }))
   }
@@ -738,7 +726,6 @@ class Orders extends Component {
             />
           )}
         </Container>
-        }
       </div>
     )
   }
