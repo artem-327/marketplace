@@ -15,9 +15,7 @@ import { getSafe } from '~/utils/functions'
 const HoldDropdown = styled(Dropdown)`
   z-index: 601 !important;
 `
-//TODO all id in formattMessage
 class Holds extends Component {
-  //TODO columns
   state = {
     columns: [
       { name: 'id', title: '', disabled: true },
@@ -29,9 +27,11 @@ class Holds extends Component {
           </FormattedMessage>
         ),
         width: 160,
-        sortPath: 'Holds.intProductName'
+        //FIXME fixed sortPath
+        sortPath: 'ProductOffer.companyProduct.intProductName'
       },
       {
+        //FIXME find sortPath for pkgsHeld. Is it correct title pkgsHeld?
         name: 'pkgsHeld',
         title: (
           <FormattedMessage id='holds.pkgsHeld' defaultMessage='Quantity'>
@@ -40,7 +40,7 @@ class Holds extends Component {
         ),
         width: 140,
         align: 'right',
-        sortPath: 'Holds.pkgsHeld'
+        sortPath: 'InventoryHold.pkgsHeld'
       },
       {
         name: 'expirationTime',
@@ -51,7 +51,7 @@ class Holds extends Component {
         ),
         width: 160,
         align: 'right',
-        sortPath: 'Holds.expirationTime'
+        sortPath: 'InventoryHold.expirationTime'
       },
       {
         name: 'holdPricePerUOM',
@@ -62,7 +62,7 @@ class Holds extends Component {
         ),
         width: 160,
         align: 'right',
-        sortPath: 'Holds.holdPricePerUOM'
+        sortPath: 'InventoryHold.holdPricePerUOM'
       },
       {
         name: 'holdPriceSubtotal',
@@ -73,7 +73,7 @@ class Holds extends Component {
         ),
         width: 160,
         align: 'right',
-        sortPath: 'Holds.holdPriceSubtotal'
+        sortPath: 'InventoryHold.holdPriceSubtotal'
       },
       {
         name: 'status',
@@ -83,7 +83,7 @@ class Holds extends Component {
           </FormattedMessage>
         ),
         width: 120,
-        sortPath: 'Holds.status'
+        sortPath: 'InventoryHold.status'
       }
     ],
     selectedRows: [],

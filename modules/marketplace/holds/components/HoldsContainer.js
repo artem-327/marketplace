@@ -30,11 +30,22 @@ function getDurationTime(expTime) {
   return null
 }
 //TODO adjust colors
-function getColor(status) {
-  let color = 'grey'
-  if (status === 'APPROVED') color = 'green'
-  if (status === 'REJECTED') color = 'red'
-  return color
+function getStyleLabel(status) {
+  let labelColor = {
+    backgroundColor: '#f8f9fb',
+    color: '#848893',
+    fontSize: 'x-small',
+    fontWeight: 400
+  }
+  if (status === 'APPROVED' || status === 'ON-HOLD') {
+    labelColor.backgroundColor = '#84c225'
+    labelColor.color = '#ffffff'
+  }
+  if (status === 'REJECTED' || status === 'EXPIRED' || status === 'CANCELED') {
+    labelColor.backgroundColor = '#f16844'
+    labelColor.color = '#ffffff'
+  }
+  return labelColor
 }
 
 function mapStateToProps(store, { datagrid }) {
@@ -56,8 +67,8 @@ function mapStateToProps(store, { datagrid }) {
           <FormattedNumber style='currency' currency={currency} value={po.holdPriceSubtotal} />
         ) : null,
         status: po.status ? (
-          <Label circular color={getColor(po.status)}>
-            {po.status}
+          <Label circular style={getStyleLabel(po.status)}>
+            {po.status[0].toUpperCase() + po.status.slice(1).toLowerCase()}
           </Label>
         ) : null
       }

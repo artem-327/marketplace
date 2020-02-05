@@ -71,11 +71,16 @@ const CustomDateTimeInput = styled(DateTimeInput)`
     max-width: 100%;
   }
 `
-
+const optionsExpirationTime = [
+  { text: '24 h', value: 24, key: 1 },
+  { text: '48 h', value: 48, key: 2 },
+  { text: '3 days', value: 72, key: 3 },
+  { text: '5 days', value: 120, key: 4 }
+]
 export default class AddCart extends Component {
   state = {
     showMore: false,
-    expirationTime: ''
+    expirationTime: optionsExpirationTime[1].value
   }
   componentDidMount() {
     // this.props.getProductOffer(this.props.id, this.props.isEdit)
@@ -87,11 +92,17 @@ export default class AddCart extends Component {
     const { addCartItem, createHold } = this.props
     let { sidebar } = this.props
     let { pkgAmount, id, isHoldRequest } = sidebar
+
     try {
       if (isHoldRequest) {
+        const holdTime = encodeURIComponent(
+          moment()
+            .add(this.state.expirationTime, 'hours')
+            .format()
+        )
         const params = {
-          holdTime: encodeURIComponent(getStringISODate(this.state.expirationTime)),
-          pkgAmount: pkgAmount,
+          holdTime,
+          pkgAmount,
           productOfferId: id
         }
         await createHold(params)
@@ -420,21 +431,14 @@ export default class AddCart extends Component {
                   </FormattedMessage>
                 </GridColumn>
                 <GridColumn>
-                  <CustomDateTimeInput
-                    closable
-                    minDate={moment()}
-                    name='expirationTime'
-                    placeholder='Select expiration date'
+                  <Dropdown
+                    options={optionsExpirationTime}
+                    selection
                     value={this.state.expirationTime}
-                    iconPosition='left'
-                    animation='none'
+                    name='expirationTime'
                     onChange={(event, { name, value }) => {
                       this.setState({ [name]: value })
                     }}
-                    animation='none'
-                    popupPosition={'top center'}
-                    dateFormat={getLocaleDateFormat()}
-                    localization={typeof navigator !== 'undefined' ? window.navigator.language.slice(0, 2) : 'en'}
                   />
                 </GridColumn>
               </GridRow>
