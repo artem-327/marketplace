@@ -5,16 +5,11 @@ import moment from 'moment/moment'
 import { Label } from 'semantic-ui-react'
 
 import { withDatagrid } from '~/modules/datagrid'
-import { applyFilter } from '~/modules/filter/actions'
 import Holds from './Holds'
 import * as Actions from '../actions'
-import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
+import { FormattedUnit } from '~/components/formatted-messages'
 import { currency } from '~/constants'
 import { getSafe } from '~/utils/functions'
-import { getLocaleDateFormat } from '~/components/date-format'
-import { getProductOffer } from '~/modules/purchase-order/actions'
-import { sidebarChanged } from '~/src/modules/cart'
-import { openPopup, closePopup } from '~/modules/company-product-info/actions'
 
 const momentDurationFormatSetup = require('moment-duration-format')
 momentDurationFormatSetup(moment)

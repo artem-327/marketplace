@@ -25,15 +25,10 @@ import { FormattedUnit, UnitOfPackaging } from '~/components/formatted-messages'
 import { errorMessages } from '~/constants/yupValidation'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
-import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
+import { getLocaleDateFormat } from '~/components/date-format'
 import './AddCart.scss'
 // import file from '../../../../images/file.svg'
 import { checkToken } from '../../../../utils/auth'
-import { DateTimeInput } from 'semantic-ui-calendar-react'
-
-const CapitalizedColumn = styled(GridColumn)`
-  text-transform: capitalize;
-`
 
 const FlexContent = styled(Segment)`
   flex: 1;
@@ -66,11 +61,6 @@ const CustomSpanShowMore = styled.span`
   cursor: pointer;
 `
 
-const CustomDateTimeInput = styled(DateTimeInput)`
-  .ui.left.icon.input {
-    max-width: 100%;
-  }
-`
 const optionsExpirationTime = [
   { text: '24 h', value: 24, key: 1 },
   { text: '48 h', value: 48, key: 2 },

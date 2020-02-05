@@ -1,16 +1,10 @@
 import React, { Component } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import { Container, Grid, GridRow, Dropdown, GridColumn, Header, Divider, Segment, Button } from 'semantic-ui-react'
+import { Container, Dropdown } from 'semantic-ui-react'
 
-import { ShippingQuotes } from '~/modules/shipping'
-import SubMenu from '~/src/components/SubMenu'
-import { Filter } from '~/modules/filter'
 import ProdexGrid from '~/components/table'
-import FilterTags from '~/modules/filter/components/FitlerTags'
-import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
-import { getSafe } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
 
 const HoldDropdown = styled(Dropdown)`
