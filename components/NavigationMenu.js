@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { ArrowLeftCircle, ArrowRightCircle, Layers, Settings, ShoppingBag } from 'react-feather';
+import { ArrowLeftCircle, ArrowRightCircle, Layers, Settings, ShoppingBag } from 'react-feather'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -28,10 +28,22 @@ const DropdownItem = ({ children, refFunc, refId, ...props }) => {
 
 class Navigation extends Component {
 
-  dropdowns = {}
-
   state = {
+    dropdowns: {},
     settings: getSafe(() => Router.router.pathname === '/settings', false)
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.checkDropdowns.bind(this))
+  }
+
+  componentDidUpdate() {
+    console.log('COLLAPSED', this.props.collapsed)
+    this.checkDropdowns()
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.checkDropdowns)
   }
 
   settingsLink = (e, to, tab) => {
@@ -49,9 +61,83 @@ class Navigation extends Component {
     }
   }
 
+  createRef = (dropdownItem, refId) => {
+    const { dropdowns } = this.state
+
+    if (getSafe(() => !dropdowns[refId], false)) {
+      this.setState({ dropdowns: {
+          ...dropdowns,
+          [refId]: dropdownItem
+        }})
+    }
+  }
+
+  getWindowDimensions = () => {
+    const hasWindow = typeof window !== 'undefined'
+
+    const width = hasWindow ? window.innerWidth : null
+    const height = hasWindow ? window.innerHeight : null
+
+    return {
+      width,
+      height
+    }
+  }
+
   toggleOpened = (type) => {
-    const { settings } = this.state
-    this.setState({ settings: !settings })
+    const { dropdowns } = this.state
+    const typeState = this.state[type]
+
+    // toggle dropdown state
+    this.setState({ [type]: !typeState })
+
+    // resize dropdown
+    this.resizeDropdown(type, typeState)
+  }
+
+  checkDropdowns = () => {
+    const { dropdowns } = this.state
+    const ddStatuses = Object.keys(dropdowns)
+
+    for (var i = 0; i < ddStatuses.length; i++) {
+      console.log('CHECK', ddStatuses[i], this.state[ddStatuses[i]])
+      if (this.state[ddStatuses[i]]) {
+        this.resizeDropdown(ddStatuses[i], false)
+      }
+    }
+  }
+
+  resizeDropdown = (type, typeState) => {
+    console.log('TYPE', type)
+    const { dropdowns } = this.state
+    const current = dropdowns[type].ref.current
+
+    // Manipulate opened dropdown design - It affects only collapsed menu styles
+    if (current) { // Sometimes null
+      if (!typeState) {
+        const wievport = this.getWindowDimensions()
+
+        // Calculate free space around dropdown
+        const topSpace = current.offsetTop - 80 // space for TopBar
+        const bottomSpace = getSafe(() => wievport.height - (current.offsetTop + current.clientHeight + 1), 0)
+
+        // Changing dropdown behavior as we know more about available space (top/bottom)
+        if (topSpace > bottomSpace) {
+          if (!current.classList.contains('upward')) {
+            current.classList.add('upward')
+          }
+          current.lastChild.style.maxHeight = `${topSpace}px`
+        } else {
+          if (current.classList.contains('upward')) {
+            current.classList.remove('upward')
+          }
+          current.lastChild.style.maxHeight = `${bottomSpace}px`
+        }
+      } else {
+        // Reset styles
+        current.lastChild.style.maxHeight = ''
+      }
+    }
   }
 
   render() {
@@ -65,7 +151,7 @@ class Navigation extends Component {
       router: { pathname, asPath }
     } = this.props
 
-    const { settings } = this.state
+    const { dropdowns, settings } = this.state
 
     const MenuLink = withRouter(({ router: { asPath }, to, children, tab }) => (
       <Link prefetch href={to}>
@@ -117,11 +203,7 @@ class Navigation extends Component {
                         className={settings ? 'opened' : null}
                         opened={settings}
                         onClick={() => this.toggleOpened('settings')}
-                        refFunc={ (dropdownItem, refId) => {
-                          if (getSafe(() => !this.dropdowns[refId], false)) {
-                            this.dropdowns[refId] = (dropdownItem)
-                          }
-                        }}
+                        refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
                         refId={'settings'}>
             <Dropdown.Menu data-test='navigation_menu_settings_drpdn'>
               {isCompanyAdmin ? (

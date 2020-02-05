@@ -174,6 +174,11 @@ export const LeftMenu = styled(Menu)`
         }
       }
     }
+    
+    .scrollbar-container > img {
+      height: 34px;
+      margin: 33px auto;
+    }
   
     .container > a.item,
     .scrollbar-container > a.item {
@@ -194,7 +199,7 @@ export const LeftMenu = styled(Menu)`
       
       &.active i,
       &.active svg {
-        color: #20273a !important;
+        color: #2599d5 !important;
       }
     }
     
@@ -398,7 +403,7 @@ export const LeftMenu = styled(Menu)`
         
         > .text ~ i,
         > .text ~ svg {
-          color: #20273a !important;
+          color: #2599d5 !important;
         }
         
         &:before,
@@ -426,9 +431,22 @@ export const LeftMenu = styled(Menu)`
         display: none;
       }
     }
+    
+    ~ div {
+      transition: left 250ms linear;
+    }
   
     &.collapsed {
       width: 70px !important;
+      
+      .scrollbar-container {
+        
+        > img {
+          width: 40px;
+          height: 50px;
+          margin: 25px auto;
+        }
+      }
       
       .container > a.item,
       .scrollbar-container > a.item,
@@ -489,10 +507,19 @@ export const LeftMenu = styled(Menu)`
             border-color: #dee2e6;
             border-radius: 0;
             border-bottom-right-radius: 4px;
-            padding: 0;
             
             a {
               padding-left: 40px !important;
+            }
+          }
+          
+          &:not(.upward),
+          &.upward {
+          
+            > .menu {
+              overflow: hidden !important;
+              overflow-y: auto !important;
+              padding: 0 !important;
             }
           }
           
@@ -511,6 +538,29 @@ export const LeftMenu = styled(Menu)`
               border-top-right-radius: 4px;
             }
           }
+        }
+      }
+      
+      ~ div {
+        left: 70px !important;
+      }
+    }
+    
+    &:not(.collapsed) {
+      
+      .scrollbar-container {
+        position: relative;
+        width: calc(100% + 10px);
+        margin-right: -10px;
+        
+        .ps__rail-y .ps__thumb-y {
+          position: absolute;
+          margin: 0 2px;
+        }
+      
+        .dropdown:not(.upward) > .menu,
+        .dropdown.upward > .menu {
+          max-height: none !important;
         }
       }
     }

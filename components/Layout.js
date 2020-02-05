@@ -17,6 +17,7 @@ import { Container, Menu, Dropdown, Icon } from 'semantic-ui-react'
 import { Sidebar } from 'react-feather'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/logo-echosystem.png'
+import LogoSmall from '~/assets/images/nav/logo4x.png'
 // import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
@@ -93,6 +94,25 @@ class Layout extends Component {
             {formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo exchange' })} / {title}
           </title>
         </Head>
+
+        <LeftMenu vertical fixed='left' inverted size='large' borderless className={collapsed ? 'collapsed' : ''}>
+          <LeftMenuContainer fluid>
+            <PerfectScrollbar>
+              <LogoImage src={!collapsed ? Logo : LogoSmall} />
+
+              <NavigationMenu takeover={takeover} collapsed={collapsed} />
+            </PerfectScrollbar>
+            <Container className='bottom'>
+              <Menu.Item as='a' onClick={() => this.collapseMenu()} data-test='navigation_menu_collapse_lnk'>
+                <Sidebar />
+                {formatMessage({
+                  id: 'global.collapseMenu',
+                  defaultMessage: 'Collapse Menu'
+                })}
+              </Menu.Item>
+            </Container>
+          </LeftMenuContainer>
+        </LeftMenu>
 
         <TopMenu fixed='top' size='large' borderless className='topbar'>
           <TopMenuContainer fluid>
@@ -176,25 +196,6 @@ class Layout extends Component {
             </Menu.Menu>
           </TopMenuContainer>
         </TopMenu>
-
-        <LeftMenu vertical fixed='left' inverted size='large' borderless className={collapsed ? 'collapsed' : ''}>
-          <LeftMenuContainer fluid>
-            <PerfectScrollbar>
-              <LogoImage src={Logo} />
-
-              <NavigationMenu takeover={takeover} />
-            </PerfectScrollbar>
-            <Container className='bottom'>
-              <Menu.Item as='a' onClick={() => this.collapseMenu()} data-test='navigation_menu_collapse_lnk'>
-                <Sidebar />
-                {formatMessage({
-                  id: 'global.collapseMenu',
-                  defaultMessage: 'Collapse Menu'
-                })}
-              </Menu.Item>
-            </Container>
-          </LeftMenuContainer>
-        </LeftMenu>
 
         {profile && profile.profilePopup && <Profile />}
         <ChatWidget />
