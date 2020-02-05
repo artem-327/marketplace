@@ -408,6 +408,8 @@ class Marketplace extends Component {
   }
 
   render() {
+    const { activeIndex } = this.props
+  
     const panes = [
       {
         menuItem: <MenuLink to='/marketplace/all'>MARKETPLACE</MenuLink>,
@@ -425,11 +427,19 @@ class Marketplace extends Component {
     return (
       <>
         <Container fluid style={{ padding: '0 32px' }}>
-          <Tab  menu={{ secondary: true, pointing: true }} panes={panes} />
+          <Tab activeIndex={activeIndex} menu={{ secondary: true, pointing: true }} panes={panes} />
         </Container>
       </>
     )
   }
+}
+
+Marketplace.propTypes = {
+  activeIndex: number
+}
+
+Marketplace.defaultProps = {
+  activeIndex: 0
 }
 
 export default injectIntl(Marketplace)

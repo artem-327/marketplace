@@ -12,7 +12,7 @@ class HoldsPage extends Component {
 
     return (
       <Layout title={formatMessage({ id: 'global.marketplace', defaultMessage: 'Marketplace' })}>
-        <Marketplace  />
+        <Marketplace activeIndex={2} />
       </Layout>
     )
   }
