@@ -11,6 +11,7 @@ import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 import { getSafe } from '~/utils/functions'
+import { Datagrid } from '~/modules/datagrid'
 
 const HoldDropdown = styled(Dropdown)`
   z-index: 601 !important;
@@ -88,7 +89,8 @@ class Holds extends Component {
     ],
     selectedRows: [],
     pageNumber: 0,
-    open: false
+    open: false,
+    holdDropdown: 'My Holds'
   }
   //TODO toastermessage
   handleApprove = async id => {
@@ -155,23 +157,25 @@ class Holds extends Component {
           options={[
             {
               key: 1,
-              value: 'My holds',
-              text: 'My holds'
+              value: 'My Holds',
+              text: 'My Holds'
             },
             {
               key: 2,
-              value: 'Your holds',
-              text: 'Your holds'
-            },
-            {
-              key: 3,
-              value: 'His holds',
-              text: 'His holds'
+              value: 'Requsted Holds',
+              text: 'Requsted Holds'
             }
           ]}
-          clearable
+          value={this.state.holdDropdown}
           selection
-          search
+          onChange={(event, { name, value }) => {
+            if (value === 'My Holds') {
+              Datagrid.setApiConfig({ url: '/prodex/api/holds/my/datagrid/' })
+            } else if (value === 'Requsted Holds') {
+              Datagrid.setApiConfig({ url: '/prodex/api/holds/foreign/datagrid/' })
+            }
+            this.setState({ [name]: value })
+          }}
           name='holdDropdown'
           placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}
         />

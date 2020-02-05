@@ -92,7 +92,7 @@ class Layout extends Component {
               {auth && auth.identity && !auth.identity.isAdmin && (
                 <>
                   <Menu.Item
-                    onClick={() => Router.push('/marketplace/all')}
+                    onClick={() => Router.push('/marketplace/holds')}
                     data-test='navigation_marketplace'
                     className='item-cart'>
                     <HoldIcon />
