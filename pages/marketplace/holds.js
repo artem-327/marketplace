@@ -11,7 +11,7 @@ class HoldsPage extends Component {
     } = this.props
 
     return (
-      <Layout title={formatMessage({ id: 'global.marketplace', defaultMessage: 'Marketplace' })}>
+      <Layout title={formatMessage({ id: 'hold.holdRequest', defaultMessage: 'Hold Requests' })}>
         <Marketplace activeIndex={2} />
       </Layout>
     )

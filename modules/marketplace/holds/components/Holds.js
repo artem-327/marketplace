@@ -28,11 +28,9 @@ class Holds extends Component {
           </FormattedMessage>
         ),
         width: 160,
-        //FIXME fixed sortPath
-        sortPath: 'ProductOffer.companyProduct.intProductName'
+        sortPath: 'InventoryHold.productOffer.companyProduct.intProductName'
       },
       {
-        //FIXME find sortPath for pkgsHeld. Is it correct title pkgsHeld?
         name: 'pkgsHeld',
         title: (
           <FormattedMessage id='holds.pkgsHeld' defaultMessage='Quantity'>
@@ -92,7 +90,6 @@ class Holds extends Component {
     open: false,
     holdDropdown: 'My Holds'
   }
-  //TODO toastermessage
   handleApprove = async id => {
     try {
       await this.props.approveHold(id)
@@ -100,7 +97,6 @@ class Holds extends Component {
       console.error(error)
     }
   }
-  //TODO toastermessage
   handleReject = async id => {
     try {
       await this.props.rejectHold(id)
@@ -108,7 +104,6 @@ class Holds extends Component {
       console.error(error)
     }
   }
-  //TODO toastermessage
   handleCancel = async id => {
     try {
       await this.props.cancelHold(id)
@@ -118,10 +113,10 @@ class Holds extends Component {
   }
 
   render() {
-    const { rows, datagrid, intl } = this.props
+    const { rows, datagrid, intl, isMerchant, isCompanyAdmin, isProductOfferManager } = this.props
     const { columns } = this.state
     let { formatMessage } = intl
-    const approveButton = {
+    const buttonApprove = {
       text: formatMessage({
         id: 'hold.approve',
         defaultMessage: 'Approve'
@@ -144,11 +139,10 @@ class Holds extends Component {
     }
     let rowActions = []
 
-    //TODO rowActions if isMerchant of Companymanager ??
-    if (false) {
+    if (isMerchant && this.state.holdDropdown === 'My Holds') {
       rowActions.push(buttonCancel)
-    } else if (true) {
-      rowActions.push(approveButton)
+    } else if ((isCompanyAdmin || isProductOfferManager) && this.state.holdDropdown === 'Requsted Holds') {
+      rowActions.push(buttonApprove)
       rowActions.push(buttonReject)
     }
     return (

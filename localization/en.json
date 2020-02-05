@@ -1872,5 +1872,6 @@
   "holds.status": "Status",
   "hold.reject": "Reject",
   "hold.cancel": "Cancel",
-  "hold.approve": "Approve"
+  "hold.approve": "Approve",
+  "hold.holdRequest": "Hold Requests"
 }

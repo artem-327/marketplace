@@ -248,10 +248,41 @@ class Marketplace extends Component {
   }
 
   renderTabMarketplace = () => {
-    const { datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading, openPopup } = this.props
+    const {
+      datagrid,
+      intl,
+      getAutocompleteData,
+      autocompleteData,
+      autocompleteDataLoading,
+      openPopup,
+      isMerchant
+    } = this.props
     const { columns, selectedRows } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
+
+    const rowActions = []
+    const buttonRequestHold = {
+      text: formatMessage({
+        id: 'hold.requestHold',
+        defaultMessage: 'Request Hold'
+      }),
+      callback: row => this.tableRowClicked(row.id, true)
+    }
+    const buttonBuy = {
+      text: formatMessage({
+        id: 'marketplace.buy',
+        defaultMessage: 'Buy Product Offer'
+      }),
+      callback: row => this.tableRowClicked(row.id)
+    }
+    if (isMerchant) {
+      rowActions.push(buttonBuy)
+      rowActions.push(buttonRequestHold)
+    } else {
+      rowActions.push(buttonBuy)
+    }
+
     return (
       <>
         <ShippingQuotes
@@ -371,23 +402,7 @@ class Marketplace extends Component {
               }
             }}*/
             data-test='marketplace_row_action'
-            rowActions={[
-              {
-                text: formatMessage({
-                  id: 'marketplace.buy',
-                  defaultMessage: 'Buy Product Offer'
-                }),
-                callback: row => this.tableRowClicked(row.id)
-              },
-
-              {
-                text: formatMessage({
-                  id: 'hold.requestHold',
-                  defaultMessage: 'Request Hold'
-                }),
-                callback: row => this.tableRowClicked(row.id, true)
-              }
-            ]}
+            rowActions={rowActions}
           />
         </div>
         <Filter
@@ -409,7 +424,7 @@ class Marketplace extends Component {
 
   render() {
     const { activeIndex } = this.props
-  
+
     const panes = [
       {
         menuItem: <MenuLink to='/marketplace/all'>MARKETPLACE</MenuLink>,

@@ -29,7 +29,6 @@ function getDurationTime(expTime) {
   }
   return null
 }
-//TODO adjust colors
 function getStyleLabel(status) {
   let labelColor = {
     backgroundColor: '#f8f9fb',
@@ -51,7 +50,9 @@ function getStyleLabel(status) {
 function mapStateToProps(store, { datagrid }) {
   return {
     ...datagrid,
-
+    isMerchant: getSafe(() => store.auth.identity.isMerchant, false),
+    isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
+    isProductOfferManager: getSafe(() => store.auth.identity.isProductOfferManager, false),
     rows: datagrid.rows.map(po => {
       const unit = getSafe(() => po.productOffer.companyProduct.packagingUnit.nameAbbreviation, null)
       return {
