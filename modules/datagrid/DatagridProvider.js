@@ -30,7 +30,7 @@ export class DatagridProvider extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { ...initialState, apiConfig: props.apiConfig }
+    this.state = initialState
 
     Datagrid = this
   }
@@ -42,13 +42,13 @@ export class DatagridProvider extends Component {
   //   }
   // }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (
-      prevState.apiConfig &&
-      prevState.apiConfig.url &&
-      this.state.apiConfig &&
-      this.state.apiConfig.url &&
-      prevState.apiConfig.url !== this.state.apiConfig.url
+      prevProps.apiConfig &&
+      prevProps.apiConfig.url &&
+      this.props.apiConfig &&
+      this.props.apiConfig.url &&
+      prevProps.apiConfig.url !== this.props.apiConfig.url
     ) {
       this.setFilter({ filters: [] })
     }
@@ -63,24 +63,28 @@ export class DatagridProvider extends Component {
   }
 
   loadNextPage = async () => {
-    if (!this.state.apiConfig) return
+    if (!this.props.apiConfig) return
 
     const { datagridParams, query } = this.state
-    const { apiConfig } = this.state
+    const { apiConfig } = this.props
 
     this.setState({ loading: true })
 
     try {
       const response = await api.request({
-        url: apiConfig.url,
+        url: this.apiConfig && this.apiConfig.url ? this.apiConfig.url : apiConfig.url,
         method: apiConfig.method || 'POST',
         params: query,
         data: {
           ...datagridParams
         }
       })
-
-      if (response.config.url !== this.state.apiConfig.url) return
+      if (
+        (this.apiConfig && this.apiConfig.url && this.apiConfig.url !== response.config.url) ||
+        (!this.apiConfig && response.config.url !== this.props.apiConfig.url)
+      ) {
+        return
+      }
 
       const { data } = response
       const allLoaded = data.length < datagridParams.pageSize || data.length === 0
@@ -97,6 +101,8 @@ export class DatagridProvider extends Component {
     } catch (e) {
       console.error(e)
       this.setState({ loading: false })
+    } finally {
+      this.apiConfig = null
     }
   }
 
@@ -203,7 +209,8 @@ export class DatagridProvider extends Component {
   }
 
   setApiConfig = apiConfig => {
-    this.setState({ apiConfig })
+    this.apiConfig = apiConfig
+    this.loadData()
   }
 
   render() {
@@ -216,7 +223,7 @@ export class DatagridProvider extends Component {
     return (
       <DatagridContext.Provider
         value={{
-          apiConfig: this.state.apiConfig,
+          apiConfig: this.props.apiConfig,
           rows,
           loading,
           filters,
