@@ -34,6 +34,7 @@ import {
   TableColumnResizing
 } from '@devexpress/dx-react-grid-bootstrap4'
 import { TableSelection } from '~/components/dx-grid-semantic-ui/plugins'
+import { getSafe } from '~/utils/functions'
 
 import { RowActionsFormatterProvider, DropdownFormatterProvider } from './providers'
 
@@ -168,13 +169,14 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
 // const TableGroupRow = props => <TableGroupRow {...props} />
 const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions' : ''} />
 const NoDataTableCells = props => {
+  const isEchoCode = getSafe(() => props.tableColumn.column.name === 'echoCode', false)
   const modifiedProps = {
     ...props,
-    colSpan: props.colSpan - (props.tableColumn.column.name === 'echoCode' ? 2 : 1)
+    colSpan: props.colSpan - (isEchoCode ? 2 : 1)
   }
   return (
     <>
-      {props.tableColumn.column.name === 'echoCode' ? (
+      {isEchoCode ? (
         <Table.Cell className='p-0'></Table.Cell>
       ) : null}
       <Table.Cell {...modifiedProps} className='not-found'>{props.getMessage('noData')}</Table.Cell>
