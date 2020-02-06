@@ -1822,6 +1822,7 @@
   "order.buyerRequesting": "Buyer is requesting a discount of $",
   "order.sellerRequestingDetail": "You have selected to Counter the credit request. Please fill in the counter details below.",
   "order.notes": "Notes:",
+  "order.detailNotes": "NOTES",
   "order.counterValue": "Counter Value",
   "order.attachments": "Attachments: ",
   "order.reasons": "Reasons:",
