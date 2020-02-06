@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Button, Popup, List, Icon } from 'semantic-ui-react'
+import { Container, Menu, Header, Button, Popup, List, Icon, Tab } from 'semantic-ui-react'
 import { AlertTriangle } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-
+import { withRouter } from 'next/router'
 import { ShippingQuotes } from '~/modules/shipping'
 import SubMenu from '~/src/components/SubMenu'
 import { Filter } from '~/modules/filter'
@@ -12,6 +12,10 @@ import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
+import { Holds } from '~/modules/marketplace/holds'
+
+import { number } from 'prop-types'
+import Link from 'next/link'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -20,6 +24,14 @@ const CapitalizedText = styled.span`
 const DivButtonWithToolTip = styled.div`
   z-index: 501;
 `
+
+const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
+  <Link prefetch href={to}>
+    <Menu.Item as='a' active={pathname === to}>
+      {children}
+    </Menu.Item>
+  </Link>
+))
 
 const RedTriangle = styled(AlertTriangle)`
   float: left;
@@ -195,14 +207,15 @@ class Marketplace extends Component {
     }))
   }
 
-  tableRowClicked = clickedId => {
+  tableRowClicked = (clickedId, isHoldRequest = false) => {
     const { getProductOffer, sidebarChanged, isProductInfoOpen, closePopup } = this.props
     let { isOpen, id } = this.props.sidebar
     getProductOffer(clickedId)
 
     if (isProductInfoOpen) closePopup()
-    if (id !== clickedId && id) sidebarChanged({ isOpen: true, id: clickedId, quantity: 1 })
-    else sidebarChanged({ isOpen: !isOpen, id: clickedId, quantity: 1 })
+    if (id !== clickedId && id)
+      sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest })
+    else sidebarChanged({ isOpen: !isOpen, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest })
   }
 
   handleFilterApply = filter => {
@@ -243,85 +256,115 @@ class Marketplace extends Component {
     }, [])
   }
 
-  render() {
-    const { datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading, openPopup } = this.props
+  renderTabMarketplace = () => {
+    const {
+      datagrid,
+      intl,
+      getAutocompleteData,
+      autocompleteData,
+      autocompleteDataLoading,
+      openPopup,
+      isMerchant
+    } = this.props
     const { columns, selectedRows } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
+
+    const rowActions = []
+    const buttonRequestHold = {
+      text: formatMessage({
+        id: 'hold.requestHold',
+        defaultMessage: 'Request Hold'
+      }),
+      callback: row => this.tableRowClicked(row.id, true)
+    }
+    const buttonBuy = {
+      text: formatMessage({
+        id: 'marketplace.buy',
+        defaultMessage: 'Buy Product Offer'
+      }),
+      callback: row => this.tableRowClicked(row.id)
+    }
+    if (isMerchant) {
+      rowActions.push(buttonBuy)
+      rowActions.push(buttonRequestHold)
+    } else {
+      rowActions.push(buttonBuy)
+    }
+
     return (
       <>
-        <Container fluid style={{ padding: '0 32px' }}>
-          <ShippingQuotes
-            modalProps={{
-              open: this.state.open,
-              closeModal: () => this.setState({ open: false })
-            }}
-            productOfferIds={rows.reduce(function(filtered, row) {
-              if (selectedRows.includes(row.id)) {
-                filtered.push(row.id)
-              }
-              return filtered
-            }, [])}
-            productOffersSelected={rows.reduce(function(filtered, row) {
-              if (selectedRows.includes(row.id)) {
-                filtered.push({
-                  id: row.id,
-                  min: row.minPkg,
-                  split: row.splitPkg
-                })
-              }
-              return filtered
-            }, [])}
-            removePopup={this.props.removePopup}
-            echoProducts={this.getEchoProducts(rows, selectedRows)}
-            {...this.props}
-          />
+        <ShippingQuotes
+          modalProps={{
+            open: this.state.open,
+            closeModal: () => this.setState({ open: false })
+          }}
+          productOfferIds={rows.reduce(function(filtered, row) {
+            if (selectedRows.includes(row.id)) {
+              filtered.push(row.id)
+            }
+            return filtered
+          }, [])}
+          productOffersSelected={rows.reduce(function(filtered, row) {
+            if (selectedRows.includes(row.id)) {
+              filtered.push({
+                id: row.id,
+                min: row.minPkg,
+                split: row.splitPkg
+              })
+            }
+            return filtered
+          }, [])}
+          removePopup={this.props.removePopup}
+          echoProducts={this.getEchoProducts(rows, selectedRows)}
+          {...this.props}
+        />
 
-          <Menu secondary className='page-part'>
-            <Menu.Menu position='right'>
-              <Menu.Item>
-                <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
-              </Menu.Item>
-              <Popup
-                wide='very'
-                data-test='array_to_multiple_list'
-                content={
-                  <FormattedMessage
-                    id='marketplace.shippingQuoteTooltip'
-                    defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
-                  />
-                }
-                disabled={selectedRows.length !== 0}
-                position='bottom right'
-                trigger={
-                  <DivButtonWithToolTip
-                    data-tooltip={
-                      this.isSelectedMultipleEcho(rows, selectedRows)
-                        ? formatMessage({
-                            id: 'marketplace.multipleEchoProduct',
-                            defaultMessage: 'Multiple ProductOffers can not be calculate.'
-                          })
-                        : null
-                    }
-                    data-position='bottom right'>
-                    <Button
-                      disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
-                      primary
-                      onClick={() => this.setState({ open: true })}
-                      data-test='marketplace_shipping_quote_btn'>
-                      <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button>
-                  </DivButtonWithToolTip>
-                }
-              />
-              <Menu.Item>
-                <SubMenu clearAutocompleteData={this.handleClearAutocompleteData} />
-              </Menu.Item>
-            </Menu.Menu>
-          </Menu>
-        </Container>
+        <Menu secondary className='page-part'>
+          <Menu.Menu position='right'>
+            <Menu.Item>
+              <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
+            </Menu.Item>
+            <Popup
+              wide='very'
+              data-test='array_to_multiple_list'
+              content={
+                <FormattedMessage
+                  id='marketplace.shippingQuoteTooltip'
+                  defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
+                />
+              }
+              disabled={selectedRows.length !== 0}
+              position='bottom right'
+              trigger={
+                <DivButtonWithToolTip
+                  data-tooltip={
+                    this.isSelectedMultipleEcho(rows, selectedRows)
+                      ? formatMessage({
+                          id: 'marketplace.multipleEchoProduct',
+                          defaultMessage: 'Multiple ProductOffers can not be calculate.'
+                        })
+                      : null
+                  }
+                  data-position='bottom right'>
+                  <Button
+                    disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
+                    primary
+                    onClick={() => this.setState({ open: true })}
+                    data-test='marketplace_shipping_quote_btn'>
+                    <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button>
+                </DivButtonWithToolTip>
+              }
+            />
+            <Menu.Item>
+              <SubMenu clearAutocompleteData={this.handleClearAutocompleteData} />
+            </Menu.Item>
+          </Menu.Menu>
+        </Menu>
+
         <div class='flex stretched' style={{ padding: '10px 32px' }}>
           <ProdexGrid
             groupActions={row => {
@@ -367,15 +410,7 @@ class Marketplace extends Component {
               }
             }}*/
             data-test='marketplace_row_action'
-            rowActions={[
-              {
-                text: formatMessage({
-                  id: 'marketplace.buy',
-                  defaultMessage: 'Buy Product Offer'
-                }),
-                callback: row => this.tableRowClicked(row.id)
-              }
-            ]}
+            rowActions={rowActions}
           />
         </div>
         <Filter
@@ -394,6 +429,40 @@ class Marketplace extends Component {
       </>
     )
   }
+
+  render() {
+    const { activeIndex } = this.props
+
+    const panes = [
+      {
+        menuItem: <MenuLink to='/marketplace/all'>MARKETPLACE</MenuLink>,
+        render: () => <pre>{this.renderTabMarketplace()}</pre>
+      },
+      {
+        menuItem: <MenuLink to='/marketplace/wanted-board'>WANTED BOARD</MenuLink>,
+        render: () => <pre>Tab 2 Content</pre>
+      },
+      {
+        menuItem: <MenuLink to='/marketplace/holds'>HOLDS</MenuLink>,
+        render: () => <pre>{<Holds />}</pre>
+      }
+    ]
+    return (
+      <>
+        <Container fluid style={{ padding: '0 32px' }}>
+          <Tab activeIndex={activeIndex} menu={{ secondary: true, pointing: true }} panes={panes} />
+        </Container>
+      </>
+    )
+  }
+}
+
+Marketplace.propTypes = {
+  activeIndex: number
+}
+
+Marketplace.defaultProps = {
+  activeIndex: 0
 }
 
 export default injectIntl(Marketplace)

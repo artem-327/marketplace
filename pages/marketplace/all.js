@@ -10,7 +10,7 @@ class MarketplacePage extends Component {
 
     return (
       <Layout title={formatMessage({ id: 'global.marketplace', defaultMessage: 'Marketplace' })}>
-        <Marketplace />
+        <Marketplace activeIndex={0} />
       </Layout>
     )
   }

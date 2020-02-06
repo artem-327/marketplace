@@ -13,12 +13,15 @@ import {
   CircularLabel,
   MainTitle
 } from '~/components/constants/layout'
-import { Menu, Dropdown, Icon } from 'semantic-ui-react'
+import { Container, Menu, Dropdown, Icon } from 'semantic-ui-react'
+import { Sidebar } from 'react-feather'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/logo-echosystem.png'
+import LogoSmall from '~/assets/images/nav/logo4x.png'
 // import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
+import HoldIcon from './HoldIcon'
 import PopUp from '~/src/components/PopUp'
 import { Messages } from '~/modules/messages'
 import Settings from '~/components/settings'
@@ -53,8 +56,16 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
 ))
 
 class Layout extends Component {
+  state = {
+    collapsed: false
+  }
+
   componentDidMount() {
     if (!this.props.phoneCountryCodes.length) this.props.getCountryCodes()
+  }
+
+  collapseMenu = () => {
+    this.setState({collapsed: !this.state.collapsed})
   }
 
   render() {
@@ -74,6 +85,7 @@ class Layout extends Component {
       isOpen,
       agreeWithTOS
     } = this.props
+    const { collapsed } = this.state
 
     return (
       <MainContainer fluid>
@@ -84,14 +96,44 @@ class Layout extends Component {
           </title>
         </Head>
 
+        <LeftMenu vertical fixed='left' inverted size='large' borderless className={collapsed ? 'collapsed' : ''}>
+          <LeftMenuContainer fluid>
+            <PerfectScrollbar>
+              <LogoImage src={!collapsed ? Logo : LogoSmall} />
+
+              <NavigationMenu takeover={takeover} collapsed={collapsed} />
+            </PerfectScrollbar>
+            <Container className='bottom'>
+              <Menu.Item as='a' onClick={() => this.collapseMenu()} data-test='navigation_menu_collapse_lnk'>
+                <Sidebar />
+                {formatMessage({
+                  id: 'global.collapseMenu',
+                  defaultMessage: 'Collapse Menu'
+                })}
+              </Menu.Item>
+            </Container>
+          </LeftMenuContainer>
+        </LeftMenu>
+
         <TopMenu fixed='top' size='large' borderless className='topbar'>
           <TopMenuContainer fluid>
             <MainTitle as='h1'>{title}</MainTitle>
             <Menu.Menu position='right' className='black'>
               {auth && auth.identity && !auth.identity.isAdmin && (
-                <Menu.Item onClick={() => Router.push('/cart')} data-test='navigation_menu_cart' className='item-cart'>
-                  <MiniCart />
-                </Menu.Item>
+                <>
+                  <Menu.Item
+                    onClick={() => Router.push('/marketplace/holds')}
+                    data-test='navigation_marketplace'
+                    className='item-cart'>
+                    <HoldIcon />
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => Router.push('/cart')}
+                    data-test='navigation_menu_cart'
+                    className='item-cart'>
+                    <MiniCart />
+                  </Menu.Item>
+                </>
               )}
               <Dropdown className='user-menu-wrapper' item icon={{ className: 'user thick' }}>
                 <Dropdown.Menu data-test='navigation_menu_user_drpdn'>
@@ -166,16 +208,6 @@ class Layout extends Component {
             </Menu.Menu>
           </TopMenuContainer>
         </TopMenu>
-
-        <LeftMenu vertical fixed='left' inverted size='large' borderless>
-          <LeftMenuContainer fluid>
-            <PerfectScrollbar>
-              <LogoImage src={Logo} />
-
-              <NavigationMenu takeover={takeover} />
-            </PerfectScrollbar>
-          </LeftMenuContainer>
-        </LeftMenu>
 
         {profile && profile.profilePopup && <Profile />}
         <ChatWidget />

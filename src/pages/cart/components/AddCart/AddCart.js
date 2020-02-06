@@ -30,10 +30,6 @@ import './AddCart.scss'
 // import file from '../../../../images/file.svg'
 import { checkToken } from '../../../../utils/auth'
 
-const CapitalizedColumn = styled(GridColumn)`
-  text-transform: capitalize;
-`
-
 const FlexContent = styled(Segment)`
   flex: 1;
   overflow-y: auto;
@@ -65,9 +61,16 @@ const CustomSpanShowMore = styled.span`
   cursor: pointer;
 `
 
+const optionsExpirationTime = [
+  { text: '24 h', value: 24, key: 1 },
+  { text: '48 h', value: 48, key: 2 },
+  { text: '3 days', value: 72, key: 3 },
+  { text: '5 days', value: 120, key: 4 }
+]
 export default class AddCart extends Component {
   state = {
-    showMore: false
+    showMore: false,
+    expirationTime: optionsExpirationTime[1].value
   }
   componentDidMount() {
     // this.props.getProductOffer(this.props.id, this.props.isEdit)
@@ -76,12 +79,32 @@ export default class AddCart extends Component {
 
   createOrder = async () => {
     if (checkToken(this.props)) return
-    const { addCartItem } = this.props
+    const { addCartItem, createHold } = this.props
     let { sidebar } = this.props
-    let { pkgAmount, id } = sidebar
+    let { pkgAmount, id, isHoldRequest } = sidebar
 
-    await addCartItem({ productOffer: id, pkgAmount })
-    Router.push('/cart')
+    try {
+      if (isHoldRequest) {
+        const holdTime = encodeURIComponent(
+          moment()
+            .add(this.state.expirationTime, 'hours')
+            .format()
+        )
+        const params = {
+          holdTime,
+          pkgAmount,
+          productOfferId: id
+        }
+        await createHold(params)
+        this.props.sidebarChanged({ isOpen: false, isHoldRequest: false })
+        Router.push('/marketplace/holds')
+      } else {
+        await addCartItem({ productOffer: id, pkgAmount })
+        Router.push('/cart')
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   editOrder = async () => {
@@ -110,7 +133,7 @@ export default class AddCart extends Component {
 
   getCartMarkup = () => {
     let { offer, order, isEdit } = this.props
-    let { pkgAmount, pricing, warning } = this.props.sidebar
+    let { pkgAmount, pricing, warning, isHoldRequest } = this.props.sidebar
 
     let { pkgAvailable, pricingTiers } = offer
 
@@ -192,7 +215,7 @@ export default class AddCart extends Component {
     //   <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
     // )
 
-    let canProceed = !warning && price && pkgAmount > 0
+    let canProceed = !warning && price && pkgAmount > 0 && this.state.expirationTime
 
     return (
       <>
@@ -330,7 +353,11 @@ export default class AddCart extends Component {
             <GridRow className='action'>
               <GridColumn>
                 <Header>
-                  <FormattedMessage id='cart.PurchaseHeader' defaultMessage='2. Purchase Info' />
+                  {isHoldRequest ? (
+                    <FormattedMessage id='cart.holdRequestInfo' defaultMessage='2. Hold Request Info' />
+                  ) : (
+                    <FormattedMessage id='cart.PurchaseHeader' defaultMessage='2. Purchase Info' />
+                  )}
                 </Header>
               </GridColumn>
             </GridRow>
@@ -339,8 +366,8 @@ export default class AddCart extends Component {
               <ListHeader>
                 <FormattedMessage id='cart.fobPricing' defaultMessage='FOB Pricing:' />
               </ListHeader>
-              {dropdownOptions.map(el => (
-                <List.Item active={el.value.price === this.props.sidebar.pricing.price}>
+              {dropdownOptions.map((el, i) => (
+                <List.Item key={i} active={el.value.price === this.props.sidebar.pricing.price}>
                   <List.Content>{el.text}</List.Content>
                 </List.Item>
               ))}
@@ -363,7 +390,6 @@ export default class AddCart extends Component {
               </GridColumn>
               <GridColumn>{offer.splitPkg}</GridColumn>
             </GridRow>
-
             <GridRow verticalAlign='middle' columns={2}>
               <GridColumn>
                 <FormattedMessage id='cart.packagesRequested' defaultMessage='Packages Requested:' />
@@ -386,6 +412,27 @@ export default class AddCart extends Component {
                 <GridColumn> {error}</GridColumn>
               </GridRow>
             )}
+
+            {isHoldRequest ? (
+              <GridRow verticalAlign='middle' columns={2}>
+                <GridColumn>
+                  <FormattedMessage id='global.expirationTime' defaultMessage='Expiration Date:'>
+                    {text => text}
+                  </FormattedMessage>
+                </GridColumn>
+                <GridColumn>
+                  <Dropdown
+                    options={optionsExpirationTime}
+                    selection
+                    value={this.state.expirationTime}
+                    name='expirationTime'
+                    onChange={(event, { name, value }) => {
+                      this.setState({ [name]: value })
+                    }}
+                  />
+                </GridColumn>
+              </GridRow>
+            ) : null}
 
             <GridRow columns={1}></GridRow>
 
@@ -462,7 +509,7 @@ export default class AddCart extends Component {
                   fluid
                   floated='right'
                   onClick={() => {
-                    this.props.sidebarChanged({ isOpen: false })
+                    this.props.sidebarChanged({ isOpen: false, isHoldRequest: false })
                     this.setState({ showMore: false })
                   }}
                   data-test='add_cart_cancel_btn'>
@@ -513,7 +560,21 @@ export default class AddCart extends Component {
 
     return (
       <Sidebar
-        onHide={() => sidebarChanged({ isOpen: false })}
+        onHide={e => {
+          // Workaround, close if you haven't clicked on calendar item or filter icon
+          try {
+            if (
+              e &&
+              !(e.path[0] instanceof HTMLTableCellElement) &&
+              !(e.path[1] instanceof HTMLTableCellElement) &&
+              (!e.target || !e.target.className.includes('js-focus-visible'))
+            ) {
+              sidebarChanged({ isOpen: false, isHoldRequest: false })
+            }
+          } catch (e) {
+            console.error(e)
+          }
+        }}
         width='very wide'
         className='cart-sidebar flex'
         direction='right'

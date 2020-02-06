@@ -9,5 +9,6 @@ export const ROLES_ENUM = [
   { name: 'CompanyAdmin', id: 2, propertyName: 'isCompanyAdmin' },
   { name: 'Merchant', id: 3, propertyName: 'isMerchant' },
   { name: 'UserAdmin', id: 4, propertyName: 'isUserAdmin' },
-  { name: 'ProductCatalogAdmin', id: 6, propertyName: 'isProductCatalogAdmin' }
+  { name: 'ProductCatalogAdmin', id: 6, propertyName: 'isProductCatalogAdmin' },
+  { name: 'ProductOfferManager', id: 8, propertyName: 'isProductOfferManager' }
 ]
