@@ -19,6 +19,7 @@ import Logo from '~/assets/images/nav/logo-echosystem.png'
 // import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
+import HoldIcon from './HoldIcon'
 import PopUp from '~/src/components/PopUp'
 import { Messages } from '~/modules/messages'
 import Settings from '~/components/settings'
@@ -89,9 +90,20 @@ class Layout extends Component {
             <MainTitle as='h1'>{title}</MainTitle>
             <Menu.Menu position='right' className='black'>
               {auth && auth.identity && !auth.identity.isAdmin && (
-                <Menu.Item onClick={() => Router.push('/cart')} data-test='navigation_menu_cart' className='item-cart'>
-                  <MiniCart />
-                </Menu.Item>
+                <>
+                  <Menu.Item
+                    onClick={() => Router.push('/marketplace/holds')}
+                    data-test='navigation_marketplace'
+                    className='item-cart'>
+                    <HoldIcon />
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => Router.push('/cart')}
+                    data-test='navigation_menu_cart'
+                    className='item-cart'>
+                    <MiniCart />
+                  </Menu.Item>
+                </>
               )}
               <Dropdown className='user-menu-wrapper' item icon={{ className: 'user thick' }}>
                 <Dropdown.Menu data-test='navigation_menu_user_drpdn'>

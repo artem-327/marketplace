@@ -68,6 +68,7 @@ import phoneNumber from '~/modules/phoneNumber/reducer'
 
 import companyProductInfo from '~/modules/company-product-info/reducer'
 import operations from '~/modules/operations/reducers'
+import holds from '~/modules/marketplace/holds/reducer'
 
 const reducer = combineReducers({
   auth,
@@ -124,7 +125,8 @@ const reducer = combineReducers({
   broadcast,
   phoneNumber,
   chatWidget,
-  operations
+  operations,
+  holds
 })
 
 const rootReducer = (state, action) => {

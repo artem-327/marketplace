@@ -74,7 +74,8 @@ function mapStateToProps(store, { datagrid }) {
       }
     }),
     sidebar: store.cart.sidebar,
-    isProductInfoOpen: store.companyProductInfo.isOpen
+    isProductInfoOpen: store.companyProductInfo.isOpen,
+    isMerchant: getSafe(() => store.auth.identity.isMerchant, false)
   }
 }
 

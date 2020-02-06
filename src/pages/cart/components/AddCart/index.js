@@ -8,6 +8,7 @@ import { getPricing, getLocationString } from '../../../../utils/functions'
 import { getSafe } from '~/utils/functions'
 import React from 'react'
 import { ArrayToMultiple } from '~/components/formatted-messages'
+import { createHold } from '~/modules/marketplace/holds/actions'
 
 function mapStateToProps(store) {
   let pricing = getPricing(store.cart.offerDetail, store.cart.sidebar.pkgAmount)
@@ -42,7 +43,16 @@ function mapStateToProps(store) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { getProductOffer, postOrderEdit, postNewOrder, removePopup, sidebarChanged, updateCartItem, addCartItem },
+    {
+      getProductOffer,
+      postOrderEdit,
+      postNewOrder,
+      removePopup,
+      sidebarChanged,
+      updateCartItem,
+      addCartItem,
+      createHold
+    },
     dispatch
   )
 }
