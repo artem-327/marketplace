@@ -1407,6 +1407,14 @@ i.file {
           border-bottom-right-radius: 4px;
         }
       }
+
+      tr.table-active {
+        background-color: #eff9ff;
+        
+        > td {
+          background-color: #eff9ff;
+        }
+      }
     }
   }
 }
