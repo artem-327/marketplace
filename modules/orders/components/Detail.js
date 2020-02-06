@@ -86,7 +86,7 @@ const TableRowData = styled(Table.Row)`
 
 class Detail extends Component {
   state = {
-    activeIndexes: [true, true, false, false, false, false]
+    activeIndexes: [true, true, false, false, false, false, false]
   }
 
   constructor(props) {
@@ -1109,6 +1109,23 @@ class Detail extends Component {
                       </Grid.Column>
                     </Grid.Row>
                   </Grid>
+                </Accordion.Content>
+                <AccordionTitle
+                  active={activeIndexes[6]}
+                  index={6}
+                  onClick={this.handleClick}
+                  data-test='orders_detail_notes'>
+                  <Icon
+                    name={'chevron ' + (activeIndexes[6] ? 'down' : 'right')}
+                    size='large'
+                    color={activeIndexes[6] ? 'blue' : 'black'}
+                  />
+                  <FormattedMessage id='order.detailNotes' defaultMessage='NOTES' />
+                </AccordionTitle>
+                <Accordion.Content active={activeIndexes[6]}>
+                  <Grid.Row>
+                    <Grid.Column>{getSafe(()=>this.props.order.note, '')}</Grid.Column>
+                  </Grid.Row>
                 </Accordion.Content>
               </Accordion>
             </>

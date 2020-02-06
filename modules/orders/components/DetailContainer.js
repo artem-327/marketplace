@@ -229,7 +229,8 @@ function prepareDetail(data, type) {
     paymentPhone: type === 'sales' ? data.buyerCompanyContactPhone : data.sellerCompanyContactPhone,
     paymentContact: type === 'sales' ? data.buyerCompanyContactName : data.sellerCompanyContactName,
     shippingTrackingCode: data.shippingTrackingCode ? data.shippingTrackingCode : '',
-    returnShippingTrackingCode: data.returnShippingTrackingCode ? data.returnShippingTrackingCode : ''
+    returnShippingTrackingCode: data.returnShippingTrackingCode ? data.returnShippingTrackingCode : '',
+    note: getSafe(() => data.note, '')
   }
 }
 
