@@ -167,6 +167,20 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
 
 // const TableGroupRow = props => <TableGroupRow {...props} />
 const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions' : ''} />
+const NoDataTableCells = props => {
+  const modifiedProps = {
+    ...props,
+    colSpan: props.colSpan - (props.tableColumn.column.name === 'echoCode' ? 2 : 1)
+  }
+  return (
+    <>
+      {props.tableColumn.column.name === 'echoCode' ? (
+        <Table.Cell className='p-0'></Table.Cell>
+      ) : null}
+      <Table.Cell {...modifiedProps} className='not-found'>{props.getMessage('noData')}</Table.Cell>
+    </>
+  )
+}
 const GridRoot = props => <Grid.Root {...props} style={{ height: '100%', flex: 1 }} />
 
 const SortLabel = ({ column, onSort, children, direction }) => (
@@ -715,6 +729,7 @@ class _Table extends Component {
                 columnExtensions={this.getColumnsExtension()}
                 height='auto'
                 cellComponent={TableCells}
+                noDataCellComponent={NoDataTableCells}
                 messages={MESSAGES}
                 rowComponent={props => <Row onClick={onRowClick} {...props} />}
               />
@@ -723,6 +738,7 @@ class _Table extends Component {
                 columnExtensions={this.getColumnsExtension()}
                 height='auto'
                 cellComponent={TableCells}
+                noDataCellComponent={NoDataTableCells}
                 messages={MESSAGES}
                 rowComponent={props => <Row onClick={onRowClick} {...props} />}
               />

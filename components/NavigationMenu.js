@@ -38,7 +38,6 @@ class Navigation extends Component {
   }
 
   componentDidUpdate() {
-    console.log('COLLAPSED', this.props.collapsed)
     this.checkDropdowns()
   }
 
@@ -100,7 +99,6 @@ class Navigation extends Component {
     const ddStatuses = Object.keys(dropdowns)
 
     for (var i = 0; i < ddStatuses.length; i++) {
-      console.log('CHECK', ddStatuses[i], this.state[ddStatuses[i]])
       if (this.state[ddStatuses[i]]) {
         this.resizeDropdown(ddStatuses[i], false)
       }
@@ -108,7 +106,6 @@ class Navigation extends Component {
   }
 
   resizeDropdown = (type, typeState) => {
-    console.log('TYPE', type)
     const { dropdowns } = this.state
     const current = dropdowns[type].ref.current
 
