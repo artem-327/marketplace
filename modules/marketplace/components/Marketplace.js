@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List, Icon, Tab } from 'semantic-ui-react'
+import { AlertTriangle } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { withRouter } from 'next/router'
@@ -31,17 +32,22 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
     </Menu.Item>
   </Link>
 ))
+
+const RedTriangle = styled(AlertTriangle)`
+  float: left;
+  width: 20px;
+  height: 19px;
+  font-size: 20px;
+  color: #f16844;
+  line-height: 20px;
+`
+
 class Marketplace extends Component {
   state = {
     columns: [
       { name: 'productName', disabled: true },
       { name: 'productNumber', disabled: true },
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
-      {
-        name: '',
-        title: '',
-        width: 20
-      },
       {
         name: 'available',
         title: (
@@ -176,14 +182,17 @@ class Marketplace extends Component {
 
     return rows.map(r => ({
       ...r,
-      '': r.condition && (
-        <Popup
-          content={
-            <FormattedMessage id='global.nonConforming.tooltip' defaultMessage='This is a non-conforming product.' />
-          }
-          trigger={<Icon name='exclamation triangle' color='red' />}
-        />
-      ),
+      available: r.condition ? (
+        <>
+          <Popup
+            content={
+              <FormattedMessage id='global.nonConforming.tooltip' defaultMessage='This is a non-conforming product.' />
+            }
+            trigger={<RedTriangle />}
+          />
+          {r.available}
+        </>
+      ) : r.available,
       condition: r.condition ? (
         <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
       ) : (
@@ -387,7 +396,6 @@ class Marketplace extends Component {
               // const numberArray = number.split(' & ')
               return (
                 <span>
-                  {children}
                   <span style={{ color: '#2599d5' }}>{name ? name : 'Unmapped'}</span>
                   <span className='right'>Product offerings: {count}</span>
                 </span>

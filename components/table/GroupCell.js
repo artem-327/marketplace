@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import cn from 'classnames'
 import { Checkbox } from 'semantic-ui-react'
+import { ChevronDown, ChevronRight } from 'react-feather'
 import styled from 'styled-components'
 import _ from 'lodash'
 
 const GroupCheckbox = styled(Checkbox)`
-  margin: 0px 10px 0 5px;
-  vertical-align: middle !important;
-  height: 21px;
+  margin: 1px 0px;
+  vertical-align: top !important;
+  height: 17px;
 `
 
 const Cell = ({
@@ -17,6 +18,7 @@ const Cell = ({
   column,
   expanded,
   onToggle,
+  actionsDropdown,
   children,
   tableRow,
   tableColumn,
@@ -34,29 +36,46 @@ const Cell = ({
   const groupCheckboxClick = e => onSelectionChange(row.key, !checked)
 
   return (
-    <td
-      key={row.key}
-      colSpan={colSpan}
-      className={cn('dx-g-bs4-cursor-pointer', className)}
-      onClick={handleClick}
-      {...restProps}>
+    <>
+      <td className="p-0"></td>
       {rowSelection && !hideCheckboxes && (
-        <GroupCheckbox
-          checked={checked}
-          indeterminate={indeterminate}
-          onChange={groupCheckboxClick}
-          onClick={e => {
-            e.stopPropagation()
-            e.preventDefault()
-          }}
-          data-test='GroupCheckbox_onChange_chckb'
-        />
+        <td className="text-center">
+          <GroupCheckbox
+            checked={checked}
+            indeterminate={indeterminate}
+            onChange={groupCheckboxClick}
+            onClick={e => {
+              e.stopPropagation()
+              e.preventDefault()
+            }}
+            data-test='GroupCheckbox_onChange_chckb'
+          />
+        </td>
       )}
-      <Content column={column} row={row}>
-        {children}
-      </Content>
-      <Icon expanded={expanded} onToggle={onToggle} className='mr-2' data-test='GroupCheckbox_onToggle_icon' />
-    </td>
+      <td className="actions">
+        {actionsDropdown}
+      </td>
+      <td
+        key={row.key}
+        colSpan={colSpan - ((rowSelection && !hideCheckboxes) ? 4 : 3)}
+        className={cn('dx-g-bs4-cursor-pointer', className)}
+        onClick={handleClick}
+        {...restProps}>
+        <div className='group-right'>
+          {expanded ? (
+            <ChevronDown onToggle={onToggle} data-test='GroupCheckbox_onToggle_icon' />
+          ) : (
+            <ChevronRight onToggle={onToggle} data-test='GroupCheckbox_onToggle_icon' />
+          )}
+        </div>
+        <div className='group-content'>
+          <Content column={column} row={row}>
+            {children}
+          </Content>
+        </div>
+      </td>
+      <td className="p-0"></td>
+    </>
   )
 }
 
