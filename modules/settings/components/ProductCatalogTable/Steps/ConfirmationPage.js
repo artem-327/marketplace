@@ -15,6 +15,7 @@ const StyledButton = styled(Button)`
 
 class ConfirmationPage extends Component {
   createReport = result => {
+    if (!result) return
     const clientMessage = result.clientMessage
     const recordCount = result.recordCount || 0
     const recordsCreated = result.recordsCreated || 0
@@ -77,18 +78,20 @@ class ConfirmationPage extends Component {
           />
         </Grid.Row>
 
-        {result.failureReports.map((error, i) => (
-          <Grid.Row key={i} style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }}>
-            <FormattedMessage
-              id='import.errorAtLine'
-              defaultMessage={`Error at line ${error.csvLineNumber}: ${error.cause}`}
-              values={{
-                lineNumber: error.csvLineNumber,
-                errorCause: error.cause
-              }}
-            />
-          </Grid.Row>
-        ))}
+        {result &&
+          result.failureReports &&
+          result.failureReports.map((error, i) => (
+            <Grid.Row key={i} style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }}>
+              <FormattedMessage
+                id='import.errorAtLine'
+                defaultMessage={`Error at line ${error.csvLineNumber}: ${error.cause}`}
+                values={{
+                  lineNumber: error.csvLineNumber,
+                  errorCause: error.cause
+                }}
+              />
+            </Grid.Row>
+          ))}
         <Grid.Row></Grid.Row>
       </React.Fragment>
     )
