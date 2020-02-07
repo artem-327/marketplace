@@ -207,14 +207,14 @@ class ActionsRequired extends React.Component {
   renderIcon(color) {
     switch (color) {
       case 'red':
-        return (<AlertTriangle />)
+        return <AlertTriangle />
       case 'green':
-        return (<CheckCircle />)
+        return <CheckCircle />
       case 'yellow':
       case 'orange':
-        return (<AlertCircle />)
+        return <AlertCircle />
       default:
-        return (<Info />)
+        return <Info />
     }
   }
 
@@ -272,11 +272,14 @@ class ActionsRequired extends React.Component {
       openPopupName,
       orderCreditHistoryOpen,
       isSending,
-      openedPopup
+      openedPopup,
+      sellEligible
     } = this.props
     const repayUntil = moment(detail.orderDate)
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
     // Some switch might do the trick
+
+    const textForConforming = !sellEligible ? 'order.confirm.sellElligible.notTrue' : 'order.confirm.accept.decline'
 
     const requestCreditButton = orderCreditHistoryOpen
       ? {
@@ -292,14 +295,14 @@ class ActionsRequired extends React.Component {
         {ordersType === 'Sales' ? (
           <>
             {orderStatus === 1 // Pending
-              ? this.renderSegment(null, 13, null, 'order.confirm.accept.decline', [
+              ? this.renderSegment(null, 13, null, textForConforming, [
                   {
                     buttonType: 'primary',
                     onClick: this.confirmOrder,
                     dataTest: 'orders_detail_confirm_btn',
                     text: 'global.confirm',
                     loading: isSending === 1,
-                    disabled: isSending && isSending !== 1
+                    disabled: (isSending && isSending !== 1) || !sellEligible
                   },
                   {
                     buttonType: 'basic',
@@ -526,8 +529,12 @@ function mapStateToProps(state, ownProps) {
       ? orders.detail.returnShippingTrackingCode
       : '',
     orderCreditHistoryOpen: getSafe(() => orders.detail.orderCreditHistoryOpen, false),
-    openedPopup: orders.openedEnterTrackingIdShip | orders.openedEnterTrackingIdReturnShip
-      | orders.openedPurchaseRejectDelivery | orders.openedPurchaseRequestCreditDelivery
+    openedPopup:
+      orders.openedEnterTrackingIdShip |
+      orders.openedEnterTrackingIdReturnShip |
+      orders.openedPurchaseRejectDelivery |
+      orders.openedPurchaseRequestCreditDelivery,
+    sellEligible: getSafe(() => state.auth.identity.company.sellEligible, false)
   }
 }
 
