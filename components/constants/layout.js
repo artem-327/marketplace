@@ -206,7 +206,6 @@ export const LeftMenu = styled(Menu)`
     .container > .item,
     .scrollbar-container > .item {
       overflow: hidden;
-      transition: width 250ms linear 250ms, padding 250ms linear 250ms;
       box-sizing: border-box;
       width: 280px;
       height: auto;
@@ -422,7 +421,6 @@ export const LeftMenu = styled(Menu)`
     }
     
     .container > a.item {
-      transition: width 250ms linear 250ms, padding 250ms linear 250ms;
       overflow: hidden;
       
       &:before,
@@ -451,7 +449,6 @@ export const LeftMenu = styled(Menu)`
       .container > a.item,
       .scrollbar-container > a.item,
       .dropdown {
-        transition: width 250ms linear 0ms, padding 250ms linear 0ms;
         width: 50px !important;
         padding: 12px 0 12px 50px;
         
@@ -463,7 +460,6 @@ export const LeftMenu = styled(Menu)`
       
       .container > a.item {
         width: 50px !important;
-        transition: width 250ms linear 0ms, padding 250ms linear 0ms;
       }
       
       .scrollbar-container {
@@ -576,6 +572,8 @@ export const LeftMenuContainer = styled(Container)`
   }
   
   .container.bottom {
+    overflow: hidden;
+    max-width: 100%;
     height: 70px;
     flex-grow: 0;
     flex-shrink: 0;

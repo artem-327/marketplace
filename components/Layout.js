@@ -42,6 +42,7 @@ import { AgreementModal } from '~/components/modals'
 import { getCountryCodes } from '~/modules/phoneNumber/actions'
 
 import { chatWidgetToggle } from '~/modules/chatWidget/actions'
+import { toggleMenu } from '~/modules/layout/actions'
 import { withToastManager } from 'react-toast-notifications'
 
 import ChatWidget from '~/modules/chatWidget/components/ChatWidgetContainer'
@@ -56,16 +57,9 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
 ))
 
 class Layout extends Component {
-  state = {
-    collapsed: false
-  }
 
   componentDidMount() {
     if (!this.props.phoneCountryCodes.length) this.props.getCountryCodes()
-  }
-
-  collapseMenu = () => {
-    this.setState({collapsed: !this.state.collapsed})
   }
 
   render() {
@@ -83,9 +77,10 @@ class Layout extends Component {
       takeover,
       intl: { formatMessage },
       isOpen,
-      agreeWithTOS
+      agreeWithTOS,
+      collapsedMenu,
+      toggleMenu
     } = this.props
-    const { collapsed } = this.state
 
     return (
       <MainContainer fluid>
@@ -96,15 +91,15 @@ class Layout extends Component {
           </title>
         </Head>
 
-        <LeftMenu vertical fixed='left' inverted size='large' borderless className={collapsed ? 'collapsed' : ''}>
+        <LeftMenu vertical fixed='left' inverted size='large' borderless className={collapsedMenu ? 'collapsed' : ''}>
           <LeftMenuContainer fluid>
             <PerfectScrollbar>
-              <LogoImage src={!collapsed ? Logo : LogoSmall} />
+              <LogoImage src={!collapsedMenu ? Logo : LogoSmall} />
 
-              <NavigationMenu takeover={takeover} collapsed={collapsed} />
+              <NavigationMenu takeover={takeover} collapsed={collapsedMenu} />
             </PerfectScrollbar>
             <Container className='bottom'>
-              <Menu.Item as='a' onClick={() => this.collapseMenu()} data-test='navigation_menu_collapse_lnk'>
+              <Menu.Item as='a' onClick={() => toggleMenu()} data-test='navigation_menu_collapse_lnk'>
                 <Sidebar />
                 {formatMessage({
                   id: 'global.collapseMenu',
@@ -231,13 +226,15 @@ const mapDispatchToProps = {
   chatWidgetToggle,
   triggerSystemSettingsModal,
   agreeWithTOS,
-  getCountryCodes
+  getCountryCodes,
+  toggleMenu
 }
 
 const mapStateToProps = state => {
   return {
     auth: state.auth,
     profile: state.profile,
+    collapsedMenu: state.layout.collapsedMenu,
     isOpen: getSafe(() => !state.auth.identity.tosAgreementDate, false),
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
     takeover: getSafe(() => !!state.auth.identity.company.id, false),
