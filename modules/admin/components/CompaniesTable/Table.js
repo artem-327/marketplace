@@ -118,6 +118,7 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
     filterValue: admin.filterValue,
     currentTab: admin.currentTab,
     rows: datagrid.rows.map(c => ({
+      rawData: c,
       ...c,
       hasLogisticsAccounts: c.logisticsAccount ? 'Yes' : 'No',
       hasDwollaAccount: c.dwollaAccountStatus === 'verified' ? 'Yes' : 'No',
