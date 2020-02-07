@@ -300,12 +300,25 @@ class Broadcast extends Component {
     })
   }
 
-  onTemplateSelected = (_, data, setFieldValue) => {
+  onTemplateSelected = async (_, data, setFieldValue) => {
+    const { getTemplate, toastManager, intl } = this.props
+    const { formatMessage } = intl
     let name = data.options.find(opt => opt.value === data.value).text
     setFieldValue('name', name)
     this.setState({ selectedTemplate: { name, id: data.value } })
+    try {
+      await getTemplate(data.value)
 
-    this.props.getTemplate(data.value)
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage id='notifications.templateLoaded.header' />,
+          <FormattedMessage id='notifications.templateLoaded.content' values={{ name }} />
+        ),
+        { appearance: 'success' }
+      )
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   handleTemplateDelete = async setFieldValue => {
@@ -653,8 +666,7 @@ class Broadcast extends Component {
                                   left: '-20000px'
                                 }
                               : null
-                          }
-                          >
+                          }>
                           <GridColumn computer={11}>
                             <FormikInput
                               inputProps={{

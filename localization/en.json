@@ -1370,6 +1370,8 @@
   "notifications.templateUpdated.content": "Template {name} successfully updated.",
   "notifications.templateDelete.header": "Template deleted",
   "notifications.templateDelete.content": "Template {name} successfully deleted.",
+  "notifications.templateLoaded.header": "Template loaded",
+  "notifications.templateLoaded.content": "Template {name} successfully loaded.",
   "notifications.deleteMapSuccess.header": "Map deleted",
   "notifications.deleteMapSuccess.content": "Map {name} successfully deleted.",
   "notifications.logisticsCreated.header": "Logistics Account created",
