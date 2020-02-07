@@ -1688,6 +1688,7 @@
   "order.paymentStatus": "Payment Status",
   "order.confirm.description": "This order is in pending status. Please select accept to move forward with the order. If you press reject the order will be cancelled.",
   "order.confirm.accept.decline": "This is a pending order, waiting for your confirmation. If you do not confirm the order within 24h, it will be rejected automatically.",
+  "order.confirm.sellElligible.notTrue": "Before you can confirm this order, please, go to Settings and set-up your Dwolla and bank account. If you do not begin the process within 24 hrs this order will be automatically rejected.",
   "order.confirm.cancel": "This order is in pending status. If you press cancel the order will be cancelled.",
   "order.confirm.approve.dissaprove": "This order is in pending status. Please select approve to move forward with the order. If you press dissaprove the order will be cancelled.",
   "order.detail.status.pending": "This is a pending order, waiting for Seller's confirmation. If Seller does not confirm the order within 24h, it will be automatically rejected. In the meantime, you can cancel the order.",

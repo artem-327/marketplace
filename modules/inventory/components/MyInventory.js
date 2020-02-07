@@ -309,57 +309,48 @@ class MyInventory extends Component {
       if (!r || !r.cfStatus) return
       const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
 
-      if (this.props.sellEligible) {
-        if (isOfferValid) {
-          switch (r.cfStatus.toLowerCase()) {
-            case 'broadcasting':
-              title = (
-                <FormattedMessage
-                  id='myInventory.broadcasting.active'
-                  defaultMessage='Broadcasting now, switch off to stop broadcasting.'
-                />
-              )
-              break
-            case 'not broadcasting':
-              title = (
-                <FormattedMessage
-                  id='myInventory.broadcasting.inactive'
-                  defaultMessage='Not Broadcasting now, switch on to start broadcasting.'
-                />
-              )
-              break
-            case 'incomplete':
-              title = (
-                <FormattedMessage
-                  id='myInventory.broadcasting.incomplete'
-                  defaultMessage='Incomplete, please enter all required values first.'
-                />
-              )
-              break
-            case 'unmapped':
-              title = (
-                <FormattedMessage
-                  id='myInventory.broadcasting.unmapped'
-                  defaultMessage='Unmapped, please make sure related Product is mapped first.'
-                />
-              )
-              break
-            default:
-              title = ''
-          }
-        } else {
-          title = (
-            <FormattedMessage
-              id='myInventory.broadcasting.validityExpired'
-              defaultMessage='This product offer validity date has expired, so it cannot be broadcasted.'
-            />
-          )
+      if (isOfferValid) {
+        switch (r.cfStatus.toLowerCase()) {
+          case 'broadcasting':
+            title = (
+              <FormattedMessage
+                id='myInventory.broadcasting.active'
+                defaultMessage='Broadcasting now, switch off to stop broadcasting.'
+              />
+            )
+            break
+          case 'not broadcasting':
+            title = (
+              <FormattedMessage
+                id='myInventory.broadcasting.inactive'
+                defaultMessage='Not Broadcasting now, switch on to start broadcasting.'
+              />
+            )
+            break
+          case 'incomplete':
+            title = (
+              <FormattedMessage
+                id='myInventory.broadcasting.incomplete'
+                defaultMessage='Incomplete, please enter all required values first.'
+              />
+            )
+            break
+          case 'unmapped':
+            title = (
+              <FormattedMessage
+                id='myInventory.broadcasting.unmapped'
+                defaultMessage='Unmapped, please make sure related Product is mapped first.'
+              />
+            )
+            break
+          default:
+            title = ''
         }
       } else {
         title = (
           <FormattedMessage
-            id='myInventory.broadcasting.noSellEligible'
-            defaultMessage='Your company is not eligible for broadcasting yet. Make sure to finalize your set-up.'
+            id='myInventory.broadcasting.validityExpired'
+            defaultMessage='This product offer validity date has expired, so it cannot be broadcasted.'
           />
         )
       }
@@ -380,16 +371,11 @@ class MyInventory extends Component {
                 <Checkbox
                   data-test='my_inventory_broadcast_chckb'
                   toggle
-                  defaultChecked={
-                    r.cfStatus.toLowerCase() === 'broadcasting' && this.props.sellEligible !== false && isOfferValid
-                  }
+                  defaultChecked={r.cfStatus.toLowerCase() === 'broadcasting' && isOfferValid}
                   className={cn({
-                    error:
-                      this.props.sellEligible &&
-                      (r.cfStatus.toLowerCase() === 'incomplete' || r.cfStatus.toLowerCase() === 'unmapped')
+                    error: r.cfStatus.toLowerCase() === 'incomplete' || r.cfStatus.toLowerCase() === 'unmapped'
                   })}
                   disabled={
-                    !this.props.sellEligible ||
                     r.cfStatus.toLowerCase() === 'incomplete' ||
                     r.cfStatus.toLowerCase() === 'unmapped' ||
                     !isOfferValid
