@@ -190,7 +190,7 @@ class Settings extends Component {
 
                 await updateCompany(values.id, {
                   ...values,
-                  businessType: values.businessType.id
+                  businessType: values.businessType ? values.businessType.id : null
                 })
                 if (companyLogo) {
                   await postCompanyLogo(values.id, companyLogo)
