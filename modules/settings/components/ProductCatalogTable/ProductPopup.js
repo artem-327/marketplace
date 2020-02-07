@@ -105,7 +105,6 @@ const formValidation = Yup.object().shape({
     .required(errorMessages.requiredMessage),
   packagingSize: Yup.number(errorMessages.invalidNumber)
     .typeError(errorMessages.mustBeNumber)
-    .integer(errorMessages.integer)
     .required(errorMessages.requiredMessage)
     .positive(errorMessages.positive),
   packagingUnit: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
