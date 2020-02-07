@@ -92,6 +92,7 @@ class CompanyForm extends Component {
             }))}
             inputProps={{
               loading,
+              clearable: true
             }}
             label={<FormattedMessage id='company.businessType' defaultMessage='Business Type' />}
             name='businessType.id'
@@ -131,7 +132,7 @@ class CompanyForm extends Component {
 
 
         <FormGroup widths='equal'>
-          <Checkbox label={formatMessage({ id: 'global.nacdNumber', defaultMessage: 'NACD Number' })} name='nacdMember'
+          <Checkbox label={formatMessage({ id: 'global.nacdMember', defaultMessage: 'NACD Member' })} name='nacdMember'
                     data-test='company_form_nacdNumber_chckb'/>
         </FormGroup>
 

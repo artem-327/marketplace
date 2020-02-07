@@ -276,6 +276,12 @@ export const websiteValidation = () =>
     .test('website', errorMessages.invalidWebsiteHttp, val => (val ? validURLHttp(val) : false))
     .test('website', errorMessages.invalidWebsite, val => (val ? validURL(val) : false))
 
+export const websiteValidationNotRequired = () =>
+  Yup.string()
+    .trim()
+    .test('website', errorMessages.invalidWebsiteHttp, val => (val ? validURLHttp(val) : true))
+    .test('website', errorMessages.invalidWebsite, val => (val ? validURL(val) : true))
+
 function validURLHttp(str) {
   const pattern = new RegExp(/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)/)
   return !!pattern.test(str.trim())
