@@ -443,15 +443,15 @@ class Marketplace extends Component {
     const panes = [
       {
         menuItem: <MenuLink to='/marketplace/all'>MARKETPLACE</MenuLink>,
-        render: () => <pre>{this.renderTabMarketplace()}</pre>
+        render: () => <>{this.renderTabMarketplace()}</>
       },
       {
         menuItem: <MenuLink to='/marketplace/wanted-board'>WANTED BOARD</MenuLink>,
-        render: () => <pre>Tab 2 Content</pre>
+        render: () => <>Tab 2 Content</>
       },
       {
         menuItem: <MenuLink to='/marketplace/holds'>HOLDS</MenuLink>,
-        render: () => <pre>{<Holds />}</pre>
+        render: () => <>{<Holds />}</>
       }
     ]
     return (
