@@ -6,6 +6,7 @@ import { Container, Dropdown } from 'semantic-ui-react'
 import ProdexGrid from '~/components/table'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 import { Datagrid } from '~/modules/datagrid'
+import { getSafe } from '~/utils/functions'
 
 const HoldDropdown = styled(Dropdown)`
   z-index: 601 !important;
@@ -122,6 +123,14 @@ class Holds extends Component {
         id: 'hold.cancel',
         defaultMessage: 'Cancel'
       }),
+      disabled: row => {
+        return (
+          getSafe(() => row.status.props.children, false) &&
+          (row.status.props.children === 'Rejected' ||
+            row.status.props.children === 'Expired' ||
+            row.status.props.children === 'Canceled')
+        )
+      },
       callback: row => this.handleCancel(row.id)
     }
     const buttonReject = {
