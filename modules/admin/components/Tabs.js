@@ -1,23 +1,35 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { injectIntl } from 'react-intl'
+import { Dropdown } from 'semantic-ui-react'
+
 import { handleActiveTab } from '../actions'
-import { Menu } from 'semantic-ui-react'
 
 function Tabs(props) {
-  const { tabsNames, handleActiveTab, currentTab } = props
+  const {
+    tabsNames,
+    handleActiveTab,
+    currentTab,
+    intl: { formatMessage }
+  } = props
 
   return (
-    <Menu pointing secondary vertical fluid>
+    <Dropdown.Menu data-test='navigation_menu_admin_drpdn'>
       {tabsNames.map((tab, i) => (
-        <Menu.Item
-          name={tab.name.toUpperCase()}
+        <Dropdown.Item
           key={tab.id}
-          onClick={() => handleActiveTab(tab)}
+          onClick={e => {
+            e.preventDefault()
+            e.stopPropagation()
+            handleActiveTab(tab)
+          }}
           active={currentTab.name === tab.name}
           data-test={`tabs_menu_item_${tab.id}`}
-        />
+          tab={tab.id}>
+          {formatMessage({ id: `navigation.${tab.name}`, defaultMessage: `${tab.name}` })}
+        </Dropdown.Item>
       ))}
-    </Menu>
+    </Dropdown.Menu>
   )
 }
 
@@ -34,4 +46,4 @@ const mapDispatchToProps = {
   handleActiveTab
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Tabs)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Tabs))
