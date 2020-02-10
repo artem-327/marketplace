@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {Container, Image, Label, Menu, Header} from "semantic-ui-react";
+import { Container, Image, Label, Menu, Header } from 'semantic-ui-react'
 
 export const TopMenu = styled(Menu)`
   background-color: #fff !important;
@@ -11,16 +11,16 @@ export const TopMenu = styled(Menu)`
   bottom: 0;
   left: 300px !important;
   border: 0 none !important;
-        
+
   &.ui.menu.fixed .item-cart {
     margin-right: 5px;
     padding: 20px;
-    
+
     &:hover {
       background: transparent !important;
     }
   }
-  
+
   &.ui.menu.fixed .item.user-menu-wrapper {
     position: relative;
     box-sizing: content-box;
@@ -31,9 +31,9 @@ export const TopMenu = styled(Menu)`
     background: #edeef2 !important;
     background-clip: content-box !important;
     text-align: center;
-    
+
     &:before {
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       left: -1px;
@@ -43,15 +43,15 @@ export const TopMenu = styled(Menu)`
       margin: 24px 0;
       background: #dee2e6 !important;
     }
-    
+
     > i.icon {
       margin: 0 auto;
-      
+
       &.user.thick {
         color: #748cad;
       }
     }
-    
+
     .menu {
       top: 69px !important;
       box-sizing: border-box;
@@ -59,10 +59,10 @@ export const TopMenu = styled(Menu)`
       border: 1px solid #dee2e6;
       border-radius: 4px;
       box-shadow: 0 0 0 0 transparent;
-      
+
       &:before,
       &:after {
-        content: "";
+        content: '';
         position: absolute;
         right: 34px;
         width: 10px;
@@ -70,17 +70,17 @@ export const TopMenu = styled(Menu)`
         border-left: 5px solid transparent;
         border-right: 5px solid transparent;
       }
-      
+
       &:before {
         top: -6px;
         border-bottom: 6px solid #dee2e6;
       }
-      
+
       &:after {
         top: -5px;
         border-bottom: 6px solid #fff;
       }
-      
+
       > div.item {
         margin-bottom: 6px;
         border-bottom: 1px solid #dee2e6;
@@ -88,18 +88,18 @@ export const TopMenu = styled(Menu)`
         font-size: 12px !important;
         color: #848893 !important;
         line-height: 18px;
-        
+
         .header {
           font-size: 16px !important;
           color: #20273a !important;
           line-height: 18px;
         }
-        
+
         &:hover {
           background-color: #fff !important;
         }
       }
-      
+
       > a.item {
         display: block;
         height: 30px;
@@ -107,12 +107,12 @@ export const TopMenu = styled(Menu)`
         font-size: 14px;
         color: #848893 !important;
         line-height: 30px;
-        
+
         &:hover {
           background-color: #2599d5 !important;
           color: #fff !important;
         }
-        
+
         &.logout {
           box-sizing: border-box;
           height: 32px;
@@ -122,7 +122,7 @@ export const TopMenu = styled(Menu)`
           text-align: center;
           font-weight: 700;
           color: #f16844 !important;
-          
+
           &:hover {
             background-color: #fff !important;
             color: #2599d5 !important;
@@ -145,19 +145,18 @@ export const LeftMenu = styled(Menu)`
   height: auto;
   background-color: #fff !important;
   box-shadow: 1px 0 3px 0 rgba(0, 0, 0, 0.06), inset -1px 0 0 0 #dee2e6 !important;
-  
+
   &.vertical,
   &.vertical.borderless {
-    
     &,
     > .container {
       max-height: 100vh;
     }
-    
+
     > .container > .scrollbar-container {
       overflow: hidden;
       max-height: 100vh;
-      
+
       > .ps__rail-y {
         position: absolute;
         top: 2px;
@@ -165,7 +164,7 @@ export const LeftMenu = styled(Menu)`
         bottom: 2px;
         width: 10px;
         height: auto;
-        
+
         .ps__thumb-y {
           width: 6px;
           margin: 0 auto;
@@ -174,35 +173,35 @@ export const LeftMenu = styled(Menu)`
         }
       }
     }
-    
+
     .scrollbar-container > img {
       height: 34px;
       margin: 33px auto;
     }
-  
+
     .container > a.item,
     .scrollbar-container > a.item {
       border-radius: 4px;
       text-transform: uppercase;
       white-space: nowrap;
       font-weight: 700 !important;
-      
+
       &:hover,
       &:hover i,
       &:hover svg {
         color: #20273a !important;
       }
-      
+
       &.active {
         background: #edeef2 !important;
       }
-      
+
       &.active i,
       &.active svg {
         color: #2599d5 !important;
       }
     }
-    
+
     .container > .item,
     .scrollbar-container > .item {
       overflow: hidden;
@@ -217,10 +216,10 @@ export const LeftMenu = styled(Menu)`
       text-align: left;
       color: #848893 !important;
       line-height: 26px;
-      
+
       &:before,
       &:after {
-        content: "";
+        content: '';
         position: absolute !important;
         top: 20px !important;
         left: auto !important;
@@ -235,33 +234,33 @@ export const LeftMenu = styled(Menu)`
         border-radius: 1px;
         background: #cecfd4 !important;
       }
-      
+
       &:after {
         top: 24px !important;
         right: 14px !important;
         width: 9px !important;
         height: 1px !important;
       }
-      
+
       &.opened {
         max-height: none;
-        
+
         &:before,
         &:after {
           transform: rotate(135deg);
           background: #546fd3 !important;
         }
       }
-      
+
       &.dropdown {
         box-sizing: border-box;
         width: 280px;
-      
+
         > .menu {
           padding: 10px 0;
           background-color: #edeef2;
           box-shadow: 0 0 0 0 transparent;
-          
+
           a {
             display: block;
             box-sizing: border-box;
@@ -278,10 +277,9 @@ export const LeftMenu = styled(Menu)`
             }
           }
         }
-        
+
         &:not(.upward),
         &.upward {
-        
           > .menu {
             position: static !important;
             overflow: hidden !important;
@@ -296,30 +294,71 @@ export const LeftMenu = styled(Menu)`
             border-top-right-radius: 0;
             padding: 0 !important;
           }
-          
+
           &.opened {
             border-radius: 4px;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
             /*background: #132947 !important;*/
-            background: rgba(237,238,242,1) !important;
-            background: -moz-linear-gradient(top, rgba(237,238,242,1) 0%, rgba(237,238,242,1) 50px, rgba(237,238,242,0) 50px, rgba(237,238,242,0) 100%) !important;
-            background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(237,238,242,1)), color-stop(50px, rgba(237,238,242,1)), color-stop(50px, rgba(237,238,242,0)), color-stop(100%, rgba(237,238,242,0))) !important;
-            background: -webkit-linear-gradient(top, rgba(237,238,242,1) 0%, rgba(237,238,242,1) 50px, rgba(237,238,242,0) 50px, rgba(237,238,242,0) 100%) !important;
-            background: -o-linear-gradient(top, rgba(237,238,242,1) 0%, rgba(237,238,242,1) 50px, rgba(237,238,242,0) 50px, rgba(237,238,242,0) 100%) !important;
-            background: -ms-linear-gradient(top, rgba(237,238,242,1) 0%, rgba(237,238,242,1) 50px, rgba(237,238,242,0) 50px, rgba(237,238,242,0) 100%) !important;
-            background: linear-gradient(to bottom, rgba(237,238,242,1) 0%, rgba(237,238,242,1) 50px, rgba(237,238,242,0) 50px, rgba(237,238,242,0) 100%) !important;
+            background: rgba(237, 238, 242, 1) !important;
+            background: -moz-linear-gradient(
+              top,
+              rgba(237, 238, 242, 1) 0%,
+              rgba(237, 238, 242, 1) 50px,
+              rgba(237, 238, 242, 0) 50px,
+              rgba(237, 238, 242, 0) 100%
+            ) !important;
+            background: -webkit-gradient(
+              left top,
+              left bottom,
+              color-stop(0%, rgba(237, 238, 242, 1)),
+              color-stop(50px, rgba(237, 238, 242, 1)),
+              color-stop(50px, rgba(237, 238, 242, 0)),
+              color-stop(100%, rgba(237, 238, 242, 0))
+            ) !important;
+            background: -webkit-linear-gradient(
+              top,
+              rgba(237, 238, 242, 1) 0%,
+              rgba(237, 238, 242, 1) 50px,
+              rgba(237, 238, 242, 0) 50px,
+              rgba(237, 238, 242, 0) 100%
+            ) !important;
+            background: -o-linear-gradient(
+              top,
+              rgba(237, 238, 242, 1) 0%,
+              rgba(237, 238, 242, 1) 50px,
+              rgba(237, 238, 242, 0) 50px,
+              rgba(237, 238, 242, 0) 100%
+            ) !important;
+            background: -ms-linear-gradient(
+              top,
+              rgba(237, 238, 242, 1) 0%,
+              rgba(237, 238, 242, 1) 50px,
+              rgba(237, 238, 242, 0) 50px,
+              rgba(237, 238, 242, 0) 100%
+            ) !important;
+            background: linear-gradient(
+              to bottom,
+              rgba(237, 238, 242, 1) 0%,
+              rgba(237, 238, 242, 1) 50px,
+              rgba(237, 238, 242, 0) 50px,
+              rgba(237, 238, 242, 0) 100%
+            ) !important;
             filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#546f93', endColorstr='#546f93', GradientType=0 ) !important;
             color: #848893 !important;
-            
+
             > .menu {
               height: auto;
               padding: 10px 0 !important;
+
+              &[data-test='navigation_menu_admin_drpdn'] {
+                padding: 10px 0 10px 40px !important;
+              }
             }
           }
         }
       }
-      
+
       i,
       svg {
         position: absolute;
@@ -331,19 +370,19 @@ export const LeftMenu = styled(Menu)`
         vertical-align: top;
         font-size: 22px;
         line-height: 22px;
-        
+
         &.hexagon {
           transform-origin: 60% 50%;
           transform: rotate(30deg);
         }
       }
-      
+
       > .text {
         text-transform: uppercase;
         white-space: nowrap;
         font-weight: 700 !important;
         line-height: 26px;
-        
+
         ~ .chevron {
           margin-right: -33px;
           width: 26px !important;
@@ -351,130 +390,128 @@ export const LeftMenu = styled(Menu)`
         }
       }
 
-      &,        
+      &,
       &.active {
         background: transparent !important;
-        
+
         > .text,
         > .text ~ i,
         > .text ~ svg {
           color: #848893 !important;
-          
+
           &.hexagon {
             color: #2599d5 !important;
           }
         }
       }
-      
+
       &.active {
         color: #20273a !important;
-        
+
         &:before,
         &:after {
           background: #546f93 !important;
         }
       }
-        
+
       &:hover {
         background-color: transparent !important;
-        
+
         > .text {
           color: #20273a !important;
         }
-        
+
         > .text ~ i,
         > .text ~ svg {
           color: #20273a !important;
         }
-        
+
         &:before,
         &:after {
           background: #546f93 !important;
         }
       }
-      
+
       &.opened {
         background-color: transparent !important;
-        
+
         > .text {
           color: #20273a !important;
         }
-        
+
         > .text ~ i,
         > .text ~ svg {
           color: #2599d5 !important;
         }
-        
+
         &:before,
         &:after {
           background: #546f93 !important;
         }
       }
-      
+
       &.opened {
-        
         > .text ~ i.hexagon,
         > .text ~ svg.hexagon {
           color: #2599d5 !important;
         }
       }
     }
-    
+
     .container > a.item {
       overflow: hidden;
-      
+
       &:before,
       &:after {
         content: none;
         display: none;
       }
     }
-    
+
     ~ div {
       transition: left 250ms linear;
     }
-  
+
     &.collapsed {
       width: 70px !important;
-      
+
       .scrollbar-container {
-        
         > img {
           width: 40px;
           height: 50px;
           margin: 25px auto;
         }
       }
-      
+
       .container > a.item,
       .scrollbar-container > a.item,
       .dropdown {
         width: 50px !important;
         padding: 12px 0 12px 50px;
-        
+
         &:before,
         &:after {
           opacity: 0;
         }
       }
-      
+
       .container > a.item {
         width: 50px !important;
       }
-      
+
       .scrollbar-container {
         overflow: visible !important;
-        
+
         > .ps__rail-y {
           display: none !important;
         }
-      
+
         .dropdown.opened {
           overflow: visible !important;
           border-width: 1px 0 1px 1px;
           border-style: solid;
           border-color: #dee2e6;
-          
+
           > .text {
             position: absolute;
             top: -1px;
@@ -489,7 +526,7 @@ export const LeftMenu = styled(Menu)`
             padding: 11px 40px 11px 55px;
             background: #edeef2;
           }
-        
+
           > .menu {
             position: absolute !important;
             top: 48px !important;
@@ -503,29 +540,27 @@ export const LeftMenu = styled(Menu)`
             border-color: #dee2e6;
             border-radius: 0;
             border-bottom-right-radius: 4px;
-            
+
             a {
               padding-left: 40px !important;
             }
           }
-          
+
           &:not(.upward),
           &.upward {
-          
             > .menu {
               overflow: hidden !important;
               overflow-y: auto !important;
               padding: 0 !important;
             }
           }
-          
+
           &.upward {
-          
             > .text {
               border-radius: 0;
               border-bottom-right-radius: 4px;
             }
-            
+
             > .menu {
               top: auto !important;
               bottom: 48px !important;
@@ -536,24 +571,23 @@ export const LeftMenu = styled(Menu)`
           }
         }
       }
-      
+
       ~ div {
         left: 70px !important;
       }
     }
-    
+
     &:not(.collapsed) {
-      
       .scrollbar-container {
         position: relative;
         width: calc(100% + 10px);
         margin-right: -10px;
-        
+
         .ps__rail-y .ps__thumb-y {
           position: absolute;
           margin: 0 2px;
         }
-      
+
         .dropdown:not(.upward) > .menu,
         .dropdown.upward > .menu {
           max-height: none !important;
@@ -564,20 +598,20 @@ export const LeftMenu = styled(Menu)`
 `
 export const LeftMenuContainer = styled(Container)`
   padding: 0 10px;
-  
+
   .scrollbar-container {
     height: calc(100vh - 70px);
     flex-grow: 1;
     flex-shrink: 1;
   }
-  
+
   .container.bottom {
     overflow: hidden;
     max-width: 100%;
     height: 70px;
     flex-grow: 0;
     flex-shrink: 0;
-    
+
     a.item {
       margin: 10px 0 !important;
     }
@@ -622,7 +656,7 @@ export const CircularLabel = styled(Label)`
   font-size: 0.7142857rem !important;
   font-style: normal !important;
   font-weight: 400 !important;
-  
+
   &.ui.orange.label {
     background-color: #f16844 !important;
   }
