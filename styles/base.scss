@@ -1423,6 +1423,14 @@ i.file {
           background-color: #eff9ff;
         }
       }
+
+      tr.non-conforming {
+        background-color: #fff0ed;
+
+        > td {
+          background-color: #fff0ed;
+        }
+      }
     }
   }
 }

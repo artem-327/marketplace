@@ -34,9 +34,10 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
 ))
 
 const RedTriangle = styled(AlertTriangle)`
-  float: left;
+  display: block;
   width: 20px;
   height: 19px;
+  margin: 0 auto;
   font-size: 20px;
   color: #f16844;
   line-height: 20px;
@@ -48,6 +49,14 @@ class Marketplace extends Component {
       { name: 'productName', disabled: true },
       { name: 'productNumber', disabled: true },
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
+      {
+        name: 'conformingIcon',
+        title: (
+          <RedTriangle />
+        ),
+        width: 45,
+        align: 'center'
+      },
       {
         name: 'available',
         title: (
@@ -182,17 +191,15 @@ class Marketplace extends Component {
 
     return rows.map(r => ({
       ...r,
-      available: r.condition ? (
-        <>
-          <Popup
-            content={
-              <FormattedMessage id='global.nonConforming.tooltip' defaultMessage='This is a non-conforming product.' />
-            }
-            trigger={<RedTriangle />}
-          />
-          {r.available}
-        </>
-      ) : r.available,
+      clsName: r.condition ? 'non-conforming' : '',
+      conformingIcon: r.condition ? (
+        <Popup
+          content={
+            <FormattedMessage id='global.nonConforming.tooltip' defaultMessage='This is a non-conforming product.' />
+          }
+          trigger={<RedTriangle />}
+        />
+      ) : null,
       condition: r.condition ? (
         <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
       ) : (

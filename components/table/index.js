@@ -91,10 +91,13 @@ const getSettingColumn = (columns, formatMessage, columnWidth) => {
               label={
                 typeof c.title === 'string'
                   ? c.title
-                  : formatMessage({
+                  : (getSafe(() => c.title.props.id, false)
+                    ? formatMessage({
                       id: c.title.props.id,
-                      defaultMessage: c.title.props.defaultMessage
-                    })
+                      defaultMessage: c.title.props.defaultMessage })
+                    : formatMessage({
+                      id: `global.${c.name}`,
+                      defaultMessage: c.name }))
               }
               inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
             />
@@ -238,7 +241,7 @@ const Row = ({ tableRow, selected, onToggle, onClick, ...restProps }) => {
   const rowAction = (e, row) => {
     onClick && onClick(e, tableRow.row)
   }
-  return <Table.Row {...restProps} onClick={rowAction} data-test='table_row_action' />
+  return <Table.Row {...restProps} onClick={rowAction} data-test='table_row_action' className={getSafe(() => tableRow.row.clsName, null)} />
 }
 
 const MESSAGES = {
