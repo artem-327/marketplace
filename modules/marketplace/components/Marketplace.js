@@ -197,7 +197,7 @@ class Marketplace extends Component {
           content={
             <FormattedMessage id='global.nonConforming.tooltip' defaultMessage='This is a non-conforming product.' />
           }
-          trigger={<RedTriangle />}
+          trigger={<div><RedTriangle /></div>} // <div> has to be there otherwise popup will be not shown
         />
       ) : null,
       condition: r.condition ? (
