@@ -53,7 +53,7 @@ function mapStateToProps(store, { datagrid }) {
       return {
         ...po,
         id: po.id,
-        intProductName: getSafe(() => po.productOffer.companyProduct.intProductName, ''),
+        intProductName: getSafe(() => po.productOffer.productName, ''),
         pkgsHeld: po.pkgsHeld ? <FormattedUnit unit={unit} separator=' ' value={po.pkgsHeld} /> : null,
         expirationTime: po.expirationTime ? getDurationTime(po.expirationTime) : null,
         holdPricePerUOM: po.holdPricePerUOM ? (
