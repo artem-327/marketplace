@@ -340,13 +340,6 @@ class AddNewPopupCasProducts extends React.Component {
                 Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: false }))
               }
             } else {
-              // Really ??
-              // if (values.mailingBranch && !(values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
-              //   values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
-              //   values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
-              //   values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''))
-              //   delete values['mailingBranch']
-
               if (!values.deliveryAddress || !deepSearch(values.mailingBranch.deliveryAddress, val => val !== ''))
                 delete values['mailingBranch']
 
@@ -581,7 +574,7 @@ class AddNewPopupCasProducts extends React.Component {
                             <FormGroup widths='equal'>
                               <Checkbox
                                 label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })}
-                                name='mailingBranch.deliveryAddress.warehouse'
+                                name='mailingBranch.warehouse'
                                 inputProps={{ 'data-test': 'admin_popup_company_mailingBranch_warehouse_chckb' }}
                               />
                             </FormGroup>
@@ -612,7 +605,8 @@ class AddNewPopupCasProducts extends React.Component {
               </Modal.Actions>
             </Modal>
           )
-        }}></Formik>
+        }}>
+      </Formik>
     )
   }
 }
@@ -651,8 +645,10 @@ const mapStateToProps = ({ admin, zip }) => {
   // const AddressSuggestOptionsMailingBranch = admin.addressSearchMailingBranch.map((a) => (
   //   a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
   // ))
+  const popupValues = admin.popupValues ? admin.popupValues.rawData : null
   return {
     ...admin,
+    popupValues,
     // AddressSuggestPrimaryBranchInput: prepareAddressSuggestPrimaryBranch(AddressSuggestOptionsPrimaryBranch),
     // AddressSuggestPrimaryBranchOptions: AddressSuggestOptionsPrimaryBranch,
     // AddressSuggestPrimaryBranchData: admin.addressSearchPrimaryBranch,
