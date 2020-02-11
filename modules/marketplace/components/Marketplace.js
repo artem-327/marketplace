@@ -452,7 +452,7 @@ class Marketplace extends Component {
     return (
       <>
         <Container fluid style={{ padding: '0 32px' }}>
-          <Tab activeIndex={activeIndex} menu={{ secondary: true, pointing: true }} panes={panes} />
+          <Tab activeIndex={activeIndex} className='marketplace-container' menu={{ secondary: true, pointing: true }} panes={panes} />
         </Container>
       </>
     )

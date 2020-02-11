@@ -269,6 +269,43 @@ i.icon.clickable:hover {
 div.page-wrapper {
   background: #f8f9fb;
 
+  > .container {
+    max-height: 100%;
+  }
+
+  .marketplace-container {
+    display: flex;
+    flex-flow: column;
+    max-height: 100%;
+
+    > .secondary.menu:first-child {
+      margin-bottom: 1em;
+    }
+
+    > .container {
+      flex-grow: 1;
+      flex-shrink: 1;
+      display: flex;
+      flex-flow: column;
+      height: auto;
+      min-height: 0;
+
+      .selection {
+        width: auto;
+      }
+
+      .segment {
+        height: 100%;
+        min-height: 0;
+      }
+    }
+
+    .bootstrapiso > div.flex-column {
+      max-height: 100%;
+      min-height: 0;
+    }
+  }
+
   div.padded.segment {
     border: 1px solid #dee2e6;
     background: #fff;
