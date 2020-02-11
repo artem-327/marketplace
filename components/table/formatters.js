@@ -24,7 +24,7 @@ export function rowActionsCellFormatter({ column: { actions }, row }) {
 
   return displayMenu ? (
     <Dropdown icon='' trigger={
-      <MoreVertical data-text={`action_${row.id}`} />
+      <MoreVertical data-test={`action_${row.id ? row.id : getSafe(() => row.key.replace(' ', '_'), 'undefined')}`} />
     }>
       <Dropdown.Menu>{dropdownItems}</Dropdown.Menu>
     </Dropdown>

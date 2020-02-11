@@ -144,7 +144,7 @@ class ProductImportPopup extends Component {
                   <Button
                     basic
                     onClick={() => this.setState({ currentStep: 'map' })}
-                    data-text='settings_product_import_back_btn'>
+                    data-test='settings_product_import_back_btn'>
                     {formatMessage({ id: 'settings.previous', defaultMessage: 'Previous' })}
                   </Button>
                 ) : null}

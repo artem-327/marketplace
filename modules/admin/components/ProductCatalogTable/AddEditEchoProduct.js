@@ -788,7 +788,7 @@ class AddEditEchoProduct extends React.Component {
               {values.elements && values.elements.length
                 ? values.elements.map((element, index) => (
                     <GridRow style={{ alignItems: 'flex-end', 'padding-bottom': '0.5rem' }}>
-                      <GridColumn width={3} data-text='admin_product_popup_proprietary' textAlign='center'>
+                      <GridColumn width={3} data-test='admin_product_popup_proprietary' textAlign='center'>
                         <Checkbox name={`elements[${index}].proprietary`} />
                       </GridColumn>
                       <GridColumn width={5}>

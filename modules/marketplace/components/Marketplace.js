@@ -442,15 +442,15 @@ class Marketplace extends Component {
 
     const panes = [
       {
-        menuItem: <MenuLink to='/marketplace/all'>MARKETPLACE</MenuLink>,
+        menuItem: <MenuLink to='/marketplace/all' data-test='marketplace_submenu_tab_marketplace'>MARKETPLACE</MenuLink>,
         render: () => <>{this.renderTabMarketplace()}</>
       },
       {
-        menuItem: <MenuLink to='/marketplace/wanted-board'>WANTED BOARD</MenuLink>,
+        menuItem: <MenuLink to='/marketplace/wanted-board' data-test='marketplace_submenu_tab_wanted_board'>WANTED BOARD</MenuLink>,
         render: () => <>Tab 2 Content</>
       },
       {
-        menuItem: <MenuLink to='/marketplace/holds'>HOLDS</MenuLink>,
+        menuItem: <MenuLink to='/marketplace/holds' data-test='marketplace_submenu_tab_holds'>HOLDS</MenuLink>,
         render: () => <>{<Holds />}</>
       }
     ]
