@@ -533,7 +533,7 @@ class Broadcast extends Component {
                             <GridColumn computer={11}>
                               <FormikDropdown
                                 name='templates'
-                                data-text='broadcast_modal_template_drpdn_addtn'
+                                data-test='broadcast_modal_template_drpdn_addtn'
                                 options={templates.map(template => ({
                                   key: template.id,
                                   text: template.name,
