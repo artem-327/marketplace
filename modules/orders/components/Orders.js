@@ -690,7 +690,7 @@ class Orders extends Component {
             </Menu.Menu>
           </Menu>
         </Container>
-        <Container fluid style={{ padding: '20px 32px 0 32px' }} className='flex stretched'>
+        <Container fluid style={{ padding: '20px 32px 10px 32px' }} className='flex stretched'>
           <OrderFilter
             ordersType={ordersType.toLowerCase()}
             sortPath={this.state.sorting.sortPath}

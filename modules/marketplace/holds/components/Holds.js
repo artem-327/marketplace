@@ -149,7 +149,7 @@ class Holds extends Component {
       rowActions.push(buttonReject)
     }
     return (
-      <Container fluid style={{ padding: '0 32px' }}>
+      <Container fluid style={{ padding: '10px 0' }} className='flex stretched'>
         <Grid>
           <Grid.Column>
             <HoldDropdown

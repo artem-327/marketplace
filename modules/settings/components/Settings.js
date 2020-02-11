@@ -466,7 +466,7 @@ class Settings extends Component {
             </Container>
             <Grid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
               <Grid.Row>
-                <Grid.Column className='flex stretched' style={{ marginTop: '10px' }}>
+                <Grid.Column className='flex stretched' style={{ paddingTop: '10px', paddingBottom: '10px' }}>
                   {this.renderContent()}
                 </Grid.Column>
               </Grid.Row>
