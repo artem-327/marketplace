@@ -372,7 +372,7 @@ class Marketplace extends Component {
           </Menu.Menu>
         </Menu>
 
-        <div class='flex stretched' style={{ padding: '10px 32px' }}>
+        <div class='flex stretched' style={{ padding: '10px 0' }}>
           <ProdexGrid
             groupActions={row => {
               let values = row.key.split('_')
@@ -456,7 +456,7 @@ class Marketplace extends Component {
     ]
     return (
       <>
-        <Container fluid style={{ padding: '0 32px' }}>
+        <Container fluid style={{ padding: '0 32px' }} className='flex stretched'>
           <Tab activeIndex={activeIndex} className='marketplace-container' menu={{ secondary: true, pointing: true }} panes={panes} />
         </Container>
       </>
