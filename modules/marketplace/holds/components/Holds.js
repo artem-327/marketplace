@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import { Container, Dropdown } from 'semantic-ui-react'
+import { Container, Grid, Dropdown } from 'semantic-ui-react'
 
 import ProdexGrid from '~/components/table'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
@@ -150,32 +150,36 @@ class Holds extends Component {
     }
     return (
       <Container fluid style={{ padding: '0 32px' }}>
-        <HoldDropdown
-          options={[
-            {
-              key: 1,
-              value: 'My Holds',
-              text: 'My Holds'
-            },
-            {
-              key: 2,
-              value: 'Requsted Holds',
-              text: 'Requsted Holds'
-            }
-          ]}
-          value={this.state.holdDropdown}
-          selection
-          onChange={(event, { name, value }) => {
-            if (value === 'My Holds') {
-              Datagrid.setApiConfig({ url: '/prodex/api/holds/my/datagrid/' })
-            } else if (value === 'Requsted Holds') {
-              Datagrid.setApiConfig({ url: '/prodex/api/holds/foreign/datagrid/' })
-            }
-            this.setState({ [name]: value })
-          }}
-          name='holdDropdown'
-          placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}
-        />
+        <Grid>
+          <Grid.Column>
+            <HoldDropdown
+              options={[
+                {
+                  key: 1,
+                  value: 'My Holds',
+                  text: 'My Holds'
+                },
+                {
+                  key: 2,
+                  value: 'Requsted Holds',
+                  text: 'Requsted Holds'
+                }
+              ]}
+              value={this.state.holdDropdown}
+              selection
+              onChange={(event, { name, value }) => {
+                if (value === 'My Holds') {
+                  Datagrid.setApiConfig({ url: '/prodex/api/holds/my/datagrid/' })
+                } else if (value === 'Requsted Holds') {
+                  Datagrid.setApiConfig({ url: '/prodex/api/holds/foreign/datagrid/' })
+                }
+                this.setState({ [name]: value })
+              }}
+              name='holdDropdown'
+              placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}
+            />
+          </Grid.Column>
+        </Grid>
         <ProdexGrid
           groupActions={row => {
             let values = row.key.split('_')
