@@ -248,6 +248,9 @@ const validationScheme = val.object().shape({
       .number()
       .min(0, errorMessages.minimum(0))
       .typeError(errorMessages.mustBeNumber)
+      .test('maxdec', errorMessages.maxDecimals(3), val => {
+        return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
+      })
       .required(errorMessages.requiredMessage),
     costPerUOM: val
       .string()
