@@ -103,6 +103,7 @@
   "navigation.userSettings": "User Settings",
   "navigation.admin": "Admin",
   "navigation.operations": "Operations",
+  "navigation.shippingQuotes": "Shipping Quotes",
   "dwolla.controllerTitlePopup": "Please read below for the definition of Controller in this context.",
   "dwolla.paymentPoweredBy": "Echo Global Chemical Exchange payment gateway is powered by:",
   "dwolla.confirmAcc": "Confirm Account Administrator Information",
