@@ -31,7 +31,8 @@ class Navigation extends Component {
   state = {
     dropdowns: {},
     settings: getSafe(() => Router.router.pathname === '/settings', false),
-    admin: getSafe(() => Router.router.pathname === '/admin', false)
+    admin: getSafe(() => Router.router.pathname === '/admin', false),
+    operations: getSafe(() => Router.router.pathname === '/operations', false)
   }
 
   componentDidMount() {
@@ -93,7 +94,9 @@ class Navigation extends Component {
   toggleOpened = type => {
     const { dropdowns } = this.state
     const typeState = this.state[type]
-
+    if (type === 'admin') {
+      Router.push('/admin')
+    }
     // toggle dropdown state
     this.setState({ [type]: !typeState })
 
@@ -156,15 +159,17 @@ class Navigation extends Component {
       router: { pathname, asPath }
     } = this.props
 
-    const { dropdowns, settings, admin } = this.state
+    const { dropdowns, settings, admin, operations } = this.state
 
-    const MenuLink = withRouter(({ router: { asPath }, to, children, tab }) => (
-      <Link prefetch href={to}>
-        <Menu.Item as='a' active={asPath === to} onClick={async e => await this.settingsLink(e, to, tab)}>
-          {children}
-        </Menu.Item>
-      </Link>
-    ))
+    const MenuLink = withRouter(({ router: { asPath }, to, children, tab }) => {
+      return (
+        <Link prefetch href={to}>
+          <Menu.Item as='a' active={asPath === to} onClick={async e => await this.settingsLink(e, to, tab)}>
+            {children}
+          </Menu.Item>
+        </Link>
+      )
+    })
 
     const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, company } = getSafe(() => auth.identity, {
       isCompanyAdmin: null,
@@ -325,9 +330,24 @@ class Navigation extends Component {
           </>
         )}
         {(isAdmin || isEchoOperator) && (
-          <MenuLink to='/operations' data-test='navigation_menu_operations_lnk'>
-            {formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
-          </MenuLink>
+          <DropdownItem
+            icon={operations ? 'chevron up' : 'chevron down'}
+            text={formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
+            className={operations ? 'opened' : null}
+            opened={operations}
+            onClick={() => this.toggleOpened('operations')}
+            refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+            refId={'operations'}>
+            <Dropdown.Menu data-test='navigation_menu_operations_drpdn'>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/operations'
+                tab='shipping-quotes'
+                data-test='navigation_admin_operations_shipping_quotes_drpdn'>
+                {formatMessage({ id: 'navigation.shippingQuotes', defaultMessage: 'Shipping Quotes' })}
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </DropdownItem>
         )}
       </>
     )
