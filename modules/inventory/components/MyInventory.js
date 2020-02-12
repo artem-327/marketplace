@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Checkbox, Popup, Button } from 'semantic-ui-react'
+import { Container, Menu, Header, Modal, Checkbox, Popup, Button } from 'semantic-ui-react'
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import { withToastManager } from 'react-toast-notifications'
 import ProdexTable from '~/components/table'
 import { InventoryFilter } from '~/modules/filter'
 
@@ -15,7 +16,8 @@ import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
 import moment from 'moment/moment'
-import { getSafe } from '~/utils/functions'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { Datagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
 
 const defaultHiddenColumns = [
@@ -256,10 +258,22 @@ class MyInventory extends Component {
           </FormattedMessage>
         ),
         width: 100
+      },
+      {
+        name: 'parentOffer',
+        title: (
+          <FormattedMessage id='myInventory.parentOffer' defaultMessage='ID Parent Offer'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 200
       }
     ],
     selectedRows: [],
-    pageNumber: 0
+    pageNumber: 0,
+    open: false,
+    clientMessage: '',
+    request: null
   }
 
   componentDidMount() {
@@ -410,6 +424,101 @@ class MyInventory extends Component {
     sidebarDetailTrigger(row, bol, tab)
   }
 
+  showMessage = (response, request = null) => {
+    const { toastManager } = this.props
+    response &&
+      response.value &&
+      response.value.productOfferStatuses &&
+      response.value.productOfferStatuses.length &&
+      response.value.productOfferStatuses.map(status => {
+        if (!status.code) return
+        if (status.code === 'GROUPED') {
+          const rowData = this.getRows(this.props.rows).filter(row => row.id === status.productOfferId)
+          Datagrid.updateRow(status.productOfferId, () => ({
+            ...rowData[0],
+            parentOffer: status.virtualOfferId ? status.virtualOfferId : ''
+          }))
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage
+                id='notifications.groupedOffer.success.header'
+                defaultMessage='Offer was successfully grouped'
+              />,
+              status.clientMessage
+            ),
+            { appearance: 'success' }
+          )
+        } else if (status.code === 'BROADCAST_RULE_CONFLICT') {
+          this.setState({ open: true, clientMessage: status.clientMessage, request })
+        } else if (status.code === 'IGNORED') {
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id='notifications.groupedOffer.ignored.header' defaultMessage='Ignored' />,
+              status.clientMessage
+            ),
+            { appearance: 'warning' }
+          )
+        } else if (status.code === 'ERROR') {
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id='notifications.groupedOffer.error.header' defaultMessage='Error' />,
+              status.clientMessage
+            ),
+            { appearance: 'error' }
+          )
+        } else if (status.code === 'DETACHED') {
+          const rowData = this.getRows(this.props.rows).filter(row => row.id === status.productOfferId)
+          Datagrid.updateRow(status.productOfferId, () => ({
+            ...rowData[0],
+            parentOffer: ''
+          }))
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage
+                id='notifications.groupedOffer.detached.header'
+                defaultMessage='Detached from a group'
+              />,
+              status.clientMessage
+            ),
+            { appearance: 'success' }
+          )
+        }
+      })
+  }
+
+  showErrorMessage = () => {
+    const { toastManager } = this.props
+    toastManager.add(
+      generateToastMarkup(
+        <FormattedMessage id='notifications.groupedOffer.error.header' defaultMessage='Error' />,
+        <FormattedMessage id='notifications.groupedOffer.error.content' defaultMessage='Error grouped offers.' />
+      ),
+      { appearance: 'error' }
+    )
+  }
+
+  groupOffer = async request => {
+    const { groupOffers } = this.props
+    try {
+      const response = await groupOffers(request)
+      this.showMessage(response, request)
+    } catch (error) {
+      this.showErrorMessage()
+      console.error(error)
+    }
+  }
+
+  detachOffer = async productOfferIds => {
+    const { detachOffers } = this.props
+    try {
+      const response = await detachOffers(productOfferIds)
+      this.showMessage(response)
+    } catch (error) {
+      this.showErrorMessage()
+      console.error(error)
+    }
+  }
+
   render() {
     const {
       openBroadcast,
@@ -426,10 +535,38 @@ class MyInventory extends Component {
       editedId,
       closeSidebarDetail
     } = this.props
-    const { columns, selectedRows } = this.state
+    const { columns, selectedRows, clientMessage, request } = this.state
 
     return (
       <>
+        <Modal size='small' open={this.state.open} onClose={() => this.setState({ open: false })} closeIcon>
+          <Modal.Header>
+            <FormattedMessage
+              id='notifications.groupedOffer.conflict.header'
+              defaultMessage='Broadcast rule conflict'
+            />
+          </Modal.Header>
+          <Modal.Content>{clientMessage}</Modal.Content>
+          <Modal.Actions>
+            <FormattedMessage
+              id='notifications.groupedOffer.conflict.discard'
+              defaultMessage='Do you want to discard rules of current offer?'
+            />
+            <Button negative onClick={() => this.setState({ open: false })}>
+              <FormattedMessage id='"global.no"' defaultMessage='No' />
+            </Button>
+            <Button
+              positive
+              onClick={e => {
+                e.preventDefault()
+                if (!request) return
+                this.groupOffer({ ...request, overrideBroadcastRules: true })
+                this.setState({ open: false })
+              }}>
+              <FormattedMessage id='"global.yes"' defaultMessage='Yes' />
+            </Button>
+          </Modal.Actions>
+        </Modal>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
 
         <Container fluid style={{ padding: '0 32px' }}>
@@ -595,6 +732,26 @@ class MyInventory extends Component {
                     datagrid.removeRow(row.id)
                   })
                 }
+              },
+              {
+                text: formatMessage({
+                  id: 'inventory.groupOffer',
+                  defaultMessage: 'Join/Create Virtual Group'
+                }),
+                callback: row =>
+                  this.groupOffer({
+                    overrideBroadcastRules: false,
+                    productOfferIds: [row.id]
+                  }),
+                disabled: row => !!row.parentOffer
+              },
+              {
+                text: formatMessage({
+                  id: 'inventory.detachOffer',
+                  defaultMessage: 'Detach from Virtual Group'
+                }),
+                callback: row => this.detachOffer([row.id]),
+                disabled: row => !row.parentOffer
               }
             ]}
             /* COMMENTED #30916
@@ -628,4 +785,4 @@ class MyInventory extends Component {
   }
 }
 
-export default injectIntl(MyInventory)
+export default injectIntl(withToastManager(MyInventory))

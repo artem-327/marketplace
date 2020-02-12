@@ -21,7 +21,7 @@ import { getLocaleDateFormat } from '~/components/date-format'
 
 function mapStateToProps(store, { datagrid }) {
   const sidebarValues = store.simpleAdd.sidebarValues
-  const editedId = (store.simpleAdd.sidebarDetailOpen && store.simpleAdd.editedId) ? store.simpleAdd.editedId : -1
+  const editedId = store.simpleAdd.sidebarDetailOpen && store.simpleAdd.editedId ? store.simpleAdd.editedId : -1
 
   return {
     ...store.simpleAdd,
@@ -106,7 +106,8 @@ function mapStateToProps(store, { datagrid }) {
         expDate: po.lotExpirationDate ? moment(po.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A',
         allocatedPkg: po.pkgAllocated,
         // processingTimeDays: po.processingTimeDays,
-        offerExpiration: po.validityDate ? moment(po.validityDate).format(getLocaleDateFormat()) : 'N/A'
+        offerExpiration: po.validityDate ? moment(po.validityDate).format(getLocaleDateFormat()) : 'N/A',
+        parentOffer: getSafe(() => po.parentOffer, '')
       }
     }),
     unmappedRows: datagrid.rows,
@@ -123,6 +124,6 @@ export default withDatagrid(
     openImportPopup,
     openBroadcast,
     applyFilter,
-    setCompanyElligible,
+    setCompanyElligible
   })(MyInventory)
 )

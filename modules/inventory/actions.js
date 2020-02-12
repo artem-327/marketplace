@@ -413,3 +413,16 @@ export function closeSidebarDetail() {
   }
 }
 
+export function groupOffers(request) {
+  return {
+    type: AT.INVENTORY_GROUP_OFFERS,
+    payload: api.groupOffers(request)
+  }
+}
+
+export function detachOffers(productOfferIds) {
+  return {
+    type: AT.INVENTORY_DETACH_OFFERS,
+    payload: api.detachOffers(productOfferIds)
+  }
+}
