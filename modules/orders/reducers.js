@@ -348,13 +348,12 @@ export default function(state = initialState, action) {
       return {
         ...state,
         shippingQuotesAreFetching: true,
-        shippingQuotes: []
       }
     }
     case AT.ORDER_SHIPPING_QUOTES_FETCH_FULFILLED: {
       return {
         ...state,
-        shippingQuotes: action.payload,
+        shippingQuotes: action.payload.data,
         shippingQuotesAreFetching: false
       }
     }
