@@ -19,11 +19,11 @@ class Messages extends Component {
     let { data } = response
     //let messages = data.clientMessage ? [data] : getSafe(() => data.messages, [])
     let messages = getSafe(() => data.messages,
-      data.clientMessage
+      data && data.clientMessage
         ? [data]
         : (
           Array.isArray(data)
-            ? data.filter(d => !!d.clientMessage)
+            ? data.filter(d => d && !!d.clientMessage)
             : []
         )
     )

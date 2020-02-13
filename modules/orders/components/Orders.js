@@ -12,11 +12,8 @@ import { getSafe } from '~/utils/functions'
 import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
 import FilterTags from '~/modules/filter/components/FitlerTags'
-
-const TitleOrderId = styled.div`
-  font-size: larger;
-  font-weight: 500;
-`
+import { ArrayToFirstItem } from '~/components/formatted-messages'
+import Link from 'next/link'
 
 class Orders extends Component {
   state = {
@@ -371,8 +368,13 @@ class Orders extends Component {
   }
 
   getRows = () => {
+    const { queryType } = this.props
+    let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
+
     return this.props.rows.map(row => ({
       ...row,
+      id: <Link href={`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`}><a>{row.id}</a></Link>,
+      productName: <ArrayToFirstItem values={row.orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))} />,
       globalStatus: row.globalStatus === 'Failed' ? this.failedWrapper(row.globalStatus) : row.globalStatus,
       paymentStatus: row.paymentStatus === 'Failed' ? this.failedWrapper(row.paymentStatus) : row.paymentStatus,
       bl: <Icon name='file' className='unknown' />, // unknown / positive / negative
@@ -453,28 +455,26 @@ class Orders extends Component {
 
   getContent = () => {
     const { relatedOrders, loadRelatedOrders } = this.props
-    const rowsRelatedOrders = relatedOrders.map(order => ({
-      documentNumber: (
-        <Button as='a' onClick={() => this.downloadAttachment(order.documentNumber, order.id)}>
-          <Icon name='download' />
-          {order.documentNumber}
-        </Button>
-      ),
-      type: order.type,
-      issuedAt: getSafe(() => <FormattedDate value={order.issuedAt.split('T')[0]} />, 'N/A'),
-      issuerCompanyName: order.issuerCompanyName,
-      cfPriceTotal: <FormattedNumber style='currency' currency={currency} value={order.cfPriceTotal} />
-    }))
+    const rowsRelatedOrders = relatedOrders.reduce((ordersList, order) => {
+      if (order) {
+        ordersList.push({
+          documentNumber: (
+            <Button as='a' onClick={() => this.downloadAttachment(order.documentNumber, order.id)}>
+              <Icon name='download'/>
+              {order.documentNumber}
+            </Button>
+          ),
+          type: order.type,
+          issuedAt: getSafe(() => <FormattedDate value={order.issuedAt.split('T')[0]}/>, 'N/A'),
+          issuerCompanyName: order.issuerCompanyName,
+          cfPriceTotal: <FormattedNumber style='currency' currency={currency} value={order.cfPriceTotal}/>
+        })
+      }
+
+      return ordersList
+    }, [])
     return (
       <>
-        {!loadRelatedOrders && (
-          <TitleOrderId>
-            <FormattedMessage id='order.related.orderId' defaultMessage='Order ID: '>
-              {text => text}
-            </FormattedMessage>
-            {`${relatedOrders[0].relatedOrder}`}
-          </TitleOrderId>
-        )}
         <ProdexGrid
           loading={this.state.submitting || loadRelatedOrders}
           hideSettingsIcon={true}
