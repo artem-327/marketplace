@@ -140,7 +140,7 @@ class PurchaseOrderShipping extends React.Component {
     return (
       <>
         <Modal closeIcon onClose={() => this.props.closePopup()} open={true} size='small'>
-          <Dimmer active={isSending} inverted>
+          <Dimmer active={isSending || shippingQuotesAreFetching && !shippingQuotes.length} inverted>
             <Loader />
           </Dimmer>
           <Modal.Header>
