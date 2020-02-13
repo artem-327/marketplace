@@ -8,9 +8,17 @@ import {
   SavedFilterItem,
   SavedFilterTitle,
   SavedFiltersSegment,
+  SavedFilterRow,
   SavedFilterIcon,
+  DeleteFilterIcon,
   AccordionContent,
-  ActionRow
+  ActionRow,
+  BoldTextColumn,
+  FlexContent,
+  FilterAccordion,
+  SavedFiltersGrid,
+  SavedFilterDetailGrid,
+  SavedFiltersNotifications
 } from '../constants/layout'
 
 import styled from 'styled-components'
@@ -64,8 +72,8 @@ class SavedFilters extends Component {
     let filterDescription = groupFilters(filter.filters, this.props.params)
     return (
       <SavedFilterTitle>
-        <Grid>
-          <GridRow>
+        <SavedFiltersGrid>
+          <SavedFilterRow>
             <Tooltip
               trigger={
                 <GridColumn
@@ -83,9 +91,8 @@ class SavedFilters extends Component {
               trigger={
                 <GridColumn computer={2} onClick={() => this.toggle(id)} data-test={`filter_editNotifications_${i}`}>
                   <SavedFilterIcon
-                    name='bell'
-                    className={this.state.activeIndex === id && 'thick'}
-                    color={this.state.activeIndex === id ? 'yellow' : 'black'}
+                    name='bell outline'
+                    color={this.state.activeIndex === id ? 'yellow' : 'gray'}
                   />
                 </GridColumn>
               }>
@@ -97,7 +104,7 @@ class SavedFilters extends Component {
                   onClick={() => this.toggle(i, 'activeTooltip')}
                   computer={2}
                   data-test={`filter_activeTooltip_${i}`}>
-                  <SavedFilterIcon color={this.state.activeTooltip === i ? 'blue' : 'black'} name='info circle' />
+                  <SavedFilterIcon color={this.state.activeTooltip === i ? 'blue' : 'gray'} name='info circle outline' />
                 </GridColumn>
               }
               position='left center'>
@@ -130,14 +137,14 @@ class SavedFilters extends Component {
                   onClick={() => this.props.deleteFilter(id)}
                   computer={2}
                   data-test={`filter_deleteFilter_${i}`}>
-                  <SavedFilterIcon name='trash alternate outline' />
+                  <DeleteFilterIcon name='trash alternate outline' />
                 </GridColumn>
               }
               position='left center'>
               <FormattedMessage id='filter.deleteFilter' />
             </Tooltip>
-          </GridRow>
-        </Grid>
+          </SavedFilterRow>
+        </SavedFiltersGrid>
       </SavedFilterTitle>
     )
   }
@@ -158,8 +165,8 @@ class SavedFilters extends Component {
     }
 
     return (
-      <SavedFiltersSegment basic>
-        <Accordion>
+
+        <FilterAccordion>
           {this.props.savedFilters.map((filter, i) => {
             let {
               notificationEnabled,
@@ -223,22 +230,24 @@ class SavedFilters extends Component {
                       }}>
                       {formikProps => {
                         return (
-                          <Grid verticalAlign='middle'>
-                            <Notifications values={formikProps.values} formikProps={formikProps} />
-                            <ActionRow>
-                              <GridColumn computer={4} floated='right'>
+                          <SavedFilterDetailGrid>
+                            <GridRow>
+                              <GridColumn computer={16} floated='left'>
+                                <Notifications values={formikProps.values} formikProps={formikProps} />
+                              </GridColumn>
+                            </GridRow>
+                            <GridRow>
+                              <GridColumn computer={4} floated='left'>
                                 <Button
                                   onClick={formikProps.submitForm}
                                   loading={this.props.savedFilterUpdating}
-                                  fluid
-                                  positive
-                                  basic
+                                  primary
                                   data-test='filter_save_btn'>
                                   {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                                 </Button>
                               </GridColumn>
-                            </ActionRow>
-                          </Grid>
+                            </GridRow>
+                          </SavedFilterDetailGrid>
                         )
                       }}
                     </Form>
@@ -247,8 +256,8 @@ class SavedFilters extends Component {
               </SavedFilterItem>
             )
           })}
-        </Accordion>
-      </SavedFiltersSegment>
+        </FilterAccordion>
+
     )
   }
 }

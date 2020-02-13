@@ -32,6 +32,8 @@ const initialState = {
   loadRelatedOrders: false,
   shippingQuotesAreFetching: false,
   shippingQuotes: [],
+  datagridFilter: { filters: [] },
+  datagridFilterUpdate: false
 }
 
 export default function(state = initialState, action) {
@@ -363,6 +365,14 @@ export default function(state = initialState, action) {
         ...state,
         shippingQuotesAreFetching: false,
         shippingQuotes: []
+      }
+    }
+
+    case AT.ORDER_APPLY_FILTER: {
+      return {
+        ...state,
+        datagridFilter: payload,
+        datagridFilterUpdate: !state.datagridFilterUpdate
       }
     }
 
