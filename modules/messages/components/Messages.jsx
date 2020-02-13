@@ -15,18 +15,18 @@ class Messages extends Component {
 
   checkForMessages = response => {
     if (!response) return
-
     let { data } = response
-    //let messages = data.clientMessage ? [data] : getSafe(() => data.messages, [])
-    let messages = getSafe(() => data.messages,
-      data.clientMessage
-        ? [data]
-        : (
-          Array.isArray(data)
-            ? data.filter(d => !!d.clientMessage)
-            : []
-        )
-    )
+    let messages = data.clientMessage
+      ? [data]
+      : Array.isArray(data)
+      ? data.filter(d => !!d.clientMessage)
+      : data && data.messages && data.messages.length > 0
+      ? data.messages
+      : []
+    // let messages = getSafe(
+    //   () => data.messages,
+    //   data.clientMessage ? [data] : Array.isArray(data) ? data.filter(d => !!d.clientMessage) : []
+    // )
     if (messages.length > 0) {
       messages.forEach(message => {
         this.onMessage(message)
@@ -36,7 +36,6 @@ class Messages extends Component {
 
   onMessage = message => {
     let { toastManager } = this.props
-
     const msg =
       message && message.level
         ? message.descriptionMessage

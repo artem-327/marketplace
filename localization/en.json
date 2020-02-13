@@ -1881,5 +1881,6 @@
   "hold.reject": "Reject",
   "hold.cancel": "Cancel",
   "hold.approve": "Approve",
-  "hold.holdRequest": "Hold Requests"
+  "hold.holdRequest": "Hold Requests",
+  "hold.buy": "Buy"
 }

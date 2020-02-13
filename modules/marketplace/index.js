@@ -4,7 +4,7 @@ import { CompanyProductInfo } from '~/modules/company-product-info'
 
 export const Marketplace = props => {
   const urlApiConfig =
-    props && props.activeIndex && props.activeIndex === 2
+    props && props.activeIndex && props.activeIndex === 1
       ? null
       : { url: '/prodex/api/product-offers/broadcasted/datagrid/' }
   return (
