@@ -136,6 +136,7 @@ class WarehousePopup extends React.Component {
     let { popupValues } = this.props
 
     return getSafe(() => popupValues.initialValues, {
+      taxId: '',
       deliveryAddress: {
         address: {
           streetAddress: '',
@@ -217,7 +218,7 @@ class WarehousePopup extends React.Component {
                 <FormGroup data-test='settings_warehouse_popup_contactName_inp'>
                   <Input
                     type='text'
-                    label='Contact Name'
+                    label={formatMessage({ id: 'global.contactName', defaultMessage: 'Contact Name' })}
                     name='deliveryAddress.contactName'
                     fieldProps={{ width: 8 }}
                   />
@@ -233,7 +234,11 @@ class WarehousePopup extends React.Component {
                     touched={touched}
                     isSubmitting={isSubmitting}
                   />
-                  <Input type='text' label='Email' name='deliveryAddress.contactEmail' />
+                  <Input
+                    type='text'
+                    label={formatMessage({ id: 'global.contactEmail', defaultMessage: 'Contact Email' })}
+                    name='deliveryAddress.contactEmail'
+                  />
                 </FormGroup>
                 {getSafe(() => currentTab.type, '') === 'warehouses' ? (
                   <>
@@ -270,6 +275,14 @@ class WarehousePopup extends React.Component {
                         label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
                         name='deliveryAddress.callAhead'
                         inputProps={{ 'data-test': 'settings_delivery_address_callAhead_inp' }}
+                      />
+                    </FormGroup>
+                    <FormGroup data-test='settings_warehouse_popup_taxId_inp'>
+                      <Input
+                        type='text'
+                        label={formatMessage({ id: 'global.taxId', defaultMessage: 'Tax ID' })}
+                        name='taxId'
+                        fieldProps={{ width: 8 }}
                       />
                     </FormGroup>
                     <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
