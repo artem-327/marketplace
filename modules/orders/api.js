@@ -96,9 +96,7 @@ export default {
     })
   },
   getReturnShipmentRates: (orderId, pickupDate) =>
-    api.get(
-      `/prodex/api/shipment/order/${orderId}/return-shipment-rates?pickupDate=${encodeURIComponent(pickupDate)}`
-    ),
+    api.get(`/prodex/api/shipment/order/${orderId}/return-shipment-rates?pickupDate=${encodeURIComponent(pickupDate)}`),
   returnShipmentOrder: (orderId, query) =>
     api.patch(`/prodex/api/shipment/order/${orderId}/return-shipment-order${generateQueryString(query)}`),
   getShippingQuotes: (orderId, pickupDate) =>
@@ -120,4 +118,11 @@ export default {
   creditAccept: orderId => api.patch(`/prodex/api/sale-orders/${orderId}/credit-accept`),
   getPurchaseOrder: orderId => api.get(`/prodex/api/purchase-orders/${orderId}`),
   getSaleOrder: orderId => api.get(`/prodex/api/sale-orders/${orderId}`),
+  /* GROUPED OFFERS*/
+  getGroupedProductOffers: (orderId, orderItemId) =>
+    api.get(`/prodex/api/sale-orders/${orderId}/order-item/${orderItemId}/grouped-product-offers`),
+  patchAssignProductOffers: (orderId, orderItemId, request) =>
+    api.patch(`/prodex/api/sale-orders/${orderId}/order-item/${orderItemId}/assign-product-offers`, request),
+  deleteAssignProductOffers: (orderId, orderItemId) =>
+    api.delete(`/prodex/api/sale-orders/${orderId}/order-item/${orderItemId}/assign-product-offers`)
 }
