@@ -1,5 +1,6 @@
 import * as AT from './action-types'
 import Api from './api'
+import api from './api'
 
 export const loadData = (endpointType, filter = null) => ({
   type: AT.ORDERS_FETCH_SUCCESS,
@@ -222,5 +223,26 @@ export function applyDatagridFilter(filter) {
   return {
     type: AT.ORDER_APPLY_FILTER,
     payload: filter
+  }
+}
+
+export function getGroupedProductOffers(orderId, orderItemId) {
+  return {
+    type: AT.GET_GROUPED_PRODUCT_OFFERS,
+    payload: Api.getGroupedProductOffers(orderId, orderItemId)
+  }
+}
+
+export function patchAssignProductOffers(orderId, orderItemId, request) {
+  return {
+    type: AT.PATCH_ASSIGN_PRODUCT_OFFERS,
+    payload: Api.patchAssignProductOffers(orderId, orderItemId, request)
+  }
+}
+
+export function deleteAssignProductOffers(orderId, orderItemId) {
+  return {
+    type: AT.DELETE_ASSIGN_PRODUCT_OFFERS,
+    payload: Api.deleteAssignProductOffers(orderId, orderItemId)
   }
 }

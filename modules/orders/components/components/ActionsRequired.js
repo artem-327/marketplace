@@ -77,10 +77,13 @@ class ActionsRequired extends React.Component {
       toastValues: { orderId: order.id }
     })
   }
-
+  //TODO
   markShipped = () => {
-    const { order, shippingTrackingCode, shipOrder, openPopupName } = this.props
-
+    const { order, shippingTrackingCode, shipOrder, openPopupName, actionNeeded } = this.props
+    if (actionNeeded === 'PRODUCT-OFFER-ASSIGN') {
+      openPopupName('opendSaleAttachingProductOffer')
+    }
+    return
     if (shippingTrackingCode.length) {
       this.confirmCall({
         action: () => shipOrder(order.id, shippingTrackingCode),
@@ -533,8 +536,10 @@ function mapStateToProps(state, ownProps) {
       orders.openedEnterTrackingIdShip |
       orders.openedEnterTrackingIdReturnShip |
       orders.openedPurchaseRejectDelivery |
-      orders.openedPurchaseRequestCreditDelivery,
-    sellEligible: getSafe(() => state.auth.identity.company.sellEligible, false)
+      orders.openedPurchaseRequestCreditDelivery |
+      orders.opendSaleAttachingProductOffer,
+    sellEligible: getSafe(() => state.auth.identity.company.sellEligible, false),
+    actionNeeded: getSafe(() => orders.detail.actionNeeded, '')
   }
 }
 

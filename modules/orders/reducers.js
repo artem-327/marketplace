@@ -33,7 +33,11 @@ const initialState = {
   shippingQuotesAreFetching: false,
   shippingQuotes: [],
   datagridFilter: { filters: [] },
-  datagridFilterUpdate: false
+  datagridFilterUpdate: false,
+  opendSaleAttachingProductOffer: false,
+  groupedProductOffers: [],
+  loadingGroupedProductOffers: false,
+  order: []
 }
 
 export default function(state = initialState, action) {
@@ -177,7 +181,8 @@ export default function(state = initialState, action) {
         openedPurchaseReviewCreditRequest: false,
         openedSaleReviewCreditRequest: false,
         openedSaleReturnShipping: false,
-        openedPurchaseOrderShipping: false
+        openedPurchaseOrderShipping: false,
+        opendSaleAttachingProductOffer: false
       }
     case AT.ORDER_LOAD_BANK_ACCOUNTS_PENDING:
       return {
@@ -349,7 +354,7 @@ export default function(state = initialState, action) {
     case AT.ORDER_SHIPPING_QUOTES_FETCH_PENDING: {
       return {
         ...state,
-        shippingQuotesAreFetching: true,
+        shippingQuotesAreFetching: true
       }
     }
     case AT.ORDER_SHIPPING_QUOTES_FETCH_FULFILLED: {
@@ -375,6 +380,58 @@ export default function(state = initialState, action) {
       }
     }
 
+    case AT.DELETE_ASSIGN_PRODUCT_OFFERS_PENDING: {
+      return {
+        ...state
+      }
+    }
+    case AT.DELETE_ASSIGN_PRODUCT_OFFERS_FULFILLED: {
+      return {
+        ...state
+      }
+    }
+    case AT.DELETE_ASSIGN_PRODUCT_OFFERS_REJECTED: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.PATCH_ASSIGN_PRODUCT_OFFERS_PENDING: {
+      return {
+        ...state
+      }
+    }
+    case AT.PATCH_ASSIGN_PRODUCT_OFFERS_FULFILLED: {
+      return {
+        ...state,
+        order: action.payload.data
+      }
+    }
+    case AT.PATCH_ASSIGN_PRODUCT_OFFERS_REJECTED: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.GET_GROUPED_PRODUCT_OFFERS_PENDING: {
+      return {
+        ...state,
+        loadingProductOffer: true
+      }
+    }
+    case AT.GET_GROUPED_PRODUCT_OFFERS_FULFILLED: {
+      return {
+        ...state,
+        loadingGroupedProductOffer: false,
+        groupedProductOffers: action.payload.data
+      }
+    }
+    case AT.GET_GROUPED_PRODUCT_OFFERS_REJECTED: {
+      return {
+        ...state,
+        loadingProductOffer: false
+      }
+    }
 
     default:
       return state

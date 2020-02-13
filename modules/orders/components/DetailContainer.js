@@ -130,12 +130,10 @@ function prepareDetail(data, type) {
     quantityOrdered: orderItems.map(d => {
       if (!d.productOffers.length) return 'N/A'
       let pkgAmount = 0
-      d.productOffers.forEach(pr => pkgAmount += pr.pkgAmount)
-      return (
-        d.packagingSize && d.packagingUnit
+      d.productOffers.forEach(pr => (pkgAmount += pr.pkgAmount))
+      return d.packagingSize && d.packagingUnit
         ? `${pkgAmount * d.packagingSize} ${d.packagingUnit.nameAbbreviation}`
         : 'N/A'
-      )
     }),
     refundDate:
       typeof data.refundDate !== 'undefined'
@@ -191,7 +189,7 @@ function prepareDetail(data, type) {
     totalPkg: orderItems.map(d => {
       if (!d.productOffers.length) return 'N/A'
       let pkgAmount = 0
-      d.productOffers.forEach(pr => pkgAmount += pr.pkgAmount)
+      d.productOffers.forEach(pr => (pkgAmount += pr.pkgAmount))
       return pkgAmount
     }),
     unit: orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A')),
@@ -207,13 +205,11 @@ function prepareDetail(data, type) {
         return sum
       }
     }),
-    unitPrice: orderItems.map((d) => d.pricePerUOM
-      ? <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} />
-      : 'N/A'
+    unitPrice: orderItems.map(d =>
+      d.pricePerUOM ? <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} /> : 'N/A'
     ),
-    itemTotal: orderItems.map((d) => d.priceSubtotal
-      ? <FormattedNumber style='currency' currency={currency} value={d.priceSubtotal} />
-      : 'N/A'
+    itemTotal: orderItems.map(d =>
+      d.priceSubtotal ? <FormattedNumber style='currency' currency={currency} value={d.priceSubtotal} /> : 'N/A'
     ),
     //<FormattedNumber style='currency' currency={currency} value={0} />, //"$" + getSafe(() => data.orderItems[0].price, 0).formatMoney(2),
     // Vendor or Customer
@@ -264,7 +260,8 @@ function mapStateToProps(state, ownProps) {
     openedSaleReturnShipping: orders.openedSaleReturnShipping,
     openedSaleReviewCreditRequest: orders.openedSaleReviewCreditRequest,
     openedPurchaseOrderShipping: orders.openedPurchaseOrderShipping,
-    action: actionRequired(orders.detail)
+    action: actionRequired(orders.detail),
+    opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer
   }
 }
 
