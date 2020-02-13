@@ -194,8 +194,8 @@ class Marketplace extends Component {
 
     return rows.map(r => ({
       ...r,
-      clsName: r.condition ? 'non-conforming' : '',
-      conformingIcon: r.condition ? (
+      clsName: !r.condition ? 'non-conforming' : '',
+      conformingIcon: !r.condition ? (
         <Popup
           content={
             <FormattedMessage id='global.nonConforming.tooltip' defaultMessage='This is a non-conforming product.' />
@@ -210,7 +210,16 @@ class Marketplace extends Component {
       condition: r.condition ? (
         <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
       ) : (
-        <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+        <Popup
+          content={
+            <FormattedMessage id='global.nonConforming.tooltip' defaultMessage='This is a non-conforming product.' />
+          }
+          trigger={
+            <div className='dashed-underline'>
+              <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+            </div>
+          } // <div> has to be there otherwise popup will be not shown
+        />
       ),
       packaging: (
         <>
