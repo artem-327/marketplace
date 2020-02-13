@@ -127,11 +127,16 @@ function prepareDetail(data, type) {
     productName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
     productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
     proNumber: 'N/A', // ! ! TBD
-    quantityOrdered: orderItems.map(d =>
-      d.pkgAmount && d.packagingSize && d.packagingUnit
-        ? `${d.pkgAmount * d.packagingSize} ${d.packagingUnit.nameAbbreviation}`
+    quantityOrdered: orderItems.map(d => {
+      if (!d.productOffers.length) return 'N/A'
+      let pkgAmount = 0
+      d.productOffers.forEach(pr => pkgAmount += pr.pkgAmount)
+      return (
+        d.packagingSize && d.packagingUnit
+        ? `${pkgAmount * d.packagingSize} ${d.packagingUnit.nameAbbreviation}`
         : 'N/A'
-    ),
+      )
+    }),
     refundDate:
       typeof data.refundDate !== 'undefined'
         ? moment(data.refundDate)
@@ -183,7 +188,12 @@ function prepareDetail(data, type) {
     subtotal: subtotal, //"$" + totalPrice.formatMoney(2),
     terms: 'Net 30', // ! ! TBD
     total: <FormattedNumber style='currency' currency={currency} value={totalPriceWithShipping} />, //"$" + totalPriceWithShipping.formatMoney(2),
-    totalPkg: orderItems.map(d => (d.pkgAmount ? d.pkgAmount : 'N/A')),
+    totalPkg: orderItems.map(d => {
+      if (!d.productOffers.length) return 'N/A'
+      let pkgAmount = 0
+      d.productOffers.forEach(pr => pkgAmount += pr.pkgAmount)
+      return pkgAmount
+    }),
     unit: orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A')),
     unitCost: orderItems.map(d => {
       let sum = 0
@@ -197,14 +207,14 @@ function prepareDetail(data, type) {
         return sum
       }
     }),
-    unitPrice: orderItems.map((d, i) => <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} />),
-    itemTotal: orderItems.map(d => {
-      if (d.pkgAmount && d.packagingSize && d.pricePerUOM) {
-        return d.pkgAmount * d.packagingSize * d.pricePerUOM
-      } else {
-        return 'N/A'
-      }
-    }),
+    unitPrice: orderItems.map((d) => d.pricePerUOM
+      ? <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} />
+      : 'N/A'
+    ),
+    itemTotal: orderItems.map((d) => d.priceSubtotal
+      ? <FormattedNumber style='currency' currency={currency} value={d.priceSubtotal} />
+      : 'N/A'
+    ),
     //<FormattedNumber style='currency' currency={currency} value={0} />, //"$" + getSafe(() => data.orderItems[0].price, 0).formatMoney(2),
     // Vendor or Customer
     paymentType: type === 'sales' ? 'Customer' : 'Vendor',
