@@ -49,9 +49,7 @@ class Marketplace extends Component {
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
       {
         name: 'conformingIcon',
-        title: (
-          <RedTriangle />
-        ),
+        title: <RedTriangle />,
         width: 45,
         align: 'center'
       },
@@ -202,7 +200,11 @@ class Marketplace extends Component {
           content={
             <FormattedMessage id='global.nonConforming.tooltip' defaultMessage='This is a non-conforming product.' />
           }
-          trigger={<div><RedTriangle /></div>} // <div> has to be there otherwise popup will be not shown
+          trigger={
+            <div>
+              <RedTriangle />
+            </div>
+          } // <div> has to be there otherwise popup will be not shown
         />
       ) : null,
       condition: r.condition ? (
@@ -269,12 +271,7 @@ class Marketplace extends Component {
   }
 
   renderTabMarketplace = () => {
-    const {
-      datagrid,
-      intl,
-      openPopup,
-      isMerchant
-    } = this.props
+    const { datagrid, intl, openPopup, isMerchant } = this.props
     const { columns, selectedRows } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
@@ -429,22 +426,35 @@ class Marketplace extends Component {
 
     const panes = [
       {
-        menuItem: <MenuLink to='/marketplace/all' data-test='marketplace_submenu_tab_marketplace'>MARKETPLACE</MenuLink>,
+        menuItem: (
+          <MenuLink to='/marketplace/all' data-test='marketplace_submenu_tab_marketplace'>
+            MARKETPLACE
+          </MenuLink>
+        ),
         render: () => <>{this.renderTabMarketplace()}</>
       },
+      // {
+      //   menuItem: <MenuLink to='/marketplace/wanted-board' data-test='marketplace_submenu_tab_wanted_board'>WANTED BOARD</MenuLink>,
+      //   render: () => <>Tab 2 Content</>
+      // },
       {
-        menuItem: <MenuLink to='/marketplace/wanted-board' data-test='marketplace_submenu_tab_wanted_board'>WANTED BOARD</MenuLink>,
-        render: () => <>Tab 2 Content</>
-      },
-      {
-        menuItem: <MenuLink to='/marketplace/holds' data-test='marketplace_submenu_tab_holds'>HOLDS</MenuLink>,
+        menuItem: (
+          <MenuLink to='/marketplace/holds' data-test='marketplace_submenu_tab_holds'>
+            HOLDS
+          </MenuLink>
+        ),
         render: () => <>{<Holds />}</>
       }
     ]
     return (
       <>
         <Container fluid style={{ padding: '0 32px' }} className='flex stretched'>
-          <Tab activeIndex={activeIndex} className='marketplace-container' menu={{ secondary: true, pointing: true }} panes={panes} />
+          <Tab
+            activeIndex={activeIndex}
+            className='marketplace-container'
+            menu={{ secondary: true, pointing: true }}
+            panes={panes}
+          />
         </Container>
       </>
     )

@@ -12,7 +12,7 @@ class HoldsPage extends Component {
 
     return (
       <Layout title={formatMessage({ id: 'hold.holdRequest', defaultMessage: 'Hold Requests' })}>
-        <Marketplace activeIndex={2} />
+        <Marketplace activeIndex={1} />
       </Layout>
     )
   }
