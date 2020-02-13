@@ -77,13 +77,13 @@ class ActionsRequired extends React.Component {
       toastValues: { orderId: order.id }
     })
   }
-  //TODO
+
   markShipped = () => {
     const { order, shippingTrackingCode, shipOrder, openPopupName, actionNeeded } = this.props
-    if (actionNeeded === 'PRODUCT-OFFER-ASSIGN') {
-      openPopupName('opendSaleAttachingProductOffer')
-    }
-    return
+    //TODO
+    // if (actionNeeded === 'PRODUCT-OFFER-ASSIGN') {
+    //   openPopupName('opendSaleAttachingProductOffer')
+    // }
     if (shippingTrackingCode.length) {
       this.confirmCall({
         action: () => shipOrder(order.id, shippingTrackingCode),

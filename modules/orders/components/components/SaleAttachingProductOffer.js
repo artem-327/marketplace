@@ -61,7 +61,11 @@ class SaleAttachingProductOffer extends Component {
           <FormattedMessage id='order.saleAttachingProductOffer' defaultMessage='ATTACHING PRODUCT OFFER' />
         </Modal.Header>
         <ModalBody>
-          <Modal.Description>{groupedProductOffers.map(offer => JSON.stringify(offer, null, '\t'))}</Modal.Description>
+          <Modal.Description>
+            {groupedProductOffers &&
+              groupedProductOffers.length &&
+              groupedProductOffers.map(offer => JSON.stringify(offer, null, '\t'))}
+          </Modal.Description>
         </ModalBody>
       </Modal>
     )
