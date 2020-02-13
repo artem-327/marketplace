@@ -13,6 +13,10 @@ import { getSafe } from '~/utils/functions'
 import { ArrowLeftCircle, ArrowRightCircle, Layers, Settings, ShoppingBag } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 
+import { InventoryFilter } from '~/modules/filter'
+import { Filter } from '~/modules/filter'   // Marketplace filter
+import { OrderFilter } from '~/modules/filter'
+
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
     <Dropdown
@@ -32,7 +36,10 @@ class Navigation extends Component {
     dropdowns: {},
     settings: getSafe(() => Router.router.pathname === '/settings', false),
     admin: getSafe(() => Router.router.pathname === '/admin', false),
-    operations: getSafe(() => Router.router.pathname === '/operations', false)
+    operations: getSafe(() => Router.router.pathname === '/operations', false),
+    openedFilterMyInventory: false,
+    openedFilterMarketplace: false,
+    openedFilterOrders: false,
   }
 
   componentDidMount() {
@@ -53,10 +60,32 @@ class Navigation extends Component {
 
     const {
       router,
-      router: { pathname },
+      router: { pathname, asPath },
       tabChanged,
       tabsNames
     } = this.props
+    if (pathname === to) {
+      switch (asPath) {
+        case '/inventory/my':
+          this.setState(prevState => ({ openedFilterMyInventory: !prevState.openedFilterMyInventory }))
+          break;
+        case '/marketplace/all':
+          this.setState(prevState => ({ openedFilterMarketplace: !prevState.openedFilterMarketplace }))
+          break;
+        case '/orders?type=sales':
+          //temporary disabled - this.setState(prevState => ({ openedFilterOrders: !prevState.openedFilterOrders }))
+          break;
+        case '/orders?type=purchase':
+          //temporary disabled - this.setState(prevState => ({ openedFilterOrders: !prevState.openedFilterOrders }))
+          break;
+      }
+    } else {
+      this.setState({
+        openedFilterMyInventory: false,
+        openedFilterMarketplace: false,
+        openedFilterOrders: false
+      })
+    }
 
     if (pathname === '/settings' && tab) {
       const newTab = tabsNames.find(t => t.type === tab)
@@ -156,10 +185,19 @@ class Navigation extends Component {
       takeover,
       intl: { formatMessage },
       sidebarDetailTrigger,
-      router: { pathname, asPath }
+      router: { pathname, asPath },
+      collapsedMenu
     } = this.props
 
-    const { dropdowns, settings, admin, operations } = this.state
+    const {
+      dropdowns,
+      settings,
+      admin,
+      operations,
+      openedFilterMyInventory,
+      openedFilterMarketplace,
+      openedFilterOrders
+    } = this.state
 
     const MenuLink = withRouter(({ router: { asPath }, to, children, tab }) => {
       return (
@@ -186,13 +224,18 @@ class Navigation extends Component {
             {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
           </>
         </MenuLink>
+        {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? (<InventoryFilter/>) : null}
+        {false && asPath === '/inventory/my' ? (<InventoryFilter/>) : null}
         {getSafe(() => company.nacdMember, false) ? (
-          <MenuLink to='/marketplace/all' data-test='navigation_menu_marketplace_drpdn'>
-            <>
-              <ShoppingBag size={22} />
-              {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
-            </>
-          </MenuLink>
+          <>
+            <MenuLink to='/marketplace/all' data-test='navigation_menu_marketplace_drpdn'>
+              <>
+                <ShoppingBag size={22} />
+                {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
+              </>
+            </MenuLink>
+            {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? (<Filter/>) : null}
+          </>
         ) : null}
         <MenuLink to='/orders?type=sales' data-test='navigation_menu_orders_sales_drpdn'>
           <>
@@ -200,12 +243,14 @@ class Navigation extends Component {
             {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
           </>
         </MenuLink>
+        {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=sales' ? (<OrderFilter/>) : null}
         <MenuLink to='/orders?type=purchase' data-test='navigation_menu_orders_purchase_drpdn'>
           <>
             <ArrowLeftCircle />
             {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
           </>
         </MenuLink>
+        {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=purchase' ? (<OrderFilter/>) : null}
         {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
@@ -360,7 +405,8 @@ export default withAuth(
       store => ({
         auth: store.auth,
         tabsNames: store.settings.tabsNames,
-        isAdmin: getSafe(() => store.auth.identity.isAdmin, false)
+        isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
+        collapsedMenu: store.layout.collapsedMenu,
       }),
       {
         triggerSystemSettingsModal,

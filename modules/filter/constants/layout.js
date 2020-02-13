@@ -4,23 +4,72 @@ import Tooltip from '~/components/tooltip'
 
 const popupWidth = 400
 
-export const FlexSidebar = styled(Sidebar)`
+export const FlexSidebar = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: #fbfbfb;
-  top: 80px !important;
-  padding-bottom: 80px;
-  box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
-  z-index: 4;
+  background-color: #edeef2;
   text-align: left;
+  font-size: 14px;  
+  padding-bottom: 0px;
+  margin-top: -6px;
+  margin-right: 10px;
+  min-width: 200px;
+  
+  .ui.large.button,
+  .ui.button {
+    font-size: 14px;
+    font-weight: normal;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    border: solid 1px #dee2e6;
+    opacity: 1;
+    color: #848893;
+    margin: 10px 5px;
+  
+    background: #ffffff;
+    :hover, :focus {
+      color: #20273a;
+      background: #f8f9fb;
+    }
+    :active {
+      color: #20273a;
+      background: #edeef2;
+    }
+    :disabled {
+      color: #cecfd4;
+      background: #ffffff;
+    }
+   }
+  
+  .ui.large.button.primary,
+  .ui.button.primary {
+    font-size: 14px;
+    font-weight: normal;
+    color: #ffffff;
+    background: #2599d5;
+    margin: 10px 5px;
+    border: 1px solid #dee2e6;
+    
+    :hover, :focus {
+      background: #188ec9;
+    }
+    :active {
+      color: #ffffff;
+      background: #0d82bc;
+    }
+    :disabled {
+      opacity: 0.65;
+      color: #ffffff;
+      background: #84d6ff;
+    }
+   }
 `
 
 export const FlexContent = styled.div`
-  flex: 1;
-  overflow-y: auto;
+  padding: 0 10px;  
 `
 
-export const FiltersContainer = styled.div`
+export const FiltersContainer = styled.div`     // ! ! smazat?
   margin: 0 15px 0 0;
   text-align: center;
   border-bottom: 1px solid #f0f0f0;
@@ -29,7 +78,43 @@ export const FiltersContainer = styled.div`
   font-size: 1.1rem;
 `
 
-export const Title = styled.div`
+export const TopButtons = styled.div`
+  margin: 0;
+  text-align: center;
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+  padding: 0 5px;
+  display: flex;
+  flex-direction: row;
+  > .button {
+    padding-right: 0px;
+    padding-left: 0px;
+    width: 125px;
+  }
+`
+export const BottomButtons = styled.div`
+  margin: 0;
+  text-align: center;
+  border-top: 1px solid #dee2e6;
+  box-sizing: border-box;
+  border-radius: 0 0 4px 4px;
+  padding: 0 5px;  
+  > .button {
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+  > .button:nth-child(1) {
+    width: 110px;
+  }
+  > .button:nth-child(2) {
+    width: 65px;
+  }
+  > .button:nth-child(3) {
+    width: 65px;
+  }
+`
+
+export const Title = styled.div`       // ! ! smazat?
   font-size: 18px !important;
   font-weight: bold;
   font-family: 'Cabin', sans-serif !important;
@@ -38,35 +123,79 @@ export const Title = styled.div`
 
 export const AccordionTitle = styled(Accordion.Title)`
   margin: 5px 0 5px 0px !important;
-  font-size: 18px !important;
+  padding: 5px 0 5px 0px !important;
+  font-size: 14px !important;
   font-weight: bold;
+  color: #546f93 !important;
   & > i {
     margin-right: 10px;
   }
 `
 
+export const IconRight = styled.div`
+  color: #2599d5;
+  float: right;
+`
+
+
+
 export const AccordionItem = styled.div`
-  border-bottom: 1px solid #f0f0f0;
+  //border-bottom: 1px solid #dee2e6;
   // padding-left: 10px
 `
 
-export const AccordionContent = styled(Accordion.Content)`
-  & > .field label {
-    color: red;
-  }
-  span {
-    font-size: 14px;
-    font-family: 'Cabin', sans-serif !important;
-  }
-  & .field {
-    padding-top: 0px;
-  }
-  & > .field:last-child {
-    padding-bottom: 15px;
+export const FilterAccordion = styled(Accordion)`
+  & > div:not(:last-child) {
+    border-bottom: 1px solid #dee2e6;
   }
 `
 
-export const WhiteSegment = styled(Segment)`
+export const AccordionContent = styled(Accordion.Content)`
+  font-size: 13px;
+  padding-top: 0px !important;
+  .fields {
+    margin-bottom: 10px !important;
+    .field {
+      .ui.checkbox {
+        label {
+          color: #848893;
+        }
+        &.checked {
+          label {
+            color: #20273a;
+          }
+        } 
+       }
+      .field {
+        label {
+          color: #546f93;
+        }
+      }
+    }
+  }
+  span {
+    //font-size: 14px;
+    font-family: 'Cabin', sans-serif !important;
+  }
+  & .field:first-child {
+    //padding-top: 0px;
+  }
+  & > .field:last-child {
+    //padding-bottom: 8px;
+  }  
+`
+
+export const DateInputStyledWrapper = styled.div`
+  .ui.label {
+    font-size: 13px !important;
+    font-weight: normal;
+    color: #848893;
+    background-color: #f8f9fb;
+    border: 1px solid #dee2e6;
+  }
+`
+
+export const WhiteSegment = styled(Segment)`   // ! ! smazat?
   position: absolute !important;
   bottom: 4.57142858em;
   max-width: 100%;
@@ -75,8 +204,8 @@ export const WhiteSegment = styled(Segment)`
   background-color: #ffffff !important;
 `
 
-export const GraySegment = styled(Segment)`
-  background-color: #ededed !important;
+export const GraySegment = styled(Segment)`   // ! ! smazat?
+  //background-color: #ededed !important;
   position: 'relative';
   overflow: 'visible';
   height: '4.57142858em';
@@ -111,23 +240,25 @@ export const SavedFiltersSegment = styled(Segment)`
 `
 
 export const SavedFilterItem = styled.div`
-  border-bottom: solid 1px #e3e3e3;
   font-weight: normal;
 `
 
 export const SavedFilterTitle = styled(AccordionTitle)`
-  text-transform: uppercase;
   font-weight: normal;
-  margin-bottom: 0px !important;
+  margin: 0px !important;
 `
 
 export const SavedFilterIcon = styled(Icon)`
-  font-size: 22px !important;
+  font-size: 20px !important;
+  float: right;
 `
 
-export const ActionRow = styled(GridRow)`
-  padding-top: 15px !important;
-  margin-bottom: 15px !important;
+export const DeleteFilterIcon = styled(Icon)`
+  font-size: 20px !important;
+  color: #f16844;
+  float: right;
+  padding: 0 !important;
+  right: 0;
 `
 
 export const PopupRow = styled(GridRow)`
@@ -142,30 +273,76 @@ export const WiderTooltip = styled(Tooltip)`
   }
 `
 
-export const LessPaddedRow = styled(GridRow)`
+export const LessPaddedRow = styled(GridRow)`   // ! ! smazat?
   padding-top: 12px !important;
   padding-bottom: 12px !important;
 `
 
+export const SavedFiltersGrid = styled(Grid)`
+  margin: 0px !important;
+  vertical-align: middle;
+  > .row:nth-child(1) {       // Bold text
+    //padding: 0 !important;
+    font-weight: bold !important;
+    color: #20273a !important;
+    > .column {
+      padding-left: 0 !important;
+    }
+  }
+`
+
+export const SavedFilterDetailGrid = styled(Grid)`
+  margin: 0px -10px !important;
+  vertical-align: middle;
+  padding: 0 !important;
+    .ui.primary.button,
+    .ui.large.button {
+      margin: 5px 5px 11px 10px !important;
+      //margin-top: 5px !important;
+      //margin-bottom: 11px !important;
+  }
+  > .row {
+    padding: 0 !important;
+    .column {
+      margin: 0 !important;
+      padding: 0 !important;
+    }  
+  }
+`
+
+export const SavedFilterRow = styled(GridRow)`
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+  .column {
+    padding-right: 5px !important;
+    > i {
+      margin: 0;
+    }
+  }
+`
+
 export const BottomMargedDropdown = styled(Dropdown)`
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 `
 
-export const SaveFilterRow = styled(GridRow)`
-  min-width: calc(100% + 2rem) !important;
-  margin-left: -1rem;
-  margin-right: -1rem;
-  border-top: 1px solid #dedede;
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
-  background-color: #eee;
+export const SaveFilterNormalRow = styled(GridRow)`   // ! ! smazat?
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+  background-color: #edeef2;
 `
 
-export const SaveFilterTitle = styled(Title)`
-  margin: 0;
+export const SaveFilterTitle = styled.div`
+  padding: 0px;
+  margin-top: 22px;
+  font-size: 14px !important;
+  font-weight: bold;  
+  color: #2599d5;
+  font-weight: bold;
 `
 
-export const SaveFilterClose = styled(Icon)`
+export const SaveFilterClose = styled(Icon)`  // ! ! delete?
   position: absolute;
   top: -1px;
   right: 2rem;
@@ -177,6 +354,95 @@ export const StyledGrid = styled(Grid)`
   margin-bottom: 0px !important;
 `
 
+export const SaveFiltersGrid = styled(Grid)`
+  margin: 0px !important;
+  vertical-align: middle;
+  background-color: #edeef2;  
+  > .row {
+    padding: 0 !important;
+    .column {
+      margin: 0 !important;
+      padding: 0px 10px !important
+    }  
+  }
+  > .ui.button,
+    .ui.large.button {
+      margin-right: 0;
+  }
+  > .row:nth-child(1) {       // Save Filter button
+    border-bottom: 1px solid #dee2e6;
+  }
+  > .row:nth-child(2) {       // 'Filter Name'
+    padding-top: 10px !important;
+  }
+  > .row:nth-child(3) {       // Filter Name Input + Save button
+    padding-top: 5px !important;
+    > .ui.button,
+    .ui.large.button {
+      margin: 0;
+    }
+  }
+  > .row:nth-child(4) {       // Automatically Apply
+    padding-top: 15px !important;
+    > .column .field{
+    float: right;
+    }
+  }  
+`
+
+export const NotificationsFiltersGrid = styled(Grid)`
+  margin: 0px !important;
+  vertical-align: middle;
+  background-color: #edeef2;  
+  > .row {
+    padding: 0 !important;
+    .column {
+      margin: 0 !important;
+      padding: 0px 10px !important
+    }  
+  }
+  > .row:nth-child(1) {       // Enable Notifications
+    padding-top: 15px !important;
+    > .column .field{
+    float: right;
+    }
+  }
+  > .row:nth-child(2) {       // Email Notifications checkbox
+    padding-top: 15px !important;
+  }
+  > .row:nth-child(3) {       // Email Input
+    padding-top: 6px !important;
+  }
+  
+  > .row:nth-child(4) {       // Mobile Notifications checkbox
+    padding-top: 15px !important;
+  }
+  > .row:nth-child(5) {       // Phone Input
+    padding-top: 6px !important;
+  }
+  > .row:nth-child(6) {       // System Notifications checkbox
+    padding-top: 15px !important;
+  }
+  > .row:last-child {
+    padding-bottom: 15px !important;
+  }
+`
+
+export const NormalColumn = styled(GridColumn)` // ! ! smazat?
+  //margin: 0 !important;
+  //padding: 0px 10px !important
+`
+
 export const SmallerTextColumn = styled(GridColumn)`
   font-size: 90%;
+`
+
+export const BoldTextColumn = styled(GridColumn)` // ! ! delete
+  padding: 0 !important;
+  font-weight: bold !important;
+  color: #20273a !important;
+`
+
+export const SavedFiltersNotifications = styled.div`
+  padding: 0 !important;
 `

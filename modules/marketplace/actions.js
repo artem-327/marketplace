@@ -19,3 +19,10 @@ export const clearAutocompleteData = () => {
     payload: {}
   }
 }
+
+export function applyDatagridFilter(filter) {
+  return {
+    type: AT.MARKETPLACE_APPLY_FILTER,
+    payload: filter
+  }
+}

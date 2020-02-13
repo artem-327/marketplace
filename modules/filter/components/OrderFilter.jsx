@@ -13,7 +13,9 @@ import {
   AccordionTitle,
   GraySegment,
   AccordionItem,
-  AccordionContent
+  AccordionContent,
+  TopButtons,
+  BottomButtons
   // FiltersContainer, WhiteSegment,
   // Title, BottomMargedDropdown,
   // LessPaddedRow, SaveFilterRow,
@@ -56,7 +58,7 @@ class OrderFilter extends Component {
   }
 
   toDatagrid = values => {
-    let { sortDirection, sortPath } = this.props
+    let { sortDirection, sortPath, applyDatagridFilter } = this.props
     let payload = {
       filters: [],
       sortDirection,
@@ -83,17 +85,18 @@ class OrderFilter extends Component {
 
     if (!payload.sortDirection) delete payload.sortDirection
     if (!payload.sortPath) delete payload.sortPath
-    this.props.applyFilter(payload)
+    this.props.applyFilter(payload) // ! ! tady je to jinak nez v My Inventory / Marketplace
+    applyDatagridFilter(payload)
     this.props.onApply(payload)
   }
 
   accordionTitle = (name, text) => (
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
+      {text}
       <Icon
         name={!this.state.inactiveAccordion[name] ? 'chevron down' : 'chevron right'}
-        color={!this.state.inactiveAccordion[name] ? 'blue' : 'black'}
+        color={'blue'}
       />
-      {text}
     </AccordionTitle>
   )
 
@@ -129,88 +132,72 @@ class OrderFilter extends Component {
         }}
         render={({ values }) => {
           return (
-            <FlexSidebar
-              visible={ordersIsOpen}
-              width={width}
-              direction={direction}
-              animation={animation}
-              onHide={e => {
-                // Workaround, close if you haven't clicked on calendar item or filter icon
-                try {
-                  if (
-                    e &&
-                    !(e.path[0] instanceof HTMLTableCellElement) &&
-                    !(e.path[1] instanceof HTMLTableCellElement) &&
-                    (!e.target || !e.target.className.includes('submenu-filter'))
-                  ) {
-                    toggleFilter(false)
-                  }
-                } catch (e) {
-                  console.error(e)
-                }
-              }}>
+            <FlexSidebar>
               <FlexContent>
                 <Accordion>
-                  <Segment basic>
-                    <AccordionItem>
-                      {this.accordionTitle(
-                        'orderDate',
-                        <FormattedMessage id='filter.orderDate' defaultMessage='Order Date'>
-                          {text => text}
-                        </FormattedMessage>
-                      )}
-                      <AccordionContent active={!this.state.inactiveAccordion.orderDate}>
-                        <FormGroup widths='equal' data-test='filter_assay_inp'>
-                          <DateInput
-                            inputProps={{
-                              fluid: true,
-                              placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }),
-                              clearable: true
-                            }}
-                            label={<FormattedMessage id='global.from' defaultMessage='From' />}
-                            name='orderFrom.value'
-                          />
-                          <DateInput
-                            inputProps={{
-                              fluid: true,
-                              placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }),
-                              clearable: true
-                            }}
-                            label={<FormattedMessage id='global.to' defaultMessage='To' />}
-                            name='orderTo.value'
-                          />
-                        </FormGroup>
-                      </AccordionContent>
-                    </AccordionItem>
+                  <AccordionItem>
+                    {this.accordionTitle(
+                      'orderDate',
+                      <FormattedMessage id='filter.orderDate' defaultMessage='Order Date'>
+                        {text => text}
+                      </FormattedMessage>
+                    )}
+                    <AccordionContent active={!this.state.inactiveAccordion.orderDate}>
+                      <FormGroup widths='equal' data-test='filter_assay_inp'>
+                        <DateInput
+                          inputProps={{
+                            fluid: true,
+                            placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }),
+                            clearable: true
+                          }}
+                          label={<FormattedMessage id='global.from' defaultMessage='From' />}
+                          name='orderFrom.value'
+                        />
+                        <DateInput
+                          inputProps={{
+                            fluid: true,
+                            placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }),
+                            clearable: true
+                          }}
+                          label={<FormattedMessage id='global.to' defaultMessage='To' />}
+                          name='orderTo.value'
+                        />
+                      </FormGroup>
+                    </AccordionContent>
+                  </AccordionItem>
 
-                    <AccordionItem>
-                      {this.accordionTitle(
-                        'vendor',
-                        <FormattedMessage id='global.vendor' defaultMessage='Vendor'>
-                          {text => text}
-                        </FormattedMessage>
-                      )}
-                      <AccordionContent active={!this.state.inactiveAccordion.vendor}>
-                        <FormGroup widths='equal' data-test='filter_assay_inp'>
-                          <Input
-                            inputProps={{
-                              fluid: true,
-                              placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
-                            }}
-                            label={<FormattedMessage id='global.vendorName' defaultMessage='Vendor Name' />}
-                            name='vendor.value'
-                          />
-                        </FormGroup>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Segment>
+                  <AccordionItem>
+                    {this.accordionTitle(
+                      'vendor',
+                      <FormattedMessage id='global.vendor' defaultMessage='Vendor'>
+                        {text => text}
+                      </FormattedMessage>
+                    )}
+                    <AccordionContent active={!this.state.inactiveAccordion.vendor}>
+                      <FormGroup widths='equal' data-test='filter_assay_inp'>
+                        <Input
+                          inputProps={{
+                            fluid: true,
+                            placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
+                          }}
+                          label={<FormattedMessage id='global.vendorName' defaultMessage='Vendor Name' />}
+                          name='vendor.value'
+                        />
+                      </FormGroup>
+                    </AccordionContent>
+                  </AccordionItem>
                 </Accordion>
               </FlexContent>
 
               <GraySegment basic>
                 <RightAlignedDiv>
-                  <Button type='button' onClick={() => toggleFilter(false, filterPresets.ORDERS)}>
-                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                  <Button
+                    type='button'
+                    onClick={() => {
+                      toggleFilter(false, filterPresets.ORDERS)
+                    }}
+                    data-test='filter_clear'>
+                    <FormattedMessage id='filter.clearFilter' defaultMessage='Clear'>
                       {text => text}
                     </FormattedMessage>
                   </Button>
@@ -231,6 +218,7 @@ class OrderFilter extends Component {
 
 OrderFilter.propTypes = {
   onApply: func.isRequired,
+  onClear: func,
   ordersType: oneOf(['sales', 'purchase'])
 }
 
@@ -240,7 +228,9 @@ OrderFilter.defaultProps = {
   animation: 'overlay',
   sortPath: '',
   sortDirection: '',
-  ordersType: 'sales'
+  ordersType: 'sales',
+  onApply: filter => {},
+  onClear: () => {},
 }
 
 export default injectIntl(OrderFilter)
