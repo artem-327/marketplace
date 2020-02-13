@@ -32,6 +32,8 @@ const initialState = {
   loadRelatedOrders: false,
   shippingQuotesAreFetching: false,
   shippingQuotes: [],
+  datagridFilter: { filters: [] },
+  datagridFilterUpdate: false
 }
 
 export default function(state = initialState, action) {
@@ -348,13 +350,12 @@ export default function(state = initialState, action) {
       return {
         ...state,
         shippingQuotesAreFetching: true,
-        shippingQuotes: []
       }
     }
     case AT.ORDER_SHIPPING_QUOTES_FETCH_FULFILLED: {
       return {
         ...state,
-        shippingQuotes: action.payload,
+        shippingQuotes: action.payload.data,
         shippingQuotesAreFetching: false
       }
     }
@@ -363,6 +364,14 @@ export default function(state = initialState, action) {
         ...state,
         shippingQuotesAreFetching: false,
         shippingQuotes: []
+      }
+    }
+
+    case AT.ORDER_APPLY_FILTER: {
+      return {
+        ...state,
+        datagridFilter: payload,
+        datagridFilterUpdate: !state.datagridFilterUpdate
       }
     }
 

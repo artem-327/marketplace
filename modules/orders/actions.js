@@ -217,3 +217,10 @@ export const getSaleOrder = orderId => ({
   type: AT.ORDER_GET_SALE_ORDER,
   payload: Api.getSaleOrder(orderId)
 })
+
+export function applyDatagridFilter(filter) {
+  return {
+    type: AT.ORDER_APPLY_FILTER,
+    payload: filter
+  }
+}

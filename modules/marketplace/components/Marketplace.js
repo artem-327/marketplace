@@ -5,8 +5,6 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { withRouter } from 'next/router'
 import { ShippingQuotes } from '~/modules/shipping'
-import SubMenu from '~/src/components/SubMenu'
-import { Filter } from '~/modules/filter'
 import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
@@ -183,6 +181,13 @@ class Marketplace extends Component {
     //this.initData()
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
+    if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
+      datagrid.setFilter(datagridFilter)
+    }
+  }
+
   getRows = () => {
     const {
       rows,
@@ -267,9 +272,6 @@ class Marketplace extends Component {
     const {
       datagrid,
       intl,
-      getAutocompleteData,
-      autocompleteData,
-      autocompleteDataLoading,
       openPopup,
       isMerchant
     } = this.props
@@ -366,9 +368,6 @@ class Marketplace extends Component {
                 </DivButtonWithToolTip>
               }
             />
-            <Menu.Item>
-              <SubMenu clearAutocompleteData={this.handleClearAutocompleteData} />
-            </Menu.Item>
           </Menu.Menu>
         </Menu>
 
@@ -420,18 +419,6 @@ class Marketplace extends Component {
             rowActions={rowActions}
           />
         </div>
-        <Filter
-          filterType={filterTypes.MARKETPLACE}
-          getAutocompleteData={getAutocompleteData}
-          autocompleteData={autocompleteData}
-          autocompleteDataLoading={autocompleteDataLoading}
-          onApply={this.handleFilterApply}
-          onClear={this.handleFilterClear}
-          savedUrl='/prodex/api/product-offers/broadcasted/datagrid/saved-filters'
-          searchUrl={text => `/prodex/api/company-products/broadcasted/search?pattern=${text}&onlyMapped=true`}
-          apiUrl={datagrid.apiUrl}
-          filters={datagrid.filters}
-        />
         <AddCart />
       </>
     )

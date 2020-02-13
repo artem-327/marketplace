@@ -32,7 +32,9 @@ export const initialState = {
   product: null,
   editProductOfferInitTrig: false,
   editedId: null,
-  productOfferStatuses: []
+  productOfferStatuses: [],
+  datagridFilter: { filters: [] },
+  datagridFilterUpdate: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -557,6 +559,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false
+      }
+    }
+    case AT.INVENTORY_APPLY_FILTER: {
+      return {
+        ...state,
+        datagridFilter: payload,
+        datagridFilterUpdate: !state.datagridFilterUpdate
       }
     }
 

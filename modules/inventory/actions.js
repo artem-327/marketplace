@@ -426,3 +426,9 @@ export function detachOffers(productOfferIds) {
     payload: api.detachOffers(productOfferIds)
   }
 }
+export function applyDatagridFilter(filter) {
+  return {
+    type: AT.INVENTORY_APPLY_FILTER,
+    payload: filter
+  }
+}

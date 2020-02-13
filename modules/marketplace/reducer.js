@@ -19,7 +19,9 @@ export const initialState = {
   warehousesList: [],
   loading: false,
   autocompleteData: [],
-  autocompleteDataLoading: false
+  autocompleteDataLoading: false,
+  datagridFilter: { filters: [] },
+  datagridFilterUpdate: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -76,6 +78,15 @@ export default function reducer(state = initialState, action) {
         autocompleteData: []
       }
     }
+
+    case AT.MARKETPLACE_APPLY_FILTER: {
+      return {
+        ...state,
+        datagridFilter: payload,
+        datagridFilterUpdate: !state.datagridFilterUpdate
+      }
+    }
+
 
     default: {
       return state
