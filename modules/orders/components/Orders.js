@@ -7,7 +7,6 @@ import SubMenu from '~/src/components/SubMenu'
 import Spinner from '~/src/components/Spinner/Spinner'
 import ProdexGrid from '~/components/table'
 import { actions } from 'react-redux-form'
-import { OrderFilter } from '~/modules/filter'
 import { getSafe } from '~/utils/functions'
 import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
@@ -394,7 +393,7 @@ class Orders extends Component {
     await this.props.getRelatedOrders(orderId)
   }
 
-  handleFilterApply = payload => {
+  handleFilterApply = payload => {    // ! ! ????
     let statusFilters = getSafe(() => this.state.filters[this.props.filterData.status].filters, [])
     statusFilters.forEach(f => payload.filters.push(f))
 
@@ -408,9 +407,13 @@ class Orders extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { endpointType } = this.props
+    const { endpointType, datagridFilterUpdate, datagridFilter, datagrid } = this.props
     if (prevProps.endpointType !== this.props.endpointType) {
       this.props.loadData(endpointType, { status: 'All' })
+    }
+
+    if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
+      datagrid.setFilter(datagridFilter)
     }
   }
 
@@ -679,24 +682,16 @@ class Orders extends Component {
             <Menu.Item>
               <FilterTags datagrid={datagrid} />
             </Menu.Item>
-            <Menu.Menu position='right'>
-              <Menu.Item
-                name={formatMessage({
-                  id: 'order.menu.filter',
-                  defaultMessage: 'Filter'
-                })}>
-                <SubMenu filterType={filterPresets.ORDERS} />
-              </Menu.Item>
-            </Menu.Menu>
           </Menu>
         </Container>
-        <Container fluid style={{ padding: '20px 32px 0 32px' }} className='flex stretched'>
+        <Container fluid style={{ padding: '20px 32px 10px 32px' }} className='flex stretched'>
+          {false && (
           <OrderFilter
             ordersType={ordersType.toLowerCase()}
             sortPath={this.state.sorting.sortPath}
             sortDirection={this.state.sorting.sortDirection}
             onApply={payload => this.handleFilterApply(payload)}
-          />
+          />)}
           {isFetching ? (
             <Spinner />
           ) : (

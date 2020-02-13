@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import TablesHandlers from './TablesHandlers'
 import { Container, Grid, Segment } from 'semantic-ui-react'
-import Tabs from './Tabs'
 import { withAuth } from '~/hocs'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
@@ -209,9 +208,6 @@ class Admin extends Component {
           </Container>
           <Grid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
             <Grid.Row>
-              <Grid.Column width={3}>
-                <Tabs />
-              </Grid.Column>
               <Grid.Column key={this.props.currentTab} style={{ marginTop: '10px' }} className='flex stretched'>
                 {this.renderContent()}
               </Grid.Column>

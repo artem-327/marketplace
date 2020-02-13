@@ -413,3 +413,10 @@ export function closeSidebarDetail() {
   }
 }
 
+export function applyDatagridFilter(filter) {
+  return {
+    type: AT.INVENTORY_APPLY_FILTER,
+    payload: filter
+  }
+}
+

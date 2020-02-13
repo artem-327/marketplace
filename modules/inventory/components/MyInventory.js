@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { Container, Menu, Header, Checkbox, Popup, Button } from 'semantic-ui-react'
-import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import ProdexTable from '~/components/table'
-import { InventoryFilter } from '~/modules/filter'
 
 import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
 
@@ -286,6 +284,13 @@ class MyInventory extends Component {
     this.handleFilterClear()
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
+    if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
+      datagrid.setFilter(datagridFilter)
+    }
+  }
+
   filterInventory = async filter => {
     let productIds = []
     if (filter.search) {
@@ -394,6 +399,7 @@ class MyInventory extends Component {
     })
   }
 
+  // ! ! delete
   handleFilterApply = filter => {
     this.props.datagrid.setFilter(filter)
   }
@@ -482,9 +488,6 @@ class MyInventory extends Component {
               <MenuItemFilters>
                 <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
               </MenuItemFilters>
-              <Menu.Item>
-                <SubMenu />
-              </Menu.Item>
             </Menu.Menu>
           </Menu>
         </Container>
@@ -608,21 +611,6 @@ class MyInventory extends Component {
           />
         </div>
         {sidebarDetailOpen && <DetailSidebar />}
-        <InventoryFilter
-          onApply={this.handleFilterApply}
-          onClear={this.handleFilterClear}
-          savedUrl='/prodex/api/product-offers/own/datagrid/saved-filters'
-          searchUrl={text => `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`}
-          searchWarehouseUrl={text => `/prodex/api/branches/warehouses/search?pattern=${text}`}
-          searchManufacturerUrl={text => `/prodex/api/manufacturers/search?search=${text}`}
-          getOriginUrl={`/prodex/api/countries`}
-          apiUrl={datagrid.apiUrl}
-          filters={datagrid.filters}
-          layout='MyInventory'
-          autocompleteDataLoading={this.props.autocompleteDataLoading}
-          getAutocompleteData={this.props.getAutocompleteData}
-          autocompleteData={this.props.autocompleteData}
-        />
       </>
     )
   }

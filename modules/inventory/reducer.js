@@ -31,7 +31,9 @@ export const initialState = {
   sidebarValues: {},
   product: null,
   editProductOfferInitTrig: false,
-  editedId: null
+  editedId: null,
+  datagridFilter: { filters: [] },
+  datagridFilterUpdate: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -510,6 +512,15 @@ export default function reducer(state = initialState, action) {
         editedId: null
       }
     }
+
+    case AT.INVENTORY_APPLY_FILTER: {
+      return {
+        ...state,
+        datagridFilter: payload,
+        datagridFilterUpdate: !state.datagridFilterUpdate
+      }
+    }
+
 
     default: {
       return state
