@@ -51,7 +51,7 @@ export const regulatoryFilter = {
   epa: {
     key: 'epa',
     text: (
-      <FormattedMessage id='global.regulatoryEpa' defaultMessage='Regulatory - EPA'>
+      <FormattedMessage id='global.regulatoryEpa' defaultMessage='EPA'>
         {text => text}
       </FormattedMessage>
     ),
@@ -60,7 +60,7 @@ export const regulatoryFilter = {
   dhs: {
     key: 'dhs',
     text: (
-      <FormattedMessage id='global.regulatoryDhs' defaultMessage='Regulatory - DHS'>
+      <FormattedMessage id='global.regulatoryDhs' defaultMessage='DHS'>
         {text => text}
       </FormattedMessage>
     ),
@@ -68,13 +68,13 @@ export const regulatoryFilter = {
   },
   // dot: {
   //   key: 'dot',
-  //   text: <FormattedMessage id='global.regulatoryDot' defaultMessage='Regulatory - DOT'>{text => text}</FormattedMessage>,
+  //   text: <FormattedMessage id='global.regulatoryDot' defaultMessage='DOT'>{text => text}</FormattedMessage>,
   //   value: 'dot'
   // },
   caProp65: {
     key: 'caProp65',
     text: (
-      <FormattedMessage id='global.regulatoryCaProp65' defaultMessage='Regulatory - CA Prop 65'>
+      <FormattedMessage id='global.regulatoryCaProp65' defaultMessage='CA Prop 65'>
         {text => text}
       </FormattedMessage>
     ),
@@ -83,7 +83,7 @@ export const regulatoryFilter = {
   rightToKnow: {
     key: 'rightToKnow',
     text: (
-      <FormattedMessage id='global.regulatoryRightToKnow' defaultMessage='Regulatory - Right to Know'>
+      <FormattedMessage id='global.regulatoryRightToKnow' defaultMessage='Right to Know'>
         {text => text}
       </FormattedMessage>
     ),
@@ -92,7 +92,7 @@ export const regulatoryFilter = {
   dea: {
     key: 'dea',
     text: (
-      <FormattedMessage id='global.regulatoryDea' defaultMessage='Regulatory - DEA'>
+      <FormattedMessage id='global.regulatoryDea' defaultMessage='DEA'>
         {text => text}
       </FormattedMessage>
     ),
@@ -101,7 +101,7 @@ export const regulatoryFilter = {
   international: {
     key: 'international',
     text: (
-      <FormattedMessage id='global.regulatoryInternational' defaultMessage='Regulatory - International'>
+      <FormattedMessage id='global.regulatoryInternational' defaultMessage='International'>
         {text => text}
       </FormattedMessage>
     ),
