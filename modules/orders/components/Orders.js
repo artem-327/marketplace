@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
-import { Modal, Menu, Header, Container, Icon, Button, Dimmer, Loader } from 'semantic-ui-react'
+import { Modal, Menu, Header, Container, Grid, Icon, Button, Dimmer, Loader } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 import SubMenu from '~/src/components/SubMenu'
@@ -264,7 +264,7 @@ class Orders extends Component {
         ]
       }
     },
-    attachment: null,
+    attachmentPopup: null,
     openModal: false,
     columnsRelatedOrders: [
       {
@@ -381,7 +381,7 @@ class Orders extends Component {
       bl: <Icon name='file' className='unknown' />, // unknown / positive / negative
       sds: row.sds
             ? (
-              <span onClick={() => this.openOverviewWindow(row.sds)}>
+              <span onClick={() => this.openOverviewWindow(row.sds, { id: row.id })}>
                 <Icon name='file' className='positive' />
               </span>
             )
@@ -390,7 +390,7 @@ class Orders extends Component {
             ),
       cofA: row.cofA
             ? (
-              <span onClick={() => this.openOverviewWindow(row.cofA)}>
+              <span onClick={() => this.openOverviewWindow(row.cofA, { id: row.id })}>
                 <Icon name='file' className='positive' />
               </span>
             )
@@ -413,8 +413,8 @@ class Orders extends Component {
     await this.props.getRelatedOrders(orderId)
   }
 
-  openOverviewWindow(attachment) {
-    this.setState({ openModal: true, attachment: attachment })
+  openOverviewWindow(attachment, order) {
+    this.setState({ openModal: true, attachmentPopup: { attachment, order } })
   }
 
   handleFilterApply = payload => {
@@ -475,18 +475,28 @@ class Orders extends Component {
   }
 
   getAttachmentContent = () => {
-    const { attachment } = this.state
+    const { attachmentPopup: { attachment, order } } = this.state
     return (
       <>
-        <Header as='h2'>{attachment.name}</Header>
+        <Grid>
+          <Grid.Column floated='right'>
+            <Button as='a' onClick={() => this.downloadAttachment(attachment.id, order.id)}>
+              <Icon name='download'/>
+              <FormattedMessage id='order.downloadAsPdf' defaultMessage='Download as PDF'>{text => text}</FormattedMessage>
+            </Button>
+            <Button as='a' onClick={() => this.printAttachment()}>
+              <FormattedMessage id='global.print' defaultMessage='Print'>{text => text}</FormattedMessage>
+            </Button>
+            <Button as='a' onClick={() => this.closeModal()}>
+              <FormattedMessage id='global.close' defaultMessage='Close'>{text => text}</FormattedMessage>
+            </Button>
+          </Grid.Column>
+        </Grid>
       </>
     )
   }
 
   getContent = () => {
-    const { attachment } = this.state
-    if (attachment) return this.getAttachmentContent()
-
     const { relatedOrders, loadRelatedOrders } = this.props
     const rowsRelatedOrders = relatedOrders.reduce((ordersList, order) => {
       if (order) {
@@ -534,11 +544,21 @@ class Orders extends Component {
     const { columns } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
 
-    const { attachment, openModal } = this.state
+    const { attachmentPopup, openModal } = this.state
 
     return (
       <div id='page' className='flex stretched scrolling'>
-        {((openModal && attachment !== null) || (this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0)) && (
+        {openModal && attachmentPopup !== null && (
+          <Modal
+            size='large'
+            closeIcon
+            onClose={() => this.setState({ openModal: false })}
+            centered={true}
+            open={this.state.openModal}>
+            <Modal.Content scrolling>{this.getAttachmentContent()}</Modal.Content>
+          </Modal>
+        )}
+        {this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (
           <Modal
             size='small'
             closeIcon
