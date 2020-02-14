@@ -42,8 +42,8 @@ function mapStateToProps(state, { router, datagrid }) {
       creditStatus: OrdersHelper.getCreditStatus(r.creditReviewStatus),
       paymentStatus: OrdersHelper.getPaymentStatus(r.paymentStatus),
       bl: '',
-      sds: '',
-      cofA: '',
+      sds: r.attachments.find(a => a.documentType.id === 3),
+      cofA: r.attachments.find(a => a.documentType.id === 1),
       orderTotal: <FormattedNumber style='currency' currency={currency} value={r.cfPriceTotal} />,
       accountingDocumentsCount: r.accountingDocumentsCount
     })),

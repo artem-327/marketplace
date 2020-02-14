@@ -264,6 +264,7 @@ class Orders extends Component {
         ]
       }
     },
+    attachment: null,
     openModal: false,
     columnsRelatedOrders: [
       {
@@ -378,8 +379,24 @@ class Orders extends Component {
       globalStatus: row.globalStatus === 'Failed' ? this.failedWrapper(row.globalStatus) : row.globalStatus,
       paymentStatus: row.paymentStatus === 'Failed' ? this.failedWrapper(row.paymentStatus) : row.paymentStatus,
       bl: <Icon name='file' className='unknown' />, // unknown / positive / negative
-      sds: <Icon name='file' className='unknown' />,
-      cofA: <Icon name='file' className='unknown' />,
+      sds: row.sds
+            ? (
+              <span onClick={() => this.openOverviewWindow(row.sds)}>
+                <Icon name='file' className='positive' />
+              </span>
+            )
+            : (
+              <Icon name='file' className='unknown' />
+            ),
+      cofA: row.cofA
+            ? (
+              <span onClick={() => this.openOverviewWindow(row.cofA)}>
+                <Icon name='file' className='positive' />
+              </span>
+            )
+            : (
+              <Icon name='file' className='unknown' />
+            ),
       related:
         row.accountingDocumentsCount > 0 ? (
           <span onClick={() => this.openModalWindow(row.id)}>
@@ -394,6 +411,10 @@ class Orders extends Component {
   async openModalWindow(orderId) {
     this.setState({ openModal: true })
     await this.props.getRelatedOrders(orderId)
+  }
+
+  openOverviewWindow(attachment) {
+    this.setState({ openModal: true, attachment: attachment })
   }
 
   handleFilterApply = payload => {
@@ -453,7 +474,19 @@ class Orders extends Component {
     return filename
   }
 
+  getAttachmentContent = () => {
+    const { attachment } = this.state
+    return (
+      <>
+        <Header as='h2'>{attachment.name}</Header>
+      </>
+    )
+  }
+
   getContent = () => {
+    const { attachment } = this.state
+    if (attachment) return this.getAttachmentContent()
+
     const { relatedOrders, loadRelatedOrders } = this.props
     const rowsRelatedOrders = relatedOrders.reduce((ordersList, order) => {
       if (order) {
@@ -501,9 +534,11 @@ class Orders extends Component {
     const { columns } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
 
+    const { attachment, openModal } = this.state
+
     return (
       <div id='page' className='flex stretched scrolling'>
-        {this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (
+        {((openModal && attachment !== null) || (this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0)) && (
           <Modal
             size='small'
             closeIcon
