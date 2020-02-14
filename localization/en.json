@@ -1120,6 +1120,12 @@
   "attachments.popup.button.forceUpload": "Upload (duplicate)",
   "attachments.popup.button.linkFile": "Link to existing",
   "attachments.popup.button.cancel": "Cancel",
+  "confirm.attachments.delete.title": "Delete Attachment",
+  "confirm.attachments.delete.content": "Do you want to delete file {fileName}?",
+  "notifications.attachments.deleted.header": "File Deleted",
+  "notifications.attachments.deleted.content": "File {fileName} successfully deleted.",
+
+
   "merchants.table": "MerchantsTable",
   "merchants.name": "Name",
   "namesSynonyms": "Names and Synonyms",

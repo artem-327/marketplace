@@ -660,15 +660,14 @@ class DetailSidebar extends Component {
         let data = await addProductOffer(props, isEdit)
         if (isEdit) {
           datagrid.updateRow(data.value.id, () => data.value)
-          this.setState({ edited: false })
         } else {
-          this.setState({
-            sidebarValues: data.value,
-            initValues: { ...initValues, ...this.getEditValues(data.value) },
-            edited: false
-          })
           datagrid.loadData()
         }
+        this.setState({
+          sidebarValues: data.value,
+          initValues: { ...initValues, ...this.getEditValues(data.value) },
+          edited: false
+        })
         toastManager.add(
           generateToastMarkup(
             <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
@@ -1751,9 +1750,8 @@ class DetailSidebar extends Component {
                                               ),
                                               callback: async row => {
                                                 try {
-
                                                   if (row.linked) {
-                                                    await this.props.removeAttachmentLink(
+                                                    const unlinkResponse = await this.props.removeAttachmentLink(
                                                       false,
                                                       sidebarValues.id,
                                                       row.id
@@ -1773,6 +1771,47 @@ class DetailSidebar extends Component {
                                                         appearance: 'success'
                                                       }
                                                     )
+                                                    if (unlinkResponse.value.data.lastLink) {
+                                                      confirm(
+                                                        formatMessage({
+                                                          id: 'confirm.attachments.delete.title',
+                                                          defaultMessage: 'Delete Attachment'
+                                                        }),
+                                                        formatMessage(
+                                                          {
+                                                            id: 'confirm.attachments.delete.content',
+                                                            defaultMessage: `Do you want to delete file ${row.name}?`
+                                                          },
+                                                          { fileName: row.name }
+                                                        )
+                                                      ).then(
+                                                        async () => { // confirm
+                                                          try {
+                                                            await this.props.removeAttachment(row.id)
+                                                            toastManager.add(
+                                                              generateToastMarkup(
+                                                                <FormattedMessage
+                                                                  id='notifications.attachments.deleted.header'
+                                                                  defaultMessage='File Deleted'
+                                                                />,
+                                                                <FormattedMessage
+                                                                  id='notifications.attachments.deleted.content'
+                                                                  defaultMessage={`File ${row.name} successfully deleted.`}
+                                                                  values={{ fileName: row.name }}
+                                                                />
+                                                              ),
+                                                              {
+                                                                appearance: 'success'
+                                                              }
+                                                            )
+                                                          } catch (e) {
+                                                            console.error(e)
+                                                          }
+                                                        },
+                                                        () => { // cancel
+                                                        }
+                                                      )
+                                                    }
                                                   }
                                                   setFieldValue(`documents.attachments`,
                                                     values.documents.attachments.filter(o => o.id !== row.id)
