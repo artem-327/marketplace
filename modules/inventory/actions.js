@@ -51,7 +51,7 @@ export const updateAttachment = (id, payload) => {
   }
 }
 
-export function addProductOffer(values, poId = false, simple = false) {
+export function addProductOffer(values, poId = false, simple = false, isGrouped = false) {
   let params = {}
 
   if (!simple) {
@@ -138,10 +138,23 @@ export function addProductOffer(values, poId = false, simple = false) {
   }
 
   if (poId) {
-    return {
-      type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
-      async payload() {
-        return await api.updateProductOffer(poId, paramsCleaned)
+
+    if (isGrouped) {
+      return {
+        type: AT.INVENTORY_EDIT_GROUPED_PRODUCT_OFFER,
+        async payload() {
+          return await api.updateGroupedProductOffer(poId, {
+            pkgAvailable: paramsCleaned.pkgAvailable,
+            lotNumber: paramsCleaned.lotNumber
+          })
+        }
+      }
+    } else {
+      return {
+        type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
+        async payload() {
+          return await api.updateProductOffer(poId, paramsCleaned)
+        }
       }
     }
   } else {

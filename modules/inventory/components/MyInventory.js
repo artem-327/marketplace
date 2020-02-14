@@ -427,6 +427,8 @@ class MyInventory extends Component {
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
     const { isProductInfoOpen, closePopup } = this.props
 
+    tab = row.grouped ? 0 : tab
+
     if (isProductInfoOpen) closePopup()
     sidebarDetailTrigger(row, bol, tab)
   }
@@ -602,19 +604,6 @@ class MyInventory extends Component {
                   </FormattedMessage>
                 </Button>
               </Menu.Item>
-              {false ? (
-                <Menu.Item>
-                  <Button
-                    size='large'
-                    primary
-                    onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
-                    data-test='my_inventory_add_btn'>
-                    <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                </Menu.Item>
-              ) : null}
               <Menu.Item>
                 <Button size='large' primary onClick={() => openImportPopup()} data-test='my_inventory_import_btn'>
                   {formatMessage({
