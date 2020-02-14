@@ -65,6 +65,7 @@ function mapStateToProps(store, { datagrid }) {
         expiration: po.lotExpirationDate ? moment(po.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A',
         assay: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
         condition: !getSafe(() => po.conforming),
+        conditionNotes: getSafe(() => po.conditionNotes, false),
         form: getSafe(() => po.form.name),
         location: getLocationString(po),
         nacdMember: po && po.ownerNacdMember ? 'Yes' : po.ownerNacdMember === false ? 'No' : ''

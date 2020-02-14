@@ -36,9 +36,14 @@ const RedTriangle = styled(AlertTriangle)`
   width: 20px;
   height: 19px;
   margin: 0 auto;
+  vertical-align: top;
   font-size: 20px;
   color: #f16844;
   line-height: 20px;
+  
+  &.grey {
+    color: #848893;
+  }
 `
 
 class Marketplace extends Component {
@@ -49,7 +54,7 @@ class Marketplace extends Component {
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
       {
         name: 'conformingIcon',
-        title: <RedTriangle />,
+        title: <RedTriangle className='grey' />,
         width: 45,
         align: 'center'
       },
@@ -194,12 +199,13 @@ class Marketplace extends Component {
 
     return rows.map(r => ({
       ...r,
-      clsName: !r.condition ? 'non-conforming' : '',
-      conformingIcon: !r.condition ? (
+      clsName: r.condition ? 'non-conforming' : '',
+      conformingIcon: r.condition ? (
         <Popup
-          content={
+          header={
             <FormattedMessage id='global.nonConforming.tooltip' defaultMessage='This is a non-conforming product.' />
           }
+          content={r.conditionNotes}
           trigger={
             <div>
               <RedTriangle />
@@ -208,18 +214,16 @@ class Marketplace extends Component {
         />
       ) : null,
       condition: r.condition ? (
-        <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
-      ) : (
         <Popup
-          content={
-            <FormattedMessage id='global.nonConforming.tooltip' defaultMessage='This is a non-conforming product.' />
-          }
+          content={r.conditionNotes}
           trigger={
             <div className='dashed-underline'>
               <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
             </div>
           } // <div> has to be there otherwise popup will be not shown
         />
+      ) : (
+        <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
       ),
       packaging: (
         <>
