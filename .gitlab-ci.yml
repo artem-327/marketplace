@@ -2,7 +2,7 @@ before_script:
   - docker -D info
   - docker system prune -f
   - df -h
-  - ls -l /usr/local/lib/
+  - df -i
   - docker system df
   - cd cypress/
   - set e+x
