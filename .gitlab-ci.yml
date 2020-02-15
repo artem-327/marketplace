@@ -1,6 +1,7 @@
 before_script:
   - docker -D info
   - df -h
+  - docker system df
   - cd cypress/
   - set e+x
   - docker build -t cypress/artio .
