@@ -44,8 +44,9 @@ context("Units of measure CRUD", () => {
         cy.get("input[type=text]").eq(0).type("Test")
         cy.waitForUI()
 
-        cy.get("i[class='ellipsis vertical large icon']").click()
-
+        cy.get("[data-test='table_row_action']").within(() => {
+            cy.get("div[role='listbox']").click()
+        })
         cy.contains("Edit").click()
 
         cy.get("#field_input_val1")
@@ -75,7 +76,9 @@ context("Units of measure CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get("i[class='ellipsis vertical large icon']").click()
+        cy.get("[data-test='table_row_action']").within(() => {
+            cy.get("div[role='listbox']").click()
+        })
 
         cy.contains("Delete").click()
 

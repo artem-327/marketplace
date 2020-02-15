@@ -45,7 +45,9 @@ context("Prodex Bank Account CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get("i[class='ellipsis vertical large icon']").click()
+        cy.get("[data-test='table_row_action']").within(() => {
+            cy.get("div[role='listbox']").click()
+        })
 
         cy.contains("Initiate Verification").click()
 
@@ -58,7 +60,9 @@ context("Prodex Bank Account CRUD", () => {
         cy.get("input[type=text]").type("David Tester")
         cy.waitForUI()
 
-        cy.get("i[class='ellipsis vertical large icon']").click()
+        cy.get("[data-test='table_row_action']").within(() => {
+            cy.get("div[role='listbox']").click()
+        })
         cy.contains("Finalize Verification").click()
 
         cy.get("#field_input_amount1").type("0.05")
@@ -86,7 +90,9 @@ context("Prodex Bank Account CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get("i[class='ellipsis vertical large icon']").click()
+        cy.get("[data-test='table_row_action']").within(() => {
+            cy.get("div[role='listbox']").click()
+        })
 
         cy.contains("Delete").click()
 

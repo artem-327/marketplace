@@ -44,7 +44,7 @@ context("Company Product Catalog CRUD", () => {
             cy.contains("kilograms").click()
         })
 
-        cy.selectFromDropdown("div[id='field_dropdown_nmfcNumber']", "12505")
+        cy.selectFromDropdown("div[id='field_dropdown_nmfcNumber']", "1506")
 
         cy.get("[data-test='settings_product_popup_freightClass_drpdn']").click()
         cy.get("[data-test='settings_product_popup_freightClass_drpdn']").within(() => {
