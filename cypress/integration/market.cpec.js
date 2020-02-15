@@ -18,7 +18,10 @@ context("Market place tests",() => {
         cy.server()
         cy.route("GET","/prodex/api/echo-products/search/all-alternatives?**").as("search")
 
-        cy.get(".submenu-filter").click()
+        cy.get(".scrollbar-container").within(() => {
+            cy.get("[class='active item']").click()
+        })
+
 
         cy.waitForUI()
 
@@ -48,7 +51,6 @@ context("Market place tests",() => {
         cy.get("#field_input_quantityTo").type(searchedValue + 5)
         cy.contains("Apply").click()
 
-        cy.get(".submenu-filter").click()
         cy.contains("No records found.")
     })
 })
