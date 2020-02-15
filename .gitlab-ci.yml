@@ -1,6 +1,7 @@
 before_script:
   - docker -D info
   - docker system prune
+  - y
   - df -h
   - docker system df
   - cd cypress/
