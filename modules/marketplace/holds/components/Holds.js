@@ -155,7 +155,9 @@ class Holds extends Component {
         id: 'hold.cancel',
         defaultMessage: 'Cancel'
       }),
-      disabled: row => getSafe(() => row.status.props.children, false) && row.status.props.children !== 'Approved',
+      disabled: row =>
+        (getSafe(() => row.status.props.children, false) && row.status.props.children === 'Rejected') ||
+        row.status.props.children === 'Expired',
       callback: row => this.handleCancel(row.id)
     }
     const buttonReject = {
