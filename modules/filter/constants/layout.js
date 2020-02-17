@@ -22,7 +22,7 @@ export const FlexSidebar = styled.div`
     border-radius: 3px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
     border: solid 1px #dee2e6;
-    opacity: 1;
+    opacity: 1 !important;
     color: #848893;
     margin: 10px 5px;
   
@@ -49,6 +49,7 @@ export const FlexSidebar = styled.div`
     background: #2599d5;
     margin: 10px 5px;
     border: 1px solid #dee2e6;
+    opacity: 1 !important;
     
     :hover, :focus {
       background: #188ec9;
@@ -58,9 +59,8 @@ export const FlexSidebar = styled.div`
       background: #0d82bc;
     }
     :disabled {
-      opacity: 0.65;
-      color: #ffffff;
-      background: #84d6ff;
+      color: rgba(255, 255, 255, 0.25);
+      background: rgba(37, 153, 213, 0.4);
     }
    }
 `
@@ -136,8 +136,6 @@ export const IconRight = styled.div`
   color: #2599d5;
   float: right;
 `
-
-
 
 export const AccordionItem = styled.div`
   //border-bottom: 1px solid #dee2e6;

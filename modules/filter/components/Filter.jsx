@@ -524,24 +524,14 @@ class Filter extends Component {
             </GridColumn>
           </GridRow>
           <GridRow>
-            <GridColumn computer={10} data-test='filter_name_inp'>
+            <GridColumn computer={16} data-test='filter_name_inp'>
               <Input
                 inputProps={{
-                  placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Enter Filter Name' })
+                  placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Your filter name' })
                 }}
                 name='name'
                 fluid
               />
-            </GridColumn>
-            <GridColumn computer={6} textAlign='right'>
-              <Button
-                size='large'
-                primary
-                type='submit'
-                data-test='filter_save_save_name_btn'
-              >
-                {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-              </Button>
             </GridColumn>
           </GridRow>
           <GridRow>
@@ -624,7 +614,8 @@ class Filter extends Component {
       options: options,
       loading: autocompleteDataLoading,
       name: 'search',
-      placeholder: <FormattedMessage id='filter.searchProducts' defaultMessage='Search Products' />,
+      placeholder:
+        <FormattedMessage id='filter.searchProductsMarketplace' defaultMessage='Chemical, CAS, Manufacturer, Trade' />,
       noResultsMessage,
       onSearchChange: (_, data) => this.handleSearch(data),
       value: values.search,
@@ -677,7 +668,7 @@ class Filter extends Component {
     }
 
     if (!autocompleteDataLoading) dropdownProps.icon = null
-    if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
+    //if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
 
     let currencySymbol = getSafe(() => this.props.preferredCurrency.symbol, '$')
 
@@ -756,14 +747,12 @@ class Filter extends Component {
           </AccordionContent>
         </AccordionItem>
 
-        {layout === 'MyInventory' && (
-          <AccordionItem>
-            {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
-            <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
-              <BottomMargedDropdown {...dropdownWarehouseProps} />
-            </AccordionContent>
-          </AccordionItem>
-        )}
+        <AccordionItem>
+          {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
+          <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
+            <BottomMargedDropdown {...dropdownWarehouseProps} />
+          </AccordionContent>
+        </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('packaging', <FormattedMessage id='filter.packaging' />)}
@@ -923,7 +912,6 @@ class Filter extends Component {
                   type={'button'}
                   size='large'
                   loading={isFilterSaving}
-                  primary={openedSaveFilter}
                   onClick={async () => {
                     if (openedSaveFilter) {
                       let { values } = props
@@ -968,7 +956,7 @@ class Filter extends Component {
                   size='large'
                   loading={isFilterApplying}
                   type='submit'
-                  primary={!openedSaveFilter}
+                  primary
                   inputProps={{ type: 'button' }}
                   data-test='filter_apply'>
                   {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
