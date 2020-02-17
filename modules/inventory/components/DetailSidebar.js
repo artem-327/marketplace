@@ -753,10 +753,10 @@ class DetailSidebar extends Component {
           const priceErrors = errors.priceTiers[Object.keys(errors.priceTiers)[0]]
           if (Array.isArray(priceErrors)) {
             const index = priceErrors.findIndex(o => typeof o !== 'undefined')
-            document.getElementsByName(
-              `priceTiers.pricingTiers[${index}].${Object.keys(priceErrors[index])[0]}`)[0].focus()
-          }
-          else {
+            document
+              .getElementsByName(`priceTiers.pricingTiers[${index}].${Object.keys(priceErrors[index])[0]}`)[0]
+              .focus()
+          } else {
             document.getElementsByName('priceTiers.' + Object.keys(errors.priceTiers)[0])[0].focus()
           }
           break
@@ -994,6 +994,7 @@ class DetailSidebar extends Component {
       // openBroadcast,
       // sidebarDetailOpen,
       sidebarValues: { grouped },
+      sidebarValues,
       // searchedManufacturers,
       // searchedManufacturersLoading,
       searchedOrigins,
@@ -1255,7 +1256,10 @@ class DetailSidebar extends Component {
                                     </GridColumn>
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <FormField width={16} data-test='detail_sidebar_cost'>
-                                        <Input name='edit.costPerUOM' inputProps={{ disabled: grouped, type: 'number', min: '0' }} />
+                                        <Input
+                                          name='edit.costPerUOM'
+                                          inputProps={{ disabled: grouped, type: 'number', min: '0' }}
+                                        />
                                       </FormField>
                                     </GridColumn>
                                   </GridRow>
@@ -1453,11 +1457,14 @@ class DetailSidebar extends Component {
                                       </FormattedMessage>
                                     </GridColumn>
                                     <GridColumn mobile={rightWidth - 5} computer={rightWidth - 5}>
-                                      <Input name='edit.leadTime' inputProps={{
-                                        type: 'number',
-                                        min: '0',
-                                        disabled: grouped
-                                      }} />
+                                      <Input
+                                        name='edit.leadTime'
+                                        inputProps={{
+                                          type: 'number',
+                                          min: '0',
+                                          disabled: grouped
+                                        }}
+                                      />
                                     </GridColumn>
                                     <GridColumn mobile={5} computer={5} verticalAlign='middle'>
                                       <FormattedMessage id='global.days' defaultMessage='Days'>
@@ -1680,7 +1687,9 @@ class DetailSidebar extends Component {
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <AttachmentManager
                                         asModal
-                                        returnSelectedRows={rows => this.attachDocumentsManager(rows, values, setFieldValue)}
+                                        returnSelectedRows={rows =>
+                                          this.attachDocumentsManager(rows, values, setFieldValue)
+                                        }
                                       />
                                     </GridColumn>
                                   </GridRow>
@@ -1817,7 +1826,8 @@ class DetailSidebar extends Component {
                                                           { fileName: row.name }
                                                         )
                                                       ).then(
-                                                        async () => { // confirm
+                                                        async () => {
+                                                          // confirm
                                                           try {
                                                             await this.props.removeAttachment(row.id)
                                                             toastManager.add(
@@ -1840,12 +1850,14 @@ class DetailSidebar extends Component {
                                                             console.error(e)
                                                           }
                                                         },
-                                                        () => { // cancel
+                                                        () => {
+                                                          // cancel
                                                         }
                                                       )
                                                     }
                                                   }
-                                                  setFieldValue(`documents.attachments`,
+                                                  setFieldValue(
+                                                    `documents.attachments`,
                                                     values.documents.attachments.filter(o => o.id !== row.id)
                                                   )
                                                 } catch (e) {
