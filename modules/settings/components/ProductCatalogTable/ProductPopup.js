@@ -11,6 +11,7 @@ import {Modal, FormGroup, Popup, Grid, GridRow, GridColumn, Divider, Icon} from 
 import { CompanyProductMixtures } from '~/components/shared-components/'
 import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
 import { DisabledButtonWrapped } from '~/utils/components'
+import confirm from '~/src/components/Confirmable/confirm'
 
 import {
   closePopup,
@@ -24,6 +25,7 @@ import {
   addNmfcNumber,
   removeAttachmentLinkCompanyProduct,
   loadFile,
+  removeAttachment
 } from '../../actions'
 import { addAttachment } from '~/modules/inventory/actions'
 
@@ -680,7 +682,8 @@ class ProductPopup extends React.Component {
                                 callback: async row => {
                                   try {
                                     if (row.linked) {
-                                      await this.props.removeAttachmentLinkCompanyProduct(popupValues.id, row.id)
+                                      const unlinkResponse =
+                                        await this.props.removeAttachmentLinkCompanyProduct(popupValues.id, row.id)
                                       datagrid.loadData() // Reload product with updated attachments
                                       toastManager.add(
                                         generateToastMarkup(
@@ -697,6 +700,47 @@ class ProductPopup extends React.Component {
                                           appearance: 'success'
                                         }
                                       )
+                                      if (unlinkResponse.value.data.lastLink) {
+                                        confirm(
+                                          formatMessage({
+                                            id: 'confirm.attachments.delete.title',
+                                            defaultMessage: 'Delete Attachment'
+                                          }),
+                                          formatMessage(
+                                            {
+                                              id: 'confirm.attachments.delete.content',
+                                              defaultMessage: `Do you want to delete file ${row.name}?`
+                                            },
+                                            { fileName: row.name }
+                                          )
+                                        ).then(
+                                          async () => { // confirm
+                                            try {
+                                              await this.props.removeAttachment(row.id)
+                                              toastManager.add(
+                                                generateToastMarkup(
+                                                  <FormattedMessage
+                                                    id='notifications.attachments.deleted.header'
+                                                    defaultMessage='File Deleted'
+                                                  />,
+                                                  <FormattedMessage
+                                                    id='notifications.attachments.deleted.content'
+                                                    defaultMessage={`File ${row.name} successfully deleted.`}
+                                                    values={{ fileName: row.name }}
+                                                  />
+                                                ),
+                                                {
+                                                  appearance: 'success'
+                                                }
+                                              )
+                                            } catch (e) {
+                                              console.error(e)
+                                            }
+                                          },
+                                          () => { // cancel
+                                          }
+                                        )
+                                      }
                                     }
                                     this.setState({
                                       attachments: this.state.attachments.filter(o => o.id !== row.id)
@@ -760,7 +804,8 @@ const mapDispatchToProps = {
   addNmfcNumber,
   removeAttachmentLinkCompanyProduct,
   loadFile,
-  addAttachment
+  addAttachment,
+  removeAttachment
 }
 const mapStateToProps = ({ settings }) => {
   return {

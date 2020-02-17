@@ -31,6 +31,7 @@ import PurchaseReviewCreditRequest from './components/PurchaseReviewCreditReques
 import SaleReviewCreditRequest from './components/SaleReviewCreditRequest'
 import SaleReturnShipping from './components/SaleReturnShipping'
 import PurchaseOrderShipping from './components/PurchaseOrderShipping'
+import SaleAttachingProductOffer from './components/SaleAttachingProductOffer'
 
 import confirm from '~/src/components/Confirmable/confirm'
 import moment from 'moment/moment'
@@ -345,7 +346,8 @@ class Detail extends Component {
       openedPurchaseOrderShipping,
       cancelPayment,
       toastManager,
-      isPaymentCancellable
+      isPaymentCancellable,
+      opendSaleAttachingProductOffer
     } = this.props
     const { activeIndexes } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
@@ -577,6 +579,7 @@ class Detail extends Component {
               {openedSaleReturnShipping ? <SaleReturnShipping /> : null}
               {openedSaleReviewCreditRequest ? <SaleReviewCreditRequest /> : null}
               {openedPurchaseOrderShipping ? <PurchaseOrderShipping /> : null}
+              {opendSaleAttachingProductOffer ? <SaleAttachingProductOffer /> : null}
 
               <Divider hidden />
               <OrderAccordion
@@ -1101,7 +1104,7 @@ class Detail extends Component {
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[6]}>
                   <Grid.Row>
-                    <Grid.Column>{getSafe(()=>this.props.order.note, '')}</Grid.Column>
+                    <Grid.Column>{getSafe(() => this.props.order.note, '')}</Grid.Column>
                   </Grid.Row>
                 </Accordion.Content>
               </OrderAccordion>

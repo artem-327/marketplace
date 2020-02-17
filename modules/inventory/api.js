@@ -125,4 +125,14 @@ export function updateProductOffer(poId, values) {
   return api.patch(`/prodex/api/product-offers/${poId}`, values).then(response => response.data)
 }
 
+export function updateGroupedProductOffer(poId, values) {
+  return api.patch(`/prodex/api/product-offers/${poId}/grouped-offer`, values).then(response => response.data)
+}
+
 export const getAutocompleteData = searchUrl => api.get(searchUrl).then(response => response.data)
+
+export const groupOffers = request =>
+  api.post(`/prodex/api/product-offers/group-offers/`, request).then(response => response.data)
+
+export const detachOffers = productOfferIds =>
+  api.post(`/prodex/api/product-offers/detach-offers/`, productOfferIds).then(response => response.data)

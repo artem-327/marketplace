@@ -31,7 +31,10 @@ export const initialState = {
   sidebarValues: {},
   product: null,
   editProductOfferInitTrig: false,
-  editedId: null
+  editedId: null,
+  productOfferStatuses: [],
+  datagridFilter: { filters: [] },
+  datagridFilterUpdate: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -75,14 +78,16 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.INVENTORY_EDIT_PRODUCT_OFFER_PENDING: {
+    case AT.INVENTORY_EDIT_PRODUCT_OFFER_PENDING:
+    case AT.INVENTORY_EDIT_GROUPED_PRODUCT_OFFER_PENDING: {
       return {
         ...state,
         loading: true
       }
     }
 
-    case AT.INVENTORY_EDIT_PRODUCT_OFFER_FULFILLED: {
+    case AT.INVENTORY_EDIT_PRODUCT_OFFER_FULFILLED:
+    case AT.INVENTORY_EDIT_GROUPED_PRODUCT_OFFER_FULFILLED: {
       return {
         ...state,
         poCreated: true,
@@ -91,7 +96,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.INVENTORY_EDIT_PRODUCT_OFFER_REJECTED: {
+    case AT.INVENTORY_EDIT_PRODUCT_OFFER_REJECTED:
+    case AT.INVENTORY_EDIT_GROUPED_PRODUCT_OFFER_REJECTED: {
       return {
         ...state,
         loading: false
@@ -452,25 +458,27 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         autocompleteDataLoading: false,
-        autocompleteData: uniqueArrayByKey(action.payload, 'id').map(el => {
-          const productCode = getSafe(() => el.intProductCode, el.mfrProductCode)
-          const productName = getSafe(() => el.intProductName, el.mfrProductName)
-          return {
-            ...el,
-            key: el.id,
-            text: `${productName} ${productCode}`,
-            value: JSON.stringify({
-              id: el.id,
-              name: productName,
-              casNumber: productCode
-            }),
-            content: {
-              productCode: productCode,
-              productName: productName,
-              casProducts: getSafe(() => el.echoProduct.elements, [])
+        autocompleteData: uniqueArrayByKey(action.payload, 'id')
+          .map(el => {
+            const productCode = getSafe(() => el.intProductCode, el.mfrProductCode)
+            const productName = getSafe(() => el.intProductName, el.mfrProductName)
+            return {
+              ...el,
+              key: el.id,
+              text: `${productName} ${productCode}`,
+              value: JSON.stringify({
+                id: el.id,
+                name: productName,
+                casNumber: productCode
+              }),
+              content: {
+                productCode: productCode,
+                productName: productName,
+                casProducts: getSafe(() => el.echoProduct.elements, [])
+              }
             }
-          }
-        }).concat(state.autocompleteData)
+          })
+          .concat(state.autocompleteData)
       }
     }
 
@@ -508,6 +516,59 @@ export default function reducer(state = initialState, action) {
         sidebarDetailOpen: false,
         sidebarValues: null,
         editedId: null
+      }
+    }
+
+    /* GROUP OFFERS */
+    case AT.INVENTORY_GROUP_OFFERS_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.INVENTORY_GROUP_OFFERS_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        productOfferStatuses: payload && payload.productOfferStatuses
+      }
+    }
+
+    case AT.INVENTORY_GROUP_OFFERS_REJECT: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* DETACH OFFERS */
+    case AT.INVENTORY_DETACH_OFFERS_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.INVENTORY_DETACH_OFFERS_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        productOfferStatuses: payload && payload.productOfferStatuses
+      }
+    }
+
+    case AT.INVENTORY_DETACH_OFFERS_REJECT: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+    case AT.INVENTORY_APPLY_FILTER: {
+      return {
+        ...state,
+        datagridFilter: payload,
+        datagridFilterUpdate: !state.datagridFilterUpdate
       }
     }
 

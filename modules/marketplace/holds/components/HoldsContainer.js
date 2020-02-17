@@ -31,11 +31,11 @@ function getStyleLabel(status) {
     fontSize: 'x-small',
     fontWeight: 400
   }
-  if (status === 'APPROVED' || status === 'ON-HOLD') {
+  if (status === 'APPROVED' || status === 'ON_HOLD') {
     labelColor.backgroundColor = '#84c225'
     labelColor.color = '#ffffff'
   }
-  if (status === 'REJECTED' || status === 'EXPIRED' || status === 'CANCELED') {
+  if (status === 'REJECTED' || status === 'EXPIRED' || status === 'CANCELLED') {
     labelColor.backgroundColor = '#f16844'
     labelColor.color = '#ffffff'
   }
@@ -64,7 +64,7 @@ function mapStateToProps(store, { datagrid }) {
         ) : null,
         status: po.status ? (
           <Label circular style={getStyleLabel(po.status)}>
-            {po.status[0].toUpperCase() + po.status.slice(1).toLowerCase()}
+            {po.status === 'ON_HOLD' ? 'Approved' : po.status[0].toUpperCase() + po.status.slice(1).toLowerCase()}
           </Label>
         ) : null
       }

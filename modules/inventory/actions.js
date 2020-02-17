@@ -51,7 +51,7 @@ export const updateAttachment = (id, payload) => {
   }
 }
 
-export function addProductOffer(values, poId = false, simple = false) {
+export function addProductOffer(values, poId = false, simple = false, isGrouped = false) {
   let params = {}
 
   if (!simple) {
@@ -138,10 +138,23 @@ export function addProductOffer(values, poId = false, simple = false) {
   }
 
   if (poId) {
-    return {
-      type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
-      async payload() {
-        return await api.updateProductOffer(poId, paramsCleaned)
+
+    if (isGrouped) {
+      return {
+        type: AT.INVENTORY_EDIT_GROUPED_PRODUCT_OFFER,
+        async payload() {
+          return await api.updateGroupedProductOffer(poId, {
+            pkgAvailable: paramsCleaned.pkgAvailable,
+            lotNumber: paramsCleaned.lotNumber
+          })
+        }
+      }
+    } else {
+      return {
+        type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
+        async payload() {
+          return await api.updateProductOffer(poId, paramsCleaned)
+        }
       }
     }
   } else {
@@ -413,3 +426,22 @@ export function closeSidebarDetail() {
   }
 }
 
+export function groupOffers(request) {
+  return {
+    type: AT.INVENTORY_GROUP_OFFERS,
+    payload: api.groupOffers(request)
+  }
+}
+
+export function detachOffers(productOfferIds) {
+  return {
+    type: AT.INVENTORY_DETACH_OFFERS,
+    payload: api.detachOffers(productOfferIds)
+  }
+}
+export function applyDatagridFilter(filter) {
+  return {
+    type: AT.INVENTORY_APPLY_FILTER,
+    payload: filter
+  }
+}

@@ -1,8 +1,5 @@
 import * as AT from './action-types'
 
-import { uniqueArrayByKey, getSafe } from '~/utils/functions'
-import { Datagrid } from '~/modules/datagrid'
-
 export const initialState = {
   loading: false,
   holds: []
@@ -108,7 +105,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.CANCEL_HOLD_FULFILLED: {
-      Datagrid.loadData()
       return {
         ...state,
         loading: false,
@@ -131,7 +127,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.APPROVE_HOLD_FULFILLED: {
-      Datagrid.loadData()
       return {
         ...state,
         loading: false,
@@ -154,7 +149,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.TO_CART_HOLD_FULFILLED: {
-      Datagrid.loadData()
       return {
         ...state,
         loading: false,

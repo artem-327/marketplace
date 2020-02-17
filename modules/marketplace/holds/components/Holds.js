@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import { Container, Grid, Dropdown } from 'semantic-ui-react'
+import { Container, Grid, Dropdown, Label } from 'semantic-ui-react'
+import { withRouter } from 'next/router'
+import Router from 'next/router'
 
 import ProdexGrid from '~/components/table'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
@@ -87,21 +89,50 @@ class Holds extends Component {
   }
   handleApprove = async id => {
     try {
-      await this.props.approveHold(id)
+      const response = await this.props.approveHold(id)
+      const newRow = response && response.value && response.value.data ? response.value.data : null
+      if (newRow) {
+        Datagrid.updateRow(id, () => ({
+          ...newRow,
+          status: 'ON_HOLD'
+        }))
+      }
     } catch (error) {
       console.error(error)
     }
   }
   handleReject = async id => {
     try {
-      await this.props.rejectHold(id)
+      const response = await this.props.rejectHold(id)
+      const newRow = response && response.value && response.value.data ? response.value.data : null
+      if (newRow) {
+        Datagrid.updateRow(id, () => ({
+          ...newRow,
+          status: 'REJECTED'
+        }))
+      }
     } catch (error) {
       console.error(error)
     }
   }
   handleCancel = async id => {
     try {
-      await this.props.cancelHold(id)
+      const response = await this.props.cancelHold(id)
+      const newRow = response && response.value && response.value.data ? response.value.data : null
+      if (newRow) {
+        Datagrid.updateRow(id, () => ({
+          ...newRow,
+          status: 'CANCELLED'
+        }))
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  handleBuy = async id => {
+    try {
+      await this.props.toCartHold(id)
+      Router.push('/cart')
     } catch (error) {
       console.error(error)
     }
@@ -116,21 +147,15 @@ class Holds extends Component {
         id: 'hold.approve',
         defaultMessage: 'Approve'
       }),
-      callback: row => this.handleApprove(row.id)
+      callback: row => this.handleApprove(row.id),
+      disabled: row => getSafe(() => row.status.props.children, false) && row.status.props.children === 'Approved'
     }
     const buttonCancel = {
       text: formatMessage({
         id: 'hold.cancel',
         defaultMessage: 'Cancel'
       }),
-      disabled: row => {
-        return (
-          getSafe(() => row.status.props.children, false) &&
-          (row.status.props.children === 'Rejected' ||
-            row.status.props.children === 'Expired' ||
-            row.status.props.children === 'Canceled')
-        )
-      },
+      disabled: row => getSafe(() => row.status.props.children, false) && row.status.props.children !== 'Pending',
       callback: row => this.handleCancel(row.id)
     }
     const buttonReject = {
@@ -138,12 +163,22 @@ class Holds extends Component {
         id: 'hold.reject',
         defaultMessage: 'Reject'
       }),
-      callback: row => this.handleReject(row.id)
+      callback: row => this.handleReject(row.id),
+      disabled: row => getSafe(() => row.status.props.children, false) && row.status.props.children === 'Rejected'
+    }
+    const buttonBuy = {
+      text: formatMessage({
+        id: 'hold.buy',
+        defaultMessage: 'Buy'
+      }),
+      callback: row => this.handleBuy(row.id),
+      disabled: row => getSafe(() => row.status.props.children, false) && row.status.props.children !== 'Approved'
     }
     let rowActions = []
 
     if (isMerchant && this.state.holdDropdown === 'My Holds') {
       rowActions.push(buttonCancel)
+      rowActions.push(buttonBuy)
     } else if ((isCompanyAdmin || isProductOfferManager) && this.state.holdDropdown === 'Requsted Holds') {
       rowActions.push(buttonApprove)
       rowActions.push(buttonReject)
@@ -212,4 +247,4 @@ class Holds extends Component {
   }
 }
 
-export default injectIntl(Holds)
+export default withRouter(injectIntl(Holds))

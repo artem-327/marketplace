@@ -5,8 +5,6 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { withRouter } from 'next/router'
 import { ShippingQuotes } from '~/modules/shipping'
-import SubMenu from '~/src/components/SubMenu'
-import { Filter } from '~/modules/filter'
 import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
@@ -38,9 +36,14 @@ const RedTriangle = styled(AlertTriangle)`
   width: 20px;
   height: 19px;
   margin: 0 auto;
+  vertical-align: top;
   font-size: 20px;
   color: #f16844;
   line-height: 20px;
+  
+  &.grey {
+    color: #848893;
+  }
 `
 
 class Marketplace extends Component {
@@ -51,9 +54,7 @@ class Marketplace extends Component {
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
       {
         name: 'conformingIcon',
-        title: (
-          <RedTriangle />
-        ),
+        title: <RedTriangle className='grey' />,
         width: 45,
         align: 'center'
       },
@@ -183,6 +184,13 @@ class Marketplace extends Component {
     //this.initData()
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
+    if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
+      datagrid.setFilter(datagridFilter)
+    }
+  }
+
   getRows = () => {
     const {
       rows,
@@ -194,16 +202,28 @@ class Marketplace extends Component {
       clsName: r.condition ? 'non-conforming' : '',
       conformingIcon: r.condition ? (
         <Popup
-          content={
+          header={
             <FormattedMessage id='global.nonConforming.tooltip' defaultMessage='This is a non-conforming product.' />
           }
-          trigger={<div><RedTriangle /></div>} // <div> has to be there otherwise popup will be not shown
+          content={r.conditionNotes}
+          trigger={
+            <div>
+              <RedTriangle />
+            </div>
+          } // <div> has to be there otherwise popup will be not shown
         />
       ) : null,
       condition: r.condition ? (
-        <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
+        <Popup
+          content={r.conditionNotes}
+          trigger={
+            <div className='dashed-underline'>
+              <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+            </div>
+          } // <div> has to be there otherwise popup will be not shown
+        />
       ) : (
-        <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+        <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
       ),
       packaging: (
         <>
@@ -264,15 +284,7 @@ class Marketplace extends Component {
   }
 
   renderTabMarketplace = () => {
-    const {
-      datagrid,
-      intl,
-      getAutocompleteData,
-      autocompleteData,
-      autocompleteDataLoading,
-      openPopup,
-      isMerchant
-    } = this.props
+    const { datagrid, intl, openPopup, isMerchant } = this.props
     const { columns, selectedRows } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
@@ -366,9 +378,6 @@ class Marketplace extends Component {
                 </DivButtonWithToolTip>
               }
             />
-            <Menu.Item>
-              <SubMenu clearAutocompleteData={this.handleClearAutocompleteData} />
-            </Menu.Item>
           </Menu.Menu>
         </Menu>
 
@@ -420,18 +429,6 @@ class Marketplace extends Component {
             rowActions={rowActions}
           />
         </div>
-        <Filter
-          filterType={filterTypes.MARKETPLACE}
-          getAutocompleteData={getAutocompleteData}
-          autocompleteData={autocompleteData}
-          autocompleteDataLoading={autocompleteDataLoading}
-          onApply={this.handleFilterApply}
-          onClear={this.handleFilterClear}
-          savedUrl='/prodex/api/product-offers/broadcasted/datagrid/saved-filters'
-          searchUrl={text => `/prodex/api/company-products/broadcasted/search?pattern=${text}&onlyMapped=true`}
-          apiUrl={datagrid.apiUrl}
-          filters={datagrid.filters}
-        />
         <AddCart />
       </>
     )
@@ -442,22 +439,35 @@ class Marketplace extends Component {
 
     const panes = [
       {
-        menuItem: <MenuLink to='/marketplace/all' data-test='marketplace_submenu_tab_marketplace'>MARKETPLACE</MenuLink>,
+        menuItem: (
+          <MenuLink to='/marketplace/all' data-test='marketplace_submenu_tab_marketplace'>
+            MARKETPLACE
+          </MenuLink>
+        ),
         render: () => <>{this.renderTabMarketplace()}</>
       },
+      // {
+      //   menuItem: <MenuLink to='/marketplace/wanted-board' data-test='marketplace_submenu_tab_wanted_board'>WANTED BOARD</MenuLink>,
+      //   render: () => <>Tab 2 Content</>
+      // },
       {
-        menuItem: <MenuLink to='/marketplace/wanted-board' data-test='marketplace_submenu_tab_wanted_board'>WANTED BOARD</MenuLink>,
-        render: () => <>Tab 2 Content</>
-      },
-      {
-        menuItem: <MenuLink to='/marketplace/holds' data-test='marketplace_submenu_tab_holds'>HOLDS</MenuLink>,
+        menuItem: (
+          <MenuLink to='/marketplace/holds' data-test='marketplace_submenu_tab_holds'>
+            HOLDS
+          </MenuLink>
+        ),
         render: () => <>{<Holds />}</>
       }
     ]
     return (
       <>
         <Container fluid style={{ padding: '0 32px' }} className='flex stretched'>
-          <Tab activeIndex={activeIndex} className='marketplace-container' menu={{ secondary: true, pointing: true }} panes={panes} />
+          <Tab
+            activeIndex={activeIndex}
+            className='marketplace-container'
+            menu={{ secondary: true, pointing: true }}
+            panes={panes}
+          />
         </Container>
       </>
     )

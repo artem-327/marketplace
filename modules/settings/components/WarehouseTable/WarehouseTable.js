@@ -199,6 +199,7 @@ const mapStateToProps = (state, { datagrid }) => {
         popupValues: {
           initialValues: {
             //name: r.name,
+            taxId: getSafe(() => r.taxId, ''),
             deliveryAddress: {
               address: {
                 streetAddress: getSafe(() => r.deliveryAddress.address.streetAddress),
