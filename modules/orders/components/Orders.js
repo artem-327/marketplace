@@ -18,7 +18,7 @@ class Orders extends Component {
   state = {
     columns: [
       {
-        name: 'id',
+        name: 'orderId',
         title: (
           <FormattedMessage id='order.orderId' defaultMessage='Order ID'>
             {text => text}
@@ -373,7 +373,7 @@ class Orders extends Component {
 
     return this.props.rows.map(row => ({
       ...row,
-      id: <Link href={`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`}><a>{row.id}</a></Link>,
+      orderId: <Link href={`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`}><a>{row.id}</a></Link>,
       productName: <ArrayToFirstItem values={row.orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))} />,
       globalStatus: row.globalStatus === 'Failed' ? this.failedWrapper(row.globalStatus) : row.globalStatus,
       paymentStatus: row.paymentStatus === 'Failed' ? this.failedWrapper(row.paymentStatus) : row.paymentStatus,
