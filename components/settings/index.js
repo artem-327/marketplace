@@ -64,7 +64,7 @@ class Settings extends Component {
           }
         }
       })
-      if (Object.keys(tmp).length > 0) validationSchema[group.name] = Yup.object().shape(tmp)
+      if (Object.keys(tmp).length > 0) validationSchema[group.code] = Yup.object().shape(tmp)
     })
 
     this.setState({
@@ -134,10 +134,10 @@ class Settings extends Component {
     let initialValues = { [role]: {} }
 
     systemSettings.forEach(el => {
-      initialValues[role][el.name] = {}
+      initialValues[role][el.code] = {}
 
       el.settings.forEach(setting => {
-        initialValues[role][el.name][setting.name] = {
+        initialValues[role][el.code][setting.code] = {
           id: setting.id,
           original: setting.original,
           value: {
@@ -196,7 +196,7 @@ class Settings extends Component {
                                             onClick: e => e.stopPropagation()
                                           }}
                                           label={formatMessage({ id: 'global.override', defaultMessage: 'Override' })}
-                                          name={`${role}.${group.name}.${el.name}.edit`}
+                                          name={`${role}.${group.code}.${el.code}.edit`}
                                         />
                                       </>
                                     )}
@@ -229,7 +229,7 @@ class Settings extends Component {
                                   }
                                 }),
                                 {
-                                  name: `${role}.${group.name}.${el.name}.value.${
+                                  name: `${role}.${group.code}.${el.code}.value.${
                                     el.type === 'BOOL' ? 'actual' : 'visible'
                                   }`
                                 }
@@ -241,20 +241,20 @@ class Settings extends Component {
                           <Popup
                             trigger={
                               <Button
-                                loading={loading[group.name]}
+                                loading={loading[group.code]}
                                 onClick={async () => {
                                   formikProps.resetForm(values)
 
                                   let errors = await formikProps.validateForm()
-                                  let errorFields = Object.keys(getSafe(() => errors[role][group.name], {}))
+                                  let errorFields = Object.keys(getSafe(() => errors[role][group.code], {}))
 
                                   if (errorFields.length > 0) {
                                     errorFields.forEach(field =>
-                                      formikProps.setFieldTouched(`${role}.${group.name}.${field}.value.visible`)
+                                      formikProps.setFieldTouched(`${role}.${group.code}.${field}.value.visible`)
                                     )
                                   } else {
                                     this.setState(
-                                      { clickedButton: group.name },
+                                      { clickedButton: group.code },
                                       () => !allDisabled && this.handleSubmit(formikProps)
                                     )
                                   }
