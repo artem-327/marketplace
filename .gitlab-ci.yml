@@ -10,4 +10,5 @@ before_script:
 
 test:
   script:
+    - pwd
     - docker run -v $PWD:/test -w /test -u appuser cypress/artio
