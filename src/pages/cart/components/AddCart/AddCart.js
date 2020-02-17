@@ -557,17 +557,21 @@ export default class AddCart extends Component {
     let { sidebar, isEdit, orderDetailIsFetching, offerDetailIsFetching } = this.props
     const { sidebarChanged } = this.props
     let { isOpen } = sidebar
-
     return (
       <Sidebar
         onHide={e => {
-          // Workaround, close if you haven't clicked on calendar item or filter icon
           try {
             if (
               e &&
               !(e.path[0] instanceof HTMLTableCellElement) &&
               !(e.path[1] instanceof HTMLTableCellElement) &&
-              (!e.target || !e.target.className.includes('js-focus-visible'))
+              e.target &&
+              e.target.className &&
+              typeof e.target.className.includes !== 'undefined' &&
+              // Workaround, close if you haven't clicked on calendar item or filter icon
+              !e.target.className.includes('js-focus-visible') &&
+              //if user click to dropdown row action then sidebar will be opend
+              !(e.target.className.includes('item') || e.target.className.includes('text'))
             ) {
               sidebarChanged({ isOpen: false, isHoldRequest: false })
             }

@@ -14,7 +14,7 @@ import { ArrowLeftCircle, ArrowRightCircle, Layers, Settings, ShoppingBag } from
 import Tabs from '~/modules/admin/components/Tabs'
 
 import { InventoryFilter } from '~/modules/filter'
-import { Filter } from '~/modules/filter'   // Marketplace filter
+import { Filter } from '~/modules/filter' // Marketplace filter
 import { OrderFilter } from '~/modules/filter'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
@@ -39,7 +39,7 @@ class Navigation extends Component {
     operations: getSafe(() => Router.router.pathname === '/operations', false),
     openedFilterMyInventory: false,
     openedFilterMarketplace: false,
-    openedFilterOrders: false,
+    openedFilterOrders: false
   }
 
   componentDidMount() {
@@ -68,16 +68,16 @@ class Navigation extends Component {
       switch (asPath) {
         case '/inventory/my':
           this.setState(prevState => ({ openedFilterMyInventory: !prevState.openedFilterMyInventory }))
-          break;
+          break
         case '/marketplace/all':
           this.setState(prevState => ({ openedFilterMarketplace: !prevState.openedFilterMarketplace }))
-          break;
+          break
         case '/orders?type=sales':
           //temporary disabled - this.setState(prevState => ({ openedFilterOrders: !prevState.openedFilterOrders }))
-          break;
+          break
         case '/orders?type=purchase':
           //temporary disabled - this.setState(prevState => ({ openedFilterOrders: !prevState.openedFilterOrders }))
-          break;
+          break
       }
     } else {
       this.setState({
@@ -224,8 +224,8 @@ class Navigation extends Component {
             {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
           </>
         </MenuLink>
-        {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? (<InventoryFilter/>) : null}
-        {false && asPath === '/inventory/my' ? (<InventoryFilter/>) : null}
+        {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
+        {false && asPath === '/inventory/my' ? <InventoryFilter /> : null}
         {getSafe(() => company.nacdMember, false) ? (
           <>
             <MenuLink to='/marketplace/all' data-test='navigation_menu_marketplace_drpdn'>
@@ -234,7 +234,7 @@ class Navigation extends Component {
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
               </>
             </MenuLink>
-            {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? (<Filter/>) : null}
+            {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
           </>
         ) : null}
         <MenuLink to='/orders?type=sales' data-test='navigation_menu_orders_sales_drpdn'>
@@ -243,14 +243,14 @@ class Navigation extends Component {
             {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
           </>
         </MenuLink>
-        {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=sales' ? (<OrderFilter/>) : null}
+        {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=sales' ? <OrderFilter /> : null}
         <MenuLink to='/orders?type=purchase' data-test='navigation_menu_orders_purchase_drpdn'>
           <>
             <ArrowLeftCircle />
             {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
           </>
         </MenuLink>
-        {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=purchase' ? (<OrderFilter/>) : null}
+        {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=purchase' ? <OrderFilter /> : null}
         {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
@@ -406,7 +406,7 @@ export default withAuth(
         auth: store.auth,
         tabsNames: store.settings.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
-        collapsedMenu: store.layout.collapsedMenu,
+        collapsedMenu: store.layout.collapsedMenu
       }),
       {
         triggerSystemSettingsModal,
