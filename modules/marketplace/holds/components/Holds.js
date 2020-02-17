@@ -148,14 +148,14 @@ class Holds extends Component {
         defaultMessage: 'Approve'
       }),
       callback: row => this.handleApprove(row.id),
-      disabled: row => getSafe(() => row.status.props.children, false) && row.status.props.children === 'Approved'
+      disabled: row => getSafe(() => row.status.props.children, false) && row.status.props.children !== 'Pending'
     }
     const buttonCancel = {
       text: formatMessage({
         id: 'hold.cancel',
         defaultMessage: 'Cancel'
       }),
-      disabled: row => getSafe(() => row.status.props.children, false) && row.status.props.children !== 'Pending',
+      disabled: row => getSafe(() => row.status.props.children, false) && row.status.props.children !== 'Approved',
       callback: row => this.handleCancel(row.id)
     }
     const buttonReject = {
@@ -164,7 +164,7 @@ class Holds extends Component {
         defaultMessage: 'Reject'
       }),
       callback: row => this.handleReject(row.id),
-      disabled: row => getSafe(() => row.status.props.children, false) && row.status.props.children === 'Rejected'
+      disabled: row => getSafe(() => row.status.props.children, false) && row.status.props.children !== 'Pending'
     }
     const buttonBuy = {
       text: formatMessage({
