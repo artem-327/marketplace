@@ -377,7 +377,15 @@ class Orders extends Component {
       productName: <ArrayToFirstItem values={row.orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))} />,
       globalStatus: row.globalStatus === 'Failed' ? this.failedWrapper(row.globalStatus) : row.globalStatus,
       paymentStatus: row.paymentStatus === 'Failed' ? this.failedWrapper(row.paymentStatus) : row.paymentStatus,
-      bl: <Icon name='file' className='unknown' />, // unknown / positive / negative
+      bl: row.bl // unknown / positive / negative
+            ? (
+              <span onClick={() => this.openOverviewWindow(row.bl, { id: row.id })}>
+                <Icon name='file' className='positive' />
+              </span>
+            )
+            : (
+              <Icon name='file' className='unknown' />
+            ),
       sds: row.sds
             ? (
               <span onClick={() => this.openOverviewWindow(row.sds, { id: row.id })}>
@@ -477,21 +485,27 @@ class Orders extends Component {
     return filename
   }
 
+  closeAttachmentPopup = () => {
+    this.setState({ attachmentPopup: null, openModal: false })
+  }
+
   getAttachmentContent = () => {
     const { attachmentPopup: { attachment, order } } = this.state
     return (
       <>
-        <Grid>
+        <Grid columns={2}>
           <Grid.Column floated='right'>
-            <Button as='a' onClick={() => this.downloadAttachment(attachment.id, order.id)}>
+            <Button color='blue'
+                    onClick={() => this.downloadAttachment(attachment.id, order.id)}>
               <Icon name='download'/>
-              <FormattedMessage id='order.downloadAsPdf' defaultMessage='Download as PDF'>{text => text}</FormattedMessage>
+              <FormattedMessage id='order.downloadAsPdf' defaultMessage='Download as PDF'>
+                {text => text}
+              </FormattedMessage>
             </Button>
-            <Button as='a' onClick={() => this.printAttachment()}>
-              <FormattedMessage id='global.print' defaultMessage='Print'>{text => text}</FormattedMessage>
-            </Button>
-            <Button as='a' onClick={() => this.closeModal()}>
-              <FormattedMessage id='global.close' defaultMessage='Close'>{text => text}</FormattedMessage>
+            <Button onClick={() => this.closeAttachmentPopup()}>
+              <FormattedMessage id='global.close' defaultMessage='Close'>
+                {text => text}
+              </FormattedMessage>
             </Button>
           </Grid.Column>
         </Grid>
@@ -554,7 +568,7 @@ class Orders extends Component {
         {openModal && attachmentPopup !== null && (
           <Modal
             size='large'
-            closeIcon
+            closeIcon={false}
             onClose={() => this.setState({ openModal: false })}
             centered={true}
             open={this.state.openModal}>
