@@ -17,8 +17,28 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import api from '~/modules/settings/api'
 
-const RightAlignedDiv = styled.div`
-  text-align: right !important;
+const FixyWrapper = styled.div`
+  position: relative;
+  transform: translateY(0);
+  padding: 2.5em 1.5em 1.5em;
+`
+
+const ButtonsWrapper = styled(Grid)`
+  position: fixed;
+  top: 1px;
+  left: 1em;
+  width: calc(100% - 2em);
+  margin: 0 !important;
+  background: #fff;
+`
+
+// PopupTriggerWrapper is necessary when button is disabled - trigger didn't work
+const PopupTriggerWrapper = styled.div`
+  display: inline-block;
+`
+
+const FormSpaced = styled(Form)`
+  padding-top: 31px !important;
 `
 
 const StyledSegment = styled(Segment)`
@@ -42,7 +62,7 @@ class Settings extends Component {
     role: null,
     systemSettings: [],
     validationSchema: null,
-    loading: {},
+    loading: false,
     clickedButton: null,
     fetching: true
   }
@@ -82,21 +102,21 @@ class Settings extends Component {
     // Original = true && value !== 'EMPTY_SETTING' => User has value set at current level
 
     const { toastManager, triggerSystemSettingsModal, role } = this.props
-    this.setState({ loading: { [this.state.clickedButton]: true } })
+    this.setState({ loading: true })
 
     let payload = {
       settings: []
     }
 
-    let group = values[role][this.state.clickedButton]
-
-    Object.keys(group).forEach(key => {
-      let el = group[key]
-      if (el.changeable) {
-        if (!el.edit && role !== 'admin') payload.settings.push({ id: el.id, value: 'EMPTY_SETTING' })
-        else if (el.value.visible !== null)
-          payload.settings.push({ id: el.id, value: el.type === 'BOOL' ? el.value.actual : el.value.visible })
-      }
+    Object.keys(values[role]).forEach(group => {
+      Object.keys(values[role][group]).forEach(key => {
+        let el = values[role][group][key]
+        if (el.changeable) {
+          if (!el.edit && role !== 'admin') payload.settings.push({id: el.id, value: 'EMPTY_SETTING'})
+          else if (el.value.visible !== null)
+            payload.settings.push({id: el.id, value: el.type === 'BOOL' ? el.value.actual : el.value.visible})
+        }
+      })
     })
 
     try {
@@ -117,7 +137,7 @@ class Settings extends Component {
     } catch (e) {
       console.error(e)
     } finally {
-      this.setState({ loading: { [this.state.clickedButton]: false } })
+      this.setState({ loading: false })
     }
   }
 
@@ -158,10 +178,10 @@ class Settings extends Component {
         validationSchema={this.state.validationSchema}
         render={formikProps => {
           let { values, errors } = formikProps
+          let allDisabled = systemSettings.every(group => group.settings.every(val => !val.changeable))
           return (
-            <Form>
+            <FormSpaced>
               {systemSettings.map(group => {
-                let allDisabled = group.settings.every(val => !val.changeable)
                 return (
                   <>
                     <Header size='medium' as='h2'>
@@ -237,50 +257,69 @@ class Settings extends Component {
                             </>
                           )
                         })}
-                        <RightAlignedDiv>
-                          <Popup
-                            trigger={
-                              <Button
-                                loading={loading[group.code]}
-                                onClick={async () => {
-                                  formikProps.resetForm(values)
-
-                                  let errors = await formikProps.validateForm()
-                                  let errorFields = Object.keys(getSafe(() => errors[role][group.code], {}))
-
-                                  if (errorFields.length > 0) {
-                                    errorFields.forEach(field =>
-                                      formikProps.setFieldTouched(`${role}.${group.code}.${field}.value.visible`)
-                                    )
-                                  } else {
-                                    this.setState(
-                                      { clickedButton: group.code },
-                                      () => !allDisabled && this.handleSubmit(formikProps)
-                                    )
-                                  }
-                                }}
-                                primary
-                                disabled={allDisabled}>
-                                <FormattedMessage id='global.save' defaultMessage='Save'>
-                                  {text => text}
-                                </FormattedMessage>
-                              </Button>
-                            }
-                            disabled={!allDisabled}
-                            content={
-                              <FormattedMessage
-                                id='settings.system.allDisabled'
-                                default='There is nothing to save as none of the values can be changed.'
-                              />
-                            }
-                          />
-                        </RightAlignedDiv>
                       </>
                     </StyledSegment>
                   </>
                 )
               })}
-            </Form>
+              <ButtonsWrapper>
+                <Grid.Column textAlign='right'>
+                  <Popup
+                    position='left center'
+                    trigger={
+                      <PopupTriggerWrapper>
+                        <Button
+                          loading={loading}
+                          onClick={async () => {
+                            formikProps.resetForm(values)
+
+                            let errors = await formikProps.validateForm()
+                            let errorFields = Object.keys(getSafe(() => errors[role], {}))
+
+                            if (errorFields.length > 0) {
+                              errorFields.forEach(group => {
+                                group.forEach(field =>
+                                  formikProps.setFieldTouched(`${role}.${group.code}.${field}.value.visible`)
+                                )
+                              })
+                            } else {
+                              this.setState(
+                                { clickedButton: true },
+                                () => !allDisabled && this.handleSubmit(formikProps)
+                              )
+                            }
+                          }}
+                          primary
+                          disabled={allDisabled}>
+                          <FormattedMessage id='global.save' defaultMessage='Save'>
+                            {text => text}
+                          </FormattedMessage>
+                        </Button>
+                      </PopupTriggerWrapper>
+                    }
+                    disabled={!allDisabled}
+                    content={
+                      <FormattedMessage
+                        id='settings.system.allDisabled'
+                        default='There is nothing to save as none of the values can be changed.'
+                      />
+                    }
+                  />
+                  {asModal ? (
+                    <Button
+                      basic
+                      onClick={e => {
+                        e.stopPropagation()
+                        this.props.triggerSystemSettingsModal(false)
+                      }}>
+                      <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                  ) : null}
+                </Grid.Column>
+              </ButtonsWrapper>
+            </FormSpaced>
           )
         }}
       />
@@ -304,20 +343,9 @@ class Settings extends Component {
           <FormattedMessage id='settings.systemSettings' defaultMessage='System Settings' />
         </Modal.Header>
 
-        <Modal.Content scrolling>{getMarkup()}</Modal.Content>
-
-        <Modal.Actions>
-          <Button
-            basic
-            onClick={e => {
-              e.stopPropagation()
-              this.props.triggerSystemSettingsModal(false)
-            }}>
-            <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-              {text => text}
-            </FormattedMessage>
-          </Button>
-        </Modal.Actions>
+        <FixyWrapper>
+          <Modal.Content scrolling>{getMarkup()}</Modal.Content>
+        </FixyWrapper>
       </Modal>
     )
   }
