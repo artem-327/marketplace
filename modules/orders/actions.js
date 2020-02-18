@@ -199,7 +199,6 @@ export const purchaseShipmentOrder = (orderId, query) => ({
   type: AT.ORDER_PURCHASE_SHIPMENT_ORDER,
   payload: Api.purchaseShipmentOrder(orderId, query)
 })
-
 export const downloadCreditRequestAttachments = (endpointType, orderId, creditRequestAttachmentId) => ({
   type: AT.DOWNLOAD_CREDIT_REQUEST_ATTACHMENTS,
   payload: Api.downloadCreditRequestAttachments(endpointType, orderId, creditRequestAttachmentId)

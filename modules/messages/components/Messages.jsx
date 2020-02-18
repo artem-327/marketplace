@@ -19,7 +19,7 @@ class Messages extends Component {
     let messages = data.clientMessage
       ? [data]
       : Array.isArray(data)
-      ? data.filter(d => !!d.clientMessage)
+      ? data.filter(d => d && !!d.clientMessage)
       : data && data.messages && data.messages.length > 0
       ? data.messages
       : []

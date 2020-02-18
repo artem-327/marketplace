@@ -1706,7 +1706,7 @@
   "order.menu.draft": "DRAFT",
   "order.menu.filter": "Filter",
   "order.orders": "ORDERS",
-  "order.downloadOrder": "Download {orderType} Order",
+  "order.downloadOrder": "Download {orderType}O",
   "order.orderStatus": "Order Status",
   "order.shippingStatus": "Shipping Status",
   "order.reviewStatus": "Review Status",

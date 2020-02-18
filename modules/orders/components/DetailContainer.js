@@ -183,7 +183,7 @@ function prepareDetail(data, type) {
       data.buyerCompanyAddressZip +
       ', ' +
       data.buyerCompanyAddressCountry,
-    subtotal: subtotal, //"$" + totalPrice.formatMoney(2),
+    subtotal: <FormattedNumber style='currency' currency={currency} value={subtotal} />, //"$" + totalPrice.formatMoney(2),
     terms: 'Net 30', // ! ! TBD
     total: <FormattedNumber style='currency' currency={currency} value={totalPriceWithShipping} />, //"$" + totalPriceWithShipping.formatMoney(2),
     totalPkg: orderItems.map(d => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
-import { Modal, Menu, Header, Container, Icon, Button, Dimmer, Loader } from 'semantic-ui-react'
+import { Modal, Menu, Header, Container, Grid, Icon, Button, Dimmer, Loader } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 import SubMenu from '~/src/components/SubMenu'
@@ -11,17 +11,14 @@ import { getSafe } from '~/utils/functions'
 import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
 import FilterTags from '~/modules/filter/components/FitlerTags'
-
-const TitleOrderId = styled.div`
-  font-size: larger;
-  font-weight: 500;
-`
+import { ArrayToFirstItem } from '~/components/formatted-messages'
+import Link from 'next/link'
 
 class Orders extends Component {
   state = {
     columns: [
       {
-        name: 'id',
+        name: 'orderId',
         title: (
           <FormattedMessage id='order.orderId' defaultMessage='Order ID'>
             {text => text}
@@ -266,6 +263,7 @@ class Orders extends Component {
         ]
       }
     },
+    attachmentPopup: null,
     openModal: false,
     columnsRelatedOrders: [
       {
@@ -370,13 +368,42 @@ class Orders extends Component {
   }
 
   getRows = () => {
+    const { queryType } = this.props
+    let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
+
     return this.props.rows.map(row => ({
       ...row,
+      orderId: <Link href={`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`}><a>{row.id}</a></Link>,
+      productName: <ArrayToFirstItem values={row.orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))} />,
       globalStatus: row.globalStatus === 'Failed' ? this.failedWrapper(row.globalStatus) : row.globalStatus,
       paymentStatus: row.paymentStatus === 'Failed' ? this.failedWrapper(row.paymentStatus) : row.paymentStatus,
-      bl: <Icon name='file' className='unknown' />, // unknown / positive / negative
-      sds: <Icon name='file' className='unknown' />,
-      cofA: <Icon name='file' className='unknown' />,
+      bl: row.bl // unknown / positive / negative
+            ? (
+              <span onClick={() => this.openOverviewWindow(row.bl, { id: row.id })}>
+                <Icon name='file' className='positive' />
+              </span>
+            )
+            : (
+              <Icon name='file' className='unknown' />
+            ),
+      sds: row.sds
+            ? (
+              <span onClick={() => this.openOverviewWindow(row.sds, { id: row.id })}>
+                <Icon name='file' className='positive' />
+              </span>
+            )
+            : (
+              <Icon name='file' className='unknown' />
+            ),
+      cofA: row.cofA
+            ? (
+              <span onClick={() => this.openOverviewWindow(row.cofA, { id: row.id })}>
+                <Icon name='file' className='positive' />
+              </span>
+            )
+            : (
+              <Icon name='file' className='unknown' />
+            ),
       related:
         row.accountingDocumentsCount > 0 ? (
           <span onClick={() => this.openModalWindow(row.id)}>
@@ -391,6 +418,10 @@ class Orders extends Component {
   async openModalWindow(orderId) {
     this.setState({ openModal: true })
     await this.props.getRelatedOrders(orderId)
+  }
+
+  openOverviewWindow(attachment, order) {
+    this.setState({ openModal: true, attachmentPopup: { attachment, order } })
   }
 
   handleFilterApply = payload => {    // ! ! ????
@@ -454,30 +485,56 @@ class Orders extends Component {
     return filename
   }
 
-  getContent = () => {
-    const { relatedOrders, loadRelatedOrders } = this.props
-    const rowsRelatedOrders = relatedOrders.map(order => ({
-      documentNumber: (
-        <Button as='a' onClick={() => this.downloadAttachment(order.documentNumber, order.id)}>
-          <Icon name='download' />
-          {order.documentNumber}
-        </Button>
-      ),
-      type: order.type,
-      issuedAt: getSafe(() => <FormattedDate value={order.issuedAt.split('T')[0]} />, 'N/A'),
-      issuerCompanyName: order.issuerCompanyName,
-      cfPriceTotal: <FormattedNumber style='currency' currency={currency} value={order.cfPriceTotal} />
-    }))
+  closeAttachmentPopup = () => {
+    this.setState({ attachmentPopup: null, openModal: false })
+  }
+
+  getAttachmentContent = () => {
+    const { attachmentPopup: { attachment, order } } = this.state
     return (
       <>
-        {!loadRelatedOrders && (
-          <TitleOrderId>
-            <FormattedMessage id='order.related.orderId' defaultMessage='Order ID: '>
-              {text => text}
-            </FormattedMessage>
-            {`${relatedOrders[0].relatedOrder}`}
-          </TitleOrderId>
-        )}
+        <Grid columns={2}>
+          <Grid.Column floated='right'>
+            <Button color='blue'
+                    onClick={() => this.downloadAttachment(attachment.id, order.id)}>
+              <Icon name='download'/>
+              <FormattedMessage id='order.downloadAsPdf' defaultMessage='Download as PDF'>
+                {text => text}
+              </FormattedMessage>
+            </Button>
+            <Button onClick={() => this.closeAttachmentPopup()}>
+              <FormattedMessage id='global.close' defaultMessage='Close'>
+                {text => text}
+              </FormattedMessage>
+            </Button>
+          </Grid.Column>
+        </Grid>
+      </>
+    )
+  }
+
+  getContent = () => {
+    const { relatedOrders, loadRelatedOrders } = this.props
+    const rowsRelatedOrders = relatedOrders.reduce((ordersList, order) => {
+      if (order) {
+        ordersList.push({
+          documentNumber: (
+            <Button as='a' onClick={() => this.downloadAttachment(order.documentNumber, order.id)}>
+              <Icon name='download'/>
+              {order.documentNumber}
+            </Button>
+          ),
+          type: order.type,
+          issuedAt: getSafe(() => <FormattedDate value={order.issuedAt.split('T')[0]}/>, 'N/A'),
+          issuerCompanyName: order.issuerCompanyName,
+          cfPriceTotal: <FormattedNumber style='currency' currency={currency} value={order.cfPriceTotal}/>
+        })
+      }
+
+      return ordersList
+    }, [])
+    return (
+      <>
         <ProdexGrid
           loading={this.state.submitting || loadRelatedOrders}
           hideSettingsIcon={true}
@@ -504,8 +561,20 @@ class Orders extends Component {
     const { columns } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
 
+    const { attachmentPopup, openModal } = this.state
+
     return (
       <div id='page' className='flex stretched scrolling'>
+        {openModal && attachmentPopup !== null && (
+          <Modal
+            size='large'
+            closeIcon={false}
+            onClose={() => this.setState({ openModal: false })}
+            centered={true}
+            open={this.state.openModal}>
+            <Modal.Content scrolling>{this.getAttachmentContent()}</Modal.Content>
+          </Modal>
+        )}
         {this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (
           <Modal
             size='small'
