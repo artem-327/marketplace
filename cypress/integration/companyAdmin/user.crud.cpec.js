@@ -10,6 +10,8 @@ context("Prodex User CRUD", () => {
         cy.route("GET", "/prodex/api/settings/user").as("usersLogin")
         cy.route("POST", "/prodex/api/users").as("usersSave")
 
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {cy.deleteWholeCart(token)})
+
         cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.wait("@inventoryLoading", {timeout: 100000})
