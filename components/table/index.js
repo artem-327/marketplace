@@ -91,13 +91,15 @@ const getSettingColumn = (columns, formatMessage, columnWidth) => {
               label={
                 typeof c.title === 'string'
                   ? c.title
-                  : (getSafe(() => c.title.props.id, false)
-                    ? formatMessage({
+                  : getSafe(() => c.title.props.id, false)
+                  ? formatMessage({
                       id: c.title.props.id,
-                      defaultMessage: c.title.props.defaultMessage })
-                    : formatMessage({
+                      defaultMessage: c.title.props.defaultMessage
+                    })
+                  : formatMessage({
                       id: `global.${c.name}`,
-                      defaultMessage: c.name }))
+                      defaultMessage: c.name
+                    })
               }
               inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
             />
@@ -179,10 +181,10 @@ const NoDataTableCells = props => {
   }
   return (
     <>
-      {isEchoCode ? (
-        <Table.Cell className='p-0'></Table.Cell>
-      ) : null}
-      <Table.Cell {...modifiedProps} className='not-found'>{props.getMessage('noData')}</Table.Cell>
+      {isEchoCode ? <Table.Cell className='p-0'></Table.Cell> : null}
+      <Table.Cell {...modifiedProps} className='not-found'>
+        {props.getMessage('noData')}
+      </Table.Cell>
     </>
   )
 }
@@ -241,7 +243,14 @@ const Row = ({ tableRow, selected, onToggle, onClick, ...restProps }) => {
   const rowAction = (e, row) => {
     onClick && onClick(e, tableRow.row)
   }
-  return <Table.Row {...restProps} onClick={rowAction} data-test='table_row_action' className={getSafe(() => tableRow.row.clsName, null)} />
+  return (
+    <Table.Row
+      {...restProps}
+      onClick={rowAction}
+      data-test='table_row_action'
+      className={getSafe(() => tableRow.row.clsName, null)}
+    />
+  )
 }
 
 const MESSAGES = {
@@ -306,7 +315,7 @@ class _Table extends Component {
     onTableReady: () => {},
     defaultSorting: null,
     editingRowId: null,
-    normalWidth: false,
+    normalWidth: false
   }
 
   constructor(props) {
@@ -324,7 +333,8 @@ class _Table extends Component {
         widths: this.getColumnsExtension(),
         order: this.getColumns().map(c => c.name),
         sorting: []
-      }
+      },
+      scrollLeft: 0
     }
   }
 
@@ -336,7 +346,11 @@ class _Table extends Component {
 
   handleScroll = ({ target }) => {
     const { onScrollToEnd } = this.props
+    const { scrollLeft } = target
 
+    if (this.state.scrollLeft !== scrollLeft) {
+      this.setState({ scrollLeft }, () => this.forceUpdate())
+    }
     if (target.offsetHeight + target.scrollTop >= target.scrollHeight - 50) {
       onScrollToEnd()
     }
@@ -647,7 +661,6 @@ class _Table extends Component {
       normalWidth,
       ...restProps
     } = this.props
-
     const {
       intl: { formatMessage },
       defaultHiddenColumns
@@ -686,6 +699,7 @@ class _Table extends Component {
             }}
             data-test='table_columns_setting_modal'
           />
+
           <Grid rows={rows} getRowId={row => row.id} columns={this.getColumns()} rootComponent={GridRoot}>
             {sorting && (
               <SortingState
@@ -706,7 +720,6 @@ class _Table extends Component {
             )}
             {groupBy && getChildGroups ? <CustomGrouping getChildGroups={getChildGroups} /> : <IntegratedGrouping />}
 
-            {columnReordering && <DragDropProvider />}
             {rowSelection && (
               <SelectionState
                 defaultSelection={[0, 1, 2, 3, 4, 5, 6, 7]}
@@ -714,11 +727,7 @@ class _Table extends Component {
                 onSelectionChange={this.handleSelectionChange}
               />
             )}
-            {editingRowId && (
-              <SelectionState
-                selection={editingRowId ? [editingRowId] : []}
-              />
-            )}
+            {editingRowId && <SelectionState selection={editingRowId ? [editingRowId] : []} />}
 
             {rowSelection && lockSelection ? (
               <PatchedIntegratedSelection lockSelection={lockSelection} />
@@ -753,7 +762,7 @@ class _Table extends Component {
               onColumnWidthsChange={widths => this.handleColumnsSettings({ widths })}
               columnWidths={columnsSettings.widths.map(el => (!el.width ? { ...el, width: 200 } : el))}
             />
-
+            {columnReordering && <DragDropProvider />}
             {showHeader && <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />}
             <RowActionsFormatterProvider for={['__actions']} actions={rowActions} />
 
@@ -829,12 +838,14 @@ class _Table extends Component {
                     rowSelection={rowSelection}
                     hideCheckboxes={hideCheckboxes}
                     onSelectionChange={this.handleGroupSelectionChange}
-                    actionsDropdown={groupActions
-                      ? rowActionsCellFormatter({
-                          column: { actions: groupActions(props.row) },
-                          row: props.row
-                        })
-                      : null}
+                    actionsDropdown={
+                      groupActions
+                        ? rowActionsCellFormatter({
+                            column: { actions: groupActions(props.row) },
+                            row: props.row
+                          })
+                        : null
+                    }
                     {...props}
                   />
                 )}
