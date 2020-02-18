@@ -993,7 +993,6 @@ class DetailSidebar extends Component {
       loading,
       // openBroadcast,
       // sidebarDetailOpen,
-      sidebarValues: { grouped },
       sidebarValues,
       // searchedManufacturers,
       // searchedManufacturersLoading,
@@ -1170,7 +1169,7 @@ class DetailSidebar extends Component {
                                               defaultMessage='Start typing to begin search'
                                             />
                                           ),
-                                          disabled: grouped,
+                                          disabled: sidebarValues && sidebarValues.grouped,
                                           loading: this.props.autocompleteDataLoading,
                                           'data-test': 'new_inventory_product_search_drpdn',
                                           style: { width: '300px' },
@@ -1214,7 +1213,7 @@ class DetailSidebar extends Component {
                                         name='edit.warehouse'
                                         options={warehousesList}
                                         inputProps={{
-                                          disabled: grouped,
+                                          disabled: sidebarValues && sidebarValues.grouped,
                                           onChange: this.onChange,
                                           selection: true,
                                           value: 0,
@@ -1234,7 +1233,7 @@ class DetailSidebar extends Component {
                                         <Input
                                           name='edit.fobPrice'
                                           inputProps={{
-                                            disabled: grouped,
+                                            disabled: sidebarValues && sidebarValues.grouped,
                                             type: 'number',
                                             min: '0',
                                             onChange: (e, { value }) => {
@@ -1258,7 +1257,11 @@ class DetailSidebar extends Component {
                                       <FormField width={16} data-test='detail_sidebar_cost'>
                                         <Input
                                           name='edit.costPerUOM'
-                                          inputProps={{ disabled: grouped, type: 'number', min: '0' }}
+                                          inputProps={{
+                                            disabled: sidebarValues && sidebarValues.grouped,
+                                            type: 'number',
+                                            min: '0'
+                                          }}
                                         />
                                       </FormField>
                                     </GridColumn>
@@ -1290,7 +1293,7 @@ class DetailSidebar extends Component {
                                               <DateInput
                                                 inputProps={{
                                                   'data-test': 'sidebar_detail_lot_exp_date',
-                                                  disabled: grouped
+                                                  disabled: sidebarValues && sidebarValues.grouped
                                                 }}
                                                 name='edit.lotExpirationDate'
                                               />
@@ -1306,7 +1309,7 @@ class DetailSidebar extends Component {
                                               <DateInput
                                                 inputProps={{
                                                   'data-test': 'sidebar_detail_lot_mfg_date',
-                                                  disabled: grouped,
+                                                  disabled: sidebarValues && sidebarValues.grouped,
                                                   maxDate: moment()
                                                 }}
                                                 name='edit.lotManufacturedDate'
@@ -1330,7 +1333,7 @@ class DetailSidebar extends Component {
                                         inputProps={{
                                           onChange: this.onChange,
                                           'data-test': 'new_inventory_grade_drpdn',
-                                          disabled: grouped,
+                                          disabled: sidebarValues && sidebarValues.grouped,
                                           selection: true,
                                           multiple: true
                                         }}
@@ -1349,7 +1352,7 @@ class DetailSidebar extends Component {
                                         options={listForms}
                                         inputProps={{
                                           onChange: this.onChange,
-                                          disabled: grouped,
+                                          disabled: sidebarValues && sidebarValues.grouped,
                                           'data-test': 'new_inventory_form_drpdn'
                                         }}
                                       />
@@ -1375,7 +1378,7 @@ class DetailSidebar extends Component {
                                           selection: true,
                                           clearable: true,
                                           loading: searchedOriginsLoading,
-                                          disabled: grouped,
+                                          disabled: sidebarValues && sidebarValues.grouped,
                                           onSearchChange: debounce(
                                             (e, { searchQuery }) => searchOrigins(searchQuery),
                                             250
@@ -1396,7 +1399,7 @@ class DetailSidebar extends Component {
                                         options={listConforming}
                                         inputProps={{
                                           onChange: this.onChange,
-                                          disabled: grouped,
+                                          disabled: sidebarValues && sidebarValues.grouped,
                                           'data-test': 'new_inventory_conforming_drpdn'
                                         }}
                                       />
@@ -1414,7 +1417,7 @@ class DetailSidebar extends Component {
                                         options={listConditions}
                                         inputProps={{
                                           onChange: this.onChange,
-                                          disabled: grouped,
+                                          disabled: sidebarValues && sidebarValues.grouped,
                                           'data-test': 'new_inventory_condition_drpdn'
                                         }}
                                       />
@@ -1428,7 +1431,7 @@ class DetailSidebar extends Component {
                                           id: 'addInventory.conditionNotes',
                                           defaultMessage: 'Condition Notes'
                                         })}
-                                        inputProps={{ disabled: grouped }}
+                                        inputProps={{ disabled: sidebarValues && sidebarValues.grouped }}
                                       />
                                     </GridColumn>
                                   </GridRow>
@@ -1444,7 +1447,7 @@ class DetailSidebar extends Component {
                                         options={optionsYesNo}
                                         inputProps={{
                                           onChange: this.onChange,
-                                          disabled: grouped,
+                                          disabled: sidebarValues && sidebarValues.grouped,
                                           'data-test': 'add_inventory_instock'
                                         }}
                                       />
@@ -1462,7 +1465,7 @@ class DetailSidebar extends Component {
                                         inputProps={{
                                           type: 'number',
                                           min: '0',
-                                          disabled: grouped
+                                          disabled: sidebarValues && sidebarValues.grouped
                                         }}
                                       />
                                     </GridColumn>
@@ -1484,7 +1487,7 @@ class DetailSidebar extends Component {
                                         options={optionsYesNo}
                                         inputProps={{
                                           onChange: this.onChange,
-                                          disabled: grouped,
+                                          disabled: sidebarValues && sidebarValues.grouped,
                                           'data-test': 'add_inventory_doesExpire'
                                         }}
                                       />
@@ -1501,7 +1504,7 @@ class DetailSidebar extends Component {
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <DateInput
                                         inputProps={{
-                                          disabled: !values.edit.doesExpire || grouped,
+                                          disabled: !values.edit.doesExpire || (sidebarValues && sidebarValues.grouped),
                                           'data-test': 'sidebar_detail_expiration_date'
                                           //! ! crashes on component calendar open if expirationDate is in past:
                                           //! ! minDate: moment().add(1, 'days')
@@ -1521,7 +1524,7 @@ class DetailSidebar extends Component {
                                       <Input
                                         name='edit.minimum'
                                         inputProps={{
-                                          disabled: grouped,
+                                          disabled: sidebarValues && sidebarValues.grouped,
                                           type: 'number',
                                           min: 1,
                                           onChange: (e, { value }) => {
@@ -1548,7 +1551,7 @@ class DetailSidebar extends Component {
                                       <Input
                                         name='edit.splits'
                                         inputProps={{
-                                          disabled: grouped,
+                                          disabled: sidebarValues && sidebarValues.grouped,
                                           type: 'number',
                                           min: 1,
                                           onChange: (e, { value }) =>
@@ -1568,7 +1571,7 @@ class DetailSidebar extends Component {
                                         name='edit.broadcasted'
                                         options={optionsYesNo}
                                         inputProps={{
-                                          disabled: grouped,
+                                          disabled: sidebarValues && sidebarValues.grouped,
                                           onChange: this.onChange,
                                           'data-test': 'add_inventory_broadcast'
                                         }}
@@ -1583,7 +1586,7 @@ class DetailSidebar extends Component {
                                           id: 'addInventory.externalNotes',
                                           defaultMessage: 'External Notes'
                                         })}
-                                        inputProps={{ disabled: grouped }}
+                                        inputProps={{ disabled: sidebarValues && sidebarValues.grouped }}
                                       />
                                     </GridColumn>
                                   </GridRow>
@@ -1596,7 +1599,7 @@ class DetailSidebar extends Component {
                                           id: 'addInventory.internalNotes',
                                           defaultMessage: 'Internal Notes'
                                         })}
-                                        inputProps={{ disabled: grouped }}
+                                        inputProps={{ disabled: sidebarValues && sidebarValues.grouped }}
                                       />
                                     </GridColumn>
                                   </GridRow>
@@ -1608,7 +1611,7 @@ class DetailSidebar extends Component {
                             menuItem: (
                               <Menu.Item
                                 key='documents'
-                                disabled={grouped}
+                                disabled={sidebarValues && sidebarValues.grouped}
                                 onClick={() => {
                                   if (Object.keys(touched).length || this.state.changedForm) {
                                     toastManager.add(
@@ -1878,7 +1881,7 @@ class DetailSidebar extends Component {
                             menuItem: (
                               <Menu.Item
                                 key='priceBook'
-                                disabled={grouped}
+                                disabled={sidebarValues && sidebarValues.grouped}
                                 onClick={() => {
                                   if (Object.keys(touched).length || this.state.changedForm) {
                                     toastManager.add(
@@ -1931,7 +1934,7 @@ class DetailSidebar extends Component {
                             menuItem: (
                               <Menu.Item
                                 key='priceTiers'
-                                disabled={grouped}
+                                disabled={sidebarValues && sidebarValues.grouped}
                                 onClick={() => {
                                   if (Object.keys(touched).length || this.state.changedForm) {
                                     toastManager.add(
