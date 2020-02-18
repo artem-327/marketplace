@@ -53,6 +53,11 @@ const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
 `
 
+const FixyWrapper = styled.div`
+  position: relative;
+  transform: translateY(0);
+`
+
 const ScrollableSegment = styled(Segment)`
   max-height: 90vh;
   overflow-y: auto;
@@ -259,9 +264,11 @@ class Settings extends Component {
       'delivery-addresses': <DeliveryAddressesTable />,
       logistics: <LogisticsTable />,
       'system-settings': (
-        <ScrollableSegment basic padded='very'>
-          <SystemSettings asModal={false} inputsInGroup={3} role='company' />
-        </ScrollableSegment>
+        <FixyWrapper>
+          <ScrollableSegment basic padded='very'>
+            <SystemSettings asModal={false} inputsInGroup={3} role='company' />
+          </ScrollableSegment>
+        </FixyWrapper>
       ),
       documents: <DocumentsTable />
     }
