@@ -89,6 +89,8 @@
   "errors.noLotsSelected.content": "Please check that all order items have selected at least one lot.",
   "errors.notImage.header": "File not Uploaded",
   "errors.notImage.content": "File {name} you are uploading is not in the desired format. Please select a picture in format: (gif, jpg, png, svg)",
+  "errors.noSelected.header": "No Selected",
+  "errors.noSelected.content": "Please check that all order items have selected at least one.",
   "navigation.inventory": "Inventory",
   "navigation.orders": "Orders",
   "navigation.myInventory": "My Inventory",
