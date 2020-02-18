@@ -22,7 +22,8 @@ import {
   Dropdown as SemanticDropdown,
   Transition,
   Header,
-  Dimmer
+  Dimmer,
+  Label
 } from 'semantic-ui-react'
 
 import { uniqueArrayByKey } from '~/utils/functions'
@@ -65,7 +66,9 @@ import {
   DateInputStyledWrapper,
   SaveFiltersGrid,
   NormalColumn,
-  SaveFilterNormalRow
+  SaveFilterNormalRow,
+  InputWrapper,
+  QuantityWrapper
 } from '../constants/layout'
 
 const optionsYesNo = [
@@ -477,6 +480,65 @@ class InventoryFilter extends Component {
     this.setState(prevState => ({ openedSaveFilter: !prevState.openedSaveFilter }))
   }
 
+  inputWrapper = (name, inputProps, label, labelText) => {
+    return (
+      <InputWrapper>
+        <Input
+          inputProps={inputProps}
+          label={label}
+          name={name}
+        />
+        <Label>{labelText}</Label>
+      </InputWrapper>
+    )
+  }
+
+  quantityWrapper = (name, { values, setFieldValue, setFieldTouched, label }) => {
+    return (
+      <QuantityWrapper>
+        <Input
+          label={label}
+          name={name}
+          inputProps={{
+            placeholder: '0',
+            type: 'number'
+          }}
+        />
+        <div className='sideButtons'>
+          <Button
+            type='button'
+            className='buttonPlus'
+            onClick={() => {
+              if (isNaN(values[name]) || values[name] === '') {
+                setFieldValue(name, 1)
+                setFieldTouched(name, true, true)
+              }
+              else {
+                setFieldValue(name, parseInt(values[name]) + 1)
+                setFieldTouched(name, true, true)
+              }
+            }}
+          >+</Button>
+          <Button
+            type='button'
+            className='buttonMinus'
+            onClick={() => {
+              if (isNaN(values[name]) || values[name] === '' ) {
+                setFieldValue(name, 1)
+                setFieldTouched(name, true, true)
+              }
+              else {
+                const value = parseInt(values[name])
+                if (value > 1) setFieldValue(name, value - 1)
+                setFieldTouched(name, true, true)
+              }
+            }}
+          >-</Button>
+        </div>
+      </QuantityWrapper>
+    )
+  }
+
   dateField = (name, { values, setFieldValue, handleChange, min }) => {
     let inputName = `${name}${values[name]}`
     let { intl } = this.props
@@ -611,7 +673,7 @@ class InventoryFilter extends Component {
     })
   }
 
-  formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError }) => {
+  formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError, setFieldTouched }) => {
     let {
       productConditions,
       productForms,
@@ -802,26 +864,26 @@ class InventoryFilter extends Component {
           <AccordionContent active={!this.state.inactiveAccordion.quantity}>
             <FormGroup widths='equal' data-test='filter_quantity_inp'>
               <FormField width={8}>
-                <Input
-                  inputProps={{
-                    type: 'number',
-                    placeholder: '0',
-                    min: 1
-                  }}
-                  label={<FormattedMessage id='filter.FromQuantity' defaultMessage='From' />}
-                  name='quantityFrom'
-                />
+                {this.quantityWrapper(
+                  'quantityFrom',
+                  {
+                    values,
+                    setFieldValue,
+                    setFieldTouched,
+                    label: <FormattedMessage id='filter.FromQuantity' defaultMessage='From' />
+                  }
+                )}
               </FormField>
               <FormField width={8}>
-                <Input
-                  inputProps={{
-                    type: 'number',
-                    placeholder: '0',
-                    min: 1
-                  }}
-                  label={<FormattedMessage id='filter.ToQuantity' defaultMessage='To' />}
-                  name='quantityTo'
-                />
+                {this.quantityWrapper(
+                  'quantityTo',
+                  {
+                    values,
+                    setFieldValue,
+                    setFieldTouched,
+                    label: <FormattedMessage id='filter.ToQuantity' defaultMessage='To' />
+                  }
+                )}
               </FormField>
             </FormGroup>
           </AccordionContent>
@@ -832,32 +894,30 @@ class InventoryFilter extends Component {
           <AccordionContent active={!this.state.inactiveAccordion.price}>
             <FormGroup>
               <FormField width={8} data-test='filter_price_inp'>
-                <Input
-                  inputProps={{
-                    label: currencySymbol,
-                    labelPosition: 'right',
+                {this.inputWrapper(
+                  'priceFrom',
+                  {
                     type: 'number',
                     min: 0.01,
                     step: 0.01,
                     placeholder: '0.000'
-                  }}
-                  label={<FormattedMessage id='filter.FromPrice' defaultMessage='From Price' />}
-                  name='priceFrom'
-                />
+                  },
+                  <FormattedMessage id='filter.FromPrice' defaultMessage='From' />,
+                  currencySymbol
+                )}
               </FormField>
               <FormField width={8}>
-                <Input
-                  inputProps={{
-                    label: currencySymbol,
-                    labelPosition: 'right',
+                {this.inputWrapper(
+                  'priceTo',
+                  {
                     type: 'number',
                     min: 0.01,
                     step: 0.01,
                     placeholder: '0.000'
-                  }}
-                  label={<FormattedMessage id='filter.ToPrice' defaultMessage='To Price' />}
-                  name='priceTo'
-                />
+                  },
+                  <FormattedMessage id='filter.ToPrice' defaultMessage='To' />,
+                  currencySymbol
+                )}
               </FormField>
             </FormGroup>
           </AccordionContent>
@@ -914,30 +974,28 @@ class InventoryFilter extends Component {
           <AccordionContent active={!this.state.inactiveAccordion.assay}>
             <FormGroup data-test='filter_assay_inp'>
               <FormField width={8}>
-                <Input
-                  inputProps={{
+                {this.inputWrapper(
+                  'assayFrom',
+                  {
                     type: 'number',
                     min: 0,
                     placeholder: '0',
-                    label: '%',
-                    labelPosition: 'right',
-                  }}
-                  label={<FormattedMessage id='filter.Minimum' defaultMessage='Minimum' />}
-                  name='assayFrom'
-                />
+                  },
+                  <FormattedMessage id='filter.Minimum' defaultMessage='Minimum' />,
+                  '%'
+                )}
               </FormField>
               <FormField width={8}>
-                <Input
-                  inputProps={{
+                {this.inputWrapper(
+                  'assayTo',
+                  {
                     type: 'number',
                     min: 0,
                     placeholder: '0',
-                    label: '%',
-                    labelPosition: 'right',
-                  }}
-                  label={<FormattedMessage id='filter.Maximum' defaultMessage='Maximum' />}
-                  name='assayTo'
-                />
+                  },
+                  <FormattedMessage id='filter.Maximum' defaultMessage='Maximum' />,
+                  '%'
+                )}
               </FormField>
             </FormGroup>
           </AccordionContent>
