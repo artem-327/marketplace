@@ -10,8 +10,8 @@ RUN id
 # there is a built-in user "node" that comes from the very base Docker Node image
 # we are going to recreate this user and give it _same id_ as external user
 # that is going to run this container.
-ARG USER_ID=1003
-ARG GROUP_ID=1004
+ARG USER_ID=999
+ARG GROUP_ID=999
 
 # if you want to see all existing groups uncomment the next command
 # RUN cat /etc/group
