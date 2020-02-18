@@ -1,9 +1,6 @@
 before_script:
   - docker -D info
   - docker system prune -f
-  - df -h
-  - df -i
-  - docker system df
   - cd cypress/
   - set e+x
   - docker build -t cypress/artio .
@@ -12,3 +9,11 @@ test:
   script:
     - cd ..
     - docker run -v $PWD:/test -w /test -u appuser cypress/artio
+
+  artifacts:
+    when: always
+    paths:
+      - ./cypress/results/results*.xml
+    reports:
+      junit:
+        - ./cypress/results/results*.xml
