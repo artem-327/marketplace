@@ -296,8 +296,6 @@ export const SavedFilterDetailGrid = styled(Grid)`
     .ui.primary.button,
     .ui.large.button {
       margin: 5px 5px 11px 10px !important;
-      //margin-top: 5px !important;
-      //margin-bottom: 11px !important;
   }
   > .row {
     padding: 0 !important;
@@ -443,4 +441,55 @@ export const BoldTextColumn = styled(GridColumn)` // ! ! delete
 
 export const SavedFiltersNotifications = styled.div`
   padding: 0 !important;
+`
+
+export const InputWrapper = styled.div`
+  position: relative;
+  > .field .ui.input input {
+    position: static;
+    padding-right: 36px; 
+  }
+  > .ui.label {
+    width: 24px;
+    height: 24px;
+    padding: 5.5px 0;
+    font-size: 13px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    text-align: center;
+    color: #2599d5;
+    border-radius: 2px;
+    background-color: rgba(37, 153, 213, 0.1);
+    position: absolute;
+    top: 29px;
+    right: 5px;
+  }
+`
+
+export const QuantityWrapper = styled.div`
+  position: relative;
+  > .sideButtons {
+    position: absolute;
+    width: 32px;
+    //height: 32px;
+    height: 35px;
+    right: 0;
+    top: 23px;
+    .ui.button {
+      position: absolute;
+      margin: 0;
+      &.buttonPlus {
+        border-radius: 0 3px 0 0;
+        width: 32px;
+        padding: 2px 0 1px 0;
+      }
+      &.buttonMinus {
+        border-radius: 0 0 3px 0;
+        width: 32px;
+        padding: 0 0 1px 0;
+        top: 18px;
+      }
+    }
+  }
 `
