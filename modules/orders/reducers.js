@@ -274,6 +274,11 @@ export default function(state = initialState, action) {
           paymentStatus: 4
         }
       }
+    case AT.CLEAR_RELATED_ORDERS:
+      return {
+        ...state,
+        relatedOrders: []
+      }
     case AT.RELATED_ORDERS_PENDING:
       return {
         ...state,

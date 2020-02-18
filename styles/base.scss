@@ -1153,6 +1153,14 @@ i.file {
 .page.modals.dimmer {overflow: auto;}
 
 
+.ui.modal .content.scrolling {
+  max-width: 100%;
+
+  .table-responsive {
+    max-width: 100%;
+  }
+}
+
 .ui.modal > .close {
   font-size: 1.9em;
   top: 0.5rem;

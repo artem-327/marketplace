@@ -1,8 +1,17 @@
 import React, { Component } from 'react'
 
-import { Label, Popup, List } from 'semantic-ui-react'
+import {Label, Popup, List, Header} from 'semantic-ui-react'
 import { string, array } from "prop-types"
+import styled from 'styled-components'
 
+const ProductLabel = styled(Label)`
+  margin-left: 5px !important;
+`
+
+const ProductFirstItem = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
 
 export default class ArrayToFirstItem extends Component {
   render() {
@@ -26,9 +35,9 @@ export default class ArrayToFirstItem extends Component {
                 ))}
               </List>}
             position='right center'
-            trigger={<Label className='bordered right'>{values.length - 1}+</Label>}
+            trigger={<ProductLabel className='bordered right'>{values.length - 1}+</ProductLabel>}
           />
-          <div>{values[0]}</div>
+          <ProductFirstItem>{values[0]}</ProductFirstItem>
         </div>
       )
     }
