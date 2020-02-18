@@ -1,0 +1,8 @@
+before_script:
+  - docker info
+
+build:
+  stage: build
+  script:
+    - git status
+    - docker build -t prodex/web:test .

@@ -22,7 +22,8 @@ import {
   Dropdown as SemanticDropdown,
   Transition,
   Header,
-  Dimmer
+  Dimmer,
+  Label
 } from 'semantic-ui-react'
 
 import { uniqueArrayByKey } from '~/utils/functions'
@@ -65,7 +66,9 @@ import {
   DateInputStyledWrapper,
   SaveFiltersGrid,
   NormalColumn,
-  SaveFilterNormalRow
+  SaveFilterNormalRow,
+  InputWrapper,
+  QuantityWrapper
 } from '../constants/layout'
 
 const optionsYesNo = [
@@ -119,12 +122,12 @@ class InventoryFilter extends Component {
 
     //It is nessery to get all manufacturer to options in dropdown if user select saved filter and want to see parametr in dropdown
     //In the future if will be a lot of manufacturer we can added search to the dropdown and here we can specify pattern to the searchManufacturerUrl
-    if (!autocompleteManufacturer || !autocompleteManufacturer.length)
-      this.props.getAutocompleteManufacturer(this.props.searchManufacturerUrl(''))
+    //if (!autocompleteManufacturer || !autocompleteManufacturer.length)
+    //  this.props.getAutocompleteManufacturer(this.props.searchManufacturerUrl(''))
 
-    if (!autocompleteOrigin || !autocompleteOrigin.length) {
-      this.props.getAutocompleteOrigin(this.props.getOriginUrl)
-    }
+    //if (!autocompleteOrigin || !autocompleteOrigin.length) {
+    //  this.props.getAutocompleteOrigin(this.props.getOriginUrl)
+    //}
     this.handleGetSavedFilters()
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
@@ -477,6 +480,65 @@ class InventoryFilter extends Component {
     this.setState(prevState => ({ openedSaveFilter: !prevState.openedSaveFilter }))
   }
 
+  inputWrapper = (name, inputProps, label, labelText) => {
+    return (
+      <InputWrapper>
+        <Input
+          inputProps={inputProps}
+          label={label}
+          name={name}
+        />
+        <Label>{labelText}</Label>
+      </InputWrapper>
+    )
+  }
+
+  quantityWrapper = (name, { values, setFieldValue, setFieldTouched, label }) => {
+    return (
+      <QuantityWrapper>
+        <Input
+          label={label}
+          name={name}
+          inputProps={{
+            placeholder: '0',
+            type: 'number'
+          }}
+        />
+        <div className='sideButtons'>
+          <Button
+            type='button'
+            className='buttonPlus'
+            onClick={() => {
+              if (isNaN(values[name]) || values[name] === '') {
+                setFieldValue(name, 1)
+                setFieldTouched(name, true, true)
+              }
+              else {
+                setFieldValue(name, parseInt(values[name]) + 1)
+                setFieldTouched(name, true, true)
+              }
+            }}
+          >+</Button>
+          <Button
+            type='button'
+            className='buttonMinus'
+            onClick={() => {
+              if (isNaN(values[name]) || values[name] === '' ) {
+                setFieldValue(name, 1)
+                setFieldTouched(name, true, true)
+              }
+              else {
+                const value = parseInt(values[name])
+                if (value > 1) setFieldValue(name, value - 1)
+                setFieldTouched(name, true, true)
+              }
+            }}
+          >-</Button>
+        </div>
+      </QuantityWrapper>
+    )
+  }
+
   dateField = (name, { values, setFieldValue, handleChange, min }) => {
     let inputName = `${name}${values[name]}`
     let { intl } = this.props
@@ -559,24 +621,14 @@ class InventoryFilter extends Component {
             </GridColumn>
           </GridRow>
           <GridRow>
-            <GridColumn computer={10} data-test='filter_name_inp'>
+            <GridColumn computer={16} data-test='filter_name_inp'>
               <Input
                 inputProps={{
-                  placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Enter Filter Name' })
+                  placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Your filter name' })
                 }}
                 name='name'
                 fluid
               />
-            </GridColumn>
-            <GridColumn computer={6} textAlign='right'>
-              <Button
-                size='large'
-                primary
-                type='submit'
-                data-test='filter_save_save_name_btn'
-              >
-                {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-              </Button>
             </GridColumn>
           </GridRow>
           <GridRow>
@@ -621,7 +673,7 @@ class InventoryFilter extends Component {
     })
   }
 
-  formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError }) => {
+  formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError, setFieldTouched }) => {
     let {
       productConditions,
       productForms,
@@ -663,7 +715,7 @@ class InventoryFilter extends Component {
       options: options,
       loading: autocompleteDataLoading,
       name: 'search',
-      placeholder: <FormattedMessage id='filter.searchProducts' defaultMessage='Search Products' />,
+      placeholder: <FormattedMessage id='filter.searchProductsInventory' defaultMessage='Chemical, CAS, Trade' />,
       noResultsMessage,
       onSearchChange: (_, data) => this.handleSearch(data),
       value: values.search,
@@ -801,9 +853,73 @@ class InventoryFilter extends Component {
     return (
       <FilterAccordion>
         <AccordionItem>
-          {this.accordionTitle('chemicalType', <FormattedMessage id='filter.keywordSearch' />)}
+          {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalProductName' />)}
           <AccordionContent active={!this.state.inactiveAccordion.chemicalType}>
             <BottomMargedDropdown {...dropdownProps} />
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem>
+          {this.accordionTitle('quantity', <FormattedMessage id='filter.quantity' />)}
+          <AccordionContent active={!this.state.inactiveAccordion.quantity}>
+            <FormGroup widths='equal' data-test='filter_quantity_inp'>
+              <FormField width={8}>
+                {this.quantityWrapper(
+                  'quantityFrom',
+                  {
+                    values,
+                    setFieldValue,
+                    setFieldTouched,
+                    label: <FormattedMessage id='filter.FromQuantity' defaultMessage='From' />
+                  }
+                )}
+              </FormField>
+              <FormField width={8}>
+                {this.quantityWrapper(
+                  'quantityTo',
+                  {
+                    values,
+                    setFieldValue,
+                    setFieldTouched,
+                    label: <FormattedMessage id='filter.ToQuantity' defaultMessage='To' />
+                  }
+                )}
+              </FormField>
+            </FormGroup>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem>
+          {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
+          <AccordionContent active={!this.state.inactiveAccordion.price}>
+            <FormGroup>
+              <FormField width={8} data-test='filter_price_inp'>
+                {this.inputWrapper(
+                  'priceFrom',
+                  {
+                    type: 'number',
+                    min: 0.01,
+                    step: 0.01,
+                    placeholder: '0.000'
+                  },
+                  <FormattedMessage id='filter.FromPrice' defaultMessage='From' />,
+                  currencySymbol
+                )}
+              </FormField>
+              <FormField width={8}>
+                {this.inputWrapper(
+                  'priceTo',
+                  {
+                    type: 'number',
+                    min: 0.01,
+                    step: 0.01,
+                    placeholder: '0.000'
+                  },
+                  <FormattedMessage id='filter.ToPrice' defaultMessage='To' />,
+                  currencySymbol
+                )}
+              </FormField>
+            </FormGroup>
           </AccordionContent>
         </AccordionItem>
 
@@ -814,23 +930,31 @@ class InventoryFilter extends Component {
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem>
+        {false && (<AccordionItem>
           {this.accordionTitle('broadcasted', <FormattedMessage id='filter.broadcast' />)}
           <AccordionContent active={!this.state.inactiveAccordion.broadcasted}>
             <BottomMargedDropdown {...dropdownBroadcastedProps} />
           </AccordionContent>
+        </AccordionItem>)}
+
+        <AccordionItem>
+          {this.accordionTitle('packaging', <FormattedMessage id='filter.packaging' />)}
+          <AccordionContent active={!this.state.inactiveAccordion.packaging}>{packagingTypesRows}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
-          {this.accordionTitle(
-            'mfg',
-            <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
-          )}
-          <AccordionContent active={!this.state.inactiveAccordion.mfg}>
-            <FormGroup widths='equal'>
-              {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
-            </FormGroup>
-          </AccordionContent>
+          {this.accordionTitle('productGrades', <FormattedMessage id='filter.grade' defaultMessage='Grade' />)}
+          <AccordionContent active={!this.state.inactiveAccordion.productGrades}>{productGradeRows}</AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem>
+          {this.accordionTitle('condition', <FormattedMessage id='filter.condition' defaultMessage='Condition' />)}
+          <AccordionContent active={!this.state.inactiveAccordion.condition}>{productConditionRows}</AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem>
+          {this.accordionTitle('productForms', <FormattedMessage id='filter.form' defaultMessage='Form' />)}
+          <AccordionContent active={!this.state.inactiveAccordion.productForms}>{productFormsRows}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
@@ -846,103 +970,63 @@ class InventoryFilter extends Component {
         </AccordionItem>
 
         <AccordionItem>
+          {this.accordionTitle('assay', <FormattedMessage id='filter.assay' />)}
+          <AccordionContent active={!this.state.inactiveAccordion.assay}>
+            <FormGroup data-test='filter_assay_inp'>
+              <FormField width={8}>
+                {this.inputWrapper(
+                  'assayFrom',
+                  {
+                    type: 'number',
+                    min: 0,
+                    placeholder: '0',
+                  },
+                  <FormattedMessage id='filter.Minimum' defaultMessage='Minimum' />,
+                  '%'
+                )}
+              </FormField>
+              <FormField width={8}>
+                {this.inputWrapper(
+                  'assayTo',
+                  {
+                    type: 'number',
+                    min: 0,
+                    placeholder: '0',
+                  },
+                  <FormattedMessage id='filter.Maximum' defaultMessage='Maximum' />,
+                  '%'
+                )}
+              </FormField>
+            </FormGroup>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem>
+          {this.accordionTitle(
+            'mfg',
+            <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
+          )}
+          <AccordionContent active={!this.state.inactiveAccordion.mfg}>
+            <FormGroup widths='equal'>
+              {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
+            </FormGroup>
+          </AccordionContent>
+        </AccordionItem>
+
+        {false && (<AccordionItem>
           {this.accordionTitle('manufacturer', <FormattedMessage id='filter.manufacturer' />)}
           <AccordionContent active={!this.state.inactiveAccordion.manufacturer}>
             <BottomMargedDropdown {...dropdownManufacturerProps} />
           </AccordionContent>
-        </AccordionItem>
+        </AccordionItem>)}
 
-        <AccordionItem>
-          {this.accordionTitle('condition', <FormattedMessage id='filter.condition' defaultMessage='Condition' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.condition}>{productConditionRows}</AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
+        {false && (<AccordionItem>
           {this.accordionTitle('origin', <FormattedMessage id='filter.origin' />)}
           <AccordionContent active={!this.state.inactiveAccordion.origin}>
             <BottomMargedDropdown {...dropdownOriginProps} />
           </AccordionContent>
-        </AccordionItem>
+        </AccordionItem>)}
 
-        <AccordionItem>
-          {this.accordionTitle('productGrades', <FormattedMessage id='filter.grade' defaultMessage='Grade' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.productGrades}>{productGradeRows}</AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('productForms', <FormattedMessage id='filter.form' defaultMessage='Form' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.productForms}>{productFormsRows}</AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('packaging', <FormattedMessage id='filter.packaging' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.packaging}>{packagingTypesRows}</AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('quantity', <FormattedMessage id='filter.quantity' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.quantity}>
-            <FormGroup widths='equal' data-test='filter_quantity_inp'>
-              <FormField width={8}>
-                <Input
-                  inputProps={{
-                    type: 'number',
-                    placeholder: '0',
-                    min: 1
-                  }}
-                  label={<FormattedMessage id='filter.FromQuantity' defaultMessage='From' />}
-                  name='quantityFrom'
-                />
-              </FormField>
-              <FormField width={8}>
-                <Input
-                  inputProps={{
-                    type: 'number',
-                    placeholder: '0',
-                    min: 1
-                  }}
-                  label={<FormattedMessage id='filter.ToQuantity' defaultMessage='To' />}
-                  name='quantityTo'
-                />
-              </FormField>
-            </FormGroup>
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem>
-          {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.price}>
-            <FormGroup>
-              <FormField width={8} data-test='filter_price_inp'>
-                <Input
-                  inputProps={{
-                    label: currencySymbol,
-                    labelPosition: 'right',
-                    type: 'number',
-                    min: 0.01,
-                    step: 0.01,
-                    placeholder: '0.000'
-                  }}
-                  label={<FormattedMessage id='filter.FromPrice' defaultMessage='From Price' />}
-                  name='priceFrom'
-                />
-              </FormField>
-              <FormField width={8}>
-                <Input
-                  inputProps={{
-                    label: currencySymbol,
-                    labelPosition: 'right',
-                    type: 'number',
-                    min: 0.01,
-                    step: 0.01,
-                    placeholder: '0.000'
-                  }}
-                  label={<FormattedMessage id='filter.ToPrice' defaultMessage='To Price' />}
-                  name='priceTo'
-                />
-              </FormField>
-            </FormGroup>
-          </AccordionContent>
-        </AccordionItem>
       </FilterAccordion>
     )
   }
@@ -1022,7 +1106,7 @@ class InventoryFilter extends Component {
                   disabled={savedFiltersActive}
                   type={'button'}
                   size='large'
-                  primary={openedSaveFilter}
+                  loading={isFilterSaving}
                   onClick={async () => {
                     if (openedSaveFilter) {
                       let { values } = props
@@ -1068,7 +1152,7 @@ class InventoryFilter extends Component {
                   size='large'
                   loading={isFilterApplying}
                   type='submit'
-                  primary={!openedSaveFilter}
+                  primary
                   inputProps={{ type: 'button' }}
                   data-test='filter_apply'>
                   {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}

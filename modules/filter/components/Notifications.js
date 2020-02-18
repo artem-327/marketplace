@@ -54,7 +54,7 @@ class Notifications extends Component {
                   fluid
                   fieldProps={{disabled: !(values.checkboxes && values.checkboxes.notifyMail) || disabled}}
                   inputProps={{
-                    placeholder: formatMessage({id: 'filter.useMyEmail', defaultMessage: 'Use my email'})
+                    placeholder: formatMessage({id: 'filter.useMyEmail', defaultMessage: 'Your Email Address'})
                   }}
                   type='text'
                   name='notifications.notificationMail'
@@ -95,7 +95,7 @@ class Notifications extends Component {
                   errors={formikProps.errors}
                   touched={formikProps.touched}
                   isSubmitting={formikProps.isSubmitting}
-                  placeholder={formatMessage({ id: 'filter.useMyPhone', defaultMessage: 'Use my phone' })}
+                  placeholder={formatMessage({ id: 'filter.useMyPhone', defaultMessage: 'Your Phone Number' })}
                 />
               </GridColumn>
             }>

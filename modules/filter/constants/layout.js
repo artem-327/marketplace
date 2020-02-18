@@ -22,7 +22,7 @@ export const FlexSidebar = styled.div`
     border-radius: 3px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
     border: solid 1px #dee2e6;
-    opacity: 1;
+    opacity: 1 !important;
     color: #848893;
     margin: 10px 5px;
   
@@ -49,6 +49,7 @@ export const FlexSidebar = styled.div`
     background: #2599d5;
     margin: 10px 5px;
     border: 1px solid #dee2e6;
+    opacity: 1 !important;
     
     :hover, :focus {
       background: #188ec9;
@@ -58,9 +59,8 @@ export const FlexSidebar = styled.div`
       background: #0d82bc;
     }
     :disabled {
-      opacity: 0.65;
-      color: #ffffff;
-      background: #84d6ff;
+      color: rgba(255, 255, 255, 0.25);
+      background: rgba(37, 153, 213, 0.4);
     }
    }
 `
@@ -136,8 +136,6 @@ export const IconRight = styled.div`
   color: #2599d5;
   float: right;
 `
-
-
 
 export const AccordionItem = styled.div`
   //border-bottom: 1px solid #dee2e6;
@@ -298,8 +296,6 @@ export const SavedFilterDetailGrid = styled(Grid)`
     .ui.primary.button,
     .ui.large.button {
       margin: 5px 5px 11px 10px !important;
-      //margin-top: 5px !important;
-      //margin-bottom: 11px !important;
   }
   > .row {
     padding: 0 !important;
@@ -445,4 +441,55 @@ export const BoldTextColumn = styled(GridColumn)` // ! ! delete
 
 export const SavedFiltersNotifications = styled.div`
   padding: 0 !important;
+`
+
+export const InputWrapper = styled.div`
+  position: relative;
+  > .field .ui.input input {
+    position: static;
+    padding-right: 36px; 
+  }
+  > .ui.label {
+    width: 24px;
+    height: 24px;
+    padding: 5.5px 0;
+    font-size: 13px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    text-align: center;
+    color: #2599d5;
+    border-radius: 2px;
+    background-color: rgba(37, 153, 213, 0.1);
+    position: absolute;
+    top: 29px;
+    right: 5px;
+  }
+`
+
+export const QuantityWrapper = styled.div`
+  position: relative;
+  > .sideButtons {
+    position: absolute;
+    width: 32px;
+    //height: 32px;
+    height: 35px;
+    right: 0;
+    top: 23px;
+    .ui.button {
+      position: absolute;
+      margin: 0;
+      &.buttonPlus {
+        border-radius: 0 3px 0 0;
+        width: 32px;
+        padding: 2px 0 1px 0;
+      }
+      &.buttonMinus {
+        border-radius: 0 0 3px 0;
+        width: 32px;
+        padding: 0 0 1px 0;
+        top: 18px;
+      }
+    }
+  }
 `

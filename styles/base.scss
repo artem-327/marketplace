@@ -266,6 +266,22 @@ i.icon.clickable:hover {
   display: block;
 }
 
+.ui.label.bordered {
+  height: 22px;
+  margin: -2px 0 -1px;
+  border: solid 1px #dee2e6;
+  border-radius: 2px;
+  padding: 2px 6px 2px 7px;
+  background-color: #f8f9fb;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.3333333;
+
+  &.right {
+    float: right;
+  }
+}
+
 .fields .field .selection.dropdown:not(.label) {
   max-width: 100%;
   min-width: 100%;
@@ -1298,6 +1314,10 @@ i.file {
             border-top-right-radius: 4px;
           }
 
+          .ui.checkbox {
+            vertical-align: top;
+          }
+
           .sortable,
           .justify-content-start .sortable,
           .justify-content-center .sortable,
@@ -1445,6 +1465,10 @@ i.file {
 
       td {
         background: #fff;
+
+        a {
+          color: #2599d5;
+        }
 
         &.not-found {
           border-bottom-left-radius: 4px;
