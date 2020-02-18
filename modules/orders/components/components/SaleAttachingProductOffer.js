@@ -130,16 +130,28 @@ const validationScheme = val.object().shape({
     })
   )
 })
+const initialState = {
+  activeTab: 0,
+  allocated: [],
+  sumAvailable: [],
+  available: [],
+  poLots: [],
+  sumPkgTotal: []
+}
 //TODO
 class SaleAttachingProductOffer extends Component {
   state = {
     activeTab: 0,
     allocated: [],
+    sumAllocated: [],
+    sumAvailable: [],
     available: [],
-    poLots: []
+    poLots: [],
+    sumPkgTotal: []
   }
+
   componentDidMount() {
-    const { getGroupedProductOffers, orderId, orderItemsId, available, allocated } = this.props
+    const { getGroupedProductOffers, orderId, orderItemsId, groupedProductOffers } = this.props
 
     if (orderItemsId && orderItemsId.length > 1) {
       orderItemsId.forEach(id => getGroupedProductOffers(orderId, id))
@@ -150,15 +162,47 @@ class SaleAttachingProductOffer extends Component {
 
   componentDidUpdate(oldProps) {
     if (
-      getSafe(() => oldProps.getGroupedProductOffers.length, 0) <
-      getSafe(() => this.props.getGroupedProductOffers.length, 0)
+      getSafe(() => oldProps.groupedProductOffers.length, 0) < getSafe(() => this.props.groupedProductOffers.length, 0)
     ) {
-      const availability = this.props.getGroupedProductOffers.map(offer => {
-        return { available: offer.pkgAvailable }
-      })
+      let sumAvailable = []
+      let sumPkgTotal = []
+      let available = []
+      let sumAllocated = []
+      let allocated = []
+      this.props.groupedProductOffers.forEach(offers => {
+        if (offers && !offers.length) return
+        const sumPkgAvailable = offers.reduce(function(sum, offer) {
+          return sum + offer.pkgAvailable
+        }, 0)
+        sumAvailable.push(sumPkgAvailable)
+        const sumPkgAllocated = offers.reduce(function(sum, offer) {
+          return sum + offer.pkgAllocated
+        }, 0)
+        sumAllocated.push(sumPkgAllocated)
+        const pkgAvailable = offers.map(offer => offer.pkgAvailable)
+        available.push(pkgAvailable)
 
-      this.setState({ available: availability })
+        const cfPkgTotal = offers.reduce(function(sum, offer) {
+          return sum + offer.cfPkgTotal
+        }, 0)
+        sumPkgTotal.push(cfPkgTotal)
+
+        const pkgAllocated = offers.map(offer => offer.pkgAllocated)
+        allocated.push(pkgAllocated)
+
+        this.setState({
+          sumAvailable,
+          sumAllocated,
+          available,
+          sumPkgTotal,
+          allocated
+        })
+      })
     }
+  }
+
+  componentWillUnmount() {
+    this.props.clearGroupedProductOffer()
   }
 
   linkAttachment = (lotId, files, data) => {
@@ -192,31 +236,30 @@ class SaleAttachingProductOffer extends Component {
     this.props.removeAttachment(fileId)
   }
 
-  renderTab(tabIndex, item, offers, setFieldValue, values) {
-    const { groupedProductOffers, available, allocated } = this.props
-    console.log('available====================================')
-    console.log(available)
-    console.log('====================================')
-    console.log('alocated====================================')
-    console.log(allocated)
-    console.log('====================================')
-    if (this.state.available && !this.state.available.length && this.state.allocated && !this.state.allocated.length) {
-      console.log('====================================')
-      console.log('ano idu do podminky')
-      console.log('====================================')
-      this.setState({ available: available, allocated: allocated })
-    }
-    console.log('available====================================')
-    console.log(this.state.available)
-    console.log('====================================')
-    console.log('alocated====================================')
-    console.log(this.state.allocated)
-    console.log('====================================')
+  renderTab(tabIndex, offers, setFieldValue, values) {
     console.log('offers====================================')
     console.log(offers)
     console.log('====================================')
+    console.log('this.state.sumAvailable====================================')
+    console.log(this.state.sumAvailable)
+    console.log('====================================')
+    console.log('this.state.available====================================')
+    console.log(this.state.available)
+    console.log('====================================')
+    console.log('this.state.sumAllocated====================================')
+    console.log(this.state.sumAllocated)
+    console.log('====================================')
+    console.log('this.state.sumPkgTotal====================================')
+    console.log(this.state.sumPkgTotal)
+    console.log('====================================')
+    console.log('this.state.allocated====================================')
+    console.log(this.state.allocated)
+    console.log('====================================')
+    console.log('values====================================')
+    console.log(values)
+    console.log('====================================')
 
-    if (!getSafe(() => groupedProductOffers.length, 0)) return <></>
+    if (!getSafe(() => offers.length, 0)) return <></>
 
     return (
       <LotsTab active={this.state.activeTab === tabIndex}>
@@ -225,14 +268,14 @@ class SaleAttachingProductOffer extends Component {
             <FormattedMessage
               id='order.groupedOffer.item.amount'
               defaultMessage='Allocated packages: {allocated} / {amount}'
-              values={{ allocated: this.state.allocated[tabIndex], amount: this.state.available[tabIndex] }}
+              values={{ allocated: this.state.sumAllocated[tabIndex], amount: this.state.sumAvailable[tabIndex] }}
             />
-            {this.state.allocated[tabIndex] > offers[tabIndex].cfPkgTotal ? (
+            {this.state.sumAllocated[tabIndex] > this.state.sumPkgTotal[tabIndex] ? (
               <Label circular color='red' empty style={{ marginLeft: '0.5em' }} />
             ) : null}
           </Grid.Column>
           <Grid.Column width={1}>
-            <Input name={`tab[${tabIndex}].itemId`} inputProps={{ type: 'hidden', defaultValue: item.id }} />
+            <Input name={`tab[${tabIndex}].itemId`} inputProps={{ type: 'hidden', defaultValue: tabIndex }} />
           </Grid.Column>
           <Grid.Column width={1}>
             <Input
@@ -288,41 +331,36 @@ class SaleAttachingProductOffer extends Component {
                               inputProps={{
                                 onClick: (e, { checked }) => {
                                   setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].selected`, checked)
-                                  const stateAllocated = this.state.allocated
+                                  const available = this.state.available
+                                  const allocated = this.state.allocated
+                                  const sumAvailable = this.state.sumAvailable
+                                  const sumAllocated = this.state.sumAllocated
 
-                                  const needAmount = parseInt(
-                                    offer.cfPkgTotal - stateAllocated[tabIndex] > 0
-                                      ? offer.cfPkgTotal - stateAllocated[tabIndex]
-                                      : 0
-                                  )
-                                  console.log('needAmount====================================')
-                                  console.log(needAmount)
-                                  console.log('====================================')
+                                  const allocatedIndex = this.state.allocated[tabIndex][index]
+                                  const availableIndex = this.state.available[tabIndex][index]
+
                                   if (checked) {
-                                    const available = this.state.available[tabIndex]
-                                    const allocated = available >= needAmount ? needAmount : available
-                                    console.log('allocated====================================')
-                                    console.log(allocated)
-                                    console.log('====================================')
-                                    setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].allocated`, allocated)
-                                    stateAllocated[tabIndex] += allocated
-                                    console.log('stateAllocated[tabIndex]====================================')
-                                    console.log(stateAllocated[tabIndex])
-                                    console.log('====================================')
-                                    const newAvailability = offer.cfPkgTotal - allocated
-                                    this.setState({ available: [newAvailability], allocated: stateAllocated })
+                                    setFieldValue(
+                                      `tab[${tabIndex}].groupedOffer[${index}].allocated`,
+                                      allocatedIndex + availableIndex
+                                    )
+                                    setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].available`, 0)
+                                    available[tabIndex][index] = 0
+                                    allocated[tabIndex][index] = availableIndex + allocatedIndex
+                                    sumAvailable[tabIndex] = sumAvailable[tabIndex] - availableIndex
+                                    sumAllocated[tabIndex] = sumAllocated[tabIndex] + availableIndex
+                                    this.setState({ available, allocated, sumAvailable, sumAllocated })
                                   } else {
-                                    const allocated = values.tab[tabIndex].groupedOffer[index].allocated
                                     setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].allocated`, 0)
                                     setFieldValue(
                                       `tab[${tabIndex}].groupedOffer[${index}].available`,
-                                      offer.pkgAvailable
+                                      availableIndex + allocatedIndex
                                     )
-                                    stateAllocated[tabIndex] -= allocated
-
-                                    const newAvailability = offer.cfPkgTotal
-
-                                    this.setState({ available: [newAvailability], allocated: stateAllocated })
+                                    available[tabIndex][index] = availableIndex + allocatedIndex
+                                    allocated[tabIndex][index] = 0
+                                    sumAvailable[tabIndex] = sumAvailable[tabIndex] + allocatedIndex
+                                    sumAllocated[tabIndex] = sumAllocated[tabIndex] - allocatedIndex
+                                    this.setState({ available, allocated, sumAvailable, sumAllocated })
                                   }
                                 },
                                 id: `tab${tabIndex}_groupedOffer${index}`
@@ -332,7 +370,9 @@ class SaleAttachingProductOffer extends Component {
                           <Table.Cell>{offer.id}</Table.Cell>
                           <Table.Cell textAlign='center'>{offer.cfPkgTotal}</Table.Cell>
                           <Table.Cell textAlign='center'>
-                            {this.state.available[index] ? this.state.available[index] : 0}
+                            {this.state.available[tabIndex] && this.state.available[tabIndex][index]
+                              ? this.state.available[tabIndex][index]
+                              : 0}
                           </Table.Cell>
                           <Table.Cell textAlign='center'>
                             <Input
@@ -342,95 +382,51 @@ class SaleAttachingProductOffer extends Component {
                                 readOnly: getSafe(() => values.tab[tabIndex].groupedOffer[index].selected, false)
                                   ? false
                                   : true,
-                                defaultValue: this.state.allocated,
+                                defaultValue:
+                                  this.state.allocated &&
+                                  this.state.allocated[tabIndex] &&
+                                  this.state.allocated[tabIndex][index],
+                                max: offer.cfPkgTotal,
+                                min: 0,
                                 onChange: (e, { value }) => {
-                                  const origValue = value
                                   value = parseInt(value)
-                                  if (!Number.isInteger(value) || (Number.isInteger(value) && value < 0)) {
-                                    console.log(
-                                      'values.tab[tabIndex].groupedOffer[index].allocated===================================='
-                                    )
-                                    console.log(values.tab[tabIndex].groupedOffer[index].allocated)
-                                    console.log('====================================')
+
+                                  const available = this.state.available
+                                  const allocated = this.state.allocated
+                                  const sumAvailable = this.state.sumAvailable
+                                  const sumAllocated = this.state.sumAllocated
+
+                                  const allocatedIndex = this.state.allocated[tabIndex][index]
+                                  const availableIndex = this.state.available[tabIndex][index]
+                                  const difference = this.state.allocated[tabIndex][index] - value
+
+                                  if (value > offer.cfPkgTotal || value < 0) {
+                                    setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].available`, availableIndex)
+                                    setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].allocated`, allocatedIndex)
+                                  } else if (difference) {
                                     setFieldValue(
-                                      `tab[${tabIndex}].groupedOffer[${index}].allocated`,
-                                      values.tab[tabIndex].groupedOffer[index].allocated
+                                      `tab[${tabIndex}].groupedOffer[${index}].available`,
+                                      availableIndex + difference
                                     )
-                                    value = values.tab[tabIndex].groupedOffer[index].allocated
-                                  }
-
-                                  // manage allocated values
-                                  let stateAllocated = this.state.allocated
-                                  console.log('stateAllocated====================================')
-                                  console.log(stateAllocated)
-                                  console.log('====================================')
-                                  const allocNow = parseInt(value - values.tab[tabIndex].groupedOffer[index].allocated)
-                                  console.log('allocNow====================================')
-                                  console.log(allocNow)
-                                  console.log('====================================')
-
-                                  let available = ''
-                                  if (this.state.available.length) {
-                                    available = this.state.available[index]
-                                  } else {
-                                    available = offer.pkgAvailable
-                                  }
-                                  console.log('available====================================')
-                                  console.log(available)
-                                  console.log('====================================')
-                                  if (allocNow > available) {
-                                    console.log(
-                                      'values.tab[tabIndex].groupedOffer[index].allocated===================================='
-                                    )
-                                    console.log(values.tab[tabIndex].groupedOffer[index].allocated)
-                                    console.log('====================================')
-                                    setFieldValue(
-                                      `tab[${tabIndex}].groupedOffer[${index}].allocated`,
-                                      values.tab[tabIndex].groupedOffer[index].allocated
-                                    )
-                                  } else {
-                                    stateAllocated[tabIndex] += allocNow
-                                    console.log('stateAllocated[tabIndex]====================================')
-                                    console.log(stateAllocated[tabIndex])
-                                    console.log('====================================')
-                                    // manage availability
-                                    let stateAvailability = []
-                                    if (this.state.available.length) {
-                                      stateAvailability = this.state.available
-                                    } else {
-                                      stateAvailability = offer.pkgAvailable
-                                    }
-                                    console.log('values.tab[tabIndex]====================================')
-                                    console.log(values.tab[tabIndex])
-                                    console.log('====================================')
-                                    const newAvailability = stateAvailability.map(po => {
-                                      po - allocNow
-                                    })
-
-                                    // fix value
-                                    if (origValue !== '' + value) {
-                                      setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].allocated`, value + 1)
-                                      setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].allocated`, value)
-                                    }
-                                    console.log('newAvailability====================================')
-                                    console.log(newAvailability)
-                                    console.log('====================================')
-                                    console.log('stateAllocated====================================')
-                                    console.log(stateAllocated)
-                                    console.log('====================================')
-
-                                    this.setState({ available: newAvailability, allocated: stateAllocated })
+                                    available[tabIndex][index] = availableIndex + difference
+                                    allocated[tabIndex][index] = allocatedIndex - difference
+                                    sumAvailable[tabIndex] = sumAvailable[tabIndex] + difference
+                                    sumAllocated[tabIndex] = sumAllocated[tabIndex] - difference
+                                    this.setState({ available, allocated, sumAvailable, sumAllocated })
                                   }
                                 }
                               }}
                             />
                           </Table.Cell>
                           <Table.Cell textAlign='center'>
-                            {offer.lotManufacturedDate &&
-                              moment(offer.lotManufacturedDate).format(getLocaleDateFormat())}
+                            {offer.lotManufacturedDate
+                              ? moment(offer.lotManufacturedDate).format(getLocaleDateFormat())
+                              : 'N/A'}
                           </Table.Cell>
                           <Table.Cell textAlign='center'>
-                            {offer.lotExpirationDate && moment(offer.lotExpirationDate).format(getLocaleDateFormat())}
+                            {offer.lotExpirationDate
+                              ? moment(offer.lotExpirationDate).format(getLocaleDateFormat())
+                              : 'N/A'}
                           </Table.Cell>
                           <Table.Cell textAlign='center'>
                             <UploadLot
@@ -493,6 +489,10 @@ class SaleAttachingProductOffer extends Component {
       toastManager
     } = this.props
 
+    console.log('groupedProductOffers====================================')
+    console.log(groupedProductOffers)
+    console.log('====================================')
+
     return (
       <Modal closeIcon onClose={() => closePopup()} open={true} size='small'>
         <Dimmer active={loadingGroupedProductOffer} inverted>
@@ -512,17 +512,19 @@ class SaleAttachingProductOffer extends Component {
                 console.log('values====================================')
                 console.log(values)
                 console.log('====================================')
-                const tab = values.tab
 
                 // check that all tabs have selected at least one lot
-                const missingLots = values.tab.find(tab => typeof tab.lots.find(lot => lot.selected) === 'undefined')
-                if (missingLots) {
+                const missingSelected =
+                  values &&
+                  values.tab &&
+                  values.tab.find(tab => typeof tab.groupedOffer.find(offer => offer.selected) === 'undefined')
+                if (missingSelected) {
                   toastManager.add(
                     generateToastMarkup(
-                      <FormattedMessage id='errors.noLotsSelected.header' defaultMessage='No Lots Selected' />,
+                      <FormattedMessage id='errors.noSelected.header' defaultMessage='No Selected' />,
                       <FormattedMessage
-                        id='errors.noLotsSelected.content'
-                        defaultMessage='Please check that all order items have selected at least one lot.'
+                        id='errors.noSelected.content'
+                        defaultMessage='Please check that all order items have selected at least one.'
                       />
                     ),
                     {
@@ -532,7 +534,8 @@ class SaleAttachingProductOffer extends Component {
                   actions.setSubmitting(false)
                   return false
                 }
-
+                actions.setSubmitting(false)
+                return false
                 // check if any selected and allocated lot is without file
                 const missingFile = !!values.tab.find(tab =>
                   tab.lots.find(lot => lot.selected && lot.allocated && lot.attachments.length === 0)
@@ -553,7 +556,7 @@ class SaleAttachingProductOffer extends Component {
                     async () => {
                       // confirm
                       await this.props
-                        .assignLots(orderId, tab)
+                        .assignLots(orderId, values.tab)
                         .then(r => {
                           toastManager.add(
                             generateToastMarkup(
@@ -582,7 +585,7 @@ class SaleAttachingProductOffer extends Component {
                   )
                 } else {
                   this.props
-                    .assignLots(orderId, tab)
+                    .assignLots(orderId, values.tab)
                     .then(r => {
                       toastManager.add(
                         generateToastMarkup(
@@ -607,7 +610,7 @@ class SaleAttachingProductOffer extends Component {
               className='flex stretched'
               style={{ padding: '0' }}>
               {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
-                const panes = groupedProductOffers.map((orderItem, index) => {
+                const panes = groupedProductOffers.map((offers, index) => {
                   return {
                     menuItem: (
                       <Menu.Item
@@ -636,7 +639,7 @@ class SaleAttachingProductOffer extends Component {
                         />
                       </Menu.Item>
                     ),
-                    pane: () => this.renderTab(index, orderItem, groupedProductOffers, setFieldValue, values)
+                    pane: () => this.renderTab(index, offers, setFieldValue, values)
                   }
                 })
                 return (

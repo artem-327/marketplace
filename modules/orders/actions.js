@@ -245,3 +245,9 @@ export function deleteAssignProductOffers(orderId, orderItemId) {
     payload: Api.deleteAssignProductOffers(orderId, orderItemId)
   }
 }
+
+export function clearGroupedProductOffer() {
+  return {
+    type: AT.CLEAR_GROUPED_PRODUCT_OFFERS
+  }
+}

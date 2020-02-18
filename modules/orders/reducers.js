@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 import { INVENTORY_LINK_ATTACHMENT } from '~/modules/inventory/action-types'
-import { getSafe } from '~/utils/functions'
+import { uniqueArrayByKey, getSafe } from '~/utils/functions'
 
 const initialState = {
   data: [],
@@ -423,13 +423,20 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loadingGroupedProductOffer: false,
-        groupedProductOffers: action.payload.data
+        groupedProductOffers: [action.payload.data].concat(state.groupedProductOffers)
       }
     }
     case AT.GET_GROUPED_PRODUCT_OFFERS_REJECTED: {
       return {
         ...state,
         loadingProductOffer: false
+      }
+    }
+    case AT.CLEAR_GROUPED_PRODUCT_OFFERS: {
+      return {
+        ...state,
+        loadingGroupedProductOffer: false,
+        groupedProductOffers: []
       }
     }
 
