@@ -525,7 +525,9 @@ class InventoryFilter extends Component {
         </FormField>
       </>
     )
-  }
+
+
+  bug
 
   formSaveFilter = formikProps => {
     let { intl } = this.props
