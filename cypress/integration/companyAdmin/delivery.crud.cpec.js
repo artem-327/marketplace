@@ -8,6 +8,8 @@ context("Prodex Branches CRUD", () => {
         cy.route("GET", "/prodex/api/delivery-addresses/datagrid").as("addressLoading")
         cy.route("POST", "/prodex/api/delivery-addresses/datagrid").as("addressLoading")
 
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {cy.deleteWholeCart(token)})
+
         cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
         cy.wait("@inventoryLoading")

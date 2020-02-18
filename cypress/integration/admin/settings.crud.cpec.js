@@ -21,7 +21,7 @@ context("Admin Settings RUD", () => {
     it("Update settings", function () {
         cy.contains("Other Settings")
 
-        cy.get("#field_textarea_admin\\.Other\\ Settings\\.Operations\\ Email\\ Address\\.value\\.visible")
+        cy.get("#field_textarea_admin.OTHER_SETTINGS.APP_OPERATIONS_EMAIL_ADDRESS.value.visible")
             .clear()
             .type("operations@echoexchange.net")
 
@@ -30,7 +30,7 @@ context("Admin Settings RUD", () => {
 
         cy.contains("System settings updated")
 
-        cy.get("#field_textarea_admin\\.Other\\ Settings\\.Operations\\ Email\\ Address\\.value\\.visible")
+        cy.get("#field_textarea_admin.OTHER_SETTINGS.APP_OPERATIONS_EMAIL_ADDRESS.value.visible")
             .should("contain", "operations@echoexchange.net")
     })
 })

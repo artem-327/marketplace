@@ -1,12 +1,13 @@
 context("Prodex Bank Account CRUD", () => {
 
     beforeEach(function () {
-        cy.viewport(1200, 800)
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("GET", "/prodex/api/payments/*").as("accountsLoading")
         cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.route("POST", "/prodex/api/payments/**").as("verifyLoading")
+
+        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {cy.deleteWholeCart(token)})
 
         cy.FElogin("mackenzie@echoexchange.net", "echopass123")
 
@@ -16,6 +17,7 @@ context("Prodex Bank Account CRUD", () => {
 
         cy.wait("@accountsLoading")
         cy.waitForUI()
+        cy.wait(10000)
     })
 
     it("Creates a bank account", () => {

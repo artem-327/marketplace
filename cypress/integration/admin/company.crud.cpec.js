@@ -114,7 +114,7 @@ context("Companies CRUD", () => {
 
         cy.openElement(companyId, 1)
 
-        cy.contains("Yes").click()
+        cy.get("[data-test='confirm_dialog_proceed_btn']").click()
 
         cy.get("[data-test=action_" + companyId + "]").should("not.exist")
     })
