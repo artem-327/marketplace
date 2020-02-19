@@ -24,12 +24,13 @@ import { FieldArray } from 'formik'
 import moment from 'moment'
 
 import * as Actions from '../../actions'
-import { getSafe } from '~/utils/functions'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import confirm from '~/src/components/Confirmable/confirm'
 import { loadFile, addAttachment } from '~/modules/inventory/actions'
 import { getLocaleDateFormat } from '~/components/date-format'
+import { ORDER_CONFIRM_FETCH_REJECTED } from '../../action-types'
 
 const ModalBody = styled(ModalContent)`
   padding: 0 1.5rem 1.5rem !important;
@@ -57,7 +58,13 @@ const TableWrapper = styled(Segment)`
   padding: 1em 2em 3em !important;
 `
 
-const initValues = {}
+const initValues = {
+  tab: [
+    {
+      groupedOffer: []
+    }
+  ]
+}
 
 val.addMethod(val.object, 'lessThanOrdered', function(propertyName, message) {
   return this.test('lessThan', message, function(value) {
@@ -169,12 +176,16 @@ class SaleAttachingProductOffer extends Component {
       let available = []
       let sumAllocated = []
       let allocated = []
-      this.props.groupedProductOffers.forEach(offers => {
+      this.props.groupedProductOffers.forEach((offers, index) => {
         if (offers && !offers.length) return
-        const sumPkgAvailable = offers.reduce(function(sum, offer) {
-          return sum + offer.pkgAvailable
-        }, 0)
-        sumAvailable.push(sumPkgAvailable)
+        console.log('offers====================================')
+        console.log(offers)
+        console.log('====================================')
+        console.log('this.props.productOffersPkgAmount.get(offers.parentOffer)====================================')
+        console.log(this.props.productOffersPkgAmount.get(offers[index].parentOffer))
+        console.log('====================================')
+        sumAvailable.push(this.props.productOffersPkgAmount.get(offers[index].parentOffer))
+
         const sumPkgAllocated = offers.reduce(function(sum, offer) {
           return sum + offer.pkgAllocated
         }, 0)
@@ -205,60 +216,37 @@ class SaleAttachingProductOffer extends Component {
     this.props.clearGroupedProductOffer()
   }
 
-  linkAttachment = (lotId, files, data) => {
-    const { values, setFieldValue, lotNumber, productOfferId } = data
-    this.props.linkAttachment(lotId, files).then(r => {
-      const affectedOrderItems = values.tab.forEach((tab, tabIndex) => {
-        if (tab.productOfferId === productOfferId) {
-          const lotIndex = tab.lots.findIndex(lot => lot.lotNumber === lotNumber)
-          const attachments = values.tab[tabIndex].lots[lotIndex].attachments
-          setFieldValue(
-            `tab[${tabIndex}].lots[${lotIndex}].attachments[${attachments.length ? attachments.length : 0}]`,
-            {
-              id: r.value.file.id,
-              name: r.value.file.name,
-              linked: true
-            }
-          )
-        }
+  linkAttachment = async (offerId, files, setFieldValue, index) => {
+    try {
+      const response = await this.props.addAttachment(files[0], 1, {})
+      const query = {
+        attachmentId: response.value.data.id,
+        orderItemId: offerId
+      }
+      await this.props.linkAttachmentToOrderItem(query)
+
+      setFieldValue(`tab[${this.state.activeTab}].groupedOffer[${index}].attachments[0]`, {
+        id: response.value.data.id,
+        name: response.value.data.name,
+        linked: true,
+        isToOrderItem: true
       })
-    })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  removeAttachment = (fileId, data) => {
-    const { values, setFieldValue } = data
-    values.tab.forEach((tab, tabIndex) => {
-      const lotIndex = tab.lots.findIndex(lot => getSafe(() => lot.attachments[0].id, 0) === fileId)
-      if (lotIndex) {
-        setFieldValue(`tab[${tabIndex}].lots[${lotIndex}].attachments`, [])
-      }
-    })
-    this.props.removeAttachment(fileId)
+  removeAttachment = (offer, file, setFieldValue, index) => {
+    setFieldValue(`tab[${this.state.activeTab}].groupedOffer[${index}].attachments`, [])
+    const query = {
+      attachmentId: file.id,
+      orderItemId: offer.id
+    }
+
+    this.props.removeLinkAttachmentToOrderItem(query)
   }
 
   renderTab(tabIndex, offers, setFieldValue, values) {
-    console.log('offers====================================')
-    console.log(offers)
-    console.log('====================================')
-    console.log('this.state.sumAvailable====================================')
-    console.log(this.state.sumAvailable)
-    console.log('====================================')
-    console.log('this.state.available====================================')
-    console.log(this.state.available)
-    console.log('====================================')
-    console.log('this.state.sumAllocated====================================')
-    console.log(this.state.sumAllocated)
-    console.log('====================================')
-    console.log('this.state.sumPkgTotal====================================')
-    console.log(this.state.sumPkgTotal)
-    console.log('====================================')
-    console.log('this.state.allocated====================================')
-    console.log(this.state.allocated)
-    console.log('====================================')
-    console.log('values====================================')
-    console.log(values)
-    console.log('====================================')
-
     if (!getSafe(() => offers.length, 0)) return <></>
 
     return (
@@ -338,6 +326,7 @@ class SaleAttachingProductOffer extends Component {
 
                                   const allocatedIndex = this.state.allocated[tabIndex][index]
                                   const availableIndex = this.state.available[tabIndex][index]
+                                  setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].id`, offer.id)
 
                                   if (checked) {
                                     setFieldValue(
@@ -356,6 +345,7 @@ class SaleAttachingProductOffer extends Component {
                                       `tab[${tabIndex}].groupedOffer[${index}].available`,
                                       availableIndex + allocatedIndex
                                     )
+
                                     available[tabIndex][index] = availableIndex + allocatedIndex
                                     allocated[tabIndex][index] = 0
                                     sumAvailable[tabIndex] = sumAvailable[tabIndex] + allocatedIndex
@@ -400,6 +390,8 @@ class SaleAttachingProductOffer extends Component {
                                   const availableIndex = this.state.available[tabIndex][index]
                                   const difference = this.state.allocated[tabIndex][index] - value
 
+                                  setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].id`, offer.id)
+
                                   if (value > offer.cfPkgTotal || value < 0) {
                                     setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].available`, availableIndex)
                                     setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].allocated`, allocatedIndex)
@@ -431,7 +423,9 @@ class SaleAttachingProductOffer extends Component {
                           <Table.Cell textAlign='center'>
                             <UploadLot
                               {...this.props}
-                              removeAttachment={fileId => this.removeAttachment(fileId, { values, setFieldValue })}
+                              removeOrderItem={file => {
+                                this.removeAttachment(offer, file, setFieldValue, index)
+                              }}
                               attachments={getSafe(
                                 () => values.tab[tabIndex].groupedOffer[index].attachments,
                                 offer.attachments
@@ -441,14 +435,7 @@ class SaleAttachingProductOffer extends Component {
                               lot={offer}
                               filesLimit={1}
                               fileMaxSize={20}
-                              onChange={files =>
-                                this.linkAttachment(offer.id, files, {
-                                  values,
-                                  setFieldValue,
-                                  lotNumber: offer.lotNumber,
-                                  productOfferId: this.props.orderId
-                                })
-                              }
+                              onChange={files => this.linkAttachment(offer.id, files, setFieldValue, index)}
                               data-test={`grouped_offer_${index}_attachments`}
                               emptyContent={
                                 <FormattedMessage id='global.upUpload' defaultMessage='\u2191 upload' tagName='a' />
@@ -466,12 +453,12 @@ class SaleAttachingProductOffer extends Component {
         <Grid>
           <Grid.Column width={10}></Grid.Column>
           <Grid.Column floated='right' width={3}>
-            <Button basic fluid onClick={() => this.props.closeAssignLots()}>
+            <Button basic fluid onClick={() => this.props.closePopup()}>
               <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
             </Button>
           </Grid.Column>
           <Grid.Column floated='right' width={3}>
-            <Button primary fluid>
+            <Button style={{ backgroundColor: '#2599d5', color: 'white' }} fluid>
               <FormattedMessage id='order.assignOffer' defaultMessage='Assign Offer' tagName='span' />
             </Button>
           </Grid.Column>
@@ -486,11 +473,12 @@ class SaleAttachingProductOffer extends Component {
       closePopup,
       loadingGroupedProductOffer,
       groupedProductOffers,
-      toastManager
+      toastManager,
+      orderId,
+      productOffersPkgAmount
     } = this.props
-
-    console.log('groupedProductOffers====================================')
-    console.log(groupedProductOffers)
+    console.log('productOffersPkgAmount====================================')
+    console.log(productOffersPkgAmount)
     console.log('====================================')
 
     return (
@@ -512,12 +500,26 @@ class SaleAttachingProductOffer extends Component {
                 console.log('values====================================')
                 console.log(values)
                 console.log('====================================')
+                // check that all tabs have selected at least one item
+                let missingSelected = true
+                if (values && values.tab && values.tab.length) {
+                  values.tab.forEach(tab => {
+                    if (tab && tab.groupedOffer && tab.groupedOffer.length) {
+                      tab.groupedOffer.forEach(offer => {
+                        if (offer && offer.selected) {
+                          missingSelected = false
+                          return
+                        }
+                      })
+                    } else {
+                      return
+                    }
+                  })
+                }
 
-                // check that all tabs have selected at least one lot
-                const missingSelected =
-                  values &&
-                  values.tab &&
-                  values.tab.find(tab => typeof tab.groupedOffer.find(offer => offer.selected) === 'undefined')
+                console.log('missingSelected====================================')
+                console.log(missingSelected)
+                console.log('====================================')
                 if (missingSelected) {
                   toastManager.add(
                     generateToastMarkup(
@@ -534,15 +536,55 @@ class SaleAttachingProductOffer extends Component {
                   actions.setSubmitting(false)
                   return false
                 }
+                // check if any selected and allocated lot is without file
+                let missingFile = true
+                if (values && values.tab && values.tab.length) {
+                  if (
+                    values.tab[this.state.activeTab] &&
+                    values.tab[this.state.activeTab].groupedOffer &&
+                    values.tab[this.state.activeTab].groupedOffer.length
+                  ) {
+                    values.tab[this.state.activeTab].groupedOffer.forEach(offer => {
+                      if (offer && offer.selected && offer.attachments) {
+                        missingFile = false
+                      } else {
+                        missingFile = true
+                        return
+                      }
+                    })
+                  } else {
+                    return
+                  }
+                }
+                console.log('missingFile====================================')
+                console.log(missingFile)
+                console.log('====================================')
+                const orderItemId = this.props.orderItemsId[this.state.activeTab]
+                console.log('orderItemId====================================')
+                console.log(orderItemId)
+                console.log('====================================')
+
+                const request = []
+                if (values && values.tab && values.tab.length) {
+                  values.tab.forEach(tab => {
+                    if (tab && tab.groupedOffer && tab.groupedOffer.length) {
+                      tab.groupedOffer.forEach(offer => {
+                        if (offer && offer.selected && offer.allocated) {
+                          request.push({
+                            pkgAmount: parseInt(offer.allocated),
+                            productOffer: parseInt(offer.id)
+                          })
+                        }
+                      })
+                    }
+                  })
+                }
+
+                console.log('request====================================')
+                console.log(request)
+                console.log('====================================')
                 actions.setSubmitting(false)
                 return false
-                // check if any selected and allocated lot is without file
-                const missingFile = !!values.tab.find(tab =>
-                  tab.lots.find(lot => lot.selected && lot.allocated && lot.attachments.length === 0)
-                )
-
-                const orderItemId = this.props.orderItems[this.state.activeTab].id
-
                 // confirm to assign when missing attachment(s) for assigned lot(s)
                 if (missingFile) {
                   confirm(
@@ -556,7 +598,7 @@ class SaleAttachingProductOffer extends Component {
                     async () => {
                       // confirm
                       await this.props
-                        .assignLots(orderId, values.tab)
+                        .patchAssignProductOffers(orderId, orderItemId, request)
                         .then(r => {
                           toastManager.add(
                             generateToastMarkup(
@@ -572,7 +614,7 @@ class SaleAttachingProductOffer extends Component {
                             }
                           )
                           actions.setSubmitting(false)
-                          this.props.closeAssignLots()
+                          this.props.closePopup()
                         })
                         .catch(e => {
                           actions.setSubmitting(false)
@@ -585,7 +627,7 @@ class SaleAttachingProductOffer extends Component {
                   )
                 } else {
                   this.props
-                    .assignLots(orderId, values.tab)
+                    .patchAssignProductOffers(orderId, orderItemId, request)
                     .then(r => {
                       toastManager.add(
                         generateToastMarkup(
@@ -600,7 +642,7 @@ class SaleAttachingProductOffer extends Component {
                         }
                       )
                       actions.setSubmitting(false)
-                      this.props.closeAssignLots()
+                      this.props.closePopup()
                     })
                     .catch(e => {
                       actions.setSubmitting(false)
@@ -662,6 +704,18 @@ class SaleAttachingProductOffer extends Component {
 function mapStateToProps(state) {
   const { detail } = state.orders
 
+  const productOffersPkgAmount = new Map()
+  const items = getSafe(() => detail.orderItems, '')
+  if (items.length) {
+    items.forEach(item => {
+      if (item && item.productOffers && item.productOffers.length) {
+        item.productOffers.forEach(offer => {
+          productOffersPkgAmount.set(offer.id, offer.pkgAmount)
+        })
+      }
+    })
+  }
+
   return {
     orderId: getSafe(() => detail.id, null),
     orderItemsId: getSafe(() => detail.orderItems.map(item => item.id), []),
@@ -672,8 +726,11 @@ function mapStateToProps(state) {
       : [0],
     allocated: getSafe(() => state.orders.groupedProductOffers, [])
       ? state.orders.groupedProductOffers.map(offer => offer.pkgAllocated)
-      : [0]
+      : [0],
+    productOffersPkgAmount
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(SaleAttachingProductOffer)))
+export default connect(mapStateToProps, { ...Actions, addAttachment })(
+  withToastManager(injectIntl(SaleAttachingProductOffer))
+)

@@ -124,5 +124,9 @@ export default {
   patchAssignProductOffers: (orderId, orderItemId, request) =>
     api.patch(`/prodex/api/sale-orders/${orderId}/order-item/${orderItemId}/assign-product-offers`, request),
   deleteAssignProductOffers: (orderId, orderItemId) =>
-    api.delete(`/prodex/api/sale-orders/${orderId}/order-item/${orderItemId}/assign-product-offers`)
+    api.delete(`/prodex/api/sale-orders/${orderId}/order-item/${orderItemId}/assign-product-offers`),
+  linkAttachmentToOrderItem: query =>
+    api.post(`/prodex/api/attachment-links/to-order-item${generateQueryString(query)}`),
+  removeLinkAttachmentToOrderItem: query =>
+    api.delete(`/prodex/api/attachment-links/to-order-item${generateQueryString(query)}`)
 }

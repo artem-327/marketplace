@@ -445,6 +445,44 @@ export default function(state = initialState, action) {
       }
     }
 
+    case AT.LINK_ATTACHMENT_TO_ORDER_ITEM_PENDING: {
+      return {
+        ...state,
+        loadingProductOffer: true
+      }
+    }
+    case AT.LINK_ATTACHMENT_TO_ORDER_ITEM_FULFILLED: {
+      return {
+        ...state,
+        loadingGroupedProductOffer: false
+      }
+    }
+    case AT.LINK_ATTACHMENT_TO_ORDER_ITEM_REJECTED: {
+      return {
+        ...state,
+        loadingProductOffer: false
+      }
+    }
+
+    case AT.REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM_PENDING: {
+      return {
+        ...state,
+        loadingProductOffer: true
+      }
+    }
+    case AT.REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM_FULFILLED: {
+      return {
+        ...state,
+        loadingGroupedProductOffer: false
+      }
+    }
+    case AT.REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM_REJECTED: {
+      return {
+        ...state,
+        loadingProductOffer: false
+      }
+    }
+
     default:
       return state
   }
