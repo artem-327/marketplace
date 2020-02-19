@@ -2,13 +2,14 @@ context("Units of packaging CRUD", () => {
 
     let packageId = null
     let filter = [{"operator": "LIKE", "path": "PackagingType.name", "values": ["%Test%"]}]
+    const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
         cy.server()
         cy.route("GET", "/prodex/api/packaging-groups").as("loading")
         cy.route("POST", "/prodex/api/packaging-types/datagrid").as("packaging")
 
-        cy.FElogin("admin@example.com", "echopass123")
+        cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.url().should("include", "admin")
 

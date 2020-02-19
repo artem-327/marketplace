@@ -1,8 +1,9 @@
 context("Inventory Broadcasting", () => {
     let offerId = null
+    const userJSON = require('../fixtures/user.json')
 
     before(function () {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getInventoryDatagridBody(token).then(inventoryBody => {
                 //TODO Found out why some assigning doesn't work
                 let idHelper = inventoryBody[0].id
@@ -21,14 +22,14 @@ context("Inventory Broadcasting", () => {
         cy.route("PATCH", '/prodex/api/product-offers/*/broadcast?broadcasted=***').as('broadcast')
         cy.route("POST", '/prodex/api/broadcast-rules/*').as('rulesSaving')
 
-        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
+        cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.url().should("include", "inventory")
     })
 
     it('Start/stop item broadcasting', () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.setOfferBroadcasting(token, offerId, "false")
         })
         cy.get(".table-responsive").scrollTo("right")
@@ -46,11 +47,14 @@ context("Inventory Broadcasting", () => {
     })
 
     it('Turn on custom broadcasting', () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.returnTurnOffJson().then(jsonBody => {
                 cy.setOfferPriceBook(token, offerId, jsonBody)
             })
         })
+
+        cy.reload()
+        cy.wait("@inventoryLoading", {timeout: 100000})
 
         cy.openElement(offerId, 2)
 
@@ -71,7 +75,7 @@ context("Inventory Broadcasting", () => {
     })
 
     it("Turns off the broadcasting", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.returnTurnOnJson().then(jsonBody => {
                 cy.setOfferPriceBook(token, offerId, jsonBody)
             })
@@ -96,7 +100,7 @@ context("Inventory Broadcasting", () => {
     })
 
     it("Turns on the broadcasting for Albreta and USA only", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.returnTurnOffJson().then(jsonBody => {
                 cy.setOfferPriceBook(token, offerId, jsonBody)
             })
@@ -134,7 +138,7 @@ context("Inventory Broadcasting", () => {
     })
 
     it("Switch to company broadcasting", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.returnTurnOffJson().then(jsonBody => {
                 cy.setOfferPriceBook(token, offerId, jsonBody)
             })

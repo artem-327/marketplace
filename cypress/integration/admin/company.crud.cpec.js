@@ -2,6 +2,7 @@ context("Companies CRUD", () => {
 
     let companyId = null
     let filter = [{"operator": "LIKE", "path": "Company.name", "values": ["%Donald%"]}]
+    const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
         cy.server()
@@ -10,7 +11,7 @@ context("Companies CRUD", () => {
         cy.route("POST", "/prodex/api/companies").as("companyCreate")
         cy.route("GET", "/_next/static/webpack/").as("datagridLoad")
 
-        cy.FElogin("admin@example.com", "echopass123")
+        cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.url().should("include", "admin")
 

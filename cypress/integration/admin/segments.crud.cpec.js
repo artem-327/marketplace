@@ -2,13 +2,14 @@ context("Market Segments CRUD", () => {
 
     let documentId = null
     let filter = [{"operator": "LIKE", "path": "MarketSegment.name", "values": ["%Test%"]}]
+    const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
         cy.server()
         cy.route("GET", "/prodex/api/packaging-groups").as("loading")
         cy.route("POST", "/prodex/api/market-segments/datagrid").as("segments")
 
-        cy.FElogin("admin@example.com", "echopass123")
+        cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.url().should("include", "admin")
 

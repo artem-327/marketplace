@@ -1,9 +1,10 @@
 context("Inventory CRUD", () => {
     let filter = null
     let productName = null
+    const userJSON = require('../fixtures/user.json')
 
     before(function () {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getInventoryDatagridBody(token).then(inventoryBody => {
                 //TODO Found out why some assigning doesn't work
                 let helper = inventoryBody[0].companyProduct.intProductName
@@ -22,7 +23,7 @@ context("Inventory CRUD", () => {
         cy.route("GET", "/prodex/api/countries/search*").as("addingLoading")
         cy.route("GET", "/prodex/api/product-offers/*").as("offerLoading")
 
-        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
+        cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.url().should("include", "inventory")
@@ -52,38 +53,8 @@ context("Inventory CRUD", () => {
         cy.contains(productName)
     })
 
-    it("See item details", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
-            cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]").click()
-                cy.get("[data-test=action_" + itemId + "_0]").click()
-            })
-        })
-
-        cy.wait("@offerLoading")
-
-        cy.get("[id='field_dropdown_edit.product']").contains(productName)
-
-        cy.get("[id='field_input_edit.pkgAvailable']")
-            .should("have.value", "100")
-
-        cy.get("[id='field_input_edit.fobPrice']")
-            .should("have.value", "20")
-
-        cy.contains("Houston Warehouse")
-
-        cy.get("[data-test=detail_inventory_tab_documents]").click()
-        cy.get("[id='field_dropdown_documents.documentType']").should("be.visible")
-
-        cy.get("[data-test=detail_inventory_tab_priceBook]").click()
-        cy.get("[data-test=broadcast_rule_row_click]").eq(0).should("be.visible")
-
-        cy.get("[data-test=detail_inventory_tab_priceTiers]").click()
-        cy.get("[data-test=field_dropdown_priceTiers.priceTiers]").should("be.visible")
-    })
-
     it("Update item", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
                 cy.get("[data-test=action_" + itemId + "]").click()
                 cy.get("[data-test=action_" + itemId + "_0]").click()
@@ -106,8 +77,38 @@ context("Inventory CRUD", () => {
         cy.contains("10").should('be.visible')
     })
 
+    it("See item details", () => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
+            cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
+                cy.get("[data-test=action_" + itemId + "]").click()
+                cy.get("[data-test=action_" + itemId + "_0]").click()
+            })
+        })
+
+        cy.wait("@offerLoading")
+
+        cy.get("[id='field_dropdown_edit.product']").contains(productName)
+
+        cy.get("[id='field_input_edit.pkgAvailable']")
+            .should("have.value", "10")
+
+        cy.get("[id='field_input_edit.fobPrice']")
+            .should("have.value", "20")
+
+        cy.contains("Mercer Distribution Services")
+
+        cy.get("[data-test=detail_inventory_tab_documents]").click()
+        cy.get("[id='field_dropdown_documents.documentType']").should("be.visible")
+
+        cy.get("[data-test=detail_inventory_tab_priceBook]").click()
+        cy.get("[data-test=broadcast_rule_row_click]").eq(0).should("be.visible")
+
+        cy.get('[data-test=detail_inventory_tab_priceTiers]').click()
+        cy.get('[data-test=detail_inventory_tab_priceTiers]').should("be.visible")
+    })
+
     it("Delete item", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
                 cy.get("[data-test=action_" + itemId + "]").click()
                 cy.get("[data-test=action_" + itemId + "_4]").click()
@@ -191,7 +192,7 @@ context("Inventory CRUD", () => {
         cy.server()
         cy.route("GET", '/prodex/api/company-products/own/search?*').as('search')
 
-        cy.get(".submenu-filter").click()
+        cy.get("[class='active item']").eq(0).click()
 
         cy.waitForUI()
 
@@ -216,12 +217,11 @@ context("Inventory CRUD", () => {
         cy.get("#field_input_quantityTo").type("10")
         cy.contains("Apply").click()
 
-        cy.get(".submenu-filter").click()
         cy.contains("No records found.")
     })
 
     it("Set price triers", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
                 cy.get("[data-test=action_" + itemId + "]").click()
                 cy.get("[data-test=action_" + itemId + "_3]").click()

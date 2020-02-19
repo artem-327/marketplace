@@ -3,6 +3,7 @@ context("Prodex Branches CRUD", () => {
     let filter = [{"operator": "LIKE", "path": "Branch.deliveryAddress.addressName", "values": ["%Central%"]},
         {"operator": "LIKE", "path": "Branch.deliveryAddress.address.streetAddress", "values": ["%Central%"]},
         {"operator": "LIKE", "path": "Branch.deliveryAddress.contactName", "values": ["%Central%"]}]
+    const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
         cy.server()
@@ -10,9 +11,9 @@ context("Prodex Branches CRUD", () => {
         cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.route("POST", "/prodex/api/branches/datagrid").as("branchesLoadingPOST")
 
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {cy.deleteWholeCart(token)})
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
 
-        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
+        cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.get('.scrollbar-container > .dropdown').click()
@@ -23,7 +24,7 @@ context("Prodex Branches CRUD", () => {
     })
 
     it("Creates a branch", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'branches', filter).then(itemId => {
                 if (itemId != null)
                     cy.deleteEntity(token, 'branches', itemId)
@@ -51,7 +52,7 @@ context("Prodex Branches CRUD", () => {
 
         cy.contains("Created Branch")
 
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstBranchIdWithFilter(token, filter).then(itemId => {
                 cy.openElement(itemId, 0)
 

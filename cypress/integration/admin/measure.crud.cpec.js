@@ -1,12 +1,13 @@
 context("Units of measure CRUD", () => {
     let filter = [{"operator": "LIKE", "path": "Unit.name", "values": ["%Test%"]}]
+    const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
         cy.server()
         cy.route("GET", "/prodex/api/packaging-groups").as("loading")
         cy.route("POST", "/prodex/api/units/datagrid").as("unitLoad")
 
-        cy.FElogin("admin@example.com", "echopass123")
+        cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.url().should("include", "admin")
 
