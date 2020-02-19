@@ -179,7 +179,7 @@ export default class PhoneNumber extends Component {
 
     return (
       <FormField error={!!error}>
-        <label>{label}</label>
+        {label && (<label>{label}</label>)}
         <span style={{ display: 'flex' }}>
           <StyledDropdown
             options={phoneCountryCodes}

@@ -860,6 +860,37 @@ class InventoryFilter extends Component {
         </AccordionItem>
 
         <AccordionItem>
+          {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
+          <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
+            <BottomMargedDropdown {...dropdownWarehouseProps} />
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem>
+          {this.accordionTitle(
+            'expiration',
+            <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
+          )}
+          <AccordionContent active={!this.state.inactiveAccordion.expiration}>
+            <FormGroup widths='equal'>
+              {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
+            </FormGroup>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem>
+          {this.accordionTitle(
+            'mfg',
+            <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
+          )}
+          <AccordionContent active={!this.state.inactiveAccordion.mfg}>
+            <FormGroup widths='equal'>
+              {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
+            </FormGroup>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem>
           {this.accordionTitle('quantity', <FormattedMessage id='filter.quantity' />)}
           <AccordionContent active={!this.state.inactiveAccordion.quantity}>
             <FormGroup widths='equal' data-test='filter_quantity_inp'>
@@ -923,12 +954,6 @@ class InventoryFilter extends Component {
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem>
-          {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
-            <BottomMargedDropdown {...dropdownWarehouseProps} />
-          </AccordionContent>
-        </AccordionItem>
 
         {false && (<AccordionItem>
           {this.accordionTitle('broadcasted', <FormattedMessage id='filter.broadcast' />)}
@@ -955,18 +980,6 @@ class InventoryFilter extends Component {
         <AccordionItem>
           {this.accordionTitle('productForms', <FormattedMessage id='filter.form' defaultMessage='Form' />)}
           <AccordionContent active={!this.state.inactiveAccordion.productForms}>{productFormsRows}</AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle(
-            'expiration',
-            <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
-          )}
-          <AccordionContent active={!this.state.inactiveAccordion.expiration}>
-            <FormGroup widths='equal'>
-              {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
-            </FormGroup>
-          </AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
@@ -997,18 +1010,6 @@ class InventoryFilter extends Component {
                   '%'
                 )}
               </FormField>
-            </FormGroup>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle(
-            'mfg',
-            <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
-          )}
-          <AccordionContent active={!this.state.inactiveAccordion.mfg}>
-            <FormGroup widths='equal'>
-              {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
             </FormGroup>
           </AccordionContent>
         </AccordionItem>
