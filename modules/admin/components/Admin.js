@@ -37,6 +37,11 @@ import { DatagridProvider } from '~/modules/datagrid'
 import Settings from '~/components/settings'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
+const FixyWrapper = styled.div`
+  position: relative;
+  transform: translateY(0);
+`
+
 const ScrollableSegment = styled(Segment)`
   max-height: 90vh;
   overflow-y: auto;
@@ -57,9 +62,11 @@ const tables = {
   'Document Types': <DataTable />,
   'Market Segments': <DataTable />,
   'Admin Settings': (
-    <ScrollableSegment basic padded='very'>
-      <Settings inputsInGroup={3} asModal={false} role='admin' />
-    </ScrollableSegment>
+    <FixyWrapper>
+      <ScrollableSegment basic padded='very'>
+        <Settings inputsInGroup={3} asModal={false} role='admin' />
+      </ScrollableSegment>
+    </FixyWrapper>
   )
 }
 

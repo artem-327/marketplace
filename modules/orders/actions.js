@@ -127,6 +127,10 @@ export const cancelOrder = orderId => ({
   type: AT.ORDER_CANCEL_ORDER,
   payload: Api.cancelOrder(orderId)
 })
+export const clearRelatedOrders = () => ({
+  type: AT.CLEAR_RELATED_ORDERS,
+  payload: {}
+})
 export const getRelatedOrders = orderId => ({
   type: AT.RELATED_ORDERS,
   payload: Api.getRelatedOrders(orderId)

@@ -427,7 +427,7 @@ class MyInventory extends Component {
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
     const { isProductInfoOpen, closePopup } = this.props
 
-    tab = row.grouped ? 0 : tab
+    tab = row && row.grouped ? 0 : tab
 
     if (isProductInfoOpen) closePopup()
     sidebarDetailTrigger(row, bol, tab)

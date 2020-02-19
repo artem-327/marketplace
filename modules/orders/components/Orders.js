@@ -14,6 +14,22 @@ import FilterTags from '~/modules/filter/components/FitlerTags'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import Link from 'next/link'
 
+const ButtonsWrapper = styled(Grid)`
+  margin-left: -21px !important;
+  margin-right: -21px !important;
+  margin-bottom: -21px !important;
+  border-top: 1px solid #dee2e6;
+  
+  > div {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    
+    button {
+      height: 40px !important;
+    }
+  }
+`
+
 class Orders extends Component {
   state = {
     columns: [
@@ -485,16 +501,17 @@ class Orders extends Component {
     return filename
   }
 
-  closeAttachmentPopup = () => {
+  closePopup = () => {
     this.setState({ attachmentPopup: null, openModal: false })
+    this.props.clearRelatedOrders()
   }
 
   getAttachmentContent = () => {
     const { attachmentPopup: { attachment, order } } = this.state
     return (
       <>
-        <Grid columns={2}>
-          <Grid.Column floated='right'>
+        <Grid>
+          <Grid.Column textAlign='right'>
             <Button color='blue'
                     onClick={() => this.downloadAttachment(attachment.id, order.id)}>
               <Icon name='download'/>
@@ -502,7 +519,7 @@ class Orders extends Component {
                 {text => text}
               </FormattedMessage>
             </Button>
-            <Button onClick={() => this.closeAttachmentPopup()}>
+            <Button onClick={() => this.closePopup()}>
               <FormattedMessage id='global.close' defaultMessage='Close'>
                 {text => text}
               </FormattedMessage>
@@ -542,6 +559,13 @@ class Orders extends Component {
           columns={this.state.columnsRelatedOrders}
           rows={rowsRelatedOrders}
         />
+        <ButtonsWrapper>
+          <Grid.Column textAlign='right'>
+            <Button basic onClick={() => this.closePopup()}>
+              <FormattedMessage id='global.close' defaultMessage='Close'>{text => text}</FormattedMessage>
+            </Button>
+          </Grid.Column>
+        </ButtonsWrapper>
       </>
     )
   }
@@ -578,7 +602,7 @@ class Orders extends Component {
         {this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (
           <Modal
             size='small'
-            closeIcon
+            closeIcon={false}
             onClose={() => this.setState({ openModal: false })}
             centered={true}
             open={this.state.openModal}>
