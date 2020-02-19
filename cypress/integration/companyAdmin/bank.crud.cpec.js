@@ -1,4 +1,5 @@
 context("Prodex Bank Account CRUD", () => {
+    const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
         cy.server()
@@ -7,9 +8,9 @@ context("Prodex Bank Account CRUD", () => {
         cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.route("POST", "/prodex/api/payments/**").as("verifyLoading")
 
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {cy.deleteWholeCart(token)})
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
 
-        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
+        cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.get('.scrollbar-container > .dropdown').click()

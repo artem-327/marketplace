@@ -1,13 +1,13 @@
 context("Admin Settings RUD", () => {
 
-    let productId = null
+    const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
         cy.server()
         cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
         cy.route("GET", "/prodex/api/settings/admin").as("adminLoading")
 
-        cy.FElogin("admin@example.com", "echopass123")
+        cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
         cy.url().should("include", "admin")
@@ -20,17 +20,21 @@ context("Admin Settings RUD", () => {
 
     it("Update settings", function () {
         cy.contains("Other Settings")
-
-        cy.get("#field_textarea_admin.OTHER_SETTINGS.APP_OPERATIONS_EMAIL_ADDRESS.value.visible")
-            .clear()
-            .type("operations@echoexchange.net")
+//TODO Selector workaround
+        cy.get(":nth-child(20)").within(() => {
+            cy.get("textarea")
+                .clear()
+                .type("operations@echoexchange.net")
+        })
 
         cy.get("button[class='ui primary button']").eq(2).click({force: true})
         cy.wait(1000)
 
         cy.contains("System settings updated")
 
-        cy.get("#field_textarea_admin.OTHER_SETTINGS.APP_OPERATIONS_EMAIL_ADDRESS.value.visible")
-            .should("contain", "operations@echoexchange.net")
+        cy.get(":nth-child(20)").within(() => {
+            cy.get("textarea")
+                .should("contain", "operations@echoexchange.net")
+        })
     })
 })

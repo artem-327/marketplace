@@ -1,4 +1,5 @@
 context("Prodex Global Price", () => {
+    const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
         cy.server()
@@ -7,16 +8,16 @@ context("Prodex Global Price", () => {
         cy.route("POST", '/prodex/api/broadcast-rules/general').as('rulesSaving')
         cy.viewport(1280, 800)
 
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {cy.deleteWholeCart(token)})
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
 
-        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
+        cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.get('.scrollbar-container > .dropdown').click()
     })
 
     it("Turns on the broadcasting", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.turnOffGlobalBroadcasting(token)
         })
 
@@ -40,7 +41,7 @@ context("Prodex Global Price", () => {
     })
 
     it("Turns off the broadcasting", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.turnOnGlobalBroadcasting(token)
         })
 
@@ -64,7 +65,7 @@ context("Prodex Global Price", () => {
     })
 
     it("Turns on the broadcasting for Albreta and USA only", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.turnOffGlobalBroadcasting(token)
         })
 
@@ -101,7 +102,7 @@ context("Prodex Global Price", () => {
     })
 
     it("Switch to company broadcasting", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.turnOffGlobalBroadcasting(token)
         })
 

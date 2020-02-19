@@ -1,6 +1,7 @@
 context("Company Product Catalog CRUD", () => {
     let productId = null
     let filter = [{"operator": "LIKE", "path": "CompanyProduct.intProductCode", "values": ["%OURPR%"]}]
+    const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
         cy.server()
@@ -8,9 +9,9 @@ context("Company Product Catalog CRUD", () => {
         cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.route("POST", "/prodex/api/company-products/datagrid").as("productLoading")
 
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {cy.deleteWholeCart(token)})
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
 
-        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
+        cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.get('.scrollbar-container > .dropdown').click()
@@ -22,7 +23,7 @@ context("Company Product Catalog CRUD", () => {
     })
 
     it("Creates a product", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'company-products', filter).then(itemId => {
                 if (itemId != null)
                     cy.deleteEntity(token, 'company-products/id', itemId)
@@ -46,7 +47,7 @@ context("Company Product Catalog CRUD", () => {
             cy.contains("kilograms").click()
         })
 
-        cy.selectFromDropdown("div[id='field_dropdown_nmfcNumber']", "1506")
+        cy.selectFromDropdown("div[id='field_dropdown_nmfcNumber']", "15")
 
         cy.get("[data-test='settings_product_popup_freightClass_drpdn']").click()
         cy.get("[data-test='settings_product_popup_freightClass_drpdn']").within(() => {
@@ -61,7 +62,7 @@ context("Company Product Catalog CRUD", () => {
         cy.waitForUI()
         cy.searchInList("Our")
 
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstCompanyProductWithFilter(token, filter).then(itemId => {
                 cy.openElement(itemId, 0)
 

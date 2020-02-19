@@ -6,13 +6,14 @@ context("Echo Product CRUD", () => {
         "path": "EchoProduct.code",
         "values": ["%Test%"]
     }]
+    const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
         cy.server()
         cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
         cy.route("POST", "/prodex/api/echo-products/datagrid").as("echoLoading")
 
-        cy.FElogin("admin@example.com", "echopass123")
+        cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
         cy.url().should("include", "admin")

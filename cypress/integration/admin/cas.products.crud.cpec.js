@@ -3,12 +3,13 @@ context("CAS products CRUD", () => {
     let productId = null
     let filter = [{"operator": "LIKE", "path": "CasProduct.casIndexName", "values": ["%Testinonium%"]},
         {"operator": "LIKE", "path": "CasProduct.casNumber", "values": ["%Testinonium%"]}]
+    const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
         cy.server()
         cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
 
-        cy.FElogin("admin@example.com", "echopass123")
+        cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
         cy.url().should("include", "admin")

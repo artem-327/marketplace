@@ -2,6 +2,7 @@ context("Prodex User CRUD", () => {
     let userID = null
     let filter = [{"operator": "LIKE", "path": "User.name", "values": ["%John Automator%"]},
         {"operator": "LIKE", "path": "User.homeBranch.deliveryAddress.contactName", "values": ["%John Automator%"]}]
+    const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
         cy.server()
@@ -10,9 +11,9 @@ context("Prodex User CRUD", () => {
         cy.route("GET", "/prodex/api/settings/user").as("usersLogin")
         cy.route("POST", "/prodex/api/users").as("usersSave")
 
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {cy.deleteWholeCart(token)})
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
 
-        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
+        cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.get('.scrollbar-container > .dropdown').click()
@@ -21,7 +22,7 @@ context("Prodex User CRUD", () => {
     })
 
     it("Creates a user", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'users', filter).then(itemId => {
                 if (itemId != null)
                     cy.deleteEntity(token, 'users/id', itemId)
@@ -45,7 +46,7 @@ context("Prodex User CRUD", () => {
         cy.wait("@usersSave")
         cy.contains("User John Automator successfully created.")
 
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstUserIdWithFilter(token, filter).then(itemId => {
                 cy.openElement(itemId, 0)
 

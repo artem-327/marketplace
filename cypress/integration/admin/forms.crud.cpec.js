@@ -2,13 +2,14 @@ context("Form CRUD", () => {
 
     let formId = null
     let filter = [{"operator": "LIKE", "path": "ProductForm.name", "values": ["%Liquor%"]}]
+    const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
         cy.server()
         cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
         cy.route("POST", "/prodex/api/product-forms/datagrid").as("formsLoad")
 
-        cy.FElogin("admin@example.com", "echopass123")
+        cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.url().should("include", "admin")
 

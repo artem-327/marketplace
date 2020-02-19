@@ -1,15 +1,18 @@
 context("Market place tests",() => {
+    const userJSON = require('../fixtures/user.json')
 
     beforeEach(function () {
         cy.server()
         cy.route("POST","/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("POST", "/prodex/api/product-offers/broadcasted/datagrid/").as("marketplaceLoading")
 
-        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
+        cy.FElogin(userJSON.email, userJSON.password)
 
-        cy.wait("@inventoryLoading")
+        cy.wait('@inventoryLoading', {timeout: 30000})
+        cy.url().should("include", "inventory")
         cy.contains("Marketplace").click()
-        cy.wait("@marketplaceLoading")
+
+        cy.wait("@marketplaceLoading", {timeout: 30000})
     })
 
     it("Filter marketplace", () =>{
@@ -25,7 +28,7 @@ context("Market place tests",() => {
 
         cy.waitForUI()
 
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
                 searchedValue = marketPlaceBody[0].pkgAvailable
 
@@ -42,7 +45,7 @@ context("Market place tests",() => {
 
         cy.contains("Apply").click()
 
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
                 cy.get("[data-test=action_" + marketPlaceBody[0].id + "]")
             })

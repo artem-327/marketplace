@@ -3,6 +3,7 @@ context("Prodex Warehouse CRUD", () => {
     let filter = [{"operator":"LIKE","path":"Branch.deliveryAddress.addressName","values":["%Central branch%"]},
         {"operator":"LIKE","path":"Branch.deliveryAddress.address.streetAddress","values":["%Central branch%"]},
         {"operator":"LIKE","path":"Branch.deliveryAddress.contactName","values":["%Central branch%"]}]
+    const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
         cy.server()
@@ -10,9 +11,9 @@ context("Prodex Warehouse CRUD", () => {
         cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.route("POST", "/prodex/api/branches/warehouses/datagrid").as("warehouseLoading")
 
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {cy.deleteWholeCart(token)})
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
 
-        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
+        cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.get('.scrollbar-container > .dropdown').click()
@@ -23,7 +24,7 @@ context("Prodex Warehouse CRUD", () => {
     })
 
     it("Creates a warehouse", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'branches/warehouses',filter).then(itemId => {
                 if(itemId != null)
                     cy.deleteEntity(token, 'branches', itemId)
@@ -53,7 +54,7 @@ context("Prodex Warehouse CRUD", () => {
 
         cy.searchInList("Central")
 
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'branches/warehouses',filter).then(itemId => {
                 cy.openElement(itemId, 0)
 

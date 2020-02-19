@@ -1,6 +1,7 @@
 context("Shopping cart CRUD", () => {
 
     let marketPlaceId = null
+    const userJSON = require('../fixtures/user.json')
 
     beforeEach(function () {
         cy.viewport(1620, 2000)
@@ -8,7 +9,7 @@ context("Shopping cart CRUD", () => {
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
 
-        cy.FElogin("mackenzie@echoexchange.net", "echopass123")
+        cy.FElogin(userJSON.email, userJSON.password)
 
         cy.waitForUI()
 
@@ -20,7 +21,7 @@ context("Shopping cart CRUD", () => {
     })
 
         it("Adds item to shopping card", () => {
-            cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.getUserToken(userJSON.email, userJSON.password).then(token => {
                 cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
                     cy.deleteWholeCart(token)
 
@@ -38,7 +39,7 @@ context("Shopping cart CRUD", () => {
 
                     cy.contains("Continue").click()
 
-                    cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+                    cy.getUserToken(userJSON.email, userJSON.password).then(token => {
                         //Check product name
                         cy.getItemBody(token, marketPlaceId).then(itemBody => {
                             cy.get(".item-cart-body-section-name").should('contain', itemBody.companyProduct.echoProduct.name)
@@ -67,7 +68,7 @@ context("Shopping cart CRUD", () => {
                 .type("2")
 
             cy.get("[data-test='add_cart_edit_order_btn']").click()
-            cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+            cy.getUserToken(userJSON.email, userJSON.password).then(token => {
                 cy.getCartBody(token).then(priceBody => {
                     //Expect there are 2 items
                     expect(priceBody.cartItems[0].pkgAmount).to.eq(2)
@@ -84,7 +85,7 @@ context("Shopping cart CRUD", () => {
         })
 
     it("Add second item in shopping card", () => {
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
                 cy.deleteWholeCart(token)
                 //TODO Automatic searching inside marketplace body
@@ -142,7 +143,7 @@ context("Shopping cart CRUD", () => {
         cy.contains("Yes").click()
 
 
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getItemBody(token, marketPlaceId).then(itemBody => {
                 cy.get(".item-cart-body-section-name").should('contain', itemBody.companyProduct.echoProduct.name)
             })
@@ -151,7 +152,7 @@ context("Shopping cart CRUD", () => {
         cy.reload()
 
         cy.get(".item-cart-body-section-name").should("have.length", "1")
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getItemBody(token, marketPlaceId).then(itemBody => {
                 cy.get(".item-cart-body-section-name").should('contain', itemBody.companyProduct.echoProduct.name)
             })
@@ -168,7 +169,7 @@ context("Shopping cart CRUD", () => {
         cy.contains("Place Order").should('not.be.enabled')
         cy.get("#field_dropdown_address").click()
 
-        cy.getUserToken("mackenzie@echoexchange.net", "echopass123").then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getDeliveryAddresses(token).then(addresses => {
                 cy.get("div[role=listbox]").within(() => {
                     cy.contains(addresses[0].addressName).click()
