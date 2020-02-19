@@ -15,6 +15,51 @@ export const FlexSidebar = styled.div`
   margin-right: 10px;
   min-width: 200px;
   
+  .ui.input {
+    .ui.label,
+    input {
+      padding-top: 8px;
+      padding-bottom: 7px;
+      font-size: 13px;
+      background-color: #fdfdfd;
+    }
+  } 
+  
+  .field {
+    .ui.dropdown {
+      min-height: 32px;
+      padding-top: 8px;
+      padding-bottom: 6.7px;
+      background-color: #fdfdfd;
+      &.disabled {
+        opacity: 1;
+        color: #cecfd4;
+      }
+    }
+  }
+  
+  .phoneNumber .field {
+    .ui.dropdown{
+      padding-top: 9px;
+      padding-bottom: 5.7px;
+      font-size: 13px;
+      background-color: #fdfdfd;
+      > .menu {
+        left: -20% !important;
+      }
+      &.disabled {
+        opacity: 0.45;
+        //color: #cecfd4;
+      }
+    }
+    input {
+      padding-top: 8px;
+      padding-bottom: 6.7px;
+      font-size: 13px;
+      background-color: #fdfdfd;
+    }
+  }
+  
   .ui.large.button,
   .ui.button {
     font-size: 14px;
@@ -462,8 +507,8 @@ export const InputWrapper = styled.div`
     border-radius: 2px;
     background-color: rgba(37, 153, 213, 0.1);
     position: absolute;
-    top: 29px;
-    right: 5px;
+    top: 27px;
+    right: 4px;
   }
 `
 
@@ -472,8 +517,7 @@ export const QuantityWrapper = styled.div`
   > .sideButtons {
     position: absolute;
     width: 32px;
-    //height: 32px;
-    height: 35px;
+    height: 32px;
     right: 0;
     top: 23px;
     .ui.button {
@@ -482,13 +526,13 @@ export const QuantityWrapper = styled.div`
       &.buttonPlus {
         border-radius: 0 3px 0 0;
         width: 32px;
-        padding: 2px 0 1px 0;
+        padding: 1px 0 0 0;
       }
       &.buttonMinus {
         border-radius: 0 0 3px 0;
         width: 32px;
-        padding: 0 0 1px 0;
-        top: 18px;
+        padding: 0;
+        top: 16px;
       }
     }
   }

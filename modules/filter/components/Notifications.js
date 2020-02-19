@@ -84,19 +84,21 @@ class Notifications extends Component {
             position='top center'
             trigger={
               <GridColumn computer={16} data-test='filter_notifications_mobile_inp'>
-                <PhoneNumber
-                  name='notifications.notificationPhone'
-                  disabled={ !(values.checkboxes && values.checkboxes.notifyPhone) || disabled }
-                  clearable
-                  label={null}
-                  values={values}
-                  setFieldValue={formikProps.setFieldValue}
-                  setFieldTouched={formikProps.setFieldTouched}
-                  errors={formikProps.errors}
-                  touched={formikProps.touched}
-                  isSubmitting={formikProps.isSubmitting}
-                  placeholder={formatMessage({ id: 'filter.useMyPhone', defaultMessage: 'Your Phone Number' })}
-                />
+                <div className='phoneNumber'>
+                  <PhoneNumber
+                    name='notifications.notificationPhone'
+                    disabled={ !(values.checkboxes && values.checkboxes.notifyPhone) || disabled }
+                    clearable
+                    label={null}
+                    values={values}
+                    setFieldValue={formikProps.setFieldValue}
+                    setFieldTouched={formikProps.setFieldTouched}
+                    errors={formikProps.errors}
+                    touched={formikProps.touched}
+                    isSubmitting={formikProps.isSubmitting}
+                    placeholder={formatMessage({ id: 'filter.useMyPhone', defaultMessage: 'Your Phone Number' })}
+                  />
+                </div>
               </GridColumn>
             }>
             <GridColumn computer={14}>

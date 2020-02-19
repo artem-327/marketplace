@@ -225,7 +225,6 @@ class Navigation extends Component {
           </>
         </MenuLink>
         {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
-        {false && asPath === '/inventory/my' ? <InventoryFilter /> : null}
         {getSafe(() => company.nacdMember, false) ? (
           <>
             <MenuLink to='/marketplace/all' data-test='navigation_menu_marketplace_drpdn'>

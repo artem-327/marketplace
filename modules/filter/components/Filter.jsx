@@ -677,7 +677,7 @@ class Filter extends Component {
       loading: autocompleteDataLoading,
       name: 'search',
       placeholder:
-        <FormattedMessage id='filter.searchProductsMarketplace' defaultMessage='Chemical, CAS, Manufacturer, Trade' />,
+        <FormattedMessage id='filter.searchProductsInventory' defaultMessage='Chemical, CAS, Trade' />,
       noResultsMessage,
       onSearchChange: (_, data) => this.handleSearch(data),
       value: values.search,
@@ -720,7 +720,7 @@ class Filter extends Component {
       }),
       loading: autocompleteWarehouseLoading,
       name: 'warehouse',
-      placeholder: <FormattedMessage id='filter.searchWarehouse' defaultMessage='Search Warehouse' />,
+      placeholder: <FormattedMessage id='filter.searchLocation' defaultMessage='Search Location' />,
       noWarehouseResultsMessage,
       onSearchChange: (_, data) => {
         this.handleSearchWarehouse(data)
@@ -808,7 +808,7 @@ class Filter extends Component {
         </AccordionItem>
 
         <AccordionItem>
-          {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
+          {this.accordionTitle('warehouse', <FormattedMessage id='filter.location' />)}
           <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
             <BottomMargedDropdown {...dropdownWarehouseProps} />
           </AccordionContent>
@@ -1066,6 +1066,7 @@ Filter.defaultProps = {
   filterType: filterTypes.MARKETPLACE,
   savedUrl: '/prodex/api/product-offers/broadcasted/datagrid/saved-filters',
   searchUrl: text => `/prodex/api/company-products/broadcasted/search?pattern=${text}&onlyMapped=true`,
+  searchWarehouseUrl: text => `/prodex/api/branches/warehouses/search?pattern=${text}`,
   onApply: filter => {},
   onClear: () => {},
 }
