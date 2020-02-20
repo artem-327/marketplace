@@ -474,12 +474,8 @@ class SaleAttachingProductOffer extends Component {
       loadingGroupedProductOffer,
       groupedProductOffers,
       toastManager,
-      orderId,
-      productOffersPkgAmount
+      orderId
     } = this.props
-    console.log('productOffersPkgAmount====================================')
-    console.log(productOffersPkgAmount)
-    console.log('====================================')
 
     return (
       <Modal closeIcon onClose={() => closePopup()} open={true} size='small'>
