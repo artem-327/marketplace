@@ -259,9 +259,18 @@ class MyInventory extends Component {
         width: 100
       },
       {
-        name: 'parentOffer',
+        name: 'groupId',
         title: (
-          <FormattedMessage id='myInventory.parentOffer' defaultMessage='ID Parent Offer'>
+          <FormattedMessage id='myInventory.groupId' defaultMessage='Group ID'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 200
+      },
+      {
+        name: 'lotNumber',
+        title: (
+          <FormattedMessage id='myInventory.lotNumber' defaultMessage='Lot Number'>
             {text => text}
           </FormattedMessage>
         ),

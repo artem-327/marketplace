@@ -107,7 +107,8 @@ function mapStateToProps(store, { datagrid }) {
         allocatedPkg: po.pkgAllocated,
         // processingTimeDays: po.processingTimeDays,
         offerExpiration: po.validityDate ? moment(po.validityDate).format(getLocaleDateFormat()) : 'N/A',
-        parentOffer: getSafe(() => po.parentOffer, '')
+        groupId: getSafe(() => po.parentOffer, ''),
+        lotNumber: getSafe(() => po.lotNumber, '')
       }
     }),
     unmappedRows: datagrid.rows,

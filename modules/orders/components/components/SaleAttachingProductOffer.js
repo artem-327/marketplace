@@ -31,6 +31,11 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { loadFile, addAttachment } from '~/modules/inventory/actions'
 import { getLocaleDateFormat } from '~/components/date-format'
 import { ORDER_CONFIRM_FETCH_REJECTED } from '../../action-types'
+import { UploadCloud } from 'react-feather'
+
+const UploadCloudIcon = styled(UploadCloud)`
+  color: #2599d5 !important;
+`
 
 const ModalBody = styled(ModalContent)`
   padding: 0 1.5rem 1.5rem !important;
@@ -47,6 +52,14 @@ const LotsTab = styled(TabPane)`
   margin: 0 !important;
   border: 0 none !important;
   padding: 0 !important;
+  .uploadLot {
+    padding: 0em !important;
+    font-size: 1rem !important;
+  }
+  .ui.table tr.active,
+  .ui.table .td.active {
+    background: #f8f9fb !important;
+  }
 `
 
 const Subtitle = styled(Header)`
@@ -58,6 +71,14 @@ const TableWrapper = styled(Segment)`
   padding: 1em 2em 3em !important;
 `
 
+const DivIcon = styled.div`
+  display: flex !important;
+`
+
+const AIcon = styled.a`
+  margin-left: 0.8vw;
+`
+
 const initValues = {
   tab: [
     {
@@ -66,85 +87,6 @@ const initValues = {
   ]
 }
 
-val.addMethod(val.object, 'lessThanOrdered', function(propertyName, message) {
-  return this.test('lessThan', message, function(value) {
-    if (!value || !value[propertyName]) {
-      return true
-    }
-
-    const { path } = this
-    const options = [...this.parent]
-    const amount = value['amount']
-    const allocated = options.reduce(function(allocated, option) {
-      allocated += option.allocated
-      return allocated
-    }, 0)
-
-    if (allocated < amount) {
-      throw this.createError({
-        path: `${path}.${propertyName}`,
-        message
-      })
-    }
-
-    return true
-  })
-})
-
-val.addMethod(val.object, 'moreThanOrdered', function(propertyName, message) {
-  return this.test('moreThan', message, function(value) {
-    if (!value || !value[propertyName]) {
-      return true
-    }
-
-    const { path } = this
-    const options = [...this.parent]
-    const amount = value['amount']
-    const allocated = options.reduce(function(allocated, option) {
-      allocated += option.allocated
-      return allocated
-    }, 0)
-
-    if (allocated > amount) {
-      throw this.createError({
-        path: `${path}.${propertyName}`,
-        message
-      })
-    }
-
-    return true
-  })
-})
-
-const validationScheme = val.object().shape({
-  tab: val.array().of(
-    val.object().shape({
-      orderItemId: val.number(),
-      lots: val.array().of(
-        val
-          .object()
-          .lessThanOrdered('allocated', errorMessages.lessThanOrdered)
-          .moreThanOrdered('allocated', errorMessages.moreThanOrdered)
-          .shape({
-            allocated: val
-              .number(errorMessages.mustBeNumber)
-              .min(0, errorMessages.minimum(0))
-              .required(errorMessages.requiredMessage),
-            amount: val.number(), // helper for allocated validation
-            selected: val.bool()
-          })
-      )
-    })
-  )
-})
-const initialState = {
-  activeTab: 0,
-  allocated: [],
-  sumAvailable: [],
-  available: [],
-  poLots: [],
-  sumPkgTotal: []
-}
 //TODO
 class SaleAttachingProductOffer extends Component {
   state = {
@@ -180,9 +122,12 @@ class SaleAttachingProductOffer extends Component {
       let totalPkgAmount = 0
       this.props.groupedProductOffers.forEach((offers, index) => {
         if (offers && !offers.length) return
+        const pkgAmount = this.props.productOffersPkgAmount.get(offers[0] && offers[0].parentOffer)
 
-        sumAvailable.push(this.props.productOffersPkgAmount.get(offers[index] && offers[index].parentOffer))
-        totalPkgAmount += this.props.productOffersPkgAmount.get(offers[index] && offers[index].parentOffer)
+        if (pkgAmount) {
+          sumAvailable.push(pkgAmount)
+          totalPkgAmount += pkgAmount
+        }
 
         const sumPkgAllocated = offers.reduce(function(sum, offer) {
           return sum + offer.pkgAllocated
@@ -196,9 +141,19 @@ class SaleAttachingProductOffer extends Component {
         }, 0)
         sumPkgTotal.push(cfPkgTotal)
 
+        offers.forEach((offer, i) => {
+          if (offer && offer.attachments && offer.attachments.length) {
+            this.setFieldValue(`tab[${index}].groupedOffer[${i}].attachments[0]`, {
+              id: offer.attachments[0].id,
+              name: offer.attachments[0].name,
+              linked: true,
+              isToOrderItem: true
+            })
+          }
+        })
+
         const pkgAllocated = offers.map(offer => offer.pkgAllocated)
         allocated.push(pkgAllocated)
-
         this.setState({
           sumAvailable,
           sumAllocated,
@@ -271,196 +226,201 @@ class SaleAttachingProductOffer extends Component {
             />
           </Grid.Column>
         </Grid>
-        <TableWrapper>
-          <Table className='table-fields basic'>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell></Table.HeaderCell>
-                <Table.HeaderCell>
-                  <FormattedMessage id='order.groupedOffer.header.number' defaultMessage='Number' />
-                </Table.HeaderCell>
-                <Table.HeaderCell textAlign='center'>
-                  <FormattedMessage id='order.groupedOffer.header.total' defaultMessage='Total' />
-                </Table.HeaderCell>
-                <Table.HeaderCell textAlign='center'>
-                  <FormattedMessage id='order.groupedOffer.header.available' defaultMessage='Available' />
-                </Table.HeaderCell>
-                <Table.HeaderCell textAlign='center'>
-                  <FormattedMessage id='order.groupedOffer.header.allocated' defaultMessage='Allocated' />
-                </Table.HeaderCell>
-                <Table.HeaderCell textAlign='center'>
-                  <FormattedMessage id='order.groupedOffer.header.mfgDate' defaultMessage='MFG Date' />
-                </Table.HeaderCell>
-                <Table.HeaderCell textAlign='center'>
-                  <FormattedMessage id='order.groupedOffer.header.expirationDate' defaultMessage='Expiration Date' />
-                </Table.HeaderCell>
-                <Table.HeaderCell textAlign='center'>
-                  <FormattedMessage id='order.groupedOffer.header.cOfA' defaultMessage='C of A' />
-                </Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              <FieldArray
-                name={`tab[${tabIndex}].groupedOffer`}
-                render={arrayHelpers => (
-                  <>
-                    {offers &&
-                      offers.map((offer, index) => (
-                        <Table.Row key={offer.id}>
-                          <Table.Cell>
-                            <Input
-                              name={`tab[${tabIndex}].groupedOffer[${index}].amount`}
-                              inputProps={{ type: 'hidden', defaultValue: offer.cfPkgTotal }}
-                            />
-                            <Checkbox
-                              name={`tab[${tabIndex}].groupedOffer[${index}].selected`}
-                              value={offer.id}
-                              inputProps={{
-                                onClick: (e, { checked }) => {
-                                  setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].selected`, checked)
-                                  const available = this.state.available
-                                  const allocated = this.state.allocated
-                                  const sumAvailable = this.state.sumAvailable
-                                  const sumAllocated = this.state.sumAllocated
+        <Table className='ui celled table' basic>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell></Table.HeaderCell>
+              <Table.HeaderCell>
+                <FormattedMessage id='order.groupedOffer.header.number' defaultMessage='Number' />
+              </Table.HeaderCell>
+              <Table.HeaderCell textAlign='center'>
+                <FormattedMessage id='order.groupedOffer.header.total' defaultMessage='Total' />
+              </Table.HeaderCell>
+              <Table.HeaderCell textAlign='center'>
+                <FormattedMessage id='order.groupedOffer.header.available' defaultMessage='Available' />
+              </Table.HeaderCell>
+              <Table.HeaderCell textAlign='center'>
+                <FormattedMessage id='order.groupedOffer.header.allocated' defaultMessage='Allocated' />
+              </Table.HeaderCell>
+              <Table.HeaderCell textAlign='center'>
+                <FormattedMessage id='order.groupedOffer.header.mfgDate' defaultMessage='MFG Date' />
+              </Table.HeaderCell>
+              <Table.HeaderCell textAlign='center'>
+                <FormattedMessage id='order.groupedOffer.header.expirationDate' defaultMessage='Expiration Date' />
+              </Table.HeaderCell>
+              <Table.HeaderCell textAlign='center'>
+                <FormattedMessage id='order.groupedOffer.header.cOfA' defaultMessage='C of A' />
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            <FieldArray
+              name={`tab[${tabIndex}].groupedOffer`}
+              render={arrayHelpers => (
+                <>
+                  {offers &&
+                    offers.map((offer, index) => (
+                      <Table.Row
+                        key={offer.id}
+                        active={getSafe(() => values.tab[tabIndex].groupedOffer[index].selected, false)}>
+                        <Table.Cell>
+                          <Input
+                            name={`tab[${tabIndex}].groupedOffer[${index}].amount`}
+                            inputProps={{ type: 'hidden', defaultValue: offer.cfPkgTotal }}
+                          />
+                          <Checkbox
+                            name={`tab[${tabIndex}].groupedOffer[${index}].selected`}
+                            value={offer.id}
+                            inputProps={{
+                              onClick: (e, { checked }) => {
+                                setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].selected`, checked)
+                                const available = this.state.available
+                                const allocated = this.state.allocated
+                                const sumAvailable = this.state.sumAvailable
+                                const sumAllocated = this.state.sumAllocated
 
-                                  const allocatedIndex = this.state.allocated[tabIndex][index]
-                                  const availableIndex = this.state.available[tabIndex][index]
-                                  setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].id`, offer.id)
-                                  let differenceNumber = 0
-                                  if (sumAvailable[tabIndex] !== sumAllocated[tabIndex]) {
-                                    differenceNumber = sumAvailable[tabIndex] - sumAllocated[tabIndex]
-                                  }
-
-                                  if (checked) {
-                                    setFieldValue(
-                                      `tab[${tabIndex}].groupedOffer[${index}].allocated`,
-                                      allocatedIndex + differenceNumber
-                                    )
-                                    setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].available`, 0)
-                                    available[tabIndex][index] = availableIndex - differenceNumber
-                                    allocated[tabIndex][index] += differenceNumber
-                                    //sumAvailable[tabIndex] = sumAvailable[tabIndex] - availableIndex
-                                    sumAllocated[tabIndex] = sumAllocated[tabIndex] + differenceNumber
-                                    this.setState({ available, allocated, sumAllocated })
-                                  } else {
-                                    setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].allocated`, 0)
-                                    setFieldValue(
-                                      `tab[${tabIndex}].groupedOffer[${index}].available`,
-                                      availableIndex + allocatedIndex
-                                    )
-
-                                    available[tabIndex][index] = availableIndex + allocatedIndex
-                                    allocated[tabIndex][index] = 0
-                                    //sumAvailable[tabIndex] = sumAvailable[tabIndex] + allocatedIndex
-                                    sumAllocated[tabIndex] = sumAllocated[tabIndex] - allocatedIndex
-                                    this.setState({ available, allocated, sumAllocated })
-                                  }
-                                },
-                                id: `tab${tabIndex}_groupedOffer${index}`
-                              }}
-                            />
-                          </Table.Cell>
-                          <Table.Cell>{offer.id}</Table.Cell>
-                          <Table.Cell textAlign='center'>{offer.cfPkgTotal}</Table.Cell>
-                          <Table.Cell textAlign='center'>
-                            {this.state.available[tabIndex] && this.state.available[tabIndex][index]
-                              ? this.state.available[tabIndex][index]
-                              : 0}
-                          </Table.Cell>
-                          <Table.Cell textAlign='center'>
-                            <Input
-                              name={`tab[${tabIndex}].groupedOffer[${index}].allocated`}
-                              inputProps={{
-                                type: 'number',
-                                readOnly: getSafe(() => values.tab[tabIndex].groupedOffer[index].selected, false)
-                                  ? false
-                                  : true,
-                                defaultValue:
-                                  this.state.allocated &&
-                                  this.state.allocated[tabIndex] &&
-                                  this.state.allocated[tabIndex][index],
-                                max: offer.cfPkgTotal,
-                                min: 0,
-                                onChange: (e, { value }) => {
-                                  value = parseInt(value)
-
-                                  const available = this.state.available
-                                  const allocated = this.state.allocated
-                                  //const sumAvailable = this.state.sumAvailable
-                                  const sumAllocated = this.state.sumAllocated
-
-                                  const allocatedIndex = this.state.allocated[tabIndex][index]
-                                  const availableIndex = this.state.available[tabIndex][index]
-                                  const difference = this.state.allocated[tabIndex][index] - value
-
-                                  setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].id`, offer.id)
-
-                                  if (value > offer.cfPkgTotal || value < 0) {
-                                    setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].available`, availableIndex)
-                                    setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].allocated`, allocatedIndex)
-                                  } else if (difference) {
-                                    setFieldValue(
-                                      `tab[${tabIndex}].groupedOffer[${index}].available`,
-                                      availableIndex + difference
-                                    )
-                                    available[tabIndex][index] = availableIndex + difference
-                                    allocated[tabIndex][index] = allocatedIndex - difference
-                                    //sumAvailable[tabIndex] = sumAvailable[tabIndex] + difference
-                                    sumAllocated[tabIndex] = sumAllocated[tabIndex] - difference
-                                    this.setState({ available, allocated, sumAllocated })
-                                  }
+                                const allocatedIndex = this.state.allocated[tabIndex][index]
+                                const availableIndex = this.state.available[tabIndex][index]
+                                setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].id`, offer.id)
+                                let differenceNumber = 0
+                                if (sumAvailable[tabIndex] !== sumAllocated[tabIndex]) {
+                                  differenceNumber = sumAvailable[tabIndex] - sumAllocated[tabIndex]
                                 }
-                              }}
-                            />
-                          </Table.Cell>
-                          <Table.Cell textAlign='center'>
-                            {offer.lotManufacturedDate
-                              ? moment(offer.lotManufacturedDate).format(getLocaleDateFormat())
-                              : 'N/A'}
-                          </Table.Cell>
-                          <Table.Cell textAlign='center'>
-                            {offer.lotExpirationDate
-                              ? moment(offer.lotExpirationDate).format(getLocaleDateFormat())
-                              : 'N/A'}
-                          </Table.Cell>
-                          <Table.Cell textAlign='center'>
-                            <UploadLot
-                              {...this.props}
-                              removeOrderItem={file => {
-                                this.removeAttachment(offer, file, setFieldValue, index)
-                              }}
-                              attachments={getSafe(
-                                () => values.tab[tabIndex].groupedOffer[index].attachments,
-                                offer.attachments
-                              )}
-                              name={`tab[${tabIndex}].groupedOffer[${index}].attachments`}
-                              type={1}
-                              lot={offer}
-                              filesLimit={1}
-                              fileMaxSize={20}
-                              onChange={files => this.linkAttachment(offer.id, files, setFieldValue, index)}
-                              data-test={`grouped_offer_${index}_attachments`}
-                              emptyContent={
-                                <FormattedMessage id='global.upUpload' defaultMessage='\u2191 upload' tagName='a' />
+
+                                if (checked) {
+                                  setFieldValue(
+                                    `tab[${tabIndex}].groupedOffer[${index}].allocated`,
+                                    allocatedIndex + differenceNumber
+                                  )
+                                  setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].available`, 0)
+                                  available[tabIndex][index] = availableIndex - differenceNumber
+                                  allocated[tabIndex][index] += differenceNumber
+                                  //sumAvailable[tabIndex] = sumAvailable[tabIndex] - availableIndex
+                                  sumAllocated[tabIndex] = sumAllocated[tabIndex] + differenceNumber
+                                  this.setState({ available, allocated, sumAllocated })
+                                } else {
+                                  setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].allocated`, 0)
+                                  setFieldValue(
+                                    `tab[${tabIndex}].groupedOffer[${index}].available`,
+                                    availableIndex + allocatedIndex
+                                  )
+
+                                  available[tabIndex][index] = availableIndex + allocatedIndex
+                                  allocated[tabIndex][index] = 0
+                                  //sumAvailable[tabIndex] = sumAvailable[tabIndex] + allocatedIndex
+                                  sumAllocated[tabIndex] = sumAllocated[tabIndex] - allocatedIndex
+                                  this.setState({ available, allocated, sumAllocated })
+                                }
+                              },
+                              id: `tab${tabIndex}_groupedOffer${index}`
+                            }}
+                          />
+                        </Table.Cell>
+                        <Table.Cell>{offer.id}</Table.Cell>
+                        <Table.Cell textAlign='center'>{offer.cfPkgTotal}</Table.Cell>
+                        <Table.Cell textAlign='center'>
+                          {this.state.available[tabIndex] && this.state.available[tabIndex][index]
+                            ? this.state.available[tabIndex][index]
+                            : 0}
+                        </Table.Cell>
+                        <Table.Cell textAlign='center'>
+                          <Input
+                            name={`tab[${tabIndex}].groupedOffer[${index}].allocated`}
+                            inputProps={{
+                              type: 'number',
+                              readOnly: getSafe(() => values.tab[tabIndex].groupedOffer[index].selected, false)
+                                ? false
+                                : true,
+                              defaultValue:
+                                this.state.allocated &&
+                                this.state.allocated[tabIndex] &&
+                                this.state.allocated[tabIndex][index],
+                              max: offer.cfPkgTotal,
+                              min: 0,
+                              onChange: (e, { value }) => {
+                                value = parseInt(value)
+
+                                const available = this.state.available
+                                const allocated = this.state.allocated
+                                //const sumAvailable = this.state.sumAvailable
+                                const sumAllocated = this.state.sumAllocated
+
+                                const allocatedIndex = this.state.allocated[tabIndex][index]
+                                const availableIndex = this.state.available[tabIndex][index]
+                                const difference = this.state.allocated[tabIndex][index] - value
+
+                                setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].id`, offer.id)
+
+                                if (value > offer.cfPkgTotal || value < 0) {
+                                  setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].available`, availableIndex)
+                                  setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].allocated`, allocatedIndex)
+                                } else if (difference) {
+                                  setFieldValue(
+                                    `tab[${tabIndex}].groupedOffer[${index}].available`,
+                                    availableIndex + difference
+                                  )
+                                  available[tabIndex][index] = availableIndex + difference
+                                  allocated[tabIndex][index] = allocatedIndex - difference
+                                  //sumAvailable[tabIndex] = sumAvailable[tabIndex] + difference
+                                  sumAllocated[tabIndex] = sumAllocated[tabIndex] - difference
+                                  this.setState({ available, allocated, sumAllocated })
+                                }
                               }
-                            />
-                          </Table.Cell>
-                        </Table.Row>
-                      ))}
-                  </>
-                )}
-              />
-            </Table.Body>
-          </Table>
-        </TableWrapper>
+                            }}
+                          />
+                        </Table.Cell>
+                        <Table.Cell textAlign='center'>
+                          {offer.lotManufacturedDate
+                            ? moment(offer.lotManufacturedDate).format(getLocaleDateFormat())
+                            : 'N/A'}
+                        </Table.Cell>
+                        <Table.Cell textAlign='center'>
+                          {offer.lotExpirationDate
+                            ? moment(offer.lotExpirationDate).format(getLocaleDateFormat())
+                            : 'N/A'}
+                        </Table.Cell>
+                        <Table.Cell textAlign='center'>
+                          <UploadLot
+                            {...this.props}
+                            removeOrderItem={file => {
+                              this.removeAttachment(offer, file, setFieldValue, index)
+                            }}
+                            attachments={getSafe(
+                              () => values.tab[tabIndex].groupedOffer[index].attachments,
+                              offer.attachments
+                            )}
+                            name={`tab[${tabIndex}].groupedOffer[${index}].attachments`}
+                            type={1}
+                            lot={offer}
+                            filesLimit={1}
+                            fileMaxSize={20}
+                            onChange={files => this.linkAttachment(offer.id, files, setFieldValue, index)}
+                            data-test={`grouped_offer_${index}_attachments`}
+                            emptyContent={
+                              <DivIcon>
+                                <UploadCloudIcon />
+                                <AIcon>
+                                  <FormattedMessage id='global.uploadCloud' defaultMessage='upload' />
+                                </AIcon>
+                              </DivIcon>
+                            }
+                          />
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                </>
+              )}
+            />
+          </Table.Body>
+        </Table>
         <Grid>
-          <Grid.Column width={10}></Grid.Column>
+          <Grid.Column width={9}></Grid.Column>
           <Grid.Column floated='right' width={3}>
             <Button basic fluid onClick={() => this.props.closePopup()}>
               <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
             </Button>
           </Grid.Column>
-          <Grid.Column floated='right' width={3}>
+          <Grid.Column floated='right' width={4}>
             <Button
               style={{ backgroundColor: '#2599d5', color: 'white' }}
               fluid
@@ -502,11 +462,7 @@ class SaleAttachingProductOffer extends Component {
               enableReinitialize
               validateOnChange={false}
               initialValues={{ ...initValues }}
-              validationSchema={validationScheme}
               onSubmit={(values, actions) => {
-                console.log('values====================================')
-                console.log(values)
-                console.log('====================================')
                 // check that all tabs have selected at least one item
                 let missingSelected = true
                 if (values && values.tab && values.tab.length) {
@@ -524,9 +480,6 @@ class SaleAttachingProductOffer extends Component {
                   })
                 }
 
-                console.log('missingSelected====================================')
-                console.log(missingSelected)
-                console.log('====================================')
                 if (missingSelected) {
                   toastManager.add(
                     generateToastMarkup(
@@ -544,54 +497,73 @@ class SaleAttachingProductOffer extends Component {
                   return false
                 }
                 // check if any selected and allocated lot is without file
-                let missingFile = true
-                if (values && values.tab && values.tab.length) {
-                  if (
-                    values.tab[this.state.activeTab] &&
-                    values.tab[this.state.activeTab].groupedOffer &&
-                    values.tab[this.state.activeTab].groupedOffer.length
-                  ) {
-                    values.tab[this.state.activeTab].groupedOffer.forEach(offer => {
-                      if (offer && offer.selected && offer.attachments) {
-                        missingFile = false
-                      } else {
-                        missingFile = true
-                        return
-                      }
-                    })
-                  } else {
-                    return
-                  }
-                }
-                console.log('missingFile====================================')
-                console.log(missingFile)
-                console.log('====================================')
-                const orderItemId = this.props.orderItemsId[this.state.activeTab]
-                console.log('orderItemId====================================')
-                console.log(orderItemId)
-                console.log('====================================')
-
-                const request = []
+                let missingFile = false
                 if (values && values.tab && values.tab.length) {
                   values.tab.forEach(tab => {
                     if (tab && tab.groupedOffer && tab.groupedOffer.length) {
                       tab.groupedOffer.forEach(offer => {
+                        if (offer && offer.selected && (!offer.attachments || !offer.attachments.length)) {
+                          missingFile = true
+                        }
+                      })
+                    }
+                  })
+                }
+                const orderItemIds =
+                  this.props.groupedProductOffers &&
+                  this.props.groupedProductOffers.map(offers => offers && offers[0] && offers[0].parentOffer)
+
+                let isSumInTabsCorrect = true
+                if (values && values.tab && values.tab.length) {
+                  values.tab.forEach((tab, index) => {
+                    if (this.state.sumAllocated[index] !== this.state.sumAvailable[index]) {
+                      isSumInTabsCorrect = false
+                      return
+                    }
+                  })
+                }
+
+                if (!isSumInTabsCorrect) {
+                  toastManager.add(
+                    generateToastMarkup(
+                      <FormattedMessage
+                        id='order.detail.error.incorect.packages.header'
+                        defaultMessage='Incorrect allocated packages'
+                      />,
+                      <FormattedMessage
+                        id='order.detail.error.incorect.packages.content'
+                        defaultMessage='Please, check all Order Item tabs and allocate correctly amount packages.'
+                        values={{ id: orderId }}
+                      />
+                    ),
+                    {
+                      appearance: 'error'
+                    }
+                  )
+                  actions.setSubmitting(false)
+                  return
+                }
+
+                const request = []
+                if (values && values.tab && values.tab.length) {
+                  values.tab.forEach(tab => {
+                    const tabRequest = []
+                    if (tab && tab.groupedOffer && tab.groupedOffer.length) {
+                      tab.groupedOffer.forEach(offer => {
                         if (offer && offer.selected && offer.allocated) {
-                          request.push({
+                          tabRequest.push({
                             pkgAmount: parseInt(offer.allocated),
                             productOffer: parseInt(offer.id)
                           })
                         }
                       })
                     }
+                    if (tabRequest.length) {
+                      request.push(tabRequest)
+                    }
                   })
                 }
 
-                console.log('request====================================')
-                console.log(request)
-                console.log('====================================')
-                actions.setSubmitting(false)
-                return false
                 // confirm to assign when missing attachment(s) for assigned lot(s)
                 if (missingFile) {
                   confirm(
@@ -604,8 +576,72 @@ class SaleAttachingProductOffer extends Component {
                   ).then(
                     async () => {
                       // confirm
+                      if (orderItemIds.length > 1) {
+                        orderItemIds.forEach(async (item, index) => {
+                          await this.props
+                            .patchAssignProductOffers(orderId, item, request[index])
+                            .then(r => {
+                              toastManager.add(
+                                generateToastMarkup(
+                                  <FormattedMessage
+                                    id='order.assignLots.success.header'
+                                    defaultMessage='Lots Assigned'
+                                  />,
+                                  <FormattedMessage
+                                    id='order.assignLots.success.content'
+                                    defaultMessage='Lot assignments for Order {id} was saved.'
+                                    values={{ id: orderId }}
+                                  />
+                                ),
+                                {
+                                  appearance: 'success'
+                                }
+                              )
+                              actions.setSubmitting(false)
+                              this.props.closePopup()
+                            })
+                            .catch(e => {
+                              actions.setSubmitting(false)
+                            })
+                        })
+                      } else {
+                        await this.props
+                          .patchAssignProductOffers(orderId, orderItemIds[0], request[0])
+                          .then(r => {
+                            toastManager.add(
+                              generateToastMarkup(
+                                <FormattedMessage
+                                  id='order.assignLots.success.header'
+                                  defaultMessage='Lots Assigned'
+                                />,
+                                <FormattedMessage
+                                  id='order.assignLots.success.content'
+                                  defaultMessage='Lot assignments for Order {id} was saved.'
+                                  values={{ id: orderId }}
+                                />
+                              ),
+                              {
+                                appearance: 'success'
+                              }
+                            )
+                            actions.setSubmitting(false)
+                            this.props.closePopup()
+                          })
+                          .catch(e => {
+                            actions.setSubmitting(false)
+                          })
+                      }
+                    },
+                    () => {
+                      // cancel
+                      actions.setSubmitting(false)
+                    }
+                  )
+                } else {
+                  if (orderItemIds.length > 1) {
+                    orderItemIds.forEach(async (item, index) => {
                       await this.props
-                        .patchAssignProductOffers(orderId, orderItemId, request)
+                        .patchAssignProductOffers(orderId, item, request[index])
                         .then(r => {
                           toastManager.add(
                             generateToastMarkup(
@@ -626,39 +662,37 @@ class SaleAttachingProductOffer extends Component {
                         .catch(e => {
                           actions.setSubmitting(false)
                         })
-                    },
-                    () => {
-                      // cancel
-                      actions.setSubmitting(false)
-                    }
-                  )
-                } else {
-                  this.props
-                    .patchAssignProductOffers(orderId, orderItemId, request)
-                    .then(r => {
-                      toastManager.add(
-                        generateToastMarkup(
-                          <FormattedMessage id='order.assignLots.success.header' defaultMessage='Lots Assigned' />,
-                          <FormattedMessage
-                            id='order.assignLots.success.content'
-                            defaultMessage='Selected Lots were assigned and available packages allocated'
-                          />
-                        ),
-                        {
-                          appearance: 'success'
-                        }
-                      )
-                      actions.setSubmitting(false)
-                      this.props.closePopup()
                     })
-                    .catch(e => {
-                      actions.setSubmitting(false)
-                    })
+                  } else {
+                    this.props
+                      .patchAssignProductOffers(orderId, orderItemIds[0], request[0])
+                      .then(r => {
+                        toastManager.add(
+                          generateToastMarkup(
+                            <FormattedMessage id='order.assignLots.success.header' defaultMessage='Lots Assigned' />,
+                            <FormattedMessage
+                              id='order.assignLots.success.content'
+                              defaultMessage='Lot assignments for Order {id} was saved.'
+                              values={{ id: orderId }}
+                            />
+                          ),
+                          {
+                            appearance: 'success'
+                          }
+                        )
+                        actions.setSubmitting(false)
+                        this.props.closePopup()
+                      })
+                      .catch(e => {
+                        actions.setSubmitting(false)
+                      })
+                  }
                 }
               }}
               className='flex stretched'
               style={{ padding: '0' }}>
               {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
+                this.setFieldValue = setFieldValue
                 const panes = groupedProductOffers.map((offers, index) => {
                   return {
                     menuItem: (
