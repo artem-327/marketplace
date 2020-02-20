@@ -6,7 +6,7 @@ import OperationsPage from '~/modules/operations'
 class Index extends Component {
   render() {
     return (
-      <Layout title='Operations'>
+      <Layout title='Shipping Quotes'>
         <OperationsPage />
       </Layout>
     )
