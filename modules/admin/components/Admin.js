@@ -10,12 +10,14 @@ import styled from 'styled-components'
 import DataTable from './DataTable/DataTable'
 import UnitOfMeasureTable from './UnitOfMeasureTable/UnitOfMeasureTable'
 import UnitOfPackagingTable from './UnitOfPackagingTable/UnitOfPackagingTable'
+import NmfcTable from './NmfcTable/Container'
 
 import AddNewUnitOfMeasurePopup from './UnitOfMeasureTable/AddNewUnitOfMeasurePopup'
 import AddNewUnitOfPackagingPopup from './UnitOfPackagingTable/AddNewUnitOfPackagingPopup'
 import AddNewPopup1Parameter from './DataTable/AddNewPopup1Parameter'
 import AddEditCasProductsPopup from './CasProductsTable/AddEditCasProductsPopup'
 import EditAltNamesCasProductsPopup from './CasProductsTable/EditAltNamesCasProductsPopup'
+import NmfcPopup from './NmfcTable/Popup'
 
 import EditUnitOfMeasurePopup from './UnitOfMeasureTable/EditUnitOfMeasurePopup'
 import EditUnitOfPackagingPopup from './UnitOfPackagingTable/EditUnitOfPackagingPopup'
@@ -51,6 +53,7 @@ const tables = {
   Grades: <DataTable />,
   Forms: <DataTable />,
   Conditions: <DataTable />,
+  'NMFC Numbers': <NmfcTable />,
   'CAS Products': <CasProductsTable />,
   Companies: <CompaniesTable />,
   'Product Catalog': <ProductCatalogTable />,
@@ -98,6 +101,19 @@ const datagridConfig = {
     url: '/prodex/api/product-conditions/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v}%`] }] : [])
   },
+  'NMFC Numbers': {
+    url: '/prodex/api/nmfc-numbers/datagrid',
+    searchToFilter: v =>
+      v
+        ? [
+            { operator: 'EQUALS', path: 'NmfcNumber.code', values: [v] },
+            { operator: 'LIKE', path: 'NmfcNumber.description', values: [`%${v}%`] }
+          ]
+        : [],
+    params: {
+      orOperator: true
+    }
+  },
   'Document Types': {
     url: 'prodex/api/document-types/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'DocumentType.name', values: [`%${v}%`] }] : [])
@@ -135,6 +151,7 @@ const editForms = {
   Grades: <EditPopup1Parameter />,
   Forms: <EditPopup1Parameter />,
   Conditions: <EditPopup1Parameter />,
+  'NMFC Numbers': <NmfcPopup />,
   'CAS Products': <AddEditCasProductsPopup />,
   Companies: <CompaniesForm />,
   'Document Types': <EditPopup1Parameter />,
@@ -153,6 +170,7 @@ const addForms = {
   Grades: <AddNewPopup1Parameter />,
   Forms: <AddNewPopup1Parameter />,
   Conditions: <AddNewPopup1Parameter />,
+  'NMFC Numbers': <NmfcPopup />,
   'CAS Products': <AddEditCasProductsPopup />,
   Companies: <CompaniesForm />,
   'Document Types': <AddNewPopup1Parameter />,

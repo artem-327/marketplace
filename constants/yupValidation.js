@@ -127,9 +127,9 @@ export const errorMessages = {
     />
   ),
   positive: <FormattedMessage id='validation.positive' defaultMessage='Number value should be positive' />,
-  invalidShipmentQuoteId:
+  invalidShipmentQuoteId: (
     <FormattedMessage id='validation.shipmentQuoteId' defaultMessage='Value should be in format "12365-4789"' />
-
+  )
 }
 
 export const provinceObjectRequired = hasProvinces =>
@@ -170,11 +170,16 @@ export const ssnValidation = () =>
     .test('ssn', errorMessages.invalidValueFormat('123-45-6789'), value => /^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$/.test(value))
     .required(errorMessages.requiredMessage)
 
-export const nmfcValidation = () =>
-  Yup.number(errorMessages.mustBeNumber)
-    .typeError(errorMessages.mustBeNumber)
-    .test('min-len', errorMessages.minDigits(5), value => (value + '').length >= 5)
-    .test('max-len', errorMessages.maxDigits(6), value => (value + '').length <= 6)
+export const nmfcValidation = (required = true) =>
+  Yup.string(errorMessages.invalidString)
+    .min(6, errorMessages.minLength(6))
+    .max(8, errorMessages.maxLength(8))
+    .test(
+      'code',
+      errorMessages.invalidValueFormat('123456'),
+      value => /^[0-9]{6}$/.test(value) || /^[0-9]{5}\-[0-9]{2}$/.test(value)
+    )
+    .concat(required ? Yup.string().required() : Yup.string().notRequired())
 
 export const freightClassValidation = () =>
   Yup.number(errorMessages.mustBeNumber)
