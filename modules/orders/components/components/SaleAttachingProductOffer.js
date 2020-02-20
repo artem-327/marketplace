@@ -154,11 +154,12 @@ class SaleAttachingProductOffer extends Component {
     sumAvailable: [],
     available: [],
     poLots: [],
-    sumPkgTotal: []
+    sumPkgTotal: [],
+    totalPkgAmount: 0
   }
 
   componentDidMount() {
-    const { getGroupedProductOffers, orderId, orderItemsId, groupedProductOffers } = this.props
+    const { getGroupedProductOffers, orderId, orderItemsId } = this.props
 
     if (orderItemsId && orderItemsId.length > 1) {
       orderItemsId.forEach(id => getGroupedProductOffers(orderId, id))
@@ -176,15 +177,12 @@ class SaleAttachingProductOffer extends Component {
       let available = []
       let sumAllocated = []
       let allocated = []
+      let totalPkgAmount = 0
       this.props.groupedProductOffers.forEach((offers, index) => {
         if (offers && !offers.length) return
-        console.log('offers====================================')
-        console.log(offers)
-        console.log('====================================')
-        console.log('this.props.productOffersPkgAmount.get(offers.parentOffer)====================================')
-        console.log(this.props.productOffersPkgAmount.get(offers[index].parentOffer))
-        console.log('====================================')
-        sumAvailable.push(this.props.productOffersPkgAmount.get(offers[index].parentOffer))
+
+        sumAvailable.push(this.props.productOffersPkgAmount.get(offers[index] && offers[index].parentOffer))
+        totalPkgAmount += this.props.productOffersPkgAmount.get(offers[index] && offers[index].parentOffer)
 
         const sumPkgAllocated = offers.reduce(function(sum, offer) {
           return sum + offer.pkgAllocated
@@ -206,7 +204,8 @@ class SaleAttachingProductOffer extends Component {
           sumAllocated,
           available,
           sumPkgTotal,
-          allocated
+          allocated,
+          totalPkgAmount
         })
       })
     }
@@ -258,7 +257,7 @@ class SaleAttachingProductOffer extends Component {
               defaultMessage='Allocated packages: {allocated} / {amount}'
               values={{ allocated: this.state.sumAllocated[tabIndex], amount: this.state.sumAvailable[tabIndex] }}
             />
-            {this.state.sumAllocated[tabIndex] > this.state.sumPkgTotal[tabIndex] ? (
+            {this.state.sumAvailable[tabIndex] !== this.state.sumAllocated[tabIndex] ? (
               <Label circular color='red' empty style={{ marginLeft: '0.5em' }} />
             ) : null}
           </Grid.Column>
@@ -327,18 +326,22 @@ class SaleAttachingProductOffer extends Component {
                                   const allocatedIndex = this.state.allocated[tabIndex][index]
                                   const availableIndex = this.state.available[tabIndex][index]
                                   setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].id`, offer.id)
+                                  let differenceNumber = 0
+                                  if (sumAvailable[tabIndex] !== sumAllocated[tabIndex]) {
+                                    differenceNumber = sumAvailable[tabIndex] - sumAllocated[tabIndex]
+                                  }
 
                                   if (checked) {
                                     setFieldValue(
                                       `tab[${tabIndex}].groupedOffer[${index}].allocated`,
-                                      allocatedIndex + availableIndex
+                                      allocatedIndex + differenceNumber
                                     )
                                     setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].available`, 0)
-                                    available[tabIndex][index] = 0
-                                    allocated[tabIndex][index] = availableIndex + allocatedIndex
-                                    sumAvailable[tabIndex] = sumAvailable[tabIndex] - availableIndex
-                                    sumAllocated[tabIndex] = sumAllocated[tabIndex] + availableIndex
-                                    this.setState({ available, allocated, sumAvailable, sumAllocated })
+                                    available[tabIndex][index] = availableIndex - differenceNumber
+                                    allocated[tabIndex][index] += differenceNumber
+                                    //sumAvailable[tabIndex] = sumAvailable[tabIndex] - availableIndex
+                                    sumAllocated[tabIndex] = sumAllocated[tabIndex] + differenceNumber
+                                    this.setState({ available, allocated, sumAllocated })
                                   } else {
                                     setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].allocated`, 0)
                                     setFieldValue(
@@ -348,9 +351,9 @@ class SaleAttachingProductOffer extends Component {
 
                                     available[tabIndex][index] = availableIndex + allocatedIndex
                                     allocated[tabIndex][index] = 0
-                                    sumAvailable[tabIndex] = sumAvailable[tabIndex] + allocatedIndex
+                                    //sumAvailable[tabIndex] = sumAvailable[tabIndex] + allocatedIndex
                                     sumAllocated[tabIndex] = sumAllocated[tabIndex] - allocatedIndex
-                                    this.setState({ available, allocated, sumAvailable, sumAllocated })
+                                    this.setState({ available, allocated, sumAllocated })
                                   }
                                 },
                                 id: `tab${tabIndex}_groupedOffer${index}`
@@ -383,7 +386,7 @@ class SaleAttachingProductOffer extends Component {
 
                                   const available = this.state.available
                                   const allocated = this.state.allocated
-                                  const sumAvailable = this.state.sumAvailable
+                                  //const sumAvailable = this.state.sumAvailable
                                   const sumAllocated = this.state.sumAllocated
 
                                   const allocatedIndex = this.state.allocated[tabIndex][index]
@@ -402,9 +405,9 @@ class SaleAttachingProductOffer extends Component {
                                     )
                                     available[tabIndex][index] = availableIndex + difference
                                     allocated[tabIndex][index] = allocatedIndex - difference
-                                    sumAvailable[tabIndex] = sumAvailable[tabIndex] + difference
+                                    //sumAvailable[tabIndex] = sumAvailable[tabIndex] + difference
                                     sumAllocated[tabIndex] = sumAllocated[tabIndex] - difference
-                                    this.setState({ available, allocated, sumAvailable, sumAllocated })
+                                    this.setState({ available, allocated, sumAllocated })
                                   }
                                 }
                               }}
@@ -458,7 +461,15 @@ class SaleAttachingProductOffer extends Component {
             </Button>
           </Grid.Column>
           <Grid.Column floated='right' width={3}>
-            <Button style={{ backgroundColor: '#2599d5', color: 'white' }} fluid>
+            <Button
+              style={{ backgroundColor: '#2599d5', color: 'white' }}
+              fluid
+              disabled={
+                this.state.totalPkgAmount !==
+                this.state.sumAllocated.reduce((sum, allocated) => {
+                  return sum + allocated
+                }, 0)
+              }>
               <FormattedMessage id='order.assignOffer' defaultMessage='Assign Offer' tagName='span' />
             </Button>
           </Grid.Column>
