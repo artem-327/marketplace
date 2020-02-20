@@ -157,7 +157,8 @@ class Holds extends Component {
       }),
       disabled: row =>
         (getSafe(() => row.status.props.children, false) && row.status.props.children === 'Rejected') ||
-        row.status.props.children === 'Expired',
+        row.status.props.children === 'Expired' ||
+        row.status.props.children === 'Cancelled',
       callback: row => this.handleCancel(row.id)
     }
     const buttonReject = {

@@ -562,16 +562,19 @@ export default class AddCart extends Component {
         onHide={e => {
           try {
             if (
-              e &&
-              !(e.path[0] instanceof HTMLTableCellElement) &&
-              !(e.path[1] instanceof HTMLTableCellElement) &&
-              e.target &&
-              e.target.className &&
-              typeof e.target.className.includes !== 'undefined' &&
-              // Workaround, close if you haven't clicked on calendar item or filter icon
-              !e.target.className.includes('js-focus-visible') &&
-              //if user click to dropdown row action then sidebar will be opend
-              !(e.target.className.includes('item') || e.target.className.includes('text'))
+              (e &&
+                !(e.path[0] instanceof HTMLTableCellElement) &&
+                !(e.path[1] instanceof HTMLTableCellElement) &&
+                e.target &&
+                e.target.className &&
+                typeof e.target.className.includes !== 'undefined' &&
+                e.target.className.includes('js-focus-visible')) ||
+              (e &&
+                e.target &&
+                e.target.className &&
+                typeof e.target.className.includes !== 'undefined' &&
+                !(e.target.className.includes('item') || e.target.className.includes('text'))) ||
+              !(e.target.nodeName === 'svg' || e.target.nodeName === 'circle' || e.target.nodeName === 'SPAN')
             ) {
               sidebarChanged({ isOpen: false, isHoldRequest: false })
             }
