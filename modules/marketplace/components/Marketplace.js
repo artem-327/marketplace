@@ -40,7 +40,7 @@ const RedTriangle = styled(AlertTriangle)`
   font-size: 20px;
   color: #f16844;
   line-height: 20px;
-  
+
   &.grey {
     color: #848893;
   }
@@ -240,9 +240,7 @@ class Marketplace extends Component {
     getProductOffer(clickedId)
 
     if (isProductInfoOpen) closePopup()
-    if (id !== clickedId && id)
-      sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest })
-    else sidebarChanged({ isOpen: !isOpen, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest })
+    sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest })
   }
 
   handleFilterApply = filter => {
