@@ -604,9 +604,7 @@ export default class AddCart extends Component {
 AddCart.propTypes = {
   offer: object,
   order: object,
-  postNewOrder: func,
-  casProductsChemNames: object,
-  casProductsCasNumbers: object
+  postNewOrder: func
   // id: number,
   // pkgAmount: number,
   // pricing: object,

@@ -14,7 +14,7 @@ import { setCompanyElligible } from '~/modules/auth/actions'
 import { FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
 
-import { FormattedUnit, UnitOfPackaging, ArrayToMultiple, FormattedAssay } from '~/components/formatted-messages'
+import { FormattedUnit, UnitOfPackaging, ArrayToFirstItem, FormattedAssay } from '~/components/formatted-messages'
 import { getSafe } from '~/utils/functions'
 import moment from 'moment/moment'
 import { getLocaleDateFormat } from '~/components/date-format'
@@ -98,7 +98,7 @@ function mapStateToProps(store, { datagrid }) {
         minOrderQuantity: getSafe(() => po.minPkg, ''),
         splits: getSafe(() => po.splitPkg, ''),
         condition: getSafe(() => po.conforming, ''),
-        grade: po.grades && po.grades.length ? <ArrayToMultiple values={po.grades.map(d => d.name)} /> : '',
+        grade: po.grades && po.grades.length ? <ArrayToFirstItem values={po.grades.map(d => d.name)} /> : '',
         origin: getSafe(() => po.origin.name, ''),
         form: getSafe(() => po.form.name, ''),
         assayString: <FormattedAssay min={po.assayMin} max={po.assayMax} />,

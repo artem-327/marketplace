@@ -35,7 +35,7 @@ export default class ArrayToFirstItem extends Component {
                 ))}
               </List>}
             position='right center'
-            trigger={<ProductLabel className='bordered right'>{values.length - 1}+</ProductLabel>}
+            trigger={<div><ProductLabel className='bordered right'>{values.length - 1}+</ProductLabel></div>}
           />
           <ProductFirstItem>{values[0]}</ProductFirstItem>
         </div>
