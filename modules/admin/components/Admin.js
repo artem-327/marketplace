@@ -224,13 +224,16 @@ class Admin extends Component {
   render() {
     if (!getSafe(() => this.props.auth.identity.isAdmin, false))
       return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
+    const { currentTab } = this.props
 
     return (
       <DatagridProvider apiConfig={this.getApiConfig()}>
         <Container fluid className='flex stretched'>
-          <Container fluid style={{ padding: '0 32px' }}>
-            <TablesHandlers />
-          </Container>
+          {!currentTab.hideHandler && (
+            <Container fluid style={{ padding: '0 32px' }}>
+              <TablesHandlers />
+            </Container>
+          )}
           <Grid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
             <Grid.Row>
               <Grid.Column key={this.props.currentTab} style={{ marginTop: '10px' }} className='flex stretched'>
