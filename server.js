@@ -9,6 +9,7 @@ const request = require('request')
 const axios = require('axios')
 
 let router = express()
+const app = express()
 
 router.get('/attachments/:id', (req, res) => {
   request
@@ -27,21 +28,24 @@ router.get('/attachments/:id', (req, res) => {
     .pipe(res)
 })
 
+app.get('/gravatar/:hash', (req, res) => {
+  const { hash } = req.params
+  axios
+    .get(`https://www.gravatar.com/${hash}.json`)
+    .then(_response => {
+      res.status(200).send({ src: `http://secure.gravatar.com/avatar/${hash}` })
+    })
+    .catch(_error => {
+      res.status(200).send({ src: null })
+    })
+})
+
 nextApp
   .prepare()
   .then(() => {
-    const app = express()
+    
     app.use(cookieParser())
     app.use('/download', router)
-    app.use('/gravatar/:hash', (req, res) => {
-      const { hash } = req.params
-      axios
-        .get(`https://www.gravatar.com/${hash}.json`)
-        .then(_response => {
-          res.status(200).send({ src: `http://secure.gravatar.com/avatar/${hash}` })
-        })
-        .catch(error => res.status(200).send({ src: null, error }))
-    })
     app.use('/prodex', proxy({ target: process.env.REACT_APP_API_URL || 'http://127.0.0.1:8080', changeOrigin: true }))
     app.use(nextApp.getRequestHandler()).listen(port, err => {
       if (err) throw err
