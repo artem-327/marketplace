@@ -80,12 +80,9 @@ class ActionsRequired extends React.Component {
 
   markShipped = () => {
     const { order, shippingTrackingCode, shipOrder, openPopupName, actionNeeded } = this.props
-    //TODO
     if (actionNeeded === 'PRODUCT-OFFER-ASSIGN') {
       openPopupName('opendSaleAttachingProductOffer')
-    }
-    return
-    if (shippingTrackingCode.length) {
+    } else if (shippingTrackingCode.length) {
       this.confirmCall({
         action: () => shipOrder(order.id, shippingTrackingCode),
         confirmTitleId: 'confirm.order.actions.shipped.title',
@@ -336,14 +333,6 @@ class ActionsRequired extends React.Component {
                     dataTest: 'orders_detail_markAsShipped_btn',
                     text: 'order.markAsShipped',
                     loading: isSending && !openedPopup
-                  },
-                  //TODO odstranit
-                  {
-                    // FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
-                    buttonType: 'primary',
-                    onClick: this.openAssignLots,
-                    dataTest: 'orders_detail_assign_lots_btn',
-                    text: 'order.assignLots.re'
                   }
                 ])
               : null}
