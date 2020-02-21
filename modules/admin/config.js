@@ -617,6 +617,51 @@ export const config = {
     }
   },
 
+  'NMFC Numbers': {
+    tableName: 'nmfc_numbers',
+    addEditText: (
+      <FormattedMessage id='admin.nmfcNumber' defaultMessage='NMFC Number'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    formattedMessageName: 'NmfcNumber',
+    searchText: 'admin.searchNmfc',
+    display: {
+      columns: [
+        {
+          name: 'code',
+          title: (
+            <FormattedMessage id='global.code' defaultMessage='Code'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'NmfcNumber.code'
+        },
+        {
+          name: 'description',
+          title: (
+            <FormattedMessage id='global.description' defaultMessage='Description'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'NmfcNumber.description'
+        }
+      ]
+    },
+    edit: [
+      {
+        name: 'name',
+        title: (
+          <FormattedMessage id='global.name' defaultMessage='Name'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'text',
+        required: true
+      }
+    ],
+  },
+
   'Document Types': {
     tableName: 'admin_document_types',
     addEditText: (
