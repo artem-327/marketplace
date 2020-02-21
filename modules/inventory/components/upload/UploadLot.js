@@ -33,15 +33,18 @@ class UploadLot extends Component {
 
   removeFile = file => {
     let poId = this.props.edit
-
     // delete attachment from database
     if (file.linked) {
-      this.props
-        .removeAttachmentLink(this.props.lot ? true : false, this.props.lot ? this.props.lot.id : poId, file.id)
-        .then(() => {
-          this.props.removeAttachment(file.id)
-          if (this.props.onRemoveFile) this.props.onRemoveFile(file.id)
-        })
+      if (file.isToOrderItem) {
+        this.props.removeOrderItem(file)
+      } else {
+        this.props
+          .removeAttachmentLink(this.props.lot ? true : false, this.props.lot ? this.props.lot.id : poId, file.id)
+          .then(() => {
+            this.props.removeAttachment(file.id)
+            if (this.props.onRemoveFile) this.props.onRemoveFile(file.id)
+          })
+      }
     } else {
       this.props.removeAttachment(file.id)
       if (this.props.onRemoveFile) this.props.onRemoveFile(file.id)

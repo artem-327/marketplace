@@ -80,11 +80,9 @@ class ActionsRequired extends React.Component {
 
   markShipped = () => {
     const { order, shippingTrackingCode, shipOrder, openPopupName, actionNeeded } = this.props
-    //TODO
-    // if (actionNeeded === 'PRODUCT-OFFER-ASSIGN') {
-    //   openPopupName('opendSaleAttachingProductOffer')
-    // }
-    if (shippingTrackingCode.length) {
+    if (actionNeeded === 'PRODUCT-OFFER-ASSIGN') {
+      openPopupName('opendSaleAttachingProductOffer')
+    } else if (shippingTrackingCode.length) {
       this.confirmCall({
         action: () => shipOrder(order.id, shippingTrackingCode),
         confirmTitleId: 'confirm.order.actions.shipped.title',
@@ -520,7 +518,7 @@ function mapStateToProps(state, ownProps) {
     reviewStatus: getSafe(() => orders.detail.reviewStatus, 0),
     creditReviewStatus: getSafe(() => orders.detail.creditReviewStatus, 0),
     returnStatus: getSafe(() => orders.detail.returnStatus, 0),
-    assignLotsRequired: false, //checkAssignLotsRequired(orders.detail),
+    assignLotsRequired: false, // checkAssignLotsRequired(orders.detail),
     isSending: orders.isSending,
     fundingSourceId: '?', // ! ! which param? (string)
 

@@ -78,7 +78,13 @@ class DocumentPopup extends Component {
     } = this.props
 
     return (
-      <Modal closeIcon onClose={() => { if (enableClose) closePopup(); onClose()}} open>
+      <Modal
+        closeIcon
+        onClose={() => {
+          if (enableClose) closePopup()
+          onClose()
+        }}
+        open>
         <Modal.Header>
           <FormattedMessage
             id={edit ? 'editDocument' : 'addDocument'}
@@ -250,9 +256,10 @@ DocumentPopup.defaultProps = {
 }
 
 const mapStateToProps = ({ simpleAdd, settings }) => {
-  const currentTab = Router && Router.router && Router.router.query && Router.router.query.type
-    ? settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-    : settings.tabsNames[0]
+  const currentTab =
+    Router && Router.router && Router.router.query && Router.router.query.type
+      ? settings.tabsNames.find(tab => tab.type === Router.router.query.type)
+      : settings.tabsNames[0]
   const documentTab = currentTab.type === 'documents'
 
   return {
