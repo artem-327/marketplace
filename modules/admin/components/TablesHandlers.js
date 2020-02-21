@@ -70,38 +70,33 @@ class TablesHandlers extends Component {
     return (
       <PositionHeaderSettings>
         <Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
-          {!currentTab.hideHandler && (
-            <Menu.Menu position='right'>
-              <Menu.Item data-test='admin_table_search_inp'>
-                <Input
-                  style={{ width: 340 }}
-                  size='large'
-                  icon='search'
-                  placeholder={formatMessage({ id: config[currentTab.name].searchText })}
-                  onChange={(e, { value }) => {
-                    this.setState({ filterValue: value })
-                    this.handleChange(value)
-                  }}
-                  value={this.state.filterValue}
-                />
-              </Menu.Item>
-              <Menu.Item>
-                <Button size='large' data-test='admin_table_add_btn' primary onClick={() => openPopup()}>
-                  <FormattedMessage id='global.add' defaultMessage='Add'>
-                    {text => `${text} `}
-                  </FormattedMessage>
-                  {config[currentTab.name].addEditText}
-                </Button>
-              </Menu.Item>
-              {currentTab.name === 'Product Catalog' ? (
-                <Menu.Item>
-                  <Button size='large' primary onClick={() => openImportPopup()} data-test='admin_import_btn'>
-                    {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}
-                  </Button>
-                </Menu.Item>
-              ) : null}
-            </Menu.Menu>
-          )}
+          <Menu.Item position='left' data-test='admin_table_search_inp'>
+            <Input
+              style={{ width: 340 }}
+              icon='search'
+              placeholder={formatMessage({ id: config[currentTab.name].searchText })}
+              onChange={(e, { value }) => {
+                this.setState({ filterValue: value })
+                this.handleChange(value)
+              }}
+              value={this.state.filterValue}
+            />
+          </Menu.Item>
+          <Menu.Item position='right'>
+            <Button size='large' data-test='admin_table_add_btn' primary onClick={() => openPopup()}>
+              <FormattedMessage id='global.add' defaultMessage='Add'>
+                {text => `${text} `}
+              </FormattedMessage>
+              {config[currentTab.name].addEditText}
+            </Button>
+          </Menu.Item>
+          {currentTab.name === 'Product Catalog' ? (
+            <Menu.Item>
+              <Button size='large' primary onClick={() => openImportPopup()} data-test='admin_import_btn'>
+                {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}
+              </Button>
+            </Menu.Item>
+          ) : null}
         </Grid>
       </PositionHeaderSettings>
     )

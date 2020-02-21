@@ -167,22 +167,8 @@ class TablesHandlers extends Component {
     const bankAccTab = currentTab.type === 'bank-accounts'
     return (
       <>
-        {currentTab.type === 'documents' && (
-          <GridColumn floated='right' computer={3} tablet={4}>
-            <Dropdown
-              placeholder={formatMessage({
-                id: 'settings.tables.documents.dropdown',
-                defaultMessage: 'Choose document type'
-              })}
-              fluid
-              selection
-              options={this.state.options}
-              onChange={this.handleFilterChangeDocumentType}
-            />
-          </GridColumn>
-        )}
         {currentTab.type !== 'global-broadcast' && (
-          <GridColumn floated={currentTab.type !== 'documents' && 'right'} widescreen={7} computer={5} tablet={4}>
+          <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
             <Input
               fluid
               icon='search'
@@ -192,6 +178,21 @@ class TablesHandlers extends Component {
                 defaultMessage: 'Select Credit Card'
               })}
               onChange={this.handleFilterChange}
+            />
+          </GridColumn>
+        )}
+
+        {currentTab.type === 'documents' && (
+          <GridColumn floated='right' computer={4} tablet={4}>
+            <Dropdown
+              placeholder={formatMessage({
+                id: 'settings.tables.documents.dropdown',
+                defaultMessage: 'Choose document type'
+              })}
+              fluid
+              selection
+              options={this.state.options}
+              onChange={this.handleFilterChangeDocumentType}
             />
           </GridColumn>
         )}
@@ -282,9 +283,7 @@ class TablesHandlers extends Component {
     return (
       <PositionHeaderSettings>
         <Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
-          <GridRow>
-            {!this.props.currentTab.hideHandler && this.renderHandler()}
-          </GridRow>
+          <GridRow>{!this.props.currentTab.hideHandler && this.renderHandler()}</GridRow>
         </Grid>
       </PositionHeaderSettings>
     )

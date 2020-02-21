@@ -66,7 +66,7 @@ class TablesHandlers extends Component {
 
     return (
       <>
-        <GridColumn floated={currentTab.type !== 'documents' && 'right'} widescreen={7} computer={5} tablet={4}>
+        <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
           <Input
             fluid
             icon='search'
