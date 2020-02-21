@@ -25,7 +25,11 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   response => {
-    Message.checkForMessages(response)
+    try {
+      Message.checkForMessages(response)
+    } catch (e) {
+      console.error(e)
+    }
     return response
   },
   function(error) {
@@ -66,7 +70,11 @@ axios.interceptors.response.use(
     }
 
     // const errData = error && error.response && error.response.data
-    Message.checkForMessages(error.response)
+    try {
+      Message.checkForMessages(error.response)
+    } catch (e) {
+      console.error(e)
+    }
 
     return Promise.reject(error)
   }

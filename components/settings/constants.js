@@ -1,4 +1,5 @@
 import { Input, TextArea, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
+
 import * as Yup from 'yup'
 
 import { errorMessages } from '~/constants/yupValidation'
@@ -33,8 +34,7 @@ export const dataTypes = {
   NUMBER: numberAllowEmptyString,
   FLOAT: numberAllowEmptyString,
   LARGE_TEXT: Yup.string(errorMessages.invalidString),
-  TEXT: Yup.string(errorMessages.invalidString),
-  
+  TEXT: Yup.string(errorMessages.invalidString)
 }
 
 const defaultDataType = 'STRING'
@@ -47,7 +47,7 @@ export const getRole = accessRights => {
 }
 
 export const typeToComponent = (type, options = {}) => {
-  
+
   switch (type) {
     case 'INTEGER':
       return (
@@ -75,13 +75,13 @@ export const typeToComponent = (type, options = {}) => {
       )
     case 'LARGE_TEXT':
       return (
-        <TextArea
-          {...getSafe(() => options.props, {})}
-          inputProps={{
-            type: 'text',
-            ...getSafe(() => options.inputProps, {})
-          }}
-        />
+          <TextArea
+            {...getSafe(() => options.props, {})}
+            inputProps={{
+              ...getSafe(() => options.inputProps, {}),
+              type: 'text'
+            }}
+          />
       )
     case 'TEXT':
       return (
@@ -138,7 +138,7 @@ export const toYupSchema = (validation, type) => {
     ...defaultOptions,
     ...validation
   }
-  
+
   let chain = dataTypes[options.type.value]
 
   Object.keys(supportedValidation).forEach(key => {

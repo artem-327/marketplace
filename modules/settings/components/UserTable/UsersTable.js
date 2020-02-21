@@ -5,7 +5,7 @@ import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 import moment from 'moment'
 
-import { FormattedDateTime, FormattedPhone } from '~/components/formatted-messages/'
+import { ArrayToFirstItem, FormattedPhone } from '~/components/formatted-messages/'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 // import { TablePopUp } from '~/components/tablePopup'
@@ -241,33 +241,6 @@ const userEnableDisableStatus = (r, currentUserId) => {
   )
 }
 
-const displayUserRoles = roles => {
-  if (!roles) return
-  const rolesList = (
-    <List>
-      {roles.map(rol => (
-        <List.Item key={rol.id}>
-          <List.Content>{rol.name}</List.Content>
-        </List.Item>
-      ))}
-    </List>
-  )
-
-  return roles.map(rol => (
-    <Popup
-      wide='very'
-      data-test='array_to_multiple_list'
-      content={rolesList}
-      key={rol.id}
-      trigger={
-        <Label size='small' key={rol.id}>
-          {rol.name}
-        </Label>
-      }
-    />
-  ))
-}
-
 const mapStateToProps = (state, { datagrid }) => {
   const currentUserId = state.settings.currentUser && state.settings.currentUser.id
   return {
@@ -286,7 +259,7 @@ const mapStateToProps = (state, { datagrid }) => {
       permissions: user.roles ? user.roles.name : '', // ! ! array?
       id: user.id,
       allUserRoles: user.roles || [],
-      userRoles: displayUserRoles(user.roles),
+      userRoles: <ArrayToFirstItem values={user.roles.map(r => r.name)} />,
       switchEnable: userEnableDisableStatus(user, currentUserId),
       lastLoginAt: user.lastLoginAt
         ? moment(user.lastLoginAt)

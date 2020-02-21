@@ -35,6 +35,7 @@ export const initialState = {
     { name: 'Grades', id: 4 },
     { name: 'Forms', id: 5 },
     { name: 'Conditions', id: 6 },
+    { name: 'NMFC Numbers', id: 7 },
     { name: 'Document Types', id: 9 },
     { name: 'Market Segments', id: 10 },
     { name: 'Admin Settings', id: 11, hideHandler: true }
@@ -321,13 +322,13 @@ export default function reducer(state = initialState, action) {
         popupValues: payload.data,
         ...(payload.data
           ? {
-            currentAddForm: null,
-            currentEditForm: state.currentTab
-          }
+              currentAddForm: null,
+              currentEditForm: state.currentTab
+            }
           : {
-            currentAddForm: state.currentTab,
-            currentEditForm: null
-          }),
+              currentAddForm: state.currentTab,
+              currentEditForm: null
+            }),
         currentEdit2Form: null,
         currentAddDwolla: null
       }

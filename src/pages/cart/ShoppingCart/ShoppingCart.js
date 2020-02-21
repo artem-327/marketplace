@@ -63,13 +63,6 @@ export default class ShoppingCart extends Component {
               key={cartItem.id}
               cartItem={cartItem}
               deleteCartItem={deleteCartItem}
-              casNumberChemName={
-                <ArrayToMultiple
-                  values={cartItem.productOffer.companyProduct.echoProduct.elements.map(d => {
-                    return d.proprietary ? d.displayName : d.displayName + ' - ' + d.casProduct.casNumber
-                  })}
-                />
-              }
             />
           </>
         )
