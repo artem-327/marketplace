@@ -25,11 +25,11 @@ const FixyWrapper = styled.div`
 
 const ButtonsWrapper = styled(Grid)`
   position: fixed;
-  top: 1px;
+  bottom: 20px;
   left: 1em;
   width: calc(100% - 2em);
   margin: 0 !important;
-  background: #fff;
+  background: transparent;
 `
 
 // PopupTriggerWrapper is necessary when button is disabled - trigger didn't work
