@@ -35,7 +35,9 @@ app.get('/gravatar/:hash', (req, res) => {
     .then(_response => {
       res.status(200).send({ src: `http://secure.gravatar.com/avatar/${hash}` })
     })
-    .catch(error => res.status(200).send({ src: null, error }))
+    .catch(_error => {
+      res.status(200).send({ src: null })
+    })
 })
 
 nextApp
