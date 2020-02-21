@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { withRouter } from 'next/router'
+import md5 from 'md5'
 import {
   TopMenu,
   TopMenuContainer,
@@ -13,7 +14,7 @@ import {
   CircularLabel,
   MainTitle
 } from '~/components/constants/layout'
-import { Container, Menu, Dropdown, Icon } from 'semantic-ui-react'
+import { Container, Menu, Dropdown, Icon, Image } from 'semantic-ui-react'
 import { Sidebar } from 'react-feather'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/logo-echosystem.png'
@@ -48,6 +49,8 @@ import { withToastManager } from 'react-toast-notifications'
 import ChatWidget from '~/modules/chatWidget/components/ChatWidgetContainer'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
+import api from '~/api'
+import axios from 'axios'
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
     <Menu.Item as='a' active={pathname === to}>
@@ -57,9 +60,10 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
 ))
 
 class Layout extends Component {
-
   componentDidMount() {
-    if (!this.props.phoneCountryCodes.length) this.props.getCountryCodes()
+    const { auth, phoneCountryCodes, getCountryCodes } = this.props
+
+    if (!phoneCountryCodes.length) getCountryCodes()
   }
 
   render() {
@@ -81,6 +85,9 @@ class Layout extends Component {
       collapsedMenu,
       toggleMenu
     } = this.props
+    let icon = <Icon name='user thick' />
+    let gravatarSrc = getSafe(() => auth.identity.gravatarSrc)
+    if (gravatarSrc) icon = <Image src={gravatarSrc} avatar size='small' />
 
     return (
       <MainContainer fluid>
@@ -130,7 +137,7 @@ class Layout extends Component {
                   </Menu.Item>
                 </>
               )}
-              <Dropdown className='user-menu-wrapper' item icon={{ className: 'user thick' }}>
+              <Dropdown className='user-menu-wrapper' item icon={icon}>
                 <Dropdown.Menu data-test='navigation_menu_user_drpdn'>
                   <Dropdown.Item>
                     <Dropdown.Header>{getSafe(() => auth.identity.name, '')}</Dropdown.Header>
