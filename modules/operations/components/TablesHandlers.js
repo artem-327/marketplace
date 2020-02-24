@@ -17,14 +17,14 @@ const textsTable = {
   'shipping-quotes': {
     BtnAddText: 'operations.tables.shippingQuotes.buttonAdd',
     SearchText: 'operations.tables.shippingQuotes.search'
-  },
+  }
 }
 
 class TablesHandlers extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      filterValue: '',
+      filterValue: ''
     }
     this.handleFiltersValue = debounce(this.handleFiltersValue, 250)
   }
@@ -66,7 +66,7 @@ class TablesHandlers extends Component {
 
     return (
       <>
-        <GridColumn floated={currentTab.type !== 'documents' && 'right'} widescreen={7} computer={5} tablet={4}>
+        <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
           <Input
             fluid
             icon='search'
@@ -79,7 +79,7 @@ class TablesHandlers extends Component {
           />
         </GridColumn>
         {!currentTab.hideButtons && (
-          <GridColumn widescreen={2} computer={2} tablet={3}>
+          <GridColumn widescreen={4} computer={4} tablet={5}>
             <Button fluid primary onClick={() => openPopup()} data-test='operations_open_popup_btn'>
               <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
             </Button>
@@ -92,11 +92,8 @@ class TablesHandlers extends Component {
   render() {
     return (
       <PositionHeaderSettings>
-        <Grid as={Menu} secondary verticalAlign='middle'>
-          <GridRow>
-            {this.renderHeader()}
-            {!this.props.currentTab.hideHandler && this.renderHandler()}
-          </GridRow>
+        <Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
+          <GridRow>{!this.props.currentTab.hideHandler && this.renderHandler()}</GridRow>
         </Grid>
       </PositionHeaderSettings>
     )
@@ -106,7 +103,7 @@ class TablesHandlers extends Component {
 const mapStateToProps = state => {
   return {
     currentTab: state.operations.currentTab,
-    filterValue: state.operations.filterValue,
+    filterValue: state.operations.filterValue
   }
 }
 

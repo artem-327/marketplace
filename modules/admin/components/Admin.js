@@ -10,12 +10,14 @@ import styled from 'styled-components'
 import DataTable from './DataTable/DataTable'
 import UnitOfMeasureTable from './UnitOfMeasureTable/UnitOfMeasureTable'
 import UnitOfPackagingTable from './UnitOfPackagingTable/UnitOfPackagingTable'
+import NmfcTable from './NmfcTable/Container'
 
 import AddNewUnitOfMeasurePopup from './UnitOfMeasureTable/AddNewUnitOfMeasurePopup'
 import AddNewUnitOfPackagingPopup from './UnitOfPackagingTable/AddNewUnitOfPackagingPopup'
 import AddNewPopup1Parameter from './DataTable/AddNewPopup1Parameter'
 import AddEditCasProductsPopup from './CasProductsTable/AddEditCasProductsPopup'
 import EditAltNamesCasProductsPopup from './CasProductsTable/EditAltNamesCasProductsPopup'
+import NmfcPopup from './NmfcTable/Popup'
 
 import EditUnitOfMeasurePopup from './UnitOfMeasureTable/EditUnitOfMeasurePopup'
 import EditUnitOfPackagingPopup from './UnitOfPackagingTable/EditUnitOfPackagingPopup'
@@ -56,6 +58,7 @@ const tables = {
   Grades: <DataTable />,
   Forms: <DataTable />,
   Conditions: <DataTable />,
+  'NMFC Numbers': <NmfcTable />,
   'CAS Products': <CasProductsTable />,
   Companies: <CompaniesTable />,
   'Product Catalog': <ProductCatalogTable />,
@@ -63,9 +66,9 @@ const tables = {
   'Market Segments': <DataTable />,
   'Admin Settings': (
     <FixyWrapper>
-      <ScrollableSegment basic padded='very'>
-        <Settings inputsInGroup={3} asModal={false} role='admin' />
-      </ScrollableSegment>
+    <ScrollableSegment basic padded='very'>
+      <Settings inputsInGroup={3} asModal={false} role='admin' />
+    </ScrollableSegment>
     </FixyWrapper>
   )
 }
@@ -105,6 +108,19 @@ const datagridConfig = {
     url: '/prodex/api/product-conditions/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v}%`] }] : [])
   },
+  'NMFC Numbers': {
+    url: '/prodex/api/nmfc-numbers/datagrid',
+    searchToFilter: v =>
+      v
+        ? [
+            { operator: 'EQUALS', path: 'NmfcNumber.code', values: [v] },
+            { operator: 'LIKE', path: 'NmfcNumber.description', values: [`%${v}%`] }
+          ]
+        : [],
+    params: {
+      orOperator: true
+    }
+  },
   'Document Types': {
     url: 'prodex/api/document-types/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'DocumentType.name', values: [`%${v}%`] }] : [])
@@ -142,6 +158,7 @@ const editForms = {
   Grades: <EditPopup1Parameter />,
   Forms: <EditPopup1Parameter />,
   Conditions: <EditPopup1Parameter />,
+  'NMFC Numbers': <NmfcPopup />,
   'CAS Products': <AddEditCasProductsPopup />,
   Companies: <CompaniesForm />,
   'Document Types': <EditPopup1Parameter />,
@@ -160,6 +177,7 @@ const addForms = {
   Grades: <AddNewPopup1Parameter />,
   Forms: <AddNewPopup1Parameter />,
   Conditions: <AddNewPopup1Parameter />,
+  'NMFC Numbers': <NmfcPopup />,
   'CAS Products': <AddEditCasProductsPopup />,
   Companies: <CompaniesForm />,
   'Document Types': <AddNewPopup1Parameter />,
@@ -206,13 +224,16 @@ class Admin extends Component {
   render() {
     if (!getSafe(() => this.props.auth.identity.isAdmin, false))
       return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
+    const { currentTab } = this.props
 
     return (
       <DatagridProvider apiConfig={this.getApiConfig()}>
         <Container fluid className='flex stretched'>
-          <Container fluid style={{ padding: '0 32px' }}>
-            <TablesHandlers />
-          </Container>
+          {!currentTab.hideHandler && (
+            <Container fluid style={{ padding: '0 32px' }}>
+              <TablesHandlers />
+            </Container>
+          )}
           <Grid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
             <Grid.Row>
               <Grid.Column key={this.props.currentTab} style={{ marginTop: '10px' }} className='flex stretched'>

@@ -25,11 +25,11 @@ const FixyWrapper = styled.div`
 
 const ButtonsWrapper = styled(Grid)`
   position: fixed;
-  top: 1px;
+  bottom: 20px;
   left: 1em;
   width: calc(100% - 2em);
   margin: 0 !important;
-  background: #fff;
+  background: transparent;
 `
 
 // PopupTriggerWrapper is necessary when button is disabled - trigger didn't work
@@ -69,8 +69,19 @@ class Settings extends Component {
 
   async componentDidMount() {
     let { role } = this.props
+    let settings = await api.getSettings(role)
+    let { systemSettings, validationSchema } = this.parseData(settings)
+
+    this.setState({
+      fetching: false,
+      systemSettings,
+      validationSchema
+    })
+  }
+
+  parseData = systemSettings => {
     let validationSchema = {}
-    let systemSettings = await api.getSettings(role)
+    let { role } = this.props
 
     systemSettings.forEach(group => {
       let tmp = {}
@@ -87,11 +98,7 @@ class Settings extends Component {
       if (Object.keys(tmp).length > 0) validationSchema[group.code] = Yup.object().shape(tmp)
     })
 
-    this.setState({
-      fetching: false,
-      systemSettings,
-      validationSchema: Yup.object({ [role]: Yup.object().shape(validationSchema) })
-    })
+    return { validationSchema: Yup.object({ [role]: Yup.object().shape(validationSchema) }), systemSettings }
   }
 
   handleSubmit = async ({ values }) => {
@@ -100,6 +107,7 @@ class Settings extends Component {
     // Original = true => Value was set at current level or contains EMPTY_SETTING
     // Original = true && value === 'EMPTY_SETTING' => No value is set on current level nor inherrited = send nothing
     // Original = true && value !== 'EMPTY_SETTING' => User has value set at current level
+    let settings
 
     const { toastManager, triggerSystemSettingsModal, role } = this.props
     this.setState({ loading: true })
@@ -107,20 +115,19 @@ class Settings extends Component {
     let payload = {
       settings: []
     }
-
     Object.keys(values[role]).forEach(group => {
       Object.keys(values[role][group]).forEach(key => {
         let el = values[role][group][key]
         if (el.changeable) {
-          if (!el.edit && role !== 'admin') payload.settings.push({id: el.id, value: 'EMPTY_SETTING'})
+          if (!el.edit && role !== 'admin') payload.settings.push({ id: el.id, value: 'EMPTY_SETTING' })
           else if (el.value.visible !== null)
-            payload.settings.push({id: el.id, value: el.type === 'BOOL' ? el.value.actual : el.value.visible})
+            payload.settings.push({ id: el.id, value: el.type === 'BOOL' ? el.value.actual : el.value.visible })
         }
       })
     })
 
     try {
-      await api.updateSettings(role, payload)
+      settings = await api.updateSettings(role, payload)
 
       toastManager.add(
         generateToastMarkup(
@@ -133,12 +140,41 @@ class Settings extends Component {
         { appearance: 'success' }
       )
 
+      let { systemSettings } = this.parseData(settings)
+
+      this.setState({ systemSettings })
+      this.resetForm(this.parseInitialValues(systemSettings))
+
       triggerSystemSettingsModal(false)
     } catch (e) {
       console.error(e)
     } finally {
       this.setState({ loading: false })
     }
+  }
+
+  parseInitialValues = systemSettings => {
+    const { role } = this.props
+    let initialValues = { [role]: {} }
+    systemSettings.forEach(el => {
+      initialValues[role][el.code] = {}
+
+      el.settings.forEach(setting => {
+        initialValues[role][el.code][setting.code] = {
+          id: setting.id,
+          original: setting.original,
+          value: {
+            actual: setting.type === 'BOOL' ? setting.value == 'true' : setting.value,
+            visible: setting.value === 'EMPTY_SETTING' ? '' : setting.value ? setting.value : ''
+          },
+          type: setting.type,
+          changeable: setting.changeable,
+          edit: setting.changeable && setting.original && setting.value !== 'EMPTY_SETTING'
+        }
+      })
+    })
+
+    return initialValues
   }
 
   render() {
@@ -150,26 +186,7 @@ class Settings extends Component {
       role
     } = this.props
     let { loading, systemSettings } = this.state
-
-    let initialValues = { [role]: {} }
-
-    systemSettings.forEach(el => {
-      initialValues[role][el.code] = {}
-
-      el.settings.forEach(setting => {
-        initialValues[role][el.code][setting.code] = {
-          id: setting.id,
-          original: setting.original,
-          value: {
-            actual: setting.type === 'BOOL' ? setting.value == 'true' : setting.value,
-            visible: setting.value === 'EMPTY_SETTING' ? null : setting.value ? setting.value : null
-          },
-          type: setting.type,
-          changeable: setting.changeable,
-          edit: setting.changeable && setting.original && setting.value !== 'EMPTY_SETTING'
-        }
-      })
-    })
+    let initialValues = this.parseInitialValues(systemSettings)
 
     let getMarkup = () => (
       <Formik
@@ -177,7 +194,8 @@ class Settings extends Component {
         enableReinitialize
         validationSchema={this.state.validationSchema}
         render={formikProps => {
-          let { values, errors } = formikProps
+          let { values, resetForm } = formikProps
+          this.resetForm = resetForm
           let allDisabled = systemSettings.every(group => group.settings.every(val => !val.changeable))
           return (
             <FormSpaced>

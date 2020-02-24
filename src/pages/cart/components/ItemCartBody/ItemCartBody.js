@@ -18,7 +18,7 @@ const CapitalizedText = styled.span`
 
 export default class ItemCartBody extends Component {
   render() {
-    let { cartItem, deleteCartItem, casNumberChemName } = this.props
+    let { cartItem, deleteCartItem } = this.props
     let { productOffer } = cartItem
 
     const packagingType = getSafe(() => productOffer.companyProduct.packagingType.name, '')
@@ -190,6 +190,5 @@ export default class ItemCartBody extends Component {
 ItemCartBody.propTypes = {
   cartItem: object,
   editCart: func,
-  deleteCartItem: func,
-  casNumberChemName: object
+  deleteCartItem: func
 }

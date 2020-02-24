@@ -78,7 +78,7 @@ export const loadLotsToAssign = productOfferId => ({
 export const linkAttachment = (lotId, attachment) => ({
   type: AT.ORDER_LINK_ATTACHMENT,
   async payload() {
-    await Api.linkAttachment(lotId, attachment.id)
+    await Api.linkAttachment(lotId, attachment.id || attachment.lastModified)
     return {
       lotId: lotId,
       file: attachment
@@ -247,5 +247,25 @@ export function deleteAssignProductOffers(orderId, orderItemId) {
   return {
     type: AT.DELETE_ASSIGN_PRODUCT_OFFERS,
     payload: Api.deleteAssignProductOffers(orderId, orderItemId)
+  }
+}
+
+export function clearGroupedProductOffer() {
+  return {
+    type: AT.CLEAR_GROUPED_PRODUCT_OFFERS
+  }
+}
+
+export function linkAttachmentToOrderItem(query) {
+  return {
+    type: AT.LINK_ATTACHMENT_TO_ORDER_ITEM,
+    payload: Api.linkAttachmentToOrderItem(query)
+  }
+}
+
+export function removeLinkAttachmentToOrderItem(query) {
+  return {
+    type: AT.REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM,
+    payload: Api.removeLinkAttachmentToOrderItem(query)
   }
 }

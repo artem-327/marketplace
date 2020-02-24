@@ -1,6 +1,16 @@
 import api from '~/api'
+import axios from 'axios'
+import md5 from 'md5'
 
-export const getIdentity = () => api.get('/prodex/api/users/me').then(response => response.data)
+export const getIdentity = async () => {
+  let identity = await api.get('/prodex/api/users/me').then(response => response.data)
+  let gravatarSrc = await axios.get(`/gravatar/${md5(identity.email)}`).then(({ data }) => data.src)
+
+  return {
+    ...identity,
+    gravatarSrc
+  }
+}
 
 export const getVersion = () => api.get('/prodex/api/version').then(response => response.data)
 

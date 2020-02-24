@@ -7,7 +7,7 @@ import { removePopup } from '../../../../modules/popup'
 import { getPricing, getLocationString } from '../../../../utils/functions'
 import { getSafe } from '~/utils/functions'
 import React from 'react'
-import { ArrayToMultiple } from '~/components/formatted-messages'
+import { ArrayToFirstItem } from '~/components/formatted-messages'
 import { createHold } from '~/modules/marketplace/holds/actions'
 
 function mapStateToProps(store) {
@@ -22,21 +22,7 @@ function mapStateToProps(store) {
     order: store.cart.orderDetail,
     sidebar: { ...store.cart.sidebar, pricing },
     offerDetailIsFetching: store.cart.offerDetailIsFetching,
-    orderDetailIsFetching: store.cart.orderDetailIsFetching,
-    casProductsChemNames: (
-      <ArrayToMultiple
-        values={getSafe(() => offer.companyProduct.echoProduct.elements, []).map(d => {
-          return d.proprietary ? d.displayName : d.displayName + ' - ' + d.casProduct.casNumber
-        })}
-      />
-    ),
-    casProductsCasNumbers: (
-      <ArrayToMultiple
-        values={getSafe(() => offer.companyProduct.echoProduct.elements, []).map(d => {
-          return d.casProduct ? d.casProduct.casNumber : null
-        })}
-      />
-    )
+    orderDetailIsFetching: store.cart.orderDetailIsFetching
     // ! ! osetrit 'proprietary'
   }
 }

@@ -44,7 +44,7 @@ export function login(username, password) {
         const auth = await authorize(username, password)
         setAuth(auth)
         const identity = await api.getIdentity()
-
+       
         let company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
         const preferredCurrency = getSafe(() => identity.preferredCurrency, currency)
 
@@ -65,7 +65,7 @@ export function login(username, password) {
 
         if (typeof window !== 'undefined' && window.FS) {
           try {
-            window.FS.identify(identity.id);
+            window.FS.identify(identity.id)
           } catch (e) {
             console.error(e)
           }
@@ -183,7 +183,7 @@ export const setCompanyElligible = () => ({
   type: AT.SET_COMPANY_SELL_ELLIGIBLE,
   payload: async () => {
     let data = await api.getIdentity()
-    return getSafe(() => data.company.sellEligible, 'kkt :D')
+    return getSafe(() => data.company.sellEligible, '')
   }
 })
 

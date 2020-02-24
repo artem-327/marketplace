@@ -731,3 +731,24 @@ export const getDocumentTypes = () => ({ type: AT.ADMIN_GET_DOCUMENT_TYPES, payl
 export const addUnNumber = payload => ({ type: AT.ADMIN_ADD_UN_NUMBER, payload })
 
 export const getCompanyDetails = id => ({ type: AT.ADMIN_GET_COMPANY_DETAILS, payload: api.getCompanyDetails(id) })
+
+export const addNmfcNumber = nmfc => {
+  return async dispatch => {
+    await dispatch({ type: AT.ADD_NMFC_NUMBER, payload: api.addNmfcNumber(nmfc) })
+    Datagrid.loadData()
+  }
+}
+
+export const editNmfcNumber = nmfc => {
+  return async dispatch => {
+    await dispatch({ type: AT.EDIT_NMFC_NUMBER, payload: api.editNmfcNumber(nmfc) })
+    Datagrid.updateRow(nmfc.id, () => nmfc)
+  }
+}
+
+export const deleteNmfcNumber = id => {
+  return async dispatch => {
+    await dispatch({ type: AT.DELETE_NMFC_NUMBER, payload: api.deleteNmfcNumber(id) })
+    Datagrid.removeRow(id)
+  }
+}
