@@ -3,14 +3,6 @@ import React, { Component } from 'react'
 import moment from 'moment'
 import { removeEmpty } from '~/modules/admin/actions'
 import { verifyEchoProduct } from '~/modules/admin/api' // No need to be an action
-import {
-  FlexSidebar,
-  FlexTabs,
-  FlexContent,
-  TopMargedColumn,
-  GraySegment,
-  HighSegment
-} from '~/modules/inventory/components/DetailSidebar'
 import { DateInput } from '~/components/custom-formik'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import * as Yup from 'yup'
@@ -25,7 +17,19 @@ import {
   Checkbox,
   TextArea
 } from 'formik-semantic-ui-fixed-validation'
-import { Menu, Grid, GridRow, GridColumn, Segment, Header, Dropdown, Icon, Dimmer, Loader } from 'semantic-ui-react'
+import {
+  Menu,
+  Grid,
+  GridRow,
+  GridColumn,
+  Segment,
+  Header,
+  Dropdown,
+  Icon,
+  Dimmer,
+  Loader,
+  Sidebar
+} from 'semantic-ui-react'
 import TextareaAutosize from 'react-autosize-textarea'
 import { FieldArray, Field } from 'formik'
 
@@ -50,6 +54,46 @@ export const MyContainer = styled.div`
   font-size: 1.1rem;
 `
 
+export const FlexSidebar = styled(Sidebar)`
+  display: flex;
+  flex-direction: column;
+  background-color: #fbfbfb;
+  top: 80px !important;
+  padding-bottom: 80px;
+  box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
+  z-index: 1000 !important;
+  text-align: left;
+`
+
+export const FlexTabs = styled.div`
+  height: 100%;
+  margin: 0;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 10px 0 15px 0;
+  font-weight: 400;
+  font-size: 1.1rem;
+
+  > .tab-menu,
+  > .tab-menu > .tab {
+    height: 100%;
+  }
+`
+
+export const FlexContent = styled.div`
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+`
+
+export const GraySegment = styled(Segment)`
+  background-color: #ededed !important;
+`
+
+export const HighSegment = styled(Segment)`
+  height: 100%;
+`
+
 const CustomTextarea = styled(TextareaAutosize)`
   resize: vertical !important;
 `
@@ -59,6 +103,30 @@ const CustomGridColumn = styled(GridColumn)`
     align-self: flex-start !important;
   }
 `
+
+
+Yup.addMethod(Yup.object, 'uniqueProperty', function(propertyName, message) {
+  return this.test('unique', message, function(value) {
+    if (!value || !value[propertyName]) {
+      return true
+    }
+
+    const { path } = this
+    const options = [...this.parent]
+    const currentIndex = options.indexOf(value)
+
+    const subOptions = options.slice(0, currentIndex)
+
+    if (subOptions.some(option => option[propertyName] === value[propertyName])) {
+      throw this.createError({
+        path: `${path}.${propertyName}`,
+        message
+      })
+    }
+
+    return true
+  })
+})
 
 const validationScheme = Yup.object().shape({
   code: Yup.string()
@@ -74,7 +142,7 @@ const validationScheme = Yup.object().shape({
       .uniqueProperty(
         'casProduct',
         errorMessages.unique(
-          <FormattedMessage id='admin.casProduct' name='CAS Product'>
+          <FormattedMessage id='admin.casProductUnique' name='CAS Product has to be unique'>
             {text => text}
           </FormattedMessage>
         )

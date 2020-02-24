@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { object, bool, number, node, func, array } from 'prop-types'
 import { Segment, GridRow, Grid, GridColumn, Button, Dropdown, Menu, Sidebar, Table } from 'semantic-ui-react'
-import { FlexSidebar, GraySegment, FlexContent } from '~/modules/inventory/components/DetailSidebar'
 import { Form, Input, Dropdown as FormikDropdown } from 'formik-semantic-ui-fixed-validation'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
@@ -22,8 +21,29 @@ import DocumentManager from '~/modules/settings/components/Documents/DocumentMan
 import { getSafe, formatAssay } from '~/utils/functions'
 import { EchoProductResponse, CasProductResponse } from '~/constants/backendObjects'
 
+export const FlexSidebar = styled(Sidebar)`
+  display: flex;
+  flex-direction: column;
+  background-color: #fbfbfb;
+  top: 80px !important;
+  padding-bottom: 80px;
+  box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
+  z-index: 1000 !important;
+  text-align: left;
+`
+
+export const GraySegment = styled(Segment)`
+  background-color: #ededed !important;
+`
+
+export const FlexContent = styled.div`
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+`
+
 const WiderSidebar = styled(FlexSidebar)`
-  min-width: 545px !important;
+  min-width: 630px !important;
 `
 
 const RightAlignedDiv = styled.div`
