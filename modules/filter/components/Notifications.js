@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { GridColumn, Grid, GridRow } from 'semantic-ui-react'
+import { GridColumn, GridRow } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Input, Checkbox as FormikCheckbox } from 'formik-semantic-ui-fixed-validation'
 import { PhoneNumber } from '~/modules/phoneNumber'
