@@ -8,7 +8,7 @@ import { injectIntl } from 'react-intl'
 import * as Yup from 'yup'
 import { nmfcValidation } from '../../../../constants/yupValidation'
 import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { addNmfcNumber, editNmfcNumber } from '~/modules/admin/actions'
 
 const validationSchema = Yup.object().shape({
@@ -37,7 +37,6 @@ class Popup extends Component {
       toastManager
     } = this.props
 
-
     let type = popupValues ? { id: 'edit', defaultMessage: 'Edit' } : { id: 'add', defaultMessage: 'Add' }
 
     return (
@@ -51,7 +50,7 @@ class Popup extends Component {
             onSubmit={async (values, { setSubmitting }) => {
               let payload = {
                 ...values,
-                code: values.code.replace('-', '')
+                code: getSafe(() => values.code.replace('-', ''), values.code)
               }
 
               if (popupValues) {
