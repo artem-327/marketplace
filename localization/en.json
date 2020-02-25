@@ -303,6 +303,7 @@
   "global.totalWeight": "Total Weight",
   "global.next": "Next",
   "global.freightClass": "Freight Class",
+  "global.docName": "Document Name",
   "global.docType": "Document Type",
   "global.doc": "Document",
   "global.linkCount": "Links count",

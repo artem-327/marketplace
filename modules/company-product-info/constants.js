@@ -1,6 +1,4 @@
 import { FormattedMessage } from 'react-intl'
-import styled from 'styled-components'
-import { Grid } from 'semantic-ui-react'
 
 export const tabs = [
   { text: { id: 'global.ep.info', defaultMessage: 'Info(EP)' }, key: 'info' },
@@ -222,9 +220,3 @@ export const yesNoOptions = {
     }
   ]
 }
-
-
-export const GridReadOnly = styled(Grid)`
-  background-color: #996060;
-  
-`

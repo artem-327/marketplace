@@ -21,10 +21,15 @@ import DocumentManager from '~/modules/settings/components/Documents/DocumentMan
 import { getSafe, formatAssay } from '~/utils/functions'
 import { EchoProductResponse, CasProductResponse } from '~/constants/backendObjects'
 
+import {
+  SegmentShowOnly,
+  BottonButtonsShowOnly
+} from '../constants/layout'
+
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
   flex-direction: column;
-  background-color: #fbfbfb;
+  background-color: #ffffff;
   top: 80px !important;
   padding-bottom: 80px;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
@@ -67,12 +72,12 @@ class CompanyProductInfo extends Component {
   getElements = ({ id, defaultMessage, elements }) => {
     return (
       <>
-        <GridRow>
+        <GridRow className='table-name'>
           <GridColumn width={16}>
             <FormattedMessage id={id} defaultMessage={defaultMessage} />
           </GridColumn>
         </GridRow>
-        <Table basic='very'>
+        <Table celled table>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>
@@ -102,11 +107,11 @@ class CompanyProductInfo extends Component {
 
   getInput = ({ id, defaultMessage, name }) => (
     <GridRow>
-      <GridColumn width={6}>
+      <GridColumn width={7}>
         <FormattedMessage id={id} defaultMessage={defaultMessage} />
       </GridColumn>
 
-      <GridColumn width={10}>
+      <GridColumn width={9}>
         <Input inputProps={{ readOnly: this.props.readOnly, id: name }} name={name} />
       </GridColumn>
     </GridRow>
@@ -114,11 +119,11 @@ class CompanyProductInfo extends Component {
 
   getDropdown = ({ id, defaultMessage, name, props }) => (
     <GridRow>
-      <GridColumn width={6}>
+      <GridColumn width={7}>
         <FormattedMessage id={id} defaultMessage={defaultMessage} />
       </GridColumn>
 
-      <GridColumn width={10}>
+      <GridColumn width={9}>
         <FormikDropdown
           selection
           fluid
@@ -597,7 +602,7 @@ class CompanyProductInfo extends Component {
 
     return (
       <>
-        <GridRow>
+        <GridRow className='select-row'>
           <GridColumn computer={8}>
             {readOnly ? (
               <>
@@ -746,11 +751,13 @@ class CompanyProductInfo extends Component {
         // Transportation
         return (
           <Grid verticalAlign='middle'>
-            <GridRow>
-              <GridColumn computer={6}>
-                <FormattedMessage id='global.filter' defaultMessage='Filter' />
+            <GridRow className='select-row'>
+              <GridColumn computer={8}>
+                <label>
+                  <FormattedMessage id='global.filter' defaultMessage='Filter' />
+                </label>
               </GridColumn>
-              <GridColumn computer={10}>
+              <GridColumn computer={8}>
                 <Dropdown
                   selection
                   fluid
@@ -872,7 +879,13 @@ class CompanyProductInfo extends Component {
 
       case 4: {
         // Documents
-        return <DocumentManager items={values.attachments} edit={false} deletable={false} normalWidth={true} />
+        return <DocumentManager
+          items={values.attachments}
+          edit={false}
+          deletable={false}
+          normalWidth={!readOnly}
+          reduceColumns={readOnly}
+        />
       }
 
       default:
@@ -890,7 +903,7 @@ class CompanyProductInfo extends Component {
       hiddenTabs,
       readOnly,
       handleSubmit,
-      casProductOnly
+      casProductOnly,
     } = this.props
 
     let { companyProduct } = popupValues
@@ -966,7 +979,10 @@ class CompanyProductInfo extends Component {
                       )
                     )}
               </Menu>
-              <Segment basic>{this.getContent(formikProps)}</Segment>
+              {readOnly
+                ? (<SegmentShowOnly basic>{this.getContent(formikProps)}</SegmentShowOnly>)
+                : (<Segment basic>{this.getContent(formikProps)}</Segment>)
+              }
             </>
           )
         }}
@@ -1000,7 +1016,7 @@ class CompanyProductInfo extends Component {
   }
 
   render() {
-    let { isOpen } = this.props
+    let { isOpen, readOnly } = this.props
 
     const contentWrapper = children =>
       React.cloneElement(
@@ -1018,10 +1034,17 @@ class CompanyProductInfo extends Component {
         this.props.actionsWrapper ? (
           this.props.actionsWrapper(children)
         ) : (
-          <GraySegment>
-            <RightAlignedDiv>{children}</RightAlignedDiv>
-          </GraySegment>
-        )
+          readOnly ?
+            (
+              <BottonButtonsShowOnly>
+                {children}
+              </BottonButtonsShowOnly>
+            ) : (
+              <GraySegment>
+                <RightAlignedDiv>{children}</RightAlignedDiv>
+              </GraySegment>
+            )
+          )
       )
 
     const Content = React.cloneElement(
