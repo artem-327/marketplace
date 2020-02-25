@@ -37,7 +37,9 @@ const initialState = {
   opendSaleAttachingProductOffer: false,
   groupedProductOffers: [],
   loadingGroupedProductOffers: false,
-  order: []
+  order: [],
+  documentTypesFetching: false,
+  listDocumentTypes: []
 }
 
 export default function(state = initialState, action) {
@@ -480,6 +482,34 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loadingProductOffer: false
+      }
+    }
+
+    case AT.RELATED_GET_DOCUMENT_TYPES_PENDING: {
+      return {
+        ...state,
+        documentTypesFetching: true
+      }
+    }
+
+    case AT.RELATED_GET_DOCUMENT_TYPES_FULFILLED: {
+      return {
+        ...state,
+        documentTypesFetching: false,
+        listDocumentTypes: action.payload.data.map(docType => {
+          return {
+            key: docType.id,
+            text: docType.name,
+            value: docType.id
+          }
+        })
+      }
+    }
+
+    case AT.RELATED_GET_DOCUMENT_TYPES_REJECTED: {
+      return {
+        ...state,
+        documentTypesFetching: false
       }
     }
 

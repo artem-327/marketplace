@@ -269,3 +269,10 @@ export function removeLinkAttachmentToOrderItem(query) {
     payload: Api.removeLinkAttachmentToOrderItem(query)
   }
 }
+
+export function getDocumentTypes() {
+  return {
+    type: AT.RELATED_GET_DOCUMENT_TYPES,
+    payload: api.getDocumentTypes()
+  }
+}

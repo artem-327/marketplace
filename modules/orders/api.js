@@ -128,5 +128,6 @@ export default {
   linkAttachmentToOrderItem: query =>
     api.post(`/prodex/api/attachment-links/to-order-item${generateQueryString(query)}`),
   removeLinkAttachmentToOrderItem: query =>
-    api.delete(`/prodex/api/attachment-links/to-order-item${generateQueryString(query)}`)
+    api.delete(`/prodex/api/attachment-links/to-order-item${generateQueryString(query)}`),
+  getDocumentTypes: () => api.get(`/prodex/api/document-types/`)
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
-import { Modal, Menu, Header, Container, Grid, Icon, Button, Dimmer, Loader } from 'semantic-ui-react'
-import styled from 'styled-components'
+import { Modal, Menu, Header, Container, Grid, Icon, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react'
+import styled, { withTheme } from 'styled-components'
 
 import SubMenu from '~/src/components/SubMenu'
 import Spinner from '~/src/components/Spinner/Spinner'
@@ -12,22 +12,59 @@ import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
+import DocumentsPopup from '~/modules/settings/components/Documents/DocumentManagerPopup'
 import Link from 'next/link'
+import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import { UploadCloud } from 'react-feather'
 
 const ButtonsWrapper = styled(Grid)`
   margin-left: -21px !important;
   margin-right: -21px !important;
   margin-bottom: -21px !important;
   border-top: 1px solid #dee2e6;
-  
+
   > div {
     padding-top: 10px !important;
     padding-bottom: 10px !important;
-    
+
     button {
       height: 40px !important;
     }
   }
+`
+
+const ButtonsWrapperDocuments = styled(Grid)`
+  margin-left: -21px !important;
+  margin-right: -21px !important;
+  margin-bottom: -21px !important;
+  border-top: 1px solid #dee2e6;
+
+  > div {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+
+    button {
+      height: 40px !important;
+    }
+  }
+`
+
+const RelatedDocumentsDropdown = styled(Dropdown)`
+  z-index: 601 !important;
+`
+
+const CustomDivUploadLot = styled.div`
+  margin-bottom: 30px !important;
+  margin-top: 20px !important;
+`
+
+const CustomDivAddDocument = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+const CustomDivLabelDocumentType = styled.div`
+  margin-bottom: 8px;
 `
 
 class Orders extends Component {
@@ -328,7 +365,42 @@ class Orders extends Component {
         width: 100,
         align: 'right'
       }
-    ]
+    ],
+    columnsRelatedOrdersDocuments: [
+      {
+        name: 'documentName',
+        title: (
+          <FormattedMessage id='order.related.documents.name' defaultMessage='Name'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 200
+      },
+      {
+        name: 'documenType',
+        title: (
+          <FormattedMessage id='order.related.documents.type' defaultMessage='Type'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 200
+      },
+      {
+        name: 'documenDescription',
+        title: (
+          <FormattedMessage id='order.related.documents.description' defaultMessage='Document Description'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 250
+      }
+    ],
+    relatedDocumentsDropdown: '',
+    isOpenDocumentsPopup: false,
+    documentType: '',
+    openUploadLot: false,
+    relatedDocumentsTypeDropdown: [],
+    documentFiles: []
   }
 
   getMimeType = documentName => {
@@ -389,37 +461,37 @@ class Orders extends Component {
 
     return this.props.rows.map(row => ({
       ...row,
-      orderId: <Link href={`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`}><a>{row.id}</a></Link>,
-      productName: <ArrayToFirstItem values={row.orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))} />,
+      orderId: (
+        <Link href={`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`}>
+          <a>{row.id}</a>
+        </Link>
+      ),
+      productName: (
+        <ArrayToFirstItem values={row.orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))} />
+      ),
       globalStatus: row.globalStatus === 'Failed' ? this.failedWrapper(row.globalStatus) : row.globalStatus,
       paymentStatus: row.paymentStatus === 'Failed' ? this.failedWrapper(row.paymentStatus) : row.paymentStatus,
-      bl: row.bl // unknown / positive / negative
-            ? (
-              <span onClick={() => this.openOverviewWindow(row.bl, { id: row.id })}>
-                <Icon name='file' className='positive' />
-              </span>
-            )
-            : (
-              <Icon name='file' className='unknown' />
-            ),
-      sds: row.sds
-            ? (
-              <span onClick={() => this.openOverviewWindow(row.sds, { id: row.id })}>
-                <Icon name='file' className='positive' />
-              </span>
-            )
-            : (
-              <Icon name='file' className='unknown' />
-            ),
-      cofA: row.cofA
-            ? (
-              <span onClick={() => this.openOverviewWindow(row.cofA, { id: row.id })}>
-                <Icon name='file' className='positive' />
-              </span>
-            )
-            : (
-              <Icon name='file' className='unknown' />
-            ),
+      bl: row.bl ? ( // unknown / positive / negative
+        <span onClick={() => this.openOverviewWindow(row.bl, { id: row.id })}>
+          <Icon name='file' className='positive' />
+        </span>
+      ) : (
+        <Icon name='file' className='unknown' />
+      ),
+      sds: row.sds ? (
+        <span onClick={() => this.openOverviewWindow(row.sds, { id: row.id })}>
+          <Icon name='file' className='positive' />
+        </span>
+      ) : (
+        <Icon name='file' className='unknown' />
+      ),
+      cofA: row.cofA ? (
+        <span onClick={() => this.openOverviewWindow(row.cofA, { id: row.id })}>
+          <Icon name='file' className='positive' />
+        </span>
+      ) : (
+        <Icon name='file' className='unknown' />
+      ),
       related:
         row.accountingDocumentsCount > 0 ? (
           <span onClick={() => this.openModalWindow(row.id)}>
@@ -440,7 +512,8 @@ class Orders extends Component {
     this.setState({ openModal: true, attachmentPopup: { attachment, order } })
   }
 
-  handleFilterApply = payload => {    // ! ! ????
+  handleFilterApply = payload => {
+    // ! ! ????
     let statusFilters = getSafe(() => this.state.filters[this.props.filterData.status].filters, [])
     statusFilters.forEach(f => payload.filters.push(f))
 
@@ -448,9 +521,12 @@ class Orders extends Component {
   }
 
   componentDidMount() {
-    const { endpointType, filterData } = this.props
+    const { endpointType, filterData, getDocumentTypes, listDocumentTypes } = this.props
     this.props.loadData(endpointType, { status: 'All' })
     this.handleFilterClear()
+    if (listDocumentTypes && !listDocumentTypes.length) {
+      getDocumentTypes()
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -506,26 +582,106 @@ class Orders extends Component {
     this.props.clearRelatedOrders()
   }
 
+  replaceExiting = row => {
+    console.log('replaceExiting')
+  }
+
+  handleDelete = row => {
+    console.log('handleDelete')
+  }
+  //TODO
   getAttachmentContent = () => {
-    const { attachmentPopup: { attachment, order } } = this.state
+    const {
+      attachmentPopup: { attachment, order }
+    } = this.state
+    const {
+      intl: { formatMessage }
+    } = this.props
+
+    const attachments = attachment && attachment.length ? attachment : [attachment]
+    console.log('attachments====================================')
+    console.log(attachments)
+    console.log('====================================')
+    const rowsRelatedOrdersDocuments = attachments.reduce((ordersList, attachment) => {
+      if (attachment) {
+        ordersList.push({
+          documentName: (
+            <Button as='a' onClick={() => this.downloadAttachment(attachment.name, attachment.id)}>
+              <Icon name='download' />
+              {attachment.name}
+            </Button>
+          ),
+          documenType: getSafe(() => attachment.documentType.name, 'N/A'),
+          documenDescription: getSafe(() => attachment.description, 'N/A')
+        })
+      }
+
+      return ordersList
+    }, [])
     return (
       <>
-        <Grid>
+        <CustomDivAddDocument>
+          <RelatedDocumentsDropdown
+            options={[
+              {
+                key: 1,
+                value: 'My TYpe',
+                text: 'My Type'
+              },
+              {
+                key: 2,
+                value: 'Your Type',
+                text: 'Your Type'
+              }
+            ]}
+            value={this.state.relatedDocumentsDropdown}
+            selection
+            onChange={(event, { name, value }) => {
+              this.setState({ [name]: value })
+            }}
+            name='relatedDocumentsDropdown'
+            placeholder={formatMessage({ id: 'related.documents.selectType', defaultMessage: 'Select type' })}
+          />
+          <Button
+            style={{ color: 'white', backgroundColor: '#2599d5', marginRight: '1.6vw' }}
+            onClick={() => this.setState({ isOpenDocumentsPopup: true })}
+            data-test='related_documents_add_document_btn'>
+            <FormattedMessage id='related.documents.addDocument' defaultMessage='Add Document'>
+              {text => text}
+            </FormattedMessage>
+          </Button>
+        </CustomDivAddDocument>
+        <ProdexGrid
+          tableName='related_orders_documents'
+          columns={this.state.columnsRelatedOrdersDocuments}
+          rows={rowsRelatedOrdersDocuments}
+          hideCheckboxes
+          rowActions={[
+            {
+              text: formatMessage({
+                id: 'global.replaceExisting',
+                defaultMessage: 'Replace Existing'
+              }),
+              callback: row => this.replaceExiting(row)
+            },
+            {
+              text: formatMessage({
+                id: 'global.delete',
+                defaultMessage: 'Delete'
+              }),
+              callback: row => this.handleDelete(row)
+            }
+          ]}
+        />
+        <ButtonsWrapper>
           <Grid.Column textAlign='right'>
-            <Button color='blue'
-                    onClick={() => this.downloadAttachment(attachment.id, order.id)}>
-              <Icon name='download'/>
-              <FormattedMessage id='order.downloadAsPdf' defaultMessage='Download as PDF'>
-                {text => text}
-              </FormattedMessage>
-            </Button>
-            <Button onClick={() => this.closePopup()}>
+            <Button basic onClick={() => this.closePopup()}>
               <FormattedMessage id='global.close' defaultMessage='Close'>
                 {text => text}
               </FormattedMessage>
             </Button>
           </Grid.Column>
-        </Grid>
+        </ButtonsWrapper>
       </>
     )
   }
@@ -537,14 +693,14 @@ class Orders extends Component {
         ordersList.push({
           documentNumber: (
             <Button as='a' onClick={() => this.downloadAttachment(order.documentNumber, order.id)}>
-              <Icon name='download'/>
+              <Icon name='download' />
               {order.documentNumber}
             </Button>
           ),
           type: order.type,
-          issuedAt: getSafe(() => <FormattedDate value={order.issuedAt.split('T')[0]}/>, 'N/A'),
+          issuedAt: getSafe(() => <FormattedDate value={order.issuedAt.split('T')[0]} />, 'N/A'),
           issuerCompanyName: order.issuerCompanyName,
-          cfPriceTotal: <FormattedNumber style='currency' currency={currency} value={order.cfPriceTotal}/>
+          cfPriceTotal: <FormattedNumber style='currency' currency={currency} value={order.cfPriceTotal} />
         })
       }
 
@@ -562,10 +718,109 @@ class Orders extends Component {
         <ButtonsWrapper>
           <Grid.Column textAlign='right'>
             <Button basic onClick={() => this.closePopup()}>
-              <FormattedMessage id='global.close' defaultMessage='Close'>{text => text}</FormattedMessage>
+              <FormattedMessage id='global.close' defaultMessage='Close'>
+                {text => text}
+              </FormattedMessage>
             </Button>
           </Grid.Column>
         </ButtonsWrapper>
+      </>
+    )
+  }
+  //TODO
+  getDocumentsContent = () => {
+    const {
+      listDocumentTypes,
+      intl: { formatMessage }
+    } = this.props
+    console.log('listDocumentTypes====================================')
+    console.log(listDocumentTypes)
+    console.log('====================================')
+    return (
+      <>
+        <CustomDivLabelDocumentType>
+          <FormattedMessage id='related.documents.documentType' defaultMessage={'Document Type'} />
+        </CustomDivLabelDocumentType>
+        <RelatedDocumentsDropdown
+          name='documentType'
+          closeOnChange
+          options={listDocumentTypes}
+          value={this.state.documentType}
+          selection
+          onChange={(event, { name, value }) => {
+            this.setState({ [name]: value })
+          }}
+          placeholder={formatMessage({ id: 'related.documents.selectType', defaultMessage: 'Select type' })}
+        />
+        <CustomDivUploadLot>
+          <UploadLot
+            {...this.props}
+            edit={getSafe(() => sidebarValues.id, 0)}
+            name='documents.attachments'
+            type={this.state.documentType}
+            attachments={this.state.documentFiles}
+            onChange={files => {
+              this.setState({ documentFiles: files })
+            }}
+            fileMaxSize={20}
+            data-test='related_document_attachments_drop'
+            emptyContent={
+              <>
+                <UploadCloud size={48} />
+                <br />
+                {formatMessage({ id: 'addInventory.dragDrop' })}
+                <br />
+                <FormattedMessage
+                  id='addInventory.dragDropOr'
+                  defaultMessage={'or {link} to select from computer'}
+                  values={{
+                    link: (
+                      <a>
+                        <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                      </a>
+                    )
+                  }}
+                />
+              </>
+            }
+            uploadedContent={
+              <label>
+                <UploadCloud size={48} />
+                <br />
+                <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+                <br />
+                <FormattedMessage
+                  id='addInventory.dragDropOr'
+                  defaultMessage={'or {link} to select from computer'}
+                  values={{
+                    link: (
+                      <a>
+                        <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                      </a>
+                    )
+                  }}
+                />
+              </label>
+            }
+          />
+        </CustomDivUploadLot>
+        <ButtonsWrapperDocuments>
+          <Grid.Column textAlign='right'>
+            <Button basic onClick={() => this.setState({ isOpenDocumentsPopup: false })}>
+              <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                {text => text}
+              </FormattedMessage>
+            </Button>
+            <Button
+              primary
+              onClick={() => this.saveRelatedDocuments()}
+              style={{ color: 'white', backgroundColor: '#2599d5' }}>
+              <FormattedMessage id='global.save' defaultMessage='Save'>
+                {text => text}
+              </FormattedMessage>
+            </Button>
+          </Grid.Column>
+        </ButtonsWrapperDocuments>
       </>
     )
   }
@@ -582,24 +837,44 @@ class Orders extends Component {
       intl: { formatMessage }
     } = this.props
 
-    const { columns } = this.state
+    const { columns, isOpenDocumentsPopup } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
 
     const { attachmentPopup, openModal } = this.state
 
     return (
       <div id='page' className='flex stretched scrolling'>
-        {openModal && attachmentPopup !== null && (
+        {isOpenDocumentsPopup && (
           <Modal
-            size='large'
+            size='small'
+            closeIcon={false}
+            onClose={() => this.setState({ isOpenDocumentsPopup: false })}
+            centered={true}
+            open={this.state.isOpenDocumentsPopup}>
+            <Modal.Header>
+              <FormattedMessage id='order.related.documents.add' defaultMessage='ADD DOCUMENTS'>
+                {text => text}
+              </FormattedMessage>
+            </Modal.Header>
+            <Modal.Content scrolling>{this.getDocumentsContent()}</Modal.Content>
+          </Modal>
+        )}
+        {openModal && (
+          <Modal
+            size='small'
             closeIcon={false}
             onClose={() => this.setState({ openModal: false })}
             centered={true}
             open={this.state.openModal}>
+            <Modal.Header>
+              <FormattedMessage id='order.related.documents.table' defaultMessage='RELATED DOCUMENTS'>
+                {text => text}
+              </FormattedMessage>
+            </Modal.Header>
             <Modal.Content scrolling>{this.getAttachmentContent()}</Modal.Content>
           </Modal>
         )}
-        {this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (
+        {false && this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (
           <Modal
             size='small'
             closeIcon={false}
@@ -779,12 +1054,13 @@ class Orders extends Component {
         </Container>
         <Container fluid style={{ padding: '20px 32px 10px 32px' }} className='flex stretched'>
           {false && (
-          <OrderFilter
-            ordersType={ordersType.toLowerCase()}
-            sortPath={this.state.sorting.sortPath}
-            sortDirection={this.state.sorting.sortDirection}
-            onApply={payload => this.handleFilterApply(payload)}
-          />)}
+            <OrderFilter
+              ordersType={ordersType.toLowerCase()}
+              sortPath={this.state.sorting.sortPath}
+              sortDirection={this.state.sorting.sortDirection}
+              onApply={payload => this.handleFilterApply(payload)}
+            />
+          )}
           {isFetching ? (
             <Spinner />
           ) : (

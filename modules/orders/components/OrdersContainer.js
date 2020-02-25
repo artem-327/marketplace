@@ -47,7 +47,8 @@ function mapStateToProps(state, { router, datagrid }) {
       orderTotal: <FormattedNumber style='currency' currency={currency} value={r.cfPriceTotal} />,
       accountingDocumentsCount: r.accountingDocumentsCount
     })),
-    activeStatus: orders.statusFilter
+    activeStatus: orders.statusFilter,
+    listDocumentTypes: orders.listDocumentTypes
   }
 }
 
