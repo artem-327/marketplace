@@ -172,11 +172,11 @@ export const ssnValidation = () =>
 
 export const nmfcValidation = (required = true) =>
   Yup.string(errorMessages.invalidString)
-    .min(6, errorMessages.minLength(6))
-    .max(8, errorMessages.maxLength(8))
+    // .min(6, errorMessages.minLength(6))
+    // .max(8, errorMessages.maxLength(8))
     .test(
       'code',
-      errorMessages.invalidValueFormat('123456'),
+      errorMessages.invalidValueFormat('123456 or 12345-67'),
       value => /^[0-9]{6}$/.test(value) || /^[0-9]{5}\-[0-9]{2}$/.test(value)
     )
     .concat(required ? Yup.string().required() : Yup.string().notRequired())
