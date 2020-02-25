@@ -447,12 +447,14 @@ class Filter extends Component {
   inputWrapper = (name, inputProps, label, labelText) => {
     return (
       <InputWrapper>
-        <Input
-          inputProps={inputProps}
-          label={label}
-          name={name}
-        />
-        <Label>{labelText}</Label>
+        {label && (<div className='field-label'>{label}</div>)}
+        <div>
+          <Input
+            inputProps={inputProps}
+            name={name}
+          />
+          <Label>{labelText}</Label>
+        </div>
       </InputWrapper>
     )
   }
@@ -460,44 +462,46 @@ class Filter extends Component {
   quantityWrapper = (name, { values, setFieldValue, setFieldTouched, label }) => {
     return (
       <QuantityWrapper>
-        <Input
-          label={label}
-          name={name}
-          inputProps={{
-            placeholder: '0',
-            type: 'number'
-          }}
-        />
-        <div className='sideButtons'>
-          <Button
-            type='button'
-            className='buttonPlus'
-            onClick={() => {
-              if (isNaN(values[name]) || values[name] === '') {
-                setFieldValue(name, 1)
-                setFieldTouched(name, true, true)
-              }
-              else {
-                setFieldValue(name, parseInt(values[name]) + 1)
-                setFieldTouched(name, true, true)
-              }
+        {label && (<div className='field-label'>{label}</div>)}
+        <div>
+          <Input
+            name={name}
+            inputProps={{
+              placeholder: '0',
+              type: 'number'
             }}
-          >+</Button>
-          <Button
-            type='button'
-            className='buttonMinus'
-            onClick={() => {
-              if (isNaN(values[name]) || values[name] === '' ) {
-                setFieldValue(name, 1)
-                setFieldTouched(name, true, true)
-              }
-              else {
-                const value = parseInt(values[name])
-                if (value > 1) setFieldValue(name, value - 1)
-                setFieldTouched(name, true, true)
-              }
-            }}
-          >-</Button>
+          />
+          <div className='sideButtons'>
+            <Button
+              type='button'
+              className='buttonPlus'
+              onClick={() => {
+                if (isNaN(values[name]) || values[name] === '') {
+                  setFieldValue(name, 1)
+                  setFieldTouched(name, true, true)
+                }
+                else {
+                  setFieldValue(name, parseInt(values[name]) + 1)
+                  setFieldTouched(name, true, true)
+                }
+              }}
+            >+</Button>
+            <Button
+              type='button'
+              className='buttonMinus'
+              onClick={() => {
+                if (isNaN(values[name]) || values[name] === '' ) {
+                  setFieldValue(name, 1)
+                  setFieldTouched(name, true, true)
+                }
+                else {
+                  const value = parseInt(values[name])
+                  if (value > 1) setFieldValue(name, value - 1)
+                  setFieldTouched(name, true, true)
+                }
+              }}
+            >-</Button>
+          </div>
         </div>
       </QuantityWrapper>
     )

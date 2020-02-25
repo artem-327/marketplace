@@ -883,7 +883,7 @@
   "filter.chemicalSearch": "Chemical Search",
   "filter.location": "Location",
   "filter.automaticallyApply": "Automatically Apply",
-  "filter.noSavedFilters": "No saved filters available",
+  "filter.noSavedFilters": "You don’t have saved filters",
   "filter.saved.name": "Filter Name: ",
   "filter.notifications": "Notifications",
   "filter.notifications.enable": "Enable Notifications:",

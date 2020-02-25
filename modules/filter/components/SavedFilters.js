@@ -36,6 +36,14 @@ const StyledGrid = styled(Grid)`
   }
 `
 
+export const NoSavedFilters = styled.div`
+  margin: 2.307692308em 0;
+  text-align: center;
+  color: #848893;
+  height: 100%;
+`
+
+
 class SavedFilters extends Component {
   state = {
     activeIndex: -1,
@@ -151,7 +159,8 @@ class SavedFilters extends Component {
 
   render() {
     const {
-      intl: { formatMessage }
+      intl: { formatMessage },
+      savedFilters
     } = this.props
 
     if (this.props.savedFiltersLoading) {
@@ -167,7 +176,7 @@ class SavedFilters extends Component {
     return (
 
         <FilterAccordion>
-          {this.props.savedFilters.map((filter, i) => {
+          {savedFilters.length ? savedFilters.map((filter, i) => {
             let {
               notificationEnabled,
               notifyMail,
@@ -255,9 +264,19 @@ class SavedFilters extends Component {
                 </AccordionContent>
               </SavedFilterItem>
             )
-          })}
+          }) : (
+            <SavedFilterItem>
+              <AccordionContent>
+                <NoSavedFilters>
+                  <FormattedMessage
+                    id='filter.noSavedFilters'
+                    defaultMessage='You don’t have saved filters'
+                  />
+                </NoSavedFilters>
+              </AccordionContent>
+            </SavedFilterItem>
+          )}
         </FilterAccordion>
-
     )
   }
 }
