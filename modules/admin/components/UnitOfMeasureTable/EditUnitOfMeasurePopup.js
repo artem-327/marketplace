@@ -7,9 +7,6 @@ import { closeEditPopup, putEditedDataRequest } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
-import { withToastManager } from 'react-toast-notifications'
-
-import { generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 import { errorMessages } from '~/constants/yupValidation'
 
@@ -36,8 +33,7 @@ class EditUnitOfMeasurePopup extends React.Component {
       config,
       popupValues,
       putEditedDataRequest,
-      measureOptions,
-      toastManager
+      measureOptions
     } = this.props
 
     const { id } = popupValues
@@ -67,20 +63,6 @@ class EditUnitOfMeasurePopup extends React.Component {
                 [config.edit[3].name]: Number(values.val3)
               }
               await putEditedDataRequest(config, id, data)
-
-              toastManager.add(
-                generateToastMarkup(
-                  <FormattedMessage id='notifications.unitOfMeasurementUpdated.header' />,
-                  <FormattedMessage
-                    id='notifications.unitOfMeasurementUpdated.content'
-                    values={{ name: values.val0 }}
-                  />
-                ),
-                {
-                  appearance: 'success'
-                }
-              )
-
               setSubmitting(false)
             }}>
             <FormGroup widths='equal' data-test='admin_edit_unit_measure_name_inp'>
@@ -141,4 +123,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(EditUnitOfMeasurePopup))
+export default connect(mapStateToProps, mapDispatchToProps)(EditUnitOfMeasurePopup)

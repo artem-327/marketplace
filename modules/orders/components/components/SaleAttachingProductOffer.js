@@ -15,10 +15,9 @@ import {
   Menu,
   Label
 } from 'semantic-ui-react'
-import { FormattedMessage, injectIntl, FormattedDate } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { Form, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import styled from 'styled-components'
-import * as val from 'yup'
 import { withToastManager } from 'react-toast-notifications'
 import { FieldArray } from 'formik'
 import moment from 'moment'
@@ -30,7 +29,6 @@ import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import confirm from '~/src/components/Confirmable/confirm'
 import { loadFile, addAttachment } from '~/modules/inventory/actions'
 import { getLocaleDateFormat } from '~/components/date-format'
-import { ORDER_CONFIRM_FETCH_REJECTED } from '../../action-types'
 import { UploadCloud } from 'react-feather'
 
 const UploadCloudIcon = styled(UploadCloud)`
@@ -581,22 +579,6 @@ class SaleAttachingProductOffer extends Component {
                           await this.props
                             .patchAssignProductOffers(orderId, item, request[index])
                             .then(r => {
-                              toastManager.add(
-                                generateToastMarkup(
-                                  <FormattedMessage
-                                    id='order.assignLots.success.header'
-                                    defaultMessage='Lots Assigned'
-                                  />,
-                                  <FormattedMessage
-                                    id='order.assignLots.success.content'
-                                    defaultMessage='Lot assignments for Order {id} was saved.'
-                                    values={{ id: orderId }}
-                                  />
-                                ),
-                                {
-                                  appearance: 'success'
-                                }
-                              )
                               actions.setSubmitting(false)
                               this.props.closePopup()
                             })
@@ -608,22 +590,6 @@ class SaleAttachingProductOffer extends Component {
                         await this.props
                           .patchAssignProductOffers(orderId, orderItemIds[0], request[0])
                           .then(r => {
-                            toastManager.add(
-                              generateToastMarkup(
-                                <FormattedMessage
-                                  id='order.assignLots.success.header'
-                                  defaultMessage='Lots Assigned'
-                                />,
-                                <FormattedMessage
-                                  id='order.assignLots.success.content'
-                                  defaultMessage='Lot assignments for Order {id} was saved.'
-                                  values={{ id: orderId }}
-                                />
-                              ),
-                              {
-                                appearance: 'success'
-                              }
-                            )
                             actions.setSubmitting(false)
                             this.props.closePopup()
                           })
@@ -643,19 +609,6 @@ class SaleAttachingProductOffer extends Component {
                       await this.props
                         .patchAssignProductOffers(orderId, item, request[index])
                         .then(r => {
-                          toastManager.add(
-                            generateToastMarkup(
-                              <FormattedMessage id='order.assignLots.success.header' defaultMessage='Lots Assigned' />,
-                              <FormattedMessage
-                                id='order.assignLots.success.content'
-                                defaultMessage='Lot assignments for Order {id} was saved.'
-                                values={{ id: orderId }}
-                              />
-                            ),
-                            {
-                              appearance: 'success'
-                            }
-                          )
                           actions.setSubmitting(false)
                           this.props.closePopup()
                         })
@@ -667,19 +620,6 @@ class SaleAttachingProductOffer extends Component {
                     this.props
                       .patchAssignProductOffers(orderId, orderItemIds[0], request[0])
                       .then(r => {
-                        toastManager.add(
-                          generateToastMarkup(
-                            <FormattedMessage id='order.assignLots.success.header' defaultMessage='Lots Assigned' />,
-                            <FormattedMessage
-                              id='order.assignLots.success.content'
-                              defaultMessage='Lot assignments for Order {id} was saved.'
-                              values={{ id: orderId }}
-                            />
-                          ),
-                          {
-                            appearance: 'success'
-                          }
-                        )
                         actions.setSubmitting(false)
                         this.props.closePopup()
                       })

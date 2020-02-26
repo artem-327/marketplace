@@ -4,14 +4,13 @@ import { Modal, ModalContent, Accordion, Button, Icon, Grid, Dimmer, Loader } fr
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import { withToastManager } from 'react-toast-notifications'
 import moment from 'moment'
 import * as val from 'yup'
 
 import * as Actions from '../../actions'
 import { errorMessages } from '~/constants/yupValidation'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
@@ -61,7 +60,7 @@ class PurchaseReviewCreditRequest extends React.Component {
   }
 
   submitHandler = async (values, actions) => {
-    const { closePopup, orderId, toastManager, creditRequest } = this.props
+    const { closePopup, orderId, creditRequest } = this.props
     const { counterValue, messageBuyer, attachments } = values
 
     try {
@@ -71,15 +70,6 @@ class PurchaseReviewCreditRequest extends React.Component {
       }
 
       await creditRequest(orderId, request, attachments)
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='order.success' defaultMessage='Success' />,
-          <FormattedMessage id='order.successfullySent' defaultMessage='Successfully sent' />
-        ),
-        {
-          appearance: 'success'
-        }
-      )
       closePopup()
     } catch (e) {
       console.error(e)
@@ -96,26 +86,10 @@ class PurchaseReviewCreditRequest extends React.Component {
 
   rejectRequestCredit = async e => {
     e.preventDefault()
-    const { closePopup, orderId, toastManager, creditCounterReject } = this.props
+    const { closePopup, orderId, creditCounterReject } = this.props
 
     try {
       await creditCounterReject(orderId)
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage
-            id='notifications.order.actions.counterOfferRejected.header'
-            defaultMessage='Counter Offer Rejected'
-          />,
-          <FormattedMessage
-            id='notifications.order.actions.counterOfferRejected.content'
-            defaultMessage={`Counter Offer for Order ${orderId} was rejected.`}
-            values={{ orderId: orderId }}
-          />
-        ),
-        {
-          appearance: 'success'
-        }
-      )
       closePopup()
     } catch (e) {
       console.error(e)
@@ -124,26 +98,10 @@ class PurchaseReviewCreditRequest extends React.Component {
 
   acceptRequestCredit = async e => {
     e.preventDefault()
-    const { closePopup, orderId, toastManager, creditCounterAccept } = this.props
+    const { closePopup, orderId, creditCounterAccept } = this.props
 
     try {
       await creditCounterAccept(orderId)
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage
-            id='notifications.order.actions.counterOfferAccepted.header'
-            defaultMessage='Counter Offer Accepted'
-          />,
-          <FormattedMessage
-            id='notifications.order.actions.counterOfferAccepted.content'
-            defaultMessage={`Counter Offer for Order ${orderId} was accepted.`}
-            values={{ orderId: orderId }}
-          />
-        ),
-        {
-          appearance: 'success'
-        }
-      )
       closePopup()
     } catch (e) {
       console.error(e)
@@ -479,4 +437,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(PurchaseReviewCreditRequest)))
+export default connect(mapStateToProps, { ...Actions })(injectIntl(PurchaseReviewCreditRequest))

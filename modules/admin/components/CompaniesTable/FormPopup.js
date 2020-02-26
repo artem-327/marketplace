@@ -27,8 +27,6 @@ import { cloneDeep } from 'lodash'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 
-import { withToastManager } from 'react-toast-notifications'
-
 import { validationSchema } from '~/modules/company-form/constants'
 import { provinceObjectRequired, errorMessages, minOrZeroLength } from '~/constants/yupValidation'
 
@@ -36,7 +34,7 @@ import { CompanyForm } from '~/modules/company-form/'
 import { AddressForm } from '~/modules/address-form/'
 import { addressValidationSchema, phoneValidation, websiteValidation } from '~/constants/yupValidation'
 
-import { getSafe, generateToastMarkup, deepSearch } from '~/utils/functions'
+import { getSafe, deepSearch } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
 import { PhoneNumber } from '~/modules/phoneNumber'
 
@@ -292,7 +290,6 @@ class AddNewPopupCasProducts extends React.Component {
       intl,
       // AddressSuggestPrimaryBranchInput,
       // AddressSuggestMailingBranchInput,
-      toastManager,
       postCompanyLogo,
       deleteCompanyLogo
     } = this.props
@@ -372,17 +369,6 @@ class AddNewPopupCasProducts extends React.Component {
                 Datagrid.loadData()
               }
             }
-            let status = popupValues ? 'companyUpdated' : 'companyCreated'
-
-            toastManager.add(
-              generateToastMarkup(
-                <FormattedMessage id={`notifications.${status}.header`} />,
-                <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
-              ),
-              {
-                appearance: 'success'
-              }
-            )
           } catch (err) {
             console.error(err)
           } finally {
@@ -660,4 +646,4 @@ const mapStateToProps = ({ admin, zip }) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(AddNewPopupCasProducts)))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddNewPopupCasProducts))

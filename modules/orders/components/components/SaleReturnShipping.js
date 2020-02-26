@@ -18,11 +18,10 @@ import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import moment from 'moment'
 
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { errorMessages } from '~/constants/yupValidation'
-import { withToastManager } from 'react-toast-notifications'
 import { DateInput } from '~/components/custom-formik'
 import { currency } from '~/constants/index'
 import ShippingQuote from '~/modules/purchase-order/components/ShippingQuote'
@@ -57,7 +56,7 @@ class SaleReturnShipping extends React.Component {
     }
   }
   submitHandler = async (values, actions) => {
-    const { closePopup, order, orderId, toastManager, shippingQuotes } = this.props
+    const { closePopup, order, orderId, shippingQuotes } = this.props
 
     let formValues = {
       quoteId: (order.cfWeightExceeded || !shippingQuotes.length
@@ -72,15 +71,6 @@ class SaleReturnShipping extends React.Component {
     try {
       await this.props.returnShipmentOrder(orderId, formValues)
       this.props.getSaleOrder(orderId)
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='order.success' defaultMessage='Success' />,
-          <FormattedMessage id='order.rejected' defaultMessage='Order was successfully rejected' />
-        ),
-        {
-          appearance: 'success'
-        }
-      )
       closePopup()
     } catch (e) {
       console.error(e.response)
@@ -331,4 +321,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(SaleReturnShipping)))
+export default connect(mapStateToProps, { ...Actions })(injectIntl(SaleReturnShipping))

@@ -23,7 +23,6 @@ import {
 import { Header } from 'semantic-ui-react'
 
 import { injectIntl } from 'react-intl'
-import { withToastManager } from 'react-toast-notifications'
 
 const mapDispatchToProps = {
   loadFile,
@@ -87,4 +86,4 @@ const mapStateToProps = ({ admin }, props) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(AddEditEchoProduct)))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddEditEchoProduct))

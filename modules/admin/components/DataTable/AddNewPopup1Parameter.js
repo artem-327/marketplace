@@ -7,9 +7,6 @@ import { closeAddPopup, postNewRequest } from '../../actions'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
-import { withToastManager } from 'react-toast-notifications'
-
-import { generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 
 const initialFormValues = {
@@ -25,7 +22,7 @@ const formValidation = Yup.object().shape({
 
 class AddNewPopup1Parameter extends React.Component {
   render() {
-    const { closeAddPopup, currentTab, config, postNewRequest, toastManager } = this.props
+    const { closeAddPopup, currentTab, config, postNewRequest } = this.props
 
     return (
       <Modal closeIcon onClose={() => closeAddPopup()} open centered={false}>
@@ -44,16 +41,6 @@ class AddNewPopup1Parameter extends React.Component {
 
               try {
                 await postNewRequest(config, data)
-
-                let formattedMsgId = `notifications.${config.formattedMessageName}Created`
-
-                toastManager.add(
-                  generateToastMarkup(
-                    <FormattedMessage id={`${formattedMsgId}.header`} />,
-                    <FormattedMessage id={`${formattedMsgId}.content`} values={{ name: values.val0 }} />
-                  ),
-                  { appearance: 'success' }
-                )
               } catch (e) {
                 console.error(e)
               } finally {
@@ -96,4 +83,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(AddNewPopup1Parameter))
+export default connect(mapStateToProps, mapDispatchToProps)(AddNewPopup1Parameter)

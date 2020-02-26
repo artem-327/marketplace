@@ -308,14 +308,6 @@ class Broadcast extends Component {
     this.setState({ selectedTemplate: { name, id: data.value } })
     try {
       await getTemplate(data.value)
-
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='notifications.templateLoaded.header' />,
-          <FormattedMessage id='notifications.templateLoaded.content' values={{ name }} />
-        ),
-        { appearance: 'success' }
-      )
     } catch (e) {
       console.error(e)
     }
@@ -355,7 +347,6 @@ class Broadcast extends Component {
       loading,
       intl: { formatMessage },
       treeData,
-      toastManager,
       additionalGridProps,
       asModal,
       hideFobPrice
@@ -500,18 +491,6 @@ class Broadcast extends Component {
                   }
 
                   let status = values.name === name ? 'Updated' : 'Saved'
-
-                  toastManager.add(
-                    generateToastMarkup(
-                      <FormattedMessage id={`notifications.template${status}.header`} />,
-                      <FormattedMessage
-                        id={`notifications.template${status}.content`}
-                        values={{ name: getSafe(() => values.name, name) }}
-                      />
-                    ),
-                    { appearance: 'success' }
-                  )
-
                   setSubmitting(false)
                 }}
                 render={props => {
@@ -773,7 +752,7 @@ class Broadcast extends Component {
   }
 
   saveBroadcastRules = async () => {
-    const { saveRules, id, toastManager, initGlobalBroadcast, asSidebar } = this.props
+    const { saveRules, id, initGlobalBroadcast, asSidebar } = this.props
 
     // Reinitialize tree via getFilteredTree func so every node has correct value
     let filteredTree = this.getFilteredTree()
@@ -790,10 +769,6 @@ class Broadcast extends Component {
     } catch (err) {
       console.error(err)
     }
-
-    toastManager.add(generateToastMarkup('Saved successfully!', 'New broadcast rules have been saved.'), {
-      appearance: 'success'
-    })
   }
 
   render() {
