@@ -636,46 +636,6 @@ class Detail extends Component {
                           <GridDataColumn width={valColumn}>{order.acceptanceDate}</GridDataColumn>
                         </GridData>
                       </Grid.Column>
-                      {order.sellerRejectionDate ||
-                        order.buyerRejectionDate ||
-                        (ordersType === 'Purchase' && (
-                          <Grid.Column width={6}>
-                            <GridData>
-                              {order.sellerRejectionDate && (
-                                <>
-                                  <GridDataColumn width={keyColumn} className='key'>
-                                    <FormattedMessage
-                                      id='order.sellerRejectionDate'
-                                      defaultMessage='Seller Rejection Date'
-                                    />
-                                  </GridDataColumn>
-                                  <GridDataColumn width={valColumn}>{order.sellerRejectionDate}</GridDataColumn>
-                                </>
-                              )}
-                              {order.buyerRejectionDate && (
-                                <>
-                                  <GridDataColumn width={keyColumn} className='key'>
-                                    <FormattedMessage
-                                      id='order.buyerRejectionDate'
-                                      defaultMessage='Buyer Rejection Date'
-                                    />
-                                  </GridDataColumn>
-                                  <GridDataColumn width={valColumn}>{order.buyerRejectionDate}</GridDataColumn>
-                                </>
-                              )}
-                              {ordersType === 'Purchase' ? (
-                                <>
-                                  <GridDataColumn width={keyColumn} className='key'>
-                                    <FormattedMessage id='order.createdBy' defaultMessage='Created By' />
-                                  </GridDataColumn>
-                                  <GridDataColumn width={valColumn}>{order.createdBy}</GridDataColumn>
-                                </>
-                              ) : (
-                                ''
-                              )}
-                            </GridData>
-                          </Grid.Column>
-                        ))}
                       <Grid.Column width={4} floated='right'>
                         <GridData>
                           <GridDataColumn style={{ paddingTop: '0 !important', paddingBottom: '0 !important' }}>
