@@ -15,7 +15,7 @@ import {
   Popup,
   GridRow
 } from 'semantic-ui-react'
-import { DownloadCloud } from 'react-feather'
+import { ChevronDown, DownloadCloud } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
@@ -96,10 +96,11 @@ const OrderList = styled(List)`
   &.horizontal.divided:not(.celled) {
     display: flex !important;
     flex-flow: row;
-    justify-content: space-between;
+    justify-content: flex-end;
     
     > .item:nth-child(n) { // nth-child to have stronger path
       flex-grow: 1;
+      max-width: 150px;
       border-left: 1px solid rgba(34, 36, 38, 0.15) !important;
       padding: 13px 15px !important;
       
@@ -180,14 +181,34 @@ const OrderAccordion = styled(Accordion)`
 `
 
 const AccordionTitle = styled(Accordion.Title)`
+  padding-left: 9px !important;
   text-transform: uppercase;
-  font-size: 1.14285714rem !important;
-  line-height: 1.5;
+  font-size: 1rem !important;
+  color: #20273a !important;
+  line-height: 1.9285714;
 
-  i.chevron {
-    margin-right: 1rem;
-    vertical-align: top;
+  svg {
+    transform: rotate(-90deg);
+    color: #2599d5 !important;
   }
+  
+  &.active {
+    color: #20273a !important;
+    
+    svg {
+      transform: rotate(0deg);
+      color: #2599d5 !important;
+    }
+  }
+`
+
+const Chevron = styled(ChevronDown)`
+  width: 20px;
+  height: 20px;
+  margin: 3px 6px 4px;
+  vertical-align: top;
+  font-size: 20px;
+  color: #2599d5 !important;
 `
 
 const GridData = styled(Grid)`
@@ -204,12 +225,6 @@ const GridData = styled(Grid)`
     
       + * {
         width: calc(100% - 211px) !important;
-        
-        &:before {
-          content: ":";
-          display: inline-block;
-          padding-right: 5px;
-        }
       }
     }
   }
@@ -233,6 +248,7 @@ const GridDataColumn = styled(Grid.Column)`
 
 const StyledTable = styled(Table)`
   width: 100% !important;
+  margin: -10px 0 !important;
   padding: 0 !important;
   
   thead,
@@ -592,11 +608,7 @@ class Detail extends Component {
                   index={0}
                   onClick={this.handleClick}
                   data-test='orders_detail_order_info'>
-                  <Icon
-                    name={'chevron ' + (activeIndexes[0] ? 'down' : 'right')}
-                    size='large'
-                    color={activeIndexes[0] ? 'blue' : 'black'}
-                  />
+                  <Chevron />
                   <FormattedMessage id='order.orderInfo' defaultMessage='Order Info' />
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[0]}>
@@ -624,46 +636,6 @@ class Detail extends Component {
                           <GridDataColumn width={valColumn}>{order.acceptanceDate}</GridDataColumn>
                         </GridData>
                       </Grid.Column>
-                      {order.sellerRejectionDate ||
-                        order.buyerRejectionDate ||
-                        (ordersType === 'Purchase' && (
-                          <Grid.Column width={6}>
-                            <GridData>
-                              {order.sellerRejectionDate && (
-                                <>
-                                  <GridDataColumn width={keyColumn} className='key'>
-                                    <FormattedMessage
-                                      id='order.sellerRejectionDate'
-                                      defaultMessage='Seller Rejection Date'
-                                    />
-                                  </GridDataColumn>
-                                  <GridDataColumn width={valColumn}>{order.sellerRejectionDate}</GridDataColumn>
-                                </>
-                              )}
-                              {order.buyerRejectionDate && (
-                                <>
-                                  <GridDataColumn width={keyColumn} className='key'>
-                                    <FormattedMessage
-                                      id='order.buyerRejectionDate'
-                                      defaultMessage='Buyer Rejection Date'
-                                    />
-                                  </GridDataColumn>
-                                  <GridDataColumn width={valColumn}>{order.buyerRejectionDate}</GridDataColumn>
-                                </>
-                              )}
-                              {ordersType === 'Purchase' ? (
-                                <>
-                                  <GridDataColumn width={keyColumn} className='key'>
-                                    <FormattedMessage id='order.createdBy' defaultMessage='Created By' />
-                                  </GridDataColumn>
-                                  <GridDataColumn width={valColumn}>{order.createdBy}</GridDataColumn>
-                                </>
-                              ) : (
-                                ''
-                              )}
-                            </GridData>
-                          </Grid.Column>
-                        ))}
                       <Grid.Column width={4} floated='right'>
                         <GridData>
                           <GridDataColumn style={{ paddingTop: '0 !important', paddingBottom: '0 !important' }}>
@@ -708,13 +680,7 @@ class Detail extends Component {
                                         <FormattedMessage id='order.subtotal' defaultMessage='Subtotal' />
                                       </Table.HeaderCell>
                                       <Table.HeaderCell textAlign='right'>
-                                        {
-                                          <FormattedNumber
-                                            style='currency'
-                                            currency={currency}
-                                            value={order.subtotal}
-                                          />
-                                        }
+                                        {order.subtotal}
                                       </Table.HeaderCell>
                                     </TableRowData>
                                   </Table.Header>
@@ -757,11 +723,7 @@ class Detail extends Component {
                   index={1}
                   onClick={this.handleClick}
                   data-test='orders_detail_product_info'>
-                  <Icon
-                    name={'chevron ' + (activeIndexes[1] ? 'down' : 'right')}
-                    size='large'
-                    color={activeIndexes[1] ? 'blue' : 'black'}
-                  />
+                  <Chevron />
                   <FormattedMessage id='order.productInfo' defaultMessage='Product Info' />
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[1]}>
@@ -814,7 +776,7 @@ class Detail extends Component {
                               <Table.Cell textAlign='right'>{order.quantityOrdered[index]}</Table.Cell>
                               <Table.Cell textAlign='right'>{order.unitPrice[index]}</Table.Cell>
                               <Table.Cell textAlign='right'>
-                                {<FormattedNumber style='currency' currency={currency} value={order.itemTotal[index]} />}
+                                {order.itemTotal[index]}
                               </Table.Cell>
                               {ordersType === 'Sales' && (
                                 <>
@@ -844,11 +806,7 @@ class Detail extends Component {
                   index={2}
                   onClick={this.handleClick}
                   data-test='orders_detail_pickup_info'>
-                  <Icon
-                    name={'chevron ' + (activeIndexes[2] ? 'down' : 'right')}
-                    size='large'
-                    color={activeIndexes[2] ? 'blue' : 'black'}
-                  />
+                  <Chevron />
                   <FormattedMessage id='order.pickupInfo' defaultMessage='Pick Up Info' />
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[2]}>
@@ -889,11 +847,7 @@ class Detail extends Component {
                       index={3}
                       onClick={this.handleClick}
                       data-test='orders_detail_return_shipping'>
-                      <Icon
-                        name={'chevron ' + (activeIndexes[3] ? 'down' : 'right')}
-                        size='large'
-                        color={activeIndexes[3] ? 'blue' : 'black'}
-                      />
+                      <Chevron />
                       <FormattedMessage id='order.returnShipping' defaultMessage='Return Shipping' />
                     </AccordionTitle>
                     <Accordion.Content active={activeIndexes[3]}>
@@ -956,11 +910,7 @@ class Detail extends Component {
                   index={4}
                   onClick={this.handleClick}
                   data-test='orders_detail_shipping'>
-                  <Icon
-                    name={'chevron ' + (activeIndexes[4] ? 'down' : 'right')}
-                    size='large'
-                    color={activeIndexes[4] ? 'blue' : 'black'}
-                  />
+                  <Chevron />
                   <FormattedMessage id='order.shipping' defaultMessage='Shipping' />
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[4]}>
@@ -1019,11 +969,7 @@ class Detail extends Component {
                   index={5}
                   onClick={this.handleClick}
                   data-test='orders_detail_payment'>
-                  <Icon
-                    name={'chevron ' + (activeIndexes[5] ? 'down' : 'right')}
-                    size='large'
-                    color={activeIndexes[5] ? 'blue' : 'black'}
-                  />
+                  <Chevron />
                   <FormattedMessage id='order.payment' defaultMessage='Payment' /> / {order.paymentType}
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[5]}>
@@ -1095,11 +1041,7 @@ class Detail extends Component {
                   index={6}
                   onClick={this.handleClick}
                   data-test='orders_detail_notes'>
-                  <Icon
-                    name={'chevron ' + (activeIndexes[6] ? 'down' : 'right')}
-                    size='large'
-                    color={activeIndexes[6] ? 'blue' : 'black'}
-                  />
+                  <Chevron />
                   <FormattedMessage id='order.detailNotes' defaultMessage='NOTES' />
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[6]}>
