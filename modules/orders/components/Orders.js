@@ -19,6 +19,8 @@ import { UploadCloud, CheckCircle, PlusCircle } from 'react-feather'
 import { handleFiltersValue } from '~/modules/settings/actions'
 import { withToastManager } from 'react-toast-notifications'
 import { Datagrid } from '../../datagrid/DatagridProvider'
+import { AttachmentManager } from '~/modules/attachments'
+import { uniqueArrayByKey } from '~/utils/functions'
 
 const ButtonsWrapper = styled(Grid)`
   margin-left: -21px !important;
@@ -446,7 +448,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 200
+        width: 180
       },
       {
         name: 'documenDescription',
@@ -455,7 +457,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 250
+        width: 257
       }
     ],
     relatedDocumentsDropdown: '',
@@ -535,27 +537,30 @@ class Orders extends Component {
       ),
       globalStatus: row.globalStatus === 'Failed' ? this.failedWrapper(row.globalStatus) : row.globalStatus,
       paymentStatus: row.paymentStatus === 'Failed' ? this.failedWrapper(row.paymentStatus) : row.paymentStatus,
-      bl: row.bl ? ( // unknown / positive / negative
-        <span onClick={() => this.openOverviewWindow(row.bl, { id: row.id })}>
-          <Icon name='file' className='positive' />
-        </span>
-      ) : (
-        <Icon name='file' className='unknown' />
-      ),
-      sds: row.sds ? (
-        <span onClick={() => this.openOverviewWindow(row.sds, { id: row.id })}>
-          <Icon name='file' className='positive' />
-        </span>
-      ) : (
-        <Icon name='file' className='unknown' />
-      ),
-      cofA: row.cofA ? (
-        <span onClick={() => this.openOverviewWindow(row.cofA, { id: row.id })}>
-          <Icon name='file' className='positive' />
-        </span>
-      ) : (
-        <Icon name='file' className='unknown' />
-      ),
+      bl:
+        row.bl && row.bl.length ? ( // unknown / positive / negative
+          <span onClick={() => this.openOverviewWindow(row.bl, { id: row.id })}>
+            <Icon name='file' className='positive' />
+          </span>
+        ) : (
+          <Icon name='file' className='unknown' />
+        ),
+      sds:
+        row.sds && row.sds.length ? (
+          <span onClick={() => this.openOverviewWindow(row.sds, { id: row.id })}>
+            <Icon name='file' className='positive' />
+          </span>
+        ) : (
+          <Icon name='file' className='unknown' />
+        ),
+      cofA:
+        row.cofA && row.cofA.length ? (
+          <span onClick={() => this.openOverviewWindow(row.cofA, { id: row.id })}>
+            <Icon name='file' className='positive' />
+          </span>
+        ) : (
+          <Icon name='file' className='unknown' />
+        ),
       related:
         row.accountingDocumentsCount > 0 ? (
           <span onClick={() => this.openModalWindow(row.id)}>
@@ -573,6 +578,9 @@ class Orders extends Component {
   }
 
   openOverviewWindow(attachment, order) {
+    console.log('attachment2====================================')
+    console.log(attachment)
+    console.log('====================================')
     this.setState({ openModal: true, attachmentPopup: { attachment, order } })
   }
 
@@ -652,7 +660,7 @@ class Orders extends Component {
   replaceExiting = row => {
     console.log('replaceExiting')
   }
-  //TODO
+  //TODO nenacte se tabulka sales orders po zavolani loadData
   handleUnlink = async row => {
     const { endpointType, unlinkAttachmentToOrder } = this.props
     console.log('endpointType====================================')
@@ -663,8 +671,9 @@ class Orders extends Component {
       orderId: row.orderId
     }
     try {
-      //await unlinkAttachmentToOrder(query)
+      await unlinkAttachmentToOrder(query)
       this.setState({ openModal: false })
+      this.props.loadData(endpointType, { status: 'All' })
     } catch (err) {
       console.error(err)
     }
@@ -677,16 +686,37 @@ class Orders extends Component {
   saveRelatedDocuments = () => {
     const { documentFiles } = this.state
   }
+  //TODO
+  attachDocumentsManager = async newDocuments => {
+    const docArray = uniqueArrayByKey(newDocuments, 'id')
+    const attach = getSafe(() => this.state.attachmentPopup.attachment, [])
+    const attachment = [...[attach], ...docArray]
+    const order = getSafe(() => this.state.attachmentPopup.order, null)
+
+    try {
+      if (docArray.length) {
+        docArray.forEach(doc => {
+          this.props.linkAttachmentToOrder({ attachmentId: doc.id, orderId: order.id })
+        })
+      }
+      this.setState({
+        attachmentPopup: { attachment, order },
+        isAddedNewDocument: true
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   //TODO
   getAttachmentContent = () => {
     const {
-      attachmentPopup: { attachment, order }
+      attachmentPopup: { attachment, order },
+      isAddedNewDocument
     } = this.state
     const {
       intl: { formatMessage },
-      listDocumentTypes,
-      isAddedNewDocument
+      listDocumentTypes
     } = this.props
 
     const attachments = attachment && attachment.length ? attachment : [attachment]
@@ -714,7 +744,7 @@ class Orders extends Component {
     //odstranit vzkricnik pred isAddNewDocument
     return (
       <>
-        {!isAddedNewDocument ? (
+        {isAddedNewDocument ? (
           <Rectangle>
             <CustomDivAddedMewDocument>
               <CustomCheckCircle />
@@ -740,16 +770,9 @@ class Orders extends Component {
               placeholder={formatMessage({ id: 'related.documents.selectType', defaultMessage: 'Select type' })}
             />
           )}
-          <CustomAddButton
-            onClick={() => this.setState({ isOpenDocumentsPopup: true })}
-            data-test='related_documents_add_document_btn'>
-            <CustomPlusCircle />
-            <CustomDivAddedMewDocument>
-              <FormattedMessage id='related.documents.addDocument' defaultMessage='Add Document'>
-                {text => text}
-              </FormattedMessage>
-            </CustomDivAddedMewDocument>
-          </CustomAddButton>
+          <div>
+            <AttachmentManager asModal returnSelectedRows={rows => this.attachDocumentsManager(rows)} />
+          </div>
         </CustomDivAddDocument>
         <ProdexGrid
           tableName='related_orders_documents'
@@ -775,7 +798,12 @@ class Orders extends Component {
         />
         <ButtonsWrapper>
           <Grid.Column textAlign='right'>
-            <Button basic onClick={() => this.closePopup()}>
+            <Button
+              basic
+              onClick={() => {
+                this.setState({ isAddedNewDocument: false })
+                this.closePopup()
+              }}>
               <FormattedMessage id='global.close' defaultMessage='Close'>
                 {text => text}
               </FormattedMessage>
@@ -906,7 +934,7 @@ class Orders extends Component {
         </CustomDivUploadLot>
         <ButtonsWrapperDocuments>
           <Grid.Column textAlign='right'>
-            <Button basic onClick={() => this.setState({ isOpenDocumentsPopup: false })}>
+            <Button basic onClick={() => this.setState({ isAddedNewDocument: false })}>
               <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                 {text => text}
               </FormattedMessage>
@@ -963,7 +991,7 @@ class Orders extends Component {
           <Modal
             size='small'
             closeIcon={false}
-            onClose={() => this.setState({ openModal: false })}
+            onClose={() => this.setState({ openModal: false, isAddedNewDocument: false })}
             centered={true}
             open={this.state.openModal}>
             <Modal.Header>

@@ -260,7 +260,7 @@ const mapStateToProps = ({ simpleAdd, settings }) => {
     Router && Router.router && Router.router.query && Router.router.query.type
       ? settings.tabsNames.find(tab => tab.type === Router.router.query.type)
       : settings.tabsNames[0]
-  const documentTab = currentTab.type === 'documents'
+  const documentTab = currentTab && currentTab.type === 'documents'
 
   return {
     popupValues: documentTab ? settings.popupValues : null,
