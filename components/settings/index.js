@@ -25,7 +25,7 @@ const FixyWrapper = styled.div`
 
 const ButtonsWrapper = styled(Grid)`
   position: fixed;
-  bottom: 20px;
+  bottom: 1em;
   left: 1em;
   width: calc(100% - 2em);
   margin: 0 !important;
@@ -38,7 +38,7 @@ const PopupTriggerWrapper = styled.div`
 `
 
 const FormSpaced = styled(Form)`
-  padding-top: 31px !important;
+  padding-bottom: 31px !important;
 `
 
 const StyledSegment = styled(Segment)`
