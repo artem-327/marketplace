@@ -6,9 +6,6 @@ import { Modal, FormGroup } from 'semantic-ui-react'
 import { closeEditPopup, putEditedDataRequest } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
-
-import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 
 const formValidation = Yup.object().shape({
@@ -27,8 +24,7 @@ class EditUnitOfPackagingPopup extends React.Component {
       config,
       popupValues,
       putEditedDataRequest,
-      measureOptions,
-      toastManager
+      measureOptions
     } = this.props
 
     const { id } = popupValues
@@ -54,15 +50,6 @@ class EditUnitOfPackagingPopup extends React.Component {
                 [config.edit[1].name]: values.val1
               }
               await putEditedDataRequest(config, id, data)
-
-              toastManager.add(
-                generateToastMarkup(
-                  <FormattedMessage id='notifications.unitOfPackagingUpdated.header' />,
-                  <FormattedMessage id='notifications.unitOfPackagingUpdated.content' values={{ name: values.val0 }} />
-                ),
-                { appearance: 'success' }
-              )
-
               setSubmitting(false)
             }}>
             <FormGroup widths='equal' data-test='admin_edit_unit_packaging_name_inp'>
@@ -116,4 +103,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(EditUnitOfPackagingPopup))
+export default connect(mapStateToProps, mapDispatchToProps)(EditUnitOfPackagingPopup)

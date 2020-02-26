@@ -5,8 +5,7 @@ import { injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
 import { Checkbox } from 'semantic-ui-react'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
-import { withToastManager } from 'react-toast-notifications'
+import { getSafe } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
 
@@ -46,8 +45,7 @@ class CompaniesTable extends Component {
       openRegisterDwollaAccount,
       takeOverCompany,
       resendWelcomeEmail,
-      intl,
-      toastManager
+      intl
     } = this.props
 
     const { formatMessage } = intl
@@ -97,10 +95,6 @@ class CompaniesTable extends Component {
               text: <FormattedMessage id='admin.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
               callback: async row => {
                 const { value } = await resendWelcomeEmail(row.primaryUser.id)
-
-                toastManager.add(generateToastMarkup(null, value.clientMessage), {
-                  appearance: 'success'
-                })
               },
               hidden: row => !row.reviewRequested || !row.primaryUser
             }
@@ -143,4 +137,4 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(withToastManager(CompaniesTable))))
+export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(CompaniesTable)))

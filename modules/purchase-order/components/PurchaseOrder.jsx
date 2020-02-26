@@ -145,7 +145,6 @@ class PurchaseOrder extends Component {
     if (this.state.submitting) return
     this.setState({ submitting: true })
 
-    const { toastManager } = this.props
     const data = {
       [this.state.addressId]: this.state.selectedAddress.id,
       shipmentQuoteId
@@ -153,19 +152,6 @@ class PurchaseOrder extends Component {
 
     try {
       await this.props.postPurchaseOrder(data)
-
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='notifications.purchaseOrderSuccess.header' defaultMessage='Order Placed' />,
-          <FormattedMessage
-            id='notifications.purchaseOrderSuccess.content'
-            defaultMessage='Order has been successfully placed.'
-          />
-        ),
-        {
-          appearance: 'success'
-        }
-      )
       Router.push('/orders?type=purchase')
     } catch (e) {
       console.error(e)

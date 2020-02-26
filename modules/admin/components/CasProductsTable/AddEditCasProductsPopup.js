@@ -1,18 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Modal, FormGroup, Header, Dropdown as SDropdown, FormField, Search } from 'semantic-ui-react'
+import { Modal } from 'semantic-ui-react'
 
-import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest, getUnNumbersByString } from '../../actions'
-import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui-fixed-validation'
-import * as Yup from 'yup'
-import debounce from 'lodash/debounce'
-import escapeRegExp from 'lodash/escapeRegExp'
-import filter from 'lodash/filter'
+import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest } from '../../actions'
+import { Field } from 'formik-semantic-ui-fixed-validation'
 import { CompanyProductInfo } from '~/modules/company-product-info'
 
-import { withToastManager } from 'react-toast-notifications'
-import { removeEmpty, generateToastMarkup } from '~/utils/functions'
+import { removeEmpty } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 
 import { errorMessages } from '~/constants/yupValidation'
@@ -25,7 +20,6 @@ class AddEditCasProductsPopup extends React.Component {
       config,
       postNewCasProductRequest,
       updateCasProductRequest,
-      toastManager
     } = this.props
 
     return (
@@ -51,21 +45,6 @@ class AddEditCasProductsPopup extends React.Component {
           if (popupValues) await updateCasProductRequest(popupValues.id, values.casProduct)
           else await postNewCasProductRequest(values.casProduct)
 
-          let status = popupValues ? 'casProductUpdated' : 'casProductCreated'
-
-          toastManager.add(
-            generateToastMarkup(
-              <FormattedMessage id={`notifications.${status}.header`} />,
-              <FormattedMessage
-                id={`notifications.${status}.content`}
-                values={{ name: values.casProduct.casIndexName }}
-              />
-            ),
-            {
-              appearance: 'success'
-            }
-          )
-
           setSubmitting(false)
         }}
       />
@@ -87,4 +66,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(AddEditCasProductsPopup))
+export default connect(mapStateToProps, mapDispatchToProps)(AddEditCasProductsPopup)

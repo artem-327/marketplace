@@ -1,8 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
-import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup } from '~/utils/functions'
 import { Modal, Grid, GridRow, FormGroup, FormField } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Dropdown, Form } from 'formik-semantic-ui-fixed-validation'
@@ -192,4 +189,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withToastManager(BankAccountsUploadDocPopup)))
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(BankAccountsUploadDocPopup))

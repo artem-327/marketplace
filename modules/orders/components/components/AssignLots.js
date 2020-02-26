@@ -5,14 +5,13 @@ import { loadFile, addAttachment } from '~/modules/inventory/actions'
 import { Modal, ModalContent, Table, Grid, Header, Button, Segment, Tab, TabPane, Menu, Label } from 'semantic-ui-react'
 import { Form, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FieldArray } from 'formik'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import confirm from '~/src/components/Confirmable/confirm'
 import styled from 'styled-components'
 import * as val from 'yup'
 import { errorMessages } from '~/constants/yupValidation'
-import { withToastManager } from 'react-toast-notifications'
 
 const ModalBody = styled(ModalContent)`
   padding: 0 1.5rem 1.5rem !important;
@@ -489,7 +488,7 @@ class AssignLots extends React.Component {
   }
 
   render() {
-    const { orderId, orderItems, intl, toastManager, poLots } = this.props
+    const { orderId, orderItems, intl, poLots } = this.props
 
     let { formatMessage } = intl
 
@@ -544,18 +543,6 @@ class AssignLots extends React.Component {
                     tab => typeof tab.lots.find(lot => lot.selected) === 'undefined'
                   )
                   if (missingLots) {
-                    toastManager.add(
-                      generateToastMarkup(
-                        <FormattedMessage id='errors.noLotsSelected.header' defaultMessage='No Lots Selected' />,
-                        <FormattedMessage
-                          id='errors.noLotsSelected.content'
-                          defaultMessage='Please check that all order items have selected at least one lot.'
-                        />
-                      ),
-                      {
-                        appearance: 'error'
-                      }
-                    )
                     actions.setSubmitting(false)
                     return false
                   }
@@ -582,22 +569,6 @@ class AssignLots extends React.Component {
                         await this.props
                           .assignLots(orderId, tabLots)
                           .then(r => {
-                            toastManager.add(
-                              generateToastMarkup(
-                                <FormattedMessage
-                                  id='order.assignLots.success.header'
-                                  defaultMessage='Lots Assigned'
-                                />,
-                                <FormattedMessage
-                                  id='order.assignLots.success.content'
-                                  defaultMessage='Lot assignments for Order {id} was saved.'
-                                  values={{ id: orderId }}
-                                />
-                              ),
-                              {
-                                appearance: 'success'
-                              }
-                            )
                             actions.setSubmitting(false)
                             this.props.closeAssignLots()
                           })
@@ -614,18 +585,6 @@ class AssignLots extends React.Component {
                     this.props
                       .assignLots(orderId, tabLots)
                       .then(r => {
-                        toastManager.add(
-                          generateToastMarkup(
-                            <FormattedMessage id='order.assignLots.success.header' defaultMessage='Lots Assigned' />,
-                            <FormattedMessage
-                              id='order.assignLots.success.content'
-                              defaultMessage='Selected Lots were assigned and available packages allocated'
-                            />
-                          ),
-                          {
-                            appearance: 'success'
-                          }
-                        )
                         actions.setSubmitting(false)
                         this.props.closeAssignLots()
                       })
@@ -704,4 +663,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions, loadFile, addAttachment })(withToastManager(injectIntl(AssignLots)))
+export default connect(mapStateToProps, { ...Actions, loadFile, addAttachment })(injectIntl(AssignLots))
