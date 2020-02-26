@@ -513,6 +513,42 @@ export default function(state = initialState, action) {
       }
     }
 
+    case AT.UNLINK_ATTACHMENT_TO_ORDER_PENDING: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.UNLINK_ATTACHMENT_TO_ORDER_FULFILLED: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.UNLINK_ATTACHMENT_TO_ORDER_REJECTED: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.LINK_ATTACHMENT_TO_ORDER_PENDING: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.LINK_ATTACHMENT_TO_ORDER_FULFILLED: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.LINK_ATTACHMENT_TO_ORDER_REJECTED: {
+      return {
+        ...state
+      }
+    }
+
     default:
       return state
   }

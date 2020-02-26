@@ -276,3 +276,17 @@ export function getDocumentTypes() {
     payload: api.getDocumentTypes()
   }
 }
+
+export function unlinkAttachmentToOrder(query) {
+  return {
+    type: AT.UNLINK_ATTACHMENT_TO_ORDER,
+    payload: api.unlinkAttachmentToOrder(query)
+  }
+}
+
+export function linkAttachmentToOrder(query) {
+  return {
+    type: AT.LINK_ATTACHMENT_TO_ORDER,
+    payload: api.linkAttachmentToOrder(query)
+  }
+}

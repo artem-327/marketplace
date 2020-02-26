@@ -7,7 +7,7 @@ import SubMenu from '~/src/components/SubMenu'
 import Spinner from '~/src/components/Spinner/Spinner'
 import ProdexGrid from '~/components/table'
 import { actions } from 'react-redux-form'
-import { getSafe } from '~/utils/functions'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
 import FilterTags from '~/modules/filter/components/FitlerTags'
@@ -15,7 +15,10 @@ import { ArrayToFirstItem } from '~/components/formatted-messages'
 import DocumentsPopup from '~/modules/settings/components/Documents/DocumentManagerPopup'
 import Link from 'next/link'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
-import { UploadCloud } from 'react-feather'
+import { UploadCloud, CheckCircle, PlusCircle } from 'react-feather'
+import { handleFiltersValue } from '~/modules/settings/actions'
+import { withToastManager } from 'react-toast-notifications'
+import { Datagrid } from '../../datagrid/DatagridProvider'
 
 const ButtonsWrapper = styled(Grid)`
   margin-left: -21px !important;
@@ -60,11 +63,71 @@ const CustomDivUploadLot = styled.div`
 
 const CustomDivAddDocument = styled.div`
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
 `
 
 const CustomDivLabelDocumentType = styled.div`
   margin-bottom: 8px;
+`
+
+const Rectangle = styled.div`
+  height: 50px;
+  border-radius: 4px;
+  border: solid 1px #84c225;
+  background-color: #ffffff;
+  margin-bottom: 15px;
+  align-items: center;
+  display: flex;
+`
+
+const CustomCheckCircle = styled(CheckCircle)`
+  width: 24px;
+  height: 20px;
+  font-family: feathericon;
+  font-size: 24px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 0.83;
+  letter-spacing: normal;
+  color: #84c225;
+  margin: 0 10px 0 10px;
+`
+
+const CustomDivAddedMewDocument = styled.div`
+  display: flex;
+`
+
+const CustomDivTextAddedMewDocument = styled.div`
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #848893;
+`
+
+const CustomAddButton = styled(Button)`
+  display: flex !important;
+  align-items: center !important;
+  color: white !important;
+  background-color: #2599d5 !important;
+  margin-right: 0px !important;
+`
+
+const CustomPlusCircle = styled(PlusCircle)`
+  margin-right: 10px !important;
+  display: flex;
+  font-size: 18px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.11;
+  letter-spacing: normal;
+  text-align: center;
+  color: #ffffff;
 `
 
 class Orders extends Component {
@@ -400,7 +463,8 @@ class Orders extends Component {
     documentType: '',
     openUploadLot: false,
     relatedDocumentsTypeDropdown: [],
-    documentFiles: []
+    documentFiles: [],
+    isAddedNewDocument: false
   }
 
   getMimeType = documentName => {
@@ -522,6 +586,9 @@ class Orders extends Component {
 
   componentDidMount() {
     const { endpointType, filterData, getDocumentTypes, listDocumentTypes } = this.props
+    console.log('endpointType====================================')
+    console.log(endpointType)
+    console.log('====================================')
     this.props.loadData(endpointType, { status: 'All' })
     this.handleFilterClear()
     if (listDocumentTypes && !listDocumentTypes.length) {
@@ -585,17 +652,41 @@ class Orders extends Component {
   replaceExiting = row => {
     console.log('replaceExiting')
   }
-
-  handleDelete = row => {
-    console.log('handleDelete')
+  //TODO
+  handleUnlink = async row => {
+    const { endpointType, unlinkAttachmentToOrder } = this.props
+    console.log('endpointType====================================')
+    console.log(endpointType)
+    console.log('====================================')
+    const query = {
+      attachmentId: row.id,
+      orderId: row.orderId
+    }
+    try {
+      //await unlinkAttachmentToOrder(query)
+      this.setState({ openModal: false })
+    } catch (err) {
+      console.error(err)
+    }
   }
+
+  //TODO pro delete /api/attachment-links/to-order, prejmenovat de;ete na unlink
+  //TODO pro replace existing otevrit
+  //TODO pro save /api/attachment-links/to-order
+
+  saveRelatedDocuments = () => {
+    const { documentFiles } = this.state
+  }
+
   //TODO
   getAttachmentContent = () => {
     const {
       attachmentPopup: { attachment, order }
     } = this.state
     const {
-      intl: { formatMessage }
+      intl: { formatMessage },
+      listDocumentTypes,
+      isAddedNewDocument
     } = this.props
 
     const attachments = attachment && attachment.length ? attachment : [attachment]
@@ -605,6 +696,7 @@ class Orders extends Component {
     const rowsRelatedOrdersDocuments = attachments.reduce((ordersList, attachment) => {
       if (attachment) {
         ordersList.push({
+          id: attachment.id,
           documentName: (
             <Button as='a' onClick={() => this.downloadAttachment(attachment.name, attachment.id)}>
               <Icon name='download' />
@@ -612,44 +704,52 @@ class Orders extends Component {
             </Button>
           ),
           documenType: getSafe(() => attachment.documentType.name, 'N/A'),
-          documenDescription: getSafe(() => attachment.description, 'N/A')
+          documenDescription: getSafe(() => attachment.description, 'N/A'),
+          orderId: order.id
         })
       }
 
       return ordersList
     }, [])
+    //odstranit vzkricnik pred isAddNewDocument
     return (
       <>
+        {!isAddedNewDocument ? (
+          <Rectangle>
+            <CustomDivAddedMewDocument>
+              <CustomCheckCircle />
+              <CustomDivTextAddedMewDocument>
+                <FormattedMessage id='related.documents.addedNewDocument' defaultMessage='New document has been added'>
+                  {text => text}
+                </FormattedMessage>
+              </CustomDivTextAddedMewDocument>
+            </CustomDivAddedMewDocument>
+          </Rectangle>
+        ) : null}
         <CustomDivAddDocument>
-          <RelatedDocumentsDropdown
-            options={[
-              {
-                key: 1,
-                value: 'My TYpe',
-                text: 'My Type'
-              },
-              {
-                key: 2,
-                value: 'Your Type',
-                text: 'Your Type'
-              }
-            ]}
-            value={this.state.relatedDocumentsDropdown}
-            selection
-            onChange={(event, { name, value }) => {
-              this.setState({ [name]: value })
-            }}
-            name='relatedDocumentsDropdown'
-            placeholder={formatMessage({ id: 'related.documents.selectType', defaultMessage: 'Select type' })}
-          />
-          <Button
-            style={{ color: 'white', backgroundColor: '#2599d5', marginRight: '1.6vw' }}
+          {false && (
+            <RelatedDocumentsDropdown
+              options={listDocumentTypes}
+              value={this.state.relatedDocumentsDropdown}
+              selection
+              onChange={(event, { name, value }) => {
+                event.preventDefault()
+                this.setState({ [name]: value })
+              }}
+              name='relatedDocumentsDropdown'
+              placeholder={formatMessage({ id: 'related.documents.selectType', defaultMessage: 'Select type' })}
+            />
+          )}
+          <CustomAddButton
             onClick={() => this.setState({ isOpenDocumentsPopup: true })}
             data-test='related_documents_add_document_btn'>
-            <FormattedMessage id='related.documents.addDocument' defaultMessage='Add Document'>
-              {text => text}
-            </FormattedMessage>
-          </Button>
+            <CustomPlusCircle />
+            <CustomDivAddedMewDocument>
+              <FormattedMessage id='related.documents.addDocument' defaultMessage='Add Document'>
+                {text => text}
+              </FormattedMessage>
+            </CustomDivAddedMewDocument>
+          </CustomAddButton>
         </CustomDivAddDocument>
         <ProdexGrid
           tableName='related_orders_documents'
@@ -666,10 +766,10 @@ class Orders extends Component {
             },
             {
               text: formatMessage({
-                id: 'global.delete',
-                defaultMessage: 'Delete'
+                id: 'global.unlink',
+                defaultMessage: 'Unlink'
               }),
-              callback: row => this.handleDelete(row)
+              callback: row => this.handleUnlink(row)
             }
           ]}
         />
@@ -874,7 +974,7 @@ class Orders extends Component {
             <Modal.Content scrolling>{this.getAttachmentContent()}</Modal.Content>
           </Modal>
         )}
-        {false && this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (
+        {this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (
           <Modal
             size='small'
             closeIcon={false}
@@ -1108,4 +1208,4 @@ class Orders extends Component {
 //   )
 // }
 
-export default injectIntl(Orders)
+export default injectIntl(withToastManager(Orders))
