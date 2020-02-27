@@ -44,7 +44,31 @@ export const FlexSidebar = styled(Sidebar)`
       }
       > .default.text {
         margin: 0 0 0 0.64285714em;
+      }      
+    }
+    > .ui.multiple.selection.dropdown {
+      > a.ui.label {
+        margin: 0;
+        padding: 1px 0.714285714em;
+        box-shadow: none;
+        background: none;
+        color: #404040;
+        font-weight: normal;
       }
+    }
+  }
+  .ui.button.doc-manager {
+    border-radius: 3px;
+    border: solid 1px #2599d5;
+    background-color: #ddf1fc;
+    color: #2599d5;
+    > i.icon {
+      font-size: 18px;
+    }
+  } 
+  .column.product-offer-documents {
+    tbody tr td:nth-child(2) {
+      color: #2599d5;
     }
   }
 `
@@ -57,8 +81,17 @@ export const FlexTabs = styled.div`
   font-weight: 400;
   font-size: 1.1rem;
   > .tab-menu .ui.menu {
-    //height: 100%;
     padding: 0 2.142857143em !important;
+    border-bottom: none !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6 !important;
+    > .item {
+      font-weight: 500;
+      color: #848893;
+    }
+    > .active.item {
+      color: #20273a;
+      border-bottom-width: 2px;
+    }
   }
   > .tab-menu,
   > .tab-menu > .tab {

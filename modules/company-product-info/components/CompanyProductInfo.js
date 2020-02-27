@@ -45,6 +45,27 @@ export const FlexContent = styled.div`
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
+  > .ui.segment {
+    padding: 0 1em 1em 1em;
+    .ui.form {    
+      > .ui.menu {      
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6 !important;    
+        margin: 0px -1em;
+        padding: 0px 2.142857143em;  
+        > .item {
+        text-transform: uppercase;
+        font-weight: 500;
+        color: #848893;
+        margin-bottom: 0;
+        box-shadow: 0 0 0 0 transparent;
+        }
+        > .active.item {
+          color: #20273a;
+          border-bottom-width: 2px;
+        }
+      }
+    }
+  }
 `
 
 const WiderSidebar = styled(FlexSidebar)`
@@ -286,6 +307,14 @@ class CompanyProductInfo extends Component {
       })}
     </>
   )
+
+  componentDidMount() {
+    let { closePopup, onClose, isOpen } = this.props
+    if (isOpen) {
+      closePopup()
+      onClose()
+    }
+  }
 
   componentDidUpdate() {
     // When you switch different Products and previous product had casProductIndex bigger value than new product casProducts count, set index to 0 so dropdown value is correctly displayed

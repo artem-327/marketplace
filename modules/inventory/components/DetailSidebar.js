@@ -1848,7 +1848,7 @@ class DetailSidebar extends Component {
                                   ) : null}
                                   {values.documents.attachments && (
                                     <GridRow>
-                                      <GridColumn>
+                                      <GridColumn className='product-offer-documents'>
                                         <ProdexGrid
                                           virtual={false}
                                           tableName='inventory_documents'

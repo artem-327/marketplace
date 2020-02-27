@@ -164,7 +164,8 @@ AttachmentModal.propTypes = {
 
 AttachmentModal.defaultProps = {
   trigger: (
-    <Button fluid type='button'>
+    <Button fluid type='button' className='doc-manager'>
+      <Icon className="file alternate outline icon"/>
       <FormattedMessage id='global.documentManager' defaultMessage='Document Manager'>
         {text => text}
       </FormattedMessage>

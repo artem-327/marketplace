@@ -419,9 +419,13 @@ class Broadcast extends Component {
                         <Input
                           name='search'
                           icon='search'
-                          iconPosition='left'
+                          iconPosition='right'
                           value={this.state.filterSearch}
                           onChange={this.handleSearchChange}
+                          placeholder={formatMessage({
+                            id: 'broadcast.keyword',
+                            defaultMessage: 'Keyword'
+                          })}
                         />
                       </Form.Field>
                     </GridColumn>
@@ -498,12 +502,10 @@ class Broadcast extends Component {
 
                   return (
                     <Form onSubmit={props.handleSubmit}>
-                      <Grid>
+                      <Grid className='upper-grid'>
                         <BottomUnpaddedRow>
                           <GridColumn computer={16}>
-                            <Header as='h4'>
-                              <FormattedMessage id='broadcast.templates' defaultMessage='Templates' />
-                            </Header>
+                            <FormattedMessage id='broadcast.templates' defaultMessage='Templates' />
                           </GridColumn>
                         </BottomUnpaddedRow>
 
@@ -570,7 +572,11 @@ class Broadcast extends Component {
                                         defaultMessage: 'a code'
                                       })
                                     }
-                                  )
+                                  ),
+                                  placeholder: formatMessage({
+                                    id: 'broadcast.selectTemplate',
+                                    defaultMessage: 'Select Template'
+                                  })
                                 }}
                               />
                             </GridColumn>
@@ -581,7 +587,6 @@ class Broadcast extends Component {
                                 disabled={!this.state.selectedTemplate}
                                 loading={this.props.templateDeleting}
                                 type='button'
-                                basic
                                 fluid
                                 negative>
                                 {formatMessage({
@@ -679,7 +684,8 @@ class Broadcast extends Component {
                       </Grid>
                     </Form>
                   )
-                }}></Formik>
+                }}>
+              </Formik>
             </div>
           </Grid.Column>
           <Grid.Column
@@ -694,14 +700,14 @@ class Broadcast extends Component {
                   </FormattedMessage>
                 </Rule.RowContent>
                 <Rule.Toggle style={asSidebar ? { flex: '0 0 60px' } : null}>
-                  <FormattedMessage id='broadcast.include' defaultMessage='Include' />
+                  <FormattedMessage id='broadcast.select' defaultMessage='Select' />
                 </Rule.Toggle>
 
                 <Rule.Toggle>
                   <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
                 </Rule.Toggle>
                 <Rule.Toggle>
-                  {!hideFobPrice && <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />}
+                  {!hideFobPrice && <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB High/Low' />}
                 </Rule.Toggle>
               </Rule.Header>
               <Rule.Content style={asSidebar ? { flex: '1 0 auto', overflowY: 'hidden' } : null}>
