@@ -35,7 +35,7 @@ import { FieldArray, Field } from 'formik'
 
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import { errorMessages, dateValidation } from '~/constants/yupValidation'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 import { tabs, defaultValues, transportationTypes, onErrorFieldTabs } from './constants'
 import styled from 'styled-components'
 import debounce from 'lodash/debounce'
@@ -547,7 +547,7 @@ class AddEditEchoProduct extends React.Component {
   }
 
   submitForm = async (values, setSubmitting) => {
-    const { putEchoProduct, postEchoProduct, closePopup, toastManager, linkAttachment, listDocumentTypes } = this.props
+    const { putEchoProduct, postEchoProduct, closePopup, linkAttachment, listDocumentTypes } = this.props
 
     const { popupValues } = this.state
 
@@ -617,17 +617,6 @@ class AddEditEchoProduct extends React.Component {
       //   ...data,
       //   attachments: data.attachments.concat(notLinkedAttachments)
       // }))
-
-      const status = popupValues ? 'echoProductUpdated' : 'echoProductCreated'
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id={`notifications.${status}.header`} />,
-          <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
-        ),
-        {
-          appearance: 'success'
-        }
-      )
 
       setSubmitting(false)
       sendSuccess = true

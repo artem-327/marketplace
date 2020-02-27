@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { Header, Modal, FormGroup } from 'semantic-ui-react'
-import { withToastManager } from 'react-toast-notifications'
 import {
   closePopup,
   handlerSubmitWarehouseEditPopup,
@@ -15,7 +14,6 @@ import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semant
 import * as Yup from 'yup'
 import Router from 'next/router'
 
-import { generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { addressValidationSchema, errorMessages, minOrZeroLength } from '~/constants/yupValidation'
@@ -55,7 +53,7 @@ class WarehousePopup extends React.Component {
   }
 
   submitHandler = async (values, actions) => {
-    let { toastManager, popupValues, currentTab } = this.props
+    let { popupValues, currentTab } = this.props
     const { handlerSubmitWarehouseEditPopup, postNewWarehouseRequest } = this.props
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
 
@@ -112,20 +110,6 @@ class WarehousePopup extends React.Component {
           ...requestData
         })
       }
-
-      let status = currentTab.type === 'branches' ? 'branch' : 'warehouse'
-
-      status += popupValues ? 'Updated' : 'Created'
-
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id={`notifications.${status}.header`} />,
-          <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.addressName }} />
-        ),
-        {
-          appearance: 'success'
-        }
-      )
     } catch {
     } finally {
       actions.setSubmitting(false)
@@ -350,4 +334,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withToastManager(WarehousePopup)))
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(WarehousePopup))

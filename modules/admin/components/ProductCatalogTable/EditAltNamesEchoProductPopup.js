@@ -4,8 +4,6 @@ import { Modal, Table, TableCell, TableHeaderCell, FormField, Message, Icon, Pop
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import { FieldArray } from 'formik'
 
-import { withToastManager } from 'react-toast-notifications'
-
 import { FormattedMessage } from 'react-intl'
 
 import {
@@ -253,4 +251,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(EditAltNamesEchoProductPopup))
+export default connect(mapStateToProps, mapDispatchToProps)(EditAltNamesEchoProductPopup)

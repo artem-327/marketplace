@@ -190,7 +190,6 @@ class ProductPopup extends React.Component {
       popupValues,
       handleSubmitProductEditPopup,
       handleSubmitProductAddPopup,
-      toastManager,
       datagrid
     } = this.props
     delete values.casProducts
@@ -223,14 +222,6 @@ class ProductPopup extends React.Component {
       }
       let status = popupValues ? 'productUpdated' : 'productCreated'
       datagrid.loadData()
-
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id={`notifications.${status}.header`} />,
-          <FormattedMessage id={`notifications.${status}.content`} values={{ name: formValues.intProductName }} />
-        ),
-        { appearance: 'success' }
-      )
     } catch (e) {
       console.error(e)
     } finally {

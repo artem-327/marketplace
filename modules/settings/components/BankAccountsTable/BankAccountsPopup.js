@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { withToastManager } from 'react-toast-notifications'
 import { Modal, FormGroup } from 'semantic-ui-react'
 
 import { closePopup, putBankAccountRequest, postNewBankAccountRequest } from '../../actions'
@@ -12,7 +11,7 @@ import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { currency } from '~/constants/index'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 
 const initialFormValues = {
@@ -58,20 +57,10 @@ const bankAccountType = [
 
 class BankAccountsPopup extends React.Component {
   submitHandler = async (values, { setSubmitting }) => {
-    const { postNewBankAccountRequest, toastManager } = this.props
+    const { postNewBankAccountRequest } = this.props
 
     try {
       await postNewBankAccountRequest(values)
-
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='notifications.bankAccountCreated.header' />,
-          <FormattedMessage id='notifications.bankAccountCreated.content' values={{ name: values.name }} />
-        ),
-        {
-          appearance: 'success'
-        }
-      )
     } catch {
     } finally {
       setSubmitting(false)
@@ -163,4 +152,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withToastManager(BankAccountsPopup)))
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(BankAccountsPopup))

@@ -9,7 +9,8 @@ export const operators = {
   LESS_THAN: 'LESS_THAN',
   LESS_THAN_OR_EQUAL_TO: 'LESS_THAN_OR_EQUAL_TO',
   GREATER_THAN: 'GREATER_THAN',
-  GREATER_THAN_OR_EQUAL_TO: 'GREATER_THAN_OR_EQUAL_TO'
+  GREATER_THAN_OR_EQUAL_TO: 'GREATER_THAN_OR_EQUAL_TO',
+  LESS_THAN_OR_NULL: 'LESS_THAN_OR_NULL'
 }
 
 export const filterTypes = {
@@ -486,9 +487,9 @@ export const datagridValues = {
   },
 
   mfgFrom: {
-    operator: operators.LESS_THAN,
+    operator: operators.LESS_THAN_OR_NULL,
     paths: [paths.productOffers.manufacturedDate],
-    description: 'Manufactured Date From',
+    description: 'Manufactured Date To',
 
     toFilter: function(values) {
       let date = moment().subtract(values, 'days')
@@ -514,7 +515,7 @@ export const datagridValues = {
   mfgTo: {
     operator: operators.GREATER_THAN,
     paths: [paths.productOffers.manufacturedDate],
-    description: 'Manufactured Date To',
+    description: 'Manufactured Date From',
 
     toFilter: function(values) {
       let date = moment().subtract(values, 'days')
@@ -837,7 +838,7 @@ export const datagridValues = {
     },
     toFormik: function(operator) {
       let result = null
-      if (operator === 'LESS_THAN') {
+      if (operator === 'LESS_THAN_OR_NULL') {
         result = 'From'
       } else if (operator === 'GREATER_THAN') {
         result = 'To'

@@ -18,18 +18,31 @@ export const FlexSidebar = styled.div`
   .ui.input {
     .ui.label,
     input {
-      padding-top: 8px;
-      padding-bottom: 7px;
+      height: 32px;
+      padding-top: 0.538461538em;
+      padding-bottom: 0.435896923em;
       font-size: 13px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.38;
       background-color: #fdfdfd;
     }
   } 
   
   .field {
     .ui.dropdown {
+      height: 32px;
       min-height: 32px;
-      padding-top: 8px;
-      padding-bottom: 6.7px;
+      padding-top: 0.538461538em;
+      padding-bottom: 0.435896923em;
+      font-size: 13px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.38;
+      
+      
       background-color: #fdfdfd;
       &.disabled {
         opacity: 1;
@@ -489,50 +502,67 @@ export const SavedFiltersNotifications = styled.div`
 `
 
 export const InputWrapper = styled.div`
-  position: relative;
-  > .field .ui.input input {
-    position: static;
-    padding-right: 36px; 
+  > .field-label {
+    margin: 0em 0em 0.384615385em 0em;
+    font-size: 1em;
+    line-height: 1.38;
+    color: #546f93;
   }
-  > .ui.label {
-    width: 24px;
-    height: 24px;
-    padding: 5.5px 0;
-    font-size: 13px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    text-align: center;
-    color: #2599d5;
-    border-radius: 2px;
-    background-color: rgba(37, 153, 213, 0.1);
-    position: absolute;
-    top: 27px;
-    right: 4px;
+  & div {
+    position: relative;
+    > .field .ui.input input {
+      position: static;
+      padding-right: 36px; 
+    }
+    > .ui.label {
+      height: 1.846153846em;
+      padding: 0.423076923em 0.615384615em;
+      font-size: 13px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      text-align: center;
+      color: #2599d5;
+      border-radius: 2px;
+      background-color: rgba(37, 153, 213, 0.1);
+      position: absolute;
+      top: 0.307692308em;
+      right: 0.307692308em;
+    }
   }
 `
 
 export const QuantityWrapper = styled.div`
-  position: relative;
-  > .sideButtons {
-    position: absolute;
-    width: 32px;
-    height: 32px;
-    right: 0;
-    top: 23px;
-    .ui.button {
+  > .field-label {
+    margin: 0em 0em 0.384615385em 0em;
+    font-size: 1em;
+    line-height: 1.38;
+    color: #546f93;
+  }
+  & div {
+    position: relative;
+    > .sideButtons {
       position: absolute;
-      margin: 0;
-      &.buttonPlus {
-        border-radius: 0 3px 0 0;
-        width: 32px;
-        padding: 1px 0 0 0;
-      }
-      &.buttonMinus {
-        border-radius: 0 0 3px 0;
-        width: 32px;
-        padding: 0;
-        top: 16px;
+      width: 32px;
+      height: 32px;
+      right: 0;
+      top: 0;
+      .ui.button {
+        position: absolute;
+        margin: 0;
+        &.buttonPlus {
+          border-radius: 0 3px 0 0;
+          border: solid 1px #dee2e6;
+          width: 32px;
+          padding: 1px 0 0 0;
+        }
+        &.buttonMinus {
+          border-radius: 0 0 3px 0;
+          border: solid 1px #dee2e6;
+          width: 32px;
+          padding: 0;
+          top: 16px;
+        }
       }
     }
   }

@@ -7,8 +7,6 @@ import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { injectIntl } from 'react-intl'
 import * as Yup from 'yup'
 import { nmfcValidation } from '../../../../constants/yupValidation'
-import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup } from '~/utils/functions'
 import { addNmfcNumber, editNmfcNumber } from '~/modules/admin/actions'
 
 const validationSchema = Yup.object().shape({
@@ -33,8 +31,7 @@ class Popup extends Component {
       intl: { formatMessage },
       config,
       addNmfcNumber,
-      editNmfcNumber,
-      toastManager
+      editNmfcNumber
     } = this.props
 
 
@@ -59,16 +56,6 @@ class Popup extends Component {
               } else {
                 await addNmfcNumber(payload)
               }
-
-              let status = popupValues ? 'nfmcNumberEdited' : 'nmfcNumberAdded'
-
-              toastManager.add(
-                generateToastMarkup(
-                  formatMessage({ id: `notifications.${status}.header` }),
-                  formatMessage({ id: `notifications.${status}.content` })
-                ),
-                { appearance: 'success' }
-              )
               setSubmitting(false)
               closeAddPopup()
             }}
@@ -122,4 +109,4 @@ const mapStateToProps = ({ admin }) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(Popup)))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Popup))

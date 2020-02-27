@@ -7,9 +7,6 @@ import { closeEditPopup, putEditedDataRequest } from '../../actions'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
-import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup } from '~/utils/functions'
-
 import { FormattedMessage } from 'react-intl'
 
 const formValidation = Yup.object().shape({
@@ -21,7 +18,7 @@ const formValidation = Yup.object().shape({
 
 class EditPopup1Parameter extends React.Component {
   render() {
-    const { closeEditPopup, currentTab, config, popupValues, putEditedDataRequest, toastManager } = this.props
+    const { closeEditPopup, currentTab, config, popupValues, putEditedDataRequest } = this.props
 
     const { id, editable = true } = popupValues
 
@@ -46,16 +43,6 @@ class EditPopup1Parameter extends React.Component {
 
               try {
                 await putEditedDataRequest(config, id, data)
-
-                let formattedMsgId = `notifications.${config.formattedMessageName}Updated`
-
-                toastManager.add(
-                  generateToastMarkup(
-                    <FormattedMessage id={`${formattedMsgId}.header`} />,
-                    <FormattedMessage id={`${formattedMsgId}.content`} values={{ name: values.val0 }} />
-                  ),
-                  { appearance: 'success' }
-                )
               } catch (e) {
                 console.error(e)
               } finally {
@@ -99,4 +86,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(EditPopup1Parameter))
+export default connect(mapStateToProps, mapDispatchToProps)(EditPopup1Parameter)

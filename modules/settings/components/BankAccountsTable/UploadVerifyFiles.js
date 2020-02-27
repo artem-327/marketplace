@@ -43,26 +43,6 @@ class UploadVerifyFiles extends Component {
     this.props.onChange(file)
   }
 
-  onUploadFail = (fileName, error) => {
-    let { fileMaxSize, toastManager } = this.props
-
-    const errorDescription = error.clientMessage ? ' : ' + error.clientMessage : ''
-
-    toastManager.add(
-      generateToastMarkup(
-        <FormattedMessage id='errors.fileNotUploaded.header' defaultMessage='File not uploaded' />,
-        <FormattedMessage
-          id='errors.fileNotUploaded.content2'
-          defaultMessage={`File ${fileName} was not uploaded due to an error${errorDescription}`}
-          values={{ name: fileName, errorDescription }}
-        />
-      ),
-      {
-        appearance: 'error'
-      }
-    )
-  }
-
   onPreviewDrop = async files => {
     let {
       type,
@@ -73,7 +53,7 @@ class UploadVerifyFiles extends Component {
       loadFile,
       addVerificationDocument
     } = this.props
-    let { onDropRejected, onUploadSuccess, onUploadFail } = this
+    let { onDropRejected, onUploadSuccess } = this
 
     if (typeof unspecifiedTypes === 'undefined') unspecifiedTypes = []
     if (unspecifiedTypes.indexOf(type) >= 0) {
@@ -139,12 +119,10 @@ class UploadVerifyFiles extends Component {
                     resolve()
                   })
                   .catch(e => {
-                    onUploadFail(files[j].name, e)
                     resolve()
                   })
               })
               .catch(e => {
-                onUploadFail(files[j].name, e)
                 resolve()
               })
           }).then(loop.bind(null, j + 1))

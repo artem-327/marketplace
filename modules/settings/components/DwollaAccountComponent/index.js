@@ -6,14 +6,13 @@ import { closeDwollaPopup, getCountries, getProvinces, postDwollaAccount } from 
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import styled from 'styled-components'
-import { withToastManager } from 'react-toast-notifications'
 import { DateInput } from '~/components/custom-formik'
 
 import { AddressForm } from '~/modules/address-form/'
 
 import { dwollaControllerValidation, beneficialOwnersValidation } from '~/constants/yupValidation'
 
-import { generateToastMarkup, deepSearch } from '~/utils/functions'
+import { deepSearch } from '~/utils/functions'
 import { beneficialOwner, USA, ownersToPayload } from '~/constants/beneficialOwners'
 
 import { BeneficialOwnersForm } from '~/components/custom-formik'
@@ -85,8 +84,7 @@ class BankAccountsPopup extends React.Component {
       provincesDropDown,
       postDwollaAccount,
       auth,
-      intl: { formatMessage },
-      toastManager
+      intl: { formatMessage }
     } = this.props
     const { accordionActive } = this.state
 
@@ -116,20 +114,7 @@ class BankAccountsPopup extends React.Component {
 
               try {
                 await postDwollaAccount(payload)
-                toastManager.add(
-                  generateToastMarkup(
-                    <FormattedMessage
-                      id='notifications.dwollaAccountCreated.header'
-                      defaultMessage='Dwolla account created'
-                    />,
-                    <FormattedMessage
-                      id='notifications.dwollaAccountCreated.content'
-                      defaultMessage='Dwolla account successfully created'
-                    />
-                  ),
-                  { appearance: 'success' }
-                )
-                closeDwollaPopup()
+                 closeDwollaPopup()
               } catch (e) {
                 console.error(e)
               } finally {
@@ -334,4 +319,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withToastManager(injectIntl(connect(mapStateToProps, mapDispatchToProps)(BankAccountsPopup)))
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(BankAccountsPopup))
