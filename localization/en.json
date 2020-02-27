@@ -1645,6 +1645,7 @@
   "order.related.documents.add": "ADD DOCUMENTS",
   "related.documents.documentType": "Document Type",
   "related.documents.addedNewDocument": "New document has been added",
+  "related.documents.unlinkDocument": "Document has been unlinked",
   "settings.tables.documents.search": "Search documents ...",
   "settings.tables.documents.dropdown": "Choose document type",
   "settings.tables.documents.dropdown.all.document.types": "All document types",

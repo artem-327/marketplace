@@ -102,7 +102,9 @@ class DocumentPopup extends Component {
               let payload = {
                 customName: values.customName,
                 description: values.description,
-                expirationDate: values.expirationDate && getSafe(() => getStringISODate(values.expirationDate), null),
+                expirationDate:
+                  values.expirationDate &&
+                  getSafe(() => encodeURIComponent(getStringISODate(values.expirationDate)), null),
                 isTemporary: getSafe(() => values.isTemporary, false),
                 othersPermissions: values.othersPermissions,
                 sharedTo: values.sharedTo

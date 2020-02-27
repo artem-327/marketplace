@@ -83,6 +83,30 @@ const Rectangle = styled.div`
   display: flex;
 `
 
+const RectangleRed = styled.div`
+  height: 50px;
+  border-radius: 4px;
+  border: solid 1px #db2828;
+  background-color: #ffffff;
+  margin-bottom: 15px;
+  align-items: center;
+  display: flex;
+`
+
+const CustomCheckCircleRed = styled(CheckCircle)`
+  width: 24px;
+  height: 20px;
+  font-family: feathericon;
+  font-size: 24px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 0.83;
+  letter-spacing: normal;
+  color: #db2828;
+  margin: 0 10px 0 10px;
+`
+
 const CustomCheckCircle = styled(CheckCircle)`
   width: 24px;
   height: 20px;
@@ -439,7 +463,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 200
+        width: 230
       },
       {
         name: 'documenType',
@@ -448,7 +472,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 180
+        width: 200
       },
       {
         name: 'documenDescription',
@@ -457,16 +481,20 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 257
+        width: 325
       }
     ],
     relatedDocumentsDropdown: '',
-    isOpenDocumentsPopup: false,
     documentType: '',
     openUploadLot: false,
     relatedDocumentsTypeDropdown: [],
     documentFiles: [],
-    isAddedNewDocument: false
+    isAddedNewDocument: false,
+    isOpenManager: false,
+    relatedDocumentType: '',
+    row: '',
+    newDocuments: '',
+    isUnlinkDocument: false
   }
 
   getMimeType = documentName => {
@@ -533,33 +561,64 @@ class Orders extends Component {
         </Link>
       ),
       productName: (
-        <ArrayToFirstItem values={row.orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))} />
+        <ArrayToFirstItem
+          values={
+            row &&
+            row.orderItems &&
+            row.orderItems.length &&
+            row.orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))
+          }
+        />
       ),
       globalStatus: row.globalStatus === 'Failed' ? this.failedWrapper(row.globalStatus) : row.globalStatus,
       paymentStatus: row.paymentStatus === 'Failed' ? this.failedWrapper(row.paymentStatus) : row.paymentStatus,
       bl:
         row.bl && row.bl.length ? ( // unknown / positive / negative
-          <span onClick={() => this.openOverviewWindow(row.bl, { id: row.id })}>
+          <span
+            onClick={() =>
+              this.openOverviewWindow(row.bl, { id: row.id }, false, { text: 'Bill of Lading', value: 10 }, row)
+            }>
             <Icon name='file' className='positive' />
           </span>
         ) : (
-          <Icon name='file' className='unknown' />
+          <span
+            onClick={() =>
+              this.openOverviewWindow(row.bl, { id: row.id }, true, { text: 'Bill of Lading', value: 10 }, row)
+            }>
+            <Icon name='file' className='unknown' />
+          </span>
         ),
       sds:
         row.sds && row.sds.length ? (
-          <span onClick={() => this.openOverviewWindow(row.sds, { id: row.id })}>
+          <span
+            onClick={() =>
+              this.openOverviewWindow(row.sds, { id: row.id }, false, { text: 'Safety Data Sheet', value: 3 })
+            }>
             <Icon name='file' className='positive' />
           </span>
         ) : (
-          <Icon name='file' className='unknown' />
+          <span
+            onClick={() =>
+              this.openOverviewWindow(row.sds, { id: row.id }, true, { text: 'Safety Data Sheet', value: 3 })
+            }>
+            <Icon name='file' className='unknown' />
+          </span>
         ),
       cofA:
         row.cofA && row.cofA.length ? (
-          <span onClick={() => this.openOverviewWindow(row.cofA, { id: row.id })}>
+          <span
+            onClick={() =>
+              this.openOverviewWindow(row.cofA, { id: row.id }, false, { text: 'Certificate of Analysis', value: 1 })
+            }>
             <Icon name='file' className='positive' />
           </span>
         ) : (
-          <Icon name='file' className='unknown' />
+          <span
+            onClick={() =>
+              this.openOverviewWindow(row.cofA, { id: row.id }, true, { text: 'Certificate of Analysis', value: 1 })
+            }>
+            <Icon name='file' className='unknown' />
+          </span>
         ),
       related:
         row.accountingDocumentsCount > 0 ? (
@@ -577,11 +636,8 @@ class Orders extends Component {
     await this.props.getRelatedOrders(orderId)
   }
 
-  openOverviewWindow(attachment, order) {
-    console.log('attachment2====================================')
-    console.log(attachment)
-    console.log('====================================')
-    this.setState({ openModal: true, attachmentPopup: { attachment, order } })
+  openOverviewWindow(attachment, order, isOpenManager, relatedDocumentType, row) {
+    this.setState({ openModal: true, attachmentPopup: { attachment, order }, isOpenManager, relatedDocumentType, row })
   }
 
   handleFilterApply = payload => {
@@ -594,9 +650,6 @@ class Orders extends Component {
 
   componentDidMount() {
     const { endpointType, filterData, getDocumentTypes, listDocumentTypes } = this.props
-    console.log('endpointType====================================')
-    console.log(endpointType)
-    console.log('====================================')
     this.props.loadData(endpointType, { status: 'All' })
     this.handleFilterClear()
     if (listDocumentTypes && !listDocumentTypes.length) {
@@ -660,38 +713,53 @@ class Orders extends Component {
   replaceExiting = row => {
     console.log('replaceExiting')
   }
-  //TODO nenacte se tabulka sales orders po zavolani loadData
+
   handleUnlink = async row => {
-    const { endpointType, unlinkAttachmentToOrder } = this.props
-    console.log('endpointType====================================')
-    console.log(endpointType)
-    console.log('====================================')
+    const { endpointType, unlinkAttachmentToOrder, datagrid } = this.props
     const query = {
       attachmentId: row.id,
       orderId: row.orderId
     }
     try {
       await unlinkAttachmentToOrder(query)
-      this.setState({ openModal: false })
-      this.props.loadData(endpointType, { status: 'All' })
+      if (datagrid && datagrid.rows) {
+        const rowDatagrid = datagrid.rows.find(r => r.id === row.orderId)
+        const attachments =
+          rowDatagrid &&
+          rowDatagrid.attachments &&
+          rowDatagrid.attachments.length &&
+          rowDatagrid.attachments.filter(ro => ro.id !== row.id)
+
+        const attachment =
+          rowDatagrid &&
+          rowDatagrid.attachments &&
+          rowDatagrid.attachments.length &&
+          rowDatagrid.attachments.filter(ro => ro.id !== row.id && ro.documentType.name === row.documenType)
+
+        datagrid.updateRow(row && row.orderId, () => ({
+          ...rowDatagrid,
+          attachments
+        }))
+        this.setState({
+          attachmentPopup: {
+            attachment: attachment && attachment.length ? attachment : null,
+            order: { id: row.orderId }
+          },
+          isAddedNewDocument: false,
+          isUnlinkDocument: true
+        })
+      }
     } catch (err) {
       console.error(err)
     }
   }
 
-  //TODO pro delete /api/attachment-links/to-order, prejmenovat de;ete na unlink
-  //TODO pro replace existing otevrit
-  //TODO pro save /api/attachment-links/to-order
-
-  saveRelatedDocuments = () => {
-    const { documentFiles } = this.state
-  }
-  //TODO
   attachDocumentsManager = async newDocuments => {
     const docArray = uniqueArrayByKey(newDocuments, 'id')
     const attach = getSafe(() => this.state.attachmentPopup.attachment, [])
-    const attachment = [...[attach], ...docArray]
+    const attachment = Array.isArray(attach) ? [...attach, ...docArray] : [...[attach], ...docArray]
     const order = getSafe(() => this.state.attachmentPopup.order, null)
+    this.setState({ newDocuments: docArray })
 
     try {
       if (docArray.length) {
@@ -701,46 +769,47 @@ class Orders extends Component {
       }
       this.setState({
         attachmentPopup: { attachment, order },
-        isAddedNewDocument: true
+        isAddedNewDocument: true,
+        isUnlinkDocument: false
       })
     } catch (error) {
       console.log(error)
     }
   }
 
-  //TODO
   getAttachmentContent = () => {
     const {
       attachmentPopup: { attachment, order },
-      isAddedNewDocument
+      isAddedNewDocument,
+      isUnlinkDocument
     } = this.state
     const {
-      intl: { formatMessage },
-      listDocumentTypes
+      intl: { formatMessage }
     } = this.props
+    let rowsRelatedOrdersDocuments = []
+    if (attachment && attachment.length) {
+      rowsRelatedOrdersDocuments = attachment.reduce((ordersList, attach) => {
+        if (attach) {
+          ordersList.push({
+            id: attach.id,
+            documentName: (
+              <Button as='a' onClick={() => this.downloadAttachment(attach.name, attach.id)}>
+                <Icon name='download' />
+                {attach.name}
+              </Button>
+            ),
+            documenType: getSafe(() => attach.documentType.name, 'N/A'),
+            documenDescription: getSafe(() => attach.description, 'N/A'),
+            orderId: order.id
+          })
+        }
 
-    const attachments = attachment && attachment.length ? attachment : [attachment]
-    console.log('attachments====================================')
-    console.log(attachments)
+        return ordersList
+      }, [])
+    }
+    console.log('rowsRelatedOrdersDocuments====================================')
+    console.log(rowsRelatedOrdersDocuments)
     console.log('====================================')
-    const rowsRelatedOrdersDocuments = attachments.reduce((ordersList, attachment) => {
-      if (attachment) {
-        ordersList.push({
-          id: attachment.id,
-          documentName: (
-            <Button as='a' onClick={() => this.downloadAttachment(attachment.name, attachment.id)}>
-              <Icon name='download' />
-              {attachment.name}
-            </Button>
-          ),
-          documenType: getSafe(() => attachment.documentType.name, 'N/A'),
-          documenDescription: getSafe(() => attachment.description, 'N/A'),
-          orderId: order.id
-        })
-      }
-
-      return ordersList
-    }, [])
     //odstranit vzkricnik pred isAddNewDocument
     return (
       <>
@@ -756,22 +825,26 @@ class Orders extends Component {
             </CustomDivAddedMewDocument>
           </Rectangle>
         ) : null}
+        {isUnlinkDocument ? (
+          <RectangleRed>
+            <CustomDivAddedMewDocument>
+              <CustomCheckCircleRed />
+              <CustomDivTextAddedMewDocument>
+                <FormattedMessage id='related.documents.unlinkDocument' defaultMessage='Document has been unlinked'>
+                  {text => text}
+                </FormattedMessage>
+              </CustomDivTextAddedMewDocument>
+            </CustomDivAddedMewDocument>
+          </RectangleRed>
+        ) : null}
         <CustomDivAddDocument>
-          {false && (
-            <RelatedDocumentsDropdown
-              options={listDocumentTypes}
-              value={this.state.relatedDocumentsDropdown}
-              selection
-              onChange={(event, { name, value }) => {
-                event.preventDefault()
-                this.setState({ [name]: value })
-              }}
-              name='relatedDocumentsDropdown'
-              placeholder={formatMessage({ id: 'related.documents.selectType', defaultMessage: 'Select type' })}
-            />
-          )}
           <div>
-            <AttachmentManager asModal returnSelectedRows={rows => this.attachDocumentsManager(rows)} />
+            <AttachmentManager
+              relatedDocumentType={this.state.relatedDocumentType}
+              isOpenManager={this.state.isOpenManager}
+              asModal
+              returnSelectedRows={rows => this.attachDocumentsManager(rows)}
+            />
           </div>
         </CustomDivAddDocument>
         <ProdexGrid
@@ -796,20 +869,6 @@ class Orders extends Component {
             }
           ]}
         />
-        <ButtonsWrapper>
-          <Grid.Column textAlign='right'>
-            <Button
-              basic
-              onClick={() => {
-                this.setState({ isAddedNewDocument: false })
-                this.closePopup()
-              }}>
-              <FormattedMessage id='global.close' defaultMessage='Close'>
-                {text => text}
-              </FormattedMessage>
-            </Button>
-          </Grid.Column>
-        </ButtonsWrapper>
       </>
     )
   }
@@ -855,103 +914,6 @@ class Orders extends Component {
       </>
     )
   }
-  //TODO
-  getDocumentsContent = () => {
-    const {
-      listDocumentTypes,
-      intl: { formatMessage }
-    } = this.props
-    console.log('listDocumentTypes====================================')
-    console.log(listDocumentTypes)
-    console.log('====================================')
-    return (
-      <>
-        <CustomDivLabelDocumentType>
-          <FormattedMessage id='related.documents.documentType' defaultMessage={'Document Type'} />
-        </CustomDivLabelDocumentType>
-        <RelatedDocumentsDropdown
-          name='documentType'
-          closeOnChange
-          options={listDocumentTypes}
-          value={this.state.documentType}
-          selection
-          onChange={(event, { name, value }) => {
-            this.setState({ [name]: value })
-          }}
-          placeholder={formatMessage({ id: 'related.documents.selectType', defaultMessage: 'Select type' })}
-        />
-        <CustomDivUploadLot>
-          <UploadLot
-            {...this.props}
-            edit={getSafe(() => sidebarValues.id, 0)}
-            name='documents.attachments'
-            type={this.state.documentType}
-            attachments={this.state.documentFiles}
-            onChange={files => {
-              this.setState({ documentFiles: files })
-            }}
-            fileMaxSize={20}
-            data-test='related_document_attachments_drop'
-            emptyContent={
-              <>
-                <UploadCloud size={48} />
-                <br />
-                {formatMessage({ id: 'addInventory.dragDrop' })}
-                <br />
-                <FormattedMessage
-                  id='addInventory.dragDropOr'
-                  defaultMessage={'or {link} to select from computer'}
-                  values={{
-                    link: (
-                      <a>
-                        <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                      </a>
-                    )
-                  }}
-                />
-              </>
-            }
-            uploadedContent={
-              <label>
-                <UploadCloud size={48} />
-                <br />
-                <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-                <br />
-                <FormattedMessage
-                  id='addInventory.dragDropOr'
-                  defaultMessage={'or {link} to select from computer'}
-                  values={{
-                    link: (
-                      <a>
-                        <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                      </a>
-                    )
-                  }}
-                />
-              </label>
-            }
-          />
-        </CustomDivUploadLot>
-        <ButtonsWrapperDocuments>
-          <Grid.Column textAlign='right'>
-            <Button basic onClick={() => this.setState({ isAddedNewDocument: false })}>
-              <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                {text => text}
-              </FormattedMessage>
-            </Button>
-            <Button
-              primary
-              onClick={() => this.saveRelatedDocuments()}
-              style={{ color: 'white', backgroundColor: '#2599d5' }}>
-              <FormattedMessage id='global.save' defaultMessage='Save'>
-                {text => text}
-              </FormattedMessage>
-            </Button>
-          </Grid.Column>
-        </ButtonsWrapperDocuments>
-      </>
-    )
-  }
 
   render() {
     const {
@@ -965,33 +927,40 @@ class Orders extends Component {
       intl: { formatMessage }
     } = this.props
 
-    const { columns, isOpenDocumentsPopup } = this.state
+    const { columns, row, openModal, attachmentPopup, newDocuments } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
 
-    const { attachmentPopup, openModal } = this.state
-
+    console.log('attachmentPopup====================================')
+    console.log(attachmentPopup)
+    console.log('====================================')
+    if (attachmentPopup && attachmentPopup.order && attachmentPopup.order.id) {
+      console.log('row====================================')
+      console.log(datagrid.rows.find(row => row.id === attachmentPopup.order.id))
+      console.log('====================================')
+    }
     return (
       <div id='page' className='flex stretched scrolling'>
-        {isOpenDocumentsPopup && (
-          <Modal
-            size='small'
-            closeIcon={false}
-            onClose={() => this.setState({ isOpenDocumentsPopup: false })}
-            centered={true}
-            open={this.state.isOpenDocumentsPopup}>
-            <Modal.Header>
-              <FormattedMessage id='order.related.documents.add' defaultMessage='ADD DOCUMENTS'>
-                {text => text}
-              </FormattedMessage>
-            </Modal.Header>
-            <Modal.Content scrolling>{this.getDocumentsContent()}</Modal.Content>
-          </Modal>
-        )}
         {openModal && (
           <Modal
-            size='small'
             closeIcon={false}
-            onClose={() => this.setState({ openModal: false, isAddedNewDocument: false })}
+            onClose={() => {
+              if (newDocuments) {
+                const row = datagrid.rows.find(row => row.id === attachmentPopup.order.id)
+
+                const attachments = [...row.attachments, ...newDocuments]
+                datagrid.updateRow(attachmentPopup && attachmentPopup.order && attachmentPopup.order.id, () => ({
+                  ...row,
+                  attachments: attachments
+                }))
+              }
+              this.setState({
+                openModal: false,
+                isAddedNewDocument: false,
+                attachmentPopup: null,
+                newDocuments: '',
+                isUnlinkDocument: false
+              })
+            }}
             centered={true}
             open={this.state.openModal}>
             <Modal.Header>
@@ -1000,6 +969,33 @@ class Orders extends Component {
               </FormattedMessage>
             </Modal.Header>
             <Modal.Content scrolling>{this.getAttachmentContent()}</Modal.Content>
+            <Modal.Actions>
+              <Button
+                basic
+                onClick={() => {
+                  if (newDocuments) {
+                    const row = datagrid.rows.find(row => row.id === attachmentPopup.order.id)
+
+                    const attachments = [...row.attachments, ...newDocuments]
+                    datagrid.updateRow(attachmentPopup && attachmentPopup.order && attachmentPopup.order.id, () => ({
+                      ...row,
+                      attachments: attachments
+                    }))
+                  }
+
+                  this.setState({
+                    isAddedNewDocument: false,
+                    attachmentPopup: null,
+                    newDocuments: '',
+                    isUnlinkDocument: false
+                  })
+                  this.closePopup()
+                }}>
+                <FormattedMessage id='global.close' defaultMessage='Close'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+            </Modal.Actions>
           </Modal>
         )}
         {this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (

@@ -27,18 +27,58 @@ const CustomDropdown = styled(Dropdown)`
   z-index: 601 !important;
 `
 
+const CustomGridColumn = styled(GridColumn)`
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+`
+
 class AttachmentClass extends Component {
   state = {
     open: false,
     uploadOpen: false,
     selectedRows: [],
-    documentType: ''
+    documentTypes: '',
+    documentTypeText: '',
+    isManualyUpdated: false
   }
 
   componentDidMount() {
-    const { documentTypes, getDocumentTypes } = this.props
+    const {
+      documentTypes,
+      getDocumentTypes,
+      isOpenManager,
+      relatedDocumentType: { text, value }
+    } = this.props
     if (documentTypes && !documentTypes.length) {
       getDocumentTypes()
+    }
+    if (isOpenManager) {
+      this.setState({ open: true })
+    }
+    if (text && value) {
+      this.handleSearch({ value: text })
+      this.setState({ documentTypes: value, documentTypeText: text, isManualyUpdated: false })
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.documentTypeText) {
+      const {
+        relatedDocumentType: { text, value }
+      } = this.props
+      console.log('prevState====================================')
+      console.log(prevState)
+      console.log('====================================')
+      console.log('this.state====================================')
+      console.log(this.state)
+      console.log('====================================')
+      const wrongRows = this.props.datagrid.rows.filter(row => row.documentType.name !== this.state.documentTypeText)
+      console.log('wrongRows====================================')
+      console.log(wrongRows)
+      console.log('====================================')
+      if (wrongRows && wrongRows.length && !this.state.isManualyUpdated) {
+        this.handleSearch({ value: this.state.documentTypeText })
+      }
     }
   }
 
@@ -49,13 +89,14 @@ class AttachmentClass extends Component {
         return { ...datagrid.rows.find(att => att.id === id) }
       })
     )
-    this.setState({ open: false })
+    this.handleSearch({ value: '' })
+    this.setState({ open: false, documentTypes: '' })
   }
 
   handleSearch = debounce(({ value }) => {
     let { datagrid } = this.props
     datagrid.setSearch(value)
-  }, 250)
+  }, 150)
 
   getContent = () => {
     const { datagrid, lockSelection, tableProps, selectable } = this.props
@@ -73,10 +114,10 @@ class AttachmentClass extends Component {
         }))}
         tableName='attachements'
         columns={[
-          { name: 'name', title: 'File Name', width: 300 },
+          { name: 'name', title: 'File Name', width: 270 },
           { name: 'documentType', title: 'Type', width: 150 },
-          { name: 'expirationDate', title: 'Expiration Date', width: 150 },
-          { name: 'description', title: 'Description', width: 200 }
+          { name: 'expirationDate', title: 'Expiration Date', width: 120 },
+          { name: 'description', title: 'Description', width: 210 }
         ]}
         rowSelection={selectable}
         lockSelection={false}
@@ -98,21 +139,45 @@ class AttachmentClass extends Component {
   }
 
   render() {
-    const { trigger, asModal, documentTypes } = this.props
-
+    const {
+      trigger,
+      asModal,
+      documentTypes,
+      relatedDocumentType: { text, value }
+    } = this.props
     if (!asModal) return this.getContent()
 
     return (
       <>
         <Modal
-          closeIcon={<PaddedIcon name='close icon' />}
-          onClose={() => this.setState({ open: false })}
+          closeIcon={
+            <PaddedIcon
+              onClick={() => {
+                this.handleSearch({ value: '' })
+                this.setState({ open: false, documentTypes: '', isManualyUpdated: false })
+              }}
+              name='close icon'
+            />
+          }
+          onClose={() => {
+            this.setState({ open: false })
+          }}
           centered={true}
           open={this.state.open}
           trigger={React.cloneElement(trigger, {
-            onClick: () => this.setState({ open: true })
+            onClick: () => {
+              if (text && value) {
+                this.setState({ open: true, documentTypes: value })
+                this.handleSearch({ value: text })
+              } else {
+                this.setState({ open: true })
+              }
+            }
           })}
-          onClose={() => this.setState({ open: false })}>
+          onClose={() => {
+            this.handleSearch({ value: '' })
+            this.setState({ open: false, documentTypes: '', isManualyUpdated: false })
+          }}>
           <CustomHeader>
             <Grid verticalAlign='middle'>
               <GridRow>
@@ -129,15 +194,16 @@ class AttachmentClass extends Component {
           <Modal.Content scrolling>
             <Grid style={{ justifyContent: 'flex-end' }}>
               <GridRow>
-                <GridColumn width={5}>
+                <GridColumn width={4}>
                   <CustomDropdown
-                    name='documentType'
-                    closeOnChange
+                    name='documentTypes'
                     options={documentTypes}
-                    value={this.state.documentType}
+                    value={this.state.documentTypes}
                     selection
                     onChange={(event, { name, value }) => {
-                      this.setState({ [name]: value })
+                      const data = documentTypes.find(option => parseInt(option.value) === parseInt(value))
+                      this.handleSearch({ value: data.text })
+                      this.setState({ [name]: value, isManualyUpdated: true })
                     }}
                     placeholder={
                       <FormattedMessage id='related.documents.selectType' defaultMessage='Select type'>
@@ -150,34 +216,47 @@ class AttachmentClass extends Component {
                   <Input icon='search' placeholder='Search...' onChange={(_, data) => this.handleSearch(data)} />
                 </GridColumn>
 
-                <GridColumn width={4}>
+                <CustomGridColumn width={4}>
                   <Button
                     type='button'
-                    primary
+                    style={{ color: 'white', backgroundColor: '#2599d5' }}
                     disabled={!this.state.selectedRows.length}
                     onClick={this.returnSelectedRows}>
                     <FormattedMessage id='attachments.attachSelected' defaultMessage='Attach Selected Files'>
                       {text => text}
                     </FormattedMessage>
                   </Button>
-                </GridColumn>
+                </CustomGridColumn>
               </GridRow>
             </Grid>
             {this.getContent()}
           </Modal.Content>
 
           <Modal.Actions>
-            <Button basic onClick={() => this.setState({ open: false })}>
+            <Button
+              basic
+              onClick={() => {
+                this.handleSearch({ value: '' })
+                this.setState({ open: false, documentTypes: '', isManualyUpdated: false })
+              }}>
               <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                 {text => text}
               </FormattedMessage>
             </Button>
-            <Button primary onClick={() => this.setState({ uploadOpen: true })}>
+            <Button
+              style={{ color: 'white', backgroundColor: '#2599d5' }}
+              onClick={() => this.setState({ uploadOpen: true })}>
               <FormattedMessage id='global.uploadAnother' defaultMessage='Upload Another'>
                 {text => text}
               </FormattedMessage>
             </Button>
-            {this.state.uploadOpen && <DocumentManagerPopup onClose={() => this.setState({ uploadOpen: false })} />}
+            {this.state.uploadOpen && (
+              <DocumentManagerPopup
+                onClose={() => {
+                  this.setState({ uploadOpen: false })
+                }}
+              />
+            )}
           </Modal.Actions>
         </Modal>
       </>
@@ -189,9 +268,6 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
-  console.log('state====================================')
-  console.log(state)
-  console.log('====================================')
   return {
     documentTypes: state.settings.documentTypes
   }
@@ -207,7 +283,7 @@ AttachmentModal.propTypes = {
 
 AttachmentModal.defaultProps = {
   trigger: (
-    <Button fluid type='button'>
+    <Button fluid type='button' style={{ color: 'white', backgroundColor: '#2599d5' }}>
       <FormattedMessage id='global.documentManager' defaultMessage='Document Manager'>
         {text => text}
       </FormattedMessage>
