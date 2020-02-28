@@ -493,8 +493,9 @@ class Orders extends Component {
     isOpenManager: false,
     relatedDocumentType: '',
     row: '',
-    newDocuments: '',
-    isUnlinkDocument: false
+    isUnlinkDocument: false,
+    replaceExisting: false,
+    replaceRow: ''
   }
 
   getMimeType = documentName => {
@@ -710,10 +711,6 @@ class Orders extends Component {
     this.props.clearRelatedOrders()
   }
 
-  replaceExiting = row => {
-    console.log('replaceExiting')
-  }
-
   handleUnlink = async row => {
     const { endpointType, unlinkAttachmentToOrder, datagrid } = this.props
     const query = {
@@ -723,13 +720,14 @@ class Orders extends Component {
     try {
       await unlinkAttachmentToOrder(query)
       if (datagrid && datagrid.rows) {
+        //This construction is for update all attachments in order
         const rowDatagrid = datagrid.rows.find(r => r.id === row.orderId)
         const attachments =
           rowDatagrid &&
           rowDatagrid.attachments &&
           rowDatagrid.attachments.length &&
           rowDatagrid.attachments.filter(ro => ro.id !== row.id)
-
+        //This construction is for update only in one table. for example in C of A or B/L or SDS
         const attachment =
           rowDatagrid &&
           rowDatagrid.attachments &&
@@ -755,22 +753,42 @@ class Orders extends Component {
   }
 
   attachDocumentsManager = async newDocuments => {
+    const { linkAttachmentToOrder, datagrid } = this.props
+    if (this.state.replaceExisting && this.state.replaceRow) {
+      await this.handleUnlink(this.state.replaceRow)
+      this.setState({ replaceExisting: false, replaceRow: '' })
+    }
     const docArray = uniqueArrayByKey(newDocuments, 'id')
     const attach = getSafe(() => this.state.attachmentPopup.attachment, [])
-    const attachment = Array.isArray(attach) ? [...attach, ...docArray] : [...[attach], ...docArray]
+    //This construction is for update state in only one table for example only for C of A
+    const newAttachment = Array.isArray(attach) ? [...attach, ...docArray] : [...[attach], ...docArray]
     const order = getSafe(() => this.state.attachmentPopup.order, null)
-    this.setState({ newDocuments: docArray })
 
     try {
       if (docArray.length) {
         docArray.forEach(doc => {
-          this.props.linkAttachmentToOrder({ attachmentId: doc.id, orderId: order.id })
+          linkAttachmentToOrder({ attachmentId: doc.id, orderId: order.id })
         })
       }
+
+      //This construction is for update all attachments in all tables in related documents
+      const rowDatagrid = datagrid.rows.find(r => r.id === order.id)
+      let newAttachments = []
+      if (rowDatagrid && rowDatagrid.attachments && rowDatagrid.attachments.length) {
+        newAttachments = [...rowDatagrid.attachments, ...docArray]
+      } else {
+        newAttachments = docArray
+      }
+      datagrid.updateRow(order.id, () => ({
+        ...rowDatagrid,
+        attachments: newAttachments
+      }))
+
       this.setState({
-        attachmentPopup: { attachment, order },
+        attachmentPopup: { attachment: newAttachment, order },
         isAddedNewDocument: true,
-        isUnlinkDocument: false
+        isUnlinkDocument: false,
+        isOpenManager: false
       })
     } catch (error) {
       console.log(error)
@@ -807,10 +825,7 @@ class Orders extends Component {
         return ordersList
       }, [])
     }
-    console.log('rowsRelatedOrdersDocuments====================================')
-    console.log(rowsRelatedOrdersDocuments)
-    console.log('====================================')
-    //odstranit vzkricnik pred isAddNewDocument
+
     return (
       <>
         {isAddedNewDocument ? (
@@ -848,6 +863,7 @@ class Orders extends Component {
           </div>
         </CustomDivAddDocument>
         <ProdexGrid
+          loading={this.props.loadingRelatedDocuments}
           tableName='related_orders_documents'
           columns={this.state.columnsRelatedOrdersDocuments}
           rows={rowsRelatedOrdersDocuments}
@@ -871,6 +887,10 @@ class Orders extends Component {
         />
       </>
     )
+  }
+
+  replaceExiting = row => {
+    this.setState({ isOpenManager: true, replaceExisting: true, replaceRow: row })
   }
 
   getContent = () => {
@@ -923,41 +943,33 @@ class Orders extends Component {
       queryType,
       router,
       datagrid,
-      loadRelatedOrders,
       intl: { formatMessage }
     } = this.props
 
-    const { columns, row, openModal, attachmentPopup, newDocuments } = this.state
+    const { columns, row, openModal, attachmentPopup, isOpenManager } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
 
-    console.log('attachmentPopup====================================')
-    console.log(attachmentPopup)
-    console.log('====================================')
-    if (attachmentPopup && attachmentPopup.order && attachmentPopup.order.id) {
-      console.log('row====================================')
-      console.log(datagrid.rows.find(row => row.id === attachmentPopup.order.id))
-      console.log('====================================')
-    }
     return (
       <div id='page' className='flex stretched scrolling'>
+        {isOpenManager && (
+          <div>
+            <AttachmentManager
+              relatedDocumentType={this.state.relatedDocumentType}
+              isOpenManager={this.state.isOpenManager}
+              asModal
+              returnSelectedRows={rows => this.attachDocumentsManager(rows)}
+              returnCloseAttachmentManager={bool => this.setState({ isOpenManager: bool })}
+            />
+          </div>
+        )}
         {openModal && (
           <Modal
             closeIcon={false}
             onClose={() => {
-              if (newDocuments) {
-                const row = datagrid.rows.find(row => row.id === attachmentPopup.order.id)
-
-                const attachments = [...row.attachments, ...newDocuments]
-                datagrid.updateRow(attachmentPopup && attachmentPopup.order && attachmentPopup.order.id, () => ({
-                  ...row,
-                  attachments: attachments
-                }))
-              }
               this.setState({
                 openModal: false,
                 isAddedNewDocument: false,
                 attachmentPopup: null,
-                newDocuments: '',
                 isUnlinkDocument: false
               })
             }}
@@ -973,20 +985,9 @@ class Orders extends Component {
               <Button
                 basic
                 onClick={() => {
-                  if (newDocuments) {
-                    const row = datagrid.rows.find(row => row.id === attachmentPopup.order.id)
-
-                    const attachments = [...row.attachments, ...newDocuments]
-                    datagrid.updateRow(attachmentPopup && attachmentPopup.order && attachmentPopup.order.id, () => ({
-                      ...row,
-                      attachments: attachments
-                    }))
-                  }
-
                   this.setState({
                     isAddedNewDocument: false,
                     attachmentPopup: null,
-                    newDocuments: '',
                     isUnlinkDocument: false
                   })
                   this.closePopup()

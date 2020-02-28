@@ -43,39 +43,26 @@ class AttachmentClass extends Component {
   }
 
   componentDidMount() {
-    const {
-      documentTypes,
-      getDocumentTypes,
-      isOpenManager,
-      relatedDocumentType: { text, value }
-    } = this.props
+    const { documentTypes, getDocumentTypes, isOpenManager, relatedDocumentType } = this.props
     if (documentTypes && !documentTypes.length) {
       getDocumentTypes()
     }
     if (isOpenManager) {
       this.setState({ open: true })
     }
-    if (text && value) {
-      this.handleSearch({ value: text })
-      this.setState({ documentTypes: value, documentTypeText: text, isManualyUpdated: false })
+    if (relatedDocumentType && relatedDocumentType.text && relatedDocumentType.value) {
+      this.handleSearch({ value: relatedDocumentType.text })
+      this.setState({
+        documentTypes: relatedDocumentType.value,
+        documentTypeText: relatedDocumentType.text,
+        isManualyUpdated: false
+      })
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.documentTypeText) {
-      const {
-        relatedDocumentType: { text, value }
-      } = this.props
-      console.log('prevState====================================')
-      console.log(prevState)
-      console.log('====================================')
-      console.log('this.state====================================')
-      console.log(this.state)
-      console.log('====================================')
       const wrongRows = this.props.datagrid.rows.filter(row => row.documentType.name !== this.state.documentTypeText)
-      console.log('wrongRows====================================')
-      console.log(wrongRows)
-      console.log('====================================')
       if (wrongRows && wrongRows.length && !this.state.isManualyUpdated) {
         this.handleSearch({ value: this.state.documentTypeText })
       }
@@ -97,6 +84,14 @@ class AttachmentClass extends Component {
     let { datagrid } = this.props
     datagrid.setSearch(value)
   }, 150)
+
+  returnCloseAttachmentManager = () => {
+    if (this.props.returnCloseAttachmentManager) {
+      this.props.returnCloseAttachmentManager(false)
+    } else {
+      return
+    }
+  }
 
   getContent = () => {
     const { datagrid, lockSelection, tableProps, selectable } = this.props
@@ -139,12 +134,7 @@ class AttachmentClass extends Component {
   }
 
   render() {
-    const {
-      trigger,
-      asModal,
-      documentTypes,
-      relatedDocumentType: { text, value }
-    } = this.props
+    const { trigger, asModal, documentTypes, relatedDocumentType } = this.props
     if (!asModal) return this.getContent()
 
     return (
@@ -153,28 +143,27 @@ class AttachmentClass extends Component {
           closeIcon={
             <PaddedIcon
               onClick={() => {
+                this.returnCloseAttachmentManager()
                 this.handleSearch({ value: '' })
                 this.setState({ open: false, documentTypes: '', isManualyUpdated: false })
               }}
               name='close icon'
             />
           }
-          onClose={() => {
-            this.setState({ open: false })
-          }}
           centered={true}
           open={this.state.open}
           trigger={React.cloneElement(trigger, {
             onClick: () => {
-              if (text && value) {
-                this.setState({ open: true, documentTypes: value })
-                this.handleSearch({ value: text })
+              if (relatedDocumentType && relatedDocumentType.text && relatedDocumentType.value) {
+                this.setState({ open: true, documentTypes: relatedDocumentType.value })
+                this.handleSearch({ value: relatedDocumentType.text })
               } else {
                 this.setState({ open: true })
               }
             }
           })}
           onClose={() => {
+            this.returnCloseAttachmentManager()
             this.handleSearch({ value: '' })
             this.setState({ open: false, documentTypes: '', isManualyUpdated: false })
           }}>
@@ -236,6 +225,7 @@ class AttachmentClass extends Component {
             <Button
               basic
               onClick={() => {
+                this.returnCloseAttachmentManager()
                 this.handleSearch({ value: '' })
                 this.setState({ open: false, documentTypes: '', isManualyUpdated: false })
               }}>

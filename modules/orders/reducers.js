@@ -39,7 +39,8 @@ const initialState = {
   loadingGroupedProductOffers: false,
   order: [],
   documentTypesFetching: false,
-  listDocumentTypes: []
+  listDocumentTypes: [],
+  loadingRelatedDocuments: false
 }
 
 export default function(state = initialState, action) {
@@ -515,37 +516,43 @@ export default function(state = initialState, action) {
 
     case AT.UNLINK_ATTACHMENT_TO_ORDER_PENDING: {
       return {
-        ...state
+        ...state,
+        loadingRelatedDocuments: true
       }
     }
 
     case AT.UNLINK_ATTACHMENT_TO_ORDER_FULFILLED: {
       return {
-        ...state
+        ...state,
+        loadingRelatedDocuments: false
       }
     }
 
     case AT.UNLINK_ATTACHMENT_TO_ORDER_REJECTED: {
       return {
-        ...state
+        ...state,
+        loadingRelatedDocuments: false
       }
     }
 
     case AT.LINK_ATTACHMENT_TO_ORDER_PENDING: {
       return {
-        ...state
+        ...state,
+        loadingRelatedDocuments: true
       }
     }
 
     case AT.LINK_ATTACHMENT_TO_ORDER_FULFILLED: {
       return {
-        ...state
+        ...state,
+        loadingRelatedDocuments: false
       }
     }
 
     case AT.LINK_ATTACHMENT_TO_ORDER_REJECTED: {
       return {
-        ...state
+        ...state,
+        loadingRelatedDocuments: false
       }
     }
 
