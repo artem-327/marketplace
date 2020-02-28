@@ -404,20 +404,6 @@ class Map extends Component {
 
                       if (this.props.productOffer)
                         await this.props.deleteCSVMapProductOffer(this.props.selectedSavedMap.id)
-
-                      toastManager.add(
-                        generateToastMarkup(
-                          formatMessage({ id: 'notifications.deleteMapSuccess.header', defaultMessage: 'Map deleted' }),
-                          formatMessage(
-                            {
-                              id: 'notifications.deleteMapSuccess.content',
-                              defaultMessage: `Map {name} successfully deleted.`
-                            },
-                            { name: mapName }
-                          )
-                        ),
-                        { appearance: 'success' }
-                      )
                     }}
                     style={{ width: '100%' }}>
                     <FormattedMessage id='settings.deleteMap' defaultMessage='Delete Map'>
@@ -510,16 +496,6 @@ class Map extends Component {
 
                       this.props.getCSVMapProductOffer()
                     }
-
-                    toastManager.add(
-                      generateToastMarkup(
-                        <FormattedMessage id='notifications.mapCreated.header' />,
-                        <FormattedMessage id='notifications.mapCreated.content' values={{ name: mapName }} />
-                      ),
-                      {
-                        appearance: 'success'
-                      }
-                    )
                   }}
                   style={{ width: '100%' }}>
                   <FormattedMessage id='settings.saveMap' defaultMessage='Save Map' />

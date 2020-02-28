@@ -5,10 +5,9 @@ import { Formik } from 'formik'
 import { Form, Modal, Button, Popup, Segment, Header, Icon, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import { Checkbox } from 'formik-semantic-ui-fixed-validation'
 
-import { withToastManager } from 'react-toast-notifications'
 import * as Yup from 'yup'
 
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 import { typeToComponent, toYupSchema } from './constants'
 
 import { triggerSystemSettingsModal } from '~/modules/settings/actions'
@@ -109,7 +108,7 @@ class Settings extends Component {
     // Original = true && value !== 'EMPTY_SETTING' => User has value set at current level
     let settings
 
-    const { toastManager, triggerSystemSettingsModal, role } = this.props
+    const { triggerSystemSettingsModal, role } = this.props
     this.setState({ loading: true })
 
     let payload = {
@@ -128,17 +127,6 @@ class Settings extends Component {
 
     try {
       settings = await api.updateSettings(role, payload)
-
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='notifications.systemSettingsUpdated.header' defaultMessage='System settings updated' />,
-          <FormattedMessage
-            id='notifications.systemSettingsUpdated.content'
-            defaultMessage='System settings successfully updated'
-          />
-        ),
-        { appearance: 'success' }
-      )
 
       let { systemSettings } = this.parseData(settings)
 
@@ -387,4 +375,4 @@ export default connect(
     }
   }),
   { triggerSystemSettingsModal }
-)(injectIntl(withToastManager(Settings)))
+)(injectIntl(Settings))

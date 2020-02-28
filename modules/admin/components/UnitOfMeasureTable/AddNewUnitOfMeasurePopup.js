@@ -6,9 +6,6 @@ import { Modal, FormGroup } from 'semantic-ui-react'
 import { closeAddPopup, postNewRequest } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
-import { withToastManager } from 'react-toast-notifications'
-
-import { generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 import { errorMessages } from '~/constants/yupValidation'
 
@@ -36,7 +33,7 @@ const formValidation = Yup.object().shape({
 
 class AddNewUnitOfMeasurePopup extends React.Component {
   render() {
-    const { closeAddPopup, currentTab, config, postNewRequest, measureOptions, toastManager } = this.props
+    const { closeAddPopup, currentTab, config, postNewRequest, measureOptions } = this.props
 
     return (
       <Modal closeIcon onClose={() => closeAddPopup()} open centered={false}>
@@ -56,20 +53,6 @@ class AddNewUnitOfMeasurePopup extends React.Component {
                 [config.edit[3].name]: Number(values.val3)
               }
               await postNewRequest(config, data)
-
-              toastManager.add(
-                generateToastMarkup(
-                  <FormattedMessage id='notifications.unitOfMeasurementCreated.header' />,
-                  <FormattedMessage
-                    id='notifications.unitOfMeasurementCreated.content'
-                    values={{ name: values.val0 }}
-                  />
-                ),
-                {
-                  appearance: 'success'
-                }
-              )
-
               setSubmitting(false)
             }}>
             <FormGroup widths='equal' data-test='admin_add_unit_measure_name_inp'>
@@ -128,4 +111,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(AddNewUnitOfMeasurePopup))
+export default connect(mapStateToProps, mapDispatchToProps)(AddNewUnitOfMeasurePopup)

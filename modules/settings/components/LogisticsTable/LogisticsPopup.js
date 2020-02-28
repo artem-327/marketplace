@@ -5,10 +5,6 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Form, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { array } from 'prop-types'
-import { withToastManager } from 'react-toast-notifications'
-
-import { generateToastMarkup } from '~/utils/functions'
-
 import { errorMessages } from '~/constants/yupValidation'
 
 const { requiredMessage } = errorMessages
@@ -69,8 +65,7 @@ class LogisticsPopup extends Component {
       logisticsProvidersFetching,
       createLogisticsAccount,
       updateLogisticsAccount,
-      intl: { formatMessage },
-      toastManager
+      intl: { formatMessage }
     } = this.props
 
     return (
@@ -96,19 +91,6 @@ class LogisticsPopup extends Component {
                 } else {
                   await createLogisticsAccount(values)
                 }
-
-                let status = popupValues ? 'Updated' : 'Created'
-
-                toastManager.add(
-                  generateToastMarkup(
-                    formatMessage({ id: `notifications.logistics${status}.header` }),
-                    formatMessage(
-                      { id: `notifications.logistics${status}.content` },
-                      { name: logisticsProviders[logisticsProviders.findIndex(el => el.id === values.provider)].name }
-                    )
-                  ),
-                  { appearance: 'success' }
-                )
               } catch {
               } finally {
                 setSubmitting(false)
@@ -209,4 +191,4 @@ const mapStateToProps = ({ settings: { popupValues, logisticsProvidersFetching, 
   logisticsProviders
 })
 
-export default injectIntl(withToastManager(connect(mapStateToProps, mapDispatchToProps)(LogisticsPopup)))
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(LogisticsPopup))

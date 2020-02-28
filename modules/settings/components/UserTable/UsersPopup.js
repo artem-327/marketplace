@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { withToastManager } from 'react-toast-notifications'
 import { Modal, FormGroup } from 'semantic-ui-react'
 import {
   closePopup,
@@ -14,7 +13,6 @@ import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui-fixe
 import { CheckboxWithValue } from '~/components/custom-formik'
 import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 //import { currency } from '~/constants/index'
 import { currencyId } from '~/constants/index'
@@ -61,7 +59,7 @@ class UsersPopup extends React.Component {
   }
 
   submitUser = async (values, actions) => {
-    const { toastManager, popupValues, handlerSubmitUserEditPopup, postNewUserRequest } = this.props
+    const { popupValues, handlerSubmitUserEditPopup, postNewUserRequest } = this.props
 
     const data = {
       additionalBranches: values.additionalBranches,
@@ -79,15 +77,6 @@ class UsersPopup extends React.Component {
       } else {
         await postNewUserRequest(data)
       }
-      const status = popupValues ? 'userUpdated' : 'userCreated'
-
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id={`notifications.${status}.header`} />,
-          <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
-        ),
-        { appearance: 'success' }
-      )
     } catch {}
     actions.setSubmitting(false)
   }
@@ -262,4 +251,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(UsersPopup)))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(UsersPopup))

@@ -669,15 +669,6 @@ class DetailSidebar extends Component {
           initValues: { ...initValues, ...this.getEditValues(data.value) },
           edited: false
         })
-        toastManager.add(
-          generateToastMarkup(
-            <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
-            <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Product Offer was successfully saved.' />
-          ),
-          {
-            appearance: 'success'
-          }
-        )
         sendSuccess = true
       } catch (e) {
         console.error(e)

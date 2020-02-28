@@ -4,13 +4,11 @@ import * as Actions from '../../actions'
 import { loadFile, addAttachment } from '~/modules/inventory/actions'
 import { Modal, ModalContent, Header, Button, Grid, Dimmer, Loader, Segment } from 'semantic-ui-react'
 import { Form, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import * as val from 'yup'
 import { errorMessages } from '~/constants/yupValidation'
-import { withToastManager } from 'react-toast-notifications'
-
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `
@@ -42,8 +40,7 @@ class ReinitiateTransfer extends React.Component {
       intl: { formatMessage },
       bankAccounts,
       bankAccountsLoading,
-      orderId,
-      toastManager
+      orderId
     } = this.props
     const { allowTransfer } = this.state
 
@@ -74,22 +71,6 @@ class ReinitiateTransfer extends React.Component {
                     .payOrder(orderId, values.paymentAccount)
                     .then(r => {
                       actions.setSubmitting(false)
-                      toastManager.add(
-                        generateToastMarkup(
-                          <FormattedMessage
-                            id='order.reinitiateTransfer.success.header'
-                            defaultMessage='Initiate Payment'
-                          />,
-                          <FormattedMessage
-                            id='order.reinitiateTransfer.success.content'
-                            defaultMessage='Payment transfer for order #{orderId} was initiated successfully'
-                            values={{ orderId: orderId }}
-                          />
-                        ),
-                        {
-                          appearance: 'success'
-                        }
-                      )
                       this.props.closeReinitiateTransfer()
                     })
                     .catch(e => {
@@ -155,4 +136,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(ReinitiateTransfer)))
+export default connect(mapStateToProps, { ...Actions })(injectIntl(ReinitiateTransfer))

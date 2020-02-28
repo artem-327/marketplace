@@ -4,15 +4,12 @@ import { Modal, ModalContent, Accordion, Button, Icon, Grid, Dimmer, Loader } fr
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import { withToastManager } from 'react-toast-notifications'
 import moment from 'moment'
 import * as val from 'yup'
-
 import * as Actions from '../../actions'
 import { errorMessages } from '~/constants/yupValidation'
 import { downloadAttachment } from '~/modules/inventory/actions'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
-import { generateToastMarkup } from '~/utils/functions'
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
@@ -63,7 +60,7 @@ class SaleReviewCreditRequest extends React.Component {
   }
 
   submitHandler = async (values, actions) => {
-    const { closePopup, orderId, toastManager, creditCounter } = this.props
+    const { closePopup, orderId, creditCounter } = this.props
     const { counterValue, messageBuyer, attachments } = values
     try {
       const request = {
@@ -72,22 +69,6 @@ class SaleReviewCreditRequest extends React.Component {
       }
 
       await creditCounter(orderId, request, attachments)
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage
-            id='notifications.order.actions.counterOfferSent.header'
-            defaultMessage='Counter Credit Offer Sent'
-          />,
-          <FormattedMessage
-            id='notifications.order.actions.counterOfferSent.content'
-            defaultMessage={`Counter Credit Offer for Order ${orderId} was sent.`}
-            values={{ orderId: orderId }}
-          />
-        ),
-        {
-          appearance: 'success'
-        }
-      )
       closePopup()
     } catch (e) {
       console.error(e)
@@ -104,26 +85,10 @@ class SaleReviewCreditRequest extends React.Component {
 
   acceptRequestCredit = async e => {
     e.preventDefault()
-    const { closePopup, orderId, toastManager, creditAccept } = this.props
+    const { closePopup, orderId, creditAccept } = this.props
 
     try {
       await creditAccept(orderId)
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage
-            id='notifications.order.actions.requestCreditAccepted.header'
-            defaultMessage='Credit Request Accepted'
-          />,
-          <FormattedMessage
-            id='notifications.order.actions.requestCreditAccepted.content'
-            defaultMessage={`Credit Request for Order ${orderId} was accepted.`}
-            values={{ orderId: orderId }}
-          />
-        ),
-        {
-          appearance: 'success'
-        }
-      )
       closePopup()
     } catch (e) {
       console.error(e)
@@ -452,5 +417,5 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, { ...Actions, downloadAttachment })(
-  withToastManager(injectIntl(SaleReviewCreditRequest))
+  injectIntl(SaleReviewCreditRequest)
 )

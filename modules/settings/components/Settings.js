@@ -169,19 +169,6 @@ class Settings extends Component {
     }
   }
 
-  companyUpdated = name => {
-    let { toastManager } = this.props
-
-    toastManager.add(
-      <div>
-        <strong>
-          <FormattedMessage id='notifications.companyUpdated' defaultMessage='Company updated' values={{ name }} />
-        </strong>
-      </div>,
-      { appearance: 'success', pauseOnHover: true }
-    )
-  }
-
   componentDidMount() {
     const { isCompanyAdmin, addTab, tabsNames } = this.props
 
@@ -203,8 +190,8 @@ class Settings extends Component {
   }
 
   companyDetails = () => {
-    let { toastManager, postCompanyLogo, deleteCompanyLogo } = this.props
-    const { selectLogo, removeLogo, companyUpdated } = this
+    let { postCompanyLogo, deleteCompanyLogo } = this.props
+    const { selectLogo, removeLogo } = this
     const { companyLogo } = this.state
     return (
       <TopMargedGrid relaxed='very' centered>
@@ -225,7 +212,6 @@ class Settings extends Component {
                 } else {
                   if (values.hasLogo) await deleteCompanyLogo(values.id)
                 }
-                companyUpdated(values.name)
               } catch (err) {
                 console.error(err)
               } finally {
