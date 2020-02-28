@@ -40,7 +40,7 @@ export const defaultValues = {
   dotReportableQuantity: '',
   dotSevereMarinePollutant: '',
   dotUnNumber: '',
-  elements: [{ name: '', casProduct: '', assayMin: 100, assayMax: 100, proprietary: false }],
+  elements: [{ name: '', casProduct: '', assayMin: '', assayMax: '', proprietary: false }],
   emergencyPhone: '',
   endocrineDisruptorInformation: '',
   evaporationPoint: '',

@@ -29,7 +29,7 @@ export function addAttachment(attachment, type, additionalParams = {}) {
     type: AT.INVENTORY_ADD_ATTACHMENT,
     async payload() {
       const data = await api.addAttachment(attachment, type, additionalParams)
-      Datagrid.loadData()
+      Datagrid && Datagrid.loadData()
       return data
     }
   }
@@ -138,7 +138,6 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
   }
 
   if (poId) {
-
     if (isGrouped) {
       return {
         type: AT.INVENTORY_EDIT_GROUPED_PRODUCT_OFFER,
