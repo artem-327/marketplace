@@ -411,7 +411,7 @@ export default function(state = initialState, action) {
     case AT.PATCH_ASSIGN_PRODUCT_OFFERS_FULFILLED: {
       return {
         ...state,
-        order: action.payload.data
+        detail: action.payload.data
       }
     }
     case AT.PATCH_ASSIGN_PRODUCT_OFFERS_REJECTED: {
