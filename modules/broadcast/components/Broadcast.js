@@ -455,9 +455,13 @@ class Broadcast extends Component {
                       <Input
                         name='search'
                         icon='search'
-                        iconPosition='left'
+                        iconPosition='right'
                         value={this.state.filterSearch}
                         onChange={this.handleSearchChange}
+                        placeholder={formatMessage({
+                          id: 'broadcast.keyword',
+                          defaultMessage: 'Keyword'
+                        })}
                       />
                     </Form.Field>
                   </>
@@ -620,6 +624,10 @@ class Broadcast extends Component {
                                   text: template.name,
                                   value: template.id
                                 }))}
+                                placeholder={formatMessage({
+                                  id: 'broadcast.selectTemplate',
+                                  defaultMessage: 'Select Template'
+                                })}
                               />
                             </GridColumn>
                             <GridColumn computer={5}>
@@ -629,7 +637,6 @@ class Broadcast extends Component {
                                 disabled={!this.state.selectedTemplate}
                                 loading={this.props.templateDeleting}
                                 type='button'
-                                basic
                                 fluid
                                 negative>
                                 {formatMessage({
@@ -672,7 +679,6 @@ class Broadcast extends Component {
                               loading={this.props.templateSaving}
                               fluid
                               positive
-                              basic
                               data-test='broadcast_modal_submit_btn'>
                               {formatMessage({
                                 id: 'global.save',
@@ -695,7 +701,7 @@ class Broadcast extends Component {
             <Rule.Root>
               <Rule.Header style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
                 <Rule.RowContent>
-                  <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region select'>
+                  <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region Select'>
                     {text => text}
                   </FormattedMessage>
                 </Rule.RowContent>
