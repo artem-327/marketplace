@@ -1930,5 +1930,11 @@
   "hold.cancel": "Cancel",
   "hold.approve": "Approve",
   "hold.holdRequest": "Hold Requests",
-  "hold.buy": "Buy"
+  "hold.buy": "Buy",
+  "tutorial.branches.title": "Add Branches",
+  "tutorial.branches.content": "This will help you to know which users are at what locations",
+  "tutorial.branches.button": "Get Started!",
+  "tutorial.users.title": "Add Users",
+  "tutorial.users.content": "Invite other team members to buy and sell with you!",
+  "tutorial.users.button": "Add User"
 }

@@ -17,6 +17,7 @@ import moment from 'moment/moment'
 import { getSafe } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
+import { Tutorial } from '~/modules/tutorial/Tutorial'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -535,7 +536,7 @@ class MyInventory extends Component {
           </Modal.Actions>
         </Modal>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
-
+        <Tutorial />
         <Container fluid style={{ padding: '0 32px' }}>
           <Menu secondary className='page-part'>
             {/*selectedRows.length > 0 ? (
