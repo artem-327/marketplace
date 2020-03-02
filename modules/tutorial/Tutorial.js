@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import styled from 'styled-components'
+import { withRouter } from 'next/router'
 import { FormattedMessage } from 'react-intl'
 import { Button } from 'semantic-ui-react'
 import { Check } from 'react-feather'
 import Cookies from 'universal-cookie'
+import Router from 'next/router'
+import { withToastManager } from 'react-toast-notifications'
+import styled from 'styled-components'
+
+import { generateToastMarkup } from '~/utils/functions'
 
 const Rectangle = styled.div`
   border-radius: 4px;
@@ -91,86 +95,169 @@ const Icons = styled.div`
   justify-content: flex-end;
   align-items: center;
 `
-//TODO adjust to class
-export const Tutorial = () => {
-  const cookies = new Cookies()
 
-  const cookieTutorialTabs = cookies.get('tutorial')
+const cookies = new Cookies()
 
-  const tutorialTabs = [
-    {
-      branches: {
-        titleId: 'tutorial.branches.title',
-        contentId: 'tutorial.branches.content',
-        buttonId: 'tutorial.branches.button',
-        url: '/settings?type=branches'
-      }
-    },
-    {
-      users: {
-        titleId: 'tutorial.users.title',
-        contentId: 'tutorial.users.content',
-        buttonId: 'tutorial.users.button',
-        url: '/settings?type=users'
-      }
+const tutorialTabs = [
+  'branches',
+  'users',
+  'warehouses',
+  'products',
+  'inventory',
+  'marketplace',
+  'registerAccount',
+  'addAccount'
+]
+
+const urlTabs = [
+  '/settings?type=branches',
+  '/settings?type=users',
+  '/settings?type=warehouses',
+  '/settings?type=products',
+  '/inventory/my',
+  '/settings?type=global-broadcast',
+  '/settings?type=bank-accounts',
+  '/settings?type=bank-accounts'
+]
+
+class Tutorial extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      tutorialTab: ''
     }
-  ]
+  }
 
-  const getTutorialTab = () => {
+  componentDidMount() {
+    const { tutorialTab } = this.state
+    if (!tutorialTab) {
+      this.setState({ tutorialTab: this.getNextTab() })
+    }
+  }
+
+  getNextTab = () => {
+    const cookieTutorialTabs = cookies.get('tutorial')
+    let nextTab = tutorialTabs[0] // 'branches'
     if (cookieTutorialTabs && cookieTutorialTabs.length) {
-      cookieTutorialTabs.forEach(cookie => {
-        return tutorialTabs.find(tab => !tab[cookie])
-      })
+      nextTab = tutorialTabs[cookieTutorialTabs.length]
+    }
+    return nextTab
+  }
+
+  handleSetCookies = (e, skip) => {
+    e.preventDefault()
+    const { toastManager } = this.props
+
+    const cookieTutorialTabs = cookies.get('tutorial')
+
+    if (cookieTutorialTabs && cookieTutorialTabs.length) {
+      // if completed all tutorial tabs (index is more than 7)
+      if (!tutorialTabs[cookieTutorialTabs.length + 1]) {
+        toastManager.add(
+          generateToastMarkup(
+            <FormattedMessage id='tutorial.congratulation.title' defaultMessage='Congratulations!' />,
+            <FormattedMessage
+              id='tutorial.congratulation.content'
+              defaultMessage='Congratulations, you have finished the setup!'
+            />
+          ),
+          {
+            appearance: 'success'
+          }
+        )
+      }
+      !skip && Router.push(urlTabs[cookieTutorialTabs.length])
+      cookies.set('tutorial', [...cookieTutorialTabs, this.getNextTab()]) // set all existing cookies + next checked tab
+      this.setState({ tutorialTab: tutorialTabs[cookieTutorialTabs.length + 1] }) // set another tutorial tab for show correct content and icons in tab
+    } else {
+      !skip && Router.push(urlTabs[0])
+      cookies.set('tutorial', [this.getNextTab()]) // set first checked tab 'branches'
+      this.setState({ tutorialTab: tutorialTabs[1] }) // set second tutorial tab after checked first tab
     }
   }
 
-  const tutorialTab = getTutorialTab()
+  getIcons = () => {
+    const cookieTutorialTabs = cookies.get('tutorial')
+    const arrayTabs = []
 
-  const handleClick = e => {
-    e.preventDefault()
-    console.log('tutorialTab====================================')
-    console.log(tutorialTab)
-    console.log('====================================')
-    console.log('cookieTutorialTabs====================================')
-    console.log(cookieTutorialTabs)
-    console.log('====================================')
-    //Router.push()
-    //cookies.set('tutorial', [...cookieTutorialTabs, tutorialTab])
+    for (let tab of tutorialTabs) {
+      if (cookieTutorialTabs && cookieTutorialTabs.length) {
+        let tabObject = null
+        for (let cookie of cookieTutorialTabs) {
+          if (tab === cookie) {
+            tabObject = { id: tab, check: 2 }
+          } else if (tab === this.state.tutorialTab) {
+            tabObject = { id: tab, check: 1 }
+          }
+        }
+        if (tabObject) {
+          arrayTabs.push(tabObject)
+        } else {
+          arrayTabs.push({ id: tab, check: 0 })
+        }
+      } else {
+        if (tab === this.state.tutorialTab) {
+          arrayTabs.push({ id: tab, check: 1 })
+        } else {
+          arrayTabs.push({ id: tab, check: 0 })
+        }
+      }
+    }
+
+    if (!arrayTabs) return
+    return (
+      <Icons>
+        {arrayTabs &&
+          arrayTabs.length &&
+          arrayTabs.map(tab => {
+            if (!tab) return
+            if (tab.check === 2) {
+              return (
+                <OvalCheck>
+                  <CustomCheck strokeWidth={4} />
+                </OvalCheck>
+              )
+            } else if (tab.check === 1) {
+              return <OvalFocus />
+            } else if (tab.check === 0) {
+              return <OvalEmpty />
+            }
+          })}
+      </Icons>
+    )
   }
 
-  return (
-    <Rectangle>
-      <div>
-        <Title>
-          <FormattedMessage id={`tutorial.${tutorialTab}.title`} defaultMessage={'Title'}>
-            {text => text}
-          </FormattedMessage>
-        </Title>
-        <Content>
-          <FormattedMessage id={`tutorial.${tutorialTab}.content`} defaultMessage={'Content'}>
-            {text => text}
-          </FormattedMessage>
-        </Content>
+  render() {
+    const { tutorialTab } = this.state
+    return (
+      <>
+        {tutorialTab ? (
+          <Rectangle>
+            <div>
+              <Title>
+                <FormattedMessage id={`tutorial.${tutorialTab}.title`} defaultMessage={'Title'}>
+                  {text => text}
+                </FormattedMessage>
+              </Title>
+              <Content>
+                <FormattedMessage id={`tutorial.${tutorialTab}.content`} defaultMessage={'Content'}>
+                  {text => text}
+                </FormattedMessage>
+              </Content>
 
-        <Button basic type='button' onClick={() => cookies.set('tutorial', [...cookieTutorialTabs, tutorialTab])}>
-          <FormattedMessage id='"global.skip"' defaultMessage='Skip' />
-        </Button>
-        <CustomButton type='button' onClick={e => handleClick(e)}>
-          <FormattedMessage id={`tutorial.${tutorialTab}.button`} defaultMessage='Button' />
-        </CustomButton>
-      </div>
-      <Icons>
-        <OvalCheck>
-          <CustomCheck strokeWidth={4} />
-        </OvalCheck>
-        <OvalFocus />
-        <OvalEmpty />
-        <OvalEmpty />
-        <OvalEmpty />
-        <OvalEmpty />
-        <OvalEmpty />
-        <OvalEmpty />
-      </Icons>
-    </Rectangle>
-  )
+              <Button basic type='button' onClick={e => this.handleSetCookies(e, true)}>
+                <FormattedMessage id='"global.skip"' defaultMessage='Skip' />
+              </Button>
+              <CustomButton type='button' onClick={e => this.handleSetCookies(e, false)}>
+                <FormattedMessage id={`tutorial.${tutorialTab}.button`} defaultMessage='Button' />
+              </CustomButton>
+            </div>
+            {this.getIcons()}
+          </Rectangle>
+        ) : null}
+      </>
+    )
+  }
 }
+
+export default withToastManager(withRouter(Tutorial))

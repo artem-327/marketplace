@@ -21,6 +21,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { Datagrid } from '../../datagrid/DatagridProvider'
 import { AttachmentManager } from '~/modules/attachments'
 import { uniqueArrayByKey } from '~/utils/functions'
+import Tutorial from '~/modules/tutorial/Tutorial'
 
 const ButtonsWrapper = styled(Grid)`
   margin-left: -21px !important;
@@ -951,6 +952,7 @@ class Orders extends Component {
 
     return (
       <div id='page' className='flex stretched scrolling'>
+        <Tutorial />
         {isOpenManager && (
           <div>
             <AttachmentManager

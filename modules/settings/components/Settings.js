@@ -48,6 +48,7 @@ import { DatagridProvider } from '~/modules/datagrid'
 
 import { withToastManager } from 'react-toast-notifications'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
+import Tutorial from '~/modules/tutorial/Tutorial'
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
@@ -66,18 +67,18 @@ const ScrollableSegment = styled(Segment)`
 const SettingsGrid = styled(Grid)`
   margin-top: 0;
   margin-bottom: 0;
-  
+
   > .row {
     height: calc(100% + 1px) !important;
     padding-bottom: 0 !important;
-    
+
     > .column {
       height: 100%;
       padding-bottom: 0 !important;
-      
-      > [class*="FixyWrapper"] {
+
+      > [class*='FixyWrapper'] {
         height: 100%;
-        
+
         > .segment {
           height: 100%;
         }
@@ -477,6 +478,7 @@ class Settings extends Component {
       !this.state.wrongUrl && (
         <DatagridProvider apiConfig={this.getApiConfig()}>
           <Container fluid className='flex stretched'>
+            <Tutorial />
             <Container fluid style={{ padding: '0 1.5vh' }}>
               <TablesHandlers currentTab={currentTab} />
             </Container>
