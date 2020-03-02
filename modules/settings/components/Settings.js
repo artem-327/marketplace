@@ -63,6 +63,29 @@ const ScrollableSegment = styled(Segment)`
   overflow-y: auto;
 `
 
+const SettingsGrid = styled(Grid)`
+  margin-top: 0;
+  margin-bottom: 0;
+  
+  > .row {
+    height: calc(100% + 1px) !important;
+    padding-bottom: 0 !important;
+    
+    > .column {
+      height: 100%;
+      padding-bottom: 0 !important;
+      
+      > [class*="FixyWrapper"] {
+        height: 100%;
+        
+        > .segment {
+          height: 100%;
+        }
+      }
+    }
+  }
+`
+
 class Settings extends Component {
   state = {
     companyLogo: null,
@@ -457,13 +480,13 @@ class Settings extends Component {
             <Container fluid style={{ padding: '0 1.5vh' }}>
               <TablesHandlers currentTab={currentTab} />
             </Container>
-            <Grid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
+            <SettingsGrid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
               <Grid.Row>
                 <Grid.Column className='flex stretched' style={{ paddingTop: '10px', paddingBottom: '10px' }}>
                   {this.renderContent()}
                 </Grid.Column>
               </Grid.Row>
-            </Grid>
+            </SettingsGrid>
           </Container>
         </DatagridProvider>
       )

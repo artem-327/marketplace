@@ -189,7 +189,7 @@ export class DatagridProvider extends Component {
       () => {
         this.setFilter(
           {
-            filters: searchToFilter(value)
+            filters: typeof searchToFilter !== 'function' ? this.apiConfig.searchToFilter(value) : searchToFilter(value)
           },
           reload
         )

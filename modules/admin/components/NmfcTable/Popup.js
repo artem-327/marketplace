@@ -7,6 +7,7 @@ import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { injectIntl } from 'react-intl'
 import * as Yup from 'yup'
 import { nmfcValidation } from '../../../../constants/yupValidation'
+import { getSafe } from '~/utils/functions'
 import { addNmfcNumber, editNmfcNumber } from '~/modules/admin/actions'
 
 const validationSchema = Yup.object().shape({
@@ -34,7 +35,6 @@ class Popup extends Component {
       editNmfcNumber
     } = this.props
 
-
     let type = popupValues ? { id: 'edit', defaultMessage: 'Edit' } : { id: 'add', defaultMessage: 'Add' }
 
     return (
@@ -48,7 +48,7 @@ class Popup extends Component {
             onSubmit={async (values, { setSubmitting }) => {
               let payload = {
                 ...values,
-                code: values.code.replace('-', '')
+                code: getSafe(() => values.code.replace('-', ''), values.code)
               }
 
               if (popupValues) {

@@ -277,11 +277,11 @@ class AddEditEchoProduct extends React.Component {
                 popupValues.elements.map(element => ({
                   name: getSafe(() => element.name, ''),
                   casProduct: getSafe(() => element.casProduct.id, null),
-                  assayMin: getSafe(() => element.assayMin, 100),
-                  assayMax: getSafe(() => element.assayMax, 100),
+                  assayMin: getSafe(() => element.assayMin, ''),
+                  assayMax: getSafe(() => element.assayMax, ''),
                   proprietary: getSafe(() => element.proprietary, false)
                 })),
-              [{ name: '', casProduct: '', assayMin: 100, assayMax: 100, proprietary: false }]
+              [{ name: '', casProduct: '', assayMin: '', assayMax: '', proprietary: false }]
             ),
             emergencyPhone: getSafe(() => popupValues.emergencyPhone, ''),
             endocrineDisruptorInformation: getSafe(() => popupValues.endocrineDisruptorInformation, ''),
@@ -390,7 +390,7 @@ class AddEditEchoProduct extends React.Component {
       initialValues.tdsRevisionDate = moment(initialValues.tdsRevisionDate).format(getLocaleDateFormat())
 
     if (initialValues.elements.length === 0) {
-      initialValues.elements = [{ name: '', casProduct: null, assayMin: 100, assayMax: 100, proprietary: false }]
+      initialValues.elements = [{ name: '', casProduct: null, assayMin: '', assayMax: '', proprietary: false }]
     }
     return initialValues
   }
@@ -857,7 +857,7 @@ class AddEditEchoProduct extends React.Component {
                     icon
                     color='green'
                     onClick={() => {
-                      arrayHelpers.push({ name: '', casProduct: null, assayMin: 100, assayMax: 100 })
+                      arrayHelpers.push({ name: '', casProduct: null, assayMin: '', assayMax: '' })
                       this.setState({ changedForm: true })
                     }}
                     data-test='settings_product_popup_add_btn'>

@@ -36,5 +36,5 @@ export const updateHazmatInfo = (cartItemId, payload) =>
   api.patch(`/prodex/api/cart/items/${cartItemId}/hazard-info`, payload).then(response => response.data)
 export const postPurchaseOrder = data => api.post('/prodex/api/purchase-orders', data).then(response => response.data)
 
-export const requestManualShipment = queryString => api.post(`/prodex/api/shipment/manual-quote${queryString}`)
+export const requestManualShipment = queryString => api.post(`/prodex/api/shipment/manual-quotes/request${queryString}`)
 export const getIdentity = () => api.get('/prodex/api/users/me').then(response => response.data)

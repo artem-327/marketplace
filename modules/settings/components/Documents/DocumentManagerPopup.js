@@ -99,7 +99,9 @@ class DocumentPopup extends Component {
               let payload = {
                 customName: values.customName,
                 description: values.description,
-                expirationDate: values.expirationDate && getSafe(() => getStringISODate(values.expirationDate), null),
+                expirationDate:
+                  values.expirationDate &&
+                  getSafe(() => encodeURIComponent(getStringISODate(values.expirationDate)), null),
                 isTemporary: getSafe(() => values.isTemporary, false),
                 othersPermissions: values.othersPermissions,
                 sharedTo: values.sharedTo
@@ -239,7 +241,7 @@ const mapStateToProps = ({ simpleAdd, settings }) => {
     Router && Router.router && Router.router.query && Router.router.query.type
       ? settings.tabsNames.find(tab => tab.type === Router.router.query.type)
       : settings.tabsNames[0]
-  const documentTab = currentTab.type === 'documents'
+  const documentTab = currentTab && currentTab.type === 'documents'
 
   return {
     popupValues: documentTab ? settings.popupValues : null,

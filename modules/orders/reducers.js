@@ -37,7 +37,10 @@ const initialState = {
   opendSaleAttachingProductOffer: false,
   groupedProductOffers: [],
   loadingGroupedProductOffers: false,
-  order: []
+  order: [],
+  documentTypesFetching: false,
+  listDocumentTypes: [],
+  loadingRelatedDocuments: false
 }
 
 export default function(state = initialState, action) {
@@ -409,7 +412,7 @@ export default function(state = initialState, action) {
     case AT.PATCH_ASSIGN_PRODUCT_OFFERS_FULFILLED: {
       return {
         ...state,
-        order: action.payload.data
+        detail: action.payload.data
       }
     }
     case AT.PATCH_ASSIGN_PRODUCT_OFFERS_REJECTED: {
@@ -480,6 +483,76 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loadingProductOffer: false
+      }
+    }
+
+    case AT.RELATED_GET_DOCUMENT_TYPES_PENDING: {
+      return {
+        ...state,
+        documentTypesFetching: true
+      }
+    }
+
+    case AT.RELATED_GET_DOCUMENT_TYPES_FULFILLED: {
+      return {
+        ...state,
+        documentTypesFetching: false,
+        listDocumentTypes: action.payload.data.map(docType => {
+          return {
+            key: docType.id,
+            text: docType.name,
+            value: docType.id
+          }
+        })
+      }
+    }
+
+    case AT.RELATED_GET_DOCUMENT_TYPES_REJECTED: {
+      return {
+        ...state,
+        documentTypesFetching: false
+      }
+    }
+
+    case AT.UNLINK_ATTACHMENT_TO_ORDER_PENDING: {
+      return {
+        ...state,
+        loadingRelatedDocuments: true
+      }
+    }
+
+    case AT.UNLINK_ATTACHMENT_TO_ORDER_FULFILLED: {
+      return {
+        ...state,
+        loadingRelatedDocuments: false
+      }
+    }
+
+    case AT.UNLINK_ATTACHMENT_TO_ORDER_REJECTED: {
+      return {
+        ...state,
+        loadingRelatedDocuments: false
+      }
+    }
+
+    case AT.LINK_ATTACHMENT_TO_ORDER_PENDING: {
+      return {
+        ...state,
+        loadingRelatedDocuments: true
+      }
+    }
+
+    case AT.LINK_ATTACHMENT_TO_ORDER_FULFILLED: {
+      return {
+        ...state,
+        loadingRelatedDocuments: false
+      }
+    }
+
+    case AT.LINK_ATTACHMENT_TO_ORDER_REJECTED: {
+      return {
+        ...state,
+        loadingRelatedDocuments: false
       }
     }
 
