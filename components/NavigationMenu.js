@@ -10,12 +10,14 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { ArrowLeftCircle, ArrowRightCircle, Layers, Settings, ShoppingBag } from 'react-feather'
+import { ArrowLeftCircle, ArrowRightCircle, Layers, Settings, ShoppingBag, Grid } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 
 import { InventoryFilter } from '~/modules/filter'
 import { Filter } from '~/modules/filter' // Marketplace filter
 import { OrderFilter } from '~/modules/filter'
+
+import { PlusCircle } from 'react-feather'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -236,6 +238,12 @@ class Navigation extends Component {
             {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
           </>
         ) : null}
+        <MenuLink to='/wanted-board/wanted-board' data-test='navigation_menu_wanted_board'>
+          <>
+            <Grid size={22} />
+            {formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}
+          </>
+        </MenuLink>
         <MenuLink to='/orders?type=sales' data-test='navigation_menu_orders_sales_drpdn'>
           <>
             <ArrowRightCircle size={22} />
