@@ -62,15 +62,15 @@ const CustomSpanShowMore = styled.span`
 `
 
 const optionsExpirationTime = [
-  { text: '24 h', value: 24, key: 1 },
-  { text: '48 h', value: 48, key: 2 },
-  { text: '3 days', value: 72, key: 3 },
-  { text: '5 days', value: 120, key: 4 }
+  { text: '24 h', value: 24, key: 1 }
+  // { text: '48 h', value: 48, key: 2 },
+  // { text: '3 days', value: 72, key: 3 },
+  // { text: '5 days', value: 120, key: 4 }
 ]
 export default class AddCart extends Component {
   state = {
     showMore: false,
-    expirationTime: optionsExpirationTime[1].value
+    expirationTime: optionsExpirationTime[0].value
   }
   componentDidMount() {
     // this.props.getProductOffer(this.props.id, this.props.isEdit)
