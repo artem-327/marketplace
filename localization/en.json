@@ -1711,7 +1711,7 @@
   "order.sds": "SDS",
   "order.cOfa": "C of A",
   "order.related": "Related",
-  "order.related.documents.table": "RELATED DOCUMENTS",
+  "order.related.documents.table": "RELATED DOCUMENTS ({documentType})",
   "related.documents.selectType": "Select Type",
   "order.orderTotal": "Order Total",
   "order.menu.all": "ALL",
