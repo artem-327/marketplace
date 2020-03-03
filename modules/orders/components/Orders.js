@@ -405,7 +405,7 @@ class Orders extends Component {
         ]
       }
     },
-    attachmentPopup: null,
+    attachmentPopup: { attachment: null, order: { id: null } },
     openModal: false,
     columnsRelatedOrders: [
       {
@@ -575,57 +575,75 @@ class Orders extends Component {
       paymentStatus: row.paymentStatus === 'Failed' ? this.failedWrapper(row.paymentStatus) : row.paymentStatus,
       bl:
         row.bl && row.bl.length ? ( // unknown / positive / negative
-          <span
+          <a
+            href='#'
             onClick={() =>
               this.openOverviewWindow(row.bl, { id: row.id }, false, { text: 'Bill of Lading', value: 10 }, row)
             }>
             <Icon name='file' className='positive' />
-          </span>
+          </a>
         ) : (
-          <span
+          <a
+            href='#'
             onClick={() =>
               this.openOverviewWindow(row.bl, { id: row.id }, true, { text: 'Bill of Lading', value: 10 }, row)
             }>
             <Icon name='file' className='unknown' />
-          </span>
+          </a>
         ),
       sds:
         row.sds && row.sds.length ? (
-          <span
+          <a
+            href='#'
             onClick={() =>
-              this.openOverviewWindow(row.sds, { id: row.id }, false, { text: 'Safety Data Sheet', value: 3 })
+              this.openOverviewWindow(row.sds, { id: row.id }, false, { text: 'Safety Data Sheet', value: 3 }, row)
             }>
             <Icon name='file' className='positive' />
-          </span>
+          </a>
         ) : (
-          <span
+          <a
+            href='#'
             onClick={() =>
-              this.openOverviewWindow(row.sds, { id: row.id }, true, { text: 'Safety Data Sheet', value: 3 })
+              this.openOverviewWindow(row.sds, { id: row.id }, true, { text: 'Safety Data Sheet', value: 3 }, row)
             }>
             <Icon name='file' className='unknown' />
-          </span>
+          </a>
         ),
       cofA:
         row.cofA && row.cofA.length ? (
-          <span
+          <a
+            href='#'
             onClick={() =>
-              this.openOverviewWindow(row.cofA, { id: row.id }, false, { text: 'Certificate of Analysis', value: 1 })
+              this.openOverviewWindow(
+                row.cofA,
+                { id: row.id },
+                false,
+                { text: 'Certificate of Analysis', value: 1 },
+                row
+              )
             }>
             <Icon name='file' className='positive' />
-          </span>
+          </a>
         ) : (
-          <span
+          <a
+            href='#'
             onClick={() =>
-              this.openOverviewWindow(row.cofA, { id: row.id }, true, { text: 'Certificate of Analysis', value: 1 })
+              this.openOverviewWindow(
+                row.cofA,
+                { id: row.id },
+                true,
+                { text: 'Certificate of Analysis', value: 1 },
+                row
+              )
             }>
             <Icon name='file' className='unknown' />
-          </span>
+          </a>
         ),
       related:
         row.accountingDocumentsCount > 0 ? (
-          <span onClick={() => this.openModalWindow(row.id)}>
+          <a href='#' onClick={() => this.openModalWindow(row.id)}>
             <Icon className='file related' />
-          </span>
+          </a>
         ) : (
           <Icon className='file non-related' />
         )
@@ -946,7 +964,7 @@ class Orders extends Component {
       intl: { formatMessage }
     } = this.props
 
-    const { columns, row, openModal, attachmentPopup, isOpenManager } = this.state
+    const { columns, row, openModal, attachmentPopup, isOpenManager, relatedDocumentType } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
 
     return (
@@ -976,7 +994,10 @@ class Orders extends Component {
             centered={true}
             open={this.state.openModal}>
             <Modal.Header>
-              <FormattedMessage id='order.related.documents.table' defaultMessage='RELATED DOCUMENTS'>
+              <FormattedMessage
+                id='order.related.documents.table'
+                defaultMessage={`RELATED DOCUMENTS (${getSafe(() => relatedDocumentType.text, '')} )`}
+                values={{ documentType: getSafe(() => relatedDocumentType.text, '') }}>
                 {text => text}
               </FormattedMessage>
             </Modal.Header>
