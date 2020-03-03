@@ -246,7 +246,7 @@ const validationScheme = val.object().shape({
       .required(errorMessages.requiredMessage),
     fobPrice: val
       .number()
-      .min(0, errorMessages.minimum(0))
+      .min(0.001, errorMessages.minimum(0))
       .typeError(errorMessages.mustBeNumber)
       .test('maxdec', errorMessages.maxDecimals(3), val => {
         return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
@@ -1226,7 +1226,8 @@ class DetailSidebar extends Component {
                                           inputProps={{
                                             disabled: sidebarValues && sidebarValues.grouped,
                                             type: 'number',
-                                            min: '0',
+                                            min: '0.001',
+                                            step: '0.001',
                                             onChange: (e, { value }) => {
                                               if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
                                                 setFieldValue(`priceTiers.pricingTiers[0].price`, value)
