@@ -114,6 +114,12 @@ const CloceIcon = styled(Icon)`
   right: -10px;
 `
 
+const CustomDropdown = styled(Dropdown)`
+  .ui.selection.dropdown.active {
+    z-index: 602;
+  }
+`
+
 const initValues = {
   edit: {
     broadcasted: false,
@@ -169,7 +175,7 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 160
+    width: 200
   }
 ]
 
@@ -1644,15 +1650,13 @@ class DetailSidebar extends Component {
                             pane: (
                               <Tab.Pane key='documents' style={{ padding: '18px' }}>
                                 <Grid>
-                                  {listDocumentTypes.length ? (
-                                    <GridRow>
-                                      <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                  <GridRow>
+                                    {listDocumentTypes.length ? (
+                                      <GridColumn width={8}>
                                         <FormattedMessage id='global.uploadDocument' defaultMessage='Upload document: '>
                                           {text => text}
                                         </FormattedMessage>
-                                      </GridColumn>
-                                      <GridColumn style={{ zIndex: '501' }} mobile={rightWidth} computer={rightWidth}>
-                                        <Dropdown
+                                        <CustomDropdown
                                           name='documents.documentType'
                                           closeOnChange
                                           options={listDocumentTypes}
@@ -1670,17 +1674,14 @@ class DetailSidebar extends Component {
                                           }}
                                         />
                                       </GridColumn>
-                                    </GridRow>
-                                  ) : null}
-                                  <GridRow>
-                                    <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                    ) : null}
+
+                                    <GridColumn width={8}>
                                       <FormattedMessage
                                         id='global.existingDocuments'
                                         defaultMessage='Existing documents: '>
                                         {text => text}
                                       </FormattedMessage>
-                                    </GridColumn>
-                                    <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <AttachmentManager
                                         asModal
                                         returnSelectedRows={rows =>
@@ -1689,7 +1690,6 @@ class DetailSidebar extends Component {
                                       />
                                     </GridColumn>
                                   </GridRow>
-
                                   {values.documents.documentType && this.state.openUploadLot ? (
                                     <GridRow>
                                       <GridColumn>

@@ -289,12 +289,26 @@ class WarehouseSidebar extends React.Component {
     )
   }
 
+  renderCertificates = formikProps => {
+    const {
+      currentTab,
+      intl: { formatMessage }
+    } = this.props
+    const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
+    return <>CERTIFICATES</>
+  }
+
   getContent = formikProps => {
     let { editTab } = this.state
     switch (editTab) {
       case 0: {
         // Edit
         return this.renderEdit(formikProps)
+      }
+
+      case 1: {
+        // Edit
+        return this.renderCertificates(formikProps)
       }
 
       default:
@@ -322,7 +336,8 @@ class WarehouseSidebar extends React.Component {
     const tabs = [
       popupValues
         ? { text: { id: 'sidebar.edit', defaultMessage: 'EDIT' }, key: 'edit' }
-        : { text: { id: 'sidebar.addNew', defaultMessage: 'ADD NEW' }, key: 'addNew' }
+        : { text: { id: 'sidebar.addNew', defaultMessage: 'ADD NEW' }, key: 'addNew' },
+      { text: { id: 'sidebar.certificates', defaultMessage: 'CERTIFICATES' }, key: 'certificates' }
     ]
 
     return (
