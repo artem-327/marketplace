@@ -11,7 +11,7 @@ import WarehouseTable from './WarehouseTable/WarehouseTable'
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable'
 import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
-import EditWarehousePopup from './WarehouseTable/WarehousePopup'
+import EditWarehouseSidebar from './WarehouseTable/WarehouseSidebar'
 import EditUsersPopup from './UserTable/UsersPopup'
 import EditProductPopup from './ProductCatalogTable/ProductPopup'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
@@ -66,18 +66,18 @@ const ScrollableSegment = styled(Segment)`
 const SettingsGrid = styled(Grid)`
   margin-top: 0;
   margin-bottom: 0;
-  
+
   > .row {
     height: calc(100% + 1px) !important;
     padding-bottom: 0 !important;
-    
+
     > .column {
       height: 100%;
       padding-bottom: 0 !important;
-      
-      > [class*="FixyWrapper"] {
+
+      > [class*='FixyWrapper'] {
         height: 100%;
-        
+
         > .segment {
           height: 100%;
         }
@@ -284,8 +284,8 @@ class Settings extends Component {
 
     const popupForm = {
       users: <EditUsersPopup />,
-      branches: <EditWarehousePopup />,
-      warehouses: <EditWarehousePopup />,
+      branches: <EditWarehouseSidebar />,
+      warehouses: <EditWarehouseSidebar />,
       products: <EditProductPopup />,
       'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsPopup />,

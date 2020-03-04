@@ -61,7 +61,7 @@ import _ from 'lodash'
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
   flex-direction: column;
-  background-color: #fbfbfb;
+  background-color: #ffffff;
   top: 80px !important;
   padding-bottom: 80px;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
@@ -99,6 +99,7 @@ export const GraySegment = styled(Segment)`
 `
 
 export const HighSegment = styled(Segment)`
+  padding-top: 0px !important;
   height: 100%;
 `
 export const DivIcon = styled.div`
