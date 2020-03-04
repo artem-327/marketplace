@@ -13,23 +13,18 @@ import { groupActionsMarketplace } from '~/modules/company-product-info/constant
 import { MyRequestedItems } from '~/modules/wanted-board/my-requested-items'
 import { MyOffers } from '~/modules/wanted-board/my-offers'
 import confirm from '~/src/components/Confirmable/confirm'
+import DetailSidebar from './DetailSidebar'
 
 import { PlusCircle } from 'react-feather'
 
 import { number } from 'prop-types'
 import Link from 'next/link'
 
-const CapitalizedText = styled.span`
-  text-transform: capitalize;
-`
+import {
+  UpperCaseText,
+  ControlPanel,
 
-const UpperCaseText = styled.div`
-  text-transform: uppercase;
-`
-
-const ControlPanel = styled.div`
-  padding: 5px 0;
-`
+} from '../../constants/layout'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
@@ -152,7 +147,7 @@ class WantedBoard extends Component {
   }
 
   renderContent = () => {
-    const { datagrid, intl, rows, sidebarDetailTrigger } = this.props
+    const { datagrid, intl, rows, editedId, sidebarDetailTrigger } = this.props
     const { columns, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
 
@@ -201,7 +196,7 @@ class WantedBoard extends Component {
                   id: 'global.edit',
                   defaultMessage: 'Edit'
                 }),
-                callback: row => this.props.sidebarDetailTrigger(row, true, 0, sidebarDetailTrigger)
+                callback: row => sidebarDetailTrigger(row, 'wanted-board')
               },
               {
                 text: formatMessage({
@@ -224,9 +219,9 @@ class WantedBoard extends Component {
                     )
                   ).then(() => {
                     try {
-                      this.props.deleteWantedBoardItem_WITH_ERROR(row.id)
+                      this.props.deleteWantedBoardItem(row.id)
                       datagrid.removeRow(row.id)
-                    } catch (e) {console.log('!!!!!!!!!! DELETE ERROR')}
+                    } catch (e) {console.log('DELETE ERROR')}
                   })
                 }
               },
@@ -248,6 +243,7 @@ class WantedBoard extends Component {
     const {
       activeIndex,
       intl: { formatMessage },
+      editWindowOpen,
     } = this.props
 
     const panes = [
@@ -293,6 +289,7 @@ class WantedBoard extends Component {
             panes={panes}
           />
         </Container>
+        {editWindowOpen === 'wanted-board' && <DetailSidebar />}
       </>
     )
   }

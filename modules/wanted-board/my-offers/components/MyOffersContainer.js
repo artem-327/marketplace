@@ -37,6 +37,7 @@ const StyledStatusLabel = styled(Label)`
 `
 
 const StatusLabel = (val) => {
+  if (!val) return null
   return (
     <StyledStatusLabel className={val}>
       {val}

@@ -17,6 +17,7 @@ import WantedBoard from './WantedBoard'
 
 
 function mapStateToProps(store, { datagrid }) {
+
   return {
     ...store.wantedBoard,
     ...datagrid,

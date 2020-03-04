@@ -13,48 +13,17 @@ import { groupActionsMarketplace } from '~/modules/company-product-info/constant
 import { WantedBoard } from '~/modules/wanted-board/wanted-board'
 import { MyOffers } from '~/modules/wanted-board/my-offers'
 import confirm from '~/src/components/Confirmable/confirm'
+import DetailSidebar from './DetailSidebar'
 
 import { number } from 'prop-types'
 import Link from 'next/link'
 
-const CapitalizedText = styled.span`
-  text-transform: capitalize;
-`
+import {
+  UpperCaseText,
+  ControlPanel,
+  ProductChemicalSwitch,
 
-const UpperCaseText = styled.div`
-  text-transform: uppercase;
-`
-
-const ControlPanel = styled.div`
-  padding: 5px 0;
-`
-
-const ProductChemicalSwitch = styled.div`
-  &.product {
-    .ui.left.button {
-      border: solid 1px #dee2e6;
-      background-color: #edeef2;
-      color: #20273a;
-    }
-    .ui.right.button {
-      border: solid 1px #dee2e6;
-      background-color: #ffffff;
-      color: #848893;
-    }
-  }
-  &.chemical {
-  .ui.left.button {
-      border: solid 1px #dee2e6;
-      background-color: #ffffff;
-      color: #848893;
-    }
-    .ui.right.button {
-      border: solid 1px #dee2e6;
-      background-color: #edeef2;
-      color: #20273a;
-    }  
-  }
-`
+} from '../../constants/layout'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
@@ -157,7 +126,7 @@ class MyRequestedItems extends Component {
       {
         name: 'deliveryLocation',
         title: (
-          <FormattedMessage id='wantedBoard.deliveryLocation' defaultMessage='Delivery Loc'>
+          <FormattedMessage id='wantedBoard.deliveryLoc' defaultMessage='Delivery Loc'>
             {text => text}
           </FormattedMessage>
         ),
@@ -302,7 +271,7 @@ class MyRequestedItems extends Component {
       {
         name: 'deliveryLocation',
         title: (
-          <FormattedMessage id='wantedBoard.deliveryLocation' defaultMessage='Delivery Loc'>
+          <FormattedMessage id='wantedBoard.deliveryLoc' defaultMessage='Delivery Loc'>
             {text => text}
           </FormattedMessage>
         ),
@@ -385,7 +354,7 @@ class MyRequestedItems extends Component {
   }
 
   renderContent = () => {
-    const { datagrid, intl, rows, sidebarDetailTrigger } = this.props
+    const { datagrid, intl, rows, editedId, sidebarDetailTrigger } = this.props
     const {
       displayColumns,
       columnsProduct,
@@ -394,6 +363,8 @@ class MyRequestedItems extends Component {
       filterValue
     } = this.state
     let { formatMessage } = intl
+
+    console.log('!!!!!!!!!! aaaaa this.props', this.props)
 
     return (
       <>
@@ -454,9 +425,41 @@ class MyRequestedItems extends Component {
             columns={displayColumns === 'product' ? columnsProduct : columnsChemical}
             rowSelection
             showSelectionColumn
-
-
-
+            rowActions={[
+              {
+                text: formatMessage({
+                  id: 'wantedBoard.reject',
+                  defaultMessage: 'Reject'
+                }),
+                disabled: row => editedId === row.id,
+                callback: row => {
+                  confirm(
+                    formatMessage({
+                      id: 'confirm.rejectRequestedItem.Header',
+                      defaultMessage: 'Reject Requested Item'
+                    }),
+                    formatMessage(
+                      {
+                        id: 'confirm.rejectRequestedItem.Content',
+                        defaultMessage: 'Do you really want to reject requested item?'
+                      }
+                    )
+                  ).then(() => {
+                    try {
+                      this.props.rejectRequestedItem(row.id)
+                      datagrid.removeRow(row.id)
+                    } catch (e) {}
+                  })
+                }
+              },
+              {
+                text: formatMessage({
+                  id: 'wantedBoard.purchase',
+                  defaultMessage: 'Purchase'
+                }),
+                callback: row => this.props.purchaseRequestedItem(row.id)
+              },
+            ]}
           />
         </div>
       </>
@@ -467,6 +470,7 @@ class MyRequestedItems extends Component {
     const {
       activeIndex,
       intl: { formatMessage },
+      editWindowOpen,
     } = this.props
 
     const panes = [
@@ -512,6 +516,7 @@ class MyRequestedItems extends Component {
             panes={panes}
           />
         </Container>
+        {editWindowOpen === 'my-requested-items' && <DetailSidebar />}
       </>
     )
   }

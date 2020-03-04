@@ -17,17 +17,11 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { number } from 'prop-types'
 import Link from 'next/link'
 
-const CapitalizedText = styled.span`
-  text-transform: capitalize;
-`
+import {
+  UpperCaseText,
+  ControlPanel,
 
-const UpperCaseText = styled.div`
-  text-transform: uppercase;
-`
-
-const ControlPanel = styled.div`
-  padding: 5px 0;
-`
+} from '../../constants/layout'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
@@ -113,7 +107,7 @@ class MyOffers extends Component {
   }
 
   renderContent = () => {
-    const { datagrid, intl, rows } = this.props
+    const { datagrid, intl, rows, editedId, sidebarDetailTrigger } = this.props
     const { columns, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
 
@@ -145,9 +139,42 @@ class MyOffers extends Component {
             columns={columns}
             rowSelection
             showSelectionColumn
-
-
-
+            rowActions={[
+              {
+                text: formatMessage({
+                  id: 'global.edit',
+                  defaultMessage: 'Edit'
+                }),
+                callback: row => sidebarDetailTrigger(row, 'my-offers')
+              },
+              {
+                text: formatMessage({
+                  id: 'global.delete',
+                  defaultMessage: 'Delete'
+                }),
+                disabled: row => editedId === row.id,
+                callback: row => {
+                  confirm(
+                    formatMessage({
+                      id: 'confirm.deleteItemOffer.Header',
+                      defaultMessage: 'Delete My Item Offer'
+                    }),
+                    formatMessage(
+                      {
+                        id: 'confirm.deleteItemOffer.Content',
+                        defaultMessage: 'Do you really want to remove item offer?'
+                      },
+                      { item: row.chemicalName }
+                    )
+                  ).then(() => {
+                    try {
+                      this.props.deleteMyOfferItem(row.id)
+                      datagrid.removeRow(row.id)
+                    } catch (e) {console.log('DELETE ERROR')}
+                  })
+                }
+              }
+            ]}
           />
         </div>
       </>
