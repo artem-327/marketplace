@@ -495,7 +495,8 @@ class Orders extends Component {
     row: '',
     isUnlinkDocument: false,
     replaceExisting: false,
-    replaceRow: ''
+    replaceRow: '',
+    openModalAcounting: false
   }
 
   getMimeType = documentName => {
@@ -651,7 +652,7 @@ class Orders extends Component {
   }
 
   async openModalWindow(orderId) {
-    this.setState({ openModal: true })
+    this.setState({ openModalAcounting: true })
     await this.props.getRelatedOrders(orderId)
   }
 
@@ -1024,9 +1025,9 @@ class Orders extends Component {
           <Modal
             size='small'
             closeIcon={false}
-            onClose={() => this.setState({ openModal: false })}
+            onClose={() => this.setState({ openModalAcounting: false })}
             centered={true}
-            open={this.state.openModal}>
+            open={this.state.openModalAcounting}>
             <Modal.Header>
               <FormattedMessage id='order.related.table' defaultMessage='Related Accounting Documents'>
                 {text => text}
