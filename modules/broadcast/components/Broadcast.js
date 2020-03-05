@@ -824,7 +824,6 @@ export default injectIntl(
           ? new TreeModel({ childrenPropertyName: 'elements' }).parse(broadcast.data)
           : new TreeModel().parse({ model: { rule: {} } })
 
-        // console.log({ treeData })
         return {
           treeData,
           ...broadcast
