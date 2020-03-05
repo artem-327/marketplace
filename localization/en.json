@@ -1726,6 +1726,8 @@
   "order.menu.cancelled": "CANCELLED",
   "order.menu.draft": "DRAFT",
   "order.menu.filter": "Filter",
+  "order.menu.toReturn": "TO RETURN",
+  "order.menu.confirmed": "CONFIRMED",
   "order.orders": "ORDERS",
   "order.downloadOrder": "Download {orderType}O",
   "order.orderStatus": "Order Status",
