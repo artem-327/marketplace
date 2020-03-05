@@ -247,7 +247,7 @@ const validationScheme = val.object().shape({
       .required(errorMessages.requiredMessage),
     fobPrice: val
       .number()
-      .min(0.001, errorMessages.minimum(0))
+      .min(0.001, errorMessages.minimum(0.001))
       .typeError(errorMessages.mustBeNumber)
       .test('maxdec', errorMessages.maxDecimals(3), val => {
         return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
