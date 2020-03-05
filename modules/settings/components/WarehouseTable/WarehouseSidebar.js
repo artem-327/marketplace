@@ -8,7 +8,9 @@ import {
   postNewWarehouseRequest,
   getProvinces,
   getAddressSearch,
-  removeEmpty
+  removeEmpty,
+  removeAttachmentLink,
+  removeAttachment
 } from '../../actions'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
@@ -24,6 +26,7 @@ import { AddressForm } from '~/modules/address-form/'
 import { getSafe } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/components/DetailSidebar'
+import { DocumentTab } from '~/components/document-tab'
 
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
@@ -81,10 +84,22 @@ class WarehouseSidebar extends React.Component {
     this.props.popupValues &&
       this.props.popupValues.hasProvinces &&
       this.props.getProvinces(this.props.popupValues.countryId)
+
+    this.fetchIfNoData('listDocumentTypes', this.props.getDocumentTypes)
+  }
+
+  fetchIfNoData = (name, fn) => {
+    if (this.props[name].length === 0) fn()
   }
 
   submitHandler = async (values, actions) => {
     let { popupValues, currentTab } = this.props
+    console.log('popupValues====================================')
+    console.log(popupValues)
+    console.log('====================================')
+    console.log('values====================================')
+    console.log(values)
+    console.log('====================================')
     const { handlerSubmitWarehouseEditPopup, postNewWarehouseRequest } = this.props
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
 
@@ -169,7 +184,8 @@ class WarehouseSidebar extends React.Component {
         contactName: '',
         contactPhone: '',
         contactEmail: '',
-        callAhead: false
+        callAhead: false,
+        attachments: ''
       }
     })
   }
@@ -292,10 +308,25 @@ class WarehouseSidebar extends React.Component {
   renderCertificates = formikProps => {
     const {
       currentTab,
+      listDocumentTypes,
+      removeAttachmentLink,
+      removeAttachment,
       intl: { formatMessage }
     } = this.props
     const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
-    return <>CERTIFICATES</>
+    return (
+      <>
+        {/* <DocumentTab
+          listDocumentTypes={listDocumentTypes}
+          values={values}
+          setFieldValue={setFieldValue}
+          setFieldNameAttachments='attachments'
+          tableName='warehouse_attachments'
+          removeAttachmentLink={removeAttachmentLink}
+          removeAttachment={removeAttachment}
+        /> */}
+      </>
+    )
   }
 
   getContent = formikProps => {
@@ -328,6 +359,9 @@ class WarehouseSidebar extends React.Component {
       loading,
       intl: { formatMessage }
     } = this.props
+    console.log('popupValues====================================')
+    console.log(popupValues)
+    console.log('====================================')
 
     const { editTab } = this.state
 
@@ -404,7 +438,9 @@ const mapDispatchToProps = {
   closePopup,
   getProvinces,
   getAddressSearch,
-  removeEmpty
+  removeEmpty,
+  removeAttachmentLink,
+  removeAttachment
 }
 const mapStateToProps = state => {
   // const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
@@ -426,7 +462,8 @@ const mapStateToProps = state => {
         : state.settings.tabsNames[0],
     company: getSafe(() => state.auth.identity.company.id, null),
     isOpenPopup: state.settings.isOpenPopup,
-    loading: state.settings.loading
+    loading: state.settings.loading,
+    listDocumentTypes: state.settings.documentTypes
   }
 }
 

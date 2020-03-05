@@ -18,8 +18,9 @@ import {
   FormField,
   Button as ButtonSemantic
 } from 'semantic-ui-react'
+import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 
-import UploadLot from '~modules/inventory/components/upload/UploadLot'
+import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import ProdexGrid from '~/components/table'
 import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
 import { AttachmentManager } from '~/modules/attachments'
@@ -42,17 +43,43 @@ export const DivIcon = styled.div`
   position: relative;
 `
 
+const columns = [
+  {
+    name: 'name',
+    title: (
+      <FormattedMessage id='global.name' defaultMessage='Name'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 200
+  },
+  {
+    name: 'documentTypeName',
+    title: (
+      <FormattedMessage id='global.docType' defaultMessage='Document Type'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 200
+  }
+]
+
 class DocumentTab extends Component {
   state = {
     openUploadLot: false,
     documentType: 1
   }
 
-  //TODO
-  attachDocumentsManager = (newDocuments, values, setFieldValue) => {
+  attachDocumentsManager = (newDocuments, values, setFieldValue, setFieldNameAttachments, changedForm) => {
     const docArray = uniqueArrayByKey(values.documents.attachments.concat(newDocuments), 'id')
-    setFieldValue(`documents.attachments`, docArray)
-    this.setState({ changedForm: true })
+    setFieldNameAttachments && setFieldValue(setFieldNameAttachments, docArray)
+    changedForm && changedForm()
+  }
+
+  attachDocumentsUploadLot = (newDocument, values, setFieldValue, setFieldNameAttachments, changedForm) => {
+    const docArray = uniqueArrayByKey(values.documents.attachments.concat([newDocument]), 'id')
+    setFieldNameAttachments && setFieldValue(setFieldNameAttachments, docArray)
+    changedForm && changedForm()
   }
 
   handleChange = (e, name, value) => {
@@ -60,7 +87,18 @@ class DocumentTab extends Component {
   }
 
   render() {
-    const { listDocumentTypes, onChangeDropdown, rows, values, setFieldValue } = this.props
+    const {
+      listDocumentTypes,
+      onChangeDropdown, //missing must test
+      values,
+      setFieldValue,
+      setFieldNameAttachments,
+      changedForm, //missing must test
+      idForm, // missing must test
+      tableName,
+      removeAttachmentLink,
+      removeAttachment
+    } = this.props
 
     return (
       <Grid>
@@ -80,9 +118,7 @@ class DocumentTab extends Component {
                   ),
                   onChange: (e, { name, value }) => {
                     this.handleChange(e, name, value)
-                    if (onChangeDropdown) {
-                      onChangeDropdown()
-                    }
+                    typeof onChangeDropdown === 'function' && onChangeDropdown()
                   }
                 }}
               />
@@ -95,12 +131,13 @@ class DocumentTab extends Component {
             </FormattedMessage>
             <AttachmentManager
               asModal
-              //TODO
-              returnSelectedRows={rows => this.attachDocumentsManager(rows, values, setFieldValue)}
+              returnSelectedRows={rows =>
+                this.attachDocumentsManager(rows, values, setFieldValue, setFieldNameAttachments, changedForm)
+              }
             />
           </GridColumn>
         </GridRow>
-        {values.documents.documentType && this.state.openUploadLot ? (
+        {this.state.openUploadLot ? (
           <GridRow>
             <GridColumn>
               <UploadLot
@@ -116,14 +153,14 @@ class DocumentTab extends Component {
                   </DivIcon>
                 }
                 hideAttachments
-                edit={getSafe(() => sidebarValues.id, 0)}
+                edit={getSafe(() => idForm, 0)} //sidebarValues.id
                 attachments={values.documents.attachments}
                 name='documents.attachments'
                 type={this.state.documentType}
                 filesLimit={1}
                 fileMaxSize={20}
                 onChange={files => {
-                  this.attachDocumentsUploadLot(files, values, setFieldValue)
+                  this.attachDocumentsUploadLot(files, values, setFieldValue, setFieldNameAttachments, changedForm)
                 }}
                 data-test='new_inventory_attachments_drop'
                 emptyContent={
@@ -169,7 +206,7 @@ class DocumentTab extends Component {
             <GridColumn>
               <ProdexGrid
                 virtual={false}
-                tableName='inventory_documents'
+                tableName={tableName} //'inventory_documents'
                 onTableReady={() => {}}
                 columns={columns}
                 normalWidth={false}
@@ -189,7 +226,7 @@ class DocumentTab extends Component {
                     callback: async row => {
                       try {
                         if (row.linked) {
-                          const unlinkResponse = await this.props.removeAttachmentLink(false, sidebarValues.id, row.id)
+                          const unlinkResponse = await removeAttachmentLink(false, idForm, row.id)
                           toastManager.add(
                             generateToastMarkup(
                               <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
@@ -219,7 +256,7 @@ class DocumentTab extends Component {
                               async () => {
                                 // confirm
                                 try {
-                                  await this.props.removeAttachment(row.id)
+                                  await removeAttachment(row.id)
                                   toastManager.add(
                                     generateToastMarkup(
                                       <FormattedMessage
@@ -247,7 +284,7 @@ class DocumentTab extends Component {
                           }
                         }
                         setFieldValue(
-                          `documents.attachments`,
+                          setFieldNameAttachments,
                           values.documents.attachments.filter(o => o.id !== row.id)
                         )
                       } catch (e) {
