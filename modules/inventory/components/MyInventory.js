@@ -277,7 +277,7 @@ class MyInventory extends Component {
       }
     ],
     selectedRows: [],
-    pageNumber: 0,
+    // pageNumber: 0,
     open: false,
     clientMessage: '',
     request: null

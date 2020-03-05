@@ -403,6 +403,24 @@ class Orders extends Component {
             values: [`Cancelled`]
           }
         ]
+      },
+      'To Return': {
+        filters: [
+          {
+            operator: 'EQUALS',
+            path: 'Order.cfGlobalStatus',
+            values: [`To Return`]
+          }
+        ]
+      },
+      Confirmed: {
+        filters: [
+          {
+            operator: 'EQUALS',
+            path: 'Order.cfGlobalStatus',
+            values: [`Confirmed`]
+          }
+        ]
       }
     },
     attachmentPopup: { attachment: null, order: { id: null } },
@@ -1182,6 +1200,34 @@ class Orders extends Component {
               }
               active={activeStatus === 'Cancelled'}
               data-test='menu_orders_cancelled'
+            />
+            <Menu.Item
+              name={formatMessage({
+                id: 'order.menu.toReturn',
+                defaultMessage: 'To Return'
+              })}
+              onClick={() =>
+                this.loadData(endpointType, {
+                  ...this.props.filterData,
+                  status: 'To Return'
+                })
+              }
+              active={activeStatus === 'To Return'}
+              data-test='menu_orders_to_return'
+            />
+            <Menu.Item
+              name={formatMessage({
+                id: 'order.menu.confirmed',
+                defaultMessage: 'Confirmed'
+              })}
+              onClick={() =>
+                this.loadData(endpointType, {
+                  ...this.props.filterData,
+                  status: 'Confirmed'
+                })
+              }
+              active={activeStatus === 'Confirmed'}
+              data-test='menu_orders_confirmed'
             />
             <Menu.Item>
               <FilterTags datagrid={datagrid} />

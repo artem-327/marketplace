@@ -70,8 +70,8 @@ export const initialState = {
   loaded: false,
   searchedCasProducts: [[]],
   searchedUnNumbers: [],
-  deliveryAddressesFilter: { pageSize: 50, pageNumber: 0 },
-  productsFilter: { pageSize: 50, pageNumber: 0 },
+  deliveryAddressesFilter: { pageSize: 50 }, //,pageNumber: 0
+  productsFilter: { pageSize: 50 }, //,pageNumber: 0
   documentTypes: [],
   addressSearch: [],
   logisticsAccounts: [],
