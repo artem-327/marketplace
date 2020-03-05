@@ -415,7 +415,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120
+        width: 150
       },
       {
         name: 'type',
@@ -424,7 +424,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 90
+        width: 150
       },
       {
         name: 'issuedAt',
@@ -433,7 +433,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 130
+        width: 120
       },
       {
         name: 'issuerCompanyName',
@@ -970,17 +970,6 @@ class Orders extends Component {
 
     return (
       <div id='page' className='flex stretched scrolling'>
-        {isOpenManager && (
-          <div>
-            <AttachmentManager
-              relatedDocumentType={this.state.relatedDocumentType}
-              isOpenManager={this.state.isOpenManager}
-              asModal
-              returnSelectedRows={rows => this.attachDocumentsManager(rows)}
-              returnCloseAttachmentManager={bool => this.setState({ isOpenManager: bool })}
-            />
-          </div>
-        )}
         {openModal && (
           <Modal
             closeIcon={false}
