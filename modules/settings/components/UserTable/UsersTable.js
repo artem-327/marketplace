@@ -252,7 +252,7 @@ const mapStateToProps = (state, { datagrid }) => {
       permissions: user.roles ? user.roles.name : '', // ! ! array?
       id: user.id,
       allUserRoles: user.roles || [],
-      userRoles: <ArrayToFirstItem values={user.roles.map(r => r.name)} />,
+      userRoles: <ArrayToFirstItem values={user && user.roles && user.roles.length && user.roles.map(r => r.name)} />,
       switchEnable: userEnableDisableStatus(user, currentUserId),
       lastLoginAt: user.lastLoginAt
         ? moment(user.lastLoginAt)
