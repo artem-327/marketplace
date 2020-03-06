@@ -119,6 +119,14 @@ const CustomDropdown = styled(Dropdown)`
     z-index: 602;
   }
 `
+const CustomGridRow = styled(GridRow)`
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+`
+
+const CustomGridColumn = styled(GridColumn)`
+  padding-bottom: 0px !important;
+`
 
 const initValues = {
   edit: {
@@ -1141,6 +1149,17 @@ class DetailSidebar extends Component {
                             pane: (
                               <Tab.Pane key='edit' style={{ padding: '18px' }}>
                                 <Grid>
+                                  {sidebarValues && sidebarValues.grouped && (
+                                    <CustomGridRow>
+                                      <CustomGridColumn>
+                                        <FormattedMessage
+                                          id='addInventory.virtualProductGroup'
+                                          defaultMessage='This Product Offer is part of virtual Product Group, only Lot Number and PKGs Available fields can be edited.'>
+                                          {text => text}
+                                        </FormattedMessage>
+                                      </CustomGridColumn>
+                                    </CustomGridRow>
+                                  )}
                                   <GridRow>
                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
                                       <FormattedMessage
@@ -1424,12 +1443,13 @@ class DetailSidebar extends Component {
                                   </GridRow>
                                   <GridRow>
                                     <GridColumn mobile={leftWidth + rightWidth} computer={leftWidth + rightWidth}>
+                                      <FormattedMessage
+                                        id='addInventory.conditionNotes'
+                                        defaultMessage='Condition Notes'>
+                                        {text => text}
+                                      </FormattedMessage>
                                       <TextArea
                                         name='edit.conditionNotes'
-                                        label={formatMessage({
-                                          id: 'addInventory.conditionNotes',
-                                          defaultMessage: 'Condition Notes'
-                                        })}
                                         inputProps={{ disabled: sidebarValues && sidebarValues.grouped }}
                                       />
                                     </GridColumn>
@@ -1579,12 +1599,11 @@ class DetailSidebar extends Component {
                                   </GridRow>
                                   <GridRow>
                                     <GridColumn mobile={leftWidth + rightWidth} computer={leftWidth + rightWidth}>
+                                      <FormattedMessage id='addInventory.externalNotes' defaultMessage='External Notes'>
+                                        {text => text}
+                                      </FormattedMessage>
                                       <TextArea
                                         name='edit.externalNotes'
-                                        label={formatMessage({
-                                          id: 'addInventory.externalNotes',
-                                          defaultMessage: 'External Notes'
-                                        })}
                                         inputProps={{ disabled: sidebarValues && sidebarValues.grouped }}
                                       />
                                     </GridColumn>
@@ -1592,12 +1611,11 @@ class DetailSidebar extends Component {
 
                                   <GridRow>
                                     <GridColumn mobile={leftWidth + rightWidth} computer={leftWidth + rightWidth}>
+                                      <FormattedMessage id='addInventory.internalNotes' defaultMessage='Internal Notes'>
+                                        {text => text}
+                                      </FormattedMessage>
                                       <TextArea
                                         name='edit.internalNotes'
-                                        label={formatMessage({
-                                          id: 'addInventory.internalNotes',
-                                          defaultMessage: 'Internal Notes'
-                                        })}
                                         inputProps={{ disabled: sidebarValues && sidebarValues.grouped }}
                                       />
                                     </GridColumn>
@@ -1610,7 +1628,6 @@ class DetailSidebar extends Component {
                             menuItem: (
                               <Menu.Item
                                 key='documents'
-                                disabled={sidebarValues && sidebarValues.grouped}
                                 onClick={() => {
                                   if (Object.keys(touched).length || this.state.changedForm) {
                                     toastManager.add(

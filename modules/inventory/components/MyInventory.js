@@ -337,7 +337,14 @@ class MyInventory extends Component {
       if (!r || !r.cfStatus) return
       const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
 
-      if (isOfferValid) {
+      if (r.groupId) {
+        title = (
+          <FormattedMessage
+            id='myInventory.broadcasting.disabled'
+            defaultMessage='This Product Offer is part of virtual Product Group, its broadcast setting cannot be changed. If you wish not to broadcast it, remove it from the group.'
+          />
+        )
+      } else if (isOfferValid) {
         switch (r.cfStatus.toLowerCase()) {
           case 'broadcasting':
             title = (
@@ -406,7 +413,8 @@ class MyInventory extends Component {
                   disabled={
                     r.cfStatus.toLowerCase() === 'incomplete' ||
                     r.cfStatus.toLowerCase() === 'unmapped' ||
-                    !isOfferValid
+                    !isOfferValid ||
+                    r.groupId
                   }
                   onChange={(e, data) => {
                     e.preventDefault()
@@ -650,6 +658,7 @@ class MyInventory extends Component {
                   id: 'inventory.broadcast',
                   defaultMessage: 'Price Book'
                 }),
+                disabled: row => row.groupId,
                 callback: row => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
               },
               {
@@ -657,6 +666,7 @@ class MyInventory extends Component {
                   id: 'inventory.priceTiers',
                   defaultMessage: 'Price Tiers'
                 }),
+                disabled: row => row.groupId,
                 callback: row => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
               },
               {
