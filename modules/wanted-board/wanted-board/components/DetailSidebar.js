@@ -49,6 +49,8 @@ import {
   BottomButtons,
 } from '../../constants/layout'
 
+import { listFrequency } from '../../constants/constants'
+
 const CustomHr = styled.hr`
   border: solid 0.5px #dee2e6;
   margin: 0.285714286em 0 0 0;
@@ -66,6 +68,7 @@ const initValues = {
   notificationEnabled: false,
   notifyMail: false,
   notifyPhone: false,
+  orderFrequency: null,
   packagingTypes: [],
   manufacturers: [],
   conditionConforming: null,
@@ -268,7 +271,7 @@ class DetailSidebar extends Component {
                             placeholder: (
                               <FormattedMessage
                                 id='wantedBoard.selectPackaging'
-                                defaultMessage='Select packaging'
+                                defaultMessage='Select Packaging'
                               />
                             ),
                             'data-test': 'new_inventory_grade_drpdn',
@@ -295,7 +298,7 @@ class DetailSidebar extends Component {
                             placeholder: (
                               <FormattedMessage
                                 id='wantedBoard.selectManufacturer'
-                                defaultMessage='Select manufacturer'
+                                defaultMessage='Select Manufacturer'
                               />
                             ),
                             'data-test': 'new_inventory_grade_drpdn',
@@ -307,7 +310,7 @@ class DetailSidebar extends Component {
                     </GridRow>
 
                     <GridRow>
-                      <GridColumn>
+                      <GridColumn width={8}>
                         <Dropdown
                           label={
                             <FormattedMessage
@@ -322,7 +325,31 @@ class DetailSidebar extends Component {
                             placeholder: (
                               <FormattedMessage
                                 id='wantedBoard.selectCondition'
-                                defaultMessage='Select condition'
+                                defaultMessage='Select Condition'
+                              />
+                            ),
+                            'data-test': 'new_inventory_grade_drpdn',
+                            selection: true,
+                            clearable: true
+                          }}
+                        />
+                      </GridColumn>
+                      <GridColumn width={8}>
+                        <Dropdown
+                          label={
+                            <FormattedMessage
+                              id='wantedBoard.orderFrequency'
+                              defaultMessage='Order Frequency'>
+                              {text => text}
+                            </FormattedMessage>
+                          }
+                          name='orderFrequency'
+                          options={listFrequency}
+                          inputProps={{
+                            placeholder: (
+                              <FormattedMessage
+                                id='wantedBoard.selectFrequency'
+                                defaultMessage='Select Frequency'
                               />
                             ),
                             'data-test': 'new_inventory_grade_drpdn',
@@ -349,7 +376,7 @@ class DetailSidebar extends Component {
                             placeholder: (
                               <FormattedMessage
                                 id='wantedBoard.selectCountryOfOrigin'
-                                defaultMessage='Select country of origin'
+                                defaultMessage='Select Country of Origin'
                               />
                             ),
                             'data-test': 'new_inventory_grade_drpdn',
@@ -376,7 +403,7 @@ class DetailSidebar extends Component {
                             placeholder: (
                               <FormattedMessage
                                 id='wantedBoard.selectForm'
-                                defaultMessage='Select form'
+                                defaultMessage='Select Form'
                               />
                             ),
                             'data-test': 'new_inventory_grade_drpdn',
@@ -447,7 +474,7 @@ class DetailSidebar extends Component {
                           {
                             min: 0,
                             type: 'number',
-                            placeholder: '0'
+                            placeholder: '0.000'
                           },
                           <FormattedMessage
                             id='global.from'
@@ -464,7 +491,7 @@ class DetailSidebar extends Component {
                           {
                             min: 0,
                             type: 'number',
-                            placeholder: '0'
+                            placeholder: '0.000'
                           },
                           <FormattedMessage
                             id='global.to'

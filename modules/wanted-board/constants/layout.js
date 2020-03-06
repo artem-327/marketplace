@@ -48,7 +48,7 @@ export const FlexSidebar = styled(Sidebar)`
   font-size: 14px;
   
   .ui.grid {
-    margin: 1.607142857em 1.071428571em;
+    margin: 1.607142857em 1.428571429em;
     .row {
       padding: 0.535714286em 0;
     }
@@ -62,7 +62,7 @@ export const FlexSidebar = styled(Sidebar)`
       }
     }
     .column {
-      padding: 0 1.071428571em;
+      padding: 0 0.714285714em;
       &.float-right {
         .field {
           float: right;

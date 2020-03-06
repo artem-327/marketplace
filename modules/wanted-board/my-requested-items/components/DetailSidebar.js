@@ -5,7 +5,7 @@ import { Button, Input, TextArea, Dropdown, Checkbox as FormikCheckbox, Radio } 
 import { Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import { DateInput } from '~/components/custom-formik'
-import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
+import { getSafe, generateToastMarkup, uniqueArrayByKey, removeEmpty } from '~/utils/functions'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
 import confirm from '~/src/components/Confirmable/confirm'
@@ -53,7 +53,9 @@ import {
   //removeAttachment,
   //downloadAttachment,
   closeDetailSidebar,
-  //getProductOffer
+  //getProductOffer,
+  addPurchaseRequest,
+  editPurchaseRequest
 } from '../../actions'
 
 
@@ -76,28 +78,34 @@ import {
   LabeledRow
 } from '../../constants/layout'
 
+import { listFrequency } from '../../constants/constants'
+
 const CustomHr = styled.hr`
   border: solid 0.5px #dee2e6;
   margin: 0.285714286em 0 0 0;
 `
 
 const initValues = {
-  product: null,
-  assayMin: '',
-  assayMax: '',
-  quantityFrom: '',
-  quantityTo: '',
-  priceFrom: '',
-  priceTo: '',
+  pkgAmount: '',
+  deliveryCountry: null,
+  deliveryProvince: null,
   neededAt: '',
-  notificationEnabled: false,
-  notifyMail: false,
-  notifyPhone: false,
-  packagingTypes: [],
   manufacturers: [],
   conditionConforming: null,
   origins: [],
+  grades: [],
   forms: [],
+  packagingTypes: [],
+  maximumPricePerUOM: null,
+  notes: null,
+  element: {
+    echoProduct: null,
+    casProduct: null,
+    assayMin: '',
+    assayMax: '',
+  },
+  neededNow: null,
+  doesExpire: null,
 }
 
 const validationScheme = val.object().shape({
@@ -115,34 +123,6 @@ const listConforming = [
     key: 0,
     text: <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />,
     value: false
-  }
-]
-
-const listFrequency = [
-  {
-    key: 1,
-    text: <FormattedMessage id='wantedBoard.oneTime' defaultMessage='One Time' />,
-    value: 1
-  },
-  {
-    key: 2,
-    text: <FormattedMessage id='wantedBoard.biWeekly' defaultMessage='Bi Weekly' />,
-    value: 2
-  },
-  {
-    key: 3,
-    text: <FormattedMessage id='wantedBoard.monthly' defaultMessage='Monthly' />,
-    value: 3
-  },
-  {
-    key: 4,
-    text: <FormattedMessage id='wantedBoard.biMonthly' defaultMessage='Bi Monthly' />,
-    value: 4
-  },
-  {
-    key: 5,
-    text: <FormattedMessage id='wantedBoard.yearly' defaultMessage='Yearly' />,
-    value: 5
   }
 ]
 
@@ -174,6 +154,31 @@ class DetailSidebar extends Component {
     })
   }, 250)
 
+  submitForm = async (values, setSubmitting, setTouched) => {
+    const { addPurchaseRequest, editPurchaseRequest, datagrid } = this.props
+    const { sidebarValues } = this.state
+
+    let body = {
+      ...values,
+
+    }
+    removeEmpty(body)
+    console.log('!!!!!!!!!! submitForm body', body)
+
+    try {
+      if (sidebarValues) {
+        const response = await editPurchaseRequest(sidebarValues.id, body)
+        console.log('!!!!!!!!!! edit response', response)
+
+      } else {
+        const response = await addPurchaseRequest(body)
+        console.log('!!!!!!!!!! add response', response)
+
+      }
+    } catch (e) {}
+
+    //! ! setSubmitting(false)
+  }
 
   render() {
     let {
@@ -209,7 +214,8 @@ class DetailSidebar extends Component {
         initialValues={this.state.initValues}
         validationSchema={validationScheme}
         onSubmit={async (values, { setSubmitting, setTouched }) => {
-          //! !this.submitForm(values, setSubmitting, setTouched)
+          setSubmitting(true)
+          this.submitForm(values, setSubmitting, setTouched)
         }}>
         {formikProps => {
           let {
@@ -226,6 +232,8 @@ class DetailSidebar extends Component {
           this.values = values
           this.resetForm = resetForm
           this.formikProps = formikProps
+
+          console.log('!!!!!!!!!! render values', values)
           return (
             <Form>
               <FlexSidebar
@@ -252,7 +260,7 @@ class DetailSidebar extends Component {
                               {text => text}
                             </FormattedMessage>
                           }
-                          name='product'
+                          name='element.echoProduct'
                           options={this.props.autocompleteData.map(el => ({
                             key: el.id,
                             text: `${getSafe(() => el.intProductCode, '')} ${getSafe(
@@ -284,7 +292,7 @@ class DetailSidebar extends Component {
                     </GridRow>
 
                     <GridRow>
-                      <GridColumn width={8}>
+                      <GridColumn>
                         <Dropdown
                           label={
                             <FormattedMessage
@@ -293,7 +301,7 @@ class DetailSidebar extends Component {
                               {text => text}
                             </FormattedMessage>
                           }
-                          name='product'
+                          name='element.casProduct'
                           options={this.props.autocompleteData.map(el => ({
                             key: el.id,
                             text: `${getSafe(() => el.intProductCode, '')} ${getSafe(
@@ -322,32 +330,49 @@ class DetailSidebar extends Component {
                           }}
                         />
                       </GridColumn>
-                      <GridColumn width={8}>
-                        <Input
-                          label={
-                            <FormattedMessage
-                              id='wantedBoard.assay'
-                              defaultMessage='Assay'>
-                              {text => text}
-                            </FormattedMessage>
-                          }
-                          name='assay'
-                          inputProps={{
-                            min: 0,
-                            type: 'number',
-                            placeholder:
-                              formatMessage({
-                                id: 'wantedBoard.selectAssay',
-                                defaultMessage: 'Select Assay'
-                              })
-                          }}
-                          />
-                      </GridColumn>
                     </GridRow>
                     <GridRow>
                       <GridColumn width={8}>
                         {quantityWrapper(
-                          'quantity',
+                          'element.assayMin',
+                          {
+                            min: 0,
+                            type: 'number',
+                            placeholder: '0'
+                          },
+                          this.formikProps
+                          ,
+                          <FormattedMessage
+                            id='global.assayMin'
+                            defaultMessage='Assay Min'
+                          >
+                            {text => text}
+                          </FormattedMessage>
+                        )}
+                      </GridColumn>
+                      <GridColumn width={8}>
+                        {quantityWrapper(
+                          'element.assayMax',
+                          {
+                            min: 0,
+                            type: 'number',
+                            placeholder: '0'
+                          },
+                          this.formikProps
+                          ,
+                          <FormattedMessage
+                            id='global.assayMax'
+                            defaultMessage='Assay Max'
+                          >
+                            {text => text}
+                          </FormattedMessage>
+                        )}
+                      </GridColumn>
+                    </GridRow>
+                    <GridRow>
+                      <GridColumn width={16}>
+                        {quantityWrapper(
+                          'pkgAmount',
                           {
                             min: 0,
                             type: 'number',
@@ -363,7 +388,7 @@ class DetailSidebar extends Component {
                           </FormattedMessage>
                         )}
                       </GridColumn>
-                      <GridColumn width={8}>
+                      {false && (<GridColumn width={8}>
                         <Dropdown
                           label={
                             <FormattedMessage
@@ -386,7 +411,7 @@ class DetailSidebar extends Component {
                             clearable: true
                           }}
                         />
-                      </GridColumn>
+                      </GridColumn>)}
                     </GridRow>
 
                     <GridRow>
@@ -399,8 +424,8 @@ class DetailSidebar extends Component {
                               {text => text}
                             </FormattedMessage>
                           }
-                          name='deliveryLocation'
-                          options={listPackagingTypes}
+                          name='deliveryCountry'
+                          options={listCountries}
                           inputProps={{
                             placeholder: (
                               <FormattedMessage
@@ -415,8 +440,8 @@ class DetailSidebar extends Component {
                       </GridColumn>
                       <GridColumn width={8}>
                         <Dropdown
-                          label={' picasi '}
-                          name='deliveryState'
+                          label={'\u00A0'}  // &nbsp to not remove label (to not break positioning)
+                          name='deliveryProvince'
                           options={listPackagingTypes}
                           inputProps={{
                             placeholder: (
@@ -434,7 +459,7 @@ class DetailSidebar extends Component {
 
                     <GridRow className='label-row'>
                       <GridColumn width={8}>
-                        <FormattedMessage id='wantedBoard.neededBy' defaultMessage='ENeeded By'>
+                        <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
                           {text => text}
                         </FormattedMessage>
                       </GridColumn>
@@ -448,15 +473,15 @@ class DetailSidebar extends Component {
                     <GridRow>
                       <GridColumn width={8}>
                         <Radio
-                          name='neededBy'
-                          value='now'
+                          name='neededNow'
+                          value={true}
                           label={formatMessage({ id: 'wantedBoard.now', defaultMessage: 'Now' })}
                         />
                       </GridColumn>
                       <GridColumn width={8}>
                         <Radio
-                          name='requireExpire'
-                          value='no'
+                          name='doesExpire'
+                          value={false}
                           label={formatMessage({ id: 'wantedBoard.no', defaultMessage: 'No' })}
                         />
                       </GridColumn>
@@ -464,15 +489,15 @@ class DetailSidebar extends Component {
                     <GridRow>
                       <GridColumn width={8}>
                         <Radio
-                          name='neededBy'
-                          value='now'
+                          name='neededNow'
+                          value={false}
                           label={formatMessage({ id: 'wantedBoard.byDate', defaultMessage: 'By Date' })}
                         />
                       </GridColumn>
                       <GridColumn width={8}>
                         <Radio
-                          name='requireExpire'
-                          value='no'
+                          name='doesExpire'
+                          value={true}
                           label={formatMessage({ id: 'wantedBoard.yes', defaultMessage: 'Yes' })}
                         />
                       </GridColumn>
@@ -481,7 +506,7 @@ class DetailSidebar extends Component {
                     <GridRow>
                       <GridColumn width={8}>
                         <DateInput
-                          name='neededBy'
+                          name='neededAt'
                           inputProps={{
                             'data-test': 'new_inventory_grade_drpdn',
                             placeholder:
@@ -489,7 +514,8 @@ class DetailSidebar extends Component {
                                 id: 'date.standardPlaceholder',
                                 defaultMessage: '00/00/0000'
                               }),
-                            clearable: true
+                            clearable: true,
+                            disabled: values.neededNow !== false
                           }}
                         />
                       </GridColumn>
@@ -503,7 +529,8 @@ class DetailSidebar extends Component {
                                 id: 'date.standardPlaceholder',
                                 defaultMessage: '00/00/0000'
                               }),
-                            clearable: true
+                            clearable: true,
+                            disabled: values.doesExpire !== true
                           }}
                         />
                       </GridColumn>
@@ -570,7 +597,7 @@ class DetailSidebar extends Component {
                               {text => text}
                             </FormattedMessage>
                           }
-                          name='origin'
+                          name='origins'
                           options={listCountries}
                           inputProps={{
                             'data-test': 'new_inventory_grade_drpdn',
@@ -597,8 +624,8 @@ class DetailSidebar extends Component {
                               {text => text}
                             </FormattedMessage>
                           }
-                          name='grade'
-                          options={listForms}
+                          name='grades'
+                          options={listGrades}
                           inputProps={{
                             'data-test': 'new_inventory_grade_drpdn',
                             selection: true,
@@ -668,7 +695,7 @@ class DetailSidebar extends Component {
                     <GridRow>
                       <GridColumn>
                         {inputWrapper(
-                          'maxDeliveredPrice',
+                          'maximumPricePerUOM',
                           {
                             min: 0,
                             type: 'number',
@@ -727,14 +754,7 @@ class DetailSidebar extends Component {
                       size='large'
                       type='button'
                       onClick={() =>
-                        validateForm().then(r => {
-                          if (Object.keys(r).length && this.state.activeTab !== 1) {
-                            //this.switchToErrors(r)
-                            //submitForm() // to show errors
-                          } else {
-                            //this.submitForm(values, setSubmitting, setTouched)
-                          }
-                        })
+                        submitForm()
                       }
                       data-test='sidebar_inventory_save_new'>
                       {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
@@ -769,7 +789,9 @@ const mapDispatchToProps = {
   //removeAttachment,
   //downloadAttachment,
   closeDetailSidebar,
-  //getProductOffer
+  //getProductOffer,
+  addPurchaseRequest,
+  editPurchaseRequest
 }
 
 const mapStateToProps = ({
@@ -782,10 +804,10 @@ const mapStateToProps = ({
     listGrades,
     listWarehouses,
     listCountries,
-    //  loading,
+    loading,
     //  sidebarActiveTab,
     //  sidebarDetailOpen,
-    //  sidebarValues,
+    sidebarValues,
     searchedManufacturers,
     searchedManufacturersLoading,
     //  searchedOrigins,
@@ -805,10 +827,10 @@ const mapStateToProps = ({
   listGrades,
   listWarehouses,
   listCountries,
-//  loading,
+  loading,
 //  sidebarActiveTab,
 //  sidebarDetailOpen,
-//  sidebarValues,
+  sidebarValues,
   searchedManufacturers,
   searchedManufacturersLoading,
 //  searchedOrigins,

@@ -98,6 +98,21 @@ export const getCountries = () => ({
   payload: api.getCountries()
 })
 
+export const getProvinces = (id) => ({
+  type: AT.WB_GET_PROVINCES,
+  payload: api.getProvinces(id)
+})
+
+export const addPurchaseRequest = (body) => ({
+  type: AT.WB_ADD_PURCHASE_REQUEST,
+  payload: api.addPurchaseRequest(body)
+})
+
+export const editPurchaseRequest = (id) => ({
+  type: AT.WB_EDIT_PURCHASE_REQUEST,
+  payload: api.editPurchaseRequest(id, body)
+})
+
 
 
 

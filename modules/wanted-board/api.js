@@ -35,3 +35,16 @@ export function searchManufacturers(text, limit) {
 export const getCountries = () => {
   return api.get('/prodex/api/countries').then(response => response.data)
 }
+
+export const getProvinces = countryId => {
+  return api.get(`/prodex/api/provinces/country/${countryId}`).then(response => response.data)
+}
+
+export const addPurchaseRequest = body => {
+  return api.post('/prodex/api/purchase-requests', body).then(response => response.data)
+}
+
+export const editPurchaseRequest = (id, body) => {
+  return api.path(`/prodex/api/purchase-requests/id/${id}`, body).then(response => response.data)
+}
+

@@ -17,7 +17,8 @@ export const filterTypes = {
   INVENTORY: 'inventory',
   MARKETPLACE: 'marketplace',
   PURCHASE_ORDERS: 'PURCHASE_ORDERS',
-  SALES_ORDERS: 'SALES_ORDERS'
+  SALES_ORDERS: 'SALES_ORDERS',
+  WANTED_BOARD: 'WANTED_BOARD',
 }
 
 export const filterPresets = {

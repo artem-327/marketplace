@@ -987,7 +987,7 @@ class InventoryFilter extends Component {
         </AccordionItem>
 
         <AccordionItem>
-          {this.accordionTitle('assay', <FormattedMessage id='filter.assay' />)}
+          {this.accordionTitle('assay', <FormattedMessage id='filter.percentage' />)}
           <AccordionContent active={!this.state.inactiveAccordion.assay}>
             <FormGroup data-test='filter_assay_inp'>
               <FormField width={8}>
@@ -1150,7 +1150,7 @@ class InventoryFilter extends Component {
                   }}
                   inputProps={{ type: 'button' }}
                   data-test='filter_clear'>
-                  {formatMessage({ id: 'filter.clearFilter', defaultMessage: 'Clear' })}
+                  {formatMessage({ id: 'filter.clear', defaultMessage: 'Clear' })}
                 </Button>
                 <Button
                   disabled={openedSaveFilter || savedFiltersActive}

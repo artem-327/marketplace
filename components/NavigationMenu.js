@@ -13,9 +13,7 @@ import { getSafe } from '~/utils/functions'
 import { ArrowLeftCircle, ArrowRightCircle, Layers, Settings, ShoppingBag, Grid } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 
-import { InventoryFilter } from '~/modules/filter'
-import { Filter } from '~/modules/filter' // Marketplace filter
-import { OrderFilter } from '~/modules/filter'
+import { InventoryFilter, Filter, OrderFilter, WantedBoardFilter } from '~/modules/filter'
 
 import { PlusCircle } from 'react-feather'
 
@@ -41,7 +39,8 @@ class Navigation extends Component {
     operations: getSafe(() => Router.router.pathname === '/operations', false),
     openedFilterMyInventory: false,
     openedFilterMarketplace: false,
-    openedFilterOrders: false
+    openedFilterOrders: false,
+    openedFilterWantedBoard: false,
   }
 
   componentDidMount() {
@@ -74,6 +73,9 @@ class Navigation extends Component {
         case '/marketplace/all':
           this.setState(prevState => ({ openedFilterMarketplace: !prevState.openedFilterMarketplace }))
           break
+        case '/wanted-board/wanted-board':
+          this.setState(prevState => ({ openedFilterWantedBoard: !prevState.openedFilterWantedBoard }))
+          break
         case '/orders?type=sales':
           //temporary disabled - this.setState(prevState => ({ openedFilterOrders: !prevState.openedFilterOrders }))
           break
@@ -85,7 +87,8 @@ class Navigation extends Component {
       this.setState({
         openedFilterMyInventory: false,
         openedFilterMarketplace: false,
-        openedFilterOrders: false
+        openedFilterOrders: false,
+        openedFilterWantedBoard: false
       })
     }
 
@@ -198,7 +201,8 @@ class Navigation extends Component {
       operations,
       openedFilterMyInventory,
       openedFilterMarketplace,
-      openedFilterOrders
+      openedFilterOrders,
+      openedFilterWantedBoard
     } = this.state
 
     const MenuLink = withRouter(({ router: { asPath }, to, children, tab }) => {
@@ -244,6 +248,9 @@ class Navigation extends Component {
             {formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}
           </>
         </MenuLink>
+        {false && !collapsedMenu && openedFilterWantedBoard && asPath === '/wanted-board/wanted-board'
+          ? <WantedBoardFilter /> : null
+        }
         <MenuLink to='/orders?type=sales' data-test='navigation_menu_orders_sales_drpdn'>
           <>
             <ArrowRightCircle size={22} />
