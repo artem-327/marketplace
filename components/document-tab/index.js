@@ -19,6 +19,9 @@ import {
   Button as ButtonSemantic
 } from 'semantic-ui-react'
 import { Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Form } from 'semantic-ui-react'
+import { FastField, Field, getIn } from 'formik'
+import { withDatagrid } from '~/modules/datagrid'
 
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import ProdexGrid from '~/components/table'
@@ -27,7 +30,7 @@ import { AttachmentManager } from '~/modules/attachments'
 
 const CustomDropdown = styled(Dropdown)`
   .ui.selection.dropdown.active {
-    z-index: 602;
+    z-index: 602 !important;
   }
 `
 
@@ -71,13 +74,16 @@ class DocumentTab extends Component {
   }
 
   attachDocumentsManager = (newDocuments, values, setFieldValue, setFieldNameAttachments, changedForm) => {
-    const docArray = uniqueArrayByKey(values.documents.attachments.concat(newDocuments), 'id')
+    const docArray = uniqueArrayByKey(values.attachments.concat(newDocuments), 'id')
+    console.log('====================================')
+    console.log(docArray)
+    console.log('====================================')
     setFieldNameAttachments && setFieldValue(setFieldNameAttachments, docArray)
     changedForm && changedForm()
   }
 
   attachDocumentsUploadLot = (newDocument, values, setFieldValue, setFieldNameAttachments, changedForm) => {
-    const docArray = uniqueArrayByKey(values.documents.attachments.concat([newDocument]), 'id')
+    const docArray = uniqueArrayByKey(values.attachments.concat([newDocument]), 'id')
     setFieldNameAttachments && setFieldValue(setFieldNameAttachments, docArray)
     changedForm && changedForm()
   }
@@ -97,8 +103,15 @@ class DocumentTab extends Component {
       idForm, // missing must test
       tableName,
       removeAttachmentLink,
-      removeAttachment
+      removeAttachment,
+      addAttachment,
+      loadFile,
+      intl: { formatMessage }
     } = this.props
+
+    console.log('values====================================')
+    console.log(values)
+    console.log('====================================')
 
     return (
       <Grid>
@@ -109,7 +122,7 @@ class DocumentTab extends Component {
                 {text => text}
               </FormattedMessage>
               <CustomDropdown
-                name='documents.documentType'
+                name='documentType'
                 closeOnChange
                 options={listDocumentTypes}
                 inputProps={{
@@ -141,7 +154,8 @@ class DocumentTab extends Component {
           <GridRow>
             <GridColumn>
               <UploadLot
-                {...this.props}
+                addAttachment={addAttachment}
+                loadFile={loadFile}
                 header={
                   <DivIcon
                     onClick={() =>
@@ -152,10 +166,11 @@ class DocumentTab extends Component {
                     <CloceIcon name='close' color='grey' />
                   </DivIcon>
                 }
+                id={'field_input_documents.documentType'}
                 hideAttachments
                 edit={getSafe(() => idForm, 0)} //sidebarValues.id
-                attachments={values.documents.attachments}
-                name='documents.attachments'
+                attachments={values.attachments}
+                name={setFieldNameAttachments}
                 type={this.state.documentType}
                 filesLimit={1}
                 fileMaxSize={20}
@@ -201,105 +216,112 @@ class DocumentTab extends Component {
             </GridColumn>
           </GridRow>
         ) : null}
-        {values.documents.attachments && (
-          <GridRow>
-            <GridColumn>
-              <ProdexGrid
-                virtual={false}
-                tableName={tableName} //'inventory_documents'
-                onTableReady={() => {}}
-                columns={columns}
-                normalWidth={false}
-                rows={values.documents.attachments
-                  .map(row => ({
-                    ...row,
-                    documentTypeName: row.documentType && row.documentType.name
-                  }))
-                  .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))}
-                rowActions={[
-                  {
-                    text: (
-                      <FormattedMessage id='global.unlink' defaultMessage='Unlink'>
-                        {text => text}
-                      </FormattedMessage>
-                    ),
-                    callback: async row => {
-                      try {
-                        if (row.linked) {
-                          const unlinkResponse = await removeAttachmentLink(false, idForm, row.id)
-                          toastManager.add(
-                            generateToastMarkup(
-                              <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
-                              <FormattedMessage
-                                id='addInventory.unlinkeAttachment'
-                                defaultMessage='Attachment was successfully unlinked.'
-                              />
-                            ),
-                            {
-                              appearance: 'success'
+        <GridRow>
+          <GridColumn>
+            <ProdexGrid
+              virtual={false}
+              tableName={tableName} //'inventory_documents'
+              onTableReady={() => {}}
+              columns={columns}
+              normalWidth={false}
+              rows={
+                getSafe(() => values.attachments.length, false)
+                  ? values.attachments
+                      .map(row => {
+                        console.log('row====================================')
+                        console.log(row)
+                        console.log('====================================')
+                        return {
+                          ...row,
+                          documentTypeName: row.documentType && row.documentType.name
+                        }
+                      })
+                      .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))
+                  : []
+              }
+              rowActions={[
+                {
+                  text: (
+                    <FormattedMessage id='global.unlink' defaultMessage='Unlink'>
+                      {text => text}
+                    </FormattedMessage>
+                  ),
+                  callback: async row => {
+                    try {
+                      if (row.linked) {
+                        const unlinkResponse = await removeAttachmentLink(false, idForm, row.id)
+                        toastManager.add(
+                          generateToastMarkup(
+                            <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
+                            <FormattedMessage
+                              id='addInventory.unlinkeAttachment'
+                              defaultMessage='Attachment was successfully unlinked.'
+                            />
+                          ),
+                          {
+                            appearance: 'success'
+                          }
+                        )
+                        if (unlinkResponse.value.data.lastLink) {
+                          confirm(
+                            formatMessage({
+                              id: 'confirm.attachments.delete.title',
+                              defaultMessage: 'Delete Attachment'
+                            }),
+                            formatMessage(
+                              {
+                                id: 'confirm.attachments.delete.content',
+                                defaultMessage: `Do you want to delete file ${row.name}?`
+                              },
+                              { fileName: row.name }
+                            )
+                          ).then(
+                            async () => {
+                              // confirm
+                              try {
+                                await removeAttachment(row.id)
+                                toastManager.add(
+                                  generateToastMarkup(
+                                    <FormattedMessage
+                                      id='notifications.attachments.deleted.header'
+                                      defaultMessage='File Deleted'
+                                    />,
+                                    <FormattedMessage
+                                      id='notifications.attachments.deleted.content'
+                                      defaultMessage={`File ${row.name} successfully deleted.`}
+                                      values={{ fileName: row.name }}
+                                    />
+                                  ),
+                                  {
+                                    appearance: 'success'
+                                  }
+                                )
+                              } catch (e) {
+                                console.error(e)
+                              }
+                            },
+                            () => {
+                              // cancel
                             }
                           )
-                          if (unlinkResponse.value.data.lastLink) {
-                            confirm(
-                              formatMessage({
-                                id: 'confirm.attachments.delete.title',
-                                defaultMessage: 'Delete Attachment'
-                              }),
-                              formatMessage(
-                                {
-                                  id: 'confirm.attachments.delete.content',
-                                  defaultMessage: `Do you want to delete file ${row.name}?`
-                                },
-                                { fileName: row.name }
-                              )
-                            ).then(
-                              async () => {
-                                // confirm
-                                try {
-                                  await removeAttachment(row.id)
-                                  toastManager.add(
-                                    generateToastMarkup(
-                                      <FormattedMessage
-                                        id='notifications.attachments.deleted.header'
-                                        defaultMessage='File Deleted'
-                                      />,
-                                      <FormattedMessage
-                                        id='notifications.attachments.deleted.content'
-                                        defaultMessage={`File ${row.name} successfully deleted.`}
-                                        values={{ fileName: row.name }}
-                                      />
-                                    ),
-                                    {
-                                      appearance: 'success'
-                                    }
-                                  )
-                                } catch (e) {
-                                  console.error(e)
-                                }
-                              },
-                              () => {
-                                // cancel
-                              }
-                            )
-                          }
                         }
-                        setFieldValue(
-                          setFieldNameAttachments,
-                          values.documents.attachments.filter(o => o.id !== row.id)
-                        )
-                      } catch (e) {
-                        console.error(e)
                       }
+                      setFieldValue(
+                        setFieldNameAttachments,
+                        values.attachments.filter(o => o.id !== row.id)
+                      )
+                    } catch (e) {
+                      console.error(e)
                     }
                   }
-                ]}
-              />
-            </GridColumn>
-          </GridRow>
-        )}
+                }
+              ]}
+            />
+          </GridColumn>
+        </GridRow>
       </Grid>
     )
   }
 }
 
-export default injectIntl(DocumentTab)
+export default withDatagrid(injectIntl(DocumentTab))

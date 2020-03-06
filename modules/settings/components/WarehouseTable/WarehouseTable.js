@@ -185,6 +185,12 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = (state, { datagrid }) => {
+  console.log('state====================================')
+  console.log(state)
+  console.log('====================================')
+  console.log('datagrid====================================')
+  console.log(datagrid)
+  console.log('====================================')
   return {
     rows: datagrid.rows.map(r => {
       let countryId = getSafe(() => r.deliveryAddress.address.country.id),
@@ -218,7 +224,9 @@ const mapStateToProps = (state, { datagrid }) => {
               contactName: getSafe(() => r.deliveryAddress.contactName, ''),
               contactPhone: getSafe(() => r.deliveryAddress.contactPhone, ''),
               contactEmail: getSafe(() => r.deliveryAddress.contactEmail, '')
-            }
+            },
+            documentType: getSafe(() => r.attachments, null),
+            attachments: getSafe(() => r.attachments, [])
           },
           zipID,
           countryId,

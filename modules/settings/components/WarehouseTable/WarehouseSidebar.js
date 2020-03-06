@@ -10,7 +10,10 @@ import {
   getAddressSearch,
   removeEmpty,
   removeAttachmentLink,
-  removeAttachment
+  removeAttachment,
+  addAttachment,
+  loadFile,
+  attachmentLinksToBranch
 } from '../../actions'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
@@ -26,7 +29,7 @@ import { AddressForm } from '~/modules/address-form/'
 import { getSafe } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/components/DetailSidebar'
-import { DocumentTab } from '~/components/document-tab'
+import DocumentTab from '~/components/document-tab'
 
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
@@ -94,15 +97,11 @@ class WarehouseSidebar extends React.Component {
 
   submitHandler = async (values, actions) => {
     let { popupValues, currentTab } = this.props
-    console.log('popupValues====================================')
-    console.log(popupValues)
-    console.log('====================================')
-    console.log('values====================================')
+    const { handlerSubmitWarehouseEditPopup, postNewWarehouseRequest, attachmentLinksToBranch } = this.props
+    let country = JSON.parse(values.deliveryAddress.address.country).countryId
+    console.log('valuessubmitHandler====================================')
     console.log(values)
     console.log('====================================')
-    const { handlerSubmitWarehouseEditPopup, postNewWarehouseRequest } = this.props
-    let country = JSON.parse(values.deliveryAddress.address.country).countryId
-
     let requestData = {}
     if (currentTab.type === 'branches') {
       requestData = {
@@ -144,6 +143,14 @@ class WarehouseSidebar extends React.Component {
 
     try {
       if (popupValues) {
+        if (values.attachments.length) {
+          values.attachments.forEach(attachment => {
+            console.log('attachment====================================')
+            console.log(attachment)
+            console.log('====================================')
+            attachmentLinksToBranch(attachment.id, popupValues.branchId)
+          })
+        }
         await handlerSubmitWarehouseEditPopup(
           {
             ...requestData,
@@ -186,7 +193,8 @@ class WarehouseSidebar extends React.Component {
         contactEmail: '',
         callAhead: false,
         attachments: ''
-      }
+      },
+      attachments: []
     })
   }
 
@@ -311,20 +319,26 @@ class WarehouseSidebar extends React.Component {
       listDocumentTypes,
       removeAttachmentLink,
       removeAttachment,
+      addAttachment,
+      loadFile,
       intl: { formatMessage }
     } = this.props
     const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
     return (
       <>
-        {/* <DocumentTab
-          listDocumentTypes={listDocumentTypes}
-          values={values}
-          setFieldValue={setFieldValue}
-          setFieldNameAttachments='attachments'
-          tableName='warehouse_attachments'
-          removeAttachmentLink={removeAttachmentLink}
-          removeAttachment={removeAttachment}
-        /> */}
+        {
+          <DocumentTab
+            listDocumentTypes={listDocumentTypes}
+            values={values}
+            setFieldValue={setFieldValue}
+            setFieldNameAttachments='attachments'
+            tableName='warehouse_attachments'
+            removeAttachmentLink={removeAttachmentLink}
+            removeAttachment={removeAttachment}
+            addAttachment={addAttachment}
+            loadFile={loadFile}
+          />
+        }
       </>
     )
   }
@@ -440,7 +454,10 @@ const mapDispatchToProps = {
   getAddressSearch,
   removeEmpty,
   removeAttachmentLink,
-  removeAttachment
+  removeAttachment,
+  addAttachment,
+  loadFile,
+  attachmentLinksToBranch
 }
 const mapStateToProps = state => {
   // const AddressSuggestOptions = state.settings.addressSearch.map((a) => (

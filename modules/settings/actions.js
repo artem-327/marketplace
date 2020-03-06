@@ -957,9 +957,13 @@ export function addVerificationDocument(attachment, type) {
 }
 
 export function addAttachment(attachment, type, expirationDate) {
-  return async dispatch => {
-    await dispatch({ type: AT.SETTINGS_ADD_ATTACHMENT, payload: api.addAttachment(attachment, type, expirationDate) })
-    Datagrid.loadData()
+  return {
+    type: AT.SETTINGS_ADD_ATTACHMENT,
+    async payload() {
+      const data = await api.addAttachment(attachment, type, expirationDate)
+      Datagrid && Datagrid.loadData()
+      return data
+    }
   }
 }
 
@@ -1053,3 +1057,12 @@ export const getNmfcNumbersByString = value => ({
 })
 
 export const addNmfcNumber = value => ({ type: AT.ADD_NMFC_NUMBERS, payload: value })
+
+export const attachmentLinksToBranch = (attachmentId, branchId) => ({
+  type: AT.ATTACHMENT_LINKS_TO_BRANCH,
+  async payload() {
+    const { data } = await api.attachmentLinksToBranch(attachmentId, branchId)
+    Datagrid.loadData()
+    return data
+  }
+})
