@@ -539,3 +539,15 @@ Cypress.Commands.add("setOfferPriceBook", (token, id, broadcastBody) => {
         expect(response.status).to.eq(200)
     })
 })
+
+Cypress.Commands.add("cancelOffer", (token, id) => {
+    cy.request({
+        method: 'PATCH',
+        url: '/prodex/api/holds/' + id + '/cancel',
+        headers: {
+            authorization: "Bearer " + token
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+    })
+})
