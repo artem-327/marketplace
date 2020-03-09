@@ -13,6 +13,7 @@ import { groupActionsMarketplace } from '~/modules/company-product-info/constant
 import { WantedBoard } from '~/modules/wanted-board/wanted-board'
 import { MyRequestedItems } from '~/modules/wanted-board/my-requested-items'
 import confirm from '~/src/components/Confirmable/confirm'
+import DetailSidebar from './DetailSidebar'
 
 import { number } from 'prop-types'
 import Link from 'next/link'
@@ -185,6 +186,7 @@ class MyOffers extends Component {
     const {
       activeIndex,
       intl: { formatMessage },
+      editWindowOpen
     } = this.props
 
     const panes = [
@@ -230,6 +232,7 @@ class MyOffers extends Component {
             panes={panes}
           />
         </Container>
+        {editWindowOpen === 'my-offers' && <DetailSidebar />}
       </>
     )
   }

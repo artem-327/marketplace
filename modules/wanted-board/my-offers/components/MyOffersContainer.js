@@ -49,11 +49,12 @@ function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
     ...datagrid,
-    rows: datagrid.rows.map(po => {
+    //rows: datagrid.rows.map(po => {
+    rows: [].map(po => {
       return {
         id: po.id,
         rawData: po,
-        product: 'jmeno produktu',
+        product: '',
         fobPrice:
           po.pricingTiers.length > 1 ? (
             <>
@@ -75,7 +76,7 @@ function mapStateToProps(store, { datagrid }) {
               />{' '}
             </>
           ),
-        manufacturer: 'jo 2 MyOffers',
+        manufacturer: '',
         //condition: getSafe(() => po.conforming, ''),
         condition: StatusLabel('Rejected'),
         status: StatusLabel('Purchased'),

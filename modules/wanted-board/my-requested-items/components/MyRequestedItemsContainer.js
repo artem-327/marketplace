@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormattedNumber } from 'react-intl'
+import {FormattedMessage, FormattedNumber} from 'react-intl'
 import { connect } from 'react-redux'
 import moment from 'moment/moment'
 
@@ -14,32 +14,55 @@ import { getSafe } from '~/utils/functions'
 import { getLocaleDateFormat } from '~/components/date-format'
 
 import MyRequestedItems from './MyRequestedItems'
-
+import { ArrayToFirstItem } from '~/components/formatted-messages'
 
 function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
     ...datagrid,
-    rows: datagrid.rows.map(po => {
+    rows: datagrid.rows.map(row => {
+      //const qtyPart = getSafe(() => row.....packagingUnit.nameAbbreviation)
+      const qtyPart = 'LB'
       return {
-        id: po.id,
-        rawData: po,
-        productName: 'grouping nazev',
-        product: 'jmeno produktu',
-        casNumber: 'text casNumber',
-        assay: 'text assay',
-        orderQuantity: 'text orderQuantity',
-        orderFrequency: 'text orderFrequency',
-        neededBy: 'text neededBy',
-        dealExpired: 'text dealExpired',
-        manufacturer: 'text manufacturer',
-        condition: getSafe(() => po.conforming),
-        deliveryLocation: 'text deliveryLocation',
-        packaging: 'text packaging',
-        deliveryPriceMax: 'text deliveryPriceMax',
-        measurement: 'text measurement',
-        fobQuote: 'text fobQuote',
-        deliveredQuote: 'text deliveredQuote',
+        id: row.id,
+        rawData: row,
+        //productName: 'grouping nazev',
+        product: getSafe(() => row.element.echoProduct.name, 'N/A'),
+        casNumber: getSafe(() => row.element.casProduct.casNumber, 'N/A'),
+        assay: (<FormattedAssay
+          min={getSafe(() => row.element.assayMin, null)}
+          max={getSafe(() => row.element.assayMax, null)}
+        />),
+        orderQuantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={row.pkgAmount} /> : 'N/A',
+        orderFrequency: 'N/A',
+        neededBy: row.neededAt ? moment(row.neededAt).format(getLocaleDateFormat()) : 'N/A',
+        dealExpired: row.expiresAt ? moment(row.expiresAt).format(getLocaleDateFormat()) : 'N/A',
+        manufacturer:
+          row.manufacturers &&
+          row.manufacturers.length
+            ? (<ArrayToFirstItem values={row.manufacturers.map(d => d.name)}/>)
+            : (<FormattedMessage id='wantedBoard.any' defaultMessage='Any' />),
+        condition: typeof row.conditionConforming === 'undefined'
+          ? 'N/A'
+          : (row.conditionConforming
+              ? (<FormattedMessage id='global.conforming' defaultMessage='Conforming' />)
+              : (<FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />)
+          ),
+        deliveryLocation: row.deliveryProvince
+          ? row.deliveryProvince.name
+          : (row.deliveryCountry
+              ? row.deliveryCountry.name
+              : 'N/A'
+          ),
+        packaging: row.packagingTypes && row.packagingTypes.length
+          ? <ArrayToFirstItem values={row.packagingTypes.map(d => d.name)} />
+          : 'N/A',
+        deliveryPriceMax: row.maximumPricePerUOM
+          ? <FormattedNumber style='currency' currency={currency} value={row.maximumPricePerUOM} />
+          : 'N/A',
+        measurement: 'LB',
+        fobQuote: '',
+        deliveredQuote: '',
       }
     })
   }

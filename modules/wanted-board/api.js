@@ -20,6 +20,10 @@ export function getProductGrades() {
   return api.get(`/prodex/api/product-grades`).then(response => response.data)
 }
 
+export function getUnits() {
+  return api.get(`/prodex/api/units`).then(response => response.data)
+}
+
 export function getWarehouses() {
   return api.get(`/prodex/api/branches/warehouses`).then(response => response.data)
 }
@@ -27,6 +31,14 @@ export function getWarehouses() {
 export function searchManufacturers(text, limit) {
   return api.get(
     `/prodex/api/manufacturers/search?search=${text}${
+      Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''
+      }`
+  ).then(response => response.data)
+}
+
+export function searchCasNumber(text, limit) {
+  return api.get(
+    `/prodex/api/cas-products/search?pattern=${text}${
       Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''
       }`
   ).then(response => response.data)

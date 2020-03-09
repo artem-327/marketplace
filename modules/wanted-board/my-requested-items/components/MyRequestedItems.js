@@ -14,6 +14,7 @@ import { WantedBoard } from '~/modules/wanted-board/wanted-board'
 import { MyOffers } from '~/modules/wanted-board/my-offers'
 import confirm from '~/src/components/Confirmable/confirm'
 import DetailSidebar from './DetailSidebar'
+import { Datagrid } from '~/modules/datagrid'
 
 import { number } from 'prop-types'
 import Link from 'next/link'
@@ -36,7 +37,7 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
 class MyRequestedItems extends Component {
   state = {
     columnsProduct: [
-      { name: 'productName', disabled: true },
+      //{ name: 'productName', disabled: true },
       //{ name: 'productNumber', disabled: true },
       {
         name: 'casNumber',
@@ -182,7 +183,7 @@ class MyRequestedItems extends Component {
       }
     ],
     columnsChemical: [
-      { name: 'productName', disabled: true },
+      //{ name: 'productName', disabled: true },
       //{ name: 'productNumber', disabled: true },
       {
         name: 'product',
@@ -339,6 +340,13 @@ class MyRequestedItems extends Component {
   componentDidMount() {
     //this.handleFilterClear()
     //this.initData()
+    this.setState({ filterValue: '' })
+    this.handleFilterClear()
+  }
+
+  handleFilterClear = () => {
+    //! !this.props.applyFilter({ filters: [] })
+    //! !this.props.datagrid.setFilter({ filters: [] })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -348,9 +356,15 @@ class MyRequestedItems extends Component {
     //}
   }
 
+  handleFiltersValue = value => {
+    const { handleFiltersValue } = this.props
+    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    else handleFiltersValue(value)
+  }
+
   handleFilterChange = (e, { value }) => {
     this.setState({ filterValue: value })
-    //this.handleFiltersValue(value)
+    this.handleFiltersValue(value)
   }
 
   renderContent = () => {

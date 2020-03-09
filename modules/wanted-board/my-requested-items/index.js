@@ -2,10 +2,22 @@ import MyRequestedItemsContainer from './components/MyRequestedItemsContainer'
 import { DatagridProvider } from '~/modules/datagrid'
 
 export const MyRequestedItems = props => {
-  const urlApiConfig = { url: '/prodex/api/purchase-requests/own/datagrid' }
+  const apiConfig = {
+    url: '/prodex/api/purchase-requests/own/datagrid',
+    searchToFilter: v =>
+      v
+        ? [
+          { operator: 'LIKE', path: 'PurchaseRequestElement.echoProduct.name', values: [`%${v}%`] },
+          //{ operator: 'LIKE', path: 'PurchaseRequestElement.casProduct.casNumber', values: [`%${v}%`] }
+        ]
+        : [],
+    params: {
+      orOperator: true
+    }
+  }
   return (
     <>
-      <DatagridProvider apiConfig={urlApiConfig}>
+      <DatagridProvider apiConfig={apiConfig}>
         <MyRequestedItemsContainer {...props} />
       </DatagridProvider>
     </>

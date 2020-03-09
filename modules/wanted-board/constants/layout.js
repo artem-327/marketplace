@@ -98,6 +98,7 @@ export const FlexSidebar = styled(Sidebar)`
         margin: 0;
       }      
     }
+    > .ui.multiple.selection.search.dropdown,
     > .ui.multiple.selection.dropdown {
       padding-top: 0.428571429em;
       padding-bottom: 0.428571429em;
@@ -114,6 +115,15 @@ export const FlexSidebar = styled(Sidebar)`
       > .default.text {
         margin: 0 0 0 0.64285714em;
         padding-top: 0.285714286em;
+      }
+    }
+    > .ui.multiple.selection.search.dropdown {
+    > .default.text {
+        padding-top: 0.714285714em;
+      } 
+      > input.search {
+        margin: 0 0 0 0.64285714em;
+        padding: 4px 0;
       }
     }
   }

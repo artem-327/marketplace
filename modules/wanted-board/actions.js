@@ -83,6 +83,11 @@ export const getProductGrades = () => ({
   payload: api.getProductGrades()
 })
 
+export const getUnits = () => ({
+  type: AT.WB_GET_UNITS,
+  payload: api.getUnits()
+})
+
 export const getWarehouses = () => ({
   type: AT.WB_GET_WAREHOUSES,
   payload: api.getWarehouses()
@@ -91,6 +96,11 @@ export const getWarehouses = () => ({
 export const searchManufacturers = (text, limit = 10) => ({
   type: AT.WB_SEARCH_MANUFACTURERS,
   payload: api.searchManufacturers(text, limit)
+})
+
+export const searchCasNumber = (text, limit = 10) => ({
+  type: AT.WB_SEARCH_CAS_NUMBER,
+  payload: api.searchCasNumber(text, limit)
 })
 
 export const getCountries = () => ({
@@ -112,6 +122,14 @@ export const editPurchaseRequest = (id) => ({
   type: AT.WB_EDIT_PURCHASE_REQUEST,
   payload: api.editPurchaseRequest(id, body)
 })
+
+export function handleFiltersValue(value) {
+  return async dispatch => {
+    dispatch({
+      type: AT.WB_HANDLE_FILTERS_VALUE,
+      payload: value
+    })
+}}
 
 
 

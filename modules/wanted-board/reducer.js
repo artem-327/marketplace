@@ -10,22 +10,29 @@ export const initialState = {
   autocompleteData: [],
   autocompleteDataLoading: false,
   listPackagingTypes: [],
+  listPackagingTypesLoading: false,
   listConditions: [],
+  listConditionsLoading: false,
   listForms: [],
+  listFormsLoading: false,
   listGrades: [],
+  listGradesLoading: false,
   listWarehouses: [],
+  listWarehousesLoading: false,
   listCountries: [],
+  listCountriesLoading: false,
+  listUnits: [],
+  listUnitsLoading: false,
   searchedManufacturers: [],
   searchedManufacturersLoading: false,
+  searchedCasNumbers: [],
+  searchedCasNumbersLoading: false,
 
 
 
 
-
-
-
-  datagridFilter: { filters: [] },
-  datagridFilterUpdate: false
+  //datagridFilter: { filters: [] },
+  //datagridFilterUpdate: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -40,6 +47,14 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.WB_HANDLE_FILTERS_VALUE: {
+      return {
+        ...state,
+        filterValue: action.payload
+      }
+    }
+
+
     case AT.WB_SIDEBAR_DETAIL_TRIGGER: {
       return {
         ...state,
@@ -49,18 +64,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.WB_GET_AUTOCOMPLETE_DATA_PENDING: {
-      return {
-        ...state,
-        autocompleteDataLoading: true
-      }
-    }
+    case AT.WB_GET_AUTOCOMPLETE_DATA_PENDING: { return { ...state, autocompleteDataLoading: true } }
+    case AT.WB_GET_AUTOCOMPLETE_DATA_REJECTED: { return { ...state, autocompleteDataLoading: false } }
     case AT.WB_GET_AUTOCOMPLETE_DATA_FULFILLED: {
       return {
         ...state,
         autocompleteDataLoading: false,
-        autocompleteData: uniqueArrayByKey(action.payload, 'id')
-          .map(el => {
+        autocompleteData: uniqueArrayByKey(action.payload.map(el => {
             const productCode = getSafe(() => el.intProductCode, el.mfrProductCode)
             const productName = getSafe(() => el.intProductName, el.mfrProductName)
             return {
@@ -79,24 +89,16 @@ export default function reducer(state = initialState, action) {
               }
             }
           })
-          .concat(state.autocompleteData)
-      }
-    }
-    case AT.WB_GET_AUTOCOMPLETE_DATA_REJECTED: {
-      return {
-        ...state,
-        autocompleteDataLoading: false
+          .concat(state.autocompleteData), 'key')
       }
     }
 
-
-
-
-
+    case AT.WB_GET_PACKAGING_TYPES_PENDING: { return { ...state, listPackagingTypesLoading: true } }
+    case AT.WB_GET_PACKAGING_TYPES_REJECTED: { return { ...state, listPackagingTypesLoading: false } }
     case AT.WB_GET_PACKAGING_TYPES_FULFILLED: {
-      console.log('!!!!!!!!!! WB_GET_PACKAGING_TYPES_FULFILLED payload', payload)
       return {
         ...state,
+        listPackagingTypesLoading: false,
         listPackagingTypes: payload.map(data => {
           return {
             key: data.id,
@@ -106,10 +108,13 @@ export default function reducer(state = initialState, action) {
         })
       }
     }
+
+    case AT.WB_GET_CONDITIONS_PENDING: { return { ...state, listConditionsLoading: true } }
+    case AT.WB_GET_CONDITIONS_REJECTED: { return { ...state, listConditionsLoading: false } }
     case AT.WB_GET_CONDITIONS_FULFILLED: {
-      console.log('!!!!!!!!!! WB_GET_CONDITIONS_FULFILLED payload', payload)
       return {
         ...state,
+        listConditionsLoading: false,
         listConditions: payload.map(data => {
           return {
             key: data.id,
@@ -119,10 +124,13 @@ export default function reducer(state = initialState, action) {
         })
       }
     }
+
+    case AT.WB_GET_FORMS_PENDING: { return { ...state, listFormsLoading: true } }
+    case AT.WB_GET_FORMS_REJECTED: { return { ...state, listFormsLoading: false } }
     case AT.WB_GET_FORMS_FULFILLED: {
-      console.log('!!!!!!!!!! WB_GET_FORMS_FULFILLED payload', payload)
       return {
         ...state,
+        listFormsLoading: false,
         listForms: payload.map(data => {
           return {
             key: data.id,
@@ -132,10 +140,13 @@ export default function reducer(state = initialState, action) {
         })
       }
     }
+
+    case AT.WB_GET_GRADES_PENDING: { return { ...state, listGradesLoading: true } }
+    case AT.WB_GET_GRADES_REJECTED: { return { ...state, listGradesLoading: false } }
     case AT.WB_GET_GRADES_FULFILLED: {
-      console.log('!!!!!!!!!! WB_GET_GRADES_FULFILLED payload', payload)
       return {
         ...state,
+        listGradesLoading: false,
         listGrades: payload.map(data => {
           return {
             key: data.id,
@@ -145,17 +156,39 @@ export default function reducer(state = initialState, action) {
         })
       }
     }
-    case AT.WB_GET_WAREHOUSES_FULFILLED: {
-      console.log('!!!!!!!!!! WB_GET_WAREHOUSES_FULFILLED payload', payload)
+
+    case AT.WB_GET_UNITS_PENDING: { return { ...state, listUnitsLoading: true } }
+    case AT.WB_GET_UNITS_REJECTED: { return { ...state, listUnitsLoading: false } }
+    case AT.WB_GET_UNITS_FULFILLED: {
       return {
         ...state,
+        listUnitsLoading: false,
+        listUnits: payload.map(data => {
+          return {
+            key: data.id,
+            value: data.id,
+            text: data.nameAbbreviation
+          }
+        })
+      }
+    }
+
+    case AT.WB_GET_WAREHOUSES_PENDING: { return { ...state, listWarehousesLoading: true } }
+    case AT.WB_GET_WAREHOUSES_REJECTED: { return { ...state, listWarehousesLoading: false } }
+    case AT.WB_GET_WAREHOUSES_FULFILLED: {
+      return {
+        ...state,
+        listWarehousesLoading: false,
         listWarehouses: payload
       }
     }
+
+    case AT.WB_GET_COUNTRIES_PENDING: { return { ...state, listCountriesLoading: true } }
+    case AT.WB_GET_COUNTRIES_REJECTED: { return { ...state, listCountriesLoading: false } }
     case AT.WB_GET_COUNTRIES_FULFILLED: {
-      console.log('!!!!!!!!!! WB_GET_COUNTRIES_FULFILLED payload', payload)
       return {
         ...state,
+        listCountriesLoading: false,
         listCountries: payload.map(data => {
           return {
             key: data.id,
@@ -166,30 +199,37 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.WB_SEARCH_MANUFACTURERS_PENDING: {
-      return {
-        ...state,
-        searchedManufacturersLoading: true,
-      }
-    }
-    case AT.WB_SEARCH_MANUFACTURERS_REJECTED: {
+    case AT.WB_SEARCH_MANUFACTURERS_PENDING: { return { ...state, searchedManufacturersLoading: true } }
+    case AT.WB_SEARCH_MANUFACTURERS_REJECTED: { return { ...state, searchedManufacturersLoading: false } }
+    case AT.WB_SEARCH_MANUFACTURERS_FULFILLED: {
       return {
         ...state,
         searchedManufacturersLoading: false,
-      }
-    }
-    case AT.WB_SEARCH_MANUFACTURERS_FULFILLED: {
-      console.log('!!!!!!!!!! WB_SEARCH_MANUFACTURERS_FULFILLED payload', payload)
-      return {
-        ...state,
-        searchedManufacturers: payload.map(data => {
+        searchedManufacturers: uniqueArrayByKey(action.payload.map(data => {
           return {
             key: data.id,
             value: data.id,
             text: data.name
           }
-        }),
-        searchedManufacturersLoading: false,
+        })
+          .concat(state.searchedManufacturers), 'key')
+      }
+    }
+
+    case AT.WB_SEARCH_CAS_NUMBER_PENDING: { return { ...state, searchedCasNumbersLoading: true } }
+    case AT.WB_SEARCH_CAS_NUMBER_REJECTED: { return { ...state, searchedCasNumbersLoading: false } }
+    case AT.WB_SEARCH_CAS_NUMBER_FULFILLED: {
+      return {
+        ...state,
+        searchedCasNumbersLoading: false,
+        searchedCasNumbers: uniqueArrayByKey(action.payload.map(data => {
+          return {
+            key: data.id,
+            value: data.id,
+            text: data.casNumber
+          }
+        })
+          .concat(state.searchedCasNumbers), 'key')
       }
     }
 

@@ -41,12 +41,14 @@ import {
   getPackagingTypes,
   getWarehouses,
   getCountries,
+  getUnits,
   //addProductOffer,
   getProductGrades,
   //searchOrigins,
   getProductForms,
   getProductConditions,
   searchManufacturers,
+  searchCasNumber,
   //addAttachment,
   //loadFile,
   //removeAttachmentLink,
@@ -79,6 +81,7 @@ import {
 } from '../../constants/layout'
 
 import { listFrequency } from '../../constants/constants'
+import { comparationHelper } from '../../constants/validation'
 
 const CustomHr = styled.hr`
   border: solid 0.5px #dee2e6;
@@ -90,6 +93,7 @@ const initValues = {
   deliveryCountry: null,
   deliveryProvince: null,
   neededAt: '',
+  expiresAt: '',
   manufacturers: [],
   conditionConforming: null,
   origins: [],
@@ -99,19 +103,93 @@ const initValues = {
   maximumPricePerUOM: null,
   notes: null,
   element: {
-    echoProduct: null,
-    casProduct: null,
+    echoProduct: '',
+    casProduct: '',
     assayMin: '',
     assayMax: '',
   },
   neededNow: null,
   doesExpire: null,
+  measurement: 7
 }
 
-const validationScheme = val.object().shape({
+const validationSchema = () =>
+  val.lazy(values => {
 
-  }
-)
+    //val.object().shape({
+    return val.object().shape({
+      /*
+      ...(values.neededNow === false && {
+        neededAt: val.string()
+          .required(errorMessages.requiredMessage)
+      }),
+      */
+      ...(values.doesExpire && {
+        expiresAt: val.string()
+          .required(errorMessages.requiredMessage)
+      }),
+      element: val.object().shape({
+        echoProduct: val.string()
+          .trim()
+          .test('required', errorMessages.requiredMessage, function(value) {
+            const { casProduct } = this.parent
+            if (casProduct === null || casProduct === '') {
+              return value !== null && value !== ''
+            }
+            return true
+          }),
+        casProduct: val.string()
+          .trim()
+          .test('required', errorMessages.requiredMessage, function(value) {
+            const { echoProduct } = this.parent
+            if (echoProduct === null || echoProduct === '') {
+              return value !== null && value !== ''
+            }
+            return true
+          }),
+        assayMin: val.string()
+          .test('v', errorMessages.minUpToMax, function(v) {
+            const { assayMax: v2 } = this.parent
+            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+            if (v2 === null || v2 === '' || isNaN(v2)) return true // No max limit value - can not be tested
+            return Number(v) <= v2
+          })
+          .test('v', errorMessages.minimum(0), function(v) {
+            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+            return Number(v) >= 0
+          })
+          .test('v', errorMessages.maximum(100), function(v) {
+            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+            return Number(v) <= 100
+          })
+          .test('v', errorMessages.mustBeNumber, function(v) {
+            return v === null || v === '' || !isNaN(v)
+          }),
+        assayMax: val.string()
+          .test('v', errorMessages.maxAtLeastMin, function(v) {
+            const { assayMin: v2 } = this.parent
+            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+            if (v2 === null || v2 === '' || isNaN(v2)) return true // No min limit value - can not be tested
+            return Number(v) >= v2
+          })
+          .test('v', errorMessages.minimum(0), function(v) {
+            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+            return Number(v) >= 0
+          })
+          .test('v', errorMessages.maximum(100), function(v) {
+            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+            return Number(v) <= 100
+          })
+          .test('v', errorMessages.mustBeNumber, function(v) {
+            return v === null || v === '' || !isNaN(v)
+          })
+      }),
+      pkgAmount: val
+        .number()
+        .typeError(errorMessages.requiredMessage)
+        .required(errorMessages.requiredMessage),
+    })
+  })
 
 const listConforming = [
   {
@@ -140,8 +218,8 @@ class DetailSidebar extends Component {
     this.fetchIfNoData('listGrades', this.props.getProductGrades)
     this.fetchIfNoData('listWarehouses', this.props.getWarehouses)
     this.fetchIfNoData('listCountries', this.props.getCountries)
+    this.fetchIfNoData('listUnits', this.props.getUnits)
     this.props.searchManufacturers('', 200)
-
   }
 
   fetchIfNoData = (name, fn) => {
@@ -154,30 +232,56 @@ class DetailSidebar extends Component {
     })
   }, 250)
 
+  searchManufacturers = debounce(text => {
+    this.props.searchManufacturers(text, 5)
+  }, 250)
+
+  searchCasNumber = debounce(text => {
+    this.props.searchCasNumber(text, 5)
+  }, 250)
+
   submitForm = async (values, setSubmitting, setTouched) => {
     const { addPurchaseRequest, editPurchaseRequest, datagrid } = this.props
     const { sidebarValues } = this.state
 
+    let neededAt = null, expiresAt = null
+
+    if (values.neededNow) {
+      neededAt = moment()
+        .add(1, 'minutes')
+        .format()
+    } else {
+      if (values.neededAt.length) {
+        neededAt = moment(getStringISODate(values.neededAt)).format()
+      }
+    }
+
+    if (values.doesExpire) {
+      expiresAt = moment(getStringISODate(values.expiresAt)).format()
+    }
+
     let body = {
       ...values,
-
+      element: {
+        ...values.element
+      },
+      neededAt,
+      expiresAt
     }
     removeEmpty(body)
-    console.log('!!!!!!!!!! submitForm body', body)
-
     try {
       if (sidebarValues) {
         const response = await editPurchaseRequest(sidebarValues.id, body)
-        console.log('!!!!!!!!!! edit response', response)
-
+        console.log('!!!!!!!!!! editPurchaseRequest response', response)
+        //datagrid.loadData()
       } else {
         const response = await addPurchaseRequest(body)
-        console.log('!!!!!!!!!! add response', response)
-
+        console.log('!!!!!!!!!! addPurchaseRequest response', response)
+        //datagrid.loadData()
       }
+      this.props.closeDetailSidebar()
     } catch (e) {}
-
-    //! ! setSubmitting(false)
+    setSubmitting(false)
   }
 
   render() {
@@ -189,12 +293,16 @@ class DetailSidebar extends Component {
       listGrades,
       listWarehouses,
       listCountries,
+      listUnits,
+      listUnitsLoading,
       loading,
       // openBroadcast,
       // sidebarDetailOpen,
       sidebarValues,
       searchedManufacturers,
       searchedManufacturersLoading,
+      searchedCasNumbers,
+      searchedCasNumbersLoading,
       searchedOrigins,
       searchedOriginsLoading,
       // searchedProducts,
@@ -212,9 +320,9 @@ class DetailSidebar extends Component {
       <Formik
         enableReinitialize
         initialValues={this.state.initValues}
-        validationSchema={validationScheme}
+        validationSchema={validationSchema()}
         onSubmit={async (values, { setSubmitting, setTouched }) => {
-          setSubmitting(true)
+          //setSubmitting(true)
           this.submitForm(values, setSubmitting, setTouched)
         }}>
         {formikProps => {
@@ -234,6 +342,7 @@ class DetailSidebar extends Component {
           this.formikProps = formikProps
 
           console.log('!!!!!!!!!! render values', values)
+
           return (
             <Form>
               <FlexSidebar
@@ -302,14 +411,7 @@ class DetailSidebar extends Component {
                             </FormattedMessage>
                           }
                           name='element.casProduct'
-                          options={this.props.autocompleteData.map(el => ({
-                            key: el.id,
-                            text: `${getSafe(() => el.intProductCode, '')} ${getSafe(
-                              () => el.intProductName,
-                              ''
-                            )}`,
-                            value: el.id
-                          }))}
+                          options={searchedCasNumbers}
                           inputProps={{
                             placeholder: (
                               <FormattedMessage
@@ -317,7 +419,7 @@ class DetailSidebar extends Component {
                                 defaultMessage='Enter CAS Number'
                               />
                             ),
-                            loading: this.props.autocompleteDataLoading,
+                            loading: searchedCasNumbersLoading,
                             'data-test': 'wanted_board_product_search_drpdn',
                             size: 'large',
                             minCharacters: 1,
@@ -326,7 +428,7 @@ class DetailSidebar extends Component {
                             selection: true,
                             clearable: true,
                             onSearchChange: (e, { searchQuery }) =>
-                              searchQuery.length > 0 && this.searchProducts(searchQuery)
+                              searchQuery.length > 0 && this.searchCasNumber(searchQuery)
                           }}
                         />
                       </GridColumn>
@@ -370,7 +472,7 @@ class DetailSidebar extends Component {
                       </GridColumn>
                     </GridRow>
                     <GridRow>
-                      <GridColumn width={16}>
+                      <GridColumn width={8}>
                         {quantityWrapper(
                           'pkgAmount',
                           {
@@ -388,30 +490,24 @@ class DetailSidebar extends Component {
                           </FormattedMessage>
                         )}
                       </GridColumn>
-                      {false && (<GridColumn width={8}>
+                      <GridColumn  width={8}>
                         <Dropdown
                           label={
                             <FormattedMessage
-                              id='wantedBoard.orderFrequency'
-                              defaultMessage='Order Frequency'>
+                              id='wantedBoard.measurement'
+                              defaultMessage='Measurement'>
                               {text => text}
                             </FormattedMessage>
                           }
-                          name='orderFrequency'
-                          options={listFrequency}
+                          name='measurement'
+                          options={listUnits}
                           inputProps={{
-                            placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectFrequency'
-                                defaultMessage='Select Frequency'
-                              />
-                            ),
                             'data-test': 'new_inventory_grade_drpdn',
                             selection: true,
-                            clearable: true
+                            loading: listUnitsLoading
                           }}
                         />
-                      </GridColumn>)}
+                      </GridColumn>
                     </GridRow>
 
                     <GridRow>
@@ -521,7 +617,7 @@ class DetailSidebar extends Component {
                       </GridColumn>
                       <GridColumn width={8}>
                         <DateInput
-                          name='expire'
+                          name='expiresAt'
                           inputProps={{
                             'data-test': 'new_inventory_grade_drpdn',
                             placeholder:
@@ -529,7 +625,6 @@ class DetailSidebar extends Component {
                                 id: 'date.standardPlaceholder',
                                 defaultMessage: '00/00/0000'
                               }),
-                            clearable: true,
                             disabled: values.doesExpire !== true
                           }}
                         />
@@ -549,15 +644,21 @@ class DetailSidebar extends Component {
                           name='manufacturers'
                           options={searchedManufacturers}
                           inputProps={{
-                            'data-test': 'new_inventory_grade_drpdn',
-                            selection: true,
-                            multiple: true,
                             placeholder: (
                               <FormattedMessage
                                 id='wantedBoard.selectManufacturer'
                                 defaultMessage='Select manufacturer'
                               />
-                            )
+                            ),
+                            loading: searchedManufacturersLoading,
+                            'data-test': 'new_inventory_grade_drpdn',
+                            size: 'large',
+                            icon: 'search',
+                            search: options => options,
+                            selection: true,
+                            multiple: true,
+                            onSearchChange: (e, { searchQuery }) =>
+                              searchQuery.length > 0 && this.searchManufacturers(searchQuery)
                           }}
                         />
                       </GridColumn>
@@ -753,9 +854,7 @@ class DetailSidebar extends Component {
                       primary
                       size='large'
                       type='button'
-                      onClick={() =>
-                        submitForm()
-                      }
+                      onClick={() => submitForm()}
                       data-test='sidebar_inventory_save_new'>
                       {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                     </Button>
@@ -780,7 +879,9 @@ const mapDispatchToProps = {
   getProductGrades,
   getWarehouses,
   getCountries,
+  getUnits,
   searchManufacturers,
+  searchCasNumber,
   //searchOrigins,
   //openBroadcast,
   //addAttachment,
@@ -804,12 +905,16 @@ const mapStateToProps = ({
     listGrades,
     listWarehouses,
     listCountries,
+    listUnits,
+    listUnitsLoading,
     loading,
     //  sidebarActiveTab,
     //  sidebarDetailOpen,
     sidebarValues,
     searchedManufacturers,
     searchedManufacturersLoading,
+    searchedCasNumbers,
+    searchedCasNumbersLoading,
     //  searchedOrigins,
     //  searchedOriginsLoading,
     //  searchedProducts,
@@ -827,12 +932,16 @@ const mapStateToProps = ({
   listGrades,
   listWarehouses,
   listCountries,
+  listUnits,
+  listUnitsLoading,
   loading,
 //  sidebarActiveTab,
 //  sidebarDetailOpen,
   sidebarValues,
   searchedManufacturers,
   searchedManufacturersLoading,
+  searchedCasNumbers,
+  searchedCasNumbersLoading,
 //  searchedOrigins,
 //  searchedOriginsLoading,
 //  searchedProducts,
