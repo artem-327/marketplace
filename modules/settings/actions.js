@@ -30,6 +30,19 @@ export function closePopup(rows = null) {
   }
 }
 
+export function openSidebar(openTab = null) {
+  return {
+    type: AT.OPEN_SIDEBAR,
+    payload: openTab
+  }
+}
+export function closeSidebar(openTab = null) {
+  return {
+    type: AT.CLOSE_SIDEBAR,
+    payload: openTab
+  }
+}
+
 export function openDwollaPopup() {
   return {
     type: AT.OPEN_DWOLLA_POPUP
@@ -359,7 +372,7 @@ export function handlerSubmitWarehouseEditPopup(payload, id) {
       payload: response
     })
     Datagrid.updateRow(id, () => response)
-    dispatch(closePopup())
+    dispatch(closeSidebar())
   }
 }
 
@@ -370,8 +383,9 @@ export function postNewWarehouseRequest(payload) {
       type: AT.POST_NEW_WAREHOUSE_REQUEST,
       payload: api.postNewWarehouse(payload)
     })
+    getWarehousesDataRequest()
     Datagrid.loadData()
-    dispatch(closePopup())
+    dispatch(closeSidebar())
   }
 }
 
@@ -957,9 +971,13 @@ export function addVerificationDocument(attachment, type) {
 }
 
 export function addAttachment(attachment, type, expirationDate) {
-  return async dispatch => {
-    await dispatch({ type: AT.SETTINGS_ADD_ATTACHMENT, payload: api.addAttachment(attachment, type, expirationDate) })
-    Datagrid.loadData()
+  return {
+    type: AT.SETTINGS_ADD_ATTACHMENT,
+    async payload() {
+      const data = await api.addAttachment(attachment, type, expirationDate)
+      Datagrid && Datagrid.loadData()
+      return data
+    }
   }
 }
 
@@ -1053,3 +1071,17 @@ export const getNmfcNumbersByString = value => ({
 })
 
 export const addNmfcNumber = value => ({ type: AT.ADD_NMFC_NUMBERS, payload: value })
+
+export const attachmentLinksToBranch = (attachmentId, branchId) => ({
+  type: AT.ATTACHMENT_LINKS_TO_BRANCH,
+  async payload() {
+    const { data } = await api.attachmentLinksToBranch(attachmentId, branchId)
+    Datagrid.loadData()
+    return data
+  }
+})
+
+export const getBranch = branchId => ({
+  type: AT.GET_BRANCH,
+  payload: api.getBranch(branchId)
+})

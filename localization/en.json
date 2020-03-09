@@ -1942,5 +1942,7 @@
   "hold.holdRequest": "Hold Requests",
   "hold.buy": "Buy",
   "sidebar.addNew": "ADD NEW",
-  "sidebar.edit": "EDIT"
+  "sidebar.edit": "EDIT",
+  "sidebar.certificates": "CERTIFICATES",
+  "global.certificates": "Certificates"
 }

@@ -37,6 +37,12 @@ const MenuItemFilters = styled(Menu.Item)`
   max-width: 40vw;
 `
 
+const CustomProdexTable = styled(ProdexTable)`
+  .dx-g-bs4-table-container {
+    overflow: hidden;
+  }
+`
+
 class MyInventory extends Component {
   state = {
     columns: [

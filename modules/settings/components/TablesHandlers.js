@@ -160,6 +160,7 @@ class TablesHandlers extends Component {
       bankAccounts,
       treeData,
       toastManager,
+      openSidebar,
       intl: { formatMessage }
     } = this.props
 
@@ -248,7 +249,13 @@ class TablesHandlers extends Component {
           <>
             {(!bankAccTab || bankAccounts.addButton) && (
               <GridColumn widescreen={3} computer={3} tablet={4}>
-                <Button fluid primary onClick={() => openPopup()} data-test='settings_open_popup_btn'>
+                <Button
+                  fluid
+                  primary
+                  onClick={() =>
+                    currentTab.type === 'warehouses' || currentTab.type === 'branches' ? openSidebar() : openPopup()
+                  }
+                  data-test='settings_open_popup_btn'>
                   <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
                 </Button>
               </GridColumn>

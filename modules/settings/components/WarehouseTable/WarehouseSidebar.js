@@ -3,12 +3,17 @@ import { connect } from 'react-redux'
 
 import { Header, Modal, FormGroup, Dimmer, Loader, Menu, Segment } from 'semantic-ui-react'
 import {
-  closePopup,
+  closeSidebar,
   handlerSubmitWarehouseEditPopup,
   postNewWarehouseRequest,
   getProvinces,
   getAddressSearch,
-  removeEmpty
+  removeEmpty,
+  removeAttachmentLink,
+  removeAttachment,
+  addAttachment,
+  loadFile,
+  attachmentLinksToBranch
 } from '../../actions'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
@@ -24,6 +29,7 @@ import { AddressForm } from '~/modules/address-form/'
 import { getSafe } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/components/DetailSidebar'
+import DocumentTab from '~/components/document-tab'
 
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
@@ -78,16 +84,25 @@ class WarehouseSidebar extends React.Component {
     editTab: 0
   }
   componentDidMount() {
-    this.props.popupValues &&
-      this.props.popupValues.hasProvinces &&
-      this.props.getProvinces(this.props.popupValues.countryId)
+    const { popupValues, getProvinces, openTab } = this.props
+    popupValues && popupValues.hasProvinces && getProvinces(popupValues.countryId)
+    openTab && this.setState({ editTab: this.props.openTab })
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.openTab !== this.props.openTab) {
+      this.setState({ editTab: this.props.openTab })
+    }
+  }
+
+  fetchIfNoData = (name, fn) => {
+    if (this.props[name].length === 0) fn()
   }
 
   submitHandler = async (values, actions) => {
     let { popupValues, currentTab } = this.props
-    const { handlerSubmitWarehouseEditPopup, postNewWarehouseRequest } = this.props
+    const { handlerSubmitWarehouseEditPopup, postNewWarehouseRequest, attachmentLinksToBranch } = this.props
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
-
     let requestData = {}
     if (currentTab.type === 'branches') {
       requestData = {
@@ -129,12 +144,17 @@ class WarehouseSidebar extends React.Component {
 
     try {
       if (popupValues) {
+        if (values.attachments.length) {
+          values.attachments.forEach(attachment => {
+            attachmentLinksToBranch(attachment.id, popupValues.id)
+          })
+        }
         await handlerSubmitWarehouseEditPopup(
           {
             ...requestData,
             company: this.props.company
           },
-          popupValues.branchId
+          popupValues.id
         )
       } else {
         await postNewWarehouseRequest({
@@ -150,28 +170,43 @@ class WarehouseSidebar extends React.Component {
   getInitialFormValues = () => {
     let { popupValues } = this.props
 
-    return getSafe(() => popupValues.initialValues, {
-      taxId: '',
+    const provinceId = getSafe(() => popupValues.deliveryAddress.address.province.id, '')
+    const countryId = getSafe(() => popupValues.deliveryAddress.address.country.id, '')
+    const hasProvinces = getSafe(() => popupValues.deliveryAddress.address.country.hasProvinces, false)
+    const zip = getSafe(() => popupValues.deliveryAddress.address.zip.zip, '')
+    const zipID = getSafe(() => popupValues.deliveryAddress.address.zip.id, '')
+
+    const initialValues = {
+      //name: r.name,
+      taxId: getSafe(() => popupValues.taxId, ''),
       deliveryAddress: {
         address: {
-          streetAddress: '',
-          city: '',
-          country: '',
-          zip: '',
-          province: ''
+          streetAddress: getSafe(() => popupValues.deliveryAddress.address.streetAddress, ''),
+          city: getSafe(() => popupValues.deliveryAddress.address.city, ''),
+          province: provinceId,
+          country: JSON.stringify({ countryId, hasProvinces }),
+          zip
         },
-        readyTime: null,
-        closeTime: null,
-        liftGate: false,
-        forkLift: false,
-        deliveryNotes: '',
-        addressName: '',
-        contactName: '',
-        contactPhone: '',
-        contactEmail: '',
-        callAhead: false
-      }
-    })
+        readyTime: getSafe(() => popupValues.deliveryAddress.readyTime, null),
+        closeTime: getSafe(() => popupValues.deliveryAddress.closeTime, null),
+        liftGate: getSafe(() => popupValues.deliveryAddress.liftGate, false),
+        forkLift: getSafe(() => popupValues.deliveryAddress.forkLift, false),
+        callAhead: getSafe(() => popupValues.deliveryAddress.callAhead, false),
+        deliveryNotes: getSafe(() => popupValues.deliveryAddress.deliveryNotes, ''),
+        addressName: getSafe(() => popupValues.deliveryAddress.addressName, ''),
+        contactName: getSafe(() => popupValues.deliveryAddress.contactName, ''),
+        contactPhone: getSafe(() => popupValues.deliveryAddress.contactPhone, ''),
+        contactEmail: getSafe(() => popupValues.deliveryAddress.contactEmail, '')
+      },
+      attachments: getSafe(() => popupValues.attachments, []),
+      zipID,
+      countryId,
+      hasProvinces,
+      branchId: getSafe(() => popupValues.id, ''),
+      province: getSafe(() => popupValues.deliveryAddress.address.province, '')
+    }
+
+    return initialValues
   }
 
   tabChanged = index => {
@@ -198,7 +233,21 @@ class WarehouseSidebar extends React.Component {
           <Input type='text' label={name} name='deliveryAddress.addressName' />
         </FormGroup>
 
-        <AddressForm prefix={'deliveryAddress'} setFieldValue={setFieldValue} values={values} />
+        <AddressForm
+          prefix={'deliveryAddress'}
+          setFieldValue={setFieldValue}
+          values={values}
+          initialZipCodes={{
+            key: values.zipID.toString(),
+            value: values.deliveryAddress.address.zip,
+            text: values.deliveryAddress.address.zip
+          }}
+          initialProvince={{
+            key: getSafe(() => values.province.id, ''),
+            value: getSafe(() => values.province.id, ''),
+            text: getSafe(() => values.province.name, '')
+          }}
+        />
 
         <Header as='h3'>
           <FormattedMessage id='settings.contactInfo' defaultMessage='Contact Info' />
@@ -289,12 +338,42 @@ class WarehouseSidebar extends React.Component {
     )
   }
 
+  renderCertificates = formikProps => {
+    const { removeAttachmentLink, removeAttachment, addAttachment, loadFile } = this.props
+    const { setFieldValue, values } = formikProps
+    return (
+      <>
+        {
+          <DocumentTab
+            listDocumentTypes={[
+              { key: 136, text: 'Sales Tax Exemption Certificate', value: 136 },
+              { key: 137, text: 'Resale Certificate', value: 137 }
+            ]}
+            values={values}
+            setFieldValue={setFieldValue}
+            setFieldNameAttachments='attachments'
+            tableName='warehouse_attachments'
+            removeAttachmentLink={removeAttachmentLink}
+            removeAttachment={removeAttachment}
+            addAttachment={addAttachment}
+            loadFile={loadFile}
+          />
+        }
+      </>
+    )
+  }
+
   getContent = formikProps => {
     let { editTab } = this.state
     switch (editTab) {
       case 0: {
         // Edit
         return this.renderEdit(formikProps)
+      }
+
+      case 1: {
+        // Edit
+        return this.renderCertificates(formikProps)
       }
 
       default:
@@ -308,9 +387,9 @@ class WarehouseSidebar extends React.Component {
     // } = this.props
 
     const {
-      closePopup,
+      closeSidebar,
       popupValues,
-      isOpenPopup,
+      isOpenSidebar,
       loading,
       intl: { formatMessage }
     } = this.props
@@ -322,7 +401,8 @@ class WarehouseSidebar extends React.Component {
     const tabs = [
       popupValues
         ? { text: { id: 'sidebar.edit', defaultMessage: 'EDIT' }, key: 'edit' }
-        : { text: { id: 'sidebar.addNew', defaultMessage: 'ADD NEW' }, key: 'addNew' }
+        : { text: { id: 'sidebar.addNew', defaultMessage: 'ADD NEW' }, key: 'addNew' },
+      { text: { id: 'sidebar.certificates', defaultMessage: 'CERTIFICATES' }, key: 'certificates' }
     ]
 
     return (
@@ -330,12 +410,12 @@ class WarehouseSidebar extends React.Component {
         initialValues={initialValues}
         validationSchema={formValidation()}
         enableReinitialize
-        onReset={closePopup}
+        onReset={closeSidebar}
         onSubmit={this.submitHandler}>
         {formikProps => (
           <>
             <FlexSidebar
-              visible={isOpenPopup}
+              visible={isOpenSidebar}
               width='very wide'
               style={{ width: '500px' }}
               direction='right'
@@ -347,7 +427,10 @@ class WarehouseSidebar extends React.Component {
                 <CustomHighSegment basic>
                   <Menu pointing secondary>
                     {tabs.map((tab, i) => (
-                      <Menu.Item onClick={() => this.tabChanged(i)} active={editTab === i}>
+                      <Menu.Item
+                        onClick={() => this.tabChanged(i)}
+                        active={editTab === i}
+                        disabled={tab.key === 'certificates' && !formikProps.values.branchId}>
                         {formatMessage(tab.text)}
                       </Menu.Item>
                     ))}
@@ -358,7 +441,7 @@ class WarehouseSidebar extends React.Component {
                 <Segment basic>{this.getContent(formikProps)}</Segment>
               </FlexContent>
               <CustomDiv>
-                <Button.Reset onClick={closePopup} data-test='settings_warehouse_popup_reset_btn'>
+                <Button.Reset onClick={closeSidebar} data-test='settings_warehouse_popup_reset_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                     {text => text}
                   </FormattedMessage>
@@ -386,10 +469,15 @@ class WarehouseSidebar extends React.Component {
 const mapDispatchToProps = {
   postNewWarehouseRequest,
   handlerSubmitWarehouseEditPopup,
-  closePopup,
+  closeSidebar,
   getProvinces,
   getAddressSearch,
-  removeEmpty
+  removeEmpty,
+  removeAttachmentLink,
+  removeAttachment,
+  addAttachment,
+  loadFile,
+  attachmentLinksToBranch
 }
 const mapStateToProps = state => {
   // const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
@@ -410,8 +498,9 @@ const mapStateToProps = state => {
         ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
         : state.settings.tabsNames[0],
     company: getSafe(() => state.auth.identity.company.id, null),
-    isOpenPopup: state.settings.isOpenPopup,
-    loading: state.settings.loading
+    isOpenSidebar: state.settings.isOpenSidebar,
+    loading: state.settings.loading,
+    openTab: state.settings.openTab
   }
 }
 
