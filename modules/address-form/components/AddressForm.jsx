@@ -176,10 +176,13 @@ export default class AddressForm extends Component {
       additionalCountryInputProps,
       countryPopup,
       countriesLoading,
-      loading
+      loading,
+      initialProvince
     } = this.props
 
     let fields = this.asignPrefix()
+
+    // this.handleChange(e, data)
 
     let { provinces, countryId, provincesAreFetching } = this.state
     //  TODO - check whether fluid didnt mess up ui somewhere else
@@ -279,11 +282,13 @@ export default class AddressForm extends Component {
             <Dropdown
               label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />}
               name={fields.province}
-              options={provinces.map(province => ({
-                key: province.id,
-                text: province.name,
-                value: province.id
-              }))}
+              options={provinces
+                .map(province => ({
+                  key: province.id,
+                  text: province.name,
+                  value: province.id
+                }))
+                .concat(initialProvince)}
               inputProps={{
                 onFocus: e => (e.target.autocomplete = null),
                 'data-test': 'address_form_province_drpdn',
