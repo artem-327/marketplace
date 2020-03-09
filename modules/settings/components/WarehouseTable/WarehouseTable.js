@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getWarehousesDataRequest, getBranchesDataRequest, openPopup, deleteBranch } from '../../actions'
+import { getWarehousesDataRequest, getBranchesDataRequest, openPopup, deleteBranch, getBranch } from '../../actions'
 import Router from 'next/router'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
@@ -123,7 +123,18 @@ class WarehouseTable extends Component {
   }
 
   render() {
-    const { filterValue, rows, datagrid, loading, openPopup, deleteBranch, intl, currentTab, toastManager } = this.props
+    const {
+      filterValue,
+      rows,
+      datagrid,
+      loading,
+      openPopup,
+      deleteBranch,
+      intl,
+      currentTab,
+      toastManager,
+      getBranch
+    } = this.props
 
     let message =
       currentTab.type === 'branches'
@@ -145,7 +156,10 @@ class WarehouseTable extends Component {
           rowActions={[
             {
               text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openPopup(row.popupValues)
+              callback: row => {
+                getBranch(row.id)
+                openPopup(row.id)
+              }
             },
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -181,7 +195,8 @@ const mapDispatchToProps = {
   getWarehousesDataRequest,
   getBranchesDataRequest,
   openPopup,
-  deleteBranch
+  deleteBranch,
+  getBranch
 }
 
 const mapStateToProps = (state, { datagrid }) => {
@@ -202,37 +217,6 @@ const mapStateToProps = (state, { datagrid }) => {
       return {
         streetAddress: getSafe(() => r.deliveryAddress.address.streetAddress),
         city: getSafe(() => r.deliveryAddress.address.city),
-        popupValues: {
-          initialValues: {
-            //name: r.name,
-            taxId: getSafe(() => r.taxId, ''),
-            deliveryAddress: {
-              address: {
-                streetAddress: getSafe(() => r.deliveryAddress.address.streetAddress),
-                city: getSafe(() => r.deliveryAddress.address.city),
-                province: provinceId,
-                country: JSON.stringify({ countryId, hasProvinces }),
-                zip
-              },
-              readyTime: getSafe(() => r.deliveryAddress.readyTime, null),
-              closeTime: getSafe(() => r.deliveryAddress.closeTime, null),
-              liftGate: getSafe(() => r.deliveryAddress.liftGate, false),
-              forkLift: getSafe(() => r.deliveryAddress.forkLift, false),
-              callAhead: getSafe(() => r.deliveryAddress.callAhead, false),
-              deliveryNotes: getSafe(() => r.deliveryAddress.deliveryNotes, ''),
-              addressName: getSafe(() => r.deliveryAddress.addressName, ''),
-              contactName: getSafe(() => r.deliveryAddress.contactName, ''),
-              contactPhone: getSafe(() => r.deliveryAddress.contactPhone, ''),
-              contactEmail: getSafe(() => r.deliveryAddress.contactEmail, '')
-            },
-            documentType: getSafe(() => r.attachments, null),
-            attachments: getSafe(() => r.attachments, [])
-          },
-          zipID,
-          countryId,
-          hasProvinces,
-          branchId: r.id
-        },
         countryName: getSafe(() => r.deliveryAddress.address.country.name),
         countryId,
         hasProvinces,

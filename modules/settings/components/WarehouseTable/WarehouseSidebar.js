@@ -99,9 +99,6 @@ class WarehouseSidebar extends React.Component {
     let { popupValues, currentTab } = this.props
     const { handlerSubmitWarehouseEditPopup, postNewWarehouseRequest, attachmentLinksToBranch } = this.props
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
-    console.log('valuessubmitHandler====================================')
-    console.log(values)
-    console.log('====================================')
     let requestData = {}
     if (currentTab.type === 'branches') {
       requestData = {
@@ -145,10 +142,7 @@ class WarehouseSidebar extends React.Component {
       if (popupValues) {
         if (values.attachments.length) {
           values.attachments.forEach(attachment => {
-            console.log('attachment====================================')
-            console.log(attachment)
-            console.log('====================================')
-            attachmentLinksToBranch(attachment.id, popupValues.branchId)
+            attachmentLinksToBranch(attachment.id, popupValues.id)
           })
         }
         await handlerSubmitWarehouseEditPopup(
@@ -156,7 +150,7 @@ class WarehouseSidebar extends React.Component {
             ...requestData,
             company: this.props.company
           },
-          popupValues.branchId
+          popupValues.id
         )
       } else {
         await postNewWarehouseRequest({
@@ -172,30 +166,43 @@ class WarehouseSidebar extends React.Component {
   getInitialFormValues = () => {
     let { popupValues } = this.props
 
-    return getSafe(() => popupValues.initialValues, {
-      taxId: '',
+    const provinceId = getSafe(() => popupValues.deliveryAddress.address.province.id, '')
+    const countryId = getSafe(() => popupValues.deliveryAddress.address.country.id, '')
+    const hasProvinces = getSafe(() => popupValues.deliveryAddress.address.country.hasProvinces, false)
+    const zip = getSafe(() => popupValues.deliveryAddress.address.zip.zip, '')
+    const zipID = getSafe(() => popupValues.deliveryAddress.address.zip.id, '')
+
+    const initialValues = {
+      //name: r.name,
+      taxId: getSafe(() => popupValues.taxId, ''),
       deliveryAddress: {
         address: {
-          streetAddress: '',
-          city: '',
-          country: '',
-          zip: '',
-          province: ''
+          streetAddress: getSafe(() => popupValues.deliveryAddress.address.streetAddress, ''),
+          city: getSafe(() => popupValues.deliveryAddress.address.city, ''),
+          province: provinceId,
+          country: JSON.stringify({ countryId, hasProvinces }),
+          zip
         },
-        readyTime: null,
-        closeTime: null,
-        liftGate: false,
-        forkLift: false,
-        deliveryNotes: '',
-        addressName: '',
-        contactName: '',
-        contactPhone: '',
-        contactEmail: '',
-        callAhead: false,
-        attachments: ''
+        readyTime: getSafe(() => popupValues.deliveryAddress.readyTime, null),
+        closeTime: getSafe(() => popupValues.deliveryAddress.closeTime, null),
+        liftGate: getSafe(() => popupValues.deliveryAddress.liftGate, false),
+        forkLift: getSafe(() => popupValues.deliveryAddress.forkLift, false),
+        callAhead: getSafe(() => popupValues.deliveryAddress.callAhead, false),
+        deliveryNotes: getSafe(() => popupValues.deliveryAddress.deliveryNotes, ''),
+        addressName: getSafe(() => popupValues.deliveryAddress.addressName, ''),
+        contactName: getSafe(() => popupValues.deliveryAddress.contactName, ''),
+        contactPhone: getSafe(() => popupValues.deliveryAddress.contactPhone, ''),
+        contactEmail: getSafe(() => popupValues.deliveryAddress.contactEmail, '')
       },
-      attachments: []
-    })
+      attachments: getSafe(() => popupValues.attachments, []),
+      zipID,
+      countryId,
+      hasProvinces,
+      branchId: getSafe(() => popupValues.id, ''),
+      province: getSafe(() => popupValues.deliveryAddress.address.province, '')
+    }
+
+    return initialValues
   }
 
   tabChanged = index => {
@@ -222,7 +229,21 @@ class WarehouseSidebar extends React.Component {
           <Input type='text' label={name} name='deliveryAddress.addressName' />
         </FormGroup>
 
-        <AddressForm prefix={'deliveryAddress'} setFieldValue={setFieldValue} values={values} />
+        <AddressForm
+          prefix={'deliveryAddress'}
+          setFieldValue={setFieldValue}
+          values={values}
+          initialZipCodes={{
+            key: values.zipID.toString(),
+            value: values.deliveryAddress.address.zip,
+            text: values.deliveryAddress.address.zip
+          }}
+          initialProvince={{
+            key: getSafe(() => values.province.id, ''),
+            value: getSafe(() => values.province.id, ''),
+            text: getSafe(() => values.province.name, '')
+          }}
+        />
 
         <Header as='h3'>
           <FormattedMessage id='settings.contactInfo' defaultMessage='Contact Info' />
@@ -373,9 +394,6 @@ class WarehouseSidebar extends React.Component {
       loading,
       intl: { formatMessage }
     } = this.props
-    console.log('popupValues====================================')
-    console.log(popupValues)
-    console.log('====================================')
 
     const { editTab } = this.state
 

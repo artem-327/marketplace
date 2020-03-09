@@ -1405,6 +1405,30 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.GET_BRANCH_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.GET_BRANCH_REJECTED: {
+      return {
+        ...state,
+        loading: false,
+        popupValues: null
+        // isOpenPopup: false,
+      }
+    }
+
+    case AT.GET_BRANCH_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        popupValues: action.payload.data
+      }
+    }
+
     default: {
       return state
     }

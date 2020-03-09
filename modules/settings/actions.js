@@ -1066,3 +1066,8 @@ export const attachmentLinksToBranch = (attachmentId, branchId) => ({
     return data
   }
 })
+
+export const getBranch = branchId => ({
+  type: AT.GET_BRANCH,
+  payload: api.getBranch(branchId)
+})
