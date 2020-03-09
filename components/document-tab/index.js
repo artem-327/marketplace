@@ -30,7 +30,7 @@ import { AttachmentManager } from '~/modules/attachments'
 
 const CustomDropdown = styled(Dropdown)`
   .ui.selection.dropdown.active {
-    z-index: 602 !important;
+    z-index: 610 !important;
   }
 `
 
@@ -75,9 +75,6 @@ class DocumentTab extends Component {
 
   attachDocumentsManager = (newDocuments, values, setFieldValue, setFieldNameAttachments, changedForm) => {
     const docArray = uniqueArrayByKey(values.attachments.concat(newDocuments), 'id')
-    console.log('====================================')
-    console.log(docArray)
-    console.log('====================================')
     setFieldNameAttachments && setFieldValue(setFieldNameAttachments, docArray)
     changedForm && changedForm()
   }
@@ -108,10 +105,6 @@ class DocumentTab extends Component {
       loadFile,
       intl: { formatMessage }
     } = this.props
-
-    console.log('values====================================')
-    console.log(values)
-    console.log('====================================')
 
     return (
       <Grid>
@@ -228,9 +221,6 @@ class DocumentTab extends Component {
                 getSafe(() => values.attachments.length, false)
                   ? values.attachments
                       .map(row => {
-                        console.log('row====================================')
-                        console.log(row)
-                        console.log('====================================')
                         return {
                           ...row,
                           documentTypeName: row.documentType && row.documentType.name

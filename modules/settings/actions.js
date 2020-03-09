@@ -30,6 +30,19 @@ export function closePopup(rows = null) {
   }
 }
 
+export function openSidebar(openTab = null) {
+  return {
+    type: AT.OPEN_SIDEBAR,
+    payload: openTab
+  }
+}
+export function closeSidebar(openTab = null) {
+  return {
+    type: AT.CLOSE_SIDEBAR,
+    payload: openTab
+  }
+}
+
 export function openDwollaPopup() {
   return {
     type: AT.OPEN_DWOLLA_POPUP
@@ -370,6 +383,7 @@ export function postNewWarehouseRequest(payload) {
       type: AT.POST_NEW_WAREHOUSE_REQUEST,
       payload: api.postNewWarehouse(payload)
     })
+    getWarehousesDataRequest()
     Datagrid.loadData()
     dispatch(closePopup())
   }

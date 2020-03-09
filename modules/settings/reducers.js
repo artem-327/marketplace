@@ -119,7 +119,9 @@ export const initialState = {
   nmfcNumbersFiltered: [],
   nmfcNumbersFetching: false,
   csvImportError: null,
-  tabClicked: false
+  tabClicked: false,
+  isOpenSidebar: false,
+  openTab: 0
 }
 
 export default function reducer(state = initialState, action) {
@@ -139,6 +141,21 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenPopup: false,
         popupValues: null
+      }
+    }
+    case AT.OPEN_SIDEBAR: {
+      return {
+        ...state,
+        loaded: false,
+        isOpenSidebar: true,
+        openTab: action.payload
+      }
+    }
+    case AT.CLOSE_SIDEBAR: {
+      return {
+        ...state,
+        isOpenSidebar: false,
+        openTab: null
       }
     }
     case AT.OPEN_DWOLLA_POPUP: {

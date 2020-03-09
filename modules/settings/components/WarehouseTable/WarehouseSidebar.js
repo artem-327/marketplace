@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { Header, Modal, FormGroup, Dimmer, Loader, Menu, Segment } from 'semantic-ui-react'
 import {
-  closePopup,
+  closeSidebar,
   handlerSubmitWarehouseEditPopup,
   postNewWarehouseRequest,
   getProvinces,
@@ -84,11 +84,15 @@ class WarehouseSidebar extends React.Component {
     editTab: 0
   }
   componentDidMount() {
-    this.props.popupValues &&
-      this.props.popupValues.hasProvinces &&
-      this.props.getProvinces(this.props.popupValues.countryId)
+    const { popupValues, getProvinces, openTab } = this.props
+    popupValues && popupValues.hasProvinces && getProvinces(popupValues.countryId)
+    openTab && this.setState({ editTab: this.props.openTab })
+  }
 
-    this.fetchIfNoData('listDocumentTypes', this.props.getDocumentTypes)
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.openTab !== this.props.openTab) {
+      this.setState({ editTab: this.props.openTab })
+    }
   }
 
   fetchIfNoData = (name, fn) => {
@@ -335,21 +339,16 @@ class WarehouseSidebar extends React.Component {
   }
 
   renderCertificates = formikProps => {
-    const {
-      currentTab,
-      listDocumentTypes,
-      removeAttachmentLink,
-      removeAttachment,
-      addAttachment,
-      loadFile,
-      intl: { formatMessage }
-    } = this.props
-    const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
+    const { removeAttachmentLink, removeAttachment, addAttachment, loadFile } = this.props
+    const { setFieldValue, values } = formikProps
     return (
       <>
         {
           <DocumentTab
-            listDocumentTypes={listDocumentTypes}
+            listDocumentTypes={[
+              { key: 136, text: 'Sales Tax Exemption Certificate', value: 136 },
+              { key: 137, text: 'Resale Certificate', value: 137 }
+            ]}
             values={values}
             setFieldValue={setFieldValue}
             setFieldNameAttachments='attachments'
@@ -388,9 +387,9 @@ class WarehouseSidebar extends React.Component {
     // } = this.props
 
     const {
-      closePopup,
+      closeSidebar,
       popupValues,
-      isOpenPopup,
+      isOpenSidebar,
       loading,
       intl: { formatMessage }
     } = this.props
@@ -411,12 +410,12 @@ class WarehouseSidebar extends React.Component {
         initialValues={initialValues}
         validationSchema={formValidation()}
         enableReinitialize
-        onReset={closePopup}
+        onReset={closeSidebar}
         onSubmit={this.submitHandler}>
         {formikProps => (
           <>
             <FlexSidebar
-              visible={isOpenPopup}
+              visible={isOpenSidebar}
               width='very wide'
               style={{ width: '500px' }}
               direction='right'
@@ -428,7 +427,10 @@ class WarehouseSidebar extends React.Component {
                 <CustomHighSegment basic>
                   <Menu pointing secondary>
                     {tabs.map((tab, i) => (
-                      <Menu.Item onClick={() => this.tabChanged(i)} active={editTab === i}>
+                      <Menu.Item
+                        onClick={() => this.tabChanged(i)}
+                        active={editTab === i}
+                        disabled={tab.key === 'certificates' && !formikProps.values.branchId}>
                         {formatMessage(tab.text)}
                       </Menu.Item>
                     ))}
@@ -439,7 +441,7 @@ class WarehouseSidebar extends React.Component {
                 <Segment basic>{this.getContent(formikProps)}</Segment>
               </FlexContent>
               <CustomDiv>
-                <Button.Reset onClick={closePopup} data-test='settings_warehouse_popup_reset_btn'>
+                <Button.Reset onClick={closeSidebar} data-test='settings_warehouse_popup_reset_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                     {text => text}
                   </FormattedMessage>
@@ -467,7 +469,7 @@ class WarehouseSidebar extends React.Component {
 const mapDispatchToProps = {
   postNewWarehouseRequest,
   handlerSubmitWarehouseEditPopup,
-  closePopup,
+  closeSidebar,
   getProvinces,
   getAddressSearch,
   removeEmpty,
@@ -496,9 +498,9 @@ const mapStateToProps = state => {
         ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
         : state.settings.tabsNames[0],
     company: getSafe(() => state.auth.identity.company.id, null),
-    isOpenPopup: state.settings.isOpenPopup,
+    isOpenSidebar: state.settings.isOpenSidebar,
     loading: state.settings.loading,
-    listDocumentTypes: state.settings.documentTypes
+    openTab: state.settings.openTab
   }
 }
 

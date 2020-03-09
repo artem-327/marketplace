@@ -1943,5 +1943,6 @@
   "hold.buy": "Buy",
   "sidebar.addNew": "ADD NEW",
   "sidebar.edit": "EDIT",
-  "sidebar.certificates": "CERTIFICATES"
+  "sidebar.certificates": "CERTIFICATES",
+  "global.certificates": "Certificates"
 }

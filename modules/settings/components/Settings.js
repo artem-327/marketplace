@@ -258,7 +258,8 @@ class Settings extends Component {
       isOpenUploadDocumentsPopup,
       isDwollaOpenPopup,
       isUserAdmin,
-      isProductCatalogAdmin
+      isProductCatalogAdmin,
+      isOpenSidebar
     } = this.props
 
     const tables = {
@@ -309,7 +310,7 @@ class Settings extends Component {
 
     return (
       <>
-        {isOpenPopup && popupForm[currentTab.type]}
+        {isOpenPopup || (isOpenSidebar && popupForm[currentTab.type])}
         {isOpenImportPopup && importForm[currentTab.type]}
         {isOpenUploadDocumentsPopup && uploadDocForms[currentTab.type]}
         {/* {isDwollaOpenPopup && addDwollaForms[currentTab.type] && Router.push('/dwolla-register')} */}

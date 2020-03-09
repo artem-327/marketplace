@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getWarehousesDataRequest, getBranchesDataRequest, openPopup, deleteBranch, getBranch } from '../../actions'
+import { getWarehousesDataRequest, getBranchesDataRequest, openSidebar, deleteBranch, getBranch } from '../../actions'
 import Router from 'next/router'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
@@ -128,7 +128,7 @@ class WarehouseTable extends Component {
       rows,
       datagrid,
       loading,
-      openPopup,
+      openSidebar,
       deleteBranch,
       intl,
       currentTab,
@@ -157,8 +157,17 @@ class WarehouseTable extends Component {
             {
               text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
               callback: row => {
+                const indexTabofSidebar = 0
                 getBranch(row.id)
-                openPopup(row.id)
+                openSidebar(indexTabofSidebar)
+              }
+            },
+            {
+              text: formatMessage({ id: 'global.certificates', defaultMessage: 'Certificates' }),
+              callback: row => {
+                const indexTabofSidebar = 1
+                getBranch(row.id)
+                openSidebar(indexTabofSidebar)
               }
             },
             {
@@ -194,18 +203,12 @@ class WarehouseTable extends Component {
 const mapDispatchToProps = {
   getWarehousesDataRequest,
   getBranchesDataRequest,
-  openPopup,
+  openSidebar,
   deleteBranch,
   getBranch
 }
 
 const mapStateToProps = (state, { datagrid }) => {
-  console.log('state====================================')
-  console.log(state)
-  console.log('====================================')
-  console.log('datagrid====================================')
-  console.log(datagrid)
-  console.log('====================================')
   return {
     rows: datagrid.rows.map(r => {
       let countryId = getSafe(() => r.deliveryAddress.address.country.id),
