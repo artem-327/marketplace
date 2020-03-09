@@ -29,8 +29,9 @@ import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/function
 import { AttachmentManager } from '~/modules/attachments'
 
 const CustomDropdown = styled(Dropdown)`
-  .ui.selection.dropdown.active {
+  &.selection.dropdown {
     z-index: 610 !important;
+    white-space: nowrap;
   }
 `
 
@@ -44,6 +45,12 @@ export const DivIcon = styled.div`
   display: block;
   height: 20px;
   position: relative;
+`
+
+export const CustomProdexGrid = styled(ProdexGrid)`
+  .dTOnmz {
+    z-index: 9 !important;
+  }
 `
 
 const columns = [

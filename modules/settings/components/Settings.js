@@ -65,7 +65,8 @@ const ScrollableSegment = styled(Segment)`
 
 const SettingsGrid = styled(Grid)`
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
+  padding-bottom: 1em !important;
 
   > .row {
     height: calc(100% + 1px) !important;
@@ -84,6 +85,14 @@ const SettingsGrid = styled(Grid)`
       }
     }
   }
+`
+
+const CustomGridColumn = styled(Grid.Column)`
+  > form + .ui.segment {
+    margin-top: 0;
+  }
+  padding-top: '10px';
+  padding-bottom: '10px';
 `
 
 class Settings extends Component {
@@ -483,9 +492,7 @@ class Settings extends Component {
             </Container>
             <SettingsGrid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
               <Grid.Row>
-                <Grid.Column className='flex stretched' style={{ paddingTop: '10px', paddingBottom: '10px' }}>
-                  {this.renderContent()}
-                </Grid.Column>
+                <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
               </Grid.Row>
             </SettingsGrid>
           </Container>

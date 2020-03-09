@@ -57,6 +57,7 @@ import UploadLot from './upload/UploadLot'
 import { withDatagrid } from '~/modules/datagrid'
 import { AttachmentManager } from '~/modules/attachments'
 import _ from 'lodash'
+import DocumentTab from '~/components/document-tab'
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -1011,7 +1012,10 @@ class DetailSidebar extends Component {
       listDocumentTypes,
       intl: { formatMessage },
       toastManager,
-      removeAttachment
+      removeAttachment,
+      loadFile,
+      addAttachment,
+      removeAttachmentLink
     } = this.props
 
     const leftWidth = 6
@@ -1666,224 +1670,17 @@ class DetailSidebar extends Component {
                             ),
                             pane: (
                               <Tab.Pane key='documents' style={{ padding: '18px' }}>
-                                <Grid>
-                                  <GridRow>
-                                    {listDocumentTypes.length ? (
-                                      <GridColumn width={8}>
-                                        <FormattedMessage id='global.uploadDocument' defaultMessage='Upload document: '>
-                                          {text => text}
-                                        </FormattedMessage>
-                                        <CustomDropdown
-                                          name='documents.documentType'
-                                          closeOnChange
-                                          options={listDocumentTypes}
-                                          inputProps={{
-                                            placeholder: (
-                                              <FormattedMessage
-                                                id='global.documentType.choose'
-                                                defaultMessage='Choose document type'
-                                              />
-                                            ),
-                                            onChange: (e, { name, value }) => {
-                                              this.handleChange(e, name, value)
-                                              this.onChange()
-                                            }
-                                          }}
-                                        />
-                                      </GridColumn>
-                                    ) : null}
-
-                                    <GridColumn width={8}>
-                                      <FormattedMessage
-                                        id='global.existingDocuments'
-                                        defaultMessage='Existing documents: '>
-                                        {text => text}
-                                      </FormattedMessage>
-                                      <AttachmentManager
-                                        asModal
-                                        returnSelectedRows={rows =>
-                                          this.attachDocumentsManager(rows, values, setFieldValue)
-                                        }
-                                      />
-                                    </GridColumn>
-                                  </GridRow>
-                                  {values.documents.documentType && this.state.openUploadLot ? (
-                                    <GridRow>
-                                      <GridColumn>
-                                        <UploadLot
-                                          {...this.props}
-                                          header={
-                                            <DivIcon
-                                              onClick={() =>
-                                                this.setState(prevState => ({
-                                                  openUploadLot: !prevState.openUploadLot
-                                                }))
-                                              }>
-                                              <CloceIcon name='close' color='grey' />
-                                            </DivIcon>
-                                          }
-                                          hideAttachments
-                                          edit={getSafe(() => sidebarValues.id, 0)}
-                                          attachments={values.documents.attachments}
-                                          name='documents.attachments'
-                                          type={this.state.documentType}
-                                          filesLimit={1}
-                                          fileMaxSize={20}
-                                          onChange={files => {
-                                            this.attachDocumentsUploadLot(files, values, setFieldValue)
-                                          }}
-                                          data-test='new_inventory_attachments_drop'
-                                          emptyContent={
-                                            <>
-                                              {formatMessage({ id: 'addInventory.dragDrop' })}
-                                              <br />
-                                              <FormattedMessage
-                                                id='addInventory.dragDropOr'
-                                                defaultMessage={'or {link} to select from computer'}
-                                                values={{
-                                                  link: (
-                                                    <a>
-                                                      <FormattedMessage
-                                                        id='global.clickHere'
-                                                        defaultMessage={'click here'}
-                                                      />
-                                                    </a>
-                                                  )
-                                                }}
-                                              />
-                                            </>
-                                          }
-                                          uploadedContent={
-                                            <label>
-                                              <FormattedMessage
-                                                id='addInventory.dragDrop'
-                                                defaultMessage={'Drag and drop to add file here'}
-                                              />
-                                              <br />
-                                              <FormattedMessage
-                                                id='addInventory.dragDropOr'
-                                                defaultMessage={'or {link} to select from computer'}
-                                                values={{
-                                                  link: (
-                                                    <a>
-                                                      <FormattedMessage
-                                                        id='global.clickHere'
-                                                        defaultMessage={'click here'}
-                                                      />
-                                                    </a>
-                                                  )
-                                                }}
-                                              />
-                                            </label>
-                                          }
-                                        />
-                                      </GridColumn>
-                                    </GridRow>
-                                  ) : null}
-                                  {values.documents.attachments && (
-                                    <GridRow>
-                                      <GridColumn>
-                                        <ProdexGrid
-                                          virtual={false}
-                                          tableName='inventory_documents'
-                                          onTableReady={() => {}}
-                                          columns={columns}
-                                          normalWidth={false}
-                                          rows={values.documents.attachments
-                                            .map(row => ({
-                                              ...row,
-                                              documentTypeName: row.documentType && row.documentType.name
-                                            }))
-                                            .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))}
-                                          rowActions={[
-                                            {
-                                              text: (
-                                                <FormattedMessage id='global.unlink' defaultMessage='Unlink'>
-                                                  {text => text}
-                                                </FormattedMessage>
-                                              ),
-                                              callback: async row => {
-                                                try {
-                                                  if (row.linked) {
-                                                    const unlinkResponse = await this.props.removeAttachmentLink(
-                                                      false,
-                                                      sidebarValues.id,
-                                                      row.id
-                                                    )
-                                                    toastManager.add(
-                                                      generateToastMarkup(
-                                                        <FormattedMessage
-                                                          id='addInventory.success'
-                                                          defaultMessage='Success'
-                                                        />,
-                                                        <FormattedMessage
-                                                          id='addInventory.unlinkeAttachment'
-                                                          defaultMessage='Attachment was successfully unlinked.'
-                                                        />
-                                                      ),
-                                                      {
-                                                        appearance: 'success'
-                                                      }
-                                                    )
-                                                    if (unlinkResponse.value.data.lastLink) {
-                                                      confirm(
-                                                        formatMessage({
-                                                          id: 'confirm.attachments.delete.title',
-                                                          defaultMessage: 'Delete Attachment'
-                                                        }),
-                                                        formatMessage(
-                                                          {
-                                                            id: 'confirm.attachments.delete.content',
-                                                            defaultMessage: `Do you want to delete file ${row.name}?`
-                                                          },
-                                                          { fileName: row.name }
-                                                        )
-                                                      ).then(
-                                                        async () => {
-                                                          // confirm
-                                                          try {
-                                                            await this.props.removeAttachment(row.id)
-                                                            toastManager.add(
-                                                              generateToastMarkup(
-                                                                <FormattedMessage
-                                                                  id='notifications.attachments.deleted.header'
-                                                                  defaultMessage='File Deleted'
-                                                                />,
-                                                                <FormattedMessage
-                                                                  id='notifications.attachments.deleted.content'
-                                                                  defaultMessage={`File ${row.name} successfully deleted.`}
-                                                                  values={{ fileName: row.name }}
-                                                                />
-                                                              ),
-                                                              {
-                                                                appearance: 'success'
-                                                              }
-                                                            )
-                                                          } catch (e) {
-                                                            console.error(e)
-                                                          }
-                                                        },
-                                                        () => {
-                                                          // cancel
-                                                        }
-                                                      )
-                                                    }
-                                                  }
-                                                  setFieldValue(
-                                                    `documents.attachments`,
-                                                    values.documents.attachments.filter(o => o.id !== row.id)
-                                                  )
-                                                } catch (e) {
-                                                  console.error(e)
-                                                }
-                                              }
-                                            }
-                                          ]}
-                                        />
-                                      </GridColumn>
-                                    </GridRow>
-                                  )}
-                                </Grid>
+                                <DocumentTab
+                                  listDocumentTypes={listDocumentTypes}
+                                  values={values}
+                                  setFieldValue={setFieldValue}
+                                  setFieldNameAttachments='attachments'
+                                  tableName='warehouse_attachments'
+                                  removeAttachmentLink={removeAttachmentLink}
+                                  removeAttachment={removeAttachment}
+                                  addAttachment={addAttachment}
+                                  loadFile={loadFile}
+                                />
                               </Tab.Pane>
                             )
                           },

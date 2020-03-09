@@ -155,7 +155,8 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isOpenSidebar: false,
-        openTab: null
+        openTab: null,
+        popupValues: null
       }
     }
     case AT.OPEN_DWOLLA_POPUP: {

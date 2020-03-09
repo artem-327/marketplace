@@ -372,7 +372,7 @@ export function handlerSubmitWarehouseEditPopup(payload, id) {
       payload: response
     })
     Datagrid.updateRow(id, () => response)
-    dispatch(closePopup())
+    dispatch(closeSidebar())
   }
 }
 
@@ -385,7 +385,7 @@ export function postNewWarehouseRequest(payload) {
     })
     getWarehousesDataRequest()
     Datagrid.loadData()
-    dispatch(closePopup())
+    dispatch(closeSidebar())
   }
 }
 
