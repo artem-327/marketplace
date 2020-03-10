@@ -99,17 +99,17 @@ class DocumentTab extends Component {
   render() {
     const {
       listDocumentTypes,
-      onChangeDropdown, //missing must test
+      onChangeDropdown,
       values,
       setFieldValue,
       setFieldNameAttachments,
-      changedForm, //missing must test
-      idForm, // missing must test
-      tableName,
+      changedForm,
+      idForm,
       removeAttachmentLink,
       removeAttachment,
       addAttachment,
       loadFile,
+      dropdownName,
       intl: { formatMessage }
     } = this.props
 
@@ -122,7 +122,7 @@ class DocumentTab extends Component {
                 {text => text}
               </FormattedMessage>
               <CustomDropdown
-                name='documentType'
+                name={dropdownName}
                 closeOnChange
                 options={listDocumentTypes}
                 inputProps={{
@@ -220,7 +220,7 @@ class DocumentTab extends Component {
           <GridColumn>
             <ProdexGrid
               virtual={false}
-              tableName={tableName} //'inventory_documents'
+              tableName='attachment_documents'
               onTableReady={() => {}}
               columns={columns}
               normalWidth={false}

@@ -45,7 +45,8 @@ import {
   removeAttachment,
   downloadAttachment,
   closeSidebarDetail,
-  getProductOffer
+  getProductOffer,
+  attachmentLinksToProductOffer
 } from '../actions'
 import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
@@ -628,7 +629,7 @@ class DetailSidebar extends Component {
   }, 250)
 
   submitForm = async (values, setSubmitting, setTouched, savedButtonClicked = false) => {
-    const { addProductOffer, datagrid, toastManager } = this.props
+    const { addProductOffer, datagrid, toastManager, attachmentLinksToProductOffer } = this.props
     const { sidebarValues } = this.state
     let isEdit = getSafe(() => sidebarValues.id, null)
     let isGrouped = getSafe(() => sidebarValues.grouped, false)
@@ -672,10 +673,14 @@ class DetailSidebar extends Component {
         this.setState({ changedForm: false, edited: false })
         break
     }
+
     if (Object.keys(props).length) {
       try {
         let data = await addProductOffer(props, isEdit, false, isGrouped)
         if (isEdit) {
+          if (props.attachments && props.attachments.length) {
+            props.attachments.forEach(attachment => attachmentLinksToProductOffer(attachment.id, isEdit))
+          }
           datagrid.updateRow(data.value.id, () => data.value)
         } else {
           datagrid.loadData()
@@ -1672,14 +1677,17 @@ class DetailSidebar extends Component {
                               <Tab.Pane key='documents' style={{ padding: '18px' }}>
                                 <DocumentTab
                                   listDocumentTypes={listDocumentTypes}
-                                  values={values}
+                                  values={values.documents}
                                   setFieldValue={setFieldValue}
-                                  setFieldNameAttachments='attachments'
-                                  tableName='warehouse_attachments'
+                                  setFieldNameAttachments='documents.attachments'
+                                  dropdownName='documents.documentType'
                                   removeAttachmentLink={removeAttachmentLink}
                                   removeAttachment={removeAttachment}
                                   addAttachment={addAttachment}
                                   loadFile={loadFile}
+                                  onChangeDropdown={this.onChange}
+                                  changedForm={() => this.setState({ changedForm: true })}
+                                  idForm={getSafe(() => sidebarValues.id, 0)}
                                 />
                               </Tab.Pane>
                             )
@@ -1933,7 +1941,8 @@ const mapDispatchToProps = {
   removeAttachment,
   downloadAttachment,
   closeSidebarDetail,
-  getProductOffer
+  getProductOffer,
+  attachmentLinksToProductOffer
 }
 
 const mapStateToProps = ({

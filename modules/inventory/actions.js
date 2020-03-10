@@ -51,6 +51,13 @@ export const updateAttachment = (id, payload) => {
   }
 }
 
+export const attachmentLinksToProductOffer = (attachmentId, productOfferId) => ({
+  type: AT.ATTACHMENT_LINKS_TO_PRODUCT_OFFER,
+  async payload() {
+    return await api.attachmentLinksToProductOffer(attachmentId, productOfferId)
+  }
+})
+
 export function addProductOffer(values, poId = false, simple = false, isGrouped = false) {
   let params = {}
 

@@ -352,7 +352,7 @@ class WarehouseSidebar extends React.Component {
             values={values}
             setFieldValue={setFieldValue}
             setFieldNameAttachments='attachments'
-            tableName='warehouse_attachments'
+            dropdownName='documentType'
             removeAttachmentLink={removeAttachmentLink}
             removeAttachment={removeAttachment}
             addAttachment={addAttachment}
