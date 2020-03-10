@@ -67,7 +67,7 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
         cy.wait("@rulesSaving")
-        cy.contains("Saved successfully!")
+        cy.contains("Info!")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
@@ -92,7 +92,7 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
         cy.wait("@rulesSaving")
-        cy.contains("Saved successfully!")
+        cy.contains("Info!")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
@@ -125,7 +125,7 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
         cy.wait("@rulesSaving")
-        cy.contains("Saved successfully!")
+        cy.contains("Info!")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(1)
@@ -158,7 +158,7 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
         cy.wait("@rulesSaving")
-        cy.contains("Saved successfully!")
+        cy.contains("Info!")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)

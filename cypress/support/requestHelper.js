@@ -488,7 +488,7 @@ Cypress.Commands.add("turnOnGlobalBroadcasting", (token) => {
 })
 
 Cypress.Commands.add("turnOffGlobalBroadcasting", (token) => {
-    let bodys = cy.returnTurnOffJson()
+    bodys = cy.returnTurnOffJson()
 
     cy.request({
         method: 'POST',

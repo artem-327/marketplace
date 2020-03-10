@@ -21,8 +21,7 @@ context("Shopping cart CRUD", () => {
     })
 
     after(function() {
-        cy.getUserToken(userJSON1.email, userJSON1.password).then(token => {
-            cy.cancelOffer(token,holdId)
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.deleteWholeCart(token)
         })
     })

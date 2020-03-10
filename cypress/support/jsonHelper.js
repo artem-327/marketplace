@@ -19,119 +19,9 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "type":"state",
                         "broadcast":0,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Alabama",
                         "elements":[
-                            {
-                                "id":2,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"ChemComp",
-                                "elements":[
-                                    {
-                                        "id":110,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"123 Test St, Place, AL",
-                                        "elements":[
 
-                                        ]
-                                    },
-                                    {
-                                        "id":93,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"25 New street, Old, AL",
-                                        "elements":[
-
-                                        ]
-                                    },
-                                    {
-                                        "id":13,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"Cargo Group",
-                                        "elements":[
-
-                                        ]
-                                    },
-                                    {
-                                        "id":10,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"CGM Industries, Inc.",
-                                        "elements":[
-
-                                        ]
-                                    },
-                                    {
-                                        "id":16,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"Ennis Logistics",
-                                        "elements":[
-
-                                        ]
-                                    },
-                                    {
-                                        "id":11,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"Mercer Distribution Services",
-                                        "elements":[
-
-                                        ]
-                                    },
-                                    {
-                                        "id":12,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"North American Warehouses",
-                                        "elements":[
-
-                                        ]
-                                    },
-                                    {
-                                        "id":14,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"Pacific Coast Warehouse",
-                                        "elements":[
-
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "id":6,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"ChemCorp1",
-                                "elements":[
-                                    {
-                                        "id":8,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"2 Freedom St., Walt Disney, AL",
-                                        "elements":[
-
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -149,30 +39,9 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "type":"state",
                         "broadcast":0,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Arizona",
                         "elements":[
-                            {
-                                "id":2,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"ChemComp",
-                                "elements":[
-                                    {
-                                        "id":20,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"B & J Group",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -192,7 +61,44 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "anonymous":0,
                         "name":"California",
                         "elements":[
+                            {
+                                "id":559,
+                                "type":"company",
+                                "broadcast":1,
+                                "anonymous":0,
+                                "name":"Ojojo",
+                                "elements":[
+                                    {
+                                        "id":13,
+                                        "type":"branch",
+                                        "broadcast":0,
+                                        "anonymous":0,
+                                        "name":"Jakok",
+                                        "elements":[
 
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id":255,
+                                "type":"company",
+                                "broadcast":1,
+                                "anonymous":0,
+                                "name":"Univar",
+                                "elements":[
+                                    {
+                                        "id":8,
+                                        "type":"branch",
+                                        "broadcast":0,
+                                        "anonymous":0,
+                                        "name":"14970 Don Julian Rd.",
+                                        "elements":[
+
+                                        ]
+                                    }
+                                ]
+                            }
                         ]
                     },
                     {
@@ -202,7 +108,44 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "anonymous":0,
                         "name":"Colorado",
                         "elements":[
+                            {
+                                "id":559,
+                                "type":"company",
+                                "broadcast":1,
+                                "anonymous":0,
+                                "name":"Ojojo",
+                                "elements":[
+                                    {
+                                        "id":14,
+                                        "type":"branch",
+                                        "broadcast":0,
+                                        "anonymous":0,
+                                        "name":"Ashwil",
+                                        "elements":[
 
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id":255,
+                                "type":"company",
+                                "broadcast":1,
+                                "anonymous":0,
+                                "name":"Univar",
+                                "elements":[
+                                    {
+                                        "id":5,
+                                        "type":"branch",
+                                        "broadcast":0,
+                                        "anonymous":0,
+                                        "name":"4300 Holly St",
+                                        "elements":[
+
+                                        ]
+                                    }
+                                ]
+                            }
                         ]
                     },
                     {
@@ -240,24 +183,21 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "type":"state",
                         "broadcast":0,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Georgia",
                         "elements":[
                             {
-                                "id":1,
+                                "id":255,
                                 "type":"company",
                                 "broadcast":1,
                                 "anonymous":0,
-                                "name":"New One.",
+                                "name":"Univar",
                                 "elements":[
                                     {
-                                        "id":1,
+                                        "id":3,
                                         "type":"branch",
                                         "broadcast":0,
                                         "anonymous":0,
-                                        "name":"Main",
+                                        "name":"2145 Skyland Ct",
                                         "elements":[
 
                                         ]
@@ -291,68 +231,9 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "type":"state",
                         "broadcast":0,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Illinois",
                         "elements":[
-                            {
-                                "id":2,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"ChemComp",
-                                "elements":[
-                                    {
-                                        "id":17,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"Chemblend",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "id":35,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Testering",
-                                "elements":[
-                                    {
-                                        "id":35,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"Praha",
-                                        "elements":[
-
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "id":4,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Testing Corp. Lim.",
-                                "elements":[
-                                    {
-                                        "id":6,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"3790 Woodland Drive, Burr Ridge, IL",
-                                        "elements":[
-
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -360,30 +241,9 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "type":"state",
                         "broadcast":0,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Indiana",
                         "elements":[
-                            {
-                                "id":36,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Tomasova",
-                                "elements":[
-                                    {
-                                        "id":36,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"Ostrava",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -453,7 +313,44 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "anonymous":0,
                         "name":"Massachusetts",
                         "elements":[
+                            {
+                                "id":275,
+                                "type":"company",
+                                "broadcast":1,
+                                "anonymous":0,
+                                "name":"Norman Fox",
+                                "elements":[
+                                    {
+                                        "id":21,
+                                        "type":"branch",
+                                        "broadcast":0,
+                                        "anonymous":0,
+                                        "name":"25 Old Fold, Hammington, MA",
+                                        "elements":[
 
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id":562,
+                                "type":"company",
+                                "broadcast":1,
+                                "anonymous":0,
+                                "name":"Thomas2",
+                                "elements":[
+                                    {
+                                        "id":20,
+                                        "type":"branch",
+                                        "broadcast":0,
+                                        "anonymous":0,
+                                        "name":"25 Old Street, Hammington, MA",
+                                        "elements":[
+
+                                        ]
+                                    }
+                                ]
+                            }
                         ]
                     },
                     {
@@ -491,49 +388,9 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "type":"state",
                         "broadcast":0,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Missouri",
                         "elements":[
-                            {
-                                "id":3,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Chromatic Chemicals",
-                                "elements":[
-                                    {
-                                        "id":9,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"Missouri",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "id":36,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Tomasova",
-                                "elements":[
-                                    {
-                                        "id":142,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"TAX",
-                                        "elements":[
-
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -571,30 +428,9 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "type":"state",
                         "broadcast":0,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"New Hampshire",
                         "elements":[
-                            {
-                                "id":3,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Chromatic Chemicals",
-                                "elements":[
-                                    {
-                                        "id":3,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"New Hampshire",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -622,30 +458,9 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "type":"state",
                         "broadcast":0,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"New York",
                         "elements":[
-                            {
-                                "id":89,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Broadcast",
-                                "elements":[
-                                    {
-                                        "id":102,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"12th New Street, New York, NY",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -763,43 +578,31 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "type":"state",
                         "broadcast":0,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Texas",
                         "elements":[
                             {
-                                "id":2,
+                                "id":275,
                                 "type":"company",
                                 "broadcast":1,
                                 "anonymous":0,
-                                "name":"ChemComp",
+                                "name":"Norman Fox",
                                 "elements":[
                                     {
-                                        "id":5,
+                                        "id":1,
                                         "type":"branch",
                                         "broadcast":0,
                                         "anonymous":0,
-                                        "name":"Houston Warehouse",
+                                        "name":"402 McBride Ln",
                                         "elements":[
 
                                         ]
-                                    }
-                                ]
-                            },
-                            {
-                                "id":92,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Latté",
-                                "elements":[
+                                    },
                                     {
-                                        "id":111,
+                                        "id":48,
                                         "type":"branch",
                                         "broadcast":0,
                                         "anonymous":0,
-                                        "name":"302 Houston St, Queen City, TX",
+                                        "name":"Zaloha",
                                         "elements":[
 
                                         ]
@@ -853,50 +656,9 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "type":"state",
                         "broadcast":0,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Washington",
                         "elements":[
-                            {
-                                "id":2,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"ChemComp",
-                                "elements":[
-                                    {
-                                        "id":18,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"117 Woodcrest Ave.",
-                                        "elements":[
 
-                                        ]
-                                    },
-                                    {
-                                        "id":19,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"117 Woodcrest Ave.",
-                                        "elements":[
-
-                                        ]
-                                    },
-                                    {
-                                        "id":4,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"Tacoma",
-                                        "elements":[
-
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -914,30 +676,9 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "type":"state",
                         "broadcast":0,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Wisconsin",
                         "elements":[
-                            {
-                                "id":2,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"ChemComp",
-                                "elements":[
-                                    {
-                                        "id":2,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"Milwaukee",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -1531,30 +1272,9 @@ Cypress.Commands.add("returnTurnOffJson", () => {
                         "type":"state",
                         "broadcast":0,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Czech Republic",
                         "elements":[
-                            {
-                                "id":36,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Tomasova",
-                                "elements":[
-                                    {
-                                        "id":101,
-                                        "type":"branch",
-                                        "broadcast":0,
-                                        "anonymous":0,
-                                        "name":"Main branch",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -3171,119 +2891,9 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "type":"state",
                         "broadcast":1,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Alabama",
                         "elements":[
-                            {
-                                "id":2,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"ChemComp",
-                                "elements":[
-                                    {
-                                        "id":110,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"123 Test St, Place, AL",
-                                        "elements":[
 
-                                        ]
-                                    },
-                                    {
-                                        "id":93,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"25 New street, Old, AL",
-                                        "elements":[
-
-                                        ]
-                                    },
-                                    {
-                                        "id":13,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"Cargo Group",
-                                        "elements":[
-
-                                        ]
-                                    },
-                                    {
-                                        "id":10,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"CGM Industries, Inc.",
-                                        "elements":[
-
-                                        ]
-                                    },
-                                    {
-                                        "id":16,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"Ennis Logistics",
-                                        "elements":[
-
-                                        ]
-                                    },
-                                    {
-                                        "id":11,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"Mercer Distribution Services",
-                                        "elements":[
-
-                                        ]
-                                    },
-                                    {
-                                        "id":12,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"North American Warehouses",
-                                        "elements":[
-
-                                        ]
-                                    },
-                                    {
-                                        "id":14,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"Pacific Coast Warehouse",
-                                        "elements":[
-
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "id":6,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"ChemCorp1",
-                                "elements":[
-                                    {
-                                        "id":8,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"2 Freedom St., Walt Disney, AL",
-                                        "elements":[
-
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -3301,30 +2911,9 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "type":"state",
                         "broadcast":1,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Arizona",
                         "elements":[
-                            {
-                                "id":2,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"ChemComp",
-                                "elements":[
-                                    {
-                                        "id":20,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"B & J Group",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -3344,7 +2933,44 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "anonymous":0,
                         "name":"California",
                         "elements":[
+                            {
+                                "id":559,
+                                "type":"company",
+                                "broadcast":1,
+                                "anonymous":0,
+                                "name":"Ojojo",
+                                "elements":[
+                                    {
+                                        "id":13,
+                                        "type":"branch",
+                                        "broadcast":1,
+                                        "anonymous":0,
+                                        "name":"Jakok",
+                                        "elements":[
 
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id":255,
+                                "type":"company",
+                                "broadcast":1,
+                                "anonymous":0,
+                                "name":"Univar",
+                                "elements":[
+                                    {
+                                        "id":8,
+                                        "type":"branch",
+                                        "broadcast":1,
+                                        "anonymous":0,
+                                        "name":"14970 Don Julian Rd.",
+                                        "elements":[
+
+                                        ]
+                                    }
+                                ]
+                            }
                         ]
                     },
                     {
@@ -3354,7 +2980,44 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "anonymous":0,
                         "name":"Colorado",
                         "elements":[
+                            {
+                                "id":559,
+                                "type":"company",
+                                "broadcast":1,
+                                "anonymous":0,
+                                "name":"Ojojo",
+                                "elements":[
+                                    {
+                                        "id":14,
+                                        "type":"branch",
+                                        "broadcast":1,
+                                        "anonymous":0,
+                                        "name":"Ashwil",
+                                        "elements":[
 
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id":255,
+                                "type":"company",
+                                "broadcast":1,
+                                "anonymous":0,
+                                "name":"Univar",
+                                "elements":[
+                                    {
+                                        "id":5,
+                                        "type":"branch",
+                                        "broadcast":1,
+                                        "anonymous":0,
+                                        "name":"4300 Holly St",
+                                        "elements":[
+
+                                        ]
+                                    }
+                                ]
+                            }
                         ]
                     },
                     {
@@ -3392,24 +3055,21 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "type":"state",
                         "broadcast":1,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Georgia",
                         "elements":[
                             {
-                                "id":1,
+                                "id":255,
                                 "type":"company",
                                 "broadcast":1,
                                 "anonymous":0,
-                                "name":"New One.",
+                                "name":"Univar",
                                 "elements":[
                                     {
-                                        "id":1,
+                                        "id":3,
                                         "type":"branch",
                                         "broadcast":1,
                                         "anonymous":0,
-                                        "name":"Main",
+                                        "name":"2145 Skyland Ct",
                                         "elements":[
 
                                         ]
@@ -3443,68 +3103,9 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "type":"state",
                         "broadcast":1,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Illinois",
                         "elements":[
-                            {
-                                "id":2,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"ChemComp",
-                                "elements":[
-                                    {
-                                        "id":17,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"Chemblend",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "id":35,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Testering",
-                                "elements":[
-                                    {
-                                        "id":35,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"Praha",
-                                        "elements":[
-
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "id":4,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Testing Corp. Lim.",
-                                "elements":[
-                                    {
-                                        "id":6,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"3790 Woodland Drive, Burr Ridge, IL",
-                                        "elements":[
-
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -3512,30 +3113,9 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "type":"state",
                         "broadcast":1,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Indiana",
                         "elements":[
-                            {
-                                "id":36,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Tomasova",
-                                "elements":[
-                                    {
-                                        "id":36,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"Ostrava",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -3605,7 +3185,44 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "anonymous":0,
                         "name":"Massachusetts",
                         "elements":[
+                            {
+                                "id":275,
+                                "type":"company",
+                                "broadcast":1,
+                                "anonymous":0,
+                                "name":"Norman Fox",
+                                "elements":[
+                                    {
+                                        "id":21,
+                                        "type":"branch",
+                                        "broadcast":1,
+                                        "anonymous":0,
+                                        "name":"25 Old Fold, Hammington, MA",
+                                        "elements":[
 
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id":562,
+                                "type":"company",
+                                "broadcast":1,
+                                "anonymous":0,
+                                "name":"Thomas2",
+                                "elements":[
+                                    {
+                                        "id":20,
+                                        "type":"branch",
+                                        "broadcast":1,
+                                        "anonymous":0,
+                                        "name":"25 Old Street, Hammington, MA",
+                                        "elements":[
+
+                                        ]
+                                    }
+                                ]
+                            }
                         ]
                     },
                     {
@@ -3643,49 +3260,9 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "type":"state",
                         "broadcast":1,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Missouri",
                         "elements":[
-                            {
-                                "id":3,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Chromatic Chemicals",
-                                "elements":[
-                                    {
-                                        "id":9,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"Missouri",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "id":36,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Tomasova",
-                                "elements":[
-                                    {
-                                        "id":142,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"TAX",
-                                        "elements":[
-
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -3723,30 +3300,9 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "type":"state",
                         "broadcast":1,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"New Hampshire",
                         "elements":[
-                            {
-                                "id":3,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Chromatic Chemicals",
-                                "elements":[
-                                    {
-                                        "id":3,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"New Hampshire",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -3774,30 +3330,9 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "type":"state",
                         "broadcast":1,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"New York",
                         "elements":[
-                            {
-                                "id":89,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Broadcast",
-                                "elements":[
-                                    {
-                                        "id":102,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"12th New Street, New York, NY",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -3915,43 +3450,31 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "type":"state",
                         "broadcast":1,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Texas",
                         "elements":[
                             {
-                                "id":2,
+                                "id":275,
                                 "type":"company",
                                 "broadcast":1,
                                 "anonymous":0,
-                                "name":"ChemComp",
+                                "name":"Norman Fox",
                                 "elements":[
                                     {
-                                        "id":5,
+                                        "id":1,
                                         "type":"branch",
                                         "broadcast":1,
                                         "anonymous":0,
-                                        "name":"Houston Warehouse",
+                                        "name":"402 McBride Ln",
                                         "elements":[
 
                                         ]
-                                    }
-                                ]
-                            },
-                            {
-                                "id":92,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Latté",
-                                "elements":[
+                                    },
                                     {
-                                        "id":111,
+                                        "id":48,
                                         "type":"branch",
                                         "broadcast":1,
                                         "anonymous":0,
-                                        "name":"302 Houston St, Queen City, TX",
+                                        "name":"Zaloha",
                                         "elements":[
 
                                         ]
@@ -4005,50 +3528,9 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "type":"state",
                         "broadcast":1,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Washington",
                         "elements":[
-                            {
-                                "id":2,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"ChemComp",
-                                "elements":[
-                                    {
-                                        "id":18,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"117 Woodcrest Ave.",
-                                        "elements":[
 
-                                        ]
-                                    },
-                                    {
-                                        "id":19,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"117 Woodcrest Ave.",
-                                        "elements":[
-
-                                        ]
-                                    },
-                                    {
-                                        "id":4,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"Tacoma",
-                                        "elements":[
-
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -4066,30 +3548,9 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "type":"state",
                         "broadcast":1,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Wisconsin",
                         "elements":[
-                            {
-                                "id":2,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"ChemComp",
-                                "elements":[
-                                    {
-                                        "id":2,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"Milwaukee",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -4683,30 +4144,9 @@ Cypress.Commands.add("returnTurnOnJson", () => {
                         "type":"state",
                         "broadcast":1,
                         "anonymous":0,
-                        "priceAddition":0,
-                        "priceMultiplier":0,
-                        "priceOverride":0,
                         "name":"Czech Republic",
                         "elements":[
-                            {
-                                "id":36,
-                                "type":"company",
-                                "broadcast":1,
-                                "anonymous":0,
-                                "name":"Tomasova",
-                                "elements":[
-                                    {
-                                        "id":101,
-                                        "type":"branch",
-                                        "broadcast":1,
-                                        "anonymous":0,
-                                        "name":"Main branch",
-                                        "elements":[
 
-                                        ]
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
