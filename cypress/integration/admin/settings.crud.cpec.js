@@ -27,7 +27,7 @@ context("Admin Settings RUD", () => {
                 .type("operations@echoexchange.net")
         })
 
-        cy.get("button[class='ui primary button']").eq(2).click({force: true})
+        cy.get("button[class='ui primary button']").click({force: true})
         cy.wait(1000)
 
         cy.contains("System settings updated")

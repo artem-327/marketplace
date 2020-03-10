@@ -48,9 +48,9 @@ context("Prodex Branches CRUD", () => {
         })
         cy.enterText("input[id='field_input_deliveryAddress.contactEmail']", "test@central.com")
 
-        cy.clickSave()
+        cy.get('[data-test=settings_warehouse_popup_submit_btn]').click()
 
-        cy.contains("Created Branch")
+        cy.contains("Info!")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstBranchIdWithFilter(token, filter).then(itemId => {
@@ -85,7 +85,7 @@ context("Prodex Branches CRUD", () => {
             .type("Arnold Schwarzenegger")
             .should("have.value", "Arnold Schwarzenegger")
 
-        cy.clickSave()
+        cy.get('[data-test=settings_warehouse_popup_submit_btn]').click()
 
         cy.openElement(branchId, 0)
 
@@ -96,7 +96,7 @@ context("Prodex Branches CRUD", () => {
     it("Checks error messages", () => {
         cy.settingsAdd()
 
-        cy.clickSave()
+        cy.get('[data-test=settings_warehouse_popup_submit_btn]').click()
 
         cy.get(".error")
             .should("have.length", 7)
@@ -108,7 +108,7 @@ context("Prodex Branches CRUD", () => {
     it("Deletes a branch", () => {
         cy.searchInList("Arnold")
 
-        cy.openElement(branchId, 1)
+        cy.openElement(branchId, 2)
 
         cy.clickSave()
 

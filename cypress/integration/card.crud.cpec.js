@@ -4,7 +4,7 @@ context("Shopping cart CRUD", () => {
     const userJSON = require('../fixtures/user.json')
 
     beforeEach(function () {
-        cy.viewport(1620, 2000)
+        cy.viewport(2500, 1500)
         cy.server()
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
@@ -18,6 +18,13 @@ context("Shopping cart CRUD", () => {
         cy.contains("Marketplace").click()
 
         cy.wait("@marketplaceLoading", {timeout: 30000})
+    })
+
+    after(function() {
+        cy.getUserToken(userJSON1.email, userJSON1.password).then(token => {
+            cy.cancelOffer(token,holdId)
+            cy.deleteWholeCart(token)
+        })
     })
 
         it("Adds item to shopping card", () => {

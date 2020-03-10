@@ -31,7 +31,7 @@ context("Conditions CRUD", () => {
 
         cy.enterText("#field_input_val0", "Half")
         cy.clickSave()
-        cy.contains("Condition created")
+        cy.contains("Info!")
 
         cy.getToken().then(token => {
             cy.getFirstConditionWithFilter(token, filter).then(itemId => {
@@ -53,7 +53,7 @@ context("Conditions CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Updated Condition")
+        cy.contains("Info!")
 
         cy.openElement(conditionId, 0)
 

@@ -48,9 +48,9 @@ context("Prodex Warehouse CRUD", () => {
         })
         cy.enterText("input[id='field_input_deliveryAddress.contactEmail']","test@central.com")
 
-        cy.clickSave()
+        cy.get('[data-test=settings_warehouse_popup_submit_btn]').click()
 
-        cy.contains("Created Warehouse")
+        cy.contains("Info!")
 
         cy.searchInList("Central")
 
@@ -82,7 +82,7 @@ context("Prodex Warehouse CRUD", () => {
             .type("Arnold Schwarzenegger")
             .should("have.value","Arnold Schwarzenegger")
 
-        cy.clickSave()
+        cy.get('[data-test=settings_warehouse_popup_submit_btn]').click()
 
         cy.openElement(branchId, 0)
 
@@ -93,7 +93,7 @@ context("Prodex Warehouse CRUD", () => {
     it("Checks error messages", () => {
         cy.get("[data-test='settings_open_popup_btn']").click()
 
-        cy.clickSave()
+        cy.get('[data-test=settings_warehouse_popup_submit_btn]').click()
 
         cy.get(".error")
             .should("have.length",7)
@@ -103,7 +103,7 @@ context("Prodex Warehouse CRUD", () => {
     })
 
     it("Deletes a warehouse", () => {
-        cy.openElement(branchId, 1)
+        cy.openElement(branchId, 2)
 
         cy.clickSave()
 

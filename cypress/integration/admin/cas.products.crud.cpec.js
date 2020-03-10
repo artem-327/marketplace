@@ -29,7 +29,7 @@ context("CAS products CRUD", () => {
         cy.enterText("[name='casProduct.casIndexName']", "Testinonium")
         cy.clickSave()
 
-        cy.contains("Created CAS Product")
+        cy.contains("Info!")
 
         cy.get("[data-test=admin_table_search_inp]")
             .children("div")

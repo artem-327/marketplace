@@ -36,7 +36,7 @@ context("Units of packaging CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Unit of Packaging created")
+        cy.contains("Info!")
 
         cy.get("input[type=text]").eq(0).type("Test")
         cy.waitForUI()
@@ -64,7 +64,7 @@ context("Units of packaging CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Updated Unit of Packaging")
+        cy.contains("Info!")
 
         cy.searchInList("Best")
 

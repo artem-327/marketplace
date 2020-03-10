@@ -33,7 +33,7 @@ context("Market Segments CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Market Segment created")
+        cy.contains("Info!")
 
         cy.searchInList("Test")
         cy.waitForUI()
@@ -61,7 +61,7 @@ context("Market Segments CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Updated Market Segment")
+        cy.contains("Info!")
 
         cy.searchInList("Great")
 

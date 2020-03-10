@@ -39,7 +39,7 @@ context("Echo Product CRUD", () => {
         cy.selectFromDropdown("[data-test='admin_product_popup_cas_0_drpdn']", "382-45-6")
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
-        cy.contains("Created Echo Product")
+        cy.contains("Info!")
 
         cy.waitForUI()
         cy.searchInList("Test")
@@ -68,7 +68,7 @@ context("Echo Product CRUD", () => {
         cy.get("#code").clear().type("TEST-06")
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
-        cy.contains("Updated Echo Product")
+        cy.contains("Info!")
 
         cy.openElement(productId, 0)
 

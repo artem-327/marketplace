@@ -28,7 +28,8 @@ context("Prodex Branches CRUD", () => {
                     cy.deleteEntity(token, 'delivery-addresses/id', itemId)
             })
         })
-        cy.settingsAdd()
+        cy.get('[data-test=settings_open_popup_btn]').click()
+        cy.waitForUI()
 
         cy.enterText("#field_input_addressName", "Automatic")
 
@@ -49,8 +50,9 @@ context("Prodex Branches CRUD", () => {
         cy.enterText("#field_input_contactEmail", "marie@address.com")
 
         cy.clickSave()
+        cy.waitForUI()
 
-        cy.contains("Created Delivery Address")
+        cy.contains("Info!")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstAddressIdWithFilter(token, filter).then(itemId => {

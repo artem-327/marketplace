@@ -33,7 +33,7 @@ context("Manufacturers CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Manufacturer created")
+        cy.contains("Info!")
 
         cy.searchInList("Test")
 
@@ -59,7 +59,7 @@ context("Manufacturers CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Updated Manufacturer")
+        cy.contains("Info!")
         cy.waitForUI()
 
         cy.searchInList("Artio")
