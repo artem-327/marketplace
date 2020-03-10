@@ -141,3 +141,8 @@ export const attachmentLinksToProductOffer = (attachmentId, productOfferId) =>
   api.post(
     `/prodex/api/attachment-links/to-product-offer?attachmentId=${attachmentId}&productOfferId=${productOfferId}`
   )
+
+export const removeAttachmentLinkProductOffer = (attachmentId, productOfferId) =>
+  api.delete(
+    `/prodex/api/attachment-links/to-product-offer?attachmentId=${attachmentId}&productOfferId=${productOfferId}`
+  )

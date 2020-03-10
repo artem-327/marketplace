@@ -451,3 +451,12 @@ export function applyDatagridFilter(filter) {
     payload: filter
   }
 }
+
+export function removeAttachmentLinkProductOffer(attachmentId, productOfferId) {
+  return {
+    type: AT.INVENTORY_REMOVE_ATTACHMENT_LINK_PRODUCT_OFFER,
+    async payload() {
+      return await api.removeAttachmentLinkProductOffer(attachmentId, productOfferId)
+    }
+  }
+}

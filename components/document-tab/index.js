@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
-import { withToastManager } from 'react-toast-notifications'
 import {
   Sidebar,
   Segment,
@@ -27,30 +26,48 @@ import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import ProdexGrid from '~/components/table'
 import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
 import { AttachmentManager } from '~/modules/attachments'
+import confirm from '~/src/components/Confirmable/confirm'
+import { UploadCloud, XCircle } from 'react-feather'
 
-const CustomDropdown = styled(Dropdown)`
-  &.selection.dropdown {
-    z-index: 610 !important;
-    white-space: nowrap;
-  }
+const CustomColumnGridDropdown = styled(GridColumn)`
+  z-index: 610 !important;
+  white-space: nowrap !important;
 `
 
-const CloceIcon = styled(Icon)`
+const CloseIcon = styled(XCircle)`
   position: absolute;
   top: -10px;
-  right: -10px;
+  right: -15px;
 `
 
 export const DivIcon = styled.div`
   display: block;
-  height: 20px;
+  height: 10px;
   position: relative;
 `
 
-export const CustomProdexGrid = styled(ProdexGrid)`
-  .dTOnmz {
-    z-index: 9 !important;
-  }
+export const CustomColumnGrid = styled(GridColumn)`
+  padding-left: 0 !important;
+`
+
+export const CustomDiv = styled.div`
+  padding: 1em;
+`
+
+export const CustomA = styled.a`
+  font-weight: bold;
+  color: #2599d5;
+`
+
+export const CustomGridRow = styled(GridRow)`
+  padding-top: 0 !important;
+  justify-content: center !important;
+`
+
+export const CustomDivHr = styled.div`
+  width: 428px;
+  border-bottom: 1px solid #dee2e6;
+  padding-top: 14px;
 `
 
 const columns = [
@@ -61,7 +78,7 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 200
+    width: 220
   },
   {
     name: 'documentTypeName',
@@ -70,7 +87,7 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 200
+    width: 168
   }
 ]
 
@@ -80,16 +97,14 @@ class DocumentTab extends Component {
     documentType: 1
   }
 
-  attachDocumentsManager = (newDocuments, values, setFieldValue, setFieldNameAttachments, changedForm) => {
-    const docArray = uniqueArrayByKey(values.attachments.concat(newDocuments), 'id')
-    setFieldNameAttachments && setFieldValue(setFieldNameAttachments, docArray)
-    changedForm && changedForm()
-  }
-
   attachDocumentsUploadLot = (newDocument, values, setFieldValue, setFieldNameAttachments, changedForm) => {
-    const docArray = uniqueArrayByKey(values.attachments.concat([newDocument]), 'id')
+    const docArray = Array.isArray(newDocument)
+      ? uniqueArrayByKey(values.attachments.concat(newDocument), 'id')
+      : uniqueArrayByKey(values.attachments.concat([newDocument]), 'id')
     setFieldNameAttachments && setFieldValue(setFieldNameAttachments, docArray)
-    changedForm && changedForm()
+    if (changedForm) {
+      Array.isArray(newDocument) ? changedForm(newDocument) : changedForm([newDocument])
+    }
   }
 
   handleChange = (e, name, value) => {
@@ -110,48 +125,46 @@ class DocumentTab extends Component {
       addAttachment,
       loadFile,
       dropdownName,
+      attachmentFiles,
+      removeAttachmentFromUpload,
       intl: { formatMessage }
     } = this.props
 
     return (
       <Grid>
-        <GridRow>
-          {listDocumentTypes.length ? (
-            <GridColumn width={8}>
-              <FormattedMessage id='global.uploadDocument' defaultMessage='Upload document: '>
-                {text => text}
-              </FormattedMessage>
-              <CustomDropdown
-                name={dropdownName}
-                closeOnChange
-                options={listDocumentTypes}
-                inputProps={{
-                  placeholder: (
-                    <FormattedMessage id='global.documentType.choose' defaultMessage='Choose document type' />
-                  ),
-                  onChange: (e, { name, value }) => {
-                    this.handleChange(e, name, value)
-                    typeof onChangeDropdown === 'function' && onChangeDropdown()
-                  }
-                }}
-              />
-            </GridColumn>
-          ) : null}
+        <CustomGridRow>
+          <CustomColumnGridDropdown width={8}>
+            <FormattedMessage id='global.uploadDocument' defaultMessage='Upload document: '>
+              {text => text}
+            </FormattedMessage>
+            <Dropdown
+              name={dropdownName}
+              closeOnChange
+              options={listDocumentTypes}
+              inputProps={{
+                placeholder: <FormattedMessage id='global.documentType.choose' defaultMessage='Choose document type' />,
+                onChange: (e, { name, value }) => {
+                  this.handleChange(e, name, value)
+                }
+              }}
+            />
+          </CustomColumnGridDropdown>
 
-          <GridColumn width={8}>
+          <CustomColumnGrid width={8}>
             <FormattedMessage id='global.existingDocuments' defaultMessage='Existing documents: '>
               {text => text}
             </FormattedMessage>
             <AttachmentManager
               asModal
               returnSelectedRows={rows =>
-                this.attachDocumentsManager(rows, values, setFieldValue, setFieldNameAttachments, changedForm)
+                this.attachDocumentsUploadLot(rows, values, setFieldValue, setFieldNameAttachments, changedForm)
               }
             />
-          </GridColumn>
-        </GridRow>
+          </CustomColumnGrid>
+          <CustomDivHr />
+        </CustomGridRow>
         {this.state.openUploadLot ? (
-          <GridRow>
+          <CustomGridRow>
             <GridColumn>
               <UploadLot
                 addAttachment={addAttachment}
@@ -159,17 +172,17 @@ class DocumentTab extends Component {
                 header={
                   <DivIcon
                     onClick={() =>
-                      this.setState(prevState => ({
-                        openUploadLot: !prevState.openUploadLot
-                      }))
+                      this.setState({
+                        openUploadLot: false
+                      })
                     }>
-                    <CloceIcon name='close' color='grey' />
+                    <CloseIcon size='16' name='close' color='#dee2e6' />
                   </DivIcon>
                 }
                 id={'field_input_documents.documentType'}
                 hideAttachments
                 edit={getSafe(() => idForm, 0)} //sidebarValues.id
-                attachments={values.attachments}
+                attachments={attachmentFiles}
                 name={setFieldNameAttachments}
                 type={this.state.documentType}
                 filesLimit={1}
@@ -179,24 +192,32 @@ class DocumentTab extends Component {
                 }}
                 data-test='new_inventory_attachments_drop'
                 emptyContent={
-                  <>
+                  <CustomDiv>
+                    <div>
+                      <UploadCloud size='40' color='#dee2e6' />
+                    </div>
+
                     {formatMessage({ id: 'addInventory.dragDrop' })}
                     <br />
+
                     <FormattedMessage
                       id='addInventory.dragDropOr'
                       defaultMessage={'or {link} to select from computer'}
                       values={{
                         link: (
-                          <a>
+                          <CustomA>
                             <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                          </a>
+                          </CustomA>
                         )
                       }}
                     />
-                  </>
+                  </CustomDiv>
                 }
                 uploadedContent={
-                  <label>
+                  <CustomDiv>
+                    <div>
+                      <UploadCloud size='40' color={'#f5f5f5'} />
+                    </div>
                     <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
                     <br />
                     <FormattedMessage
@@ -204,19 +225,19 @@ class DocumentTab extends Component {
                       defaultMessage={'or {link} to select from computer'}
                       values={{
                         link: (
-                          <a>
+                          <CustomA>
                             <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                          </a>
+                          </CustomA>
                         )
                       }}
                     />
-                  </label>
+                  </CustomDiv>
                 }
               />
             </GridColumn>
-          </GridRow>
+          </CustomGridRow>
         ) : null}
-        <GridRow>
+        <CustomGridRow>
           <GridColumn>
             <ProdexGrid
               virtual={false}
@@ -246,19 +267,7 @@ class DocumentTab extends Component {
                   callback: async row => {
                     try {
                       if (row.linked) {
-                        const unlinkResponse = await removeAttachmentLink(false, idForm, row.id)
-                        toastManager.add(
-                          generateToastMarkup(
-                            <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
-                            <FormattedMessage
-                              id='addInventory.unlinkeAttachment'
-                              defaultMessage='Attachment was successfully unlinked.'
-                            />
-                          ),
-                          {
-                            appearance: 'success'
-                          }
-                        )
+                        const unlinkResponse = await removeAttachmentLink(row.id, idForm)
                         if (unlinkResponse.value.data.lastLink) {
                           confirm(
                             formatMessage({
@@ -277,22 +286,6 @@ class DocumentTab extends Component {
                               // confirm
                               try {
                                 await removeAttachment(row.id)
-                                toastManager.add(
-                                  generateToastMarkup(
-                                    <FormattedMessage
-                                      id='notifications.attachments.deleted.header'
-                                      defaultMessage='File Deleted'
-                                    />,
-                                    <FormattedMessage
-                                      id='notifications.attachments.deleted.content'
-                                      defaultMessage={`File ${row.name} successfully deleted.`}
-                                      values={{ fileName: row.name }}
-                                    />
-                                  ),
-                                  {
-                                    appearance: 'success'
-                                  }
-                                )
                               } catch (e) {
                                 console.error(e)
                               }
@@ -307,6 +300,7 @@ class DocumentTab extends Component {
                         setFieldNameAttachments,
                         values.attachments.filter(o => o.id !== row.id)
                       )
+                      removeAttachmentFromUpload(row.id)
                     } catch (e) {
                       console.error(e)
                     }
@@ -315,7 +309,7 @@ class DocumentTab extends Component {
               ]}
             />
           </GridColumn>
-        </GridRow>
+        </CustomGridRow>
       </Grid>
     )
   }
