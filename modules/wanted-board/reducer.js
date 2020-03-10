@@ -27,6 +27,8 @@ export const initialState = {
   searchedManufacturersLoading: false,
   searchedCasNumbers: [],
   searchedCasNumbersLoading: false,
+  openedSubmitOfferPopup: false,
+  popupValues: null,
 
 
 
@@ -39,6 +41,21 @@ export default function reducer(state = initialState, action) {
   const { type, payload } = action
 
   switch (type) {
+
+    case AT.WB_OPEN_SUBMIT_OFFER: {
+      return {
+        ...state,
+        openedSubmitOfferPopup: true,
+        popupValues: payload
+      }
+    }
+
+    case AT.WB_CLOSE_POPUP: {
+      return {
+        ...state,
+        openedSubmitOfferPopup: false,
+      }
+    }
 
     case AT.WB_CLOSE_DETAIL_SIDEBAR: {
       return {

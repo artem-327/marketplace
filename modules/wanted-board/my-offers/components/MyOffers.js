@@ -14,6 +14,7 @@ import { WantedBoard } from '~/modules/wanted-board/wanted-board'
 import { MyRequestedItems } from '~/modules/wanted-board/my-requested-items'
 import confirm from '~/src/components/Confirmable/confirm'
 import DetailSidebar from './DetailSidebar'
+import { Datagrid } from '~/modules/datagrid'
 
 import { number } from 'prop-types'
 import Link from 'next/link'
@@ -91,8 +92,9 @@ class MyOffers extends Component {
   }
 
   componentDidMount() {
+    this.setState({ filterValue: '' })
     //this.handleFilterClear()
-    //this.initData()
+    this.props.handleFiltersValue('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -102,9 +104,15 @@ class MyOffers extends Component {
     //}
   }
 
+  handleFiltersValue = value => {
+    const { handleFiltersValue } = this.props
+    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    else handleFiltersValue(value)
+  }
+
   handleFilterChange = (e, { value }) => {
     this.setState({ filterValue: value })
-    //this.handleFiltersValue(value)
+    this.handleFiltersValue(value)
   }
 
   renderContent = () => {

@@ -1964,11 +1964,13 @@
   "wantedBoard.quantity": "Quantity",
   "wantedBoard.orderQuantity": "Order Quantity",
   "wantedBoard.orderFrequency": "Order Frequency",
+  "wantedBoard.expirationDate": "Expiration Date",
   "wantedBoard.dealExpired": "Deal Expired",
   "wantedBoard.deliveryLoc": "Delivery Loc",
   "wantedBoard.deliveryLocation": "Delivery Location",
   "wantedBoard.deliveryPriceMax": "Delivery Price Max",
   "wantedBoard.measurement": "Measurement",
+  "wantedBoard.meas": "Meas",
   "wantedBoard.fobQuote": "FOB Quote",
   "wantedBoard.deliveredQuote": "Delivered Quote",
   "wantedBoard.casNumber": "CAS Number",
@@ -2018,7 +2020,8 @@
   "wantedBoard.maxDeliveredPrice": "Max Delivered Price/LB",
   "wantedBoard.specialNotes": "Special Notes",
   "wantedBoard.writeNotesHere": "Write notes here",
-
+  "wantedBoard.submit": "Submit",
+  "wantedBoard.submitOfferHeader": "SUBMIT OFFER",
 
 
 

@@ -25,14 +25,6 @@ export const comparationHelper = (fieldOne, fieldTwo, values, options = {}) => {
 
   let validation = defaultValidation.notRequired().nullable()
 
-  console.log('!!!!!!!!!! aaaaa fieldOne', fieldOne)
-  console.log('!!!!!!!!!! aaaaa fieldOne.propertyName', fieldOne.propertyName)
-  console.log('!!!!!!!!!! aaaaa fieldTwo', fieldTwo)
-  console.log('!!!!!!!!!! aaaaa fieldTwo.propertyName', fieldTwo.propertyName)
-
-  console.log('!!!!!!!!!! aaaaa values[fieldOne.propertyName]', values[fieldOne.propertyName])
-  console.log('!!!!!!!!!! aaaaa values[fieldTwo.propertyName]', values[fieldTwo.propertyName])
-
   return {
     [fieldOne.propertyName]: Yup.lazy(() => {
       if (values[fieldTwo.propertyName]) {

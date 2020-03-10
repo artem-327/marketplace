@@ -34,13 +34,20 @@ export const deleteMyOfferItem = (id) => {
   }
 }
 
-export const SubmitOfferWantedBoard = (id) => {
-  console.log('!!!!!!!!!! SubmitOfferWantedBoard id', id)
+export const openSubmitOffer = (row) => {
+  console.log('!!!!!!!!!! OpenSubmitOffer id', row)
   return {
-    type: AT.WB_SUBMIT_OFFER_WANTED_BOARD,
-    payload: id
+    type: AT.WB_OPEN_SUBMIT_OFFER,
+    payload: row
   }
 }
+export const closePopup = () => {
+  console.log('!!!!!!!!!! ClosePopup')
+  return {
+    type: AT.WB_CLOSE_POPUP
+  }
+}
+
 
 export const purchaseRequestedItem = (id) => {
   console.log('!!!!!!!!!! purchaseRequestedItem id', id)

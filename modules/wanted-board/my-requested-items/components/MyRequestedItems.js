@@ -36,9 +36,18 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
 
 class MyRequestedItems extends Component {
   state = {
-    columnsProduct: [
+    columns: [
       //{ name: 'productName', disabled: true },
       //{ name: 'productNumber', disabled: true },
+      {
+        name: 'product',
+        title: (
+          <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 304
+      },
       {
         name: 'casNumber',
         title: (
@@ -46,8 +55,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 225,
-        disabled: true
+        width: 225
       },
       {
         name: 'assay',
@@ -56,19 +64,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 80,
-        disabled: true
-      },
-      {
-        name: 'product',
-        title: (
-          <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 304,
-        //align: 'right',
-        //sortPath: 'ProductOffer.pkgAvailable'
+        width: 80
       },
       {
         name: 'orderQuantity',
@@ -182,152 +178,6 @@ class MyRequestedItems extends Component {
         width: 145,
       }
     ],
-    columnsChemical: [
-      //{ name: 'productName', disabled: true },
-      //{ name: 'productNumber', disabled: true },
-      {
-        name: 'product',
-        title: (
-          <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 304,
-        disabled: true
-      },
-      {
-        name: 'casNumber',
-        title: (
-          <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 225,
-        //align: 'right',
-        //sortPath: 'ProductOffer.pkgAvailable'
-      },
-      {
-        name: 'assay',
-        title: (
-          <FormattedMessage id='wantedBoard.assay' defaultMessage='Assay'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 80,
-      },
-      {
-        name: 'orderQuantity',
-        title: (
-          <FormattedMessage id='wantedBoard.orderQuantity' defaultMessage='Order Quantity'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 145,
-      },
-      {
-        name: 'orderFrequency',
-        title: (
-          <FormattedMessage id='wantedBoard.orderFrequency' defaultMessage='orderFrequency'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 160,
-      },
-      {
-        name: 'neededBy',
-        title: (
-          <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 110,
-      },
-      {
-        name: 'dealExpired',
-        title: (
-          <FormattedMessage id='wantedBoard.dealExpired' defaultMessage='Deal Expired'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 130,
-      },
-      {
-        name: 'manufacturer',
-        title: (
-          <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 130,
-      },
-      {
-        name: 'condition',
-        title: (
-          <FormattedMessage id='wantedBoard.condition' defaultMessage='Condition'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120,
-      },
-      {
-        name: 'deliveryLocation',
-        title: (
-          <FormattedMessage id='wantedBoard.deliveryLoc' defaultMessage='Delivery Loc'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120,
-      },
-      {
-        name: 'packaging',
-        title: (
-          <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 110,
-      },
-      {
-        name: 'deliveryPriceMax',
-        title: (
-          <FormattedMessage id='wantedBoard.deliveryPriceMax' defaultMessage='Delivery Price Max'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        align: 'right',
-        width: 170,
-      },
-      {
-        name: 'measurement',
-        title: (
-          <FormattedMessage id='wantedBoard.measurement' defaultMessage='Measurement'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 135,
-      },
-      {
-        name: 'fobQuote',
-        title: (
-          <FormattedMessage id='wantedBoard.fobQuote' defaultMessage='FOB Quote'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        align: 'right',
-        width: 110,
-      },
-      {
-        name: 'deliveredQuote',
-        title: (
-          <FormattedMessage id='wantedBoard.deliveredQuote' defaultMessage='Delivered Quote'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        align: 'right',
-        width: 145,
-      }
-    ],
-
 
     displayColumns: 'product',
     selectedRows: [],
@@ -338,15 +188,9 @@ class MyRequestedItems extends Component {
 
 
   componentDidMount() {
-    //this.handleFilterClear()
-    //this.initData()
     this.setState({ filterValue: '' })
-    this.handleFilterClear()
-  }
-
-  handleFilterClear = () => {
-    //! !this.props.applyFilter({ filters: [] })
-    //! !this.props.datagrid.setFilter({ filters: [] })
+    //this.handleFilterClear()
+    this.props.handleFiltersValue('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -371,14 +215,11 @@ class MyRequestedItems extends Component {
     const { datagrid, intl, rows, editedId, sidebarDetailTrigger } = this.props
     const {
       displayColumns,
-      columnsProduct,
-      columnsChemical,
+      columns,
       selectedRows,
       filterValue
     } = this.state
     let { formatMessage } = intl
-
-    console.log('!!!!!!!!!! aaaaa this.props', this.props)
 
     return (
       <>
@@ -398,7 +239,7 @@ class MyRequestedItems extends Component {
                 />
               </GridColumn>
               <GridColumn floated='right' width={3}>
-                <ProductChemicalSwitch className={displayColumns}>
+                {false && (<ProductChemicalSwitch className={displayColumns}>
                   <Button
                     attached='left'
                     onClick={() => this.setState({ displayColumns: 'product'})}
@@ -415,7 +256,7 @@ class MyRequestedItems extends Component {
                       {text => text}
                     </FormattedMessage>
                   </Button>
-                </ProductChemicalSwitch>
+                </ProductChemicalSwitch>)}
               </GridColumn>
               <GridColumn floated='right' width={2}>
                 <Button
@@ -436,7 +277,7 @@ class MyRequestedItems extends Component {
             tableName='my_requested_items_grid'
             {...datagrid.tableProps}
             rows={rows}
-            columns={displayColumns === 'product' ? columnsProduct : columnsChemical}
+            columns={columns}
             rowSelection
             showSelectionColumn
             rowActions={[

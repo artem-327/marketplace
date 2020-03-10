@@ -7,7 +7,7 @@ export const MyRequestedItems = props => {
     searchToFilter: v =>
       v
         ? [
-          { operator: 'LIKE', path: 'PurchaseRequestElement.echoProduct.name', values: [`%${v}%`] },
+          //{ operator: 'LIKE', path: 'PurchaseRequestElement.echoProduct.name', values: [`%${v}%`] },
           //{ operator: 'LIKE', path: 'PurchaseRequestElement.casProduct.casNumber', values: [`%${v}%`] }
         ]
         : [],
