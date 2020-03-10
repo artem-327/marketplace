@@ -30,7 +30,9 @@ context("Companies CRUD", () => {
             })
         })
 
+        cy.waitForUI()
         cy.clickAdd()
+        cy.waitForUI()
 
         cy.enterText("#field_input_name", "Donald The Ducks")
         cy.enterText("#field_input_website", "https://www.donald.com/")

@@ -40,7 +40,7 @@ context("Prodex Bank Account CRUD", () => {
         cy.clickSave()
 
         cy.wait("@verifyLoading")
-        cy.contains("Created Bank Account")
+        cy.contains("Info!")
     })
 
     it("Initiate Verification bank account", () => {
@@ -56,7 +56,7 @@ context("Prodex Bank Account CRUD", () => {
 
         cy.wait("@verifyLoading")
 
-        cy.contains("Verification in process")
+        cy.contains("Info!")
     })
 
     it("Complete Verification bank account", () => {

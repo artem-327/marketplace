@@ -181,8 +181,6 @@ context("Inventory CRUD", () => {
 
         cy.get("[data-test=sidebar_inventory_save_new]").click()
 
-        cy.wait("@inventoryLoading")
-
         cy.contains("20")
         cy.contains("Houston Warehouse")
         cy.contains("5")

@@ -31,7 +31,7 @@ context("Form CRUD", () => {
 
         cy.enterText("#field_input_val0", "Liquor")
         cy.clickSave()
-        cy.contains("Form created")
+        cy.contains("Info!")
 
         cy.getToken().then(token => {
             cy.getFirstFormWithFilter(token, filter).then(itemId => {
@@ -53,7 +53,7 @@ context("Form CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Updated Form")
+        cy.contains("Info!")
 
         cy.openElement(formId, 0)
 

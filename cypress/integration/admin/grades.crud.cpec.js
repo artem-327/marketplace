@@ -31,7 +31,7 @@ context("Grades CRUD", () => {
 
         cy.enterText("#field_input_val0", "Test grade")
         cy.clickSave()
-        cy.contains("Grade created")
+        cy.contains("Info!")
 
         cy.get("input[type=text]").eq(0).type("Test", {force: true})
 
@@ -57,7 +57,7 @@ context("Grades CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Updated Grade")
+        cy.contains("Info!")
 
         cy.openElement(gradeId, 0)
 

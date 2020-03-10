@@ -38,7 +38,7 @@ context("Units of measure CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Unit of Measurement created")
+        cy.contains("Info!")
     })
 
     it("Edits unit of measure", () => {
@@ -57,7 +57,7 @@ context("Units of measure CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Updated Unit of Measurement")
+        cy.contains("Info!")
     })
 
     it("Checks error messages", () => {

@@ -56,7 +56,7 @@ context("Company Product Catalog CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Created Product")
+        cy.contains("Info!")
         cy.reload()
         cy.wait("@productLoading")
         cy.waitForUI()
