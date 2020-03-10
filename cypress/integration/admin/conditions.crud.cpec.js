@@ -2,6 +2,7 @@ context("Conditions CRUD", () => {
 
     let conditionId = null
     let filter = [{"operator": "LIKE", "path": "ProductCondition.name", "values": ["%Half%"]}]
+    let filterUpdate = [{"operator": "LIKE", "path": "ProductCondition.name", "values": ["%Spilled%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
@@ -23,6 +24,10 @@ context("Conditions CRUD", () => {
     it("Creates a condition", () => {
         cy.getToken().then(token => {
             cy.getFirstEntityWithFilter(token, 'product-conditions', filter).then(itemId => {
+                if (itemId != null)
+                    cy.deleteEntity(token, 'product-conditions', itemId)
+            })
+            cy.getFirstEntityWithFilter(token, 'product-conditions', filterUpdate).then(itemId => {
                 if (itemId != null)
                     cy.deleteEntity(token, 'product-conditions', itemId)
             })
