@@ -437,7 +437,7 @@ class WarehouseSidebar extends React.Component {
                   </Menu>
                 </CustomHighSegment>
               </div>
-              <FlexContent>
+              <FlexContent style={{ padding: '16px' }}>
                 <Segment basic>{this.getContent(formikProps)}</Segment>
               </FlexContent>
               <CustomDiv>
