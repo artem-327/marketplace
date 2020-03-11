@@ -41,11 +41,12 @@ import {
   getDocumentTypes,
   addAttachment,
   loadFile,
-  removeAttachmentLink,
   removeAttachment,
   downloadAttachment,
   closeSidebarDetail,
-  getProductOffer
+  getProductOffer,
+  attachmentLinksToProductOffer,
+  removeAttachmentLinkProductOffer
 } from '../actions'
 import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
@@ -365,7 +366,8 @@ class DetailSidebar extends Component {
     openUploadLot: false,
     edited: false,
     sidebarValues: null,
-    initValues: initValues
+    initValues: initValues,
+    attachmentFiles: []
   }
 
   componentDidMount = async () => {
@@ -628,12 +630,11 @@ class DetailSidebar extends Component {
   }, 250)
 
   submitForm = async (values, setSubmitting, setTouched, savedButtonClicked = false) => {
-    const { addProductOffer, datagrid, toastManager } = this.props
-    const { sidebarValues } = this.state
+    const { addProductOffer, datagrid, toastManager, attachmentLinksToProductOffer } = this.props
+    const { sidebarValues, attachmentFiles } = this.state
     let isEdit = getSafe(() => sidebarValues.id, null)
     let isGrouped = getSafe(() => sidebarValues.grouped, false)
     let sendSuccess = false
-
     await new Promise(resolve => this.setState({ edited: false }, resolve))
 
     setSubmitting(false)
@@ -644,7 +645,6 @@ class DetailSidebar extends Component {
       case 3:
         props = {
           ...values.edit,
-          ...values.documents,
           expirationDate: values.edit.doesExpire ? getStringISODate(values.edit.expirationDate) : null,
           leadTime: values.edit.leadTime,
           lotExpirationDate: values.edit.lotExpirationDate ? getStringISODate(values.edit.lotExpirationDate) : null,
@@ -672,10 +672,14 @@ class DetailSidebar extends Component {
         this.setState({ changedForm: false, edited: false })
         break
     }
+
     if (Object.keys(props).length) {
       try {
         let data = await addProductOffer(props, isEdit, false, isGrouped)
         if (isEdit) {
+          if (attachmentFiles && attachmentFiles.length) {
+            attachmentFiles.forEach(attachment => attachmentLinksToProductOffer(attachment.id, isEdit))
+          }
           datagrid.updateRow(data.value.id, () => data.value)
         } else {
           datagrid.loadData()
@@ -715,7 +719,7 @@ class DetailSidebar extends Component {
         }
       } finally {
         setTouched({})
-        this.setState({ changedForm: false })
+        this.setState({ changedForm: false, attachmentFiles: [] })
       }
     }
     return sendSuccess
@@ -1015,7 +1019,7 @@ class DetailSidebar extends Component {
       removeAttachment,
       loadFile,
       addAttachment,
-      removeAttachmentLink
+      removeAttachmentLinkProductOffer
     } = this.props
 
     const leftWidth = 6
@@ -1669,17 +1673,31 @@ class DetailSidebar extends Component {
                               </Menu.Item>
                             ),
                             pane: (
-                              <Tab.Pane key='documents' style={{ padding: '18px' }}>
+                              <Tab.Pane key='documents' style={{ padding: '16px' }}>
                                 <DocumentTab
                                   listDocumentTypes={listDocumentTypes}
-                                  values={values}
+                                  values={values.documents}
                                   setFieldValue={setFieldValue}
-                                  setFieldNameAttachments='attachments'
-                                  tableName='warehouse_attachments'
-                                  removeAttachmentLink={removeAttachmentLink}
+                                  setFieldNameAttachments='documents.attachments'
+                                  dropdownName='documents.documentType'
+                                  removeAttachmentLink={removeAttachmentLinkProductOffer}
                                   removeAttachment={removeAttachment}
                                   addAttachment={addAttachment}
                                   loadFile={loadFile}
+                                  changedForm={files =>
+                                    this.setState(prevState => ({
+                                      changedForm: true,
+                                      attachmentFiles: prevState.attachmentFiles.concat(files)
+                                    }))
+                                  }
+                                  idForm={getSafe(() => sidebarValues.id, 0)}
+                                  attachmentFiles={this.state.attachmentFiles}
+                                  removeAttachmentFromUpload={id => {
+                                    const attachmentFiles = this.state.attachmentFiles.filter(
+                                      attachment => attachment.id !== id
+                                    )
+                                    this.setState({ attachmentFiles })
+                                  }}
                                 />
                               </Tab.Pane>
                             )
@@ -1929,11 +1947,12 @@ const mapDispatchToProps = {
   openBroadcast,
   addAttachment,
   loadFile,
-  removeAttachmentLink,
   removeAttachment,
   downloadAttachment,
   closeSidebarDetail,
-  getProductOffer
+  getProductOffer,
+  attachmentLinksToProductOffer,
+  removeAttachmentLinkProductOffer
 }
 
 const mapStateToProps = ({

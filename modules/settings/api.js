@@ -205,5 +205,7 @@ export default {
     api.delete(`/prodex/api/attachment-links/to-company-product?attachmentId=${aId}&companyProductId=${itemId}`),
   attachmentLinksToBranch: (attachmentId, branchId) =>
     api.post(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&branchId=${branchId}`),
-  getBranch: branchId => api.get(`/prodex/api/branches/${branchId}`)
+  getBranch: branchId => api.get(`/prodex/api/branches/${branchId}`),
+  removeAttachmentLinkToBranch: (attachmentId, branchId) =>
+    api.delete(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&companyProductId=${branchId}`)
 }
