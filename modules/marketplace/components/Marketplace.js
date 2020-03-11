@@ -47,6 +47,11 @@ const RedTriangle = styled(AlertTriangle)`
   }
 `
 
+const MarketplaceTab = styled(Tab)`
+  flex-grow: 1;
+  flex-shrink: 1;
+`
+
 class Marketplace extends Component {
   state = {
     columns: [
@@ -462,7 +467,7 @@ class Marketplace extends Component {
       <>
         {!tutorialCompleted && <Tutorial />}
         <Container fluid style={{ padding: '0 32px' }} className='flex stretched'>
-          <Tab
+          <MarketplaceTab
             activeIndex={activeIndex}
             className='marketplace-container'
             menu={{ secondary: true, pointing: true }}
