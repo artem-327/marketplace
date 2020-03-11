@@ -377,7 +377,7 @@ class Broadcast extends Component {
                     />
                   }
                 />
-                <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Broadcasting To' />:{' '}
+                <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Visible to' />:{' '}
                 <strong>
                   {broadcastingTo}/{total}
                 </strong>
