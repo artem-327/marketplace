@@ -9,7 +9,7 @@ import {
   getProvinces,
   getAddressSearch,
   removeEmpty,
-  removeAttachmentLink,
+  removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
   loadFile,
@@ -81,7 +81,8 @@ const formValidation = () =>
 
 class WarehouseSidebar extends React.Component {
   state = {
-    editTab: 0
+    editTab: 0,
+    attachmentFiles: []
   }
   componentDidMount() {
     const { popupValues, getProvinces, openTab } = this.props
@@ -100,8 +101,16 @@ class WarehouseSidebar extends React.Component {
   }
 
   submitHandler = async (values, actions) => {
-    let { popupValues, currentTab } = this.props
-    const { handlerSubmitWarehouseEditPopup, postNewWarehouseRequest, attachmentLinksToBranch } = this.props
+    const {
+      popupValues,
+      currentTab,
+      handlerSubmitWarehouseEditPopup,
+      postNewWarehouseRequest,
+      attachmentLinksToBranch
+    } = this.props
+    const { attachmentFiles } = this.state
+
+    delete values.attachments
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
     let requestData = {}
     if (currentTab.type === 'branches') {
@@ -144,8 +153,8 @@ class WarehouseSidebar extends React.Component {
 
     try {
       if (popupValues) {
-        if (values.attachments.length) {
-          values.attachments.forEach(attachment => {
+        if (attachmentFiles.length) {
+          attachmentFiles.forEach(attachment => {
             attachmentLinksToBranch(attachment.id, popupValues.id)
           })
         }
@@ -339,7 +348,7 @@ class WarehouseSidebar extends React.Component {
   }
 
   renderCertificates = formikProps => {
-    const { removeAttachmentLink, removeAttachment, addAttachment, loadFile } = this.props
+    const { removeAttachmentLinkToBranch, removeAttachment, addAttachment, loadFile, popupValues } = this.props
     const { setFieldValue, values } = formikProps
     return (
       <>
@@ -352,11 +361,22 @@ class WarehouseSidebar extends React.Component {
             values={values}
             setFieldValue={setFieldValue}
             setFieldNameAttachments='attachments'
-            tableName='warehouse_attachments'
-            removeAttachmentLink={removeAttachmentLink}
+            dropdownName='documentType'
+            removeAttachmentLink={removeAttachmentLinkToBranch}
             removeAttachment={removeAttachment}
             addAttachment={addAttachment}
             loadFile={loadFile}
+            changedForm={files =>
+              this.setState(prevState => ({
+                attachmentFiles: prevState.attachmentFiles.concat(files)
+              }))
+            }
+            idForm={getSafe(() => popupValues.id, 0)}
+            attachmentFiles={this.state.attachmentFiles}
+            removeAttachmentFromUpload={id => {
+              const attachmentFiles = this.state.attachmentFiles.filter(attachment => attachment.id !== id)
+              this.setState({ attachmentFiles })
+            }}
           />
         }
       </>
@@ -437,7 +457,7 @@ class WarehouseSidebar extends React.Component {
                   </Menu>
                 </CustomHighSegment>
               </div>
-              <FlexContent>
+              <FlexContent style={{ padding: '16px' }}>
                 <Segment basic>{this.getContent(formikProps)}</Segment>
               </FlexContent>
               <CustomDiv>
@@ -473,7 +493,7 @@ const mapDispatchToProps = {
   getProvinces,
   getAddressSearch,
   removeEmpty,
-  removeAttachmentLink,
+  removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
   loadFile,

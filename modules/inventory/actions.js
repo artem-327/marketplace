@@ -51,6 +51,13 @@ export const updateAttachment = (id, payload) => {
   }
 }
 
+export const attachmentLinksToProductOffer = (attachmentId, productOfferId) => ({
+  type: AT.ATTACHMENT_LINKS_TO_PRODUCT_OFFER,
+  async payload() {
+    return await api.attachmentLinksToProductOffer(attachmentId, productOfferId)
+  }
+})
+
 export function addProductOffer(values, poId = false, simple = false, isGrouped = false) {
   let params = {}
 
@@ -442,5 +449,14 @@ export function applyDatagridFilter(filter) {
   return {
     type: AT.INVENTORY_APPLY_FILTER,
     payload: filter
+  }
+}
+
+export function removeAttachmentLinkProductOffer(attachmentId, productOfferId) {
+  return {
+    type: AT.INVENTORY_REMOVE_ATTACHMENT_LINK_PRODUCT_OFFER,
+    async payload() {
+      return await api.removeAttachmentLinkProductOffer(attachmentId, productOfferId)
+    }
   }
 }

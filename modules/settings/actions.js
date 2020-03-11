@@ -1081,6 +1081,15 @@ export const attachmentLinksToBranch = (attachmentId, branchId) => ({
   }
 })
 
+export function removeAttachmentLinkToBranch(attachmentId, branchId) {
+  return {
+    type: AT.REMOVE_ATTACHMENT_LINK_TO_BRANCH,
+    async payload() {
+      return await api.removeAttachmentLinkToBranch(attachmentId, branchId)
+    }
+  }
+}
+
 export const getBranch = branchId => ({
   type: AT.GET_BRANCH,
   payload: api.getBranch(branchId)
