@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { withRouter } from 'next/router'
 import { FormattedMessage } from 'react-intl'
 import { Button } from 'semantic-ui-react'
@@ -7,8 +8,11 @@ import Cookies from 'universal-cookie'
 import Router from 'next/router'
 import { withToastManager } from 'react-toast-notifications'
 import styled from 'styled-components'
+import { updateMyProfile } from '~/modules/profile/actions'
+import { tabChanged } from '~/modules/settings/actions'
+import { defaultTabs } from '~/modules/settings/contants'
 
-import { generateToastMarkup } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 
 const Rectangle = styled.div`
   border-radius: 4px;
@@ -144,34 +148,53 @@ class Tutorial extends Component {
     return nextTab
   }
 
-  handleSetCookies = (e, skip) => {
+  handleSetCookies = async (e, skip) => {
     e.preventDefault()
-    const { toastManager } = this.props
+    const { toastManager, updateMyProfile, request, tabChanged } = this.props
+    // array of tabsNames converted to Map
+    let tabsNamesMap = new Map()
+    if (defaultTabs && defaultTabs.length) {
+      for (let i in defaultTabs) {
+        tabsNamesMap.set(defaultTabs[i].type, defaultTabs[i])
+      }
+    }
 
     const cookieTutorialTabs = cookies.get('tutorial')
 
     if (cookieTutorialTabs && cookieTutorialTabs.length) {
       // if completed all tutorial tabs (index is more than 7)
       if (!tutorialTabs[cookieTutorialTabs.length + 1]) {
-        toastManager.add(
-          generateToastMarkup(
-            <FormattedMessage id='tutorial.congratulation.title' defaultMessage='Congratulations!' />,
-            <FormattedMessage
-              id='tutorial.congratulation.content'
-              defaultMessage='Congratulations, you have finished the setup!'
-            />
-          ),
-          {
-            appearance: 'success'
-          }
-        )
+        const newRequest = { ...request, tutorialCompleted: true }
+        try {
+          await updateMyProfile(newRequest)
+          cookies.remove('tutorial', { path: '/' })
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id='tutorial.congratulation.title' defaultMessage='Congratulations!' />,
+              <FormattedMessage
+                id='tutorial.congratulation.content'
+                defaultMessage='Congratulations, you have finished the setup!'
+              />
+            ),
+            {
+              appearance: 'success'
+            }
+          )
+        } catch (error) {
+          console.error(error)
+        }
+      } else {
+        !skip && Router.push(urlTabs[cookieTutorialTabs.length])
+        const tabType = urlTabs[cookieTutorialTabs.length].split('=')[1]
+        !skip && tutorialTabs[cookieTutorialTabs.length] !== 'inventory' && tabChanged(tabsNamesMap.get(tabType))
+
+        cookies.set('tutorial', [...cookieTutorialTabs, this.getNextTab()], { path: '/' }) // set all existing cookies + next checked tab
+        this.setState({ tutorialTab: tutorialTabs[cookieTutorialTabs.length + 1] }) // set another tutorial tab for show correct content and icons in tab
       }
-      !skip && Router.push(urlTabs[cookieTutorialTabs.length])
-      cookies.set('tutorial', [...cookieTutorialTabs, this.getNextTab()]) // set all existing cookies + next checked tab
-      this.setState({ tutorialTab: tutorialTabs[cookieTutorialTabs.length + 1] }) // set another tutorial tab for show correct content and icons in tab
     } else {
       !skip && Router.push(urlTabs[0])
-      cookies.set('tutorial', [this.getNextTab()]) // set first checked tab 'branches'
+      !skip && tabChanged(tabsNamesMap.get('branches'))
+      cookies.set('tutorial', [this.getNextTab()], { path: '/' }) // set first checked tab 'branches'
       this.setState({ tutorialTab: tutorialTabs[1] }) // set second tutorial tab after checked first tab
     }
   }
@@ -260,4 +283,20 @@ class Tutorial extends Component {
   }
 }
 
-export default withToastManager(withRouter(Tutorial))
+const mapDispatchToProps = {
+  updateMyProfile,
+  tabChanged
+}
+
+const mapStateToProps = state => {
+  return {
+    request: {
+      name: getSafe(() => state.auth.identity.name, ''),
+      phone: getSafe(() => state.auth.identity.phone, ''),
+      preferredCurrency: getSafe(() => state.auth.identity.preferredCurrency.id, 1),
+      tutorialCompleted: getSafe(() => state.auth.identity.tutorialCompleted, false)
+    }
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withToastManager(Tutorial)))

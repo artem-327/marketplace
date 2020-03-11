@@ -981,6 +981,7 @@ class Orders extends Component {
       queryType,
       router,
       datagrid,
+      tutorialCompleted,
       intl: { formatMessage }
     } = this.props
 
@@ -989,7 +990,7 @@ class Orders extends Component {
 
     return (
       <div id='page' className='flex stretched scrolling'>
-        <Tutorial />
+        {!tutorialCompleted && <Tutorial />}
         {openModal && (
           <Modal
             closeIcon={false}

@@ -482,13 +482,13 @@ class Settings extends Component {
   }
 
   render() {
-    const { currentTab } = this.props
+    const { currentTab, tutorialCompleted } = this.props
 
     return (
       !this.state.wrongUrl && (
         <DatagridProvider apiConfig={this.getApiConfig()}>
           <Container fluid className='flex stretched'>
-            <Tutorial />
+            {!tutorialCompleted && <Tutorial />}
             <Container fluid style={{ padding: '0 1.5vh' }}>
               <TablesHandlers currentTab={currentTab} />
             </Container>
@@ -511,7 +511,8 @@ const mapStateToProps = ({ settings, auth }) => {
     company: auth.identity ? auth.identity.company : null,
     currentTab: settings.currentTab,
     isProductCatalogAdmin: getSafe(() => auth.identity.isProductCatalogAdmin, false),
-    isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false)
+    isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
+    tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false)
   }
 }
 

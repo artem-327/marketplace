@@ -434,7 +434,7 @@ class Marketplace extends Component {
   }
 
   render() {
-    const { activeIndex } = this.props
+    const { activeIndex, tutorialCompleted } = this.props
 
     const panes = [
       {
@@ -460,7 +460,7 @@ class Marketplace extends Component {
     ]
     return (
       <>
-        <Tutorial />
+        {!tutorialCompleted && <Tutorial />}
         <Container fluid style={{ padding: '0 32px' }} className='flex stretched'>
           <Tab
             activeIndex={activeIndex}

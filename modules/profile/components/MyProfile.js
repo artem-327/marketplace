@@ -49,7 +49,9 @@ class MyProfile extends Component {
       popupValues,
       intl: { formatMessage },
       languages,
-      languagesFetching
+      languagesFetching,
+      preferredCurrency,
+      tutorialCompleted
     } = this.props
 
     return (
@@ -73,8 +75,9 @@ class MyProfile extends Component {
 
                 let payload = {
                   name,
-                  phone
-                  //  preferredCurrency
+                  phone,
+                  preferredCurrency, //from props, not from form
+                  tutorialCompleted //from props, not from form
                 }
 
                 if (values.language)
@@ -204,7 +207,9 @@ const mapStateToProps = state => {
     // }),
     changePasswordPopup: state.profile.changePasswordPopup,
     languages: state.settings.languages,
-    languagesFetching: state.settings.languagesFetching
+    languagesFetching: state.settings.languagesFetching,
+    preferredCurrency: getSafe(() => state.auth.identity.preferredCurrency.id, 1),
+    tutorialCompleted: getSafe(() => state.auth.identity.tutorialCompleted, false)
   }
 }
 
