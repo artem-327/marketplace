@@ -216,7 +216,7 @@ class DocumentTab extends Component {
                 uploadedContent={
                   <CustomDiv>
                     <div>
-                      <UploadCloud size='40' color={'#f5f5f5'} />
+                      <UploadCloud size='40' color='#dee2e6' />
                     </div>
                     <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
                     <br />

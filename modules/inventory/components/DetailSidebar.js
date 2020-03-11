@@ -645,7 +645,6 @@ class DetailSidebar extends Component {
       case 3:
         props = {
           ...values.edit,
-          ...values.documents,
           expirationDate: values.edit.doesExpire ? getStringISODate(values.edit.expirationDate) : null,
           leadTime: values.edit.leadTime,
           lotExpirationDate: values.edit.lotExpirationDate ? getStringISODate(values.edit.lotExpirationDate) : null,
