@@ -48,6 +48,7 @@ import { DatagridProvider } from '~/modules/datagrid'
 
 import { withToastManager } from 'react-toast-notifications'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
+import Tutorial from '~/modules/tutorial/Tutorial'
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
@@ -482,12 +483,13 @@ class Settings extends Component {
   }
 
   render() {
-    const { currentTab } = this.props
+    const { currentTab, tutorialCompleted } = this.props
 
     return (
       !this.state.wrongUrl && (
         <DatagridProvider apiConfig={this.getApiConfig()}>
           <Container fluid className='flex stretched'>
+            {!tutorialCompleted && <Tutorial />}
             <Container fluid style={{ padding: '0 1.5vh' }}>
               <TablesHandlers currentTab={currentTab} />
             </Container>
@@ -510,7 +512,8 @@ const mapStateToProps = ({ settings, auth }) => {
     company: auth.identity ? auth.identity.company : null,
     currentTab: settings.currentTab,
     isProductCatalogAdmin: getSafe(() => auth.identity.isProductCatalogAdmin, false),
-    isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false)
+    isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
+    tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false)
   }
 }
 
