@@ -319,7 +319,7 @@ class Settings extends Component {
 
     return (
       <>
-        {isOpenPopup || (isOpenSidebar && popupForm[currentTab.type])}
+        {(isOpenPopup || isOpenSidebar) && popupForm[currentTab.type]}
         {isOpenImportPopup && importForm[currentTab.type]}
         {isOpenUploadDocumentsPopup && uploadDocForms[currentTab.type]}
         {/* {isDwollaOpenPopup && addDwollaForms[currentTab.type] && Router.push('/dwolla-register')} */}

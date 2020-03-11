@@ -1066,6 +1066,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentTab: payload,
+        isOpenSidebar: false,
         filterValue: state.currentTab !== payload ? '' : state.filterValue,
         tabClicked: !state.tabClicked
       }
