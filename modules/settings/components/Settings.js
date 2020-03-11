@@ -11,7 +11,7 @@ import WarehouseTable from './WarehouseTable/WarehouseTable'
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable'
 import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
-import EditWarehousePopup from './WarehouseTable/WarehousePopup'
+import EditWarehouseSidebar from './WarehouseTable/WarehouseSidebar'
 import EditUsersPopup from './UserTable/UsersPopup'
 import EditProductPopup from './ProductCatalogTable/ProductPopup'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
@@ -66,7 +66,8 @@ const ScrollableSegment = styled(Segment)`
 
 const SettingsGrid = styled(Grid)`
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
+  padding-bottom: 1em !important;
 
   > .row {
     height: calc(100% + 1px) !important;
@@ -85,6 +86,14 @@ const SettingsGrid = styled(Grid)`
       }
     }
   }
+`
+
+const CustomGridColumn = styled(Grid.Column)`
+  > form + .ui.segment {
+    margin-top: 0;
+  }
+  padding-top: '10px';
+  padding-bottom: '10px';
 `
 
 class Settings extends Component {
@@ -259,7 +268,8 @@ class Settings extends Component {
       isOpenUploadDocumentsPopup,
       isDwollaOpenPopup,
       isUserAdmin,
-      isProductCatalogAdmin
+      isProductCatalogAdmin,
+      isOpenSidebar
     } = this.props
 
     const tables = {
@@ -285,8 +295,8 @@ class Settings extends Component {
 
     const popupForm = {
       users: <EditUsersPopup />,
-      branches: <EditWarehousePopup />,
-      warehouses: <EditWarehousePopup />,
+      branches: <EditWarehouseSidebar />,
+      warehouses: <EditWarehouseSidebar />,
       products: <EditProductPopup />,
       'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsPopup />,
@@ -310,7 +320,7 @@ class Settings extends Component {
 
     return (
       <>
-        {isOpenPopup && popupForm[currentTab.type]}
+        {isOpenPopup || (isOpenSidebar && popupForm[currentTab.type])}
         {isOpenImportPopup && importForm[currentTab.type]}
         {isOpenUploadDocumentsPopup && uploadDocForms[currentTab.type]}
         {/* {isDwollaOpenPopup && addDwollaForms[currentTab.type] && Router.push('/dwolla-register')} */}
@@ -484,9 +494,7 @@ class Settings extends Component {
             </Container>
             <SettingsGrid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
               <Grid.Row>
-                <Grid.Column className='flex stretched' style={{ paddingTop: '10px', paddingBottom: '10px' }}>
-                  {this.renderContent()}
-                </Grid.Column>
+                <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
               </Grid.Row>
             </SettingsGrid>
           </Container>

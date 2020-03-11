@@ -4,7 +4,7 @@ import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 
 export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async offer => {
-  const { data } = await api.loadRules(offer.id)
+  const data = await api.loadRules(offer.id)
 
   return {
     data,

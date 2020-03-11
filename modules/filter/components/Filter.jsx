@@ -184,7 +184,7 @@ class Filter extends Component {
         path: filter.path,
         values: filter.values.map(val => val.value)
       })),
-      pageNumber: savedFilter.pageNumber,
+      //pageNumber: savedFilter.pageNumber,
       pageSize: 50
     }
   }
@@ -432,9 +432,7 @@ class Filter extends Component {
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
       {text}
       <IconRight>
-        <Icon
-          name={!this.state.inactiveAccordion[name] ? 'chevron down' : 'chevron right'}
-        />
+        <Icon name={!this.state.inactiveAccordion[name] ? 'chevron down' : 'chevron right'} />
       </IconRight>
     </AccordionTitle>
   )
@@ -447,12 +445,9 @@ class Filter extends Component {
   inputWrapper = (name, inputProps, label, labelText) => {
     return (
       <InputWrapper>
-        {label && (<div className='field-label'>{label}</div>)}
+        {label && <div className='field-label'>{label}</div>}
         <div>
-          <Input
-            inputProps={inputProps}
-            name={name}
-          />
+          <Input inputProps={inputProps} name={name} />
           <Label>{labelText}</Label>
         </div>
       </InputWrapper>
@@ -462,7 +457,7 @@ class Filter extends Component {
   quantityWrapper = (name, { values, setFieldValue, setFieldTouched, label }) => {
     return (
       <QuantityWrapper>
-        {label && (<div className='field-label'>{label}</div>)}
+        {label && <div className='field-label'>{label}</div>}
         <div>
           <Input
             name={name}
@@ -479,28 +474,28 @@ class Filter extends Component {
                 if (isNaN(values[name]) || values[name] === '') {
                   setFieldValue(name, 1)
                   setFieldTouched(name, true, true)
-                }
-                else {
+                } else {
                   setFieldValue(name, parseInt(values[name]) + 1)
                   setFieldTouched(name, true, true)
                 }
-              }}
-            >+</Button>
+              }}>
+              +
+            </Button>
             <Button
               type='button'
               className='buttonMinus'
               onClick={() => {
-                if (isNaN(values[name]) || values[name] === '' ) {
+                if (isNaN(values[name]) || values[name] === '') {
                   setFieldValue(name, 1)
                   setFieldTouched(name, true, true)
-                }
-                else {
+                } else {
                   const value = parseInt(values[name])
                   if (value > 1) setFieldValue(name, value - 1)
                   setFieldTouched(name, true, true)
                 }
-              }}
-            >-</Button>
+              }}>
+              -
+            </Button>
           </div>
         </div>
       </QuantityWrapper>
@@ -574,12 +569,7 @@ class Filter extends Component {
               </SaveFilterTitle>
             </GridColumn>
             <GridColumn width={7} textAlign='right'>
-              <Button
-                type='button'
-                size='large'
-                onClick={this.toggleSaveFilter}
-                data-test='filter_save_cancel_btn'
-              >
+              <Button type='button' size='large' onClick={this.toggleSaveFilter} data-test='filter_save_cancel_btn'>
                 {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
               </Button>
             </GridColumn>
@@ -680,8 +670,7 @@ class Filter extends Component {
       options: options,
       loading: autocompleteDataLoading,
       name: 'search',
-      placeholder:
-        <FormattedMessage id='filter.searchProductsInventory' defaultMessage='Chemical, CAS, Trade' />,
+      placeholder: <FormattedMessage id='filter.searchProductsInventory' defaultMessage='Chemical, CAS, Trade' />,
       noResultsMessage,
       onSearchChange: (_, data) => this.handleSearch(data),
       value: values.search,
@@ -752,26 +741,20 @@ class Filter extends Component {
           <AccordionContent active={!this.state.inactiveAccordion.quantity}>
             <FormGroup widths='equal' data-test='filter_quantity_inp'>
               <FormField width={8}>
-                {this.quantityWrapper(
-                  'quantityFrom',
-                  {
-                    values,
-                    setFieldValue,
-                    setFieldTouched,
-                    label: <FormattedMessage id='filter.FromQuantity' defaultMessage='From' />
-                  }
-                )}
+                {this.quantityWrapper('quantityFrom', {
+                  values,
+                  setFieldValue,
+                  setFieldTouched,
+                  label: <FormattedMessage id='filter.FromQuantity' defaultMessage='From' />
+                })}
               </FormField>
               <FormField width={8}>
-                {this.quantityWrapper(
-                  'quantityTo',
-                  {
-                    values,
-                    setFieldValue,
-                    setFieldTouched,
-                    label: <FormattedMessage id='filter.ToQuantity' defaultMessage='To' />
-                  }
-                )}
+                {this.quantityWrapper('quantityTo', {
+                  values,
+                  setFieldValue,
+                  setFieldTouched,
+                  label: <FormattedMessage id='filter.ToQuantity' defaultMessage='To' />
+                })}
               </FormField>
             </FormGroup>
           </AccordionContent>
@@ -860,7 +843,7 @@ class Filter extends Component {
                   {
                     type: 'number',
                     min: 0,
-                    placeholder: '0',
+                    placeholder: '0'
                   },
                   <FormattedMessage id='filter.Minimum' defaultMessage='Minimum' />,
                   '%'
@@ -872,7 +855,7 @@ class Filter extends Component {
                   {
                     type: 'number',
                     min: 0,
-                    placeholder: '0',
+                    placeholder: '0'
                   },
                   <FormattedMessage id='filter.Maximum' defaultMessage='Maximum' />,
                   '%'
@@ -929,8 +912,7 @@ class Filter extends Component {
           this.resetForm = props.resetForm
           this.setFieldValue = props.setFieldValue
           return (
-            <FlexSidebar
-              {...additionalSidebarProps}>
+            <FlexSidebar {...additionalSidebarProps}>
               <TopButtons>
                 <Button
                   type='button'
@@ -963,7 +945,7 @@ class Filter extends Component {
                     savedFilterUpdating={this.props.savedFilterUpdating}
                   />
                 )}
-                <Dimmer active={this.state.openedSaveFilter}/>
+                <Dimmer active={this.state.openedSaveFilter} />
               </Dimmer.Dimmable>
               <Transition visible={openedSaveFilter} animation='fade down' duration={500}>
                 <div basic>{this.formSaveFilter(props)}</div>
@@ -1072,7 +1054,7 @@ Filter.defaultProps = {
   searchUrl: text => `/prodex/api/company-products/broadcasted/search?pattern=${text}&onlyMapped=true`,
   searchWarehouseUrl: text => `/prodex/api/branches/warehouses/search?pattern=${text}`,
   onApply: filter => {},
-  onClear: () => {},
+  onClear: () => {}
 }
 
 export default withToastManager(injectIntl(Filter))

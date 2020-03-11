@@ -70,8 +70,8 @@ export const initialState = {
   loaded: false,
   searchedCasProducts: [[]],
   searchedUnNumbers: [],
-  deliveryAddressesFilter: { pageSize: 50, pageNumber: 0 },
-  productsFilter: { pageSize: 50, pageNumber: 0 },
+  deliveryAddressesFilter: { pageSize: 50 }, //,pageNumber: 0
+  productsFilter: { pageSize: 50 }, //,pageNumber: 0
   documentTypes: [],
   addressSearch: [],
   logisticsAccounts: [],
@@ -119,7 +119,9 @@ export const initialState = {
   nmfcNumbersFiltered: [],
   nmfcNumbersFetching: false,
   csvImportError: null,
-  tabClicked: false
+  tabClicked: false,
+  isOpenSidebar: false,
+  openTab: 0
 }
 
 export default function reducer(state = initialState, action) {
@@ -138,6 +140,22 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isOpenPopup: false,
+        popupValues: null
+      }
+    }
+    case AT.OPEN_SIDEBAR: {
+      return {
+        ...state,
+        loaded: false,
+        isOpenSidebar: true,
+        openTab: action.payload
+      }
+    }
+    case AT.CLOSE_SIDEBAR: {
+      return {
+        ...state,
+        isOpenSidebar: false,
+        openTab: null,
         popupValues: null
       }
     }
@@ -1402,6 +1420,30 @@ export default function reducer(state = initialState, action) {
         ...state,
         selectedSavedMap: null,
         maps: state.maps.filter(map => map.id !== action.meta)
+      }
+    }
+
+    case AT.GET_BRANCH_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.GET_BRANCH_REJECTED: {
+      return {
+        ...state,
+        loading: false,
+        popupValues: null
+        // isOpenPopup: false,
+      }
+    }
+
+    case AT.GET_BRANCH_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        popupValues: action.payload.data
       }
     }
 
