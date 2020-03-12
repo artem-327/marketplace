@@ -110,45 +110,27 @@ class WarehouseSidebar extends React.Component {
     } = this.props
     const { attachmentFiles } = this.state
 
-    delete values.attachments
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
     let requestData = {}
-    if (currentTab.type === 'branches') {
-      requestData = {
-        deliveryAddress: {
-          address: {
-            ...values.deliveryAddress.address,
-            country
-          },
-          addressName: values.deliveryAddress.addressName,
-          contactName: values.deliveryAddress.contactName,
-          contactPhone: values.deliveryAddress.contactPhone,
-          contactEmail: values.deliveryAddress.contactEmail
-        },
-        warehouse: false
-      }
-    }
 
-    if (currentTab.type === 'warehouses') {
-      requestData = {
-        ...values,
-        deliveryAddress: {
-          ...values.deliveryAddress,
-          readyTime:
-            !values.deliveryAddress.readyTime || values.deliveryAddress.readyTime === ''
-              ? null
-              : values.deliveryAddress.readyTime,
-          closeTime:
-            !values.deliveryAddress.closeTime || values.deliveryAddress.closeTime === ''
-              ? null
-              : values.deliveryAddress.closeTime,
-          address: {
-            ...values.deliveryAddress.address,
-            country
-          }
-        },
-        warehouse: true
-      }
+    requestData = {
+      deliveryAddress: {
+        ...values.deliveryAddress,
+        readyTime:
+          !values.deliveryAddress.readyTime || values.deliveryAddress.readyTime === ''
+            ? null
+            : values.deliveryAddress.readyTime,
+        closeTime:
+          !values.deliveryAddress.closeTime || values.deliveryAddress.closeTime === ''
+            ? null
+            : values.deliveryAddress.closeTime,
+        address: {
+          ...values.deliveryAddress.address,
+          country
+        }
+      },
+      taxId: values.taxId,
+      warehouse: currentTab.type === 'warehouses' ? true : false
     }
 
     try {
@@ -158,17 +140,9 @@ class WarehouseSidebar extends React.Component {
             attachmentLinksToBranch(attachment.id, popupValues.id)
           })
         }
-        await handlerSubmitWarehouseEditPopup(
-          {
-            ...requestData,
-            company: this.props.company
-          },
-          popupValues.id
-        )
+        await handlerSubmitWarehouseEditPopup(requestData, popupValues.id)
       } else {
-        await postNewWarehouseRequest({
-          ...requestData
-        })
+        await postNewWarehouseRequest(requestData)
       }
     } catch {
     } finally {
