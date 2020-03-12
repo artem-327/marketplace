@@ -55,6 +55,14 @@ const CustomButton = styled(Button)`
   letter-spacing: normal !important;
 `
 
+const CustomSkipButton = styled(Button)`
+  border: solid 1px #dee2e6 !important;
+  background-color: #ffffff !important;
+  color: #848893 !important;
+  font-weight: 500 !important;
+  letter-spacing: normal !important;
+`
+
 const OvalEmpty = styled.div`
   width: 18px;
   height: 18px;
@@ -268,9 +276,9 @@ class Tutorial extends Component {
                 </FormattedMessage>
               </Content>
 
-              <Button basic type='button' onClick={e => this.handleSetCookies(e, true)}>
+              <CustomSkipButton type='button' onClick={e => this.handleSetCookies(e, true)}>
                 <FormattedMessage id='"global.skip"' defaultMessage='Skip' />
-              </Button>
+              </CustomSkipButton>
               <CustomButton type='button' onClick={e => this.handleSetCookies(e, false)}>
                 <FormattedMessage id={`tutorial.${tutorialTab}.button`} defaultMessage='Button' />
               </CustomButton>
