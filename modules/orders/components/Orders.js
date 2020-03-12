@@ -21,6 +21,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { Datagrid } from '../../datagrid/DatagridProvider'
 import { AttachmentManager } from '~/modules/attachments'
 import { uniqueArrayByKey } from '~/utils/functions'
+import Tutorial from '~/modules/tutorial/Tutorial'
 
 const ButtonsWrapper = styled(Grid)`
   margin-left: -21px !important;
@@ -403,9 +404,27 @@ class Orders extends Component {
             values: [`Cancelled`]
           }
         ]
+      },
+      'To Return': {
+        filters: [
+          {
+            operator: 'EQUALS',
+            path: 'Order.cfGlobalStatus',
+            values: [`To Return`]
+          }
+        ]
+      },
+      Confirmed: {
+        filters: [
+          {
+            operator: 'EQUALS',
+            path: 'Order.cfGlobalStatus',
+            values: [`Confirmed`]
+          }
+        ]
       }
     },
-    attachmentPopup: null,
+    attachmentPopup: { attachment: null, order: { id: null } },
     openModal: false,
     columnsRelatedOrders: [
       {
@@ -415,7 +434,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120
+        width: 150
       },
       {
         name: 'type',
@@ -424,7 +443,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 90
+        width: 150
       },
       {
         name: 'issuedAt',
@@ -433,7 +452,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 130
+        width: 120
       },
       {
         name: 'issuerCompanyName',
@@ -495,7 +514,8 @@ class Orders extends Component {
     row: '',
     isUnlinkDocument: false,
     replaceExisting: false,
-    replaceRow: ''
+    replaceRow: '',
+    openModalAcounting: false
   }
 
   getMimeType = documentName => {
@@ -575,57 +595,75 @@ class Orders extends Component {
       paymentStatus: row.paymentStatus === 'Failed' ? this.failedWrapper(row.paymentStatus) : row.paymentStatus,
       bl:
         row.bl && row.bl.length ? ( // unknown / positive / negative
-          <span
+          <a
+            href='#'
             onClick={() =>
               this.openOverviewWindow(row.bl, { id: row.id }, false, { text: 'Bill of Lading', value: 10 }, row)
             }>
             <Icon name='file' className='positive' />
-          </span>
+          </a>
         ) : (
-          <span
+          <a
+            href='#'
             onClick={() =>
               this.openOverviewWindow(row.bl, { id: row.id }, true, { text: 'Bill of Lading', value: 10 }, row)
             }>
             <Icon name='file' className='unknown' />
-          </span>
+          </a>
         ),
       sds:
         row.sds && row.sds.length ? (
-          <span
+          <a
+            href='#'
             onClick={() =>
-              this.openOverviewWindow(row.sds, { id: row.id }, false, { text: 'Safety Data Sheet', value: 3 })
+              this.openOverviewWindow(row.sds, { id: row.id }, false, { text: 'Safety Data Sheet', value: 3 }, row)
             }>
             <Icon name='file' className='positive' />
-          </span>
+          </a>
         ) : (
-          <span
+          <a
+            href='#'
             onClick={() =>
-              this.openOverviewWindow(row.sds, { id: row.id }, true, { text: 'Safety Data Sheet', value: 3 })
+              this.openOverviewWindow(row.sds, { id: row.id }, true, { text: 'Safety Data Sheet', value: 3 }, row)
             }>
             <Icon name='file' className='unknown' />
-          </span>
+          </a>
         ),
       cofA:
         row.cofA && row.cofA.length ? (
-          <span
+          <a
+            href='#'
             onClick={() =>
-              this.openOverviewWindow(row.cofA, { id: row.id }, false, { text: 'Certificate of Analysis', value: 1 })
+              this.openOverviewWindow(
+                row.cofA,
+                { id: row.id },
+                false,
+                { text: 'Certificate of Analysis', value: 1 },
+                row
+              )
             }>
             <Icon name='file' className='positive' />
-          </span>
+          </a>
         ) : (
-          <span
+          <a
+            href='#'
             onClick={() =>
-              this.openOverviewWindow(row.cofA, { id: row.id }, true, { text: 'Certificate of Analysis', value: 1 })
+              this.openOverviewWindow(
+                row.cofA,
+                { id: row.id },
+                true,
+                { text: 'Certificate of Analysis', value: 1 },
+                row
+              )
             }>
             <Icon name='file' className='unknown' />
-          </span>
+          </a>
         ),
       related:
         row.accountingDocumentsCount > 0 ? (
-          <span onClick={() => this.openModalWindow(row.id)}>
+          <a href='#' onClick={() => this.openModalWindow(row.id)}>
             <Icon className='file related' />
-          </span>
+          </a>
         ) : (
           <Icon className='file non-related' />
         )
@@ -633,7 +671,7 @@ class Orders extends Component {
   }
 
   async openModalWindow(orderId) {
-    this.setState({ openModal: true })
+    this.setState({ openModalAcounting: true })
     await this.props.getRelatedOrders(orderId)
   }
 
@@ -943,25 +981,16 @@ class Orders extends Component {
       queryType,
       router,
       datagrid,
+      tutorialCompleted,
       intl: { formatMessage }
     } = this.props
 
-    const { columns, row, openModal, attachmentPopup, isOpenManager } = this.state
+    const { columns, row, openModal, attachmentPopup, isOpenManager, relatedDocumentType } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
 
     return (
       <div id='page' className='flex stretched scrolling'>
-        {isOpenManager && (
-          <div>
-            <AttachmentManager
-              relatedDocumentType={this.state.relatedDocumentType}
-              isOpenManager={this.state.isOpenManager}
-              asModal
-              returnSelectedRows={rows => this.attachDocumentsManager(rows)}
-              returnCloseAttachmentManager={bool => this.setState({ isOpenManager: bool })}
-            />
-          </div>
-        )}
+        {!tutorialCompleted && <Tutorial />}
         {openModal && (
           <Modal
             closeIcon={false}
@@ -976,7 +1005,10 @@ class Orders extends Component {
             centered={true}
             open={this.state.openModal}>
             <Modal.Header>
-              <FormattedMessage id='order.related.documents.table' defaultMessage='RELATED DOCUMENTS'>
+              <FormattedMessage
+                id='order.related.documents.table'
+                defaultMessage={`RELATED DOCUMENTS (${getSafe(() => relatedDocumentType.text, '')} )`}
+                values={{ documentType: getSafe(() => relatedDocumentType.text, '') }}>
                 {text => text}
               </FormattedMessage>
             </Modal.Header>
@@ -1003,9 +1035,9 @@ class Orders extends Component {
           <Modal
             size='small'
             closeIcon={false}
-            onClose={() => this.setState({ openModal: false })}
+            onClose={() => this.setState({ openModalAcounting: false })}
             centered={true}
-            open={this.state.openModal}>
+            open={this.state.openModalAcounting}>
             <Modal.Header>
               <FormattedMessage id='order.related.table' defaultMessage='Related Accounting Documents'>
                 {text => text}
@@ -1171,6 +1203,34 @@ class Orders extends Component {
               }
               active={activeStatus === 'Cancelled'}
               data-test='menu_orders_cancelled'
+            />
+            <Menu.Item
+              name={formatMessage({
+                id: 'order.menu.toReturn',
+                defaultMessage: 'To Return'
+              })}
+              onClick={() =>
+                this.loadData(endpointType, {
+                  ...this.props.filterData,
+                  status: 'To Return'
+                })
+              }
+              active={activeStatus === 'To Return'}
+              data-test='menu_orders_to_return'
+            />
+            <Menu.Item
+              name={formatMessage({
+                id: 'order.menu.confirmed',
+                defaultMessage: 'Confirmed'
+              })}
+              onClick={() =>
+                this.loadData(endpointType, {
+                  ...this.props.filterData,
+                  status: 'Confirmed'
+                })
+              }
+              active={activeStatus === 'Confirmed'}
+              data-test='menu_orders_confirmed'
             />
             <Menu.Item>
               <FilterTags datagrid={datagrid} />

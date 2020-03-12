@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage } from 'react-intl'
-import { FormGroup, Header, Popup, Dropdown as SemanticDropdown, FormField } from 'semantic-ui-react'
+import { FormGroup, Header, Popup, Dropdown as SemanticDropdown, FormField, Segment } from 'semantic-ui-react'
 
 import { ZipDropdown } from '~/modules/zip-dropdown'
 import { func, string, shape, array, bool, object, oneOfType, node } from 'prop-types'
@@ -16,6 +16,10 @@ const DatalistGroup = styled(FormGroup)`
   input::-webkit-calendar-picker-indicator {
     opacity: 0 !important;
   }
+`
+
+const CustomSegment = styled(Segment)`
+  background-color: #f8f9fb !important;
 `
 
 export default class AddressForm extends Component {
@@ -172,10 +176,13 @@ export default class AddressForm extends Component {
       additionalCountryInputProps,
       countryPopup,
       countriesLoading,
-      loading
+      loading,
+      initialProvince
     } = this.props
 
     let fields = this.asignPrefix()
+
+    // this.handleChange(e, data)
 
     let { provinces, countryId, provincesAreFetching } = this.state
     //  TODO - check whether fluid didnt mess up ui somewhere else
@@ -194,101 +201,105 @@ export default class AddressForm extends Component {
             <FormattedMessage id='global.address' defaultMessage='Address' />
           </Header>
         )}
-        <DatalistGroup widths='equal' data-test='address_form_streetCity_inp'>
-          <Input
-            inputProps={{
-              onFocus: e => (e.target.autocomplete = null),
-              icon: 'dropdown',
-              list: datalistName,
-              onChange: this.handleChange,
-              fluid: true,
-              loading
-            }}
-            label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />}
-            name={fields.streetAddress}
-          />
-
-          <Input
-            inputProps={{
-              onFocus: e => (e.target.autocomplete = null),
-              icon: 'dropdown',
-              list: datalistName,
-              onChange: this.handleChange,
-              fluid: true,
-              loading
-            }}
-            label={<FormattedMessage id='global.city' defaultMessage='City' />}
-            name={fields.city}
-          />
-        </DatalistGroup>
-        <FormGroup widths='equal'>
-          <ZipDropdown
-            onAddition={(e, data) => setFieldValue(fields[this.props.zip.name], data.value)}
-            onChange={this.handleChange}
-            additionalInputProps={{ loading }}
-            name={fields.zip}
-            countryId={countryId}
-            initialZipCodes={initialZipCodes}
-            data-test='address_form_zip_drpdn'
-          />
-          <FormField name={fields.country}>
-            <Popup
-              trigger={
-                <label>
-                  <FormattedMessage id='global.country' defaultMessage='Country' />
-                </label>
-              }
-              disabled={countryPopup.disabled}
-              content={countryPopup.content}
+        <CustomSegment>
+          <DatalistGroup widths='equal' data-test='address_form_streetCity_inp'>
+            <Input
+              inputProps={{
+                onFocus: e => (e.target.autocomplete = null),
+                icon: 'dropdown',
+                list: datalistName,
+                onChange: this.handleChange,
+                fluid: true,
+                loading
+              }}
+              label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />}
+              name={fields.streetAddress}
             />
+
+            <Input
+              inputProps={{
+                onFocus: e => (e.target.autocomplete = null),
+                icon: 'dropdown',
+                list: datalistName,
+                onChange: this.handleChange,
+                fluid: true,
+                loading
+              }}
+              label={<FormattedMessage id='global.city' defaultMessage='City' />}
+              name={fields.city}
+            />
+          </DatalistGroup>
+          <FormGroup widths='equal'>
+            <ZipDropdown
+              onAddition={(e, data) => setFieldValue(fields[this.props.zip.name], data.value)}
+              onChange={this.handleChange}
+              additionalInputProps={{ loading }}
+              name={fields.zip}
+              countryId={countryId}
+              initialZipCodes={initialZipCodes}
+              data-test='address_form_zip_drpdn'
+            />
+            <FormField name={fields.country}>
+              <Popup
+                trigger={
+                  <label>
+                    <FormattedMessage id='global.country' defaultMessage='Country' />
+                  </label>
+                }
+                disabled={countryPopup.disabled}
+                content={countryPopup.content}
+              />
+
+              <Dropdown
+                name={fields.country}
+                options={countries.map(country => ({
+                  key: country.id,
+                  text: country.name,
+                  value: JSON.stringify({ countryId: country.id, hasProvinces: country.hasProvinces })
+                }))}
+                inputProps={{
+                  loading: countriesLoading,
+                  onFocus: e => (e.target.autocomplete = null),
+                  'data-test': 'address_form_country_drpdn',
+                  search: true,
+                  onChange: async (e, data) => {
+                    let values = JSON.parse(data.value)
+                    // let fieldName = prefix ? `${prefix.province}` : 'address.province'
+
+                    setFieldValue(fields[this.props.province.name], '')
+
+                    // this.handleChange(e, data)
+                    this.setState({ hasProvinces: values.hasProvinces })
+                    if (values.hasProvinces) {
+                      this.fetchProvinces(values.countryId, values.hasProvinces)
+                    }
+                  },
+                  ...additionalCountryInputProps
+                }}
+              />
+            </FormField>
 
             <Dropdown
-              name={fields.country}
-              options={countries.map(country => ({
-                key: country.id,
-                text: country.name,
-                value: JSON.stringify({ countryId: country.id, hasProvinces: country.hasProvinces })
-              }))}
+              label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />}
+              name={fields.province}
+              options={provinces
+                .map(province => ({
+                  key: province.id,
+                  text: province.name,
+                  value: province.id
+                }))
+                .concat(initialProvince)}
               inputProps={{
-                loading: countriesLoading,
                 onFocus: e => (e.target.autocomplete = null),
-                'data-test': 'address_form_country_drpdn',
+                'data-test': 'address_form_province_drpdn',
                 search: true,
-                onChange: async (e, data) => {
-                  let values = JSON.parse(data.value)
-                  // let fieldName = prefix ? `${prefix.province}` : 'address.province'
-
-                  setFieldValue(fields[this.props.province.name], '')
-
-                  // this.handleChange(e, data)
-                  this.setState({ hasProvinces: values.hasProvinces })
-                  if (values.hasProvinces) {
-                    this.fetchProvinces(values.countryId, values.hasProvinces)
-                  }
-                },
-                ...additionalCountryInputProps
+                disabled: !this.state.hasProvinces,
+                loading: provincesAreFetching,
+                onChange: this.handleChange
               }}
             />
-          </FormField>
-
-          <Dropdown
-            label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />}
-            name={fields.province}
-            options={provinces.map(province => ({
-              key: province.id,
-              text: province.name,
-              value: province.id
-            }))}
-            inputProps={{
-              onFocus: e => (e.target.autocomplete = null),
-              'data-test': 'address_form_province_drpdn',
-              search: true,
-              disabled: !this.state.hasProvinces,
-              loading: provincesAreFetching,
-              onChange: this.handleChange
-            }}
-          />
-        </FormGroup>
+          </FormGroup>
+        </CustomSegment>
       </>
     )
   }

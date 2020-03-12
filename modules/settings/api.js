@@ -82,7 +82,9 @@ export default {
     }).then(r => new File([r.data], attachment.name, { type: attachment.type }))
   },
   postLinkAttachment: (attachmentId, productId) =>
-    api.post(`/prodex/api/attachment-links/to-company-product?attachmentId=${attachmentId}&companyProductId=${productId}`),
+    api.post(
+      `/prodex/api/attachment-links/to-company-product?attachmentId=${attachmentId}&companyProductId=${productId}`
+    ),
   postNewUser: body => api.post('/prodex/api/users', body),
   postNewWarehouse: body => api.post('/prodex/api/branches/', body),
   postNewCreditCard: body => api.post('/prodex/api/payments/cards/add', body),
@@ -166,7 +168,7 @@ export default {
   dwollaFinalizeVerification: async (id, value1, value2) => {
     return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify?value1=${value1}&value2=${value2}`)
   },
-  dwollaSetPreferred: async (id) => {
+  dwollaSetPreferred: async id => {
     return await api.patch(`/prodex/api/payments/bank-accounts/${id}/preferred`)
   },
   removeAttachment: aId => {
@@ -200,5 +202,10 @@ export default {
   getNmfcNumbersByString: pattern =>
     api.get(`/prodex/api/nmfc-numbers/search?limit=5&pattern=${pattern}`).then(response => response.data),
   removeAttachmentLinkCompanyProduct: (itemId, aId) =>
-    api.delete(`/prodex/api/attachment-links/to-company-product?attachmentId=${aId}&companyProductId=${itemId}`)
+    api.delete(`/prodex/api/attachment-links/to-company-product?attachmentId=${aId}&companyProductId=${itemId}`),
+  attachmentLinksToBranch: (attachmentId, branchId) =>
+    api.post(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&branchId=${branchId}`),
+  getBranch: branchId => api.get(`/prodex/api/branches/${branchId}`),
+  removeAttachmentLinkToBranch: (attachmentId, branchId) =>
+    api.delete(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&companyProductId=${branchId}`)
 }

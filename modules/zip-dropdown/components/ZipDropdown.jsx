@@ -26,7 +26,7 @@ export default class ZipDropdown extends Component {
   debouncedCallback = (e, { searchQuery }) => {
     let params = {
       limit: 5,
-      pattern: searchQuery,
+      pattern: searchQuery
     }
 
     if (this.props.countryId) params.countryId = this.props.countryId
@@ -38,7 +38,6 @@ export default class ZipDropdown extends Component {
     this.setState({ value: data.value })
     this.props.onChange(e, data)
   }
-
 
   render() {
     let {
@@ -64,7 +63,7 @@ export default class ZipDropdown extends Component {
             this.props.onSearchChange(e, data)
             this.debouncedRef(e, data)
           },
-          onFocus: (e) => e.target.autocomplete = null,
+          onFocus: e => (e.target.autocomplete = null),
           loading,
           selection,
           search,
@@ -98,10 +97,10 @@ ZipDropdown.defaultProps = {
   search: true,
   allowAdditions: true,
   codes: [],
-  onAddition: (e, data) => { },
-  handleChange: (e, data) => { },
-  onSearchChange: (e, data) => { },
+  onAddition: (e, data) => {},
+  handleChange: (e, data) => {},
+  onSearchChange: (e, data) => {},
   label: <FormattedMessage id='global.zip' defaultMessage='Zip' />,
   initialZipCodes: [],
-  onChange: () => { }
+  onChange: () => {}
 }

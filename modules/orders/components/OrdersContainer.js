@@ -14,6 +14,7 @@ import { ArrayToMultiple } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
 import { downloadAttachmentPdf } from '~/modules/inventory/actions'
 import { getLocaleDateFormat } from '~/components/date-format'
+import { getSafe } from '~/utils/functions'
 
 function mapStateToProps(state, { router, datagrid }) {
   const { orders } = state
@@ -72,7 +73,8 @@ function mapStateToProps(state, { router, datagrid }) {
       accountingDocumentsCount: r.accountingDocumentsCount
     })),
     activeStatus: orders.statusFilter,
-    listDocumentTypes: orders.listDocumentTypes
+    listDocumentTypes: orders.listDocumentTypes,
+    tutorialCompleted: getSafe(() => state.auth.identity.tutorialCompleted, false)
   }
 }
 

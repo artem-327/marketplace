@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { debounce } from 'lodash'
 import moment from 'moment'
 import { node, object, bool } from 'prop-types'
+import { FileText } from 'react-feather'
 
 import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
@@ -30,6 +31,21 @@ const CustomDropdown = styled(Dropdown)`
 const CustomGridColumn = styled(GridColumn)`
   padding-left: 0px !important;
   padding-right: 0px !important;
+`
+
+const CustomButton = styled(Button)`
+  color: #2599d5 !important;
+  background-color: #ddf1fc !important;
+  border: solid 1px #2599d5 !important;
+  border-radius: 3px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+`
+
+const CustomIcon = styled(FileText)`
+  padding-right: 10px !important;
+  width: 28px;
 `
 
 class AttachmentClass extends Component {
@@ -273,11 +289,12 @@ AttachmentModal.propTypes = {
 
 AttachmentModal.defaultProps = {
   trigger: (
-    <Button fluid type='button' style={{ color: 'white', backgroundColor: '#2599d5' }}>
+    <CustomButton fluid type='button'>
+      <CustomIcon size='14' />
       <FormattedMessage id='global.documentManager' defaultMessage='Document Manager'>
         {text => text}
       </FormattedMessage>
-    </Button>
+    </CustomButton>
   ),
   tableProps: {},
   asModal: true,

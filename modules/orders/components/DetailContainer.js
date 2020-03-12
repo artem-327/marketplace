@@ -68,8 +68,7 @@ function prepareDetail(data, type) {
             .toDate()
             .toLocaleString()
         : 'N/A',
-    feesAmount: <FormattedNumber style='currency' currency={currency} value={subtotal * (0 / 100)} />, // ! ! TBD
-    feesPercent: 0, // ! ! TBD
+    echoFee: getSafe(() => data.echoFee, 0),
     freight: (
       <FormattedNumber style='currency' currency={currency} value={data.shippingPrice ? data.shippingPrice : 0} />
     ),
@@ -195,15 +194,16 @@ function prepareDetail(data, type) {
     unit: orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A')),
     unitCost: orderItems.map(d => {
       let sum = 0
-      if (d.orderItemProductOffers && d.orderItemProductOffers.length) {
+      if (d.productOffers && d.productOffers.length) {
         //calculate average
-        for (const i in d.orderItemProductOffers) {
-          sum += parseInt(d.orderItemProductOffers[i].costPerUOM, 10)
+        for (let product of d.productOffers) {
+          if (product.costPerUOM) {
+            sum += parseInt(product.costPerUOM)
+          }
         }
-        return sum / d.orderItemProductOffers.length
-      } else {
-        return sum
+        return sum / d.productOffers.length
       }
+      return sum
     }),
     unitPrice: orderItems.map(d =>
       d.pricePerUOM ? <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} /> : 'N/A'
