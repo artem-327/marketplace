@@ -50,7 +50,6 @@ class MyProfile extends Component {
       intl: { formatMessage },
       languages,
       languagesFetching,
-      preferredCurrency,
       tutorialCompleted
     } = this.props
 
@@ -76,7 +75,7 @@ class MyProfile extends Component {
                 let payload = {
                   name,
                   phone,
-                  preferredCurrency, //from props, not from form
+                  //preferredCurrency,
                   tutorialCompleted //from props, not from form
                 }
 
@@ -208,7 +207,6 @@ const mapStateToProps = state => {
     changePasswordPopup: state.profile.changePasswordPopup,
     languages: state.settings.languages,
     languagesFetching: state.settings.languagesFetching,
-    preferredCurrency: getSafe(() => state.auth.identity.preferredCurrency.id, 1),
     tutorialCompleted: getSafe(() => state.auth.identity.tutorialCompleted, false)
   }
 }

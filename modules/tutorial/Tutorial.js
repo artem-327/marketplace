@@ -150,7 +150,7 @@ class Tutorial extends Component {
 
   handleSetCookies = async (e, skip) => {
     e.preventDefault()
-    const { toastManager, updateMyProfile, request, tabChanged } = this.props
+    const { toastManager, updateMyProfile, name, tabChanged } = this.props
     // array of tabsNames converted to Map
     let tabsNamesMap = new Map()
     if (defaultTabs && defaultTabs.length) {
@@ -164,9 +164,9 @@ class Tutorial extends Component {
     if (cookieTutorialTabs && cookieTutorialTabs.length) {
       // if completed all tutorial tabs (index is more than 7)
       if (!tutorialTabs[cookieTutorialTabs.length + 1]) {
-        const newRequest = { ...request, tutorialCompleted: true }
+        const requestBody = { name, tutorialCompleted: true }
         try {
-          await updateMyProfile(newRequest)
+          await updateMyProfile(requestBody)
           cookies.remove('tutorial', { path: '/' })
           toastManager.add(
             generateToastMarkup(
@@ -290,12 +290,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    request: {
-      name: getSafe(() => state.auth.identity.name, ''),
-      phone: getSafe(() => state.auth.identity.phone, ''),
-      preferredCurrency: getSafe(() => state.auth.identity.preferredCurrency.id, 1),
-      tutorialCompleted: getSafe(() => state.auth.identity.tutorialCompleted, false)
-    }
+    name: getSafe(() => state.auth.identity.name, '')
   }
 }
 
