@@ -334,7 +334,8 @@ AddressForm.propTypes = {
   initialZipCodes: array,
   additionalCountryInputProps: object,
   fixedCountries: array,
-  handleChange: func
+  handleChange: func,
+  initialProvince: array
 }
 
 AddressForm.defaultProps = {
@@ -370,5 +371,6 @@ AddressForm.defaultProps = {
   values: null,
   additionalCountryInputProps: {},
   fixedCountries: [],
-  handleChange: () => console.error('handleChange function not provided in AddressForm.jsx!')
+  handleChange: () => console.error('handleChange function not provided in AddressForm.jsx!'),
+  initialProvince: []
 }
