@@ -667,6 +667,8 @@
   "company.tooltip.notRequiredIfSame": "Not required unless different from TIN",
   "company.tooltip.orEin": "or Employer Identification Number",
   "company.duns": "D‑U‑N‑S Number",
+  "confirm.editOrAddNew.header": "Edit or add New",
+  "confirm.editOrAddNew.content": "If you like to continue editing this product offer by adding documents, price tiers, or price book rules, click Edit. If you would like to add a new Inventory Item, click New.",
   "confirm.deleteNmfcNumber.header": "Delete NMFC Number",
   "confirm.deleteNmfcNumber.content": "Do you really want to delete NMFC Number with code: {code}?",
   "confirm.deleteOfferHeader": "Delete Product Offer",
@@ -1300,6 +1302,7 @@
   "verification.labels.password": "Password",
   "verification.labels.passwordConfirm": "Password Confirmation",
   "verification.nextStep": "Next Step",
+  
   "notifications.companyUpdated": "Company {name} succesfully updated.",
   "notifications.companyCreated": "Company {name} succesfully created.",
   "notifications.echoProductCreated.header": "Created Echo Product",
