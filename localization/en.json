@@ -68,7 +68,7 @@
   "broadcast.byRegion": "By Region",
   "broadcast.byCompany": "By Company",
   "broadcast.controls": "Broadcast Controls",
-  "broadcast.broadcastingTo": "Broadcasting to",
+  "broadcast.broadcastingTo": "Visible to",
   "broadcast.categoryFilter": "Category filter",
   "broadcast.filter": "Filter",
   "broadcast.regionSelect": "Region select",
