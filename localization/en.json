@@ -1970,5 +1970,7 @@
   "sidebar.addNew": "ADD NEW",
   "sidebar.edit": "EDIT",
   "sidebar.certificates": "CERTIFICATES",
-  "global.certificates": "Certificates"
+  "global.certificates": "Certificates",
+  "broadcast.turnoff.title": "Price book for this offer has been deleted",
+  "broadcast.turnoff.content": "Global rules are going to be used. To turn off broadcasting completely, edit it inside Edit tab."
 }
