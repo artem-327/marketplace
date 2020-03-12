@@ -3,11 +3,10 @@ import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader, GridColumn, GridRow } from 'semantic-ui-react'
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { errorMessages } from '~/constants/yupValidation'
-import { withToastManager } from 'react-toast-notifications'
 import { DateInput } from '~/components/custom-formik'
 import moment from 'moment'
 import { currency } from '~/constants/index'
@@ -45,7 +44,7 @@ class PurchaseOrderShipping extends React.Component {
   }
 
   submitHandler = async (values, actions) => {
-    const { closePopup, order, orderId, toastManager, shippingQuotes } = this.props
+    const { closePopup, order, orderId, shippingQuotes } = this.props
 
     try {
       let formValues = {
@@ -60,14 +59,6 @@ class PurchaseOrderShipping extends React.Component {
 
       await this.props.purchaseShipmentOrder(orderId, formValues)
       this.props.getPurchaseOrder(orderId)
-
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='order.success' defaultMessage='Success' />,
-          <FormattedMessage id='order.shippingOrdered' defaultMessage='Order Shipping was successfully ordered.' />
-        ),
-        { appearance: 'success' }
-      )
       closePopup()
     } catch {
     } finally {
@@ -340,4 +331,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(PurchaseOrderShipping)))
+export default connect(mapStateToProps, { ...Actions })(injectIntl(PurchaseOrderShipping))

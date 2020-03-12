@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { generateToastMarkup } from '~/utils/functions'
-import { withToastManager } from 'react-toast-notifications'
 import moment from 'moment'
 
 import { ArrayToFirstItem, FormattedPhone } from '~/components/formatted-messages/'
@@ -134,7 +132,6 @@ class UsersTable extends Component {
       datagrid,
       deleteUser,
       resendWelcomeEmail,
-      toastManager,
       currentUserId
       // confirmMessage,
       // handleOpenConfirmPopup,
@@ -183,10 +180,6 @@ class UsersTable extends Component {
               text: <FormattedMessage id='settings.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
               callback: async row => {
                 const { value } = await resendWelcomeEmail(row.id)
-
-                toastManager.add(generateToastMarkup(null, value.clientMessage), {
-                  appearance: 'success'
-                })
               },
               hidden: row => !!row.lastLoginAt || currentUserId === row.id
             }
@@ -259,7 +252,7 @@ const mapStateToProps = (state, { datagrid }) => {
       permissions: user.roles ? user.roles.name : '', // ! ! array?
       id: user.id,
       allUserRoles: user.roles || [],
-      userRoles: <ArrayToFirstItem values={user.roles.map(r => r.name)} />,
+      userRoles: <ArrayToFirstItem values={user && user.roles && user.roles.length && user.roles.map(r => r.name)} />,
       switchEnable: userEnableDisableStatus(user, currentUserId),
       lastLoginAt: user.lastLoginAt
         ? moment(user.lastLoginAt)
@@ -282,4 +275,4 @@ const mapStateToProps = (state, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(UsersTable))))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UsersTable)))

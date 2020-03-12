@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Modal, FormGroup, Header } from 'semantic-ui-react'
-import { withToastManager } from 'react-toast-notifications'
 
 import {
   closePopup,
@@ -17,7 +16,7 @@ import * as Yup from 'yup'
 import Router from 'next/router'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { generateToastMarkup, getSafe } from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 import { errorMessages, provinceObjectRequired, minOrZeroLength } from '~/constants/yupValidation'
 
 import { AddressForm } from '~/modules/address-form'
@@ -86,7 +85,6 @@ class DeliveryAddressesPopup extends React.Component {
       updateDeliveryAddresses,
       createDeliveryAddress,
       reloadFilter,
-      toastManager,
       intl: { formatMessage }
     } = this.props
 
@@ -114,20 +112,10 @@ class DeliveryAddressesPopup extends React.Component {
                 }
               }
               try {
-                let response
                 if (values.address.province === '') delete payload.address['province']
-                if (popupValues) response = await updateDeliveryAddresses(rowId, payload, reloadFilter)
-                else response = await createDeliveryAddress(payload, reloadFilter)
+                if (popupValues) await updateDeliveryAddresses(rowId, payload, reloadFilter)
+                else await createDeliveryAddress(payload, reloadFilter)
 
-                let status = popupValues ? 'deliveryAddressUpdated' : 'deliveryAddressCreated'
-
-                toastManager.add(
-                  generateToastMarkup(
-                    <FormattedMessage id={`notifications.${status}.header`} />,
-                    <FormattedMessage id={`notifications.${status}.content`} values={{ name: response.cfName }} />
-                  ),
-                  { appearance: 'success' }
-                )
               } catch {
               } finally {
                 setSubmitting(false)
@@ -310,4 +298,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withToastManager(DeliveryAddressesPopup)))
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(DeliveryAddressesPopup))

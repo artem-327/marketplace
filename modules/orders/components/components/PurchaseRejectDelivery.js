@@ -3,11 +3,8 @@ import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader, FormGroup } from 'semantic-ui-react'
 import { Form } from 'formik-semantic-ui-fixed-validation'
-import { generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-
-import { withToastManager } from 'react-toast-notifications'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 
 const ModalBody = styled(ModalContent)`
@@ -62,28 +59,12 @@ class PurchaseRejectDelivery extends React.Component {
   }
 
   submitHandler = async (values, actions) => {
-    const { closePopup, orderId, toastManager, rejectPurchaseOrder } = this.props
+    const { closePopup, orderId, rejectPurchaseOrder } = this.props
     const { reason, reasonComment, attachments } = values
 
     try {
       const request = { reason, reasonComment }
       await rejectPurchaseOrder(orderId, request, attachments)
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage
-      id='notifications.order.actions.rejected.success.header'
-      defaultMessage='Order Rejected'
-        />,
-        <FormattedMessage
-          id='notifications.order.actions.rejected.success.content'
-          defaultMessage={`Order ${orderId} was rejected.`}
-          values={{ orderId: orderId }}
-        />
-        ),
-        {
-          appearance: 'success'
-        }
-      )
       closePopup()
     } catch (e) {
       console.error(e)
@@ -268,4 +249,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(PurchaseRejectDelivery)))
+export default connect(mapStateToProps, { ...Actions })(injectIntl(PurchaseRejectDelivery))

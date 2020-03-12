@@ -92,6 +92,7 @@
     "styled-jsx": "^3.2.1",
     "tree-model": "^1.0.7",
     "type-to-reducer": "^1.1.0",
+    "universal-cookie": "^4.0.3",
     "url-loader": "^1.1.2",
     "validator": "^11.1.0",
     "webpack": "^4.29.6",

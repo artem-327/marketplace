@@ -7,13 +7,11 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import * as Yup from 'yup'
 import styled from 'styled-components'
 import moment from 'moment'
-import { withToastManager } from 'react-toast-notifications'
-
 import { FileInput, DateInput } from '~/components/custom-formik'
 
 import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import { otherPermissions, sharedTo } from '~/constants/index'
-import { getSafe, generateToastMarkup, removeEmpty } from '~/utils/functions'
+import { getSafe, removeEmpty } from '~/utils/functions'
 
 import { closePopup } from '~/modules/settings/actions'
 import { getDocumentTypes, addAttachment, updateAttachment } from '~/modules/inventory/actions'
@@ -70,7 +68,6 @@ class DocumentPopup extends Component {
       intl: { formatMessage },
       documentTypesFetching,
       edit,
-      toastManager,
       addAttachment,
       updateAttachment,
       onClose,
@@ -102,7 +99,9 @@ class DocumentPopup extends Component {
               let payload = {
                 customName: values.customName,
                 description: values.description,
-                expirationDate: values.expirationDate && getSafe(() => getStringISODate(values.expirationDate), null),
+                expirationDate:
+                  values.expirationDate &&
+                  getSafe(() => encodeURIComponent(getStringISODate(values.expirationDate)), null),
                 isTemporary: getSafe(() => values.isTemporary, false),
                 othersPermissions: values.othersPermissions,
                 sharedTo: values.sharedTo
@@ -116,24 +115,6 @@ class DocumentPopup extends Component {
                 } else {
                   await addAttachment(values.file, values.documentType.id, payload)
                 }
-
-                let status = edit ? 'notifications.documentEdited' : 'notifications.documentAdded'
-                let name = edit ? values.name : values.file.name
-
-                toastManager.add(
-                  generateToastMarkup(
-                    <FormattedMessage
-                      id={`${status}.header`}
-                      defaultMessage={edit ? 'Document Edited' : 'Document Added'}
-                    />,
-                    <FormattedMessage
-                      id={`${status}.content`}
-                      defaultMessage={`Document ${name} successfully ${edit ? 'edited' : 'added'}`}
-                      values={{ name }}
-                    />
-                  ),
-                  { appearance: 'success' }
-                )
               } catch (e) {
                 console.error(e)
               } finally {
@@ -260,7 +241,7 @@ const mapStateToProps = ({ simpleAdd, settings }) => {
     Router && Router.router && Router.router.query && Router.router.query.type
       ? settings.tabsNames.find(tab => tab.type === Router.router.query.type)
       : settings.tabsNames[0]
-  const documentTab = currentTab.type === 'documents'
+  const documentTab = currentTab && currentTab.type === 'documents'
 
   return {
     popupValues: documentTab ? settings.popupValues : null,
@@ -278,4 +259,4 @@ const mapDispatchToProps = {
   updateAttachment
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(DocumentPopup)))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(DocumentPopup))

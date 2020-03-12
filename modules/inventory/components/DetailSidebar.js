@@ -41,11 +41,12 @@ import {
   getDocumentTypes,
   addAttachment,
   loadFile,
-  removeAttachmentLink,
   removeAttachment,
   downloadAttachment,
   closeSidebarDetail,
-  getProductOffer
+  getProductOffer,
+  attachmentLinksToProductOffer,
+  removeAttachmentLinkProductOffer
 } from '../actions'
 import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
@@ -57,11 +58,12 @@ import UploadLot from './upload/UploadLot'
 import { withDatagrid } from '~/modules/datagrid'
 import { AttachmentManager } from '~/modules/attachments'
 import _ from 'lodash'
+import DocumentTab from '~/components/document-tab'
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
   flex-direction: column;
-  background-color: #fbfbfb;
+  background-color: #ffffff;
   top: 80px !important;
   padding-bottom: 80px;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
@@ -99,6 +101,7 @@ export const GraySegment = styled(Segment)`
 `
 
 export const HighSegment = styled(Segment)`
+  padding-top: 0px !important;
   height: 100%;
 `
 export const DivIcon = styled.div`
@@ -111,6 +114,20 @@ const CloceIcon = styled(Icon)`
   position: absolute;
   top: -10px;
   right: -10px;
+`
+
+const CustomDropdown = styled(Dropdown)`
+  .ui.selection.dropdown.active {
+    z-index: 602;
+  }
+`
+const CustomGridRow = styled(GridRow)`
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+`
+
+const CustomGridColumn = styled(GridColumn)`
+  padding-bottom: 0px !important;
 `
 
 const initValues = {
@@ -168,7 +185,7 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 160
+    width: 200
   }
 ]
 
@@ -246,7 +263,7 @@ const validationScheme = val.object().shape({
       .required(errorMessages.requiredMessage),
     fobPrice: val
       .number()
-      .min(0, errorMessages.minimum(0))
+      .min(0.001, errorMessages.minimum(0.001))
       .typeError(errorMessages.mustBeNumber)
       .test('maxdec', errorMessages.maxDecimals(3), val => {
         return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
@@ -349,7 +366,8 @@ class DetailSidebar extends Component {
     openUploadLot: false,
     edited: false,
     sidebarValues: null,
-    initValues: initValues
+    initValues: initValues,
+    attachmentFiles: []
   }
 
   componentDidMount = async () => {
@@ -612,12 +630,11 @@ class DetailSidebar extends Component {
   }, 250)
 
   submitForm = async (values, setSubmitting, setTouched, savedButtonClicked = false) => {
-    const { addProductOffer, datagrid, toastManager } = this.props
-    const { sidebarValues } = this.state
+    const { addProductOffer, datagrid, toastManager, attachmentLinksToProductOffer } = this.props
+    const { sidebarValues, attachmentFiles } = this.state
     let isEdit = getSafe(() => sidebarValues.id, null)
     let isGrouped = getSafe(() => sidebarValues.grouped, false)
     let sendSuccess = false
-
     await new Promise(resolve => this.setState({ edited: false }, resolve))
 
     setSubmitting(false)
@@ -628,7 +645,6 @@ class DetailSidebar extends Component {
       case 3:
         props = {
           ...values.edit,
-          ...values.documents,
           expirationDate: values.edit.doesExpire ? getStringISODate(values.edit.expirationDate) : null,
           leadTime: values.edit.leadTime,
           lotExpirationDate: values.edit.lotExpirationDate ? getStringISODate(values.edit.lotExpirationDate) : null,
@@ -656,10 +672,14 @@ class DetailSidebar extends Component {
         this.setState({ changedForm: false, edited: false })
         break
     }
+
     if (Object.keys(props).length) {
       try {
         let data = await addProductOffer(props, isEdit, false, isGrouped)
         if (isEdit) {
+          if (attachmentFiles && attachmentFiles.length) {
+            attachmentFiles.forEach(attachment => attachmentLinksToProductOffer(attachment.id, isEdit))
+          }
           datagrid.updateRow(data.value.id, () => data.value)
         } else {
           datagrid.loadData()
@@ -669,15 +689,6 @@ class DetailSidebar extends Component {
           initValues: { ...initValues, ...this.getEditValues(data.value) },
           edited: false
         })
-        toastManager.add(
-          generateToastMarkup(
-            <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
-            <FormattedMessage id='addInventory.poDataSaved' defaultMessage='Product Offer was successfully saved.' />
-          ),
-          {
-            appearance: 'success'
-          }
-        )
         sendSuccess = true
       } catch (e) {
         console.error(e)
@@ -708,7 +719,7 @@ class DetailSidebar extends Component {
         }
       } finally {
         setTouched({})
-        this.setState({ changedForm: false })
+        this.setState({ changedForm: false, attachmentFiles: [] })
       }
     }
     return sendSuccess
@@ -1005,7 +1016,10 @@ class DetailSidebar extends Component {
       listDocumentTypes,
       intl: { formatMessage },
       toastManager,
-      removeAttachment
+      removeAttachment,
+      loadFile,
+      addAttachment,
+      removeAttachmentLinkProductOffer
     } = this.props
 
     const leftWidth = 6
@@ -1143,6 +1157,17 @@ class DetailSidebar extends Component {
                             pane: (
                               <Tab.Pane key='edit' style={{ padding: '18px' }}>
                                 <Grid>
+                                  {sidebarValues && sidebarValues.grouped && (
+                                    <CustomGridRow>
+                                      <CustomGridColumn>
+                                        <FormattedMessage
+                                          id='addInventory.virtualProductGroup'
+                                          defaultMessage='This Product Offer is part of virtual Product Group, only Lot Number and PKGs Available fields can be edited.'>
+                                          {text => text}
+                                        </FormattedMessage>
+                                      </CustomGridColumn>
+                                    </CustomGridRow>
+                                  )}
                                   <GridRow>
                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
                                       <FormattedMessage
@@ -1235,7 +1260,8 @@ class DetailSidebar extends Component {
                                           inputProps={{
                                             disabled: sidebarValues && sidebarValues.grouped,
                                             type: 'number',
-                                            min: '0',
+                                            min: '0.001',
+                                            step: '0.001',
                                             onChange: (e, { value }) => {
                                               if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
                                                 setFieldValue(`priceTiers.pricingTiers[0].price`, value)
@@ -1425,12 +1451,13 @@ class DetailSidebar extends Component {
                                   </GridRow>
                                   <GridRow>
                                     <GridColumn mobile={leftWidth + rightWidth} computer={leftWidth + rightWidth}>
+                                      <FormattedMessage
+                                        id='addInventory.conditionNotes'
+                                        defaultMessage='Condition Notes'>
+                                        {text => text}
+                                      </FormattedMessage>
                                       <TextArea
                                         name='edit.conditionNotes'
-                                        label={formatMessage({
-                                          id: 'addInventory.conditionNotes',
-                                          defaultMessage: 'Condition Notes'
-                                        })}
                                         inputProps={{ disabled: sidebarValues && sidebarValues.grouped }}
                                       />
                                     </GridColumn>
@@ -1580,12 +1607,11 @@ class DetailSidebar extends Component {
                                   </GridRow>
                                   <GridRow>
                                     <GridColumn mobile={leftWidth + rightWidth} computer={leftWidth + rightWidth}>
+                                      <FormattedMessage id='addInventory.externalNotes' defaultMessage='External Notes'>
+                                        {text => text}
+                                      </FormattedMessage>
                                       <TextArea
                                         name='edit.externalNotes'
-                                        label={formatMessage({
-                                          id: 'addInventory.externalNotes',
-                                          defaultMessage: 'External Notes'
-                                        })}
                                         inputProps={{ disabled: sidebarValues && sidebarValues.grouped }}
                                       />
                                     </GridColumn>
@@ -1593,12 +1619,11 @@ class DetailSidebar extends Component {
 
                                   <GridRow>
                                     <GridColumn mobile={leftWidth + rightWidth} computer={leftWidth + rightWidth}>
+                                      <FormattedMessage id='addInventory.internalNotes' defaultMessage='Internal Notes'>
+                                        {text => text}
+                                      </FormattedMessage>
                                       <TextArea
                                         name='edit.internalNotes'
-                                        label={formatMessage({
-                                          id: 'addInventory.internalNotes',
-                                          defaultMessage: 'Internal Notes'
-                                        })}
                                         inputProps={{ disabled: sidebarValues && sidebarValues.grouped }}
                                       />
                                     </GridColumn>
@@ -1611,7 +1636,6 @@ class DetailSidebar extends Component {
                             menuItem: (
                               <Menu.Item
                                 key='documents'
-                                disabled={sidebarValues && sidebarValues.grouped}
                                 onClick={() => {
                                   if (Object.keys(touched).length || this.state.changedForm) {
                                     toastManager.add(
@@ -1649,231 +1673,32 @@ class DetailSidebar extends Component {
                               </Menu.Item>
                             ),
                             pane: (
-                              <Tab.Pane key='documents' style={{ padding: '18px' }}>
-                                <Grid>
-                                  {listDocumentTypes.length ? (
-                                    <GridRow>
-                                      <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                        <FormattedMessage id='global.uploadDocument' defaultMessage='Upload document: '>
-                                          {text => text}
-                                        </FormattedMessage>
-                                      </GridColumn>
-                                      <GridColumn style={{ zIndex: '501' }} mobile={rightWidth} computer={rightWidth}>
-                                        <Dropdown
-                                          name='documents.documentType'
-                                          closeOnChange
-                                          options={listDocumentTypes}
-                                          inputProps={{
-                                            placeholder: (
-                                              <FormattedMessage
-                                                id='global.documentType.choose'
-                                                defaultMessage='Choose document type'
-                                              />
-                                            ),
-                                            onChange: (e, { name, value }) => {
-                                              this.handleChange(e, name, value)
-                                              this.onChange()
-                                            }
-                                          }}
-                                        />
-                                      </GridColumn>
-                                    </GridRow>
-                                  ) : null}
-                                  <GridRow>
-                                    <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                      <FormattedMessage
-                                        id='global.existingDocuments'
-                                        defaultMessage='Existing documents: '>
-                                        {text => text}
-                                      </FormattedMessage>
-                                    </GridColumn>
-                                    <GridColumn mobile={rightWidth} computer={rightWidth}>
-                                      <AttachmentManager
-                                        asModal
-                                        returnSelectedRows={rows =>
-                                          this.attachDocumentsManager(rows, values, setFieldValue)
-                                        }
-                                      />
-                                    </GridColumn>
-                                  </GridRow>
-
-                                  {values.documents.documentType && this.state.openUploadLot ? (
-                                    <GridRow>
-                                      <GridColumn>
-                                        <UploadLot
-                                          {...this.props}
-                                          header={
-                                            <DivIcon
-                                              onClick={() =>
-                                                this.setState(prevState => ({
-                                                  openUploadLot: !prevState.openUploadLot
-                                                }))
-                                              }>
-                                              <CloceIcon name='close' color='grey' />
-                                            </DivIcon>
-                                          }
-                                          hideAttachments
-                                          edit={getSafe(() => sidebarValues.id, 0)}
-                                          attachments={values.documents.attachments}
-                                          name='documents.attachments'
-                                          type={this.state.documentType}
-                                          filesLimit={1}
-                                          fileMaxSize={20}
-                                          onChange={files => {
-                                            this.attachDocumentsUploadLot(files, values, setFieldValue)
-                                          }}
-                                          data-test='new_inventory_attachments_drop'
-                                          emptyContent={
-                                            <>
-                                              {formatMessage({ id: 'addInventory.dragDrop' })}
-                                              <br />
-                                              <FormattedMessage
-                                                id='addInventory.dragDropOr'
-                                                defaultMessage={'or {link} to select from computer'}
-                                                values={{
-                                                  link: (
-                                                    <a>
-                                                      <FormattedMessage
-                                                        id='global.clickHere'
-                                                        defaultMessage={'click here'}
-                                                      />
-                                                    </a>
-                                                  )
-                                                }}
-                                              />
-                                            </>
-                                          }
-                                          uploadedContent={
-                                            <label>
-                                              <FormattedMessage
-                                                id='addInventory.dragDrop'
-                                                defaultMessage={'Drag and drop to add file here'}
-                                              />
-                                              <br />
-                                              <FormattedMessage
-                                                id='addInventory.dragDropOr'
-                                                defaultMessage={'or {link} to select from computer'}
-                                                values={{
-                                                  link: (
-                                                    <a>
-                                                      <FormattedMessage
-                                                        id='global.clickHere'
-                                                        defaultMessage={'click here'}
-                                                      />
-                                                    </a>
-                                                  )
-                                                }}
-                                              />
-                                            </label>
-                                          }
-                                        />
-                                      </GridColumn>
-                                    </GridRow>
-                                  ) : null}
-                                  {values.documents.attachments && (
-                                    <GridRow>
-                                      <GridColumn>
-                                        <ProdexGrid
-                                          virtual={false}
-                                          tableName='inventory_documents'
-                                          onTableReady={() => {}}
-                                          columns={columns}
-                                          normalWidth={false}
-                                          rows={values.documents.attachments
-                                            .map(row => ({
-                                              ...row,
-                                              documentTypeName: row.documentType && row.documentType.name
-                                            }))
-                                            .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))}
-                                          rowActions={[
-                                            {
-                                              text: (
-                                                <FormattedMessage id='global.unlink' defaultMessage='Unlink'>
-                                                  {text => text}
-                                                </FormattedMessage>
-                                              ),
-                                              callback: async row => {
-                                                try {
-                                                  if (row.linked) {
-                                                    const unlinkResponse = await this.props.removeAttachmentLink(
-                                                      false,
-                                                      sidebarValues.id,
-                                                      row.id
-                                                    )
-                                                    toastManager.add(
-                                                      generateToastMarkup(
-                                                        <FormattedMessage
-                                                          id='addInventory.success'
-                                                          defaultMessage='Success'
-                                                        />,
-                                                        <FormattedMessage
-                                                          id='addInventory.unlinkeAttachment'
-                                                          defaultMessage='Attachment was successfully unlinked.'
-                                                        />
-                                                      ),
-                                                      {
-                                                        appearance: 'success'
-                                                      }
-                                                    )
-                                                    if (unlinkResponse.value.data.lastLink) {
-                                                      confirm(
-                                                        formatMessage({
-                                                          id: 'confirm.attachments.delete.title',
-                                                          defaultMessage: 'Delete Attachment'
-                                                        }),
-                                                        formatMessage(
-                                                          {
-                                                            id: 'confirm.attachments.delete.content',
-                                                            defaultMessage: `Do you want to delete file ${row.name}?`
-                                                          },
-                                                          { fileName: row.name }
-                                                        )
-                                                      ).then(
-                                                        async () => {
-                                                          // confirm
-                                                          try {
-                                                            await this.props.removeAttachment(row.id)
-                                                            toastManager.add(
-                                                              generateToastMarkup(
-                                                                <FormattedMessage
-                                                                  id='notifications.attachments.deleted.header'
-                                                                  defaultMessage='File Deleted'
-                                                                />,
-                                                                <FormattedMessage
-                                                                  id='notifications.attachments.deleted.content'
-                                                                  defaultMessage={`File ${row.name} successfully deleted.`}
-                                                                  values={{ fileName: row.name }}
-                                                                />
-                                                              ),
-                                                              {
-                                                                appearance: 'success'
-                                                              }
-                                                            )
-                                                          } catch (e) {
-                                                            console.error(e)
-                                                          }
-                                                        },
-                                                        () => {
-                                                          // cancel
-                                                        }
-                                                      )
-                                                    }
-                                                  }
-                                                  setFieldValue(
-                                                    `documents.attachments`,
-                                                    values.documents.attachments.filter(o => o.id !== row.id)
-                                                  )
-                                                } catch (e) {
-                                                  console.error(e)
-                                                }
-                                              }
-                                            }
-                                          ]}
-                                        />
-                                      </GridColumn>
-                                    </GridRow>
-                                  )}
-                                </Grid>
+                              <Tab.Pane key='documents' style={{ padding: '16px' }}>
+                                <DocumentTab
+                                  listDocumentTypes={listDocumentTypes}
+                                  values={values.documents}
+                                  setFieldValue={setFieldValue}
+                                  setFieldNameAttachments='documents.attachments'
+                                  dropdownName='documents.documentType'
+                                  removeAttachmentLink={removeAttachmentLinkProductOffer}
+                                  removeAttachment={removeAttachment}
+                                  addAttachment={addAttachment}
+                                  loadFile={loadFile}
+                                  changedForm={files =>
+                                    this.setState(prevState => ({
+                                      changedForm: true,
+                                      attachmentFiles: prevState.attachmentFiles.concat(files)
+                                    }))
+                                  }
+                                  idForm={getSafe(() => sidebarValues.id, 0)}
+                                  attachmentFiles={this.state.attachmentFiles}
+                                  removeAttachmentFromUpload={id => {
+                                    const attachmentFiles = this.state.attachmentFiles.filter(
+                                      attachment => attachment.id !== id
+                                    )
+                                    this.setState({ attachmentFiles })
+                                  }}
+                                />
                               </Tab.Pane>
                             )
                           },
@@ -2122,11 +1947,12 @@ const mapDispatchToProps = {
   openBroadcast,
   addAttachment,
   loadFile,
-  removeAttachmentLink,
   removeAttachment,
   downloadAttachment,
   closeSidebarDetail,
-  getProductOffer
+  getProductOffer,
+  attachmentLinksToProductOffer,
+  removeAttachmentLinkProductOffer
 }
 
 const mapStateToProps = ({

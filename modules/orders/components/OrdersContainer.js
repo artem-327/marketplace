@@ -14,6 +14,7 @@ import { ArrayToMultiple } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
 import { downloadAttachmentPdf } from '~/modules/inventory/actions'
 import { getLocaleDateFormat } from '~/components/date-format'
+import { getSafe } from '~/utils/functions'
 
 function mapStateToProps(state, { router, datagrid }) {
   const { orders } = state
@@ -41,13 +42,39 @@ function mapStateToProps(state, { router, datagrid }) {
       reviewStatus: OrdersHelper.getReviewStatus(r.reviewStatus),
       creditStatus: OrdersHelper.getCreditStatus(r.creditReviewStatus),
       paymentStatus: OrdersHelper.getPaymentStatus(r.paymentStatus),
-      bl: r.attachments.find(a => a.documentType.id === 10),
-      sds: r.attachments.find(a => a.documentType.id === 3),
-      cofA: r.attachments.find(a => a.documentType.id === 1),
+      bl:
+        r.attachments && r.attachments.length
+          ? r.attachments.reduce((cofAList, a) => {
+              if (a && a.documentType && a.documentType.id === 10) {
+                cofAList.push(a)
+              }
+              return cofAList
+            }, [])
+          : null,
+      sds:
+        r.attachments && r.attachments.length
+          ? r.attachments.reduce((cofAList, a) => {
+              if (a && a.documentType && a.documentType.id === 3) {
+                cofAList.push(a)
+              }
+              return cofAList
+            }, [])
+          : null,
+      cofA:
+        r.attachments && r.attachments.length
+          ? r.attachments.reduce((cofAList, a) => {
+              if (a && a.documentType && a.documentType.id === 1) {
+                cofAList.push(a)
+              }
+              return cofAList
+            }, [])
+          : null,
       orderTotal: <FormattedNumber style='currency' currency={currency} value={r.cfPriceTotal} />,
       accountingDocumentsCount: r.accountingDocumentsCount
     })),
-    activeStatus: orders.statusFilter
+    activeStatus: orders.statusFilter,
+    listDocumentTypes: orders.listDocumentTypes,
+    tutorialCompleted: getSafe(() => state.auth.identity.tutorialCompleted, false)
   }
 }
 

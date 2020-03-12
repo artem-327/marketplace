@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Container, Menu, Header, Modal, Checkbox, Popup, Button } from 'semantic-ui-react'
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { withToastManager } from 'react-toast-notifications'
 import ProdexTable from '~/components/table'
 
 import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
@@ -15,9 +14,10 @@ import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
 import moment from 'moment/moment'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
+import Tutorial from '~/modules/tutorial/Tutorial'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -36,6 +36,12 @@ const defaultHiddenColumns = [
 
 const MenuItemFilters = styled(Menu.Item)`
   max-width: 40vw;
+`
+
+const CustomProdexTable = styled(ProdexTable)`
+  .dx-g-bs4-table-container {
+    overflow: hidden;
+  }
 `
 
 class MyInventory extends Component {
@@ -278,7 +284,7 @@ class MyInventory extends Component {
       }
     ],
     selectedRows: [],
-    pageNumber: 0,
+    // pageNumber: 0,
     open: false,
     clientMessage: '',
     request: null
@@ -338,7 +344,14 @@ class MyInventory extends Component {
       if (!r || !r.cfStatus) return
       const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
 
-      if (isOfferValid) {
+      if (r.groupId) {
+        title = (
+          <FormattedMessage
+            id='myInventory.broadcasting.disabled'
+            defaultMessage='This Product Offer is part of virtual Product Group, its broadcast setting cannot be changed. If you wish not to broadcast it, remove it from the group.'
+          />
+        )
+      } else if (isOfferValid) {
         switch (r.cfStatus.toLowerCase()) {
           case 'broadcasting':
             title = (
@@ -407,7 +420,8 @@ class MyInventory extends Component {
                   disabled={
                     r.cfStatus.toLowerCase() === 'incomplete' ||
                     r.cfStatus.toLowerCase() === 'unmapped' ||
-                    !isOfferValid
+                    !isOfferValid ||
+                    r.groupId
                   }
                   onChange={(e, data) => {
                     e.preventDefault()
@@ -436,14 +450,11 @@ class MyInventory extends Component {
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
     const { isProductInfoOpen, closePopup } = this.props
 
-    tab = row && row.grouped ? 0 : tab
-
     if (isProductInfoOpen) closePopup()
     sidebarDetailTrigger(row, bol, tab)
   }
 
   showMessage = (response, request = null) => {
-    const { toastManager } = this.props
     response &&
       response.value &&
       response.value.productOfferStatuses &&
@@ -456,63 +467,16 @@ class MyInventory extends Component {
             ...rowData[0],
             parentOffer: status.virtualOfferId ? status.virtualOfferId : ''
           }))
-          toastManager.add(
-            generateToastMarkup(
-              <FormattedMessage
-                id='notifications.groupedOffer.success.header'
-                defaultMessage='Offer was successfully grouped'
-              />,
-              status.clientMessage
-            ),
-            { appearance: 'success' }
-          )
         } else if (status.code === 'BROADCAST_RULE_CONFLICT') {
           this.setState({ open: true, clientMessage: status.clientMessage, request })
-        } else if (status.code === 'IGNORED') {
-          toastManager.add(
-            generateToastMarkup(
-              <FormattedMessage id='notifications.groupedOffer.ignored.header' defaultMessage='Ignored' />,
-              status.clientMessage
-            ),
-            { appearance: 'warning' }
-          )
-        } else if (status.code === 'ERROR') {
-          toastManager.add(
-            generateToastMarkup(
-              <FormattedMessage id='notifications.groupedOffer.error.header' defaultMessage='Error' />,
-              status.clientMessage
-            ),
-            { appearance: 'error' }
-          )
         } else if (status.code === 'DETACHED') {
           const rowData = this.getRows(this.props.rows).filter(row => row.id === status.productOfferId)
           Datagrid.updateRow(status.productOfferId, () => ({
             ...rowData[0],
             parentOffer: ''
           }))
-          toastManager.add(
-            generateToastMarkup(
-              <FormattedMessage
-                id='notifications.groupedOffer.detached.header'
-                defaultMessage='Detached from a group'
-              />,
-              status.clientMessage
-            ),
-            { appearance: 'success' }
-          )
         }
       })
-  }
-
-  showErrorMessage = () => {
-    const { toastManager } = this.props
-    toastManager.add(
-      generateToastMarkup(
-        <FormattedMessage id='notifications.groupedOffer.error.header' defaultMessage='Error' />,
-        <FormattedMessage id='notifications.groupedOffer.error.content' defaultMessage='Error grouped offers.' />
-      ),
-      { appearance: 'error' }
-    )
   }
 
   groupOffer = async request => {
@@ -521,7 +485,6 @@ class MyInventory extends Component {
       const response = await groupOffers(request)
       this.showMessage(response, request)
     } catch (error) {
-      this.showErrorMessage()
       console.error(error)
     }
   }
@@ -532,7 +495,6 @@ class MyInventory extends Component {
       const response = await detachOffers(productOfferIds)
       this.showMessage(response)
     } catch (error) {
-      this.showErrorMessage()
       console.error(error)
     }
   }
@@ -551,7 +513,8 @@ class MyInventory extends Component {
       sidebarValues,
       openPopup,
       editedId,
-      closeSidebarDetail
+      closeSidebarDetail,
+      tutorialCompleted
     } = this.props
     const { columns, selectedRows, clientMessage, request } = this.state
 
@@ -586,7 +549,7 @@ class MyInventory extends Component {
           </Modal.Actions>
         </Modal>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
-
+        {!tutorialCompleted && <Tutorial />}
         <Container fluid style={{ padding: '0 32px' }}>
           <Menu secondary className='page-part'>
             {/*selectedRows.length > 0 ? (
@@ -701,6 +664,7 @@ class MyInventory extends Component {
                   id: 'inventory.broadcast',
                   defaultMessage: 'Price Book'
                 }),
+                disabled: row => row.groupId,
                 callback: row => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
               },
               {
@@ -708,6 +672,7 @@ class MyInventory extends Component {
                   id: 'inventory.priceTiers',
                   defaultMessage: 'Price Tiers'
                 }),
+                disabled: row => row.groupId,
                 callback: row => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
               },
               {
@@ -772,4 +737,4 @@ class MyInventory extends Component {
   }
 }
 
-export default injectIntl(withToastManager(MyInventory))
+export default injectIntl(MyInventory)

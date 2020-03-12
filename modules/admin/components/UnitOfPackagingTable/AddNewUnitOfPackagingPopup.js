@@ -6,9 +6,6 @@ import { Modal, FormGroup } from 'semantic-ui-react'
 import { closeAddPopup, postNewRequest } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
-
-import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 
 const initialFormValues = {
@@ -26,7 +23,7 @@ const formValidation = Yup.object().shape({
 
 class AddNewUnitOfPackagingPopup extends React.Component {
   render() {
-    const { closeAddPopup, currentTab, config, postNewRequest, measureOptions, toastManager } = this.props
+    const { closeAddPopup, currentTab, config, postNewRequest, measureOptions } = this.props
 
     return (
       <Modal closeIcon onClose={() => closeAddPopup()} open centered={false}>
@@ -44,15 +41,6 @@ class AddNewUnitOfPackagingPopup extends React.Component {
                 [config.edit[1].name]: values.val1
               }
               await postNewRequest(config, data)
-
-              toastManager.add(
-                generateToastMarkup(
-                  <FormattedMessage id='notifications.unitOfPackagingCreated.header' />,
-                  <FormattedMessage id='notifications.unitOfPackagingCreated.content' values={{ name: values.val0 }} />
-                ),
-                { appearance: 'success' }
-              )
-
               setSubmitting(false)
             }}>
             <FormGroup widths='equal' data-test='admin_add_unit_packaging_name_inp'>
@@ -105,4 +93,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(AddNewUnitOfPackagingPopup))
+export default connect(mapStateToProps, mapDispatchToProps)(AddNewUnitOfPackagingPopup)

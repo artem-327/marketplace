@@ -3,13 +3,11 @@ import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import {Modal, ModalContent, Button, Grid, Dimmer, Loader} from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { errorMessages } from '~/constants/yupValidation'
 import confirm from '~/src/components/Confirmable/confirm'
-import { withToastManager } from 'react-toast-notifications'
-
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `
@@ -23,25 +21,11 @@ class EnterTrackingIdReturnShip extends React.Component {
   markShipped = async (value, actions) => {
     const {
       orderId,
-      toastManager,
       closePopup
     } = this.props
 
     try {
       await this.props.returnShipOrder(orderId, value)
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage
-            id='notifications.order.actions.shipped.success.header'
-            defaultMessage='Order Marked as Shipped'
-          />,
-          <FormattedMessage
-            id='notifications.order.actions.returnShipped.success.content'
-            defaultMessage={`Order '${orderId}' was marked as shipped to be returned.`}
-            values={{ orderId: orderId }}
-          />
-        ), { appearance: 'success' }
-      )
       closePopup()
     } catch (e) {
       console.error(e)
@@ -150,4 +134,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(EnterTrackingIdReturnShip)))
+export default connect(mapStateToProps, { ...Actions })(injectIntl(EnterTrackingIdReturnShip))

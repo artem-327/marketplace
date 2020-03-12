@@ -83,7 +83,7 @@ class Holds extends Component {
       }
     ],
     selectedRows: [],
-    pageNumber: 0,
+    //pageNumber: 0,
     open: false,
     holdDropdown: 'My Holds'
   }

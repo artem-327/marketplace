@@ -45,21 +45,21 @@ const OrderSegment = styled(Segment)`
   width: calc(100% - 64px);
   margin-left: 32px !important;
   margin-bottom: 30px !important;
-  
+
   > .grid {
     padding: 0;
-    
+
     > .row {
       padding-top: 0 !important;
       padding-bottom: 0 !important;
     }
-    
+
     > .column,
     > .row > .column {
       padding: 20px !important;
     }
   }
-  
+
   h1.header {
     height: 17px;
     margin: 0 0 10px;
@@ -68,7 +68,7 @@ const OrderSegment = styled(Segment)`
     font-weight: 700 !important;
     color: #20273a;
     line-height: 1.2142857;
-    
+
     ~ a {
       display: inline-block;
       height: 32px;
@@ -80,7 +80,7 @@ const OrderSegment = styled(Segment)`
       font-weight: 500;
       color: #2599d5;
       line-height: 1.5384615;
-      
+
       svg {
         width: 18px;
         height: 20px;
@@ -97,13 +97,14 @@ const OrderList = styled(List)`
     display: flex !important;
     flex-flow: row;
     justify-content: flex-end;
-    
-    > .item:nth-child(n) { // nth-child to have stronger path
+
+    > .item:nth-child(n) {
+      // nth-child to have stronger path
       flex-grow: 1;
       max-width: 150px;
       border-left: 1px solid rgba(34, 36, 38, 0.15) !important;
       padding: 13px 15px !important;
-      
+
       .header {
         margin: 0;
         padding: 0 0 3px;
@@ -112,17 +113,17 @@ const OrderList = styled(List)`
         color: #848893;
         line-height: 1.1666667;
       }
-      
+
       .description {
         font-size: 14px;
         font-weight: 700;
         color: #20273a;
         line-height: 1.2142857;
-        
+
         &.green {
           color: #84c225;
         }
-        
+
         &.red {
           color: #f16844;
         }
@@ -139,13 +140,13 @@ const OrderAccordion = styled(Accordion)`
     border: solid 1px #dee2e6 !important;
     border-radius: 4px;
     background-color: #f8f9fb !important;
-    
+
     &.active {
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
     }
   }
-  
+
   > .content {
     border: 1px solid #dee2e6;
     border-top: 0 none !important;
@@ -154,24 +155,23 @@ const OrderAccordion = styled(Accordion)`
     padding: 15px 1em !important;
     background-color: #ffffff;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-  
+
     + .title {
       margin-top: 10px !important;
     }
-    
+
     .table-responsive {
-    
       .ui.table {
         width: calc(100% - 32px);
         margin: 16px;
         border: 0 none;
-        
+
         th.p-0,
         td.p-0 {
           width: 0 !important;
           padding: 0 !important;
         }
-        
+
         span.product-name {
           font-weight: 500;
         }
@@ -191,10 +191,10 @@ const AccordionTitle = styled(Accordion.Title)`
     transform: rotate(-90deg);
     color: #2599d5 !important;
   }
-  
+
   &.active {
     color: #20273a !important;
-    
+
     svg {
       transform: rotate(0deg);
       color: #2599d5 !important;
@@ -214,15 +214,14 @@ const Chevron = styled(ChevronDown)`
 const GridData = styled(Grid)`
   padding-top: 1em !important;
   padding-bottom: 1em !important;
-  
+
   > .column:not(.row),
   > .row > .column,
   &.column > .column:not(.row),
   &.column > .row > .column {
-  
-    &[class*="key"] {
+    &[class*='key'] {
       width: 181px !important;
-    
+
       + * {
         width: calc(100% - 211px) !important;
       }
@@ -250,13 +249,11 @@ const StyledTable = styled(Table)`
   width: 100% !important;
   margin: -10px 0 !important;
   padding: 0 !important;
-  
+
   thead,
   tbody,
   tfoot {
-  
     tr {
-      
       th,
       td {
         border: 0 none !important;
@@ -265,11 +262,11 @@ const StyledTable = styled(Table)`
         font-weight: 400 !important;
         color: #848893 !important;
         line-height: 1.4285714 !important;
-        
+
         &:first-child {
           padding-left: 16px !important;
         }
-        
+
         &:last-child {
           padding-right: 16px !important;
           color: #20273a !important;
@@ -423,8 +420,7 @@ class Detail extends Component {
                               ? 'red'
                               : order.orderStatus === 'Confirmed'
                               ? 'green'
-                              : order.orderStatus === 'Pending' ||
-                                order.orderStatus === 'Draft'
+                              : order.orderStatus === 'Pending' || order.orderStatus === 'Draft'
                               ? null // could be blue
                               : null
                           }>
@@ -437,15 +433,17 @@ class Detail extends Component {
                         <List.Header as='label'>
                           <FormattedMessage id='order.shippingStatus' defaultMessage='Shipping Status' />
                         </List.Header>
-                        <List.Description as='span' className={
-                          order.shippingStatus === 'Delivered'
-                            ? 'green'
-                            : order.shippingStatus === 'Returned'
-                            ? 'red'
-                            : order.shippingStatus === 'In Transit'
-                            ? null // could be blue
-                            : null
-                        }>
+                        <List.Description
+                          as='span'
+                          className={
+                            order.shippingStatus === 'Delivered'
+                              ? 'green'
+                              : order.shippingStatus === 'Returned'
+                              ? 'red'
+                              : order.shippingStatus === 'In Transit'
+                              ? null // could be blue
+                              : null
+                          }>
                           {order.shippingStatus}
                         </List.Description>
                       </List.Content>
@@ -455,15 +453,17 @@ class Detail extends Component {
                         <List.Header as='label'>
                           <FormattedMessage id='order.reviewStatus' defaultMessage='Review Status' />
                         </List.Header>
-                        <List.Description as='span' className={
-                          order.reviewStatus === 'Accepted'
-                            ? 'green'
-                            : order.reviewStatus === 'Rejected'
-                            ? 'red'
-                            : order.reviewStatus === 'Pending'
-                            ? null // could be blue
-                            : null
-                        }>
+                        <List.Description
+                          as='span'
+                          className={
+                            order.reviewStatus === 'Accepted'
+                              ? 'green'
+                              : order.reviewStatus === 'Rejected'
+                              ? 'red'
+                              : order.reviewStatus === 'Pending'
+                              ? null // could be blue
+                              : null
+                          }>
                           {order.reviewStatus}
                         </List.Description>
                       </List.Content>
@@ -474,16 +474,17 @@ class Detail extends Component {
                           <List.Header as='label'>
                             <FormattedMessage id='order.creditStatus' defaultMessage='Credit Status' />
                           </List.Header>
-                          <List.Description as='span' className={
-                            order.creditStatus === 'Accepted'
-                              ? 'green'
-                              : order.creditStatus === 'Rejected'
-                              ? 'red'
-                              : order.creditStatus === 'Pending' ||
-                                order.creditStatus === 'Counter Offer Pending'
-                              ? null // could be blue
-                              : null
-                          }>
+                          <List.Description
+                            as='span'
+                            className={
+                              order.creditStatus === 'Accepted'
+                                ? 'green'
+                                : order.creditStatus === 'Rejected'
+                                ? 'red'
+                                : order.creditStatus === 'Pending' || order.creditStatus === 'Counter Offer Pending'
+                                ? null // could be blue
+                                : null
+                            }>
                             {order.creditStatus}
                           </List.Description>
                         </List.Content>
@@ -495,15 +496,17 @@ class Detail extends Component {
                           <List.Header as='label'>
                             <FormattedMessage id='order.returnStatus' defaultMessage='Return Status' />
                           </List.Header>
-                          <List.Description as='span' className={
-                            order.returnStatus === 'Delivered'
-                              ? 'green'
-                              : order.returnStatus === 'Not Shipped'
-                              ? 'red'
-                              : order.returnStatus === 'In Transit'
-                              ? null // could be blue
-                              : null
-                          }>
+                          <List.Description
+                            as='span'
+                            className={
+                              order.returnStatus === 'Delivered'
+                                ? 'green'
+                                : order.returnStatus === 'Not Shipped'
+                                ? 'red'
+                                : order.returnStatus === 'In Transit'
+                                ? null // could be blue
+                                : null
+                            }>
                             {order.returnStatus}
                           </List.Description>
                         </List.Content>
@@ -514,19 +517,22 @@ class Detail extends Component {
                         <List.Header as='label'>
                           <FormattedMessage id='order.paymentStatus' defaultMessage='Payment Status' />
                         </List.Header>
-                        <List.Description as='span' className={
-                          order.paymentStatus === 'Failed' ||
-                          order.paymentStatus === 'Canceled'
-                            ? 'red'
-                            : order.paymentStatus === 'Paid'
-                            ? 'green'
-                            : order.paymentStatus === 'Pending' ||
-                              order.paymentStatus === 'Refunded' ||
-                              order.paymentStatus === 'Initiated'
-                            ? null // could be blue
-                            : null
-                        }>
-                          {order.orderType === 'Purchase' && order.paymentStatus === 'Pending' && isPaymentCancellable ? (
+                        <List.Description
+                          as='span'
+                          className={
+                            order.paymentStatus === 'Failed' || order.paymentStatus === 'Canceled'
+                              ? 'red'
+                              : order.paymentStatus === 'Paid'
+                              ? 'green'
+                              : order.paymentStatus === 'Pending' ||
+                                order.paymentStatus === 'Refunded' ||
+                                order.paymentStatus === 'Initiated'
+                              ? null // could be blue
+                              : null
+                          }>
+                          {order.orderType === 'Purchase' &&
+                          order.paymentStatus === 'Pending' &&
+                          isPaymentCancellable ? (
                             <Popup
                               content={
                                 <FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />
@@ -653,10 +659,9 @@ class Detail extends Component {
                                   <Table.Body>
                                     <TableRowData>
                                       <Table.Cell>
-                                        <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' /> (
-                                        {order.feesPercent}%)
+                                        <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' />
                                       </Table.Cell>
-                                      <Table.Cell textAlign='right'>{order.feesAmount}</Table.Cell>
+                                      <Table.Cell textAlign='right'>{order.echoFee}</Table.Cell>
                                     </TableRowData>
                                   </Table.Body>
                                   <Table.Footer>
@@ -679,9 +684,7 @@ class Detail extends Component {
                                       <Table.HeaderCell>
                                         <FormattedMessage id='order.subtotal' defaultMessage='Subtotal' />
                                       </Table.HeaderCell>
-                                      <Table.HeaderCell textAlign='right'>
-                                        {order.subtotal}
-                                      </Table.HeaderCell>
+                                      <Table.HeaderCell textAlign='right'>{order.subtotal}</Table.HeaderCell>
                                     </TableRowData>
                                   </Table.Header>
                                   <Table.Body>
@@ -769,15 +772,15 @@ class Detail extends Component {
                           order.productName.map((element, index) => (
                             <Table.Row>
                               <Table.Cell className='p-0'></Table.Cell>
-                              <Table.Cell><span className='product-name'>{element}</span></Table.Cell>
+                              <Table.Cell>
+                                <span className='product-name'>{element}</span>
+                              </Table.Cell>
                               <Table.Cell>{order.productCode[index]}</Table.Cell>
                               <Table.Cell>{order.packaging[index]}</Table.Cell>
                               <Table.Cell textAlign='right'>{order.totalPkg[index]}</Table.Cell>
                               <Table.Cell textAlign='right'>{order.quantityOrdered[index]}</Table.Cell>
                               <Table.Cell textAlign='right'>{order.unitPrice[index]}</Table.Cell>
-                              <Table.Cell textAlign='right'>
-                                {order.itemTotal[index]}
-                              </Table.Cell>
+                              <Table.Cell textAlign='right'>{order.itemTotal[index]}</Table.Cell>
                               {ordersType === 'Sales' && (
                                 <>
                                   <Table.Cell textAlign='right'>
@@ -1018,7 +1021,7 @@ class Detail extends Component {
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.paymentAddress}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
-                              {order.paymentType} <FormattedMessage id='order.phone' defaultMessage='Phone' />
+                            {order.paymentType} <FormattedMessage id='order.phone' defaultMessage='Phone' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>
                             <FormattedPhone value={order.paymentPhone} />
