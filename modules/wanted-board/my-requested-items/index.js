@@ -3,7 +3,7 @@ import { DatagridProvider } from '~/modules/datagrid'
 
 export const MyRequestedItems = props => {
   const apiConfig = {
-    url: '/prodex/api/purchase-requests/own/datagrid',
+    url: `/prodex/api/purchase-requests/own/datagrid?type=${props.type}`,
     searchToFilter: v =>
       v
         ? [
@@ -18,7 +18,7 @@ export const MyRequestedItems = props => {
   return (
     <>
       <DatagridProvider apiConfig={apiConfig}>
-        <MyRequestedItemsContainer {...props} />
+        <MyRequestedItemsContainer {...props}/>
       </DatagridProvider>
     </>
   )

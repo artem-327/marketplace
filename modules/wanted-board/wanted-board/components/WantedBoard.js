@@ -25,7 +25,7 @@ import Link from 'next/link'
 import {
   UpperCaseText,
   ControlPanel,
-
+  ProductChemicalSwitch,
 } from '../../constants/layout'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
@@ -39,7 +39,7 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
 
 class WantedBoard extends Component {
   state = {
-    columns: [
+    columnsProduct: [
       {
         name: 'product',
         title: (
@@ -52,18 +52,106 @@ class WantedBoard extends Component {
         //sortPath: 'ProductOffer.pkgAvailable'
       },
       {
-        name: 'assayMin',
+        name: 'casNumber',
         title: (
-          <FormattedMessage id='wantedBoard.assayMin' defaultMessage='Assay Min'>
+          <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 225,
+        disabled: true
+      },
+      {
+        name: 'assay',
+        title: (
+          <FormattedMessage id='wantedBoard.assay' defaultMessage='Assay'>
             {text => text}
           </FormattedMessage>
         ),
         width: 130,
+        disabled: true
       },
       {
-        name: 'assayMax',
+        name: 'packaging',
         title: (
-          <FormattedMessage id='wantedBoard.assayMax' defaultMessage='Assay Max'>
+          <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150,
+      },
+      {
+        name: 'manufacturer',
+        title: (
+          <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 420,
+      },
+      {
+        name: 'form',
+        title: (
+          <FormattedMessage id='wantedBoard.form' defaultMessage='Form'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120,
+      },
+      {
+        name: 'fobPrice',
+        title: (
+          <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150,
+      },
+      {
+        name: 'quantity',
+        title: (
+          <FormattedMessage id='wantedBoard.quantity' defaultMessage='Quantity'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 180,
+      },
+      {
+        name: 'neededBy',
+        title: (
+          <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120,
+      }
+    ],
+    columnsChemical: [
+      {
+        name: 'product',
+        title: (
+          <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 290,
+        disabled: true
+        //align: 'right',
+        //sortPath: 'ProductOffer.pkgAvailable'
+      },
+      {
+        name: 'casNumber',
+        title: (
+          <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 225
+      },
+      {
+        name: 'assay',
+        title: (
+          <FormattedMessage id='wantedBoard.assay' defaultMessage='Assay'>
             {text => text}
           </FormattedMessage>
         ),
@@ -162,9 +250,10 @@ class WantedBoard extends Component {
       rows,
       editedId,
       sidebarDetailTrigger,
-      openedSubmitOfferPopup
+      openedSubmitOfferPopup,
+      type
     } = this.props
-    const { columns, selectedRows, filterValue } = this.state
+    const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
 
     return (
@@ -185,6 +274,28 @@ class WantedBoard extends Component {
                   onChange={this.handleFilterChange}
                 />
               </GridColumn>
+
+              <GridColumn floated='right' width={3}>
+                <ProductChemicalSwitch className={type}>
+                  <Button
+                    attached='left'
+                    onClick={() => this.props.setWantedBoardType('product')}
+                  >
+                    <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button>
+                  <Button
+                    attached='right'
+                    onClick={() => this.props.setWantedBoardType('chemical')}
+                  >
+                    <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button>
+                </ProductChemicalSwitch>
+              </GridColumn>
+
               <GridColumn floated='right' width={2}>
                 <Button
                   fluid
@@ -204,7 +315,7 @@ class WantedBoard extends Component {
             tableName='wanted_board_grid'
             {...datagrid.tableProps}
             rows={rows}
-            columns={columns}
+            columns={type === 'product' ? columnsProduct : columnsChemical}
             rowSelection
             showSelectionColumn
             rowActions={[

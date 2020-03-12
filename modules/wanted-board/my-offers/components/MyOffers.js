@@ -93,15 +93,10 @@ class MyOffers extends Component {
 
   componentDidMount() {
     this.setState({ filterValue: '' })
-    //this.handleFilterClear()
     this.props.handleFiltersValue('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    //const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
-    //if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-    //  datagrid.setFilter(datagridFilter)
-    //}
   }
 
   handleFiltersValue = value => {
@@ -116,7 +111,7 @@ class MyOffers extends Component {
   }
 
   renderContent = () => {
-    const { datagrid, intl, rows, editedId, sidebarDetailTrigger } = this.props
+    const { datagrid, intl, rows, editedId, myOffersSidebarTrigger } = this.props
     const { columns, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
 
@@ -154,7 +149,7 @@ class MyOffers extends Component {
                   id: 'global.edit',
                   defaultMessage: 'Edit'
                 }),
-                callback: row => sidebarDetailTrigger(row, 'my-offers')
+                callback: row => myOffersSidebarTrigger(row)
               },
               {
                 text: formatMessage({

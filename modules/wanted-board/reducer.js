@@ -20,7 +20,10 @@ export const initialState = {
   listWarehouses: [],
   listWarehousesLoading: false,
   listCountries: [],
+  countries: [],
   listCountriesLoading: false,
+  listProvinces: [],
+  listProvincesLoading: false,
   listUnits: [],
   listUnitsLoading: false,
   searchedManufacturers: [],
@@ -29,8 +32,10 @@ export const initialState = {
   searchedCasNumbersLoading: false,
   openedSubmitOfferPopup: false,
   popupValues: null,
-
-
+  wantedBoardType: 'product',
+  myRequestedItemsType: 'product',
+  matchingProductOffers: [],
+  matchingProductOffersLoading: false,
 
 
   //datagridFilter: { filters: [] },
@@ -64,6 +69,19 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.WB_SET_WANTED_BOARD_TYPE: {
+      return {
+        ...state,
+        wantedBoardType: payload,
+      }
+    }
+    case AT.WB_SET_MY_REQUESTED_ITEM_TYPE: {
+      return {
+        ...state,
+        myRequestedItemsType: payload,
+      }
+    }
+
     case AT.WB_HANDLE_FILTERS_VALUE: {
       return {
         ...state,
@@ -71,13 +89,36 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-
     case AT.WB_SIDEBAR_DETAIL_TRIGGER: {
+      const row = payload.row ? payload.row.rawData : null
       return {
         ...state,
         editInitTrig: !state.editInitTrig,
         editWindowOpen: payload.activeTab,
-        sidebarValues: payload.row
+        sidebarValues: payload.row,
+        ...(row && {
+          searchedManufacturers: row.manufacturers.map(data => {
+            return {
+              key: data.id,
+              value: data.id,
+              text: data.name
+            }
+          }),
+          autocompleteData: (row.element.echoProduct
+            ? [{
+              key: row.element.echoProduct.id,
+              text: `${row.element.echoProduct.name} ${row.element.echoProduct.code}`,
+              value: row.element.echoProduct.id,
+            }]
+            : []),
+          searchedCasNumbers: (row.element.casProduct
+            ? [{
+              key: row.element.casProduct.id,
+              text: row.element.casProduct.casNumber,
+              value: row.element.casProduct.id,
+            }]
+            : []),
+        })
       }
     }
 
@@ -88,22 +129,12 @@ export default function reducer(state = initialState, action) {
         ...state,
         autocompleteDataLoading: false,
         autocompleteData: uniqueArrayByKey(action.payload.map(el => {
-            const productCode = getSafe(() => el.intProductCode, el.mfrProductCode)
-            const productName = getSafe(() => el.intProductName, el.mfrProductName)
+            const productCode = getSafe(() => el.code, '')
+            const productName = getSafe(() => el.name, '')
             return {
-              ...el,
               key: el.id,
               text: `${productName} ${productCode}`,
-              value: JSON.stringify({
-                id: el.id,
-                name: productName,
-                casNumber: productCode
-              }),
-              content: {
-                productCode: productCode,
-                productName: productName,
-                casProducts: getSafe(() => el.echoProduct.elements, [])
-              }
+              value: el.id,
             }
           })
           .concat(state.autocompleteData), 'key')
@@ -200,13 +231,40 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.WB_GET_MATCHING_PRODUCT_OFFERS_PENDING: { return { ...state, matchingProductOffersLoading: true } }
+    case AT.WB_GET_MATCHING_PRODUCT_OFFERS_REJECTED: { return { ...state, matchingProductOffersLoading: false } }
+    case AT.WB_GET_MATCHING_PRODUCT_OFFERS_FULFILLED: {
+      return {
+        ...state,
+        matchingProductOffersLoading: false,
+        matchingProductOffers: payload
+      }
+    }
+
     case AT.WB_GET_COUNTRIES_PENDING: { return { ...state, listCountriesLoading: true } }
     case AT.WB_GET_COUNTRIES_REJECTED: { return { ...state, listCountriesLoading: false } }
     case AT.WB_GET_COUNTRIES_FULFILLED: {
       return {
         ...state,
         listCountriesLoading: false,
+        countries: payload,
         listCountries: payload.map(data => {
+          return {
+            key: data.id,
+            value: data.id,
+            text: data.name
+          }
+        })
+      }
+    }
+
+    case AT.WB_GET_PROVINCES_PENDING: { return { ...state, listProvincesLoading: true } }
+    case AT.WB_GET_PROVINCES_REJECTED: { return { ...state, listProvincesLoading: false } }
+    case AT.WB_GET_PROVINCES_FULFILLED: {
+      return {
+        ...state,
+        listProvincesLoading: false,
+        listProvinces: payload.map(data => {
           return {
             key: data.id,
             value: data.id,

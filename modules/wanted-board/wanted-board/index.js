@@ -3,7 +3,7 @@ import { DatagridProvider } from '~/modules/datagrid'
 
 export const WantedBoard = props => {
   const urlApiConfig = {
-    url: '/prodex/api/purchase-requests/other/datagrid',
+    url: `/prodex/api/purchase-requests/other/datagrid?type=${props.type}`,
     searchToFilter: v =>
       v
         ? [

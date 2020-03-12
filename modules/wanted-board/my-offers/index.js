@@ -3,7 +3,7 @@ import { DatagridProvider } from '~/modules/datagrid'
 
 export const MyOffers = props => {
   const urlApiConfig = {
-    url: '/prodex/api/product-offers/broadcasted/datagrid/',
+    url: '/prodex/api/purchase-request-offers/own/datagrid',
     searchToFilter: v =>
       v
         ? [

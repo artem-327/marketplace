@@ -21,28 +21,31 @@ function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
     ...datagrid,
+    type: store.wantedBoard.wantedBoardType,
     rows: datagrid.rows.map(row => {
-      const qtyPart = 'lb'
+      const qtyPart = getSafe(() => row.unit.nameAbbreviation)
       return {
         id: row.id,
         rawData: row,
         product: getSafe(() => row.element.echoProduct.name,
           <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
         ),
-        assayMin: getSafe(() => row.element.assayMin,
-          <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />),
-        assayMax: getSafe(() => row.element.assayMax,
-          <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />),
+        casNumber: getSafe(() => row.element.casProduct.casNumber, 'N/A'),
+        assay:
+          <FormattedAssay
+            min={getSafe(() => row.element.assayMin, null)}
+            max={getSafe(() => row.element.assayMax, null)}
+          />,
         packaging: row.packagingTypes && row.packagingTypes.length
           ? <ArrayToFirstItem values={row.packagingTypes.map(d => d.name)} />
           : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
         manufacturer: row.manufacturers && row.manufacturers.length
-          ? (<ArrayToFirstItem values={row.manufacturers.map(d => d.name)}/>)
-          : (<FormattedMessage id='wantedBoard.any' defaultMessage='Any' />),
+          ? <ArrayToFirstItem values={row.manufacturers.map(d => d.name)}/>
+          : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
         form: row.forms && row.forms.length
-          ? (<ArrayToFirstItem values={row.forms.map(d => d.name)}/>)
-          : (<FormattedMessage id='wantedBoard.any' defaultMessage='Any' />),
-        fobPrice: 'N/A'
+          ? <ArrayToFirstItem values={row.forms.map(d => d.name)}/>
+          : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
+        fobPrice: 'N/A' // Not returned in endpoint
         /*
           row.pricingTiers && row.pricingTiers.length > 1 ? (
             <>
@@ -66,7 +69,7 @@ function mapStateToProps(store, { datagrid }) {
           )*/
         ,
         quantity: qtyPart
-          ? <FormattedUnit unit={qtyPart} separator='' value={row.pkgAmount} />
+          ? <FormattedUnit unit={qtyPart} separator='' value={row.quantity} />
           : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
         neededBy: row.neededAt
           ? moment(row.neededAt).format(getLocaleDateFormat())

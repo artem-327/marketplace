@@ -11,15 +11,20 @@ export const closeDetailSidebar = (id) => {
 }
 
 export const sidebarDetailTrigger = (row = null, activeTab = '') => {
-  console.log('!!!!!!!!!! sidebarDetailTrigger activeTab', activeTab)
   return {
     type: AT.WB_SIDEBAR_DETAIL_TRIGGER,
     payload: { activeTab: activeTab, row: row }
   }
 }
 
+export const myOffersSidebarTrigger = (row = null) => {
+  return {
+    type: AT.WB_SIDEBAR_DETAIL_TRIGGER,
+    payload: row
+  }
+}
+
 export const deleteWantedBoardItem = (id) => {
-  console.log('!!!!!!!!!! deleteWantedBoardItem id', id)
   return {
     type: AT.WB_DELETE_WANTED_BOARD_ITEM,
     payload: id
@@ -27,7 +32,6 @@ export const deleteWantedBoardItem = (id) => {
 }
 
 export const deleteMyOfferItem = (id) => {
-  console.log('!!!!!!!!!! deleteMyOfferItem id', id)
   return {
     type: AT.WB_DELETE_MY_OFFER_ITEM,
     payload: id
@@ -35,14 +39,12 @@ export const deleteMyOfferItem = (id) => {
 }
 
 export const openSubmitOffer = (row) => {
-  console.log('!!!!!!!!!! OpenSubmitOffer id', row)
   return {
     type: AT.WB_OPEN_SUBMIT_OFFER,
     payload: row
   }
 }
 export const closePopup = () => {
-  console.log('!!!!!!!!!! ClosePopup')
   return {
     type: AT.WB_CLOSE_POPUP
   }
@@ -50,7 +52,6 @@ export const closePopup = () => {
 
 
 export const purchaseRequestedItem = (id) => {
-  console.log('!!!!!!!!!! purchaseRequestedItem id', id)
   return {
     type: AT.WB_PURCHASE_REQUESTED_ITEM,
     payload: id
@@ -58,7 +59,6 @@ export const purchaseRequestedItem = (id) => {
 }
 
 export const rejectRequestedItem = (id) => {
-  console.log('!!!!!!!!!! rejectRequestedItem id', id)
   return {
     type: AT.WB_REJECT_REQUESTED_ITEM,
     payload: id
@@ -138,6 +138,19 @@ export function handleFiltersValue(value) {
     })
 }}
 
+export const setWantedBoardType = (type) => ({
+  type: AT.WB_SET_WANTED_BOARD_TYPE,
+  payload: type
+})
 
+export const setMyRequestedItemsType = (type) => ({
+  type: AT.WB_SET_MY_REQUESTED_ITEM_TYPE,
+  payload: type
+})
+
+export const getMatchingProductOffers = (id) => ({
+  type: AT.WB_GET_MATCHING_PRODUCT_OFFERS,
+  payload: api.getMatchingProductOffers(id)
+})
 
 

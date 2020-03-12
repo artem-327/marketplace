@@ -28,7 +28,7 @@ import {
 } from 'semantic-ui-react'
 
 import {
-  //sidebarDetailTrigger,
+  myOffersSidebarTrigger,
   getAutocompleteData,
   getPackagingTypes,
   getWarehouses,
@@ -58,11 +58,12 @@ const CustomHr = styled.hr`
 `
 
 const initValues = {
-  product: null,
+  product: '',
   fobPrice: '',
-  manufacturers: null,
-  conditionConforming: null,
-  packagingTypes: null,
+  manufacturers: '',
+  conditionConforming: '',
+  packagingTypes: '',
+  expiresAt: '',
   measurement: 7      // pounds [lb]
 }
 
@@ -99,7 +100,6 @@ class DetailSidebar extends Component {
   state = {
     initValues: initValues,
     sidebarValues: null,
-
   }
 
   componentDidMount = async () => {
@@ -114,7 +114,7 @@ class DetailSidebar extends Component {
 
   searchProducts = debounce(text => {
     this.props.getAutocompleteData({
-      searchUrl: `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`
+      searchUrl: `/prodex/api/echo-products/search/include-alternative-names?pattern=${text}`
     })
   }, 250)
 
@@ -128,10 +128,8 @@ class DetailSidebar extends Component {
 
     let body = {
       ...values,
-
     }
     removeEmpty(body)
-    console.log('!!!!!!!!!! submitForm body', body)
 
     try {
       if (sidebarValues) {
@@ -143,9 +141,54 @@ class DetailSidebar extends Component {
         //console.log('!!!!!!!!!! add response', response)
 
       }
+      this.props.closeDetailSidebar()
     } catch (e) {}
 
     //! ! setSubmitting(false)
+  }
+
+  getInitialFormValues = () => {
+    const { sidebarValues } = this.props
+
+    let initialValues = {
+      ...this.state.initValues,
+      ...(sidebarValues
+          ? {
+            conditionConforming: getSafe(() => sidebarValues.conditionConforming, ''),
+            deliveryCountry: getSafe(() => sidebarValues.deliveryCountry.id, ''),
+            deliveryProvince: getSafe(() => sidebarValues.deliveryProvince.id, ''),
+            element: {
+              echoProduct: getSafe(() => sidebarValues.element.echoProduct.id, ''),
+              casProduct: getSafe(() => sidebarValues.element.casProduct.id, ''),
+              assayMin: getSafe(() => sidebarValues.element.assayMin, ''),
+              assayMax: getSafe(() => sidebarValues.element.assayMax, ''),
+            },
+            expiresAt: getSafe(() => sidebarValues.expiresAt, ''),
+            forms: sidebarValues.forms.map(d => d.id),
+            grades: sidebarValues.grades.map(d => d.id),
+            manufacturers: sidebarValues.manufacturers.map(d => d.id),
+            maximumPricePerUOM: getSafe(() => sidebarValues.maximumPricePerUOM, ''),
+            neededAt: getSafe(() => sidebarValues.neededAt, ''),
+            notes: getSafe(() => sidebarValues.notes, ''),
+            origins: sidebarValues.origins.map(d => d.id),
+            packagingTypes: sidebarValues.packagingTypes.map(d => d.id),
+            quantity: getSafe(() => sidebarValues.quantity, ''),
+            unit: getSafe(() => sidebarValues.unit.id, ''),
+          }
+          : null
+      )
+    }
+
+    if (initialValues.expiresAt) {
+      initialValues.expiresAt = moment(initialValues.expiresAt).format(getLocaleDateFormat())
+      initialValues.doesExpire = true
+    }
+    if (initialValues.neededAt) {
+      initialValues.neededAt = moment(initialValues.neededAt).format(getLocaleDateFormat())
+      initialValues.neededNow = false
+    }
+
+    return initialValues
   }
 
   render() {
@@ -166,7 +209,7 @@ class DetailSidebar extends Component {
     return (
       <Formik
         enableReinitialize
-        initialValues={this.state.initValues}
+        initialValues={this.getInitialFormValues()}
         validationSchema={validationScheme}
         onSubmit={async (values, { setSubmitting, setTouched }) => {
           this.submitForm(values, setSubmitting, setTouched)
@@ -214,14 +257,7 @@ class DetailSidebar extends Component {
                             </FormattedMessage>
                           }
                           name='product'
-                          options={this.props.autocompleteData.map(el => ({
-                            key: el.id,
-                            text: `${getSafe(() => el.intProductCode, '')} ${getSafe(
-                              () => el.intProductName,
-                              ''
-                            )}`,
-                            value: el.id
-                          }))}
+                          options={this.props.autocompleteData}
                           inputProps={{
                             placeholder: (
                               <FormattedMessage
@@ -290,6 +326,7 @@ class DetailSidebar extends Component {
                             search: options => options,
                             selection: true,
                             multiple: false,
+                            disabled: true,
                             onSearchChange: (e, { searchQuery }) =>
                               searchQuery.length > 0 && this.searchManufacturers(searchQuery)
                           }}
@@ -298,7 +335,7 @@ class DetailSidebar extends Component {
                     </GridRow>
 
                     <GridRow>
-                      <GridColumn>
+                      <GridColumn width={8}>
                         <Dropdown
                           label={
                             <FormattedMessage
@@ -318,13 +355,11 @@ class DetailSidebar extends Component {
                             ),
                             'data-test': 'new_inventory_grade_drpdn',
                             selection: true,
-                            clearable: true
+                            clearable: true,
+                            disabled: true,
                           }}
                         />
                       </GridColumn>
-                    </GridRow>
-
-                    <GridRow>
                       <GridColumn  width={8}>
                         <Dropdown
                           label={
@@ -346,10 +381,14 @@ class DetailSidebar extends Component {
                             'data-test': 'new_inventory_grade_drpdn',
                             selection: true,
                             multiple: false,
+                            disabled: true,
                             loading: listPackagingTypesLoading
                           }}
                         />
                       </GridColumn>
+                    </GridRow>
+
+                    <GridRow>
                       <GridColumn  width={8}>
                         <Dropdown
                           label={
@@ -364,7 +403,22 @@ class DetailSidebar extends Component {
                           inputProps={{
                             'data-test': 'new_inventory_grade_drpdn',
                             selection: true,
+                            disabled: true,
                             loading: listUnitsLoading
+                          }}
+                        />
+                      </GridColumn>
+                      <GridColumn width={8}>
+                        <DateInput
+                          name='expiresAt'
+                          inputProps={{
+                            'data-test': 'new_inventory_grade_drpdn',
+                            placeholder:
+                              formatMessage({
+                                id: 'date.standardPlaceholder',
+                                defaultMessage: '00/00/0000'
+                              }),
+                            disabled: true
                           }}
                         />
                       </GridColumn>
@@ -404,7 +458,7 @@ class DetailSidebar extends Component {
 }
 
 const mapDispatchToProps = {
-  //sidebarDetailTrigger,
+  myOffersSidebarTrigger,
   getAutocompleteData,
   getProductConditions,
   getPackagingTypes,
@@ -434,7 +488,7 @@ const mapStateToProps = ({
   listUnits,
   listUnitsLoading,
 //  loading,
-  sidebarValues,
+  sidebarValues: sidebarValues ? sidebarValues.rawData : null,
   searchedManufacturers,
   searchedManufacturersLoading,
   currencySymbol: '$'

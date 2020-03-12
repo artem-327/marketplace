@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { Button, Input, TextArea, Dropdown, Checkbox as FormikCheckbox } from 'formik-semantic-ui-fixed-validation'
+import { Button, Input, TextArea, Dropdown, Checkbox as FormikCheckbox, Radio } from 'formik-semantic-ui-fixed-validation'
 import { Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import { DateInput } from '~/components/custom-formik'
-import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
+import { getSafe, generateToastMarkup, uniqueArrayByKey, removeEmpty } from '~/utils/functions'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
 import confirm from '~/src/components/Confirmable/confirm'
@@ -20,11 +20,19 @@ import _ from 'lodash'
 import { inputWrapper, quantityWrapper } from '../../components'
 
 import {
+  Segment,
   Dimmer,
   Loader,
+  Tab,
+  Menu,
   Grid,
   GridRow,
   GridColumn,
+  Header,
+  Icon,
+  Popup,
+  FormField,
+  Button as ButtonSemantic
 } from 'semantic-ui-react'
 
 import {
@@ -33,23 +41,48 @@ import {
   getPackagingTypes,
   getWarehouses,
   getCountries,
+  getProvinces,
+  getUnits,
+  //addProductOffer,
   getProductGrades,
+  //searchOrigins,
   getProductForms,
   getProductConditions,
   searchManufacturers,
+  searchCasNumber,
+  //addAttachment,
+  //loadFile,
+  //removeAttachmentLink,
+  //removeAttachment,
+  //downloadAttachment,
   closeDetailSidebar,
+  //getProductOffer,
+  addPurchaseRequest,
+  editPurchaseRequest
 } from '../../actions'
 
 
 
 import {
   FlexSidebar,
+  //FlexTabs,
   FlexContent,
+  //TopMargedColumn,
+  //GraySegment,
   HighSegment,
+  //DivIcon,
+  //CloceIcon,
+  //InputWrapper,
+  //QuantityWrapper,
   BottomButtons,
+  //SmallGrid,
+  //InputLabeledWrapper,
+  //CustomLabel,
+  LabeledRow
 } from '../../constants/layout'
 
 import { listFrequency } from '../../constants/constants'
+import { comparationHelper } from '../../constants/validation'
 
 const CustomHr = styled.hr`
   border: solid 0.5px #dee2e6;
@@ -57,29 +90,111 @@ const CustomHr = styled.hr`
 `
 
 const initValues = {
-  product: null,
-  assayMin: '',
-  assayMax: '',
-  quantityFrom: '',
-  quantityTo: '',
-  priceFrom: '',
-  priceTo: '',
+  quantity: '',
+  deliveryCountry: '',
+  deliveryProvince: '',
   neededAt: '',
-  notificationEnabled: false,
-  notifyMail: false,
-  notifyPhone: false,
-  orderFrequency: null,
-  packagingTypes: [],
+  expiresAt: '',
   manufacturers: [],
-  conditionConforming: null,
+  conditionConforming: '',
   origins: [],
+  grades: [],
   forms: [],
+  packagingTypes: [],
+  maximumPricePerUOM: '',
+  notes: '',
+  element: {
+    echoProduct: '',
+    casProduct: '',
+    assayMin: '',
+    assayMax: '',
+  },
+  fobPrice: '',     // not implemented on endpoint yet
+  neededNow: null,
+  doesExpire: null,
+  notificationEnabled: false, // not implemented on endpoint yet
+  notifyMail: false,          // not implemented on endpoint yet
+  notifyPhone: false,         // not implemented on endpoint yet
+  unit: 7
 }
 
-const validationScheme = val.object().shape({
+const validationSchema = () =>
+  val.lazy(values => {
 
-  }
-)
+    //val.object().shape({
+    return val.object().shape({
+      /*
+      ...(values.neededNow === false && {
+        neededAt: val.string()
+          .required(errorMessages.requiredMessage)
+      }),
+      */
+      ...(values.doesExpire && {
+        expiresAt: val.string()
+          .required(errorMessages.requiredMessage)
+      }),
+      element: val.object().shape({
+        echoProduct: val.string()
+          .trim()
+          .test('required', errorMessages.requiredMessage, function(value) {
+            const { casProduct } = this.parent
+            if (casProduct === null || casProduct === '') {
+              return value !== null && value !== ''
+            }
+            return true
+          }),
+        casProduct: val.string()
+          .trim()
+          .test('required', errorMessages.requiredMessage, function(value) {
+            const { echoProduct } = this.parent
+            if (echoProduct === null || echoProduct === '') {
+              return value !== null && value !== ''
+            }
+            return true
+          }),
+        assayMin: val.string()
+          .test('v', errorMessages.minUpToMax, function(v) {
+            const { assayMax: v2 } = this.parent
+            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+            if (v2 === null || v2 === '' || isNaN(v2)) return true // No max limit value - can not be tested
+            return Number(v) <= v2
+          })
+          .test('v', errorMessages.minimum(0), function(v) {
+            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+            return Number(v) >= 0
+          })
+          .test('v', errorMessages.maximum(100), function(v) {
+            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+            return Number(v) <= 100
+          })
+          .test('v', errorMessages.mustBeNumber, function(v) {
+            return v === null || v === '' || !isNaN(v)
+          }),
+        assayMax: val.string()
+          .test('v', errorMessages.maxAtLeastMin, function(v) {
+            const { assayMin: v2 } = this.parent
+            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+            if (v2 === null || v2 === '' || isNaN(v2)) return true // No min limit value - can not be tested
+            return Number(v) >= v2
+          })
+          .test('v', errorMessages.minimum(0), function(v) {
+            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+            return Number(v) >= 0
+          })
+          .test('v', errorMessages.maximum(100), function(v) {
+            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+            return Number(v) <= 100
+          })
+          .test('v', errorMessages.mustBeNumber, function(v) {
+            return v === null || v === '' || !isNaN(v)
+          })
+      }),
+      quantity: val
+        .number()
+        .typeError(errorMessages.requiredMessage)
+        .required(errorMessages.requiredMessage),
+    })
+  })
 
 const listConforming = [
   {
@@ -98,7 +213,7 @@ class DetailSidebar extends Component {
   state = {
     initValues: initValues,
     sidebarValues: null,
-
+    hasProvinces: false
   }
 
   componentDidMount = async () => {
@@ -108,8 +223,15 @@ class DetailSidebar extends Component {
     this.fetchIfNoData('listGrades', this.props.getProductGrades)
     this.fetchIfNoData('listWarehouses', this.props.getWarehouses)
     this.fetchIfNoData('listCountries', this.props.getCountries)
-    this.props.searchManufacturers('', 200)
-
+    this.fetchIfNoData('listUnits', this.props.getUnits)
+    if (!this.props.sidebarValues) {
+      this.props.searchManufacturers('', 200)
+    } else {
+      if (this.props.sidebarValues.deliveryCountry && this.props.sidebarValues.deliveryCountry.hasProvinces) {
+        this.props.getProvinces(this.props.sidebarValues.deliveryCountry.id)
+        this.setState({ hasProvinces: true })
+      }
+    }
   }
 
   fetchIfNoData = (name, fn) => {
@@ -118,31 +240,156 @@ class DetailSidebar extends Component {
 
   searchProducts = debounce(text => {
     this.props.getAutocompleteData({
-      searchUrl: `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`
+      searchUrl: `/prodex/api/echo-products/search/include-alternative-names?pattern=${text}`
     })
   }, 250)
 
+  searchManufacturers = debounce(text => {
+    this.props.searchManufacturers(text, 5)
+  }, 250)
+
+  searchCasNumber = debounce(text => {
+    this.props.searchCasNumber(text, 5)
+  }, 250)
+
+  submitForm = async (values, setSubmitting, setTouched) => {
+    const { addPurchaseRequest, editPurchaseRequest, datagrid } = this.props
+    const { sidebarValues } = this.state
+
+    let neededAt = null, expiresAt = null
+
+    if (values.neededNow) {
+      neededAt = moment()
+        .add(1, 'minutes')
+        .format()
+    } else {
+      if (values.neededAt.length) {
+        neededAt = moment(getStringISODate(values.neededAt)).format()
+      }
+    }
+
+    if (values.doesExpire) {
+      expiresAt = moment(getStringISODate(values.expiresAt)).format()
+    }
+
+    let body = {
+      ...values,
+      element: {
+        ...values.element
+      },
+      neededAt,
+      expiresAt
+    }
+    delete body.neededNow
+    delete body.doesExpire
+
+    removeEmpty(body)
+    try {
+      if (sidebarValues) {
+        const response = await editPurchaseRequest(sidebarValues.id, body)
+        datagrid.loadData()
+      } else {
+        const response = await addPurchaseRequest(body)
+        datagrid.loadData()
+      }
+      this.props.closeDetailSidebar()
+    } catch (e) {}
+    setSubmitting(false)
+  }
+
+  getInitialFormValues = () => {
+    const { sidebarValues } = this.props
+
+    let initialValues = {
+      ...this.state.initValues,
+      ...(sidebarValues
+      ? {
+            conditionConforming: getSafe(() => sidebarValues.conditionConforming, ''),
+            deliveryCountry: getSafe(() => sidebarValues.deliveryCountry.id, ''),
+            deliveryProvince: getSafe(() => sidebarValues.deliveryProvince.id, ''),
+            element: {
+              echoProduct: getSafe(() => sidebarValues.element.echoProduct.id, ''),
+              casProduct: getSafe(() => sidebarValues.element.casProduct.id, ''),
+              assayMin: getSafe(() => sidebarValues.element.assayMin, ''),
+              assayMax: getSafe(() => sidebarValues.element.assayMax, ''),
+            },
+            expiresAt: getSafe(() => sidebarValues.expiresAt, ''),
+            forms: sidebarValues.forms.map(d => d.id),
+            grades: sidebarValues.grades.map(d => d.id),
+            manufacturers: sidebarValues.manufacturers.map(d => d.id),
+            maximumPricePerUOM: getSafe(() => sidebarValues.maximumPricePerUOM, ''),
+            neededAt: getSafe(() => sidebarValues.neededAt, ''),
+            notes: getSafe(() => sidebarValues.notes, ''),
+            origins: sidebarValues.origins.map(d => d.id),
+            packagingTypes: sidebarValues.packagingTypes.map(d => d.id),
+            quantity: getSafe(() => sidebarValues.quantity, ''),
+            unit: getSafe(() => sidebarValues.unit.id, ''),
+        }
+      : null
+      )
+    }
+
+    if (initialValues.expiresAt) {
+      initialValues.expiresAt = moment(initialValues.expiresAt).format(getLocaleDateFormat())
+      initialValues.doesExpire = true
+    }
+    if (initialValues.neededAt) {
+      initialValues.neededAt = moment(initialValues.neededAt).format(getLocaleDateFormat())
+      initialValues.neededNow = false
+    }
+
+    return initialValues
+  }
 
   render() {
     let {
+      // addProductOffer,
       listPackagingTypes,
+      listConditions,
       listForms,
+      listGrades,
+      listWarehouses,
       listCountries,
+      listCountriesLoading,
+      countries,
+      listProvinces,
+      listProvincesLoading,
+      listUnits,
+      listUnitsLoading,
       loading,
+      // openBroadcast,
+      // sidebarDetailOpen,
       sidebarValues,
       searchedManufacturers,
+      searchedManufacturersLoading,
+      searchedCasNumbers,
+      searchedCasNumbersLoading,
+      searchedOrigins,
+      searchedOriginsLoading,
+      // searchedProducts,
+      // searchedProductsLoading,
+      searchOrigins,
+      warehousesList,
+      listDocumentTypes,
       intl: { formatMessage },
       toastManager,
-      currencySymbol
+      removeAttachment,
+      currencySymbol,
+      type
     } = this.props
+
+    const {
+      hasProvinces
+    } = this.state
 
     return (
       <Formik
         enableReinitialize
-        initialValues={this.state.initValues}
-        validationSchema={validationScheme}
+        initialValues={this.getInitialFormValues()}
+        validationSchema={validationSchema()}
         onSubmit={async (values, { setSubmitting, setTouched }) => {
-          //! !this.submitForm(values, setSubmitting, setTouched)
+          //setSubmitting(true)
+          this.submitForm(values, setSubmitting, setTouched)
         }}>
         {formikProps => {
           let {
@@ -159,6 +406,9 @@ class DetailSidebar extends Component {
           this.values = values
           this.resetForm = resetForm
           this.formikProps = formikProps
+
+          const typeProduct = type === 'product'
+
           return (
             <Form>
               <FlexSidebar
@@ -175,108 +425,302 @@ class DetailSidebar extends Component {
                 </HighSegment>
                 <FlexContent>
                   <Grid>
-                    <GridRow>
-                      <GridColumn width={16}>
-                        <Dropdown
-                          label={
+                    {typeProduct && (
+                      <GridRow>
+                        <GridColumn width={16}>
+                          <Dropdown
+                            label={
+                              <FormattedMessage
+                                id='wantedBoard.productName'
+                                defaultMessage='Product Name'>
+                                {text => text}
+                              </FormattedMessage>
+                            }
+                            name='element.echoProduct'
+                            options={this.props.autocompleteData}
+                            inputProps={{
+                              placeholder: (
+                                <FormattedMessage
+                                  id='wantedBoard.enterProductName'
+                                  defaultMessage='Enter any Product Name'
+                                />
+                              ),
+                              loading: this.props.autocompleteDataLoading,
+                              'data-test': 'wanted_board_product_search_drpdn',
+                              size: 'large',
+                              minCharacters: 1,
+                              icon: 'search',
+                              search: options => options,
+                              selection: true,
+                              clearable: true,
+                              onSearchChange: (e, { searchQuery }) =>
+                                searchQuery.length > 0 && this.searchProducts(searchQuery)
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+                    )}
+                    {!typeProduct && (
+                      <GridRow>
+                        <GridColumn>
+                          <Dropdown
+                            label={
+                              <FormattedMessage
+                                id='wantedBoard.casNumber'
+                                defaultMessage='CAS Number'>
+                                {text => text}
+                              </FormattedMessage>
+                            }
+                            name='element.casProduct'
+                            options={searchedCasNumbers}
+                            inputProps={{
+                              placeholder: (
+                                <FormattedMessage
+                                  id='wantedBoard.enterCasNumber'
+                                  defaultMessage='Enter CAS Number'
+                                />
+                              ),
+                              loading: searchedCasNumbersLoading,
+                              'data-test': 'wanted_board_product_search_drpdn',
+                              size: 'large',
+                              minCharacters: 1,
+                              icon: 'search',
+                              search: options => options,
+                              selection: true,
+                              clearable: true,
+                              onSearchChange: (e, { searchQuery }) =>
+                                searchQuery.length > 0 && this.searchCasNumber(searchQuery)
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+                    )}
+                    {!typeProduct && (
+                      <GridRow>
+                        <GridColumn width={8}>
+                          {quantityWrapper(
+                            'element.assayMin',
+                            {
+                              min: 0,
+                              type: 'number',
+                              placeholder: '0'
+                            },
+                            this.formikProps
+                            ,
                             <FormattedMessage
-                              id='wantedBoard.searchProduct'
-                              defaultMessage='Search Product'>
+                              id='global.assayMin'
+                              defaultMessage='Assay Min'
+                            >
                               {text => text}
                             </FormattedMessage>
-                          }
-                          name='product'
-                          options={this.props.autocompleteData.map(el => ({
-                            key: el.id,
-                            text: `${getSafe(() => el.intProductCode, '')} ${getSafe(
-                              () => el.intProductName,
-                              ''
-                            )}`,
-                            value: el.id
-                          }))}
-                          inputProps={{
-                            placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.keyword'
-                                defaultMessage='Keyword'
-                              />
-                            ),
-                            loading: this.props.autocompleteDataLoading,
-                            'data-test': 'wanted_board_product_search_drpdn',
-                            size: 'large',
-                            minCharacters: 1,
-                            icon: 'search',
-                            search: options => options,
-                            selection: true,
-                            clearable: true,
-                            onSearchChange: (e, { searchQuery }) =>
-                              searchQuery.length > 0 && this.searchProducts(searchQuery)
-                          }}
-                        />
-
-                      </GridColumn>
-                    </GridRow>
-                    <GridRow>
-                      <GridColumn width={8}>
-                        {quantityWrapper(
-                          'assayMin',
-                          {
-                            min: 0,
-                            type: 'number',
-                            placeholder: '0'
-                          },
-                          this.formikProps
-                          ,
-                          <FormattedMessage
-                            id='global.assayMin'
-                            defaultMessage='Assay Min'
-                          >
-                            {text => text}
-                          </FormattedMessage>
-                        )}
-                      </GridColumn>
-                      <GridColumn width={8}>
-                        {quantityWrapper(
-                          'assayMax',
-                          {
-                            min: 0,
-                            type: 'number',
-                            placeholder: '0'
-                          },
-                          this.formikProps
-                          ,
-                          <FormattedMessage
-                            id='global.assayMax'
-                            defaultMessage='Assay Max'
-                          >
-                            {text => text}
-                          </FormattedMessage>
-                        )}
-                      </GridColumn>
-                    </GridRow>
-
+                          )}
+                        </GridColumn>
+                        <GridColumn width={8}>
+                          {quantityWrapper(
+                            'element.assayMax',
+                            {
+                              min: 0,
+                              type: 'number',
+                              placeholder: '0'
+                            },
+                            this.formikProps
+                            ,
+                            <FormattedMessage
+                              id='global.assayMax'
+                              defaultMessage='Assay Max'
+                            >
+                              {text => text}
+                            </FormattedMessage>
+                          )}
+                        </GridColumn>
+                      </GridRow>
+                    )}
                     <GridRow>
                       <GridColumn>
+                        {inputWrapper(
+                          'fobPrice',
+                          {
+                            min: 0,
+                            type: 'number',
+                            placeholder: '0.000'
+                          },
+                          <FormattedMessage
+                            id='wantedBoard.fobPrice'
+                            defaultMessage='FOB Price'
+                          >
+                            {text => text}
+                          </FormattedMessage>,
+                          currencySymbol
+                        )}
+                      </GridColumn>
+                    </GridRow>
+
+                    <GridRow>
+                      <GridColumn width={8}>
+                        {quantityWrapper(
+                          'quantity',
+                          {
+                            min: 0,
+                            type: 'number',
+                            placeholder: '0'
+                          },
+                          this.formikProps
+                          ,
+                          <FormattedMessage
+                            id='wantedBoard.quantity'
+                            defaultMessage='Quantity'
+                          >
+                            {text => text}
+                          </FormattedMessage>
+                        )}
+                      </GridColumn>
+                      <GridColumn  width={8}>
                         <Dropdown
                           label={
                             <FormattedMessage
-                              id='wantedBoard.packaging'
-                              defaultMessage='Packaging'>
+                              id='wantedBoard.measurement'
+                              defaultMessage='Measurement'>
                               {text => text}
                             </FormattedMessage>
                           }
-                          name='packagingTypes'
-                          options={listPackagingTypes}
+                          name='unit'
+                          options={listUnits}
+                          inputProps={{
+                            'data-test': 'new_inventory_grade_drpdn',
+                            selection: true,
+                            loading: listUnitsLoading
+                          }}
+                        />
+                      </GridColumn>
+                    </GridRow>
+
+                    <GridRow>
+                      <GridColumn width={8}>
+                        <Dropdown
+                          label={
+                            <FormattedMessage
+                              id='wantedBoard.deliveryLocation'
+                              defaultMessage='Delivery Location'>
+                              {text => text}
+                            </FormattedMessage>
+                          }
+                          name='deliveryCountry'
+                          options={listCountries}
                           inputProps={{
                             placeholder: (
                               <FormattedMessage
-                                id='wantedBoard.selectPackaging'
-                                defaultMessage='Select Packaging'
+                                id='wantedBoard.selectCountry'
+                                defaultMessage='Select Country'
                               />
                             ),
                             'data-test': 'new_inventory_grade_drpdn',
                             selection: true,
-                            multiple: true
+                            onChange: (_, value) => {
+                              const country = countries.find(val => val.id === value.value)
+                              setFieldValue('deliveryProvince', '')
+                              if (country && country.hasProvinces) {
+                                this.props.getProvinces(country.id)
+                              }
+                              this.setState({ hasProvinces: country.hasProvinces })
+                            },
+                            loading: listCountriesLoading
+                          }}
+                        />
+                      </GridColumn>
+                      <GridColumn width={8}>
+                        <Dropdown
+                          label={'\u00A0'}  // &nbsp to not remove label (to not break positioning)
+                          name='deliveryProvince'
+                          options={listProvinces}
+                          inputProps={{
+                            placeholder: (
+                              <FormattedMessage
+                                id='wantedBoard.selectState'
+                                defaultMessage='Select State'
+                              />
+                            ),
+                            'data-test': 'new_inventory_grade_drpdn',
+                            selection: true,
+                            loading: listProvincesLoading,
+                            disabled: !hasProvinces
+                          }}
+                        />
+                      </GridColumn>
+                    </GridRow>
+
+                    <GridRow className='label-row'>
+                      <GridColumn width={8}>
+                        <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
+                          {text => text}
+                        </FormattedMessage>
+                      </GridColumn>
+                      <GridColumn width={8} className='float-right'>
+                        <FormattedMessage id='wantedBoard.doesRequireExpire' defaultMessage='Does this request expire?'>
+                          {text => text}
+                        </FormattedMessage>
+                      </GridColumn>
+                    </GridRow>
+
+                    <GridRow>
+                      <GridColumn width={8}>
+                        <Radio
+                          name='neededNow'
+                          value={true}
+                          label={formatMessage({ id: 'wantedBoard.now', defaultMessage: 'Now' })}
+                        />
+                      </GridColumn>
+                      <GridColumn width={8}>
+                        <Radio
+                          name='doesExpire'
+                          value={false}
+                          label={formatMessage({ id: 'wantedBoard.no', defaultMessage: 'No' })}
+                        />
+                      </GridColumn>
+                    </GridRow>
+                    <GridRow>
+                      <GridColumn width={8}>
+                        <Radio
+                          name='neededNow'
+                          value={false}
+                          label={formatMessage({ id: 'wantedBoard.byDate', defaultMessage: 'By Date' })}
+                        />
+                      </GridColumn>
+                      <GridColumn width={8}>
+                        <Radio
+                          name='doesExpire'
+                          value={true}
+                          label={formatMessage({ id: 'wantedBoard.yes', defaultMessage: 'Yes' })}
+                        />
+                      </GridColumn>
+                    </GridRow>
+
+                    <GridRow>
+                      <GridColumn width={8}>
+                        <DateInput
+                          name='neededAt'
+                          inputProps={{
+                            'data-test': 'new_inventory_grade_drpdn',
+                            placeholder:
+                              formatMessage({
+                                id: 'date.standardPlaceholder',
+                                defaultMessage: '00/00/0000'
+                              }),
+                            clearable: true,
+                            disabled: values.neededNow !== false
+                          }}
+                        />
+                      </GridColumn>
+                      <GridColumn width={8}>
+                        <DateInput
+                          name='expiresAt'
+                          inputProps={{
+                            'data-test': 'new_inventory_grade_drpdn',
+                            placeholder:
+                              formatMessage({
+                                id: 'date.standardPlaceholder',
+                                defaultMessage: '00/00/0000'
+                              }),
+                            disabled: values.doesExpire !== true
                           }}
                         />
                       </GridColumn>
@@ -298,12 +742,18 @@ class DetailSidebar extends Component {
                             placeholder: (
                               <FormattedMessage
                                 id='wantedBoard.selectManufacturer'
-                                defaultMessage='Select Manufacturer'
+                                defaultMessage='Select manufacturer'
                               />
                             ),
+                            loading: searchedManufacturersLoading,
                             'data-test': 'new_inventory_grade_drpdn',
+                            size: 'large',
+                            icon: 'search',
+                            search: options => options,
                             selection: true,
-                            multiple: true
+                            multiple: true,
+                            onSearchChange: (e, { searchQuery }) =>
+                              searchQuery.length > 0 && this.searchManufacturers(searchQuery)
                           }}
                         />
                       </GridColumn>
@@ -322,15 +772,15 @@ class DetailSidebar extends Component {
                           name='conditionConforming'
                           options={listConforming}
                           inputProps={{
+                            'data-test': 'new_inventory_grade_drpdn',
+                            selection: true,
+                            clearable: true,
                             placeholder: (
                               <FormattedMessage
                                 id='wantedBoard.selectCondition'
-                                defaultMessage='Select Condition'
+                                defaultMessage='Select condition'
                               />
-                            ),
-                            'data-test': 'new_inventory_grade_drpdn',
-                            selection: true,
-                            clearable: true
+                            )
                           }}
                         />
                       </GridColumn>
@@ -338,57 +788,54 @@ class DetailSidebar extends Component {
                         <Dropdown
                           label={
                             <FormattedMessage
-                              id='wantedBoard.orderFrequency'
-                              defaultMessage='Order Frequency'>
-                              {text => text}
-                            </FormattedMessage>
-                          }
-                          name='orderFrequency'
-                          options={listFrequency}
-                          inputProps={{
-                            placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectFrequency'
-                                defaultMessage='Select Frequency'
-                              />
-                            ),
-                            'data-test': 'new_inventory_grade_drpdn',
-                            selection: true,
-                            clearable: true
-                          }}
-                        />
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow>
-                      <GridColumn>
-                        <Dropdown
-                          label={
-                            <FormattedMessage
-                              id='global.origin'
-                              defaultMessage='Country of Origin'>
+                              id='wantedBoard.origin'
+                              defaultMessage='Origin'>
                               {text => text}
                             </FormattedMessage>
                           }
                           name='origins'
                           options={listCountries}
                           inputProps={{
-                            placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectCountryOfOrigin'
-                                defaultMessage='Select Country of Origin'
-                              />
-                            ),
                             'data-test': 'new_inventory_grade_drpdn',
                             selection: true,
-                            multiple: true
+                            multiple: true,
+                            placeholder: (
+                              <FormattedMessage
+                                id='wantedBoard.selectOrigin'
+                                defaultMessage='Select Origin'
+                              />
+                            )
                           }}
                         />
                       </GridColumn>
                     </GridRow>
 
                     <GridRow>
-                      <GridColumn>
+                      <GridColumn width={8}>
+                        <Dropdown
+                          label={
+                            <FormattedMessage
+                              id='wantedBoard.grade'
+                              defaultMessage='Grade'>
+                              {text => text}
+                            </FormattedMessage>
+                          }
+                          name='grades'
+                          options={listGrades}
+                          inputProps={{
+                            'data-test': 'new_inventory_grade_drpdn',
+                            selection: true,
+                            multiple: true,
+                            placeholder: (
+                              <FormattedMessage
+                                id='wantedBoard.selectGrade'
+                                defaultMessage='Select Grade'
+                              />
+                            )
+                          }}
+                        />
+                      </GridColumn>
+                      <GridColumn width={8}>
                         <Dropdown
                           label={
                             <FormattedMessage
@@ -400,10 +847,37 @@ class DetailSidebar extends Component {
                           name='forms'
                           options={listForms}
                           inputProps={{
+                            'data-test': 'new_inventory_grade_drpdn',
+                            selection: true,
+                            multiple: true,
                             placeholder: (
                               <FormattedMessage
                                 id='wantedBoard.selectForm'
-                                defaultMessage='Select Form'
+                                defaultMessage='Select form'
+                              />
+                            )
+                          }}
+                        />
+                      </GridColumn>
+                    </GridRow>
+
+                    <GridRow>
+                      <GridColumn>
+                        <Dropdown
+                          label={
+                            <FormattedMessage
+                              id='wantedBoard.packaging'
+                              defaultMessage='Packaging'>
+                              {text => text}
+                            </FormattedMessage>
+                          }
+                          name='packagingTypes'
+                          options={listPackagingTypes}
+                          inputProps={{
+                            placeholder: (
+                              <FormattedMessage
+                                id='wantedBoard.selectPackaging'
+                                defaultMessage='Select packaging'
                               />
                             ),
                             'data-test': 'new_inventory_grade_drpdn',
@@ -414,88 +888,18 @@ class DetailSidebar extends Component {
                       </GridColumn>
                     </GridRow>
 
-                    <GridRow className='label-row'>
+                    <GridRow>
                       <GridColumn>
-                        <FormattedMessage id='wantedBoard.quantityLbs' defaultMessage='Quantity(LBS)'>
-                          {text => text}
-                        </FormattedMessage>
-                      </GridColumn>
-                    </GridRow>
-                    <GridRow className='light-labels'>
-                      <GridColumn width={8}>
-                        {quantityWrapper(
-                          'quantityFrom',
-                          {
-                            min: 0,
-                            type: 'number',
-                            placeholder: '0'
-                          },
-                          this.formikProps
-                          ,
-                          <FormattedMessage
-                            id='global.from'
-                            defaultMessage='From'
-                          >
-                            {text => text}
-                          </FormattedMessage>
-                        )}
-                      </GridColumn>
-                      <GridColumn width={8}>
-                        {quantityWrapper(
-                          'quantityTo',
-                          {
-                            min: 0,
-                            type: 'number',
-                            placeholder: '0'
-                          },
-                          this.formikProps
-                          ,
-                          <FormattedMessage
-                            id='global.to'
-                            defaultMessage='To'
-                          >
-                            {text => text}
-                          </FormattedMessage>
-                        )}
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow className='label-row'>
-                      <GridColumn>
-                        <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price'>
-                          {text => text}
-                        </FormattedMessage>
-                      </GridColumn>
-                    </GridRow>
-                    <GridRow className='light-labels'>
-                      <GridColumn width={8}>
                         {inputWrapper(
-                          'priceFrom',
+                          'maximumPricePerUOM',
                           {
                             min: 0,
                             type: 'number',
                             placeholder: '0.000'
                           },
                           <FormattedMessage
-                            id='global.from'
-                            defaultMessage='From'
-                          >
-                            {text => text}
-                          </FormattedMessage>,
-                          currencySymbol
-                        )}
-                      </GridColumn>
-                      <GridColumn width={8}>
-                        {inputWrapper(
-                          'priceTo',
-                          {
-                            min: 0,
-                            type: 'number',
-                            placeholder: '0.000'
-                          },
-                          <FormattedMessage
-                            id='global.to'
-                            defaultMessage='To'
+                            id='wantedBoard.maxDeliveredPrice'
+                            defaultMessage='Max Delivered Price/LB'
                           >
                             {text => text}
                           </FormattedMessage>,
@@ -506,23 +910,22 @@ class DetailSidebar extends Component {
 
                     <GridRow>
                       <GridColumn>
-                        <DateInput
+                        <TextArea
+                          name='notes'
                           label={
                             <FormattedMessage
-                              id='wantedBoard.neededBy'
-                              defaultMessage='Needed By'>
+                              id='wantedBoard.specialNotes'
+                              defaultMessage='Special Notes'>
                               {text => text}
                             </FormattedMessage>
                           }
-                          name='neededAt'
                           inputProps={{
                             'data-test': 'new_inventory_grade_drpdn',
                             placeholder:
                               formatMessage({
-                                id: 'date.standardPlaceholder',
-                                defaultMessage: '00/00/0000'
-                              }),
-                            clearable: true
+                                id: 'wantedBoard.writeNotesHere',
+                                defaultMessage: 'Write notes here'
+                              })
                           }}
                         />
                       </GridColumn>
@@ -592,16 +995,7 @@ class DetailSidebar extends Component {
                       primary
                       size='large'
                       type='button'
-                      onClick={() =>
-                        validateForm().then(r => {
-                          if (Object.keys(r).length && this.state.activeTab !== 1) {
-                            //this.switchToErrors(r)
-                            //submitForm() // to show errors
-                          } else {
-                            //this.submitForm(values, setSubmitting, setTouched)
-                          }
-                        })
-                      }
+                      onClick={() => submitForm()}
                       data-test='sidebar_inventory_save_new'>
                       {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                     </Button>
@@ -626,7 +1020,10 @@ const mapDispatchToProps = {
   getProductGrades,
   getWarehouses,
   getCountries,
+  getProvinces,
+  getUnits,
   searchManufacturers,
+  searchCasNumber,
   //searchOrigins,
   //openBroadcast,
   //addAttachment,
@@ -635,12 +1032,13 @@ const mapDispatchToProps = {
   //removeAttachment,
   //downloadAttachment,
   closeDetailSidebar,
-  //getProductOffer
+  //getProductOffer,
+  addPurchaseRequest,
+  editPurchaseRequest
 }
 
 const mapStateToProps = ({
   wantedBoard: {
-
     autocompleteData,
     autocompleteDataLoading,
     listPackagingTypes,
@@ -649,13 +1047,30 @@ const mapStateToProps = ({
     listGrades,
     listWarehouses,
     listCountries,
-  //  loading,
-  //  sidebarValues,
+    listCountriesLoading,
+    countries,
+    listProvinces,
+    listProvincesLoading,
+    listUnits,
+    listUnitsLoading,
+    loading,
+    //  sidebarActiveTab,
+    //  sidebarDetailOpen,
+    sidebarValues,
     searchedManufacturers,
     searchedManufacturersLoading,
-  //  editProductOfferInitTrig
+    searchedCasNumbers,
+    searchedCasNumbersLoading,
+    wantedBoardType,
+    //  searchedOrigins,
+    //  searchedOriginsLoading,
+    //  searchedProducts,
+    //  searchedProductsLoading,
+    //  warehousesList,
+    //  listDocumentTypes,
+    //  editProductOfferInitTrig
   }
-}) => ({
+  }) => ({
   autocompleteData,
   autocompleteDataLoading,
   listPackagingTypes,
@@ -664,10 +1079,27 @@ const mapStateToProps = ({
   listGrades,
   listWarehouses,
   listCountries,
-//  loading,
-//  sidebarValues,
+  listCountriesLoading,
+  countries,
+  listProvinces,
+  listProvincesLoading,
+  listUnits,
+  listUnitsLoading,
+  loading,
+//  sidebarActiveTab,
+//  sidebarDetailOpen,
+  sidebarValues: sidebarValues ? sidebarValues.rawData : null,
   searchedManufacturers,
   searchedManufacturersLoading,
+  searchedCasNumbers,
+  searchedCasNumbersLoading,
+  type: wantedBoardType,
+//  searchedOrigins,
+//  searchedOriginsLoading,
+//  searchedProducts,
+//  searchedProductsLoading,
+//  warehousesList,
+//  listDocumentTypes,
 //  editProductOfferInitTrig,
   currencySymbol: '$'
 })

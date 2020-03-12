@@ -20,14 +20,13 @@ function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
     ...datagrid,
+    type: store.wantedBoard.myRequestedItemsType,
     rows: datagrid.rows.map(row => {
       const productName = getSafe(() => row.element.echoProduct.name, null)
-      //const qtyPart = getSafe(() => row.....packagingUnit.nameAbbreviation)
-      const qtyPart = 'lb'
+      const qtyPart = getSafe(() => row.unit.nameAbbreviation)
       return {
         id: row.id,
         rawData: row,
-        //productName: 'grouping nazev',
         product: getSafe(() => row.element.echoProduct.name,
           <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
         ),
@@ -39,7 +38,7 @@ function mapStateToProps(store, { datagrid }) {
           max={getSafe(() => row.element.assayMax, null)}
         />),
         orderQuantity: qtyPart
-          ? <FormattedUnit unit={qtyPart} separator=' ' value={row.pkgAmount} />
+          ? <FormattedUnit unit={qtyPart} separator=' ' value={row.quantity} />
           : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
         orderFrequency: <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
         neededBy: row.neededAt
@@ -50,13 +49,13 @@ function mapStateToProps(store, { datagrid }) {
           : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
         manufacturer:
           row.manufacturers && row.manufacturers.length
-            ? (<ArrayToFirstItem values={row.manufacturers.map(d => d.name)}/>)
-            : (<FormattedMessage id='wantedBoard.any' defaultMessage='Any' />),
+            ? <ArrayToFirstItem values={row.manufacturers.map(d => d.name)}/>
+            : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
         condition: typeof row.conditionConforming === 'undefined'
           ? <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
           : (row.conditionConforming
-              ? (<FormattedMessage id='global.conforming' defaultMessage='Conforming' />)
-              : (<FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />)
+              ? <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
+              : <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
           ),
         deliveryLocation: row.deliveryProvince
           ? row.deliveryProvince.name
@@ -70,7 +69,7 @@ function mapStateToProps(store, { datagrid }) {
         deliveryPriceMax: row.maximumPricePerUOM
           ? <FormattedNumber style='currency' currency={currency} value={row.maximumPricePerUOM} />
           : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
-        measurement: 'lb',
+        measurement: qtyPart,
         fobQuote: '',
         deliveredQuote: '',
       }

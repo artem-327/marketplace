@@ -133,6 +133,10 @@ const initValues = {
 
 class SubmitOfferPopup extends React.Component {
 
+  componentDidMount() {
+    this.props.getMatchingProductOffers(this.props.popupValues.id)
+  }
+
   submitOffer = async (value, actions) => {
     const {
       closePopup,
@@ -154,13 +158,15 @@ class SubmitOfferPopup extends React.Component {
     const {
       intl: { formatMessage },
       popupValues,
+      matchingProductOffers,
       popupValues2,
       isSending
     } = this.props
 
-    const qtyPart = 'lb'  // ! ! will be returned by BE
+    const qtyPart = popupValues.unit.nameAbbreviation
 
     console.log('!!!!!!!!!! aaaaa popupValues', popupValues)
+    console.log('!!!!!!!!!! aaaaa matchingProductOffers', matchingProductOffers)
 
     return (
       <>
@@ -225,7 +231,7 @@ class SubmitOfferPopup extends React.Component {
                                       <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price' />
                                     </List.Header>
                                     <List.Description as='span'>
-                                      TBD !
+                                      TBD !  pricePerUOM
                                     </List.Description>
                                   </List.Content>
                                 </List.Item>
@@ -237,7 +243,7 @@ class SubmitOfferPopup extends React.Component {
                                     </List.Header>
                                     <List.Description as='span'>
                                       {qtyPart
-                                        ? <FormattedUnit unit={qtyPart} separator='' value={popupValues.pkgAmount} />
+                                        ? <FormattedUnit unit={qtyPart} separator='' value={popupValues.quantity} />
                                         : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
                                       }
                                     </List.Description>

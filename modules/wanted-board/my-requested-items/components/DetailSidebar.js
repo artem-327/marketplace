@@ -41,6 +41,7 @@ import {
   getPackagingTypes,
   getWarehouses,
   getCountries,
+  getProvinces,
   getUnits,
   //addProductOffer,
   getProductGrades,
@@ -89,28 +90,32 @@ const CustomHr = styled.hr`
 `
 
 const initValues = {
-  pkgAmount: '',
-  deliveryCountry: null,
-  deliveryProvince: null,
+  quantity: '',
+  deliveryCountry: '',
+  deliveryProvince: '',
   neededAt: '',
   expiresAt: '',
   manufacturers: [],
-  conditionConforming: null,
+  conditionConforming: '',
   origins: [],
   grades: [],
   forms: [],
   packagingTypes: [],
-  maximumPricePerUOM: null,
-  notes: null,
+  maximumPricePerUOM: '',
+  notes: '',
   element: {
     echoProduct: '',
     casProduct: '',
     assayMin: '',
     assayMax: '',
   },
+  fobPrice: '',     // not implemented on endpoint yet
   neededNow: null,
   doesExpire: null,
-  measurement: 7
+  notificationEnabled: false, // not implemented on endpoint yet
+  notifyMail: false,          // not implemented on endpoint yet
+  notifyPhone: false,         // not implemented on endpoint yet
+  unit: 7
 }
 
 const validationSchema = () =>
@@ -184,7 +189,7 @@ const validationSchema = () =>
             return v === null || v === '' || !isNaN(v)
           })
       }),
-      pkgAmount: val
+      quantity: val
         .number()
         .typeError(errorMessages.requiredMessage)
         .required(errorMessages.requiredMessage),
@@ -208,7 +213,7 @@ class DetailSidebar extends Component {
   state = {
     initValues: initValues,
     sidebarValues: null,
-
+    hasProvinces: false
   }
 
   componentDidMount = async () => {
@@ -219,7 +224,14 @@ class DetailSidebar extends Component {
     this.fetchIfNoData('listWarehouses', this.props.getWarehouses)
     this.fetchIfNoData('listCountries', this.props.getCountries)
     this.fetchIfNoData('listUnits', this.props.getUnits)
-    this.props.searchManufacturers('', 200)
+    if (!this.props.sidebarValues) {
+      this.props.searchManufacturers('', 200)
+    } else {
+      if (this.props.sidebarValues.deliveryCountry && this.props.sidebarValues.deliveryCountry.hasProvinces) {
+        this.props.getProvinces(this.props.sidebarValues.deliveryCountry.id)
+        this.setState({ hasProvinces: true })
+      }
+    }
   }
 
   fetchIfNoData = (name, fn) => {
@@ -228,7 +240,7 @@ class DetailSidebar extends Component {
 
   searchProducts = debounce(text => {
     this.props.getAutocompleteData({
-      searchUrl: `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`
+      searchUrl: `/prodex/api/echo-products/search/include-alternative-names?pattern=${text}`
     })
   }, 250)
 
@@ -268,20 +280,65 @@ class DetailSidebar extends Component {
       neededAt,
       expiresAt
     }
+    delete body.neededNow
+    delete body.doesExpire
+
     removeEmpty(body)
     try {
       if (sidebarValues) {
         const response = await editPurchaseRequest(sidebarValues.id, body)
-        console.log('!!!!!!!!!! editPurchaseRequest response', response)
-        //datagrid.loadData()
+        datagrid.loadData()
       } else {
         const response = await addPurchaseRequest(body)
-        console.log('!!!!!!!!!! addPurchaseRequest response', response)
-        //datagrid.loadData()
+        datagrid.loadData()
       }
       this.props.closeDetailSidebar()
     } catch (e) {}
     setSubmitting(false)
+  }
+
+  getInitialFormValues = () => {
+    const { sidebarValues } = this.props
+
+    let initialValues = {
+      ...this.state.initValues,
+      ...(sidebarValues
+          ? {
+            conditionConforming: getSafe(() => sidebarValues.conditionConforming, ''),
+            deliveryCountry: getSafe(() => sidebarValues.deliveryCountry.id, ''),
+            deliveryProvince: getSafe(() => sidebarValues.deliveryProvince.id, ''),
+            element: {
+              echoProduct: getSafe(() => sidebarValues.element.echoProduct.id, ''),
+              casProduct: getSafe(() => sidebarValues.element.casProduct.id, ''),
+              assayMin: getSafe(() => sidebarValues.element.assayMin, ''),
+              assayMax: getSafe(() => sidebarValues.element.assayMax, ''),
+            },
+            expiresAt: getSafe(() => sidebarValues.expiresAt, ''),
+            forms: sidebarValues.forms.map(d => d.id),
+            grades: sidebarValues.grades.map(d => d.id),
+            manufacturers: sidebarValues.manufacturers.map(d => d.id),
+            maximumPricePerUOM: getSafe(() => sidebarValues.maximumPricePerUOM, ''),
+            neededAt: getSafe(() => sidebarValues.neededAt, ''),
+            notes: getSafe(() => sidebarValues.notes, ''),
+            origins: sidebarValues.origins.map(d => d.id),
+            packagingTypes: sidebarValues.packagingTypes.map(d => d.id),
+            quantity: getSafe(() => sidebarValues.quantity, ''),
+            unit: getSafe(() => sidebarValues.unit.id, ''),
+          }
+          : null
+      )
+    }
+
+    if (initialValues.expiresAt) {
+      initialValues.expiresAt = moment(initialValues.expiresAt).format(getLocaleDateFormat())
+      initialValues.doesExpire = true
+    }
+    if (initialValues.neededAt) {
+      initialValues.neededAt = moment(initialValues.neededAt).format(getLocaleDateFormat())
+      initialValues.neededNow = false
+    }
+
+    return initialValues
   }
 
   render() {
@@ -293,6 +350,10 @@ class DetailSidebar extends Component {
       listGrades,
       listWarehouses,
       listCountries,
+      listCountriesLoading,
+      countries,
+      listProvinces,
+      listProvincesLoading,
       listUnits,
       listUnitsLoading,
       loading,
@@ -313,13 +374,18 @@ class DetailSidebar extends Component {
       intl: { formatMessage },
       toastManager,
       removeAttachment,
-      currencySymbol
+      currencySymbol,
+      type
     } = this.props
+
+    const {
+      hasProvinces
+    } = this.state
 
     return (
       <Formik
         enableReinitialize
-        initialValues={this.state.initValues}
+        initialValues={this.getInitialFormValues()}
         validationSchema={validationSchema()}
         onSubmit={async (values, { setSubmitting, setTouched }) => {
           //setSubmitting(true)
@@ -341,7 +407,7 @@ class DetailSidebar extends Component {
           this.resetForm = resetForm
           this.formikProps = formikProps
 
-          console.log('!!!!!!!!!! render values', values)
+          const typeProduct = type === 'product'
 
           return (
             <Form>
@@ -359,122 +425,140 @@ class DetailSidebar extends Component {
                 </HighSegment>
                 <FlexContent>
                   <Grid>
-                    <GridRow>
-                      <GridColumn width={16}>
-                        <Dropdown
-                          label={
+                    {typeProduct && (
+                      <GridRow>
+                        <GridColumn width={16}>
+                          <Dropdown
+                            label={
+                              <FormattedMessage
+                                id='wantedBoard.productName'
+                                defaultMessage='Product Name'>
+                                {text => text}
+                              </FormattedMessage>
+                            }
+                            name='element.echoProduct'
+                            options={this.props.autocompleteData}
+                            inputProps={{
+                              placeholder: (
+                                <FormattedMessage
+                                  id='wantedBoard.enterProductName'
+                                  defaultMessage='Enter any Product Name'
+                                />
+                              ),
+                              loading: this.props.autocompleteDataLoading,
+                              'data-test': 'wanted_board_product_search_drpdn',
+                              size: 'large',
+                              minCharacters: 1,
+                              icon: 'search',
+                              search: options => options,
+                              selection: true,
+                              clearable: true,
+                              onSearchChange: (e, { searchQuery }) =>
+                                searchQuery.length > 0 && this.searchProducts(searchQuery)
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+                    )}
+                    {!typeProduct && (
+                      <GridRow>
+                        <GridColumn>
+                          <Dropdown
+                            label={
+                              <FormattedMessage
+                                id='wantedBoard.casNumber'
+                                defaultMessage='CAS Number'>
+                                {text => text}
+                              </FormattedMessage>
+                            }
+                            name='element.casProduct'
+                            options={searchedCasNumbers}
+                            inputProps={{
+                              placeholder: (
+                                <FormattedMessage
+                                  id='wantedBoard.enterCasNumber'
+                                  defaultMessage='Enter CAS Number'
+                                />
+                              ),
+                              loading: searchedCasNumbersLoading,
+                              'data-test': 'wanted_board_product_search_drpdn',
+                              size: 'large',
+                              minCharacters: 1,
+                              icon: 'search',
+                              search: options => options,
+                              selection: true,
+                              clearable: true,
+                              onSearchChange: (e, { searchQuery }) =>
+                                searchQuery.length > 0 && this.searchCasNumber(searchQuery)
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+                    )}
+                    {!typeProduct && (
+                      <GridRow>
+                        <GridColumn width={8}>
+                          {quantityWrapper(
+                            'element.assayMin',
+                            {
+                              min: 0,
+                              type: 'number',
+                              placeholder: '0'
+                            },
+                            this.formikProps
+                            ,
                             <FormattedMessage
-                              id='wantedBoard.productName'
-                              defaultMessage='Product Name'>
+                              id='global.assayMin'
+                              defaultMessage='Assay Min'
+                            >
                               {text => text}
                             </FormattedMessage>
-                          }
-                          name='element.echoProduct'
-                          options={this.props.autocompleteData.map(el => ({
-                            key: el.id,
-                            text: `${getSafe(() => el.intProductCode, '')} ${getSafe(
-                              () => el.intProductName,
-                              ''
-                            )}`,
-                            value: el.id
-                          }))}
-                          inputProps={{
-                            placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.enterProductName'
-                                defaultMessage='Enter any Product Name'
-                              />
-                            ),
-                            loading: this.props.autocompleteDataLoading,
-                            'data-test': 'wanted_board_product_search_drpdn',
-                            size: 'large',
-                            minCharacters: 1,
-                            icon: 'search',
-                            search: options => options,
-                            selection: true,
-                            clearable: true,
-                            onSearchChange: (e, { searchQuery }) =>
-                              searchQuery.length > 0 && this.searchProducts(searchQuery)
-                          }}
-                        />
+                          )}
+                        </GridColumn>
+                        <GridColumn width={8}>
+                          {quantityWrapper(
+                            'element.assayMax',
+                            {
+                              min: 0,
+                              type: 'number',
+                              placeholder: '0'
+                            },
+                            this.formikProps
+                            ,
+                            <FormattedMessage
+                              id='global.assayMax'
+                              defaultMessage='Assay Max'
+                            >
+                              {text => text}
+                            </FormattedMessage>
+                          )}
+                        </GridColumn>
+                      </GridRow>
+                    )}
+                    <GridRow>
+                      <GridColumn>
+                        {inputWrapper(
+                          'fobPrice',
+                          {
+                            min: 0,
+                            type: 'number',
+                            placeholder: '0.000'
+                          },
+                          <FormattedMessage
+                            id='wantedBoard.fobPrice'
+                            defaultMessage='FOB Price'
+                          >
+                            {text => text}
+                          </FormattedMessage>,
+                          currencySymbol
+                        )}
                       </GridColumn>
                     </GridRow>
 
                     <GridRow>
-                      <GridColumn>
-                        <Dropdown
-                          label={
-                            <FormattedMessage
-                              id='wantedBoard.casNumber'
-                              defaultMessage='CAS Number'>
-                              {text => text}
-                            </FormattedMessage>
-                          }
-                          name='element.casProduct'
-                          options={searchedCasNumbers}
-                          inputProps={{
-                            placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.enterCasNumber'
-                                defaultMessage='Enter CAS Number'
-                              />
-                            ),
-                            loading: searchedCasNumbersLoading,
-                            'data-test': 'wanted_board_product_search_drpdn',
-                            size: 'large',
-                            minCharacters: 1,
-                            icon: 'search',
-                            search: options => options,
-                            selection: true,
-                            clearable: true,
-                            onSearchChange: (e, { searchQuery }) =>
-                              searchQuery.length > 0 && this.searchCasNumber(searchQuery)
-                          }}
-                        />
-                      </GridColumn>
-                    </GridRow>
-                    <GridRow>
                       <GridColumn width={8}>
                         {quantityWrapper(
-                          'element.assayMin',
-                          {
-                            min: 0,
-                            type: 'number',
-                            placeholder: '0'
-                          },
-                          this.formikProps
-                          ,
-                          <FormattedMessage
-                            id='global.assayMin'
-                            defaultMessage='Assay Min'
-                          >
-                            {text => text}
-                          </FormattedMessage>
-                        )}
-                      </GridColumn>
-                      <GridColumn width={8}>
-                        {quantityWrapper(
-                          'element.assayMax',
-                          {
-                            min: 0,
-                            type: 'number',
-                            placeholder: '0'
-                          },
-                          this.formikProps
-                          ,
-                          <FormattedMessage
-                            id='global.assayMax'
-                            defaultMessage='Assay Max'
-                          >
-                            {text => text}
-                          </FormattedMessage>
-                        )}
-                      </GridColumn>
-                    </GridRow>
-                    <GridRow>
-                      <GridColumn width={8}>
-                        {quantityWrapper(
-                          'pkgAmount',
+                          'quantity',
                           {
                             min: 0,
                             type: 'number',
@@ -499,7 +583,7 @@ class DetailSidebar extends Component {
                               {text => text}
                             </FormattedMessage>
                           }
-                          name='measurement'
+                          name='unit'
                           options={listUnits}
                           inputProps={{
                             'data-test': 'new_inventory_grade_drpdn',
@@ -530,7 +614,16 @@ class DetailSidebar extends Component {
                               />
                             ),
                             'data-test': 'new_inventory_grade_drpdn',
-                            selection: true
+                            selection: true,
+                            onChange: (_, value) => {
+                              const country = countries.find(val => val.id === value.value)
+                              setFieldValue('deliveryProvince', '')
+                              if (country && country.hasProvinces) {
+                                this.props.getProvinces(country.id)
+                              }
+                              this.setState({ hasProvinces: country.hasProvinces })
+                            },
+                            loading: listCountriesLoading
                           }}
                         />
                       </GridColumn>
@@ -538,7 +631,7 @@ class DetailSidebar extends Component {
                         <Dropdown
                           label={'\u00A0'}  // &nbsp to not remove label (to not break positioning)
                           name='deliveryProvince'
-                          options={listPackagingTypes}
+                          options={listProvinces}
                           inputProps={{
                             placeholder: (
                               <FormattedMessage
@@ -547,7 +640,9 @@ class DetailSidebar extends Component {
                               />
                             ),
                             'data-test': 'new_inventory_grade_drpdn',
-                            selection: true
+                            selection: true,
+                            loading: listProvincesLoading,
+                            disabled: !hasProvinces
                           }}
                         />
                       </GridColumn>
@@ -836,6 +931,52 @@ class DetailSidebar extends Component {
                       </GridColumn>
                     </GridRow>
 
+                    <GridRow>
+                      <GridColumn>
+                        <CustomHr/>
+                      </GridColumn>
+                    </GridRow>
+
+                    <GridRow className='label-row'>
+                      <GridColumn width={8}>
+                        <FormattedMessage id='wantedBoard.enableNotifications' defaultMessage='Enable Notifications'>
+                          {text => text}
+                        </FormattedMessage>
+                      </GridColumn>
+                      <GridColumn width={8} className='float-right'>
+                        <FormikCheckbox
+                          inputProps={{ toggle: true, style: { marginBottom: '-4px' }, float: 'right' }}
+                          name='notificationEnabled'
+                        />
+                      </GridColumn>
+                    </GridRow>
+
+                    <GridRow>
+                      <GridColumn>
+                        <FormikCheckbox
+                          inputProps={{
+                            disabled: !values.notificationEnabled,
+                            'data-test': 'filter_notifications_notifyMail_chckb'
+                          }}
+                          name='notifyMail'
+                          label={formatMessage({id: 'wantedBoard.notifyMail', defaultMessage: 'Email Notifications'})}
+                        />
+                      </GridColumn>
+                    </GridRow>
+
+                    <GridRow>
+                      <GridColumn>
+                        <FormikCheckbox
+                          inputProps={{
+                            disabled: !values.notificationEnabled,
+                            'data-test': 'filter_notifications_notifyMail_chckb'
+                          }}
+                          name='notifyPhone'
+                          label={formatMessage({id: 'wantedBoard.notifyPhone', defaultMessage: 'Phone Notifications'})}
+                        />
+                      </GridColumn>
+                    </GridRow>
+
                   </Grid>
                 </FlexContent>
                 <BottomButtons>
@@ -879,6 +1020,7 @@ const mapDispatchToProps = {
   getProductGrades,
   getWarehouses,
   getCountries,
+  getProvinces,
   getUnits,
   searchManufacturers,
   searchCasNumber,
@@ -905,6 +1047,10 @@ const mapStateToProps = ({
     listGrades,
     listWarehouses,
     listCountries,
+    listCountriesLoading,
+    countries,
+    listProvinces,
+    listProvincesLoading,
     listUnits,
     listUnitsLoading,
     loading,
@@ -915,6 +1061,7 @@ const mapStateToProps = ({
     searchedManufacturersLoading,
     searchedCasNumbers,
     searchedCasNumbersLoading,
+    myRequestedItemsType,
     //  searchedOrigins,
     //  searchedOriginsLoading,
     //  searchedProducts,
@@ -932,16 +1079,21 @@ const mapStateToProps = ({
   listGrades,
   listWarehouses,
   listCountries,
+  listCountriesLoading,
+  countries,
+  listProvinces,
+  listProvincesLoading,
   listUnits,
   listUnitsLoading,
   loading,
 //  sidebarActiveTab,
 //  sidebarDetailOpen,
-  sidebarValues,
+  sidebarValues: sidebarValues ? sidebarValues.rawData : null,
   searchedManufacturers,
   searchedManufacturersLoading,
   searchedCasNumbers,
   searchedCasNumbersLoading,
+  type: myRequestedItemsType,
 //  searchedOrigins,
 //  searchedOriginsLoading,
 //  searchedProducts,
