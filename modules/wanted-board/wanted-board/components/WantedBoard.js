@@ -321,40 +321,6 @@ class WantedBoard extends Component {
             rowActions={[
               {
                 text: formatMessage({
-                  id: 'global.edit',
-                  defaultMessage: 'Edit'
-                }),
-                callback: row => sidebarDetailTrigger(row, 'wanted-board')
-              },
-              {
-                text: formatMessage({
-                  id: 'global.delete',
-                  defaultMessage: 'Delete'
-                }),
-                disabled: row => editedId === row.id,
-                callback: row => {
-                  confirm(
-                    formatMessage({
-                      id: 'confirm.deleteOfferHeader',
-                      defaultMessage: 'Delete Product Offer'
-                    }),
-                    formatMessage(
-                      {
-                        id: 'confirm.deleteItem',
-                        defaultMessage: `Do you really want to remove ${row.chemicalName}?`
-                      },
-                      { item: row.chemicalName }
-                    )
-                  ).then(() => {
-                    try {
-                      this.props.deleteWantedBoardItem(row.id)
-                      datagrid.removeRow(row.id)
-                    } catch (e) {console.log('DELETE ERROR')}
-                  })
-                }
-              },
-              {
-                text: formatMessage({
                   id: 'wantedBoard.submitOffer',
                   defaultMessage: 'Submit Offer'
                 }),
@@ -389,7 +355,7 @@ class WantedBoard extends Component {
         menuItem: (
           <MenuLink to='/wanted-board/my-requested-items' data-test='wanted_board_submenu_tab_my_requested_items'>
             <UpperCaseText>
-              {formatMessage({ id: 'title.myRequestedItems', defaultMessage: 'My Requested Itemsd' })}
+              {formatMessage({ id: 'title.myRequestedItems', defaultMessage: 'My Requested Items' })}
             </UpperCaseText>
           </MenuLink>
         ),

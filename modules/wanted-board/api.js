@@ -65,4 +65,8 @@ export const getMatchingProductOffers = (id) => {
     .then(response => response.data)
 }
 
+export const submitOffer = (myOffer) => {
+  return api.post(`/prodex/api/purchase-request-offers`, myOffer)
+}
+
 

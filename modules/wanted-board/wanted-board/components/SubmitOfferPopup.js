@@ -11,6 +11,7 @@ import { ArrayToFirstItem } from '~/components/formatted-messages'
 import moment from 'moment/moment'
 import { getLocaleDateFormat } from '~/components/date-format'
 import { FormattedUnit } from '~/components/formatted-messages'
+import { DateInput } from '~/components/custom-formik'
 
 import confirm from '~/src/components/Confirmable/confirm'
 
@@ -33,9 +34,9 @@ import {
 } from '../../constants/layout'
 
 const SubmitOfferHighSegment = styled(Segment)`
-  width: calc(100% - 64px);
-  margin-left: 32px !important;
-  margin-bottom: 30px !important;
+  width: 100%;
+  margin-left: 0 !important;
+  margin-bottom: 16px !important;
   
   > .grid {
     padding: 0;
@@ -88,12 +89,16 @@ const OrderList = styled(List)`
     display: flex !important;
     flex-flow: row;
     justify-content: flex-end;
+    width: calc(100% + 40px);
+    margin: -20px;
+    padding: 15px 0;
     
     > .item:nth-child(n) { // nth-child to have stronger path
       flex-grow: 1;
-      max-width: 150px;
+      width: 20%;
+      max-width: 20%;
       border-left: 1px solid rgba(34, 36, 38, 0.15) !important;
-      padding: 13px 15px !important;
+      padding: 3px 15px !important;
       
       .header {
         margin: 0;
@@ -118,6 +123,10 @@ const OrderList = styled(List)`
           color: #f16844;
         }
       }
+    }
+    
+    > .item:first-child {
+      border-left: 0 none !important;
     }
   }
 `
@@ -144,7 +153,14 @@ class SubmitOfferPopup extends React.Component {
     } = this.props
 
     try {
-      //await submitOffer(orderId, value) // waiting for BE endpoint
+
+      /*const testValue = {
+        expiresAt: "2020-03-20T14:44:00.892Z",
+        pricePerUOM: 12,
+        productOffer: 101,
+        purchaseRequest: 19
+      }
+      await submitOffer(testValue) // waiting for BE endpoint*/
       closePopup()
     } catch (e) {
       console.error(e)
@@ -274,10 +290,6 @@ class SubmitOfferPopup extends React.Component {
                           <Table.Header>
                             <Table.Row>
                               <Table.HeaderCell>
-                                <Radio
-                                  name='selectAll'
-                                  value={false}
-                                />
                               </Table.HeaderCell>
                               <Table.HeaderCell>
                                 <FormattedMessage id='wantedBoard.product' defaultMessage='Product' />
@@ -316,6 +328,9 @@ class SubmitOfferPopup extends React.Component {
                                 </Table.Cell>
                                 <Table.Cell>
                                   {element.fobPrice}
+                                  <Input type='text'
+                                         name='fobPrice'
+                                         inputProps={{ defaultValue: element.fobPrice }} />
                                 </Table.Cell>
                                 <Table.Cell>
                                   {element.manufacturer}
@@ -331,6 +346,7 @@ class SubmitOfferPopup extends React.Component {
                                 </Table.Cell>
                                 <Table.Cell>
                                   {element.expirationDate}
+                                  <DateInput inputProps={{ minDate: moment(), id: 'expirationDate', clearable: true, defaultValue: element.expirationDate }} name='expirationDate' />
                                 </Table.Cell>
                               </Table.Row>
                             ))}

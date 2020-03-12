@@ -50,6 +50,13 @@ export const closePopup = () => {
   }
 }
 
+export const submitOffer = (myOffer) => {
+  return {
+    type: AT.WB_SUBMIT_OFFER,
+    payload: api.submitOffer(myOffer)
+  }
+}
+
 
 export const purchaseRequestedItem = (id) => {
   return {

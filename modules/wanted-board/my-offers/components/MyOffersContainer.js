@@ -49,13 +49,18 @@ function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
     ...datagrid,
-    //rows: datagrid.rows.map(po => {
-    rows: [].map(po => {
+    rows: datagrid.rows.map(po => {
+    //rows: [].map(po => {
       return {
         id: po.id,
         rawData: po,
-        product: '',
-        fobPrice:
+        product: getSafe(() => po.productOffer.companyProduct.intProductName, ''),
+        fobPrice: <FormattedNumber
+            style='currency'
+            currency={currency}
+            value={po.pricePerUOM}
+          />,
+        /*fobPrice:
           po.pricingTiers.length > 1 ? (
             <>
               {' '}
@@ -75,8 +80,8 @@ function mapStateToProps(store, { datagrid }) {
                 value={getSafe(() => po.pricingTiers[0].pricePerUOM, 0)}
               />{' '}
             </>
-          ),
-        manufacturer: '',
+          ),*/
+        manufacturer: getSafe(() => po.productOffer.companyProduct.echoProduct.manufacturer.name, ''),
         //condition: getSafe(() => po.conforming, ''),
         condition: StatusLabel('Rejected'),
         status: StatusLabel('Purchased'),
