@@ -172,6 +172,146 @@ export const LeftMenu = styled(Menu)`
           background: #edeef2;
         }
       }
+      
+      > .flex-wrapper {
+        overflow: hidden;
+        display: flex;
+        flex-flow: column;
+        height: calc(100% - 100px); // 100px for logo
+        
+        > a.item {
+          flex-grow: 0;
+          flex-shrink: 0;
+          
+          &.opened {
+            margin-bottom: 0;
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+          
+            + form {
+              flex-grow: 1;
+              flex-shrink: 1;
+              overflow: hidden;
+              height: auto;
+              border-bottom-left-radius: 4px !important;
+              border-bottom-right-radius: 4px !important;
+              
+              > div {
+                height: 100%;
+                margin-top: 0;
+                
+                > div {
+                  flex-grow: 1;
+                  flex-shrink: 1;
+                  overflow: hidden;
+                  height: auto;
+                
+                  &:first-child,
+                  &:last-child {
+                    flex-grow: 0;
+                    flex-shrink: 0;
+                    overflow: hidden;
+                  }
+                  
+                  &.dimmable {
+                    width: 100%;
+                    padding: 0 !important;
+                  
+                    > .scrollbar-container {
+                      position: relative;
+                      overflow: hidden;
+                      width: 100%;
+                      height: 100%;
+                      padding: 0 10px;
+                      
+                      .ps__rail-y {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        width: 4px;
+                        background: rgba(0, 0, 0, 0.1);
+                        
+                        .ps__thumb-y {
+                          width: 100%;
+                          margin: 0;
+                          border-radius: 2px;
+                          background-color: #748cad;
+                        }
+                      }
+                    }
+                  }
+                  
+                  &.transition.visible {
+                    overflow: hidden;
+                    display: flex !important;
+                    flex-flow: column;
+                  
+                    &.up,
+                    &.down {
+                      position: absolute;
+                      left: 0;
+                      right: 10px;
+                      z-index: 1000;
+                      max-height: calc(100% - 119px);
+                    }
+                    
+                    &.up {
+                      bottom: 59px;
+                    }
+                    
+                    &.down {
+                      top: 59px;
+                    }
+                    
+                    > .grid {
+                      flex-grow: 0;
+                      flex-shrink: 0;
+                    }
+                  
+                    > .scrollbar-container {
+                      flex-grow: 1;
+                      flex-shrink: 1;
+                      position: relative;
+                      overflow: hidden;
+                      width: 100%;
+                      height: auto;
+                      padding: 0;
+                      background: #edeef2;
+                      
+                      .ps__rail-y {
+                        position: absolute;
+                        top: 0;
+                        left: auto !important;
+                        right: 0 !important;
+                        width: 4px;
+                        height: 100%;
+                        background: rgba(0, 0, 0, 0.1);
+                        
+                        .ps__thumb-y {
+                          width: 100%;
+                          margin: 0;
+                          border-radius: 2px;
+                          background-color: #748cad;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        
+        > div.item {
+          flex-grow: 0;
+          flex-shrink: 0;
+          
+          &.opened {
+            flex-grow: 1;
+            flex-shrink: 1;
+          }
+        }
+      }
     }
 
     .scrollbar-container > img {
@@ -180,7 +320,8 @@ export const LeftMenu = styled(Menu)`
     }
 
     .container > a.item,
-    .scrollbar-container > a.item {
+    .flex-wrapper > a.item,
+    .flex-wrapper > .scrollbar-container > a.item {
       border-radius: 4px;
       text-transform: uppercase;
       white-space: nowrap;
@@ -203,7 +344,8 @@ export const LeftMenu = styled(Menu)`
     }
 
     .container > .item,
-    .scrollbar-container > .item {
+    .flex-wrapper > .item,
+    .flex-wrapper > .scrollbar-container > .item {
       overflow: hidden;
       box-sizing: border-box;
       width: 280px;
@@ -219,7 +361,7 @@ export const LeftMenu = styled(Menu)`
 
       &:before,
       &:after {
-        content: '';
+        content: "" !important;
         position: absolute !important;
         top: 20px !important;
         left: auto !important;
@@ -228,7 +370,7 @@ export const LeftMenu = styled(Menu)`
         transform-origin: 50% 50%;
         transition: transform 250ms linear, opacity 250ms linear;
         opacity: 1;
-        display: block;
+        display: block !important;
         width: 1px !important;
         height: 9px !important;
         border-radius: 1px;
@@ -267,6 +409,7 @@ export const LeftMenu = styled(Menu)`
             height: 40px;
             margin: 0;
             padding: 12px 40px 12px 55px !important;
+            font-size: 15px !important;
             color: #848893 !important;
 
             &.active,
@@ -280,10 +423,12 @@ export const LeftMenu = styled(Menu)`
 
         &:not(.upward),
         &.upward {
+        
           > .menu {
             position: static !important;
             overflow: hidden !important;
-            display: block;
+            display: flex !important;
+            flex-flow: column;
             width: auto;
             height: 0;
             margin: 12px -40px 0 -55px;
@@ -293,6 +438,34 @@ export const LeftMenu = styled(Menu)`
             border-top-left-radius: 0;
             border-top-right-radius: 0;
             padding: 0 !important;
+          
+            > .scrollbar-container {
+              flex-grow: 0;
+              flex-shrink: 1;
+              position: relative;
+              overflow: hidden;
+              width: 100%;
+              height: 100% !important;
+              margin: -10px 0 !important;
+              padding: 10px 0 !important;
+                      
+              .ps__rail-y {
+                position: absolute;
+                top: 0;
+                left: auto !important;
+                right: 0 !important;
+                width: 4px;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.1);
+                
+                .ps__thumb-y {
+                  width: 100%;
+                  margin: 0;
+                  border-radius: 2px;
+                  background-color: #748cad;
+                }
+              }
+            }
           }
 
           &.opened {
@@ -350,10 +523,6 @@ export const LeftMenu = styled(Menu)`
             > .menu {
               height: auto;
               padding: 10px 0 !important;
-
-              &[data-test='navigation_menu_admin_drpdn'] {
-                padding: 10px 0 10px 40px !important;
-              }
             }
           }
         }
@@ -475,7 +644,11 @@ export const LeftMenu = styled(Menu)`
     &.collapsed {
       width: 70px !important;
 
-      .scrollbar-container {
+      .flex-wrapper,
+      .scrollbar-container > .flex-wrapper {
+        overflow: visible;
+        display: block;
+        
         > img {
           width: 40px;
           height: 50px;
@@ -485,6 +658,7 @@ export const LeftMenu = styled(Menu)`
 
       .container > a.item,
       .scrollbar-container > a.item,
+      .flex-wrapper > a.item,
       .dropdown {
         width: 50px !important;
         padding: 12px 0 12px 50px;
@@ -495,18 +669,20 @@ export const LeftMenu = styled(Menu)`
         }
       }
 
-      .container > a.item {
+      .container > a.item,
+      .flex-wrapper > a.item {
         width: 50px !important;
       }
 
-      .scrollbar-container {
+      .scrollbar-container,
+      .scrollbar-container > .flex-wrapper {
         overflow: visible !important;
 
         > .ps__rail-y {
           display: none !important;
         }
 
-        .dropdown.opened {
+        .item.dropdown.opened {
           overflow: visible !important;
           border-width: 1px 0 1px 1px;
           border-style: solid;
@@ -540,6 +716,11 @@ export const LeftMenu = styled(Menu)`
             border-color: #dee2e6;
             border-radius: 0;
             border-bottom-right-radius: 4px;
+            
+            > .scrollbar-container {
+              margin: 0 !important;
+              padding: 0 !important;
+            }
 
             a {
               padding-left: 40px !important;
@@ -548,10 +729,43 @@ export const LeftMenu = styled(Menu)`
 
           &:not(.upward),
           &.upward {
+          
             > .menu {
               overflow: hidden !important;
-              overflow-y: auto !important;
+              display: flex !important;
+              flex-flow: column;
               padding: 0 !important;
+          
+              > .scrollbar-container {
+                flex-grow: 0;
+                flex-shrink: 1;
+                position: relative;
+                overflow: hidden !important;
+                width: 100%;
+                height: 100% !important;
+                max-height: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                        
+                .ps__rail-y {
+                  position: absolute;
+                  top: 0;
+                  left: auto !important;
+                  right: 0 !important;
+                  display: block !important;
+                  width: 4px;
+                  height: 100%;
+                  background: rgba(0, 0, 0, 0.1);
+                  
+                  .ps__thumb-y {
+                    position: absolute;
+                    width: 100%;
+                    margin: 0;
+                    border-radius: 2px;
+                    background-color: #748cad;
+                  }
+                }
+              }
             }
           }
 
@@ -578,6 +792,7 @@ export const LeftMenu = styled(Menu)`
     }
 
     &:not(.collapsed) {
+    
       .scrollbar-container {
         position: relative;
         width: calc(100% + 10px);
@@ -587,11 +802,11 @@ export const LeftMenu = styled(Menu)`
           position: absolute;
           margin: 0 2px;
         }
-
-        .dropdown:not(.upward) > .menu,
-        .dropdown.upward > .menu {
-          max-height: none !important;
-        }
+      }
+      
+      .scrollbar-container > .flex-wrapper > .item.dropdown.upward.opened > .menu,
+      .scrollbar-container > .flex-wrapper > .item.dropdown:not(.upward).opened > .menu {
+        max-height: calc(100% - 26px) !important;
       }
     }
   }

@@ -65,15 +65,21 @@ const ScrollableSegment = styled(Segment)`
 `
 
 const SettingsGrid = styled(Grid)`
+  flex-direction: column !important;
   margin-top: 0;
   margin-bottom: 0 !important;
   padding-bottom: 1em !important;
 
   > .row {
+    flex-direction: column !important;
+    flex-grow: 1 !important;
+    flex-shrink: 1 !important;
     height: calc(100% + 1px) !important;
     padding-bottom: 0 !important;
 
     > .column {
+      flex-grow: 1 !important;
+      flex-shrink: 1 !important;
       height: 100%;
       padding-bottom: 0 !important;
 

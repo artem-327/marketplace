@@ -1,9 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
-import { Dropdown } from 'semantic-ui-react'
+import { Menu, Dropdown } from 'semantic-ui-react'
+import Link from 'next/link'
 
 import { handleActiveTab } from '../actions'
+import PerfectScrollbar from 'react-perfect-scrollbar'
+
+const MenuLink = ({ active, children, onClick, className }) => {
+  return (
+    <Menu.Item as='a' active={active} onClick={onClick} className={className}>
+      {children}
+    </Menu.Item>
+  )
+}
 
 function Tabs(props) {
   const {
@@ -15,8 +25,10 @@ function Tabs(props) {
 
   return (
     <Dropdown.Menu data-test='navigation_menu_admin_drpdn'>
+      <PerfectScrollbar>
       {tabsNames.map((tab, i) => (
         <Dropdown.Item
+          as={MenuLink}
           key={tab.id}
           onClick={e => {
             e.preventDefault()
@@ -29,6 +41,7 @@ function Tabs(props) {
           {formatMessage({ id: `navigation.${tab.name}`, defaultMessage: `${tab.name}` })}
         </Dropdown.Item>
       ))}
+      </PerfectScrollbar>
     </Dropdown.Menu>
   )
 }
