@@ -383,7 +383,7 @@ export function postNewWarehouseRequest(payload) {
       type: AT.POST_NEW_WAREHOUSE_REQUEST,
       payload: api.postNewWarehouse(payload)
     })
-    getWarehousesDataRequest()
+    //getWarehousesDataRequest()
     Datagrid.loadData()
     dispatch(closeSidebar())
   }
