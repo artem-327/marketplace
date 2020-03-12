@@ -1978,8 +1978,7 @@
   "sidebar.addNew": "ADD NEW",
   "sidebar.edit": "EDIT",
   "sidebar.certificates": "CERTIFICATES",
-  "global.certificates": "Certificates"
-  "hold.buy": "Buy",
+  "global.certificates": "Certificates",
   "title.wantedBoard": "Wanted Board",
   "title.myRequestedItems": "My Requested Items",
   "title.myOffers": "My Offers",
@@ -2056,6 +2055,6 @@
   "wantedBoard.specialNotes": "Special Notes",
   "wantedBoard.writeNotesHere": "Write notes here",
   "wantedBoard.submit": "Submit",
-  "wantedBoard.submitOfferHeader": "SUBMIT OFFER",
+  "wantedBoard.submitOfferHeader": "SUBMIT OFFER"
 
 }
