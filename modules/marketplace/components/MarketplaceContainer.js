@@ -73,7 +73,8 @@ function mapStateToProps(store, { datagrid }) {
     }),
     sidebar: store.cart.sidebar,
     isProductInfoOpen: store.companyProductInfo.isOpen,
-    isMerchant: getSafe(() => store.auth.identity.isMerchant, false)
+    isMerchant: getSafe(() => store.auth.identity.isMerchant, false),
+    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false)
   }
 }
 

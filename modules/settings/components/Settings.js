@@ -48,6 +48,7 @@ import { DatagridProvider } from '~/modules/datagrid'
 
 import { withToastManager } from 'react-toast-notifications'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
+import Tutorial from '~/modules/tutorial/Tutorial'
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
@@ -64,15 +65,21 @@ const ScrollableSegment = styled(Segment)`
 `
 
 const SettingsGrid = styled(Grid)`
+  flex-direction: column !important;
   margin-top: 0;
   margin-bottom: 0 !important;
   padding-bottom: 1em !important;
 
   > .row {
+    flex-direction: column !important;
+    flex-grow: 1 !important;
+    flex-shrink: 1 !important;
     height: calc(100% + 1px) !important;
     padding-bottom: 0 !important;
 
     > .column {
+      flex-grow: 1 !important;
+      flex-shrink: 1 !important;
       height: 100%;
       padding-bottom: 0 !important;
 
@@ -319,8 +326,7 @@ class Settings extends Component {
 
     return (
       <>
-        {isOpenSidebar && popupForm[currentTab.type]}
-        {isOpenPopup && popupForm[currentTab.type]}
+        {(isOpenPopup || isOpenSidebar) && popupForm[currentTab.type]}
         {isOpenImportPopup && importForm[currentTab.type]}
         {isOpenUploadDocumentsPopup && uploadDocForms[currentTab.type]}
         {/* {isDwollaOpenPopup && addDwollaForms[currentTab.type] && Router.push('/dwolla-register')} */}
@@ -482,12 +488,13 @@ class Settings extends Component {
   }
 
   render() {
-    const { currentTab } = this.props
+    const { currentTab, tutorialCompleted } = this.props
 
     return (
       !this.state.wrongUrl && (
         <DatagridProvider apiConfig={this.getApiConfig()}>
           <Container fluid className='flex stretched'>
+            {!tutorialCompleted && <Tutorial />}
             <Container fluid style={{ padding: '0 1.5vh' }}>
               <TablesHandlers currentTab={currentTab} />
             </Container>
@@ -510,7 +517,8 @@ const mapStateToProps = ({ settings, auth }) => {
     company: auth.identity ? auth.identity.company : null,
     currentTab: settings.currentTab,
     isProductCatalogAdmin: getSafe(() => auth.identity.isProductCatalogAdmin, false),
-    isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false)
+    isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
+    tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false)
   }
 }
 
