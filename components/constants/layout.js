@@ -523,10 +523,6 @@ export const LeftMenu = styled(Menu)`
             > .menu {
               height: auto;
               padding: 10px 0 !important;
-
-              &[data-test='navigation_menu_admin_drpdn'] {
-                padding: 10px 0 10px 40px !important;
-              }
             }
           }
         }
