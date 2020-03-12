@@ -372,7 +372,7 @@ class Navigation extends Component {
         )}
       </div>
     ) : (
-      <>
+      <div className='flex-wrapper'>
         {isAdmin && (
           <>
             <DropdownItem
@@ -397,17 +397,19 @@ class Navigation extends Component {
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'operations'}>
             <Dropdown.Menu data-test='navigation_menu_operations_drpdn'>
-              <Dropdown.Item
-                as={MenuLink}
-                to='/operations'
-                tab='shipping-quotes'
-                data-test='navigation_admin_operations_shipping_quotes_drpdn'>
-                {formatMessage({ id: 'navigation.shippingQuotes', defaultMessage: 'Shipping Quotes' })}
-              </Dropdown.Item>
+              <PerfectScrollbar>
+                <Dropdown.Item
+                  as={MenuLink}
+                  to='/operations'
+                  tab='shipping-quotes'
+                  data-test='navigation_admin_operations_shipping_quotes_drpdn'>
+                  {formatMessage({ id: 'navigation.shippingQuotes', defaultMessage: 'Shipping Quotes' })}
+                </Dropdown.Item>
+              </PerfectScrollbar>
             </Dropdown.Menu>
           </DropdownItem>
         )}
-      </>
+      </div>
     )
   }
 }
