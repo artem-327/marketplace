@@ -10,6 +10,7 @@ import { debounce } from 'lodash'
 import styled from 'styled-components'
 import confirm from '~/src/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
+import { PriceField } from '~/styles/styledComponents'
 
 import {
   Sidebar,
@@ -582,11 +583,9 @@ class DetailSidebar extends Component {
           </GridColumn>
 
           <GridColumn computer={5} data-test={`add_inventory_price_${i}_inp`}>
-            <Input
+            <PriceField
               name={`priceTiers.pricingTiers[${i}].price`}
               inputProps={{
-                type: 'number',
-                step: '0.001',
                 min: 0.001,
                 value: null
               }}
@@ -1255,13 +1254,11 @@ class DetailSidebar extends Component {
                                     </GridColumn>
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <FormField width={16} data-test='detail_sidebar_fob_price'>
-                                        <Input
+                                        <PriceField
                                           name='edit.fobPrice'
                                           inputProps={{
                                             disabled: sidebarValues && sidebarValues.grouped,
-                                            type: 'number',
                                             min: '0.001',
-                                            step: '0.001',
                                             onChange: (e, { value }) => {
                                               if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
                                                 setFieldValue(`priceTiers.pricingTiers[0].price`, value)
@@ -1281,7 +1278,7 @@ class DetailSidebar extends Component {
                                     </GridColumn>
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <FormField width={16} data-test='detail_sidebar_cost'>
-                                        <Input
+                                        <PriceField
                                           name='edit.costPerUOM'
                                           inputProps={{
                                             disabled: sidebarValues && sidebarValues.grouped,

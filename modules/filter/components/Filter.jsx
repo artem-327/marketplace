@@ -764,7 +764,7 @@ class Filter extends Component {
           {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
           <AccordionContent active={!this.state.inactiveAccordion.price}>
             <FormGroup>
-              <FormField width={8} data-test='filter_price_inp'>
+              <FormField className='price-input' width={8} data-test='filter_price_inp'>
                 {this.inputWrapper(
                   'priceFrom',
                   {
@@ -777,7 +777,7 @@ class Filter extends Component {
                   currencySymbol
                 )}
               </FormField>
-              <FormField width={8}>
+              <FormField className='price-input' width={8}>
                 {this.inputWrapper(
                   'priceTo',
                   {
