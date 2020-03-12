@@ -423,20 +423,20 @@ export const SaveFiltersGrid = styled(Grid)`
     .ui.large.button {
       margin-right: 0;
   }
-  > .row:nth-child(1) {       // Save Filter button
+  > .row:first-child:last-child {       // Save Filter button
     border-bottom: 1px solid #dee2e6;
   }
-  > .row:nth-child(2) {       // 'Filter Name'
+  > .row:nth-last-child(3) {       // 'Filter Name'
     padding-top: 10px !important;
   }
-  > .row:nth-child(3) {       // Filter Name Input + Save button
+  > .row:nth-child(2) {       // Filter Name Input + Save button
     padding-top: 5px !important;
     > .ui.button,
     .ui.large.button {
       margin: 0;
     }
   }
-  > .row:nth-child(4) {       // Automatically Apply
+  > .row:nth-child(3) {       // Automatically Apply
     padding-top: 15px !important;
     > .column .field{
     float: right;
