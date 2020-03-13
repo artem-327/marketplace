@@ -695,7 +695,7 @@ class DetailSidebar extends Component {
         let entityId = getSafe(() => e.response.data.entityId, null)
 
         if (entityId) {
-          confirm(
+          await confirm(
             <FormattedMessage
               id='notifications.productOffer.alreadyExists.header'
               defaultMessage='Product Offer already exists'
@@ -932,38 +932,6 @@ class DetailSidebar extends Component {
   }
   onChange = debounce(() => this.setState({ edited: true }), 200)
 
-  render() {
-    let {
-      // addProductOffer,
-      listConditions,
-      listForms,
-      listGrades,
-      loading,
-      // openBroadcast,
-      // sidebarDetailOpen,
-      // searchedManufacturers,
-      // searchedManufacturersLoading,
-      searchedOrigins,
-      searchedOriginsLoading,
-      // searchedProducts,
-      // searchedProductsLoading,
-      searchOrigins,
-      warehousesList,
-      listDocumentTypes,
-      intl: { formatMessage },
-      toastManager,
-      removeAttachment
-    } = this.props
-    const { sidebarValues } = this.state
-
-    const leftWidth = 6
-    const rightWidth = 10
-
-    element.download = documentName
-    document.body.appendChild(element) // Required for this to work in FireFox
-    element.click()
-  }
-
   prepareLinkToAttachment = async documentId => {
     let downloadedFile = await this.props.downloadAttachment(documentId)
     const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
@@ -1052,14 +1020,14 @@ class DetailSidebar extends Component {
     ]
 
     const { toggleFilter } = this.props
-
+    
     return (
       <Formik
         enableReinitialize
         initialValues={this.state.initValues}
         validationSchema={validationScheme}
         onSubmit={async (values, { setSubmitting, setTouched }) => {
-          this.submitForm(values, setSubmitting, setTouched)
+          await this.submitForm(values, setSubmitting, setTouched)
         }}>
         {formikProps => {
           let {
@@ -1909,12 +1877,35 @@ class DetailSidebar extends Component {
                         size='large'
                         type='button'
                         onClick={() =>
-                          validateForm().then(r => {
+                          validateForm().then(async r => {
                             if (Object.keys(r).length && this.state.activeTab !== 1) {
                               this.switchToErrors(r)
                               submitForm() // to show errors
                             } else {
-                              this.submitForm(values, setSubmitting, setTouched)
+                              await this.submitForm(values, setSubmitting, setTouched)
+                          
+                              confirm(
+                                formatMessage({
+                                  id: 'confirm.editOrAddNew.header',
+                                  defaultMessage: 'Edit or add New'
+                                }),
+                                formatMessage({
+                                  id: 'confirm.editOrAddNew.content',
+                                  defaultMessage:
+                                    'If you like to continue editing this product offer by adding documents, price tiers, or price book rules, click Edit. If you would like to add a new Inventory Item, click New.'
+                                }),
+                                {
+                                  cancelText: formatMessage({ id: 'global.edit', defaultMessage: '!Edit' }),
+                                  proceedText: formatMessage({ id: 'global.save', defaultMessage: '!Save' })
+                                }
+                              )
+                                .then(() => {
+                                  this.setState(state => ({
+                                    ...state,
+                                    sidebarValues: { ...state.sidebarValues, id: null }
+                                  }))
+                                })
+                                .catch(() => {})
                             }
                           })
                         }
