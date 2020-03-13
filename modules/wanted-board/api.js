@@ -69,4 +69,11 @@ export const submitOffer = (myOffer) => {
   return api.post(`/prodex/api/purchase-request-offers`, myOffer)
 }
 
+export const editMyPurchaseOffer = (id, body) => {
+  return api.patch(`/prodex/api/purchase-request-offers/id/${id}`, body)
+}
 
+export const deleteMyOfferItem = (id) => {
+  return api.delete(`/prodex/api/purchase-request-offers/id/${id}`)
+    .then(response => response.data)
+}

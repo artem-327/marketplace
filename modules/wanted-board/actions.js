@@ -19,7 +19,7 @@ export const sidebarDetailTrigger = (row = null, activeTab = '') => {
 
 export const myOffersSidebarTrigger = (row = null) => {
   return {
-    type: AT.WB_SIDEBAR_DETAIL_TRIGGER,
+    type: AT.WB_SIDEBAR_MO_DETAIL_TRIGGER,
     payload: row
   }
 }
@@ -34,7 +34,7 @@ export const deleteWantedBoardItem = (id) => {
 export const deleteMyOfferItem = (id) => {
   return {
     type: AT.WB_DELETE_MY_OFFER_ITEM,
-    payload: id
+    payload: api.deleteMyOfferItem(id)
   }
 }
 
@@ -132,7 +132,7 @@ export const addPurchaseRequest = (body) => ({
   payload: api.addPurchaseRequest(body)
 })
 
-export const editPurchaseRequest = (id) => ({
+export const editPurchaseRequest = (id, body) => ({
   type: AT.WB_EDIT_PURCHASE_REQUEST,
   payload: api.editPurchaseRequest(id, body)
 })
@@ -160,4 +160,7 @@ export const getMatchingProductOffers = (id) => ({
   payload: api.getMatchingProductOffers(id)
 })
 
-
+export const editMyPurchaseOffer = (id, body) => ({
+  type: AT.WB_EDIT_MY_PURCHASE_OFFER,
+  payload: api.editMyPurchaseOffer(id, body)
+})

@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormattedNumber } from 'react-intl'
+import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { connect } from 'react-redux'
 import moment from 'moment/moment'
 
@@ -28,19 +28,29 @@ const StyledStatusLabel = styled(Label)`
   
   padding: 0.3333em 1.16667em 0.16667em 1.16667em !important;
   
-  &.Rejected {
+  &.REJECTED {
     background-color: #f16844 !important;
   }
-  &.Purchased {
+  &.PURCHASED {
     background-color: #84c225 !important;
   }
 `
 
 const StatusLabel = (val) => {
-  if (!val) return null
+    let text
+    switch (val) {
+      case 'PURCHASED':
+        text = <FormattedMessage id='wantedBoard.purchased' defaultMessage='Purchased' />
+        break
+      case 'REJECTED':
+        text = <FormattedMessage id='wantedBoard.rejected' defaultMessage='Rejected' />
+        break
+      default:
+        return null
+    }
   return (
     <StyledStatusLabel className={val}>
-      {val}
+      {text}
     </StyledStatusLabel>
   )
 }
@@ -50,41 +60,24 @@ function mapStateToProps(store, { datagrid }) {
     ...store.wantedBoard,
     ...datagrid,
     rows: datagrid.rows.map(po => {
-    //rows: [].map(po => {
+      const condition = getSafe(() => po.productOffer.conforming, null)
       return {
         id: po.id,
         rawData: po,
-        product: getSafe(() => po.productOffer.companyProduct.intProductName, ''),
+        product: getSafe(() => po.productOffer.companyProduct.echoProduct.name, ''),
         fobPrice: <FormattedNumber
             style='currency'
             currency={currency}
             value={po.pricePerUOM}
           />,
-        /*fobPrice:
-          po.pricingTiers.length > 1 ? (
-            <>
-              {' '}
-              <FormattedNumber
-                style='currency'
-                currency={currency}
-                value={po.pricingTiers[po.pricingTiers.length - 1].pricePerUOM}
-              />{' '}
-              - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].pricePerUOM} />{' '}
-            </>
-          ) : (
-            <>
-              {' '}
-              <FormattedNumber
-                style='currency'
-                currency={currency}
-                value={getSafe(() => po.pricingTiers[0].pricePerUOM, 0)}
-              />{' '}
-            </>
-          ),*/
         manufacturer: getSafe(() => po.productOffer.companyProduct.echoProduct.manufacturer.name, ''),
-        //condition: getSafe(() => po.conforming, ''),
-        condition: StatusLabel('Rejected'),
-        status: StatusLabel('Purchased'),
+        condition: condition === null
+          ? ''
+          : (condition
+              ? <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
+              : <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+          ),
+        status: StatusLabel(po.status)
       }
     })
   }

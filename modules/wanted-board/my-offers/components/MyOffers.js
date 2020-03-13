@@ -170,9 +170,9 @@ class MyOffers extends Component {
                       },
                       { item: row.chemicalName }
                     )
-                  ).then(() => {
+                  ).then(async () => {
                     try {
-                      this.props.deleteMyOfferItem(row.id)
+                      await this.props.deleteMyOfferItem(row.id)
                       datagrid.removeRow(row.id)
                     } catch (e) {console.log('DELETE ERROR')}
                   })

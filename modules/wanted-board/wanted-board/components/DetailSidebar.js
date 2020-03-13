@@ -212,7 +212,7 @@ const listConforming = [
 class DetailSidebar extends Component {
   state = {
     initValues: initValues,
-    sidebarValues: null,
+    //sidebarValues: null,
     hasProvinces: false
   }
 
@@ -254,7 +254,7 @@ class DetailSidebar extends Component {
 
   submitForm = async (values, setSubmitting, setTouched) => {
     const { addPurchaseRequest, editPurchaseRequest, datagrid } = this.props
-    const { sidebarValues } = this.state
+    const { sidebarValues } = this.props
 
     let neededAt = null, expiresAt = null
 
@@ -285,13 +285,8 @@ class DetailSidebar extends Component {
 
     removeEmpty(body)
     try {
-      if (sidebarValues) {
-        const response = await editPurchaseRequest(sidebarValues.id, body)
-        datagrid.loadData()
-      } else {
-        const response = await addPurchaseRequest(body)
-        datagrid.loadData()
-      }
+      const response = await addPurchaseRequest(body)
+      //datagrid.loadData() // Not needed here - endpoint affects datagrid in another tab
       this.props.closeDetailSidebar()
     } catch (e) {}
     setSubmitting(false)
@@ -931,6 +926,7 @@ class DetailSidebar extends Component {
                       </GridColumn>
                     </GridRow>
 
+                    {false /* temporary hidden */ && (<>
                     <GridRow>
                       <GridColumn>
                         <CustomHr/>
@@ -976,6 +972,7 @@ class DetailSidebar extends Component {
                         />
                       </GridColumn>
                     </GridRow>
+                    </>)}
 
                   </Grid>
                 </FlexContent>
@@ -995,7 +992,18 @@ class DetailSidebar extends Component {
                       primary
                       size='large'
                       type='button'
-                      onClick={() => submitForm()}
+                      onClick={() => {
+                        validateForm().then(err => {
+                          const errors = Object.keys(err)
+                          if (errors.length && errors[0] !== 'isCanceled') {
+                            // Errors found
+                            submitForm() // to show errors
+                          } else {
+                            // No errors found
+                            this.submitForm(values, setSubmitting, setTouched)
+                          }
+                        })
+                      }}
                       data-test='sidebar_inventory_save_new'>
                       {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                     </Button>

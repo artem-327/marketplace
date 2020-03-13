@@ -122,6 +122,34 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.WB_SIDEBAR_MO_DETAIL_TRIGGER: {
+      const row = payload ? payload.rawData : null
+      const manufacturer = getSafe(() => row.productOffer.companyProduct.echoProduct.manufacturer, null)
+      const product = getSafe(() => row.productOffer.companyProduct.echoProduct, null)
+      return {
+        ...state,
+        editInitTrig: !state.editInitTrig,
+        editWindowOpen: 'my-offers',
+        sidebarValues: row,
+        ...(row && {
+          searchedManufacturers: (manufacturer
+            ? [{
+                key: manufacturer.id,
+                value: manufacturer.id,
+                text: manufacturer.name
+              }]
+            : []),
+          autocompleteData: (product
+            ? [{
+              key: product.id,
+              text: `${product.name} ${product.code}`,
+              value: product.id,
+            }]
+            : []),
+        })
+      }
+    }
+
     case AT.WB_GET_AUTOCOMPLETE_DATA_PENDING: { return { ...state, autocompleteDataLoading: true } }
     case AT.WB_GET_AUTOCOMPLETE_DATA_REJECTED: { return { ...state, autocompleteDataLoading: false } }
     case AT.WB_GET_AUTOCOMPLETE_DATA_FULFILLED: {
@@ -308,6 +336,23 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.WB_EDIT_PURCHASE_REQUEST_PENDING:
+    case AT.WB_ADD_PURCHASE_REQUEST_PENDING:
+    case AT.WB_EDIT_MY_PURCHASE_OFFER_PENDING: {
+      return { ...state, loading: true }
+    }
+
+    case AT.WB_EDIT_PURCHASE_REQUEST_REJECTED:
+    case AT.WB_ADD_PURCHASE_REQUEST_REJECTED:
+    case AT.WB_EDIT_MY_PURCHASE_OFFER_REJECTED: {
+      return { ...state, loading: false }
+    }
+
+    case AT.WB_EDIT_PURCHASE_REQUEST_FULFILLED:
+    case AT.WB_ADD_PURCHASE_REQUEST_FULFILLED:
+    case AT.WB_EDIT_MY_PURCHASE_OFFER_FULFILLED: {
+      return { ...state, loading: false }
+    }
 
 
     default: {

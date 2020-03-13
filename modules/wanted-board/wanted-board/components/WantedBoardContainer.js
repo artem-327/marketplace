@@ -45,29 +45,13 @@ function mapStateToProps(store, { datagrid }) {
         form: row.forms && row.forms.length
           ? <ArrayToFirstItem values={row.forms.map(d => d.name)}/>
           : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
-        fobPrice: 'N/A' // Not returned in endpoint
-        /*
-          row.pricingTiers && row.pricingTiers.length > 1 ? (
-            <>
-              {' '}
-              <FormattedNumber
-                style='currency'
-                currency={currency}
-                value={row.pricingTiers[row.pricingTiers.length - 1].pricePerUOM}
-              />{' '}
-              - <FormattedNumber style='currency' currency={currency} value={row.pricingTiers[0].pricePerUOM} />{' '}
-            </>
-          ) : (
-            <>
-              {' '}
-              <FormattedNumber
-                style='currency'
-                currency={currency}
-                value={getSafe(() => row.pricingTiers[0].pricePerUOM, 0)}
-              />{' '}
-            </>
-          )*/
-        ,
+        fobPrice: row.maximumPricePerUOM
+          ? <FormattedNumber
+            style='currency'
+            currency={currency}
+            value={row.maximumPricePerUOM }
+          />
+          : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
         quantity: qtyPart
           ? <FormattedUnit unit={qtyPart} separator='' value={row.quantity} />
           : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,

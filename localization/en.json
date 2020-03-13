@@ -2055,6 +2055,7 @@
   "wantedBoard.specialNotes": "Special Notes",
   "wantedBoard.writeNotesHere": "Write notes here",
   "wantedBoard.submit": "Submit",
+  "wantedBoard.purchased": "Purchased",
+  "wantedBoard.rejected": "Rejected",
   "wantedBoard.submitOfferHeader": "SUBMIT OFFER"
-
 }

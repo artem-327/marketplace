@@ -39,6 +39,7 @@ import {
   getProductConditions,
   searchManufacturers,
   closeDetailSidebar,
+  editMyPurchaseOffer
 } from '../../actions'
 
 
@@ -59,7 +60,7 @@ const CustomHr = styled.hr`
 
 const initValues = {
   product: '',
-  fobPrice: '',
+  pricePerUOM: '',
   manufacturers: '',
   conditionConforming: '',
   packagingTypes: '',
@@ -72,7 +73,7 @@ const validationScheme = val.object().shape({
     .number()
     .typeError(errorMessages.requiredMessage)
     .required(errorMessages.requiredMessage),
-  fobPrice: val
+  pricePerUOM: val
     .number()
     .min(0, errorMessages.minimum(0))
     .typeError(errorMessages.mustBeNumber)
@@ -123,71 +124,52 @@ class DetailSidebar extends Component {
   }, 250)
 
   submitForm = async (values, setSubmitting, setTouched) => {
-    const { addPurchaseRequest, editPurchaseRequest, datagrid } = this.props
-    const { sidebarValues } = this.state
+    const { editMyPurchaseOffer, datagrid } = this.props
+    const { sidebarValues } = this.props
+
+    let expiresAt = null
+    if (values.doesExpire) {
+      expiresAt = moment(getStringISODate(values.expiresAt)).format()
+    }
 
     let body = {
-      ...values,
+      expiresAt,
+      pricePerUOM: values.pricePerUOM
     }
-    removeEmpty(body)
-
     try {
       if (sidebarValues) {
-        //const response = await editMyPurchaseOffer(sidebarValues.id, body)
-        //console.log('!!!!!!!!!! edit response', response)
+        const response = await editMyPurchaseOffer(sidebarValues.id, body)
+        datagrid.updateRow(sidebarValues.id, () => response.value.data)
 
       } else {
         //const response = await addMyPurchaseOffer(body)
-        //console.log('!!!!!!!!!! add response', response)
-
       }
       this.props.closeDetailSidebar()
     } catch (e) {}
-
-    //! ! setSubmitting(false)
+    setSubmitting(false)
   }
 
   getInitialFormValues = () => {
     const { sidebarValues } = this.props
-
     let initialValues = {
       ...this.state.initValues,
       ...(sidebarValues
           ? {
-            conditionConforming: getSafe(() => sidebarValues.conditionConforming, ''),
-            deliveryCountry: getSafe(() => sidebarValues.deliveryCountry.id, ''),
-            deliveryProvince: getSafe(() => sidebarValues.deliveryProvince.id, ''),
-            element: {
-              echoProduct: getSafe(() => sidebarValues.element.echoProduct.id, ''),
-              casProduct: getSafe(() => sidebarValues.element.casProduct.id, ''),
-              assayMin: getSafe(() => sidebarValues.element.assayMin, ''),
-              assayMax: getSafe(() => sidebarValues.element.assayMax, ''),
-            },
+            product: getSafe(() => sidebarValues.productOffer.companyProduct.echoProduct.id, ''),
+            pricePerUOM: getSafe(() => sidebarValues.pricePerUOM, ''),
+            manufacturers: getSafe(() => sidebarValues.productOffer.companyProduct.echoProduct.manufacturer.id, ''),
+            conditionConforming: getSafe(() => sidebarValues.productOffer.conforming, ''),
+            packagingTypes: getSafe(() => sidebarValues.productOffer.companyProduct.packagingType.id, ''),
+            measurement: getSafe(() => sidebarValues.productOffer.companyProduct.packagingUnit.id, ''),
             expiresAt: getSafe(() => sidebarValues.expiresAt, ''),
-            forms: sidebarValues.forms.map(d => d.id),
-            grades: sidebarValues.grades.map(d => d.id),
-            manufacturers: sidebarValues.manufacturers.map(d => d.id),
-            maximumPricePerUOM: getSafe(() => sidebarValues.maximumPricePerUOM, ''),
-            neededAt: getSafe(() => sidebarValues.neededAt, ''),
-            notes: getSafe(() => sidebarValues.notes, ''),
-            origins: sidebarValues.origins.map(d => d.id),
-            packagingTypes: sidebarValues.packagingTypes.map(d => d.id),
-            quantity: getSafe(() => sidebarValues.quantity, ''),
-            unit: getSafe(() => sidebarValues.unit.id, ''),
           }
           : null
       )
     }
-
     if (initialValues.expiresAt) {
       initialValues.expiresAt = moment(initialValues.expiresAt).format(getLocaleDateFormat())
       initialValues.doesExpire = true
     }
-    if (initialValues.neededAt) {
-      initialValues.neededAt = moment(initialValues.neededAt).format(getLocaleDateFormat())
-      initialValues.neededNow = false
-    }
-
     return initialValues
   }
 
@@ -272,7 +254,7 @@ class DetailSidebar extends Component {
                             icon: 'search',
                             search: options => options,
                             selection: true,
-                            clearable: true,
+                            disabled: true,
                             onSearchChange: (e, { searchQuery }) =>
                               searchQuery.length > 0 && this.searchProducts(searchQuery)
                           }}
@@ -283,7 +265,7 @@ class DetailSidebar extends Component {
                     <GridRow>
                       <GridColumn>
                         {inputWrapper(
-                          'fobPrice',
+                          'pricePerUOM',
                           {
                             min: 0,
                             type: 'number',
@@ -411,14 +393,20 @@ class DetailSidebar extends Component {
                       <GridColumn width={8}>
                         <DateInput
                           name='expiresAt'
+                          label={
+                            <FormattedMessage
+                              id='wantedBoard.expirationDate'
+                              defaultMessage='Expiration Date'>
+                              {text => text}
+                            </FormattedMessage>
+                          }
                           inputProps={{
                             'data-test': 'new_inventory_grade_drpdn',
                             placeholder:
                               formatMessage({
                                 id: 'date.standardPlaceholder',
                                 defaultMessage: '00/00/0000'
-                              }),
-                            disabled: true
+                              })
                           }}
                         />
                       </GridColumn>
@@ -442,7 +430,18 @@ class DetailSidebar extends Component {
                       primary
                       size='large'
                       type='button'
-                      onClick={() => submitForm()}
+                      onClick={() => {
+                        validateForm().then(err => {
+                          const errors = Object.keys(err)
+                          if (errors.length && errors[0] !== 'isCanceled') {
+                            // Errors found
+                            submitForm() // to show errors
+                          } else {
+                            // No errors found
+                            this.submitForm(values, setSubmitting, setTouched)
+                          }
+                        })
+                      }}
                       data-test='sidebar_inventory_save_new'>
                       {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                     </Button>
@@ -465,6 +464,7 @@ const mapDispatchToProps = {
   getUnits,
   searchManufacturers,
   closeDetailSidebar,
+  editMyPurchaseOffer
 }
 
 const mapStateToProps = ({
@@ -475,7 +475,7 @@ const mapStateToProps = ({
     listPackagingTypesLoading,
     listUnits,
     listUnitsLoading,
-    //  loading,
+    loading,
     sidebarValues,
     searchedManufacturers,
     searchedManufacturersLoading,
@@ -487,8 +487,8 @@ const mapStateToProps = ({
   listPackagingTypesLoading,
   listUnits,
   listUnitsLoading,
-//  loading,
-  sidebarValues: sidebarValues ? sidebarValues.rawData : null,
+  loading,
+  sidebarValues: sidebarValues,
   searchedManufacturers,
   searchedManufacturersLoading,
   currencySymbol: '$'

@@ -4,14 +4,17 @@ import * as Actions from '../../actions'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader, Segment, GridRow, List, Table } from 'semantic-ui-react'
 import { Form, Input, Radio } from 'formik-semantic-ui-fixed-validation'
 import { getSafe } from '~/utils/functions'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import {FormattedMessage, FormattedNumber, injectIntl} from 'react-intl'
 import styled from 'styled-components'
 import { errorMessages } from '~/constants/yupValidation'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import moment from 'moment/moment'
-import { getLocaleDateFormat } from '~/components/date-format'
 import { FormattedUnit } from '~/components/formatted-messages'
 import { DateInput } from '~/components/custom-formik'
+import { inputWrapper } from '../../components'
+import { currency } from '~/constants/index'
+import { FieldArray } from 'formik'
+import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 
 import confirm from '~/src/components/Confirmable/confirm'
 
@@ -135,32 +138,55 @@ const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `
 
-const initValues = {
-  selectAll: false,
-
-}
-
 class SubmitOfferPopup extends React.Component {
-
-  componentDidMount() {
-    this.props.getMatchingProductOffers(this.props.popupValues.id)
+  state = {
+    initValues: {
+      select: '',
+      tableRow: []
+    }
   }
 
-  submitOffer = async (value, actions) => {
+  componentDidMount = async () => {
+    const response = await this.props.getMatchingProductOffers(this.props.popupValues.id)
+    this.setState({
+      initValues: {
+        select: '',
+        tableRow: response.value.map(d => ({
+          id: d.id,
+          pricePerUOM: '',  // missing on BE
+          expirationDate: d.lotExpirationDate
+            ? moment(d.lotExpirationDate ).format(getLocaleDateFormat())
+            : ''
+        }))
+      }
+    })
+  }
+
+  submitOffer = async (values, actions) => {
     const {
       closePopup,
-      submitOffer
+      submitOffer,
+      popupValues,
+
     } = this.props
+
+    const data = values.tableRow[values.select]
+
+    let expiresAt = null
+    if (data.expirationDate) {
+      expiresAt = moment(getStringISODate(data.expirationDate)).format()
+    }
+
+    const body = {
+      expiresAt,
+      pricePerUOM: data.pricePerUOM,
+      productOffer: data.id,
+      purchaseRequest: popupValues.id
+    }
 
     try {
 
-      /*const testValue = {
-        expiresAt: "2020-03-20T14:44:00.892Z",
-        pricePerUOM: 12,
-        productOffer: 101,
-        purchaseRequest: 19
-      }
-      await submitOffer(testValue) // waiting for BE endpoint*/
+      await submitOffer(body)
       closePopup()
     } catch (e) {
       console.error(e)
@@ -175,18 +201,15 @@ class SubmitOfferPopup extends React.Component {
       intl: { formatMessage },
       popupValues,
       matchingProductOffers,
-      popupValues2,
-      isSending
+      isSending,
+      currencySymbol
     } = this.props
 
     const qtyPart = popupValues.unit.nameAbbreviation
 
-    console.log('!!!!!!!!!! aaaaa popupValues', popupValues)
-    console.log('!!!!!!!!!! aaaaa matchingProductOffers', matchingProductOffers)
-
     return (
       <>
-        <Modal open={true}>
+        <Modal open={true} size='large'>
           <Dimmer active={isSending} inverted>
             <Loader />
           </Dimmer>
@@ -198,7 +221,7 @@ class SubmitOfferPopup extends React.Component {
               <Form
                 enableReinitialize
                 validateOnChange={false}
-                initialValues={{ ...initValues }}
+                initialValues={{ ...this.state.initValues }}
                 onSubmit={(values, actions) => {
                     this.submitOffer(values, actions)
                   actions.setSubmitting(false)
@@ -247,7 +270,15 @@ class SubmitOfferPopup extends React.Component {
                                       <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price' />
                                     </List.Header>
                                     <List.Description as='span'>
-                                      TBD !  pricePerUOM
+                                      {
+                                        popupValues.maximumPricePerUOM
+                                          ? <FormattedNumber
+                                              style='currency'
+                                              currency={currency}
+                                              value={popupValues.maximumPricePerUOM }
+                                            />
+                                          : 'N/A'
+                                      }
                                     </List.Description>
                                   </List.Content>
                                 </List.Item>
@@ -315,45 +346,79 @@ class SubmitOfferPopup extends React.Component {
                             </Table.Row>
                           </Table.Header>
                           <Table.Body>
-                            {popupValues2.map((element, index) => (
-                              <Table.Row>
-                                <Table.Cell>
-                                  <Radio
-                                    name='select'
-                                    value={false}
-                                  />
-                                </Table.Cell>
-                                <Table.Cell>
-                                  <span className='product-name'>{element.product}</span>
-                                </Table.Cell>
-                                <Table.Cell>
-                                  {element.fobPrice}
-                                  <Input type='text'
-                                         name='fobPrice'
-                                         inputProps={{ defaultValue: element.fobPrice }} />
-                                </Table.Cell>
-                                <Table.Cell>
-                                  {element.manufacturer}
-                                </Table.Cell>
-                                <Table.Cell>
-                                  {element.condition}
-                                </Table.Cell>
-                                <Table.Cell>
-                                  {element.packaging}
-                                </Table.Cell>
-                                <Table.Cell>
-                                  {element.meas}
-                                </Table.Cell>
-                                <Table.Cell>
-                                  {element.expirationDate}
-                                  <DateInput inputProps={{ minDate: moment(), id: 'expirationDate', clearable: true, defaultValue: element.expirationDate }} name='expirationDate' />
-                                </Table.Cell>
-                              </Table.Row>
-                            ))}
+                            <FieldArray
+                              name={`tableRow`}
+                              render={arrayHelpers => (
+                              <>
+                                {matchingProductOffers.map((element, index) => (
+                                  <Table.Row>
+                                    <Table.Cell>
+                                      <Radio
+                                        name='select'
+                                        value={index}
+                                      />
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                      <span className='product-name'>
+                                        {element.companyProduct.echoProduct.name}
+                                      </span>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                      {inputWrapper(
+                                        `tableRow[${index}].pricePerUOM`,
+                                        {
+                                          min: 0,
+                                          type: 'number',
+                                          placeholder: '0.000'
+                                        },
+                                        null,
+                                        currencySymbol
+                                      )}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                      {element.companyProduct.echoProduct.manufacturer.name}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                      {
+                                        element.conforming
+                                          ? <FormattedMessage
+                                            id='global.conforming'
+                                            defaultMessage='Conforming'
+                                          />
+                                          : <FormattedMessage
+                                            id='global.nonConforming'
+                                            defaultMessage='Non Conforming'
+                                          />
+                                      }
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                      {element.companyProduct.packagingType.name}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                      {element.companyProduct.packagingUnit.nameAbbreviation}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                      <DateInput
+                                        inputProps={{
+                                          minDate: moment(),
+                                          clearable: true,
+                                          defaultValue: element.lotExpirationDate
+                                            ? moment(element.lotExpirationDate ).format(getLocaleDateFormat())
+                                            : ''
+                                        }}
+                                        name={`tableRow[${index}].expirationDate`}
+                                      />
+                                    </Table.Cell>
+                                  </Table.Row>
+                                ))}
+                              </>
+                              )}
+                            />
                           </Table.Body>
                         </Table>
                       </div>
 
+                      <BottomButtons>
                       <Grid>
                         <Grid.Row>
                           <Grid.Column width={10}></Grid.Column>
@@ -365,7 +430,14 @@ class SubmitOfferPopup extends React.Component {
                             </Button>
                           </Grid.Column>
                           <Grid.Column floated='right' width={3}>
-                            <Button primary fluid type='submit'>
+                            <Button
+                              primary
+                              fluid
+                              type='submit'
+                              disabled={
+                                values.select === '' || values.tableRow[values.select].pricePerUOM === ''
+                              }
+                            >
                               <FormattedMessage id='wantedBoard.submit' defaultMessage='Submit' tagName='span' >
                                 {text => text}
                               </FormattedMessage>
@@ -373,6 +445,7 @@ class SubmitOfferPopup extends React.Component {
                           </Grid.Column>
                         </Grid.Row>
                       </Grid>
+                      </BottomButtons>
                     </>
                   )
                 }}
@@ -389,17 +462,7 @@ function mapStateToProps(store) {
   return {
     ...store.wantedBoard,
     popupValues: store.wantedBoard.popupValues.rawData,
-    popupValues2: [ // ! ! test data
-      {
-        product: 'Acrylic Acid',
-        fobPrice: 3.2145,
-        manufacturer: 'Ecolab',
-        condition: 'Conforming',
-        packaging: 'Bulk',
-        meas: 'lb',
-        expirationDate: '34.13.2499'
-      }
-    ]
+    currencySymbol: '$',
   }
 }
 
