@@ -51,15 +51,6 @@ export const updateAttachment = (id, payload) => {
   }
 }
 
-export const attachmentLinksToProductOffer = (attachmentId, productOfferId) => {
-  return {
-    type: AT.ATTACHMENT_LINKS_TO_PRODUCT_OFFER,
-    async payload() {
-      return await api.attachmentLinksToProductOffer(attachmentId, productOfferId)
-    }
-  }
-}
-
 export function addProductOffer(values, poId = false, simple = false, isGrouped = false, attachmentFiles = []) {
   let params = {}
 
@@ -156,7 +147,7 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
         })
       }
       if (isGrouped) {
-        dispatch({
+        await dispatch({
           type: AT.INVENTORY_EDIT_GROUPED_PRODUCT_OFFER,
           payload: api.updateGroupedProductOffer(poId, {
             pkgAvailable: paramsCleaned.pkgAvailable,
@@ -164,7 +155,7 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
           })
         })
       } else {
-        dispatch({
+        await dispatch({
           type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
           payload: api.updateProductOffer(poId, paramsCleaned)
         })

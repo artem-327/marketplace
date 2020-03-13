@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { withDatagrid } from '~/modules/datagrid'
 
 import { Header, Modal, FormGroup, Dimmer, Loader, Menu, Segment } from 'semantic-ui-react'
 import {
   closeSidebar,
-  handlerSubmitWarehouseEditPopup,
+  putEditWarehouse,
   postNewWarehouseRequest,
   getProvinces,
   getAddressSearch,
@@ -12,8 +13,7 @@ import {
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
-  loadFile,
-  attachmentLinksToBranch
+  loadFile
 } from '../../actions'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
@@ -101,13 +101,7 @@ class WarehouseSidebar extends React.Component {
   }
 
   submitHandler = async (values, actions) => {
-    const {
-      popupValues,
-      currentTab,
-      handlerSubmitWarehouseEditPopup,
-      postNewWarehouseRequest,
-      attachmentLinksToBranch
-    } = this.props
+    const { popupValues, currentTab, putEditWarehouse, postNewWarehouseRequest, datagrid } = this.props
     const { attachmentFiles } = this.state
 
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
@@ -135,18 +129,14 @@ class WarehouseSidebar extends React.Component {
 
     try {
       if (popupValues) {
-        if (attachmentFiles.length) {
-          attachmentFiles.forEach(attachment => {
-            attachmentLinksToBranch(attachment.id, popupValues.id)
-          })
-        }
-        await handlerSubmitWarehouseEditPopup(requestData, popupValues.id)
+        await putEditWarehouse(requestData, popupValues.id, attachmentFiles)
       } else {
-        await postNewWarehouseRequest(requestData)
+        await postNewWarehouseRequest(requestData, attachmentFiles)
       }
     } catch {
     } finally {
       actions.setSubmitting(false)
+      datagrid.loadData()
     }
   }
 
@@ -462,7 +452,7 @@ class WarehouseSidebar extends React.Component {
 
 const mapDispatchToProps = {
   postNewWarehouseRequest,
-  handlerSubmitWarehouseEditPopup,
+  putEditWarehouse,
   closeSidebar,
   getProvinces,
   getAddressSearch,
@@ -470,8 +460,7 @@ const mapDispatchToProps = {
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
-  loadFile,
-  attachmentLinksToBranch
+  loadFile
 }
 const mapStateToProps = state => {
   // const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
@@ -498,4 +487,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(WarehouseSidebar))
+export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(WarehouseSidebar)))

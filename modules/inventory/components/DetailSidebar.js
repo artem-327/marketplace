@@ -46,7 +46,6 @@ import {
   downloadAttachment,
   closeSidebarDetail,
   getProductOffer,
-  attachmentLinksToProductOffer,
   removeAttachmentLinkProductOffer
 } from '../actions'
 import { Broadcast } from '~/modules/broadcast'
@@ -629,7 +628,7 @@ class DetailSidebar extends Component {
   }, 250)
 
   submitForm = async (values, setSubmitting, setTouched, savedButtonClicked = false) => {
-    const { addProductOffer, datagrid, toastManager, attachmentLinksToProductOffer } = this.props
+    const { addProductOffer, datagrid } = this.props
     const { sidebarValues, attachmentFiles } = this.state
     let isEdit = getSafe(() => sidebarValues.id, null)
     let isGrouped = getSafe(() => sidebarValues.grouped, false)
@@ -1935,7 +1934,6 @@ const mapDispatchToProps = {
   downloadAttachment,
   closeSidebarDetail,
   getProductOffer,
-  attachmentLinksToProductOffer,
   removeAttachmentLinkProductOffer
 }
 
