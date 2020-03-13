@@ -180,7 +180,7 @@ class WarehouseSidebar extends React.Component {
     let { popupValues } = this.props
 
     const provinceId = getSafe(() => popupValues.deliveryAddress.address.province.id, '')
-    const countryId = getSafe(() => popupValues.deliveryAddress.address.country.id, '')
+    const countryId = getSafe(() => popupValues.deliveryAddress.address.country.id, null)
     const hasProvinces = getSafe(() => popupValues.deliveryAddress.address.country.hasProvinces, false)
     const zip = getSafe(() => popupValues.deliveryAddress.address.zip.zip, '')
     const zipID = getSafe(() => popupValues.deliveryAddress.address.zip.id, '')
@@ -193,7 +193,7 @@ class WarehouseSidebar extends React.Component {
           streetAddress: getSafe(() => popupValues.deliveryAddress.address.streetAddress, ''),
           city: getSafe(() => popupValues.deliveryAddress.address.city, ''),
           province: provinceId,
-          country: JSON.stringify({ countryId, hasProvinces }),
+          country: countryId ? JSON.stringify({ countryId, hasProvinces }) : '',
           zip
         },
         readyTime: getSafe(() => popupValues.deliveryAddress.readyTime, null),
