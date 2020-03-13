@@ -47,15 +47,13 @@ export const getRole = accessRights => {
 }
 
 export const typeToComponent = (type, options = {}) => {
-
   switch (type) {
     case 'INTEGER':
       return (
         <Input
-          type='number'
           {...getSafe(() => options.props, {})}
+          fieldProps={{ className: 'price-input' }}
           inputProps={{
-            type: 'number',
             step: 1,
             ...getSafe(() => options.inputProps, {})
           }}
@@ -64,10 +62,9 @@ export const typeToComponent = (type, options = {}) => {
     case 'FLOAT':
       return (
         <Input
-          type='number'
           {...getSafe(() => options.props, {})}
+          fieldProps={{ className: 'price-input' }}
           inputProps={{
-            type: 'number',
             step: 0.001,
             ...getSafe(() => options.inputProps, {})
           }}
@@ -75,13 +72,13 @@ export const typeToComponent = (type, options = {}) => {
       )
     case 'LARGE_TEXT':
       return (
-          <TextArea
-            {...getSafe(() => options.props, {})}
-            inputProps={{
-              ...getSafe(() => options.inputProps, {}),
-              type: 'text'
-            }}
-          />
+        <TextArea
+          {...getSafe(() => options.props, {})}
+          inputProps={{
+            ...getSafe(() => options.inputProps, {}),
+            type: 'text'
+          }}
+        />
       )
     case 'TEXT':
       return (
