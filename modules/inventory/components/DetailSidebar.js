@@ -672,14 +672,10 @@ class DetailSidebar extends Component {
         this.setState({ changedForm: false, edited: false })
         break
     }
-
     if (Object.keys(props).length) {
       try {
-        let data = await addProductOffer(props, isEdit, false, isGrouped)
+        let data = await addProductOffer(props, isEdit, false, isGrouped, attachmentFiles)
         if (isEdit) {
-          if (attachmentFiles && attachmentFiles.length) {
-            attachmentFiles.forEach(attachment => attachmentLinksToProductOffer(attachment.id, isEdit))
-          }
           datagrid.updateRow(data.value.id, () => data.value)
         } else {
           datagrid.loadData()
@@ -706,7 +702,7 @@ class DetailSidebar extends Component {
             />
           )
             .then(async () => {
-              let po = await addProductOffer(props, entityId, false, isGrouped)
+              let po = await addProductOffer(props, entityId, false, isGrouped, attachmentFiles)
               datagrid.updateRow(entityId, () => po.value)
               this.setState({
                 sidebarValues: po.value,
@@ -1020,7 +1016,7 @@ class DetailSidebar extends Component {
     ]
 
     const { toggleFilter } = this.props
-    
+
     return (
       <Formik
         enableReinitialize
@@ -1883,7 +1879,7 @@ class DetailSidebar extends Component {
                               submitForm() // to show errors
                             } else {
                               await this.submitForm(values, setSubmitting, setTouched)
-                          
+
                               confirm(
                                 formatMessage({
                                   id: 'confirm.editOrAddNew.header',
