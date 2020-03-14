@@ -27,6 +27,7 @@ function mapStateToProps(store, { datagrid }) {
       return {
         id: row.id,
         rawData: row,
+        offer: false,
         product: getSafe(() => row.element.echoProduct.name,
           <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
         ),
@@ -72,6 +73,7 @@ function mapStateToProps(store, { datagrid }) {
         measurement: qtyPart,
         fobQuote: '',
         deliveredQuote: '',
+        purchaseRequestOffers: row.purchaseRequestOffers
       }
     })
   }

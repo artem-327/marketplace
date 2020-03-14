@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Grid, GridColumn, Input, Menu, Header, Button, Popup, List, Icon, Tab } from 'semantic-ui-react'
+import { Container, Grid, GridColumn, Input, Menu, Header, Button, Popup, List, Icon, Tab, Label } from 'semantic-ui-react'
 import { AlertTriangle } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
@@ -15,6 +15,8 @@ import { MyOffers } from '~/modules/wanted-board/my-offers'
 import confirm from '~/src/components/Confirmable/confirm'
 import DetailSidebar from './DetailSidebar'
 import { Datagrid } from '~/modules/datagrid'
+
+import { getSafe } from '~/utils/functions'
 
 import { number } from 'prop-types'
 import Link from 'next/link'
@@ -331,7 +333,8 @@ class MyRequestedItems extends Component {
     selectedRows: [],
     pageNumber: 0,
     open: false,
-    filterValue: ''
+    filterValue: '',
+    openedRows: {}
   }
 
 
@@ -341,12 +344,12 @@ class MyRequestedItems extends Component {
     this.props.handleFiltersValue('')
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  /*componentDidUpdate(prevProps, prevState, snapshot) {
     //const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
     //if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
     //  datagrid.setFilter(datagridFilter)
     //}
-  }
+  }*/
 
   handleFiltersValue = value => {
     const { handleFiltersValue } = this.props
@@ -357,6 +360,46 @@ class MyRequestedItems extends Component {
   handleFilterChange = (e, { value }) => {
     this.setState({ filterValue: value })
     this.handleFiltersValue(value)
+  }
+
+  getRows = (rows) => {
+    const { type } = this.props
+    const { openedRows } = this.state
+    return rows.length ? rows.reduce(function(newRows, row) {
+      newRows.push({
+        ...row,
+        casNumber: (
+          <>
+            <Label>{getSafe(() => row.purchaseRequestOffers.length, 0)}</Label>
+            {row.casNumber}
+          </>
+        ),
+        product: (
+          <>
+            <Label>{getSafe(() => row.purchaseRequestOffers.length, 0)}</Label>
+            {row.product}
+          </>
+        )
+      })
+      if (getSafe(() => openedRows[type][row.id], false) && row.purchaseRequestOffers.length) {
+        row.purchaseRequestOffers.map(rOffer => {
+          newRows.push({
+            offer: true,
+            casNumber: getSafe(() => rOffer.productOffer.companyProduct.echoProduct.code, ''),
+            product: getSafe(() => rOffer.productOffer.companyProduct.echoProduct.name, ''),
+            manufacturer: getSafe(() => rOffer.productOffer.companyProduct.echoProduct.manufacturer.name, ''),
+            condition: getSafe(() => rOffer.productOffer.condition.name, ''),
+            packaging: getSafe(() => rOffer.productOffer.companyProduct.packagingType.name, ''),
+            deliveryPriceMax: '',
+            measurement: getSafe(() => rOffer.productOffer.companyProduct.packageWeightUnit.nameAbbreviation, ''),
+            fobQuote: '',
+            deliveredQuote: '',
+            //myRequestedItem: row
+          })
+        })
+      }
+      return newRows
+    }, []) : []
   }
 
   renderContent = () => {
@@ -425,19 +468,38 @@ class MyRequestedItems extends Component {
         </ControlPanel>
         <div className='flex stretched' style={{padding: '10px 0'}}>
           <ProdexGrid
+            key={type}
             tableName='my_requested_items_grid'
             {...datagrid.tableProps}
-            rows={rows}
+            rows={rows.length ? this.getRows(rows) : rows}
             columns={type === 'product' ? columnsProduct : columnsChemical}
             rowSelection
             showSelectionColumn
             rowActions={[
               {
                 text: formatMessage({
+                  id: 'wantedBoard.open',
+                  defaultMessage: 'Open'
+                }),
+                disabled: row => row.offer && getSafe(() => row.purchaseRequestOffers.length, false),
+                callback: row => {
+                  let { openedRows } = this.state
+                  if (typeof openedRows[type] === 'undefined') {
+                    openedRows[type] = {}
+                    openedRows[type][row.id] = false
+                  } else if (typeof openedRows[type][row.id] === 'undefined') {
+                    openedRows[type][row.id] = false
+                  }
+                  openedRows[type][row.id] = !openedRows[type][row.id]
+                  this.setState({ 'openedRows': openedRows })
+                }
+              },
+              {
+                text: formatMessage({
                   id: 'wantedBoard.reject',
                   defaultMessage: 'Reject'
                 }),
-                disabled: row => editedId === row.id,
+                disabled: row => !row.offer || (editedId === row.id),
                 callback: row => {
                   confirm(
                     formatMessage({
@@ -463,6 +525,7 @@ class MyRequestedItems extends Component {
                   id: 'wantedBoard.purchase',
                   defaultMessage: 'Purchase'
                 }),
+                disabled: row => !row.offer,
                 callback: row => this.props.purchaseRequestedItem(row.id)
               },
             ]}
