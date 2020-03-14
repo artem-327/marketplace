@@ -14,7 +14,7 @@ context("Prodex Branches CRUD", () => {
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading")
-        cy.get('.scrollbar-container > .dropdown').click()
+        cy.openSettings()
         cy.contains("Delivery Addresses").click()
 
         cy.wait("@addressLoading")

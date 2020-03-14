@@ -22,3 +22,8 @@ Cypress.Commands.add("assertProductDetail", (index,value) => {
         .children()
         .eq(index).contains(value)
 })
+
+Cypress.Commands.add("openSettings", () => {
+    cy.get(".flex-wrapper > .ui")
+        .click()
+})
