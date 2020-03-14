@@ -13,7 +13,7 @@ context("Prodex Bank Account CRUD", () => {
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading", {timeout: 100000})
-        cy.get('.scrollbar-container > .dropdown').click()
+        cy.openSettings()
         cy.contains("Bank Accounts").click()
 
         cy.wait("@accountsLoading")
