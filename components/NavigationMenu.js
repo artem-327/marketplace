@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { ArrowLeftCircle, ArrowRightCircle, Layers, Settings, ShoppingBag } from 'react-feather'
+import { ArrowLeftCircle, ArrowRightCircle, Hexagon, Layers, Settings, ShoppingBag } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
@@ -135,10 +135,12 @@ class Navigation extends Component {
     }
     // toggle dropdown state
     this.setState({
-      [type]: !typeState,
       openedFilterMyInventory: false,
       openedFilterMarketplace: false,
-      openedFilterOrders: false
+      openedFilterOrders: false,
+      admin: false,
+      operations: false,
+      [type]: !typeState
     })
 
     // resize dropdown
@@ -376,7 +378,7 @@ class Navigation extends Component {
         {isAdmin && (
           <>
             <DropdownItem
-              icon={admin ? 'chevron up' : 'chevron down'}
+              icon={<Hexagon size={22} />}
               text={formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}
               className={admin ? 'opened' : null}
               opened={admin}
@@ -389,7 +391,7 @@ class Navigation extends Component {
         )}
         {(isAdmin || isEchoOperator) && (
           <DropdownItem
-            icon={operations ? 'chevron up' : 'chevron down'}
+            icon={<Hexagon size={22} />}
             text={formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
             className={operations ? 'opened' : null}
             opened={operations}
