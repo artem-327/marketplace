@@ -18,36 +18,18 @@ import {
 
 const validationSchema = Yup.object().shape(
   {
-    provider: Yup.string(requiredMessage).required(requiredMessage),
-    apiKey: Yup.string().when(['username', 'password'], {
-      is: (username, password) => username || password,
-      then: Yup.string().notRequired(),
-      otherwise: Yup.string(requiredMessage).required(requiredMessage)
+    providerIdentifier: Yup.object().shape({
+      type: Yup.string(requiredMessage).required(requiredMessage),
+      value: Yup.string(requiredMessage).required(requiredMessage)
     }),
-    username: Yup.string().when('apiKey', {
-      is: apiKey => !apiKey,
-      then: Yup.string(requiredMessage).required(requiredMessage),
-      otherwise: Yup.string().notRequired()
-    }),
-    password: Yup.string().when('apiKey', {
-      is: apiKey => !apiKey,
-      then: Yup.string(requiredMessage).required(requiredMessage),
-      otherwise: Yup.string().notRequired(),
-    })
-    // apiKey: Yup.string(requiredMessage).required(requiredMessage),
-    // username: Yup.string(requiredMessage).required(requiredMessage),
-    // password: Yup.string(requiredMessage).required(requiredMessage)
+    username: Yup.string(requiredMessage).required(requiredMessage),
+    password: Yup.string(requiredMessage).required(requiredMessage)
   },
-  [
-    ['username', 'apiKey'],
-    // ['username', 'password'],
-    ['password', 'apiKey']
-  ]
+  [['username', 'password']]
 )
 
 const initialValues = {
-  provider: '',
-  apiKey: '',
+  providerIdentifier: {},
   username: '',
   password: ''
 }
@@ -67,7 +49,6 @@ class LogisticsPopup extends Component {
       updateLogisticsAccount,
       intl: { formatMessage }
     } = this.props
-
     return (
       <Modal closeIcon onClose={() => closePopup()} open centered={false}>
         <Modal.Header>
@@ -103,11 +84,11 @@ class LogisticsPopup extends Component {
                 <>
                   <FormGroup widths='equal' data-test='settings_logistics_apikey_inp'>
                     <Dropdown
-                      name='provider'
+                      name='providerIdentifier'
                       options={logisticsProviders.map(provider => ({
-                        key: provider.id,
+                        key: provider.identifier.value,
                         text: provider.name,
-                        value: provider.id
+                        value: provider.identifier
                       }))}
                       label={formatMessage({
                         id: 'logistics.label.logisticsProvider',
@@ -120,16 +101,6 @@ class LogisticsPopup extends Component {
                           label: 'Select Logistics Provider'
                         }),
                         loading: logisticsProvidersFetching
-                      }}
-                    />
-                    <Input
-                      name='apiKey'
-                      label={formatMessage({ id: 'logistics.label.apiKey', defaultMessage: 'API Key' })}
-                      inputProps={{
-                        placeholder: formatMessage({
-                          id: 'logistics.placeholder.apiKey',
-                          defaultMessage: 'Enter your API key'
-                        })
                       }}
                     />
                   </FormGroup>

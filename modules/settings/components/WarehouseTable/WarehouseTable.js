@@ -179,19 +179,7 @@ class WarehouseTable extends Component {
                     { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}! ? ` },
                     { item: row.name }
                   )
-                )
-                  .then(() => deleteBranch(row.id))
-                  .then(() =>
-                    toastManager.add(
-                      generateToastMarkup(
-                        <FormattedMessage id='settings.headerDeleteWarehouse' defaultMessage='Successfully deleted' />,
-                        null
-                      ),
-                      {
-                        appearance: 'success'
-                      }
-                    )
-                  )
+                ).then(() => deleteBranch(row.id))
             }
           ]}
         />
