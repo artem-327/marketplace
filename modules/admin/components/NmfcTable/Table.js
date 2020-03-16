@@ -48,23 +48,6 @@ export default class Table extends Component {
                 )
               ).then(async () => {
                 await deleteNmfcNumber(row.id)
-
-                toastManager.add(
-                  generateToastMarkup(
-                    formatMessage({
-                      id: 'notifications.nmfcNumberDeleted.header',
-                      defaultMessage: 'NFMC Number Deleted'
-                    }),
-                    formatMessage(
-                      {
-                        id: 'notifications.nmfcNumberDeleted.content',
-                        defaultMessage: `NMFC Number ${row.code} successfully deleted.`
-                      },
-                      { code: row.code }
-                    )
-                  ),
-                  { appearance: 'success' }
-                )
               })
           }
         ]}
