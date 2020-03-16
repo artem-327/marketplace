@@ -160,34 +160,72 @@ export const FlexContent = styled.div`
 `
 
 export const InputWrapper = styled.div`
+  position: relative;
+  min-width: 107px;
+  height: 22px;
+  margin: 0 -5px;
+  
+  * {
+    max-height: 100%;
+  }
+  
+  > div {
+    position: absolute !important;
+    top: -5px;
+    bottom: -5px;
+    width: 100%;
+    height: 32px !important;
+    max-height: 32px !important;
+  }
+    
   > .field-label {
       margin: 0em 0em 0.428571429em 0em;
       font-size: 1em;
       line-height: 1.29;
       color: #404040;
   }
-  & div {
+  div {
     position: relative;
+    
     > .field {
       margin: 0 !important;
+      
       .ui.input input {
-        padding-right: 47px; 
+        box-sizing: border-box;
+        max-width: 100%;
+        padding: 5px 30px 5px 13px; 
         background-color: #fdfdfd;
+        font-size: 14px;
+        line-height: 1.4285714;
+        
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        
+        /* Firefox */
+        &[type=number] {
+          -moz-appearance: textfield;
+        }
       }
     }
     > .ui.label {
-      padding: 0.5em 0.7142857em;
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 2px;
+      padding: 0;
+      background-color: rgba(132, 194, 37, 0.15);
+      text-align: center;
       font-size: 14px;
       font-weight: normal;
       font-stretch: normal;
       font-style: normal;
-      text-align: center;
       color: #84c225;
-      border-radius: 2px;
-      background-color: rgba(132, 194, 37, 0.15);
-      position: absolute;
-      top: 0.42857143em;
-      right: 0.42857143em;
+      line-height: 24px;
     }
   }
 `

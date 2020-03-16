@@ -138,6 +138,23 @@ const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `
 
+const SubmitFormTable = styled(Table)`
+  .table-responsive & tbody tr td {
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    line-height: 18px;
+  }
+`
+
+const DateField = styled.div`
+  height: 32px;
+  margin: 0 -5px;
+  
+  * {
+    max-height: 32px;
+  }
+`
+
 class SubmitOfferPopup extends React.Component {
   state = {
     initValues: {
@@ -340,7 +357,7 @@ class SubmitOfferPopup extends React.Component {
                       </SubmitOfferHighSegment>
 
                       <div className='table-responsive'>
-                        <Table>
+                        <SubmitFormTable>
                           <Table.Header>
                             <Table.Row>
                               <Table.HeaderCell>
@@ -421,16 +438,18 @@ class SubmitOfferPopup extends React.Component {
                                       {element.companyProduct.packagingUnit.nameAbbreviation}
                                     </Table.Cell>
                                     <Table.Cell>
-                                      <DateInput
-                                        inputProps={{
-                                          minDate: moment(),
-                                          clearable: true,
-                                          defaultValue: element.lotExpirationDate
-                                            ? moment(element.lotExpirationDate ).format(getLocaleDateFormat())
-                                            : ''
-                                        }}
-                                        name={`tableRow[${index}].expirationDate`}
-                                      />
+                                      <DateField>
+                                        <DateInput
+                                          inputProps={{
+                                            minDate: moment(),
+                                            clearable: true,
+                                            defaultValue: element.lotExpirationDate
+                                              ? moment(element.lotExpirationDate ).format(getLocaleDateFormat())
+                                              : ''
+                                          }}
+                                          name={`tableRow[${index}].expirationDate`}
+                                        />
+                                      </DateField>
                                     </Table.Cell>
                                   </Table.Row>
                                 ))}
@@ -438,7 +457,7 @@ class SubmitOfferPopup extends React.Component {
                               )}
                             />
                           </Table.Body>
-                        </Table>
+                        </SubmitFormTable>
                       </div>
 
                       <BottomButtons>
