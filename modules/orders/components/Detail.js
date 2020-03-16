@@ -659,10 +659,9 @@ class Detail extends Component {
                                   <Table.Body>
                                     <TableRowData>
                                       <Table.Cell>
-                                        <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' /> (
-                                        {order.feesPercent}%)
+                                        <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' />
                                       </Table.Cell>
-                                      <Table.Cell textAlign='right'>{order.feesAmount}</Table.Cell>
+                                      <Table.Cell textAlign='right'>{order.echoFee}</Table.Cell>
                                     </TableRowData>
                                   </Table.Body>
                                   <Table.Footer>

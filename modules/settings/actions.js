@@ -30,6 +30,19 @@ export function closePopup(rows = null) {
   }
 }
 
+export function openSidebar(openTab = null) {
+  return {
+    type: AT.OPEN_SIDEBAR,
+    payload: openTab
+  }
+}
+export function closeSidebar(openTab = null) {
+  return {
+    type: AT.CLOSE_SIDEBAR,
+    payload: openTab
+  }
+}
+
 export function openDwollaPopup() {
   return {
     type: AT.OPEN_DWOLLA_POPUP
@@ -351,27 +364,44 @@ export function handleProductCatalogUnmappedValue(checked, props) {
   }
 }
 //////////////////////
-export function handlerSubmitWarehouseEditPopup(payload, id) {
+export function putEditWarehouse(payload, id, attachmentFiles) {
   return async dispatch => {
     const response = await api.putWarehouse(id, payload)
     await dispatch({
       type: AT.PUT_WAREHOUSE_EDIT_POPUP,
       payload: response
     })
-    Datagrid.updateRow(id, () => response)
-    dispatch(closePopup())
+    if (attachmentFiles && attachmentFiles.length) {
+      attachmentFiles.forEach(attachment => {
+        dispatch({
+          type: AT.ATTACHMENT_LINKS_TO_BRANCH,
+          payload: api.attachmentLinksToBranch(attachment.id, id)
+        })
+      })
+    }
+    //Datagrid.updateRow(id, () => response)
+    dispatch(closeSidebar())
   }
 }
 
 ///////////////////
-export function postNewWarehouseRequest(payload) {
+export function postNewWarehouseRequest(payload, attachmentFiles) {
   return async dispatch => {
-    await dispatch({
+    const newWarehouse = await dispatch({
       type: AT.POST_NEW_WAREHOUSE_REQUEST,
       payload: api.postNewWarehouse(payload)
     })
-    Datagrid.loadData()
-    dispatch(closePopup())
+    if (attachmentFiles && attachmentFiles.length) {
+      attachmentFiles.forEach(attachment => {
+        dispatch({
+          type: AT.ATTACHMENT_LINKS_TO_BRANCH,
+          payload: api.attachmentLinksToBranch(attachment.id, newWarehouse.value.data.id)
+        })
+      })
+    }
+    //dispatch(getWarehousesDataRequest())
+    dispatch(closeSidebar())
+    //Datagrid.loadData()
   }
 }
 
@@ -392,6 +422,7 @@ export function handleSubmitProductEditPopup(payload, id) {
       }
     }
     dispatch(closePopup())
+    Datagrid.loadData()
   }
 }
 
@@ -957,9 +988,13 @@ export function addVerificationDocument(attachment, type) {
 }
 
 export function addAttachment(attachment, type, expirationDate) {
-  return async dispatch => {
-    await dispatch({ type: AT.SETTINGS_ADD_ATTACHMENT, payload: api.addAttachment(attachment, type, expirationDate) })
-    Datagrid.loadData()
+  return {
+    type: AT.SETTINGS_ADD_ATTACHMENT,
+    async payload() {
+      const data = await api.addAttachment(attachment, type, expirationDate)
+      Datagrid && Datagrid.loadData()
+      return data
+    }
   }
 }
 
@@ -1053,3 +1088,17 @@ export const getNmfcNumbersByString = value => ({
 })
 
 export const addNmfcNumber = value => ({ type: AT.ADD_NMFC_NUMBERS, payload: value })
+
+export function removeAttachmentLinkToBranch(attachmentId, branchId) {
+  return {
+    type: AT.REMOVE_ATTACHMENT_LINK_TO_BRANCH,
+    async payload() {
+      return await api.removeAttachmentLinkToBranch(attachmentId, branchId)
+    }
+  }
+}
+
+export const getBranch = branchId => ({
+  type: AT.GET_BRANCH,
+  payload: api.getBranch(branchId)
+})

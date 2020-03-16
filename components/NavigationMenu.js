@@ -12,6 +12,7 @@ import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
 import { ArrowLeftCircle, ArrowRightCircle, Layers, Settings, ShoppingBag } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import { InventoryFilter } from '~/modules/filter'
 import { Filter } from '~/modules/filter' // Marketplace filter
@@ -67,10 +68,16 @@ class Navigation extends Component {
     if (pathname === to) {
       switch (asPath) {
         case '/inventory/my':
-          this.setState(prevState => ({ openedFilterMyInventory: !prevState.openedFilterMyInventory }))
+          this.setState(prevState => ({
+            openedFilterMyInventory: !prevState.openedFilterMyInventory,
+            settings: false
+          }))
           break
         case '/marketplace/all':
-          this.setState(prevState => ({ openedFilterMarketplace: !prevState.openedFilterMarketplace }))
+          this.setState(prevState => ({
+            openedFilterMarketplace: !prevState.openedFilterMarketplace,
+            settings: false
+          }))
           break
         case '/orders?type=sales':
           //temporary disabled - this.setState(prevState => ({ openedFilterOrders: !prevState.openedFilterOrders }))
@@ -127,7 +134,12 @@ class Navigation extends Component {
       Router.push('/admin')
     }
     // toggle dropdown state
-    this.setState({ [type]: !typeState })
+    this.setState({
+      [type]: !typeState,
+      openedFilterMyInventory: false,
+      openedFilterMarketplace: false,
+      openedFilterOrders: false
+    })
 
     // resize dropdown
     this.resizeDropdown(type, typeState)
@@ -199,10 +211,10 @@ class Navigation extends Component {
       openedFilterOrders
     } = this.state
 
-    const MenuLink = withRouter(({ router: { asPath }, to, children, tab }) => {
+    const MenuLink = withRouter(({ router: { asPath }, to, children, tab, className }) => {
       return (
         <Link prefetch href={to}>
-          <Menu.Item as='a' active={asPath === to} onClick={async e => await this.settingsLink(e, to, tab)}>
+          <Menu.Item as='a' active={asPath === to} onClick={async e => await this.settingsLink(e, to, tab)} className={className}>
             {children}
           </Menu.Item>
         </Link>
@@ -217,8 +229,8 @@ class Navigation extends Component {
     })
 
     return !isAdmin || takeover ? (
-      <>
-        <MenuLink to='/inventory/my' data-test='navigation_menu_inventory_my_drpdn'>
+      <div className='flex-wrapper'>
+        <MenuLink to='/inventory/my' data-test='navigation_menu_inventory_my_drpdn' className={!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''}>
           <>
             <Layers size={22} />
             {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
@@ -227,7 +239,7 @@ class Navigation extends Component {
         {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
         {getSafe(() => company.nacdMember, false) ? (
           <>
-            <MenuLink to='/marketplace/all' data-test='navigation_menu_marketplace_drpdn'>
+            <MenuLink to='/marketplace/all' data-test='navigation_menu_marketplace_drpdn' className={!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''}>
               <>
                 <ShoppingBag size={22} />
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
@@ -260,105 +272,107 @@ class Navigation extends Component {
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'settings'}>
             <Dropdown.Menu data-test='navigation_menu_settings_drpdn'>
-              {isCompanyAdmin ? (
-                <>
+              <PerfectScrollbar>
+                {isCompanyAdmin ? (
+                  <>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings?type=company-details'
+                      tab='company-details'
+                      data-test='navigation_settings_company_details_drpdn'>
+                      {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Details' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings?type=system-settings'
+                      tab='system-settings'
+                      data-test='navigation_settings_system_settings_drpdn'>
+                      {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Settings' })}
+                    </Dropdown.Item>
+                  </>
+                ) : null}
+                {isCompanyAdmin || isUserAdmin ? (
                   <Dropdown.Item
                     as={MenuLink}
-                    to='/settings?type=company-details'
-                    tab='company-details'
-                    data-test='navigation_settings_company_details_drpdn'>
-                    {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Details' })}
+                    to='/settings?type=users'
+                    tab='users'
+                    data-test='navigation_settings_users_drpdn'>
+                    {formatMessage({ id: 'navigation.users', defaultMessage: 'Users' })}
                   </Dropdown.Item>
+                ) : null}
+                {isCompanyAdmin ? (
+                  <>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings?type=branches'
+                      tab='branches'
+                      data-test='navigation_settings_branches_drpdn'>
+                      {formatMessage({ id: 'navigation.branches', defaultMessage: 'Branches' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings?type=warehouses'
+                      tab='warehouses'
+                      data-test='navigation_settings_warehouses_drpdn'>
+                      {formatMessage({ id: 'navigation.warehouses', defaultMessage: 'Warehouses' })}
+                    </Dropdown.Item>
+                  </>
+                ) : null}
+                {isCompanyAdmin || isProductCatalogAdmin ? (
                   <Dropdown.Item
                     as={MenuLink}
-                    to='/settings?type=system-settings'
-                    tab='system-settings'
-                    data-test='navigation_settings_system_settings_drpdn'>
-                    {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Settings' })}
+                    to='/settings?type=products'
+                    tab='products'
+                    data-test='navigation_settings_products_drpdn'>
+                    {formatMessage({ id: 'navigation.productCatalog', defaultMessage: 'Product Catalog' })}
                   </Dropdown.Item>
-                </>
-              ) : null}
-              {isCompanyAdmin || isUserAdmin ? (
-                <Dropdown.Item
-                  as={MenuLink}
-                  to='/settings?type=users'
-                  tab='users'
-                  data-test='navigation_settings_users_drpdn'>
-                  {formatMessage({ id: 'navigation.users', defaultMessage: 'Users' })}
-                </Dropdown.Item>
-              ) : null}
-              {isCompanyAdmin ? (
-                <>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/settings?type=branches'
-                    tab='branches'
-                    data-test='navigation_settings_branches_drpdn'>
-                    {formatMessage({ id: 'navigation.branches', defaultMessage: 'Branches' })}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/settings?type=warehouses'
-                    tab='warehouses'
-                    data-test='navigation_settings_warehouses_drpdn'>
-                    {formatMessage({ id: 'navigation.warehouses', defaultMessage: 'Warehouses' })}
-                  </Dropdown.Item>
-                </>
-              ) : null}
-              {isCompanyAdmin || isProductCatalogAdmin ? (
-                <Dropdown.Item
-                  as={MenuLink}
-                  to='/settings?type=products'
-                  tab='products'
-                  data-test='navigation_settings_products_drpdn'>
-                  {formatMessage({ id: 'navigation.productCatalog', defaultMessage: 'Product Catalog' })}
-                </Dropdown.Item>
-              ) : null}
-              {isCompanyAdmin ? (
-                <>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/settings?type=global-broadcast'
-                    tab='global-broadcast'
-                    data-test='navigation_settings_global_broadcast_drpdn'>
-                    {formatMessage({ id: 'navigation.globalPriceBook', defaultMessage: 'Global Price Book' })}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/settings?type=bank-accounts'
-                    tab='bank-accounts'
-                    data-test='navigation_settings_bank_accounts_drpdn'>
-                    {formatMessage({ id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts' })}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/settings?type=delivery-addresses'
-                    tab='delivery-addresses'
-                    data-test='navigation_settings_delivery_addresses_drpdn'>
-                    {formatMessage({ id: 'navigation.deliveryAddresses', defaultMessage: 'Delivery Addresses' })}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/settings?type=logistics'
-                    tab='logistics'
-                    data-test='navigation_settings_logistics_drpdn'>
-                    {formatMessage({ id: 'navigation.logistics', defaultMessage: 'Logistics' })}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/settings?type=documents'
-                    tab='documents'
-                    data-test='navigation_settings_documents_drpdn'>
-                    {formatMessage({ id: 'navigation.documents', defaultMessage: 'Documents' })}
-                  </Dropdown.Item>
-                </>
-              ) : null}
+                ) : null}
+                {isCompanyAdmin ? (
+                  <>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings?type=global-broadcast'
+                      tab='global-broadcast'
+                      data-test='navigation_settings_global_broadcast_drpdn'>
+                      {formatMessage({ id: 'navigation.globalPriceBook', defaultMessage: 'Global Price Book' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings?type=bank-accounts'
+                      tab='bank-accounts'
+                      data-test='navigation_settings_bank_accounts_drpdn'>
+                      {formatMessage({ id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings?type=delivery-addresses'
+                      tab='delivery-addresses'
+                      data-test='navigation_settings_delivery_addresses_drpdn'>
+                      {formatMessage({ id: 'navigation.deliveryAddresses', defaultMessage: 'Delivery Addresses' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings?type=logistics'
+                      tab='logistics'
+                      data-test='navigation_settings_logistics_drpdn'>
+                      {formatMessage({ id: 'navigation.logistics', defaultMessage: 'Logistics' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings?type=documents'
+                      tab='documents'
+                      data-test='navigation_settings_documents_drpdn'>
+                      {formatMessage({ id: 'navigation.documents', defaultMessage: 'Documents' })}
+                    </Dropdown.Item>
+                  </>
+                ) : null}
+              </PerfectScrollbar>
             </Dropdown.Menu>
           </DropdownItem>
         )}
-      </>
+      </div>
     ) : (
-      <>
+      <div className='flex-wrapper'>
         {isAdmin && (
           <>
             <DropdownItem
@@ -383,17 +397,19 @@ class Navigation extends Component {
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'operations'}>
             <Dropdown.Menu data-test='navigation_menu_operations_drpdn'>
-              <Dropdown.Item
-                as={MenuLink}
-                to='/operations'
-                tab='shipping-quotes'
-                data-test='navigation_admin_operations_shipping_quotes_drpdn'>
-                {formatMessage({ id: 'navigation.shippingQuotes', defaultMessage: 'Shipping Quotes' })}
-              </Dropdown.Item>
+              <PerfectScrollbar>
+                <Dropdown.Item
+                  as={MenuLink}
+                  to='/operations'
+                  tab='shipping-quotes'
+                  data-test='navigation_admin_operations_shipping_quotes_drpdn'>
+                  {formatMessage({ id: 'navigation.shippingQuotes', defaultMessage: 'Shipping Quotes' })}
+                </Dropdown.Item>
+              </PerfectScrollbar>
             </Dropdown.Menu>
           </DropdownItem>
         )}
-      </>
+      </div>
     )
   }
 }

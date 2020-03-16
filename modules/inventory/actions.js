@@ -51,7 +51,7 @@ export const updateAttachment = (id, payload) => {
   }
 }
 
-export function addProductOffer(values, poId = false, simple = false, isGrouped = false) {
+export function addProductOffer(values, poId = false, simple = false, isGrouped = false, attachmentFiles = []) {
   let params = {}
 
   if (!simple) {
@@ -136,32 +136,45 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
       paramsCleaned[paramKeys[i]] = params[paramKeys[i]]
     }
   }
-
-  if (poId) {
-    if (isGrouped) {
-      return {
-        type: AT.INVENTORY_EDIT_GROUPED_PRODUCT_OFFER,
-        async payload() {
-          return await api.updateGroupedProductOffer(poId, {
+  return async dispatch => {
+    if (poId) {
+      if (attachmentFiles && attachmentFiles.length) {
+        attachmentFiles.forEach(attachment => {
+          dispatch({
+            type: AT.ATTACHMENT_LINKS_TO_PRODUCT_OFFER,
+            payload: api.attachmentLinksToProductOffer(attachment.id, poId)
+          })
+        })
+      }
+      if (isGrouped) {
+        await dispatch({
+          type: AT.INVENTORY_EDIT_GROUPED_PRODUCT_OFFER,
+          payload: api.updateGroupedProductOffer(poId, {
             pkgAvailable: paramsCleaned.pkgAvailable,
             lotNumber: paramsCleaned.lotNumber
           })
-        }
+        })
+      } else {
+        await dispatch({
+          type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
+          payload: api.updateProductOffer(poId, paramsCleaned)
+        })
       }
     } else {
-      return {
-        type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
-        async payload() {
-          return await api.updateProductOffer(poId, paramsCleaned)
-        }
+      const newProd = await dispatch({
+        type: AT.INVENTORY_ADD_PRODUCT_OFFER,
+        payload: api.addProductOffer(paramsCleaned)
+      })
+    
+      if (attachmentFiles && attachmentFiles.length) {
+        attachmentFiles.forEach(attachment => {
+          dispatch({
+            type: AT.ATTACHMENT_LINKS_TO_PRODUCT_OFFER,
+            payload: api.attachmentLinksToProductOffer(attachment.id, newProd.value.data.id)
+          })
+        })
       }
-    }
-  } else {
-    return {
-      type: AT.INVENTORY_ADD_PRODUCT_OFFER,
-      async payload() {
-        return await api.addProductOffer(paramsCleaned)
-      }
+      return newProd.value
     }
   }
 }
@@ -442,5 +455,14 @@ export function applyDatagridFilter(filter) {
   return {
     type: AT.INVENTORY_APPLY_FILTER,
     payload: filter
+  }
+}
+
+export function removeAttachmentLinkProductOffer(attachmentId, productOfferId) {
+  return {
+    type: AT.INVENTORY_REMOVE_ATTACHMENT_LINK_PRODUCT_OFFER,
+    async payload() {
+      return await api.removeAttachmentLinkProductOffer(attachmentId, productOfferId)
+    }
   }
 }
