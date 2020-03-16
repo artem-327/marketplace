@@ -1145,8 +1145,8 @@ class DetailSidebar extends Component {
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <Dropdown
                                         name='edit.product'
-                                        options={this.props.autocompleteData.map(el => ({
-                                          key: el.echoProduct.id,
+                                        options={this.props.autocompleteData.map((el, i) => ({
+                                          key: i,
                                           text: `${getSafe(() => el.intProductCode, '')} ${getSafe(
                                             () => el.intProductName,
                                             ''
