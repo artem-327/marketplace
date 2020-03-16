@@ -397,6 +397,7 @@
   "global.lastName": "Last Name",
   "global.save": "Save",
   "global.edit": "Edit",
+  "global.new": "New",
   "global.editCompanyProduct": "Edit Company Product",
   "global.addCompanyProduct": "Add Company Product",
   "global.editAltNames": "Edit Alternative Names",
