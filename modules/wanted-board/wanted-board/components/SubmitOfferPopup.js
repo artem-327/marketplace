@@ -146,6 +146,45 @@ const SubmitFormTable = styled(Table)`
   }
 `
 
+const RadioField = styled.div`
+  .ui.radio {
+    width: 18px;
+    height: 18px;
+    margin: 0 !important;
+    
+    input[type='radio'] {
+      width: 18px;
+      height: 18px;
+    }
+    
+    label {
+    
+      &:before,
+      &:after {
+        right: auto;
+        bottom: auto;
+        box-sizing: border-box;
+      }
+    
+      &:before {
+        top: 0;
+        left: 0;
+        width: 18px;
+        height: 18px;
+      }
+      
+      &:after {
+        top: 4px;
+        left: 4px;
+        transform: none;
+        width: 10px;
+        height: 10px;
+        background: #2599d5 !important;
+      }
+    }
+  }
+`
+
 const DateField = styled.div`
   height: 32px;
   margin: 0 -5px;
@@ -393,10 +432,12 @@ class SubmitOfferPopup extends React.Component {
                                 {matchingProductOffers.map((element, index) => (
                                   <Table.Row>
                                     <Table.Cell>
-                                      <Radio
-                                        name='select'
-                                        value={index}
-                                      />
+                                      <RadioField>
+                                        <Radio
+                                          name='select'
+                                          value={index}
+                                        />
+                                      </RadioField>
                                     </Table.Cell>
                                     <Table.Cell>
                                       <span className='product-name'>

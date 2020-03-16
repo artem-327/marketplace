@@ -136,10 +136,17 @@ export const BottomButtons = styled.div`
   box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
   padding: 0.714285714em 1.785714286em;
   text-align: right;
+  
   .ui.button {
     font-size: 1em;
     margin: 0 0.357142857em;
     padding: 0.928571429em 1.5em 0.928571429em;
+  }
+  
+  .ui.modal & {
+    margin: 30px -1.5rem -1.5rem;
+    border-top: 1px solid #dee2e6;
+    box-shadow: 0 0 0 0 transparent;
   }
 `
 
