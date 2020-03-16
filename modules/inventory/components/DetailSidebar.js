@@ -436,7 +436,7 @@ class DetailSidebar extends Component {
             .then(
               async () => {
                 // Confirm
-                if (await this.submitForm(values, setSubmitting, setTouched)) {
+                if (await this.submitForm(values, setSubmitting, setTouched).sendSuccess) {
                   if (callback) callback()
                 }
               },
@@ -633,6 +633,8 @@ class DetailSidebar extends Component {
     let isEdit = getSafe(() => sidebarValues.id, null)
     let isGrouped = getSafe(() => sidebarValues.grouped, false)
     let sendSuccess = false
+    let data = null
+
     await new Promise(resolve => this.setState({ edited: false }, resolve))
 
     setSubmitting(false)
@@ -672,15 +674,16 @@ class DetailSidebar extends Component {
     }
     if (Object.keys(props).length) {
       try {
-        let data = await addProductOffer(props, isEdit, false, isGrouped, attachmentFiles)
+        data = await addProductOffer(props, isEdit, false, isGrouped, attachmentFiles)
+        
         if (isEdit) {
-          datagrid.updateRow(data.value.id, () => data.value)
+          datagrid.updateRow(data.id, () => data)
         } else {
           datagrid.loadData()
         }
         this.setState({
-          sidebarValues: data.value,
-          initValues: { ...initValues, ...this.getEditValues(data.value) },
+          sidebarValues: { ...data, id: isEdit ? data.id : null },
+          initValues: { ...initValues, ...this.getEditValues(data) },
           edited: false
         })
         sendSuccess = true
@@ -716,7 +719,8 @@ class DetailSidebar extends Component {
         this.setState({ changedForm: false, attachmentFiles: [] })
       }
     }
-    return sendSuccess
+
+    return { sendSuccess, data }
   }
 
   switchTab = async (newTab, data = null) => {
@@ -1111,8 +1115,8 @@ class DetailSidebar extends Component {
                                 }}
                                 data-test='detail_inventory_tab_edit'>
                                 {formatMessage({
-                                  id: getSafe(() => sidebarValues.id, false) ? 'global.edit' : 'global.add',
-                                  defaultMessage: getSafe(() => sidebarValues.id, false) ? 'Edit' : 'Add'
+                                  id: getSafe(() => this.state.sidebarValues.id, false) ? 'global.edit' : 'global.add',
+                                  defaultMessage: getSafe(() => this.state.sidebarValues.id, false) ? 'Edit' : 'Add'
                                 })}
                               </Menu.Item>
                             ),
@@ -1142,7 +1146,7 @@ class DetailSidebar extends Component {
                                       <Dropdown
                                         name='edit.product'
                                         options={this.props.autocompleteData.map(el => ({
-                                          key: el.id,
+                                          key: el.echoProduct.id,
                                           text: `${getSafe(() => el.intProductCode, '')} ${getSafe(
                                             () => el.intProductName,
                                             ''
@@ -1874,30 +1878,36 @@ class DetailSidebar extends Component {
                               this.switchToErrors(r)
                               submitForm() // to show errors
                             } else {
-                              await this.submitForm(values, setSubmitting, setTouched)
-
-                              confirm(
-                                formatMessage({
-                                  id: 'confirm.editOrAddNew.header',
-                                  defaultMessage: 'Edit or add New'
-                                }),
-                                formatMessage({
-                                  id: 'confirm.editOrAddNew.content',
-                                  defaultMessage:
-                                    'If you like to continue editing this product offer by adding documents, price tiers, or price book rules, click Edit. If you would like to add a new Inventory Item, click New.'
-                                }),
-                                {
-                                  cancelText: formatMessage({ id: 'global.edit', defaultMessage: '!Edit' }),
-                                  proceedText: formatMessage({ id: 'global.save', defaultMessage: '!Save' })
-                                }
-                              )
-                                .then(() => {
-                                  this.setState(state => ({
-                                    ...state,
-                                    sidebarValues: { ...state.sidebarValues, id: null }
-                                  }))
-                                })
-                                .catch(() => {})
+                              let { data } = await this.submitForm(values, setSubmitting, setTouched)
+                              if (!getSafe(() => this.state.sidebarValues.id, false)) {
+                                confirm(
+                                  formatMessage({
+                                    id: 'confirm.editOrAddNew.header',
+                                    defaultMessage: 'Edit or add New'
+                                  }),
+                                  formatMessage({
+                                    id: 'confirm.editOrAddNew.content',
+                                    defaultMessage:
+                                      'If you like to continue editing this product offer by adding documents, price tiers, or price book rules, click Edit. If you would like to add a new Inventory Item, click New.'
+                                  }),
+                                  {
+                                    cancelText: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+                                    proceedText: formatMessage({ id: 'global.new', defaultMessage: 'New' })
+                                  }
+                                )
+                                  .then(() => {
+                                    this.setState(state => ({
+                                      ...state,
+                                      sidebarValues: { ...state.sidebarValues, id: null }
+                                    }))
+                                  })
+                                  .catch(() => {
+                                    this.setState(state => ({
+                                      ...state,
+                                      sidebarValues: { ...state.sidebarValues, id: data.id }
+                                    }))
+                                  })
+                              }
                             }
                           })
                         }
