@@ -17,6 +17,7 @@ import moment from 'moment/moment'
 import { getSafe } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
+import Tutorial from '~/modules/tutorial/Tutorial'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -449,8 +450,6 @@ class MyInventory extends Component {
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
     const { isProductInfoOpen, closePopup } = this.props
 
-    tab = row && row.grouped ? 0 : tab
-
     if (isProductInfoOpen) closePopup()
     sidebarDetailTrigger(row, bol, tab)
   }
@@ -514,7 +513,8 @@ class MyInventory extends Component {
       sidebarValues,
       openPopup,
       editedId,
-      closeSidebarDetail
+      closeSidebarDetail,
+      tutorialCompleted
     } = this.props
     const { columns, selectedRows, clientMessage, request } = this.state
 
@@ -549,7 +549,7 @@ class MyInventory extends Component {
           </Modal.Actions>
         </Modal>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
-
+        {!tutorialCompleted && <Tutorial />}
         <Container fluid style={{ padding: '0 32px' }}>
           <Menu secondary className='page-part'>
             {/*selectedRows.length > 0 ? (

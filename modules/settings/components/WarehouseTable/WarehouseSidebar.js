@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { withDatagrid } from '~/modules/datagrid'
 
 import { Header, Modal, FormGroup, Dimmer, Loader, Menu, Segment } from 'semantic-ui-react'
 import {
   closeSidebar,
-  handlerSubmitWarehouseEditPopup,
+  putEditWarehouse,
   postNewWarehouseRequest,
   getProvinces,
   getAddressSearch,
@@ -12,8 +13,7 @@ import {
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
-  loadFile,
-  attachmentLinksToBranch
+  loadFile
 } from '../../actions'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
@@ -101,78 +101,42 @@ class WarehouseSidebar extends React.Component {
   }
 
   submitHandler = async (values, actions) => {
-    const {
-      popupValues,
-      currentTab,
-      handlerSubmitWarehouseEditPopup,
-      postNewWarehouseRequest,
-      attachmentLinksToBranch
-    } = this.props
+    const { popupValues, currentTab, putEditWarehouse, postNewWarehouseRequest, datagrid } = this.props
     const { attachmentFiles } = this.state
 
-    delete values.attachments
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
     let requestData = {}
-    if (currentTab.type === 'branches') {
-      requestData = {
-        deliveryAddress: {
-          address: {
-            ...values.deliveryAddress.address,
-            country
-          },
-          addressName: values.deliveryAddress.addressName,
-          contactName: values.deliveryAddress.contactName,
-          contactPhone: values.deliveryAddress.contactPhone,
-          contactEmail: values.deliveryAddress.contactEmail
-        },
-        warehouse: false
-      }
-    }
 
-    if (currentTab.type === 'warehouses') {
-      requestData = {
-        ...values,
-        deliveryAddress: {
-          ...values.deliveryAddress,
-          readyTime:
-            !values.deliveryAddress.readyTime || values.deliveryAddress.readyTime === ''
-              ? null
-              : values.deliveryAddress.readyTime,
-          closeTime:
-            !values.deliveryAddress.closeTime || values.deliveryAddress.closeTime === ''
-              ? null
-              : values.deliveryAddress.closeTime,
-          address: {
-            ...values.deliveryAddress.address,
-            country
-          }
-        },
-        warehouse: true
-      }
+    requestData = {
+      deliveryAddress: {
+        ...values.deliveryAddress,
+        readyTime:
+          !values.deliveryAddress.readyTime || values.deliveryAddress.readyTime === ''
+            ? null
+            : values.deliveryAddress.readyTime,
+        closeTime:
+          !values.deliveryAddress.closeTime || values.deliveryAddress.closeTime === ''
+            ? null
+            : values.deliveryAddress.closeTime,
+        address: {
+          ...values.deliveryAddress.address,
+          country
+        }
+      },
+      taxId: values.taxId,
+      warehouse: currentTab.type === 'warehouses' ? true : false
     }
 
     try {
       if (popupValues) {
-        if (attachmentFiles.length) {
-          attachmentFiles.forEach(attachment => {
-            attachmentLinksToBranch(attachment.id, popupValues.id)
-          })
-        }
-        await handlerSubmitWarehouseEditPopup(
-          {
-            ...requestData,
-            company: this.props.company
-          },
-          popupValues.id
-        )
+        await putEditWarehouse(requestData, popupValues.id, attachmentFiles)
       } else {
-        await postNewWarehouseRequest({
-          ...requestData
-        })
+        await postNewWarehouseRequest(requestData, attachmentFiles)
       }
     } catch {
     } finally {
       actions.setSubmitting(false)
+      datagrid.loadData()
     }
   }
 
@@ -180,7 +144,7 @@ class WarehouseSidebar extends React.Component {
     let { popupValues } = this.props
 
     const provinceId = getSafe(() => popupValues.deliveryAddress.address.province.id, '')
-    const countryId = getSafe(() => popupValues.deliveryAddress.address.country.id, '')
+    const countryId = getSafe(() => popupValues.deliveryAddress.address.country.id, null)
     const hasProvinces = getSafe(() => popupValues.deliveryAddress.address.country.hasProvinces, false)
     const zip = getSafe(() => popupValues.deliveryAddress.address.zip.zip, '')
     const zipID = getSafe(() => popupValues.deliveryAddress.address.zip.id, '')
@@ -193,7 +157,7 @@ class WarehouseSidebar extends React.Component {
           streetAddress: getSafe(() => popupValues.deliveryAddress.address.streetAddress, ''),
           city: getSafe(() => popupValues.deliveryAddress.address.city, ''),
           province: provinceId,
-          country: JSON.stringify({ countryId, hasProvinces }),
+          country: countryId ? JSON.stringify({ countryId, hasProvinces }) : '',
           zip
         },
         readyTime: getSafe(() => popupValues.deliveryAddress.readyTime, null),
@@ -488,7 +452,7 @@ class WarehouseSidebar extends React.Component {
 
 const mapDispatchToProps = {
   postNewWarehouseRequest,
-  handlerSubmitWarehouseEditPopup,
+  putEditWarehouse,
   closeSidebar,
   getProvinces,
   getAddressSearch,
@@ -496,8 +460,7 @@ const mapDispatchToProps = {
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
-  loadFile,
-  attachmentLinksToBranch
+  loadFile
 }
 const mapStateToProps = state => {
   // const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
@@ -524,4 +487,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(WarehouseSidebar))
+export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(WarehouseSidebar)))

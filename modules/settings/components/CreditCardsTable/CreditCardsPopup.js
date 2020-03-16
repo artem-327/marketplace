@@ -6,7 +6,7 @@ import * as Yup from 'yup'
 import Router from 'next/router'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { closePopup, handlerSubmitWarehouseEditPopup, postNewCreditCardRequest } from '../../actions'
+import { closePopup, postNewCreditCardRequest } from '../../actions'
 import { errorMessages } from '~/constants/yupValidation'
 
 const formValidation = Yup.object().shape({
@@ -84,7 +84,6 @@ class CreditCardsPopup extends React.Component {
 
 const mapDispatchToProps = {
   postNewCreditCardRequest,
-  handlerSubmitWarehouseEditPopup,
   closePopup
 }
 const mapStateToProps = state => {

@@ -425,13 +425,12 @@ export default class AddCart extends Component {
                   </FormattedMessage>
                 </GridColumn>
                 <CustomGridColumn>
-                  <Input
-                    type='time'
+                  <Dropdown
+                    options={[{ key: 0, text: '24:00', value: this.state.expirationTime }]}
+                    selection
+                    disabled
+                    fluid
                     value={this.state.expirationTime}
-                    name='expirationTime'
-                    onChange={({ target: { value, name } }) => {
-                      this.setState({ [name]: value })
-                    }}
                   />
                 </CustomGridColumn>
               </GridRow>

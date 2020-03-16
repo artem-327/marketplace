@@ -364,28 +364,44 @@ export function handleProductCatalogUnmappedValue(checked, props) {
   }
 }
 //////////////////////
-export function handlerSubmitWarehouseEditPopup(payload, id) {
+export function putEditWarehouse(payload, id, attachmentFiles) {
   return async dispatch => {
     const response = await api.putWarehouse(id, payload)
     await dispatch({
       type: AT.PUT_WAREHOUSE_EDIT_POPUP,
       payload: response
     })
-    Datagrid.updateRow(id, () => response)
+    if (attachmentFiles && attachmentFiles.length) {
+      attachmentFiles.forEach(attachment => {
+        dispatch({
+          type: AT.ATTACHMENT_LINKS_TO_BRANCH,
+          payload: api.attachmentLinksToBranch(attachment.id, id)
+        })
+      })
+    }
+    //Datagrid.updateRow(id, () => response)
     dispatch(closeSidebar())
   }
 }
 
 ///////////////////
-export function postNewWarehouseRequest(payload) {
+export function postNewWarehouseRequest(payload, attachmentFiles) {
   return async dispatch => {
-    await dispatch({
+    const newWarehouse = await dispatch({
       type: AT.POST_NEW_WAREHOUSE_REQUEST,
       payload: api.postNewWarehouse(payload)
     })
-    getWarehousesDataRequest()
-    Datagrid.loadData()
+    if (attachmentFiles && attachmentFiles.length) {
+      attachmentFiles.forEach(attachment => {
+        dispatch({
+          type: AT.ATTACHMENT_LINKS_TO_BRANCH,
+          payload: api.attachmentLinksToBranch(attachment.id, newWarehouse.value.data.id)
+        })
+      })
+    }
+    //dispatch(getWarehousesDataRequest())
     dispatch(closeSidebar())
+    //Datagrid.loadData()
   }
 }
 
@@ -406,6 +422,7 @@ export function handleSubmitProductEditPopup(payload, id) {
       }
     }
     dispatch(closePopup())
+    Datagrid.loadData()
   }
 }
 
@@ -1071,15 +1088,6 @@ export const getNmfcNumbersByString = value => ({
 })
 
 export const addNmfcNumber = value => ({ type: AT.ADD_NMFC_NUMBERS, payload: value })
-
-export const attachmentLinksToBranch = (attachmentId, branchId) => ({
-  type: AT.ATTACHMENT_LINKS_TO_BRANCH,
-  async payload() {
-    const { data } = await api.attachmentLinksToBranch(attachmentId, branchId)
-    Datagrid.loadData()
-    return data
-  }
-})
 
 export function removeAttachmentLinkToBranch(attachmentId, branchId) {
   return {

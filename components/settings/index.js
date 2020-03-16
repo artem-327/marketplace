@@ -44,9 +44,7 @@ const StyledSegment = styled(Segment)`
   margin-bottom: 45px !important;
 `
 
-const BottomMargedRow = styled(GridRow)`
-  margin-bottom: 10px !important;
-`
+const BottomMargedRow = styled(GridRow)``
 
 const IconContainer = styled.div`
   padding-right: 0.5em !important;
@@ -54,6 +52,10 @@ const IconContainer = styled.div`
 
 const CustomPaddedColumn = styled(GridColumn)`
   padding-right: 7px !important;
+`
+
+const CustomGridColumn = styled(GridColumn)`
+  padding-bottom: 2px !important;
 `
 
 class Settings extends Component {
@@ -82,20 +84,22 @@ class Settings extends Component {
     let validationSchema = {}
     let { role } = this.props
 
-    systemSettings.forEach(group => {
-      let tmp = {}
-      group.settings.forEach(el => {
-        if (el.frontendConfig) {
-          let parsed = JSON.parse(el.frontendConfig)
-          if (getSafe(() => parsed.validation, false)) {
-            tmp[el.name] = Yup.object().shape({
-              value: Yup.object().shape({ visible: toYupSchema(parsed.validation, el.type) })
-            })
+    systemSettings &&
+      systemSettings.length &&
+      systemSettings.forEach(group => {
+        let tmp = {}
+        group.settings.forEach(el => {
+          if (el.frontendConfig) {
+            let parsed = JSON.parse(el.frontendConfig)
+            if (getSafe(() => parsed.validation, false)) {
+              tmp[el.name] = Yup.object().shape({
+                value: Yup.object().shape({ visible: toYupSchema(parsed.validation, el.type) })
+              })
+            }
           }
-        }
+        })
+        if (Object.keys(tmp).length > 0) validationSchema[group.code] = Yup.object().shape(tmp)
       })
-      if (Object.keys(tmp).length > 0) validationSchema[group.code] = Yup.object().shape(tmp)
-    })
 
     return { validationSchema: Yup.object({ [role]: Yup.object().shape(validationSchema) }), systemSettings }
   }
@@ -110,7 +114,6 @@ class Settings extends Component {
 
     const { triggerSystemSettingsModal, role } = this.props
     this.setState({ loading: true })
-
     let payload = {
       settings: []
     }
@@ -118,17 +121,21 @@ class Settings extends Component {
       Object.keys(values[role][group]).forEach(key => {
         let el = values[role][group][key]
         if (el.changeable) {
-          if (!el.edit && role !== 'admin') payload.settings.push({ id: el.id, value: 'EMPTY_SETTING' })
-          else if (el.value.visible !== null)
+          if (
+            (!el.edit && role !== 'admin') ||
+            (el.value.actual === 'EMPTY_SETTING' && el.value.visible.trim() === '')
+          ) {
+            payload.settings.push({ id: el.id, value: 'EMPTY_SETTING' })
+          } else if (el.value.visible !== null) {
             payload.settings.push({ id: el.id, value: el.type === 'BOOL' ? el.value.actual : el.value.visible })
+          }
         }
       })
     })
 
     try {
       settings = await api.updateSettings(role, payload)
-
-      let { systemSettings } = this.parseData(settings)
+      let { systemSettings } = this.parseData(settings.settingGroups)
 
       this.setState({ systemSettings })
       this.resetForm(this.parseInitialValues(systemSettings))
@@ -144,23 +151,25 @@ class Settings extends Component {
   parseInitialValues = systemSettings => {
     const { role } = this.props
     let initialValues = { [role]: {} }
-    systemSettings.forEach(el => {
-      initialValues[role][el.code] = {}
+    systemSettings &&
+      systemSettings.length &&
+      systemSettings.forEach(el => {
+        initialValues[role][el.code] = {}
 
-      el.settings.forEach(setting => {
-        initialValues[role][el.code][setting.code] = {
-          id: setting.id,
-          original: setting.original,
-          value: {
-            actual: setting.type === 'BOOL' ? setting.value == 'true' : setting.value,
-            visible: setting.value === 'EMPTY_SETTING' ? '' : setting.value ? setting.value : ''
-          },
-          type: setting.type,
-          changeable: setting.changeable,
-          edit: setting.changeable && setting.original && setting.value !== 'EMPTY_SETTING'
-        }
+        el.settings.forEach(setting => {
+          initialValues[role][el.code][setting.code] = {
+            id: setting.id,
+            original: setting.original,
+            value: {
+              actual: setting.type === 'BOOL' ? setting.value == 'true' : setting.value,
+              visible: setting.value === 'EMPTY_SETTING' ? '' : setting.value ? setting.value : ''
+            },
+            type: setting.type,
+            changeable: setting.changeable,
+            edit: setting.changeable && setting.original && setting.value !== 'EMPTY_SETTING'
+          }
+        })
       })
-    })
 
     return initialValues
   }
@@ -184,90 +193,85 @@ class Settings extends Component {
         render={formikProps => {
           let { values, resetForm } = formikProps
           this.resetForm = resetForm
-          let allDisabled = systemSettings.every(group => group.settings.every(val => !val.changeable))
+          let allDisabled =
+            systemSettings &&
+            systemSettings.length &&
+            systemSettings.every(group => group.settings.every(val => !val.changeable))
           return (
             <FormSpaced>
-              {systemSettings.map(group => {
-                return (
-                  <>
-                    <Header size='medium' as='h2'>
-                      {group.name}
-                    </Header>
-                    <StyledSegment>
+              {systemSettings && systemSettings.length
+                ? systemSettings.map(group => {
+                    return (
                       <>
-                        {group.settings.map(el => {
-                          return (
-                            <>
-                              <Grid>
-                                <BottomMargedRow>
-                                  <GridColumn width={10}>
-                                    <Header as='h3'>
-                                      <>
-                                        {el.name}
-                                        <Popup
-                                          trigger={<Icon color='blue' name='info circle' />}
-                                          content={el.description}
-                                        />
-                                      </>
-                                    </Header>
-                                  </GridColumn>
+                        <Header size='medium' as='h2'>
+                          {group.name}
+                        </Header>
+                        <StyledSegment>
+                          <>
+                            {group.settings.map(el => {
+                              return (
+                                <>
+                                  <Grid>
+                                    <BottomMargedRow>
+                                      <CustomGridColumn width={10}>
+                                        <Header as='h3'>
+                                          <>
+                                            {el.name}
+                                            <Popup
+                                              trigger={<Icon color='blue' name='info circle' />}
+                                              content={el.description}
+                                            />
+                                          </>
+                                        </Header>
+                                      </CustomGridColumn>
 
-                                  <CustomPaddedColumn width={5} floated='right' textAlign='right'>
-                                    {this.props.role !== 'admin' && (
-                                      <>
-                                        <Checkbox
-                                          inputProps={{
-                                            disabled: !el.changeable,
-                                            onChange: e => e.stopPropagation(),
-                                            onClick: e => e.stopPropagation()
-                                          }}
-                                          label={formatMessage({ id: 'global.override', defaultMessage: 'Override' })}
-                                          name={`${role}.${group.code}.${el.code}.edit`}
-                                        />
-                                      </>
-                                    )}
-                                  </CustomPaddedColumn>
-                                  <Popup
-                                    trigger={
-                                      <IconContainer>
-                                        <Icon color='blue' name='info circle' />
-                                      </IconContainer>
+                                      <CustomPaddedColumn width={5} floated='right' textAlign='right'>
+                                        {this.props.role !== 'admin' && (
+                                          <>
+                                            <Checkbox
+                                              inputProps={{
+                                                disabled: !el.changeable,
+                                                onChange: e => e.stopPropagation(),
+                                                onClick: e => e.stopPropagation()
+                                              }}
+                                              label={formatMessage({
+                                                id: 'global.override',
+                                                defaultMessage: 'Override'
+                                              })}
+                                              name={`${role}.${group.code}.${el.code}.edit`}
+                                            />
+                                          </>
+                                        )}
+                                      </CustomPaddedColumn>
+                                    </BottomMargedRow>
+                                  </Grid>
+
+                                  {React.cloneElement(
+                                    typeToComponent(el.type, {
+                                      props: getSafe(() => JSON.parse(el.frontendConfig).props),
+                                      inputProps: {
+                                        disabled:
+                                          !el.changeable ||
+                                          (getSafe(() => !values[role][group.name][el.name].edit, false) &&
+                                            !(role === 'admin')),
+                                        ...getSafe(() => JSON.parse(el.frontendConfig).inputProps, {})
+                                      }
+                                    }),
+                                    {
+                                      name: `${role}.${group.code}.${el.code}.value.${
+                                        el.type === 'BOOL' ? 'actual' : 'visible'
+                                      }`
                                     }
-                                    content={formatMessage({
-                                      id: `global.${el.changeable ? 'checkToOverride' : 'canNotOverride'}`,
-                                      defaultMessage: el.changeable
-                                        ? 'Check this option if you wish to override this setting.'
-                                        : 'This setting cannot be overridden at this level.'
-                                    })}
-                                  />
-                                </BottomMargedRow>
-                              </Grid>
-
-                              {React.cloneElement(
-                                typeToComponent(el.type, {
-                                  props: getSafe(() => JSON.parse(el.frontendConfig).props),
-                                  inputProps: {
-                                    disabled:
-                                      !el.changeable ||
-                                      (getSafe(() => !values[role][group.name][el.name].edit, false) &&
-                                        !(role === 'admin')),
-                                    ...getSafe(() => JSON.parse(el.frontendConfig).inputProps, {})
-                                  }
-                                }),
-                                {
-                                  name: `${role}.${group.code}.${el.code}.value.${
-                                    el.type === 'BOOL' ? 'actual' : 'visible'
-                                  }`
-                                }
-                              )}
-                            </>
-                          )
-                        })}
+                                  )}
+                                </>
+                              )
+                            })}
+                          </>
+                        </StyledSegment>
                       </>
-                    </StyledSegment>
-                  </>
-                )
-              })}
+                    )
+                  })
+                : null}
               <ButtonsWrapper>
                 <Grid.Column textAlign='right'>
                   <Popup
