@@ -659,6 +659,7 @@ class _Table extends Component {
       hideCheckboxes,
       editingRowId,
       normalWidth,
+      removeFlexClass,
       ...restProps
     } = this.props
     const {
@@ -677,7 +678,12 @@ class _Table extends Component {
       ...(columnsSettings.hiddenColumnNames || [])
     ]
     return (
-      <Segment basic loading={loading} {...restProps} className='flex stretched' style={{ padding: 0 }}>
+      <Segment
+        basic
+        loading={loading}
+        {...restProps}
+        className={removeFlexClass ? 'stretched' : 'flex stretched'}
+        style={{ padding: 0 }}>
         <GlobalTableOverrideStyle />
         <div
           className={`${normalWidth ? '' : 'table-responsive-wider'} bootstrapiso flex stretched`}

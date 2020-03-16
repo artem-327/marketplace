@@ -1303,7 +1303,7 @@
   "verification.labels.password": "Password",
   "verification.labels.passwordConfirm": "Password Confirmation",
   "verification.nextStep": "Next Step",
-  
+
   "notifications.companyUpdated": "Company {name} succesfully updated.",
   "notifications.companyCreated": "Company {name} succesfully created.",
   "notifications.echoProductCreated.header": "Created Echo Product",
@@ -1977,5 +1977,11 @@
   "sidebar.certificates": "CERTIFICATES",
   "global.certificates": "Certificates",
   "broadcast.turnoff.title": "Price book for this offer has been deleted",
-  "broadcast.turnoff.content": "Global rules are going to be used. To turn off broadcasting completely, edit it inside Edit tab."
+  "broadcast.turnoff.content": "Global rules are going to be used. To turn off broadcasting completely, edit it inside Edit tab.",
+  "order.detail.documents.issuer": "Issuer",
+  "order.detail.documents.date": "Document Date",
+  "order.detail.documents.type": "Type",
+  "order.detail.documents.name": "Document #",
+  "order.detail.documents.dropdown": "Select Type",
+  "order.detail.documents.dropdown.all": "Select All"
 }
