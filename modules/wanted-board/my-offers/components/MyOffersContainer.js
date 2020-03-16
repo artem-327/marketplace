@@ -77,7 +77,8 @@ function mapStateToProps(store, { datagrid }) {
               ? <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
               : <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
           ),
-        status: StatusLabel(po.status)
+        status: StatusLabel(po.status),
+        hiddenActions: po.status === 'PURCHASED' || po.status === 'REJECTED'
       }
     })
   }

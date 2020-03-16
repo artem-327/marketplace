@@ -426,9 +426,9 @@ class _Table extends Component {
     const { getChildGroups, rows } = this.props
     const { selection } = this.state
     const group = getChildGroups(rows).find(g => g.key === groupKey)
-    const groupRowsIds = group.childRows.map(r => r.id)
+    const groupRowsIds = group && group.childRows ? group.childRows.map(r => r.id) : []
 
-    const checked = groupRowsIds.every(gr => selection.indexOf(gr) > -1)
+    const checked = groupRowsIds.length && groupRowsIds.every(gr => selection.indexOf(gr) > -1)
     const indeterminate = !checked && _.intersection(groupRowsIds, selection).length > 0
 
     return {

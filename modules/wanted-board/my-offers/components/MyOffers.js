@@ -149,6 +149,7 @@ class MyOffers extends Component {
                   id: 'global.edit',
                   defaultMessage: 'Edit'
                 }),
+                hidden: row => row.hiddenActions,
                 callback: row => myOffersSidebarTrigger(row)
               },
               {
@@ -156,6 +157,7 @@ class MyOffers extends Component {
                   id: 'global.delete',
                   defaultMessage: 'Delete'
                 }),
+                hidden: row => row.hiddenActions,
                 disabled: row => editedId === row.id,
                 callback: row => {
                   confirm(

@@ -109,7 +109,7 @@ const initValues = {
     assayMin: '',
     assayMax: '',
   },
-  fobPrice: '',     // not implemented on endpoint yet
+  maximumDeliveredPrice: '',
   neededNow: null,
   doesExpire: null,
   notificationEnabled: false, // not implemented on endpoint yet
@@ -192,7 +192,16 @@ const validationSchema = () =>
       quantity: val
         .number()
         .typeError(errorMessages.requiredMessage)
+        .positive(errorMessages.positive)
         .required(errorMessages.requiredMessage),
+      maximumPricePerUOM: val
+        .number()
+        .positive(errorMessages.positive)
+        .typeError(errorMessages.requiredMessage),
+      maximumDeliveredPrice: val
+        .number()
+        .positive(errorMessages.positive)
+        .typeError(errorMessages.requiredMessage),
     })
   })
 
@@ -538,7 +547,7 @@ class DetailSidebar extends Component {
                     <GridRow>
                       <GridColumn>
                         {inputWrapper(
-                          'fobPrice',
+                          'maximumPricePerUOM',
                           {
                             min: 0,
                             type: 'number',
@@ -891,7 +900,7 @@ class DetailSidebar extends Component {
                     <GridRow>
                       <GridColumn>
                         {inputWrapper(
-                          'maximumPricePerUOM',
+                          'maximumDeliveredPrice',
                           {
                             min: 0,
                             type: 'number',

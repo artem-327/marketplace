@@ -24,10 +24,10 @@ export const myOffersSidebarTrigger = (row = null) => {
   }
 }
 
-export const deleteWantedBoardItem = (id) => {
+export const deletePurchaseRequestItem = (id) => {
   return {
-    type: AT.WB_DELETE_WANTED_BOARD_ITEM,
-    payload: id
+    type: AT.WB_DELETE_PURCHASE_REQUEST_ITEM,
+    payload: api.deletePurchaseRequestItem(id)
   }
 }
 
@@ -58,19 +58,21 @@ export const submitOffer = (myOffer) => {
 }
 
 
-export const purchaseRequestedItem = (id) => {
-  return {
-    type: AT.WB_PURCHASE_REQUESTED_ITEM,
-    payload: id
+export const purchaseRequestedItem = (id) => ({
+  type: AT.WB_PURCHASE_REQUESTED_ITEM,
+    async payload() {
+    const { data } = await api.purchaseRequestedItem(id)
+    return data
   }
-}
+})
 
-export const rejectRequestedItem = (id) => {
-  return {
-    type: AT.WB_REJECT_REQUESTED_ITEM,
-    payload: id
+export const rejectRequestedItem = (id) => ({
+  type: AT.WB_REJECT_REQUESTED_ITEM,
+  async payload() {
+    const { data } = await api.rejectRequestedItem(id)
+    return data
   }
-}
+})
 
 export const getAutocompleteData = ({ searchUrl }) => ({
   type: AT.WB_GET_AUTOCOMPLETE_DATA,

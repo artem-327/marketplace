@@ -77,3 +77,18 @@ export const deleteMyOfferItem = (id) => {
   return api.delete(`/prodex/api/purchase-request-offers/id/${id}`)
     .then(response => response.data)
 }
+
+export const deletePurchaseRequestItem = (id) => {
+  return api.delete(`/prodex/api/purchase-requests/id/${id}`)
+    .then(response => response.data)
+}
+
+export const purchaseRequestedItem = (id) => {
+  return api.patch(`/prodex/api/purchase-request-offers/id/${id}/to-cart`)
+    .then(response => response.data)
+}
+
+export const rejectRequestedItem = (id) => {
+  return api.patch(`/prodex/api/purchase-request-offers/id/${id}/decline`)
+    .then(response => response.data)
+}

@@ -146,18 +146,41 @@ class SubmitOfferPopup extends React.Component {
     }
   }
 
+  getPrice = (quantity, pricingTiers) => {
+
+    if (pricingTiers) {
+      if (pricingTiers.length === 1) {
+        return pricingTiers[0].pricePerUOM
+      } else {
+        let sortedTiers = pricingTiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
+        let index = 0
+        for (let i = 0; i < sortedTiers.length; i++) {
+          if (quantity >= sortedTiers[i].quantityFrom) {
+            index = i
+          } else break
+        }
+        return sortedTiers[index].pricePerUOM
+      }
+    }
+    return 0
+  }
+
   componentDidMount = async () => {
     const response = await this.props.getMatchingProductOffers(this.props.popupValues.id)
+    const quantity = this.props.popupValues.quantity
     this.setState({
       initValues: {
         select: '',
-        tableRow: response.value.map(d => ({
+        tableRow: response.value.map(d => {
+          const pricingTiers = d.pricingTiers
+          return ({
           id: d.id,
-          pricePerUOM: '',  // missing on BE
+          pricePerUOM: this.getPrice(quantity, pricingTiers),
           expirationDate: d.lotExpirationDate
             ? moment(d.lotExpirationDate ).format(getLocaleDateFormat())
             : ''
-        }))
+          })
+        })
       }
     })
   }
@@ -195,12 +218,12 @@ class SubmitOfferPopup extends React.Component {
     }
   }
 
-
   render() {
     const {
       intl: { formatMessage },
       popupValues,
       matchingProductOffers,
+      matchingProductOffersLoading,
       isSending,
       currencySymbol
     } = this.props
@@ -210,7 +233,7 @@ class SubmitOfferPopup extends React.Component {
     return (
       <>
         <Modal open={true} size='large'>
-          <Dimmer active={isSending} inverted>
+          <Dimmer active={isSending || matchingProductOffersLoading} inverted>
             <Loader />
           </Dimmer>
           <Modal.Header>
