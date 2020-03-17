@@ -38,11 +38,12 @@ import confirm from '~/src/components/Confirmable/confirm'
 import moment from 'moment/moment'
 import { FormattedPhone } from '~/components/formatted-messages/'
 import { withToastManager } from 'react-toast-notifications'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
 import { injectIntl, FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
 import { AttachmentManager } from '~/modules/attachments'
 import ProdexGrid from '~/components/table'
+import { getLocaleDateFormat } from '~/components/date-format'
 
 const OrderSegment = styled(Segment)`
   width: calc(100% - 64px);
@@ -338,7 +339,6 @@ class Detail extends Component {
       }
     ],
     isOpenManager: false,
-    replaceExisting: false,
     replaceRow: '',
     listDocumentTypes: '',
     attachmentRows: []
@@ -349,18 +349,15 @@ class Detail extends Component {
   }
 
   componentDidMount() {
-    const { order, listDocumentTypes } = this.props
+    const { listDocumentTypes } = this.props
     let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
     this.props.loadDetail(endpointType, this.props.router.query.id)
-    if (order && order.attachments && order.attachments.length)
-      this.setState({
-        attachmentRows: this.getRows(order.attachments)
-      })
+
     if (listDocumentTypes && !listDocumentTypes.length) this.props.getDocumentTypes()
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { order, listDocumentTypes } = this.props
+    const { order } = this.props
     let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
     let dataCells = document.querySelectorAll('.data-list dd')
     for (let i = 0; i < dataCells.length; i++) {
@@ -370,23 +367,21 @@ class Detail extends Component {
         dataCells[i].className = ''
       }
     }
-    if (listDocumentTypes && !listDocumentTypes.length) this.props.getDocumentTypes()
-    //TODO vymyslet podminku kdy updatuju attachments
-    // if (
-    //   (order &&
-    //     order.attachments &&
-    //     order.attachments.length &&
-    //     this.state.attachmentRows &&
-    //     this.state.attachmentRows.length !== order.attachments.length) ||
-    //   prevState.attachmentRows.length !== this.state.attachmentRows.length
-    // )
-    //   this.setState({
-    //     attachmentRows: this.getRows(order.attachments)
-    //   })
+
+    if (
+      !getSafe(() => prevState.attachmentRows.length, false) &&
+      !getSafe(() => this.state.attachmentRows.length, false) &&
+      !getSafe(() => prevProps.order.attachments.length, false) &&
+      getSafe(() => order.attachments.length, false)
+    ) {
+      this.setState({
+        attachmentRows: this.getRows(order.attachments)
+      })
+    }
   }
 
-  openAssignLots = order => {
-    this.props.openAssignLots()
+  componentWillUnmount() {
+    this.props.clearOrderDetail()
   }
 
   downloadOrder = async () => {
@@ -411,19 +406,60 @@ class Detail extends Component {
 
     this.setState({ activeIndexes })
   }
-  //TODO
+
   attachDocumentsManager = async newDocuments => {
-    console.log('attachDocumentsManager')
-    console.log(newDocuments)
+    const { linkAttachmentToOrder, order, getPurchaseOrder, getSaleOrder } = this.props
+    if (this.state.replaceRow) {
+      await this.handleUnlink(this.state.replaceRow)
+      this.setState({ replaceRow: '' })
+    }
+    const docArray = uniqueArrayByKey(newDocuments, 'id')
+
+    try {
+      if (docArray.length) {
+        await docArray.forEach(doc => {
+          linkAttachmentToOrder({ attachmentId: doc.id, orderId: order.id })
+        })
+      }
+      let response = ''
+      if (getSafe(() => this.props.router.query.type, false) === 'sales') {
+        response = await getSaleOrder(order.id)
+      } else {
+        response = await getPurchaseOrder(order.id)
+      }
+
+      const attachmentRows = this.getRows(getSafe(() => response.value.data.attachments, []))
+
+      this.setState({ isOpenManager: false, attachmentRows })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   replaceExiting = row => {
-    this.setState({ isOpenManager: true, replaceExisting: true, replaceRow: row })
+    this.setState({ isOpenManager: true, replaceRow: row })
   }
-  //TODO
+
   handleUnlink = async row => {
-    console.log('handleUnlink')
-    console.log(row)
+    const { unlinkAttachmentToOrder, order, getSaleOrder, getPurchaseOrder } = this.props
+    const query = {
+      attachmentId: row.id,
+      orderId: order.id
+    }
+    try {
+      await unlinkAttachmentToOrder(query)
+      let response = ''
+      if (getSafe(() => this.props.router.query.type, false) === 'sales') {
+        response = await getSaleOrder(order.id)
+      } else {
+        response = await getPurchaseOrder(order.id)
+      }
+
+      const attachmentRows = this.getRows(getSafe(() => response.value.data.attachments, []))
+      this.setState({ attachmentRows })
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   getMimeType = documentName => {
@@ -513,10 +549,14 @@ class Detail extends Component {
             </Button>
           ),
           documenType: getSafe(() => row.documentType.name, 'N/A'),
-          documenDate: getSafe(() => row.documentDate, 'N/A'),
+          documenDate: row.expirationDate
+            ? getSafe(() => moment(row.expirationDate).format(getLocaleDateFormat()), 'N/A')
+            : 'N/A',
           documenIssuer: getSafe(() => row.issuer, 'N/A')
         }
       })
+    } else {
+      return []
     }
   }
 
@@ -541,6 +581,7 @@ class Detail extends Component {
       isPaymentCancellable,
       opendSaleAttachingProductOffer,
       listDocumentTypes,
+      loadingRelatedDocuments,
       intl: { formatMessage }
     } = this.props
     const { activeIndexes } = this.state
@@ -550,10 +591,6 @@ class Detail extends Component {
 
     const keyColumn = 5
     const valColumn = 16 - keyColumn
-
-    console.log('listDocumentTypes====================================')
-    console.log(listDocumentTypes)
-    console.log('====================================')
 
     return (
       <div id='page' className='auto-scrolling'>
@@ -917,7 +954,7 @@ class Detail extends Component {
                 <Accordion.Content active={activeIndexes[1]}>
                   <Grid>
                     <Grid.Row>
-                      <Grid.Column width={11}>
+                      <Grid.Column width={10}>
                         <DocumentsDropdown
                           options={[
                             {
@@ -946,7 +983,7 @@ class Detail extends Component {
                           })}
                         />
                       </Grid.Column>
-                      <Grid.Column width={5}>
+                      <Grid.Column width={6}>
                         <AttachmentManager
                           isOpenManager={this.state.isOpenManager}
                           asModal
@@ -958,7 +995,7 @@ class Detail extends Component {
                       <Grid.Column style={{ paddingLeft: '30px' }}>
                         <ProdexGrid
                           removeFlexClass={true}
-                          loading={false}
+                          loading={loadingRelatedDocuments}
                           tableName='related_orders_detail_documents'
                           columns={this.state.columnsRelatedOrdersDetailDocuments}
                           rows={this.state.attachmentRows}

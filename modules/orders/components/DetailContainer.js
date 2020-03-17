@@ -264,7 +264,8 @@ function mapStateToProps(state, ownProps) {
     openedPurchaseOrderShipping: orders.openedPurchaseOrderShipping,
     action: actionRequired(orders.detail),
     opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer,
-    listDocumentTypes: orders.listDocumentTypes
+    listDocumentTypes: orders.listDocumentTypes,
+    loadingRelatedDocuments: orders.loadingRelatedDocuments
   }
 }
 
