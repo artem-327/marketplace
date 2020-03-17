@@ -992,7 +992,7 @@ class Detail extends Component {
                       </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
-                      <Grid.Column style={{ paddingLeft: '30px' }}>
+                      <Grid.Column style={{ paddingLeft: '30px', paddingRight: '2.2857143em' }}>
                         <ProdexGrid
                           removeFlexClass={true}
                           loading={loadingRelatedDocuments}
