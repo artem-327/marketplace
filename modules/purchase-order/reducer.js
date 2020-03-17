@@ -22,7 +22,7 @@ export const initialState = {
   provinces: [],
   warehouses: [],
   // TODO remove shippingQuotes, keep them in shipping obj only
-  shippingQuotes: [],
+  shippingQuotes: {},
   manualShipmentRequested: false,
   manualShipmentPending: false,
   manualShipmentError: false,
@@ -301,7 +301,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         shippingQuotesAreFetching: false,
-        shippingQuotes: []
+        shippingQuotes: {}
       }
     }
 
@@ -470,7 +470,7 @@ export default function reducer(state = initialState, action) {
     case AT.PURCHASE_GET_IDENTITY_FULFILLED: {
       return {
         ...state,
-        identity: action.payload,
+        identity: action.payload
       }
     }
 
