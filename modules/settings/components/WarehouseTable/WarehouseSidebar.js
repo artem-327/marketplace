@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withDatagrid } from '~/modules/datagrid'
 
-import { Header, Modal, FormGroup, Dimmer, Loader, Menu, Segment } from 'semantic-ui-react'
+import { Header, FormGroup, Dimmer, Loader, Menu, Segment } from 'semantic-ui-react'
 import {
   closeSidebar,
   putEditWarehouse,
@@ -15,7 +15,7 @@ import {
   addAttachment,
   loadFile
 } from '../../actions'
-import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
+import { Form, Input, Button, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import Router from 'next/router'
 import styled from 'styled-components'
@@ -30,6 +30,7 @@ import { getSafe } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/components/DetailSidebar'
 import DocumentTab from '~/components/document-tab'
+import { AlertCircle } from 'react-feather'
 
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
@@ -55,6 +56,46 @@ const CustomDiv = styled.div`
 
 const CustomHighSegment = styled(HighSegment)`
   margin: 0 !important;
+`
+
+const Rectangle = styled.div`
+  border-radius: 4px;
+  border: solid 1px orange;
+  background-color: #ffffff;
+  margin-bottom: 15px;
+  align-items: center;
+  display: block;
+  padding: 10px;
+`
+
+const CustomDivTitle = styled.div`
+  font-size: 12px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #0d0d0d;
+  display: flex;
+`
+
+const CustomDivContent = styled.div`
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #848893;
+  padding-left: 30px;
+`
+
+const CustomDivInTitle = styled.div`
+  padding-left: 10px;
+`
+
+const CustomSegmentContent = styled(Segment)`
+  padding-top: 0px !important;
 `
 
 const minLength = errorMessages.minLength(3)
@@ -316,33 +357,53 @@ class WarehouseSidebar extends React.Component {
     const { setFieldValue, values } = formikProps
     return (
       <>
-        {
-          <DocumentTab
-            listDocumentTypes={[
-              { key: 136, text: 'Sales Tax Exemption Certificate', value: 136 },
-              { key: 137, text: 'Resale Certificate', value: 137 }
-            ]}
-            values={values}
-            setFieldValue={setFieldValue}
-            setFieldNameAttachments='attachments'
-            dropdownName='documentType'
-            removeAttachmentLink={removeAttachmentLinkToBranch}
-            removeAttachment={removeAttachment}
-            addAttachment={addAttachment}
-            loadFile={loadFile}
-            changedForm={files =>
-              this.setState(prevState => ({
-                attachmentFiles: prevState.attachmentFiles.concat(files)
-              }))
-            }
-            idForm={getSafe(() => popupValues.id, 0)}
-            attachmentFiles={this.state.attachmentFiles}
-            removeAttachmentFromUpload={id => {
-              const attachmentFiles = this.state.attachmentFiles.filter(attachment => attachment.id !== id)
-              this.setState({ attachmentFiles })
-            }}
-          />
-        }
+        {getSafe(() => popupValues.attachments.length, false) &&
+        getSafe(() => popupValues.deliveryAddress.address.country.name, false) === 'USA' ? (
+          <Rectangle>
+            <CustomDivTitle>
+              <AlertCircle color='orange' size={18} />
+              <CustomDivInTitle>
+                <FormattedMessage
+                  id='settings.warehouse.certificates.message.title'
+                  defaultMessage='This state/province already has certificate documents uploaded'>
+                  {text => text}
+                </FormattedMessage>
+              </CustomDivInTitle>
+            </CustomDivTitle>
+            <CustomDivContent>
+              <FormattedMessage
+                id='settings.warehouse.certificates.message.content'
+                defaultMessage='If you want to update the documents, you will replace all existing certificates for warehouses in this state.'>
+                {text => text}
+              </FormattedMessage>
+            </CustomDivContent>
+          </Rectangle>
+        ) : null}
+        <DocumentTab
+          listDocumentTypes={[
+            { key: 136, text: 'Sales Tax Exemption Certificate', value: 136 },
+            { key: 137, text: 'Resale Certificate', value: 137 }
+          ]}
+          values={values}
+          setFieldValue={setFieldValue}
+          setFieldNameAttachments='attachments'
+          dropdownName='documentType'
+          removeAttachmentLink={removeAttachmentLinkToBranch}
+          removeAttachment={removeAttachment}
+          addAttachment={addAttachment}
+          loadFile={loadFile}
+          changedForm={files =>
+            this.setState(prevState => ({
+              attachmentFiles: prevState.attachmentFiles.concat(files)
+            }))
+          }
+          idForm={getSafe(() => popupValues.id, 0)}
+          attachmentFiles={this.state.attachmentFiles}
+          removeAttachmentFromUpload={id => {
+            const attachmentFiles = this.state.attachmentFiles.filter(attachment => attachment.id !== id)
+            this.setState({ attachmentFiles })
+          }}
+        />
       </>
     )
   }
@@ -422,7 +483,7 @@ class WarehouseSidebar extends React.Component {
                 </CustomHighSegment>
               </div>
               <FlexContent style={{ padding: '16px' }}>
-                <Segment basic>{this.getContent(formikProps)}</Segment>
+                <CustomSegmentContent basic>{this.getContent(formikProps)}</CustomSegmentContent>
               </FlexContent>
               <CustomDiv>
                 <Button.Reset onClick={closeSidebar} data-test='settings_warehouse_popup_reset_btn'>
