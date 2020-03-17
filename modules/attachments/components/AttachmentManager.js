@@ -83,6 +83,9 @@ class AttachmentClass extends Component {
         this.handleSearch({ value: this.state.documentTypeText })
       }
     }
+    if (!prevProps.isOpenManager && this.props.isOpenManager) {
+      this.setState({ open: true })
+    }
   }
 
   returnSelectedRows = async () => {

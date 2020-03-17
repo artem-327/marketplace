@@ -556,6 +556,13 @@ export default function(state = initialState, action) {
       }
     }
 
+    case AT.CLEARE_ORDER_DETAIL: {
+      return {
+        ...state,
+        detail: {}
+      }
+    }
+
     default:
       return state
   }
