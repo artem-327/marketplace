@@ -213,10 +213,10 @@ class Navigation extends Component {
       openedFilterOrders
     } = this.state
 
-    const MenuLink = withRouter(({ router: { asPath }, to, children, tab, className }) => {
+    const MenuLink = withRouter(({ router: { asPath }, to, children, tab, className, dataTest }) => {
       return (
         <Link prefetch href={to}>
-          <Menu.Item as='a' active={asPath === to} onClick={async e => await this.settingsLink(e, to, tab)} className={className}>
+          <Menu.Item as='a' data-test={dataTest} active={asPath === to} onClick={async e => await this.settingsLink(e, to, tab)} className={className}>
             {children}
           </Menu.Item>
         </Link>
@@ -232,7 +232,7 @@ class Navigation extends Component {
 
     return !isAdmin || takeover ? (
       <div className='flex-wrapper'>
-        <MenuLink to='/inventory/my' data-test='navigation_menu_inventory_my_drpdn' className={!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''}>
+        <MenuLink to='/inventory/my' dataTest='navigation_menu_inventory_my_drpdn' className={!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''}>
           <>
             <Layers size={22} />
             {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
@@ -241,7 +241,7 @@ class Navigation extends Component {
         {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
         {getSafe(() => company.nacdMember, false) ? (
           <>
-            <MenuLink to='/marketplace/all' data-test='navigation_menu_marketplace_drpdn' className={!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''}>
+            <MenuLink to='/marketplace/all' dataTest='navigation_menu_marketplace_drpdn' className={!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''}>
               <>
                 <ShoppingBag size={22} />
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
@@ -250,14 +250,14 @@ class Navigation extends Component {
             {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
           </>
         ) : null}
-        <MenuLink to='/orders?type=sales' data-test='navigation_menu_orders_sales_drpdn'>
+        <MenuLink to='/orders?type=sales' dataTest='navigation_menu_orders_sales_drpdn'>
           <>
             <ArrowRightCircle size={22} />
             {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
           </>
         </MenuLink>
         {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=sales' ? <OrderFilter /> : null}
-        <MenuLink to='/orders?type=purchase' data-test='navigation_menu_orders_purchase_drpdn'>
+        <MenuLink to='/orders?type=purchase' dataTest='navigation_menu_orders_purchase_drpdn'>
           <>
             <ArrowLeftCircle />
             {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
@@ -272,8 +272,9 @@ class Navigation extends Component {
             opened={settings}
             onClick={() => this.toggleOpened('settings')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-            refId={'settings'}>
-            <Dropdown.Menu data-test='navigation_menu_settings_drpdn'>
+            refId={'settings'}
+            data-test='navigation_menu_settings_drpdn'>
+            <Dropdown.Menu data-test='navigation_menu_settings_drpdn_menu'>
               <PerfectScrollbar>
                 {isCompanyAdmin ? (
                   <>
@@ -281,14 +282,14 @@ class Navigation extends Component {
                       as={MenuLink}
                       to='/settings?type=company-details'
                       tab='company-details'
-                      data-test='navigation_settings_company_details_drpdn'>
+                      dataTest='navigation_settings_company_details_drpdn'>
                       {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Details' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=system-settings'
                       tab='system-settings'
-                      data-test='navigation_settings_system_settings_drpdn'>
+                      dataTest='navigation_settings_system_settings_drpdn'>
                       {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Settings' })}
                     </Dropdown.Item>
                   </>
@@ -298,7 +299,7 @@ class Navigation extends Component {
                     as={MenuLink}
                     to='/settings?type=users'
                     tab='users'
-                    data-test='navigation_settings_users_drpdn'>
+                    dataTest='navigation_settings_users_drpdn'>
                     {formatMessage({ id: 'navigation.users', defaultMessage: 'Users' })}
                   </Dropdown.Item>
                 ) : null}
@@ -308,14 +309,14 @@ class Navigation extends Component {
                       as={MenuLink}
                       to='/settings?type=branches'
                       tab='branches'
-                      data-test='navigation_settings_branches_drpdn'>
+                      dataTest='navigation_settings_branches_drpdn'>
                       {formatMessage({ id: 'navigation.branches', defaultMessage: 'Branches' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=warehouses'
                       tab='warehouses'
-                      data-test='navigation_settings_warehouses_drpdn'>
+                      dataTest='navigation_settings_warehouses_drpdn'>
                       {formatMessage({ id: 'navigation.warehouses', defaultMessage: 'Warehouses' })}
                     </Dropdown.Item>
                   </>
@@ -325,7 +326,7 @@ class Navigation extends Component {
                     as={MenuLink}
                     to='/settings?type=products'
                     tab='products'
-                    data-test='navigation_settings_products_drpdn'>
+                    dataTest='navigation_settings_products_drpdn'>
                     {formatMessage({ id: 'navigation.productCatalog', defaultMessage: 'Product Catalog' })}
                   </Dropdown.Item>
                 ) : null}
@@ -335,35 +336,35 @@ class Navigation extends Component {
                       as={MenuLink}
                       to='/settings?type=global-broadcast'
                       tab='global-broadcast'
-                      data-test='navigation_settings_global_broadcast_drpdn'>
+                      dataTest='navigation_settings_global_broadcast_drpdn'>
                       {formatMessage({ id: 'navigation.globalPriceBook', defaultMessage: 'Global Price Book' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=bank-accounts'
                       tab='bank-accounts'
-                      data-test='navigation_settings_bank_accounts_drpdn'>
+                      dataTest='navigation_settings_bank_accounts_drpdn'>
                       {formatMessage({ id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=delivery-addresses'
                       tab='delivery-addresses'
-                      data-test='navigation_settings_delivery_addresses_drpdn'>
+                      dataTest='navigation_settings_delivery_addresses_drpdn'>
                       {formatMessage({ id: 'navigation.deliveryAddresses', defaultMessage: 'Delivery Addresses' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=logistics'
                       tab='logistics'
-                      data-test='navigation_settings_logistics_drpdn'>
+                      dataTest='navigation_settings_logistics_drpdn'>
                       {formatMessage({ id: 'navigation.logistics', defaultMessage: 'Logistics' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=documents'
                       tab='documents'
-                      data-test='navigation_settings_documents_drpdn'>
+                      dataTest='navigation_settings_documents_drpdn'>
                       {formatMessage({ id: 'navigation.documents', defaultMessage: 'Documents' })}
                     </Dropdown.Item>
                   </>
