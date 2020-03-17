@@ -15,6 +15,8 @@ import { inputWrapper } from '../../components'
 import { currency } from '~/constants/index'
 import { FieldArray } from 'formik'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
+import { withDatagrid } from '~/modules/datagrid'
+import ProdexGrid from '~/components/table'
 
 import confirm from '~/src/components/Confirmable/confirm'
 
@@ -186,8 +188,13 @@ const RadioField = styled.div`
 `
 
 const DateField = styled.div`
-  height: 32px;
+  height: 22px;
   margin: 0 -5px;
+  
+  > div {
+    position: relative;
+    top: -5px;
+  }
   
   * {
     max-height: 32px;
@@ -196,6 +203,65 @@ const DateField = styled.div`
 
 class SubmitOfferPopup extends React.Component {
   state = {
+    columns: [
+      {
+        name: 'product',
+        title: (
+          <FormattedMessage id='submitOffer.product' defaultMessage='Product'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 170
+      }, {
+        name: 'fobPrice',
+        title: (
+          <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 117
+      }, {
+        name: 'manufacturer',
+        title: (
+          <FormattedMessage id='submitOffer.manufacturer' defaultMessage='Manufacturer'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 143
+      }, {
+        name: 'condition',
+        title: (
+          <FormattedMessage id='submitOffer.condition' defaultMessage='Condition'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120
+      }, {
+        name: 'packaging',
+        title: (
+          <FormattedMessage id='submitOffer.packaging' defaultMessage='Packaging'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 140
+      }, {
+        name: 'meas',
+        title: (
+          <FormattedMessage id='submitOffer.meas' defaultMessage='Meas'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 80
+      }, {
+        name: 'expirationDate',
+        title: (
+          <FormattedMessage id='submitOffer.expirationDate' defaultMessage='Expiration Date'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      }
+    ],
     initValues: {
       select: '',
       tableRow: []
@@ -274,6 +340,45 @@ class SubmitOfferPopup extends React.Component {
     }
   }
 
+  getRows = (rows) => {
+    const { currencySymbol } = this.props
+    return rows.map((row, index) => {
+      return {
+        ...row,
+        product: row.element.echoProduct.name,
+        fobPrice: inputWrapper(
+          `tableRow[${index}].pricePerUOM`,
+          {
+            min: 0,
+            type: 'number',
+            placeholder: '0.000'
+          },
+          null,
+          currencySymbol
+        ),
+        manufacturer: row.element.echoProduct.manufacturer.name,
+        packaging: row.packagingTypes && row.packagingTypes.length
+          ? <ArrayToFirstItem values={row.packagingTypes.map(d => d.name)} />
+          : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
+        meas: row.unit.nameAbbreviation.toUpperCase(),
+        expirationDate: (
+          <DateField>
+            <DateInput
+              inputProps={{
+                minDate: moment(),
+                clearable: true,
+                defaultValue: getSafe(() => row.element.lotExpirationDate, false)
+                  ? moment(row.element.lotExpirationDate ).format(getLocaleDateFormat())
+                  : ''
+              }}
+              name={`tableRow[${index}].expirationDate`}
+            />
+          </DateField>
+        )
+      }
+    })
+  }
+
   render() {
     const {
       intl: { formatMessage },
@@ -281,8 +386,13 @@ class SubmitOfferPopup extends React.Component {
       matchingProductOffers,
       matchingProductOffersLoading,
       isSending,
-      currencySymbol
+      currencySymbol,
+      datagrid
     } = this.props
+
+    const {
+      columns
+    } = this.state
 
     const qtyPart = popupValues.unit.nameAbbreviation
 
@@ -396,6 +506,23 @@ class SubmitOfferPopup extends React.Component {
                       </SubmitOfferHighSegment>
 
                       <div className='table-responsive'>
+                        <ProdexGrid
+                          tableName='submit_offer_grid'
+                          {...datagrid.tableProps}
+                          rows={this.getRows(datagrid.rows)}
+                          columns={columns}
+                          rowSelection
+                          showSelectionColumn
+                          rowActions={[
+                            {
+                              text: formatMessage({
+                                id: 'wantedBoard.submitOffer',
+                                defaultMessage: 'Submit Offer'
+                              }),
+                              callback: row => this.props.openSubmitOffer(row)
+                            },
+                          ]}
+                        />
                         <SubmitFormTable>
                           <Table.Header>
                             <Table.Row>
@@ -549,4 +676,4 @@ function mapStateToProps(store) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(injectIntl(SubmitOfferPopup))
+export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(SubmitOfferPopup)))
