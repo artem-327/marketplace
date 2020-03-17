@@ -1303,7 +1303,7 @@
   "verification.labels.password": "Password",
   "verification.labels.passwordConfirm": "Password Confirmation",
   "verification.nextStep": "Next Step",
-  
+
   "notifications.companyUpdated": "Company {name} succesfully updated.",
   "notifications.companyCreated": "Company {name} succesfully created.",
   "notifications.echoProductCreated.header": "Created Echo Product",
@@ -1976,5 +1976,8 @@
   "sidebar.certificates": "CERTIFICATES",
   "global.certificates": "Certificates",
   "broadcast.turnoff.title": "Price book for this offer has been deleted",
-  "broadcast.turnoff.content": "Global rules are going to be used. To turn off broadcasting completely, edit it inside Edit tab."
+  "broadcast.turnoff.content": "Global rules are going to be used. To turn off broadcasting completely, edit it inside Edit tab.",
+  "settings.warehouse.certificates.message.title": "This state/province already has certificate documents uploaded",
+  "settings.warehouse.certificates.message.content": "If you want to update the documents, you will replace all existing certificates for warehouses in this state.",
+  "settings.warehouse.certificateIcon.header": "Certificate is attached and so will be visible anywhere"
 }
