@@ -189,7 +189,7 @@ export const LeftMenu = styled(Menu)`
             border-bottom-right-radius: 0 !important;
           
             + form {
-              flex-grow: 1;
+              flex-grow: 0;
               flex-shrink: 1;
               overflow: hidden;
               height: auto;
@@ -201,7 +201,7 @@ export const LeftMenu = styled(Menu)`
                 margin-top: 0;
                 
                 > div {
-                  flex-grow: 1;
+                  flex-grow: 0;
                   flex-shrink: 1;
                   overflow: hidden;
                   height: auto;
@@ -224,10 +224,16 @@ export const LeftMenu = styled(Menu)`
                       height: 100%;
                       padding: 0 10px;
                       
-                      .ps__rail-y {
+                      &:not(.ps--active-y) > .ps__rail-y {
+                        display: none !important;
+                      }
+                      
+                      &.ps--active-y > .ps__rail-y {
                         position: absolute;
                         top: 0;
+                        left: auto !important;
                         right: 0;
+                        display: block !important;
                         width: 4px;
                         background: rgba(0, 0, 0, 0.1);
                         
@@ -269,7 +275,7 @@ export const LeftMenu = styled(Menu)`
                     }
                   
                     > .scrollbar-container {
-                      flex-grow: 1;
+                      flex-grow: 0;
                       flex-shrink: 1;
                       position: relative;
                       overflow: hidden;
@@ -278,11 +284,16 @@ export const LeftMenu = styled(Menu)`
                       padding: 0;
                       background: #edeef2;
                       
-                      .ps__rail-y {
+                      &:not(.ps--active-y) > .ps__rail-y {
+                        display: none !important;
+                      }
+                      
+                      &.ps--active-y > .ps__rail-y {
                         position: absolute;
                         top: 0;
                         left: auto !important;
                         right: 0 !important;
+                        display: block !important;
                         width: 4px;
                         height: 100%;
                         background: rgba(0, 0, 0, 0.1);
@@ -307,7 +318,7 @@ export const LeftMenu = styled(Menu)`
           flex-shrink: 0;
           
           &.opened {
-            flex-grow: 1;
+            flex-grow: 0;
             flex-shrink: 1;
           }
         }
@@ -315,6 +326,7 @@ export const LeftMenu = styled(Menu)`
     }
 
     .scrollbar-container > img {
+      object-fit: contain;
       height: 34px;
       margin: 33px auto;
     }
@@ -448,12 +460,17 @@ export const LeftMenu = styled(Menu)`
               height: 100% !important;
               margin: -10px 0 !important;
               padding: 10px 0 !important;
-                      
-              .ps__rail-y {
+              
+              &:not(.ps--active-y) > .ps__rail-y {
+                display: none !important;
+              }
+              
+              &.ps--active-y > .ps__rail-y {
                 position: absolute;
                 top: 0;
                 left: auto !important;
                 right: 0 !important;
+                display: block !important;
                 width: 4px;
                 height: 100%;
                 background: rgba(0, 0, 0, 0.1);
@@ -677,8 +694,12 @@ export const LeftMenu = styled(Menu)`
       .scrollbar-container,
       .scrollbar-container > .flex-wrapper {
         overflow: visible !important;
-
-        > .ps__rail-y {
+    
+        &:not(.ps--active-y) > .ps__rail-y {
+          display: none !important;
+        }
+        
+        &.ps--active-y > .ps__rail-y {
           display: none !important;
         }
 
@@ -746,8 +767,12 @@ export const LeftMenu = styled(Menu)`
                 max-height: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
+              
+                &:not(.ps--active-y) > .ps__rail-y {
+                  display: none !important;
+                }
                         
-                .ps__rail-y {
+                &.ps--active-y > .ps__rail-y {
                   position: absolute;
                   top: 0;
                   left: auto !important;
@@ -807,6 +832,7 @@ export const LeftMenu = styled(Menu)`
       .scrollbar-container > .flex-wrapper > .item.dropdown.upward.opened > .menu,
       .scrollbar-container > .flex-wrapper > .item.dropdown:not(.upward).opened > .menu {
         max-height: calc(100% - 26px) !important;
+        margin-bottom: -12px !important;
       }
     }
   }
@@ -816,7 +842,7 @@ export const LeftMenuContainer = styled(Container)`
 
   .scrollbar-container {
     height: calc(100vh - 70px);
-    flex-grow: 1;
+    flex-grow: 0;
     flex-shrink: 1;
   }
 
