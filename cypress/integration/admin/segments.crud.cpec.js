@@ -15,7 +15,7 @@ context("Market Segments CRUD", () => {
 
         cy.wait("@loading")
 
-        cy.get("[data-test='tabs_menu_item_10']").click()
+        cy.contains('Market Segments').click()
 
         cy.wait("@segments")
     })

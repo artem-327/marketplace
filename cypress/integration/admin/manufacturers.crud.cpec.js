@@ -15,7 +15,7 @@ context("Manufacturers CRUD", () => {
 
         cy.wait("@loading")
 
-        cy.get("[data-test='tabs_menu_item_3']").click()
+        cy.contains("Manufacturers").click()
 
         cy.wait("@manufacturersLoad")
     })

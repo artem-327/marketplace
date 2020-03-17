@@ -14,7 +14,7 @@ context("Units of measure CRUD", () => {
         cy.wait("@loading")
         cy.waitForUI()
 
-        cy.get("[data-test='tabs_menu_item_1']").click()
+        cy.contains("Units of Measure").click()
 
         cy.wait("@unitLoad")
     })

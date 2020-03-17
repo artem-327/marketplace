@@ -16,7 +16,7 @@ context("Conditions CRUD", () => {
 
         cy.wait("@loading")
 
-        cy.get("[data-test='tabs_menu_item_6']").click()
+        cy.contains("Conditions").click()
 
         cy.wait("@formsLoad")
     })

@@ -488,15 +488,18 @@ Cypress.Commands.add("turnOnGlobalBroadcasting", (token) => {
 })
 
 Cypress.Commands.add("turnOffGlobalBroadcasting", (token) => {
-    bodys = cy.returnTurnOffJson()
-
     cy.request({
         method: 'POST',
         url: '/prodex/api/broadcast-rules/general',
         headers: {
             authorization: "Bearer " + token
         },
-        body: bodys
+        body: {type: "root",
+            broadcast: 0,
+            anonymous: 0,
+            priceAddition: 0,
+            priceMultiplier: 0,
+            priceOverride: 0}
     }).then((response) => {
         expect(response.status).to.eq(200)
     })
