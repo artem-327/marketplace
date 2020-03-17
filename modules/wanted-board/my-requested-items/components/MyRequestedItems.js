@@ -9,15 +9,12 @@ import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
-import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 import { WantedBoard } from '~/modules/wanted-board/wanted-board'
 import { MyOffers } from '~/modules/wanted-board/my-offers'
 import confirm from '~/src/components/Confirmable/confirm'
 import DetailSidebar from './DetailSidebar'
 import { Datagrid } from '~/modules/datagrid'
-
 import { getSafe } from '~/utils/functions'
-
 import { number } from 'prop-types'
 import Link from 'next/link'
 
@@ -25,7 +22,6 @@ import {
   UpperCaseText,
   ControlPanel,
   ProductChemicalSwitch,
-
 } from '../../constants/layout'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
@@ -334,7 +330,7 @@ class MyRequestedItems extends Component {
     pageNumber: 0,
     open: false,
     filterValue: '',
-    openedRows: {}
+    expandedRowIds: []
   }
 
 
@@ -360,46 +356,6 @@ class MyRequestedItems extends Component {
   handleFilterChange = (e, { value }) => {
     this.setState({ filterValue: value })
     this.handleFiltersValue(value)
-  }
-
-  getRows = (rows) => {
-    const { type } = this.props
-    const { openedRows } = this.state
-    return rows.length ? rows.reduce(function(newRows, row) {
-      newRows.push({
-        ...row,
-        casNumber: (
-          <>
-            <Label>{getSafe(() => row.purchaseRequestOffers.length, 0)}</Label>
-            {row.casNumber}
-          </>
-        ),
-        product: (
-          <>
-            <Label>{getSafe(() => row.purchaseRequestOffers.length, 0)}</Label>
-            {row.product}
-          </>
-        )
-      })
-      if (getSafe(() => openedRows[type][row.id], false) && row.purchaseRequestOffers.length) {
-        row.purchaseRequestOffers.map(rOffer => {
-          newRows.push({
-            offer: true,
-            casNumber: getSafe(() => rOffer.productOffer.companyProduct.echoProduct.code, ''),
-            product: getSafe(() => rOffer.productOffer.companyProduct.echoProduct.name, ''),
-            manufacturer: getSafe(() => rOffer.productOffer.companyProduct.echoProduct.manufacturer.name, ''),
-            condition: getSafe(() => rOffer.productOffer.condition.name, ''),
-            packaging: getSafe(() => rOffer.productOffer.companyProduct.packagingType.name, ''),
-            deliveryPriceMax: '',
-            measurement: getSafe(() => rOffer.productOffer.companyProduct.packageWeightUnit.nameAbbreviation, ''),
-            fobQuote: '',
-            deliveredQuote: '',
-            //myRequestedItem: row
-          })
-        })
-      }
-      return newRows
-    }, []) : []
   }
 
   renderContent = () => {
@@ -435,7 +391,10 @@ class MyRequestedItems extends Component {
                 <ProductChemicalSwitch className={type}>
                   <Button
                     attached='left'
-                    onClick={() => this.props.setMyRequestedItemsType('product')}
+                      onClick={() => {
+                        this.setState({ expandedRowIds: [] })
+                        this.props.setMyRequestedItemsType('product')
+                    }}
                   >
                     <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
                       {text => text}
@@ -443,7 +402,10 @@ class MyRequestedItems extends Component {
                   </Button>
                   <Button
                     attached='right'
-                    onClick={() => this.props.setMyRequestedItemsType('chemical')}
+                    onClick={() => {
+                      this.setState({ expandedRowIds: [] })
+                      this.props.setMyRequestedItemsType('chemical')
+                    }}
                   >
                     <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
                       {text => text}
@@ -471,35 +433,71 @@ class MyRequestedItems extends Component {
             key={type}
             tableName='my_requested_items_grid'
             {...datagrid.tableProps}
-            rows={rows.length ? this.getRows(rows) : rows}
+            rows={rows}
             columns={type === 'product' ? columnsProduct : columnsChemical}
             rowSelection
+            treeDataType={true}
             showSelectionColumn
+            tableTreeColumn={type === 'product' ? 'product' : 'casNumber'}
+            getChildRows={(row, rootRows) => { return row ? row.purchaseRequestOffers : rootRows }}
+            onRowClick={(_, row) => {
+              if (row.root && row.purchaseRequestOffers.length) {
+                let ids = this.state.expandedRowIds.slice()
+                if (ids.includes(row.id)) {
+                  //ids.filter(id => id === row.id)
+                  this.setState({ expandedRowIds: ids.filter(id => id !== row.id) })
+                } else {
+                  ids.push(row.id)
+                  this.setState({ expandedRowIds: ids })
+                }
+              }
+            }}
+            expandedRowIds={this.state.expandedRowIds}
+            onExpandedRowIdsChange={(expandedRowIds) => this.setState({ expandedRowIds })}
             rowActions={[
               {
                 text: formatMessage({
-                  id: 'wantedBoard.open',
-                  defaultMessage: 'Open'
+                  id: 'global.edit',
+                  defaultMessage: 'Edit'
                 }),
-                disabled: row => row.offer && getSafe(() => row.purchaseRequestOffers.length, false),
+                disabled: row => editedId === row.id,
                 callback: row => {
-                  let { openedRows } = this.state
-                  if (typeof openedRows[type] === 'undefined') {
-                    openedRows[type] = {}
-                    openedRows[type][row.id] = false
-                  } else if (typeof openedRows[type][row.id] === 'undefined') {
-                    openedRows[type][row.id] = false
-                  }
-                  openedRows[type][row.id] = !openedRows[type][row.id]
-                  this.setState({ 'openedRows': openedRows })
-                }
+                  sidebarDetailTrigger(row, 'my-requested-items')}
               },
+              {
+                text: formatMessage({
+                  id: 'global.delete',
+                  defaultMessage: 'Delete'
+                }),
+                disabled: row => editedId === row.id,
+                callback: row => {
+                  confirm(
+                    formatMessage({
+                      id: 'confirm.deleteRequestedItem.Header',
+                      defaultMessage: 'Delete Requested Item'
+                    }),
+                    formatMessage(
+                      {
+                        id: 'confirm.deleteRequestedItem.Content',
+                        defaultMessage: 'Do you really want to delete requested item?'
+                      }
+                    )
+                  ).then(async () => {
+                    try {
+                      await this.props.deletePurchaseRequestItem(row.id)
+                      datagrid.removeRow(row.id)
+                    } catch (e) {}
+                  })
+                }
+              }
+            ]}
+            rowChildActions={[
               {
                 text: formatMessage({
                   id: 'wantedBoard.reject',
                   defaultMessage: 'Reject'
                 }),
-                disabled: row => !row.offer || (editedId === row.id),
+                disabled: row => editedId === row.id,
                 callback: row => {
                   confirm(
                     formatMessage({
@@ -512,9 +510,9 @@ class MyRequestedItems extends Component {
                         defaultMessage: 'Do you really want to reject requested item?'
                       }
                     )
-                  ).then(() => {
+                  ).then(async () => {
                     try {
-                      this.props.rejectRequestedItem(row.id)
+                      await this.props.rejectRequestedItem(row.id)
                       datagrid.removeRow(row.id)
                     } catch (e) {}
                   })
@@ -525,8 +523,8 @@ class MyRequestedItems extends Component {
                   id: 'wantedBoard.purchase',
                   defaultMessage: 'Purchase'
                 }),
-                disabled: row => !row.offer,
-                callback: row => this.props.purchaseRequestedItem(row.id)
+                disabled: row => editedId === row.id,
+                callback: async (row) => await this.props.purchaseRequestedItem(row.id)
               },
             ]}
           />
