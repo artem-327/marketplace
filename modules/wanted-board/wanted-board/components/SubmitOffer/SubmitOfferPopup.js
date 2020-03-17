@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as Actions from '../../actions'
+import * as Actions from '../../../actions'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader, Segment, GridRow, List, Table } from 'semantic-ui-react'
 import { Form, Input, Radio } from 'formik-semantic-ui-fixed-validation'
 import { getSafe } from '~/utils/functions'
@@ -11,7 +11,7 @@ import { ArrayToFirstItem } from '~/components/formatted-messages'
 import moment from 'moment/moment'
 import { FormattedUnit } from '~/components/formatted-messages'
 import { DateInput } from '~/components/custom-formik'
-import { inputWrapper } from '../../components'
+import { inputWrapper } from '../../../components'
 import { currency } from '~/constants/index'
 import { FieldArray } from 'formik'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
@@ -36,7 +36,7 @@ import {
   //InputLabeledWrapper,
   //CustomLabel,
   LabeledRow
-} from '../../constants/layout'
+} from '../../../constants/layout'
 
 const SubmitOfferHighSegment = styled(Segment)`
   width: 100%;
@@ -345,10 +345,11 @@ class SubmitOfferPopup extends React.Component {
     return rows.map((row, index) => {
       return {
         ...row,
-        product: row.element.echoProduct.name,
+        product: row.companyProduct.intProductName,
         fobPrice: inputWrapper(
           `tableRow[${index}].pricePerUOM`,
           {
+            defaultValue: row.pricingTiers[0].pricePerUOM,
             min: 0,
             type: 'number',
             placeholder: '0.000'
@@ -356,19 +357,25 @@ class SubmitOfferPopup extends React.Component {
           null,
           currencySymbol
         ),
-        manufacturer: row.element.echoProduct.manufacturer.name,
-        packaging: row.packagingTypes && row.packagingTypes.length
-          ? <ArrayToFirstItem values={row.packagingTypes.map(d => d.name)} />
-          : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
-        meas: row.unit.nameAbbreviation.toUpperCase(),
+        manufacturer: row.companyProduct.echoProduct.manufacturer.name,
+        condition: row.conforming ? <FormattedMessage
+            id='global.conforming'
+            defaultMessage='Conforming'
+          />
+          : <FormattedMessage
+            id='global.nonConforming'
+            defaultMessage='Non Conforming'
+          />,
+        packaging: row.companyProduct.packagingType.name,
+        meas: row.companyProduct.packagingUnit.nameAbbreviation.toUpperCase(),
         expirationDate: (
           <DateField>
             <DateInput
               inputProps={{
                 minDate: moment(),
                 clearable: true,
-                defaultValue: getSafe(() => row.element.lotExpirationDate, false)
-                  ? moment(row.element.lotExpirationDate ).format(getLocaleDateFormat())
+                defaultValue: getSafe(() => row.lotExpirationDate, false)
+                  ? moment(row.lotExpirationDate).format(getLocaleDateFormat())
                   : ''
               }}
               name={`tableRow[${index}].expirationDate`}
@@ -668,10 +675,10 @@ class SubmitOfferPopup extends React.Component {
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(store, props) {
   return {
     ...store.wantedBoard,
-    popupValues: store.wantedBoard.popupValues.rawData,
+    popupValues: props.rawData,
     currencySymbol: '$',
   }
 }

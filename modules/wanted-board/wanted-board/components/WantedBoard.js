@@ -15,7 +15,7 @@ import { MyOffers } from '~/modules/wanted-board/my-offers'
 import confirm from '~/src/components/Confirmable/confirm'
 import DetailSidebar from './DetailSidebar'
 import { Datagrid } from '~/modules/datagrid'
-import SubmitOfferPopup from './SubmitOfferPopup'
+import { SubmitOffer } from './SubmitOffer/index'
 
 import { PlusCircle } from 'react-feather'
 
@@ -215,6 +215,7 @@ class WantedBoard extends Component {
     selectedRows: [],
     pageNumber: 0,
     open: false,
+    popupValues: null,
     filterValue: ''
   }
 
@@ -243,6 +244,10 @@ class WantedBoard extends Component {
     this.handleFiltersValue(value)
   }
 
+  openSubmitOffer = (row) => {
+    this.setState({ popupValues: row })
+  }
+
   renderContent = () => {
     const {
       datagrid,
@@ -253,12 +258,12 @@ class WantedBoard extends Component {
       openedSubmitOfferPopup,
       type
     } = this.props
-    const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
+    const { columnsProduct, columnsChemical, selectedRows, filterValue, popupValues } = this.state
     let { formatMessage } = intl
 
     return (
       <>
-        {openedSubmitOfferPopup && <SubmitOfferPopup/>}
+        {popupValues && <SubmitOffer {...popupValues} />}
         <ControlPanel>
           <Grid>
             <Grid.Row>
@@ -324,7 +329,7 @@ class WantedBoard extends Component {
                   id: 'wantedBoard.submitOffer',
                   defaultMessage: 'Submit Offer'
                 }),
-                callback: row => this.props.openSubmitOffer(row)
+                callback: row => this.openSubmitOffer(row)
               },
             ]}
           />
