@@ -17,7 +17,7 @@ context("Companies CRUD", () => {
 
         cy.wait("@loading")
 
-        cy.get('[data-test="tabs_menu_item_8"]').click()
+        cy.contains("Companies").click()
 
         cy.wait("@companiesLoad")
     })
@@ -68,7 +68,7 @@ context("Companies CRUD", () => {
         cy.clickSave()
 
         cy.wait("@companyCreate")
-        cy.contains("Created Company")
+        cy.contains("Info!")
     })
 
     it("Edits a condition", () => {
@@ -90,7 +90,7 @@ context("Companies CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Updated Company")
+        cy.contains("Info!")
 
         cy.getToken().then(token => {
             cy.getFirstCompanyWithFilter(token, filter).then(itemId => {

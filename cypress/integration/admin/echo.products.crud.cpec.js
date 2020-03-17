@@ -18,7 +18,7 @@ context("Echo Product CRUD", () => {
         cy.wait("@loading")
         cy.url().should("include", "admin")
 
-        cy.get("[data-test='tabs_menu_item_12']").click()
+        cy.contains("Product Catalog").click()
 
         cy.wait("@echoLoading")
         cy.waitForUI()

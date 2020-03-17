@@ -15,7 +15,7 @@ context("Grades CRUD", () => {
 
         cy.wait("@loading")
 
-        cy.get("[data-test='tabs_menu_item_4']").click()
+        cy.contains("Grades").click()
 
         cy.wait("@gradesLoad")
     })

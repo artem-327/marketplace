@@ -15,7 +15,7 @@ context("Units of packaging CRUD", () => {
 
         cy.wait("@loading")
         cy.waitForUI()
-        cy.get('[data-test="tabs_menu_item_2"]').click()
+        cy.contains('Units of Packaging').click()
 
         cy.wait("@packaging")
     })

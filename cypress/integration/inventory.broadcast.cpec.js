@@ -61,8 +61,8 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test=broadcast_rule_row_click]").should("be.visible")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
-            .eq(0)
-            .should("have.class", "ui fitted toggle checkbox")
+            .eq(8)
+            .should("have.class", "ui checked fitted toggle checkbox")
             .click()
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
@@ -71,7 +71,10 @@ context("Inventory Broadcasting", () => {
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
-            .should("have.class", "ui checked fitted toggle checkbox")
+            .should("have.class", "ui indeterminate fitted toggle checkbox")
+        cy.get("[data-test='broadcast_rule_toggle_chckb']")
+            .eq(8)
+            .should("have.class", "ui fitted toggle checkbox")
     })
 
     it("Turns off the broadcasting", () => {
@@ -92,7 +95,7 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
         cy.wait("@rulesSaving")
-        cy.contains("Info!")
+        cy.contains("Price book for this offer has been deleted")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
@@ -114,12 +117,12 @@ context("Inventory Broadcasting", () => {
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(1)
-            .should("have.class", "ui fitted toggle checkbox")
+            .should("have.class", "ui checked fitted toggle checkbox")
             .click()
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(3)
-            .should("have.class", "ui fitted toggle checkbox")
+            .should("have.class", "ui checked fitted toggle checkbox")
             .click()
 
         cy.get("[data-test='sidebar_inventory_save_new']").click()
@@ -129,7 +132,7 @@ context("Inventory Broadcasting", () => {
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(1)
-            .should("have.class", "ui checked fitted toggle checkbox")
+            .should("have.class", "ui fitted toggle checkbox")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(2)
@@ -153,7 +156,7 @@ context("Inventory Broadcasting", () => {
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
-            .should("have.class", "ui fitted toggle checkbox")
+            .should("have.class", "ui checked fitted toggle checkbox")
             .click()
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
@@ -162,6 +165,6 @@ context("Inventory Broadcasting", () => {
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
-            .should("have.class", "ui checked fitted toggle checkbox")
+            .should("have.class", "ui fitted toggle checkbox")
     })
 })
