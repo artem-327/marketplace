@@ -31,7 +31,7 @@ const initialState = {
   returnShipmentOrderResult: {},
   loadRelatedOrders: false,
   shippingQuotesAreFetching: false,
-  shippingQuotes: [],
+  shippingQuotes: {},
   datagridFilter: { filters: [] },
   datagridFilterUpdate: false,
   opendSaleAttachingProductOffer: false,
@@ -376,7 +376,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         shippingQuotesAreFetching: false,
-        shippingQuotes: []
+        shippingQuotes: {}
       }
     }
 

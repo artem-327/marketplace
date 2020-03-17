@@ -5,6 +5,7 @@ import { Grid, GridRow, GridColumn, Header, Divider, Radio, Dimmer, Loader } fro
 import styled from 'styled-components'
 
 import { getLocaleDateFormat } from '~/components/date-format'
+import { getSafe } from '~/utils/functions'
 
 const InnerGrid = styled(Grid)`
   display: block !important;
@@ -99,7 +100,7 @@ export default class ShippingQuote extends Component {
       )
     }
 
-    if (!shippingQuotes || shippingQuotes.length === 0) {
+    if (!getSafe(() => shippingQuotes.length, false)) {
       return (
         <RelaxedRowPaddingTop>
           <GridColumn computer={16}>
@@ -149,7 +150,7 @@ export default class ShippingQuote extends Component {
         </RelaxedColumn>
 
         <InnerGrid padded verticalAlign='middle'>
-          {shippingQuotes.map((el, i) => this.renderItem(el, i))}
+          {getSafe(() => shippingQuotes, []).map((el, i) => this.renderItem(el, i))}
         </InnerGrid>
       </>
     )

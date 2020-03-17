@@ -28,9 +28,7 @@ class PurchaseOrderShipping extends React.Component {
   validationSchema = manualShipmentQuoteId =>
     Yup.lazy(values =>
       Yup.object().shape({
-        shipmentQuoteId: manualShipmentQuoteId
-          ? validateShipmentQuoteId()
-          : Yup.string().notRequired()
+        shipmentQuoteId: manualShipmentQuoteId ? validateShipmentQuoteId() : Yup.string().notRequired()
       })
     )
 
@@ -131,7 +129,7 @@ class PurchaseOrderShipping extends React.Component {
     return (
       <>
         <Modal closeIcon onClose={() => this.props.closePopup()} open={true} size='small'>
-          <Dimmer active={isSending || shippingQuotesAreFetching && !shippingQuotes.length} inverted>
+          <Dimmer active={isSending || (shippingQuotesAreFetching && !shippingQuotes.length)} inverted>
             <Loader />
           </Dimmer>
           <Modal.Header>
@@ -303,7 +301,7 @@ function mapStateToProps(state) {
     orderId: detail.id,
     isSending: orders.isSending,
     shippingQuotesAreFetching: orders.shippingQuotesAreFetching,
-    shippingQuotes: orders.shippingQuotes
+    shippingQuotes: getSafe(() => orders.shippingQuotes.rates, [])
     /*
     shippingQuotes: [ // ! ! temporary
       {
