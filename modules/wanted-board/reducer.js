@@ -34,9 +34,6 @@ export const initialState = {
   popupValues: null,
   wantedBoardType: 'product',
   myRequestedItemsType: 'product',
-  matchingProductOffers: [],
-  matchingProductOffersLoading: false,
-
 
   //datagridFilter: { filters: [] },
   //datagridFilterUpdate: false
@@ -256,16 +253,6 @@ export default function reducer(state = initialState, action) {
         ...state,
         listWarehousesLoading: false,
         listWarehouses: payload
-      }
-    }
-
-    case AT.WB_GET_MATCHING_PRODUCT_OFFERS_PENDING: { return { ...state, matchingProductOffersLoading: true } }
-    case AT.WB_GET_MATCHING_PRODUCT_OFFERS_REJECTED: { return { ...state, matchingProductOffersLoading: false } }
-    case AT.WB_GET_MATCHING_PRODUCT_OFFERS_FULFILLED: {
-      return {
-        ...state,
-        matchingProductOffersLoading: false,
-        matchingProductOffers: payload
       }
     }
 

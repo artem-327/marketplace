@@ -120,7 +120,7 @@ class MyOffers extends Component {
         <ControlPanel>
           <Grid>
             <Grid.Row>
-              <GridColumn floated='left' width={5}>
+              <GridColumn floated='left' width={5} data-test='my_offer_search_inp'>
                 <Input
                   fluid
                   icon='search'

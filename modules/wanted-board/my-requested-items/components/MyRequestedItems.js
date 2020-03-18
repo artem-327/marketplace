@@ -22,6 +22,7 @@ import {
   UpperCaseText,
   ControlPanel,
   ProductChemicalSwitch,
+  TopButtons
 } from '../../constants/layout'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
@@ -374,7 +375,7 @@ class MyRequestedItems extends Component {
         <ControlPanel>
           <Grid>
             <Grid.Row>
-              <GridColumn floated='left' width={5}>
+              <GridColumn floated='left' width={5} data-test='my_requested_items_search_inp'>
                 <Input
                   fluid
                   icon='search'
@@ -387,43 +388,43 @@ class MyRequestedItems extends Component {
                 />
               </GridColumn>
 
-              <GridColumn floated='right' width={3}>
-                <ProductChemicalSwitch className={type}>
-                  <Button
-                    attached='left'
+              <GridColumn width={11}>
+                <TopButtons>
+                  <ProductChemicalSwitch className={type}>
+                    <Button
+                      attached='left'
+                        onClick={() => {
+                          this.setState({ expandedRowIds: [] })
+                          this.props.setMyRequestedItemsType('product')
+                      }}
+                      data-test='my_requested_items_product_switch_btn'
+                    >
+                      <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                    <Button
+                      attached='right'
                       onClick={() => {
                         this.setState({ expandedRowIds: [] })
-                        this.props.setMyRequestedItemsType('product')
-                    }}
-                  >
-                    <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
+                        this.props.setMyRequestedItemsType('chemical')
+                      }}
+                      data-test='my_requested_items_chemical_switch_btn'
+                    >
+                      <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                  </ProductChemicalSwitch>
                   <Button
-                    attached='right'
-                    onClick={() => {
-                      this.setState({ expandedRowIds: [] })
-                      this.props.setMyRequestedItemsType('chemical')
-                    }}
-                  >
-                    <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
+                    primary
+                    onClick={() => sidebarDetailTrigger(null, 'my-requested-items')}
+                    data-test='my_requested_items_open_popup_btn'>
+                    <FormattedMessage id='wantedBoard.addNewItem' defaultMessage='Add New Item'>
                       {text => text}
                     </FormattedMessage>
                   </Button>
-                </ProductChemicalSwitch>
-              </GridColumn>
-
-              <GridColumn floated='right' width={2}>
-                <Button
-                  fluid
-                  primary
-                  onClick={() => sidebarDetailTrigger(null, 'my-requested-items')}
-                  data-test='wanted_board_open_popup_btn'>
-                  <FormattedMessage id='wantedBoard.addNewItem' defaultMessage='Add New Item'>
-                    {text => text}
-                  </FormattedMessage>
-                </Button>
+                </TopButtons>
               </GridColumn>
             </Grid.Row>
           </Grid>

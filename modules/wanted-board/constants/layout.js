@@ -7,10 +7,21 @@ export const UpperCaseText = styled.div`
 
 export const ControlPanel = styled.div`
   padding: 5px 0;
+  .ui.primary.button {
+    background-color: #2599d5;
+  }
 `
 
 export const ProductChemicalSwitch = styled.div`
+  margin: 0 20px;
+  display: inline-block;
   &.product {
+    .ui.button {
+      width: 110px;
+      padding-left: 1.071428571em;
+      padding-right: 1.071428571em;
+      text-align: center;
+    }
     .ui.left.button {
       border: solid 1px #dee2e6;
       background-color: #edeef2;
@@ -23,7 +34,13 @@ export const ProductChemicalSwitch = styled.div`
     }
   }
   &.chemical {
-  .ui.left.button {
+    .ui.button {
+      width: 110px;
+      padding-left: 1.071428571em;
+      padding-right: 1.071428571em;
+      text-align: center;
+      }
+    .ui.left.button {
       border: solid 1px #dee2e6;
       background-color: #ffffff;
       color: #848893;
@@ -46,7 +63,7 @@ export const FlexSidebar = styled(Sidebar)`
   z-index: 1000 !important;
   text-align: left;
   font-size: 14px;
-  
+    
   .ui.grid {
     margin: 1.607142857em 1.428571429em;
     .row {
@@ -129,18 +146,36 @@ export const FlexSidebar = styled(Sidebar)`
   }
 `
 
+export const TopButtons = styled.div`
+  float: right;
+  .ui.button,
+  button {
+    height: 40px;
+  }
+`
+
 export const BottomButtons = styled.div`
+  display: inline-block;
   position: relative;
   overflow: visible;
   margin: 0;
   box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
   padding: 0.714285714em 1.785714286em;
   text-align: right;
-  
+
   .ui.button {
     font-size: 1em;
     margin: 0 0.357142857em;
     padding: 0.928571429em 1.5em 0.928571429em;
+    color: #848893;
+    background-color: #ffffff;
+    border: solid 1px #dee2e6;
+  }
+
+  .ui.primary.button {
+    color: #ffffff;
+    background-color: #2599d5;
+    border: none;
   }
   
   .ui.modal & {

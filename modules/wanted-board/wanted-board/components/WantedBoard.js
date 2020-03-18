@@ -26,6 +26,7 @@ import {
   UpperCaseText,
   ControlPanel,
   ProductChemicalSwitch,
+  TopButtons
 } from '../../constants/layout'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
@@ -244,10 +245,6 @@ class WantedBoard extends Component {
     this.handleFiltersValue(value)
   }
 
-  openSubmitOffer = (row) => {
-    this.setState({ popupValues: row })
-  }
-
   renderContent = () => {
     const {
       datagrid,
@@ -256,18 +253,19 @@ class WantedBoard extends Component {
       editedId,
       sidebarDetailTrigger,
       openedSubmitOfferPopup,
-      type
+      type,
+      popupValues
     } = this.props
-    const { columnsProduct, columnsChemical, selectedRows, filterValue, popupValues } = this.state
+    const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
 
     return (
       <>
-        {popupValues && <SubmitOffer {...popupValues} />}
+        {openedSubmitOfferPopup && <SubmitOffer {...popupValues} />}
         <ControlPanel>
           <Grid>
             <Grid.Row>
-              <GridColumn floated='left' width={5}>
+              <GridColumn floated='left' width={5} data-test='wanted_board_search_inp'>
                 <Input
                   fluid
                   icon='search'
@@ -280,37 +278,37 @@ class WantedBoard extends Component {
                 />
               </GridColumn>
 
-              <GridColumn floated='right' width={3}>
-                <ProductChemicalSwitch className={type}>
+              <GridColumn width={11}>
+                <TopButtons>
+                  <ProductChemicalSwitch className={type}>
+                    <Button
+                      attached='left'
+                      onClick={() => this.props.setWantedBoardType('product')}
+                      data-test='wanted_board_product_switch_btn'
+                    >
+                      <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                    <Button
+                      attached='right'
+                      onClick={() => this.props.setWantedBoardType('chemical')}
+                      data-test='wanted_board_chemical_switch_btn'
+                    >
+                      <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                  </ProductChemicalSwitch>
                   <Button
-                    attached='left'
-                    onClick={() => this.props.setWantedBoardType('product')}
-                  >
-                    <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+                    primary
+                    onClick={() => sidebarDetailTrigger(null, 'wanted-board')}
+                    data-test='wanted_board_open_popup_btn'>
+                    <FormattedMessage id='wantedBoard.addNewItem' defaultMessage='Add New Item'>
                       {text => text}
                     </FormattedMessage>
                   </Button>
-                  <Button
-                    attached='right'
-                    onClick={() => this.props.setWantedBoardType('chemical')}
-                  >
-                    <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                </ProductChemicalSwitch>
-              </GridColumn>
-
-              <GridColumn floated='right' width={2}>
-                <Button
-                  fluid
-                  primary
-                  onClick={() => sidebarDetailTrigger(null, 'wanted-board')}
-                  data-test='wanted_board_open_popup_btn'>
-                  <FormattedMessage id='wantedBoard.addNewItem' defaultMessage='Add New Item'>
-                    {text => text}
-                  </FormattedMessage>
-                </Button>
+                </TopButtons>
               </GridColumn>
             </Grid.Row>
           </Grid>
@@ -329,7 +327,7 @@ class WantedBoard extends Component {
                   id: 'wantedBoard.submitOffer',
                   defaultMessage: 'Submit Offer'
                 }),
-                callback: row => this.openSubmitOffer(row)
+                callback: row => this.props.openSubmitOffer(row)
               },
             ]}
           />

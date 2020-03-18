@@ -57,12 +57,7 @@ export const addPurchaseRequest = body => {
 }
 
 export const editPurchaseRequest = (id, body) => {
-  return api.path(`/prodex/api/purchase-requests/id/${id}`, body).then(response => response.data)
-}
-
-export const getMatchingProductOffers = (id) => {
-  return api.get(`/prodex/api/purchase-requests/id/${id}/matching-product-offers`)
-    .then(response => response.data)
+  return api.patch(`/prodex/api/purchase-requests/id/${id}`, body).then(response => response.data)
 }
 
 export const submitOffer = (myOffer) => {

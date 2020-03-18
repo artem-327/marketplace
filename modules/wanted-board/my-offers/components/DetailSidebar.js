@@ -248,7 +248,7 @@ class DetailSidebar extends Component {
                               />
                             ),
                             loading: this.props.autocompleteDataLoading,
-                            'data-test': 'wanted_board_product_search_drpdn',
+                            'data-test': 'my_offer_product_search_drpdn',
                             size: 'large',
                             minCharacters: 1,
                             icon: 'search',
@@ -269,7 +269,8 @@ class DetailSidebar extends Component {
                           {
                             min: 0,
                             type: 'number',
-                            placeholder: '0.000'
+                            placeholder: '0.000',
+                            'data-test': 'my_offer_fob_price_inp'
                           },
                           <FormattedMessage
                             id='wantedBoard.fobPrice'
@@ -302,7 +303,7 @@ class DetailSidebar extends Component {
                               />
                             ),
                             loading: searchedManufacturersLoading,
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'my_offer_manufacturer_drpdn',
                             size: 'large',
                             icon: 'search',
                             search: options => options,
@@ -335,7 +336,7 @@ class DetailSidebar extends Component {
                                 defaultMessage='Select Condition'
                               />
                             ),
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'my_offer_conforming_drpdn',
                             selection: true,
                             clearable: true,
                             disabled: true,
@@ -360,7 +361,7 @@ class DetailSidebar extends Component {
                                 defaultMessage='Select Packaging'
                               />
                             ),
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'my_offer_packaging_drpdn',
                             selection: true,
                             multiple: false,
                             disabled: true,
@@ -383,7 +384,7 @@ class DetailSidebar extends Component {
                           name='measurement'
                           options={listUnits}
                           inputProps={{
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'my_offer_measurement_drpdn',
                             selection: true,
                             disabled: true,
                             loading: listUnitsLoading
@@ -401,7 +402,7 @@ class DetailSidebar extends Component {
                             </FormattedMessage>
                           }
                           inputProps={{
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'my_offer_expiration_date_inp',
                             placeholder:
                               formatMessage({
                                 id: 'date.standardPlaceholder',
@@ -418,7 +419,10 @@ class DetailSidebar extends Component {
                   <div>
                     <Button
                       size='large'
-                      inputProps={{ type: 'button' }}
+                      inputProps={{
+                        type: 'button',
+                        'data-test': 'my_offer_close_btn',
+                      }}
                       onClick={() => this.props.closeDetailSidebar()}
                       data-test='sidebar_inventory_cancel'>
                       {Object.keys(touched).length || this.state.changedForm
@@ -427,6 +431,9 @@ class DetailSidebar extends Component {
                     </Button>
                     <Button
                       disabled={!(Object.keys(touched).length || this.state.changedForm)}
+                      inputProps={{
+                        'data-test': 'my_offer_save_btn',
+                      }}
                       primary
                       size='large'
                       type='button'
@@ -441,8 +448,7 @@ class DetailSidebar extends Component {
                             this.submitForm(values, setSubmitting, setTouched)
                           }
                         })
-                      }}
-                      data-test='sidebar_inventory_save_new'>
+                      }}>
                       {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                     </Button>
                   </div>

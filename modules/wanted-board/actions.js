@@ -157,11 +157,6 @@ export const setMyRequestedItemsType = (type) => ({
   payload: type
 })
 
-export const getMatchingProductOffers = (id) => ({
-  type: AT.WB_GET_MATCHING_PRODUCT_OFFERS,
-  payload: api.getMatchingProductOffers(id)
-})
-
 export const editMyPurchaseOffer = (id, body) => ({
   type: AT.WB_EDIT_MY_PURCHASE_OFFER,
   payload: api.editMyPurchaseOffer(id, body)

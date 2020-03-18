@@ -205,6 +205,10 @@ class SubmitOfferPopup extends React.Component {
   state = {
     columns: [
       {
+        name: 'radio',
+        title: ' ',
+        width: 40
+      }, {
         name: 'product',
         title: (
           <FormattedMessage id='submitOffer.product' defaultMessage='Product'>
@@ -288,21 +292,9 @@ class SubmitOfferPopup extends React.Component {
   }
 
   componentDidMount = async () => {
-    const response = await this.props.getMatchingProductOffers(this.props.popupValues.id)
-    const quantity = this.props.popupValues.quantity
     this.setState({
       initValues: {
-        select: '',
-        tableRow: response.value.map(d => {
-          const pricingTiers = d.pricingTiers
-          return ({
-          id: d.id,
-          pricePerUOM: this.getPrice(quantity, pricingTiers),
-          expirationDate: d.lotExpirationDate
-            ? moment(d.lotExpirationDate ).format(getLocaleDateFormat())
-            : ''
-          })
-        })
+        select: ''
       }
     })
   }
@@ -341,15 +333,21 @@ class SubmitOfferPopup extends React.Component {
   }
 
   getRows = (rows) => {
-    const { currencySymbol } = this.props
+    const { currencySymbol, popupValues } = this.props
     return rows.map((row, index) => {
       return {
         ...row,
+        radio: (
+          <Radio
+            value={index}
+            name='select'
+          />
+        ),
         product: row.companyProduct.intProductName,
         fobPrice: inputWrapper(
           `tableRow[${index}].pricePerUOM`,
           {
-            defaultValue: row.pricingTiers[0].pricePerUOM,
+            defaultValue: this.getPrice(popupValues.quantity, row.pricingTiers),
             min: 0,
             type: 'number',
             placeholder: '0.000'
@@ -390,8 +388,6 @@ class SubmitOfferPopup extends React.Component {
     const {
       intl: { formatMessage },
       popupValues,
-      matchingProductOffers,
-      matchingProductOffersLoading,
       isSending,
       currencySymbol,
       datagrid
@@ -406,7 +402,7 @@ class SubmitOfferPopup extends React.Component {
     return (
       <>
         <Modal open={true} size='large'>
-          <Dimmer active={isSending || matchingProductOffersLoading} inverted>
+          <Dimmer active={isSending} inverted>
             <Loader />
           </Dimmer>
           <Modal.Header>
@@ -518,150 +514,28 @@ class SubmitOfferPopup extends React.Component {
                           {...datagrid.tableProps}
                           rows={this.getRows(datagrid.rows)}
                           columns={columns}
-                          rowSelection
-                          showSelectionColumn
-                          rowActions={[
-                            {
-                              text: formatMessage({
-                                id: 'wantedBoard.submitOffer',
-                                defaultMessage: 'Submit Offer'
-                              }),
-                              callback: row => this.props.openSubmitOffer(row)
-                            },
-                          ]}
                         />
-                        <SubmitFormTable>
-                          <Table.Header>
-                            <Table.Row>
-                              <Table.HeaderCell>
-                              </Table.HeaderCell>
-                              <Table.HeaderCell>
-                                <FormattedMessage id='wantedBoard.product' defaultMessage='Product' />
-                              </Table.HeaderCell>
-                              <Table.HeaderCell>
-                                <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price' />
-                              </Table.HeaderCell>
-                              <Table.HeaderCell>
-                                <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer' />
-                              </Table.HeaderCell>
-                              <Table.HeaderCell>
-                                <FormattedMessage id='wantedBoard.condition' defaultMessage='Condition' />
-                              </Table.HeaderCell>
-                              <Table.HeaderCell>
-                                <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging' />
-                              </Table.HeaderCell>
-                              <Table.HeaderCell>
-                                <FormattedMessage id='wantedBoard.meas' defaultMessage='Meas' />
-                              </Table.HeaderCell>
-                              <Table.HeaderCell>
-                                <FormattedMessage id='wantedBoard.expirationDate' defaultMessage='Expiration Date' />
-                              </Table.HeaderCell>
-                            </Table.Row>
-                          </Table.Header>
-                          <Table.Body>
-                            <FieldArray
-                              name={`tableRow`}
-                              render={arrayHelpers => (
-                              <>
-                                {matchingProductOffers.map((element, index) => (
-                                  <Table.Row>
-                                    <Table.Cell>
-                                      <RadioField>
-                                        <Radio
-                                          name='select'
-                                          value={index}
-                                        />
-                                      </RadioField>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                      <span className='product-name'>
-                                        {element.companyProduct.echoProduct.name}
-                                      </span>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                      {inputWrapper(
-                                        `tableRow[${index}].pricePerUOM`,
-                                        {
-                                          min: 0,
-                                          type: 'number',
-                                          placeholder: '0.000'
-                                        },
-                                        null,
-                                        currencySymbol
-                                      )}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                      {element.companyProduct.echoProduct.manufacturer.name}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                      {
-                                        element.conforming
-                                          ? <FormattedMessage
-                                            id='global.conforming'
-                                            defaultMessage='Conforming'
-                                          />
-                                          : <FormattedMessage
-                                            id='global.nonConforming'
-                                            defaultMessage='Non Conforming'
-                                          />
-                                      }
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                      {element.companyProduct.packagingType.name}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                      {element.companyProduct.packagingUnit.nameAbbreviation}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                      <DateField>
-                                        <DateInput
-                                          inputProps={{
-                                            minDate: moment(),
-                                            clearable: true,
-                                            defaultValue: element.lotExpirationDate
-                                              ? moment(element.lotExpirationDate ).format(getLocaleDateFormat())
-                                              : ''
-                                          }}
-                                          name={`tableRow[${index}].expirationDate`}
-                                        />
-                                      </DateField>
-                                    </Table.Cell>
-                                  </Table.Row>
-                                ))}
-                              </>
-                              )}
-                            />
-                          </Table.Body>
-                        </SubmitFormTable>
                       </div>
 
                       <BottomButtons>
-                      <Grid>
-                        <Grid.Row>
-                          <Grid.Column width={10}></Grid.Column>
-                          <Grid.Column floated='right' width={3}>
-                            <Button basic fluid onClick={() => this.props.closePopup()}>
+                        <div>
+                            <Button basic type='button' onClick={() => this.props.closePopup()}>
                               <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' >
                                 {text => text}
                               </FormattedMessage>
                             </Button>
-                          </Grid.Column>
-                          <Grid.Column floated='right' width={3}>
                             <Button
                               primary
-                              fluid
                               type='submit'
                               disabled={
-                                values.select === '' || values.tableRow[values.select].pricePerUOM === ''
+                                false//values.select === '' || values.tableRow[values.select].pricePerUOM === ''
                               }
                             >
                               <FormattedMessage id='wantedBoard.submit' defaultMessage='Submit' tagName='span' >
                                 {text => text}
                               </FormattedMessage>
                             </Button>
-                          </Grid.Column>
-                        </Grid.Row>
-                      </Grid>
+                        </div>
                       </BottomButtons>
                     </>
                   )

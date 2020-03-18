@@ -450,7 +450,7 @@ class DetailSidebar extends Component {
                                 />
                               ),
                               loading: this.props.autocompleteDataLoading,
-                              'data-test': 'wanted_board_product_search_drpdn',
+                              'data-test': 'wanted_board_sidebar_productName_drpdn',
                               size: 'large',
                               minCharacters: 1,
                               icon: 'search',
@@ -485,7 +485,7 @@ class DetailSidebar extends Component {
                                 />
                               ),
                               loading: searchedCasNumbersLoading,
-                              'data-test': 'wanted_board_product_search_drpdn',
+                              'data-test': 'wanted_board_sidebar_casNumber_drpdn',
                               size: 'large',
                               minCharacters: 1,
                               icon: 'search',
@@ -501,7 +501,7 @@ class DetailSidebar extends Component {
                     )}
                     {!typeProduct && (
                       <GridRow>
-                        <GridColumn width={8}>
+                        <GridColumn width={8} data-test='wanted_board_sidebar_assayMin_inp'>
                           {quantityWrapper(
                             'element.assayMin',
                             {
@@ -519,7 +519,7 @@ class DetailSidebar extends Component {
                             </FormattedMessage>
                           )}
                         </GridColumn>
-                        <GridColumn width={8}>
+                        <GridColumn width={8} data-test='wanted_board_sidebar_assayMax_inp'>
                           {quantityWrapper(
                             'element.assayMax',
                             {
@@ -540,7 +540,7 @@ class DetailSidebar extends Component {
                       </GridRow>
                     )}
                     <GridRow>
-                      <GridColumn>
+                      <GridColumn data-test='wanted_board_sidebar_fobPrice_inp'>
                         {inputWrapper(
                           'maximumPricePerUOM',
                           {
@@ -560,7 +560,7 @@ class DetailSidebar extends Component {
                     </GridRow>
 
                     <GridRow>
-                      <GridColumn width={8}>
+                      <GridColumn width={8} data-test='wanted_board_sidebar_quantity_inp'>
                         {quantityWrapper(
                           'quantity',
                           {
@@ -590,7 +590,7 @@ class DetailSidebar extends Component {
                           name='unit'
                           options={listUnits}
                           inputProps={{
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'wanted_board_sidebar_measurement_drpdn',
                             selection: true,
                             loading: listUnitsLoading
                           }}
@@ -617,7 +617,7 @@ class DetailSidebar extends Component {
                                 defaultMessage='Select Country'
                               />
                             ),
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'wanted_board_sidebar_deliveryLocation_drpdn',
                             selection: true,
                             onChange: (_, value) => {
                               const country = countries.find(val => val.id === value.value)
@@ -643,7 +643,7 @@ class DetailSidebar extends Component {
                                 defaultMessage='Select State'
                               />
                             ),
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'wanted_board_sidebar_selectState_drpdn',
                             selection: true,
                             loading: listProvincesLoading,
                             disabled: !hasProvinces
@@ -671,6 +671,7 @@ class DetailSidebar extends Component {
                           name='neededNow'
                           value={true}
                           label={formatMessage({ id: 'wantedBoard.now', defaultMessage: 'Now' })}
+                          inputProps={{ 'data-test': 'wanted_board_sidebar_neededNow_radio' }}
                         />
                       </GridColumn>
                       <GridColumn width={8}>
@@ -678,6 +679,7 @@ class DetailSidebar extends Component {
                           name='doesExpire'
                           value={false}
                           label={formatMessage({ id: 'wantedBoard.no', defaultMessage: 'No' })}
+                          inputProps={{ 'data-test': 'wanted_board_sidebar_expireNo_radio' }}
                         />
                       </GridColumn>
                     </GridRow>
@@ -687,6 +689,7 @@ class DetailSidebar extends Component {
                           name='neededNow'
                           value={false}
                           label={formatMessage({ id: 'wantedBoard.byDate', defaultMessage: 'By Date' })}
+                          inputProps={{ 'data-test': 'wanted_board_sidebar_neededByDate_radio' }}
                         />
                       </GridColumn>
                       <GridColumn width={8}>
@@ -694,6 +697,7 @@ class DetailSidebar extends Component {
                           name='doesExpire'
                           value={true}
                           label={formatMessage({ id: 'wantedBoard.yes', defaultMessage: 'Yes' })}
+                          inputProps={{ 'data-test': 'wanted_board_sidebar_expireYes_radio' }}
                         />
                       </GridColumn>
                     </GridRow>
@@ -703,7 +707,7 @@ class DetailSidebar extends Component {
                         <DateInput
                           name='neededAt'
                           inputProps={{
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'wanted_board_sidebar_neededAt_inp',
                             placeholder:
                               formatMessage({
                                 id: 'date.standardPlaceholder',
@@ -718,7 +722,7 @@ class DetailSidebar extends Component {
                         <DateInput
                           name='expiresAt'
                           inputProps={{
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'wanted_board_sidebar_expiresAt_inp',
                             placeholder:
                               formatMessage({
                                 id: 'date.standardPlaceholder',
@@ -750,7 +754,7 @@ class DetailSidebar extends Component {
                               />
                             ),
                             loading: searchedManufacturersLoading,
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'wanted_board_sidebar_manufacturer_drpdn',
                             size: 'large',
                             icon: 'search',
                             search: options => options,
@@ -776,7 +780,7 @@ class DetailSidebar extends Component {
                           name='conditionConforming'
                           options={listConforming}
                           inputProps={{
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'wanted_board_sidebar_condition_drpdn',
                             selection: true,
                             clearable: true,
                             placeholder: (
@@ -800,7 +804,7 @@ class DetailSidebar extends Component {
                           name='origins'
                           options={listCountries}
                           inputProps={{
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'wanted_board_sidebar_origins_drpdn',
                             selection: true,
                             multiple: true,
                             placeholder: (
@@ -827,7 +831,7 @@ class DetailSidebar extends Component {
                           name='grades'
                           options={listGrades}
                           inputProps={{
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'wanted_board_sidebar_grade_drpdn',
                             selection: true,
                             multiple: true,
                             placeholder: (
@@ -851,7 +855,7 @@ class DetailSidebar extends Component {
                           name='forms'
                           options={listForms}
                           inputProps={{
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'wanted_board_sidebar_forms_drpdn',
                             selection: true,
                             multiple: true,
                             placeholder: (
@@ -884,7 +888,7 @@ class DetailSidebar extends Component {
                                 defaultMessage='Select packaging'
                               />
                             ),
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'wanted_board_sidebar_packaging_drpdn',
                             selection: true,
                             multiple: true
                           }}
@@ -893,7 +897,7 @@ class DetailSidebar extends Component {
                     </GridRow>
 
                     <GridRow>
-                      <GridColumn>
+                      <GridColumn data-test='wanted_board_sidebar_maximumDeliveredPrice_inp'>
                         {inputWrapper(
                           'maximumDeliveredPrice',
                           {
@@ -924,7 +928,7 @@ class DetailSidebar extends Component {
                             </FormattedMessage>
                           }
                           inputProps={{
-                            'data-test': 'new_inventory_grade_drpdn',
+                            'data-test': 'wanted_board_sidebar_specialNotes_inp',
                             placeholder:
                               formatMessage({
                                 id: 'wantedBoard.writeNotesHere',
@@ -950,7 +954,12 @@ class DetailSidebar extends Component {
                       </GridColumn>
                       <GridColumn width={8} className='float-right'>
                         <FormikCheckbox
-                          inputProps={{ toggle: true, style: { marginBottom: '-4px' }, float: 'right' }}
+                          inputProps={{
+                            toggle: true,
+                            style: { marginBottom: '-4px' },
+                            float: 'right',
+                            'data-test': 'wanted_board_sidebar_enableNotifications_chckb'
+                          }}
                           name='notificationEnabled'
                         />
                       </GridColumn>
@@ -961,7 +970,7 @@ class DetailSidebar extends Component {
                         <FormikCheckbox
                           inputProps={{
                             disabled: !values.notificationEnabled,
-                            'data-test': 'filter_notifications_notifyMail_chckb'
+                            'data-test': 'wanted_board_sidebar_notifyMail_chckb'
                           }}
                           name='notifyMail'
                           label={formatMessage({id: 'wantedBoard.notifyMail', defaultMessage: 'Email Notifications'})}
@@ -974,7 +983,7 @@ class DetailSidebar extends Component {
                         <FormikCheckbox
                           inputProps={{
                             disabled: !values.notificationEnabled,
-                            'data-test': 'filter_notifications_notifyMail_chckb'
+                            'data-test': 'wanted_board_sidebar_notifyMail_chckb'
                           }}
                           name='notifyPhone'
                           label={formatMessage({id: 'wantedBoard.notifyPhone', defaultMessage: 'Phone Notifications'})}
@@ -991,7 +1000,7 @@ class DetailSidebar extends Component {
                       size='large'
                       inputProps={{ type: 'button' }}
                       onClick={() => this.props.closeDetailSidebar()}
-                      data-test='sidebar_inventory_cancel'>
+                      data-test='wanted_board_sidebar_cancel_btn'>
                       {Object.keys(touched).length || this.state.changedForm
                         ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
                         : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
@@ -1013,7 +1022,7 @@ class DetailSidebar extends Component {
                           }
                         })
                       }}
-                      data-test='sidebar_inventory_save_new'>
+                      data-test='wanted_board_sidebar_save_btn'>
                       {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                     </Button>
                   </div>
