@@ -256,7 +256,7 @@ class Navigation extends Component {
             {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
           </>
         ) : null}
-        <MenuLink to='/wanted-board/wanted-board' data-test='navigation_menu_wanted_board'>
+        <MenuLink to='/wanted-board/wanted-board' dataTest='navigation_menu_wanted_board_drpdn'>
           <>
             <Grid size={22} />
             {formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}

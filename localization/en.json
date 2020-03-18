@@ -1994,8 +1994,7 @@
   "order.detail.documents.dropdown.all": "Select All",
   "settings.warehouse.certificates.message.title": "This state/province already has certificate documents uploaded",
   "settings.warehouse.certificates.message.content": "If you want to update the documents, you will replace all existing certificates for warehouses in this state.",
-  "settings.warehouse.certificateIcon.header": "Certificate is attached and so will be visible anywhere"
-  "global.certificates": "Certificates",
+  "settings.warehouse.certificateIcon.header": "Certificate is attached and so will be visible anywhere",
   "title.wantedBoard": "Wanted Board",
   "title.myRequestedItems": "My Requested Items",
   "title.myOffers": "My Offers",
