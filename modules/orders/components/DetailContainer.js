@@ -8,6 +8,7 @@ import { getSafe } from '~/utils/functions'
 import { FormattedNumber } from 'react-intl'
 import { ArrayToMultiple } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
+import { downloadAttachment } from '~/modules/inventory/actions'
 
 function actionRequired(data) {
   // return statuses code
@@ -236,7 +237,8 @@ function prepareDetail(data, type) {
     paymentContact: type === 'sales' ? data.buyerCompanyContactName : data.sellerCompanyContactName,
     shippingTrackingCode: data.shippingTrackingCode ? data.shippingTrackingCode : '',
     returnShippingTrackingCode: data.returnShippingTrackingCode ? data.returnShippingTrackingCode : '',
-    note: getSafe(() => data.note, '')
+    note: getSafe(() => data.note, ''),
+    attachments: getSafe(() => data.attachments, [])
   }
 }
 
@@ -261,8 +263,10 @@ function mapStateToProps(state, ownProps) {
     openedSaleReviewCreditRequest: orders.openedSaleReviewCreditRequest,
     openedPurchaseOrderShipping: orders.openedPurchaseOrderShipping,
     action: actionRequired(orders.detail),
-    opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer
+    opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer,
+    listDocumentTypes: orders.listDocumentTypes,
+    loadingRelatedDocuments: orders.loadingRelatedDocuments
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(Detail)
+export default connect(mapStateToProps, { ...Actions, downloadAttachment })(Detail)

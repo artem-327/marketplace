@@ -10,6 +10,7 @@ import { debounce } from 'lodash'
 import styled from 'styled-components'
 import confirm from '~/src/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
+import { PriceField } from '~/styles/styledComponents'
 
 import {
   Sidebar,
@@ -45,7 +46,6 @@ import {
   downloadAttachment,
   closeSidebarDetail,
   getProductOffer,
-  attachmentLinksToProductOffer,
   removeAttachmentLinkProductOffer
 } from '../actions'
 import { Broadcast } from '~/modules/broadcast'
@@ -436,7 +436,7 @@ class DetailSidebar extends Component {
             .then(
               async () => {
                 // Confirm
-                if (await this.submitForm(values, setSubmitting, setTouched)) {
+                if (await this.submitForm(values, setSubmitting, setTouched).sendSuccess) {
                   if (callback) callback()
                 }
               },
@@ -582,11 +582,9 @@ class DetailSidebar extends Component {
           </GridColumn>
 
           <GridColumn computer={5} data-test={`add_inventory_price_${i}_inp`}>
-            <Input
+            <PriceField
               name={`priceTiers.pricingTiers[${i}].price`}
               inputProps={{
-                type: 'number',
-                step: '0.001',
                 min: 0.001,
                 value: null
               }}
@@ -630,11 +628,13 @@ class DetailSidebar extends Component {
   }, 250)
 
   submitForm = async (values, setSubmitting, setTouched, savedButtonClicked = false) => {
-    const { addProductOffer, datagrid, toastManager, attachmentLinksToProductOffer } = this.props
+    const { addProductOffer, datagrid } = this.props
     const { sidebarValues, attachmentFiles } = this.state
     let isEdit = getSafe(() => sidebarValues.id, null)
     let isGrouped = getSafe(() => sidebarValues.grouped, false)
     let sendSuccess = false
+    let data = null
+
     await new Promise(resolve => this.setState({ edited: false }, resolve))
 
     setSubmitting(false)
@@ -672,21 +672,18 @@ class DetailSidebar extends Component {
         this.setState({ changedForm: false, edited: false })
         break
     }
-
     if (Object.keys(props).length) {
       try {
-        let data = await addProductOffer(props, isEdit, false, isGrouped)
+        data = await addProductOffer(props, isEdit, false, isGrouped, attachmentFiles)
+        
         if (isEdit) {
-          if (attachmentFiles && attachmentFiles.length) {
-            attachmentFiles.forEach(attachment => attachmentLinksToProductOffer(attachment.id, isEdit))
-          }
-          datagrid.updateRow(data.value.id, () => data.value)
+          datagrid.updateRow(data.id, () => data)
         } else {
           datagrid.loadData()
         }
         this.setState({
-          sidebarValues: data.value,
-          initValues: { ...initValues, ...this.getEditValues(data.value) },
+          sidebarValues: { ...data, id: isEdit ? data.id : null },
+          initValues: { ...initValues, ...this.getEditValues(data) },
           edited: false
         })
         sendSuccess = true
@@ -706,7 +703,7 @@ class DetailSidebar extends Component {
             />
           )
             .then(async () => {
-              let po = await addProductOffer(props, entityId, false, isGrouped)
+              let po = await addProductOffer(props, entityId, false, isGrouped, attachmentFiles)
               datagrid.updateRow(entityId, () => po.value)
               this.setState({
                 sidebarValues: po.value,
@@ -722,7 +719,8 @@ class DetailSidebar extends Component {
         this.setState({ changedForm: false, attachmentFiles: [] })
       }
     }
-    return sendSuccess
+
+    return { sendSuccess, data }
   }
 
   switchTab = async (newTab, data = null) => {
@@ -1020,7 +1018,7 @@ class DetailSidebar extends Component {
     ]
 
     const { toggleFilter } = this.props
-    
+
     return (
       <Formik
         enableReinitialize
@@ -1117,8 +1115,8 @@ class DetailSidebar extends Component {
                                 }}
                                 data-test='detail_inventory_tab_edit'>
                                 {formatMessage({
-                                  id: getSafe(() => sidebarValues.id, false) ? 'global.edit' : 'global.add',
-                                  defaultMessage: getSafe(() => sidebarValues.id, false) ? 'Edit' : 'Add'
+                                  id: getSafe(() => this.state.sidebarValues.id, false) ? 'global.edit' : 'global.add',
+                                  defaultMessage: getSafe(() => this.state.sidebarValues.id, false) ? 'Edit' : 'Add'
                                 })}
                               </Menu.Item>
                             ),
@@ -1147,8 +1145,8 @@ class DetailSidebar extends Component {
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <Dropdown
                                         name='edit.product'
-                                        options={this.props.autocompleteData.map(el => ({
-                                          key: el.id,
+                                        options={this.props.autocompleteData.map((el, i) => ({
+                                          key: i,
                                           text: `${getSafe(() => el.intProductCode, '')} ${getSafe(
                                             () => el.intProductName,
                                             ''
@@ -1223,13 +1221,11 @@ class DetailSidebar extends Component {
                                     </GridColumn>
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <FormField width={16} data-test='detail_sidebar_fob_price'>
-                                        <Input
+                                        <PriceField
                                           name='edit.fobPrice'
                                           inputProps={{
                                             disabled: sidebarValues && sidebarValues.grouped,
-                                            type: 'number',
                                             min: '0.001',
-                                            step: '0.001',
                                             onChange: (e, { value }) => {
                                               if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
                                                 setFieldValue(`priceTiers.pricingTiers[0].price`, value)
@@ -1249,7 +1245,7 @@ class DetailSidebar extends Component {
                                     </GridColumn>
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <FormField width={16} data-test='detail_sidebar_cost'>
-                                        <Input
+                                        <PriceField
                                           name='edit.costPerUOM'
                                           inputProps={{
                                             disabled: sidebarValues && sidebarValues.grouped,
@@ -1882,30 +1878,36 @@ class DetailSidebar extends Component {
                               this.switchToErrors(r)
                               submitForm() // to show errors
                             } else {
-                              await this.submitForm(values, setSubmitting, setTouched)
-                          
-                              confirm(
-                                formatMessage({
-                                  id: 'confirm.editOrAddNew.header',
-                                  defaultMessage: 'Edit or add New'
-                                }),
-                                formatMessage({
-                                  id: 'confirm.editOrAddNew.content',
-                                  defaultMessage:
-                                    'If you like to continue editing this product offer by adding documents, price tiers, or price book rules, click Edit. If you would like to add a new Inventory Item, click New.'
-                                }),
-                                {
-                                  cancelText: formatMessage({ id: 'global.edit', defaultMessage: '!Edit' }),
-                                  proceedText: formatMessage({ id: 'global.save', defaultMessage: '!Save' })
-                                }
-                              )
-                                .then(() => {
-                                  this.setState(state => ({
-                                    ...state,
-                                    sidebarValues: { ...state.sidebarValues, id: null }
-                                  }))
-                                })
-                                .catch(() => {})
+                              let { data } = await this.submitForm(values, setSubmitting, setTouched)
+                              if (!getSafe(() => this.state.sidebarValues.id, false)) {
+                                confirm(
+                                  formatMessage({
+                                    id: 'confirm.editOrAddNew.header',
+                                    defaultMessage: 'Edit or add New'
+                                  }),
+                                  formatMessage({
+                                    id: 'confirm.editOrAddNew.content',
+                                    defaultMessage:
+                                      'If you like to continue editing this product offer by adding documents, price tiers, or price book rules, click Edit. If you would like to add a new Inventory Item, click New.'
+                                  }),
+                                  {
+                                    cancelText: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+                                    proceedText: formatMessage({ id: 'global.new', defaultMessage: 'New' })
+                                  }
+                                )
+                                  .then(() => {
+                                    this.setState(state => ({
+                                      ...state,
+                                      sidebarValues: { ...state.sidebarValues, id: null }
+                                    }))
+                                  })
+                                  .catch(() => {
+                                    this.setState(state => ({
+                                      ...state,
+                                      sidebarValues: { ...state.sidebarValues, id: data.id }
+                                    }))
+                                  })
+                              }
                             }
                           })
                         }
@@ -1942,7 +1944,6 @@ const mapDispatchToProps = {
   downloadAttachment,
   closeSidebarDetail,
   getProductOffer,
-  attachmentLinksToProductOffer,
   removeAttachmentLinkProductOffer
 }
 

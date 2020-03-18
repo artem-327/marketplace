@@ -13,7 +13,8 @@ import {
   Divider,
   Header,
   Popup,
-  GridRow
+  GridRow,
+  Dropdown
 } from 'semantic-ui-react'
 import { ChevronDown, DownloadCloud } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
@@ -37,9 +38,12 @@ import confirm from '~/src/components/Confirmable/confirm'
 import moment from 'moment/moment'
 import { FormattedPhone } from '~/components/formatted-messages/'
 import { withToastManager } from 'react-toast-notifications'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
-import { FormattedNumber } from 'react-intl'
+import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
+import { injectIntl, FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
+import { AttachmentManager } from '~/modules/attachments'
+import ProdexGrid from '~/components/table'
+import { getLocaleDateFormat } from '~/components/date-format'
 
 const OrderSegment = styled(Segment)`
   width: calc(100% - 64px);
@@ -288,9 +292,56 @@ const TableRowData = styled(Table.Row)`
   }
 `
 
+const DocumentsDropdown = styled(Dropdown)`
+  z-index: 601 !important;
+  margin-left: 16px;
+`
+
 class Detail extends Component {
   state = {
-    activeIndexes: [true, true, false, false, false, false, false]
+    activeIndexes: [true, true, true, false, false, false, false, false],
+    columnsRelatedOrdersDetailDocuments: [
+      {
+        name: 'documentName',
+        title: (
+          <FormattedMessage id='order.detail.documents.name' defaultMessage='Document #'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      },
+      {
+        name: 'documenType',
+        title: (
+          <FormattedMessage id='order.detail.documents.type' defaultMessage='Type'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      },
+      {
+        name: 'documenDate',
+        title: (
+          <FormattedMessage id='order.detail.documents.date' defaultMessage='Document Date'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      },
+      {
+        name: 'documenIssuer',
+        title: (
+          <FormattedMessage id='order.detail.documents.issuer' defaultMessage='Issuer'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      }
+    ],
+    isOpenManager: false,
+    replaceRow: '',
+    listDocumentTypes: '',
+    attachmentRows: []
   }
 
   constructor(props) {
@@ -298,11 +349,15 @@ class Detail extends Component {
   }
 
   componentDidMount() {
+    const { listDocumentTypes } = this.props
     let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
     this.props.loadDetail(endpointType, this.props.router.query.id)
+
+    if (listDocumentTypes && !listDocumentTypes.length) this.props.getDocumentTypes()
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { order } = this.props
     let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
     let dataCells = document.querySelectorAll('.data-list dd')
     for (let i = 0; i < dataCells.length; i++) {
@@ -312,10 +367,21 @@ class Detail extends Component {
         dataCells[i].className = ''
       }
     }
+
+    if (
+      !getSafe(() => prevState.attachmentRows.length, false) &&
+      !getSafe(() => this.state.attachmentRows.length, false) &&
+      !getSafe(() => prevProps.order.attachments.length, false) &&
+      getSafe(() => order.attachments.length, false)
+    ) {
+      this.setState({
+        attachmentRows: this.getRows(order.attachments)
+      })
+    }
   }
 
-  openAssignLots = order => {
-    this.props.openAssignLots()
+  componentWillUnmount() {
+    this.props.clearOrderDetail()
   }
 
   downloadOrder = async () => {
@@ -341,6 +407,159 @@ class Detail extends Component {
     this.setState({ activeIndexes })
   }
 
+  attachDocumentsManager = async newDocuments => {
+    const { linkAttachmentToOrder, order, getPurchaseOrder, getSaleOrder } = this.props
+    if (this.state.replaceRow) {
+      await this.handleUnlink(this.state.replaceRow)
+      this.setState({ replaceRow: '' })
+    }
+    const docArray = uniqueArrayByKey(newDocuments, 'id')
+
+    try {
+      if (docArray.length) {
+        await docArray.forEach(doc => {
+          linkAttachmentToOrder({ attachmentId: doc.id, orderId: order.id })
+        })
+      }
+      let response = ''
+      if (getSafe(() => this.props.router.query.type, false) === 'sales') {
+        response = await getSaleOrder(order.id)
+      } else {
+        response = await getPurchaseOrder(order.id)
+      }
+
+      const attachmentRows = this.getRows(getSafe(() => response.value.data.attachments, []))
+
+      this.setState({ isOpenManager: false, attachmentRows })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  replaceExiting = row => {
+    this.setState({ isOpenManager: true, replaceRow: row })
+  }
+
+  handleUnlink = async row => {
+    const { unlinkAttachmentToOrder, order, getSaleOrder, getPurchaseOrder } = this.props
+    const query = {
+      attachmentId: row.id,
+      orderId: order.id
+    }
+    try {
+      await unlinkAttachmentToOrder(query)
+      let response = ''
+      if (getSafe(() => this.props.router.query.type, false) === 'sales') {
+        response = await getSaleOrder(order.id)
+      } else {
+        response = await getPurchaseOrder(order.id)
+      }
+
+      const attachmentRows = this.getRows(getSafe(() => response.value.data.attachments, []))
+      this.setState({ attachmentRows })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  getMimeType = documentName => {
+    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
+
+    switch (documentExtension) {
+      case 'doc':
+        return 'application/msword'
+      case 'docx':
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      case 'ppt':
+        return 'application/vnd.ms-powerpoint'
+      case 'pptx':
+        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      case 'xls':
+        return 'application/vnd.ms-excel'
+      case 'xlsx':
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      case 'gif':
+        return 'image/gif'
+      case 'png':
+        return 'image/png'
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg'
+      case 'svg':
+        return 'image/svg'
+      case 'pdf':
+        return 'application/pdf'
+      case '7z':
+        return 'application/x-7z-compressed'
+      case 'zip':
+        return 'application/zip'
+      case 'tar':
+        return 'application/x-tar'
+      case 'rar':
+        return 'application/x-rar-compressed'
+      case 'xml':
+        return 'application/xml'
+      default:
+        return 'text/plain'
+    }
+  }
+
+  downloadAttachment = async (documentName, documentId) => {
+    const element = await this.prepareLinkToAttachment(documentId)
+
+    element.download = documentName
+    document.body.appendChild(element) // Required for this to work in FireFox
+    element.click()
+  }
+
+  prepareLinkToAttachment = async documentId => {
+    let downloadedFile = await this.props.downloadAttachment(documentId)
+    const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
+    const mimeType = fileName && this.getMimeType(fileName)
+    const element = document.createElement('a')
+    const file = new Blob([downloadedFile.value.data], { type: mimeType })
+    let fileURL = URL.createObjectURL(file)
+    element.href = fileURL
+
+    return element
+  }
+
+  extractFileName = contentDispositionValue => {
+    var filename = ''
+    if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
+      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+      var matches = filenameRegex.exec(contentDispositionValue)
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, '')
+      }
+    }
+    return filename
+  }
+
+  getRows = attachments => {
+    if (attachments && attachments.length) {
+      return attachments.map(row => {
+        return {
+          id: row.id,
+          documentTypeId: getSafe(() => row.documentType.id, 'N/A'),
+          documentName: (
+            <Button as='a' onClick={() => this.downloadAttachment(row.name, row.id)}>
+              <Icon name='download' />
+              {row.name}
+            </Button>
+          ),
+          documenType: getSafe(() => row.documentType.name, 'N/A'),
+          documenDate: row.expirationDate
+            ? getSafe(() => moment(row.expirationDate).format(getLocaleDateFormat()), 'N/A')
+            : 'N/A',
+          documenIssuer: getSafe(() => row.issuer, 'N/A')
+        }
+      })
+    } else {
+      return []
+    }
+  }
+
   render() {
     const {
       router,
@@ -360,7 +579,10 @@ class Detail extends Component {
       cancelPayment,
       toastManager,
       isPaymentCancellable,
-      opendSaleAttachingProductOffer
+      opendSaleAttachingProductOffer,
+      listDocumentTypes,
+      loadingRelatedDocuments,
+      intl: { formatMessage }
     } = this.props
     const { activeIndexes } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
@@ -727,9 +949,88 @@ class Detail extends Component {
                   onClick={this.handleClick}
                   data-test='orders_detail_product_info'>
                   <Chevron />
-                  <FormattedMessage id='order.productInfo' defaultMessage='Product Info' />
+                  <FormattedMessage id='order.relatedDocuments' defaultMessage='RELATED DOCUMENTS' />
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[1]}>
+                  <Grid>
+                    <Grid.Row>
+                      <Grid.Column width={10}>
+                        <DocumentsDropdown
+                          options={[
+                            {
+                              key: 0,
+                              text: formatMessage({
+                                id: 'order.detail.documents.dropdown.all',
+                                defaultMessage: 'Select All'
+                              }),
+                              value: 0
+                            }
+                          ].concat(listDocumentTypes)}
+                          value={this.state.listDocumentTypes}
+                          selection
+                          onChange={(event, { name, value }) => {
+                            const rows = this.getRows(order.attachments)
+                            const attachmentRows = value === 0 ? rows : rows.filter(row => row.documentTypeId === value)
+                            this.setState({
+                              [name]: value,
+                              attachmentRows
+                            })
+                          }}
+                          name='listDocumentTypes'
+                          placeholder={formatMessage({
+                            id: 'order.detail.documents.dropdown',
+                            defaultMessage: 'Select Type'
+                          })}
+                        />
+                      </Grid.Column>
+                      <Grid.Column width={6}>
+                        <AttachmentManager
+                          isOpenManager={this.state.isOpenManager}
+                          asModal
+                          returnSelectedRows={rows => this.attachDocumentsManager(rows)}
+                        />
+                      </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                      <Grid.Column style={{ paddingLeft: '30px', paddingRight: '2.2857143em' }}>
+                        <ProdexGrid
+                          removeFlexClass={true}
+                          loading={loadingRelatedDocuments}
+                          tableName='related_orders_detail_documents'
+                          columns={this.state.columnsRelatedOrdersDetailDocuments}
+                          rows={this.state.attachmentRows}
+                          hideCheckboxes
+                          rowActions={[
+                            {
+                              text: formatMessage({
+                                id: 'global.replaceExisting',
+                                defaultMessage: 'Replace Existing'
+                              }),
+                              callback: row => this.replaceExiting(row)
+                            },
+                            {
+                              text: formatMessage({
+                                id: 'global.unlink',
+                                defaultMessage: 'Unlink'
+                              }),
+                              callback: row => this.handleUnlink(row)
+                            }
+                          ]}
+                        />
+                      </Grid.Column>
+                    </Grid.Row>
+                  </Grid>
+                </Accordion.Content>
+
+                <AccordionTitle
+                  active={activeIndexes[2]}
+                  index={2}
+                  onClick={this.handleClick}
+                  data-test='orders_detail_product_info'>
+                  <Chevron />
+                  <FormattedMessage id='order.productInfo' defaultMessage='Product Info' />
+                </AccordionTitle>
+                <Accordion.Content active={activeIndexes[2]}>
                   <div className='table-responsive'>
                     <Table>
                       <Table.Header>
@@ -805,14 +1106,14 @@ class Detail extends Component {
                 </Accordion.Content>
 
                 <AccordionTitle
-                  active={activeIndexes[2]}
-                  index={2}
+                  active={activeIndexes[3]}
+                  index={3}
                   onClick={this.handleClick}
                   data-test='orders_detail_pickup_info'>
                   <Chevron />
                   <FormattedMessage id='order.pickupInfo' defaultMessage='Pick Up Info' />
                 </AccordionTitle>
-                <Accordion.Content active={activeIndexes[2]}>
+                <Accordion.Content active={activeIndexes[3]}>
                   <Grid divided='horizontally'>
                     <Grid.Row columns={2}>
                       <Grid.Column>
@@ -846,14 +1147,14 @@ class Detail extends Component {
                 {order.reviewStatus === 'Rejected' && (
                   <>
                     <AccordionTitle
-                      active={activeIndexes[3]}
-                      index={3}
+                      active={activeIndexes[4]}
+                      index={4}
                       onClick={this.handleClick}
                       data-test='orders_detail_return_shipping'>
                       <Chevron />
                       <FormattedMessage id='order.returnShipping' defaultMessage='Return Shipping' />
                     </AccordionTitle>
-                    <Accordion.Content active={activeIndexes[3]}>
+                    <Accordion.Content active={activeIndexes[4]}>
                       <Grid divided='horizontally'>
                         <Grid.Row columns={2}>
                           <Grid.Column>
@@ -909,14 +1210,14 @@ class Detail extends Component {
                 )}
 
                 <AccordionTitle
-                  active={activeIndexes[4]}
-                  index={4}
+                  active={activeIndexes[5]}
+                  index={5}
                   onClick={this.handleClick}
                   data-test='orders_detail_shipping'>
                   <Chevron />
                   <FormattedMessage id='order.shipping' defaultMessage='Shipping' />
                 </AccordionTitle>
-                <Accordion.Content active={activeIndexes[4]}>
+                <Accordion.Content active={activeIndexes[5]}>
                   <Grid divided='horizontally'>
                     <Grid.Row columns={2}>
                       <Grid.Column>
@@ -968,14 +1269,14 @@ class Detail extends Component {
                 </Accordion.Content>
 
                 <AccordionTitle
-                  active={activeIndexes[5]}
-                  index={5}
+                  active={activeIndexes[6]}
+                  index={6}
                   onClick={this.handleClick}
                   data-test='orders_detail_payment'>
                   <Chevron />
                   <FormattedMessage id='order.payment' defaultMessage='Payment' /> / {order.paymentType}
                 </AccordionTitle>
-                <Accordion.Content active={activeIndexes[5]}>
+                <Accordion.Content active={activeIndexes[6]}>
                   <Grid divided='horizontally'>
                     <Grid.Row columns={2}>
                       <Grid.Column>
@@ -1040,14 +1341,14 @@ class Detail extends Component {
                   </Grid>
                 </Accordion.Content>
                 <AccordionTitle
-                  active={activeIndexes[6]}
-                  index={6}
+                  active={activeIndexes[7]}
+                  index={7}
                   onClick={this.handleClick}
                   data-test='orders_detail_notes'>
                   <Chevron />
                   <FormattedMessage id='order.detailNotes' defaultMessage='NOTES' />
                 </AccordionTitle>
-                <Accordion.Content active={activeIndexes[6]}>
+                <Accordion.Content active={activeIndexes[7]}>
                   <Grid.Row>
                     <Grid.Column>{getSafe(() => this.props.order.note, '')}</Grid.Column>
                   </Grid.Row>
@@ -1061,4 +1362,4 @@ class Detail extends Component {
   }
 }
 
-export default withToastManager(Detail)
+export default injectIntl(withToastManager(Detail))
