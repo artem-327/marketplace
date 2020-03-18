@@ -176,8 +176,8 @@ export class DatagridProvider extends Component {
   setQuery = (query, reload = true) => {
     this.setState({ query }, () => reload && this.loadData())
   }
-
-  setSearch = (value, reload = true) => {
+  //TODO change type to type = [] when multiple is accepted
+  setSearch = (value, type = '', reload = true) => {
     const {
       apiConfig: { searchToFilter, params }
     } = this.props
@@ -189,7 +189,10 @@ export class DatagridProvider extends Component {
       () => {
         this.setFilter(
           {
-            filters: typeof searchToFilter !== 'function' ? this.apiConfig.searchToFilter(value) : searchToFilter(value)
+            filters:
+              typeof searchToFilter !== 'function'
+                ? this.apiConfig.searchToFilter(value, type)
+                : searchToFilter(value, type)
           },
           reload
         )
