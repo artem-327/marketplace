@@ -1,5 +1,5 @@
 import { FormattedMessage } from 'react-intl'
-
+import { companyDatagridColumns } from '~/constants/index'
 export const config = {
   'CAS Products': {
     addEditText: (
@@ -49,76 +49,7 @@ export const config = {
     formattedMessageName: 'company',
     searchText: 'admin.searchCompany',
     display: {
-      columns: [
-        {
-          name: 'displayName',
-          title: (
-            <FormattedMessage id='global.companyName' defaultMessage='Company Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          sortPath: 'Company.name'
-        },
-        {
-          name: 'primaryBranchAddress',
-          title: (
-            <FormattedMessage id='global.headquaterAddress' defaultMessage='Headquarters Address'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          sortPath: 'Company.primaryBranch.deliveryAddress.address.streetAddress'
-        },
-        {
-          name: 'primaryContact',
-          title: (
-            <FormattedMessage id='global.primaryContact' defaultMessage='Primary Contact'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          sortPath: 'ClientCompany.primaryBranch.deliveryAddress.contactName'
-        },
-        {
-          name: 'contactEmail',
-          title: (
-            <FormattedMessage id='global.contactEmail' defaultMessage='Contact E-mail'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          sortPath: 'ClientCompany.primaryBranch.deliveryAddress.contactEmail'
-        },
-        {
-          name: 'hasDwollaAccount',
-          title: (
-            <FormattedMessage id='global.dwollaAccount' defaultMessage='Dwolla Account'>
-              {text => text}
-            </FormattedMessage>
-          )
-        },
-        {
-          name: 'hasLogisticsAccounts',
-          title: (
-            <FormattedMessage id='global.logisticAccounts' defaultMessage='Logistics Accounts'>
-              {text => text}
-            </FormattedMessage>
-          )
-        },
-        {
-          name: 'reviewRequested',
-          title: (
-            <FormattedMessage id='global.reviewRequested' defaultMessage='Review Requested'>
-              {text => text}
-            </FormattedMessage>
-          )
-        },
-        {
-          name: 'nacdMember',
-          title: (
-            <FormattedMessage id='global.nacdMember' defaultMessage='NACD Member'>
-              {text => text}
-            </FormattedMessage>
-          )
-        }
-      ]
+      columns: companyDatagridColumns
     }
   },
 
@@ -659,7 +590,7 @@ export const config = {
         type: 'text',
         required: true
       }
-    ],
+    ]
   },
 
   'Document Types': {

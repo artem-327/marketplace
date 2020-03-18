@@ -8,6 +8,7 @@ import { Checkbox } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
+import { mapCompanyRows } from '~/constants/index'
 
 import * as Actions from '../../actions'
 
@@ -111,27 +112,7 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
     companyListDataRequest: admin.companyListDataRequest,
     filterValue: admin.filterValue,
     currentTab: admin.currentTab,
-    rows: datagrid.rows.map(c => ({
-      rawData: c,
-      ...c,
-      hasLogisticsAccounts: c.logisticsAccount ? 'Yes' : 'No',
-      hasDwollaAccount: c.dwollaAccountStatus === 'verified' ? 'Yes' : 'No',
-      primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false)
-        ? c.primaryBranch.deliveryAddress.address.streetAddress +
-          ', ' +
-          c.primaryBranch.deliveryAddress.address.city +
-          ', ' +
-          (c.primaryBranch.deliveryAddress.address.province
-            ? c.primaryBranch.deliveryAddress.address.province.name + ', '
-            : '') +
-          (c.primaryBranch.deliveryAddress.address.country ? c.primaryBranch.deliveryAddress.address.country.name : '')
-        : '',
-      primaryContact: c.primaryUser ? c.primaryUser.name : '',
-      contactEmail: c.primaryUser ? c.primaryUser.email : '',
-      reviewRequested: c.reviewRequested,
-      hasLogo: c.hasLogo,
-      nacdMember: c && c.nacdMember ? 'Yes' : c.nacdMember === false ? 'No' : ''
-    })),
+    rows: mapCompanyRows(datagrid.rows),
     confirmMessage: admin.confirmMessage,
     deleteRowById: admin.deleteRowById
   }

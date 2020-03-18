@@ -207,5 +207,8 @@ export default {
     api.post(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&branchId=${branchId}`),
   getBranch: branchId => api.get(`/prodex/api/branches/${branchId}`),
   removeAttachmentLinkToBranch: (attachmentId, branchId) =>
-    api.delete(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&branchId=${branchId}`)
+    api.delete(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&branchId=${branchId}`),
+  createClientCompany: payload => api.post('/prodex/api/companies/client', payload).then(response => response.data),
+  updateClientCompany: (payload, id) => api.put(`/prodex/api/companies/client/${id}`, payload).then(response => response.data),
+  deleteClientCompany: id => api.delete(`/prodex/api/companies/client/${id}`).then(response => response.data)
 }

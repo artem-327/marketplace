@@ -31,6 +31,9 @@ import SystemSettings from '~/components/settings'
 import DocumentsTable from './Documents/DocumentManagerTable'
 import DocumentsPopup from './Documents/DocumentManagerPopup'
 
+import ClientCompanyTable from './ClientCompany/Table'
+import ClientCompanyPopup from './ClientCompany/Popup'
+
 import DwollaAccount from './DwollaAccountComponent'
 import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
@@ -288,6 +291,7 @@ class Settings extends Component {
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
       'delivery-addresses': <DeliveryAddressesTable />,
+      'client-companies': <ClientCompanyTable />,
       logistics: <LogisticsTable />,
       'system-settings': (
         <FixyWrapper>
@@ -308,6 +312,7 @@ class Settings extends Component {
       'bank-accounts': <BankAccountsPopup />,
       'credit-cards': <CreditCardsPopup />,
       'delivery-addresses': <DeliveryAddressesPopup />,
+      'client-companies': <ClientCompanyPopup />,
       logistics: <LogisticsPopup />,
       documents: <DocumentsPopup />
     }
@@ -379,6 +384,13 @@ class Settings extends Component {
                 }
               ]
             : [],
+        params: {
+          orOperator: true
+        }
+      },
+      'client-companies': {
+        url: '/prodex/api/companies/client/datagrid',
+        searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v}%`] }] : []),
         params: {
           orOperator: true
         }

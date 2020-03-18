@@ -214,7 +214,11 @@ class Navigation extends Component {
     const MenuLink = withRouter(({ router: { asPath }, to, children, tab, className }) => {
       return (
         <Link prefetch href={to}>
-          <Menu.Item as='a' active={asPath === to} onClick={async e => await this.settingsLink(e, to, tab)} className={className}>
+          <Menu.Item
+            as='a'
+            active={asPath === to}
+            onClick={async e => await this.settingsLink(e, to, tab)}
+            className={className}>
             {children}
           </Menu.Item>
         </Link>
@@ -230,7 +234,10 @@ class Navigation extends Component {
 
     return !isAdmin || takeover ? (
       <div className='flex-wrapper'>
-        <MenuLink to='/inventory/my' data-test='navigation_menu_inventory_my_drpdn' className={!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''}>
+        <MenuLink
+          to='/inventory/my'
+          data-test='navigation_menu_inventory_my_drpdn'
+          className={!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''}>
           <>
             <Layers size={22} />
             {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
@@ -239,7 +246,10 @@ class Navigation extends Component {
         {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
         {getSafe(() => company.nacdMember, false) ? (
           <>
-            <MenuLink to='/marketplace/all' data-test='navigation_menu_marketplace_drpdn' className={!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''}>
+            <MenuLink
+              to='/marketplace/all'
+              data-test='navigation_menu_marketplace_drpdn'
+              className={!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''}>
               <>
                 <ShoppingBag size={22} />
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
@@ -349,6 +359,13 @@ class Navigation extends Component {
                       tab='delivery-addresses'
                       data-test='navigation_settings_delivery_addresses_drpdn'>
                       {formatMessage({ id: 'navigation.deliveryAddresses', defaultMessage: 'Delivery Addresses' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings?type=client-companies'
+                      tab='client-companies'
+                      data-test='navigation_settings_client_companies_drpdn'>
+                      {formatMessage({ id: 'navigation.clientCompanies', defaultMessage: '!Client Companies' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}

@@ -1102,3 +1102,14 @@ export const getBranch = branchId => ({
   type: AT.GET_BRANCH,
   payload: api.getBranch(branchId)
 })
+
+export const createClientCompany = payload => ({
+  type: AT.CREATE_CLIENT_COMPANY,
+  payload: api.createClientCompany(payload)
+})
+export const updateClientCompany = (payload, id) => ({
+  type: AT.UPDATE_CLIENT_COMPANY,
+  payload: api.updateClientCompany(payload, id)
+})
+
+export const deleteClientCompany = id => ({ type: AT.DELETE_CLIENT_COMPANY, payload: api.deleteClientCompany(id) })

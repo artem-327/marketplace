@@ -56,6 +56,10 @@ const textsTable = {
     BtnAddText: 'settings.tables.deliveryAddresses.buttonAdd',
     SearchText: 'settings.tables.deliveryAddresses.search'
   },
+  'client-companies': {
+    BtnAddText: 'settings.tables.clientCompanies.buttonAdd',
+    SearchText: 'settings.tables.clientCompanies.search'
+  },
   logistics: {
     BtnAddText: 'settings.tables.logistics.buttonAdd',
     SearchText: 'settings.tables.logistics.search'
@@ -248,7 +252,7 @@ class TablesHandlers extends Component {
         {!currentTab.hideButtons && (
           <>
             {(!bankAccTab || bankAccounts.addButton) && (
-              <GridColumn widescreen={3} computer={3} tablet={4}>
+              <GridColumn widescreen={3} computer={4} tablet={4}>
                 <Button
                   fluid
                   primary
