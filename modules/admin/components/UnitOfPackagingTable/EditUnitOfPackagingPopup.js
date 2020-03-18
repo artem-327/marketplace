@@ -13,25 +13,24 @@ const formValidation = Yup.object().shape({
     .trim()
     .min(1, 'Too short')
     .required('Required'),
-  val1: Yup.number().required('Required')
+  val1: Yup.number().required('Required'),
+  val2: Yup.number().required('Required'),
+  val3: Yup.number().required('Required'),
+  val4: Yup.number().required('Required')
 })
 
 class EditUnitOfPackagingPopup extends React.Component {
   render() {
-    const {
-      closeEditPopup,
-      currentTab,
-      config,
-      popupValues,
-      putEditedDataRequest,
-      measureOptions
-    } = this.props
+    const { closeEditPopup, currentTab, config, popupValues, putEditedDataRequest, measureOptions } = this.props
 
     const { id } = popupValues
 
     const initialFormValues = {
       val0: popupValues[config.edit[0].name],
-      val1: popupValues.measureTypeId
+      val1: popupValues.measureTypeId,
+      val2: popupValues.height,
+      val3: popupValues.length,
+      val4: popupValues.width
     }
 
     return (
@@ -47,13 +46,21 @@ class EditUnitOfPackagingPopup extends React.Component {
             onSubmit={async (values, { setSubmitting }) => {
               let data = {
                 [config.edit[0].name]: values.val0.trim(),
-                [config.edit[1].name]: values.val1
+                [config.edit[1].name]: values.val1,
+                [config.edit[2].name]: parseFloat(values.val2),
+                [config.edit[3].name]: parseFloat(values.val3),
+                [config.edit[4].name]: parseFloat(values.val4)
               }
-              await putEditedDataRequest(config, id, data)
-              setSubmitting(false)
+              try {
+                await putEditedDataRequest(config, id, data)
+              } catch (error) {
+                console.error(error)
+              } finally {
+                setSubmitting(false)
+              }
             }}>
             <FormGroup widths='equal' data-test='admin_edit_unit_packaging_name_inp'>
-              <Input type={config.edit[0].type} label={config.edit[0].title} name='val0' />
+              <Input inputProps={{ type: config.edit[0].type }} label={config.edit[0].title} name='val0' />
             </FormGroup>
             <FormGroup widths='equal'>
               <Dropdown
@@ -61,6 +68,30 @@ class EditUnitOfPackagingPopup extends React.Component {
                 options={measureOptions}
                 name='val1'
                 inputProps={{ 'data-test': 'admin_edit_unit_packaging_type_drpdn' }}
+              />
+            </FormGroup>
+            <FormGroup widths='equal' data-test='admin_edit_unit_packaging_height_inp'>
+              <Input
+                inputProps={{ type: config.edit[2].type, step: config.edit[2].step }}
+                label={config.edit[2].title}
+                name='val2'
+                step={config.edit[2].step}
+              />
+            </FormGroup>
+            <FormGroup widths='equal' data-test='admin_edit_unit_packaging_length_inp'>
+              <Input
+                inputProps={{ type: config.edit[3].type, step: config.edit[3].step }}
+                label={config.edit[3].title}
+                name='val3'
+                step={config.edit[3].step}
+              />
+            </FormGroup>
+            <FormGroup widths='equal' data-test='admin_edit_unit_packaging_width_inp'>
+              <Input
+                inputProps={{ type: config.edit[4].type, step: config.edit[4].step }}
+                label={config.edit[4].title}
+                name='val4'
+                step={config.edit[4].step}
               />
             </FormGroup>
             <div style={{ textAlign: 'right' }}>
