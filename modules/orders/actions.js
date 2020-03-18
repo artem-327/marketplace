@@ -1,6 +1,5 @@
 import * as AT from './action-types'
 import Api from './api'
-import api from './api'
 
 export const loadData = (endpointType, filter = null) => ({
   type: AT.ORDERS_FETCH_SUCCESS,
@@ -273,20 +272,26 @@ export function removeLinkAttachmentToOrderItem(query) {
 export function getDocumentTypes() {
   return {
     type: AT.RELATED_GET_DOCUMENT_TYPES,
-    payload: api.getDocumentTypes()
+    payload: Api.getDocumentTypes()
   }
 }
 
 export function unlinkAttachmentToOrder(query) {
   return {
     type: AT.UNLINK_ATTACHMENT_TO_ORDER,
-    payload: api.unlinkAttachmentToOrder(query)
+    payload: Api.unlinkAttachmentToOrder(query)
   }
 }
 
 export function linkAttachmentToOrder(query) {
   return {
     type: AT.LINK_ATTACHMENT_TO_ORDER,
-    payload: api.linkAttachmentToOrder(query)
+    payload: Api.linkAttachmentToOrder(query)
+  }
+}
+
+export function clearOrderDetail() {
+  return {
+    type: AT.CLEARE_ORDER_DETAIL
   }
 }

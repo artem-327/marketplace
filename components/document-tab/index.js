@@ -266,36 +266,35 @@ class DocumentTab extends Component {
                   ),
                   callback: async row => {
                     try {
-                      if (row.linked) {
-                        const unlinkResponse = await removeAttachmentLink(row.id, idForm)
-                        if (unlinkResponse.value.data.lastLink) {
-                          confirm(
-                            formatMessage({
-                              id: 'confirm.attachments.delete.title',
-                              defaultMessage: 'Delete Attachment'
-                            }),
-                            formatMessage(
-                              {
-                                id: 'confirm.attachments.delete.content',
-                                defaultMessage: `Do you want to delete file ${row.name}?`
-                              },
-                              { fileName: row.name }
-                            )
-                          ).then(
-                            async () => {
-                              // confirm
-                              try {
-                                await removeAttachment(row.id)
-                              } catch (e) {
-                                console.error(e)
-                              }
+                      const unlinkResponse = await removeAttachmentLink(row.id, idForm)
+                      if (unlinkResponse.value.data.lastLink) {
+                        confirm(
+                          formatMessage({
+                            id: 'confirm.attachments.delete.title',
+                            defaultMessage: 'Delete Attachment'
+                          }),
+                          formatMessage(
+                            {
+                              id: 'confirm.attachments.delete.content',
+                              defaultMessage: `Do you want to delete file ${row.name}?`
                             },
-                            () => {
-                              // cancel
-                            }
+                            { fileName: row.name }
                           )
-                        }
+                        ).then(
+                          async () => {
+                            // confirm
+                            try {
+                              await removeAttachment(row.id)
+                            } catch (e) {
+                              console.error(e)
+                            }
+                          },
+                          () => {
+                            // cancel
+                          }
+                        )
                       }
+
                       setFieldValue(
                         setFieldNameAttachments,
                         values.attachments.filter(o => o.id !== row.id)

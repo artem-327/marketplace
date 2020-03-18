@@ -239,18 +239,16 @@ export default class AddressForm extends Component {
               initialZipCodes={initialZipCodes}
               data-test='address_form_zip_drpdn'
             />
-            <FormField name={fields.country}>
-              <Popup
-                trigger={
-                  <label>
-                    <FormattedMessage id='global.country' defaultMessage='Country' />
-                  </label>
-                }
-                disabled={countryPopup.disabled}
-                content={countryPopup.content}
-              />
-
               <Dropdown
+                label={<Popup
+                  trigger={
+                    <label>
+                      <FormattedMessage id='global.country' defaultMessage='Country' />
+                    </label>
+                  }
+                  disabled={countryPopup.disabled}
+                  content={countryPopup.content}
+                />}
                 name={fields.country}
                 options={countries.map(country => ({
                   key: country.id,
@@ -277,7 +275,7 @@ export default class AddressForm extends Component {
                   ...additionalCountryInputProps
                 }}
               />
-            </FormField>
+           
 
             <Dropdown
               label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />}
@@ -334,7 +332,8 @@ AddressForm.propTypes = {
   initialZipCodes: array,
   additionalCountryInputProps: object,
   fixedCountries: array,
-  handleChange: func
+  handleChange: func,
+  initialProvince: array
 }
 
 AddressForm.defaultProps = {
@@ -370,5 +369,6 @@ AddressForm.defaultProps = {
   values: null,
   additionalCountryInputProps: {},
   fixedCountries: [],
-  handleChange: () => console.error('handleChange function not provided in AddressForm.jsx!')
+  handleChange: () => console.error('handleChange function not provided in AddressForm.jsx!'),
+  initialProvince: []
 }

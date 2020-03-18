@@ -16,15 +16,8 @@ const columns = [
       <FormattedMessage id='logistics.label.logisticsProvider' defaultMessage='Logistics Provider'>
         {text => text}
       </FormattedMessage>
-    )
-  },
-  {
-    name: 'apiKey',
-    title: (
-      <FormattedMessage id='logistics.label.apiKey' defaultMessage='API Key'>
-        {text => text}
-      </FormattedMessage>
-    )
+    ),
+    width: 300
   },
   {
     name: 'username',
@@ -32,7 +25,8 @@ const columns = [
       <FormattedMessage id='logistics.label.username' defaultMessage='User Name'>
         {text => text}
       </FormattedMessage>
-    )
+    ),
+    width: 300
   }
 ]
 
@@ -58,7 +52,6 @@ class LogisticsTable extends Component {
           ...acc,
           provider: acc.provider.id,
           logisticsProviderName: acc.provider.name,
-          apiKey: acc.apiKey,
           username: acc.username
         }))}
         loading={loading}
@@ -83,22 +76,6 @@ class LogisticsTable extends Component {
                 .then(async () => {
                   try {
                     await deleteLogisticsAccount(row.id)
-                    toastManager.add(
-                      generateToastMarkup(
-                        formatMessage({
-                          id: 'notifications.logisticsDeleted.header',
-                          defaultMessage: 'Logistics Account deleted'
-                        }),
-                        formatMessage(
-                          {
-                            id: 'notifications.logisticsDeleted.content',
-                            defaultMessage: `Logistics Account ${row.logisticsProviderName} successfully deleted.`
-                          },
-                          { name: row.logisticsProviderName }
-                        )
-                      ),
-                      { appearance: 'success' }
-                    )
                   } catch {}
                 })
                 .catch(() => {})

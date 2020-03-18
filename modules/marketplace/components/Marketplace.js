@@ -2,8 +2,11 @@ import React, { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List, Icon, Tab } from 'semantic-ui-react'
 import { AlertTriangle } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import styled from 'styled-components'
 import { withRouter } from 'next/router'
+import { number } from 'prop-types'
+import Link from 'next/link'
+import styled from 'styled-components'
+
 import { ShippingQuotes } from '~/modules/shipping'
 import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
@@ -11,9 +14,7 @@ import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 import { Holds } from '~/modules/marketplace/holds'
-
-import { number } from 'prop-types'
-import Link from 'next/link'
+import Tutorial from '~/modules/tutorial/Tutorial'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -44,6 +45,11 @@ const RedTriangle = styled(AlertTriangle)`
   &.grey {
     color: #848893;
   }
+`
+
+const MarketplaceTab = styled(Tab)`
+  flex-grow: 1;
+  flex-shrink: 1;
 `
 
 class Marketplace extends Component {
@@ -433,7 +439,7 @@ class Marketplace extends Component {
   }
 
   render() {
-    const { activeIndex } = this.props
+    const { activeIndex, tutorialCompleted } = this.props
 
     const panes = [
       {
@@ -459,8 +465,9 @@ class Marketplace extends Component {
     ]
     return (
       <>
+        {!tutorialCompleted && <Tutorial />}
         <Container fluid style={{ padding: '0 32px' }} className='flex stretched'>
-          <Tab
+          <MarketplaceTab
             activeIndex={activeIndex}
             className='marketplace-container'
             menu={{ secondary: true, pointing: true }}

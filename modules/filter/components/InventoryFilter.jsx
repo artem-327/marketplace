@@ -5,6 +5,7 @@ import { Field as FormikField } from 'formik'
 import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
 import { getSafe } from '~/utils/functions'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import { withToastManager } from 'react-toast-notifications'
 
@@ -596,7 +597,6 @@ class InventoryFilter extends Component {
     return (
       <>
         <SaveFiltersGrid>
-          {/* Save Filter */}
           <GridRow>
             <GridColumn width={9}>
               <SaveFilterTitle>
@@ -604,40 +604,50 @@ class InventoryFilter extends Component {
               </SaveFilterTitle>
             </GridColumn>
             <GridColumn width={7} textAlign='right'>
-              <Button type='button' size='large' onClick={this.toggleSaveFilter} data-test='filter_save_cancel_btn'>
+              <Button
+                type='button'
+                size='large'
+                onClick={this.toggleSaveFilter}
+                data-test='filter_save_cancel_btn'
+              >
                 {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
               </Button>
             </GridColumn>
           </GridRow>
-          <GridRow>
-            <GridColumn computer={16} data-test='filter_name_inp'>
-              <FormattedMessage id='filter.filterNameHeader' defaultMessage='Filter Name' />
-            </GridColumn>
-          </GridRow>
-          <GridRow>
-            <GridColumn computer={16} data-test='filter_name_inp'>
-              <Input
-                inputProps={{
-                  placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Your filter name' })
-                }}
-                name='name'
-                fluid
-              />
-            </GridColumn>
-          </GridRow>
-          <GridRow>
-            <GridColumn computer={12}>
-              <label>{formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}</label>
-            </GridColumn>
-            <GridColumn computer={4}>
-              <FormikCheckbox
-                inputProps={{ toggle: true, style: { marginBottom: '-4px' } }}
-                name='checkboxes.automaticallyApply'
-              />
-            </GridColumn>
-          </GridRow>
         </SaveFiltersGrid>
-        <Notifications values={values} formikProps={formikProps} />
+        <PerfectScrollbar>
+          <SaveFiltersGrid>
+            {/* Save Filter */}
+            <GridRow>
+              <GridColumn computer={16} data-test='filter_name_inp'>
+                <FormattedMessage id='filter.filterNameHeader' defaultMessage='Filter Name' />
+              </GridColumn>
+            </GridRow>
+            <GridRow>
+              <GridColumn computer={16} data-test='filter_name_inp'>
+                <Input
+                  inputProps={{
+                    placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Your filter name' })
+                  }}
+                  name='name'
+                  fluid
+                />
+              </GridColumn>
+            </GridRow>
+            <GridRow>
+              <GridColumn computer={12}>
+                <label>{formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}</label>
+              </GridColumn>
+              <GridColumn computer={4}>
+                <FormikCheckbox
+                  inputProps={{ toggle: true, style: { marginBottom: '-4px' } }}
+                  name='checkboxes.automaticallyApply'
+                />
+              </GridColumn>
+            </GridRow>
+          </SaveFiltersGrid>
+          <Notifications values={values} formikProps={formikProps} />
+        </PerfectScrollbar>
       </>
     )
   }
@@ -912,7 +922,7 @@ class InventoryFilter extends Component {
           {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
           <AccordionContent active={!this.state.inactiveAccordion.price}>
             <FormGroup>
-              <FormField width={8} data-test='filter_price_inp'>
+              <FormField className='price-input' width={8} data-test='filter_price_inp'>
                 {this.inputWrapper(
                   'priceFrom',
                   {
@@ -925,7 +935,7 @@ class InventoryFilter extends Component {
                   currencySymbol
                 )}
               </FormField>
-              <FormField width={8}>
+              <FormField className='price-input' width={8}>
                 {this.inputWrapper(
                   'priceTo',
                   {
@@ -1074,21 +1084,23 @@ class InventoryFilter extends Component {
                 </Button>
               </TopButtons>
               <Dimmer.Dimmable as={FlexContent}>
-                {!this.state.savedFiltersActive ? (
-                  this.formMarkup(props)
-                ) : (
-                  <SavedFilters
-                    params={this.props.params}
-                    onApply={filter => this.handleSavedFilterApply(filter, props)}
-                    savedFilters={this.props.savedFilters}
-                    savedFiltersLoading={this.props.savedFiltersLoading}
-                    getSavedFilters={this.handleGetSavedFilters}
-                    deleteFilter={this.props.deleteFilter}
-                    updateFilterNotifications={this.props.updateFilterNotifications}
-                    savedFilterUpdating={this.props.savedFilterUpdating}
-                  />
-                )}
-                <Dimmer active={this.state.openedSaveFilter} />
+                <PerfectScrollbar>
+                  {!this.state.savedFiltersActive ? (
+                    this.formMarkup(props)
+                  ) : (
+                    <SavedFilters
+                      params={this.props.params}
+                      onApply={filter => this.handleSavedFilterApply(filter, props)}
+                      savedFilters={this.props.savedFilters}
+                      savedFiltersLoading={this.props.savedFiltersLoading}
+                      getSavedFilters={this.handleGetSavedFilters}
+                      deleteFilter={this.props.deleteFilter}
+                      updateFilterNotifications={this.props.updateFilterNotifications}
+                      savedFilterUpdating={this.props.savedFilterUpdating}
+                    />
+                  )}
+                </PerfectScrollbar>
+                <Dimmer active={this.state.openedSaveFilter}/>
               </Dimmer.Dimmable>
               <Transition visible={openedSaveFilter} animation='fade up' duration={500}>
                 <div>{this.formSaveFilter(props)}</div>
