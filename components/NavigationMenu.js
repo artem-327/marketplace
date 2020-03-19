@@ -10,13 +10,13 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { ArrowLeftCircle, ArrowRightCircle, Hexagon, Layers, Settings, ShoppingBag } from 'react-feather'
+import { ArrowLeftCircle, ArrowRightCircle, Hexagon, Layers, Settings, ShoppingBag, Grid } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
-import { InventoryFilter } from '~/modules/filter'
-import { Filter } from '~/modules/filter' // Marketplace filter
-import { OrderFilter } from '~/modules/filter'
+import { InventoryFilter, Filter, OrderFilter, WantedBoardFilter } from '~/modules/filter'
+
+import { PlusCircle } from 'react-feather'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -40,7 +40,8 @@ class Navigation extends Component {
     operations: getSafe(() => Router.router.pathname === '/operations', false),
     openedFilterMyInventory: false,
     openedFilterMarketplace: false,
-    openedFilterOrders: false
+    openedFilterOrders: false,
+    openedFilterWantedBoard: false,
   }
 
   componentDidMount() {
@@ -79,6 +80,9 @@ class Navigation extends Component {
             settings: false
           }))
           break
+        case '/wanted-board/wanted-board':
+          this.setState(prevState => ({ openedFilterWantedBoard: !prevState.openedFilterWantedBoard }))
+          break
         case '/orders?type=sales':
           //temporary disabled - this.setState(prevState => ({ openedFilterOrders: !prevState.openedFilterOrders }))
           break
@@ -90,7 +94,8 @@ class Navigation extends Component {
       this.setState({
         openedFilterMyInventory: false,
         openedFilterMarketplace: false,
-        openedFilterOrders: false
+        openedFilterOrders: false,
+        openedFilterWantedBoard: false
       })
     }
 
@@ -210,7 +215,8 @@ class Navigation extends Component {
       operations,
       openedFilterMyInventory,
       openedFilterMarketplace,
-      openedFilterOrders
+      openedFilterOrders,
+      openedFilterWantedBoard
     } = this.state
 
     const MenuLink = withRouter(({ router: { asPath }, to, children, tab, className, dataTest }) => {
@@ -250,6 +256,15 @@ class Navigation extends Component {
             {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
           </>
         ) : null}
+        <MenuLink to='/wanted-board/wanted-board' dataTest='navigation_menu_wanted_board_drpdn'>
+          <>
+            <Grid size={22} />
+            {formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}
+          </>
+        </MenuLink>
+        {false && !collapsedMenu && openedFilterWantedBoard && asPath === '/wanted-board/wanted-board'
+          ? <WantedBoardFilter /> : null
+        }
         <MenuLink to='/orders?type=sales' dataTest='navigation_menu_orders_sales_drpdn'>
           <>
             <ArrowRightCircle size={22} />
