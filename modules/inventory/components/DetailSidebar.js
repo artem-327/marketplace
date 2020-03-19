@@ -547,19 +547,25 @@ class DetailSidebar extends Component {
                 onChange: (e, { value }) => {
                   setFieldValue(`priceTiers.pricingTiers[${i}].manuallyModified`, 1)
                   if (i === 0) setFieldValue('edit.minimum', value)
-                }
+                },
+                placeholder: '0'
               }
             )}
           </GridColumn>
 
           <GridColumn computer={5} data-test={`add_inventory_price_${i}_inp`}>
-            <PriceField
-              name={`priceTiers.pricingTiers[${i}].price`}
-              inputProps={{
+            {this.inputWrapper(
+              `priceTiers.pricingTiers[${i}].price`,
+              {
+                type: 'number',
+                step: '0.001',
                 min: 0.001,
-                value: null
-              }}
-            />
+                value: null,
+                placeholder: '0.000'
+              },
+              null,
+              this.props.currencySymbol
+            )}
           </GridColumn>
         </GridRow>
       )
@@ -904,7 +910,7 @@ class DetailSidebar extends Component {
       <InputWrapper>
         {label && (<div className='field-label'>{label}</div>)}
         <div>
-          <Input
+          <PriceField
             inputProps={inputProps}
             name={name}
           />
@@ -1025,7 +1031,6 @@ class DetailSidebar extends Component {
       listDocumentTypes,
       intl: { formatMessage },
       toastManager,
-      removeAttachment,
       loadFile,
       addAttachment,
       removeAttachmentLinkProductOffer,
