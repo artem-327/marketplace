@@ -3,10 +3,11 @@ import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getWarehousesDataRequest, getBranchesDataRequest, openPopup, deleteBranch } from '../../actions'
+import { getWarehousesDataRequest, getBranchesDataRequest, openSidebar, deleteBranch, getBranch } from '../../actions'
 import Router from 'next/router'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
+import { Popup, Icon } from 'semantic-ui-react'
 
 import { getSafe } from '~/utils/functions'
 
@@ -16,6 +17,12 @@ import { FormattedPhone } from '~/components/formatted-messages/'
 class WarehouseTable extends Component {
   state = {
     columns: [
+      {
+        name: 'certificateIcon',
+        title: ' ',
+        width: 45,
+        align: 'center'
+      },
       {
         name: 'addressName',
         title: (
@@ -94,7 +101,7 @@ class WarehouseTable extends Component {
     if (!columns) return
 
     if (currentTab.type === 'warehouses') {
-      columns[0].title = (
+      columns[1].title = (
         <FormattedMessage id='settings.warehouseName' defaultMessage='Warehouse Name'>
           {text => text}
         </FormattedMessage>
@@ -104,7 +111,7 @@ class WarehouseTable extends Component {
         columns
       }))
     } else if (currentTab.type === 'branches') {
-      columns[0].title = (
+      columns[1].title = (
         <FormattedMessage id='settings.branchName' defaultMessage='Branch Name'>
           {text => text}
         </FormattedMessage>
@@ -122,8 +129,42 @@ class WarehouseTable extends Component {
     }
   }
 
+  getRows = rows => {
+    return rows.map(r => ({
+      ...r,
+      certificateIcon:
+        getSafe(() => r.attachments.length, false) && getSafe(() => r.countryName, false) === 'USA' ? (
+          <Popup
+            position='right center'
+            header={
+              <FormattedMessage
+                id='settings.warehouse.certificateIcon.header'
+                defaultMessage='Certificate is attached and so will be visible anywhere'
+              />
+            }
+            trigger={
+              <div>
+                <Icon className='file related' />
+              </div>
+            }
+          />
+        ) : null
+    }))
+  }
+
   render() {
-    const { filterValue, rows, datagrid, loading, openPopup, deleteBranch, intl, currentTab, toastManager } = this.props
+    const {
+      filterValue,
+      rows,
+      datagrid,
+      loading,
+      openSidebar,
+      deleteBranch,
+      intl,
+      currentTab,
+      toastManager,
+      getBranch
+    } = this.props
 
     let message =
       currentTab.type === 'branches'
@@ -140,12 +181,24 @@ class WarehouseTable extends Component {
           filterValue={filterValue}
           columns={this.state.columns}
           loading={datagrid.loading || loading}
-          rows={rows}
+          rows={this.getRows(rows)}
           style={{ marginTop: '5px' }}
           rowActions={[
             {
               text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openPopup(row.popupValues)
+              callback: row => {
+                const indexTabofSidebar = 0
+                getBranch(row.id)
+                openSidebar(indexTabofSidebar)
+              }
+            },
+            {
+              text: formatMessage({ id: 'global.certificates', defaultMessage: 'Certificates' }),
+              callback: row => {
+                const indexTabofSidebar = 1
+                getBranch(row.id)
+                openSidebar(indexTabofSidebar)
+              }
             },
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -156,19 +209,7 @@ class WarehouseTable extends Component {
                     { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}! ? ` },
                     { item: row.name }
                   )
-                )
-                  .then(() => deleteBranch(row.id))
-                  .then(() =>
-                    toastManager.add(
-                      generateToastMarkup(
-                        <FormattedMessage id='settings.headerDeleteWarehouse' defaultMessage='Successfully deleted' />,
-                        null
-                      ),
-                      {
-                        appearance: 'success'
-                      }
-                    )
-                  )
+                ).then(() => deleteBranch(row.id))
             }
           ]}
         />
@@ -180,8 +221,9 @@ class WarehouseTable extends Component {
 const mapDispatchToProps = {
   getWarehousesDataRequest,
   getBranchesDataRequest,
-  openPopup,
-  deleteBranch
+  openSidebar,
+  deleteBranch,
+  getBranch
 }
 
 const mapStateToProps = (state, { datagrid }) => {
@@ -196,35 +238,6 @@ const mapStateToProps = (state, { datagrid }) => {
       return {
         streetAddress: getSafe(() => r.deliveryAddress.address.streetAddress),
         city: getSafe(() => r.deliveryAddress.address.city),
-        popupValues: {
-          initialValues: {
-            //name: r.name,
-            taxId: getSafe(() => r.taxId, ''),
-            deliveryAddress: {
-              address: {
-                streetAddress: getSafe(() => r.deliveryAddress.address.streetAddress),
-                city: getSafe(() => r.deliveryAddress.address.city),
-                province: provinceId,
-                country: JSON.stringify({ countryId, hasProvinces }),
-                zip
-              },
-              readyTime: getSafe(() => r.deliveryAddress.readyTime, null),
-              closeTime: getSafe(() => r.deliveryAddress.closeTime, null),
-              liftGate: getSafe(() => r.deliveryAddress.liftGate, false),
-              forkLift: getSafe(() => r.deliveryAddress.forkLift, false),
-              callAhead: getSafe(() => r.deliveryAddress.callAhead, false),
-              deliveryNotes: getSafe(() => r.deliveryAddress.deliveryNotes, ''),
-              addressName: getSafe(() => r.deliveryAddress.addressName, ''),
-              contactName: getSafe(() => r.deliveryAddress.contactName, ''),
-              contactPhone: getSafe(() => r.deliveryAddress.contactPhone, ''),
-              contactEmail: getSafe(() => r.deliveryAddress.contactEmail, '')
-            }
-          },
-          zipID,
-          countryId,
-          hasProvinces,
-          branchId: r.id
-        },
         countryName: getSafe(() => r.deliveryAddress.address.country.name),
         countryId,
         hasProvinces,
@@ -239,7 +252,8 @@ const mapStateToProps = (state, { datagrid }) => {
         phoneFormatted: <FormattedPhone value={getSafe(() => r.deliveryAddress.contactPhone, '')} />,
         branchId: r.id,
         id: r.id,
-        warehouse: r.warehouse
+        warehouse: r.warehouse,
+        attachments: r.attachments
       }
     }),
     editPopupBoolean: state.settings.editPopupBoolean,

@@ -61,16 +61,20 @@ const CustomSpanShowMore = styled.span`
   cursor: pointer;
 `
 
+const CustomGridColumn = styled(GridColumn)`
+  display: flex !important;
+`
+
 const optionsExpirationTime = [
-  { text: '24 h', value: 24, key: 1 },
-  { text: '48 h', value: 48, key: 2 },
-  { text: '3 days', value: 72, key: 3 },
-  { text: '5 days', value: 120, key: 4 }
+  { text: '24 h', value: 24, key: 1 }
+  // { text: '48 h', value: 48, key: 2 },
+  // { text: '3 days', value: 72, key: 3 },
+  // { text: '5 days', value: 120, key: 4 }
 ]
 export default class AddCart extends Component {
   state = {
     showMore: false,
-    expirationTime: optionsExpirationTime[1].value
+    expirationTime: '23:59'
   }
   componentDidMount() {
     // this.props.getProductOffer(this.props.id, this.props.isEdit)
@@ -87,7 +91,7 @@ export default class AddCart extends Component {
       if (isHoldRequest) {
         const holdTime = encodeURIComponent(
           moment()
-            .add(this.state.expirationTime, 'hours')
+            .add({ hours: this.state.expirationTime.split(':')[0], minutes: this.state.expirationTime.split(':')[1] })
             .format()
         )
         const params = {
@@ -420,17 +424,15 @@ export default class AddCart extends Component {
                     {text => text}
                   </FormattedMessage>
                 </GridColumn>
-                <GridColumn>
+                <CustomGridColumn>
                   <Dropdown
-                    options={optionsExpirationTime}
+                    options={[{ key: 0, text: '24:00', value: this.state.expirationTime }]}
                     selection
+                    disabled
+                    fluid
                     value={this.state.expirationTime}
-                    name='expirationTime'
-                    onChange={(event, { name, value }) => {
-                      this.setState({ [name]: value })
-                    }}
                   />
-                </GridColumn>
+                </CustomGridColumn>
               </GridRow>
             ) : null}
 

@@ -8,6 +8,7 @@ import { getSafe } from '~/utils/functions'
 import { FormattedNumber } from 'react-intl'
 import { ArrayToMultiple } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
+import { downloadAttachment } from '~/modules/inventory/actions'
 
 function actionRequired(data) {
   // return statuses code
@@ -68,8 +69,7 @@ function prepareDetail(data, type) {
             .toDate()
             .toLocaleString()
         : 'N/A',
-    feesAmount: <FormattedNumber style='currency' currency={currency} value={subtotal * (0 / 100)} />, // ! ! TBD
-    feesPercent: 0, // ! ! TBD
+    echoFee: getSafe(() => data.echoFee, 0),
     freight: (
       <FormattedNumber style='currency' currency={currency} value={data.shippingPrice ? data.shippingPrice : 0} />
     ),
@@ -195,15 +195,16 @@ function prepareDetail(data, type) {
     unit: orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A')),
     unitCost: orderItems.map(d => {
       let sum = 0
-      if (d.orderItemProductOffers && d.orderItemProductOffers.length) {
+      if (d.productOffers && d.productOffers.length) {
         //calculate average
-        for (const i in d.orderItemProductOffers) {
-          sum += parseInt(d.orderItemProductOffers[i].costPerUOM, 10)
+        for (let product of d.productOffers) {
+          if (product.costPerUOM) {
+            sum += parseInt(product.costPerUOM)
+          }
         }
-        return sum / d.orderItemProductOffers.length
-      } else {
-        return sum
+        return sum / d.productOffers.length
       }
+      return sum
     }),
     unitPrice: orderItems.map(d =>
       d.pricePerUOM ? <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} /> : 'N/A'
@@ -236,7 +237,8 @@ function prepareDetail(data, type) {
     paymentContact: type === 'sales' ? data.buyerCompanyContactName : data.sellerCompanyContactName,
     shippingTrackingCode: data.shippingTrackingCode ? data.shippingTrackingCode : '',
     returnShippingTrackingCode: data.returnShippingTrackingCode ? data.returnShippingTrackingCode : '',
-    note: getSafe(() => data.note, '')
+    note: getSafe(() => data.note, ''),
+    attachments: getSafe(() => data.attachments, [])
   }
 }
 
@@ -261,8 +263,10 @@ function mapStateToProps(state, ownProps) {
     openedSaleReviewCreditRequest: orders.openedSaleReviewCreditRequest,
     openedPurchaseOrderShipping: orders.openedPurchaseOrderShipping,
     action: actionRequired(orders.detail),
-    opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer
+    opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer,
+    listDocumentTypes: orders.listDocumentTypes,
+    loadingRelatedDocuments: orders.loadingRelatedDocuments
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(Detail)
+export default connect(mapStateToProps, { ...Actions, downloadAttachment })(Detail)

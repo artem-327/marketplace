@@ -377,7 +377,7 @@ class Broadcast extends Component {
                     />
                   }
                 />
-                <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Broadcasting To' />:{' '}
+                <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Visible to' />:{' '}
                 <strong>
                   {broadcastingTo}/{total}
                 </strong>
@@ -764,7 +764,7 @@ class Broadcast extends Component {
   }
 
   saveBroadcastRules = async () => {
-    const { saveRules, id, initGlobalBroadcast, asSidebar } = this.props
+    const { saveRules, id, initGlobalBroadcast, asSidebar, toastManager } = this.props
 
     // Reinitialize tree via getFilteredTree func so every node has correct value
     let filteredTree = this.getFilteredTree()
@@ -778,6 +778,23 @@ class Broadcast extends Component {
         saved: true,
         initialize: true
       })
+      if (getSafe(() => filteredTree.model.rule.broadcast, null) === 0) {
+        toastManager.add(
+          generateToastMarkup(
+            <FormattedMessage
+              id='broadcast.turnoff.title'
+              defaultMessage='Price book for this offer has been deleted!'
+            />,
+            <FormattedMessage
+              id='broadcast.turnoff.content'
+              defaultMessage='Global rules are going to be used. To turn off broadcasting completely, edit it inside Edit tab.'
+            />
+          ),
+          {
+            appearance: 'info'
+          }
+        )
+      }
     } catch (err) {
       console.error(err)
     }
@@ -836,7 +853,6 @@ export default injectIntl(
           ? new TreeModel({ childrenPropertyName: 'elements' }).parse(broadcast.data)
           : new TreeModel().parse({ model: { rule: {} } })
 
-        // console.log({ treeData })
         return {
           treeData,
           ...broadcast

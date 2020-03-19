@@ -128,6 +128,7 @@ export default class PriceControl extends Component {
     return (
       <Box>
         <PriceInput
+          className='price-input'
           disabled={disabled}
           name='value'
           type='number'

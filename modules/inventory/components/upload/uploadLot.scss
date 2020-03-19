@@ -1,8 +1,8 @@
 .uploadLot {
-  padding: 1em;
-  background: #f5f5f5 none;
+  padding: 1.4em;
+  background: #f8f9fb none;
   text-align: center;
-  font-size: 1.4285714rem;
+  font-size: 1rem;
   color: #cccccc;
   width: 100%;
   cursor: pointer;
@@ -12,16 +12,17 @@
   }
 
   .dropzoneLot {
-    border: 2px dashed #cccccc;
-    padding: 1.5em;
+    background: #f8f9fb !important;
+    color: #848893;
+    border: 2px dashed #dee2e6;
     font-weight: 300;
     line-height: 1.5;
   }
 
   .dropzoneLotHasFile {
     background: #dfffdf none;
-    border: 2px dashed #cccccc;
-    padding: 1.5em;
+    color: #848893;
+    border: 2px dashed #dee2e6;
     font-weight: 300;
     line-height: 1.5;
   }

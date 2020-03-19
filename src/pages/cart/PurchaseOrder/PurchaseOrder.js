@@ -23,7 +23,7 @@ import confirm from '../../../components/Confirmable/confirm'
 import './PurchaseOrder.scss'
 
 const RelaxedGrid = styled(Grid)`
-  margin-top 1.5rem !important;
+  margin-top: 1.5rem !important;
   padding-bottom: 50px !important;
 `
 

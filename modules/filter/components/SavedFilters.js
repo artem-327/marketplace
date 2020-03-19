@@ -29,6 +29,11 @@ import { savedFilterValidation } from '../constants/validation'
 import { groupFilters } from '../constants/filter'
 import Tooltip from '~/components/tooltip'
 
+const StyledDimmer = styled(Dimmer)`
+  background: rgb(237, 238, 242) !important;
+  margin: 1rem 0;
+`
+
 const StyledGrid = styled(Grid)`
   word-break: break-word;
   > .row {
@@ -166,9 +171,9 @@ class SavedFilters extends Component {
     if (this.props.savedFiltersLoading) {
       return (
         <Segment basic>
-          <Dimmer active inverted>
+          <StyledDimmer active inverted>
             <Loader active />
-          </Dimmer>
+          </StyledDimmer>
         </Segment>
       )
     }

@@ -1526,3 +1526,10 @@ i.file {
     }
   }
 }
+
+
+.price-input input[type=number]::-webkit-inner-spin-button, 
+.price-input input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

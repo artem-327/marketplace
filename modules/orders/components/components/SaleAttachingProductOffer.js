@@ -262,10 +262,6 @@ class SaleAttachingProductOffer extends Component {
                         key={offer.id}
                         active={getSafe(() => values.tab[tabIndex].groupedOffer[index].selected, false)}>
                         <Table.Cell>
-                          <Input
-                            name={`tab[${tabIndex}].groupedOffer[${index}].amount`}
-                            inputProps={{ type: 'hidden', defaultValue: offer.cfPkgTotal }}
-                          />
                           <Checkbox
                             name={`tab[${tabIndex}].groupedOffer[${index}].selected`}
                             value={offer.id}
@@ -443,11 +439,12 @@ class SaleAttachingProductOffer extends Component {
       loadingGroupedProductOffer,
       groupedProductOffers,
       toastManager,
-      orderId
+      orderId,
+      orderItemsId
     } = this.props
 
     return (
-      <Modal closeIcon onClose={() => closePopup()} open={true} size='small'>
+      <Modal closeIcon onClose={() => closePopup()} open={true}>
         <Dimmer active={loadingGroupedProductOffer} inverted>
           <Loader />
         </Dimmer>
@@ -507,9 +504,6 @@ class SaleAttachingProductOffer extends Component {
                     }
                   })
                 }
-                const orderItemIds =
-                  this.props.groupedProductOffers &&
-                  this.props.groupedProductOffers.map(offers => offers && offers[0] && offers[0].parentOffer)
 
                 let isSumInTabsCorrect = true
                 if (values && values.tab && values.tab.length) {
@@ -574,8 +568,8 @@ class SaleAttachingProductOffer extends Component {
                   ).then(
                     async () => {
                       // confirm
-                      if (orderItemIds.length > 1) {
-                        orderItemIds.forEach(async (item, index) => {
+                      if (orderItemsId.length > 1) {
+                        orderItemsId.forEach(async (item, index) => {
                           await this.props
                             .patchAssignProductOffers(orderId, item, request[index])
                             .then(r => {
@@ -588,7 +582,7 @@ class SaleAttachingProductOffer extends Component {
                         })
                       } else {
                         await this.props
-                          .patchAssignProductOffers(orderId, orderItemIds[0], request[0])
+                          .patchAssignProductOffers(orderId, orderItemsId[0], request[0])
                           .then(r => {
                             actions.setSubmitting(false)
                             this.props.closePopup()
@@ -604,8 +598,8 @@ class SaleAttachingProductOffer extends Component {
                     }
                   )
                 } else {
-                  if (orderItemIds.length > 1) {
-                    orderItemIds.forEach(async (item, index) => {
+                  if (orderItemsId.length > 1) {
+                    orderItemsId.forEach(async (item, index) => {
                       await this.props
                         .patchAssignProductOffers(orderId, item, request[index])
                         .then(r => {
@@ -618,7 +612,7 @@ class SaleAttachingProductOffer extends Component {
                     })
                   } else {
                     this.props
-                      .patchAssignProductOffers(orderId, orderItemIds[0], request[0])
+                      .patchAssignProductOffers(orderId, orderItemsId[0], request[0])
                       .then(r => {
                         actions.setSubmitting(false)
                         this.props.closePopup()

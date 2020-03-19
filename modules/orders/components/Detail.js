@@ -13,9 +13,10 @@ import {
   Divider,
   Header,
   Popup,
-  GridRow
+  GridRow,
+  Dropdown
 } from 'semantic-ui-react'
-import { DownloadCloud } from 'react-feather'
+import { ChevronDown, DownloadCloud } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
@@ -37,29 +38,32 @@ import confirm from '~/src/components/Confirmable/confirm'
 import moment from 'moment/moment'
 import { FormattedPhone } from '~/components/formatted-messages/'
 import { withToastManager } from 'react-toast-notifications'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
-import { FormattedNumber } from 'react-intl'
+import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
+import { injectIntl, FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
+import { AttachmentManager } from '~/modules/attachments'
+import ProdexGrid from '~/components/table'
+import { getLocaleDateFormat } from '~/components/date-format'
 
 const OrderSegment = styled(Segment)`
   width: calc(100% - 64px);
   margin-left: 32px !important;
   margin-bottom: 30px !important;
-  
+
   > .grid {
     padding: 0;
-    
+
     > .row {
       padding-top: 0 !important;
       padding-bottom: 0 !important;
     }
-    
+
     > .column,
     > .row > .column {
       padding: 20px !important;
     }
   }
-  
+
   h1.header {
     height: 17px;
     margin: 0 0 10px;
@@ -68,7 +72,7 @@ const OrderSegment = styled(Segment)`
     font-weight: 700 !important;
     color: #20273a;
     line-height: 1.2142857;
-    
+
     ~ a {
       display: inline-block;
       height: 32px;
@@ -80,7 +84,7 @@ const OrderSegment = styled(Segment)`
       font-weight: 500;
       color: #2599d5;
       line-height: 1.5384615;
-      
+
       svg {
         width: 18px;
         height: 20px;
@@ -96,13 +100,15 @@ const OrderList = styled(List)`
   &.horizontal.divided:not(.celled) {
     display: flex !important;
     flex-flow: row;
-    justify-content: space-between;
-    
-    > .item:nth-child(n) { // nth-child to have stronger path
+    justify-content: flex-end;
+
+    > .item:nth-child(n) {
+      // nth-child to have stronger path
       flex-grow: 1;
+      max-width: 150px;
       border-left: 1px solid rgba(34, 36, 38, 0.15) !important;
       padding: 13px 15px !important;
-      
+
       .header {
         margin: 0;
         padding: 0 0 3px;
@@ -111,17 +117,17 @@ const OrderList = styled(List)`
         color: #848893;
         line-height: 1.1666667;
       }
-      
+
       .description {
         font-size: 14px;
         font-weight: 700;
         color: #20273a;
         line-height: 1.2142857;
-        
+
         &.green {
           color: #84c225;
         }
-        
+
         &.red {
           color: #f16844;
         }
@@ -138,13 +144,13 @@ const OrderAccordion = styled(Accordion)`
     border: solid 1px #dee2e6 !important;
     border-radius: 4px;
     background-color: #f8f9fb !important;
-    
+
     &.active {
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
     }
   }
-  
+
   > .content {
     border: 1px solid #dee2e6;
     border-top: 0 none !important;
@@ -153,24 +159,23 @@ const OrderAccordion = styled(Accordion)`
     padding: 15px 1em !important;
     background-color: #ffffff;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-  
+
     + .title {
       margin-top: 10px !important;
     }
-    
+
     .table-responsive {
-    
       .ui.table {
         width: calc(100% - 32px);
         margin: 16px;
         border: 0 none;
-        
+
         th.p-0,
         td.p-0 {
           width: 0 !important;
           padding: 0 !important;
         }
-        
+
         span.product-name {
           font-weight: 500;
         }
@@ -180,36 +185,49 @@ const OrderAccordion = styled(Accordion)`
 `
 
 const AccordionTitle = styled(Accordion.Title)`
+  padding-left: 9px !important;
   text-transform: uppercase;
-  font-size: 1.14285714rem !important;
-  line-height: 1.5;
+  font-size: 1rem !important;
+  color: #20273a !important;
+  line-height: 1.9285714;
 
-  i.chevron {
-    margin-right: 1rem;
-    vertical-align: top;
+  svg {
+    transform: rotate(-90deg);
+    color: #2599d5 !important;
   }
+
+  &.active {
+    color: #20273a !important;
+
+    svg {
+      transform: rotate(0deg);
+      color: #2599d5 !important;
+    }
+  }
+`
+
+const Chevron = styled(ChevronDown)`
+  width: 20px;
+  height: 20px;
+  margin: 3px 6px 4px;
+  vertical-align: top;
+  font-size: 20px;
+  color: #2599d5 !important;
 `
 
 const GridData = styled(Grid)`
   padding-top: 1em !important;
   padding-bottom: 1em !important;
-  
+
   > .column:not(.row),
   > .row > .column,
   &.column > .column:not(.row),
   &.column > .row > .column {
-  
-    &[class*="key"] {
+    &[class*='key'] {
       width: 181px !important;
-    
+
       + * {
         width: calc(100% - 211px) !important;
-        
-        &:before {
-          content: ":";
-          display: inline-block;
-          padding-right: 5px;
-        }
       }
     }
   }
@@ -233,14 +251,13 @@ const GridDataColumn = styled(Grid.Column)`
 
 const StyledTable = styled(Table)`
   width: 100% !important;
+  margin: -10px 0 !important;
   padding: 0 !important;
-  
+
   thead,
   tbody,
   tfoot {
-  
     tr {
-      
       th,
       td {
         border: 0 none !important;
@@ -249,11 +266,11 @@ const StyledTable = styled(Table)`
         font-weight: 400 !important;
         color: #848893 !important;
         line-height: 1.4285714 !important;
-        
+
         &:first-child {
           padding-left: 16px !important;
         }
-        
+
         &:last-child {
           padding-right: 16px !important;
           color: #20273a !important;
@@ -275,9 +292,56 @@ const TableRowData = styled(Table.Row)`
   }
 `
 
+const DocumentsDropdown = styled(Dropdown)`
+  z-index: 601 !important;
+  margin-left: 16px;
+`
+
 class Detail extends Component {
   state = {
-    activeIndexes: [true, true, false, false, false, false, false]
+    activeIndexes: [true, true, true, false, false, false, false, false],
+    columnsRelatedOrdersDetailDocuments: [
+      {
+        name: 'documentName',
+        title: (
+          <FormattedMessage id='order.detail.documents.name' defaultMessage='Document #'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      },
+      {
+        name: 'documenType',
+        title: (
+          <FormattedMessage id='order.detail.documents.type' defaultMessage='Type'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      },
+      {
+        name: 'documenDate',
+        title: (
+          <FormattedMessage id='order.detail.documents.date' defaultMessage='Document Date'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      },
+      {
+        name: 'documenIssuer',
+        title: (
+          <FormattedMessage id='order.detail.documents.issuer' defaultMessage='Issuer'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      }
+    ],
+    isOpenManager: false,
+    replaceRow: '',
+    listDocumentTypes: '',
+    attachmentRows: []
   }
 
   constructor(props) {
@@ -285,11 +349,15 @@ class Detail extends Component {
   }
 
   componentDidMount() {
+    const { listDocumentTypes } = this.props
     let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
     this.props.loadDetail(endpointType, this.props.router.query.id)
+
+    if (listDocumentTypes && !listDocumentTypes.length) this.props.getDocumentTypes()
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { order } = this.props
     let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
     let dataCells = document.querySelectorAll('.data-list dd')
     for (let i = 0; i < dataCells.length; i++) {
@@ -299,10 +367,21 @@ class Detail extends Component {
         dataCells[i].className = ''
       }
     }
+
+    if (
+      !getSafe(() => prevState.attachmentRows.length, false) &&
+      !getSafe(() => this.state.attachmentRows.length, false) &&
+      !getSafe(() => prevProps.order.attachments.length, false) &&
+      getSafe(() => order.attachments.length, false)
+    ) {
+      this.setState({
+        attachmentRows: this.getRows(order.attachments)
+      })
+    }
   }
 
-  openAssignLots = order => {
-    this.props.openAssignLots()
+  componentWillUnmount() {
+    this.props.clearOrderDetail()
   }
 
   downloadOrder = async () => {
@@ -328,6 +407,159 @@ class Detail extends Component {
     this.setState({ activeIndexes })
   }
 
+  attachDocumentsManager = async newDocuments => {
+    const { linkAttachmentToOrder, order, getPurchaseOrder, getSaleOrder } = this.props
+    if (this.state.replaceRow) {
+      await this.handleUnlink(this.state.replaceRow)
+      this.setState({ replaceRow: '' })
+    }
+    const docArray = uniqueArrayByKey(newDocuments, 'id')
+
+    try {
+      if (docArray.length) {
+        await docArray.forEach(doc => {
+          linkAttachmentToOrder({ attachmentId: doc.id, orderId: order.id })
+        })
+      }
+      let response = ''
+      if (getSafe(() => this.props.router.query.type, false) === 'sales') {
+        response = await getSaleOrder(order.id)
+      } else {
+        response = await getPurchaseOrder(order.id)
+      }
+
+      const attachmentRows = this.getRows(getSafe(() => response.value.data.attachments, []))
+
+      this.setState({ isOpenManager: false, attachmentRows })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  replaceExiting = row => {
+    this.setState({ isOpenManager: true, replaceRow: row })
+  }
+
+  handleUnlink = async row => {
+    const { unlinkAttachmentToOrder, order, getSaleOrder, getPurchaseOrder } = this.props
+    const query = {
+      attachmentId: row.id,
+      orderId: order.id
+    }
+    try {
+      await unlinkAttachmentToOrder(query)
+      let response = ''
+      if (getSafe(() => this.props.router.query.type, false) === 'sales') {
+        response = await getSaleOrder(order.id)
+      } else {
+        response = await getPurchaseOrder(order.id)
+      }
+
+      const attachmentRows = this.getRows(getSafe(() => response.value.data.attachments, []))
+      this.setState({ attachmentRows })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  getMimeType = documentName => {
+    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
+
+    switch (documentExtension) {
+      case 'doc':
+        return 'application/msword'
+      case 'docx':
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      case 'ppt':
+        return 'application/vnd.ms-powerpoint'
+      case 'pptx':
+        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      case 'xls':
+        return 'application/vnd.ms-excel'
+      case 'xlsx':
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      case 'gif':
+        return 'image/gif'
+      case 'png':
+        return 'image/png'
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg'
+      case 'svg':
+        return 'image/svg'
+      case 'pdf':
+        return 'application/pdf'
+      case '7z':
+        return 'application/x-7z-compressed'
+      case 'zip':
+        return 'application/zip'
+      case 'tar':
+        return 'application/x-tar'
+      case 'rar':
+        return 'application/x-rar-compressed'
+      case 'xml':
+        return 'application/xml'
+      default:
+        return 'text/plain'
+    }
+  }
+
+  downloadAttachment = async (documentName, documentId) => {
+    const element = await this.prepareLinkToAttachment(documentId)
+
+    element.download = documentName
+    document.body.appendChild(element) // Required for this to work in FireFox
+    element.click()
+  }
+
+  prepareLinkToAttachment = async documentId => {
+    let downloadedFile = await this.props.downloadAttachment(documentId)
+    const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
+    const mimeType = fileName && this.getMimeType(fileName)
+    const element = document.createElement('a')
+    const file = new Blob([downloadedFile.value.data], { type: mimeType })
+    let fileURL = URL.createObjectURL(file)
+    element.href = fileURL
+
+    return element
+  }
+
+  extractFileName = contentDispositionValue => {
+    var filename = ''
+    if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
+      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+      var matches = filenameRegex.exec(contentDispositionValue)
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, '')
+      }
+    }
+    return filename
+  }
+
+  getRows = attachments => {
+    if (attachments && attachments.length) {
+      return attachments.map(row => {
+        return {
+          id: row.id,
+          documentTypeId: getSafe(() => row.documentType.id, 'N/A'),
+          documentName: (
+            <Button as='a' onClick={() => this.downloadAttachment(row.name, row.id)}>
+              <Icon name='download' />
+              {row.name}
+            </Button>
+          ),
+          documenType: getSafe(() => row.documentType.name, 'N/A'),
+          documenDate: row.expirationDate
+            ? getSafe(() => moment(row.expirationDate).format(getLocaleDateFormat()), 'N/A')
+            : 'N/A',
+          documenIssuer: getSafe(() => row.issuer, 'N/A')
+        }
+      })
+    } else {
+      return []
+    }
+  }
+
   render() {
     const {
       router,
@@ -347,7 +579,10 @@ class Detail extends Component {
       cancelPayment,
       toastManager,
       isPaymentCancellable,
-      opendSaleAttachingProductOffer
+      opendSaleAttachingProductOffer,
+      listDocumentTypes,
+      loadingRelatedDocuments,
+      intl: { formatMessage }
     } = this.props
     const { activeIndexes } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
@@ -407,8 +642,7 @@ class Detail extends Component {
                               ? 'red'
                               : order.orderStatus === 'Confirmed'
                               ? 'green'
-                              : order.orderStatus === 'Pending' ||
-                                order.orderStatus === 'Draft'
+                              : order.orderStatus === 'Pending' || order.orderStatus === 'Draft'
                               ? null // could be blue
                               : null
                           }>
@@ -421,15 +655,17 @@ class Detail extends Component {
                         <List.Header as='label'>
                           <FormattedMessage id='order.shippingStatus' defaultMessage='Shipping Status' />
                         </List.Header>
-                        <List.Description as='span' className={
-                          order.shippingStatus === 'Delivered'
-                            ? 'green'
-                            : order.shippingStatus === 'Returned'
-                            ? 'red'
-                            : order.shippingStatus === 'In Transit'
-                            ? null // could be blue
-                            : null
-                        }>
+                        <List.Description
+                          as='span'
+                          className={
+                            order.shippingStatus === 'Delivered'
+                              ? 'green'
+                              : order.shippingStatus === 'Returned'
+                              ? 'red'
+                              : order.shippingStatus === 'In Transit'
+                              ? null // could be blue
+                              : null
+                          }>
                           {order.shippingStatus}
                         </List.Description>
                       </List.Content>
@@ -439,15 +675,17 @@ class Detail extends Component {
                         <List.Header as='label'>
                           <FormattedMessage id='order.reviewStatus' defaultMessage='Review Status' />
                         </List.Header>
-                        <List.Description as='span' className={
-                          order.reviewStatus === 'Accepted'
-                            ? 'green'
-                            : order.reviewStatus === 'Rejected'
-                            ? 'red'
-                            : order.reviewStatus === 'Pending'
-                            ? null // could be blue
-                            : null
-                        }>
+                        <List.Description
+                          as='span'
+                          className={
+                            order.reviewStatus === 'Accepted'
+                              ? 'green'
+                              : order.reviewStatus === 'Rejected'
+                              ? 'red'
+                              : order.reviewStatus === 'Pending'
+                              ? null // could be blue
+                              : null
+                          }>
                           {order.reviewStatus}
                         </List.Description>
                       </List.Content>
@@ -458,16 +696,17 @@ class Detail extends Component {
                           <List.Header as='label'>
                             <FormattedMessage id='order.creditStatus' defaultMessage='Credit Status' />
                           </List.Header>
-                          <List.Description as='span' className={
-                            order.creditStatus === 'Accepted'
-                              ? 'green'
-                              : order.creditStatus === 'Rejected'
-                              ? 'red'
-                              : order.creditStatus === 'Pending' ||
-                                order.creditStatus === 'Counter Offer Pending'
-                              ? null // could be blue
-                              : null
-                          }>
+                          <List.Description
+                            as='span'
+                            className={
+                              order.creditStatus === 'Accepted'
+                                ? 'green'
+                                : order.creditStatus === 'Rejected'
+                                ? 'red'
+                                : order.creditStatus === 'Pending' || order.creditStatus === 'Counter Offer Pending'
+                                ? null // could be blue
+                                : null
+                            }>
                             {order.creditStatus}
                           </List.Description>
                         </List.Content>
@@ -479,15 +718,17 @@ class Detail extends Component {
                           <List.Header as='label'>
                             <FormattedMessage id='order.returnStatus' defaultMessage='Return Status' />
                           </List.Header>
-                          <List.Description as='span' className={
-                            order.returnStatus === 'Delivered'
-                              ? 'green'
-                              : order.returnStatus === 'Not Shipped'
-                              ? 'red'
-                              : order.returnStatus === 'In Transit'
-                              ? null // could be blue
-                              : null
-                          }>
+                          <List.Description
+                            as='span'
+                            className={
+                              order.returnStatus === 'Delivered'
+                                ? 'green'
+                                : order.returnStatus === 'Not Shipped'
+                                ? 'red'
+                                : order.returnStatus === 'In Transit'
+                                ? null // could be blue
+                                : null
+                            }>
                             {order.returnStatus}
                           </List.Description>
                         </List.Content>
@@ -498,19 +739,22 @@ class Detail extends Component {
                         <List.Header as='label'>
                           <FormattedMessage id='order.paymentStatus' defaultMessage='Payment Status' />
                         </List.Header>
-                        <List.Description as='span' className={
-                          order.paymentStatus === 'Failed' ||
-                          order.paymentStatus === 'Canceled'
-                            ? 'red'
-                            : order.paymentStatus === 'Paid'
-                            ? 'green'
-                            : order.paymentStatus === 'Pending' ||
-                              order.paymentStatus === 'Refunded' ||
-                              order.paymentStatus === 'Initiated'
-                            ? null // could be blue
-                            : null
-                        }>
-                          {order.orderType === 'Purchase' && order.paymentStatus === 'Pending' && isPaymentCancellable ? (
+                        <List.Description
+                          as='span'
+                          className={
+                            order.paymentStatus === 'Failed' || order.paymentStatus === 'Canceled'
+                              ? 'red'
+                              : order.paymentStatus === 'Paid'
+                              ? 'green'
+                              : order.paymentStatus === 'Pending' ||
+                                order.paymentStatus === 'Refunded' ||
+                                order.paymentStatus === 'Initiated'
+                              ? null // could be blue
+                              : null
+                          }>
+                          {order.orderType === 'Purchase' &&
+                          order.paymentStatus === 'Pending' &&
+                          isPaymentCancellable ? (
                             <Popup
                               content={
                                 <FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />
@@ -592,11 +836,7 @@ class Detail extends Component {
                   index={0}
                   onClick={this.handleClick}
                   data-test='orders_detail_order_info'>
-                  <Icon
-                    name={'chevron ' + (activeIndexes[0] ? 'down' : 'right')}
-                    size='large'
-                    color={activeIndexes[0] ? 'blue' : 'black'}
-                  />
+                  <Chevron />
                   <FormattedMessage id='order.orderInfo' defaultMessage='Order Info' />
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[0]}>
@@ -624,46 +864,6 @@ class Detail extends Component {
                           <GridDataColumn width={valColumn}>{order.acceptanceDate}</GridDataColumn>
                         </GridData>
                       </Grid.Column>
-                      {order.sellerRejectionDate ||
-                        order.buyerRejectionDate ||
-                        (ordersType === 'Purchase' && (
-                          <Grid.Column width={6}>
-                            <GridData>
-                              {order.sellerRejectionDate && (
-                                <>
-                                  <GridDataColumn width={keyColumn} className='key'>
-                                    <FormattedMessage
-                                      id='order.sellerRejectionDate'
-                                      defaultMessage='Seller Rejection Date'
-                                    />
-                                  </GridDataColumn>
-                                  <GridDataColumn width={valColumn}>{order.sellerRejectionDate}</GridDataColumn>
-                                </>
-                              )}
-                              {order.buyerRejectionDate && (
-                                <>
-                                  <GridDataColumn width={keyColumn} className='key'>
-                                    <FormattedMessage
-                                      id='order.buyerRejectionDate'
-                                      defaultMessage='Buyer Rejection Date'
-                                    />
-                                  </GridDataColumn>
-                                  <GridDataColumn width={valColumn}>{order.buyerRejectionDate}</GridDataColumn>
-                                </>
-                              )}
-                              {ordersType === 'Purchase' ? (
-                                <>
-                                  <GridDataColumn width={keyColumn} className='key'>
-                                    <FormattedMessage id='order.createdBy' defaultMessage='Created By' />
-                                  </GridDataColumn>
-                                  <GridDataColumn width={valColumn}>{order.createdBy}</GridDataColumn>
-                                </>
-                              ) : (
-                                ''
-                              )}
-                            </GridData>
-                          </Grid.Column>
-                        ))}
                       <Grid.Column width={4} floated='right'>
                         <GridData>
                           <GridDataColumn style={{ paddingTop: '0 !important', paddingBottom: '0 !important' }}>
@@ -681,10 +881,9 @@ class Detail extends Component {
                                   <Table.Body>
                                     <TableRowData>
                                       <Table.Cell>
-                                        <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' /> (
-                                        {order.feesPercent}%)
+                                        <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' />
                                       </Table.Cell>
-                                      <Table.Cell textAlign='right'>{order.feesAmount}</Table.Cell>
+                                      <Table.Cell textAlign='right'>{order.echoFee}</Table.Cell>
                                     </TableRowData>
                                   </Table.Body>
                                   <Table.Footer>
@@ -707,15 +906,7 @@ class Detail extends Component {
                                       <Table.HeaderCell>
                                         <FormattedMessage id='order.subtotal' defaultMessage='Subtotal' />
                                       </Table.HeaderCell>
-                                      <Table.HeaderCell textAlign='right'>
-                                        {
-                                          <FormattedNumber
-                                            style='currency'
-                                            currency={currency}
-                                            value={order.subtotal}
-                                          />
-                                        }
-                                      </Table.HeaderCell>
+                                      <Table.HeaderCell textAlign='right'>{order.subtotal}</Table.HeaderCell>
                                     </TableRowData>
                                   </Table.Header>
                                   <Table.Body>
@@ -757,14 +948,89 @@ class Detail extends Component {
                   index={1}
                   onClick={this.handleClick}
                   data-test='orders_detail_product_info'>
-                  <Icon
-                    name={'chevron ' + (activeIndexes[1] ? 'down' : 'right')}
-                    size='large'
-                    color={activeIndexes[1] ? 'blue' : 'black'}
-                  />
-                  <FormattedMessage id='order.productInfo' defaultMessage='Product Info' />
+                  <Chevron />
+                  <FormattedMessage id='order.relatedDocuments' defaultMessage='RELATED DOCUMENTS' />
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[1]}>
+                  <Grid>
+                    <Grid.Row>
+                      <Grid.Column width={10}>
+                        <DocumentsDropdown
+                          options={[
+                            {
+                              key: 0,
+                              text: formatMessage({
+                                id: 'order.detail.documents.dropdown.all',
+                                defaultMessage: 'Select All'
+                              }),
+                              value: 0
+                            }
+                          ].concat(listDocumentTypes)}
+                          value={this.state.listDocumentTypes}
+                          selection
+                          onChange={(event, { name, value }) => {
+                            const rows = this.getRows(order.attachments)
+                            const attachmentRows = value === 0 ? rows : rows.filter(row => row.documentTypeId === value)
+                            this.setState({
+                              [name]: value,
+                              attachmentRows
+                            })
+                          }}
+                          name='listDocumentTypes'
+                          placeholder={formatMessage({
+                            id: 'order.detail.documents.dropdown',
+                            defaultMessage: 'Select Type'
+                          })}
+                        />
+                      </Grid.Column>
+                      <Grid.Column width={6}>
+                        <AttachmentManager
+                          isOpenManager={this.state.isOpenManager}
+                          asModal
+                          returnSelectedRows={rows => this.attachDocumentsManager(rows)}
+                        />
+                      </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                      <Grid.Column style={{ paddingLeft: '30px', paddingRight: '2.2857143em' }}>
+                        <ProdexGrid
+                          removeFlexClass={true}
+                          loading={loadingRelatedDocuments}
+                          tableName='related_orders_detail_documents'
+                          columns={this.state.columnsRelatedOrdersDetailDocuments}
+                          rows={this.state.attachmentRows}
+                          hideCheckboxes
+                          rowActions={[
+                            {
+                              text: formatMessage({
+                                id: 'global.replaceExisting',
+                                defaultMessage: 'Replace Existing'
+                              }),
+                              callback: row => this.replaceExiting(row)
+                            },
+                            {
+                              text: formatMessage({
+                                id: 'global.unlink',
+                                defaultMessage: 'Unlink'
+                              }),
+                              callback: row => this.handleUnlink(row)
+                            }
+                          ]}
+                        />
+                      </Grid.Column>
+                    </Grid.Row>
+                  </Grid>
+                </Accordion.Content>
+
+                <AccordionTitle
+                  active={activeIndexes[2]}
+                  index={2}
+                  onClick={this.handleClick}
+                  data-test='orders_detail_product_info'>
+                  <Chevron />
+                  <FormattedMessage id='order.productInfo' defaultMessage='Product Info' />
+                </AccordionTitle>
+                <Accordion.Content active={activeIndexes[2]}>
                   <div className='table-responsive'>
                     <Table>
                       <Table.Header>
@@ -807,15 +1073,15 @@ class Detail extends Component {
                           order.productName.map((element, index) => (
                             <Table.Row>
                               <Table.Cell className='p-0'></Table.Cell>
-                              <Table.Cell><span className='product-name'>{element}</span></Table.Cell>
+                              <Table.Cell>
+                                <span className='product-name'>{element}</span>
+                              </Table.Cell>
                               <Table.Cell>{order.productCode[index]}</Table.Cell>
                               <Table.Cell>{order.packaging[index]}</Table.Cell>
                               <Table.Cell textAlign='right'>{order.totalPkg[index]}</Table.Cell>
                               <Table.Cell textAlign='right'>{order.quantityOrdered[index]}</Table.Cell>
                               <Table.Cell textAlign='right'>{order.unitPrice[index]}</Table.Cell>
-                              <Table.Cell textAlign='right'>
-                                {<FormattedNumber style='currency' currency={currency} value={order.itemTotal[index]} />}
-                              </Table.Cell>
+                              <Table.Cell textAlign='right'>{order.itemTotal[index]}</Table.Cell>
                               {ordersType === 'Sales' && (
                                 <>
                                   <Table.Cell textAlign='right'>
@@ -840,18 +1106,14 @@ class Detail extends Component {
                 </Accordion.Content>
 
                 <AccordionTitle
-                  active={activeIndexes[2]}
-                  index={2}
+                  active={activeIndexes[3]}
+                  index={3}
                   onClick={this.handleClick}
                   data-test='orders_detail_pickup_info'>
-                  <Icon
-                    name={'chevron ' + (activeIndexes[2] ? 'down' : 'right')}
-                    size='large'
-                    color={activeIndexes[2] ? 'blue' : 'black'}
-                  />
+                  <Chevron />
                   <FormattedMessage id='order.pickupInfo' defaultMessage='Pick Up Info' />
                 </AccordionTitle>
-                <Accordion.Content active={activeIndexes[2]}>
+                <Accordion.Content active={activeIndexes[3]}>
                   <Grid divided='horizontally'>
                     <Grid.Row columns={2}>
                       <Grid.Column>
@@ -885,18 +1147,14 @@ class Detail extends Component {
                 {order.reviewStatus === 'Rejected' && (
                   <>
                     <AccordionTitle
-                      active={activeIndexes[3]}
-                      index={3}
+                      active={activeIndexes[4]}
+                      index={4}
                       onClick={this.handleClick}
                       data-test='orders_detail_return_shipping'>
-                      <Icon
-                        name={'chevron ' + (activeIndexes[3] ? 'down' : 'right')}
-                        size='large'
-                        color={activeIndexes[3] ? 'blue' : 'black'}
-                      />
+                      <Chevron />
                       <FormattedMessage id='order.returnShipping' defaultMessage='Return Shipping' />
                     </AccordionTitle>
-                    <Accordion.Content active={activeIndexes[3]}>
+                    <Accordion.Content active={activeIndexes[4]}>
                       <Grid divided='horizontally'>
                         <Grid.Row columns={2}>
                           <Grid.Column>
@@ -952,18 +1210,14 @@ class Detail extends Component {
                 )}
 
                 <AccordionTitle
-                  active={activeIndexes[4]}
-                  index={4}
+                  active={activeIndexes[5]}
+                  index={5}
                   onClick={this.handleClick}
                   data-test='orders_detail_shipping'>
-                  <Icon
-                    name={'chevron ' + (activeIndexes[4] ? 'down' : 'right')}
-                    size='large'
-                    color={activeIndexes[4] ? 'blue' : 'black'}
-                  />
+                  <Chevron />
                   <FormattedMessage id='order.shipping' defaultMessage='Shipping' />
                 </AccordionTitle>
-                <Accordion.Content active={activeIndexes[4]}>
+                <Accordion.Content active={activeIndexes[5]}>
                   <Grid divided='horizontally'>
                     <Grid.Row columns={2}>
                       <Grid.Column>
@@ -1015,18 +1269,14 @@ class Detail extends Component {
                 </Accordion.Content>
 
                 <AccordionTitle
-                  active={activeIndexes[5]}
-                  index={5}
+                  active={activeIndexes[6]}
+                  index={6}
                   onClick={this.handleClick}
                   data-test='orders_detail_payment'>
-                  <Icon
-                    name={'chevron ' + (activeIndexes[5] ? 'down' : 'right')}
-                    size='large'
-                    color={activeIndexes[5] ? 'blue' : 'black'}
-                  />
+                  <Chevron />
                   <FormattedMessage id='order.payment' defaultMessage='Payment' /> / {order.paymentType}
                 </AccordionTitle>
-                <Accordion.Content active={activeIndexes[5]}>
+                <Accordion.Content active={activeIndexes[6]}>
                   <Grid divided='horizontally'>
                     <Grid.Row columns={2}>
                       <Grid.Column>
@@ -1072,7 +1322,7 @@ class Detail extends Component {
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.paymentAddress}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
-                              {order.paymentType} <FormattedMessage id='order.phone' defaultMessage='Phone' />
+                            {order.paymentType} <FormattedMessage id='order.phone' defaultMessage='Phone' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>
                             <FormattedPhone value={order.paymentPhone} />
@@ -1091,18 +1341,14 @@ class Detail extends Component {
                   </Grid>
                 </Accordion.Content>
                 <AccordionTitle
-                  active={activeIndexes[6]}
-                  index={6}
+                  active={activeIndexes[7]}
+                  index={7}
                   onClick={this.handleClick}
                   data-test='orders_detail_notes'>
-                  <Icon
-                    name={'chevron ' + (activeIndexes[6] ? 'down' : 'right')}
-                    size='large'
-                    color={activeIndexes[6] ? 'blue' : 'black'}
-                  />
+                  <Chevron />
                   <FormattedMessage id='order.detailNotes' defaultMessage='NOTES' />
                 </AccordionTitle>
-                <Accordion.Content active={activeIndexes[6]}>
+                <Accordion.Content active={activeIndexes[7]}>
                   <Grid.Row>
                     <Grid.Column>{getSafe(() => this.props.order.note, '')}</Grid.Column>
                   </Grid.Row>
@@ -1116,4 +1362,4 @@ class Detail extends Component {
   }
 }
 
-export default withToastManager(Detail)
+export default injectIntl(withToastManager(Detail))
