@@ -27,6 +27,7 @@ function mapStateToProps(store) {
     }
     return ''
   }
+
   return {
     ...store.cart,
     selectedAddressId: store.forms.cart.selectedAddressId,

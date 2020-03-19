@@ -26,6 +26,7 @@ export const initialState = {
   manualShipmentRequested: false,
   manualShipmentPending: false,
   manualShipmentError: false,
+  preFilledValues: null,
   sidebar: {
     isOpen: false,
     pricing: null,
@@ -189,13 +190,10 @@ export default function reducer(state = initialState, action) {
         let { cartItems } = payload
         cartItems.forEach(item => {
           item.locationStr = getLocationString(item.productOffer)
-          //! !item.pricing = {price: item.cfPricePerUOM} // ! ! getPricing(item.productOffer, item.quantity)
-          //! ! item.productOffer = addFirstTier(item.productOffer)
         })
       }
       return {
         ...state,
-        //cart: calculateTotalPrice(payload),
         cart: payload,
         cartIsFetching: false
       }
@@ -315,10 +313,18 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.ADD_CART_ITEM_FULFILLED: {
+      let { payload } = action
+      if (payload.cartItems) {
+        let { cartItems } = payload
+        cartItems.forEach(item => {
+          item.locationStr = getLocationString(item.productOffer)
+        })
+      }
       return {
         ...state,
         isPurchasing: false,
-        sidebar: { ...state.cart.sidebar, isOpen: false }
+        sidebar: { ...state.cart.sidebar, isOpen: false },
+        cart: payload,
       }
     }
 
@@ -471,6 +477,23 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         identity: action.payload
+      }
+    }
+
+    case AT.SET_PRE_FILLED_VALUES: {
+      return {
+        ...state,
+        preFilledValues: action.payload,
+        country: action.payload.country,
+        zip: action.payload.zip,
+        shippingQuotes: action.payload.quotes,
+      }
+    }
+
+    case AT.CLEAR_PRE_FILLED_VALUES: {
+      return {
+        ...state,
+        preFilledValues: null
       }
     }
 
