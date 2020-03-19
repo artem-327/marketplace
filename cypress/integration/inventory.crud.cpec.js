@@ -44,6 +44,7 @@ context("Inventory CRUD", () => {
         cy.setNumberInput("[id='field_input_edit.costPerUOM']", "0")
 
         cy.get("[data-test=sidebar_inventory_save_new]").click()
+        cy.get('[data-test=confirm_dialog_cancel_btn]').click()
 
         cy.wait("@inventoryLoading")
 
@@ -206,7 +207,7 @@ context("Inventory CRUD", () => {
 
         cy.contains("Apply").click()
 
-        cy.getToken().then(token => {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstItemIdWithFilter(token, filter).then(itemId => {
                 cy.get('[data-test=action_' + itemId + ']')
             })

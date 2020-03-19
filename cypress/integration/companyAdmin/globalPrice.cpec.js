@@ -16,6 +16,12 @@ context("Prodex Global Price", () => {
         cy.openSettings()
     })
 
+    after(function () {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
+            cy.turnOnGlobalBroadcasting(token)
+        })
+    })
+
     it("Turns on the broadcasting", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.turnOffGlobalBroadcasting(token)

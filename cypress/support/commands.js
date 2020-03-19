@@ -88,3 +88,24 @@ Cypress.Commands.add("openElement", (elementId, dropdownOption) => {
     cy.get("[data-test=action_" + elementId + "]").click()
     cy.get("[data-test=action_" + elementId + "_" + dropdownOption + "]").click()
 })
+
+Cypress.Commands.add('getRefreshToken', (username, password) =>{
+    cy.request({
+        method: 'POST',
+        url: '/prodex/oauth/token', // baseUrl is prepended to url
+        form: true, // indicates the body should be form urlencoded and sets Content-Type: application/x-www-form-urlencoded headers
+        headers: {
+            authorization: "Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs",
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin'
+        },
+        body: {
+            username: username,
+            password: password,
+            grant_type: 'password'
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body.refresh_token
+    })
+})

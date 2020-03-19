@@ -10,6 +10,7 @@ context("Prodex User CRUD", () => {
         cy.route("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")
         cy.route("GET", "/prodex/api/settings/user").as("usersLogin")
         cy.route("POST", "/prodex/api/users").as("usersSave")
+        cy.viewport(2000, 800)
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
 
@@ -44,7 +45,8 @@ context("Prodex User CRUD", () => {
         cy.clickSave()
 
         cy.wait("@usersSave")
-        cy.contains("User John Automator successfully created.")
+        cy.waitForUI()
+        cy.searchInList("John")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstUserIdWithFilter(token, filter).then(itemId => {

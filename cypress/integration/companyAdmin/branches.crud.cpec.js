@@ -87,6 +87,8 @@ context("Prodex Branches CRUD", () => {
 
         cy.get('[data-test=settings_warehouse_popup_submit_btn]').click()
 
+        cy.searchInList("Arnold")
+
         cy.openElement(branchId, 0)
 
         cy.get("input[id='field_input_deliveryAddress.addressName']")

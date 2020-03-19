@@ -19,7 +19,6 @@ context("Holds tests", () => {
         cy.waitForUI()
 
         cy.wait('@inventoryLoading', {timeout: 30000})
-        cy.url().should("include", "inventory")
         cy.contains("Marketplace").click()
 
         cy.wait("@marketplaceLoading", {timeout: 30000})
@@ -29,6 +28,9 @@ context("Holds tests", () => {
         cy.getUserToken(userJSON1.email, userJSON1.password).then(token => {
             cy.cancelOffer(token,holdId)
             cy.deleteWholeCart(token)
+            cy.getRefreshToken(userJSON1.email, userJSON1.password).then(refreshTok => {
+                cy.refreshToken(refreshTok)
+            })
         })
     })
 
