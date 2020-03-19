@@ -75,7 +75,7 @@ export function getCreditStatus(creditStatus) {
     case 4:
       return 'Rejected'
     default:
-      return null
+      return 'N/A'
   }
 }
 
@@ -88,6 +88,6 @@ export function getReturnStatus(returnStatus) {
     case 3:
       return 'Delivered'
     default:
-      return null
+      return 'N/A'
   }
 }
