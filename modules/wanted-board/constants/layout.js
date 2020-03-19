@@ -226,7 +226,7 @@ export const InputWrapper = styled.div`
     
       > .field {
       
-        .ui.input input {
+        // .ui.input input {
           box-sizing: border-box;
           max-width: 100%;
           padding: 5px 30px 5px 13px; 
@@ -245,7 +245,7 @@ export const InputWrapper = styled.div`
             -moz-appearance: textfield;
           }
         }
-      }
+      // }
       
       > .ui.label {
         position: absolute;

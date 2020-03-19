@@ -7,6 +7,7 @@ export const initialState = {
   sidebarValues: null,
   editInitTrig: false,
   loading: false,
+  purchaseRequestPending: false,
   autocompleteData: [],
   autocompleteDataLoading: false,
   listPackagingTypes: [],
@@ -83,6 +84,20 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         filterValue: action.payload
+      }
+    }
+
+    case AT.WB_SUBMIT_OFFER_PENDING: {
+      return {
+        ...state,
+        purchaseRequestPending: true
+      }
+    }
+
+    case AT.WB_SUBMIT_OFFER_FULFILLED: {
+      return {
+        ...state,
+        purchaseRequestPending: false
       }
     }
 
