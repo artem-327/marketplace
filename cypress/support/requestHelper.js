@@ -554,3 +554,23 @@ Cypress.Commands.add("cancelOffer", (token, id) => {
         expect(response.status).to.eq(200)
     })
 })
+
+Cypress.Commands.add("refreshToken", (token) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/oauth/token',
+        headers: {
+            authorization: "Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs",
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-dest': 'empty'
+        },
+        form: true,
+        body: {
+            grant_type: "refresh_token",
+            refresh_token: token
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+    })
+})

@@ -21,6 +21,12 @@ context("Prodex Bank Account CRUD", () => {
         cy.wait(10000)
     })
 
+    after(function () {
+        cy.getRefreshToken(userJSON.email, userJSON.password).then(refreshTok => {
+            cy.refreshToken(refreshTok)
+        })
+    })
+
     it("Creates a bank account", () => {
         cy.get("[data-test='settings_open_popup_btn']").click()
 
