@@ -77,7 +77,7 @@ class Filter extends Component {
   state = {
     savedFiltersActive: false,
     openedSaveFilter: false,
-    inactiveAccordion: {},
+    activeAccordion: { chemicalType: true },
     dateDropdown: {
       expiration: dateDropdownOptions[0].value,
       mfg: dateDropdownOptions[0].value
@@ -378,9 +378,9 @@ class Filter extends Component {
   }
 
   toggleAccordion = name => {
-    let { inactiveAccordion } = this.state
-    let inactive = inactiveAccordion[name]
-    this.setState({ inactiveAccordion: { ...this.state.inactiveAccordion, [name]: !inactive } })
+    let { activeAccordion } = this.state
+    let active = activeAccordion[name]
+    this.setState({ activeAccordion: { ...this.state.activeAccordion, [name]: !active } })
   }
 
   handleSearch = debounce(({ searchQuery, name }) => {
@@ -433,7 +433,7 @@ class Filter extends Component {
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
       {text}
       <IconRight>
-        <Icon name={!this.state.inactiveAccordion[name] ? 'chevron down' : 'chevron right'} />
+        <Icon name={this.state.activeAccordion[name] ? 'chevron down' : 'chevron right'} />
       </IconRight>
     </AccordionTitle>
   )
@@ -736,14 +736,14 @@ class Filter extends Component {
       <FilterAccordion>
         <AccordionItem>
           {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalProductName' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.chemicalType}>
+          <AccordionContent active={this.state.activeAccordion.chemicalType}>
             <BottomMargedDropdown {...dropdownProps} />
           </AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('quantity', <FormattedMessage id='filter.quantity' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.quantity}>
+          <AccordionContent active={this.state.activeAccordion.quantity}>
             <FormGroup widths='equal' data-test='filter_quantity_inp'>
               <FormField width={8}>
                 {this.quantityWrapper('quantityFrom', {
@@ -767,7 +767,7 @@ class Filter extends Component {
 
         <AccordionItem>
           {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.price}>
+          <AccordionContent active={this.state.activeAccordion.price}>
             <FormGroup>
               <FormField className='price-input' width={8} data-test='filter_price_inp'>
                 {this.inputWrapper(
@@ -801,29 +801,29 @@ class Filter extends Component {
 
         <AccordionItem>
           {this.accordionTitle('warehouse', <FormattedMessage id='filter.location' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
+          <AccordionContent active={this.state.activeAccordion.warehouse}>
             <BottomMargedDropdown {...dropdownWarehouseProps} />
           </AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('packaging', <FormattedMessage id='filter.packaging' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.packaging}>{packagingTypesRows}</AccordionContent>
+          <AccordionContent active={this.state.activeAccordion.packaging}>{packagingTypesRows}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('productGrades', <FormattedMessage id='filter.grade' defaultMessage='Grade' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.productGrades}>{productGradeRows}</AccordionContent>
+          <AccordionContent active={this.state.activeAccordion.productGrades}>{productGradeRows}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('condition', <FormattedMessage id='filter.condition' defaultMessage='Condition' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.condition}>{productConditionRows}</AccordionContent>
+          <AccordionContent active={this.state.activeAccordion.condition}>{productConditionRows}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('productForms', <FormattedMessage id='filter.form' defaultMessage='Form' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.productForms}>{productFormsRows}</AccordionContent>
+          <AccordionContent active={this.state.activeAccordion.productForms}>{productFormsRows}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
@@ -831,7 +831,7 @@ class Filter extends Component {
             'expiration',
             <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
           )}
-          <AccordionContent active={!this.state.inactiveAccordion.expiration}>
+          <AccordionContent active={this.state.activeAccordion.expiration}>
             <FormGroup widths='equal'>
               {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
             </FormGroup>
@@ -840,7 +840,7 @@ class Filter extends Component {
 
         <AccordionItem>
           {this.accordionTitle('assay', <FormattedMessage id='filter.percentage' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.assay}>
+          <AccordionContent active={this.state.activeAccordion.assay}>
             <FormGroup data-test='filter_assay_inp'>
               <FormField width={8}>
                 {this.inputWrapper(
@@ -875,7 +875,7 @@ class Filter extends Component {
             'mfg',
             <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
           )}
-          <AccordionContent active={!this.state.inactiveAccordion.mfg}>
+          <AccordionContent active={this.state.activeAccordion.mfg}>
             <FormGroup widths='equal'>
               {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
             </FormGroup>
@@ -900,6 +900,7 @@ class Filter extends Component {
 
     const { savedFiltersActive, openedSaveFilter } = this.state
 
+    console.log('!!!!!!!!!! render activeAccordion', this.state.activeAccordion)
     return (
       <Form
         enableReinitialize={true}

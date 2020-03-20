@@ -38,10 +38,10 @@ class Navigation extends Component {
     settings: getSafe(() => Router.router.pathname === '/settings', false),
     admin: getSafe(() => Router.router.pathname === '/admin', false),
     operations: getSafe(() => Router.router.pathname === '/operations', false),
-    openedFilterMyInventory: false,
-    openedFilterMarketplace: false,
+    openedFilterMyInventory: true,
+    openedFilterMarketplace: true,
     openedFilterOrders: false,
-    openedFilterWantedBoard: false,
+    openedFilterWantedBoard: true,
   }
 
   componentDidMount() {
