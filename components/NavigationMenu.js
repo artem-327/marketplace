@@ -10,13 +10,11 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { ArrowLeftCircle, ArrowRightCircle, Hexagon, Layers, Settings, ShoppingBag, Grid } from 'react-feather'
+import { Hexagon, Layers, Settings, ShoppingBag, Grid, FileText } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import { InventoryFilter, Filter, OrderFilter, WantedBoardFilter } from '~/modules/filter'
-
-import { PlusCircle } from 'react-feather'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -36,6 +34,8 @@ class Navigation extends Component {
   state = {
     dropdowns: {},
     settings: getSafe(() => Router.router.pathname === '/settings', false),
+    orders: getSafe(() => Router.router.pathname === '/orders', false)
+      || getSafe(() => Router.router.pathname === '/orders/detail', false),
     admin: getSafe(() => Router.router.pathname === '/admin', false),
     operations: getSafe(() => Router.router.pathname === '/operations', false),
     openedFilterMyInventory: false,
@@ -71,13 +71,15 @@ class Navigation extends Component {
         case '/inventory/my':
           this.setState(prevState => ({
             openedFilterMyInventory: !prevState.openedFilterMyInventory,
-            settings: false
+            settings: false,
+            orders: false
           }))
           break
         case '/marketplace/all':
           this.setState(prevState => ({
             openedFilterMarketplace: !prevState.openedFilterMarketplace,
-            settings: false
+            settings: false,
+            orders: false
           }))
           break
         case '/wanted-board/wanted-board':
@@ -101,9 +103,12 @@ class Navigation extends Component {
 
     if (pathname === '/settings' && tab) {
       const newTab = tabsNames.find(t => t.type === tab)
+      console.log('!!!!!!!!!! aaaaa tabsNames.find(t => t.type === tab) 1', tabsNames.find(t => t.type === tab))
+
       tabChanged(newTab)
       router.push('/settings?type=' + tab)
     } else {
+      console.log('!!!!!!!!!! aaaaa tabsNames.find(t => t.type === tab) 2', tabsNames.find(t => t.type === tab))
       router.push(to)
     }
   }
@@ -143,6 +148,8 @@ class Navigation extends Component {
       openedFilterMyInventory: false,
       openedFilterMarketplace: false,
       openedFilterOrders: false,
+      orders: false,
+      settings: false,
       admin: false,
       operations: false,
       [type]: !typeState
@@ -211,6 +218,7 @@ class Navigation extends Component {
     const {
       dropdowns,
       settings,
+      orders,
       admin,
       operations,
       openedFilterMyInventory,
@@ -265,20 +273,32 @@ class Navigation extends Component {
         {false && !collapsedMenu && openedFilterWantedBoard && asPath === '/wanted-board/wanted-board'
           ? <WantedBoardFilter /> : null
         }
-        <MenuLink to='/orders?type=sales' dataTest='navigation_menu_orders_sales_drpdn'>
-          <>
-            <ArrowRightCircle size={22} />
-            {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
-          </>
-        </MenuLink>
-        {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=sales' ? <OrderFilter /> : null}
-        <MenuLink to='/orders?type=purchase' dataTest='navigation_menu_orders_purchase_drpdn'>
-          <>
-            <ArrowLeftCircle />
-            {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
-          </>
-        </MenuLink>
-        {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=purchase' ? <OrderFilter /> : null}
+        <DropdownItem
+          icon={<FileText size={22} />}
+          text={formatMessage({ id: 'navigation.orders', defaultMessage: 'Orders' })}
+          className={orders ? 'opened' : null}
+          opened={orders}
+          onClick={() => this.toggleOpened('orders')}
+          refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+          refId={'orders'}
+          data-test='navigation_orders_drpdn'>
+          <Dropdown.Menu data-test='navigation_menu_orders_drpdn_menu'>
+            <PerfectScrollbar>
+                <Dropdown.Item
+                  as={MenuLink}
+                  to='/orders?type=sales'
+                  dataTest='navigation_orders_sales_orders_drpdn'>
+                  {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
+                </Dropdown.Item>
+                <Dropdown.Item
+                  as={MenuLink}
+                  to='/orders?type=purchase'
+                  dataTest='navigation_orders_purchase_orders_drpdn'>
+                  {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
+                </Dropdown.Item>
+            </PerfectScrollbar>
+          </Dropdown.Menu>
+        </DropdownItem>
         {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
