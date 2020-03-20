@@ -197,7 +197,7 @@ class OrderFilter extends Component {
                       toggleFilter(false, filterPresets.ORDERS)
                     }}
                     data-test='filter_clear'>
-                    <FormattedMessage id='filter.clearFilter' defaultMessage='Clear'>
+                    <FormattedMessage id='filter.clear' defaultMessage='Clear'>
                       {text => text}
                     </FormattedMessage>
                   </Button>

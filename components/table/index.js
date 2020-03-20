@@ -21,7 +21,9 @@ import {
   CustomGrouping,
   IntegratedGrouping,
   TableColumnVisibility,
-  VirtualTableState
+  VirtualTableState,
+  TreeDataState,
+  CustomTreeData
 } from '@devexpress/dx-react-grid'
 import {
   Grid,
@@ -31,7 +33,8 @@ import {
   DragDropProvider,
   TableColumnReordering,
   VirtualTable,
-  TableColumnResizing
+  TableColumnResizing,
+  TableTreeColumn
 } from '@devexpress/dx-react-grid-bootstrap4'
 import { TableSelection } from '~/components/dx-grid-semantic-ui/plugins'
 import { getSafe } from '~/utils/functions'
@@ -58,6 +61,10 @@ const GlobalTableOverrideStyle = createGlobalStyle`
   .group-row {
     position: relative;
     background: #EEE;
+  }
+  
+  .tree-table.root-row td {
+    background-color: #edeef2 !important;
   }
 `
 
@@ -172,6 +179,42 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
 }
 
 // const TableGroupRow = props => <TableGroupRow {...props} />
+const TreeTableCells = (props, rowChildActions) => {
+  let newProps = props
+  if (props.column.name === '__actions' && rowChildActions && !props.row.root) {
+    newProps = {
+      ...props,
+      tableColumn: {
+        ...props.tableColumn,
+        column: {
+          ...props.tableColumn.column,
+          actions: rowChildActions
+        }
+      },
+      column: {
+        ...props.column,
+        actions: rowChildActions
+      },
+      children: {
+        ...props.children,
+        props: {
+          ...props.children.props,
+          column: {
+            ...props.children.props.column,
+            actions: rowChildActions
+          }
+        }
+      }
+    }
+  }
+  return (
+    <Table.Cell
+      {...newProps}
+      className={props.column.name === '__actions' ? 'actions' : ''}
+    />
+    )
+}
+
 const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions' : ''} />
 const NoDataTableCells = props => {
   const isEchoCode = getSafe(() => props.tableColumn.column.name === 'echoCode', false)
@@ -276,12 +319,14 @@ class _Table extends Component {
     loading: pt.bool,
     virtual: pt.bool,
     sorting: pt.bool,
+    treeDataType: pt.bool,
     groupBy: pt.array,
     defaultSelection: pt.array,
     onSelectionChange: pt.func,
     sameGroupSelectionOnly: pt.bool,
     renderGroupLabel: pt.func,
     getChildGroups: pt.func,
+    getChildRows: pt.func,
     tableName: pt.string,
     singleSelection: pt.bool,
     onScrollToEnd: pt.func,
@@ -294,7 +339,10 @@ class _Table extends Component {
       direction: pt.oneOf(['ASC', 'asc', 'DESC', 'desc'])
     }),
     editingRowId: pt.number,
-    normalWidth: pt.bool
+    normalWidth: pt.bool,
+    tableTreeColumn: pt.string,
+    onExpandedRowIdsChange: pt.func,
+    expandedRowIds: pt.array,
   }
 
   static defaultProps = {
@@ -307,15 +355,20 @@ class _Table extends Component {
     defaultSelection: [],
     virtual: true,
     sorting: true,
+    treeDataType: false,
     groupBy: [],
     defaultHiddenColumns: [],
     singleSelection: false,
     onSelectionChange: () => {},
     onScrollToEnd: () => {},
     onTableReady: () => {},
+    getChildRows: () => {},
     defaultSorting: null,
     editingRowId: null,
-    normalWidth: false
+    normalWidth: false,
+    tableTreeColumn: '',
+    onExpandedRowIdsChange: () => {},
+    expandedRowIds: []
   }
 
   constructor(props) {
@@ -426,9 +479,9 @@ class _Table extends Component {
     const { getChildGroups, rows } = this.props
     const { selection } = this.state
     const group = getChildGroups(rows).find(g => g.key === groupKey)
-    const groupRowsIds = group.childRows.map(r => r.id)
+    const groupRowsIds = group && group.childRows ? group.childRows.map(r => r.id) : []
 
-    const checked = groupRowsIds.every(gr => selection.indexOf(gr) > -1)
+    const checked = groupRowsIds.length && groupRowsIds.every(gr => selection.indexOf(gr) > -1)
     const indeterminate = !checked && _.intersection(groupRowsIds, selection).length > 0
 
     return {
@@ -639,16 +692,19 @@ class _Table extends Component {
       showSelectAll,
       sameGroupSelectionOnly,
       rowActions,
+      rowChildActions,
       showHeader,
       onSelectionChange,
       loading,
       virtual,
       sorting,
+      treeDataType,
       onSortingChange,
       integratedSorting,
       groupBy,
       renderGroupLabel,
       getChildGroups,
+      getChildRows,
       tableName,
       showColumnsWhenGrouped = false,
       lockSelection,
@@ -660,6 +716,9 @@ class _Table extends Component {
       editingRowId,
       normalWidth,
       removeFlexClass,
+      tableTreeColumn,
+      onExpandedRowIdsChange,
+      expandedRowIds,
       ...restProps
     } = this.props
     const {
@@ -744,11 +803,21 @@ class _Table extends Component {
             <SearchState value={filterValue} />
             <IntegratedFiltering />
 
+            {treeDataType && <TreeDataState
+              expandedRowIds={expandedRowIds}
+              onExpandedRowIdsChange={onExpandedRowIdsChange}
+            />}
+            {treeDataType && <CustomTreeData getChildRows={getChildRows} />}
+
             {virtual ? (
               <VirtualTable
                 columnExtensions={this.getColumnsExtension()}
                 height='auto'
-                cellComponent={TableCells}
+                cellComponent={(props) => {
+                  return treeDataType && rowChildActions
+                    ? TreeTableCells(props, rowChildActions)
+                    : TableCells(props)
+                }}
                 noDataCellComponent={NoDataTableCells}
                 messages={MESSAGES}
                 rowComponent={props => <Row onClick={onRowClick} {...props} />}
@@ -771,6 +840,13 @@ class _Table extends Component {
             {columnReordering && <DragDropProvider />}
             {showHeader && <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />}
             <RowActionsFormatterProvider for={['__actions']} actions={rowActions} />
+
+            {treeDataType && (
+              <TableTreeColumn
+                for={tableTreeColumn}
+                expandButtonComponent={() => {return (null)}}
+              />
+            )}
 
             <TableColumnVisibility hiddenColumnNames={hiddenColumns} />
 

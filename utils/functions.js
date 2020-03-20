@@ -34,9 +34,7 @@ export const uniqueArrayByKey = (array, key) => {
 export const generateToastMarkup = (header, content) => (
   <div>
     <strong>{header}</strong>
-    <div style={{ wordBreak: 'break-word' }}>
-      {content}
-    </div>
+    <div style={{ wordBreak: 'break-word' }}>{content}</div>
   </div>
 )
 
@@ -129,4 +127,22 @@ export const getIntOrNull = value => {
   let num = parseInt(value)
   if (isNaN(num)) return null
   else return num
+}
+
+export const getPrice = (quantity, pricingTiers) => {
+  if (pricingTiers) {
+    if (pricingTiers.length === 1) {
+      return parseInt(pricingTiers[0].pricePerUOM, 10)
+    } else {
+      let sortedTiers = pricingTiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
+      let index = 0
+      for (let i = 0; i < sortedTiers.length; i++) {
+        if (quantity >= sortedTiers[i].quantityFrom) {
+          index = i
+        } else break
+      }
+      return parseInt(sortedTiers[index].pricePerUOM, 10)
+    }
+  }
+  return 0
 }
