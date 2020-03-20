@@ -610,12 +610,7 @@ class InventoryFilter extends Component {
               </SaveFilterTitle>
             </GridColumn>
             <GridColumn width={7} textAlign='right'>
-              <Button
-                type='button'
-                size='large'
-                onClick={this.toggleSaveFilter}
-                data-test='filter_save_cancel_btn'
-              >
+              <Button type='button' size='large' onClick={this.toggleSaveFilter} data-test='filter_save_cancel_btn'>
                 {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
               </Button>
             </GridColumn>
@@ -642,7 +637,9 @@ class InventoryFilter extends Component {
             </GridRow>
             <GridRow>
               <GridColumn computer={12}>
-                <label>{formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}</label>
+                <label>
+                  {formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}
+                </label>
               </GridColumn>
               <GridColumn computer={4}>
                 <FormikCheckbox
@@ -930,7 +927,7 @@ class InventoryFilter extends Component {
 
         <AccordionItem>
           {this.accordionTitle('incomplete', <FormattedMessage id='filter.incomplete' defaultMessage='Incomplete' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.incomplete}>
+          <AccordionContent active={this.state.activeAccordion.incomplete}>
             <FormField>
               <Radio
                 name='yes'
@@ -1132,7 +1129,7 @@ class InventoryFilter extends Component {
                     />
                   )}
                 </PerfectScrollbar>
-                <Dimmer active={this.state.openedSaveFilter}/>
+                <Dimmer active={this.state.openedSaveFilter} />
               </Dimmer.Dimmable>
               <Transition visible={openedSaveFilter} animation='fade up' duration={500}>
                 <div>{this.formSaveFilter(props)}</div>
