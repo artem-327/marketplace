@@ -288,7 +288,7 @@ class Marketplace extends Component {
   }
 
   renderTabMarketplace = () => {
-    const { datagrid, intl, openPopup, isMerchant } = this.props
+    const { datagrid, intl, openPopup, isMerchant, tutorialCompleted } = this.props
     const { columns, selectedRows } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
@@ -317,6 +317,7 @@ class Marketplace extends Component {
 
     return (
       <>
+        {!tutorialCompleted && <Tutorial marginMarketplace />}
         <ShippingQuotes
           modalProps={{
             open: this.state.open,
@@ -439,7 +440,7 @@ class Marketplace extends Component {
   }
 
   render() {
-    const { activeIndex, tutorialCompleted } = this.props
+    const { activeIndex } = this.props
 
     const panes = [
       {
@@ -465,7 +466,6 @@ class Marketplace extends Component {
     ]
     return (
       <>
-        {!tutorialCompleted && <Tutorial />}
         <Container fluid style={{ padding: '0 32px' }} className='flex stretched'>
           <MarketplaceTab
             activeIndex={activeIndex}

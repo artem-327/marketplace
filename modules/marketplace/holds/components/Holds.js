@@ -9,6 +9,7 @@ import ProdexGrid from '~/components/table'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 import { Datagrid } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
+import Tutorial from '~/modules/tutorial/Tutorial'
 
 const HoldDropdown = styled(Dropdown)`
   z-index: 601 !important;
@@ -139,7 +140,7 @@ class Holds extends Component {
   }
 
   render() {
-    const { rows, datagrid, intl, isMerchant, isCompanyAdmin, isProductOfferManager } = this.props
+    const { rows, datagrid, intl, isMerchant, isCompanyAdmin, isProductOfferManager, tutorialCompleted } = this.props
     const { columns } = this.state
     let { formatMessage } = intl
     const buttonApprove = {
@@ -188,6 +189,7 @@ class Holds extends Component {
     }
     return (
       <Container fluid style={{ padding: '10px 0' }} className='flex stretched'>
+        {!tutorialCompleted && <Tutorial marginHolds />}
         <Grid>
           <Grid.Column>
             <HoldDropdown

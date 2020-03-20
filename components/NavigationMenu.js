@@ -10,13 +10,11 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { ArrowLeftCircle, ArrowRightCircle, Hexagon, Layers, Settings, ShoppingBag, Grid } from 'react-feather'
+import { ArrowLeftCircle, ArrowRightCircle, Hexagon, Layers, Settings, ShoppingBag, Grid, Sliders } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import { InventoryFilter, Filter, OrderFilter, WantedBoardFilter } from '~/modules/filter'
-
-import { PlusCircle } from 'react-feather'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -36,12 +34,14 @@ class Navigation extends Component {
   state = {
     dropdowns: {},
     settings: getSafe(() => Router.router.pathname === '/settings', false),
+    orders: getSafe(() => Router.router.pathname === '/orders', false)
+      || getSafe(() => Router.router.pathname === '/orders/detail', false),
     admin: getSafe(() => Router.router.pathname === '/admin', false),
     operations: getSafe(() => Router.router.pathname === '/operations', false),
-    openedFilterMyInventory: false,
-    openedFilterMarketplace: false,
+    openedFilterMyInventory: true,
+    openedFilterMarketplace: true,
     openedFilterOrders: false,
-    openedFilterWantedBoard: false,
+    openedFilterWantedBoard: true,
   }
 
   componentDidMount() {
@@ -71,13 +71,15 @@ class Navigation extends Component {
         case '/inventory/my':
           this.setState(prevState => ({
             openedFilterMyInventory: !prevState.openedFilterMyInventory,
-            settings: false
+            settings: false,
+            orders: false
           }))
           break
         case '/marketplace/all':
           this.setState(prevState => ({
             openedFilterMarketplace: !prevState.openedFilterMarketplace,
-            settings: false
+            settings: false,
+            orders: false
           }))
           break
         case '/wanted-board/wanted-board':
@@ -101,9 +103,12 @@ class Navigation extends Component {
 
     if (pathname === '/settings' && tab) {
       const newTab = tabsNames.find(t => t.type === tab)
+      console.log('!!!!!!!!!! aaaaa tabsNames.find(t => t.type === tab) 1', tabsNames.find(t => t.type === tab))
+
       tabChanged(newTab)
       router.push('/settings?type=' + tab)
     } else {
+      console.log('!!!!!!!!!! aaaaa tabsNames.find(t => t.type === tab) 2', tabsNames.find(t => t.type === tab))
       router.push(to)
     }
   }
@@ -143,6 +148,8 @@ class Navigation extends Component {
       openedFilterMyInventory: false,
       openedFilterMarketplace: false,
       openedFilterOrders: false,
+      orders: false,
+      settings: false,
       admin: false,
       operations: false,
       [type]: !typeState
@@ -205,12 +212,14 @@ class Navigation extends Component {
       intl: { formatMessage },
       sidebarDetailTrigger,
       router: { pathname, asPath },
-      collapsedMenu
+      collapsedMenu,
+      activeFilter
     } = this.props
 
     const {
       dropdowns,
       settings,
+      orders,
       admin,
       operations,
       openedFilterMyInventory,
@@ -242,6 +251,7 @@ class Navigation extends Component {
           <>
             <Layers size={22} />
             {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
+            {asPath === '/inventory/my' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
           </>
         </MenuLink>
         {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
@@ -251,6 +261,7 @@ class Navigation extends Component {
               <>
                 <ShoppingBag size={22} />
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
+                {asPath === '/marketplace/all' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
               </>
             </MenuLink>
             {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
@@ -260,6 +271,7 @@ class Navigation extends Component {
           <>
             <Grid size={22} />
             {formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}
+            {false && asPath === '/wanted-board/wanted-board' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
           </>
         </MenuLink>
         {false && !collapsedMenu && openedFilterWantedBoard && asPath === '/wanted-board/wanted-board'
@@ -269,6 +281,7 @@ class Navigation extends Component {
           <>
             <ArrowRightCircle size={22} />
             {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
+            {asPath === '/orders?type=sales' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
           </>
         </MenuLink>
         {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=sales' ? <OrderFilter /> : null}
@@ -276,6 +289,7 @@ class Navigation extends Component {
           <>
             <ArrowLeftCircle />
             {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
+            {asPath === '/orders?type=purchase' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
           </>
         </MenuLink>
         {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=purchase' ? <OrderFilter /> : null}
@@ -439,7 +453,8 @@ export default withAuth(
         auth: store.auth,
         tabsNames: store.settings.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
-        collapsedMenu: store.layout.collapsedMenu
+        collapsedMenu: store.layout.collapsedMenu,
+        activeFilter: getSafe(() => store.filter.filter.appliedFilter.filters.length > 0, false)
       }),
       {
         triggerSystemSettingsModal,

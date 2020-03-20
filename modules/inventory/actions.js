@@ -165,7 +165,7 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
         type: AT.INVENTORY_ADD_PRODUCT_OFFER,
         payload: api.addProductOffer(paramsCleaned)
       })
-    
+
       if (attachmentFiles && attachmentFiles.length) {
         attachmentFiles.forEach(attachment => {
           dispatch({

@@ -189,7 +189,7 @@ export const LeftMenu = styled(Menu)`
             border-bottom-right-radius: 0 !important;
           
             + form {
-              flex-grow: 0;
+              flex-grow: 1;
               flex-shrink: 1;
               overflow: hidden;
               height: auto;
@@ -214,6 +214,7 @@ export const LeftMenu = styled(Menu)`
                   }
                   
                   &.dimmable {
+                    flex-grow: 1;
                     width: 100%;
                     padding: 0 !important;
                   
@@ -223,6 +224,13 @@ export const LeftMenu = styled(Menu)`
                       width: 100%;
                       height: 100%;
                       padding: 0 10px;
+                  
+                      > div.ui.basic.segment { // dimmer area
+                        width: 100% !important;
+                        height: 100% !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                      }
                       
                       &:not(.ps--active-y) > .ps__rail-y {
                         display: none !important;
@@ -353,6 +361,36 @@ export const LeftMenu = styled(Menu)`
       &.active svg {
         color: #2599d5 !important;
       }
+      
+      .active-filter {
+        position: absolute;
+        top: 13px;
+        right: 37px;
+        display: none;
+        width: 24px !important;
+        height: 24px;
+        margin: 0 !important;
+        border-radius: 4px;
+        background-color: #2599d5;
+        vertical-align: top;
+        font-size: 22px;
+        line-height: 22px;
+      }
+      
+      &.active {
+        
+        .active-filter {
+          display: block;
+          
+          > svg {
+            position: static;
+            width: 16px !important;
+            height: 16px;
+            margin: 4px !important;
+            color: #fff !important;
+          }
+        }
+      }
     }
 
     .container > .item,
@@ -387,6 +425,11 @@ export const LeftMenu = styled(Menu)`
         height: 9px !important;
         border-radius: 1px;
         background: #cecfd4 !important;
+      }
+      
+      &:nth-child(n):before,
+      &:nth-child(n):after {
+        display: block !important; // solving rewrites from semantic css
       }
 
       &:after {

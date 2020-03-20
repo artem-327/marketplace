@@ -155,6 +155,7 @@ class DocumentTab extends Component {
               {text => text}
             </FormattedMessage>
             <AttachmentManager
+              documentTypesForCertificates={listDocumentTypes}
               asModal
               returnSelectedRows={rows =>
                 this.attachDocumentsUploadLot(rows, values, setFieldValue, setFieldNameAttachments, changedForm)

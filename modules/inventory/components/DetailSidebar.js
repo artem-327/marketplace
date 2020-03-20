@@ -647,6 +647,7 @@ class DetailSidebar extends Component {
         this.setState({ changedForm: false, edited: false })
         break
     }
+
     if (Object.keys(props).length) {
       try {
         data = await addProductOffer(props, isEdit, false, isGrouped, attachmentFiles)
