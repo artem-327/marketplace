@@ -95,7 +95,7 @@ const RuleItem = props => {
           ) : (
             <EmptyIconSpace />
           )}
-          {rule.type !== 'branch' ? (
+          {rule.type !== 'branch' || (rule.type === 'branch' && companyName) ? (
             <span>{companyName ? `${companyName} ${name}` : `${name}`}</span>
           ) : (
             <a
