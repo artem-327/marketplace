@@ -18,6 +18,10 @@ export const initialValues = {
   expirationFrom: '',
   mfgTo: '',
   mfgFrom: '',
+  incomplete: {
+    yes: false,
+    no: false
+  },
   checkboxes: {
     notificationEnabled: false,
     automaticallyApply: true,

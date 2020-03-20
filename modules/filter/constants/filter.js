@@ -44,7 +44,8 @@ export const paths = {
     broadcast: 'ProductOffer.broadcasted',
     origin: 'ProductOffer.origin.id',
     expiration: 'ProductOffer.lotExpirationDate',
-    mfg: 'ProductOffer.lotManufacturedDate'
+    mfg: 'ProductOffer.lotManufacturedDate',
+    cfStatus: 'ProductOffer.cfStatus'
   },
   orders: {
     orderDate: 'Order.orderDate',
@@ -210,6 +211,32 @@ export const datagridValues = {
         return JSON.stringify({ id: parseInt(val.value), name: parsed.name, casNumber: parsed.casNumberCombined })
       })
     }
+  },
+
+  incomplete: {
+    paths: [paths.productOffers.cfStatus],
+    description: 'Inactive',
+    operator: operators.LIKE,
+
+    toFilter: function(values) {
+      let { yes, no } = values
+      let returnValues = null
+
+      if (!(yes || no)) return null
+      if (yes) returnValues = ['Incomplete', 'Unmapped']
+      else returnValues = ['Broadcasting', 'Not broadcasting']
+
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: returnValues.map(val => ({ value: val, description: val }))
+      }
+    },
+    tagDescription: values => values.toString(),
+    valuesDescription: values => values.toString(),
+    toFormik: values => ({
+      incomplete: values.includes('Incomplete') ? { yes: true, no: false } : { yes: false, no: true }
+    })
   },
 
   quantityFrom: {

@@ -801,6 +801,7 @@
   "myInventory.groupId": "Group ID",
   "myInventory.lotNumber": "Lot Number",
   "filter.warehouse": "Warehouse",
+  "filter.incomplete": "Incomplete",
   "filter.chemicalProductName": "Chemical / Product Name",
   "filter.saved": "Saved",
   "filter.searchLocation": "Search Location",

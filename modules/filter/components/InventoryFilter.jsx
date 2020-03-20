@@ -23,7 +23,8 @@ import {
   Transition,
   Header,
   Dimmer,
-  Label
+  Label,
+  Radio
 } from 'semantic-ui-react'
 
 import { uniqueArrayByKey } from '~/utils/functions'
@@ -68,7 +69,8 @@ import {
   NormalColumn,
   SaveFilterNormalRow,
   InputWrapper,
-  QuantityWrapper
+  QuantityWrapper,
+  BottomMargedField
 } from '../constants/layout'
 
 const optionsYesNo = [
@@ -101,7 +103,11 @@ class InventoryFilter extends Component {
     searchWarehouseQuery: '',
     isTyping: false,
     searchManufacturerQuery: '',
-    searchOriginQuery: ''
+    searchOriginQuery: '',
+    incomplete: {
+      yes: false,
+      no: false
+    }
   }
 
   componentDidMount() {
@@ -667,6 +673,10 @@ class InventoryFilter extends Component {
     })
   }
 
+  handleRadio = (_e, { name }) => {
+    this.setState(state => ({ ...state, incomplete: { yes: false, no: false, [name]: !state.incomplete[name] } }))
+  }
+
   formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError, setFieldTouched }) => {
     let {
       productConditions,
@@ -909,6 +919,28 @@ class InventoryFilter extends Component {
         </AccordionItem>
 
         <AccordionItem>
+          {this.accordionTitle('incomplete', <FormattedMessage id='filter.incomplete' defaultMessage='Incomplete' />)}
+          <AccordionContent active={!this.state.inactiveAccordion.incomplete}>
+            <FormField>
+              <Radio
+                name='yes'
+                checked={this.state.incomplete.yes}
+                label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })}
+                onClick={this.handleRadio}
+              />
+            </FormField>
+            <BottomMargedField>
+              <Radio
+                name='no'
+                checked={this.state.incomplete.no}
+                label={formatMessage({ id: 'global.no', defaultMessage: 'No' })}
+                onClick={this.handleRadio}
+              />
+            </BottomMargedField>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem>
           {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
           <AccordionContent active={!this.state.inactiveAccordion.price}>
             <FormGroup>
@@ -1047,7 +1079,7 @@ class InventoryFilter extends Component {
         validationSchema={validationSchema(openedSaveFilter)}
         onSubmit={(values, { setSubmitting }) => {
           if (!openedSaveFilter) {
-            this.handleSubmit(values)
+            this.handleSubmit({ ...values, incomplete: this.state.incomplete })
           }
           setSubmitting(false)
         }}>
@@ -1145,7 +1177,6 @@ class InventoryFilter extends Component {
                   loading={isFilterApplying}
                   type='submit'
                   primary
-                  inputProps={{ type: 'button' }}
                   data-test='filter_apply'>
                   {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
                 </Button>
