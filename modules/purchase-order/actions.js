@@ -75,3 +75,7 @@ export const requestManualShipment = params => ({
 })
 
 export const getIdentity = () => ({ type: AT.PURCHASE_GET_IDENTITY, payload: api.getIdentity() })
+
+export const setPreFilledValues = values => ({ type: AT.SET_PRE_FILLED_VALUES, payload: values })
+
+export const clearPreFilledValues = () => ({ type: AT.CLEAR_PRE_FILLED_VALUES, payload: null })

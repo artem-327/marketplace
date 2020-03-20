@@ -111,7 +111,17 @@ export default class ShippingQuotes extends Component {
 
     try {
       await this.props.addCartItem(payload)
-      Router.push('/cart')
+
+      const filledValues = {
+        zip: this.values.destination.zip,
+        country: this.values.destination.country,
+        freight: this.state.sQuote,
+        quotes: this.props.quotes,
+        freightIndex: this.state.selectedIndex
+      }
+      await this.props.setPreFilledValues(filledValues)
+
+      Router.push('/purchase-order')
     } catch {}
   }
 
@@ -190,6 +200,7 @@ export default class ShippingQuotes extends Component {
             !quantity ||
             !Number.isInteger(quantity) ||
             !values.destination.zip
+          this.values = values
 
           return (
             <>

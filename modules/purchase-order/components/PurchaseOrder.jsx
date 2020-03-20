@@ -45,11 +45,41 @@ class PurchaseOrder extends Component {
     shippingQuotes: [],
     selectedAddress: ''
   }
-  componentDidMount() {
+  componentDidMount = async () => {
+    const { preFilledValues, clearPreFilledValues, getWarehouses } = this.props
     this.props.getCart()
     this.props.getDeliveryAddresses()
     this.props.getPayments()
     this.props.getIdentity()
+
+    if (preFilledValues) {
+      const warehouses = await getWarehouses()
+      const filteredWarehouses = warehouses.value.filter(el =>
+        getSafe(() => el.deliveryAddress.address.zip.zip, '') === preFilledValues.zip
+        && getSafe(() => el.deliveryAddress.address.country.id, '') === preFilledValues.country
+      )
+
+      let selectedAddress = null
+      if (filteredWarehouses.length) {
+        selectedAddress = filteredWarehouses[0]
+        if (selectedAddress.deliveryAddress) {
+          selectedAddress = { ...selectedAddress, address: selectedAddress.deliveryAddress.address }
+        }
+
+        this.formikProps.setFieldValue('address', filteredWarehouses[0].id)
+
+        this.setState({
+          otherAddresses: false,
+          addressId: 'warehouseId',
+          shippingQuotes: preFilledValues.quotes.rates.map(d => d.shipmentRate),
+          selectedAddress: selectedAddress
+        },
+          () => this.handleQuoteSelect(preFilledValues.freightIndex)
+        )
+      }
+
+      clearPreFilledValues()
+    }
   }
 
   handleQuoteSelect = index => {
@@ -258,6 +288,7 @@ class PurchaseOrder extends Component {
           className='purchase-order'
           render={formikProps => {
             let { values } = formikProps
+            this.formikProps = formikProps
 
             return (
               <Grid centered>

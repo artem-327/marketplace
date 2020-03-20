@@ -1,8 +1,7 @@
 import { connect } from 'react-redux'
 import ShippingQuotes from './ShippingQuotes'
 import * as Actions from '../actions'
-
-import { addCartItem } from '~/modules/purchase-order/actions'
+import { addCartItem, setPreFilledValues } from '~/modules/purchase-order/actions'
 
 function mapStateToProps({ shiping, cart }) {
   return {
@@ -13,7 +12,8 @@ function mapStateToProps({ shiping, cart }) {
 
 const mapDispatchToProps = {
   ...Actions,
-  addCartItem
+  addCartItem,
+  setPreFilledValues
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShippingQuotes)
