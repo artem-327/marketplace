@@ -8574,10 +8574,6 @@ react-gtm-module@^2.0.7:
   resolved "https://registry.yarnpkg.com/react-gtm-module/-/react-gtm-module-2.0.7.tgz#1d1d085eddac36d522b56d45308ff4472ace09d6"
   integrity sha512-QYnzQdRpN9qZIc/HaWnpmXUZ31ZsJ4BICp8Gb9VOAh4v5wtytXIrSvQdB7/dS9RgI9cuYN6KCl7NuqiNCPS+DA==
 
-react-idle-timer@^4.0.9:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/react-idle-timer/-/react-idle-timer-4.2.3.tgz#d4c7e646de0d7d67b26d47a49ac231a15c7350c7"
-
 react-input-autosize@^2.1.2:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-2.2.1.tgz#ec428fa15b1592994fb5f9aa15bb1eb6baf420f8"
