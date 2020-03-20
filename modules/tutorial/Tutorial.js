@@ -7,7 +7,7 @@ import { Check } from 'react-feather'
 import Cookies from 'universal-cookie'
 import Router from 'next/router'
 import { withToastManager } from 'react-toast-notifications'
-import styled from 'styled-components'
+import styled, { ThemeProvider } from 'styled-components'
 import { updateMyProfile } from '~/modules/profile/actions'
 import { tabChanged } from '~/modules/settings/actions'
 import { defaultTabs } from '~/modules/settings/contants'
@@ -19,11 +19,17 @@ const Rectangle = styled.div`
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
   border: solid 1px #dee2e6;
   background-color: #ffffff;
-  margin: 15px 32px 15px 32px;
+  margin: ${props => props.theme.margin};
   padding: 15px 20px 15px 20px;
   display: flex;
   justify-content: space-between;
 `
+
+Rectangle.defaultProps = {
+  theme: {
+    margin: '15px 32px 15px 32px'
+  }
+}
 
 const Title = styled.div`
   font-size: 20px;
@@ -61,6 +67,7 @@ const CustomSkipButton = styled(Button)`
   color: #848893 !important;
   font-weight: 500 !important;
   letter-spacing: normal !important;
+  margin-right: 10px !important;
 `
 
 const OvalEmpty = styled.div`
@@ -260,31 +267,42 @@ class Tutorial extends Component {
 
   render() {
     const { tutorialTab } = this.state
+    const { marginMarketplace, marginHolds } = this.props
+
+    let margin = '15px 32px 15px 32px'
+    if (marginMarketplace) margin = '10px 0'
+    if (marginHolds) margin = '0 0 14px 0'
+
+    const theme = {
+      margin
+    }
     return (
       <>
         {tutorialTab ? (
-          <Rectangle>
-            <div>
-              <Title>
-                <FormattedMessage id={`tutorial.${tutorialTab}.title`} defaultMessage={'Title'}>
-                  {text => text}
-                </FormattedMessage>
-              </Title>
-              <Content>
-                <FormattedMessage id={`tutorial.${tutorialTab}.content`} defaultMessage={'Content'}>
-                  {text => text}
-                </FormattedMessage>
-              </Content>
+          <ThemeProvider theme={theme}>
+            <Rectangle>
+              <div>
+                <Title>
+                  <FormattedMessage id={`tutorial.${tutorialTab}.title`} defaultMessage={'Title'}>
+                    {text => text}
+                  </FormattedMessage>
+                </Title>
+                <Content>
+                  <FormattedMessage id={`tutorial.${tutorialTab}.content`} defaultMessage={'Content'}>
+                    {text => text}
+                  </FormattedMessage>
+                </Content>
 
-              <CustomSkipButton type='button' onClick={e => this.handleSetCookies(e, true)}>
-                <FormattedMessage id='"global.skip"' defaultMessage='Skip' />
-              </CustomSkipButton>
-              <CustomButton type='button' onClick={e => this.handleSetCookies(e, false)}>
-                <FormattedMessage id={`tutorial.${tutorialTab}.button`} defaultMessage='Button' />
-              </CustomButton>
-            </div>
-            {this.getIcons()}
-          </Rectangle>
+                <CustomSkipButton type='button' onClick={e => this.handleSetCookies(e, true)}>
+                  <FormattedMessage id='"global.skip"' defaultMessage='Skip' />
+                </CustomSkipButton>
+                <CustomButton type='button' onClick={e => this.handleSetCookies(e, false)}>
+                  <FormattedMessage id={`tutorial.${tutorialTab}.button`} defaultMessage='Button' />
+                </CustomButton>
+              </div>
+              {this.getIcons()}
+            </Rectangle>
+          </ThemeProvider>
         ) : null}
       </>
     )
