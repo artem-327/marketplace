@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { ArrowLeftCircle, ArrowRightCircle, Hexagon, Layers, Settings, ShoppingBag, Grid } from 'react-feather'
+import { ArrowLeftCircle, ArrowRightCircle, Hexagon, Layers, Settings, ShoppingBag, Grid, Sliders } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
@@ -205,7 +205,8 @@ class Navigation extends Component {
       intl: { formatMessage },
       sidebarDetailTrigger,
       router: { pathname, asPath },
-      collapsedMenu
+      collapsedMenu,
+      activeFilter
     } = this.props
 
     const {
@@ -242,6 +243,7 @@ class Navigation extends Component {
           <>
             <Layers size={22} />
             {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
+            {asPath === '/inventory/my' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
           </>
         </MenuLink>
         {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
@@ -251,6 +253,7 @@ class Navigation extends Component {
               <>
                 <ShoppingBag size={22} />
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
+                {asPath === '/marketplace/all' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
               </>
             </MenuLink>
             {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
@@ -260,6 +263,7 @@ class Navigation extends Component {
           <>
             <Grid size={22} />
             {formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}
+            {false && asPath === '/wanted-board/wanted-board' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
           </>
         </MenuLink>
         {false && !collapsedMenu && openedFilterWantedBoard && asPath === '/wanted-board/wanted-board'
@@ -269,6 +273,7 @@ class Navigation extends Component {
           <>
             <ArrowRightCircle size={22} />
             {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
+            {asPath === '/orders?type=sales' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
           </>
         </MenuLink>
         {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=sales' ? <OrderFilter /> : null}
@@ -276,6 +281,7 @@ class Navigation extends Component {
           <>
             <ArrowLeftCircle />
             {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
+            {asPath === '/orders?type=purchase' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
           </>
         </MenuLink>
         {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=purchase' ? <OrderFilter /> : null}
@@ -439,7 +445,8 @@ export default withAuth(
         auth: store.auth,
         tabsNames: store.settings.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
-        collapsedMenu: store.layout.collapsedMenu
+        collapsedMenu: store.layout.collapsedMenu,
+        activeFilter: getSafe(() => store.filter.filter.appliedFilter.filters.length > 0, false)
       }),
       {
         triggerSystemSettingsModal,

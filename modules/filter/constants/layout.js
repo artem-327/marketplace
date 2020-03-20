@@ -124,7 +124,11 @@ export const FlexSidebar = styled.div`
 `
 
 export const FlexContent = styled.div`
-  padding: 0 10px;  
+  padding: 0 10px;
+  
+  .dimmer {
+    background: rgba(0, 0, 0, 0.25) !important;
+  }  
 `
 
 export const FiltersContainer = styled.div`     // ! ! smazat?
