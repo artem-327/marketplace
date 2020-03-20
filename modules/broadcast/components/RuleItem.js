@@ -96,7 +96,7 @@ const RuleItem = props => {
           <span>{companyName ? `${companyName} ${name}` : `${name}`}</span>
         </Rule.RowContent>
 
-        <Rule.Toggle style={asSidebar ? { flex: '0 0 60px' } : null}>
+        <Rule.Toggle style={asSidebar ? { flex: '0 0 62px' } : null}>
           <Checkbox
             className={rule.priceOverride && nodeBroadcast === 1 && 'independent'}
             data-test='broadcast_rule_toggle_chckb'

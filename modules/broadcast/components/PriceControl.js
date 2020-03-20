@@ -170,8 +170,10 @@ export default class PriceControl extends Component {
 }
 
 const PriceInput = styled(Input)`
+  width: 138px;
+  margin-right: 10px;
+  border-right: 1px solid #dee2e6;
   padding: 8px;
-  width: 110px;
 `
 
 const ControlBox = styled.div`
@@ -193,7 +195,7 @@ const FobPrice = styled.label`
 `
 
 const Box = styled.div`
-  flex: 0 0 220px;
+  flex: 0 0 276px;
   display: flex;
   justify-content: flex-start;
   align-items: center;

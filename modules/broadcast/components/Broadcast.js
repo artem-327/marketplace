@@ -705,7 +705,7 @@ class Broadcast extends Component {
                     {text => text}
                   </FormattedMessage>
                 </Rule.RowContent>
-                <Rule.Toggle style={asSidebar ? { flex: '0 0 60px' } : null}>
+                <Rule.Toggle style={asSidebar ? { flex: '0 0 62px' } : null}>
                   <FormattedMessage id='broadcast.select' defaultMessage='Select' />
                 </Rule.Toggle>
 

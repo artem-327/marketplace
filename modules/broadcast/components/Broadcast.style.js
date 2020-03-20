@@ -53,7 +53,7 @@ const Root = styled.div`
 const Header = styled(Row)`
   /* font-weight: bold; */
   flex: 0 0 45px;
-  padding: 0 10px 0 20px;
+  padding: 0;
   display: flex;
   color: #848893;
   font-weight: bold;
@@ -62,7 +62,11 @@ const Header = styled(Row)`
     border-left: solid 1px #dee2e6; 
   }
   > div:first-child {
-    border-left: none; 
+    border-left: none;
+    padding-left: 10px; 
+  }
+  > div:last-child {
+    padding-right: 10px;
   }
 `
 const Content = styled.div`
@@ -87,14 +91,14 @@ const RowContent = styled.div`
 `
 
 const Toggle = styled.div`
-  flex: 0 0 110px;
+  flex: 0 0 138px;
   display: flex;
   flex-flow: column;
   justify-content: center;
   align-items: center;
 `
 const Checkbox = styled.div`
-  flex: 0 0 110px;
+  flex: 0 0 138px;
   display: flex;
   justify-content: center;
   align-items: center;
