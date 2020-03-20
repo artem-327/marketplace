@@ -7,6 +7,7 @@ import { getWarehousesDataRequest, getBranchesDataRequest, openSidebar, deleteBr
 import Router from 'next/router'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
+import { Popup, Icon } from 'semantic-ui-react'
 
 import { getSafe } from '~/utils/functions'
 
@@ -16,6 +17,12 @@ import { FormattedPhone } from '~/components/formatted-messages/'
 class WarehouseTable extends Component {
   state = {
     columns: [
+      {
+        name: 'certificateIcon',
+        title: ' ',
+        width: 45,
+        align: 'center'
+      },
       {
         name: 'addressName',
         title: (
@@ -94,7 +101,7 @@ class WarehouseTable extends Component {
     if (!columns) return
 
     if (currentTab.type === 'warehouses') {
-      columns[0].title = (
+      columns[1].title = (
         <FormattedMessage id='settings.warehouseName' defaultMessage='Warehouse Name'>
           {text => text}
         </FormattedMessage>
@@ -104,7 +111,7 @@ class WarehouseTable extends Component {
         columns
       }))
     } else if (currentTab.type === 'branches') {
-      columns[0].title = (
+      columns[1].title = (
         <FormattedMessage id='settings.branchName' defaultMessage='Branch Name'>
           {text => text}
         </FormattedMessage>
@@ -120,6 +127,29 @@ class WarehouseTable extends Component {
     if (this.state.tab !== this.props.currentTab.type && this.props.currentTab.type !== prevProps.currentTab.type) {
       this.handlerLoadPage()
     }
+  }
+
+  getRows = rows => {
+    return rows.map(r => ({
+      ...r,
+      certificateIcon:
+        getSafe(() => r.attachments.length, false) && getSafe(() => r.countryName, false) === 'USA' ? (
+          <Popup
+            position='right center'
+            header={
+              <FormattedMessage
+                id='settings.warehouse.certificateIcon.header'
+                defaultMessage='Certificate is attached and so will be visible anywhere'
+              />
+            }
+            trigger={
+              <div>
+                <Icon className='file related' />
+              </div>
+            }
+          />
+        ) : null
+    }))
   }
 
   render() {
@@ -151,7 +181,7 @@ class WarehouseTable extends Component {
           filterValue={filterValue}
           columns={this.state.columns}
           loading={datagrid.loading || loading}
-          rows={rows}
+          rows={this.getRows(rows)}
           style={{ marginTop: '5px' }}
           rowActions={[
             {
@@ -179,19 +209,7 @@ class WarehouseTable extends Component {
                     { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}! ? ` },
                     { item: row.name }
                   )
-                )
-                  .then(() => deleteBranch(row.id))
-                  .then(() =>
-                    toastManager.add(
-                      generateToastMarkup(
-                        <FormattedMessage id='settings.headerDeleteWarehouse' defaultMessage='Successfully deleted' />,
-                        null
-                      ),
-                      {
-                        appearance: 'success'
-                      }
-                    )
-                  )
+                ).then(() => deleteBranch(row.id))
             }
           ]}
         />
@@ -234,7 +252,8 @@ const mapStateToProps = (state, { datagrid }) => {
         phoneFormatted: <FormattedPhone value={getSafe(() => r.deliveryAddress.contactPhone, '')} />,
         branchId: r.id,
         id: r.id,
-        warehouse: r.warehouse
+        warehouse: r.warehouse,
+        attachments: r.attachments
       }
     }),
     editPopupBoolean: state.settings.editPopupBoolean,

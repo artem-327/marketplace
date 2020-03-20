@@ -922,7 +922,7 @@ class InventoryFilter extends Component {
           {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
           <AccordionContent active={!this.state.inactiveAccordion.price}>
             <FormGroup>
-              <FormField width={8} data-test='filter_price_inp'>
+              <FormField className='price-input' width={8} data-test='filter_price_inp'>
                 {this.inputWrapper(
                   'priceFrom',
                   {
@@ -935,7 +935,7 @@ class InventoryFilter extends Component {
                   currencySymbol
                 )}
               </FormField>
-              <FormField width={8}>
+              <FormField className='price-input' width={8}>
                 {this.inputWrapper(
                   'priceTo',
                   {
@@ -982,7 +982,7 @@ class InventoryFilter extends Component {
         </AccordionItem>
 
         <AccordionItem>
-          {this.accordionTitle('assay', <FormattedMessage id='filter.assay' />)}
+          {this.accordionTitle('assay', <FormattedMessage id='filter.percentage' />)}
           <AccordionContent active={!this.state.inactiveAccordion.assay}>
             <FormGroup data-test='filter_assay_inp'>
               <FormField width={8}>
@@ -1149,7 +1149,7 @@ class InventoryFilter extends Component {
                   }}
                   inputProps={{ type: 'button' }}
                   data-test='filter_clear'>
-                  {formatMessage({ id: 'filter.clearFilter', defaultMessage: 'Clear' })}
+                  {formatMessage({ id: 'filter.clear', defaultMessage: 'Clear' })}
                 </Button>
                 <Button
                   disabled={openedSaveFilter || savedFiltersActive}

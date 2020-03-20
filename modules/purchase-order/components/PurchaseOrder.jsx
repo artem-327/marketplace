@@ -85,7 +85,7 @@ class PurchaseOrder extends Component {
     let { address } = selectedAddress
     try {
       const shippingQuotes = await this.props.getShippingQuotes(address.country.id, address.zip.zip)
-      this.setState({ shippingQuotes: shippingQuotes.value })
+      this.setState({ shippingQuotes: shippingQuotes.value.rates })
     } catch (error) {
       console.error(error)
     }

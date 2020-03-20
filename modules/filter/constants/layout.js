@@ -229,6 +229,12 @@ export const AccordionContent = styled(Accordion.Content)`
       }
     }
   }
+
+  .see-all {
+      color: #2599d5;
+      padding-bottom: 0.846153846em
+  }
+  
   span {
     //font-size: 14px;
     font-family: 'Cabin', sans-serif !important;

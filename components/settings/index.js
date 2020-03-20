@@ -114,7 +114,6 @@ class Settings extends Component {
 
     const { triggerSystemSettingsModal, role } = this.props
     this.setState({ loading: true })
-
     let payload = {
       settings: []
     }
@@ -122,14 +121,18 @@ class Settings extends Component {
       Object.keys(values[role][group]).forEach(key => {
         let el = values[role][group][key]
         if (el.changeable) {
-          if (!el.edit && role !== 'admin') {
+          if (
+            (!el.edit && role !== 'admin') ||
+            (el.value.actual === 'EMPTY_SETTING' && el.value.visible.trim() === '')
+          ) {
             payload.settings.push({ id: el.id, value: 'EMPTY_SETTING' })
           } else if (el.value.visible !== null) {
-            payload.settings.push({ id: el.id, value: el.value.actual })
+            payload.settings.push({ id: el.id, value: el.type === 'BOOL' ? el.value.actual : el.value.visible })
           }
         }
       })
     })
+
     try {
       settings = await api.updateSettings(role, payload)
       let { systemSettings } = this.parseData(settings.settingGroups)
