@@ -54,17 +54,17 @@ class AttachmentClass extends Component {
     open: false,
     uploadOpen: false,
     selectedRows: [],
-    //TODO documentTypes: []
-    documentTypes: '',
-    //TODO remove documentTypeText if possible multiple
-    documentTypeText: '',
+    documentTypes: [],
     searchValue: ''
   }
 
   componentDidMount() {
     const { documentTypes, getDocumentTypes, isOpenManager, documentTypesForCertificates } = this.props
-    if (documentTypes && !documentTypes.length && !documentTypesForCertificates) {
+    if (documentTypes && !documentTypes.length) {
       getDocumentTypes()
+    }
+    if (documentTypesForCertificates && documentTypesForCertificates.length) {
+      this.setState({ documentTypes: documentTypesForCertificates.map(doc => doc.value) })
     }
     if (isOpenManager) {
       this.setState({ open: true })
@@ -86,12 +86,11 @@ class AttachmentClass extends Component {
         return { ...datagrid.rows.find(att => att.id === id) }
       })
     )
-    //TODO type: []
-    this.handleSearch({ value: '', type: '' })
+    this.handleSearch({ value: '', type: [] })
     this.setState({ open: false, documentTypes: '' })
   }
-  //TODO fixed if possible multiple type, type: []
-  handleSearch = debounce((value = '', type = '') => {
+
+  handleSearch = debounce((value = '', type = []) => {
     let { datagrid } = this.props
     datagrid.setSearch(value, type)
   }, 150)
@@ -168,19 +167,17 @@ class AttachmentClass extends Component {
             onClick: () => {
               this.setState({ open: true })
               if (documentTypesForCertificates && documentTypesForCertificates.length) {
-                //TODO change if possible multiple search type,type: [id]
                 this.handleSearch(
                   '',
-                  getSafe(() => documentTypesForCertificates[0].text, '')
+                  documentTypesForCertificates.map(doc => doc.value)
                 )
               }
             }
           })}
           onClose={() => {
             this.returnCloseAttachmentManager()
-            //TODO type: []
-            this.handleSearch('', '')
-            this.setState({ open: false, documentTypes: '' })
+            this.handleSearch('', [])
+            this.setState({ open: false, documentTypes: [] })
           }}>
           <CustomHeader>
             <Grid verticalAlign='middle'>
@@ -198,20 +195,19 @@ class AttachmentClass extends Component {
           <Modal.Content scrolling>
             <Grid style={{ justifyContent: 'flex-end' }}>
               <GridRow>
-                <GridColumn width={4}>
+                <GridColumn width={7}>
                   <CustomDropdown
-                    // multiple
+                    multiple
                     name='documentTypes'
-                    options={documentTypesForCertificates || documentTypes}
+                    options={documentTypes}
                     value={this.state.documentTypes}
                     selection
                     onChange={(event, { name, value }) => {
                       const documents = documentTypesForCertificates || documentTypes
                       const data = documents.find(option => parseInt(option.value) === parseInt(value))
-                      //TODO replace documentTypeText remove if possible multiple
-                      this.setState({ [name]: value, documentTypeText: data.text })
-                      //TODO if multiple than data.text replace to value. value = [id]
-                      this.handleSearch(this.state.searchValue, data.text)
+
+                      this.setState({ [name]: value })
+                      this.handleSearch(this.state.searchValue, value)
                     }}
                     placeholder={
                       <FormattedMessage id='related.documents.selectType' defaultMessage='Select type'>
@@ -226,8 +222,7 @@ class AttachmentClass extends Component {
                     placeholder='Search...'
                     onChange={(_, data) => {
                       this.setState({ searchValue: data && data.value })
-                      //TODO replace documentTypeText to this.state.documentTypes if possible multiple
-                      this.handleSearch(data.value, this.state.documentTypeText)
+                      this.handleSearch(data.value, this.state.documentTypes)
                     }}
                   />
                 </GridColumn>
@@ -253,9 +248,8 @@ class AttachmentClass extends Component {
               basic
               onClick={() => {
                 this.returnCloseAttachmentManager()
-                //TODO type: []
-                this.handleSearch('', '')
-                this.setState({ open: false, documentTypes: '' })
+                this.handleSearch('', [])
+                this.setState({ open: false, documentTypes: [] })
               }}>
               <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                 {text => text}
@@ -318,26 +312,28 @@ AttachmentModal.defaultProps = {
 class AttachmentManager extends Component {
   getApiConfig = () => ({
     url: '/prodex/api/attachments/datagrid/',
-    searchToFilter: (v, type) =>
-      v || type
-        ? [
-            { operator: 'LIKE', path: 'Attachment.name', values: [`%${v}%`] },
-            //TODO when BE is prepared to customName
-            // {
-            //   operator: 'LIKE',
-            //   path: 'Attachment.customName',
-            //   values: [`%${v}%`]
-            // },
-            {
-              operator: 'LIKE',
-              path: 'Attachment.documentType.name',
-              //TODO change values to [] values when multiple is accepted
-              values: [`%${type || v}%`]
-            }
-          ]
-        : [],
-    params: {
-      orOperator: false
+    searchToFilter: (v, type) => {
+      let filters = { or: [], and: [] }
+      if (v) {
+        filters.or = [
+          { operator: 'LIKE', path: 'Attachment.name', values: [`%${v}%`] },
+          {
+            operator: 'LIKE',
+            path: 'Attachment.customName',
+            values: [`%${v}%`]
+          }
+        ]
+      }
+      if (type && type.length) {
+        filters.and = [
+          {
+            operator: 'EQUALS',
+            path: 'Attachment.documentType.id',
+            values: type
+          }
+        ]
+      }
+      return filters
     }
   })
 
