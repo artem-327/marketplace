@@ -1236,7 +1236,48 @@ class DetailSidebar extends Component {
                                       </FormField>
                                     </GridColumn>
                                   </GridRow>
-
+                                  <GridRow>
+                                    <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                      <FormattedMessage id='global.leadTime' defaultMessage='Lead Time'>
+                                        {text => text}
+                                      </FormattedMessage>
+                                    </GridColumn>
+                                    <GridColumn mobile={rightWidth - 5} computer={rightWidth - 5}>
+                                      <Input
+                                        name='edit.leadTime'
+                                        inputProps={{
+                                          type: 'number',
+                                          min: '0',
+                                          disabled: sidebarValues && sidebarValues.grouped
+                                        }}
+                                      />
+                                    </GridColumn>
+                                    <GridColumn mobile={5} computer={5} verticalAlign='middle'>
+                                      <FormattedMessage id='global.days' defaultMessage='Days'>
+                                        {text => text}
+                                      </FormattedMessage>
+                                    </GridColumn>
+                                  </GridRow>
+                                  <GridRow>
+                                    <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+                                      <FormattedMessage id='global.splitPkgs' defaultMessage='Split PKGs' />
+                                    </GridColumn>
+                                    <GridColumn
+                                      mobile={rightWidth}
+                                      computer={rightWidth}
+                                      data-test='add_inventory_product_splits_inp'>
+                                      <Input
+                                        name='edit.splits'
+                                        inputProps={{
+                                          disabled: sidebarValues && sidebarValues.grouped,
+                                          type: 'number',
+                                          min: 1,
+                                          onChange: (e, { value }) =>
+                                            this.onSplitsChange(value, values, setFieldValue, validateForm)
+                                        }}
+                                      />
+                                    </GridColumn>
+                                  </GridRow>
                                   <GridRow>
                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
                                       <FormattedMessage id='global.cost' defaultMessage='Cost'>
@@ -1446,28 +1487,6 @@ class DetailSidebar extends Component {
                                   </GridRow>
                                   <GridRow>
                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                      <FormattedMessage id='global.leadTime' defaultMessage='Lead Time'>
-                                        {text => text}
-                                      </FormattedMessage>
-                                    </GridColumn>
-                                    <GridColumn mobile={rightWidth - 5} computer={rightWidth - 5}>
-                                      <Input
-                                        name='edit.leadTime'
-                                        inputProps={{
-                                          type: 'number',
-                                          min: '0',
-                                          disabled: sidebarValues && sidebarValues.grouped
-                                        }}
-                                      />
-                                    </GridColumn>
-                                    <GridColumn mobile={5} computer={5} verticalAlign='middle'>
-                                      <FormattedMessage id='global.days' defaultMessage='Days'>
-                                        {text => text}
-                                      </FormattedMessage>
-                                    </GridColumn>
-                                  </GridRow>
-                                  <GridRow>
-                                    <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
                                       <FormattedMessage id='global.offerExpiration' defaultMessage='Offer Expiration'>
                                         {text => text}
                                       </FormattedMessage>
@@ -1527,26 +1546,6 @@ class DetailSidebar extends Component {
                                               //setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
                                             }
                                           }
-                                        }}
-                                      />
-                                    </GridColumn>
-                                  </GridRow>
-                                  <GridRow>
-                                    <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                                      <FormattedMessage id='global.splitPkgs' defaultMessage='Split PKGs' />
-                                    </GridColumn>
-                                    <GridColumn
-                                      mobile={rightWidth}
-                                      computer={rightWidth}
-                                      data-test='add_inventory_product_splits_inp'>
-                                      <Input
-                                        name='edit.splits'
-                                        inputProps={{
-                                          disabled: sidebarValues && sidebarValues.grouped,
-                                          type: 'number',
-                                          min: 1,
-                                          onChange: (e, { value }) =>
-                                            this.onSplitsChange(value, values, setFieldValue, validateForm)
                                         }}
                                       />
                                     </GridColumn>
