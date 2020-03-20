@@ -994,6 +994,7 @@ class Detail extends Component {
                     <Grid.Row>
                       <Grid.Column style={{ paddingLeft: '30px', paddingRight: '2.2857143em' }}>
                         <ProdexGrid
+                          displayRowActionsOverBorder
                           removeFlexClass={true}
                           loading={loadingRelatedDocuments}
                           tableName='related_orders_detail_documents'
