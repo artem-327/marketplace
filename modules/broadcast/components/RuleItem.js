@@ -18,7 +18,9 @@ const RuleItem = props => {
     hideFobPrice,
     filter,
     loadingChanged,
-    asSidebar
+    asSidebar,
+    openModalCompanyInfo,
+    getCompanyInfo
     // tree,
   } = props
   // let item = _.cloneDeep(props.item)
@@ -93,7 +95,23 @@ const RuleItem = props => {
           ) : (
             <EmptyIconSpace />
           )}
-          <span>{companyName ? `${companyName} ${name}` : `${name}`}</span>
+          {rule.type !== 'branch' || (rule.type === 'branch' && companyName) ? (
+            <span>{companyName ? `${companyName} ${name}` : `${name}`}</span>
+          ) : (
+            <a
+              onClick={() => {
+                try {
+                  if (getSafe(() => item.parent.model.rule.id, '')) {
+                    getCompanyInfo(item.parent.model.rule.id)
+                    openModalCompanyInfo()
+                  }
+                } catch (error) {
+                  console.error(error)
+                }
+              }}>
+              {companyName ? `${companyName} ${name}` : `${name}`}
+            </a>
+          )}
         </Rule.RowContent>
 
         <Rule.Toggle style={asSidebar ? { flex: '0 0 60px' } : null}>
@@ -135,6 +153,8 @@ const RuleItem = props => {
             onPriceChange={onPriceChange}
             onChange={onChange}
             asSidebar={asSidebar}
+            openModalCompanyInfo={openModalCompanyInfo}
+            getCompanyInfo={getCompanyInfo}
           />
         ))}
     </>

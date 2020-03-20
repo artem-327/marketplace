@@ -46,3 +46,7 @@ export const updateFilter = createAction('BROADCAST_FILTER_UPDATE', filter => fi
 export const switchMode = createAction('BROADCAST_SWITCH_MODE', mode => mode)
 export const loadingChanged = createAction('BROADCAST_LOADING', (force = null) => force)
 export const treeDataChanged = createAction('TREE_DATA_CHANGED', treeData => treeData)
+
+export const openModalCompanyInfo = createAction('OPEN_MODAL_COMPANY_INFO')
+export const closeModalCompanyInfo = createAction('CLOSE_MODAL_COMPANY_INFO')
+export const getCompanyInfo = createAsyncAction('GET_COMPANY_INFO', companyId => api.getCompanyInfo(companyId))
