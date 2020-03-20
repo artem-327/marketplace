@@ -154,8 +154,7 @@ class AttachmentClass extends Component {
             <PaddedIcon
               onClick={() => {
                 this.returnCloseAttachmentManager()
-                //TODO type: []
-                this.handleSearch('', '')
+                this.handleSearch('', [])
                 this.setState({ open: false, documentTypes: '' })
               }}
               name='close icon'
