@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import pt, { node, bool, number, object, func } from 'prop-types'
-import { connect } from 'react-redux'
 import { Modal, Button, Grid, GridRow, GridColumn, Input, Dimmer, Loader, Label } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
@@ -134,10 +133,8 @@ const values = {
 
 class CompanyInfo extends Component {
   getContent = () => {
+    //TODO fixed with real data in 1.0.5 from new endpoint where we get all data for this modal company info
     const { dataCompanyInfo } = this.props
-    console.log('dataCompanyInfo====================================')
-    console.log(dataCompanyInfo)
-    console.log('====================================')
     return (
       <Grid>
         <CustomRow>
