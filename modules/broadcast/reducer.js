@@ -14,7 +14,10 @@ import {
   deleteTemplate,
   initGlobalBroadcast,
   loadingChanged,
-  treeDataChanged
+  treeDataChanged,
+  openModalCompanyInfo,
+  closeModalCompanyInfo,
+  getCompanyInfo
 } from './actions'
 
 const initialState = {
@@ -34,7 +37,10 @@ const initialState = {
     search: '',
     category: 'region'
   },
-  mode: 'client' // price
+  mode: 'client', // price
+  isOpenModalCompanyInfo: false,
+  dataCompanyInfo: {},
+  isLoadingModalCompanyInfo: false
 }
 
 export default typeToReducer(
@@ -197,7 +203,33 @@ export default typeToReducer(
         ...state,
         data: getSafe(() => payload.model.rule, payload.model)
       }
-    }
+    },
+    [openModalCompanyInfo]: state => ({
+      ...state,
+      isOpenModalCompanyInfo: true
+    }),
+    [closeModalCompanyInfo]: state => ({
+      ...state,
+      isOpenModalCompanyInfo: false
+    }),
+
+    [getCompanyInfo.pending]: state => ({
+      ...state,
+      isLoadingModalCompanyInfo: true
+    }),
+
+    [getCompanyInfo.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        dataCompanyInfo: payload,
+        isLoadingModalCompanyInfo: false
+      }
+    },
+
+    [getCompanyInfo.rejected]: state => ({
+      ...state,
+      isLoadingModalCompanyInfo: false
+    })
   },
   initialState
 )

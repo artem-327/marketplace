@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { Hexagon, Layers, Settings, ShoppingBag, Grid, FileText } from 'react-feather'
+import { ArrowLeftCircle, ArrowRightCircle, Hexagon, Layers, Settings, ShoppingBag, Grid, Sliders } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
@@ -212,7 +212,8 @@ class Navigation extends Component {
       intl: { formatMessage },
       sidebarDetailTrigger,
       router: { pathname, asPath },
-      collapsedMenu
+      collapsedMenu,
+      activeFilter
     } = this.props
 
     const {
@@ -250,6 +251,7 @@ class Navigation extends Component {
           <>
             <Layers size={22} />
             {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
+            {asPath === '/inventory/my' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
           </>
         </MenuLink>
         {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
@@ -259,6 +261,7 @@ class Navigation extends Component {
               <>
                 <ShoppingBag size={22} />
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
+                {asPath === '/marketplace/all' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
               </>
             </MenuLink>
             {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
@@ -268,37 +271,28 @@ class Navigation extends Component {
           <>
             <Grid size={22} />
             {formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}
+            {false && asPath === '/wanted-board/wanted-board' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
           </>
         </MenuLink>
         {false && !collapsedMenu && openedFilterWantedBoard && asPath === '/wanted-board/wanted-board'
           ? <WantedBoardFilter /> : null
         }
-        <DropdownItem
-          icon={<FileText size={22} />}
-          text={formatMessage({ id: 'navigation.orders', defaultMessage: 'Orders' })}
-          className={orders ? 'opened' : null}
-          opened={orders}
-          onClick={() => this.toggleOpened('orders')}
-          refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-          refId={'orders'}
-          data-test='navigation_orders_drpdn'>
-          <Dropdown.Menu data-test='navigation_menu_orders_drpdn_menu'>
-            <PerfectScrollbar>
-                <Dropdown.Item
-                  as={MenuLink}
-                  to='/orders?type=sales'
-                  dataTest='navigation_orders_sales_orders_drpdn'>
-                  {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  as={MenuLink}
-                  to='/orders?type=purchase'
-                  dataTest='navigation_orders_purchase_orders_drpdn'>
-                  {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
-                </Dropdown.Item>
-            </PerfectScrollbar>
-          </Dropdown.Menu>
-        </DropdownItem>
+        <MenuLink to='/orders?type=sales' dataTest='navigation_menu_orders_sales_drpdn'>
+          <>
+            <ArrowRightCircle size={22} />
+            {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
+            {asPath === '/orders?type=sales' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
+          </>
+        </MenuLink>
+        {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=sales' ? <OrderFilter /> : null}
+        <MenuLink to='/orders?type=purchase' dataTest='navigation_menu_orders_purchase_drpdn'>
+          <>
+            <ArrowLeftCircle />
+            {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
+            {asPath === '/orders?type=purchase' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
+          </>
+        </MenuLink>
+        {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=purchase' ? <OrderFilter /> : null}
         {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
@@ -459,7 +453,8 @@ export default withAuth(
         auth: store.auth,
         tabsNames: store.settings.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
-        collapsedMenu: store.layout.collapsedMenu
+        collapsedMenu: store.layout.collapsedMenu,
+        activeFilter: getSafe(() => store.filter.filter.appliedFilter.filters.length > 0, false)
       }),
       {
         triggerSystemSettingsModal,
