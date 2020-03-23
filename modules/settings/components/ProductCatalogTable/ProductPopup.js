@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce'
 import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {Modal, FormGroup, Popup, Grid, GridRow, GridColumn, Divider, Icon} from 'semantic-ui-react'
+import { Modal, FormGroup, Popup, Grid, GridRow, GridColumn, Divider, Icon } from 'semantic-ui-react'
 
 import { CompanyProductMixtures } from '~/components/shared-components/'
 import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
@@ -37,9 +37,11 @@ import { UnitOfPackaging } from '~/components/formatted-messages'
 import { errorMessages } from '~/constants/yupValidation'
 import { AttachmentManager } from '~/modules/attachments'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
-import styled from "styled-components"
+import styled from 'styled-components'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
+import { changeTutorialTab } from '~/modules/tutorial/actions'
+import { setTutorialCookies } from '~/modules/tutorial/components/Tutorial'
 
 export const DivIcon = styled.div`
   display: block;
@@ -190,7 +192,9 @@ class ProductPopup extends React.Component {
       popupValues,
       handleSubmitProductEditPopup,
       handleSubmitProductAddPopup,
-      datagrid
+      datagrid,
+      changeTutorialTab,
+      tutorialCompleted
     } = this.props
     delete values.casProducts
 
@@ -219,6 +223,9 @@ class ProductPopup extends React.Component {
         await handleSubmitProductEditPopup(formValues, popupValues.id)
       } else {
         await handleSubmitProductAddPopup(formValues)
+        if (!tutorialCompleted) {
+          await setTutorialCookies(changeTutorialTab)
+        }
       }
       let status = popupValues ? 'productUpdated' : 'productCreated'
       datagrid.loadData()
@@ -309,16 +316,17 @@ class ProductPopup extends React.Component {
   }
 
   attachDocumentsUploadLot = (att, values, setFieldValue) => {
-    const newDocArray = [{
-      id: att.id,
-      name: att.name,
-      documentType: att.documentType.name,
-      linked: false
-    }]
+    const newDocArray = [
+      {
+        id: att.id,
+        name: att.name,
+        documentType: att.documentType.name,
+        linked: false
+      }
+    ]
     const docArray = uniqueArrayByKey(this.state.attachments.concat(newDocArray), 'id')
     this.setState({ changedForm: true, attachments: docArray })
   }
-
 
   render() {
     const {
@@ -563,9 +571,7 @@ class ProductPopup extends React.Component {
 
                     <GridRow>
                       <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                        <FormattedMessage
-                          id='global.existingDocuments'
-                          defaultMessage='Existing documents: '>
+                        <FormattedMessage id='global.existingDocuments' defaultMessage='Existing documents: '>
                           {text => text}
                         </FormattedMessage>
                       </GridColumn>
@@ -611,10 +617,7 @@ class ProductPopup extends React.Component {
                                   values={{
                                     link: (
                                       <a>
-                                        <FormattedMessage
-                                          id='global.clickHere'
-                                          defaultMessage={'click here'}
-                                        />
+                                        <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
                                       </a>
                                     )
                                   }}
@@ -634,10 +637,7 @@ class ProductPopup extends React.Component {
                                   values={{
                                     link: (
                                       <a>
-                                        <FormattedMessage
-                                          id='global.clickHere'
-                                          defaultMessage={'click here'}
-                                        />
+                                        <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
                                       </a>
                                     )
                                   }}
@@ -673,15 +673,14 @@ class ProductPopup extends React.Component {
                                 callback: async row => {
                                   try {
                                     if (row.linked) {
-                                      const unlinkResponse =
-                                        await this.props.removeAttachmentLinkCompanyProduct(popupValues.id, row.id)
+                                      const unlinkResponse = await this.props.removeAttachmentLinkCompanyProduct(
+                                        popupValues.id,
+                                        row.id
+                                      )
                                       datagrid.loadData() // Reload product with updated attachments
                                       toastManager.add(
                                         generateToastMarkup(
-                                          <FormattedMessage
-                                            id='addInventory.success'
-                                            defaultMessage='Success'
-                                          />,
+                                          <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
                                           <FormattedMessage
                                             id='addInventory.unlinkeAttachment'
                                             defaultMessage='Attachment was successfully unlinked.'
@@ -705,7 +704,8 @@ class ProductPopup extends React.Component {
                                             { fileName: row.name }
                                           )
                                         ).then(
-                                          async () => { // confirm
+                                          async () => {
+                                            // confirm
                                             try {
                                               await this.props.removeAttachment(row.id)
                                               toastManager.add(
@@ -728,7 +728,8 @@ class ProductPopup extends React.Component {
                                               console.error(e)
                                             }
                                           },
-                                          () => { // cancel
+                                          () => {
+                                            // cancel
                                           }
                                         )
                                       }
@@ -739,7 +740,7 @@ class ProductPopup extends React.Component {
                                   } catch (e) {
                                     console.error(e)
                                   }
-                                },
+                                }
                               }
                             ]}
                           />
@@ -796,7 +797,8 @@ const mapDispatchToProps = {
   removeAttachmentLinkCompanyProduct,
   loadFile,
   addAttachment,
-  removeAttachment
+  removeAttachment,
+  changeTutorialTab
 }
 const mapStateToProps = ({ settings }) => {
   return {
@@ -829,6 +831,7 @@ const mapStateToProps = ({ settings }) => {
         )
       }
     }),
+    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false)
   }
 }
 

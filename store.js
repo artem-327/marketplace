@@ -70,6 +70,7 @@ import companyProductInfo from '~/modules/company-product-info/reducer'
 import operations from '~/modules/operations/reducers'
 import holds from '~/modules/marketplace/holds/reducer'
 import wantedBoard from '~/modules/wanted-board/reducer'
+import tutorial from '~/modules/tutorial/reducer'
 
 import layout from '~/modules/layout/reducer'
 
@@ -131,7 +132,8 @@ const reducer = combineReducers({
   operations,
   holds,
   wantedBoard,
-  layout
+  layout,
+  tutorial
 })
 
 const rootReducer = (state, action) => {

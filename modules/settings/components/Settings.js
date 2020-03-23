@@ -48,7 +48,7 @@ import { DatagridProvider } from '~/modules/datagrid'
 
 import { withToastManager } from 'react-toast-notifications'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
-import Tutorial from '~/modules/tutorial/Tutorial'
+import Tutorial from '~/modules/tutorial'
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;

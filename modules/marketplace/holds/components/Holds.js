@@ -9,7 +9,7 @@ import ProdexGrid from '~/components/table'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 import { Datagrid } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
-import Tutorial from '~/modules/tutorial/Tutorial'
+import Tutorial from '~/modules/tutorial'
 
 const HoldDropdown = styled(Dropdown)`
   z-index: 601 !important;

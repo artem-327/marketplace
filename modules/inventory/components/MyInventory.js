@@ -17,7 +17,7 @@ import moment from 'moment/moment'
 import { getSafe } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
-import Tutorial from '~/modules/tutorial/Tutorial'
+import Tutorial from '~/modules/tutorial'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',

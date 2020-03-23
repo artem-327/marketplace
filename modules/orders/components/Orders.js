@@ -21,7 +21,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { Datagrid } from '../../datagrid/DatagridProvider'
 import { AttachmentManager } from '~/modules/attachments'
 import { uniqueArrayByKey } from '~/utils/functions'
-import Tutorial from '~/modules/tutorial/Tutorial'
+import Tutorial from '~/modules/tutorial'
 
 const ButtonsWrapper = styled(Grid)`
   margin-left: -21px !important;

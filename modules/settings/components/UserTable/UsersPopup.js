@@ -17,6 +17,9 @@ import { errorMessages } from '~/constants/yupValidation'
 //import { currency } from '~/constants/index'
 import { currencyId } from '~/constants/index'
 import { PhoneNumber } from '~/modules/phoneNumber'
+import { changeTutorialTab } from '~/modules/tutorial/actions'
+import { setTutorialCookies } from '~/modules/tutorial/components/Tutorial'
+import { getSafe } from '~/utils/functions'
 
 const userFormValidation = () =>
   Yup.object().shape({
@@ -59,7 +62,13 @@ class UsersPopup extends React.Component {
   }
 
   submitUser = async (values, actions) => {
-    const { popupValues, handlerSubmitUserEditPopup, postNewUserRequest } = this.props
+    const {
+      popupValues,
+      handlerSubmitUserEditPopup,
+      postNewUserRequest,
+      changeTutorialTab,
+      tutorialCompleted
+    } = this.props
 
     const data = {
       additionalBranches: values.additionalBranches,
@@ -76,6 +85,9 @@ class UsersPopup extends React.Component {
         await handlerSubmitUserEditPopup(data, popupValues.id)
       } else {
         await postNewUserRequest(data)
+        if (!tutorialCompleted) {
+          setTutorialCookies(changeTutorialTab)
+        }
       }
     } catch {}
     actions.setSubmitting(false)
@@ -231,7 +243,8 @@ const mapDispatchToProps = {
   closePopup,
   closeRolesPopup,
   handlerSubmitUserEditPopup,
-  getCurrencies
+  getCurrencies,
+  changeTutorialTab
 }
 
 const mapStateToProps = state => {
@@ -240,7 +253,8 @@ const mapStateToProps = state => {
     userRoles: state.settings.popupValues && state.settings.popupValues.allUserRoles.map(r => r.id),
     branchesAll: state.settings.branchesAll,
     roles: state.settings.roles,
-    userEditRoles: state.settings.userEditRoles
+    userEditRoles: state.settings.userEditRoles,
+    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false)
     // currencies: state.settings.currency.map(d => {
     //   return {
     //     id: d.id,

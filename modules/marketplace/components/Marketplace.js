@@ -14,7 +14,7 @@ import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 import { Holds } from '~/modules/marketplace/holds'
-import Tutorial from '~/modules/tutorial/Tutorial'
+import Tutorial from '~/modules/tutorial'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;

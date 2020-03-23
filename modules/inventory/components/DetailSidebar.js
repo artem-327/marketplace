@@ -59,6 +59,8 @@ import { withDatagrid } from '~/modules/datagrid'
 import { AttachmentManager } from '~/modules/attachments'
 import _ from 'lodash'
 import DocumentTab from '~/components/document-tab'
+import { changeTutorialTab } from '~/modules/tutorial/actions'
+import { setTutorialCookies } from '~/modules/tutorial/components/Tutorial'
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -628,7 +630,7 @@ class DetailSidebar extends Component {
   }, 250)
 
   submitForm = async (values, setSubmitting, setTouched, savedButtonClicked = false) => {
-    const { addProductOffer, datagrid } = this.props
+    const { addProductOffer, datagrid, changeTutorialTab, tutorialCompleted } = this.props
     const { sidebarValues, attachmentFiles } = this.state
     let isEdit = getSafe(() => sidebarValues.id, null)
     let isGrouped = getSafe(() => sidebarValues.grouped, false)
@@ -676,7 +678,9 @@ class DetailSidebar extends Component {
     if (Object.keys(props).length) {
       try {
         data = await addProductOffer(props, isEdit, false, isGrouped, attachmentFiles)
-
+        if (!tutorialCompleted) {
+          await setTutorialCookies(changeTutorialTab)
+        }
         if (isEdit) {
           datagrid.updateRow(data.id, () => data)
         } else {
@@ -1945,10 +1949,14 @@ const mapDispatchToProps = {
   downloadAttachment,
   closeSidebarDetail,
   getProductOffer,
-  removeAttachmentLinkProductOffer
+  removeAttachmentLinkProductOffer,
+  changeTutorialTab
 }
 
 const mapStateToProps = ({
+  auth: {
+    identity: { tutorialCompleted }
+  },
   simpleAdd: {
     autocompleteData,
     autocompleteDataLoading,
@@ -1987,7 +1995,8 @@ const mapStateToProps = ({
   searchedProductsLoading,
   warehousesList,
   listDocumentTypes,
-  editProductOfferInitTrig
+  editProductOfferInitTrig,
+  tutorialCompleted
 })
 
 export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(DetailSidebar))))

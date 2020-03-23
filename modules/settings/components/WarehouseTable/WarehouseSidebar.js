@@ -19,6 +19,7 @@ import { Form, Input, Button, Checkbox, TextArea } from 'formik-semantic-ui-fixe
 import * as Yup from 'yup'
 import Router from 'next/router'
 import styled from 'styled-components'
+import { withToastManager } from 'react-toast-notifications'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -31,6 +32,8 @@ import { PhoneNumber } from '~/modules/phoneNumber'
 import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/components/DetailSidebar'
 import DocumentTab from '~/components/document-tab'
 import { AlertCircle } from 'react-feather'
+import { changeTutorialTab } from '~/modules/tutorial/actions'
+import { setTutorialCookies } from '~/modules/tutorial/components/Tutorial'
 
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
@@ -141,8 +144,80 @@ class WarehouseSidebar extends React.Component {
     if (this.props[name].length === 0) fn()
   }
 
+  //setTutorialCookies = async () => {
+  //const { toastManager, name } = this.props
+  // array of tabsNames converted to Map
+  // let tabsNamesMap = new Map()
+  // if (defaultTabs && defaultTabs.length) {
+  //   for (let i in defaultTabs) {
+  //     tabsNamesMap.set(defaultTabs[i].type, defaultTabs[i])
+  //   }
+  // }
+  // const cookies = new Cookies()
+  // const cookieTutorialTabs = cookies.get('tutorial')
+  // console.log('cookieTutorialTabs====================================')
+  // console.log(cookieTutorialTabs)
+  // console.log('====================================')
+  // const leng = cookieTutorialTabs && cookieTutorialTabs.length ? cookieTutorialTabs.length : 0
+  // const tabs =
+  //   cookieTutorialTabs && !cookieTutorialTabs.length
+  //     ? [tutorialTabs[leng]] // ['branches']
+  //     : [...cookieTutorialTabs, tutorialTabs[leng]]
+  // if (tabs) {
+  //   cookies.set('tutorial', tabs, { path: '/' }) // set all existing cookies + next checked tab
+  //   await this.props.changeTutorialTab()
+  // }
+  //const cookieTutorialTabs = cookies.get('tutorial')
+
+  //if (cookieTutorialTabs && cookieTutorialTabs.length) {
+  // if completed all tutorial tabs (index is more than 7)
+  // if (!tutorialTabs[cookieTutorialTabs.length + 1]) {
+  //   const requestBody = { name, tutorialCompleted: true }
+  //   try {
+  //     await updateMyProfile(requestBody)
+  //     cookies.remove('tutorial', { path: '/' })
+  //     toastManager.add(
+  //       generateToastMarkup(
+  //         <FormattedMessage id='tutorial.congratulation.title' defaultMessage='Congratulations!' />,
+  //         <FormattedMessage
+  //           id='tutorial.congratulation.content'
+  //           defaultMessage='Congratulations, you have finished the setup!'
+  //         />
+  //       ),
+  //       {
+  //         appearance: 'success'
+  //       }
+  //     )
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // } else {
+  //!skip && Router.push(urlTabs[cookieTutorialTabs.length])
+  //const tabType = urlTabs[cookieTutorialTabs.length].split('=')[1]
+  //!skip && tutorialTabs[cookieTutorialTabs.length] !== 'inventory' && settingsTabChang(tabsNamesMap.get(tabType))
+
+  //this.setState({ tutorialTab: tutorialTabs[cookieTutorialTabs.length + 1] }) // set another tutorial tab for show correct content and icons in tab
+  //}
+  //} else {
+  //!skip && Router.push(urlTabs[0])
+  //!skip && settingsTabChang(tabsNamesMap.get('branches'))
+  // await changeTutorialTab()
+  // cookies.set('tutorial', [this.getNextTab()], { path: '/' }) // set first checked tab 'branches'
+
+  //this.setState({ tutorialTab: tutorialTabs[1] }) // set second tutorial tab after checked first tab
+  //}
+  //}
+
   submitHandler = async (values, actions) => {
-    const { popupValues, currentTab, putEditWarehouse, postNewWarehouseRequest, datagrid } = this.props
+    const {
+      popupValues,
+      currentTab,
+      putEditWarehouse,
+      postNewWarehouseRequest,
+      datagrid,
+      changeTutorialTab,
+      tutorialCompleted
+    } = this.props
     const { attachmentFiles } = this.state
 
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
@@ -173,6 +248,9 @@ class WarehouseSidebar extends React.Component {
         await putEditWarehouse(requestData, popupValues.id, attachmentFiles)
       } else {
         await postNewWarehouseRequest(requestData, attachmentFiles)
+        if (!tutorialCompleted) {
+          await setTutorialCookies(changeTutorialTab)
+        }
       }
     } catch {
     } finally {
@@ -521,7 +599,8 @@ const mapDispatchToProps = {
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
-  loadFile
+  loadFile,
+  changeTutorialTab
 }
 const mapStateToProps = state => {
   // const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
@@ -544,8 +623,12 @@ const mapStateToProps = state => {
     company: getSafe(() => state.auth.identity.company.id, null),
     isOpenSidebar: state.settings.isOpenSidebar,
     loading: state.settings.loading,
-    openTab: state.settings.openTab
+    openTab: state.settings.openTab,
+    name: getSafe(() => state.auth.identity.name, ''),
+    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false)
   }
 }
 
-export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(WarehouseSidebar)))
+export default withDatagrid(
+  injectIntl(connect(mapStateToProps, mapDispatchToProps)(withToastManager(WarehouseSidebar)))
+)
