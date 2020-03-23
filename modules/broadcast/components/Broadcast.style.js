@@ -73,7 +73,7 @@ const Content = styled.div`
   display: flex;
   flex: 1 0 300px;
   flex-direction: column;
-  overflow-y: scroll;
+  overflow-y: none;
 `
 
 const RowContent = styled.div`
