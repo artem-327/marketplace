@@ -28,7 +28,7 @@ import { AddressForm } from '~/modules/address-form/'
 
 import { getSafe } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
-import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/components/DetailSidebar'
+import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
 import DocumentTab from '~/components/document-tab'
 import { AlertCircle } from 'react-feather'
 

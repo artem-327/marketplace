@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { object, bool, number, node, func, array } from 'prop-types'
 import { Segment, GridRow, Grid, GridColumn, Button, Dropdown, Menu, Sidebar, Table } from 'semantic-ui-react'
-import { FlexSidebar, GraySegment, FlexContent } from '~/modules/inventory/components/DetailSidebar'
 import { Form, Input, Dropdown as FormikDropdown } from 'formik-semantic-ui-fixed-validation'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
@@ -22,8 +21,55 @@ import DocumentManager from '~/modules/settings/components/Documents/DocumentMan
 import { getSafe, formatAssay } from '~/utils/functions'
 import { EchoProductResponse, CasProductResponse } from '~/constants/backendObjects'
 
+import {
+  SegmentShowOnly,
+  BottonButtonsShowOnly
+} from '../constants/layout'
+
+export const FlexSidebar = styled(Sidebar)`
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  top: 80px !important;
+  padding-bottom: 80px;
+  box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
+  z-index: 1000 !important;
+  text-align: left;
+`
+
+export const GraySegment = styled(Segment)`
+  background-color: #ededed !important;
+`
+
+export const FlexContent = styled.div`
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  > .ui.segment {
+    padding: 0 1em 1em 1em;
+    .ui.form {    
+      > .ui.menu {      
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6 !important;    
+        margin: 0px -1em;
+        padding: 0px 2.142857143em;  
+        > .item {
+        text-transform: uppercase;
+        font-weight: 500;
+        color: #848893;
+        margin-bottom: 0;
+        box-shadow: 0 0 0 0 transparent;
+        }
+        > .active.item {
+          color: #20273a;
+          border-bottom-width: 2px;
+        }
+      }
+    }
+  }
+`
+
 const WiderSidebar = styled(FlexSidebar)`
-  min-width: 545px !important;
+  min-width: 630px !important;
 `
 
 const RightAlignedDiv = styled.div`
@@ -47,12 +93,12 @@ class CompanyProductInfo extends Component {
   getElements = ({ id, defaultMessage, elements }) => {
     return (
       <>
-        <GridRow>
+        <GridRow className='table-name'>
           <GridColumn width={16}>
             <FormattedMessage id={id} defaultMessage={defaultMessage} />
           </GridColumn>
         </GridRow>
-        <Table basic='very'>
+        <Table celled table>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>
@@ -82,11 +128,11 @@ class CompanyProductInfo extends Component {
 
   getInput = ({ id, defaultMessage, name }) => (
     <GridRow>
-      <GridColumn width={6}>
+      <GridColumn width={7}>
         <FormattedMessage id={id} defaultMessage={defaultMessage} />
       </GridColumn>
 
-      <GridColumn width={10}>
+      <GridColumn width={9}>
         <Input inputProps={{ readOnly: this.props.readOnly, id: name }} name={name} />
       </GridColumn>
     </GridRow>
@@ -94,11 +140,11 @@ class CompanyProductInfo extends Component {
 
   getDropdown = ({ id, defaultMessage, name, props }) => (
     <GridRow>
-      <GridColumn width={6}>
+      <GridColumn width={7}>
         <FormattedMessage id={id} defaultMessage={defaultMessage} />
       </GridColumn>
 
-      <GridColumn width={10}>
+      <GridColumn width={9}>
         <FormikDropdown
           selection
           fluid
@@ -261,6 +307,14 @@ class CompanyProductInfo extends Component {
       })}
     </>
   )
+
+  componentDidMount() {
+    let { closePopup, onClose, isOpen } = this.props
+    if (isOpen) {
+      closePopup()
+      onClose()
+    }
+  }
 
   componentDidUpdate() {
     // When you switch different Products and previous product had casProductIndex bigger value than new product casProducts count, set index to 0 so dropdown value is correctly displayed
@@ -577,7 +631,7 @@ class CompanyProductInfo extends Component {
 
     return (
       <>
-        <GridRow>
+        <GridRow className='select-row'>
           <GridColumn computer={8}>
             {readOnly ? (
               <>
@@ -726,11 +780,13 @@ class CompanyProductInfo extends Component {
         // Transportation
         return (
           <Grid verticalAlign='middle'>
-            <GridRow>
-              <GridColumn computer={6}>
-                <FormattedMessage id='global.filter' defaultMessage='Filter' />
+            <GridRow className='select-row'>
+              <GridColumn computer={8}>
+                <label>
+                  <FormattedMessage id='global.filter' defaultMessage='Filter' />
+                </label>
               </GridColumn>
-              <GridColumn computer={10}>
+              <GridColumn computer={8}>
                 <Dropdown
                   selection
                   fluid
@@ -852,7 +908,13 @@ class CompanyProductInfo extends Component {
 
       case 4: {
         // Documents
-        return <DocumentManager items={values.attachments} edit={false} deletable={false} normalWidth={true} />
+        return <DocumentManager
+          items={values.attachments}
+          edit={false}
+          deletable={false}
+          normalWidth={!readOnly}
+          reduceColumns={readOnly}
+        />
       }
 
       default:
@@ -870,7 +932,7 @@ class CompanyProductInfo extends Component {
       hiddenTabs,
       readOnly,
       handleSubmit,
-      casProductOnly
+      casProductOnly,
     } = this.props
 
     let { companyProduct } = popupValues
@@ -946,7 +1008,10 @@ class CompanyProductInfo extends Component {
                       )
                     )}
               </Menu>
-              <Segment basic>{this.getContent(formikProps)}</Segment>
+              {readOnly
+                ? (<SegmentShowOnly basic>{this.getContent(formikProps)}</SegmentShowOnly>)
+                : (<Segment basic>{this.getContent(formikProps)}</Segment>)
+              }
             </>
           )
         }}
@@ -980,7 +1045,7 @@ class CompanyProductInfo extends Component {
   }
 
   render() {
-    let { isOpen } = this.props
+    let { isOpen, readOnly } = this.props
 
     const contentWrapper = children =>
       React.cloneElement(
@@ -998,10 +1063,17 @@ class CompanyProductInfo extends Component {
         this.props.actionsWrapper ? (
           this.props.actionsWrapper(children)
         ) : (
-          <GraySegment>
-            <RightAlignedDiv>{children}</RightAlignedDiv>
-          </GraySegment>
-        )
+          readOnly ?
+            (
+              <BottonButtonsShowOnly>
+                {children}
+              </BottonButtonsShowOnly>
+            ) : (
+              <GraySegment>
+                <RightAlignedDiv>{children}</RightAlignedDiv>
+              </GraySegment>
+            )
+          )
       )
 
     const Content = React.cloneElement(
