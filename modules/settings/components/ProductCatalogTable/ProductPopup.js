@@ -6,12 +6,13 @@ import debounce from 'lodash/debounce'
 import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {Modal, FormGroup, Popup, Grid, GridRow, GridColumn, Divider, Icon} from 'semantic-ui-react'
+import {Modal, FormGroup, FormField, Popup, Grid, GridRow, GridColumn, Divider, Icon} from 'semantic-ui-react'
 
 import { CompanyProductMixtures } from '~/components/shared-components/'
 import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
 import { DisabledButtonWrapped } from '~/utils/components'
 import confirm from '~/src/components/Confirmable/confirm'
+import { Required } from '~/components/constants/layout'
 
 import {
   closePopup,
@@ -410,69 +411,79 @@ class ProductPopup extends React.Component {
                     </>
                   )}
                   <FormGroup widths='equal' data-test='settings_product_popup_nameCodeInci_inp'>
-                    <Input
-                      type='text'
-                      label={formatMessage({ id: 'global.intProductName', defaultMessage: 'Internal Product Name' })}
-                      name='intProductName'
-                    />
-                    <Input
-                      type='text'
-                      label={formatMessage({ id: 'global.intProductCode', defaultMessage: 'Internal Product Code' })}
-                      name='intProductCode'
-                    />
+                    <FormField>
+                      <FormattedMessage id='global.intProductName' defaultMessage='Internal Product Name' />
+                      <Required />
+                      <Input
+                        type='text'
+                        name='intProductName'
+                      />
+                    </FormField>
+                    <FormField>
+                      <FormattedMessage id='global.intProductCode' defaultMessage='Internal Product Code' />
+                      <Required />
+                      <Input
+                        type='text'
+                        name='intProductCode'
+                      />
+                    </FormField>
                   </FormGroup>
 
                   <FormGroup data-test='settings_product_popup_packagingSize_inp'>
-                    <Input
-                      fieldProps={{
-                        width: 4
-                      }}
-                      type='number'
-                      label={formatMessage({ id: 'global.packagingSize', defaultMessage: 'Packaging Size' })}
-                      name='packagingSize'
-                    />
-                    <Dropdown
-                      fieldProps={{ width: 6 }}
-                      label={formatMessage({ id: 'global.packagingUnit', defaultMessage: 'Unit' })}
-                      name='packagingUnit'
-                      options={productsUnitsType}
-                      inputProps={{
-                        'data-test': 'settings_product_popup_packagingUnit_drpdn',
-                        onChange: (e, d) => {
-                          setFieldValue('packagingType', '')
-                          this.handleUnitChange(d.value, this.props.unitsAll, this.props.packagingTypesAll)
-                        }
-                      }}
-                    />
-                    <Dropdown
-                      fieldProps={{
-                        width: 6
-                      }}
-                      label={formatMessage({ id: 'global.packagingType', defaultMessage: 'Packaging Type' })}
-                      name='packagingType'
-                      options={packagingTypesReduced}
-                      inputProps={{ 'data-test': 'settings_product_popup_packagingType_drpdn' }}
-                    />
+                    <FormField width='4'>
+                      <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size' />
+                      <Required />
+                      <Input
+                        type='number'
+                        name='packagingSize'
+                      />
+                    </FormField>
+                    <FormField width='6'>
+                      <FormattedMessage id='global.packagingUnit' defaultMessage='Unit' />
+                      <Required />
+                      <Dropdown
+                        name='packagingUnit'
+                        options={productsUnitsType}
+                        inputProps={{
+                          'data-test': 'settings_product_popup_packagingUnit_drpdn',
+                          onChange: (e, d) => {
+                            setFieldValue('packagingType', '')
+                            this.handleUnitChange(d.value, this.props.unitsAll, this.props.packagingTypesAll)
+                          }
+                        }}
+                      />
+                    </FormField>
+                    <FormField width='6'>
+                      <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type' />
+                      <Required />
+                      <Dropdown
+                        name='packagingType'
+                        options={packagingTypesReduced}
+                        inputProps={{ 'data-test': 'settings_product_popup_packagingType_drpdn' }}
+                      />
+                    </FormField>
                   </FormGroup>
 
                   <FormGroup data-test='settings_product_popup_packageWeight_inp'>
-                    <Input
-                      fieldProps={{
-                        width: 4
-                      }}
-                      type='text'
-                      label={formatMessage({ id: 'global.packageWeight', defaultMessage: 'Package Weight' })}
-                      name='packageWeight'
-                    />
-                    <Dropdown
-                      fieldProps={{ width: 6 }}
-                      label={formatMessage({ id: 'global.packageWeightUnit', defaultMessage: 'Package Weight Unit' })}
-                      name='packageWeightUnit'
-                      options={packageWeightUnits}
-                      inputProps={{
-                        'data-test': 'settings_product_popup_packageWeightUnit_drpdn'
-                      }}
-                    />
+                    <FormField width='4'>
+                      <FormattedMessage id='global.packageWeight' defaultMessage='Package Weight' />
+                      <Required />
+                      <Input
+                        type='text'
+                        name='packageWeight'
+                      />
+                    </FormField>
+                    <FormField width='6'>
+                      <FormattedMessage id='global.packageWeightUnit' defaultMessage='Package Weight Unit' />
+                      <Required />
+                      <Dropdown
+                        name='packageWeightUnit'
+                        options={packageWeightUnits}
+                        inputProps={{
+                          'data-test': 'settings_product_popup_packageWeightUnit_drpdn'
+                        }}
+                      />
+                    </FormField>
                     <Input
                       fieldProps={{
                         width: 6
@@ -484,33 +495,36 @@ class ProductPopup extends React.Component {
                   </FormGroup>
 
                   <FormGroup widths='equal'>
-                    <Dropdown
-                      label={
-                        <FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code'>
-                          {text => text}
-                        </FormattedMessage>
-                      }
-                      options={nmfcNumbersFiltered}
-                      inputProps={{
-                        fluid: true,
-                        search: val => val,
-                        selection: true,
-                        loading: nmfcNumbersFetching,
-                        onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery)
-                      }}
-                      name='nmfcNumber'
-                    />
+                    <FormField>
+                      <FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code'>
+                        {text => text}
+                      </FormattedMessage> <Required/>
+                      <Dropdown
+                        options={nmfcNumbersFiltered}
+                        inputProps={{
+                          fluid: true,
+                          search: val => val,
+                          selection: true,
+                          loading: nmfcNumbersFetching,
+                          onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery)
+                        }}
+                        name='nmfcNumber'
+                      />
+                    </FormField>
                     <Input
                       label={formatMessage({ id: 'global.inciName', defaultMessage: 'INCI Name' })}
                       type='string'
                       name='inciName'
                     />
-                    <Dropdown
-                      label={formatMessage({ id: 'global.freightClass', defaultMessage: 'Freight Class' })}
-                      name='freightClass'
-                      options={freightClasses}
-                      inputProps={{ 'data-test': 'settings_product_popup_freightClass_drpdn' }}
-                    />
+                    <FormField>
+                      <FormattedMessage id='global.freightClass' defaultMessage='Freight Class' />
+                      <Required />
+                      <Dropdown
+                        name='freightClass'
+                        options={freightClasses}
+                        inputProps={{ 'data-test': 'settings_product_popup_freightClass_drpdn' }}
+                      />
+                    </FormField>
                   </FormGroup>
 
                   <FormGroup>

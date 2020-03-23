@@ -59,6 +59,7 @@ import { withDatagrid } from '~/modules/datagrid'
 import { AttachmentManager } from '~/modules/attachments'
 import _ from 'lodash'
 import DocumentTab from '~/components/document-tab'
+import { Required } from '~/components/constants/layout'
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -607,9 +608,11 @@ class DetailSidebar extends Component {
           <GridColumn computer={2} />
           <GridColumn computer={5}>
             <FormattedMessage id='global.quantity' defaultMessage='Quantity' />
+            <Required />
           </GridColumn>
           <GridColumn computer={5}>
             <FormattedMessage id='addInventory.fobPrice' defaultMessage='FOB Price' />
+            <Required />
           </GridColumn>
         </Grid>
         {tiers}
@@ -1142,6 +1145,7 @@ class DetailSidebar extends Component {
                                         defaultMessage='Company Product'>
                                         {text => text}
                                       </FormattedMessage>
+                                      <Required />
                                     </GridColumn>
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <Dropdown
@@ -1183,6 +1187,7 @@ class DetailSidebar extends Component {
                                       <FormattedMessage id='addInventory.pkgsAvailable' defaultMessage='PKGs Available'>
                                         {text => text}
                                       </FormattedMessage>
+                                      <Required />
                                     </GridColumn>
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <Input
@@ -1199,6 +1204,7 @@ class DetailSidebar extends Component {
                                       <FormattedMessage id='global.warehouse' defaultMessage='Warehouse'>
                                         {text => text}
                                       </FormattedMessage>
+                                      <Required />
                                     </GridColumn>
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <Dropdown
@@ -1219,6 +1225,7 @@ class DetailSidebar extends Component {
                                       <FormattedMessage id='global.fobPrice' defaultMessage='FOB Price'>
                                         {text => text}
                                       </FormattedMessage>
+                                      <Required />
                                     </GridColumn>
                                     <GridColumn mobile={rightWidth} computer={rightWidth}>
                                       <FormField width={16} data-test='detail_sidebar_fob_price'>
@@ -1421,6 +1428,7 @@ class DetailSidebar extends Component {
                                         defaultMessage='Condition Notes'>
                                         {text => text}
                                       </FormattedMessage>
+                                      {values.edit.conforming ? null : <Required />}
                                       <TextArea
                                         name='edit.conditionNotes'
                                         inputProps={{ disabled: sidebarValues && sidebarValues.grouped }}
@@ -1508,6 +1516,7 @@ class DetailSidebar extends Component {
                                   <GridRow>
                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
                                       <FormattedMessage id='global.minimumPkgs' defaultMessage='Minimum PKGs' />
+                                      <Required />
                                     </GridColumn>
                                     <GridColumn
                                       mobile={rightWidth}
@@ -1535,6 +1544,7 @@ class DetailSidebar extends Component {
                                   <GridRow>
                                     <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
                                       <FormattedMessage id='global.splitPkgs' defaultMessage='Split PKGs' />
+                                      <Required />
                                     </GridColumn>
                                     <GridColumn
                                       mobile={rightWidth}

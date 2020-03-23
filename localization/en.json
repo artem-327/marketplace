@@ -591,6 +591,7 @@
   "global.dotPackagingGroup": "DOT Packaging Group",
   "global.imdgImoPackagingGroup": "IMDG/IMO Packaging Group",
   "global.elements": "Elements",
+  "global.elementName": "Element Name",
   "global.sds": "SDS",
   "global.sdsRevisionDate": "SDS Revision Date",
   "global.sdsVersionNumber": "SDS Version Number",
