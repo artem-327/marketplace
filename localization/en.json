@@ -626,6 +626,7 @@
   "global.sales": "Sales",
   "global.Purchase": "Purchase",
   "global.marketplace": "Marketplace",
+  "global.marketplaceCovid": "Marketplace: COVID-19 Supplies",
   "global.salesOrders": "Sales Orders",
   "global.purchaseOrders": "Purchase Orders",
   "global.import": "Import",
