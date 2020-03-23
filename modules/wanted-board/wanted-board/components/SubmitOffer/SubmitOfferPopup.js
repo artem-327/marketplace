@@ -391,6 +391,7 @@ class SubmitOfferPopup extends React.Component {
       purchaseRequestPending
     } = this.props
     const { columns } = this.state
+    const rows = this.getRows()
 
     const qtyPart = popupValues.unit.nameAbbreviation
 
@@ -403,7 +404,7 @@ class SubmitOfferPopup extends React.Component {
           <Modal.Header>
             <FormattedMessage id='wantedBoard.submitOfferHeader' defaultMessage='SUBMIT OFFER' />
           </Modal.Header>
-          <ModalContent scrolling>
+          <ModalContent scrolling={rows.length !== 0}>
             <>
               <SubmitOfferHighSegment>
                 <Grid verticalAlign='middle'>
@@ -499,7 +500,7 @@ class SubmitOfferPopup extends React.Component {
                   tableName='submit_offer_grid'
                   {...datagrid.tableProps}
                   loading={datagrid.loading || purchaseRequestPending}
-                  rows={this.getRows()}
+                  rows={rows}
                   columns={columns}
                 />
               </div>

@@ -436,9 +436,9 @@ class MyRequestedItems extends Component {
             {...datagrid.tableProps}
             rows={rows}
             columns={type === 'product' ? columnsProduct : columnsChemical}
-            rowSelection
+            rowSelection={false}
+            showSelectionColumn={false}
             treeDataType={true}
-            showSelectionColumn
             tableTreeColumn={type === 'product' ? 'product' : 'casNumber'}
             getChildRows={(row, rootRows) => { return row ? row.purchaseRequestOffers : rootRows }}
             onRowClick={(_, row) => {
