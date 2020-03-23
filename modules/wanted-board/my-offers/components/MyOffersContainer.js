@@ -31,7 +31,7 @@ const StyledStatusLabel = styled(Label)`
   &.REJECTED {
     background-color: #f16844 !important;
   }
-  &.PURCHASED {
+  &.PURCHASED, &.ACCEPTED {
     background-color: #84c225 !important;
   }
 `
@@ -39,8 +39,9 @@ const StyledStatusLabel = styled(Label)`
 const StatusLabel = (val) => {
     let text
     switch (val) {
+      case 'ACCEPTED':
       case 'PURCHASED':
-        text = <FormattedMessage id='wantedBoard.purchased' defaultMessage='Purchased' />
+        text = <FormattedMessage id='wantedBoard.accepted' defaultMessage='Accepted' />
         break
       case 'REJECTED':
         text = <FormattedMessage id='wantedBoard.rejected' defaultMessage='Rejected' />
