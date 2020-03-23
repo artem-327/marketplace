@@ -381,8 +381,8 @@ class WarehouseSidebar extends React.Component {
         ) : null}
         <DocumentTab
           listDocumentTypes={[
-            { key: 137, text: 'Resale Certificate', value: 137 },
-            { key: 136, text: 'Sales Tax Exemption Certificate', value: 136 }
+            { key: 14, text: 'Resale Certificate', value: 14 },
+            { key: 13, text: 'Sales Tax Exemption Certificate', value: 13 }
           ]}
           values={values}
           setFieldValue={setFieldValue}
