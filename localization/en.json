@@ -1262,6 +1262,7 @@
   "cart.holdRequestInfo": "2. Hold Request Info",
   "validation.required": "Required",
   "validation.dateInFuture": "Date must be in future",
+  "validation.dateNotInPast": "Date must not be in past",
   "validation.requiredNonConforming": "Required if Condition is Non Conforming",
   "validation.invalidWebsiteHttp": "Invalid Website URL (make sure to include http:// or https://)",
   "validation.invalidURL": "Invalid Website URL",

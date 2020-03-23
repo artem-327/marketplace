@@ -35,9 +35,23 @@ import ProdexGrid from '~/components/table'
 
 import confirm from '~/src/components/Confirmable/confirm'
 
-const validationSchema = Yup.object().shape({
-  pricePerUOM: Yup.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage)
-})
+const validationSchema = () =>
+  Yup.lazy(values => {
+    return Yup.object().shape({
+      pricePerUOM: Yup
+        .number()
+        .positive(errorMessages.positive)
+        .typeError(errorMessages.requiredMessage)
+        .required(errorMessages.requiredMessage),
+      ...(values.lotExpirationDate && {
+        lotExpirationDate: Yup.string()
+          .test('minDate', errorMessages.dateNotInPast, function(date) {
+            const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+            return enteredDate >= moment().endOf('day').format()
+          }),
+      }),
+    })
+  })
 
 import { InputWrapper } from '../../../constants/layout'
 
@@ -301,7 +315,7 @@ class SubmitOfferPopup extends React.Component {
 
     let expiresAt = null
     if (lotExpirationDate) {
-      expiresAt = moment(getStringISODate(lotExpirationDate)).format()
+      expiresAt = moment(getStringISODate(lotExpirationDate)).endOf('day').format()
     }
 
     const body = {
@@ -497,7 +511,7 @@ class SubmitOfferPopup extends React.Component {
                 setSubmitting(false)
                 this.submitOffer(values)
               }}
-              validationSchema={validationSchema}
+              validationSchema={validationSchema()}
               validateOnChange
               enableReinitialize
               initialValues={{
@@ -530,7 +544,9 @@ class SubmitOfferPopup extends React.Component {
                               label='Expiration Date'
                               inputProps={{
                                 onChange: (e, { name, value }) =>
-                                  this.handleChange(e, { name, value: getStringISODate(value) })
+                                  this.handleChange(e, { name, value: getStringISODate(value) }),
+                                minDate: moment(),
+                                clearable: true,
                               }}
                             />
                           </FormGroup>
@@ -541,7 +557,7 @@ class SubmitOfferPopup extends React.Component {
                               {text => text}
                             </FormattedMessage>
                           </Button>
-                          <Button primary disabled={this.state.select === ''}>
+                          <Button primary type='submit' disabled={this.state.select === ''}>
                             <FormattedMessage id='wantedBoard.submit' defaultMessage='Submit' tagName='span'>
                               {text => text}
                             </FormattedMessage>

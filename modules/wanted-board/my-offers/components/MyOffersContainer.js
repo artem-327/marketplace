@@ -59,6 +59,7 @@ function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
     ...datagrid,
+    editedId: store.wantedBoard.editWindowOpen === 'my-offers' ? store.wantedBoard.editedId : null,
     rows: datagrid.rows.map(po => {
       const condition = getSafe(() => po.productOffer.conforming, null)
       return {

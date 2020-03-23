@@ -58,7 +58,8 @@ import {
   closeDetailSidebar,
   //getProductOffer,
   addPurchaseRequest,
-  editPurchaseRequest
+  editPurchaseRequest,
+  updateEditedId
 } from '../../actions'
 
 
@@ -120,18 +121,22 @@ const initValues = {
 
 const validationSchema = () =>
   val.lazy(values => {
-
-    //val.object().shape({
     return val.object().shape({
-      /*
-      ...(values.neededNow === false && {
-        neededAt: val.string()
-          .required(errorMessages.requiredMessage)
-      }),
-      */
       ...(values.doesExpire && {
         expiresAt: val.string()
           .required(errorMessages.requiredMessage)
+          .test('minDate', errorMessages.dateNotInPast, function(date) {
+            const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+            return enteredDate >= moment().endOf('day').format()
+          }),
+      }),
+      ...(values.neededNow === false && {
+        neededAt: val.string()
+          .required(errorMessages.requiredMessage)
+          .test('minDate', errorMessages.dateNotInPast, function(date) {
+            const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+            return enteredDate >= moment().endOf('day').format()
+          }),
       }),
       element: val.object().shape({
         echoProduct: val.string()
@@ -192,7 +197,8 @@ const validationSchema = () =>
       quantity: val
         .number()
         .typeError(errorMessages.requiredMessage)
-        .positive(errorMessages.positive)
+        .moreThan(0, errorMessages.greaterThan(0))
+        //.integer(errorMessages.integer)
         .required(errorMessages.requiredMessage),
       maximumPricePerUOM: val
         .number()
@@ -221,7 +227,7 @@ const listConforming = [
 class DetailSidebar extends Component {
   state = {
     initValues: initValues,
-    //sidebarValues: null,
+    sidebarValues: null,
     hasProvinces: false
   }
 
@@ -236,9 +242,58 @@ class DetailSidebar extends Component {
     if (!this.props.sidebarValues) {
       this.props.searchManufacturers('', 200)
     } else {
+      this.setState({ sidebarValues: this.props.sidebarValues})
+      this.props.updateEditedId(this.props.sidebarValues.id)
       if (this.props.sidebarValues.deliveryCountry && this.props.sidebarValues.deliveryCountry.hasProvinces) {
         this.props.getProvinces(this.props.sidebarValues.deliveryCountry.id)
         this.setState({ hasProvinces: true })
+      }
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.editInitTrig !== this.props.editInitTrig) {
+      const { touched, validateForm, submitForm, values, setSubmitting, setTouched } = this.formikProps
+      if (_.isEmpty(touched)) {
+        this.props.updateEditedId(this.props.sidebarValues.id)
+        this.setState({ sidebarValues: this.props.sidebarValues})
+      } else {
+        // Form edited
+        validateForm().then(err => {
+          const errors = Object.keys(err)
+          if (!errors.length || errors[0] === 'isCanceled') {
+            confirm(
+              <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
+              <FormattedMessage
+                id='confirm.global.unsavedChanges.content'
+                defaultMessage='You have unsaved changes. Do you wish to save them?'
+              />
+            )
+              .then(
+                async () => {
+                  // Confirm
+                  if (await this.submitForm(values, setSubmitting, setTouched).sendSuccess) {
+                    if (this.props.sidebarValues.deliveryCountry && this.props.sidebarValues.deliveryCountry.hasProvinces) {
+                      this.props.getProvinces(this.props.sidebarValues.deliveryCountry.id)
+                      this.setState({ hasProvinces: true })
+                    }
+                    this.setState({sidebarValues: this.props.sidebarValues})
+                    this.props.updateEditedId(this.props.sidebarValues.id)
+                  }
+                },
+                () => {
+                  // Cancel
+                  if (this.props.sidebarValues.deliveryCountry && this.props.sidebarValues.deliveryCountry.hasProvinces) {
+                    this.props.getProvinces(this.props.sidebarValues.deliveryCountry.id)
+                    this.setState({ hasProvinces: true })
+                  }
+                  this.setState({ sidebarValues: this.props.sidebarValues})
+                  this.props.updateEditedId(this.props.sidebarValues.id)
+                }
+              )
+              .catch(() => {})
+          }
+        })
       }
     }
   }
@@ -263,22 +318,21 @@ class DetailSidebar extends Component {
 
   submitForm = async (values, setSubmitting, setTouched) => {
     const { addPurchaseRequest, editPurchaseRequest, datagrid } = this.props
-    const { sidebarValues } = this.props
+    const { sidebarValues } = this.state
+    let sendSuccess = false
 
     let neededAt = null, expiresAt = null
 
     if (values.neededNow) {
-      neededAt = moment()
-        .add(1, 'minutes')
-        .format()
+      neededAt = moment().endOf('day').format()
     } else {
       if (values.neededAt.length) {
-        neededAt = moment(getStringISODate(values.neededAt)).format()
+        neededAt = moment(getStringISODate(values.neededAt)).endOf('day').format()
       }
     }
 
     if (values.doesExpire) {
-      expiresAt = moment(getStringISODate(values.expiresAt)).format()
+      expiresAt = moment(getStringISODate(values.expiresAt)).endOf('day').format()
     }
 
     let body = {
@@ -296,18 +350,21 @@ class DetailSidebar extends Component {
     try {
       if (sidebarValues) {
         const response = await editPurchaseRequest(sidebarValues.id, body)
+        sendSuccess = true
         datagrid.updateRow(sidebarValues.id, () => response.value)
       } else {
         const response = await addPurchaseRequest(body)
+        sendSuccess = true
         datagrid.loadData()
       }
       this.props.closeDetailSidebar()
     } catch (e) {}
     setSubmitting(false)
+    return { sendSuccess }
   }
 
   getInitialFormValues = () => {
-    const { sidebarValues } = this.props
+    const { sidebarValues } = this.state
 
     let initialValues = {
       ...this.state.initValues,
@@ -719,7 +776,8 @@ class DetailSidebar extends Component {
                                 defaultMessage: '00/00/0000'
                               }),
                             clearable: true,
-                            disabled: values.neededNow !== false
+                            disabled: values.neededNow !== false,
+                            minDate: moment()
                           }}
                         />
                       </GridColumn>
@@ -733,7 +791,8 @@ class DetailSidebar extends Component {
                                 id: 'date.standardPlaceholder',
                                 defaultMessage: '00/00/0000'
                               }),
-                            disabled: values.doesExpire !== true
+                            disabled: values.doesExpire !== true,
+                            minDate: moment()
                           }}
                         />
                       </GridColumn>
@@ -1065,11 +1124,13 @@ const mapDispatchToProps = {
   closeDetailSidebar,
   //getProductOffer,
   addPurchaseRequest,
-  editPurchaseRequest
+  editPurchaseRequest,
+  updateEditedId
 }
 
 const mapStateToProps = ({
   wantedBoard: {
+    editInitTrig,
     autocompleteData,
     autocompleteDataLoading,
     listPackagingTypes,
@@ -1102,6 +1163,7 @@ const mapStateToProps = ({
     //  editProductOfferInitTrig
   }
   }) => ({
+  editInitTrig,
   autocompleteData,
   autocompleteDataLoading,
   listPackagingTypes,
