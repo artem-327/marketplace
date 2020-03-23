@@ -672,10 +672,11 @@ class DetailSidebar extends Component {
         this.setState({ changedForm: false, edited: false })
         break
     }
+
     if (Object.keys(props).length) {
       try {
         data = await addProductOffer(props, isEdit, false, isGrouped, attachmentFiles)
-        
+
         if (isEdit) {
           datagrid.updateRow(data.id, () => data)
         } else {

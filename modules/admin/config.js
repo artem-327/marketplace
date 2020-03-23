@@ -328,7 +328,7 @@ export const config = {
           </FormattedMessage>
         ),
         type: 'text',
-        required: true
+        required: false
       },
       {
         name: 'measureType',
@@ -338,6 +338,40 @@ export const config = {
           </FormattedMessage>
         ),
         type: 'text',
+        step: 1,
+        required: true
+      },
+      {
+        name: 'height',
+        title: (
+          <FormattedMessage id='global.height' defaultMessage='Height'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'number',
+        step: 0.01,
+        required: true
+      },
+      {
+        name: 'length',
+        title: (
+          <FormattedMessage id='global.length' defaultMessage='Length'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'number',
+        step: 0.01,
+        required: true
+      },
+      {
+        name: 'width',
+        title: (
+          <FormattedMessage id='global.width' defaultMessage='Width'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'number',
+        step: 0.01,
         required: true
       }
     ],
@@ -659,7 +693,7 @@ export const config = {
         type: 'text',
         required: true
       }
-    ],
+    ]
   },
 
   'Document Types': {

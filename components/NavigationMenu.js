@@ -10,13 +10,11 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { ArrowLeftCircle, ArrowRightCircle, Hexagon, Layers, Settings, ShoppingBag, Grid } from 'react-feather'
+import { Hexagon, Layers, Settings, ShoppingBag, Grid, Sliders, FileText  } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import { InventoryFilter, Filter, OrderFilter, WantedBoardFilter } from '~/modules/filter'
-
-import { PlusCircle } from 'react-feather'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -36,12 +34,14 @@ class Navigation extends Component {
   state = {
     dropdowns: {},
     settings: getSafe(() => Router.router.pathname === '/settings', false),
+    orders: getSafe(() => Router.router.pathname === '/orders', false)
+      || getSafe(() => Router.router.pathname === '/orders/detail', false),
     admin: getSafe(() => Router.router.pathname === '/admin', false),
     operations: getSafe(() => Router.router.pathname === '/operations', false),
-    openedFilterMyInventory: false,
-    openedFilterMarketplace: false,
+    openedFilterMyInventory: true,
+    openedFilterMarketplace: true,
     openedFilterOrders: false,
-    openedFilterWantedBoard: false,
+    openedFilterWantedBoard: true,
   }
 
   componentDidMount() {
@@ -71,13 +71,15 @@ class Navigation extends Component {
         case '/inventory/my':
           this.setState(prevState => ({
             openedFilterMyInventory: !prevState.openedFilterMyInventory,
-            settings: false
+            settings: false,
+            orders: false
           }))
           break
         case '/marketplace/all':
           this.setState(prevState => ({
             openedFilterMarketplace: !prevState.openedFilterMarketplace,
-            settings: false
+            settings: false,
+            orders: false
           }))
           break
         case '/wanted-board/wanted-board':
@@ -143,6 +145,8 @@ class Navigation extends Component {
       openedFilterMyInventory: false,
       openedFilterMarketplace: false,
       openedFilterOrders: false,
+      orders: false,
+      settings: false,
       admin: false,
       operations: false,
       [type]: !typeState
@@ -205,12 +209,14 @@ class Navigation extends Component {
       intl: { formatMessage },
       sidebarDetailTrigger,
       router: { pathname, asPath },
-      collapsedMenu
+      collapsedMenu,
+      activeFilter
     } = this.props
 
     const {
       dropdowns,
       settings,
+      orders,
       admin,
       operations,
       openedFilterMyInventory,
@@ -242,6 +248,7 @@ class Navigation extends Component {
           <>
             <Layers size={22} />
             {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
+            {asPath === '/inventory/my' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
           </>
         </MenuLink>
         {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
@@ -251,6 +258,7 @@ class Navigation extends Component {
               <>
                 <ShoppingBag size={22} />
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
+                {asPath === '/marketplace/all' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
               </>
             </MenuLink>
             {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
@@ -260,25 +268,38 @@ class Navigation extends Component {
           <>
             <Grid size={22} />
             {formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}
+            {false && asPath === '/wanted-board/wanted-board' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
           </>
         </MenuLink>
         {false && !collapsedMenu && openedFilterWantedBoard && asPath === '/wanted-board/wanted-board'
           ? <WantedBoardFilter /> : null
         }
-        <MenuLink to='/orders?type=sales' dataTest='navigation_menu_orders_sales_drpdn'>
-          <>
-            <ArrowRightCircle size={22} />
-            {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
-          </>
-        </MenuLink>
-        {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=sales' ? <OrderFilter /> : null}
-        <MenuLink to='/orders?type=purchase' dataTest='navigation_menu_orders_purchase_drpdn'>
-          <>
-            <ArrowLeftCircle />
-            {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
-          </>
-        </MenuLink>
-        {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=purchase' ? <OrderFilter /> : null}
+        <DropdownItem
+          icon={<FileText size={22} />}
+          text={formatMessage({ id: 'navigation.orders', defaultMessage: 'Orders' })}
+          className={orders ? 'opened' : null}
+          opened={orders}
+          onClick={() => this.toggleOpened('orders')}
+          refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+          refId={'orders'}
+          data-test='navigation_orders_drpdn'>
+          <Dropdown.Menu data-test='navigation_menu_orders_drpdn_menu'>
+            <PerfectScrollbar>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/orders?type=sales'
+                dataTest='navigation_orders_sales_orders_drpdn'>
+                {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/orders?type=purchase'
+                dataTest='navigation_orders_purchase_orders_drpdn'>
+                {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
+              </Dropdown.Item>
+            </PerfectScrollbar>
+          </Dropdown.Menu>
+        </DropdownItem>
         {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
@@ -439,7 +460,8 @@ export default withAuth(
         auth: store.auth,
         tabsNames: store.settings.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
-        collapsedMenu: store.layout.collapsedMenu
+        collapsedMenu: store.layout.collapsedMenu,
+        activeFilter: getSafe(() => store.filter.filter.appliedFilter.filters.length > 0, false)
       }),
       {
         triggerSystemSettingsModal,

@@ -120,18 +120,22 @@ const initValues = {
 
 const validationSchema = () =>
   val.lazy(values => {
-
-    //val.object().shape({
     return val.object().shape({
-      /*
-      ...(values.neededNow === false && {
-        neededAt: val.string()
-          .required(errorMessages.requiredMessage)
-      }),
-      */
       ...(values.doesExpire && {
         expiresAt: val.string()
           .required(errorMessages.requiredMessage)
+          .test('minDate', errorMessages.dateNotInPast, function(date) {
+            const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+            return enteredDate >= moment().endOf('day').format()
+          }),
+      }),
+      ...(values.neededNow === false && {
+        neededAt: val.string()
+          .required(errorMessages.requiredMessage)
+          .test('minDate', errorMessages.dateNotInPast, function(date) {
+            const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+            return enteredDate >= moment().endOf('day').format()
+          }),
       }),
       element: val.object().shape({
         echoProduct: val.string()
@@ -192,7 +196,8 @@ const validationSchema = () =>
       quantity: val
         .number()
         .typeError(errorMessages.requiredMessage)
-        .positive(errorMessages.positive)
+        .moreThan(0, errorMessages.greaterThan(0))
+        //.integer(errorMessages.integer)
         .required(errorMessages.requiredMessage),
       maximumPricePerUOM: val
         .number()
@@ -268,17 +273,15 @@ class DetailSidebar extends Component {
     let neededAt = null, expiresAt = null
 
     if (values.neededNow) {
-      neededAt = moment()
-        .add(1, 'minutes')
-        .format()
+      neededAt = moment().endOf('day').format()
     } else {
       if (values.neededAt.length) {
-        neededAt = moment(getStringISODate(values.neededAt)).format()
+        neededAt = moment(getStringISODate(values.neededAt)).endOf('day').format()
       }
     }
 
     if (values.doesExpire) {
-      expiresAt = moment(getStringISODate(values.expiresAt)).format()
+      expiresAt = moment(getStringISODate(values.expiresAt)).endOf('day').format()
     }
 
     let body = {
@@ -714,7 +717,8 @@ class DetailSidebar extends Component {
                                 defaultMessage: '00/00/0000'
                               }),
                             clearable: true,
-                            disabled: values.neededNow !== false
+                            disabled: values.neededNow !== false,
+                            minDate: moment()
                           }}
                         />
                       </GridColumn>
@@ -728,7 +732,8 @@ class DetailSidebar extends Component {
                                 id: 'date.standardPlaceholder',
                                 defaultMessage: '00/00/0000'
                               }),
-                            disabled: values.doesExpire !== true
+                            disabled: values.doesExpire !== true,
+                            minDate: moment()
                           }}
                         />
                       </GridColumn>

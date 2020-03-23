@@ -111,7 +111,17 @@ export default class ShippingQuotes extends Component {
 
     try {
       await this.props.addCartItem(payload)
-      Router.push('/cart')
+
+      const filledValues = {
+        zip: this.values.destination.zip,
+        country: this.values.destination.country,
+        freight: this.state.sQuote,
+        quotes: this.props.quotes,
+        freightIndex: this.state.selectedIndex
+      }
+      await this.props.setPreFilledValues(filledValues)
+
+      Router.push('/purchase-order')
     } catch {}
   }
 
@@ -190,6 +200,7 @@ export default class ShippingQuotes extends Component {
             !quantity ||
             !Number.isInteger(quantity) ||
             !values.destination.zip
+          this.values = values
 
           return (
             <>
@@ -343,7 +354,7 @@ export default class ShippingQuotes extends Component {
   }
 
   renderShipingQuotes(setFieldTouched) {
-    const { loading } = this.props
+    const { loading, quotes } = this.props
 
     return (
       <Segment basic style={{ padding: 0 }} loading={loading}>
@@ -387,7 +398,8 @@ export default class ShippingQuotes extends Component {
             </Table.HeaderCell>
           </Table.Header>
           <Table.Body>
-            {this.props.quotes.map((sQuote, i) => {
+            {getSafe(() => quotes.rates, []).map((sQuote, i) => {
+              if (!sQuote) return
               let now = moment()
               let deliveryDate = sQuote.shipmentRate.estimatedDeliveryDate
               let etd = now.diff(deliveryDate, 'days') * -1 + 1
@@ -439,7 +451,7 @@ export default class ShippingQuotes extends Component {
             })}
           </Table.Body>
         </Table>
-        {this.props.quotes.length === 0 && !loading && (
+        {getSafe(() => quotes.rates, []).length === 0 && !loading && (
           <div className='dx-g-bs4-fixed-block'>
             <big className='text-muted'>
               <FormattedMessage

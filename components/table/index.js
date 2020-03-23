@@ -207,12 +207,7 @@ const TreeTableCells = (props, rowChildActions) => {
       }
     }
   }
-  return (
-    <Table.Cell
-      {...newProps}
-      className={props.column.name === '__actions' ? 'actions' : ''}
-    />
-    )
+  return <Table.Cell {...newProps} className={props.column.name === '__actions' ? 'actions' : ''} />
 }
 
 const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions' : ''} />
@@ -342,7 +337,7 @@ class _Table extends Component {
     normalWidth: pt.bool,
     tableTreeColumn: pt.string,
     onExpandedRowIdsChange: pt.func,
-    expandedRowIds: pt.array,
+    expandedRowIds: pt.array
   }
 
   static defaultProps = {
@@ -395,6 +390,7 @@ class _Table extends Component {
     this.loadColumnsSettings()
     let table = this.gridWrapper.querySelector('.table-responsive')
     table.addEventListener('scroll', this.handleScroll)
+    this.props.displayRowActionsOverBorder && table.setAttribute('style', 'display: table')
   }
 
   handleScroll = ({ target }) => {
@@ -803,20 +799,17 @@ class _Table extends Component {
             <SearchState value={filterValue} />
             <IntegratedFiltering />
 
-            {treeDataType && <TreeDataState
-              expandedRowIds={expandedRowIds}
-              onExpandedRowIdsChange={onExpandedRowIdsChange}
-            />}
+            {treeDataType && (
+              <TreeDataState expandedRowIds={expandedRowIds} onExpandedRowIdsChange={onExpandedRowIdsChange} />
+            )}
             {treeDataType && <CustomTreeData getChildRows={getChildRows} />}
 
             {virtual ? (
               <VirtualTable
                 columnExtensions={this.getColumnsExtension()}
                 height='auto'
-                cellComponent={(props) => {
-                  return treeDataType && rowChildActions
-                    ? TreeTableCells(props, rowChildActions)
-                    : TableCells(props)
+                cellComponent={props => {
+                  return treeDataType && rowChildActions ? TreeTableCells(props, rowChildActions) : TableCells(props)
                 }}
                 noDataCellComponent={NoDataTableCells}
                 messages={MESSAGES}
@@ -844,7 +837,9 @@ class _Table extends Component {
             {treeDataType && (
               <TableTreeColumn
                 for={tableTreeColumn}
-                expandButtonComponent={() => {return (null)}}
+                expandButtonComponent={() => {
+                  return null
+                }}
               />
             )}
 

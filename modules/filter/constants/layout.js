@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Sidebar, Accordion, Segment, GridRow, Icon, Dropdown, Grid, GridColumn } from 'semantic-ui-react'
+import { Sidebar, Accordion, Segment, GridRow, Icon, Dropdown, Grid, GridColumn, FormField } from 'semantic-ui-react'
 import Tooltip from '~/components/tooltip'
 
 const popupWidth = 400
@@ -124,7 +124,11 @@ export const FlexSidebar = styled.div`
 `
 
 export const FlexContent = styled.div`
-  padding: 0 10px;  
+  padding: 0 10px;
+  
+  .dimmer {
+    background: rgba(0, 0, 0, 0.25) !important;
+  }  
 `
 
 export const FiltersContainer = styled.div`     // ! ! smazat?
@@ -572,4 +576,8 @@ export const QuantityWrapper = styled.div`
       }
     }
   }
+`
+
+export const BottomMargedField = styled(FormField)`
+  margin-bottom: 13px !important
 `
