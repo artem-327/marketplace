@@ -49,21 +49,44 @@ import { withToastManager } from 'react-toast-notifications'
 import ChatWidget from '~/modules/chatWidget/components/ChatWidgetContainer'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
-import api from '~/api'
-import axios from 'axios'
-const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
-  <Link prefetch href={to}>
-    <Menu.Item as='a' active={pathname === to}>
-      {children}
-    </Menu.Item>
-  </Link>
-))
+const clientCompanyRoutes = {
+  restrictedRoutes: [
+    '/inventory',
+    '/orders?type=sales',
+    '/settings?type=products',
+    '/settings?type=global-broadcast',
+    '/wanted-board/wanted-board',
+    '/wanted-board/my-offers'
+  ],
+  redirectTo: '/marketplace/all'
+}
 
 class Layout extends Component {
   componentDidMount() {
     const { auth, phoneCountryCodes, getCountryCodes } = this.props
 
+    Router.events.on('beforeHistoryChange', this.handleRouteChange)
+    Router.events.on('routeChangeStart', this.handleRouteChange)
+
     if (!phoneCountryCodes.length) getCountryCodes()
+  }
+
+  componentWillUpdate() {
+    this.handleRouteChange(this.props.router.route)
+  }
+
+  handleRouteChange = url => {
+    const { auth } = this.props
+    let clientCompany = getSafe(() => auth.identity.clientCompany, false)
+
+    if (clientCompany) {
+      clientCompanyRoutes.restrictedRoutes.forEach(route => {
+        if (url.startsWith(route)) {
+          Router.push(clientCompanyRoutes.redirectTo)
+          return
+        }
+      })
+    }
   }
 
   render() {

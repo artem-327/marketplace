@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { Hexagon, Layers, Settings, ShoppingBag, Grid, Sliders, FileText  } from 'react-feather'
+import { Hexagon, Layers, Settings, ShoppingBag, Grid, Sliders, FileText } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
@@ -34,14 +34,15 @@ class Navigation extends Component {
   state = {
     dropdowns: {},
     settings: getSafe(() => Router.router.pathname === '/settings', false),
-    orders: getSafe(() => Router.router.pathname === '/orders', false)
-      || getSafe(() => Router.router.pathname === '/orders/detail', false),
+    orders:
+      getSafe(() => Router.router.pathname === '/orders', false) ||
+      getSafe(() => Router.router.pathname === '/orders/detail', false),
     admin: getSafe(() => Router.router.pathname === '/admin', false),
     operations: getSafe(() => Router.router.pathname === '/operations', false),
     openedFilterMyInventory: true,
     openedFilterMarketplace: true,
     openedFilterOrders: false,
-    openedFilterWantedBoard: true,
+    openedFilterWantedBoard: true
   }
 
   componentDidMount() {
@@ -228,52 +229,79 @@ class Navigation extends Component {
     const MenuLink = withRouter(({ router: { asPath }, to, children, tab, className, dataTest }) => {
       return (
         <Link prefetch href={to}>
-          <Menu.Item as='a' data-test={dataTest} active={asPath === to} onClick={async e => await this.settingsLink(e, to, tab)} className={className}>
+          <Menu.Item
+            as='a'
+            data-test={dataTest}
+            active={asPath === to}
+            onClick={async e => await this.settingsLink(e, to, tab)}
+            className={className}>
             {children}
           </Menu.Item>
         </Link>
       )
     })
 
-    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, company } = getSafe(() => auth.identity, {
-      isCompanyAdmin: null,
-      isUserAdmin: null,
-      isProductCatalogAdmin: null,
-      company: null
-    })
-
+    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, company, clientCompany } = getSafe(
+      () => auth.identity,
+      {
+        isCompanyAdmin: null,
+        isUserAdmin: null,
+        isProductCatalogAdmin: null,
+        company: null,
+        clientCompany: false
+      }
+    )
     return !isAdmin || takeover ? (
       <div className='flex-wrapper'>
-        <MenuLink to='/inventory/my' dataTest='navigation_menu_inventory_my_drpdn' className={!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''}>
+        {!clientCompany && (
           <>
-            <Layers size={22} />
-            {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
-            {asPath === '/inventory/my' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
+            <MenuLink
+              to='/inventory/my'
+              dataTest='navigation_menu_inventory_my_drpdn'
+              className={!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''}>
+              <>
+                <Layers size={22} />
+                {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
+              </>
+            </MenuLink>
+            {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
           </>
-        </MenuLink>
-        {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
+        )}
         {getSafe(() => company.nacdMember, false) ? (
           <>
-            <MenuLink to='/marketplace/all' dataTest='navigation_menu_marketplace_drpdn' className={!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''}>
+            <MenuLink
+              to='/marketplace/all'
+              dataTest='navigation_menu_marketplace_drpdn'
+              className={!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''}>
               <>
                 <ShoppingBag size={22} />
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
-                {asPath === '/marketplace/all' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
+                {asPath === '/marketplace/all' && activeFilter ? (
+                  <div className='active-filter'>
+                    <Sliders />
+                  </div>
+                ) : null}
               </>
             </MenuLink>
             {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
           </>
         ) : null}
-        <MenuLink to='/wanted-board/wanted-board' dataTest='navigation_menu_wanted_board_drpdn'>
+        <MenuLink
+          to={clientCompany ? '/wanted-board/my-requested-items' : '/wanted-board/wanted-board'}
+          dataTest='navigation_menu_wanted_board_drpdn'>
           <>
             <Grid size={22} />
             {formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}
-            {false && asPath === '/wanted-board/wanted-board' && activeFilter ? <div className='active-filter'><Sliders /></div> : null}
+            {false && asPath === '/wanted-board/wanted-board' && activeFilter ? (
+              <div className='active-filter'>
+                <Sliders />
+              </div>
+            ) : null}
           </>
         </MenuLink>
-        {false && !collapsedMenu && openedFilterWantedBoard && asPath === '/wanted-board/wanted-board'
-          ? <WantedBoardFilter /> : null
-        }
+        {false && !collapsedMenu && openedFilterWantedBoard && asPath === '/wanted-board/wanted-board' ? (
+          <WantedBoardFilter />
+        ) : null}
         <DropdownItem
           icon={<FileText size={22} />}
           text={formatMessage({ id: 'navigation.orders', defaultMessage: 'Orders' })}
@@ -285,12 +313,11 @@ class Navigation extends Component {
           data-test='navigation_orders_drpdn'>
           <Dropdown.Menu data-test='navigation_menu_orders_drpdn_menu'>
             <PerfectScrollbar>
-              <Dropdown.Item
-                as={MenuLink}
-                to='/orders?type=sales'
-                dataTest='navigation_orders_sales_orders_drpdn'>
-                {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
-              </Dropdown.Item>
+              {!clientCompany && (
+                <Dropdown.Item as={MenuLink} to='/orders?type=sales' dataTest='navigation_orders_sales_orders_drpdn'>
+                  {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
+                </Dropdown.Item>
+              )}
               <Dropdown.Item
                 as={MenuLink}
                 to='/orders?type=purchase'
@@ -357,7 +384,7 @@ class Navigation extends Component {
                     </Dropdown.Item>
                   </>
                 ) : null}
-                {isCompanyAdmin || isProductCatalogAdmin ? (
+                {(isCompanyAdmin || isProductCatalogAdmin) && !clientCompany ? (
                   <Dropdown.Item
                     as={MenuLink}
                     to='/settings?type=products'
@@ -366,7 +393,7 @@ class Navigation extends Component {
                     {formatMessage({ id: 'navigation.productCatalog', defaultMessage: 'Product Catalog' })}
                   </Dropdown.Item>
                 ) : null}
-                {isCompanyAdmin ? (
+                {isCompanyAdmin && !clientCompany ? (
                   <>
                     <Dropdown.Item
                       as={MenuLink}

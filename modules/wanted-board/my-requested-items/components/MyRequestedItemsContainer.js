@@ -46,6 +46,7 @@ function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
     ...datagrid,
+    clientCompany: getSafe(() => store.auth.identity.clientCompany, false),
     type: store.wantedBoard.myRequestedItemsType,
     editedId: store.wantedBoard.editWindowOpen === 'my-requested-items' ? store.wantedBoard.editedId : null,
     rows: datagrid.rows.map(row => {
