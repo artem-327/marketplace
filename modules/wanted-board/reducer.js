@@ -60,10 +60,18 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.WB_UPDATE_EDITED_ID: {
+      return {
+        ...state,
+        editedId: payload,
+      }
+    }
+
     case AT.WB_CLOSE_DETAIL_SIDEBAR: {
       return {
         ...state,
         editWindowOpen: null,
+        editedId: null
       }
     }
 
@@ -94,6 +102,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.WB_SUBMIT_OFFER_REJECTED:
     case AT.WB_SUBMIT_OFFER_FULFILLED: {
       return {
         ...state,

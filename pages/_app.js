@@ -26,36 +26,35 @@ Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
 
-const ProdexToast = (toast) => {
+const ProdexToast = toast => {
   const { appearance, autoDismiss, children, isRunning, transitionState } = toast
   let icon = null
   switch (appearance) {
     case 'error':
-      icon = (<AlertTriangle />)
+      icon = <AlertTriangle />
       break
     case 'success':
-      icon = (<CheckCircle />)
+      icon = <CheckCircle />
       break
     case 'info':
-      icon = (<Info />)
+      icon = <Info />
       break
     case 'warning':
-      icon = (<AlertCircle />)
+      icon = <AlertCircle />
       break
   }
 
   return (
-    <div className={`prodex-toast ${appearance} ${transitionState} ${isRunning ? 'running' : 'stopped'}`} onMouseEnter={() => toast.onMouseEnter()} onMouseLeave={() => toast.onMouseLeave()}>
+    <div
+      className={`prodex-toast ${appearance} ${transitionState} ${isRunning ? 'running' : 'stopped'}`}
+      onMouseEnter={() => toast.onMouseEnter()}
+      onMouseLeave={() => toast.onMouseLeave()}>
       <div role='button' onClick={() => toast.onDismiss()}>
         <X />
       </div>
-      {autoDismiss ? (
-        <div className='dismiss-bar'></div>
-      ) : null}
+      {autoDismiss ? <div className='dismiss-bar'></div> : null}
       {icon}
-      <div className='toast-content'>
-        {children}
-      </div>
+      <div className='toast-content'>{children}</div>
     </div>
   )
 }
@@ -67,6 +66,8 @@ class ProdexApp extends App {
     }
   }
 
+  
+
   render() {
     const { Component, pageProps, store } = this.props
 
@@ -75,7 +76,7 @@ class ProdexApp extends App {
         <IntlProvider locale='en' messages={EN} textComponent={({ children }) => <>{children}</>}>
           <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={10 * 1000} components={{ Toast: ProdexToast }}>
             <Provider store={store}>
-              <Component {...pageProps} />
+              <Component {...pageProps} test={this.test} />
             </Provider>
           </ToastProvider>
         </IntlProvider>

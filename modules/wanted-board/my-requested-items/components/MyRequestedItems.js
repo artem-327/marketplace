@@ -436,9 +436,9 @@ class MyRequestedItems extends Component {
             {...datagrid.tableProps}
             rows={rows}
             columns={type === 'product' ? columnsProduct : columnsChemical}
-            rowSelection
+            rowSelection={false}
+            showSelectionColumn={false}
             treeDataType={true}
-            showSelectionColumn
             tableTreeColumn={type === 'product' ? 'product' : 'casNumber'}
             getChildRows={(row, rootRows) => { return row ? row.purchaseRequestOffers : rootRows }}
             onRowClick={(_, row) => {
@@ -461,9 +461,9 @@ class MyRequestedItems extends Component {
                   id: 'global.edit',
                   defaultMessage: 'Edit'
                 }),
-                disabled: row => editedId === row.id,
                 callback: row => {
-                  sidebarDetailTrigger(row, 'my-requested-items')}
+                  sidebarDetailTrigger(row, 'my-requested-items')
+                  }
               },
               {
                 text: formatMessage({
@@ -513,8 +513,8 @@ class MyRequestedItems extends Component {
                     )
                   ).then(async () => {
                     try {
-                      await this.props.rejectRequestedItem(row.id)
-                      datagrid.removeRow(row.id)
+                      await this.props.rejectRequestedItem(row.id.split('_')[1])
+                      datagrid.loadData()
                     } catch (e) {}
                   })
                 }
@@ -525,7 +525,10 @@ class MyRequestedItems extends Component {
                   defaultMessage: 'Purchase'
                 }),
                 disabled: row => editedId === row.id,
-                callback: async (row) => await this.props.purchaseRequestedItem(row.id)
+                callback: async (row) => {
+                  await this.props.purchaseRequestedItem(row.id.split('_')[1])
+                  datagrid.loadData()
+                }
               },
             ]}
           />

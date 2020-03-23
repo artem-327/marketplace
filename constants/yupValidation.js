@@ -11,6 +11,7 @@ const allowedFreightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125
 
 export const errorMessages = {
   mustBeInFuture: <FormattedMessage id='validation.dateInFuture' defaultMessage='Date must be in future' />,
+  dateNotInPast: <FormattedMessage id='validation.dateNotInPast' defaultMessage='Date must not be in past' />,
   invalidString: <FormattedMessage id='validation.invalidString' defaultMessage='Invalid value' />,
   invalidEmail: <FormattedMessage id='validation.invalidEmail' defaultMessage='Invalid e-mail address' />,
   invalidDate: <FormattedMessage id='validation.invalidDate' defaultMessage='Invalid date' />,
