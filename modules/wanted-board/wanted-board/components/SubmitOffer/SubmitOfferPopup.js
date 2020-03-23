@@ -142,6 +142,7 @@ const OrderList = styled(List)`
 
 const ModalContent = styled(Modal.Content)`
   padding: 1.5rem !important;
+  margin-bottom: 10px !important;
 `
 
 const SubmitFormTable = styled(Table)`
@@ -388,7 +389,7 @@ class SubmitOfferPopup extends React.Component {
           <Modal.Header>
             <FormattedMessage id='wantedBoard.submitOfferHeader' defaultMessage='SUBMIT OFFER' />
           </Modal.Header>
-          <ModalContent>
+          <ModalContent scrolling>
             <>
               <SubmitOfferHighSegment>
                 <Grid verticalAlign='middle'>
