@@ -882,9 +882,7 @@ table.order-total.ui[class*="very basic"]:not(.sortable):not(.striped) {
 
 .ui.toggle.checkbox.fitted .box:before,
 .ui.toggle.checkbox.fitted label:before {
-  border: 1px solid #979797;
-  border-radius: 12px;
-  background-color: #d8d8d8;
+  background-color: #dee2e6;
 }
 
 .ui.toggle.checkbox.fitted .box:after,
@@ -892,13 +890,20 @@ table.order-total.ui[class*="very basic"]:not(.sortable):not(.striped) {
   left: 0em;
   width: 14px;
   height: 14px;
-  border: 1px solid #979797;
-  background-color: #e7e7e7;
+  border: none;
+  background-color: #ffffff;
 }
 
 .ui.toggle.checkbox input:focus ~ .box:before,
 .ui.toggle.checkbox input:focus ~ label:before {
   border: 1px solid #979797;
+}
+
+.ui.toggle.checkbox input:checked ~ .box:before,
+.ui.toggle.checkbox input:checked ~ label:before,
+.ui.toggle.checkbox input:focus:checked ~ .box:before,
+.ui.toggle.checkbox input:focus:checked ~ label:before {
+  border: none;
 }
 
 .ui.toggle.checkbox input:checked ~ .box:after,
@@ -909,7 +914,7 @@ table.order-total.ui[class*="very basic"]:not(.sortable):not(.striped) {
 // special error state of toggle button
 .ui.toggle.checkbox.error input[disabled] ~ .box:before,
 .ui.toggle.checkbox.error input[disabled] ~ label:before {
-  border: solid 1px #e74c3c;
+  border: none;
   background-color: #e7e7e7;
 }
 
@@ -978,7 +983,8 @@ i.file {
 
 .ui.toggle.checkbox input:not([type=radio]):indeterminate ~ .box:before,
 .ui.toggle.checkbox input:not([type=radio]):indeterminate ~ label:before {
-  background: #ffff55 !important;
+  background: #ffc65d !important;
+  border: none;
 }
 
 /* ------------------------------------------------------------------------------------------------
