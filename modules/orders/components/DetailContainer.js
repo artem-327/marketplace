@@ -40,6 +40,7 @@ function prepareDetail(data, type) {
   const orderItems = getSafe(() => data.orderItems, [])
 
   return {
+    ...data,
     acceptanceDate:
       typeof data.acceptanceDate !== 'undefined'
         ? moment(data.acceptanceDate)
@@ -251,6 +252,10 @@ function mapStateToProps(state, ownProps) {
 
   return {
     order: prepareDetail(orders.detail, ownProps.router.query.type),
+    echoSupportPhone: getSafe(
+      () => state.auth.identity.settings.find(el => el.key === 'APP_SUPPORT_PHONE_NUMBER').value,
+      'N/A'
+    ),
     isPaymentCancellable: getSafe(() => orders.detail.isPaymentCancellable, false),
     openedAssignLots: orders.openedAssignLots,
     openedReinitiateTransfer: orders.openedReinitiateTransfer,
