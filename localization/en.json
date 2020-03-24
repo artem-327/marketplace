@@ -808,6 +808,7 @@
   "myInventory.broadcasting.inactive": "Not Broadcasting now, switch on to start broadcasting.",
   "myInventory.broadcasting.incomplete": "Incomplete, please enter all required values first.",
   "myInventory.broadcasting.unmapped": "Unmapped, please make sure related Product is mapped first.",
+  "myInventory.broadcasting.notAvailable": "Status is not available",
   "myInventory.broadcasting.noSellEligible": "Your company is not eligible for broadcasting yet. Make sure to finalize your set-up.",
   "myInventory.broadcasting.validityExpired": "This product offer validity date has expired, so it cannot be broadcasted.",
   "myInventory.broadcasting.disabled": "This Product Offer is part of virtual Product Group, its broadcast setting cannot be changed. If you wish not to broadcast it, remove it from the group.",
