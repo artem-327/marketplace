@@ -1,14 +1,9 @@
 import React, { Component } from 'react'
 import { getSafe } from '~/utils/functions'
-import {
-  chatWidget_hide,
-  chatWidget_show,
-  chatWidget_isConnected
-} from './chatWidgetFunctions'
+import { chatWidget_hide, chatWidget_show, chatWidget_isConnected, chatWidget_showLable } from './chatWidgetFunctions'
 
 import { generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
-
 
 export default class ChatWidget extends Component {
   componentDidMount() {
@@ -18,6 +13,10 @@ export default class ChatWidget extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.sidebarDetailOpen !== prevProps.sidebarDetailOpen) {
+      if (this.props.sidebarDetailOpen) chatWidget_hide()
+      else chatWidget_showLable()
+    }
     if (this.props.supportChatEnabled !== prevProps.supportChatEnabled) {
       if (!chatWidget_isConnected()) {
         if (this.props.supportChatEnabled) {
