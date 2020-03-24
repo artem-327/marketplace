@@ -341,7 +341,6 @@ class MyInventory extends Component {
     let title = ''
 
     return rows.map((r, rIndex) => {
-      if (!r || !r.cfStatus) return
       const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
 
       if (r.groupId) {
@@ -386,7 +385,9 @@ class MyInventory extends Component {
             )
             break
           default:
-            title = ''
+            title = (
+              <FormattedMessage id='myInventory.broadcasting.notAvailable' defaultMessage='Status is not available' />
+            )
         }
       } else {
         title = (
@@ -420,6 +421,7 @@ class MyInventory extends Component {
                   disabled={
                     r.cfStatus.toLowerCase() === 'incomplete' ||
                     r.cfStatus.toLowerCase() === 'unmapped' ||
+                    r.cfStatus.toLowerCase() === 'n/a' ||
                     !isOfferValid ||
                     r.groupId
                   }
@@ -517,7 +519,6 @@ class MyInventory extends Component {
       tutorialCompleted
     } = this.props
     const { columns, selectedRows, clientMessage, request } = this.state
-
     return (
       <>
         <Modal size='small' open={this.state.open} onClose={() => this.setState({ open: false })} closeIcon>
