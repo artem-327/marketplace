@@ -15,7 +15,6 @@ const RightSpan = styled.span`
   font-size: 14px !important;
   color: #20273a;
 `
-// code: 'APP_SUPPORT_PHONE_NUMBER
 
 class TransactionInfo extends Component {
   render() {
@@ -42,7 +41,6 @@ class TransactionInfo extends Component {
             </GridColumn>
             <GridColumn>
               <FormattedMessage id='order.detail.echoSupportPhone' defaultMessage='Echo Support phone number' />
-              {/* TODO - Add real value from settings when BE allows access */}
               <RightSpan>{echoSupportPhone}</RightSpan>
             </GridColumn>
           </GridRow>
