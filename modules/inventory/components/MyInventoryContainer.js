@@ -94,7 +94,7 @@ function mapStateToProps(store, { datagrid }) {
         manufacturer: getSafe(() => po.companyProduct.echoProduct.manufacturer.name, 'N/A'),
         broadcasted: po.broadcasted,
         // lotNumber: <ArrayToMultiple values={po.lots.map(d => (d.lotNumber))} />,
-        status: po.cfStatus, // new broadcasted
+        status: getSafe(() => po.cfStatus, 'N/A'),
         minOrderQuantity: getSafe(() => po.minPkg, ''),
         splits: getSafe(() => po.splitPkg, ''),
         condition: getSafe(() => po.conforming, ''),
