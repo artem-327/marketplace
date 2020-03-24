@@ -900,7 +900,6 @@ class Filter extends Component {
 
     const { savedFiltersActive, openedSaveFilter } = this.state
 
-    console.log('!!!!!!!!!! render activeAccordion', this.state.activeAccordion)
     return (
       <Form
         enableReinitialize={true}

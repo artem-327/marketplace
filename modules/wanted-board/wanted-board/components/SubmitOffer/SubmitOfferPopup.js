@@ -347,7 +347,7 @@ class SubmitOfferPopup extends React.Component {
             // inputProps={{  }}
           />
         ),
-        product: row.companyProduct.intProductName,
+        product: getSafe(() => row.companyProduct.intProductName, 'N/A'),
         pricePerUOM: (
           <InputWrapper>
             <div>
@@ -358,14 +358,14 @@ class SubmitOfferPopup extends React.Component {
             </div>
           </InputWrapper>
         ),
-        manufacturer: row.companyProduct.echoProduct.manufacturer.name,
+        manufacturer: getSafe(() => row.companyProduct.echoProduct.manufacturer.name, 'N/A'),
         condition: row.conforming ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
           <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
         ),
-        packaging: row.companyProduct.packagingType.name,
-        meas: row.companyProduct.packagingUnit.nameAbbreviation.toUpperCase(),
+        packaging: getSafe(() => row.companyProduct.packagingType.name, 'N/A'),
+        meas: getSafe(() => row.companyProduct.packagingUnit.nameAbbreviation, 'N/A').toUpperCase(),
         expirationDate: row.lotExpirationDate ? moment(row.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A'
       }
     })

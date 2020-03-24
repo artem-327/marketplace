@@ -1,5 +1,7 @@
 import * as AT from './action-types'
 import { uniqueArrayByKey, getSafe } from '~/utils/functions'
+import { Header } from 'semantic-ui-react'
+import React from "react"
 
 export const initialState = {
   editedId: null,
@@ -118,27 +120,34 @@ export default function reducer(state = initialState, action) {
         editWindowOpen: payload.activeTab,
         sidebarValues: payload.row,
         ...(row && {
-          searchedManufacturers: row.manufacturers.map(data => {
+          searchedManufacturers: uniqueArrayByKey(row.manufacturers.map(data => {
             return {
               key: data.id,
               value: data.id,
               text: data.name
             }
-          }),
+          }).concat(state.searchedManufacturers), 'key'),
           autocompleteData: (row.element.echoProduct
-            ? [{
+            ? uniqueArrayByKey([{
               key: row.element.echoProduct.id,
               text: `${row.element.echoProduct.name} ${row.element.echoProduct.code}`,
               value: row.element.echoProduct.id,
-            }]
-            : []),
+            }].concat(state.autocompleteData), 'key')
+            : state.autocompleteData),
           searchedCasNumbers: (row.element.casProduct
-            ? [{
+            ? uniqueArrayByKey([{
               key: row.element.casProduct.id,
               text: row.element.casProduct.casNumber,
               value: row.element.casProduct.id,
-            }]
-            : []),
+              content: (
+                <Header
+                  content={row.element.casProduct.casNumber}
+                  subheader={row.element.casProduct.casIndexName}
+                  style={{ fontSize: '1em' }}
+                />
+              )
+            }].concat(state.searchedCasNumbers), 'key')
+            : state.searchedCasNumbers),
         })
       }
     }
@@ -154,19 +163,19 @@ export default function reducer(state = initialState, action) {
         sidebarValues: row,
         ...(row && {
           searchedManufacturers: (manufacturer
-            ? [{
+            ? uniqueArrayByKey([{
                 key: manufacturer.id,
                 value: manufacturer.id,
                 text: manufacturer.name
-              }]
-            : []),
+              }].concat(state.searchedManufacturers), 'key')
+            : state.searchedManufacturers),
           autocompleteData: (product
-            ? [{
+            ? uniqueArrayByKey([{
               key: product.id,
               text: `${product.name} ${product.code}`,
               value: product.id,
-            }]
-            : []),
+            }].concat(state.autocompleteData), 'key')
+            : state.autocompleteData),
         })
       }
     }
@@ -340,10 +349,16 @@ export default function reducer(state = initialState, action) {
           return {
             key: data.id,
             value: data.id,
-            text: data.casNumber
+            text: data.casNumber,
+            content: (
+              <Header
+                content={data.casNumber}
+                subheader={data.casIndexName}
+                style={{ fontSize: '1em' }}
+              />
+            )
           }
-        })
-          .concat(state.searchedCasNumbers), 'key')
+        }).concat(state.searchedCasNumbers), 'key')
       }
     }
 
