@@ -130,7 +130,9 @@ class DetailSidebar extends Component {
         // Form edited
         validateForm().then(err => {
           const errors = Object.keys(err)
-          if (!errors.length || errors[0] === 'isCanceled') {
+          if (errors.length && errors[0] !== 'isCanceled') {
+            submitForm() // to show errors
+          } else {
             confirm(
               formatMessage({
                 id: 'confirm.global.unsavedChanges.header',
