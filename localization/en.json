@@ -654,6 +654,7 @@
   "global.length": "Length",
   "global.width": "Width",
   "global.expiredDate": "Expired Date",
+  "global.published": "Published",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",

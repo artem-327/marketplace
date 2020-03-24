@@ -453,7 +453,8 @@ class AddEditEchoProduct extends React.Component {
             vaporDensity: getSafe(() => popupValues.vaporDensity, ''),
             vaporPressure: getSafe(() => popupValues.vaporPressure, ''),
             viscosity: getSafe(() => popupValues.viscosity, ''),
-            wasteDisposalMethods: getSafe(() => popupValues.wasteDisposalMethods, '')
+            wasteDisposalMethods: getSafe(() => popupValues.wasteDisposalMethods, ''),
+            isPublished: getSafe(() => popupValues.isPublished, false)
           }
         : null)
     }
@@ -992,6 +993,15 @@ class AddEditEchoProduct extends React.Component {
         </GridRow>
 
         {this.renderMixtures(formikProps)}
+
+        <GridRow>
+          <GridColumn width={6}>
+            <FormattedMessage id='global.published' defaultMessage='Published' />
+          </GridColumn>
+          <GridColumn width={10}>
+            <Checkbox name='isPublished' />
+          </GridColumn>
+        </GridRow>
 
         <GridRow>
           <GridColumn width={6}>
