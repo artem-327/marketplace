@@ -1,7 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { Button, Input, TextArea, Dropdown, Checkbox as FormikCheckbox, Radio } from 'formik-semantic-ui-fixed-validation'
+import {
+  Button,
+  Input,
+  TextArea,
+  Dropdown,
+  Checkbox as FormikCheckbox,
+  Radio
+} from 'formik-semantic-ui-fixed-validation'
 import { Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import { DateInput } from '~/components/custom-formik'
@@ -58,10 +65,9 @@ import {
   closeDetailSidebar,
   //getProductOffer,
   addPurchaseRequest,
-  editPurchaseRequest
+  editPurchaseRequest,
+  updateEditedId
 } from '../../actions'
-
-
 
 import {
   FlexSidebar,
@@ -107,34 +113,55 @@ const initValues = {
     echoProduct: '',
     casProduct: '',
     assayMin: '',
-    assayMax: '',
+    assayMax: ''
   },
   maximumDeliveredPrice: '',
   neededNow: null,
   doesExpire: null,
   notificationEnabled: false, // not implemented on endpoint yet
-  notifyMail: false,          // not implemented on endpoint yet
-  notifyPhone: false,         // not implemented on endpoint yet
+  notifyMail: false, // not implemented on endpoint yet
+  notifyPhone: false, // not implemented on endpoint yet
   unit: 7
 }
 
 const validationSchema = () =>
   val.lazy(values => {
-
-    //val.object().shape({
     return val.object().shape({
-      /*
-      ...(values.neededNow === false && {
-        neededAt: val.string()
-          .required(errorMessages.requiredMessage)
-      }),
-      */
       ...(values.doesExpire && {
-        expiresAt: val.string()
+        expiresAt: val
+          .string()
           .required(errorMessages.requiredMessage)
+          .test('minDate', errorMessages.dateNotInPast, function(date) {
+            const enteredDate = moment(getStringISODate(date))
+              .endOf('day')
+              .format()
+            return (
+              enteredDate >=
+              moment()
+                .endOf('day')
+                .format()
+            )
+          })
+      }),
+      ...(values.neededNow === false && {
+        neededAt: val
+          .string()
+          .required(errorMessages.requiredMessage)
+          .test('minDate', errorMessages.dateNotInPast, function(date) {
+            const enteredDate = moment(getStringISODate(date))
+              .endOf('day')
+              .format()
+            return (
+              enteredDate >=
+              moment()
+                .endOf('day')
+                .format()
+            )
+          })
       }),
       element: val.object().shape({
-        echoProduct: val.string()
+        echoProduct: val
+          .string()
           .trim()
           .test('required', errorMessages.requiredMessage, function(value) {
             const { casProduct } = this.parent
@@ -143,7 +170,8 @@ const validationSchema = () =>
             }
             return true
           }),
-        casProduct: val.string()
+        casProduct: val
+          .string()
           .trim()
           .test('required', errorMessages.requiredMessage, function(value) {
             const { echoProduct } = this.parent
@@ -152,7 +180,8 @@ const validationSchema = () =>
             }
             return true
           }),
-        assayMin: val.string()
+        assayMin: val
+          .string()
           .test('v', errorMessages.minUpToMax, function(v) {
             const { assayMax: v2 } = this.parent
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
@@ -170,7 +199,8 @@ const validationSchema = () =>
           .test('v', errorMessages.mustBeNumber, function(v) {
             return v === null || v === '' || !isNaN(v)
           }),
-        assayMax: val.string()
+        assayMax: val
+          .string()
           .test('v', errorMessages.maxAtLeastMin, function(v) {
             const { assayMin: v2 } = this.parent
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
@@ -192,7 +222,8 @@ const validationSchema = () =>
       quantity: val
         .number()
         .typeError(errorMessages.requiredMessage)
-        .positive(errorMessages.positive)
+        .moreThan(0, errorMessages.greaterThan(0))
+        //.integer(errorMessages.integer)
         .required(errorMessages.requiredMessage),
       maximumPricePerUOM: val
         .number()
@@ -201,7 +232,7 @@ const validationSchema = () =>
       maximumDeliveredPrice: val
         .number()
         .positive(errorMessages.positive)
-        .typeError(errorMessages.requiredMessage),
+        .typeError(errorMessages.requiredMessage)
     })
   })
 
@@ -221,7 +252,7 @@ const listConforming = [
 class DetailSidebar extends Component {
   state = {
     initValues: initValues,
-    //sidebarValues: null,
+    sidebarValues: null,
     hasProvinces: false
   }
 
@@ -236,9 +267,66 @@ class DetailSidebar extends Component {
     if (!this.props.sidebarValues) {
       this.props.searchManufacturers('', 200)
     } else {
+      this.setState({ sidebarValues: this.props.sidebarValues })
+      this.props.updateEditedId(this.props.sidebarValues.id)
       if (this.props.sidebarValues.deliveryCountry && this.props.sidebarValues.deliveryCountry.hasProvinces) {
         this.props.getProvinces(this.props.sidebarValues.deliveryCountry.id)
         this.setState({ hasProvinces: true })
+      }
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.editInitTrig !== this.props.editInitTrig) {
+      const { touched, validateForm, submitForm, values, setSubmitting, setTouched } = this.formikProps
+      if (_.isEmpty(touched)) {
+        this.props.updateEditedId(this.props.sidebarValues.id)
+        this.setState({ sidebarValues: this.props.sidebarValues })
+      } else {
+        // Form edited
+        validateForm().then(err => {
+          const errors = Object.keys(err)
+          if (errors.length && errors[0] !== 'isCanceled') {
+            submitForm() // to show errors
+          } else {
+            confirm(
+              <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
+              <FormattedMessage
+                id='confirm.global.unsavedChanges.content'
+                defaultMessage='You have unsaved changes. Do you wish to save them?'
+              />
+            )
+              .then(
+                async () => {
+                  // Confirm
+                  if (await this.submitForm(values, setSubmitting, setTouched).sendSuccess) {
+                    if (
+                      this.props.sidebarValues.deliveryCountry &&
+                      this.props.sidebarValues.deliveryCountry.hasProvinces
+                    ) {
+                      this.props.getProvinces(this.props.sidebarValues.deliveryCountry.id)
+                      this.setState({ hasProvinces: true })
+                    }
+                    this.setState({ sidebarValues: this.props.sidebarValues })
+                    this.props.updateEditedId(this.props.sidebarValues.id)
+                  }
+                },
+                () => {
+                  // Cancel
+                  if (
+                    this.props.sidebarValues.deliveryCountry &&
+                    this.props.sidebarValues.deliveryCountry.hasProvinces
+                  ) {
+                    this.props.getProvinces(this.props.sidebarValues.deliveryCountry.id)
+                    this.setState({ hasProvinces: true })
+                  }
+                  this.setState({ sidebarValues: this.props.sidebarValues })
+                  this.props.updateEditedId(this.props.sidebarValues.id)
+                }
+              )
+              .catch(() => {})
+          }
+        })
       }
     }
   }
@@ -263,22 +351,28 @@ class DetailSidebar extends Component {
 
   submitForm = async (values, setSubmitting, setTouched) => {
     const { addPurchaseRequest, editPurchaseRequest, datagrid } = this.props
-    const { sidebarValues } = this.props
+    const { sidebarValues } = this.state
+    let sendSuccess = false
 
-    let neededAt = null, expiresAt = null
+    let neededAt = null,
+      expiresAt = null
 
     if (values.neededNow) {
       neededAt = moment()
-        .add(1, 'minutes')
+        .endOf('day')
         .format()
     } else {
       if (values.neededAt.length) {
-        neededAt = moment(getStringISODate(values.neededAt)).format()
+        neededAt = moment(getStringISODate(values.neededAt))
+          .endOf('day')
+          .format()
       }
     }
 
     if (values.doesExpire) {
-      expiresAt = moment(getStringISODate(values.expiresAt)).format()
+      expiresAt = moment(getStringISODate(values.expiresAt))
+        .endOf('day')
+        .format()
     }
 
     let body = {
@@ -295,24 +389,30 @@ class DetailSidebar extends Component {
     removeEmpty(body)
     try {
       if (sidebarValues) {
-        const response = await editPurchaseRequest(sidebarValues.id, body)
-        datagrid.updateRow(sidebarValues.id, () => response.value)
+        const { value } = await editPurchaseRequest(sidebarValues.id, body)
+        sendSuccess = true
+        
+        // If id's differ then "Purchase Request contained offers, new Purchase Request will be created instead." happened
+        if (sidebarValues.id !== value.id) datagrid.loadData()
+        else datagrid.updateRow(sidebarValues.id, () => value)
       } else {
-        const response = await addPurchaseRequest(body)
+        await addPurchaseRequest(body)
+        sendSuccess = true
         datagrid.loadData()
       }
       this.props.closeDetailSidebar()
     } catch (e) {}
     setSubmitting(false)
+    return { sendSuccess }
   }
 
   getInitialFormValues = () => {
-    const { sidebarValues } = this.props
+    const { sidebarValues } = this.state
 
     let initialValues = {
       ...this.state.initValues,
       ...(sidebarValues
-          ? {
+        ? {
             conditionConforming: getSafe(() => sidebarValues.conditionConforming, ''),
             deliveryCountry: getSafe(() => sidebarValues.deliveryCountry.id, ''),
             deliveryProvince: getSafe(() => sidebarValues.deliveryProvince.id, ''),
@@ -320,7 +420,7 @@ class DetailSidebar extends Component {
               echoProduct: getSafe(() => sidebarValues.element.echoProduct.id, ''),
               casProduct: getSafe(() => sidebarValues.element.casProduct.id, ''),
               assayMin: getSafe(() => sidebarValues.element.assayMin, ''),
-              assayMax: getSafe(() => sidebarValues.element.assayMax, ''),
+              assayMax: getSafe(() => sidebarValues.element.assayMax, '')
             },
             expiresAt: getSafe(() => sidebarValues.expiresAt, ''),
             forms: sidebarValues.forms.map(d => d.id),
@@ -332,10 +432,9 @@ class DetailSidebar extends Component {
             origins: sidebarValues.origins.map(d => d.id),
             packagingTypes: sidebarValues.packagingTypes.map(d => d.id),
             quantity: getSafe(() => sidebarValues.quantity, ''),
-            unit: getSafe(() => sidebarValues.unit.id, ''),
+            unit: getSafe(() => sidebarValues.unit.id, '')
           }
-          : null
-      )
+        : null)
     }
 
     if (initialValues.expiresAt) {
@@ -387,9 +486,7 @@ class DetailSidebar extends Component {
       type
     } = this.props
 
-    const {
-      hasProvinces
-    } = this.state
+    const { hasProvinces } = this.state
 
     return (
       <Formik
@@ -439,9 +536,7 @@ class DetailSidebar extends Component {
                         <GridColumn width={16}>
                           <Dropdown
                             label={
-                              <FormattedMessage
-                                id='wantedBoard.productName'
-                                defaultMessage='Product Name'>
+                              <FormattedMessage id='wantedBoard.productName' defaultMessage='Product Name'>
                                 {text => text}
                               </FormattedMessage>
                             }
@@ -474,9 +569,7 @@ class DetailSidebar extends Component {
                         <GridColumn>
                           <Dropdown
                             label={
-                              <FormattedMessage
-                                id='wantedBoard.casNumber'
-                                defaultMessage='CAS Number'>
+                              <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
                                 {text => text}
                               </FormattedMessage>
                             }
@@ -484,10 +577,7 @@ class DetailSidebar extends Component {
                             options={searchedCasNumbers}
                             inputProps={{
                               placeholder: (
-                                <FormattedMessage
-                                  id='wantedBoard.enterCasNumber'
-                                  defaultMessage='Enter CAS Number'
-                                />
+                                <FormattedMessage id='wantedBoard.enterCasNumber' defaultMessage='Enter CAS Number' />
                               ),
                               loading: searchedCasNumbersLoading,
                               'data-test': 'my_requested_items_sidebar_casNumber_drpdn',
@@ -514,12 +604,8 @@ class DetailSidebar extends Component {
                               type: 'number',
                               placeholder: '0'
                             },
-                            this.formikProps
-                            ,
-                            <FormattedMessage
-                              id='global.assayMin'
-                              defaultMessage='Assay Min'
-                            >
+                            this.formikProps,
+                            <FormattedMessage id='global.assayMin' defaultMessage='Assay Min'>
                               {text => text}
                             </FormattedMessage>
                           )}
@@ -532,12 +618,8 @@ class DetailSidebar extends Component {
                               type: 'number',
                               placeholder: '0'
                             },
-                            this.formikProps
-                            ,
-                            <FormattedMessage
-                              id='global.assayMax'
-                              defaultMessage='Assay Max'
-                            >
+                            this.formikProps,
+                            <FormattedMessage id='global.assayMax' defaultMessage='Assay Max'>
                               {text => text}
                             </FormattedMessage>
                           )}
@@ -553,10 +635,7 @@ class DetailSidebar extends Component {
                             type: 'number',
                             placeholder: '0.000'
                           },
-                          <FormattedMessage
-                            id='wantedBoard.fobPrice'
-                            defaultMessage='FOB Price'
-                          >
+                          <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price'>
                             {text => text}
                           </FormattedMessage>,
                           currencySymbol
@@ -573,22 +652,16 @@ class DetailSidebar extends Component {
                             type: 'number',
                             placeholder: '0'
                           },
-                          this.formikProps
-                          ,
-                          <FormattedMessage
-                            id='wantedBoard.quantity'
-                            defaultMessage='Quantity'
-                          >
+                          this.formikProps,
+                          <FormattedMessage id='wantedBoard.quantity' defaultMessage='Quantity'>
                             {text => text}
                           </FormattedMessage>
                         )}
                       </GridColumn>
-                      <GridColumn  width={8}>
+                      <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage
-                              id='wantedBoard.measurement'
-                              defaultMessage='Measurement'>
+                            <FormattedMessage id='wantedBoard.measurement' defaultMessage='Measurement'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -607,9 +680,7 @@ class DetailSidebar extends Component {
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage
-                              id='wantedBoard.deliveryLocation'
-                              defaultMessage='Delivery Location'>
+                            <FormattedMessage id='wantedBoard.deliveryLocation' defaultMessage='Delivery Location'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -617,10 +688,7 @@ class DetailSidebar extends Component {
                           options={listCountries}
                           inputProps={{
                             placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectCountry'
-                                defaultMessage='Select Country'
-                              />
+                              <FormattedMessage id='wantedBoard.selectCountry' defaultMessage='Select Country' />
                             ),
                             'data-test': 'my_requested_items_sidebar_deliveryLocation_drpdn',
                             selection: true,
@@ -638,15 +706,12 @@ class DetailSidebar extends Component {
                       </GridColumn>
                       <GridColumn width={8}>
                         <Dropdown
-                          label={'\u00A0'}  // &nbsp to not remove label (to not break positioning)
+                          label={'\u00A0'} // &nbsp to not remove label (to not break positioning)
                           name='deliveryProvince'
                           options={listProvinces}
                           inputProps={{
                             placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectState'
-                                defaultMessage='Select State'
-                              />
+                              <FormattedMessage id='wantedBoard.selectState' defaultMessage='Select State' />
                             ),
                             'data-test': 'my_requested_items_sidebar_selectState_drpdn',
                             selection: true,
@@ -713,13 +778,13 @@ class DetailSidebar extends Component {
                           name='neededAt'
                           inputProps={{
                             'data-test': 'my_requested_items_sidebar_neededAt_inp',
-                            placeholder:
-                              formatMessage({
-                                id: 'date.standardPlaceholder',
-                                defaultMessage: '00/00/0000'
-                              }),
+                            placeholder: formatMessage({
+                              id: 'date.standardPlaceholder',
+                              defaultMessage: '00/00/0000'
+                            }),
                             clearable: true,
-                            disabled: values.neededNow !== false
+                            disabled: values.neededNow !== false,
+                            minDate: moment()
                           }}
                         />
                       </GridColumn>
@@ -728,12 +793,12 @@ class DetailSidebar extends Component {
                           name='expiresAt'
                           inputProps={{
                             'data-test': 'my_requested_items_sidebar_expiresAt_inp',
-                            placeholder:
-                              formatMessage({
-                                id: 'date.standardPlaceholder',
-                                defaultMessage: '00/00/0000'
-                              }),
-                            disabled: values.doesExpire !== true
+                            placeholder: formatMessage({
+                              id: 'date.standardPlaceholder',
+                              defaultMessage: '00/00/0000'
+                            }),
+                            disabled: values.doesExpire !== true,
+                            minDate: moment()
                           }}
                         />
                       </GridColumn>
@@ -743,9 +808,7 @@ class DetailSidebar extends Component {
                       <GridColumn>
                         <Dropdown
                           label={
-                            <FormattedMessage
-                              id='wantedBoard.manufacturer'
-                              defaultMessage='Manufacturer'>
+                            <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -776,9 +839,7 @@ class DetailSidebar extends Component {
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage
-                              id='wantedBoard.condition'
-                              defaultMessage='Condition'>
+                            <FormattedMessage id='wantedBoard.condition' defaultMessage='Condition'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -789,10 +850,7 @@ class DetailSidebar extends Component {
                             selection: true,
                             clearable: true,
                             placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectCondition'
-                                defaultMessage='Select condition'
-                              />
+                              <FormattedMessage id='wantedBoard.selectCondition' defaultMessage='Select condition' />
                             )
                           }}
                         />
@@ -800,9 +858,7 @@ class DetailSidebar extends Component {
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage
-                              id='wantedBoard.origin'
-                              defaultMessage='Origin'>
+                            <FormattedMessage id='wantedBoard.origin' defaultMessage='Origin'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -813,10 +869,7 @@ class DetailSidebar extends Component {
                             selection: true,
                             multiple: true,
                             placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectOrigin'
-                                defaultMessage='Select Origin'
-                              />
+                              <FormattedMessage id='wantedBoard.selectOrigin' defaultMessage='Select Origin' />
                             )
                           }}
                         />
@@ -827,9 +880,7 @@ class DetailSidebar extends Component {
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage
-                              id='wantedBoard.grade'
-                              defaultMessage='Grade'>
+                            <FormattedMessage id='wantedBoard.grade' defaultMessage='Grade'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -839,21 +890,14 @@ class DetailSidebar extends Component {
                             'data-test': 'my_requested_items_sidebar_grade_drpdn',
                             selection: true,
                             multiple: true,
-                            placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectGrade'
-                                defaultMessage='Select Grade'
-                              />
-                            )
+                            placeholder: <FormattedMessage id='wantedBoard.selectGrade' defaultMessage='Select Grade' />
                           }}
                         />
                       </GridColumn>
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage
-                              id='wantedBoard.form'
-                              defaultMessage='Form'>
+                            <FormattedMessage id='wantedBoard.form' defaultMessage='Form'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -863,12 +907,7 @@ class DetailSidebar extends Component {
                             'data-test': 'my_requested_items_sidebar_forms_drpdn',
                             selection: true,
                             multiple: true,
-                            placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectForm'
-                                defaultMessage='Select form'
-                              />
-                            )
+                            placeholder: <FormattedMessage id='wantedBoard.selectForm' defaultMessage='Select form' />
                           }}
                         />
                       </GridColumn>
@@ -878,9 +917,7 @@ class DetailSidebar extends Component {
                       <GridColumn>
                         <Dropdown
                           label={
-                            <FormattedMessage
-                              id='wantedBoard.packaging'
-                              defaultMessage='Packaging'>
+                            <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -888,10 +925,7 @@ class DetailSidebar extends Component {
                           options={listPackagingTypes}
                           inputProps={{
                             placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectPackaging'
-                                defaultMessage='Select packaging'
-                              />
+                              <FormattedMessage id='wantedBoard.selectPackaging' defaultMessage='Select packaging' />
                             ),
                             'data-test': 'my_requested_items_sidebar_packaging_drpdn',
                             selection: true,
@@ -910,10 +944,7 @@ class DetailSidebar extends Component {
                             type: 'number',
                             placeholder: '0.000'
                           },
-                          <FormattedMessage
-                            id='wantedBoard.maxDeliveredPrice'
-                            defaultMessage='Max Delivered Price/LB'
-                          >
+                          <FormattedMessage id='wantedBoard.maxDeliveredPrice' defaultMessage='Max Delivered Price/LB'>
                             {text => text}
                           </FormattedMessage>,
                           currencySymbol
@@ -926,77 +957,83 @@ class DetailSidebar extends Component {
                         <TextArea
                           name='notes'
                           label={
-                            <FormattedMessage
-                              id='wantedBoard.specialNotes'
-                              defaultMessage='Special Notes'>
+                            <FormattedMessage id='wantedBoard.specialNotes' defaultMessage='Special Notes'>
                               {text => text}
                             </FormattedMessage>
                           }
                           inputProps={{
                             'data-test': 'my_requested_items_sidebar_specialNotes_inp',
-                            placeholder:
-                              formatMessage({
-                                id: 'wantedBoard.writeNotesHere',
-                                defaultMessage: 'Write notes here'
-                              })
+                            placeholder: formatMessage({
+                              id: 'wantedBoard.writeNotesHere',
+                              defaultMessage: 'Write notes here'
+                            })
                           }}
-                          />
-                      </GridColumn>
-                    </GridRow>
-
-                    {false /* temporary hidden */ && (<>
-                    <GridRow>
-                      <GridColumn>
-                        <CustomHr/>
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow className='label-row'>
-                      <GridColumn width={8}>
-                        <FormattedMessage id='wantedBoard.enableNotifications' defaultMessage='Enable Notifications'>
-                          {text => text}
-                        </FormattedMessage>
-                      </GridColumn>
-                      <GridColumn width={8} className='float-right'>
-                        <FormikCheckbox
-                          inputProps={{
-                            toggle: true,
-                            style: { marginBottom: '-4px' },
-                            float: 'right',
-                            'data-test': 'my_requested_items_sidebar_enableNotifications_chckb'
-                          }}
-                          name='notificationEnabled'
                         />
                       </GridColumn>
                     </GridRow>
 
-                    <GridRow>
-                      <GridColumn>
-                        <FormikCheckbox
-                          inputProps={{
-                            disabled: !values.notificationEnabled,
-                            'data-test': 'my_requested_items_sidebar_notifyMail_chckb'
-                          }}
-                          name='notifyMail'
-                          label={formatMessage({id: 'wantedBoard.notifyMail', defaultMessage: 'Email Notifications'})}
-                        />
-                      </GridColumn>
-                    </GridRow>
+                    {false /* temporary hidden */ && (
+                      <>
+                        <GridRow>
+                          <GridColumn>
+                            <CustomHr />
+                          </GridColumn>
+                        </GridRow>
 
-                    <GridRow>
-                      <GridColumn>
-                        <FormikCheckbox
-                          inputProps={{
-                            disabled: !values.notificationEnabled,
-                            'data-test': 'my_requested_items_sidebar_notifyMail_chckb'
-                          }}
-                          name='notifyPhone'
-                          label={formatMessage({id: 'wantedBoard.notifyPhone', defaultMessage: 'Phone Notifications'})}
-                        />
-                      </GridColumn>
-                    </GridRow>
-                    </>)}
+                        <GridRow className='label-row'>
+                          <GridColumn width={8}>
+                            <FormattedMessage
+                              id='wantedBoard.enableNotifications'
+                              defaultMessage='Enable Notifications'>
+                              {text => text}
+                            </FormattedMessage>
+                          </GridColumn>
+                          <GridColumn width={8} className='float-right'>
+                            <FormikCheckbox
+                              inputProps={{
+                                toggle: true,
+                                style: { marginBottom: '-4px' },
+                                float: 'right',
+                                'data-test': 'my_requested_items_sidebar_enableNotifications_chckb'
+                              }}
+                              name='notificationEnabled'
+                            />
+                          </GridColumn>
+                        </GridRow>
 
+                        <GridRow>
+                          <GridColumn>
+                            <FormikCheckbox
+                              inputProps={{
+                                disabled: !values.notificationEnabled,
+                                'data-test': 'my_requested_items_sidebar_notifyMail_chckb'
+                              }}
+                              name='notifyMail'
+                              label={formatMessage({
+                                id: 'wantedBoard.notifyMail',
+                                defaultMessage: 'Email Notifications'
+                              })}
+                            />
+                          </GridColumn>
+                        </GridRow>
+
+                        <GridRow>
+                          <GridColumn>
+                            <FormikCheckbox
+                              inputProps={{
+                                disabled: !values.notificationEnabled,
+                                'data-test': 'my_requested_items_sidebar_notifyMail_chckb'
+                              }}
+                              name='notifyPhone'
+                              label={formatMessage({
+                                id: 'wantedBoard.notifyPhone',
+                                defaultMessage: 'Phone Notifications'
+                              })}
+                            />
+                          </GridColumn>
+                        </GridRow>
+                      </>
+                    )}
                   </Grid>
                 </FlexContent>
                 <BottomButtons>
@@ -1065,11 +1102,13 @@ const mapDispatchToProps = {
   closeDetailSidebar,
   //getProductOffer,
   addPurchaseRequest,
-  editPurchaseRequest
+  editPurchaseRequest,
+  updateEditedId
 }
 
 const mapStateToProps = ({
   wantedBoard: {
+    editInitTrig,
     autocompleteData,
     autocompleteDataLoading,
     listPackagingTypes,
@@ -1092,7 +1131,7 @@ const mapStateToProps = ({
     searchedManufacturersLoading,
     searchedCasNumbers,
     searchedCasNumbersLoading,
-    myRequestedItemsType,
+    myRequestedItemsType
     //  searchedOrigins,
     //  searchedOriginsLoading,
     //  searchedProducts,
@@ -1101,7 +1140,8 @@ const mapStateToProps = ({
     //  listDocumentTypes,
     //  editProductOfferInitTrig
   }
-  }) => ({
+}) => ({
+  editInitTrig,
   autocompleteData,
   autocompleteDataLoading,
   listPackagingTypes,
@@ -1117,21 +1157,21 @@ const mapStateToProps = ({
   listUnits,
   listUnitsLoading,
   loading,
-//  sidebarActiveTab,
-//  sidebarDetailOpen,
+  //  sidebarActiveTab,
+  //  sidebarDetailOpen,
   sidebarValues: sidebarValues ? sidebarValues.rawData : null,
   searchedManufacturers,
   searchedManufacturersLoading,
   searchedCasNumbers,
   searchedCasNumbersLoading,
   type: myRequestedItemsType,
-//  searchedOrigins,
-//  searchedOriginsLoading,
-//  searchedProducts,
-//  searchedProductsLoading,
-//  warehousesList,
-//  listDocumentTypes,
-//  editProductOfferInitTrig,
+  //  searchedOrigins,
+  //  searchedOriginsLoading,
+  //  searchedProducts,
+  //  searchedProductsLoading,
+  //  warehousesList,
+  //  listDocumentTypes,
+  //  editProductOfferInitTrig,
   currencySymbol: '$'
 })
 

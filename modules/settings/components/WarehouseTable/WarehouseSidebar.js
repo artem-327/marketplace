@@ -29,7 +29,7 @@ import { AddressForm } from '~/modules/address-form/'
 
 import { getSafe } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
-import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/components/DetailSidebar'
+import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
 import DocumentTab from '~/components/document-tab'
 import { AlertCircle } from 'react-feather'
 import { changeTutorialTab } from '~/modules/tutorial/actions'
@@ -459,8 +459,8 @@ class WarehouseSidebar extends React.Component {
         ) : null}
         <DocumentTab
           listDocumentTypes={[
-            { key: 137, text: 'Resale Certificate', value: 137 },
-            { key: 136, text: 'Sales Tax Exemption Certificate', value: 136 }
+            { key: 14, text: 'Resale Certificate', value: 14 },
+            { key: 13, text: 'Sales Tax Exemption Certificate', value: 13 }
           ]}
           values={values}
           setFieldValue={setFieldValue}

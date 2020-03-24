@@ -161,3 +161,8 @@ export const editMyPurchaseOffer = (id, body) => ({
   type: AT.WB_EDIT_MY_PURCHASE_OFFER,
   payload: api.editMyPurchaseOffer(id, body)
 })
+
+export const updateEditedId = (id) => ({
+  type: AT.WB_UPDATE_EDITED_ID,
+  payload: id
+})

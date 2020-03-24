@@ -1,5 +1,18 @@
 import React, { Component } from 'react'
-import { Container, Grid, GridColumn, Input, Menu, Header, Button, Popup, List, Icon, Tab, Label } from 'semantic-ui-react'
+import {
+  Container,
+  Grid,
+  GridColumn,
+  Input,
+  Menu,
+  Header,
+  Button,
+  Popup,
+  List,
+  Icon,
+  Tab,
+  Label
+} from 'semantic-ui-react'
 import { AlertTriangle } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
@@ -18,12 +31,7 @@ import { getSafe } from '~/utils/functions'
 import { number } from 'prop-types'
 import Link from 'next/link'
 
-import {
-  UpperCaseText,
-  ControlPanel,
-  ProductChemicalSwitch,
-  TopButtons
-} from '../../constants/layout'
+import { UpperCaseText, ControlPanel, ProductChemicalSwitch, TopButtons } from '../../constants/layout'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
@@ -65,7 +73,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 304,
+        width: 304
         //align: 'right',
         //sortPath: 'ProductOffer.pkgAvailable'
       },
@@ -76,7 +84,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 145,
+        width: 145
       },
       {
         name: 'orderFrequency',
@@ -85,7 +93,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 160,
+        width: 160
       },
       {
         name: 'neededBy',
@@ -94,7 +102,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 110,
+        width: 110
       },
       {
         name: 'dealExpired',
@@ -103,7 +111,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 130,
+        width: 130
       },
       {
         name: 'manufacturer',
@@ -112,7 +120,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 130,
+        width: 130
       },
       {
         name: 'condition',
@@ -121,7 +129,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120,
+        width: 120
       },
       {
         name: 'deliveryLocation',
@@ -130,7 +138,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120,
+        width: 120
       },
       {
         name: 'packaging',
@@ -139,7 +147,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 110,
+        width: 110
       },
       {
         name: 'deliveryPriceMax',
@@ -149,7 +157,7 @@ class MyRequestedItems extends Component {
           </FormattedMessage>
         ),
         align: 'right',
-        width: 170,
+        width: 170
       },
       {
         name: 'measurement',
@@ -158,7 +166,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 135,
+        width: 135
       },
       {
         name: 'fobQuote',
@@ -168,7 +176,7 @@ class MyRequestedItems extends Component {
           </FormattedMessage>
         ),
         align: 'right',
-        width: 110,
+        width: 110
       },
       {
         name: 'deliveredQuote',
@@ -178,7 +186,7 @@ class MyRequestedItems extends Component {
           </FormattedMessage>
         ),
         align: 'right',
-        width: 145,
+        width: 145
       }
     ],
     columnsChemical: [
@@ -201,7 +209,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 225,
+        width: 225
         //align: 'right',
         //sortPath: 'ProductOffer.pkgAvailable'
       },
@@ -212,7 +220,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 80,
+        width: 80
       },
       {
         name: 'orderQuantity',
@@ -221,7 +229,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 145,
+        width: 145
       },
       {
         name: 'orderFrequency',
@@ -230,7 +238,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 160,
+        width: 160
       },
       {
         name: 'neededBy',
@@ -239,7 +247,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 110,
+        width: 110
       },
       {
         name: 'dealExpired',
@@ -248,7 +256,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 130,
+        width: 130
       },
       {
         name: 'manufacturer',
@@ -257,7 +265,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 130,
+        width: 130
       },
       {
         name: 'condition',
@@ -266,7 +274,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120,
+        width: 120
       },
       {
         name: 'deliveryLocation',
@@ -275,7 +283,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120,
+        width: 120
       },
       {
         name: 'packaging',
@@ -284,7 +292,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 110,
+        width: 110
       },
       {
         name: 'deliveryPriceMax',
@@ -294,7 +302,7 @@ class MyRequestedItems extends Component {
           </FormattedMessage>
         ),
         align: 'right',
-        width: 170,
+        width: 170
       },
       {
         name: 'measurement',
@@ -303,7 +311,7 @@ class MyRequestedItems extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 135,
+        width: 135
       },
       {
         name: 'fobQuote',
@@ -313,7 +321,7 @@ class MyRequestedItems extends Component {
           </FormattedMessage>
         ),
         align: 'right',
-        width: 110,
+        width: 110
       },
       {
         name: 'deliveredQuote',
@@ -323,7 +331,7 @@ class MyRequestedItems extends Component {
           </FormattedMessage>
         ),
         align: 'right',
-        width: 145,
+        width: 145
       }
     ],
 
@@ -333,7 +341,6 @@ class MyRequestedItems extends Component {
     filterValue: '',
     expandedRowIds: []
   }
-
 
   componentDidMount() {
     this.setState({ filterValue: '' })
@@ -360,14 +367,8 @@ class MyRequestedItems extends Component {
   }
 
   renderContent = () => {
-    const {
-      datagrid, intl, rows, editedId, sidebarDetailTrigger, type } = this.props
-    const {
-      columnsProduct,
-      columnsChemical,
-      selectedRows,
-      filterValue
-    } = this.state
+    const { datagrid, intl, rows, editedId, sidebarDetailTrigger, type } = this.props
+    const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
 
     return (
@@ -393,12 +394,11 @@ class MyRequestedItems extends Component {
                   <ProductChemicalSwitch className={type}>
                     <Button
                       attached='left'
-                        onClick={() => {
-                          this.setState({ expandedRowIds: [] })
-                          this.props.setMyRequestedItemsType('product')
+                      onClick={() => {
+                        this.setState({ expandedRowIds: [] })
+                        this.props.setMyRequestedItemsType('product')
                       }}
-                      data-test='my_requested_items_product_switch_btn'
-                    >
+                      data-test='my_requested_items_product_switch_btn'>
                       <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
                         {text => text}
                       </FormattedMessage>
@@ -409,8 +409,7 @@ class MyRequestedItems extends Component {
                         this.setState({ expandedRowIds: [] })
                         this.props.setMyRequestedItemsType('chemical')
                       }}
-                      data-test='my_requested_items_chemical_switch_btn'
-                    >
+                      data-test='my_requested_items_chemical_switch_btn'>
                       <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
                         {text => text}
                       </FormattedMessage>
@@ -429,18 +428,20 @@ class MyRequestedItems extends Component {
             </Grid.Row>
           </Grid>
         </ControlPanel>
-        <div className='flex stretched' style={{padding: '10px 0'}}>
+        <div className='flex stretched' style={{ padding: '10px 0' }}>
           <ProdexGrid
             key={type}
             tableName='my_requested_items_grid'
             {...datagrid.tableProps}
             rows={rows}
             columns={type === 'product' ? columnsProduct : columnsChemical}
-            rowSelection
+            rowSelection={false}
+            showSelectionColumn={false}
             treeDataType={true}
-            showSelectionColumn
             tableTreeColumn={type === 'product' ? 'product' : 'casNumber'}
-            getChildRows={(row, rootRows) => { return row ? row.purchaseRequestOffers : rootRows }}
+            getChildRows={(row, rootRows) => {
+              return row ? row.purchaseRequestOffers : rootRows
+            }}
             onRowClick={(_, row) => {
               if (row.root && row.purchaseRequestOffers.length) {
                 let ids = this.state.expandedRowIds.slice()
@@ -454,16 +455,16 @@ class MyRequestedItems extends Component {
               }
             }}
             expandedRowIds={this.state.expandedRowIds}
-            onExpandedRowIdsChange={(expandedRowIds) => this.setState({ expandedRowIds })}
+            onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
             rowActions={[
               {
                 text: formatMessage({
                   id: 'global.edit',
                   defaultMessage: 'Edit'
                 }),
-                disabled: row => editedId === row.id,
                 callback: row => {
-                  sidebarDetailTrigger(row, 'my-requested-items')}
+                  sidebarDetailTrigger(row, 'my-requested-items')
+                }
               },
               {
                 text: formatMessage({
@@ -477,12 +478,10 @@ class MyRequestedItems extends Component {
                       id: 'confirm.deleteRequestedItem.Header',
                       defaultMessage: 'Delete Requested Item'
                     }),
-                    formatMessage(
-                      {
-                        id: 'confirm.deleteRequestedItem.Content',
-                        defaultMessage: 'Do you really want to delete requested item?'
-                      }
-                    )
+                    formatMessage({
+                      id: 'confirm.deleteRequestedItem.Content',
+                      defaultMessage: 'Do you really want to delete requested item?'
+                    })
                   ).then(async () => {
                     try {
                       await this.props.deletePurchaseRequestItem(row.id)
@@ -505,16 +504,14 @@ class MyRequestedItems extends Component {
                       id: 'confirm.rejectRequestedItem.Header',
                       defaultMessage: 'Reject Requested Item'
                     }),
-                    formatMessage(
-                      {
-                        id: 'confirm.rejectRequestedItem.Content',
-                        defaultMessage: 'Do you really want to reject requested item?'
-                      }
-                    )
+                    formatMessage({
+                      id: 'confirm.rejectRequestedItem.Content',
+                      defaultMessage: 'Do you really want to reject requested item?'
+                    })
                   ).then(async () => {
                     try {
-                      await this.props.rejectRequestedItem(row.id)
-                      datagrid.removeRow(row.id)
+                      await this.props.rejectRequestedItem(row.id.split('_')[1])
+                      datagrid.loadData()
                     } catch (e) {}
                   })
                 }
@@ -525,7 +522,10 @@ class MyRequestedItems extends Component {
                   defaultMessage: 'Purchase'
                 }),
                 disabled: row => editedId === row.id,
-                callback: async (row) => await this.props.purchaseRequestedItem(row.id)
+                callback: async (row) => {
+                  await this.props.purchaseRequestedItem(row.id.split('_')[1])
+                  datagrid.loadData()
+                }
               },
             ]}
           />
@@ -539,15 +539,14 @@ class MyRequestedItems extends Component {
       activeIndex,
       intl: { formatMessage },
       editWindowOpen,
+      clientCompany
     } = this.props
 
     const panes = [
-      {
+      !clientCompany && {
         menuItem: (
           <MenuLink to='/wanted-board/wanted-board' data-test='wanted_board_submenu_tab_wanted_board'>
-            <UpperCaseText>
-              {formatMessage({ id: 'title.wantedBoard', defaultMessage: 'Wanted Board' })}
-            </UpperCaseText>
+            <UpperCaseText>{formatMessage({ id: 'title.wantedBoard', defaultMessage: 'Wanted Board' })}</UpperCaseText>
           </MenuLink>
         ),
         render: () => <>{<WantedBoard />}</>
@@ -562,12 +561,10 @@ class MyRequestedItems extends Component {
         ),
         render: () => <>{this.renderContent()}</>
       },
-      {
+      !clientCompany && {
         menuItem: (
           <MenuLink to='/wanted-board/my-offers' data-test='wanted_board_submenu_tab_my_offers'>
-            <UpperCaseText>
-              {formatMessage({ id: 'title.myOffers', defaultMessage: 'My Offers' })}
-            </UpperCaseText>
+            <UpperCaseText>{formatMessage({ id: 'title.myOffers', defaultMessage: 'My Offers' })}</UpperCaseText>
           </MenuLink>
         ),
         render: () => <>{<MyOffers />}</>

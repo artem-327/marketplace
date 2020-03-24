@@ -468,9 +468,13 @@ class Broadcast extends Component {
                         <Input
                           name='search'
                           icon='search'
-                          iconPosition='left'
+                          iconPosition='right'
                           value={this.state.filterSearch}
                           onChange={this.handleSearchChange}
+                          placeholder={formatMessage({
+                            id: 'broadcast.keyword',
+                            defaultMessage: 'Keyword'
+                          })}
                         />
                       </Form.Field>
                     </>
@@ -515,7 +519,7 @@ class Broadcast extends Component {
 
                     return (
                       <Form onSubmit={props.handleSubmit}>
-                        <Grid>
+                        <Grid className='upper-grid'>
                           <BottomUnpaddedRow>
                             <GridColumn computer={16}>
                               <Header as='h4'>
@@ -684,7 +688,6 @@ class Broadcast extends Component {
                                 loading={this.props.templateSaving}
                                 fluid
                                 positive
-                                basic
                                 data-test='broadcast_modal_submit_btn'>
                                 {formatMessage({
                                   id: 'global.save',
@@ -703,14 +706,14 @@ class Broadcast extends Component {
               width={asSidebar ? 16 : 10}
               stretched
               style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : { height: '80vh' }}>
-              <Rule.Root>
+              <Rule.Root style={asSidebar ? null : { overflowY: 'scroll' }}>
                 <Rule.Header style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
                   <Rule.RowContent>
                     <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region select'>
                       {text => text}
                     </FormattedMessage>
                   </Rule.RowContent>
-                  <Rule.Toggle style={asSidebar ? { flex: '0 0 60px' } : null}>
+                  <Rule.Toggle style={asSidebar ? { flex: '0 0 62px' } : null}>
                     <FormattedMessage id='broadcast.include' defaultMessage='Include' />
                   </Rule.Toggle>
 

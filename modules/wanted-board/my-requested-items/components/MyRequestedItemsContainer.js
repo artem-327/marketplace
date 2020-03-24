@@ -46,13 +46,43 @@ function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
     ...datagrid,
+    clientCompany: getSafe(() => store.auth.identity.clientCompany, false),
     type: store.wantedBoard.myRequestedItemsType,
+    editedId: store.wantedBoard.editWindowOpen === 'my-requested-items' ? store.wantedBoard.editedId : null,
     rows: datagrid.rows.map(row => {
       const productName = getSafe(() => row.element.echoProduct.name, null)
       const qtyPart = getSafe(() => row.unit.nameAbbreviation)
       const product = getSafe(() => row.element.echoProduct.name, null)
       const casNumber = getSafe(() => row.element.casProduct.casNumber, null)
-      const offersLength = getSafe(() => row.purchaseRequestOffers.length, 0)
+      const purchaseRequestOffers = row.purchaseRequestOffers.map(pro => {
+        const condition = getSafe(() => pro.productOffer.conforming, null)
+        return {
+          id: row.id + '_' + pro.id,
+          clsName: 'tree-table nested-row',
+          rawData: pro,
+          product: getSafe(() => pro.productOffer.companyProduct.echoProduct.name, ''),
+          casNumber: getSafe(() => pro.productOffer.companyProduct.echoProduct.elements[0].casProduct.casNumber, 'N/A'),
+          orderQuantity: '',
+          orderFrequency: '',
+          neededBy: '',
+          dealExpired: '',
+          manufacturer: getSafe(() => pro.productOffer.companyProduct.echoProduct.manufacturer.name, ''),
+          condition: condition === null
+            ? <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
+            : (condition
+                ? <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
+                : <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+            ),
+          deliveryLocation: '',
+          packaging: getSafe(() => pro.productOffer.companyProduct.packagingType.name, ''),
+          measurement: getSafe(() => pro.productOffer.companyProduct.packagingUnit.nameAbbreviation, ''),
+          deliveryPriceMax: 'N/A',
+          fobQuote: <FormattedNumber style='currency' currency={currency} value={pro.pricePerUOM} />,
+          deliveredQuote: 'N/A',
+        }
+      })
+      //.filter(el => el.rawData.status === 'NEW')
+      const offersLength = purchaseRequestOffers.length
       return {
         id: row.id,
         clsName: 'tree-table root-row',
@@ -123,35 +153,9 @@ function mapStateToProps(store, { datagrid }) {
         measurement: qtyPart,
         fobQuote: '',
         deliveredQuote: '',
-        purchaseRequestOffers: row.purchaseRequestOffers.map(row => {
-          const condition = getSafe(() => row.productOffer.conforming, null)
-          return {
-            id: row.id,
-            clsName: 'tree-table nested-row',
-            rawData: row,
-            product: getSafe(() => row.productOffer.companyProduct.echoProduct.name, ''),
-            casNumber: getSafe(() => row.productOffer.companyProduct.echoProduct.elements[0].casProduct.casNumber, 'N/A'),
-            orderQuantity: '',
-            orderFrequency: '',
-            neededBy: '',
-            dealExpired: '',
-            manufacturer: getSafe(() => row.productOffer.companyProduct.echoProduct.manufacturer.name, ''),
-            condition: condition === null
-              ? <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
-              : (condition
-                  ? <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
-                  : <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
-              ),
-            deliveryLocation: '',
-            packaging: getSafe(() => row.productOffer.companyProduct.packagingType.name, ''),
-            measurement: getSafe(() => row.productOffer.companyProduct.packagingUnit.nameAbbreviation, ''),
-            deliveryPriceMax: 'N/A',
-            fobQuote: <FormattedNumber style='currency' currency={currency} value={row.pricePerUOM} />,
-            deliveredQuote: 'N/A',
-          }
-        })
+        purchaseRequestOffers
       }
-    })
+    })//.filter(row => row.purchaseRequestOffers.length !== 0)
   }
 }
 

@@ -319,8 +319,8 @@ class WantedBoard extends Component {
             {...datagrid.tableProps}
             rows={rows}
             columns={type === 'product' ? columnsProduct : columnsChemical}
-            rowSelection
-            showSelectionColumn
+            rowSelection={false}
+            showSelectionColumn={false}
             rowActions={[
               {
                 text: formatMessage({

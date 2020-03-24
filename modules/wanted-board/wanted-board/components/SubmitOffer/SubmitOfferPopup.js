@@ -35,9 +35,23 @@ import ProdexGrid from '~/components/table'
 
 import confirm from '~/src/components/Confirmable/confirm'
 
-const validationSchema = Yup.object().shape({
-  pricePerUOM: Yup.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage)
-})
+const validationSchema = () =>
+  Yup.lazy(values => {
+    return Yup.object().shape({
+      pricePerUOM: Yup
+        .number()
+        .positive(errorMessages.positive)
+        .typeError(errorMessages.requiredMessage)
+        .required(errorMessages.requiredMessage),
+      ...(values.lotExpirationDate && {
+        lotExpirationDate: Yup.string()
+          .test('minDate', errorMessages.dateNotInPast, function(date) {
+            const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+            return enteredDate >= moment().endOf('day').format()
+          }),
+      }),
+    })
+  })
 
 import { InputWrapper } from '../../../constants/layout'
 
@@ -142,6 +156,7 @@ const OrderList = styled(List)`
 
 const ModalContent = styled(Modal.Content)`
   padding: 1.5rem !important;
+  margin-bottom: 10px !important;
 `
 
 const SubmitFormTable = styled(Table)`
@@ -301,7 +316,7 @@ class SubmitOfferPopup extends React.Component {
 
     let expiresAt = null
     if (lotExpirationDate) {
-      expiresAt = moment(getStringISODate(lotExpirationDate)).format()
+      expiresAt = moment(getStringISODate(lotExpirationDate)).endOf('day').format()
     }
 
     const body = {
@@ -332,7 +347,7 @@ class SubmitOfferPopup extends React.Component {
             // inputProps={{  }}
           />
         ),
-        product: row.companyProduct.intProductName,
+        product: getSafe(() => row.companyProduct.intProductName, 'N/A'),
         pricePerUOM: (
           <InputWrapper>
             <div>
@@ -343,14 +358,14 @@ class SubmitOfferPopup extends React.Component {
             </div>
           </InputWrapper>
         ),
-        manufacturer: row.companyProduct.echoProduct.manufacturer.name,
+        manufacturer: getSafe(() => row.companyProduct.echoProduct.manufacturer.name, 'N/A'),
         condition: row.conforming ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
           <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
         ),
-        packaging: row.companyProduct.packagingType.name,
-        meas: row.companyProduct.packagingUnit.nameAbbreviation.toUpperCase(),
+        packaging: getSafe(() => row.companyProduct.packagingType.name, 'N/A'),
+        meas: getSafe(() => row.companyProduct.packagingUnit.nameAbbreviation, 'N/A').toUpperCase(),
         expirationDate: row.lotExpirationDate ? moment(row.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A'
       }
     })
@@ -376,6 +391,7 @@ class SubmitOfferPopup extends React.Component {
       purchaseRequestPending
     } = this.props
     const { columns } = this.state
+    const rows = this.getRows()
 
     const qtyPart = popupValues.unit.nameAbbreviation
 
@@ -388,7 +404,7 @@ class SubmitOfferPopup extends React.Component {
           <Modal.Header>
             <FormattedMessage id='wantedBoard.submitOfferHeader' defaultMessage='SUBMIT OFFER' />
           </Modal.Header>
-          <ModalContent>
+          <ModalContent scrolling={rows.length !== 0}>
             <>
               <SubmitOfferHighSegment>
                 <Grid verticalAlign='middle'>
@@ -484,7 +500,7 @@ class SubmitOfferPopup extends React.Component {
                   tableName='submit_offer_grid'
                   {...datagrid.tableProps}
                   loading={datagrid.loading || purchaseRequestPending}
-                  rows={this.getRows()}
+                  rows={rows}
                   columns={columns}
                 />
               </div>
@@ -497,7 +513,7 @@ class SubmitOfferPopup extends React.Component {
                 setSubmitting(false)
                 this.submitOffer(values)
               }}
-              validationSchema={validationSchema}
+              validationSchema={validationSchema()}
               validateOnChange
               enableReinitialize
               initialValues={{
@@ -530,7 +546,9 @@ class SubmitOfferPopup extends React.Component {
                               label='Expiration Date'
                               inputProps={{
                                 onChange: (e, { name, value }) =>
-                                  this.handleChange(e, { name, value: getStringISODate(value) })
+                                  this.handleChange(e, { name, value: getStringISODate(value) }),
+                                minDate: moment(),
+                                clearable: true,
                               }}
                             />
                           </FormGroup>
@@ -541,7 +559,7 @@ class SubmitOfferPopup extends React.Component {
                               {text => text}
                             </FormattedMessage>
                           </Button>
-                          <Button primary disabled={this.state.select === ''}>
+                          <Button primary type='submit' disabled={this.state.select === ''}>
                             <FormattedMessage id='wantedBoard.submit' defaultMessage='Submit' tagName='span'>
                               {text => text}
                             </FormattedMessage>

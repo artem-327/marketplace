@@ -19,11 +19,7 @@ import { Datagrid } from '~/modules/datagrid'
 import { number } from 'prop-types'
 import Link from 'next/link'
 
-import {
-  UpperCaseText,
-  ControlPanel,
-
-} from '../../constants/layout'
+import { UpperCaseText, ControlPanel } from '../../constants/layout'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
@@ -43,7 +39,7 @@ class MyOffers extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 375,
+        width: 375
         //align: 'right',
         //sortPath: 'ProductOffer.pkgAvailable'
       },
@@ -55,7 +51,7 @@ class MyOffers extends Component {
           </FormattedMessage>
         ),
         align: 'right',
-        width: 125,
+        width: 125
       },
       {
         name: 'manufacturer',
@@ -64,7 +60,7 @@ class MyOffers extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 310,
+        width: 310
       },
       {
         name: 'condition',
@@ -73,7 +69,7 @@ class MyOffers extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 145,
+        width: 145
       },
       {
         name: 'status',
@@ -82,7 +78,7 @@ class MyOffers extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 135,
+        width: 135
       }
     ],
     selectedRows: [],
@@ -96,8 +92,7 @@ class MyOffers extends Component {
     this.props.handleFiltersValue('')
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-  }
+  componentDidUpdate(prevProps, prevState, snapshot) {}
 
   handleFiltersValue = value => {
     const { handleFiltersValue } = this.props
@@ -135,14 +130,14 @@ class MyOffers extends Component {
             </Grid.Row>
           </Grid>
         </ControlPanel>
-        <div className='flex stretched' style={{padding: '10px 0'}}>
+        <div className='flex stretched' style={{ padding: '10px 0' }}>
           <ProdexGrid
             tableName='my_offers_grid'
             {...datagrid.tableProps}
             rows={rows}
             columns={columns}
-            rowSelection
-            showSelectionColumn
+            rowSelection={false}
+            showSelectionColumn={false}
             rowActions={[
               {
                 text: formatMessage({
@@ -176,7 +171,9 @@ class MyOffers extends Component {
                     try {
                       await this.props.deleteMyOfferItem(row.id)
                       datagrid.removeRow(row.id)
-                    } catch (e) {console.log('DELETE ERROR')}
+                    } catch (e) {
+                      console.log('DELETE ERROR')
+                    }
                   })
                 }
               }
@@ -198,9 +195,7 @@ class MyOffers extends Component {
       {
         menuItem: (
           <MenuLink to='/wanted-board/wanted-board' data-test='wanted_board_submenu_tab_wanted_board'>
-            <UpperCaseText>
-              {formatMessage({ id: 'title.wantedBoard', defaultMessage: 'Wanted Board' })}
-            </UpperCaseText>
+            <UpperCaseText>{formatMessage({ id: 'title.wantedBoard', defaultMessage: 'Wanted Board' })}</UpperCaseText>
           </MenuLink>
         ),
         render: () => <>{<WantedBoard />}</>
@@ -218,9 +213,7 @@ class MyOffers extends Component {
       {
         menuItem: (
           <MenuLink to='/wanted-board/my-offers' data-test='wanted_board_submenu_tab_my_offers'>
-            <UpperCaseText>
-              {formatMessage({ id: 'title.myOffers', defaultMessage: 'My Offers' })}
-            </UpperCaseText>
+            <UpperCaseText>{formatMessage({ id: 'title.myOffers', defaultMessage: 'My Offers' })}</UpperCaseText>
           </MenuLink>
         ),
         render: () => <>{this.renderContent()}</>

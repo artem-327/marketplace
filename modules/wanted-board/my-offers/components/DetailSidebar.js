@@ -39,7 +39,8 @@ import {
   getProductConditions,
   searchManufacturers,
   closeDetailSidebar,
-  editMyPurchaseOffer
+  editMyPurchaseOffer,
+  updateEditedId
 } from '../../actions'
 
 
@@ -53,11 +54,6 @@ import {
 
 import { listFrequency } from '../../constants/constants'
 
-const CustomHr = styled.hr`
-  border: solid 0.5px #dee2e6;
-  margin: 0.285714286em 0 0 0;
-`
-
 const initValues = {
   product: '',
   pricePerUOM: '',
@@ -68,21 +64,32 @@ const initValues = {
   measurement: 7      // pounds [lb]
 }
 
-const validationScheme = val.object().shape({
-  product: val
-    .number()
-    .typeError(errorMessages.requiredMessage)
-    .required(errorMessages.requiredMessage),
-  pricePerUOM: val
-    .number()
-    .min(0, errorMessages.minimum(0))
-    .typeError(errorMessages.mustBeNumber)
-    .test('maxdec', errorMessages.maxDecimals(3), val => {
-      return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
-    })
-    .required(errorMessages.requiredMessage),
-  }
-)
+const validationSchema = () =>
+  val.lazy(values => {
+    return val.object().shape({
+        product: val
+          .number()
+          .typeError(errorMessages.requiredMessage)
+          .required(errorMessages.requiredMessage),
+        pricePerUOM: val
+          .number()
+          .positive(errorMessages.positive)
+          .moreThan(0, errorMessages.greaterThan(0))
+          .typeError(errorMessages.mustBeNumber)
+          .test('maxdec', errorMessages.maxDecimals(3), val => {
+            return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
+          })
+          .required(errorMessages.requiredMessage),
+        ...(values.expiresAt.length && {
+          expiresAt: val.string()
+            .test('minDate', errorMessages.dateNotInPast, function(date) {
+              const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+              return enteredDate >= moment().endOf('day').format()
+            }),
+        }),
+      }
+    )
+  })
 
 const listConforming = [
   {
@@ -107,6 +114,54 @@ class DetailSidebar extends Component {
     this.fetchIfNoData('listPackagingTypes', this.props.getPackagingTypes)
     this.fetchIfNoData('listUnits', this.props.getUnits)
     this.props.searchManufacturers('', 200)
+    this.props.updateEditedId(this.props.sidebarValues.id)
+    this.setState({ sidebarValues: this.props.sidebarValues})
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.editInitTrig !== this.props.editInitTrig) {
+      const { intl } = this.props
+      let { formatMessage } = intl
+      const { touched, validateForm, submitForm, values, setSubmitting, setTouched } = this.formikProps
+      if (_.isEmpty(touched)) {
+        this.props.updateEditedId(this.props.sidebarValues.id)
+        this.setState({ sidebarValues: this.props.sidebarValues})
+      } else {
+        // Form edited
+        validateForm().then(err => {
+          const errors = Object.keys(err)
+          if (errors.length && errors[0] !== 'isCanceled') {
+            submitForm() // to show errors
+          } else {
+            confirm(
+              formatMessage({
+                id: 'confirm.global.unsavedChanges.header',
+                defaultMessage: 'Unsaved changes'
+              }),
+              formatMessage({
+                id: 'confirm.global.unsavedChanges.content',
+                defaultMessage: 'You have unsaved changes. Do you wish to save them?'
+              })
+            )
+            .then(
+              async () => {
+                // Confirm
+                if (await this.submitForm(values, setSubmitting, setTouched).sendSuccess) {
+                  this.setState({sidebarValues: this.props.sidebarValues})
+                  this.props.updateEditedId(this.props.sidebarValues.id)
+                }
+              },
+              () => {
+                // Cancel
+                this.setState({ sidebarValues: this.props.sidebarValues})
+                this.props.updateEditedId(this.props.sidebarValues.id)
+              }
+            )
+            .catch(() => {})
+          }
+        })
+      }
+    }
   }
 
   fetchIfNoData = (name, fn) => {
@@ -125,11 +180,12 @@ class DetailSidebar extends Component {
 
   submitForm = async (values, setSubmitting, setTouched) => {
     const { editMyPurchaseOffer, datagrid } = this.props
-    const { sidebarValues } = this.props
+    const { sidebarValues } = this.state
+    let sendSuccess = false
 
     let expiresAt = null
-    if (values.doesExpire) {
-      expiresAt = moment(getStringISODate(values.expiresAt)).format()
+    if (values.expiresAt) {
+      expiresAt = moment(getStringISODate(values.expiresAt)).endOf('day').format()
     }
 
     let body = {
@@ -139,6 +195,7 @@ class DetailSidebar extends Component {
     try {
       if (sidebarValues) {
         const response = await editMyPurchaseOffer(sidebarValues.id, body)
+        sendSuccess = true
         datagrid.updateRow(sidebarValues.id, () => response.value.data)
 
       } else {
@@ -147,10 +204,11 @@ class DetailSidebar extends Component {
       this.props.closeDetailSidebar()
     } catch (e) {}
     setSubmitting(false)
+    return { sendSuccess }
   }
 
   getInitialFormValues = () => {
-    const { sidebarValues } = this.props
+    const { sidebarValues } = this.state
     let initialValues = {
       ...this.state.initValues,
       ...(sidebarValues
@@ -168,7 +226,6 @@ class DetailSidebar extends Component {
     }
     if (initialValues.expiresAt) {
       initialValues.expiresAt = moment(initialValues.expiresAt).format(getLocaleDateFormat())
-      initialValues.doesExpire = true
     }
     return initialValues
   }
@@ -180,7 +237,6 @@ class DetailSidebar extends Component {
       listUnits,
       listUnitsLoading,
       loading,
-      sidebarValues,
       searchedManufacturers,
       searchedManufacturersLoading,
       intl: { formatMessage },
@@ -192,7 +248,7 @@ class DetailSidebar extends Component {
       <Formik
         enableReinitialize
         initialValues={this.getInitialFormValues()}
-        validationSchema={validationScheme}
+        validationSchema={validationSchema()}
         onSubmit={async (values, { setSubmitting, setTouched }) => {
           this.submitForm(values, setSubmitting, setTouched)
         }}>
@@ -407,7 +463,9 @@ class DetailSidebar extends Component {
                               formatMessage({
                                 id: 'date.standardPlaceholder',
                                 defaultMessage: '00/00/0000'
-                              })
+                              }),
+                            minDate: moment(),
+                            clearable: true
                           }}
                         />
                       </GridColumn>
@@ -470,11 +528,13 @@ const mapDispatchToProps = {
   getUnits,
   searchManufacturers,
   closeDetailSidebar,
-  editMyPurchaseOffer
+  editMyPurchaseOffer,
+  updateEditedId
 }
 
 const mapStateToProps = ({
   wantedBoard: {
+    editInitTrig,
     autocompleteData,
     autocompleteDataLoading,
     listPackagingTypes,
@@ -487,6 +547,7 @@ const mapStateToProps = ({
     searchedManufacturersLoading,
   }
 }) => ({
+  editInitTrig,
   autocompleteData,
   autocompleteDataLoading,
   listPackagingTypes,
@@ -494,7 +555,7 @@ const mapStateToProps = ({
   listUnits,
   listUnitsLoading,
   loading,
-  sidebarValues: sidebarValues,
+  sidebarValues,
   searchedManufacturers,
   searchedManufacturersLoading,
   currencySymbol: '$'
