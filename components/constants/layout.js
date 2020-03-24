@@ -953,3 +953,24 @@ export const MainTitle = styled(Header)`
   color: #000;
   line-height: 31px;
 `
+
+export const Required = styled.span`
+  &:before {
+    content: "*";
+    display: inline;
+    margin-left: 0.5em;
+    font-size: 1em;
+    line-height: ‭1.2857143‬;
+    color: #f16844;
+  }
+`
+
+export const Or = styled.span`
+  &:before {
+    content: "/";
+    display: inline;
+    margin: 0 0.5em;
+    font-size: 1em;
+    line-height: ‭1.2857143‬;
+  }
+`

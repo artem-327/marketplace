@@ -20,6 +20,7 @@ import { errorMessages } from '~/constants/yupValidation'
 import DocumentManager from '~/modules/settings/components/Documents/DocumentManagerTable'
 import { getSafe, formatAssay } from '~/utils/functions'
 import { EchoProductResponse, CasProductResponse } from '~/constants/backendObjects'
+import { Required } from '~/components/constants/layout'
 
 import {
   SegmentShowOnly,
@@ -126,10 +127,11 @@ class CompanyProductInfo extends Component {
     )
   }
 
-  getInput = ({ id, defaultMessage, name }) => (
+  getInput = ({ id, defaultMessage, name, required }) => (
     <GridRow>
       <GridColumn width={7}>
         <FormattedMessage id={id} defaultMessage={defaultMessage} />
+        {required === true ? <Required /> : null}
       </GridColumn>
 
       <GridColumn width={9}>
@@ -335,7 +337,8 @@ class CompanyProductInfo extends Component {
       this.getInput({
         id: 'global.casIndexName',
         defaultMessage: 'Cas Index Name',
-        name: 'casProduct.casIndexName'
+        name: 'casProduct.casIndexName',
+        required: true
       })
     ]
 
@@ -666,7 +669,8 @@ class CompanyProductInfo extends Component {
               this.getInput({
                 id: 'global.casNumber',
                 defaultMessage: 'CAS Number',
-                name: 'casProduct.casNumber'
+                name: 'casProduct.casNumber',
+                required : true
               })
             )}
           </GridColumn>

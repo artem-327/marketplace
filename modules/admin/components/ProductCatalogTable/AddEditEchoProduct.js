@@ -44,6 +44,7 @@ import escapeRegExp from 'lodash/escapeRegExp'
 import { Datagrid } from '~/modules/datagrid'
 import confirm from '~/src/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
+import { Required, Or } from '~/components/constants/layout'
 
 export const MyContainer = styled.div`
   margin: 0 15px 0 0;
@@ -102,6 +103,15 @@ const CustomGridColumn = styled(GridColumn)`
   #__next & {
     align-self: flex-start !important;
   }
+`
+
+const TabsWrapper = styled.div`
+  overflow: hidden; // fix for space at the end of flex column
+`
+
+const GridColumnBtn = styled(GridColumn)`
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 `
 
 
@@ -626,10 +636,10 @@ class AddEditEchoProduct extends React.Component {
     return sendSuccess
   }
 
-  RowInput = ({ name, readOnly = false, id, defaultMessage }) => (
+  RowInput = ({ name, readOnly = false, id, defaultMessage, required }) => (
     <GridRow>
       <GridColumn width={6}>
-        <FormattedMessage id={id} defaultMessage={defaultMessage} />
+        <FormattedMessage id={id} defaultMessage={defaultMessage} /> {required === true ? <Required /> : null}
       </GridColumn>
 
       <GridColumn width={10}>
@@ -823,7 +833,11 @@ class AddEditEchoProduct extends React.Component {
           </GridColumn>
           <GridColumn width={5}>
             <Header as='h5'>
-              <FormattedMessage id='global.elementNameaa' defaultMessage='Element Name / CAS Number' />
+              <FormattedMessage id='global.elementName' defaultMessage='Element Name' />
+              <Required />
+              <Or />
+              <FormattedMessage id='global.casNumber' defaultMessage='CAS Number' />
+              <Required />
             </Header>
           </GridColumn>
           <GridColumn width={3}>
@@ -951,8 +965,8 @@ class AddEditEchoProduct extends React.Component {
 
     return (
       <Grid verticalAlign='middle'>
-        {this.RowInput({ name: 'name', id: 'global.productName', defaultMessage: 'Product Name' })}
-        {this.RowInput({ name: 'code', id: 'global.productCode', defaultMessage: 'Product Code' })}
+        {this.RowInput({ name: 'name', id: 'global.productName', defaultMessage: 'Product Name', required: true })}
+        {this.RowInput({ name: 'code', id: 'global.productCode', defaultMessage: 'Product Code', required: true })}
 
         <GridRow>
           <GridColumn width={6}>
@@ -1621,7 +1635,7 @@ class AddEditEchoProduct extends React.Component {
               <Dimmer inverted active={isLoading}>
                 <Loader />
               </Dimmer>
-              <div>
+              <TabsWrapper>
                 <HighSegment basic>
                   <Menu pointing secondary>
                     {tabs.map((tab, i) => (
@@ -1631,7 +1645,7 @@ class AddEditEchoProduct extends React.Component {
                     ))}
                   </Menu>
                 </HighSegment>
-              </div>
+              </TabsWrapper>
 
               <FlexContent>
                 <Segment basic>{this.getContent(formikProps)}</Segment>
@@ -1639,10 +1653,10 @@ class AddEditEchoProduct extends React.Component {
 
               <GraySegment
                 basic
-                style={{ position: 'relative', overflow: 'visible', height: '4.57142858em', margin: '0' }}>
+                style={{ position: 'relative', overflow: 'visible', margin: '0' }}>
                 <Grid>
                   <GridRow>
-                    <GridColumn computer={6} textAlign='left'>
+                    <GridColumnBtn computer={6} textAlign='left'>
                       <Button
                         size='large'
                         inputProps={{ type: 'button' }}
@@ -1655,8 +1669,8 @@ class AddEditEchoProduct extends React.Component {
                           ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
                           : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
                       </Button>
-                    </GridColumn>
-                    <GridColumn computer={10} textAlign='right'>
+                    </GridColumnBtn>
+                    <GridColumnBtn computer={10} textAlign='right'>
                       <Button.Submit
                         disabled={!(Object.keys(touched).length || this.state.changedForm)}
                         onClick={() =>
@@ -1672,7 +1686,7 @@ class AddEditEchoProduct extends React.Component {
                         data-test='sidebar_inventory_save_new'>
                         {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                       </Button.Submit>
-                    </GridColumn>
+                    </GridColumnBtn>
                   </GridRow>
                 </Grid>
               </GraySegment>
