@@ -9,7 +9,7 @@ class MarketplacePage extends Component {
     const { intl: { formatMessage } } = this.props
 
     return (
-      <Layout title={formatMessage({ id: 'global.marketplace', defaultMessage: 'Marketplace' })}>
+      <Layout title={formatMessage({ id: 'global.marketplaceCovid', defaultMessage: 'Marketplace: COVID-19 Supplies' })}>
         <Marketplace activeIndex={0} />
       </Layout>
     )
