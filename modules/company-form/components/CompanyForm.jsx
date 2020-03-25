@@ -7,6 +7,7 @@ import { withToastManager } from 'react-toast-notifications'
 
 import { generateToastMarkup } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
+import { Required } from '~/components/constants/layout'
 
 class CompanyForm extends Component {
   componentDidMount() {
@@ -89,7 +90,12 @@ class CompanyForm extends Component {
       <>
         <FormGroup widths='equal' data-test='company_form_legalCompanyName_inp'>
           <Input
-            label={<FormattedMessage id='company.legalCompanyName' defaultMessage='Legal Company Name' />}
+            label={
+              <>
+                <FormattedMessage id='company.legalCompanyName' defaultMessage='Legal Company Name' />
+                <Required />
+              </>
+            }
             name='name'
           />
           <Dropdown
@@ -150,7 +156,15 @@ class CompanyForm extends Component {
         </FormGroup>
 
         <FormGroup widths='equal' data-test='company_form_websiteUrlPhone_inp'>
-          <Input label={<FormattedMessage id='global.websiteUrl' defaultMessage='Website URL' />} name='website' />
+          <Input
+            label={
+              <>
+                <FormattedMessage id='global.websiteUrl' defaultMessage='Website URL' />
+                <Required />
+              </>
+            }
+            name='website'
+          />
           <PhoneNumber
             label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
             name='phone'

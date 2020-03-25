@@ -31,6 +31,7 @@ import { PhoneNumber } from '~/modules/phoneNumber'
 import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
 import DocumentTab from '~/components/document-tab'
 import { AlertCircle } from 'react-feather'
+import { Required } from '~/components/constants/layout'
 
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
@@ -249,6 +250,7 @@ class WarehouseSidebar extends React.Component {
 
         <AddressForm
           prefix={'deliveryAddress'}
+          required={true}
           setFieldValue={setFieldValue}
           values={values}
           initialZipCodes={{
@@ -270,7 +272,12 @@ class WarehouseSidebar extends React.Component {
           <FormGroup data-test='settings_warehouse_popup_contactName_inp'>
             <Input
               type='text'
-              label={formatMessage({ id: 'global.contactName', defaultMessage: 'Contact Name' })}
+              label={
+                <>
+                  {formatMessage({ id: 'global.contactName', defaultMessage: 'Contact Name' })}
+                  <Required />
+                </>
+              }
               name='deliveryAddress.contactName'
               fieldProps={{ width: 8 }}
             />
@@ -279,7 +286,7 @@ class WarehouseSidebar extends React.Component {
             <PhoneNumber
               name='deliveryAddress.contactPhone'
               values={values}
-              label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+              label={<>{<FormattedMessage id='global.phone' defaultMessage='Phone' />}<Required /></>}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
               errors={errors}
@@ -288,7 +295,7 @@ class WarehouseSidebar extends React.Component {
             />
             <Input
               type='text'
-              label={formatMessage({ id: 'global.contactEmail', defaultMessage: 'Contact Email' })}
+              label={<>{formatMessage({ id: 'global.contactEmail', defaultMessage: 'Contact Email' })}<Required /></>}
               name='deliveryAddress.contactEmail'
             />
           </FormGroup>

@@ -53,6 +53,7 @@ class MyOffers extends Component {
         align: 'right',
         width: 125
       },
+      /*
       {
         name: 'manufacturer',
         title: (
@@ -62,6 +63,7 @@ class MyOffers extends Component {
         ),
         width: 310
       },
+      */
       {
         name: 'condition',
         title: (
