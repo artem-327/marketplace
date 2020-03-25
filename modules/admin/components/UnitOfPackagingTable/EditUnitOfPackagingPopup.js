@@ -7,6 +7,7 @@ import { closeEditPopup, putEditedDataRequest } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
+import { Required } from '~/components/constants/layout'
 
 const formValidation = Yup.object().shape({
   val0: Yup.string()
@@ -64,7 +65,12 @@ class EditUnitOfPackagingPopup extends React.Component {
             </FormGroup>
             <FormGroup widths='equal'>
               <Dropdown
-                label={config.edit[1].title}
+                label={
+                  <>
+                    {config.edit[1].title}
+                    <Required />
+                  </>
+                }
                 options={measureOptions}
                 name='val1'
                 inputProps={{ 'data-test': 'admin_edit_unit_packaging_type_drpdn' }}
@@ -73,7 +79,12 @@ class EditUnitOfPackagingPopup extends React.Component {
             <FormGroup widths='equal' data-test='admin_edit_unit_packaging_height_inp'>
               <Input
                 inputProps={{ type: config.edit[2].type, step: config.edit[2].step }}
-                label={config.edit[2].title}
+                label={
+                  <>
+                    {config.edit[2].title}
+                    <Required />
+                  </>
+                }
                 name='val2'
                 step={config.edit[2].step}
               />
@@ -81,7 +92,12 @@ class EditUnitOfPackagingPopup extends React.Component {
             <FormGroup widths='equal' data-test='admin_edit_unit_packaging_length_inp'>
               <Input
                 inputProps={{ type: config.edit[3].type, step: config.edit[3].step }}
-                label={config.edit[3].title}
+                label={
+                  <>
+                    {config.edit[3].title}
+                    <Required />
+                  </>
+                }
                 name='val3'
                 step={config.edit[3].step}
               />
@@ -89,7 +105,12 @@ class EditUnitOfPackagingPopup extends React.Component {
             <FormGroup widths='equal' data-test='admin_edit_unit_packaging_width_inp'>
               <Input
                 inputProps={{ type: config.edit[4].type, step: config.edit[4].step }}
-                label={config.edit[4].title}
+                label={
+                  <>
+                    {config.edit[4].title}
+                    <Required />
+                  </>
+                }
                 name='val4'
                 step={config.edit[4].step}
               />

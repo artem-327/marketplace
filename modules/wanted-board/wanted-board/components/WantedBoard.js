@@ -81,6 +81,7 @@ class WantedBoard extends Component {
         ),
         width: 150,
       },
+      /*
       {
         name: 'manufacturer',
         title: (
@@ -90,6 +91,7 @@ class WantedBoard extends Component {
         ),
         width: 420,
       },
+      */
       {
         name: 'form',
         title: (
@@ -102,7 +104,7 @@ class WantedBoard extends Component {
       {
         name: 'fobPrice',
         title: (
-          <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price'>
+          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max. Price'>
             {text => text}
           </FormattedMessage>
         ),
@@ -111,7 +113,7 @@ class WantedBoard extends Component {
       {
         name: 'quantity',
         title: (
-          <FormattedMessage id='wantedBoard.quantity' defaultMessage='Quantity'>
+          <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
             {text => text}
           </FormattedMessage>
         ),
@@ -167,6 +169,7 @@ class WantedBoard extends Component {
         ),
         width: 150,
       },
+      /*
       {
         name: 'manufacturer',
         title: (
@@ -176,6 +179,7 @@ class WantedBoard extends Component {
         ),
         width: 420,
       },
+      */
       {
         name: 'form',
         title: (
@@ -188,7 +192,7 @@ class WantedBoard extends Component {
       {
         name: 'fobPrice',
         title: (
-          <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price'>
+          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max. Price'>
             {text => text}
           </FormattedMessage>
         ),
@@ -197,7 +201,7 @@ class WantedBoard extends Component {
       {
         name: 'quantity',
         title: (
-          <FormattedMessage id='wantedBoard.quantity' defaultMessage='Quantity'>
+          <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
             {text => text}
           </FormattedMessage>
         ),

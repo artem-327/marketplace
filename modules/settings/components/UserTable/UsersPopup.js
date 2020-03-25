@@ -17,6 +17,7 @@ import { errorMessages } from '~/constants/yupValidation'
 //import { currency } from '~/constants/index'
 import { currencyId } from '~/constants/index'
 import { PhoneNumber } from '~/modules/phoneNumber'
+import { Required } from '~/components/constants/layout'
 
 const userFormValidation = () =>
   Yup.object().shape({
@@ -143,7 +144,7 @@ class UsersPopup extends React.Component {
                     <FormGroup widths='equal' data-test='settings_users_popup_nameTitle_inp'>
                       <Input
                         type='text'
-                        label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
+                        label={<>{formatMessage({ id: 'global.name', defaultMessage: 'Name' })}<Required /></>}
                         name='name'
                       />
                       <Input
@@ -155,7 +156,7 @@ class UsersPopup extends React.Component {
                     <FormGroup widths='equal' data-test='settings_users_popup_emailPhone_inp'>
                       <Input
                         type='text'
-                        label={formatMessage({ id: 'global.email', defaultMessage: 'Email' })}
+                        label={<>{formatMessage({ id: 'global.email', defaultMessage: 'Email' })}<Required /></>}
                         name='email'
                       />
                       <PhoneNumber
@@ -171,7 +172,12 @@ class UsersPopup extends React.Component {
                     </FormGroup>
                     <FormGroup>
                       <Dropdown
-                        label={formatMessage({ id: 'global.homeBranch', defaultMessage: 'Home Branch' })}
+                        label={
+                          <>
+                            {formatMessage({ id: 'global.homeBranch', defaultMessage: 'Home Branch' })}
+                            <Required />
+                          </>
+                        }
                         name='homeBranch'
                         options={branchesAll}
                         fieldProps={{ width: 7 }}

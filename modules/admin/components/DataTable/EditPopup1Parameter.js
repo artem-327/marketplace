@@ -8,6 +8,7 @@ import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
 import { FormattedMessage } from 'react-intl'
+import { Required } from '~/components/constants/layout'
 
 const formValidation = Yup.object().shape({
   val0: Yup.string()
@@ -50,7 +51,15 @@ class EditPopup1Parameter extends React.Component {
               }
             }}>
             <FormGroup widths='equal' data-test={`admin_edit_${config.formattedMessageName}_inp`}>
-              <Input type={config.edit[0].type} label={config.edit[0].title} name='val0' />
+              <Input
+                type={config.edit[0].type}
+                label={
+                  <>
+                    {config.edit[0].title}
+                    <Required />
+                  </>
+                }
+                name='val0' />
             </FormGroup>
 
             <div style={{ textAlign: 'right' }}>

@@ -18,6 +18,7 @@ import moment from 'moment'
 import { withDatagrid } from '~/modules/datagrid'
 import _ from 'lodash'
 import { inputWrapper, quantityWrapper } from '../../components'
+import { Required } from '~/components/constants/layout'
 
 import {
   Dimmer,
@@ -328,12 +329,16 @@ class DetailSidebar extends Component {
                             placeholder: '0.000',
                             'data-test': 'my_offer_fob_price_inp'
                           },
-                          <FormattedMessage
-                            id='wantedBoard.fobPrice'
-                            defaultMessage='FOB Price'
-                          >
-                            {text => text}
-                          </FormattedMessage>,
+                          <>
+                            <FormattedMessage
+                              id='wantedBoard.fobPrice'
+                              defaultMessage='FOB Price'
+                            >
+                              {text => text}
+                            </FormattedMessage>
+                            <Required />
+                          </>
+                          ,
                           currencySymbol
                         )}
                       </GridColumn>
