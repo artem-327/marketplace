@@ -7,9 +7,22 @@ import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 
 function mapStateToProps(state) {
+  const sidebars = () => {
+    return (
+      getSafe(() => state.admin.currentEditForm, false) ||
+      getSafe(() => state.admin.currentEdit2Form, false) ||
+      getSafe(() => state.admin.currentAddForm, false) ||
+      getSafe(() => state.admin.currentAddDwolla, false) ||
+      getSafe(() => state.simpleAdd.sidebarDetailOpen, false) ||
+      getSafe(() => state.cart.sidebar.isOpen, false) ||
+      getSafe(() => state.wantedBoard.editWindowOpen, false) ||
+      getSafe(() => state.settings.isOpenSidebar, false)
+    )
+  }
+
   return {
     ...state.chatWidget,
-    sidebarDetailOpen: getSafe(() => state.simpleAdd.sidebarDetailOpen, false),
+    sidebars: sidebars(),
     identity: {
       name: getSafe(() => state.auth.identity.name, ''),
       email: getSafe(() => state.auth.identity.email, ''),
