@@ -63,12 +63,13 @@ const tables = {
   Companies: <CompaniesTable />,
   'Product Catalog': <ProductCatalogTable />,
   'Document Types': <DataTable />,
+  Associations: <DataTable />,
   'Market Segments': <DataTable />,
   'Admin Settings': (
     <FixyWrapper>
-    <ScrollableSegment basic padded='very'>
-      <Settings inputsInGroup={3} asModal={false} role='admin' />
-    </ScrollableSegment>
+      <ScrollableSegment basic padded='very'>
+        <Settings inputsInGroup={3} asModal={false} role='admin' />
+      </ScrollableSegment>
     </FixyWrapper>
   )
 }
@@ -125,6 +126,10 @@ const datagridConfig = {
     url: 'prodex/api/document-types/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'DocumentType.name', values: [`%${v}%`] }] : [])
   },
+  Associations: {
+    url: 'prodex/api/associations/datagrid',
+    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Association.name', values: [`%${v}%`] }] : [])
+  },
   Forms: {
     url: '/prodex/api/product-forms/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ProductForm.name', values: [`%${v}%`] }] : [])
@@ -162,6 +167,7 @@ const editForms = {
   'CAS Products': <AddEditCasProductsPopup />,
   Companies: <CompaniesForm />,
   'Document Types': <EditPopup1Parameter />,
+  Associations: <EditPopup1Parameter />,
   'Market Segments': <EditPopup1Parameter />
 }
 
@@ -181,6 +187,7 @@ const addForms = {
   'CAS Products': <AddEditCasProductsPopup />,
   Companies: <CompaniesForm />,
   'Document Types': <AddNewPopup1Parameter />,
+  Associations: <AddNewPopup1Parameter />,
   'Market Segments': <AddNewPopup1Parameter />
 }
 

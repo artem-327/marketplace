@@ -55,8 +55,11 @@ export async function getDataRequest(config, values) {
 }
 
 export async function postNewRequest(config, values) {
-  const { data } = await api.post(config.api.post.apiCall, values)
-  return data
+  if (getSafe(() => config.api.post.typeQuery, false)) {
+    return await api.post(`${config.api.post.apiCall}${generateQueryString(values)}`).data
+  } else {
+    return await api.post(config.api.post.apiCall, values).data
+  }
 }
 
 export async function postNewDwollaAccount(values, companyId) {
@@ -70,6 +73,17 @@ export async function deleteItem(config, id) {
 }
 
 export async function putEditedDataRequest(config, values, id) {
+  if (getSafe(() => config.api.update.typeQuery, false)) {
+    const { data } = await api[getSafe(() => config.api.update.method, 'put')]
+                (`${config.api.update.apiCall}${id}${generateQueryString(values)}`)
+    return data
+  } else {
+    const { data } = await api[getSafe(() => config.api.update.method, 'put')](config.api.update.apiCall + id, values)
+    return data
+  }
+}
+
+export async function putEditedDataRequest2(config, values, id) {
   const { data } = await api[getSafe(() => config.api.update.method, 'put')](config.api.update.apiCall + id, values)
   return data
 }

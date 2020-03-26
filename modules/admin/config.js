@@ -696,6 +696,65 @@ export const config = {
     ]
   },
 
+  Associations: {
+    tableName: 'admin_associations',
+    addEditText: (
+      <FormattedMessage id='admin.associations' defaultMessage='Associations'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    formattedMessageName: 'associations',
+    searchText: 'admin.searchAssociations',
+    display: {
+      columns: [
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.name' defaultMessage='Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'Associations.name'
+        }
+      ]
+    },
+    edit: [
+      {
+        name: 'name',
+        title: (
+          <FormattedMessage id='global.name' defaultMessage='Name'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'text',
+        required: true
+      }
+    ],
+    api: {
+      get: {
+        dataName: 'associationsRows',
+        typeRequest: 'GET_ASSOCIATIONS',
+        typeSuccess: 'GET_ASSOCIATIONS_FULFILLED',
+        apiCall: '/prodex/api/associations'
+      },
+      post: {
+        typeRequest: 'ADD_ASSOCIATION',
+        apiCall: '/prodex/api/associations',
+        typeQuery: true
+      },
+      update: {
+        method: 'patch',
+        typeRequest: 'EDIT_ASSOCIATION',
+        apiCall: '/prodex/api/associations/id/',
+        typeQuery: true
+      },
+      delete: {
+        typeRequest: 'DELETE_ASSOCIATION',
+        apiCall: '/prodex/api/associations/id/'
+      }
+    }
+  },
+
   'Document Types': {
     tableName: 'admin_document_types',
     addEditText: (
