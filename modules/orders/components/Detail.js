@@ -44,8 +44,9 @@ import { currency } from '~/constants/index'
 import { AttachmentManager } from '~/modules/attachments'
 import ProdexGrid from '~/components/table'
 import { getLocaleDateFormat } from '~/components/date-format'
+import TransactionInfo from './components/TransactionInfo'
 
-const OrderSegment = styled(Segment)`
+export const OrderSegment = styled(Segment)`
   width: calc(100% - 64px);
   margin-left: 32px !important;
   margin-bottom: 30px !important;
@@ -96,7 +97,7 @@ const OrderSegment = styled(Segment)`
   }
 `
 
-const OrderList = styled(List)`
+export const OrderList = styled(List)`
   &.horizontal.divided:not(.celled) {
     display: flex !important;
     flex-flow: row;
@@ -582,7 +583,8 @@ class Detail extends Component {
       opendSaleAttachingProductOffer,
       listDocumentTypes,
       loadingRelatedDocuments,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      echoSupportPhone
     } = this.props
     const { activeIndexes } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
@@ -812,6 +814,7 @@ class Detail extends Component {
             <Spinner />
           ) : (
             <>
+              <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
               <ActionsRequired order={order} ordersType={ordersType} />
               {openedAssignLots ? <AssignLots /> : null}
               {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
