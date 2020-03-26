@@ -25,6 +25,7 @@ import { AddressForm } from '~/modules/address-form'
 import { ControllerForm } from '~/components/custom-formik'
 
 import { postNewDwollaAccount } from '~/modules/admin/api'
+import { getStringISODate } from '~/components/date-format'
 
 const Wrapper = styled.div`
   background-color: rgba(208, 224, 240, 0.3);
@@ -777,6 +778,9 @@ class DwollaRegister extends Component {
                 city: values.address.city,
                 dwollaController: {
                   ...values.dwollaController,
+                  dateOfBirth: values.dwollaController.dateOfBirth
+                    ? getStringISODate(values.dwollaController.dateOfBirth).split('T')[0]
+                    : '',
                   ...values.address,
                   country: JSON.parse(values.dwollaController.address.country).countryId
                   // zip: JSON.parse(values.dwollaController.address.zip).zip
@@ -785,7 +789,6 @@ class DwollaRegister extends Component {
                 postalCode: values.address.zip,
                 address: values.address.streetAddress
               }
-
               delete payload.dwollaController.address
               delete payload.acceptance
               delete payload.beneficialOwnersNotApplicable
