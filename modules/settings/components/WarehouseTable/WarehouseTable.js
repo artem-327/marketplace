@@ -180,7 +180,7 @@ class WarehouseTable extends Component {
           {...datagrid.tableProps}
           filterValue={filterValue}
           columns={this.state.columns}
-          loading={datagrid.loading || loading}
+          loading={datagrid.loading}
           rows={this.getRows(rows)}
           style={{ marginTop: '5px' }}
           rowActions={[

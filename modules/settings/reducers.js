@@ -844,8 +844,8 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_GET_ADDRESSES_SEARCH_PENDING: {
       return {
-        ...state,
-        loading: true
+        ...state
+        //loading: true  //it is bug if fill Address fields in Add or Edit warehouse. Load all settings - warehouses page.
       }
     }
 
