@@ -3,6 +3,14 @@
  */
 
 context("Login and logout", () => {
+    const merchantUser = require('../fixtures/merchant.json')
+    const orderProcessingUser = require('../fixtures/orderProcessing.json')
+    const orderViewUser = require('../fixtures/orderView.json')
+    const productCatalogUser =  require('../fixtures/productCatalogAdmin.json')
+    const productOfferManager  =  require('../fixtures/productOfferManager.json')
+    const userAdmin =  require('../fixtures/userAdmin.json')
+    const echoOperator =  require('../fixtures/echoOperator.json')
+
     it('Bad credentials', () => {
         cy.server()
         //This is the post call we are interested in capturing
@@ -132,5 +140,110 @@ context("Login and logout", () => {
         cy.wait('@login')
 
         cy.contains("Bad credentials")
+    })
+
+    it('Merchant login and logout', () => {
+        cy.server()
+        //This is the post call we are interested in capturing
+        cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
+        cy.FElogin(merchantUser.email, merchantUser.password)
+
+        //Assert on XHR
+        cy.wait('@login', {timeout: 30000})
+
+        cy.waitForUI()
+        cy.get(".user-menu-wrapper").click()
+        cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()
+        cy.url().should("include", "/login")
+    })
+
+    it('Order view login and logout', () => {
+        cy.server()
+        //This is the post call we are interested in capturing
+        cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
+        cy.FElogin(orderViewUser.email, orderViewUser.password)
+
+        //Assert on XHR
+        cy.wait('@login', {timeout: 30000})
+
+        cy.waitForUI()
+        cy.get(".user-menu-wrapper").click()
+        cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()
+        cy.url().should("include", "/login")
+    })
+
+    it('Order processing login and logout', () => {
+        cy.server()
+        //This is the post call we are interested in capturing
+        cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
+        cy.FElogin(orderProcessingUser.email, orderProcessingUser.password)
+
+        //Assert on XHR
+        cy.wait('@login', {timeout: 30000})
+
+        cy.waitForUI()
+        cy.get(".user-menu-wrapper").click()
+        cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()
+        cy.url().should("include", "/login")
+    })
+
+    it('Product Catalog Admin login and logout', () => {
+        cy.server()
+        //This is the post call we are interested in capturing
+        cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
+        cy.FElogin(productCatalogUser.email, productCatalogUser.password)
+
+        //Assert on XHR
+        cy.wait('@login', {timeout: 30000})
+
+        cy.waitForUI()
+        cy.get(".user-menu-wrapper").click()
+        cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()
+        cy.url().should("include", "/login")
+    })
+
+    it('Product Offer Manager login and logout', () => {
+        cy.server()
+        //This is the post call we are interested in capturing
+        cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
+        cy.FElogin(productOfferManager.email, productOfferManager.password)
+
+        //Assert on XHR
+        cy.wait('@login', {timeout: 30000})
+
+        cy.waitForUI()
+        cy.get(".user-menu-wrapper").click()
+        cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()
+        cy.url().should("include", "/login")
+    })
+
+    it('User admin login and logout', () => {
+        cy.server()
+        //This is the post call we are interested in capturing
+        cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
+        cy.FElogin(userAdmin.email, userAdmin.password)
+
+        //Assert on XHR
+        cy.wait('@login', {timeout: 30000})
+
+        cy.waitForUI()
+        cy.get(".user-menu-wrapper").click()
+        cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()
+        cy.url().should("include", "/login")
+    })
+
+    it('Echo Operator login and logout', () => {
+        cy.server()
+        //This is the post call we are interested in capturing
+        cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
+        cy.FElogin(echoOperator.email, echoOperator.password)
+
+        //Assert on XHR
+        cy.wait('@login', {timeout: 30000})
+
+        cy.waitForUI()
+        cy.get(".user-menu-wrapper").click()
+        cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()
+        cy.url().should("include", "/login")
     })
 })
