@@ -120,7 +120,9 @@ class AddNewPopupCasProducts extends React.Component {
       //   values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
       //   values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
       //   values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''
-      let mailingBranchRequired = deepSearch(values.mailingBranch.deliveryAddress, val => val.trim() !== '')
+      let mailingBranchRequired = getSafe(() => values.mailingBranch.deliveryAddress, false)
+        ? deepSearch(values.mailingBranch.deliveryAddress, val => val.trim() !== '')
+        : ''
 
       let minLength = errorMessages.minLength(2)
 
@@ -380,7 +382,9 @@ class AddNewPopupCasProducts extends React.Component {
         render={props => {
           let { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = props
           let colorIcon = accordionActive.companyAdmin && 'blue'
-          let mailingBranchRequired = deepSearch(values.mailingBranch.deliveryAddress, val => val.trim() !== '')
+          let mailingBranchRequired = getSafe(() => values.mailingBranch.deliveryAddress, false)
+            ? deepSearch(values.mailingBranch.deliveryAddress, val => val.trim() !== '')
+            : ''
           return (
             <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
               <Modal.Header>
@@ -635,8 +639,7 @@ class AddNewPopupCasProducts extends React.Component {
               </Modal.Actions>
             </Modal>
           )
-        }}>
-      </Formik>
+        }}></Formik>
     )
   }
 }

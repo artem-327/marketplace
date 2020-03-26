@@ -5,7 +5,7 @@ import { getSafe, deepSearch } from '~/utils/functions'
 import { isValid } from 'ein-validator'
 import validator from 'validator'
 import React from 'react'
-import { getLocaleDateFormat } from '~/components/date-format'
+import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 
 const allowedFreightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500]
 
@@ -260,8 +260,14 @@ export const dwollaControllerValidation = () =>
 
 export const dateOfBirthValidation = (minimumAge = 18) =>
   Yup.string(errorMessages.requiredMessage)
-    .test('min-age', errorMessages.aboveAge(minimumAge), val => moment().diff(val, 'years') >= minimumAge)
-    .test('date-format', errorMessages.invalidDateFormat(), value => moment(value, 'YYYY-MM-DD', true).isValid())
+    .test(
+      'min-age',
+      errorMessages.aboveAge(minimumAge),
+      val => moment().diff(getStringISODate(val), 'years') >= minimumAge
+    )
+    .test('date-format', errorMessages.invalidDateFormat(), value =>
+      moment(value, getLocaleDateFormat(), true).isValid()
+    )
     .required(errorMessages.requiredMessage)
 
 export const einValidation = () =>
