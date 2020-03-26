@@ -205,6 +205,7 @@
   "casProduct.internationalIECSC": "IECSC",
   "casProduct.internationalKECL": "KECL",
   "global.from": "From",
+  "global.associations": "Associations",
   "global.discard": "Discard",
   "global.override": "Override",
   "global.checkToOverride": "Check this option if you wish to override this setting.",
