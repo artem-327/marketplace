@@ -183,10 +183,37 @@ class CompanyForm extends Component {
             name='nacdMember'
             data-test='company_form_nacdNumber_chckb'
           />
-        </FormGroup>
 
-        <FormGroup>
-          <FormField className='upload-input' width={8}>
+          {this.props.admin && (
+            <Checkbox
+              label={formatMessage({
+                id: 'company.purchaseHazmatEligible ',
+                defaultMessage: 'Purchase Hazardous Materials'
+              })}
+              name='purchaseHazmatEligible'
+              data-test='company_form_purchaseHazmatEligible_chckb'
+            />
+          )}
+        </FormGroup>
+        <FormGroup widths={this.props.admin && 'equal'} data-test='company_form_associationMembership_upload_inp'>
+          {this.props.admin && (
+            <Dropdown
+              options={data.map(type => ({
+                text: type.name,
+                value: type.id,
+                key: type.id
+              }))}
+              inputProps={{
+                loading,
+                clearable: true,
+                multiple: true
+              }}
+              label={<FormattedMessage id='company.associationMembership' defaultMessage='Association Membership' />}
+              name='associationMembership'
+              data-test='company_form_associationMembership_drpdn'
+            />
+          )}
+          <FormField className='upload-input' width={!this.props.admin && 8}>
             <label htmlFor='field_input_phone'>
               <span>Company Logo</span>
             </label>
