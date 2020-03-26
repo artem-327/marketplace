@@ -34,9 +34,11 @@ context("Units of packaging CRUD", () => {
         cy.get("#field_dropdown_val1").click()
         cy.get("#2").click()
 
-        cy.clickSave()
+        cy.enterText("#field_input_val2", "10")
+        cy.enterText("#field_input_val3", "10")
+        cy.enterText("#field_input_val4", "10")
 
-        cy.contains("Info!")
+        cy.clickSave()
 
         cy.get("input[type=text]").eq(0).type("Test")
         cy.waitForUI()
@@ -64,8 +66,6 @@ context("Units of packaging CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Info!")
-
         cy.searchInList("Best")
 
         cy.openElement(packageId, 0)
@@ -79,7 +79,7 @@ context("Units of packaging CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length", 2)
+            .should("have.length", 4)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

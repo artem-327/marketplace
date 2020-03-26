@@ -39,7 +39,6 @@ context("Prodex Global Price", () => {
         cy.get("[data-test='broadcast_modal_save_btn']").click()
 
         cy.wait("@rulesSaving")
-        cy.contains("Info!")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
@@ -63,7 +62,6 @@ context("Prodex Global Price", () => {
         cy.get("[data-test='broadcast_modal_save_btn']").click()
 
         cy.wait("@rulesSaving")
-        cy.contains("Info!")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
@@ -95,7 +93,7 @@ context("Prodex Global Price", () => {
         cy.get("[data-test='broadcast_modal_save_btn']").click()
 
         cy.wait("@rulesSaving")
-        cy.contains("Info!")
+
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(1)
@@ -127,7 +125,6 @@ context("Prodex Global Price", () => {
         cy.get("[data-test='broadcast_modal_save_btn']").click()
 
         cy.wait("@rulesSaving")
-        cy.contains("Info!")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)

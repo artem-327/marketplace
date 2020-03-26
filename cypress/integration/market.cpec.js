@@ -21,11 +21,6 @@ context("Market place tests",() => {
         cy.server()
         cy.route("GET","/prodex/api/echo-products/search/all-alternatives?**").as("search")
 
-        cy.get(".scrollbar-container").within(() => {
-            cy.get("[class='active item']").click()
-        })
-
-
         cy.waitForUI()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
@@ -50,7 +45,7 @@ context("Market place tests",() => {
                 cy.get("[data-test=action_" + marketPlaceBody[0].id + "]")
             })
         })
-
+        cy.get("[name='quantity'").click()
         cy.get("#field_input_quantityTo").type(searchedValue + 5)
         cy.contains("Apply").click()
 

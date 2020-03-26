@@ -235,7 +235,7 @@ Cypress.Commands.add("getFirstUserIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator: true}
+        body: {pageSize: 50, orOperator: true, orFilters: filter}
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].id
@@ -249,7 +249,7 @@ Cypress.Commands.add("getFirstBranchIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator: true}
+        body: {pageSize: 50, orOperator: true, orFilters : filter}
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].id
@@ -291,7 +291,7 @@ Cypress.Commands.add("getFirstCasProductWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator: true}
+        body: {pageSize: 50, orOperator: true, orFilters: filter}
     }).then((response) => {
         expect(response.status).to.eq(200)
         if (response.body[0] == undefined) {
@@ -309,7 +309,7 @@ Cypress.Commands.add("getFirstEntityWithFilter", (token, entity, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator: true}
+        body: {pageSize: 50, orOperator: true, orFilters: filter}
     }).then((response) => {
         expect(response.status).to.eq(200)
         if (response.body[0] == undefined) {

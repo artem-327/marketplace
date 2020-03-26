@@ -1,6 +1,6 @@
 context("Prodex Branches CRUD", () => {
     let addressId = null
-    let filter = [{"operator": "LIKE", "path": "DeliveryAddress.address.streetAddress", "values": ["%125 N G St%"]}]
+    let filter = [{"operator": "LIKE", "path": "DeliveryAddress.address.streetAddress", "values": ["%126 N G St%"]}]
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
@@ -33,7 +33,7 @@ context("Prodex Branches CRUD", () => {
 
         cy.enterText("#field_input_addressName", "Automatic")
 
-        cy.enterText("input[id='field_input_address.streetAddress']", "125 N G St")
+        cy.enterText("input[id='field_input_address.streetAddress']", "126 N G St")
         cy.enterText("input[id='field_input_address.city']", "Harlingen")
 
         cy.selectFromDropdown("div[id='field_dropdown_address.country']", "Bahamas")
@@ -52,8 +52,6 @@ context("Prodex Branches CRUD", () => {
         cy.clickSave()
         cy.waitForUI()
 
-        cy.contains("Info!")
-
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstAddressIdWithFilter(token, filter).then(itemId => {
                 cy.get('[data-test=action_' + itemId + ']').click()
@@ -64,7 +62,7 @@ context("Prodex Branches CRUD", () => {
             })
         })
 
-        cy.contains("125 N G St")
+        cy.contains("126 N G St")
         cy.contains("75000")
 
         cy.get("input[id='field_input_address.city']")
@@ -116,11 +114,11 @@ context("Prodex Branches CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("125 N G St").should("not.exist")
+        cy.contains("126 N G St").should("not.exist")
 
         cy.reload()
         cy.wait("@addressLoading")
 
-        cy.contains("125 N G St").should("not.exist")
+        cy.contains("126 N G St").should("not.exist")
     })
 })

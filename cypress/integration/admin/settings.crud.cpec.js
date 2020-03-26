@@ -30,11 +30,11 @@ context("Admin Settings RUD", () => {
         cy.get("button[class='ui primary button']").click({force: true})
         cy.wait(1000)
 
-        cy.contains("Info!")
+        cy.contains("Success!")
 
-        cy.get(":nth-child(30)").within(() => {
+       /* cy.get(":nth-child(30)").within(() => {
             cy.get("input")
                 .should("contain", "operations@echoexchange.net")
-        })
+        })*/
     })
 })

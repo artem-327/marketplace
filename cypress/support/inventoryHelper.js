@@ -24,6 +24,6 @@ Cypress.Commands.add("assertProductDetail", (index,value) => {
 })
 
 Cypress.Commands.add("openSettings", () => {
-    cy.get(".flex-wrapper > .ui")
+    cy.get("[data-test='navigation_menu_settings_drpdn']")
         .click()
 })
