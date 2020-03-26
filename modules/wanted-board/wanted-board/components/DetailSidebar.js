@@ -240,7 +240,7 @@ class DetailSidebar extends Component {
     this.fetchIfNoData('listCountries', this.props.getCountries)
     this.fetchIfNoData('listUnits', this.props.getUnits)
     if (!this.props.sidebarValues) {
-      this.props.searchManufacturers('', 200)
+      //this.props.searchManufacturers('', 200)
     } else {
       if (this.props.sidebarValues.deliveryCountry && this.props.sidebarValues.deliveryCountry.hasProvinces) {
         this.props.getProvinces(this.props.sidebarValues.deliveryCountry.id)
@@ -749,7 +749,7 @@ class DetailSidebar extends Component {
                       </GridColumn>
                     </GridRow>
 
-                    <GridRow>
+                    {false && (<GridRow>
                       <GridColumn>
                         <Dropdown
                           label={
@@ -780,7 +780,7 @@ class DetailSidebar extends Component {
                           }}
                         />
                       </GridColumn>
-                    </GridRow>
+                    </GridRow>)}
 
                     <GridRow>
                       <GridColumn width={8}>

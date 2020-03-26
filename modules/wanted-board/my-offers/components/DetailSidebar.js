@@ -114,7 +114,7 @@ class DetailSidebar extends Component {
   componentDidMount = async () => {
     this.fetchIfNoData('listPackagingTypes', this.props.getPackagingTypes)
     this.fetchIfNoData('listUnits', this.props.getUnits)
-    this.props.searchManufacturers('', 200)
+    //this.props.searchManufacturers('', 200)
     this.props.updateEditedId(this.props.sidebarValues.id)
     this.setState({ sidebarValues: this.props.sidebarValues})
   }
@@ -344,7 +344,7 @@ class DetailSidebar extends Component {
                       </GridColumn>
                     </GridRow>
 
-                    <GridRow>
+                    {false && (<GridRow>
                       <GridColumn>
                         <Dropdown
                           label={
@@ -376,7 +376,7 @@ class DetailSidebar extends Component {
                           }}
                         />
                       </GridColumn>
-                    </GridRow>
+                    </GridRow>)}
 
                     <GridRow>
                       <GridColumn width={8}>
