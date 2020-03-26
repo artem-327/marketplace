@@ -54,6 +54,7 @@ const chatWidget_scriptLoaded = (identity, hide) => {
     $zopim(function() {
       if (hide) $zopim.livechat.window.hide()
       $zopim.livechat.setStatus('online')
+      $zopim.livechat.button.show()
     })
   })
   chatWidget_updateIdentity(identity)
