@@ -658,6 +658,7 @@ class MyInventory extends Component {
                   id: 'global.documents',
                   defaultMessage: 'Documents'
                 }),
+                disabled: row => row.groupId,
                 callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
               },
               {
