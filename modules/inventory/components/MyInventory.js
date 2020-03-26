@@ -341,7 +341,9 @@ class MyInventory extends Component {
     let title = ''
 
     return rows.map((r, rIndex) => {
-      if (!r || !r.cfStatus) return
+      if (!r.cfStatus) r.cfStatus = 'empty status'   // Workaround if 'cfStatus' attribute is missing
+
+      if (!r) return
       const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
 
       if (r.groupId) {
