@@ -68,7 +68,6 @@ context("Companies CRUD", () => {
         cy.clickSave()
 
         cy.wait("@companyCreate")
-        cy.contains("Info!")
     })
 
     it("Edits a condition", () => {
@@ -89,8 +88,6 @@ context("Companies CRUD", () => {
             .should("have.value", "Donald and Co.")
 
         cy.clickSave()
-
-        cy.contains("Info!")
 
         cy.getToken().then(token => {
             cy.getFirstCompanyWithFilter(token, filter).then(itemId => {

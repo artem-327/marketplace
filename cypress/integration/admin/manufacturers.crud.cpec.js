@@ -33,8 +33,6 @@ context("Manufacturers CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Info!")
-
         cy.searchInList("Test")
 
         cy.getToken().then(token => {
@@ -59,7 +57,6 @@ context("Manufacturers CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Info!")
         cy.waitForUI()
 
         cy.searchInList("Artio")

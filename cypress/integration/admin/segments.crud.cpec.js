@@ -33,8 +33,6 @@ context("Market Segments CRUD", () => {
 
         cy.clickSave()
 
-        cy.contains("Info!")
-
         cy.searchInList("Test")
         cy.waitForUI()
 
@@ -60,8 +58,6 @@ context("Market Segments CRUD", () => {
             .should("have.value", "Great segment")
 
         cy.clickSave()
-
-        cy.contains("Info!")
 
         cy.searchInList("Great")
 

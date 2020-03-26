@@ -36,7 +36,6 @@ context("Conditions CRUD", () => {
 
         cy.enterText("#field_input_val0", "Half")
         cy.clickSave()
-        cy.contains("Info!")
 
         cy.getToken().then(token => {
             cy.getFirstConditionWithFilter(token, filter).then(itemId => {
@@ -57,8 +56,6 @@ context("Conditions CRUD", () => {
             .should("have.value", "Spilled")
 
         cy.clickSave()
-
-        cy.contains("Info!")
 
         cy.openElement(conditionId, 0)
 

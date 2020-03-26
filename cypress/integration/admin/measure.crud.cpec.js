@@ -37,8 +37,6 @@ context("Units of measure CRUD", () => {
         cy.enterText("#field_input_val3", "0.5")
 
         cy.clickSave()
-
-        cy.contains("Info!")
     })
 
     it("Edits unit of measure", () => {
@@ -56,8 +54,6 @@ context("Units of measure CRUD", () => {
             .should("have.value", "test")
 
         cy.clickSave()
-
-        cy.contains("Info!")
     })
 
     it("Checks error messages", () => {

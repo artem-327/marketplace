@@ -50,8 +50,6 @@ context("Prodex Warehouse CRUD", () => {
 
         cy.get('[data-test=settings_warehouse_popup_submit_btn]').click()
 
-        cy.contains("Info!")
-
         cy.searchInList("Central")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {

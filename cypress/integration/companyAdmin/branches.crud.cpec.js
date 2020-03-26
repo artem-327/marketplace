@@ -1,8 +1,10 @@
 context("Prodex Branches CRUD", () => {
     let branchId = null
-    let filter = [{"operator": "LIKE", "path": "Branch.deliveryAddress.addressName", "values": ["%Central%"]},
-        {"operator": "LIKE", "path": "Branch.deliveryAddress.address.streetAddress", "values": ["%Central%"]},
-        {"operator": "LIKE", "path": "Branch.deliveryAddress.contactName", "values": ["%Central%"]}]
+    let filter = [
+        {"operator":"LIKE", "path":"Branch.deliveryAddress.addressName", "values":["%Central%"]},
+        {"operator":"LIKE", "path":"Branch.deliveryAddress.address.streetAddress", "values":["%Central%"]},
+        {"operator":"LIKE", "path":"Branch.deliveryAddress.contactName", "values":["%Central%"]}
+    ]
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
@@ -49,8 +51,6 @@ context("Prodex Branches CRUD", () => {
         cy.enterText("input[id='field_input_deliveryAddress.contactEmail']", "test@central.com")
 
         cy.get('[data-test=settings_warehouse_popup_submit_btn]').click()
-
-        cy.contains("Info!")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstBranchIdWithFilter(token, filter).then(itemId => {

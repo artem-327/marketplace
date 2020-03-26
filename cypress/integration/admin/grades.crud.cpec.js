@@ -31,7 +31,6 @@ context("Grades CRUD", () => {
 
         cy.enterText("#field_input_val0", "Test grade")
         cy.clickSave()
-        cy.contains("Info!")
 
         cy.get("input[type=text]").eq(0).type("Test", {force: true})
 
@@ -56,8 +55,6 @@ context("Grades CRUD", () => {
             .should("have.value", "Graceful")
 
         cy.clickSave()
-
-        cy.contains("Info!")
 
         cy.openElement(gradeId, 0)
 
