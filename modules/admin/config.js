@@ -140,6 +140,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.name'
         },
         {
