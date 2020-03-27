@@ -74,8 +74,9 @@ export async function deleteItem(config, id) {
 
 export async function putEditedDataRequest(config, values, id) {
   if (getSafe(() => config.api.update.typeQuery, false)) {
-    const { data } = await api[getSafe(() => config.api.update.method, 'put')]
-                (`${config.api.update.apiCall}${id}${generateQueryString(values)}`)
+    const { data } = await api[getSafe(() => config.api.update.method, 'put')](
+      `${config.api.update.apiCall}${id}${generateQueryString(values)}`
+    )
     return data
   } else {
     const { data } = await api[getSafe(() => config.api.update.method, 'put')](config.api.update.apiCall + id, values)
@@ -133,7 +134,7 @@ export async function createCompany(formData) {
 }
 
 export async function updateCompany(id, formData) {
-  const { data } = await api.patch(`/prodex/api/companies/id/${id}`, formData)
+  const { data } = await api.patch(`/prodex/api/companies/admin/id/${id}`, formData)
 
   return data
 }

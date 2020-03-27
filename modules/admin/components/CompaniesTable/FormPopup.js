@@ -316,20 +316,27 @@ class AddNewPopupCasProducts extends React.Component {
         onSubmit={async (values, actions) => {
           try {
             if (popupValues) {
-              let newValues = {}
+              let newAssociations = []
+              if (getSafe(() => values.associations[0].id, false)) {
+                newAssociations = values.associations.map(assoc => assoc.id)
+              } else {
+                newAssociations = getSafe(() => values.associations, [])
+              }
+              let newValues = {
+                associations: newAssociations,
+                businessType: getSafe(() => values.businessType.id, null),
+                cin: getSafe(() => values.cin, ''),
+                dba: getSafe(() => values.dba, ''),
+                dunsNumber: getSafe(() => values.dunsNumber, null),
+                nacdMember: getSafe(() => values.nacdMember, false),
+                name: getSafe(() => values.name, ''),
+                phone: getSafe(() => values.phone, ''),
+                tin: getSafe(() => values.tin, ''),
+                website: getSafe(() => values.website, ''),
+                purchaseHazmatEligible: getSafe(() => values.purchaseHazmatEligible, false)
+              }
 
-              Object.keys(values).forEach(key => {
-                // TODO: try to have reviewRequested in values not as React.element
-                if (typeof values[key].$$typeof === 'undefined') {
-                  if (typeof values[key] === 'string') newValues[key] = values[key].trim()
-                  else newValues[key] = values[key]
-                }
-              })
-
-              const data = await updateCompany(popupValues.id, {
-                ...newValues,
-                businessType: getSafe(() => newValues.businessType.id, null)
-              })
+              const data = await updateCompany(popupValues.id, newValues)
               if (this.state.companyLogo) {
                 postCompanyLogo(data.id, companyLogo)
 
