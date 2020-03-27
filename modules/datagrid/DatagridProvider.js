@@ -70,14 +70,19 @@ export class DatagridProvider extends Component {
     const { apiConfig } = this.props
 
     this.setState({ loading: true })
-
+    //if is filtering we need to set pageNumber to 0
+    const pageNumber =
+      getSafe(() => datagridParams.filters.length, false) || getSafe(() => datagridParams.orFilters.length, false)
+        ? 0
+        : datagridParams.pageNumber
     try {
       const response = await api.request({
         url: this.apiConfig && this.apiConfig.url ? this.apiConfig.url : apiConfig.url,
         method: apiConfig.method || 'POST',
         params: query,
         data: {
-          ...datagridParams
+          ...datagridParams,
+          pageNumber
         }
       })
       if (
@@ -96,7 +101,7 @@ export class DatagridProvider extends Component {
         allLoaded,
         datagridParams: {
           ...s.datagridParams,
-          pageNumber: s.datagridParams.pageNumber + (allLoaded ? 0 : 1)
+          pageNumber: pageNumber + (allLoaded ? 0 : 1)
         }
       }))
     } catch (e) {
