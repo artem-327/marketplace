@@ -3,6 +3,7 @@ import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { bool, func, object, string, array, number } from 'prop-types'
 import { debounce } from 'lodash'
 import { FormattedMessage } from 'react-intl'
+import { Required } from '~/components/constants/layout'
 
 export default class ZipDropdown extends Component {
   constructor(props) {
@@ -49,13 +50,18 @@ export default class ZipDropdown extends Component {
       name,
       loading,
       label,
+      required,
       initialZipCodes } = this.props
 
     return (
       <Dropdown
         name={name}
         options={codes.concat(initialZipCodes)}
-        label={label}
+        label={
+          <>
+            {label}
+            {required && <Required />}
+          </>}
         inputProps={{
           'data-test': 'ZipDropdown_drpdn',
           // onChange: this.handleChange,
@@ -89,7 +95,8 @@ ZipDropdown.propTypes = {
   onSearchChange: func,
   countryId: number,
   initialZipCodes: array,
-  onChange: func
+  onChange: func,
+  required: bool
 }
 
 ZipDropdown.defaultProps = {
@@ -102,5 +109,6 @@ ZipDropdown.defaultProps = {
   onSearchChange: (e, data) => {},
   label: <FormattedMessage id='global.zip' defaultMessage='Zip' />,
   initialZipCodes: [],
-  onChange: () => {}
+  onChange: () => {},
+  required: false
 }

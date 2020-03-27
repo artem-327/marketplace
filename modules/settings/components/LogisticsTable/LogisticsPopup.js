@@ -8,6 +8,7 @@ import { array } from 'prop-types'
 import { errorMessages } from '~/constants/yupValidation'
 
 const { requiredMessage } = errorMessages
+import { Required } from '~/components/constants/layout'
 
 import {
   closePopup,
@@ -108,14 +109,24 @@ class LogisticsPopup extends Component {
                   <FormGroup widths='equal' data-test='settings_logistics_namePassword_inp'>
                     <Input
                       name='username'
-                      label={formatMessage({ id: 'logistics.label.username', defaultMessage: 'User Name' })}
+                      label={
+                        <>
+                          {formatMessage({ id: 'logistics.label.username', defaultMessage: 'User Name' })}
+                          <Required />
+                        </>
+                      }
                       inputProps={{
                         placeholder: formatMessage({ id: 'logistics.placeholder.username', defaultMessage: 'username' })
                       }}
                     />
                     <Input
                       name='password'
-                      label={formatMessage({ id: 'logistics.label.password', defaultMessage: 'Password' })}
+                      label={
+                        <>
+                          {formatMessage({ id: 'logistics.label.password', defaultMessage: 'Password' })}
+                          <Required />
+                        </>
+                      }
                       inputProps={{ type: 'password' }}
                     />
                   </FormGroup>

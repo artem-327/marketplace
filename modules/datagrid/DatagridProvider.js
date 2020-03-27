@@ -11,8 +11,8 @@ const initialState = {
   query: {},
   datagridParams: {
     filters: [],
-    pageSize: 50
-    //pageNumber: 0
+    pageSize: 50,
+    pageNumber: 0
   }
 }
 
@@ -94,8 +94,8 @@ export class DatagridProvider extends Component {
         loading: false,
         allLoaded,
         datagridParams: {
-          ...s.datagridParams
-          //pageNumber: s.datagridParams.pageNumber + (allLoaded ? 0 : 1)
+          ...s.datagridParams,
+          pageNumber: s.datagridParams.pageNumber + (allLoaded ? 0 : 1)
         }
       }))
     } catch (e) {

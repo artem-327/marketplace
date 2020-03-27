@@ -37,9 +37,10 @@ const StyledDropdown = styled(Dropdown)`
     opacity: 0.8;
     transition: opacity 0.1s ease;
   }
-  > .menu {
+  /* bug in field Phone. In settings - warehouse - sidebar (edit or add) shows dropdown with numbers behind sidebar borders
+  /* > .menu {
     left: -100% !important;
-  }
+  } */
 `
 
 const StyledInputMask = styled(InputMask)`
@@ -108,13 +109,14 @@ export default class PhoneNumber extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
-    return ( this.state.phoneFull !== nextState.phoneFull
-      || get(this.props.values, this.props.name, '') !== get(nextProps.values, nextProps.name, '')
-      || get(this.props.errors, this.props.name, '') !== get(nextProps.errors, nextProps.name, '')
-      || get(this.props.touched, this.props.name, '') !== get(nextProps.touched, nextProps.name, '')
-      || this.props.phoneCountryCodes.length !== nextProps.phoneCountryCodes.length
-      || this.props.disabled !== nextProps.disabled
-      || this.props.isSubmitting !== nextProps.isSubmitting
+    return (
+      this.state.phoneFull !== nextState.phoneFull ||
+      get(this.props.values, this.props.name, '') !== get(nextProps.values, nextProps.name, '') ||
+      get(this.props.errors, this.props.name, '') !== get(nextProps.errors, nextProps.name, '') ||
+      get(this.props.touched, this.props.name, '') !== get(nextProps.touched, nextProps.name, '') ||
+      this.props.phoneCountryCodes.length !== nextProps.phoneCountryCodes.length ||
+      this.props.disabled !== nextProps.disabled ||
+      this.props.isSubmitting !== nextProps.isSubmitting
     )
   }
 
@@ -179,7 +181,7 @@ export default class PhoneNumber extends Component {
 
     return (
       <FormField error={!!error}>
-        {label && (<label>{label}</label>)}
+        {label && <label>{label}</label>}
         <span style={{ display: 'flex' }}>
           <StyledDropdown
             options={phoneCountryCodes}

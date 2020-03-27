@@ -21,6 +21,7 @@ import { errorMessages, provinceObjectRequired, minOrZeroLength } from '~/consta
 
 import { AddressForm } from '~/modules/address-form'
 import { PhoneNumber } from '~/modules/phoneNumber'
+import { Required } from '~/components/constants/layout'
 
 const initialFormValues = {
   addressName: '',
@@ -136,14 +137,19 @@ class DeliveryAddressesPopup extends React.Component {
                   <Header as='h3'>
                     <FormattedMessage id='global.address' defaultMessage='Address' />
                   </Header>
-                  <AddressForm values={values} displayHeader={false} setFieldValue={setFieldValue} />
+                  <AddressForm values={values} displayHeader={false} setFieldValue={setFieldValue} required={true}/>
                   <Header as='h3'>
                     <FormattedMessage id='settings.contactInfo' defaultMessage='Contact Info' />
                   </Header>
                   <FormGroup data-test='settings_delivery_address_contact_inp'>
                     <Input
                       type='text'
-                      label={formatMessage({ id: 'global.contactName', defaultMessage: 'Contact Name' })}
+                      label={
+                        <>
+                          {formatMessage({ id: 'global.contactName', defaultMessage: 'Contact Name' })}
+                          <Required />
+                        </>
+                      }
                       name='contactName'
                       fieldProps={{ width: 8 }}
                     />
@@ -151,13 +157,23 @@ class DeliveryAddressesPopup extends React.Component {
                   <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
                     <Input
                       type='text'
-                      label={formatMessage({ id: 'settings.contactEmail', defaultMessage: 'Contact Email' })}
+                      label={
+                        <>
+                          {formatMessage({ id: 'settings.contactEmail', defaultMessage: 'Contact Email' })}
+                          <Required />
+                        </>
+                      }
                       name='contactEmail'
                     />
                     <PhoneNumber
                       name='contactPhone'
                       values={values}
-                      label={<FormattedMessage id='settings.contactPhone' defaultMessage='Contact Phone' />}
+                      label={
+                        <>
+                          <FormattedMessage id='settings.contactPhone' defaultMessage='Contact Phone' />
+                          <Required />
+                        </>
+                      }
                       setFieldValue={setFieldValue}
                       setFieldTouched={setFieldTouched}
                       errors={errors}

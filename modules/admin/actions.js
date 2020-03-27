@@ -752,3 +752,37 @@ export const deleteNmfcNumber = id => {
     Datagrid.removeRow(id)
   }
 }
+
+export const getUsersMe = () => ({ type: AT.ADMIN_GET_USERS_ME, payload: api.getUsersMe() })
+
+export const userSwitchEnableDisable = (id) => ({
+  type: AT.ADMIN_USER_SWITCH_ENABLE_DISABLE,
+  payload: api.userSwitchEnableDisable(id)
+})
+
+export const postNewUserRequest = (data) => ({
+  type: AT.ADMIN_POST_NEW_USER,
+  payload: api.postNewUserRequest(data)
+})
+
+export const submitUserEdit = (id, data) => ({
+  type: AT.ADMIN_EDIT_USER,
+  payload: api.submitUserEdit(id, data)
+})
+
+export const deleteUser = (id) => ({
+  type: AT.ADMIN_DELETE_USER,
+  payload: api.deleteUser(id)
+})
+
+export const getRoles = () => ({
+  type: AT.ADMIN_GET_ROLES,
+  payload: api.getRoles()
+})
+
+export const searchCompany = (companyText, limit) => ({
+  type: AT.ADMIN_SEARCH_COMPANY,
+  payload: api.searchCompany(companyText, limit)
+})
+
+

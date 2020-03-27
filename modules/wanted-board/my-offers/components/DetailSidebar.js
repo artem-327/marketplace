@@ -18,6 +18,7 @@ import moment from 'moment'
 import { withDatagrid } from '~/modules/datagrid'
 import _ from 'lodash'
 import { inputWrapper, quantityWrapper } from '../../components'
+import { Required } from '~/components/constants/layout'
 
 import {
   Dimmer,
@@ -113,7 +114,7 @@ class DetailSidebar extends Component {
   componentDidMount = async () => {
     this.fetchIfNoData('listPackagingTypes', this.props.getPackagingTypes)
     this.fetchIfNoData('listUnits', this.props.getUnits)
-    this.props.searchManufacturers('', 200)
+    //this.props.searchManufacturers('', 200)
     this.props.updateEditedId(this.props.sidebarValues.id)
     this.setState({ sidebarValues: this.props.sidebarValues})
   }
@@ -328,18 +329,22 @@ class DetailSidebar extends Component {
                             placeholder: '0.000',
                             'data-test': 'my_offer_fob_price_inp'
                           },
-                          <FormattedMessage
-                            id='wantedBoard.fobPrice'
-                            defaultMessage='FOB Price'
-                          >
-                            {text => text}
-                          </FormattedMessage>,
+                          <>
+                            <FormattedMessage
+                              id='wantedBoard.fobPrice'
+                              defaultMessage='FOB Price'
+                            >
+                              {text => text}
+                            </FormattedMessage>
+                            <Required />
+                          </>
+                          ,
                           currencySymbol
                         )}
                       </GridColumn>
                     </GridRow>
 
-                    <GridRow>
+                    {false && (<GridRow>
                       <GridColumn>
                         <Dropdown
                           label={
@@ -371,7 +376,7 @@ class DetailSidebar extends Component {
                           }}
                         />
                       </GridColumn>
-                    </GridRow>
+                    </GridRow>)}
 
                     <GridRow>
                       <GridColumn width={8}>

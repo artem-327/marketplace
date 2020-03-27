@@ -1,17 +1,31 @@
 import React, { Component } from 'react'
-import { FormGroup, FormField, Popup, Image } from 'semantic-ui-react'
-import { Input, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { FormGroup, FormField, Popup, Image, Dropdown } from 'semantic-ui-react'
+import { Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import { withToastManager } from 'react-toast-notifications'
 
 import { generateToastMarkup } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
+import { Required } from '~/components/constants/layout'
 
 class CompanyForm extends Component {
+  state = {
+    associations: []
+  }
   componentDidMount() {
     this.loadCompanyLogo()
     if (this.props.data.length === 0) this.props.getBusinessTypes()
+    const dataGrid = {
+      filters: [],
+      pageSize: 50
+    }
+    if (!this.props.associations.length) this.props.getAssociations(dataGrid)
+    if (this.props.values.associations) {
+      this.setState({
+        associations: this.props.values.associations.map(assoc => assoc.id)
+      })
+    }
   }
 
   loadCompanyLogo = async () => {
@@ -80,7 +94,19 @@ class CompanyForm extends Component {
   }
 
   render() {
-    let { intl, loading, data, setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = this.props
+    let {
+      intl,
+      loading,
+      data,
+      setFieldValue,
+      values,
+      setFieldTouched,
+      errors,
+      touched,
+      isSubmitting,
+      getAssociations,
+      associations
+    } = this.props
     let { selectLogo, removeLogo } = this
 
     const { formatMessage } = intl
@@ -89,7 +115,12 @@ class CompanyForm extends Component {
       <>
         <FormGroup widths='equal' data-test='company_form_legalCompanyName_inp'>
           <Input
-            label={<FormattedMessage id='company.legalCompanyName' defaultMessage='Legal Company Name' />}
+            label={
+              <>
+                <FormattedMessage id='company.legalCompanyName' defaultMessage='Legal Company Name' />
+                <Required />
+              </>
+            }
             name='name'
           />
           <Dropdown
@@ -150,7 +181,14 @@ class CompanyForm extends Component {
         </FormGroup>
 
         <FormGroup widths='equal' data-test='company_form_websiteUrlPhone_inp'>
-          <Input label={<FormattedMessage id='global.websiteUrl' defaultMessage='Website URL' />} name='website' />
+          <Input
+            label={
+              <>
+                <FormattedMessage id='global.websiteUrl' defaultMessage='Website URL' />
+              </>
+            }
+            name='website'
+          />
           <PhoneNumber
             label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
             name='phone'
@@ -169,10 +207,50 @@ class CompanyForm extends Component {
             name='nacdMember'
             data-test='company_form_nacdNumber_chckb'
           />
-        </FormGroup>
 
-        <FormGroup>
-          <FormField className='upload-input' width={8}>
+          {this.props.admin && (
+            <Checkbox
+              label={formatMessage({
+                id: 'company.purchaseHazmatEligible ',
+                defaultMessage: 'Purchase Hazardous Materials'
+              })}
+              name='purchaseHazmatEligible'
+              data-test='company_form_purchaseHazmatEligible_chckb'
+            />
+          )}
+        </FormGroup>
+        <FormGroup widths={this.props.admin && 'equal'} data-test='company_form_associationMembership_upload_inp'>
+          {this.props.admin && (
+            <FormField className='upload-input' width={!this.props.admin && 8}>
+              <Dropdown
+                options={
+                  associations && associations.length
+                    ? associations.map(assoc => ({
+                        text: assoc.name,
+                        value: assoc.id,
+                        key: assoc.id
+                      }))
+                    : []
+                }
+                clearable
+                multiple
+                search
+                selection
+                value={this.state.associations}
+                onChange={(e, data) => {
+                  e.preventDefault()
+                  this.setState({
+                    associations: data.value
+                  })
+                  setFieldValue('associations', data.value)
+                }}
+                label={<FormattedMessage id='company.associationMembership' defaultMessage='Association Membership' />}
+                name='associations'
+                data-test='company_form_association_drpdn'
+              />
+            </FormField>
+          )}
+          <FormField className='upload-input' width={!this.props.admin && 8}>
             <label htmlFor='field_input_phone'>
               <span>Company Logo</span>
             </label>
