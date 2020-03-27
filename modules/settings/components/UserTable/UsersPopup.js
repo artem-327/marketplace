@@ -117,7 +117,12 @@ class UsersPopup extends React.Component {
     }
 
     return (
-      <Modal closeIcon onClose={() => closePopup()} open centered={false} size={userEditRoles ? 'mini' : null}>
+      <Modal
+        closeIcon
+        onClose={() => (userEditRoles ? closeRolesPopup() : closePopup())}
+        open
+        centered={false}
+        size={userEditRoles ? 'mini' : null}>
         <Modal.Header>
           {userEditRoles
             ? formatMessage({ id: 'settings.assignUserRoles', defaultMessage: 'Assign User Roles' })
@@ -144,7 +149,12 @@ class UsersPopup extends React.Component {
                     <FormGroup widths='equal' data-test='settings_users_popup_nameTitle_inp'>
                       <Input
                         type='text'
-                        label={<>{formatMessage({ id: 'global.name', defaultMessage: 'Name' })}<Required /></>}
+                        label={
+                          <>
+                            {formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
+                            <Required />
+                          </>
+                        }
                         name='name'
                       />
                       <Input
@@ -156,7 +166,12 @@ class UsersPopup extends React.Component {
                     <FormGroup widths='equal' data-test='settings_users_popup_emailPhone_inp'>
                       <Input
                         type='text'
-                        label={<>{formatMessage({ id: 'global.email', defaultMessage: 'Email' })}<Required /></>}
+                        label={
+                          <>
+                            {formatMessage({ id: 'global.email', defaultMessage: 'Email' })}
+                            <Required />
+                          </>
+                        }
                         name='email'
                       />
                       <PhoneNumber
