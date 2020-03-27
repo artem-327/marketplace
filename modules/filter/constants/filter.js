@@ -18,7 +18,7 @@ export const filterTypes = {
   MARKETPLACE: 'marketplace',
   PURCHASE_ORDERS: 'PURCHASE_ORDERS',
   SALES_ORDERS: 'SALES_ORDERS',
-  WANTED_BOARD: 'WANTED_BOARD',
+  WANTED_BOARD: 'WANTED_BOARD'
 }
 
 export const filterPresets = {
@@ -216,7 +216,7 @@ export const datagridValues = {
 
   incomplete: {
     paths: [paths.productOffers.cfStatus],
-    description: 'Inactive',
+    description: 'Status',
     operator: operators.LIKE,
 
     toFilter: function(values) {
@@ -233,8 +233,8 @@ export const datagridValues = {
         values: returnValues.map(val => ({ value: val, description: val }))
       }
     },
-    tagDescription: values => values.toString(),
-    valuesDescription: values => values.toString(),
+    tagDescription: values => values.map(val => val.description).toString(),
+    valuesDescription: values =>values.map(val => val.description).toString(),
     toFormik: values => ({
       incomplete: values.includes('Incomplete') ? { yes: true, no: false } : { yes: false, no: true }
     })
