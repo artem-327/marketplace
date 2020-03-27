@@ -80,8 +80,7 @@ function mapStateToProps(store, { datagrid }) {
           fobQuote: <FormattedNumber style='currency' currency={currency} value={pro.pricePerUOM} />,
           deliveredQuote: 'N/A',
         }
-      })
-      //.filter(el => el.rawData.status === 'NEW')
+      }).filter(el => el.rawData.status === 'NEW')
       const offersLength = purchaseRequestOffers.length
       return {
         id: row.id,
