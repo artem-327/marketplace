@@ -39,6 +39,7 @@ export const initialState = {
     { name: 'Document Types', id: 9 },
     { name: 'Associations', id: 12 },
     { name: 'Market Segments', id: 10 },
+    { name: 'Users', id: 13 },
     { name: 'Admin Settings', id: 11, hideHandler: true }
   ],
 
@@ -59,7 +60,6 @@ export const initialState = {
   config: config,
   addressSearchPrimaryBranch: [],
   addressSearchMailingBranch: [],
-
   productsHazardClasses: [],
   productsPackagingGroups: [],
   searchedCasProducts: [],
@@ -69,7 +69,12 @@ export const initialState = {
   altEchoNamesRows: [],
   documentTypes: [],
   editEchoProductEditTab: 0,
-  editEchoProductInitTrig: false
+  editEchoProductInitTrig: false,
+  currentUser: null,
+  roles: [],
+  searchedCompanies: [],
+  searchedCompaniesLoading: false,
+  updating: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -719,6 +724,43 @@ export default function reducer(state = initialState, action) {
         })
       }
     }
+
+    case AT.ADMIN_GET_USERS_ME_FULFILLED: {
+      return {
+        ...state,
+        currentUser: action.payload
+      }
+    }
+
+    case AT.ADMIN_GET_ROLES_FULFILLED: {
+      return {
+        ...state,
+        roles: action.payload
+      }
+    }
+
+    case AT.ADMIN_SEARCH_COMPANY_PENDING: {return { ...state, searchedCompaniesLoading: true }}
+    case AT.ADMIN_SEARCH_COMPANY_REJECTED: {return { ...state, searchedCompaniesLoading: false }}
+    case AT.ADMIN_SEARCH_COMPANY_FULFILLED: {
+      return {
+        ...state,
+        searchedCompanies: action.payload,
+        searchedCompaniesLoading: false
+      }
+    }
+
+    case AT.ADMIN_EDIT_USER_PENDING:
+    case AT.ADMIN_POST_NEW_USER_PENDING: {
+      return {...state, updating: true}
+    }
+
+    case AT.ADMIN_POST_NEW_USER_REJECTED:
+    case AT.ADMIN_POST_NEW_USER_FULFILLED:
+    case AT.ADMIN_EDIT_USER_REJECTED:
+    case AT.ADMIN_EDIT_USER_FULFILLED: {
+      return {...state, updating: false}
+    }
+
 
     default: {
       for (let groupName in config) {
