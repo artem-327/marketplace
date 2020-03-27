@@ -175,7 +175,7 @@ class Layout extends Component {
                       defaultMessage: 'My Profile'
                     })}
                   </Dropdown.Item>
-                  <Dropdown.Item
+                  {/* <Dropdown.Item
                     as={Menu.Item}
                     onClick={() => chatWidgetToggle()}
                     data-test='navigation_menu_user_support_chat_drpdn'>
@@ -183,7 +183,7 @@ class Layout extends Component {
                       id: 'global.supportChat',
                       defaultMessage: 'Support Chat'
                     })}
-                  </Dropdown.Item>
+                  </Dropdown.Item> */}
 
                   {getSafe(() => auth.identity.isAdmin, false) && takeover && (
                     <Dropdown.Item

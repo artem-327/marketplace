@@ -11,8 +11,8 @@ const initialState = {
   query: {},
   datagridParams: {
     filters: [],
-    pageSize: 50
-    //pageNumber: 0
+    pageSize: 50,
+    pageNumber: 0
   }
 }
 
@@ -94,8 +94,8 @@ export class DatagridProvider extends Component {
         loading: false,
         allLoaded,
         datagridParams: {
-          ...s.datagridParams
-          //pageNumber: s.datagridParams.pageNumber + (allLoaded ? 0 : 1)
+          ...s.datagridParams,
+          pageNumber: s.datagridParams.pageNumber + (allLoaded ? 0 : 1)
         }
       }))
     } catch (e) {
@@ -177,13 +177,12 @@ export class DatagridProvider extends Component {
     this.setState({ query }, () => reload && this.loadData())
   }
 
-  setSearch = (value, type = [], reload = true) => {
+  setSearch = (value, reload = true) => {
     const {
       apiConfig: { searchToFilter, params }
     } = this.props
 
-    let filters =
-      typeof searchToFilter !== 'function' ? this.apiConfig.searchToFilter(value, type) : searchToFilter(value, type)
+    let filters = typeof searchToFilter !== 'function' ? this.apiConfig.searchToFilter(value) : searchToFilter(value)
 
     this.setState(
       s => ({
@@ -192,7 +191,7 @@ export class DatagridProvider extends Component {
       () => {
         this.setFilter(
           {
-            orFilters: filters.or ? filters.or : filters ? filters : [],
+            orFilters: filters.or ? filters.or : filters.length ? filters : [],
             filters: filters.and ? filters.and : []
           },
           reload

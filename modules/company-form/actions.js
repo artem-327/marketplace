@@ -14,3 +14,8 @@ export const deleteCompanyLogo = companyId => ({
   type: AT.DELETE_COMPANY_LOGO,
   payload: api.deleteCompanyLogo(companyId)
 })
+
+export const getAssociations = dataGrid => ({
+  type: AT.GET_ASSOCIATIONS,
+  payload: api.getAssociations(dataGrid)
+})

@@ -2,30 +2,25 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Modal, FormGroup, Header } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
-
-import {
-  closePopup,
-  updateShippingQuote,
-  createShippingQuote,
-} from '../../actions'
-
-import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
-import { DateInput } from '~/components/custom-formik'
+import moment from 'moment'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import * as Yup from 'yup'
 import Router from 'next/router'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 
+import { DateInput } from '~/components/custom-formik'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { errorMessages, minOrZeroLength } from '~/constants/yupValidation'
 import { withDatagrid } from '~/modules/datagrid'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
-import moment from 'moment'
+import { closePopup, updateShippingQuote, createShippingQuote } from '../../actions'
+import { Required } from '~/components/constants/layout'
 
 const initialFormValues = {
   carrierName: '',
   quoteId: '',
   price: '',
-  validityDate: '',
+  validityDate: ''
 }
 
 const formValidation = () =>
@@ -112,22 +107,42 @@ class ShippingQuotesPopup extends React.Component {
                   <FormGroup data-test='operations_shipping_quote_name_inp'>
                     <Input
                       type='text'
-                      label={formatMessage({ id: 'operations.carrierName', defaultMessage: 'Carrier Name' })}
+                      label={
+                        <>
+                          <FormattedMessage id='operations.carrierName' defaultMessage='Carrier Name'>
+                            {text => text}
+                          </FormattedMessage>
+                          <Required />
+                        </>
+                      }
                       name='carrierName'
                       fieldProps={{ width: 8 }}
                     />
                     <Input
                       type='text'
-                      label={formatMessage({ id: 'operations.quoteId', defaultMessage: 'Quote Id' })}
+                      label={
+                        <>
+                          <FormattedMessage id='operations.quoteId' defaultMessage='Quote Id'>
+                            {text => text}
+                          </FormattedMessage>
+                          <Required />
+                        </>
+                      }
                       name='quoteId'
                       fieldProps={{ width: 8 }}
                     />
-
                   </FormGroup>
                   <FormGroup data-test='operations_shipping_quote_price_date_inp'>
                     <Input
                       type='number'
-                      label={formatMessage({ id: 'operations.price', defaultMessage: 'Price' })}
+                      label={
+                        <>
+                          <FormattedMessage id='operations.price' defaultMessage='Price'>
+                            {text => text}
+                          </FormattedMessage>
+                          <Required />
+                        </>
+                      }
                       name='price'
                       fieldProps={{ width: 8 }}
                     />
@@ -163,26 +178,27 @@ class ShippingQuotesPopup extends React.Component {
 const mapDispatchToProps = {
   closePopup,
   updateShippingQuote,
-  createShippingQuote,
+  createShippingQuote
 }
 
 const mapStateToProps = state => {
   const { popupValues } = state.operations
-  let validityDate = popupValues && popupValues.validityDate
-    ? moment(popupValues.validityDate).format(getLocaleDateFormat()) : ''
+  let validityDate =
+    popupValues && popupValues.validityDate ? moment(popupValues.validityDate).format(getLocaleDateFormat()) : ''
 
   return {
     rowId: getSafe(() => popupValues.id),
-    popupValues:
-      popupValues
-        ? {
+    popupValues: popupValues
+      ? {
           carrierName: popupValues.carrierName,
           quoteId: popupValues.quoteId,
           price: popupValues.price,
-          validityDate: validityDate,
+          validityDate: validityDate
         }
-        : null,
+      : null
   }
 }
 
-export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(withToastManager(ShippingQuotesPopup))))
+export default withDatagrid(
+  injectIntl(connect(mapStateToProps, mapDispatchToProps)(withToastManager(ShippingQuotesPopup)))
+)
