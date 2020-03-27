@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import api from '~/api'
 import pt from 'prop-types'
+import { getSafe } from '~/utils/functions'
 export const DatagridContext = React.createContext({})
 
 const initialState = {
@@ -108,10 +109,10 @@ export class DatagridProvider extends Component {
 
   updateRow = (id, updateFn) => {
     this.setState(s => {
-      let rows = s.rows.slice(0).map((r, i) => {
-        if (r.id === id) {
-          return updateFn(r)
-        } else return r
+      let rows = s.rows.slice(0).map((ro, i) => {
+        if (getSafe(() => ro.id, null) === id) {
+          return updateFn(ro)
+        } else return ro
       })
 
       return { rows }
