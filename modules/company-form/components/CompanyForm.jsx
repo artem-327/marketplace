@@ -17,14 +17,22 @@ class CompanyForm extends Component {
       id: ''
     }
   }
-  componentDidMount() {
+  async componentDidMount() {
     this.loadCompanyLogo()
-    if (!getSafe(() => this.props.data, false)) this.props.getBusinessTypes()
-    else this.setState({ businessType: { id: this.props.data.id } })
+    try {
+      if (!getSafe(() => this.props.data.length, false)) await this.props.getBusinessTypes()
+      if (!getSafe(() => this.props.associations.length, false))
+        await this.props.getAssociations({ filters: [], pageSize: 50 })
+    } catch (error) {
+      console.error(error)
+    }
 
-    if (!getSafe(() => this.props.values.associations.length, false))
-      this.props.getAssociations({ filters: [], pageSize: 50 })
-    else this.setState({ associations: this.props.values.associations.map(assoc => assoc.id) })
+    this.setState({
+      businessType: { id: getSafe(() => this.props.values.businessType.id, '') },
+      associations: getSafe(() => this.props.values.associations.length, false)
+        ? this.props.values.associations.map(assoc => assoc.id)
+        : []
+    })
   }
 
   loadCompanyLogo = async () => {
@@ -103,22 +111,15 @@ class CompanyForm extends Component {
       errors,
       touched,
       isSubmitting,
-      getAssociations,
       associations
     } = this.props
     let { selectLogo, removeLogo } = this
-    console.log('businessType====================================')
-    console.log(this.state.businessType)
-    console.log('====================================')
-    console.log('data====================================')
-    console.log(data)
-    console.log('====================================')
     const { formatMessage } = intl
 
     return (
       <>
         <FormGroup widths='equal' data-test='company_form_legalCompanyName_inp'>
-          <FormField width={8}>
+          <FormField className='upload-input' width={8}>
             <Input
               label={
                 <>
@@ -144,6 +145,8 @@ class CompanyForm extends Component {
                   : []
               }
               clearable
+              loading={loading}
+              selection
               value={this.state.businessType.id}
               onChange={(e, data) => {
                 e.preventDefault()
@@ -256,6 +259,7 @@ class CompanyForm extends Component {
                 }
                 clearable
                 multiple
+                loading={loading}
                 search
                 selection
                 value={this.state.associations}
