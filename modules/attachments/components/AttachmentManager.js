@@ -86,13 +86,13 @@ class AttachmentClass extends Component {
         return { ...datagrid.rows.find(att => att.id === id) }
       })
     )
-    this.handleSearch({ value: '', type: [] })
+    this.handleSearch({ name: '', type: [] })
     this.setState({ open: false, documentTypes: '' })
   }
 
-  handleSearch = debounce((value = '', type = []) => {
+  handleSearch = debounce(value => {
     let { datagrid } = this.props
-    datagrid.setSearch(value, type)
+    datagrid.setSearch(value)
   }, 150)
 
   returnCloseAttachmentManager = () => {
@@ -154,7 +154,7 @@ class AttachmentClass extends Component {
             <PaddedIcon
               onClick={() => {
                 this.returnCloseAttachmentManager()
-                this.handleSearch('', [])
+                this.handleSearch({ name: '', type: [] })
                 this.setState({ open: false, documentTypes: '' })
               }}
               name='close icon'
@@ -166,16 +166,13 @@ class AttachmentClass extends Component {
             onClick: () => {
               this.setState({ open: true })
               if (documentTypesForCertificates && documentTypesForCertificates.length) {
-                this.handleSearch(
-                  '',
-                  documentTypesForCertificates.map(doc => doc.value)
-                )
+                this.handleSearch({ name: '', type: documentTypesForCertificates.map(doc => doc.value) })
               }
             }
           })}
           onClose={() => {
             this.returnCloseAttachmentManager()
-            this.handleSearch('', [])
+            this.handleSearch({ name: '', type: [] })
             this.setState({ open: false, documentTypes: [] })
           }}>
           <CustomHeader>
@@ -206,7 +203,7 @@ class AttachmentClass extends Component {
                       const data = documents.find(option => parseInt(option.value) === parseInt(value))
 
                       this.setState({ [name]: value })
-                      this.handleSearch(this.state.searchValue, value)
+                      this.handleSearch({ name: this.state.searchValue, type: value })
                     }}
                     placeholder={
                       <FormattedMessage id='related.documents.selectType' defaultMessage='Select type'>
@@ -221,7 +218,7 @@ class AttachmentClass extends Component {
                     placeholder='Search...'
                     onChange={(_, data) => {
                       this.setState({ searchValue: data && data.value })
-                      this.handleSearch(data.value, this.state.documentTypes)
+                      this.handleSearch({ name: data.value, type: this.state.documentTypes })
                     }}
                   />
                 </GridColumn>
@@ -247,7 +244,7 @@ class AttachmentClass extends Component {
               basic
               onClick={() => {
                 this.returnCloseAttachmentManager()
-                this.handleSearch('', [])
+                this.handleSearch({ name: '', type: [] })
                 this.setState({ open: false, documentTypes: [] })
               }}>
               <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
@@ -311,24 +308,24 @@ AttachmentModal.defaultProps = {
 class AttachmentManager extends Component {
   getApiConfig = () => ({
     url: '/prodex/api/attachments/datagrid/',
-    searchToFilter: (v, type) => {
+    searchToFilter: v => {
       let filters = { or: [], and: [] }
-      if (v) {
+      if (v && v.name) {
         filters.or = [
-          { operator: 'LIKE', path: 'Attachment.name', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Attachment.name', values: [`%${v.name}%`] },
           {
             operator: 'LIKE',
             path: 'Attachment.customName',
-            values: [`%${v}%`]
+            values: [`%${v.name}%`]
           }
         ]
       }
-      if (type && type.length) {
+      if (v && v.type && v.type.length) {
         filters.and = [
           {
             operator: 'EQUALS',
             path: 'Attachment.documentType.id',
-            values: type
+            values: v.type
           }
         ]
       }
