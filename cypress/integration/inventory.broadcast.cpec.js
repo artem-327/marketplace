@@ -15,7 +15,7 @@ context("Inventory Broadcasting", () => {
 
 
     beforeEach(function () {
-        cy.viewport(1620, 2000)
+        cy.viewport(3000, 2000)
 
         cy.server()
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
@@ -32,7 +32,7 @@ context("Inventory Broadcasting", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.setOfferBroadcasting(token, offerId, "false")
         })
-        cy.get(".table-responsive").scrollTo("right")
+
         cy.waitForUI()
 
         cy.get("[data-test=my_inventory_broadcast_chckb]").eq(0).should("not.have.class", "checked")
@@ -58,7 +58,7 @@ context("Inventory Broadcasting", () => {
 
         cy.openElement(offerId, 2)
 
-        cy.get("[data-test=broadcast_rule_row_click]").should("be.visible")
+        cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(8)
@@ -67,7 +67,6 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
         cy.wait("@rulesSaving")
-        cy.contains("Info!")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
@@ -86,7 +85,7 @@ context("Inventory Broadcasting", () => {
 
         cy.openElement(offerId, 2)
 
-        cy.get("[data-test=broadcast_rule_row_click]").should("be.visible")
+        cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
@@ -111,7 +110,7 @@ context("Inventory Broadcasting", () => {
 
         cy.openElement(offerId, 2)
 
-        cy.get("[data-test=broadcast_rule_row_click]").should("be.visible")
+        cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
 
         cy.contains("Canada").click()
 
@@ -128,7 +127,6 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
         cy.wait("@rulesSaving")
-        cy.contains("Info!")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(1)
@@ -149,7 +147,7 @@ context("Inventory Broadcasting", () => {
 
         cy.openElement(offerId, 2)
 
-        cy.get("[data-test=broadcast_rule_row_click]").should("be.visible")
+        cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
 
         cy.get("[data-test=broadcast_modal_category_drpdn]").click()
         cy.contains("By Company").click()
@@ -161,7 +159,6 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
         cy.wait("@rulesSaving")
-        cy.contains("Info!")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
