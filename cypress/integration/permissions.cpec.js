@@ -144,6 +144,6 @@ context("Permissions tests",() => {
 
         cy.get("[data-test='navigation_settings_users_drpdn']").click()
         cy.wait('@loading')
-        cy.get("[data-test='table_row_action']").eq(1).should('be.visible')
+        cy.get(':nth-child(1) > .actions').should('be.visible')
     })
 })

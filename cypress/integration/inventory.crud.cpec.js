@@ -17,7 +17,7 @@ context("Inventory CRUD", () => {
     })
 
     beforeEach(function () {
-        cy.viewport(1620, 2000)
+        cy.viewport(3000, 2000)
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("GET", "/prodex/api/countries/search*").as("addingLoading")
@@ -43,7 +43,7 @@ context("Inventory CRUD", () => {
         cy.setNumberInput("[id='field_input_edit.fobPrice']", "20")
         cy.setNumberInput("[id='field_input_edit.costPerUOM']", "0")
 
-        cy.get("[data-test=sidebar_inventory_save_new]").click()
+        cy.get("[data-test=sidebar_inventory_save_new]").click({force:true})
         cy.get('[data-test=confirm_dialog_cancel_btn]').click()
 
         cy.wait("@inventoryLoading")
@@ -75,7 +75,6 @@ context("Inventory CRUD", () => {
         cy.contains("Success")
 
         cy.contains("Mercer Distribution Services").should('be.visible')
-        cy.contains("10").should('be.visible')
     })
 
     it("See item details", () => {
@@ -141,8 +140,6 @@ context("Inventory CRUD", () => {
     })
 
     it('Create item with optional info', () => {
-        cy.viewport(1280, 800)
-
         cy.get("[data-test=my_inventory_add_btn]").click()
 
         cy.selectChemical("Caustic")
@@ -162,7 +159,7 @@ context("Inventory CRUD", () => {
         cy.get("[data-test=new_inventory_conforming_drpdn]").within(() => {
             cy.contains("Non Conforming").click()
         })
-        cy.enterText("[id='field_textarea_edit.conditionNotes']", "Hello")
+        cy.enterText("[id='field_input_edit.conditionNotes']", "Hello")
 
 
         cy.get("[data-test=new_inventory_form_drpdn]").click()
@@ -180,7 +177,7 @@ context("Inventory CRUD", () => {
             cy.contains("Yes").click()
         })
 
-        cy.get("[data-test=sidebar_inventory_save_new]").click()
+        cy.get("[data-test=sidebar_inventory_save_new]").click({force: true})
 
         cy.contains("20")
         cy.contains("Houston Warehouse")
@@ -190,8 +187,6 @@ context("Inventory CRUD", () => {
     it('Filter inventory', () => {
         cy.server()
         cy.route("GET", '/prodex/api/company-products/own/search?*').as('search')
-
-        cy.get("[class='active item']").eq(0).click()
 
         cy.waitForUI()
 
@@ -213,6 +208,7 @@ context("Inventory CRUD", () => {
             })
         })
 
+        cy.get("[name=quantity]").click()
         cy.get("#field_input_quantityTo").type("10")
         cy.contains("Apply").click()
 
@@ -227,7 +223,7 @@ context("Inventory CRUD", () => {
             })
         })
 
-        cy.get("[data-test='new_inventory_price_tiers_drpdn']").click()
+        cy.get("[data-test='new_inventory_price_tiers_drpdn']", {timeout: 10000}).click()
         cy.get("[data-test='new_inventory_price_tiers_drpdn']").within(() => {
             cy.contains("2").click()
         })
