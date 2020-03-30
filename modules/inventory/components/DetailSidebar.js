@@ -52,7 +52,7 @@ import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import ProdexGrid from '~/components/table'
 import * as val from 'yup'
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages, dateBefore } from '~/constants/yupValidation'
 import moment from 'moment'
 import UploadLot from './upload/UploadLot'
 import { withDatagrid } from '~/modules/datagrid'
@@ -256,6 +256,7 @@ const validationScheme = val.object().shape({
       .string()
       .typeError(errorMessages.invalidString)
       .nullable(),
+    lotManufacturedDate: val.lazy((_value) => dateBefore()),
     inStock: val.bool().required(errorMessages.requiredMessage),
     minimum: val
       .number()
