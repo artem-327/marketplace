@@ -61,7 +61,7 @@ export const submitOffer = (myOffer) => {
 export function purchaseRequestedItem(id) {
   return async dispatch => {
     await dispatch({
-      type: AT.WB_HANDLE_FILTERS_VALUE,
+      type: AT.WB_PURCHASE_REQUESTED_ITEM,
       async payload() {
         const data = await api.purchaseRequestedItem(id)
         dispatch({ // To display in CART
