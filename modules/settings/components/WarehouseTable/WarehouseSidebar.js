@@ -516,8 +516,17 @@ class WarehouseSidebar extends React.Component {
                   </Button.Reset>
                   <CustomButtonSubmit
                     onClick={() => {
-                      this.setState({ loadSidebar: true })
-                      this.submitHandler(formikProps.values, formikProps.setSubmitting)
+                      formikProps.validateForm().then(err => {
+                        const errors = Object.keys(err)
+                        if (errors.length && errors[0] !== 'isCanceled') {
+                          // Errors found
+                          formikProps.submitForm() // to show errors
+                        } else {
+                          // No errors found
+                          this.setState({ loadSidebar: true })
+                          this.submitHandler(formikProps.values, formikProps.setSubmitting)
+                        }
+                      })
                     }}
                     data-test='settings_warehouse_popup_submit_btn'>
                     <FormattedMessage id='global.save' defaultMessage='Save'>
