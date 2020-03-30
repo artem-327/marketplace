@@ -18,6 +18,7 @@ import { Datagrid } from '~/modules/datagrid'
 
 import { number } from 'prop-types'
 import Link from 'next/link'
+import Tutorial from '~/modules/tutorial/Tutorial'
 
 import { UpperCaseText, ControlPanel } from '../../constants/layout'
 
@@ -106,12 +107,13 @@ class MyOffers extends Component {
   }
 
   renderContent = () => {
-    const { datagrid, intl, rows, editedId, myOffersSidebarTrigger } = this.props
+    const { datagrid, intl, rows, editedId, myOffersSidebarTrigger, tutorialCompleted } = this.props
     const { columns, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
 
     return (
       <>
+        {!tutorialCompleted && <Tutorial marginWantedBoard />}
         <ControlPanel>
           <Grid>
             <Grid.Row>
