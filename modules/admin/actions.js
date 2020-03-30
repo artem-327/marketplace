@@ -755,6 +755,8 @@ export const deleteNmfcNumber = id => {
 
 export const getUsersMe = () => ({ type: AT.ADMIN_GET_USERS_ME, payload: api.getUsersMe() })
 
+export const getUser = (id) => ({ type: AT.ADMIN_GET_USER, payload: api.getUser(id) })
+
 export const userSwitchEnableDisable = (id) => ({
   type: AT.ADMIN_USER_SWITCH_ENABLE_DISABLE,
   payload: api.userSwitchEnableDisable(id)
@@ -780,9 +782,19 @@ export const getRoles = () => ({
   payload: api.getRoles()
 })
 
+export const getAdminRoles = () => ({
+  type: AT.ADMIN_GET_ADMIN_ROLES,
+  payload: api.getAdminRoles()
+})
+
 export const searchCompany = (companyText, limit) => ({
   type: AT.ADMIN_SEARCH_COMPANY,
   payload: api.searchCompany(companyText, limit)
+})
+
+export const initSearchCompany = (id) => ({
+  type: AT.ADMIN_INIT_SEARCH_COMPANY,
+  payload: api.getCompanyInfo(id)
 })
 
 

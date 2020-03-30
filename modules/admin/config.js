@@ -870,6 +870,7 @@ export const config = {
     }
   },
   'Users': {
+    tableName: 'admin_users',
     addEditText: (
       <FormattedMessage id='admin.user' defaultMessage='User'>
         {text => text}

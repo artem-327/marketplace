@@ -283,8 +283,7 @@ class Admin extends Component {
           </Grid>
         </Container>
         {enableSideProductEdit && <AddEditEchoProduct tabName={'Product Catalog'} />}
-        {currentAddForm && editSidebar[currentTab.name]}
-        {currentEditForm && editSidebar[currentTab.name]}
+        {(currentAddForm || currentEditForm) && editSidebar[currentTab.name]}
       </DatagridProvider>
     )
   }
