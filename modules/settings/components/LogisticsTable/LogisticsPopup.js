@@ -50,6 +50,7 @@ class LogisticsPopup extends Component {
       updateLogisticsAccount,
       intl: { formatMessage }
     } = this.props
+
     return (
       <Modal closeIcon onClose={() => closePopup()} open centered={false}>
         <Modal.Header>
@@ -88,7 +89,7 @@ class LogisticsPopup extends Component {
                       name='providerIdentifier'
                       options={logisticsProviders.map(provider => ({
                         key: provider.identifier.value,
-                        text: provider.name,
+                        text: `${provider.name} (${provider.identifier.value})`,
                         value: provider.identifier
                       }))}
                       label={formatMessage({
@@ -96,6 +97,7 @@ class LogisticsPopup extends Component {
                         defaultMessage: 'Logistics Provider'
                       })}
                       inputProps={{
+                        search: true,
                         'data-test': 'settings_logistics_provider_drpdn',
                         placeholder: formatMessage({
                           id: 'logistics.placeholder.logisticsProvider',
