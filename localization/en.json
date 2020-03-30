@@ -839,6 +839,7 @@
   "myInventory.offerExpiration": "Expiration Date",
   "myInventory.groupId": "Group ID",
   "myInventory.lotNumber": "Lot Number",
+  "myInventory.searchByProductName": "Search by product name...",
   "filter.warehouse": "Warehouse",
   "filter.incomplete": "Incomplete",
   "filter.chemicalProductName": "Chemical / Product Name",

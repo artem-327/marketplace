@@ -2,7 +2,9 @@ import * as AT from './action-types'
 
 export const initialState = {
   loading: false,
-  holds: []
+  holds: [],
+  datagridFilter: { filters: [] },
+  datagridFilterUpdate: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -162,6 +164,15 @@ export default function reducer(state = initialState, action) {
         loading: false
       }
     }
+
+    case AT.HOLD_APPLY_FILTER: {
+      return {
+        ...state,
+        datagridFilter: payload,
+        datagridFilterUpdate: !state.datagridFilterUpdate
+      }
+    }
+
     default: {
       return state
     }
