@@ -423,7 +423,7 @@ class MyRequestedItems extends Component {
                     primary
                     onClick={() => sidebarDetailTrigger(null, 'my-requested-items')}
                     data-test='my_requested_items_open_popup_btn'>
-                    <FormattedMessage id='wantedBoard.addNewItem' defaultMessage='Add New Item'>
+                    <FormattedMessage id='wantedBoard.addNewRequest' defaultMessage='Add New Request'>
                       {text => text}
                     </FormattedMessage>
                   </Button>
