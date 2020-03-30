@@ -110,13 +110,13 @@ export class DatagridProvider extends Component {
         datagridParams: {
           ...s.datagridParams,
           pageNumber: pageNumber + (allLoaded ? 0 : 1)
-        },
-        isScrollToEnd: false
+        }
       }))
     } catch (e) {
       console.error(e)
       this.setState({ loading: false })
     } finally {
+      this.setState({ isScrollToEnd: false })
       this.apiConfig = null
     }
   }
@@ -206,7 +206,8 @@ export class DatagridProvider extends Component {
 
     this.setState(
       s => ({
-        datagridParams: { ...s.datagridParams, ...params }
+        datagridParams: { ...s.datagridParams, ...params },
+        isScrollToEnd: false
       }),
       () => {
         this.setFilter(
