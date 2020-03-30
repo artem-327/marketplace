@@ -1,5 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { PlaidLink } from 'react-plaid-link'
+import axios from 'axios'
 
 import { Modal, FormGroup } from 'semantic-ui-react'
 
@@ -13,6 +15,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
+import Axios from 'axios'
 
 const initialFormValues = {
   accountNumber: '',
@@ -66,6 +69,27 @@ class BankAccountsPopup extends React.Component {
       setSubmitting(false)
     }
   }
+  onExit = (error, metadata) => {
+    console.log('onExit - error', error)
+    console.log('onExit - metadata', metadata)
+  }
+  onEvent = (eventName, metadata) => {
+    console.log('onEvent - eventName', eventName)
+    console.log('onEvent - metadata', metadata)
+  }
+  onSuccess = (public_token, metadata) => {
+    console.log('onSuccess - public_token', public_token)
+    console.log('onSuccess - metadata', metadata)
+
+    // Send the public_token to an internal server
+    // and exchange it for an access_token.
+    axios.post('/get_access_token', {
+      public_token: public_token,
+      accounts: metadata.accounts,
+      institution: metadata.institution,
+      link_session_id: metadata.link_session_id
+    })
+  }
 
   render() {
     const {
@@ -84,6 +108,18 @@ class BankAccountsPopup extends React.Component {
           )}
         </Modal.Header>
         <Modal.Content>
+          <PlaidLink
+            className='CustomButton'
+            style={{ padding: '20px', fontSize: '16px', cursor: 'pointer' }}
+            clientName={'Echo system'}
+            env={'sandbox'} //process.env.NODE_ENV||
+            product={['auth', 'transactions']}
+            publicKey={process.env.PLAID_PUBLIC_KEY || '...'}
+            onExit={this.onExit}
+            onSuccess={this.onSuccess}
+            onEvent={this.onEvent}>
+            Open Link and connect your bank!
+          </PlaidLink>
           <Form
             enableReinitialize
             initialValues={{

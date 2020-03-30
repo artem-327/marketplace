@@ -6,7 +6,6 @@ import { closeDwollaPopup, getCountries, getProvinces, postDwollaAccount } from 
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import styled from 'styled-components'
-import { PlaidLink } from 'react-plaid-link'
 
 import { DateInput } from '~/components/custom-formik'
 import { AddressForm } from '~/modules/address-form/'
@@ -74,9 +73,6 @@ class BankAccountsPopup extends React.Component {
     accordionActive[name] = !accordionActive[name]
     this.setState({ accordionActive })
   }
-  onExit = (error, metadata) => console.log('onExit', error, metadata)
-  onEvent = (eventName, metadata) => console.log('onEvent', eventName, metadata)
-  onSuccess = (token, metadata) => console.log('onSuccess', token, metadata)
 
   render() {
     const {
@@ -95,18 +91,6 @@ class BankAccountsPopup extends React.Component {
           <FormattedMessage id='settings.registerDwollaAcc' defaultMessage='Register Dwolla Account' />
         </Modal.Header>
         <Modal.Content>
-          <PlaidLink
-            className='CustomButton'
-            style={{ padding: '20px', fontSize: '16px', cursor: 'pointer' }}
-            clientName={this.props.clientName || 'Your app name'}
-            env={this.props.env || 'sandbox'}
-            product={this.props.product || ['auth', 'transactions']}
-            publicKey={this.props.publicKey || '...'}
-            onExit={this.onExit}
-            onSuccess={this.onSuccess}
-            onEvent={this.onEvent}>
-            Open Link and connect your bank!
-          </PlaidLink>
           <Form
             initialValues={this.state.initialFormValues}
             enableReinitialize
