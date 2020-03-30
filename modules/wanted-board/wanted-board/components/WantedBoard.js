@@ -21,13 +21,9 @@ import { PlusCircle } from 'react-feather'
 
 import { number } from 'prop-types'
 import Link from 'next/link'
+import Tutorial from '~/modules/tutorial/Tutorial'
 
-import {
-  UpperCaseText,
-  ControlPanel,
-  ProductChemicalSwitch,
-  TopButtons
-} from '../../constants/layout'
+import { UpperCaseText, ControlPanel, ProductChemicalSwitch, TopButtons } from '../../constants/layout'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
@@ -36,7 +32,6 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
     </Menu.Item>
   </Link>
 ))
-
 
 class WantedBoard extends Component {
   state = {
@@ -48,7 +43,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 290,
+        width: 290
         //align: 'right',
         //sortPath: 'ProductOffer.pkgAvailable'
       },
@@ -79,7 +74,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 150,
+        width: 150
       },
       {
         name: 'manufacturer',
@@ -88,7 +83,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 420,
+        width: 420
       },
       {
         name: 'form',
@@ -97,7 +92,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120,
+        width: 120
       },
       {
         name: 'fobPrice',
@@ -106,7 +101,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 150,
+        width: 150
       },
       {
         name: 'quantity',
@@ -115,7 +110,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 180,
+        width: 180
       },
       {
         name: 'neededBy',
@@ -124,7 +119,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120,
+        width: 120
       }
     ],
     columnsChemical: [
@@ -156,7 +151,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 130,
+        width: 130
       },
       {
         name: 'packaging',
@@ -165,7 +160,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 150,
+        width: 150
       },
       {
         name: 'manufacturer',
@@ -174,7 +169,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 420,
+        width: 420
       },
       {
         name: 'form',
@@ -183,7 +178,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120,
+        width: 120
       },
       {
         name: 'fobPrice',
@@ -192,7 +187,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 150,
+        width: 150
       },
       {
         name: 'quantity',
@@ -201,7 +196,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 180,
+        width: 180
       },
       {
         name: 'neededBy',
@@ -210,7 +205,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120,
+        width: 120
       }
     ],
     selectedRows: [],
@@ -219,7 +214,6 @@ class WantedBoard extends Component {
     popupValues: null,
     filterValue: ''
   }
-
 
   componentDidMount() {
     this.setState({ filterValue: '' })
@@ -254,13 +248,15 @@ class WantedBoard extends Component {
       sidebarDetailTrigger,
       openedSubmitOfferPopup,
       type,
-      popupValues
+      popupValues,
+      tutorialCompleted
     } = this.props
     const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
 
     return (
       <>
+        {!tutorialCompleted && <Tutorial marginWantedBoard />}
         {openedSubmitOfferPopup && <SubmitOffer {...popupValues} />}
         <ControlPanel>
           <Grid>
@@ -284,8 +280,7 @@ class WantedBoard extends Component {
                     <Button
                       attached='left'
                       onClick={() => this.props.setWantedBoardType('product')}
-                      data-test='wanted_board_product_switch_btn'
-                    >
+                      data-test='wanted_board_product_switch_btn'>
                       <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
                         {text => text}
                       </FormattedMessage>
@@ -293,8 +288,7 @@ class WantedBoard extends Component {
                     <Button
                       attached='right'
                       onClick={() => this.props.setWantedBoardType('chemical')}
-                      data-test='wanted_board_chemical_switch_btn'
-                    >
+                      data-test='wanted_board_chemical_switch_btn'>
                       <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
                         {text => text}
                       </FormattedMessage>
@@ -313,7 +307,7 @@ class WantedBoard extends Component {
             </Grid.Row>
           </Grid>
         </ControlPanel>
-        <div className='flex stretched' style={{padding: '10px 0'}}>
+        <div className='flex stretched' style={{ padding: '10px 0' }}>
           <ProdexGrid
             tableName='wanted_board_grid'
             {...datagrid.tableProps}
@@ -328,7 +322,7 @@ class WantedBoard extends Component {
                   defaultMessage: 'Submit Offer'
                 }),
                 callback: row => this.props.openSubmitOffer(row)
-              },
+              }
             ]}
           />
         </div>
@@ -340,16 +334,14 @@ class WantedBoard extends Component {
     const {
       activeIndex,
       intl: { formatMessage },
-      editWindowOpen,
+      editWindowOpen
     } = this.props
 
     const panes = [
       {
         menuItem: (
           <MenuLink to='/wanted-board/wanted-board' data-test='wanted_board_submenu_tab_wanted_board'>
-            <UpperCaseText>
-              {formatMessage({ id: 'title.wantedBoard', defaultMessage: 'Wanted Board' })}
-            </UpperCaseText>
+            <UpperCaseText>{formatMessage({ id: 'title.wantedBoard', defaultMessage: 'Wanted Board' })}</UpperCaseText>
           </MenuLink>
         ),
         render: () => <>{this.renderContent()}</>
@@ -367,9 +359,7 @@ class WantedBoard extends Component {
       {
         menuItem: (
           <MenuLink to='/wanted-board/my-offers' data-test='wanted_board_submenu_tab_my_offers'>
-            <UpperCaseText>
-              {formatMessage({ id: 'title.myOffers', defaultMessage: 'My Offers' })}
-            </UpperCaseText>
+            <UpperCaseText>{formatMessage({ id: 'title.myOffers', defaultMessage: 'My Offers' })}</UpperCaseText>
           </MenuLink>
         ),
         render: () => <>{<MyOffers />}</>

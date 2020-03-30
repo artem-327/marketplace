@@ -30,6 +30,7 @@ import { Datagrid } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
 import { number } from 'prop-types'
 import Link from 'next/link'
+import Tutorial from '~/modules/tutorial/Tutorial'
 
 import { UpperCaseText, ControlPanel, ProductChemicalSwitch, TopButtons } from '../../constants/layout'
 
@@ -367,12 +368,13 @@ class MyRequestedItems extends Component {
   }
 
   renderContent = () => {
-    const { datagrid, intl, rows, editedId, sidebarDetailTrigger, type } = this.props
+    const { datagrid, intl, rows, editedId, sidebarDetailTrigger, type, tutorialCompleted } = this.props
     const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
 
     return (
       <>
+        {!tutorialCompleted && <Tutorial marginWantedBoard />}
         <ControlPanel>
           <Grid>
             <Grid.Row>
@@ -522,11 +524,11 @@ class MyRequestedItems extends Component {
                   defaultMessage: 'Purchase'
                 }),
                 disabled: row => editedId === row.id,
-                callback: async (row) => {
+                callback: async row => {
                   await this.props.purchaseRequestedItem(row.id.split('_')[1])
                   datagrid.loadData()
                 }
-              },
+              }
             ]}
           />
         </div>
