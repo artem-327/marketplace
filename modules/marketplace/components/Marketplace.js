@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Button, Popup, List, Icon, Tab } from 'semantic-ui-react'
+import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
 import { AlertTriangle } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
@@ -15,6 +15,8 @@ import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 import { Holds } from '~/modules/marketplace/holds'
 import Tutorial from '~/modules/tutorial/Tutorial'
+import { Datagrid } from '~/modules/datagrid'
+import { debounce } from 'lodash'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -177,7 +179,8 @@ class Marketplace extends Component {
     ],
     selectedRows: [],
     //pageNumber: 0,
-    open: false
+    open: false,
+    filterValue: ''
   }
 
   initData = () => {
@@ -186,8 +189,7 @@ class Marketplace extends Component {
   }
 
   componentDidMount() {
-    this.handleFilterClear()
-    //this.initData()
+    this.props.applyDatagridFilter('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -249,13 +251,15 @@ class Marketplace extends Component {
     sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest })
   }
 
-  handleFilterApply = filter => {
-    this.props.datagrid.setFilter(filter)
-  }
+  handleFiltersValue = debounce(value => {
+    const { applyDatagridFilter } = this.props
+    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    else applyDatagridFilter(value)
+  }, 250)
 
-  handleFilterClear = () => {
-    this.props.applyFilter({ filters: [] })
-    this.props.datagrid.setFilter({ filters: [] })
+  handleFilterChange = (e, { value }) => {
+    this.setState({ filterValue: value })
+    this.handleFiltersValue(value)
   }
 
   handleClearAutocompleteData = () => {
@@ -289,7 +293,7 @@ class Marketplace extends Component {
 
   renderTabMarketplace = () => {
     const { datagrid, intl, openPopup, isMerchant, tutorialCompleted } = this.props
-    const { columns, selectedRows } = this.state
+    const { columns, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
 
@@ -344,6 +348,21 @@ class Marketplace extends Component {
           {...this.props}
         />
 
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={4} style={{ paddingTop: '9px' }}>
+              <Input
+                fluid
+                icon='search'
+                value={filterValue}
+                onChange={this.handleFilterChange}
+                placeholder={formatMessage({
+                  id: 'myInventory.searchByProductName',
+                  defaultMessage: 'Search by product name...'
+                })}
+              />
+            </Grid.Column>
+            <Grid.Column width={12}>
         <Menu secondary className='page-part'>
           <Menu.Menu position='right'>
             <Menu.Item>
@@ -385,6 +404,9 @@ class Marketplace extends Component {
             />
           </Menu.Menu>
         </Menu>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
 
         <div class='flex stretched' style={{ padding: '10px 0' }}>
           <ProdexGrid

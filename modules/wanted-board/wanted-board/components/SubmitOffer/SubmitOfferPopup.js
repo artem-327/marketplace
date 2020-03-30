@@ -32,6 +32,7 @@ import { FieldArray } from 'formik'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexGrid from '~/components/table'
+import { Required } from '~/components/constants/layout'
 
 import confirm from '~/src/components/Confirmable/confirm'
 
@@ -262,6 +263,7 @@ class SubmitOfferPopup extends React.Component {
         ),
         width: 117
       },
+      /*
       {
         name: 'manufacturer',
         title: (
@@ -271,6 +273,7 @@ class SubmitOfferPopup extends React.Component {
         ),
         width: 143
       },
+      */
       {
         name: 'condition',
         title: (
@@ -444,7 +447,7 @@ class SubmitOfferPopup extends React.Component {
                         <List.Item>
                           <List.Content>
                             <List.Header as='label'>
-                              <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price' />
+                              <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max. Price' />
                             </List.Header>
                             <List.Description as='span'>
                               {popupValues.maximumPricePerUOM ? (
@@ -463,7 +466,7 @@ class SubmitOfferPopup extends React.Component {
                         <List.Item>
                           <List.Content>
                             <List.Header as='label'>
-                              <FormattedMessage id='wantedBoard.quantity' defaultMessage='Quantity' />
+                              <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed' />
                             </List.Header>
                             <List.Description as='span'>
                               {qtyPart ? (
@@ -532,7 +535,17 @@ class SubmitOfferPopup extends React.Component {
                           <FormGroup className='price-input'>
                             <Input
                               name='pricePerUOM'
-                              label='FOB Price'
+                              label={
+                                <>
+                                  <FormattedMessage
+                                    id='submitOffer.fobPrice'
+                                    defaultMessage='FOB Price'
+                                  >
+                                    {text => text}
+                                  </FormattedMessage>
+                                  <Required />
+                                </>
+                              }
                               inputProps={{
                                 type: 'number',
                                 onChange: this.handleChange,

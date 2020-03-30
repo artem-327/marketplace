@@ -18,6 +18,7 @@ import { getDocumentTypes, addAttachment, updateAttachment } from '~/modules/inv
 import { func } from 'prop-types'
 import { getStringISODate } from '~/components/date-format'
 import Router from 'next/router'
+import { Required } from '~/components/constants/layout'
 
 const validationSchema = Yup.lazy(values => {
   let validationObject = {
@@ -183,13 +184,21 @@ class DocumentPopup extends Component {
                         setFieldValue={setFieldValue}
                         errorMessage={errorMessages.requiredMessage}
                         errors={errors}
+                        required={true}
                       />
                     )}
                     <Dropdown
                       inputProps={{ loading: documentTypesFetching }}
                       loading={documentTypesFetching}
                       name='documentType.id'
-                      label='Document Type'
+                      label={
+                        <>
+                          <FormattedMessage id='global.docType' defaultMessage='Document Type'>
+                            {text => text}
+                          </FormattedMessage>
+                          <Required />
+                        </>
+                      }
                       options={documentTypes}
                     />
                   </FormGroup>

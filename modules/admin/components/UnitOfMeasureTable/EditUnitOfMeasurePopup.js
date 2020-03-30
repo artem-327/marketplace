@@ -9,6 +9,7 @@ import * as Yup from 'yup'
 
 import { FormattedMessage } from 'react-intl'
 import { errorMessages } from '~/constants/yupValidation'
+import { Required } from '~/components/constants/layout'
 
 const formValidation = Yup.object().shape({
   val0: Yup.string()
@@ -66,21 +67,53 @@ class EditUnitOfMeasurePopup extends React.Component {
               setSubmitting(false)
             }}>
             <FormGroup widths='equal' data-test='admin_edit_unit_measure_name_inp'>
-              <Input type={config.edit[0].type} label={config.edit[0].title} name='val0' />
+              <Input
+                type={config.edit[0].type}
+                label={
+                  <>
+                    {config.edit[0].title}
+                    <Required />
+                  </>
+                }
+                name='val0'
+              />
             </FormGroup>
             <FormGroup widths='equal' data-test='admin_edit_unit_measure_nameAbb_inp'>
-              <Input type={config.edit[1].type} label={config.edit[1].title} name='val1' />
+              <Input
+                type={config.edit[1].type}
+                label={
+                  <>
+                    {config.edit[1].title}
+                    <Required />
+                  </>
+                }
+                name='val1'
+              />
             </FormGroup>
             <FormGroup widths='equal'>
               <Dropdown
-                label={config.edit[2].title}
+                label={
+                  <>
+                    {config.edit[2].title}
+                    <Required />
+                  </>
+                }
                 options={measureOptions}
                 name='val2'
                 inputProps={{ 'data-test': 'admin_edit_unit_measure_type_drpdn' }}
               />
             </FormGroup>
             <FormGroup widths='equal' data-test='admin_edit_unit_measure_ratioToBaseSiUnit_inp'>
-              <Input type={config.edit[3].type} label={config.edit[3].title} name='val3' />
+              <Input
+                type={config.edit[3].type}
+                label={
+                  <>
+                    {config.edit[3].title}
+                    <Required />
+                  </>
+                }
+                name='val3'
+              />
             </FormGroup>
 
             <div style={{ textAlign: 'right' }}>

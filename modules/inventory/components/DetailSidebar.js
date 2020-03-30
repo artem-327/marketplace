@@ -97,6 +97,14 @@ const CustomGridColumn = styled(GridColumn)`
   padding-bottom: 0px !important;
 `
 
+const PricingLabel = styled.label`
+  line-height: 40px;
+`
+
+const PricingIcon = styled(Icon)`
+  line-height: 40px;
+`
+
 const initValues = {
   edit: {
     broadcasted: false,
@@ -527,11 +535,11 @@ class DetailSidebar extends Component {
       tiers.push(
         <GridRow>
           <GridColumn computer={2} textAlign='center'>
-            <label name={`priceTiers.pricingTiers[${i}].level`} style={{ verticalAlign: 'middle'}}>{i + 1}</label>
+            <PricingLabel name={`priceTiers.pricingTiers[${i}].level`} style={{ verticalAlign: 'middle'}}>{i + 1}</PricingLabel>
           </GridColumn>
 
           <GridColumn computer={1}>
-            <Icon className='greater than equal' />
+            <PricingIcon className='greater than equal' />
           </GridColumn>
 
           <GridColumn computer={1} data-test={`add_inventory_manuallyModified_${i}_inp`}>
@@ -588,7 +596,7 @@ class DetailSidebar extends Component {
             <Required />
           </GridColumn>
         </Grid>
-        <SmallGrid verticalAlign='middle'>
+        <SmallGrid verticalAlign='top'>
           {tiers}
         </SmallGrid>
       </>

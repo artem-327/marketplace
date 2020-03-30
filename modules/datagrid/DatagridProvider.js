@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import api from '~/api'
 import pt from 'prop-types'
+import { getSafe } from '~/utils/functions'
 export const DatagridContext = React.createContext({})
 
 const initialState = {
@@ -11,8 +12,8 @@ const initialState = {
   query: {},
   datagridParams: {
     filters: [],
-    pageSize: 50
-    //pageNumber: 0
+    pageSize: 50,
+    pageNumber: 0
   }
 }
 
@@ -69,14 +70,19 @@ export class DatagridProvider extends Component {
     const { apiConfig } = this.props
 
     this.setState({ loading: true })
-
+    //if is filtering we need to set pageNumber to 0
+    const pageNumber =
+      getSafe(() => datagridParams.filters.length, false) || getSafe(() => datagridParams.orFilters.length, false)
+        ? 0
+        : datagridParams.pageNumber
     try {
       const response = await api.request({
         url: this.apiConfig && this.apiConfig.url ? this.apiConfig.url : apiConfig.url,
         method: apiConfig.method || 'POST',
         params: query,
         data: {
-          ...datagridParams
+          ...datagridParams,
+          pageNumber
         }
       })
       if (
@@ -94,8 +100,8 @@ export class DatagridProvider extends Component {
         loading: false,
         allLoaded,
         datagridParams: {
-          ...s.datagridParams
-          //pageNumber: s.datagridParams.pageNumber + (allLoaded ? 0 : 1)
+          ...s.datagridParams,
+          pageNumber: pageNumber + (allLoaded ? 0 : 1)
         }
       }))
     } catch (e) {
@@ -108,10 +114,10 @@ export class DatagridProvider extends Component {
 
   updateRow = (id, updateFn) => {
     this.setState(s => {
-      let rows = s.rows.slice(0).map((r, i) => {
-        if (r.id === id) {
-          return updateFn(r)
-        } else return r
+      let rows = s.rows.slice(0).map((ro, i) => {
+        if (getSafe(() => ro.id, null) === id) {
+          return updateFn(ro)
+        } else return ro
       })
 
       return { rows }
@@ -177,13 +183,12 @@ export class DatagridProvider extends Component {
     this.setState({ query }, () => reload && this.loadData())
   }
 
-  setSearch = (value, type = [], reload = true) => {
+  setSearch = (value, reload = true) => {
     const {
       apiConfig: { searchToFilter, params }
     } = this.props
 
-    let filters =
-      typeof searchToFilter !== 'function' ? this.apiConfig.searchToFilter(value, type) : searchToFilter(value, type)
+    let filters = typeof searchToFilter !== 'function' ? this.apiConfig.searchToFilter(value) : searchToFilter(value)
 
     this.setState(
       s => ({
@@ -192,7 +197,7 @@ export class DatagridProvider extends Component {
       () => {
         this.setFilter(
           {
-            orFilters: filters.or ? filters.or : filters ? filters : [],
+            orFilters: filters.or ? filters.or : filters.length ? filters : [],
             filters: filters.and ? filters.and : []
           },
           reload
