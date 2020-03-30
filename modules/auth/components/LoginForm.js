@@ -235,7 +235,7 @@ class LoginForm extends Component {
 
             <Grid>
               <GridRow>
-                <GridColumn computer={12}>
+                <GridColumn computer={8}>
                   <ToggleLabel onClick={this.toggleResetPassword} data-test='login_reset_toggle_btn'>
                     {this.state.resetPassword ? (
                       <FormattedMessage id='auth.cancelPasswordReset' defaultMessage='Cancel Password Reset'>
@@ -249,7 +249,7 @@ class LoginForm extends Component {
                   </ToggleLabel>
                 </GridColumn>
 
-                <GridColumn computer={4} textAlign='right'>
+                <GridColumn computer={8} textAlign='right'>
                   {version && `v${version}`}
                 </GridColumn>
               </GridRow>

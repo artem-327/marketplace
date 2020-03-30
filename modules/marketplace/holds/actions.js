@@ -35,3 +35,10 @@ export const toCartHold = id => ({
   type: AT.TO_CART_HOLD,
   payload: api.toCartHold(id)
 })
+
+export function applyDatagridFilter(filter) {
+  return {
+    type: AT.HOLD_APPLY_FILTER,
+    payload: filter
+  }
+}

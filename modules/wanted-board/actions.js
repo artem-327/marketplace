@@ -1,4 +1,5 @@
 import * as AT from './action-types'
+import { CART_FETCH_FULFILLED } from './../purchase-order/action-types'
 import * as api from './api'
 import { Datagrid } from '~/modules/datagrid'
 
@@ -57,14 +58,20 @@ export const submitOffer = (myOffer) => {
   }
 }
 
-
-export const purchaseRequestedItem = (id) => ({
-  type: AT.WB_PURCHASE_REQUESTED_ITEM,
-    async payload() {
-    const { data } = await api.purchaseRequestedItem(id)
-    return data
-  }
-})
+export function purchaseRequestedItem(id) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.WB_PURCHASE_REQUESTED_ITEM,
+      async payload() {
+        const data = await api.purchaseRequestedItem(id)
+        dispatch({ // To display in CART
+          type: CART_FETCH_FULFILLED,
+          payload: data
+        })
+        return data
+      }
+    })
+}}
 
 export const rejectRequestedItem = (id) => ({
   type: AT.WB_REJECT_REQUESTED_ITEM,

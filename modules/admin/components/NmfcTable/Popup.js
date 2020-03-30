@@ -9,6 +9,7 @@ import * as Yup from 'yup'
 import { nmfcValidation } from '../../../../constants/yupValidation'
 import { getSafe } from '~/utils/functions'
 import { addNmfcNumber, editNmfcNumber } from '~/modules/admin/actions'
+import { Required } from '~/components/constants/layout'
 
 const validationSchema = Yup.object().shape({
   code: nmfcValidation()
@@ -66,7 +67,15 @@ class Popup extends Component {
               return (
                 <>
                   <FormGroup widths='equal'>
-                    <Input name='code' label={formatMessage({ id: 'global.code', defaultMessage: '!Code' })} />
+                    <Input
+                      name='code'
+                      label={
+                        <>
+                          {formatMessage({ id: 'global.code', defaultMessage: '!Code' })}
+                          <Required />
+                        </>
+                      }
+                    />
                   </FormGroup>
 
                   <FormGroup widths='equal'>

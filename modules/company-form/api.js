@@ -17,3 +17,6 @@ export const postCompanyLogo = (companyId, companyLogo) => {
   })
 }
 export const deleteCompanyLogo = companyId => api.delete(`/prodex/api/companies/id/${companyId}/logo`)
+
+export const getAssociations = dataGrid =>
+  api.post(`/prodex/api/associations/datagrid/`, dataGrid).then(response => response.data)

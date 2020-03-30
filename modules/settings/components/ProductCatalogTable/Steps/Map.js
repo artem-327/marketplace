@@ -160,9 +160,9 @@ const simpleCompanyProductList = {
     'stackableMapper'
   ],
   optional: [
-    'echoProductName',
-    'echoProductCode',
-    'echoProductNameOrCode',
+    'echoProductNameMapper',
+    'echoProductCodeMapper',
+    'echoProductNameOrCodeMapper',
     'freezeProtectMapper',
     'hazardousMapper',
     'inciNameMapper',

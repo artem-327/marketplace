@@ -114,6 +114,7 @@ class MyRequestedItems extends Component {
         ),
         width: 130
       },
+      /*
       {
         name: 'manufacturer',
         title: (
@@ -123,6 +124,7 @@ class MyRequestedItems extends Component {
         ),
         width: 130
       },
+      */
       {
         name: 'condition',
         title: (
@@ -259,6 +261,7 @@ class MyRequestedItems extends Component {
         ),
         width: 130
       },
+      /*
       {
         name: 'manufacturer',
         title: (
@@ -268,6 +271,7 @@ class MyRequestedItems extends Component {
         ),
         width: 130
       },
+      */
       {
         name: 'condition',
         title: (

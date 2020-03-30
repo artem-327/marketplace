@@ -39,6 +39,10 @@ import { DatagridProvider } from '~/modules/datagrid'
 import Settings from '~/components/settings'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
+import UsersTable from './UsersTable/Table'
+import UsersSidebar from './UsersTable/UsersSidebar'
+
+
 const FixyWrapper = styled.div`
   position: relative;
   transform: translateY(0);
@@ -63,12 +67,14 @@ const tables = {
   Companies: <CompaniesTable />,
   'Product Catalog': <ProductCatalogTable />,
   'Document Types': <DataTable />,
+  Associations: <DataTable />,
   'Market Segments': <DataTable />,
+  Users: <UsersTable />,
   'Admin Settings': (
     <FixyWrapper>
-    <ScrollableSegment basic padded='very'>
-      <Settings inputsInGroup={3} asModal={false} role='admin' />
-    </ScrollableSegment>
+      <ScrollableSegment basic padded='very'>
+        <Settings inputsInGroup={3} asModal={false} role='admin' />
+      </ScrollableSegment>
     </FixyWrapper>
   )
 }
@@ -125,6 +131,10 @@ const datagridConfig = {
     url: 'prodex/api/document-types/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'DocumentType.name', values: [`%${v}%`] }] : [])
   },
+  Associations: {
+    url: 'prodex/api/associations/datagrid',
+    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Association.name', values: [`%${v}%`] }] : [])
+  },
   Forms: {
     url: '/prodex/api/product-forms/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ProductForm.name', values: [`%${v}%`] }] : [])
@@ -148,7 +158,24 @@ const datagridConfig = {
   'Units of Measure': {
     url: '/prodex/api/units/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v}%`] }] : [])
-  }
+  },
+  Users: {
+    url: `/prodex/api/users/datagrid/all`,
+    searchToFilter: v =>
+      v
+        ? [
+          { operator: 'LIKE', path: 'User.name', values: [`%${v}%`] },
+          {
+            operator: 'LIKE',
+            path: 'User.homeBranch.deliveryAddress.contactName',
+            values: [`%${v}%`]
+          }
+        ]
+        : [],
+    params: {
+      orOperator: true
+    }
+  },
 }
 
 const editForms = {
@@ -162,6 +189,7 @@ const editForms = {
   'CAS Products': <AddEditCasProductsPopup />,
   Companies: <CompaniesForm />,
   'Document Types': <EditPopup1Parameter />,
+  Associations: <EditPopup1Parameter />,
   'Market Segments': <EditPopup1Parameter />
 }
 
@@ -181,7 +209,12 @@ const addForms = {
   'CAS Products': <AddEditCasProductsPopup />,
   Companies: <CompaniesForm />,
   'Document Types': <AddNewPopup1Parameter />,
+  Associations: <AddNewPopup1Parameter />,
   'Market Segments': <AddNewPopup1Parameter />
+}
+
+const editSidebar = {
+  'Users': <UsersSidebar />
 }
 
 const importForm = {
@@ -224,7 +257,14 @@ class Admin extends Component {
   render() {
     if (!getSafe(() => this.props.auth.identity.isAdmin, false))
       return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
-    const { currentTab } = this.props
+    const {
+      currentEditForm,
+      currentEdit2Form,
+      currentAddForm,
+      currentTab,
+      currentAddDwolla,
+      isOpenImportPopup
+    } = this.props
 
     return (
       <DatagridProvider apiConfig={this.getApiConfig()}>
@@ -243,6 +283,8 @@ class Admin extends Component {
           </Grid>
         </Container>
         {enableSideProductEdit && <AddEditEchoProduct tabName={'Product Catalog'} />}
+        {currentAddForm && editSidebar[currentTab.name]}
+        {currentEditForm && editSidebar[currentTab.name]}
       </DatagridProvider>
     )
   }
