@@ -14,7 +14,8 @@ import {
   closePopup,
   getLogisticsProviders,
   createLogisticsAccount,
-  updateLogisticsAccount
+  updateLogisticsAccount,
+  getLogisticsAccounts
 } from '~/modules/settings/actions'
 
 const validationSchema = Yup.object().shape(
@@ -48,6 +49,7 @@ class LogisticsPopup extends Component {
       logisticsProvidersFetching,
       createLogisticsAccount,
       updateLogisticsAccount,
+      getLogisticsAccounts,
       intl: { formatMessage }
     } = this.props
 
@@ -73,6 +75,7 @@ class LogisticsPopup extends Component {
                   await updateLogisticsAccount(values)
                 } else {
                   await createLogisticsAccount(values)
+                  getLogisticsAccounts()
                 }
               } catch {
               } finally {
@@ -166,7 +169,8 @@ const mapDispatchToProps = {
   closePopup,
   getLogisticsProviders,
   createLogisticsAccount,
-  updateLogisticsAccount
+  updateLogisticsAccount,
+  getLogisticsAccounts
 }
 
 const mapStateToProps = ({ settings: { popupValues, logisticsProvidersFetching, logisticsProviders } }) => ({

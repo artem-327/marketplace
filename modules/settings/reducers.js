@@ -1138,7 +1138,7 @@ export default function reducer(state = initialState, action) {
     case AT.CREATE_LOGISTICS_ACCOUNT_FULFILLED: {
       return {
         ...state,
-        logisticsAccounts: [].concat([payload], state.logisticsAccounts)
+        //logisticsAccounts: [].concat([payload], state.logisticsAccounts)  // ! ! not working now (missing response)
       }
     }
 
@@ -1147,7 +1147,6 @@ export default function reducer(state = initialState, action) {
     case AT.UPDATE_LOGISTICS_ACCOUNT_FULFILLED: {
       let logisticsAccounts = state.logisticsAccounts.slice()
       logisticsAccounts[state.logisticsAccounts.findIndex(el => el.id === payload.id)] = payload
-
       return {
         ...state,
         logisticsAccounts
