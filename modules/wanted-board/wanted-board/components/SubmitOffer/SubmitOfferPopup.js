@@ -447,7 +447,7 @@ class SubmitOfferPopup extends React.Component {
                         <List.Item>
                           <List.Content>
                             <List.Header as='label'>
-                              <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max. Price' />
+                              <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit' />
                             </List.Header>
                             <List.Description as='span'>
                               {popupValues.maximumPricePerUOM ? (
