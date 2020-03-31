@@ -201,11 +201,12 @@ const addForms = {
 }
 
 const editSidebar = {
-  'Users': <UsersSidebar />
+  Users: <UsersSidebar />
 }
 
 const importForm = {
-  'Product Catalog': <ProductImportPopup echoProduct={true} />
+  'Product Catalog': <ProductImportPopup echoProduct={true} />,
+  Companies: <ProductImportPopup companies={true} />
 }
 
 const addDwollaForms = {

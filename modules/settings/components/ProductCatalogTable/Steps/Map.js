@@ -17,16 +17,14 @@ import {
   deleteCSVMapEchoProduct,
   postCSVMapProductOffer,
   putCSVMapProductOffer,
-  deleteCSVMapProductOffer
+  deleteCSVMapProductOffer,
+  getCSVMapCompanies
 } from '../../../actions'
 
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import _invert from 'lodash/invert'
 import { withToastManager } from 'react-toast-notifications'
-import {
-  MapTable,
-  SmallerTableCell
-} from '~/modules/settings/components/ProductCatalogTable/Steps/constants/layout'
+import { MapTable, SmallerTableCell } from '~/modules/settings/components/ProductCatalogTable/Steps/constants/layout'
 
 const simpleEchoProductList = {
   constant: 'global',
@@ -198,6 +196,45 @@ const simpleProductOfferList = {
   ]
 }
 
+const simpleCompaniesList = {
+  constant: 'import',
+  required: [
+    'isNacdMemberMapper',
+    'nameMapper',
+    'primaryBranchDeliveryAddressAddressCityMapper',
+    'primaryBranchDeliveryAddressAddressCountryMapper',
+    'primaryBranchDeliveryAddressAddressStreetAddressMapper',
+    'primaryBranchDeliveryAddressAddressZipMapper',
+    'primaryBranchDeliveryAddressContactEmailMapper',
+    'primaryBranchDeliveryAddressContactNameMapper',
+    'primaryBranchDeliveryAddressContactPhoneMapper',
+    'primaryBranchIsWarehouseMapper'
+  ],
+  optional: [
+    'businessTypeMapper',
+    'cinMapper',
+    'dbaMapper',
+    'dunsNumberMapper',
+    'headerLine',
+    'phoneMapper',
+    'primaryBranchDeliveryAddressAddressProvinceMapper',
+    'primaryBranchDeliveryAddressCallAheadMapper',
+    'primaryBranchDeliveryAddressCloseTimeMapper',
+    'primaryBranchDeliveryAddressDeliveryNotesMapper',
+    'primaryBranchDeliveryAddressForkLiftMapper',
+    'primaryBranchDeliveryAddressLiftGateMapper',
+    'primaryBranchDeliveryAddressNameMapper',
+    'primaryBranchDeliveryAddressReadyTimeMapper',
+    'primaryBranchTaxIdMapper',
+    'primaryUserEmailMapper',
+    'primaryUserJobTitleMapper',
+    'primaryUserNameMapper',
+    'primaryUserPhoneMapper	',
+    'tinMapper',
+    'websiteMapper'
+  ]
+}
+
 class Map extends Component {
   state = {
     newHeaders: null,
@@ -253,6 +290,11 @@ class Map extends Component {
       const mappingEchoProduct = this.getMapping(simpleEchoProductList)
       constant = simpleEchoProductList.constant
       mapping = mappingEchoProduct
+    } else if (this.props.companies) {
+      this.props.getCSVMapCompanies()
+      const mappingCompanies = this.getMapping(simpleCompaniesList)
+      constant = simpleCompaniesList.constant
+      mapping = mappingCompanies
     } else {
       const mappingCompanyProduct = this.getMapping(simpleCompanyProductList)
       constant = simpleCompanyProductList.constant
@@ -671,7 +713,8 @@ const mapDispatchToProps = {
   deleteCSVMapEchoProduct,
   postCSVMapProductOffer,
   putCSVMapProductOffer,
-  deleteCSVMapProductOffer
+  deleteCSVMapProductOffer,
+  getCSVMapCompanies
 }
 
 const mapStateToProps = state => {

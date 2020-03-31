@@ -65,6 +65,7 @@ class ProductImportPopup extends Component {
       <Map
         productOffer={this.props.productOffer && this.props.productOffer}
         echoProduct={this.props.echoProduct && this.props.echoProduct}
+        companies={this.props.companies && this.props.companies}
       />
     ),
     preview: (

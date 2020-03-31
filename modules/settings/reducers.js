@@ -673,14 +673,9 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_CSV_MAP_ECHO_PRODUCT_FULFILLED: {
-      return {
-        ...state,
-        maps: action.payload
-      }
-    }
-
-    case AT.GET_CSV_MAP_PRODUCT_OFFER_FULFILLED: {
+    case AT.GET_CSV_MAP_ECHO_PRODUCT_FULFILLED:
+    case AT.GET_CSV_MAP_PRODUCT_OFFER_FULFILLED:
+    case AT.GET_CSV_MAP_COMPANIES_FULFILLED: {
       return {
         ...state,
         maps: action.payload
@@ -1137,7 +1132,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.CREATE_LOGISTICS_ACCOUNT_FULFILLED: {
       return {
-        ...state,
+        ...state
         //logisticsAccounts: [].concat([payload], state.logisticsAccounts)  // ! ! not working now (missing response)
       }
     }
@@ -1415,7 +1410,8 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.DELETE_CSV_MAP_PRODUCT_OFFER_FULFILLED:
-    case AT.DELETE_CSV_MAP_ECHO_PRODUCT_FULFILLED: {
+    case AT.DELETE_CSV_MAP_ECHO_PRODUCT_FULFILLED:
+    case AT.DELETE_CSV_MAP_COMPANIES_FULFILLED: {
       return {
         ...state,
         selectedSavedMap: null,
