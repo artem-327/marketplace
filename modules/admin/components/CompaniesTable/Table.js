@@ -8,7 +8,7 @@ import { Checkbox } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
-
+import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import * as Actions from '../../actions'
 
 class CompaniesTable extends Component {
@@ -114,6 +114,8 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
     rows: datagrid.rows.map(c => ({
       rawData: c,
       ...c,
+      displayName: c.displayName ? c.displayName : c.name,
+      associations: <ArrayToFirstItem values={c.associations && c.associations.map(r => r.name)} />,
       hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
       hasDwollaAccount: getSafe(() => c.dwollaAccountStatus, false) === 'verified' ? 'Yes' : 'No',
       primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false)
