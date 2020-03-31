@@ -27,6 +27,7 @@ import { withDatagrid } from '~/modules/datagrid'
 import { removeEmpty } from '~/utils/functions'
 import confirm from '~/src/components/Confirmable/confirm'
 import { uniqueArrayByKey } from '~/utils/functions'
+import get from 'lodash/get'
 
 const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -116,6 +117,12 @@ const BottomButtons = styled.div`
   }
 `
 
+const GridColumnWError = styled(GridColumn)`
+  &.column.error {
+    color: #9f3a38;
+  }
+`
+
 const initValues = {
   name: '',
   email: '',
@@ -161,7 +168,9 @@ class UsersSidebar extends React.Component {
         ...((popupValues || !disabledCompany) && {
           homeBranch: Yup.number()
             .required(errorMessages.requiredMessage)
-        })
+        }),
+        roles: Yup.array()
+          .min(1, errorMessages.minOneRole)
       })
     })
 
@@ -261,8 +270,7 @@ class UsersSidebar extends React.Component {
           {
             ...popupValues,
             homeBranch: user.value.homeBranch,
-            additionalBranches: user.value.additionalBranches,
-            phone: user.value.phone
+            additionalBranches: user.value.additionalBranches
           }
       })
     } else {
@@ -274,8 +282,7 @@ class UsersSidebar extends React.Component {
           {
             ...popupValues,
             homeBranch: user.value.homeBranch,
-            additionalBranches: user.value.additionalBranches,
-            phone: user.value.phone
+            additionalBranches: user.value.additionalBranches
           }
       })
     }
@@ -348,7 +355,7 @@ class UsersSidebar extends React.Component {
     this.props.searchCompany(text, 5)
   }, 250)
 
-  generateCheckboxes = (data, values, groupName = null) => {
+  generateCheckboxes = (data, values, groupName = null, error) => {
     if (!data) return []
     let group = null
 
@@ -366,7 +373,7 @@ class UsersSidebar extends React.Component {
       let path = `${group}${name}`
 
       return (
-        <FormField key={i}>
+        <FormField key={i} error={error}>
           <FormikField
             onChange={(e, data) => {
               let { setFieldValue, setFieldTouched } = data.form
@@ -454,6 +461,7 @@ class UsersSidebar extends React.Component {
           this.formikProps = formikProps
 
           const disabledCompany = values.roles.some(role => adminRoles.some(d => role === d))
+          let errorRoles = get(errors, 'roles', null)
 
           return (
             <FlexSidebar
@@ -617,14 +625,20 @@ class UsersSidebar extends React.Component {
                   </GridRow>
 
                   <GridRow style={{ paddingBottom: '2.5px' }}>
-                    <GridColumn>
+                    <GridColumnWError className={errorRoles ? 'error' : ''}>
                       <FormattedMessage id='global.roles' defaultMessage='Roles'>
                         {text => text}
                       </FormattedMessage>
-                    </GridColumn>
+                      <Required />
+                    </GridColumnWError>
                   </GridRow>
                   <GridRow>
-                    {this.generateCheckboxes(allRoles, values, 'roles')}
+                    {this.generateCheckboxes(allRoles, values, 'roles', errorRoles)}
+                  </GridRow>
+                  <GridRow style={{ paddingTop: '0' }}>
+                    <GridColumn>
+                      {errorRoles && <span className='sui-error-message'>{errorRoles}</span>}
+                    </GridColumn>
                   </GridRow>
 
                   {/*<pre>
