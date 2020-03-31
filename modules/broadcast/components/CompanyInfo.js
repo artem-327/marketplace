@@ -98,36 +98,37 @@ const columns = [
   }
 ]
 
+//TODO remove if we have data from BE
 const values = {
   attachments: [
-    {
-      name: 'Test attachments 1 ',
-      documentType: {
-        name: 'EPA Document'
-      },
-      expirationDate: '2020-03-20T00:00:00'
-    },
-    {
-      name: 'Test attachments 2 ',
-      documentType: {
-        name: 'Sales Tax Exemption Certificate'
-      },
-      expirationDate: '2020-03-20T00:00:00'
-    },
-    {
-      name: 'Test attachments 3 ',
-      documentType: {
-        name: 'EPA Document'
-      },
-      expirationDate: '2020-03-20T00:00:00'
-    },
-    {
-      name: 'Test attachments 4 ',
-      documentType: {
-        name: 'Sales Tax Exemption Certificate'
-      },
-      expirationDate: '2020-03-20T00:00:00'
-    }
+    // {
+    //   name: 'Test attachments 1 ',
+    //   documentType: {
+    //     name: 'EPA Document'
+    //   },
+    //   expirationDate: '2020-03-20T00:00:00'
+    // },
+    // {
+    //   name: 'Test attachments 2 ',
+    //   documentType: {
+    //     name: 'Sales Tax Exemption Certificate'
+    //   },
+    //   expirationDate: '2020-03-20T00:00:00'
+    // },
+    // {
+    //   name: 'Test attachments 3 ',
+    //   documentType: {
+    //     name: 'EPA Document'
+    //   },
+    //   expirationDate: '2020-03-20T00:00:00'
+    // },
+    // {
+    //   name: 'Test attachments 4 ',
+    //   documentType: {
+    //     name: 'Sales Tax Exemption Certificate'
+    //   },
+    //   expirationDate: '2020-03-20T00:00:00'
+    // }
   ]
 }
 
