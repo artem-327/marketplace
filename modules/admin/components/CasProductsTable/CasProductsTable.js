@@ -34,6 +34,11 @@ class CasProductsTable extends Component {
           tableName='admin_cas_products'
           columns={columns}
           rows={rows}
+          defaultSorting={{
+            columnName: 'casIndexName',
+            sortPath: 'CasProduct.casIndexName',
+            direction: 'asc'
+          }}
           rowActions={[
             {
               text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
@@ -80,6 +85,7 @@ const transformHazardClasses = classes => (
   <Label.Group color='blue'>
     {classes.map((b, i) => (
       <Popup
+        key={i}
         content={b.description}
         trigger={
           <Label size='tiny' key={i}>
