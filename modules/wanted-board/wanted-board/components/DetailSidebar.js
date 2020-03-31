@@ -560,7 +560,7 @@ class DetailSidebar extends Component {
                           },
                           <FormattedMessage
                             id='wantedBoard.maxPrice'
-                            defaultMessage='Max. Price'
+                            defaultMessage='Max Price/Unit'
                           >
                             {text => text}
                           </FormattedMessage>,

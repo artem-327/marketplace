@@ -99,7 +99,7 @@ class WantedBoard extends Component {
       {
         name: 'fobPrice',
         title: (
-          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max. Price'>
+          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
             {text => text}
           </FormattedMessage>
         ),
@@ -187,7 +187,7 @@ class WantedBoard extends Component {
       {
         name: 'fobPrice',
         title: (
-          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max. Price'>
+          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
             {text => text}
           </FormattedMessage>
         ),
@@ -302,7 +302,7 @@ class WantedBoard extends Component {
                     primary
                     onClick={() => sidebarDetailTrigger(null, 'wanted-board')}
                     data-test='wanted_board_open_popup_btn'>
-                    <FormattedMessage id='wantedBoard.addNewItem' defaultMessage='Add New Item'>
+                    <FormattedMessage id='wantedBoard.addNewRequest' defaultMessage='Add New Request'>
                       {text => text}
                     </FormattedMessage>
                   </Button>

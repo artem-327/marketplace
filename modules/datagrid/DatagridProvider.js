@@ -11,10 +11,12 @@ const initialState = {
   loading: true,
   query: {},
   datagridParams: {
+    orFilters: [],
     filters: [],
     pageSize: 50,
     pageNumber: 0
-  }
+  },
+  isScrollToEnd: false
 }
 
 // singleton instance
@@ -66,15 +68,21 @@ export class DatagridProvider extends Component {
   loadNextPage = async () => {
     if (!this.props.apiConfig) return
 
-    const { datagridParams, query } = this.state
+    const { datagridParams, query, isScrollToEnd } = this.state
     const { apiConfig } = this.props
 
     this.setState({ loading: true })
-    //if is filtering we need to set pageNumber to 0
+    //if is filtering and is not scroll to end or if is not any filter and is not scroll to end we need to set pageNumber to 0
     const pageNumber =
-      getSafe(() => datagridParams.filters.length, false) || getSafe(() => datagridParams.orFilters.length, false)
+      (getSafe(() => datagridParams.filters.length, false) && !isScrollToEnd) ||
+      (getSafe(() => datagridParams.orFilters.length, false) && !isScrollToEnd) ||
+      (!getSafe(() => datagridParams.filters.length, false) &&
+        !getSafe(() => datagridParams.orFilters.length, false) &&
+        datagridParams.pageNumber > 0 &&
+        !isScrollToEnd)
         ? 0
         : datagridParams.pageNumber
+
     try {
       const response = await api.request({
         url: this.apiConfig && this.apiConfig.url ? this.apiConfig.url : apiConfig.url,
@@ -108,6 +116,7 @@ export class DatagridProvider extends Component {
       console.error(e)
       this.setState({ loading: false })
     } finally {
+      this.setState({ isScrollToEnd: false })
       this.apiConfig = null
     }
   }
@@ -138,6 +147,11 @@ export class DatagridProvider extends Component {
     this.setState(s => ({
       rows: s.rows.filter((r, i) => i !== index)
     }))
+  }
+
+  onScrollToEnd = () => {
+    this.setState({ isScrollToEnd: true })
+    this.loadNextPageSafe()
   }
 
   loadNextPageSafe = () => {
@@ -192,7 +206,8 @@ export class DatagridProvider extends Component {
 
     this.setState(
       s => ({
-        datagridParams: { ...s.datagridParams, ...params }
+        datagridParams: { ...s.datagridParams, ...params },
+        isScrollToEnd: false
       }),
       () => {
         this.setFilter(
@@ -252,7 +267,7 @@ export class DatagridProvider extends Component {
             loading,
             onTableReady: this.onTableReady,
             onSortingChange: this.setFilter,
-            onScrollToEnd: this.loadNextPageSafe
+            onScrollToEnd: this.onScrollToEnd
           }
         }}>
         {this.props.children}

@@ -7,7 +7,7 @@ import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semant
 import styled from 'styled-components'
 import * as val from 'yup'
 import Router from 'next/router'
-
+import { Required } from '~/components/constants/layout'
 import Logo from '~/assets/images/login/logo-login.png'
 
 import {
@@ -218,7 +218,12 @@ class ConfirmationPage extends Component {
                   <Grid.Row columns={2}>
                     <Grid.Column data-test='auth_confirm_companyName_inp'>
                       <Input
-                        label={formatMessage({ id: 'laststep.company.name', defaultMessage: 'Company Legal Name *' })}
+                        label={
+                          <>
+                            {formatMessage({ id: 'laststep.company.name', defaultMessage: 'Company Legal Name' })}
+                            <Required />
+                          </>
+                        }
                         name='name'
                       />
                     </Grid.Column>
@@ -231,13 +236,24 @@ class ConfirmationPage extends Component {
                 <Header as='h3'>
                   <FormattedMessage id='laststep.address.header' defaultMessage='Company Primary Address' />
                 </Header>
-                <AddressForm setFieldValue={setFieldValue} values={values} displayHeader={false} prefix='address' />
+                <AddressForm
+                  setFieldValue={setFieldValue}
+                  values={values}
+                  displayHeader={false}
+                  prefix='address'
+                  required={true}
+                />
 
                 <Grid>
                   <Grid.Row columns={2}>
                     <Grid.Column data-test='auth_confirm_addressEIN_inp'>
                       <Input
-                        label={formatMessage({ id: 'laststep.address.ein', defaultMessage: 'EIN Number *' })}
+                        label={
+                          <>
+                            {formatMessage({ id: 'laststep.address.ein', defaultMessage: 'EIN Number' })}
+                            <Required />
+                          </>
+                        }
                         name='tin'
                       />
                     </Grid.Column>
@@ -258,7 +274,12 @@ class ConfirmationPage extends Component {
                   <Grid.Row columns={1}>
                     <Grid.Column data-test='auth_confirm_addressContactName_inp'>
                       <Input
-                        label={formatMessage({ id: 'laststep.address.contactName', defaultMessage: 'Contact Name *' })}
+                        label={
+                          <>
+                            {formatMessage({ id: 'laststep.address.contactName', defaultMessage: 'Contact Name' })}
+                            <Required />
+                          </>
+                        }
                         name='address.contactName'
                       />
                     </Grid.Column>
@@ -269,10 +290,12 @@ class ConfirmationPage extends Component {
                   <Grid.Row columns={2}>
                     <Grid.Column data-test='auth_confirm_addressContactPhone_inp'>
                       <PhoneNumber
-                        label={formatMessage({
-                          id: 'laststep.address.contactPhone',
-                          defaultMessage: 'Contact Phone *'
-                        })}
+                        label={
+                          <>
+                            {formatMessage({ id: 'laststep.address.contactPhone', defaultMessage: 'Contact Phone' })}
+                            <Required />
+                          </>
+                        }
                         name='address.contactPhone'
                         values={values}
                         setFieldValue={setFieldValue}
@@ -284,10 +307,12 @@ class ConfirmationPage extends Component {
                     </Grid.Column>
                     <Grid.Column data-test='auth_confirm_addressContactEmail_inp'>
                       <Input
-                        label={formatMessage({
-                          id: 'laststep.address.contactEmail',
-                          defaultMessage: 'Contact E-Mail *'
-                        })}
+                        label={
+                          <>
+                            {formatMessage({ id: 'laststep.address.contactEmail', defaultMessage: 'Contact E-Mail' })}
+                            <Required />
+                          </>
+                        }
                         name='address.contactEmail'
                       />
                     </Grid.Column>
@@ -301,7 +326,12 @@ class ConfirmationPage extends Component {
                   <Grid.Row columns={2}>
                     <Grid.Column data-test='auth_confirm_adminName_inp'>
                       <Input
-                        label={formatMessage({ id: 'laststep.admin.name', defaultMessage: 'Name *' })}
+                        label={
+                          <>
+                            {formatMessage({ id: 'laststep.admin.name', defaultMessage: 'Name' })}
+                            <Required />
+                          </>
+                        }
                         name='companyAdminUser.name'
                       />
                     </Grid.Column>
@@ -327,7 +357,12 @@ class ConfirmationPage extends Component {
                     </Grid.Column>
                     <Grid.Column data-test='auth_confirm_adminEmail_inp'>
                       <Input
-                        label={formatMessage({ id: 'laststep.admin.email', defaultMessage: 'E-Mail *' })}
+                        label={
+                          <>
+                            {formatMessage({ id: 'laststep.admin.email', defaultMessage: 'E-Mail' })}
+                            <Required />
+                          </>
+                        }
                         name='companyAdminUser.email'
                       />
                     </Grid.Column>
