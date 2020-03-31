@@ -267,11 +267,13 @@ class Tutorial extends Component {
 
   render() {
     const { tutorialTab } = this.state
-    const { marginMarketplace, marginHolds } = this.props
+    const { marginMarketplace, marginHolds, marginOrders, marginWantedBoard } = this.props
 
     let margin = '15px 32px 15px 32px'
     if (marginMarketplace) margin = '10px 0'
     if (marginHolds) margin = '0 0 14px 0'
+    if (marginOrders) margin = '20px 32px 0 32px'
+    if (marginWantedBoard) margin = '15px 0 15px 0'
 
     const theme = {
       margin
