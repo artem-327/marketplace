@@ -379,8 +379,8 @@ export function putEditWarehouse(payload, id, attachmentFiles) {
         })
       })
     }
-    //Datagrid.updateRow(id, () => response)
     dispatch(closeSidebar())
+    Datagrid.updateRow(id, () => response)
   }
 }
 
@@ -401,7 +401,7 @@ export function postNewWarehouseRequest(payload, attachmentFiles) {
     }
     //dispatch(getWarehousesDataRequest())
     dispatch(closeSidebar())
-    //Datagrid.loadData()
+    Datagrid.loadData()
   }
 }
 

@@ -8,12 +8,14 @@ import { array } from 'prop-types'
 import { errorMessages } from '~/constants/yupValidation'
 
 const { requiredMessage } = errorMessages
+import { Required } from '~/components/constants/layout'
 
 import {
   closePopup,
   getLogisticsProviders,
   createLogisticsAccount,
-  updateLogisticsAccount
+  updateLogisticsAccount,
+  getLogisticsAccounts
 } from '~/modules/settings/actions'
 
 const validationSchema = Yup.object().shape(
@@ -47,8 +49,10 @@ class LogisticsPopup extends Component {
       logisticsProvidersFetching,
       createLogisticsAccount,
       updateLogisticsAccount,
+      getLogisticsAccounts,
       intl: { formatMessage }
     } = this.props
+
     return (
       <Modal closeIcon onClose={() => closePopup()} open centered={false}>
         <Modal.Header>
@@ -71,6 +75,7 @@ class LogisticsPopup extends Component {
                   await updateLogisticsAccount(values)
                 } else {
                   await createLogisticsAccount(values)
+                  getLogisticsAccounts()
                 }
               } catch {
               } finally {
@@ -87,7 +92,7 @@ class LogisticsPopup extends Component {
                       name='providerIdentifier'
                       options={logisticsProviders.map(provider => ({
                         key: provider.identifier.value,
-                        text: provider.name,
+                        text: `${provider.name} (${provider.identifier.value})`,
                         value: provider.identifier
                       }))}
                       label={formatMessage({
@@ -95,6 +100,7 @@ class LogisticsPopup extends Component {
                         defaultMessage: 'Logistics Provider'
                       })}
                       inputProps={{
+                        search: true,
                         'data-test': 'settings_logistics_provider_drpdn',
                         placeholder: formatMessage({
                           id: 'logistics.placeholder.logisticsProvider',
@@ -108,14 +114,24 @@ class LogisticsPopup extends Component {
                   <FormGroup widths='equal' data-test='settings_logistics_namePassword_inp'>
                     <Input
                       name='username'
-                      label={formatMessage({ id: 'logistics.label.username', defaultMessage: 'User Name' })}
+                      label={
+                        <>
+                          {formatMessage({ id: 'logistics.label.username', defaultMessage: 'User Name' })}
+                          <Required />
+                        </>
+                      }
                       inputProps={{
                         placeholder: formatMessage({ id: 'logistics.placeholder.username', defaultMessage: 'username' })
                       }}
                     />
                     <Input
                       name='password'
-                      label={formatMessage({ id: 'logistics.label.password', defaultMessage: 'Password' })}
+                      label={
+                        <>
+                          {formatMessage({ id: 'logistics.label.password', defaultMessage: 'Password' })}
+                          <Required />
+                        </>
+                      }
                       inputProps={{ type: 'password' }}
                     />
                   </FormGroup>
@@ -153,7 +169,8 @@ const mapDispatchToProps = {
   closePopup,
   getLogisticsProviders,
   createLogisticsAccount,
-  updateLogisticsAccount
+  updateLogisticsAccount,
+  getLogisticsAccounts
 }
 
 const mapStateToProps = ({ settings: { popupValues, logisticsProvidersFetching, logisticsProviders } }) => ({

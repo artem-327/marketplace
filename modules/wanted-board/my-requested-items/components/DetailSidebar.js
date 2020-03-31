@@ -25,6 +25,7 @@ import moment from 'moment'
 import { withDatagrid } from '~/modules/datagrid'
 import _ from 'lodash'
 import { inputWrapper, quantityWrapper } from '../../components'
+import { Required } from '~/components/constants/layout'
 
 import {
   Segment,
@@ -265,7 +266,7 @@ class DetailSidebar extends Component {
     this.fetchIfNoData('listCountries', this.props.getCountries)
     this.fetchIfNoData('listUnits', this.props.getUnits)
     if (!this.props.sidebarValues) {
-      this.props.searchManufacturers('', 200)
+      //this.props.searchManufacturers('', 200)
     } else {
       this.setState({ sidebarValues: this.props.sidebarValues })
       this.props.updateEditedId(this.props.sidebarValues.id)
@@ -536,9 +537,14 @@ class DetailSidebar extends Component {
                         <GridColumn width={16}>
                           <Dropdown
                             label={
-                              <FormattedMessage id='wantedBoard.productName' defaultMessage='Product Name'>
-                                {text => text}
-                              </FormattedMessage>
+                              <>
+                                <FormattedMessage
+                                  id='wantedBoard.productName'
+                                  defaultMessage='Product Name'>
+                                  {text => text}
+                                </FormattedMessage>
+                                <Required />
+                              </>
                             }
                             name='element.echoProduct'
                             options={this.props.autocompleteData}
@@ -569,9 +575,14 @@ class DetailSidebar extends Component {
                         <GridColumn>
                           <Dropdown
                             label={
-                              <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
-                                {text => text}
-                              </FormattedMessage>
+                              <>
+                                <FormattedMessage
+                                  id='wantedBoard.casNumber'
+                                  defaultMessage='CAS Number'>
+                                  {text => text}
+                                </FormattedMessage>
+                                <Required />
+                              </>
                             }
                             name='element.casProduct'
                             options={searchedCasNumbers}
@@ -635,7 +646,7 @@ class DetailSidebar extends Component {
                             type: 'number',
                             placeholder: '0.000'
                           },
-                          <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price'>
+                          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
                             {text => text}
                           </FormattedMessage>,
                           currencySymbol
@@ -653,9 +664,15 @@ class DetailSidebar extends Component {
                             placeholder: '0'
                           },
                           this.formikProps,
-                          <FormattedMessage id='wantedBoard.quantity' defaultMessage='Quantity'>
-                            {text => text}
-                          </FormattedMessage>
+                          <>
+                            <FormattedMessage
+                              id='wantedBoard.quantityNeeded'
+                              defaultMessage='Quantity Needed'
+                            >
+                              {text => text}
+                            </FormattedMessage>
+                            <Required />
+                          </>
                         )}
                       </GridColumn>
                       <GridColumn width={8}>
@@ -804,7 +821,7 @@ class DetailSidebar extends Component {
                       </GridColumn>
                     </GridRow>
 
-                    <GridRow>
+                    {false && (<GridRow>
                       <GridColumn>
                         <Dropdown
                           label={
@@ -833,7 +850,7 @@ class DetailSidebar extends Component {
                           }}
                         />
                       </GridColumn>
-                    </GridRow>
+                    </GridRow>)}
 
                     <GridRow>
                       <GridColumn width={8}>

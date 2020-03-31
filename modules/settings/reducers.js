@@ -844,8 +844,8 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_GET_ADDRESSES_SEARCH_PENDING: {
       return {
-        ...state,
-        loading: true
+        ...state
+        //loading: true  //it is bug if fill Address fields in Add or Edit warehouse. Load all settings - warehouses page.
       }
     }
 
@@ -1138,7 +1138,7 @@ export default function reducer(state = initialState, action) {
     case AT.CREATE_LOGISTICS_ACCOUNT_FULFILLED: {
       return {
         ...state,
-        logisticsAccounts: [].concat([payload], state.logisticsAccounts)
+        //logisticsAccounts: [].concat([payload], state.logisticsAccounts)  // ! ! not working now (missing response)
       }
     }
 
@@ -1147,7 +1147,6 @@ export default function reducer(state = initialState, action) {
     case AT.UPDATE_LOGISTICS_ACCOUNT_FULFILLED: {
       let logisticsAccounts = state.logisticsAccounts.slice()
       logisticsAccounts[state.logisticsAccounts.findIndex(el => el.id === payload.id)] = payload
-
       return {
         ...state,
         logisticsAccounts

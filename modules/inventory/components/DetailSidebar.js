@@ -52,7 +52,7 @@ import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import ProdexGrid from '~/components/table'
 import * as val from 'yup'
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages, dateBefore } from '~/constants/yupValidation'
 import moment from 'moment'
 import UploadLot from './upload/UploadLot'
 import { withDatagrid } from '~/modules/datagrid'
@@ -256,6 +256,7 @@ const validationScheme = val.object().shape({
       .string()
       .typeError(errorMessages.invalidString)
       .nullable(),
+    lotManufacturedDate: val.lazy((_value) => dateBefore()),
     inStock: val.bool().required(errorMessages.requiredMessage),
     minimum: val
       .number()
@@ -1079,7 +1080,7 @@ class DetailSidebar extends Component {
       }
     ]
 
-    const { toggleFilter } = this.props
+    // const { toggleFilter } = this.props
 
     return (
       <Formik
@@ -2013,8 +2014,14 @@ class DetailSidebar extends Component {
                         primary
                         size='large'
                         type='button'
-                        onClick={() =>
-                          validateForm().then(async r => {
+                        onClick={() => {
+                          // Dont validate if it is a broadcast tab
+                          if(this.state.activeTab === 2) {
+                            this.submitForm(values, setSubmitting, setTouched)
+                            return true
+                          }
+                          
+                          return validateForm().then(async r => {
                             if (Object.keys(r).length && this.state.activeTab !== 1) {
                               this.switchToErrors(r)
                               submitForm() // to show errors
@@ -2051,7 +2058,7 @@ class DetailSidebar extends Component {
                               }
                             }
                           })
-                        }
+                        }}
                         data-test='sidebar_inventory_save_new'>
                         {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                       </Button>

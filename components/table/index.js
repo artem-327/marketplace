@@ -599,7 +599,10 @@ class _Table extends Component {
     let newSorting = []
 
     if (sorting.length === 0) {
-      newSorting = sort
+      newSorting = sort.map(el => ({
+        ...el,
+        direction: el.direction.toUpperCase()
+      }))
     } else {
       if (sorting[0].columnName === sort[0].columnName) {
         // Just switch directions

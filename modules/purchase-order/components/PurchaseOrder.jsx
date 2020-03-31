@@ -47,10 +47,10 @@ class PurchaseOrder extends Component {
   }
   componentDidMount = async () => {
     const { preFilledValues, clearPreFilledValues, getWarehouses } = this.props
-    this.props.getCart()
     this.props.getDeliveryAddresses()
     this.props.getPayments()
     this.props.getIdentity()
+    await this.props.getCart()
 
     if (preFilledValues) {
       const warehouses = await getWarehouses()
@@ -171,13 +171,14 @@ class PurchaseOrder extends Component {
     }
   }
 
-  handlePurchase = async (shipping, shipmentQuoteId) => {
+  handlePurchase = async (shipping, shipmentQuoteId, dwollaBankAccountId) => {
     if (this.state.submitting) return
     this.setState({ submitting: true })
 
     const data = {
       [this.state.addressId]: this.state.selectedAddress.id,
-      shipmentQuoteId
+      shipmentQuoteId,
+      dwollaBankAccountId
     }
 
     try {
@@ -286,6 +287,7 @@ class PurchaseOrder extends Component {
           initialValues={initialValues}
           validationSchema={validationSchema}
           className='purchase-order'
+          enableReinitialize
           render={formikProps => {
             let { values } = formikProps
             this.formikProps = formikProps
@@ -488,7 +490,8 @@ class PurchaseOrder extends Component {
                                     getSafe(
                                       () => this.props.cart.selectedShipping.quote.quoteId,
                                       values.shipmentQuoteId
-                                    )
+                                    ),
+                                    values.payment
                                   )
                                 }}
                                 data-test='purchase_order_place_order_btn'>

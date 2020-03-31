@@ -3,6 +3,7 @@ import { config } from './config'
 import { uniqueArrayByKey } from '~/utils/functions'
 
 export const initialState = {
+  editTrig: false,
   editPopupBoolean: false,
   addNewPopup: false,
   popupValues: null,
@@ -35,9 +36,11 @@ export const initialState = {
     { name: 'Grades', id: 4 },
     { name: 'Forms', id: 5 },
     { name: 'Conditions', id: 6 },
-    { name: 'NMFC Numbers', id: 7 },
+    { name: 'NMFC Numbers', id: 14 },
     { name: 'Document Types', id: 9 },
+    { name: 'Associations', id: 15 },
     { name: 'Market Segments', id: 10 },
+    { name: 'Users', id: 13 },
     { name: 'Admin Settings', id: 11, hideHandler: true }
   ],
 
@@ -58,7 +61,6 @@ export const initialState = {
   config: config,
   addressSearchPrimaryBranch: [],
   addressSearchMailingBranch: [],
-
   productsHazardClasses: [],
   productsPackagingGroups: [],
   searchedCasProducts: [],
@@ -68,7 +70,14 @@ export const initialState = {
   altEchoNamesRows: [],
   documentTypes: [],
   editEchoProductEditTab: 0,
-  editEchoProductInitTrig: false
+  editEchoProductInitTrig: false,
+  currentUser: null,
+  user: null,
+  roles: [],
+  adminRoles: [],
+  searchedCompanies: [],
+  searchedCompaniesLoading: false,
+  updating: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -78,6 +87,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_OPEN_POPUP: {
       return {
         ...state,
+        editTrig: !state.editTrig,
         popupValues: payload.data,
 
         //[payload.data ? 'currentEditForm' : 'currentAddForm']: state.currentTab,
@@ -334,6 +344,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_DELETE_USER_PENDING:
     case AT.ADMIN_GET_ECHO_PRODUCT_PENDING:
     case AT.ADMIN_POST_ECHO_PRODUCT_PENDING:
     case AT.ADMIN_PUT_ECHO_PRODUCT_PENDING:
@@ -467,6 +478,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_DELETE_USER_FULFILLED:
     case AT.ADMIN_GET_ECHO_PRODUCT_FULFILLED:
     case AT.ADMIN_POST_ECHO_PRODUCT_FULFILLED:
     case AT.ADMIN_PUT_ECHO_PRODUCT_FULFILLED:
@@ -480,6 +492,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_DELETE_USER_REJECTED:
     case AT.ADMIN_GET_ECHO_PRODUCT_REJECTED:
     case AT.ADMIN_POST_ECHO_PRODUCT_REJECTED:
     case AT.ADMIN_PUT_ECHO_PRODUCT_REJECTED:
@@ -717,6 +730,68 @@ export default function reducer(state = initialState, action) {
           }
         })
       }
+    }
+
+    case AT.ADMIN_GET_USERS_ME_FULFILLED: {
+      return {
+        ...state,
+        currentUser: action.payload
+      }
+    }
+
+    case AT.ADMIN_GET_ROLES_FULFILLED: {
+      return {
+        ...state,
+        roles: action.payload
+      }
+    }
+
+    case AT.ADMIN_GET_ADMIN_ROLES_FULFILLED: {
+      return {
+        ...state,
+        adminRoles: action.payload
+      }
+    }
+
+    case AT.ADMIN_SEARCH_COMPANY_PENDING: {return { ...state, searchedCompaniesLoading: true }}
+    case AT.ADMIN_SEARCH_COMPANY_REJECTED: {return { ...state, searchedCompaniesLoading: false }}
+    case AT.ADMIN_SEARCH_COMPANY_FULFILLED: {
+      return {
+        ...state,
+        searchedCompanies: action.payload,
+        searchedCompaniesLoading: false
+      }
+    }
+
+    case AT.ADMIN_INIT_SEARCH_COMPANY_PENDING: {return { ...state, searchedCompaniesLoading: true }}
+    case AT.ADMIN_INIT_SEARCH_COMPANY_REJECTED: {return { ...state, searchedCompaniesLoading: false }}
+    case AT.ADMIN_INIT_SEARCH_COMPANY_FULFILLED: {
+      return {
+        ...state,
+        searchedCompanies: [action.payload],
+        searchedCompaniesLoading: false
+      }
+    }
+
+    case AT.ADMIN_GET_USER_PENDING: {return { ...state, updating: true }}
+    case AT.ADMIN_GET_USER_REJECTED: {return { ...state, updating: false }}
+    case AT.ADMIN_GET_USER_FULFILLED: {
+      return {
+        ...state,
+        updating: false
+      }
+    }
+
+    case AT.ADMIN_EDIT_USER_PENDING:
+    case AT.ADMIN_POST_NEW_USER_PENDING: {
+      return {...state, updating: true}
+    }
+
+    case AT.ADMIN_POST_NEW_USER_REJECTED:
+    case AT.ADMIN_POST_NEW_USER_FULFILLED:
+    case AT.ADMIN_EDIT_USER_REJECTED:
+    case AT.ADMIN_EDIT_USER_FULFILLED: {
+      return {...state, updating: false}
     }
 
     default: {
