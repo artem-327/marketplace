@@ -6,8 +6,10 @@ import Tabs from './Tabs'
 import { withAuth } from '~/hocs'
 import { FormattedMessage } from 'react-intl'
 
-import ShippingQuotesTable from './ShippingQuotesTable/ShippingQuotesTable'
-import ShippingQuotesPopup from './ShippingQuotesTable/ShippingQuotesPopup'
+import ShippingQuotesTable from './shipping-quotes/ShippingQuotesTable'
+import ShippingQuotesPopup from './shipping-quotes/ShippingQuotesPopup'
+import TagsTable from './tags/TagsTable'
+import TagsPopup from './tags/TagsPopup'
 
 import { getSafe } from '~/utils/functions'
 import { DatagridProvider } from '~/modules/datagrid'
@@ -18,11 +20,13 @@ class Operations extends Component {
     const { currentTab, isOpenPopup } = this.props
 
     const tables = {
-      'shipping-quotes': <ShippingQuotesTable />
+      'shipping-quotes': <ShippingQuotesTable />,
+      tags: <TagsTable />
     }
 
     const popupForm = {
-      'shipping-quotes': <ShippingQuotesPopup />
+      'shipping-quotes': <ShippingQuotesPopup />,
+      tags: <TagsPopup />
     }
 
     return (
@@ -51,6 +55,11 @@ class Operations extends Component {
             ]
             : []
         */
+      },
+      //TODO when exist endpoints for Tags then change
+      tags: {
+        url: 'prodex/api/associations/datagrid',
+        searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Association.name', values: [`%${v}%`] }] : [])
       }
     }
 
@@ -86,6 +95,7 @@ class Operations extends Component {
 const mapStateToProps = state => {
   return {
     ...state.operations,
+    currentTab: state.operations.currentTab,
     auth: state.auth
   }
 }

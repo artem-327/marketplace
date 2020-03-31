@@ -54,3 +54,33 @@ export function createShippingQuote(data) {
   }
 }
 
+export function deleteTag(id) {
+  return {
+    type: AT.OPERATIONS_DELETE_TAG,
+    async payload() {
+      await api.deleteTag(id)
+      Datagrid.removeRow(id)
+      return id
+    }
+  }
+}
+//TODO missing endpoint fix updateRow
+export function updateTag(id, data) {
+  return {
+    type: AT.OPERATIONS_UPDATE_TAG,
+    async payload() {
+      const newRow = await api.updateTag(id, data)
+      Datagrid.updateRow(id, newRow)
+    }
+  }
+}
+
+export function createTag(data) {
+  return {
+    type: AT.OPERATIONS_CREATE_TAG,
+    async payload() {
+      await api.createTag(id, data)
+      Datagrid.loadData()
+    }
+  }
+}

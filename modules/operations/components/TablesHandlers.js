@@ -17,6 +17,10 @@ const textsTable = {
   'shipping-quotes': {
     BtnAddText: 'operations.tables.shippingQuotes.buttonAdd',
     SearchText: 'operations.tables.shippingQuotes.search'
+  },
+  tags: {
+    BtnAddText: 'operations.tables.tags.buttonAdd',
+    SearchText: 'operations.tables.tags.search'
   }
 }
 
@@ -93,7 +97,7 @@ class TablesHandlers extends Component {
     return (
       <PositionHeaderSettings>
         <Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
-          <GridRow>{!this.props.currentTab.hideHandler && this.renderHandler()}</GridRow>
+          <GridRow>{this.renderHandler()}</GridRow>
         </Grid>
       </PositionHeaderSettings>
     )
