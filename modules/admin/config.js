@@ -887,7 +887,8 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
-          width: 180
+          width: 180,
+          sortPath: 'User.name'
         },
         {
           name: 'companyName',
@@ -914,7 +915,8 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
-          width: 180
+          width: 180,
+          sortPath: 'User.email'
         },
         {
           name: 'phoneFormatted',

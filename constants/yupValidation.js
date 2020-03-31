@@ -133,7 +133,8 @@ export const errorMessages = {
   positive: <FormattedMessage id='validation.positive' defaultMessage='Number value should be positive' />,
   invalidShipmentQuoteId: (
     <FormattedMessage id='validation.shipmentQuoteId' defaultMessage='Value should be in format "12365-4789"' />
-  )
+  ),
+  minOneRole: <FormattedMessage id='validation.minOneRole' defaultMessage='At least one role should be selected' />,
 }
 
 export const provinceObjectRequired = hasProvinces =>
