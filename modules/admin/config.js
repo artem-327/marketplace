@@ -1,5 +1,5 @@
 import { FormattedMessage } from 'react-intl'
-import React from "react";
+import React from 'react'
 
 export const config = {
   'CAS Products': {
@@ -150,6 +150,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.code'
         },
         {
@@ -159,6 +160,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.manufacturer.name'
         },
         {
@@ -167,7 +169,8 @@ export const config = {
             <FormattedMessage id='admin.echoProducts.sds' defaultMessage='SDS'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 150
         },
         {
           name: 'sdsVersionNumber',
@@ -176,6 +179,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.sdsVersionNumber'
         },
         {
@@ -185,6 +189,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.sdsRevisionDate'
         }
       ]
@@ -869,7 +874,7 @@ export const config = {
       }
     }
   },
-  'Users': {
+  Users: {
     tableName: 'admin_users',
     addEditText: (
       <FormattedMessage id='admin.user' defaultMessage='User'>

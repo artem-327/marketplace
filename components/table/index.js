@@ -231,7 +231,7 @@ const GridRoot = props => <Grid.Root {...props} style={{ height: '100%', flex: 1
 const SortLabel = ({ column, onSort, children, direction }) => (
   <span onClick={onSort} data-test={`table_sort_action_${column.name}`} className={column.sortPath ? 'sortable' : ''}>
     {children}
-    {direction && <Icon className='thick' name={direction.toUpperCase() === 'ASC' ? 'sort up' : 'sort down'} />}
+    {direction && <Icon className='thick' name={direction === 'asc' ? 'sort up' : 'sort down'} />}
     {!direction && column.sortPath && <Icon className='thick' name={'sort up inactive'} />}
   </span>
 )
@@ -331,7 +331,7 @@ class _Table extends Component {
     defaultSorting: pt.shape({
       columnName: pt.string,
       sortPath: pt.string,
-      direction: pt.oneOf(['ASC', 'asc', 'DESC', 'desc'])
+      direction: pt.oneOf(['asc', 'desc', null])
     }),
     editingRowId: pt.number,
     normalWidth: pt.bool,
@@ -606,15 +606,13 @@ class _Table extends Component {
     } else {
       if (sorting[0].columnName === sort[0].columnName) {
         // Just switch directions
-        newSorting = [
-          { columnName: sort[0].columnName, direction: sorting[0].direction.toUpperCase() === 'ASC' ? 'DESC' : 'ASC' }
-        ]
+        newSorting = [{ columnName: sort[0].columnName, direction: sorting[0].direction === 'asc' ? 'desc' : 'asc' }]
       } else {
-        // Just switch columnName and set to ASC as is default
+        // Just switch columnName and set to asc as is default
         newSorting = [
           {
             columnName: sort[0].columnName,
-            direction: sorting[0].direction.toUpperCase() === 'ASC' ? 'ASC' : 'DESC'
+            direction: sorting[0].direction === 'asc' ? 'asc' : 'desc'
           }
         ]
       }
