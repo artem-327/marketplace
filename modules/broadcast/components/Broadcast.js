@@ -256,11 +256,14 @@ class Broadcast extends Component {
 
   applyAssociationFilter = tree => {
     const { associationFilter } = this.state
+
     if (associationFilter === 'ALL') return tree
 
     let nodesToDrop = tree.all(n => {
       if (n.model.rule.type === 'branch') {
-        if (getSafe(() => this.findCompany(n).model.association, null) !== this.state.associationFilter) {
+        let company = this.findCompany(n)
+
+        if (!getSafe(() => company.model.associations, []).includes(this.state.associationFilter)) {
           return true
         }
       }
@@ -269,6 +272,10 @@ class Broadcast extends Component {
 
     nodesToDrop.forEach(n => n.drop())
 
+    let companiesToDrop = tree.all(n => n.model.rule.type === 'company' && !n.hasChildren())
+
+    companiesToDrop.forEach(c => c.model.rule.hidden = true)
+    
     return tree
   }
 
@@ -328,7 +335,7 @@ class Broadcast extends Component {
 
   onTemplateSelected = async (_, data, setFieldValue) => {
     const { getTemplate } = this.props
- 
+
     let name = data.options.find(opt => opt.value === data.value).text
     setFieldValue('name', name)
     this.setState({ selectedTemplate: { name, id: data.value } })

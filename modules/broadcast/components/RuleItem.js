@@ -80,7 +80,10 @@ const RuleItem = props => {
   const nodeBroadcast = rule.broadcast
 
   let companyName = findCompany()
-
+  if(rule.hidden) {
+    return null
+  }
+  
   return (
     <>
       <Rule.Row
