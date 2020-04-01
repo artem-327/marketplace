@@ -49,7 +49,7 @@ class CompaniesTable extends Component {
     } = this.props
 
     const { formatMessage } = intl
-    console.log('table props', datagrid.tableProps, ' columns', columns)
+    
     return (
       <React.Fragment>
         <ProdexTable
