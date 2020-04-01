@@ -5,24 +5,33 @@ import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'
 import Tabs from './Tabs'
 import { withAuth } from '~/hocs'
 import { FormattedMessage } from 'react-intl'
+import styled from 'styled-components'
 
-import ShippingQuotesTable from './ShippingQuotesTable/ShippingQuotesTable'
-import ShippingQuotesPopup from './ShippingQuotesTable/ShippingQuotesPopup'
+import ShippingQuotesTable from './shipping-quotes/ShippingQuotesTable'
+import ShippingQuotesPopup from './shipping-quotes/ShippingQuotesPopup'
+import TagsTable from './tags/TagsTable'
+import TagsPopup from './tags/TagsPopup'
 
 import { getSafe } from '~/utils/functions'
 import { DatagridProvider } from '~/modules/datagrid'
 import { tabChanged } from '../actions'
+
+const CustomGridColumn = styled(GridColumn)`
+  padding: 0 32px 0 32px !important;
+`
 
 class Operations extends Component {
   renderContent = () => {
     const { currentTab, isOpenPopup } = this.props
 
     const tables = {
-      'shipping-quotes': <ShippingQuotesTable />
+      'shipping-quotes': <ShippingQuotesTable />,
+      tags: <TagsTable />
     }
 
     const popupForm = {
-      'shipping-quotes': <ShippingQuotesPopup />
+      'shipping-quotes': <ShippingQuotesPopup />,
+      tags: <TagsPopup />
     }
 
     return (
@@ -38,19 +47,22 @@ class Operations extends Component {
 
     const datagridApiMap = {
       'shipping-quotes': {
-        url: '/prodex/api/shipment/manual-quotes/datagrid'
-        /*
+        url: '/prodex/api/shipment/manual-quotes/datagrid',
+        //TODO add path when exist
         searchToFilter: v =>
           v
             ? [
-              {
-                operator: 'LIKE',
-                path: '',
-                values: [`%${v}%`]
-              }
-            ]
+                {
+                  operator: 'LIKE',
+                  path: '',
+                  values: [`%${v}%`]
+                }
+              ]
             : []
-        */
+      },
+      tags: {
+        url: 'prodex/api/tags/datagrid',
+        searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v}%`] }] : [])
       }
     }
 
@@ -72,9 +84,7 @@ class Operations extends Component {
           </Container>
           <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
             <Grid.Row>
-              <Grid.Column className='flex stretched' style={{ marginTop: '10px' }}>
-                {this.renderContent()}
-              </Grid.Column>
+              <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
             </Grid.Row>
           </Grid>
         </Container>
@@ -86,6 +96,7 @@ class Operations extends Component {
 const mapStateToProps = state => {
   return {
     ...state.operations,
+    currentTab: state.operations.currentTab,
     auth: state.auth
   }
 }
