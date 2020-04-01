@@ -732,7 +732,8 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_REJECTED:
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER_FULFILLED:
     case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_FULFILLED:
-    case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_FULFILLED: {
+    case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_FULFILLED:
+    case AT.POST_CSV_IMPORT_COMPANIES: {
       return {
         ...state,
         csvImportError: action.payload

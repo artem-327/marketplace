@@ -792,32 +792,39 @@ export function deleteCSVMapProductOffer(mapId) {
   }
 }
 
-export function getCSVMapComapnies() {
+export function postImportCompaniesCSV(payload, id) {
+  return {
+    type: AT.POST_CSV_IMPORT_COMPANIES,
+    payload: api.postImportCompaniesCSV(payload, id)
+  }
+}
+
+export function getCSVMapCompanies() {
   return {
     type: AT.GET_CSV_MAP_COMAPNIES,
     payload: api.getCSVMapCompanies()
   }
 }
 
-export function postCSVMapComapniest(payload) {
+export function postCSVMapCompanies(payload) {
   return {
     type: AT.POST_CSV_MAP_COMAPNIES,
-    payload: api.postCSVMapComapnies(payload)
+    payload: api.postCSVMapCompanies(payload)
   }
 }
 
-export function putCSVMapComapnies(mapId, data) {
+export function putCSVMapCompanies(mapId, data) {
   return {
     type: AT.PUT_CSV_MAP_COMAPNIES,
-    payload: api.putCSVMapComapnies(mapId, data)
+    payload: api.putCSVMapCompanies(mapId, data)
   }
 }
 
-export function deleteCSVMapComapnies(mapId) {
+export function deleteCSVMapCompanies(mapId) {
   return {
     type: AT.DELETE_CSV_MAP_COMAPNIES,
     meta: mapId,
-    payload: api.deleteCSVMapComapnies(mapId)
+    payload: api.deleteCSVMapCompanies(mapId)
   }
 }
 

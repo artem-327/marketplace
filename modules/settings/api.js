@@ -131,6 +131,11 @@ export default {
   putCSVMapProductOffer: (mapId, data) => api.put(`/prodex/api/imports/product-offers/import-maps/${mapId}`, data),
   deleteCSVMapProductOffer: mapId => api.delete(`/prodex/api/imports/product-offers/import-maps/${mapId}`),
 
+  postImportCompaniesCSV: (body, id) => {
+    return api
+      .post(`/prodex/api/imports/companies/csv-import?temporaryFileId=${id}`, body)
+      .then(response => response.data)
+  },
   getCSVMapCompanies: () => api.get('/prodex/api/imports/companies/import-maps').then(response => response.data),
   postCSVMapCompanies: data => api.post('/prodex/api/imports/companies/import-maps', data),
   putCSVMapCompanies: (mapId, data) => api.put(`/prodex/api/imports/companies/import-maps/${mapId}`, data),
