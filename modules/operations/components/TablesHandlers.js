@@ -13,6 +13,11 @@ const PositionHeaderSettings = styled.div`
   z-index: 602;
 `
 
+const CustomGridRow = styled(GridRow)`
+  padding: 0 !important;
+  margin: 10px 0 10px 4px !important;
+`
+
 const textsTable = {
   'shipping-quotes': {
     BtnAddText: 'operations.tables.shippingQuotes.buttonAdd',
@@ -42,8 +47,9 @@ class TablesHandlers extends Component {
 
   handleFiltersValue = value => {
     const { handleFiltersValue } = this.props
-    //if (Datagrid.isReady()) Datagrid.setSearch(value) // temporary - missing filter path in BE
-    //else handleFiltersValue(value)
+    //TODO temporary - missing filter path in BE for carrierName (shipment/manual-quotes)
+    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    else handleFiltersValue(value)
   }
 
   handleFilterChange = (e, { value }) => {
@@ -72,7 +78,7 @@ class TablesHandlers extends Component {
       <>
         <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
           <Input
-            fluid
+            style={{ width: 340 }}
             icon='search'
             value={filterValue}
             placeholder={formatMessage({
@@ -97,7 +103,7 @@ class TablesHandlers extends Component {
     return (
       <PositionHeaderSettings>
         <Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
-          <GridRow>{this.renderHandler()}</GridRow>
+          <CustomGridRow>{this.renderHandler()}</CustomGridRow>
         </Grid>
       </PositionHeaderSettings>
     )

@@ -55,39 +55,11 @@ class TagsPopup extends React.Component {
             validationSchema={formValidation()}
             onReset={closePopup}
             onSubmit={async (values, { setSubmitting }) => {
-              let payload = {
-                name: values.name
-              }
-
               try {
-                let response
-                if (popupValues) response = await updateTag(rowId, payload)
-                else response = await createTag(payload)
-
-                let status = popupValues ? 'tagUpdated' : 'tagCreated'
-
-                toastManager.add(
-                  generateToastMarkup(
-                    <FormattedMessage id={`notifications.${status}.header`} />,
-                    <FormattedMessage
-                      id={`notifications.${status}.content`}
-                      values={{ name: response.value.quoteId }}
-                    />
-                  ),
-                  { appearance: 'success' }
-                )
+                if (popupValues) await updateTag(rowId, values.name)
+                else await createTag(values.name)
               } catch (err) {
-                //TODO delete when ednpoints will exist
-                toastManager.add(
-                  generateToastMarkup(
-                    <FormattedMessage id={`notifications.error`} defaultMessage='Error' />,
-                    <FormattedMessage
-                      id={`notifications.error`}
-                      defaultMessage='Endpoint update or create tag does not exist yet.'
-                    />
-                  ),
-                  { appearance: 'error' }
-                )
+                console.error(err)
               } finally {
                 setSubmitting(false)
                 closePopup()

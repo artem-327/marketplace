@@ -19,7 +19,8 @@ class TagsTable extends Component {
           <FormattedMessage id='operations.tagName' defaultMessage='Tag Name'>
             {text => text}
           </FormattedMessage>
-        )
+        ),
+        sortPath: 'Tag.name'
       }
     ]
   }
@@ -56,19 +57,11 @@ class TagsTable extends Component {
                     { name: row.name }
                   )
                 )
-                  .then(() => deleteTag(row.id))
+                  .then(() => {
+                    deleteTag(row.id)
+                  })
                   .catch(err => {
-                    //TODO delete when ednpoints will exist
-                    toastManager.add(
-                      generateToastMarkup(
-                        <FormattedMessage id={`notifications.error`} defaultMessage='Error' />,
-                        <FormattedMessage
-                          id={`notifications.error`}
-                          defaultMessage='Endpoint delete tag does not exist yet.'
-                        />
-                      ),
-                      { appearance: 'error' }
-                    )
+                    console.error(err)
                   })
             }
           ]}
@@ -83,10 +76,9 @@ const mapDispatchToProps = {
   deleteTag
 }
 
-//TODO missing endpoints datagrid fixed rows
 const mapStateToProps = (state, { datagrid }) => {
   return {
-    rows: [{ id: 1, name: 'Test' }], //datagrid.rows,
+    rows: datagrid.rows,
     filterValue: state.operations.filterValue,
     currentTab: state.operations.currentTab,
     loading: state.operations.loading

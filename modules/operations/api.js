@@ -8,6 +8,6 @@ export default {
 
   //TODO missing endpoints
   deleteTag: id => api.delete(`/prodex/api/tags/id/${id}`),
-  createTag: data => api.post(`/prodex/api/tags`, data),
-  updateTag: (id, data) => api.patch(`/prodex/api/tags/id/${id}`, data)
+  createTag: name => api.post(`/prodex/api/tags?name=${name}`),
+  updateTag: (id, name) => api.patch(`/prodex/api/tags/id/${id}?name=${name}`)
 }

@@ -65,21 +65,21 @@ export function deleteTag(id) {
   }
 }
 //TODO missing endpoint fix updateRow
-export function updateTag(id, data) {
+export function updateTag(id, name) {
   return {
     type: AT.OPERATIONS_UPDATE_TAG,
     async payload() {
-      const newRow = await api.updateTag(id, data)
-      Datagrid.updateRow(id, newRow)
+      const newRow = await api.updateTag(id, name)
+      Datagrid.updateRow(id, () => newRow.data)
     }
   }
 }
 
-export function createTag(data) {
+export function createTag(name) {
   return {
     type: AT.OPERATIONS_CREATE_TAG,
     async payload() {
-      await api.createTag(id, data)
+      await api.createTag(name)
       Datagrid.loadData()
     }
   }
