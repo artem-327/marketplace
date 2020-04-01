@@ -90,7 +90,8 @@ export class DatagridProvider extends Component {
         params: query,
         data: {
           ...datagridParams,
-          pageNumber
+          pageNumber,
+          sortDirection: datagridParams.sortDirection ? datagridParams.sortDirection.toUpperCase() : null
         }
       })
       if (

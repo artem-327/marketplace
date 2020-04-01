@@ -32,7 +32,7 @@ import { provinceObjectRequired, errorMessages, minOrZeroLength } from '~/consta
 
 import { CompanyForm } from '~/modules/company-form/'
 import { AddressForm } from '~/modules/address-form/'
-import { addressValidationSchema, phoneValidation, websiteValidation } from '~/constants/yupValidation'
+import { addressValidationSchema, phoneValidation, websiteValidationNotRequired } from '~/constants/yupValidation'
 
 import { getSafe, deepSearch } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
@@ -70,7 +70,7 @@ const initialFormValues = {
       contactName: '',
       contactPhone: ''
     },
-    warehouse: true
+    warehouse: false
   },
   primaryBranch: {
     deliveryAddress: {
@@ -87,7 +87,7 @@ const initialFormValues = {
       contactName: '',
       contactPhone: ''
     },
-    warehouse: true
+    warehouse: false
   },
   primaryUser: {
     email: '',
@@ -131,7 +131,7 @@ class AddNewPopupCasProducts extends React.Component {
           .trim()
           .min(2, minLength)
           .required(minLength),
-        website: websiteValidation(),
+        website: websiteValidationNotRequired(),
 
         mailingBranch: Yup.lazy(() => {
           if (mailingBranchRequired)
@@ -538,19 +538,23 @@ class AddNewPopupCasProducts extends React.Component {
                                 isSubmitting={isSubmitting}
                               />
                             </FormGroup>
-                            <FormGroup widths='equal'>
-                              <Checkbox
-                                label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })}
-                                name='primaryBranch.warehouse'
-                                inputProps={{ 'data-test': 'admin_popup_company_primaryBranch_warehouse_chckb' }}
-                              />
-                            </FormGroup>
                             <AddressForm
                               values={values}
                               setFieldValue={setFieldValue}
                               prefix='primaryBranch.deliveryAddress'
                               required={true}
                             />
+                            <FormGroup widths='equal'>
+                              <Checkbox
+                                label={
+                                  formatMessage({
+                                    id: 'admin.createWarehouseWith',
+                                    defaultMessage: 'Create Warehouse with same parameters'
+                                  })}
+                                name='primaryBranch.warehouse'
+                                inputProps={{ 'data-test': 'admin_popup_company_primaryBranch_warehouse_chckb' }}
+                              />
+                            </FormGroup>
                           </Accordion.Content>
                           <Divider />
 
@@ -611,13 +615,6 @@ class AddNewPopupCasProducts extends React.Component {
                                 isSubmitting={isSubmitting}
                               />
                             </FormGroup>
-                            <FormGroup widths='equal'>
-                              <Checkbox
-                                label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })}
-                                name='mailingBranch.warehouse'
-                                inputProps={{ 'data-test': 'admin_popup_company_mailingBranch_warehouse_chckb' }}
-                              />
-                            </FormGroup>
                             <AddressForm
                               values={values}
                               setFieldValue={setFieldValue}
@@ -625,6 +622,17 @@ class AddNewPopupCasProducts extends React.Component {
                               datalistName='mailingAddresses.deliveryAddress'
                               required={mailingBranchRequired}
                             />
+                            <FormGroup widths='equal'>
+                              <Checkbox
+                                label={
+                                  formatMessage({
+                                    id: 'admin.createWarehouseWith',
+                                    defaultMessage: 'Create Warehouse with same parameters'
+                                  })}
+                                name='mailingBranch.warehouse'
+                                inputProps={{ 'data-test': 'admin_popup_company_mailingBranch_warehouse_chckb' }}
+                              />
+                            </FormGroup>
                           </Accordion.Content>
                         </>
                       )}
@@ -646,7 +654,8 @@ class AddNewPopupCasProducts extends React.Component {
               </Modal.Actions>
             </Modal>
           )
-        }}></Formik>
+        }}>
+      </Formik>
     )
   }
 }

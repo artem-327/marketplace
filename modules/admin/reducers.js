@@ -45,8 +45,8 @@ export const initialState = {
   ],
 
   currentTab: { name: 'CAS Products', id: 7 },
-  casListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'ASC', sortPath: 'CasProduct.chemicalName' },
-  companyListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'ASC', sortPath: 'Company.name' },
+  casListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'asc', sortPath: 'CasProduct.chemicalName' },
+  companyListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'asc', sortPath: 'Company.name' },
   currentEditForm: null,
   currentEdit2Form: null,
   currentAddForm: null,
@@ -753,8 +753,12 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_SEARCH_COMPANY_PENDING: {return { ...state, searchedCompaniesLoading: true }}
-    case AT.ADMIN_SEARCH_COMPANY_REJECTED: {return { ...state, searchedCompaniesLoading: false }}
+    case AT.ADMIN_SEARCH_COMPANY_PENDING: {
+      return { ...state, searchedCompaniesLoading: true }
+    }
+    case AT.ADMIN_SEARCH_COMPANY_REJECTED: {
+      return { ...state, searchedCompaniesLoading: false }
+    }
     case AT.ADMIN_SEARCH_COMPANY_FULFILLED: {
       return {
         ...state,
@@ -763,8 +767,12 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_INIT_SEARCH_COMPANY_PENDING: {return { ...state, searchedCompaniesLoading: true }}
-    case AT.ADMIN_INIT_SEARCH_COMPANY_REJECTED: {return { ...state, searchedCompaniesLoading: false }}
+    case AT.ADMIN_INIT_SEARCH_COMPANY_PENDING: {
+      return { ...state, searchedCompaniesLoading: true }
+    }
+    case AT.ADMIN_INIT_SEARCH_COMPANY_REJECTED: {
+      return { ...state, searchedCompaniesLoading: false }
+    }
     case AT.ADMIN_INIT_SEARCH_COMPANY_FULFILLED: {
       return {
         ...state,
@@ -773,8 +781,12 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_GET_USER_PENDING: {return { ...state, updating: true }}
-    case AT.ADMIN_GET_USER_REJECTED: {return { ...state, updating: false }}
+    case AT.ADMIN_GET_USER_PENDING: {
+      return { ...state, updating: true }
+    }
+    case AT.ADMIN_GET_USER_REJECTED: {
+      return { ...state, updating: false }
+    }
     case AT.ADMIN_GET_USER_FULFILLED: {
       return {
         ...state,
@@ -784,14 +796,14 @@ export default function reducer(state = initialState, action) {
 
     case AT.ADMIN_EDIT_USER_PENDING:
     case AT.ADMIN_POST_NEW_USER_PENDING: {
-      return {...state, updating: true}
+      return { ...state, updating: true }
     }
 
     case AT.ADMIN_POST_NEW_USER_REJECTED:
     case AT.ADMIN_POST_NEW_USER_FULFILLED:
     case AT.ADMIN_EDIT_USER_REJECTED:
     case AT.ADMIN_EDIT_USER_FULFILLED: {
-      return {...state, updating: false}
+      return { ...state, updating: false }
     }
 
     default: {
