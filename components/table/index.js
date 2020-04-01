@@ -590,7 +590,7 @@ class _Table extends Component {
 
     onTableReady({
       sortPath: column && column.sortPath,
-      sortDirection: s && s.direction.toUpperCase()
+      sortDirection: s && s.direction
     })
   }
 
@@ -601,7 +601,7 @@ class _Table extends Component {
     if (sorting.length === 0) {
       newSorting = sort.map(el => ({
         ...el,
-        direction: el.direction.toUpperCase()
+        direction: el.direction
       }))
     } else {
       if (sorting[0].columnName === sort[0].columnName) {
