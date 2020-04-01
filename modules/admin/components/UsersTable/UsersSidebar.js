@@ -4,8 +4,6 @@ import {
   closePopup,
   postNewUserRequest,
   submitUserEdit,
-  getRoles,
-  getAdminRoles,
   searchCompany,
   initSearchCompany,
   getUser
@@ -149,6 +147,8 @@ class UsersSidebar extends React.Component {
       const { popupValues } = this.state
 
       const disabledCompany = values.roles.some(role => adminRoles.some(d => role === d))
+      const requiredCompany = !!popupValues || (!disabledCompany && !values.company)
+      const requiredBranch = !!popupValues || (!disabledCompany && !!values.company)
 
       return Yup.object().shape({
         name: Yup.string()
@@ -166,7 +166,10 @@ class UsersSidebar extends React.Component {
         phone: Yup.string()
           .trim()
           .min(3, errorMessages.minLength(3)),
-        ...((popupValues || !disabledCompany) && {
+        ...(requiredCompany && {
+          company: Yup.number().required(errorMessages.requiredMessage)
+        }),
+        ...(requiredBranch && {
           homeBranch: Yup.number().required(errorMessages.requiredMessage)
         }),
         roles: Yup.array().min(1, errorMessages.minOneRole)
@@ -175,8 +178,6 @@ class UsersSidebar extends React.Component {
 
   componentDidMount = async () => {
     //this.props.getCurrencies()
-    if (!this.props.allRoles.length) this.props.getRoles()
-    if (!this.props.adminRoles.length) this.props.getAdminRoles()
 
     if (this.props.popupValues) {
       this.switchUser(this.props.popupValues)
@@ -362,7 +363,7 @@ class UsersSidebar extends React.Component {
       let path = `${group}${name}`
 
       return (
-        <FormField key={i} error={error}>
+        <FormField key={i} error={!!error}>
           <FormikField
             onChange={(e, data) => {
               let { setFieldValue, setFieldTouched } = data.form
@@ -523,7 +524,12 @@ class UsersSidebar extends React.Component {
                   <GridRow>
                     <GridColumn>
                       <Dropdown
-                        label={formatMessage({ id: 'global.companyName', defaultMessage: 'Company Name' })}
+                        label={
+                          <>
+                            {formatMessage({ id: 'global.companyName', defaultMessage: 'Company Name' })}
+                            {!disabledCompany && <Required />}
+                          </>
+                        }
                         name='company'
                         options={companiesOptions}
                         inputProps={{
@@ -563,13 +569,13 @@ class UsersSidebar extends React.Component {
                         label={
                           <>
                             {formatMessage({ id: 'global.homeBranch', defaultMessage: 'Home Branch' })}
-                            {(popupValues || !disabledCompany) && <Required />}
+                            {!disabledCompany && values.company !== '' && <Required />}
                           </>
                         }
                         name='homeBranch'
                         options={branches}
                         inputProps={{
-                          disabled: disabledCompany,
+                          disabled: disabledCompany || values.company === '',
                           placeholder: formatMessage({
                             id: 'global.selectHomeBranch',
                             defaultMessage: 'Select Home Branch'
@@ -587,7 +593,7 @@ class UsersSidebar extends React.Component {
                         name='additionalBranches'
                         options={branches}
                         inputProps={{
-                          disabled: disabledCompany,
+                          disabled: disabledCompany || values.company === '',
                           placeholder: formatMessage({
                             id: 'global.selectAdditionalHomeBranch',
                             defaultMessage: 'Select Additional Home Branch'
@@ -644,8 +650,6 @@ const mapDispatchToProps = {
   closePopup,
   postNewUserRequest,
   submitUserEdit,
-  getRoles,
-  getAdminRoles,
   searchCompany,
   initSearchCompany,
   getUser
