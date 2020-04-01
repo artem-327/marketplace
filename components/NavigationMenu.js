@@ -15,6 +15,7 @@ import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import { InventoryFilter, Filter, OrderFilter, WantedBoardFilter } from '~/modules/filter'
+import TabsOperations from '~/modules/operations/components/Tabs'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -140,6 +141,9 @@ class Navigation extends Component {
     const typeState = this.state[type]
     if (type === 'admin') {
       Router.push('/admin')
+    }
+    if (type === 'operations') {
+      Router.push('/operations')
     }
     // toggle dropdown state
     this.setState({
@@ -454,32 +458,23 @@ class Navigation extends Component {
           </>
         )}
         {(isAdmin || isEchoOperator) && (
-          <DropdownItem
-            icon={<Hexagon size={22} />}
-            text={formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
-            className={operations ? 'opened' : null}
-            opened={operations}
-            onClick={() => this.toggleOpened('operations')}
-            refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-            refId={'operations'}>
-            <Dropdown.Menu data-test='navigation_menu_operations_drpdn'>
-              <PerfectScrollbar>
-                <Dropdown.Item
-                  as={MenuLink}
-                  to='/operations'
-                  tab='shipping-quotes'
-                  data-test='navigation_admin_operations_shipping_quotes_drpdn'>
-                  {formatMessage({ id: 'navigation.shippingQuotes', defaultMessage: 'Shipping Quotes' })}
-                </Dropdown.Item>
-              </PerfectScrollbar>
-            </Dropdown.Menu>
-          </DropdownItem>
+          <>
+            <DropdownItem
+              icon={<Hexagon size={22} />}
+              text={formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
+              className={operations ? 'opened' : null}
+              opened={operations}
+              onClick={() => this.toggleOpened('operations')}
+              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+              refId={'operations'}>
+              <TabsOperations />
+            </DropdownItem>
+          </>
         )}
       </div>
     )
   }
 }
-
 export default withAuth(
   withRouter(
     connect(
