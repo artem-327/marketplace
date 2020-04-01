@@ -646,7 +646,7 @@ class DetailSidebar extends Component {
                             type: 'number',
                             placeholder: '0.000'
                           },
-                          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max. Price'>
+                          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
                             {text => text}
                           </FormattedMessage>,
                           currencySymbol

@@ -269,6 +269,9 @@ export const getSpecificNmfcNumber = id => api.get(`/prodex/api/nmfc-numbers/${i
 export const deleteNmfcNumber = id => api.delete(`/prodex/api/nmfc-numbers/${id}`).then(() => id)
 
 export const getUsersMe = () => api.get('/prodex/api/users/me').then(response => response.data)
+export const getUser = (id) => api.get(`/prodex/api/users/id/${id}`).then(response => response.data)
+export const getCompanyInfo = (id) => api.get(`/prodex/api/companies/id/${id}`).then(response => response.data)
+
 export const userSwitchEnableDisable = id => api.patch(`/prodex/api/users/id/${id}/switch-enabled`)
   .then(response => response.data)
 
@@ -276,7 +279,8 @@ export const postNewUserRequest = (body) => api.post('/prodex/api/users', body).
 export const submitUserEdit = (id, body) => api.patch(`/prodex/api/users/id/${id}`, body).then(response => response.data)
 
 export const deleteUser = id => api.delete(`/prodex/api/users/id/${id}`).then(() => id)
-export const getRoles = () => api.get('/prodex/api/roles?includeSuperAdmin=true').then(response => response.data)
+export const getRoles = () => api.get('/prodex/api/roles?includeAdminRoles=true').then(response => response.data)
+export const getAdminRoles = () => api.get('/prodex/api/roles?onlyAdminRoles=true').then(response => response.data)
 
 export const searchCompany = (companyText, limit = 30) =>
   api.get(`/prodex/api/companies/search/all-info?limit=${limit}&pattern=${companyText}`)

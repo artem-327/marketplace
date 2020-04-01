@@ -12,7 +12,6 @@ import { getLocaleDateFormat } from '~/components/date-format'
 import moment from 'moment/moment'
 
 import {
-  getShippingQuotes,
   deleteShippingQuote,
   openPopup
   // handleOpenConfirmPopup,
@@ -70,20 +69,12 @@ class ShippingQuotesTable extends Component {
             {text => text}
           </FormattedMessage>
         )
-      },
+      }
     ]
   }
 
   render() {
-    const {
-      datagrid,
-      rows,
-      filterValue,
-      loading,
-      openPopup,
-      intl,
-      deleteShippingQuote
-    } = this.props
+    const { datagrid, rows, filterValue, loading, openPopup, intl, deleteShippingQuote } = this.props
 
     let { columns } = this.state
     const { formatMessage } = intl
@@ -124,7 +115,6 @@ class ShippingQuotesTable extends Component {
 }
 
 const mapDispatchToProps = {
-  getShippingQuotes,
   deleteShippingQuote,
   openPopup
 }
@@ -140,12 +130,12 @@ const mapStateToProps = (state, { datagrid }) => {
         carrierName: d.carrierName || '',
         price: d.price ? <FormattedNumber style='currency' currency={currency} value={d.price} /> : 'N/A',
         quoteId: d.quoteId || '',
-        validityDate: d.validityDate ? moment(d.validityDate).format(getLocaleDateFormat()) : 'N/A',
+        validityDate: d.validityDate ? moment(d.validityDate).format(getLocaleDateFormat()) : 'N/A'
       }
     }),
     currentTab: getSafe(() => Router.router.query.type)
       ? state.operations.tabsNames.find(tab => tab.type === Router.router.query.type)
-      : state.operations.tabsNames[0],
+      : state.operations.tabsNames[0]
   }
 }
 

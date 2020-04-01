@@ -5,7 +5,10 @@ import {
   postNewUserRequest,
   submitUserEdit,
   getRoles,
-  searchCompany
+  getAdminRoles,
+  searchCompany,
+  initSearchCompany,
+  getUser
 } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Sidebar, Dimmer, Loader, Grid, GridRow, GridColumn, Checkbox, FormField, FormGroup } from 'semantic-ui-react'
@@ -22,6 +25,9 @@ import { debounce } from "lodash"
 import { Required } from '~/components/constants/layout'
 import { withDatagrid } from '~/modules/datagrid'
 import { removeEmpty } from '~/utils/functions'
+import confirm from '~/src/components/Confirmable/confirm'
+import { uniqueArrayByKey } from '~/utils/functions'
+import get from 'lodash/get'
 
 const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -111,6 +117,12 @@ const BottomButtons = styled.div`
   }
 `
 
+const GridColumnWError = styled(GridColumn)`
+  &.column.error {
+    color: #9f3a38;
+  }
+`
+
 const initValues = {
   name: '',
   email: '',
@@ -123,43 +135,156 @@ const initValues = {
   roles: []
 }
 
-const userFormValidation = (popupValues) =>
-  Yup.object().shape({
-    name: Yup.string()
-      .trim()
-      .min(3, errorMessages.minLength(3))
-      .required(errorMessages.requiredMessage),
-    email: Yup.string()
-      .trim()
-      .email(errorMessages.invalidEmail)
-      .required(errorMessages.requiredMessage),
-    ...(popupValues && { homeBranch: Yup.number().required(errorMessages.requiredMessage) }),
-    additionalBranches: Yup.array(),
-    jobTitle: Yup.string()
-      .trim()
-      .min(3, errorMessages.minLength(3)),
-    phone: Yup.string()
-      .trim()
-      .min(3, errorMessages.minLength(3))
-  })
-
 class UsersSidebar extends React.Component {
   state = {
+    popupValues: null,
+    selectedCompany: [],
     branches: []
   }
+
+  userFormValidation = () =>
+    Yup.lazy(values => {
+      const { adminRoles } = this.props
+      const { popupValues } = this.state
+
+      const disabledCompany = values.roles.some(role => adminRoles.some(d => role === d))
+
+      return Yup.object().shape({
+        name: Yup.string()
+          .trim()
+          .min(3, errorMessages.minLength(3))
+          .required(errorMessages.requiredMessage),
+        email: Yup.string()
+          .trim()
+          .email(errorMessages.invalidEmail)
+          .required(errorMessages.requiredMessage),
+        additionalBranches: Yup.array(),
+        jobTitle: Yup.string()
+          .trim()
+          .min(3, errorMessages.minLength(3)),
+        phone: Yup.string()
+          .trim()
+          .min(3, errorMessages.minLength(3)),
+        ...((popupValues || !disabledCompany) && {
+          homeBranch: Yup.number()
+            .required(errorMessages.requiredMessage)
+        }),
+        roles: Yup.array()
+          .min(1, errorMessages.minOneRole)
+      })
+    })
 
   componentDidMount = async () => {
     //this.props.getCurrencies()
     if (!this.props.allRoles.length) this.props.getRoles()
-    if (this.props.popupValues && this.props.popupValues.company) {
-      const { value } = await this.props.searchCompany(this.props.popupValues.company.name, 5)
-      const company = value.find(el => el.id === this.props.popupValues.company.id)
-      this.setState({ branches: company
-        ? this.getBranchesOptions(company.branches)
-        : []
+    if (!this.props.adminRoles.length) this.props.getAdminRoles()
+
+    if (this.props.popupValues) {
+      this.switchUser(this.props.popupValues)
+    } else {
+      this.props.searchCompany('', 30)
+      this.setState({ popupValues: null })
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.editTrig !== prevProps.editTrig) {
+      if (!this.state.popupValues || this.props.popupValues.id !== this.state.popupValues) {
+        let {values, setFieldValue, setFieldTouched, errors, touched, validateForm, isSubmitting, submitForm} = this.formikProps
+        if (Object.keys(touched).length) {
+          validateForm().then(err => {
+            const errors = Object.keys(err)
+            if (errors.length && errors[0] !== 'isCanceled') {
+              submitForm() // to show errors
+            } else {
+              const {intl} = this.props
+              let {formatMessage} = intl
+              confirm(
+                formatMessage({
+                  id: 'confirm.global.unsavedChanges.header',
+                  defaultMessage: 'Unsaved changes'
+                }),
+                formatMessage({
+                  id: 'confirm.global.unsavedChanges.content',
+                  defaultMessage: 'You have unsaved changes. Do you wish to save them?'
+                })
+              )
+              .then(
+                async () => {
+                  // Confirm
+                  //if (await submitForm(values, this.formikProps, false).sendSuccess) {
+                  if (await this.submitUser(values, this.formikProps, false)) {
+                    this.switchUser(this.props.popupValues)
+                  }
+                },
+                () => {
+                  // Cancel
+                  this.switchUser(this.props.popupValues)
+                }
+              )
+              .catch(() => {
+              })
+            }
+          })
+        } else {
+          this.switchUser(this.props.popupValues)
+        }
+      }
+    }
+  }
+
+  switchUser = async (popupValues) => {
+    const [ comp, user ] = await Promise.all([
+      popupValues.company
+        ? this.props.initSearchCompany(popupValues.company.id)
+        : this.props.searchCompany('', 30)
+      ,
+      this.props.getUser(popupValues.id),
+    ])
+
+    if (popupValues.company) {
+      const company = comp.value
+      let branches = uniqueArrayByKey(
+        (
+          user.value.homeBranch
+            ? this.getBranchesOptions([user.value.homeBranch])
+            : []
+        )
+        .concat(
+            user.value.additionalBranches
+              ? this.getBranchesOptions(user.value.additionalBranches)
+              : []
+          ,
+            company
+              ? this.getBranchesOptions(company.branches)
+              : []
+        ), 'key'
+      )
+
+      this.setState({
+        branches,
+        selectedCompany: company
+          ? [company]
+          : [],
+        popupValues:
+          {
+            ...popupValues,
+            homeBranch: user.value.homeBranch,
+            additionalBranches: user.value.additionalBranches
+          }
       })
     } else {
       this.props.searchCompany('', 30)
+      this.setState({
+        branches: [],
+        selectedCompany: [],
+        popupValues:
+          {
+            ...popupValues,
+            homeBranch: user.value.homeBranch,
+            additionalBranches: user.value.additionalBranches
+          }
+      })
     }
   }
 
@@ -172,8 +297,12 @@ class UsersSidebar extends React.Component {
     )
   }
 
-  submitUser = async (values, actions) => {
-    const { popupValues, submitUserEdit, postNewUserRequest, closePopup, datagrid } = this.props
+  submitUser = async (values, actions, closeOnSubmit=true) => {
+    const { submitUserEdit, postNewUserRequest, closePopup, datagrid } = this.props
+    const { popupValues } = this.state
+    let sendSuccess = false
+
+    actions.setSubmitting(false)
 
     const data = {
       additionalBranches: values.additionalBranches,
@@ -192,22 +321,25 @@ class UsersSidebar extends React.Component {
       if (popupValues) {
         const { value } = await submitUserEdit(popupValues.id, data)
         datagrid.updateRow(popupValues.id, () => value)
+        sendSuccess = true
       } else {
         await postNewUserRequest(data)
         datagrid.loadData()
+        sendSuccess = true
       }
-      closePopup()
+      if (closeOnSubmit) closePopup()
     } catch {}
     actions.setSubmitting(false)
+    return sendSuccess
   }
 
   getInitialFormValues = () => {
-    const { popupValues } = this.props
+    const { popupValues } = this.state
     return popupValues
     ? {
-        additionalBranches: [].map(d => d.id),  // ! ! zatim nevraci BE ! !
+        additionalBranches: popupValues.additionalBranches.map(d => d.id),
         email: popupValues.email,
-        homeBranch: '',  // ! ! zatim nevraci BE ! !
+        homeBranch: popupValues.homeBranch ? popupValues.homeBranch.id : '',
         jobTitle: popupValues.jobTitle,
         company: popupValues.company ? popupValues.company.id : '',
         name: popupValues.name,
@@ -223,7 +355,7 @@ class UsersSidebar extends React.Component {
     this.props.searchCompany(text, 5)
   }, 250)
 
-  generateCheckboxes = (data, values, groupName = null) => {
+  generateCheckboxes = (data, values, groupName = null, error) => {
     if (!data) return []
     let group = null
 
@@ -241,11 +373,10 @@ class UsersSidebar extends React.Component {
       let path = `${group}${name}`
 
       return (
-        <FormField key={i}>
+        <FormField key={i} error={error}>
           <FormikField
             onChange={(e, data) => {
-              let { setFieldValue } = data.form
-
+              let { setFieldValue, setFieldTouched } = data.form
               let newArray = values[groupName].slice()
               if (data.checked) {
                 newArray.push(el.id)
@@ -253,8 +384,9 @@ class UsersSidebar extends React.Component {
                 newArray = newArray.filter(d => d !== el.id)
               }
               setFieldValue(groupName, newArray)
+              setFieldTouched(groupName, true, true)
             }}
-            disabled={hasCompany && el.id === 1}
+            disabled={values.company !== '' && this.props.adminRoles.some(d => el.id === d)}
             component={Checkbox}
             checked={!!values[groupName] && values[groupName].includes(el.id)}
             name={path}
@@ -293,11 +425,11 @@ class UsersSidebar extends React.Component {
   render() {
     const {
       closePopup,
-      popupValues,
       allRoles,
+      adminRoles,
       currencies,
       intl: { formatMessage },
-      companiesOptions,
+      //searchedCompaniesOptions,
       searchedCompanies,
       searchedCompaniesLoading,
       isSuperAdmin,
@@ -305,207 +437,236 @@ class UsersSidebar extends React.Component {
     } = this.props
 
     const {
-      branches
+      branches,
+      popupValues,
+      selectedCompany
     } = this.state
+
+    const companiesAll = uniqueArrayByKey(searchedCompanies.concat(selectedCompany), 'id')
+    const companiesOptions = companiesAll.map(d => ({
+      key: d.id,
+      value: d.id,
+      text: d.displayName ? d.displayName : d.name
+    }))
 
     return (
       <Form
+        enableReinitialize
         initialValues={this.getInitialFormValues()}
-        validationSchema={userFormValidation(popupValues)}
-        onReset={closePopup}
+        validationSchema={this.userFormValidation()}
+
         onSubmit={this.submitUser}>
-        {({ values, setFieldValue, setFieldTouched, errors, touched, isSubmitting }) => (
-          <FlexSidebar
-            visible={true}
-            width='very wide'
-            style={{ width: '630px' }}
-            direction='right'
-            animation='overlay'>
-            <Dimmer inverted active={updating}>
-              <Loader />
-            </Dimmer>
+        {(formikProps) => {
+          let { values, setFieldValue, setFieldTouched, errors, touched, isSubmitting } = formikProps
+          this.formikProps = formikProps
 
-            <HighSegment basic>
-              {popupValues
-                ? formatMessage({ id: 'settings.editUser', defaultMessage: 'Edit User' })
-                : formatMessage({ id: 'settings.addUser', defaultMessage: 'Add User' })}
-            </HighSegment>
+          const disabledCompany = values.roles.some(role => adminRoles.some(d => role === d))
+          let errorRoles = get(errors, 'roles', null)
 
-            <FlexContent>
-              <Grid>
-                <GridRow>
-                  <GridColumn width={8} data-test='admin_users_popup_name_inp'>
-                    <Input
-                      type='text'
-                      label={
-                        <>
-                          {formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
-                          <Required />
-                        </>
-                      }
-                      name='name'
-                      inputProps={{
-                        placeholder: formatMessage({ id: 'global.enterName', defaultMessage: 'Enter Name' })
-                      }}
-                    />
-                  </GridColumn>
-                  <GridColumn width={8} data-test='admin_users_popup_title_inp'>
-                    <Input
-                      type='text'
-                      label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
-                      name='jobTitle'
-                      inputProps={{
-                        placeholder: formatMessage({ id: 'global.enterJobTitle', defaultMessage: 'Enter Job Title' })
-                      }}
-                    />
-                  </GridColumn>
-                </GridRow>
+          return (
+            <FlexSidebar
+              visible={true}
+              width='very wide'
+              style={{ width: '630px' }}
+              direction='right'
+              animation='overlay'>
+              <Dimmer inverted active={updating}>
+                <Loader />
+              </Dimmer>
 
-                <GridRow>
-                  <GridColumn width={8} data-test='admin_users_popup_email_inp'>
-                    <Input
-                      type='text'
-                      label={
-                        <>
-                          {formatMessage({ id: 'global.email', defaultMessage: 'Email' })}
-                          <Required />
-                        </>
-                      }
-                      name='email'
-                      inputProps={{
-                        placeholder:
-                          formatMessage({ id: 'global.enterEmailAddress', defaultMessage: 'Enter Email Address' })
-                      }}
-                    />
-                  </GridColumn>
-                  <GridColumn width={8} data-test='admin_users_popup_Phone_inp'>
-                    <PhoneNumber
-                      name='phone'
-                      values={values}
-                      label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
-                      setFieldValue={setFieldValue}
-                      setFieldTouched={setFieldTouched}
-                      errors={errors}
-                      touched={touched}
-                      isSubmitting={isSubmitting}
-                      placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
-                    />
-                  </GridColumn>
-                </GridRow>
+              <HighSegment basic>
+                {popupValues
+                  ? formatMessage({ id: 'settings.editUser', defaultMessage: 'Edit User' })
+                  : formatMessage({ id: 'settings.addUser', defaultMessage: 'Add User' })}
+              </HighSegment>
 
-                <GridRow>
-                  <GridColumn>
-                    <Dropdown
-                      label={formatMessage({ id: 'global.companyName', defaultMessage: 'Company Name' })}
-                      name='company'
-                      options={companiesOptions}
-                      inputProps={{
-                        icon: 'search',
-                        search: options => options,
-                        disabled: !!popupValues,
-                        selection: true,
-                        onSearchChange: (e, { searchQuery }) =>
-                          searchQuery.length > 0 && this.searchCompanies(searchQuery),
-                        onChange: (_, { value }) => {
-                          const company = searchedCompanies.find(el => el.id === value)
-                          this.setState({
-                            branches: company
-                              ? this.getBranchesOptions(company.branches)
-                              : []
-                          })
-                          if (company) {
-                            let newArray = values.roles.slice()
-                            newArray = newArray.filter(d => d !== 1)  // Clear Super Admin role
-                            setFieldValue('roles', newArray)
-                          }
-                          console.log('!!!!!!!!!! onChange company', company)
-                          setFieldValue('homeBranch', '')
-                          setFieldValue('additionalBranches', [])
-                        },
-                        loading: searchedCompaniesLoading,
-                        placeholder: formatMessage({ id: 'global.selectCompany', defaultMessage: 'Select Company' }),
-                        'data-test': 'admin_users_popup_company_drpdn'
-                      }}
-                    />
-                  </GridColumn>
-                </GridRow>
+              <FlexContent>
+                <Grid>
+                  <GridRow>
+                    <GridColumn width={8} data-test='admin_users_popup_name_inp'>
+                      <Input
+                        type='text'
+                        label={
+                          <>
+                            {formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
+                            <Required />
+                          </>
+                        }
+                        name='name'
+                        inputProps={{
+                          placeholder: formatMessage({ id: 'global.enterName', defaultMessage: 'Enter Name' })
+                        }}
+                      />
+                    </GridColumn>
+                    <GridColumn width={8} data-test='admin_users_popup_title_inp'>
+                      <Input
+                        type='text'
+                        label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
+                        name='jobTitle'
+                        inputProps={{
+                          placeholder: formatMessage({ id: 'global.enterJobTitle', defaultMessage: 'Enter Job Title' })
+                        }}
+                      />
+                    </GridColumn>
+                  </GridRow>
 
-                <GridRow>
-                  <GridColumn width={8} >
-                    <Dropdown
-                      label={
-                        <>
-                          {formatMessage({ id: 'global.homeBranch', defaultMessage: 'Home Branch' })}
-                          {popupValues && (<Required />)}
-                        </>
-                      }
-                      name='homeBranch'
-                      options={branches}
-                      inputProps={{
-                        placeholder:
-                          formatMessage({ id: 'global.selectHomeBranch', defaultMessage: 'Select Home Branch' }),
-                        'data-test': 'admin_users_popup_homeBranch_drpdn'
-                      }}
-                    />
-                  </GridColumn>
-                  <GridColumn width={8} >
-                    <Dropdown
-                      label={formatMessage({
-                        id: 'global.additionalBranches',
-                        defaultMessage: 'Additional Branches'
-                      })}
-                      name='additionalBranches'
-                      options={branches}
-                      inputProps={{
-                        placeholder:
-                          formatMessage({
-                            id: 'global.selectAdditionalHomeBranch',
-                            defaultMessage: 'Select Additional Home Branch'
-                          }),
-                        'data-test': 'admin_users_popup_additionalBranches_drpdn',
-                        multiple: true
-                      }}
-                    />
-                  </GridColumn>
-                </GridRow>
+                  <GridRow>
+                    <GridColumn width={8} data-test='admin_users_popup_email_inp'>
+                      <Input
+                        type='text'
+                        label={
+                          <>
+                            {formatMessage({ id: 'global.email', defaultMessage: 'Email' })}
+                            <Required />
+                          </>
+                        }
+                        name='email'
+                        inputProps={{
+                          placeholder:
+                            formatMessage({ id: 'global.enterEmailAddress', defaultMessage: 'Enter Email Address' })
+                        }}
+                      />
+                    </GridColumn>
+                    <GridColumn width={8} data-test='admin_users_popup_Phone_inp'>
+                      <PhoneNumber
+                        name='phone'
+                        values={values}
+                        label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+                        setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        errors={errors}
+                        touched={touched}
+                        isSubmitting={isSubmitting}
+                        placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
+                      />
+                    </GridColumn>
+                  </GridRow>
 
-                <GridRow style={{ paddingBottom: '2.5px' }}>
-                  <GridColumn>
-                    <FormattedMessage id='global.roles' defaultMessage='Roles'>
+                  <GridRow>
+                    <GridColumn>
+                      <Dropdown
+                        label={formatMessage({ id: 'global.companyName', defaultMessage: 'Company Name' })}
+                        name='company'
+                        options={companiesOptions}
+                        inputProps={{
+                          icon: 'search',
+                          search: options => options,
+                          disabled: disabledCompany,
+                          selection: true,
+                          onSearchChange: (e, { searchQuery }) =>
+                            searchQuery.length > 0 && this.searchCompanies(searchQuery),
+                          onChange: (_, { value }) => {
+                            const company = companiesAll.find(el => el.id === value)
+                            this.setState({
+                              branches: company
+                                ? this.getBranchesOptions(company.branches)
+                                : [],
+                              selectedCompany: value
+                                ? companiesAll.find(d => d.id === value)
+                                : []
+                            })
+                            let homeBranch = ''
+                            if (company) {
+                              let newRoles = values.roles.slice()
+                              newRoles = newRoles.filter(role => adminRoles.every(d => role !== d))
+                              setFieldValue('roles', newRoles)
+                              if (company.primaryBranch) homeBranch = company.primaryBranch.id
+                            }
+                            setFieldValue('homeBranch', homeBranch)
+                            setFieldValue('additionalBranches', [])
+                          },
+                          loading: searchedCompaniesLoading,
+                          placeholder: formatMessage({ id: 'global.selectCompany', defaultMessage: 'Select Company' }),
+                          'data-test': 'admin_users_popup_company_drpdn'
+                        }}
+                      />
+                    </GridColumn>
+                  </GridRow>
+
+                  <GridRow>
+                    <GridColumn width={8} >
+                      <Dropdown
+                        label={
+                          <>
+                            {formatMessage({ id: 'global.homeBranch', defaultMessage: 'Home Branch' })}
+                            {(popupValues || !disabledCompany) && (<Required />)}
+                          </>
+                        }
+                        name='homeBranch'
+                        options={branches}
+                        inputProps={{
+                          disabled: disabledCompany,
+                          placeholder:
+                            formatMessage({ id: 'global.selectHomeBranch', defaultMessage: 'Select Home Branch' }),
+                          'data-test': 'admin_users_popup_homeBranch_drpdn'
+                        }}
+                      />
+                    </GridColumn>
+                    <GridColumn width={8} >
+                      <Dropdown
+                        label={formatMessage({
+                          id: 'global.additionalBranches',
+                          defaultMessage: 'Additional Branches'
+                        })}
+                        name='additionalBranches'
+                        options={branches}
+                        inputProps={{
+                          disabled: disabledCompany,
+                          placeholder:
+                            formatMessage({
+                              id: 'global.selectAdditionalHomeBranch',
+                              defaultMessage: 'Select Additional Home Branch'
+                            }),
+                          'data-test': 'admin_users_popup_additionalBranches_drpdn',
+                          multiple: true
+                        }}
+                      />
+                    </GridColumn>
+                  </GridRow>
+
+                  <GridRow style={{ paddingBottom: '2.5px' }}>
+                    <GridColumnWError className={errorRoles ? 'error' : ''}>
+                      <FormattedMessage id='global.roles' defaultMessage='Roles'>
+                        {text => text}
+                      </FormattedMessage>
+                      <Required />
+                    </GridColumnWError>
+                  </GridRow>
+                  <GridRow>
+                    {this.generateCheckboxes(allRoles, values, 'roles', errorRoles)}
+                  </GridRow>
+                  <GridRow style={{ paddingTop: '0' }}>
+                    <GridColumn>
+                      {errorRoles && <span className='sui-error-message'>{errorRoles}</span>}
+                    </GridColumn>
+                  </GridRow>
+
+                  {/*<pre>
+                      {JSON.stringify(values, null, 2)}
+                    </pre>*/}
+                </Grid>
+              </FlexContent>
+
+              <BottomButtons>
+                <div style={{ textAlign: 'right' }}>
+                  <Button
+                    onClick={closePopup}
+                    data-test='admin_users_popup_reset_btn'>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>
-                  </GridColumn>
-                </GridRow>
-                <GridRow>
-                  {this.generateCheckboxes(allRoles, values, 'roles')}
-                </GridRow>
-
-                {/*<pre>
-                    {JSON.stringify(values, null, 2)}
-                  </pre>*/}
-              </Grid>
-            </FlexContent>
-
-            <BottomButtons>
-              <div style={{ textAlign: 'right' }}>
-                <Button.Reset
-                  onClick={closePopup}
-                  data-test='admin_users_popup_reset_btn'>
-                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                    {text => text}
-                  </FormattedMessage>
-                </Button.Reset>
-                <Button.Submit data-test='admin_users_popup_submit_btn'>
-                  <FormattedMessage id='global.save' defaultMessage='Save'>
-                    {text => text}
-                  </FormattedMessage>
-                </Button.Submit>
-              </div>
-            </BottomButtons>
-          </FlexSidebar>
-        )}
+                  </Button>
+                  <Button.Submit data-test='admin_users_popup_submit_btn'>
+                    <FormattedMessage id='global.save' defaultMessage='Save'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button.Submit>
+                </div>
+              </BottomButtons>
+            </FlexSidebar>
+          )}
+        }
       </Form>
-
     )
   }
 }
@@ -515,21 +676,21 @@ const mapDispatchToProps = {
   postNewUserRequest,
   submitUserEdit,
   getRoles,
+  getAdminRoles,
   searchCompany,
+  initSearchCompany,
+  getUser,
 }
 
 const mapStateToProps = state => {
   const { admin } = state
   return {
+    editTrig: admin.editTrig,
     updating: admin.updating,
     allRoles: admin.roles,
+    adminRoles: admin.adminRoles.map(d => d.id),
     popupValues: admin.popupValues,
     isSuperAdmin: admin.currentUser && admin.currentUser.roles.findIndex(d => d.id === 1) !== -1,
-    companiesOptions: admin.searchedCompanies.map(d => ({
-      key: d.id,
-      value: d.id,
-      text: d.displayName ? d.displayName : d.name
-    })),
     searchedCompanies: admin.searchedCompanies,
     searchedCompaniesLoading: admin.searchedCompaniesLoading,
   }

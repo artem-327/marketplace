@@ -10,6 +10,9 @@ import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 const allowedFreightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500]
 
 export const errorMessages = {
+  dateBefore: date => (
+    <FormattedMessage id='validation.dateBefore' defaultMessage={`Date must be before ${date}`} values={{ date }} />
+  ),
   mustBeInFuture: <FormattedMessage id='validation.dateInFuture' defaultMessage='Date must be in future' />,
   dateNotInPast: <FormattedMessage id='validation.dateNotInPast' defaultMessage='Date must not be in past' />,
   invalidString: <FormattedMessage id='validation.invalidString' defaultMessage='Invalid value' />,
@@ -130,7 +133,8 @@ export const errorMessages = {
   positive: <FormattedMessage id='validation.positive' defaultMessage='Number value should be positive' />,
   invalidShipmentQuoteId: (
     <FormattedMessage id='validation.shipmentQuoteId' defaultMessage='Value should be in format "12365-4789"' />
-  )
+  ),
+  minOneRole: <FormattedMessage id='validation.minOneRole' defaultMessage='At least one role should be selected' />,
 }
 
 export const provinceObjectRequired = hasProvinces =>
@@ -325,3 +329,26 @@ function validShipmentQuoteId(str) {
   const pattern = new RegExp(/^\d+-\d+$/)
   return !!pattern.test(str.trim())
 }
+
+export const dateBefore = (date = 'lotManufacturedDate', beforeDate = 'lotExpirationDate', opts = {}) =>
+  Yup.string().test(
+    'is-before',
+    errorMessages.dateBefore(getSafe(() => opts.beforeDateError, 'Expired Date')),
+    function(_val) {
+      let defaultOpts = {
+        nullable: true,
+        beforeDateError: 'Expired Date'
+      }
+      let newOpts = {
+        ...defaultOpts,
+        ...opts
+      }
+      let parsedDate = moment(this.parent[date], getLocaleDateFormat())
+      let parsedBeforeDate = moment(this.parent[beforeDate], getLocaleDateFormat())
+
+      return (
+        (newOpts.nullable && parsedDate.isValid() && !parsedBeforeDate.isValid()) ||
+        parsedDate.isBefore(parsedBeforeDate)
+      )
+    }
+  )

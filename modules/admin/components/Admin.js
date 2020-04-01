@@ -42,7 +42,6 @@ import ProductImportPopup from '~/modules/settings/components/ProductCatalogTabl
 import UsersTable from './UsersTable/Table'
 import UsersSidebar from './UsersTable/UsersSidebar'
 
-
 const FixyWrapper = styled.div`
   position: relative;
   transform: translateY(0);
@@ -88,14 +87,17 @@ const datagridConfig = {
             { operator: 'LIKE', path: 'CasProduct.casIndexName', values: [`%${v}%`] },
             { operator: 'LIKE', path: 'CasProduct.casNumber', values: [`%${v}%`] }
           ]
-        : [],
-    params: {
-      orOperator: true
-    }
+        : []
   },
   Companies: {
     url: '/prodex/api/companies/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] }] : [])
+    searchToFilter: v =>
+      v
+        ? [
+            { operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] },
+            { operator: 'LIKE', path: 'Company.displayName', values: [`%${v}%`] },
+          ]
+        : []
   },
   'Product Catalog': {
     url: '/prodex/api/echo-products/datagrid',
@@ -105,10 +107,7 @@ const datagridConfig = {
             { operator: 'LIKE', path: 'EchoProduct.name', values: [`%${v}%`] },
             { operator: 'LIKE', path: 'EchoProduct.code', values: [`%${v}%`] }
           ]
-        : [],
-    params: {
-      orOperator: true
-    }
+        : []
   },
   Conditions: {
     url: '/prodex/api/product-conditions/datagrid',
@@ -122,10 +121,7 @@ const datagridConfig = {
             { operator: 'EQUALS', path: 'NmfcNumber.code', values: [v] },
             { operator: 'LIKE', path: 'NmfcNumber.description', values: [`%${v}%`] }
           ]
-        : [],
-    params: {
-      orOperator: true
-    }
+        : []
   },
   'Document Types': {
     url: 'prodex/api/document-types/datagrid',
@@ -164,18 +160,15 @@ const datagridConfig = {
     searchToFilter: v =>
       v
         ? [
-          { operator: 'LIKE', path: 'User.name', values: [`%${v}%`] },
-          {
-            operator: 'LIKE',
-            path: 'User.homeBranch.deliveryAddress.contactName',
-            values: [`%${v}%`]
-          }
-        ]
-        : [],
-    params: {
-      orOperator: true
-    }
-  },
+            { operator: 'LIKE', path: 'User.name', values: [`%${v}%`] },
+            {
+              operator: 'LIKE',
+              path: 'User.homeBranch.deliveryAddress.contactName',
+              values: [`%${v}%`]
+            }
+          ]
+        : []
+  }
 }
 
 const editForms = {
@@ -283,8 +276,7 @@ class Admin extends Component {
           </Grid>
         </Container>
         {enableSideProductEdit && <AddEditEchoProduct tabName={'Product Catalog'} />}
-        {currentAddForm && editSidebar[currentTab.name]}
-        {currentEditForm && editSidebar[currentTab.name]}
+        {(currentAddForm || currentEditForm) && editSidebar[currentTab.name]}
       </DatagridProvider>
     )
   }

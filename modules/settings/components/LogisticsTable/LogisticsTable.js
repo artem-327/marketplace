@@ -58,7 +58,8 @@ class LogisticsTable extends Component {
         rowActions={[
           {
             text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-            callback: row => openPopup(row)
+            callback: row => openPopup(row),
+            hidden: () => true
           },
           {
             text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -101,10 +102,11 @@ const mapDispatchToProps = {
   deleteLogisticsAccount
 }
 
-const mapStateToProps = ({ settings: { loading, logisticsAccounts, deleteLogisticsAccount } }) => ({
+const mapStateToProps = ({ settings: { loading, logisticsAccounts, deleteLogisticsAccount } }) => {
+  return ({
   loading,
   logisticsAccounts,
   deleteLogisticsAccount
-})
+})}
 
 export default withToastManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(LogisticsTable)))

@@ -37,6 +37,7 @@ class UsersTable extends Component {
       openPopup,
       deleteUser,
       currentUserId,
+      editId
     } = this.props
 
     const { formatMessage } = intl
@@ -59,7 +60,7 @@ class UsersTable extends Component {
             },
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              disabled: row => currentUserId === row.id,
+              disabled: row => currentUserId === row.id || editId === row.id,
               callback: row =>
                 confirm(
                   formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
@@ -140,8 +141,8 @@ const mapStateToProps = (state, { datagrid }) => {
         company: user.company,
         jobTitle: user.jobTitle || '',
         email: user.email,
-        phone: getSafe(() => user.company.phone, ''),
-        phoneFormatted: <FormattedPhone value={getSafe(() => user.company.phone, '')} />,
+        phone: user.phone || '',
+        phoneFormatted: <FormattedPhone value={user.phone || ''} />,
         homeBranch: user.homeBranch ? user.homeBranch.id : '',
         additionalBranches: (user.additionalBranches ? user.additionalBranches : []).map(d => d.id),
         enabled: user.enabled,
@@ -159,6 +160,7 @@ const mapStateToProps = (state, { datagrid }) => {
     }),
     currentUser,
     currentUserId,
+    editId: state.admin.popupValues && state.admin.popupValues.id,
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
     loading: state.admin.loading,

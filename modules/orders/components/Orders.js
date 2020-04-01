@@ -990,7 +990,6 @@ class Orders extends Component {
 
     return (
       <div id='page' className='flex stretched scrolling'>
-        {!tutorialCompleted && <Tutorial />}
         {openModal && (
           <Modal
             closeIcon={false}
@@ -1237,6 +1236,7 @@ class Orders extends Component {
             </Menu.Item>
           </Menu>
         </Container>
+        {!tutorialCompleted && <Tutorial marginOrders />}
         <Container fluid style={{ padding: '20px 32px 10px 32px' }} className='flex stretched'>
           {false && (
             <OrderFilter
