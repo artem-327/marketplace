@@ -1,8 +1,15 @@
 import React, { Component } from 'react'
 import { initGlobalBroadcast } from '~/modules/broadcast/actions'
 import { connect } from 'react-redux'
-import { Broadcast } from '~/modules/broadcast'
+
 import { Segment } from 'semantic-ui-react'
+import styled from 'styled-components'
+
+import { Broadcast } from '~/modules/broadcast'
+
+const ScrollableSegment = styled(Segment)`
+  overflow-y: auto;
+`
 
 class PriceBook extends Component {
   state = { loading: true }
@@ -17,9 +24,9 @@ class PriceBook extends Component {
   }
   render() {
     return (
-      <Segment padded='very' basic>
+      <ScrollableSegment padded='very' basic>
         <Broadcast hideFobPrice isPrepared={!this.state.loading} asModal={false} />
-      </Segment>
+      </ScrollableSegment>
     )
   }
 }

@@ -20,14 +20,15 @@ import { errorMessages } from '~/constants/yupValidation'
 //import { currency } from '~/constants/index'
 import { currencyId } from '~/constants/index'
 import { PhoneNumber } from '~/modules/phoneNumber'
-import styled from "styled-components"
-import { debounce } from "lodash"
+import styled from 'styled-components'
+import { debounce } from 'lodash'
 import { Required } from '~/components/constants/layout'
 import { withDatagrid } from '~/modules/datagrid'
 import { removeEmpty } from '~/utils/functions'
 import confirm from '~/src/components/Confirmable/confirm'
 import { uniqueArrayByKey } from '~/utils/functions'
 import get from 'lodash/get'
+import { getSafe } from '~/utils/functions'
 
 const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -56,7 +57,7 @@ const FlexContent = styled.div`
   overflow-x: hidden;
   overflow-y: auto;
   padding: 30px;
-  
+
   .ui.grid {
     margin: 0 -5px;
     .row {
@@ -66,7 +67,7 @@ const FlexContent = styled.div`
       padding: 0 5px;
     }
   }
-  
+
   .field {
     .ui.checkbox {
       label {
@@ -76,14 +77,14 @@ const FlexContent = styled.div`
         label {
           color: #20273a;
         }
-      } 
+      }
     }
     .field {
       label {
         color: #546f93;
       }
     }
-  }  
+  }
 `
 
 const BottomButtons = styled.div`
@@ -94,7 +95,7 @@ const BottomButtons = styled.div`
   box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
   padding: 0.714285714em 1.785714286em;
   text-align: right;
-  
+
   .ui.button {
     font-size: 1em;
     margin: 0 0.357142857em;
@@ -109,7 +110,7 @@ const BottomButtons = styled.div`
     background-color: #2599d5;
     border: none;
   }
-  
+
   .ui.modal & {
     margin: 30px -1.5rem -1.5rem;
     border-top: 1px solid #dee2e6;
@@ -166,11 +167,9 @@ class UsersSidebar extends React.Component {
           .trim()
           .min(3, errorMessages.minLength(3)),
         ...((popupValues || !disabledCompany) && {
-          homeBranch: Yup.number()
-            .required(errorMessages.requiredMessage)
+          homeBranch: Yup.number().required(errorMessages.requiredMessage)
         }),
-        roles: Yup.array()
-          .min(1, errorMessages.minOneRole)
+        roles: Yup.array().min(1, errorMessages.minOneRole)
       })
     })
 
@@ -190,15 +189,24 @@ class UsersSidebar extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.editTrig !== prevProps.editTrig) {
       if (!this.state.popupValues || this.props.popupValues.id !== this.state.popupValues) {
-        let {values, setFieldValue, setFieldTouched, errors, touched, validateForm, isSubmitting, submitForm} = this.formikProps
+        let {
+          values,
+          setFieldValue,
+          setFieldTouched,
+          errors,
+          touched,
+          validateForm,
+          isSubmitting,
+          submitForm
+        } = this.formikProps
         if (Object.keys(touched).length) {
           validateForm().then(err => {
             const errors = Object.keys(err)
             if (errors.length && errors[0] !== 'isCanceled') {
               submitForm() // to show errors
             } else {
-              const {intl} = this.props
-              let {formatMessage} = intl
+              const { intl } = this.props
+              let { formatMessage } = intl
               confirm(
                 formatMessage({
                   id: 'confirm.global.unsavedChanges.header',
@@ -209,21 +217,20 @@ class UsersSidebar extends React.Component {
                   defaultMessage: 'You have unsaved changes. Do you wish to save them?'
                 })
               )
-              .then(
-                async () => {
-                  // Confirm
-                  //if (await submitForm(values, this.formikProps, false).sendSuccess) {
-                  if (await this.submitUser(values, this.formikProps, false)) {
+                .then(
+                  async () => {
+                    // Confirm
+                    //if (await submitForm(values, this.formikProps, false).sendSuccess) {
+                    if (await this.submitUser(values, this.formikProps, false)) {
+                      this.switchUser(this.props.popupValues)
+                    }
+                  },
+                  () => {
+                    // Cancel
                     this.switchUser(this.props.popupValues)
                   }
-                },
-                () => {
-                  // Cancel
-                  this.switchUser(this.props.popupValues)
-                }
-              )
-              .catch(() => {
-              })
+                )
+                .catch(() => {})
             }
           })
         } else {
@@ -233,57 +240,41 @@ class UsersSidebar extends React.Component {
     }
   }
 
-  switchUser = async (popupValues) => {
-    const [ comp, user ] = await Promise.all([
-      popupValues.company
-        ? this.props.initSearchCompany(popupValues.company.id)
-        : this.props.searchCompany('', 30)
-      ,
-      this.props.getUser(popupValues.id),
+  switchUser = async popupValues => {
+    const [comp, user] = await Promise.all([
+      popupValues.company ? this.props.initSearchCompany(popupValues.company.id) : this.props.searchCompany('', 30),
+      this.props.getUser(popupValues.id)
     ])
 
     if (popupValues.company) {
       const company = comp.value
       let branches = uniqueArrayByKey(
-        (
-          user.value.homeBranch
-            ? this.getBranchesOptions([user.value.homeBranch])
-            : []
-        )
-        .concat(
-            user.value.additionalBranches
-              ? this.getBranchesOptions(user.value.additionalBranches)
-              : []
-          ,
-            company
-              ? this.getBranchesOptions(company.branches)
-              : []
-        ), 'key'
+        (user.value.homeBranch ? this.getBranchesOptions([user.value.homeBranch]) : []).concat(
+          user.value.additionalBranches ? this.getBranchesOptions(user.value.additionalBranches) : [],
+          company ? this.getBranchesOptions(company.branches) : []
+        ),
+        'key'
       )
 
       this.setState({
         branches,
-        selectedCompany: company
-          ? [company]
-          : [],
-        popupValues:
-          {
-            ...popupValues,
-            homeBranch: user.value.homeBranch,
-            additionalBranches: user.value.additionalBranches
-          }
+        selectedCompany: company ? [company] : [],
+        popupValues: {
+          ...popupValues,
+          homeBranch: user.value.homeBranch,
+          additionalBranches: user.value.additionalBranches
+        }
       })
     } else {
       this.props.searchCompany('', 30)
       this.setState({
         branches: [],
         selectedCompany: [],
-        popupValues:
-          {
-            ...popupValues,
-            homeBranch: user.value.homeBranch,
-            additionalBranches: user.value.additionalBranches
-          }
+        popupValues: {
+          ...popupValues,
+          homeBranch: user.value.homeBranch,
+          additionalBranches: user.value.additionalBranches
+        }
       })
     }
   }
@@ -293,11 +284,10 @@ class UsersSidebar extends React.Component {
       key: b.id,
       value: b.id,
       text: b.deliveryAddress.cfName
-      })
-    )
+    }))
   }
 
-  submitUser = async (values, actions, closeOnSubmit=true) => {
+  submitUser = async (values, actions, closeOnSubmit = true) => {
     const { submitUserEdit, postNewUserRequest, closePopup, datagrid } = this.props
     const { popupValues } = this.state
     let sendSuccess = false
@@ -336,19 +326,18 @@ class UsersSidebar extends React.Component {
   getInitialFormValues = () => {
     const { popupValues } = this.state
     return popupValues
-    ? {
-        additionalBranches: popupValues.additionalBranches.map(d => d.id),
-        email: popupValues.email,
-        homeBranch: popupValues.homeBranch ? popupValues.homeBranch.id : '',
-        jobTitle: popupValues.jobTitle,
-        company: popupValues.company ? popupValues.company.id : '',
-        name: popupValues.name,
-        phone: popupValues.phone,
-        preferredCurrency: currencyId,
-        roles: popupValues.roles.map(d => d.id)
-      }
-    :
-      initValues
+      ? {
+          additionalBranches: popupValues.additionalBranches.map(d => d.id),
+          email: popupValues.email,
+          homeBranch: popupValues.homeBranch ? popupValues.homeBranch.id : '',
+          jobTitle: popupValues.jobTitle,
+          company: popupValues.company ? popupValues.company.id : '',
+          name: popupValues.name,
+          phone: popupValues.phone,
+          preferredCurrency: currencyId,
+          roles: popupValues.roles.map(d => d.id)
+        }
+      : initValues
   }
 
   searchCompanies = debounce(text => {
@@ -399,25 +388,17 @@ class UsersSidebar extends React.Component {
 
     let i = 0
     for (; i < data.length / 2; i++) {
-      columnLeft.push(
-        getCheckbox(data[i], i)
-      )
+      columnLeft.push(getCheckbox(data[i], i))
     }
 
     for (; i < data.length; i++) {
-      columnRight.push(
-        getCheckbox(data[i], i)
-      )
+      columnRight.push(getCheckbox(data[i], i))
     }
 
     return (
       <>
-        <GridColumn width={8} >
-          {columnLeft}
-        </GridColumn>
-        <GridColumn width={8} >
-          {columnRight}
-        </GridColumn>
+        <GridColumn width={8}>{columnLeft}</GridColumn>
+        <GridColumn width={8}>{columnRight}</GridColumn>
       </>
     )
   }
@@ -436,17 +417,13 @@ class UsersSidebar extends React.Component {
       updating
     } = this.props
 
-    const {
-      branches,
-      popupValues,
-      selectedCompany
-    } = this.state
+    const { branches, popupValues, selectedCompany } = this.state
 
     const companiesAll = uniqueArrayByKey(searchedCompanies.concat(selectedCompany), 'id')
     const companiesOptions = companiesAll.map(d => ({
       key: d.id,
       value: d.id,
-      text: d.displayName ? d.displayName : d.name
+      text: getSafe(() => d.cfDisplayName, d.displayName)
     }))
 
     return (
@@ -454,9 +431,8 @@ class UsersSidebar extends React.Component {
         enableReinitialize
         initialValues={this.getInitialFormValues()}
         validationSchema={this.userFormValidation()}
-
         onSubmit={this.submitUser}>
-        {(formikProps) => {
+        {formikProps => {
           let { values, setFieldValue, setFieldTouched, errors, touched, isSubmitting } = formikProps
           this.formikProps = formikProps
 
@@ -522,8 +498,10 @@ class UsersSidebar extends React.Component {
                         }
                         name='email'
                         inputProps={{
-                          placeholder:
-                            formatMessage({ id: 'global.enterEmailAddress', defaultMessage: 'Enter Email Address' })
+                          placeholder: formatMessage({
+                            id: 'global.enterEmailAddress',
+                            defaultMessage: 'Enter Email Address'
+                          })
                         }}
                       />
                     </GridColumn>
@@ -558,12 +536,8 @@ class UsersSidebar extends React.Component {
                           onChange: (_, { value }) => {
                             const company = companiesAll.find(el => el.id === value)
                             this.setState({
-                              branches: company
-                                ? this.getBranchesOptions(company.branches)
-                                : [],
-                              selectedCompany: value
-                                ? companiesAll.find(d => d.id === value)
-                                : []
+                              branches: company ? this.getBranchesOptions(company.branches) : [],
+                              selectedCompany: value ? companiesAll.find(d => d.id === value) : []
                             })
                             let homeBranch = ''
                             if (company) {
@@ -584,25 +558,27 @@ class UsersSidebar extends React.Component {
                   </GridRow>
 
                   <GridRow>
-                    <GridColumn width={8} >
+                    <GridColumn width={8}>
                       <Dropdown
                         label={
                           <>
                             {formatMessage({ id: 'global.homeBranch', defaultMessage: 'Home Branch' })}
-                            {(popupValues || !disabledCompany) && (<Required />)}
+                            {(popupValues || !disabledCompany) && <Required />}
                           </>
                         }
                         name='homeBranch'
                         options={branches}
                         inputProps={{
                           disabled: disabledCompany,
-                          placeholder:
-                            formatMessage({ id: 'global.selectHomeBranch', defaultMessage: 'Select Home Branch' }),
+                          placeholder: formatMessage({
+                            id: 'global.selectHomeBranch',
+                            defaultMessage: 'Select Home Branch'
+                          }),
                           'data-test': 'admin_users_popup_homeBranch_drpdn'
                         }}
                       />
                     </GridColumn>
-                    <GridColumn width={8} >
+                    <GridColumn width={8}>
                       <Dropdown
                         label={formatMessage({
                           id: 'global.additionalBranches',
@@ -612,11 +588,10 @@ class UsersSidebar extends React.Component {
                         options={branches}
                         inputProps={{
                           disabled: disabledCompany,
-                          placeholder:
-                            formatMessage({
-                              id: 'global.selectAdditionalHomeBranch',
-                              defaultMessage: 'Select Additional Home Branch'
-                            }),
+                          placeholder: formatMessage({
+                            id: 'global.selectAdditionalHomeBranch',
+                            defaultMessage: 'Select Additional Home Branch'
+                          }),
                           'data-test': 'admin_users_popup_additionalBranches_drpdn',
                           multiple: true
                         }}
@@ -632,13 +607,9 @@ class UsersSidebar extends React.Component {
                       <Required />
                     </GridColumnWError>
                   </GridRow>
-                  <GridRow>
-                    {this.generateCheckboxes(allRoles, values, 'roles', errorRoles)}
-                  </GridRow>
+                  <GridRow>{this.generateCheckboxes(allRoles, values, 'roles', errorRoles)}</GridRow>
                   <GridRow style={{ paddingTop: '0' }}>
-                    <GridColumn>
-                      {errorRoles && <span className='sui-error-message'>{errorRoles}</span>}
-                    </GridColumn>
+                    <GridColumn>{errorRoles && <span className='sui-error-message'>{errorRoles}</span>}</GridColumn>
                   </GridRow>
 
                   {/*<pre>
@@ -649,9 +620,7 @@ class UsersSidebar extends React.Component {
 
               <BottomButtons>
                 <div style={{ textAlign: 'right' }}>
-                  <Button
-                    onClick={closePopup}
-                    data-test='admin_users_popup_reset_btn'>
+                  <Button onClick={closePopup} data-test='admin_users_popup_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>
@@ -664,8 +633,8 @@ class UsersSidebar extends React.Component {
                 </div>
               </BottomButtons>
             </FlexSidebar>
-          )}
-        }
+          )
+        }}
       </Form>
     )
   }
@@ -679,7 +648,7 @@ const mapDispatchToProps = {
   getAdminRoles,
   searchCompany,
   initSearchCompany,
-  getUser,
+  getUser
 }
 
 const mapStateToProps = state => {
@@ -692,7 +661,7 @@ const mapStateToProps = state => {
     popupValues: admin.popupValues,
     isSuperAdmin: admin.currentUser && admin.currentUser.roles.findIndex(d => d.id === 1) !== -1,
     searchedCompanies: admin.searchedCompanies,
-    searchedCompaniesLoading: admin.searchedCompaniesLoading,
+    searchedCompaniesLoading: admin.searchedCompaniesLoading
   }
 }
 

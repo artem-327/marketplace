@@ -36,6 +36,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import * as Yup from 'yup'
 
 import { getSafe } from '~/utils/functions'
+import { associations } from '../constants'
 
 import { errorMessages } from '~/constants/yupValidation'
 
@@ -55,6 +56,7 @@ const templateValidation = () =>
 class Broadcast extends Component {
   state = {
     filterSearch: '',
+    associationFilter: associations[0],
     selectedTemplate: { name: null, id: null },
     broadcastingTo: 0,
     change: false,
@@ -171,76 +173,78 @@ class Broadcast extends Component {
     const searchParentFn = n => n.first(i => searchFn(i))
 
     const presets = {
-      region: () =>
-        new TreeModel().parse({
-          name: formatMessage({
-            id: 'broadcast.byRegion',
-            defaultMessage: 'By Region'
-          }),
-          rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
-          depth: 1,
-          children: treeData.children
-            .filter(n => searchParentFn(n))
-            .map(n1 => ({
-              name: n1.model.name,
-              // rule: n1.model,
-              rule: { ...n1.model, broadcast: getBroadcast(n1) },
-              depth: 2,
-              children: n1.children
-                .filter(n => searchFn(n) || searchParentFn(n))
-                .map(n2 => ({
-                  name: n2.model.name,
-                  rule: n2.model,
-                  depth: 3,
-                  children: n2
-                    .all(n => n.model.type === 'branch' && searchFn(n))
-                    .map(n3 => ({
-                      name: n3.model.name,
-                      rule: n3.model,
-                      // rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
-                      depth: 4,
-                      children: []
-                    }))
-                }))
-            }))
+      region: {
+        name: formatMessage({
+          id: 'broadcast.byRegion',
+          defaultMessage: 'By Region'
         }),
-      branch: () =>
-        new TreeModel().parse({
-          // name: 'By company',
-          name: formatMessage({
-            id: 'broadcast.byCompany',
-            defaultMessage: 'By Company'
-          }),
-          // rule: treeData.model,
-          rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
-          depth: 1,
-          children: _.uniqBy(
-            treeData.all(n => n.model.type === 'company'),
-            n => n.model.id
-          )
-            .sort((a, b) => (a.model.name > b.model.name ? 1 : b.model.name > a.model.name ? -1 : 0))
-            .filter(searchFn)
-            .map(n1 => ({
-              name: n1.model.name,
-              // rule: n1.model,
-              rule: { ...n1.model, broadcast: getBroadcast(n1) },
-              depth: 2,
-              children: treeData
-                .all(n => n.model.type === 'branch' && n.parent.model.id === n1.model.id)
-                .map(n2 => ({
-                  name: n2.model.name,
-                  rule: n2.model,
-                  // rule: { ...n2.model, broadcast: getBroadcast(n2) },
-                  depth: 3,
-                  children: []
-                }))
-            }))
-        })
+        rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
+        depth: 1,
+        children: treeData.children
+          .filter(n => searchParentFn(n))
+          .map(n1 => ({
+            name: n1.model.name,
+            // rule: n1.model,
+            rule: { ...n1.model, broadcast: getBroadcast(n1) },
+            depth: 2,
+            children: n1.children
+              .filter(n => searchFn(n) || searchParentFn(n))
+              .map(n2 => ({
+                name: n2.model.name,
+                rule: n2.model,
+                depth: 3,
+                children: n2
+                  .all(n => n.model.type === 'branch' && searchFn(n))
+                  .map(n3 => ({
+                    name: n3.model.name,
+                    rule: n3.model,
+                    // rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
+                    depth: 4,
+                    children: []
+                  }))
+              }))
+          }))
+      },
+      branch: {
+        // name: 'By company',
+        name: formatMessage({
+          id: 'broadcast.byCompany',
+          defaultMessage: 'By Company'
+        }),
+        // rule: treeData.model,
+        rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
+        depth: 1,
+        children: _.uniqBy(
+          treeData.all(n => n.model.type === 'company'),
+          n => n.model.id
+        )
+          .sort((a, b) => (a.model.name > b.model.name ? 1 : b.model.name > a.model.name ? -1 : 0))
+          .filter(searchFn)
+          .map(n1 => ({
+            name: n1.model.name,
+            // rule: n1.model,
+            rule: { ...n1.model, broadcast: getBroadcast(n1) },
+            depth: 2,
+            children: treeData
+              .all(n => n.model.type === 'branch' && n.parent.model.id === n1.model.id)
+              .map(n2 => ({
+                name: n2.model.name,
+                rule: n2.model,
+                // rule: { ...n2.model, broadcast: getBroadcast(n2) },
+                depth: 3,
+                children: []
+              }))
+          }))
+      }
     }
 
-    let tree = presets[filter.category]()
-    // expand when search is active
+    let preset = presets[filter.category]
 
+    let tree = new TreeModel().parse(preset)
+
+    if (filter.category === 'branch') this.applyAssociationFilter(tree)
+
+    // expand when search is active
     if (fs.length > 0) {
       tree.walk(n => (n.model.expanded = true))
     }
@@ -249,6 +253,34 @@ class Broadcast extends Component {
 
     return tree
   }
+
+  applyAssociationFilter = tree => {
+    const { associationFilter } = this.state
+
+    if (associationFilter === 'ALL') return tree
+
+    let nodesToDrop = tree.all(n => {
+      if (n.model.rule.type === 'branch') {
+        let company = this.findCompany(n)
+
+        if (!getSafe(() => company.model.associations, []).includes(this.state.associationFilter)) {
+          return true
+        }
+      }
+      return false
+    })
+
+    nodesToDrop.forEach(n => n.drop())
+
+    let companiesToDrop = tree.all(n => n.model.rule.type === 'company' && !n.hasChildren())
+
+    companiesToDrop.forEach(c => c.model.rule.hidden = true)
+    
+    return tree
+  }
+
+  findCompany = branch =>
+    this.props.treeData.first(n => n.model.id === getSafe(() => branch.model.rule.id, branch.id)).parent
 
   handleChange = node => {
     const { treeData } = this.props
@@ -302,8 +334,8 @@ class Broadcast extends Component {
   }
 
   onTemplateSelected = async (_, data, setFieldValue) => {
-    const { getTemplate, toastManager, intl } = this.props
-    const { formatMessage } = intl
+    const { getTemplate } = this.props
+
     let name = data.options.find(opt => opt.value === data.value).text
     setFieldValue('name', name)
     this.setState({ selectedTemplate: { name, id: data.value } })
@@ -378,7 +410,7 @@ class Broadcast extends Component {
           closeModalCompanyInfo={closeModalCompanyInfo}
         />
         <StretchedGrid
-          className='flex stretched'
+          className={asSidebar ? 'flex stretched' : ''}
           {...additionalGridProps}
           style={asSidebar ? { height: 'auto' } : null}>
           <Grid.Row divided className='flex stretched'>
@@ -477,6 +509,19 @@ class Broadcast extends Component {
                           })}
                         />
                       </Form.Field>
+                      {this.props.filter.category === 'branch' && (
+                        <Form.Field>
+                          <label>
+                            <FormattedMessage id='global.associations' defaultMessage='Associations' />
+                          </label>
+                          <Dropdown
+                            value={this.state.associationFilter}
+                            selection
+                            options={associations.map((a, i) => ({ key: i, text: a, value: a }))}
+                            onChange={(_e, { value }) => this.setState({ associationFilter: value })}
+                          />
+                        </Form.Field>
+                      )}
                     </>
                   )}
                 </Form>
@@ -705,7 +750,7 @@ class Broadcast extends Component {
             <Grid.Column
               width={asSidebar ? 16 : 10}
               stretched
-              style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : { height: '80vh' }}>
+              style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : null}>
               <Rule.Root style={asSidebar ? null : { overflowY: 'scroll' }}>
                 <Rule.Header style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
                   <Rule.RowContent>
@@ -831,7 +876,7 @@ class Broadcast extends Component {
         <Modal.Header>
           <FormattedMessage id='inventory.broadcast' defaultMessage='Price Book' />
         </Modal.Header>
-        <Modal.Content scrolling style={{ minHeight: '70vh' }} className='flex stretched'>
+        <Modal.Content scrolling className='flex stretched'>
           {this.getContent()}
         </Modal.Content>
         <Modal.Actions>{this.getButtons()}</Modal.Actions>
