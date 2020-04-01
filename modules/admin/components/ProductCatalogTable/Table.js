@@ -115,20 +115,18 @@ class ProductCatalogTable extends Component {
       openEditEchoProduct,
       openEditEchoAltNamesPopup,
       deleteEchoProduct,
-      editedId
+      editedId,
+      filterValue,
     } = this.props
     return (
       <React.Fragment>
         <ProdexTable
-          tableName='admin_companies'
+          tableName='admin_product-catalog'
+          {...datagrid.tableProps}
           columns={columns}
+          filterValue={filterValue}
           loading={datagrid.loading}
           rows={this.getRows(rows)}
-          defaultSorting={{
-            columnName: 'name',
-            sortPath: 'EchoProduct.name',
-            direction: 'asc'
-          }}
           rowActions={[
             ...echoRowActions((row, i) => openEditEchoProduct(row.id, i, true)),
             {

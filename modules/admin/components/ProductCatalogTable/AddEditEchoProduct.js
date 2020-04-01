@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import moment from 'moment'
-import { removeEmpty } from '~/modules/admin/actions'
+import { removeEmpty } from '~/utils/functions'
 import { verifyEchoProduct } from '~/modules/admin/api' // No need to be an action
 import { DateInput } from '~/components/custom-formik'
 import { PhoneNumber } from '~/modules/phoneNumber'
@@ -460,13 +460,13 @@ class AddEditEchoProduct extends React.Component {
     }
 
     if (initialValues.sdsIssuedDate)
-      initialValues.sdsIssuedDate = moment(initialValues.sdsIssuedDate).format(getLocaleDateFormat())
+      initialValues.sdsIssuedDate = this.getDateInLocaleFormat(initialValues.sdsIssuedDate)
     if (initialValues.sdsRevisionDate)
-      initialValues.sdsRevisionDate = moment(initialValues.sdsRevisionDate).format(getLocaleDateFormat())
+      initialValues.sdsRevisionDate = this.getDateInLocaleFormat(initialValues.sdsRevisionDate)
     if (initialValues.tdsIssuedDate)
-      initialValues.tdsIssuedDate = moment(initialValues.tdsIssuedDate).format(getLocaleDateFormat())
+      initialValues.tdsIssuedDate = this.getDateInLocaleFormat(initialValues.tdsIssuedDate)
     if (initialValues.tdsRevisionDate)
-      initialValues.tdsRevisionDate = moment(initialValues.tdsRevisionDate).format(getLocaleDateFormat())
+      initialValues.tdsRevisionDate = this.getDateInLocaleFormat(initialValues.tdsRevisionDate)
 
     if (initialValues.elements.length === 0) {
       initialValues.elements = [{ name: '', casProduct: null, assayMin: '', assayMax: '', proprietary: false }]
@@ -476,6 +476,15 @@ class AddEditEchoProduct extends React.Component {
 
   tabChanged = index => {
     this.setState({ editTab: index })
+  }
+
+  getDateInLocaleFormat = value => {
+    let date = moment(value)
+    if (date.isValid()) {
+      return date.format(getLocaleDateFormat())
+    } else {
+      return ''
+    }
   }
 
   handleUnNumberSearchChange = debounce((_, { searchQuery }) => {
@@ -557,6 +566,17 @@ class AddEditEchoProduct extends React.Component {
     }
   }
 
+  getDateInIsoFormat = value => {
+    if (!value) return ''
+    let date = getStringISODate(value)
+
+    if (moment(date).isValid()) {
+      return date
+    } else {
+      return ''
+    }
+  }
+
   submitForm = async (values, setSubmitting) => {
     const { putEchoProduct, postEchoProduct, closePopup, linkAttachment, listDocumentTypes } = this.props
 
@@ -579,30 +599,14 @@ class AddEditEchoProduct extends React.Component {
               assayMax: e.assayMax === null || e.assayMax === '' ? null : Number(e.assayMax)
             }
       ),
-      sdsIssuedDate: values.sdsIssuedDate ? getStringISODate(values.sdsIssuedDate) : '',
-      sdsRevisionDate: values.sdsRevisionDate ? getStringISODate(values.sdsRevisionDate) : '',
-      tdsIssuedDate: values.tdsIssuedDate ? getStringISODate(values.tdsIssuedDate) : '',
-      tdsRevisionDate: values.tdsRevisionDate ? getStringISODate(values.tdsRevisionDate) : ''
+      sdsIssuedDate: this.getDateInIsoFormat(values.sdsIssuedDate),
+      sdsRevisionDate: this.getDateInIsoFormat(values.sdsRevisionDate),
+      tdsIssuedDate: this.getDateInIsoFormat(values.tdsIssuedDate),
+      tdsRevisionDate: this.getDateInIsoFormat(values.tdsRevisionDate)
     }
     delete formValues.attachments
 
-    const fieldsToNull = [
-      'dotHazardClass',
-      'dotPackagingGroup',
-      'dotUnNumber',
-      'iataHazardClass',
-      'iataPackagingGroup',
-      'iataUnNumber',
-      'imdgImoHazardClass',
-      'imdgImoPackagingGroup',
-      'imdgImoUnNumber',
-      'tdgHazardClass',
-      'tdgPackagingGroup',
-      'tdgUnNumber'
-    ]
-    fieldsToNull.forEach(el => {
-      if (formValues[el] === '') formValues[el] = null
-    })
+    removeEmpty(formValues)
 
     try {
       if (popupValues) var { value } = await putEchoProduct(popupValues.id, formValues)
