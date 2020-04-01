@@ -57,6 +57,12 @@ const MarketplaceTab = styled(Tab)`
 class Marketplace extends Component {
   state = {
     columns: [
+      {
+        name: 'intProductName',
+        width: 200,
+        sortPath: 'ProductOffer.companyProduct.intProductName',
+        title: <FormattedMessage id='marketplace.intProductName' defaultMessage='Int Product Name' />
+      },
       { name: 'productName', disabled: true },
       { name: 'productNumber', disabled: true },
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
@@ -363,47 +369,47 @@ class Marketplace extends Component {
               />
             </Grid.Column>
             <Grid.Column width={12}>
-        <Menu secondary className='page-part'>
-          <Menu.Menu position='right'>
-            <Menu.Item>
-              <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
-            </Menu.Item>
-            <Popup
-              wide='very'
-              data-test='array_to_multiple_list'
-              content={
-                <FormattedMessage
-                  id='marketplace.shippingQuoteTooltip'
-                  defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
-                />
-              }
-              disabled={selectedRows.length !== 0}
-              position='bottom right'
-              trigger={
-                <DivButtonWithToolTip
-                  data-tooltip={
-                    this.isSelectedMultipleEcho(rows, selectedRows)
-                      ? formatMessage({
-                          id: 'marketplace.multipleEchoProduct',
-                          defaultMessage: 'Multiple ProductOffers can not be calculate.'
-                        })
-                      : null
-                  }
-                  data-position='bottom right'>
-                  <Button
-                    disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
-                    primary
-                    onClick={() => this.setState({ open: true })}
-                    data-test='marketplace_shipping_quote_btn'>
-                    <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                </DivButtonWithToolTip>
-              }
-            />
-          </Menu.Menu>
-        </Menu>
+              <Menu secondary className='page-part'>
+                <Menu.Menu position='right'>
+                  <Menu.Item>
+                    <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
+                  </Menu.Item>
+                  <Popup
+                    wide='very'
+                    data-test='array_to_multiple_list'
+                    content={
+                      <FormattedMessage
+                        id='marketplace.shippingQuoteTooltip'
+                        defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
+                      />
+                    }
+                    disabled={selectedRows.length !== 0}
+                    position='bottom right'
+                    trigger={
+                      <DivButtonWithToolTip
+                        data-tooltip={
+                          this.isSelectedMultipleEcho(rows, selectedRows)
+                            ? formatMessage({
+                                id: 'marketplace.multipleEchoProduct',
+                                defaultMessage: 'Multiple ProductOffers can not be calculate.'
+                              })
+                            : null
+                        }
+                        data-position='bottom right'>
+                        <Button
+                          disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
+                          primary
+                          onClick={() => this.setState({ open: true })}
+                          data-test='marketplace_shipping_quote_btn'>
+                          <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
+                            {text => text}
+                          </FormattedMessage>
+                        </Button>
+                      </DivButtonWithToolTip>
+                    }
+                  />
+                </Menu.Menu>
+              </Menu>
             </Grid.Column>
           </Grid.Row>
         </Grid>
