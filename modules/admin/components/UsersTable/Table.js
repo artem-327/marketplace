@@ -8,7 +8,9 @@ import {
   deleteUser,
   getUsersMe,
   userSwitchEnableDisable,
-  openPopup
+  openPopup,
+  getRoles,
+  getAdminRoles,
 } from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { ArrayToFirstItem, FormattedPhone } from '~/components/formatted-messages/'
@@ -25,6 +27,8 @@ class UsersTable extends Component {
 
   componentDidMount() {
     this.props.getUsersMe()
+    if (!this.props.allRoles.length) this.props.getRoles()
+    if (!this.props.adminRoles.length) this.props.getAdminRoles()
   }
 
   render() {
@@ -37,7 +41,8 @@ class UsersTable extends Component {
       openPopup,
       deleteUser,
       currentUserId,
-      editId
+      editId,
+      adminRoles
     } = this.props
 
     const { formatMessage } = intl
@@ -56,7 +61,8 @@ class UsersTable extends Component {
           rowActions={[
             {
               text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openPopup(row)
+              callback: row => openPopup(row),
+              disabled: row => row.roles.some(role => adminRoles.some(d => role.id === d))
             },
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -90,7 +96,9 @@ const mapDispatchToProps = {
   deleteUser,
   getUsersMe,
   userSwitchEnableDisable,
-  openPopup
+  openPopup,
+  getRoles,
+  getAdminRoles,
 }
 
 const userEnableDisableStatus = (r, currentUserId) => {
@@ -164,6 +172,8 @@ const mapStateToProps = (state, { datagrid }) => {
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
     loading: state.admin.loading,
+    allRoles: state.admin.roles,
+    adminRoles: state.admin.adminRoles.map(d => d.id),
   }
 }
 

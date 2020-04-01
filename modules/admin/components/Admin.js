@@ -91,7 +91,13 @@ const datagridConfig = {
   },
   Companies: {
     url: '/prodex/api/companies/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] }] : [])
+    searchToFilter: v =>
+      v
+        ? [
+            { operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] },
+            { operator: 'LIKE', path: 'Company.displayName', values: [`%${v}%`] },
+          ]
+        : []
   },
   'Product Catalog': {
     url: '/prodex/api/echo-products/datagrid',

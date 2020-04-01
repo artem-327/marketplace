@@ -70,6 +70,7 @@
   "admin.sds.revisionDate": "SDS Revision Date",
   "admin.user": "User",
   "admin.searchUser": "Search user ...",
+  "admin.createWarehouseWith": "Create Warehouse with same parameters",
   "broadcast.byRegion": "By Region",
   "broadcast.byCompany": "By Company",
   "broadcast.controls": "Broadcast Controls",

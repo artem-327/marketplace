@@ -1066,9 +1066,9 @@ export const createLogisticsAccount = payload => ({
 
 export const getLogisticsAccounts = () => ({ type: AT.GET_LOGISTICS_ACCOUNTS, payload: api.getLogisticsAccounts() })
 
-export const updateLogisticsAccount = payload => ({
+export const updateLogisticsAccount = (id, payload) => ({
   type: AT.UPDATE_LOGISTICS_ACCOUNT,
-  payload: api.updateLogisticsAccount(payload)
+  payload: api.updateLogisticsAccount(id, payload)
 })
 
 export const deleteLogisticsAccount = id => ({
