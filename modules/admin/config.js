@@ -58,7 +58,17 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 220,
           sortPath: 'Company.name'
+        },
+        {
+          name: 'associations',
+          title: (
+            <FormattedMessage id='admin.associations' defaultMessage='Associations'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 165
         },
         {
           name: 'primaryBranchAddress',
@@ -67,6 +77,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 185,
           sortPath: 'Company.primaryBranch.deliveryAddress.address.streetAddress'
         },
         {
@@ -76,6 +87,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'ClientCompany.primaryBranch.deliveryAddress.contactName'
         },
         {
@@ -85,6 +97,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 175,
           sortPath: 'ClientCompany.primaryBranch.deliveryAddress.contactEmail'
         },
         {
@@ -93,7 +106,8 @@ export const config = {
             <FormattedMessage id='global.dwollaAccount' defaultMessage='Dwolla Account'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 145
         },
         {
           name: 'hasLogisticsAccounts',
@@ -101,7 +115,8 @@ export const config = {
             <FormattedMessage id='global.logisticAccounts' defaultMessage='Logistics Accounts'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 150
         },
         {
           name: 'reviewRequested',
@@ -109,7 +124,8 @@ export const config = {
             <FormattedMessage id='global.reviewRequested' defaultMessage='Review Requested'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 150
         },
         {
           name: 'nacdMember',
@@ -117,7 +133,8 @@ export const config = {
             <FormattedMessage id='global.nacdMember' defaultMessage='NACD Member'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 130
         }
       ]
     }
