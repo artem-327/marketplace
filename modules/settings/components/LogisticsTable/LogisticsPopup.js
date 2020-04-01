@@ -41,6 +41,20 @@ class LogisticsPopup extends Component {
     this.props.getLogisticsProviders()
   }
 
+  getInitialValues = () => {
+    let { popupValues } = this.props
+    return popupValues
+      ? {
+        providerIdentifier: popupValues.provider.identifier,
+        username: popupValues.accountInfos && popupValues.accountInfos.length
+          ? popupValues.accountInfos[0].username
+          : '',
+        password: ''
+      }
+      :
+      initialValues
+  }
+
   render() {
     let {
       popupValues,
@@ -68,11 +82,11 @@ class LogisticsPopup extends Component {
             enableReinitialize={true}
             validateOnChange={false}
             validateOnBlur={false}
-            initialValues={popupValues || initialValues}
+            initialValues={this.getInitialValues()}
             onSubmit={async (values, { setSubmitting }) => {
               try {
                 if (popupValues) {
-                  await updateLogisticsAccount(values)
+                  await updateLogisticsAccount(popupValues.id, values)
                 } else {
                   await createLogisticsAccount(values)
                   getLogisticsAccounts()
@@ -83,32 +97,45 @@ class LogisticsPopup extends Component {
                 closePopup()
               }
             }}>
-            {({ submitForm }) => {
+            {({ submitForm, values }) => {
               this.handleSubmit = submitForm
               return (
                 <>
                   <FormGroup widths='equal' data-test='settings_logistics_apikey_inp'>
-                    <Dropdown
-                      name='providerIdentifier'
-                      options={logisticsProviders.map(provider => ({
-                        key: provider.identifier.value,
-                        text: `${provider.name} (${provider.identifier.value})`,
-                        value: provider.identifier
-                      }))}
-                      label={formatMessage({
-                        id: 'logistics.label.logisticsProvider',
-                        defaultMessage: 'Logistics Provider'
-                      })}
-                      inputProps={{
-                        search: true,
-                        'data-test': 'settings_logistics_provider_drpdn',
-                        placeholder: formatMessage({
-                          id: 'logistics.placeholder.logisticsProvider',
-                          label: 'Select Logistics Provider'
-                        }),
-                        loading: logisticsProvidersFetching
-                      }}
-                    />
+                    {popupValues ? (
+                      <Input
+                        name='providerIdentifier.value'
+                        label={formatMessage({
+                          id: 'logistics.label.logisticsProvider',
+                          defaultMessage: 'Logistics Provider'
+                        })}
+                        inputProps={{
+                          readOnly: true
+                        }}
+                      />
+                    ) : (
+                      <Dropdown
+                        name='providerIdentifier'
+                        options={logisticsProviders.map(provider => ({
+                          key: provider.identifier.value,
+                          text: `${provider.name} (${provider.identifier.value})`,
+                          value: provider.identifier
+                        }))}
+                        label={formatMessage({
+                          id: 'logistics.label.logisticsProvider',
+                          defaultMessage: 'Logistics Provider'
+                        })}
+                        inputProps={{
+                          search: true,
+                          'data-test': 'settings_logistics_provider_drpdn',
+                          placeholder: formatMessage({
+                            id: 'logistics.placeholder.logisticsProvider',
+                            label: 'Select Logistics Provider'
+                          }),
+                          loading: logisticsProvidersFetching
+                        }}
+                      />
+                    )}
                   </FormGroup>
 
                   <FormGroup widths='equal' data-test='settings_logistics_namePassword_inp'>
