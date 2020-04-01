@@ -16,6 +16,11 @@ const PositionHeaderSettings = styled.div`
   z-index: 602;
 `
 
+const LeftMenuItem = styled(Menu.Item)`
+  padding-left: 0px !important;
+  margin-left: 0px !important;
+`
+
 class TablesHandlers extends Component {
   constructor(props) {
     super(props)
@@ -70,7 +75,7 @@ class TablesHandlers extends Component {
     return (
       <PositionHeaderSettings>
         <Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
-          <Menu.Item position='left' data-test='admin_table_search_inp'>
+          <LeftMenuItem position='left' data-test='admin_table_search_inp'>
             <Input
               style={{ width: 340 }}
               icon='search'
@@ -81,7 +86,7 @@ class TablesHandlers extends Component {
               }}
               value={this.state.filterValue}
             />
-          </Menu.Item>
+          </LeftMenuItem>
           <Menu.Item position='right'>
             <Button size='large' data-test='admin_table_add_btn' primary onClick={() => openPopup()}>
               <FormattedMessage id='global.add' defaultMessage='Add'>
