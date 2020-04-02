@@ -25,6 +25,7 @@ function mapStateToProps(store, { datagrid }) {
     ...store.wantedBoard,
     ...datagrid,
     type: store.wantedBoard.wantedBoardType,
+    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
     rows: datagrid.rows.map(row => {
       const qtyPart = getSafe(() => row.unit.nameAbbreviation)
       return {

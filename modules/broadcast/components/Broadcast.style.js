@@ -119,8 +119,8 @@ const RightAlignedDiv = styled.div`
 `
 
 const StretchedGrid = styled(Grid)`
-  height: 100vh;
-  
+  height: 100% !important;
+
   .ui.info.message {
     border: solid 1px #2599d5;
     background-color: #ffffff;

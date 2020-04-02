@@ -49,6 +49,7 @@ function mapStateToProps(store, { datagrid }) {
     isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
     isProductOfferManager: getSafe(() => store.auth.identity.isProductOfferManager, false),
     isCompanyAdmin: getSafe(() => store.auth.identity.isCompanyAdmin, false),
+    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
     rows: datagrid.rows.map(po => {
       const unit = getSafe(() => po.productOffer.companyProduct.packagingUnit.nameAbbreviation, null)
       return {
