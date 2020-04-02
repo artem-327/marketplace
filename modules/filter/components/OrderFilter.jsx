@@ -59,12 +59,10 @@ class OrderFilter extends Component {
 
   toDatagrid = values => {
     let { sortDirection, sortPath, applyDatagridFilter } = this.props
-    if (sortDirection) {
-      sortDirection.toUpperCase()
-    }
+
     let payload = {
       filters: [],
-      sortDirection,
+      sortDirection: sortDirection ? sortDirection.tuUpperCase() : sortDirection,
       sortPath
     }
 
