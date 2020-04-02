@@ -181,8 +181,8 @@ export const nmfcValidation = (required = true) =>
     // .max(8, errorMessages.maxLength(8))
     .test(
       'code',
-      errorMessages.invalidValueFormat('123456 or 12345-67'),
-      value => /^[0-9]{6}$/.test(value) || /^[0-9]{5}\-[0-9]{2}$/.test(value)
+      errorMessages.invalidValueFormat('1 .. 123456, 1234567 or 12345-67'),
+      value => /^[0-9]{1,6}$/.test(value) || /^[0-9]{7}$/.test(value) || /^[0-9]{5}\-[0-9]{2}$/.test(value)
     )
     .concat(required ? Yup.string().required() : Yup.string().notRequired())
 

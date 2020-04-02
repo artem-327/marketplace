@@ -49,7 +49,7 @@ class Popup extends Component {
             onSubmit={async (values, { setSubmitting }) => {
               let payload = {
                 ...values,
-                code: getSafe(() => values.code.replace('-', ''), values.code)
+                code: Number(getSafe(() => values.code.replace('-', ''), values.code))
               }
 
               if (popupValues) {

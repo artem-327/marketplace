@@ -16,7 +16,18 @@ export default class Table extends Component {
       toastManager
     } = this.props
 
-    let rows = getSafe(() => datagrid.rows, [])
+    let rows = getSafe(() => datagrid.rows, []).map(row => {
+
+      let rowCode = row.code ? row.code.toString() : ''
+      rowCode = rowCode.length < 7
+        ? rowCode
+        : `${rowCode.slice(0, 5)}-${rowCode.slice(5)}`
+
+      return ({
+        ...row,
+        code: rowCode
+      })
+    })
 
     const { tableName, formattedMessageName } = config
     const { columns } = config.display
