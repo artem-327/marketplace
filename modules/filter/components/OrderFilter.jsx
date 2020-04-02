@@ -62,7 +62,7 @@ class OrderFilter extends Component {
 
     let payload = {
       filters: [],
-      sortDirection: sortDirection ? sortDirection.tuUpperCase() : sortDirection,
+      sortDirection: sortDirection ? sortDirection.toUpperCase() : sortDirection,
       sortPath
     }
 
