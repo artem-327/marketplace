@@ -208,7 +208,16 @@ export const config = {
           ),
           width: 150,
           sortPath: 'EchoProduct.sdsRevisionDate'
-        }
+        },
+        {
+          name: 'tagsFormatted',
+          title: (
+            <FormattedMessage id='global.tags' defaultMessage='Tags'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
+        },
       ]
     }
   },
@@ -738,7 +747,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
-          sortPath: 'Associations.name'
+          sortPath: 'Association.name'
         }
       ]
     },

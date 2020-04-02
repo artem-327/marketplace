@@ -95,7 +95,7 @@ const datagridConfig = {
       v
         ? [
             { operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] },
-            { operator: 'LIKE', path: 'Company.displayName', values: [`%${v}%`] },
+            { operator: 'LIKE', path: 'Company.cfDisplayName', values: [`%${v}%`] },
           ]
         : []
   },
@@ -207,11 +207,12 @@ const addForms = {
 }
 
 const editSidebar = {
-  'Users': <UsersSidebar />
+  Users: <UsersSidebar />
 }
 
 const importForm = {
-  'Product Catalog': <ProductImportPopup echoProduct={true} />
+  'Product Catalog': <ProductImportPopup echoProduct={true} />,
+  Companies: <ProductImportPopup companies={true} />
 }
 
 const addDwollaForms = {

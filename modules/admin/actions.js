@@ -797,4 +797,9 @@ export const initSearchCompany = (id) => ({
   payload: api.getCompanyInfo(id)
 })
 
+export const searchTags = (tag) => ({
+  type: AT.ADMIN_SEARCH_TAGS,
+  payload: api.searchTags(tag)
+})
+
 

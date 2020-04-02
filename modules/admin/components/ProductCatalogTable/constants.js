@@ -135,7 +135,8 @@ export const defaultValues = {
   vaporPressure: '',
   viscosity: '',
   wasteDisposalMethods: '',
-  isPublished: true
+  isPublished: true,
+  tags: []
 }
 
 export const echoRowActions = callback => {

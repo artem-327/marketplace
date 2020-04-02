@@ -99,6 +99,7 @@ class ConfirmationPage extends Component {
 
   render() {
     const { csvImportError, reloadFilter } = this.props
+    const titleViewMap = this.props.productOffer ? 'MyInventory' : this.props.echoProduct ? 'Products' : 'Companies'
     return (
       <Grid centered padded>
         {csvImportError ? this.createReport(csvImportError) : ''}
@@ -108,10 +109,7 @@ class ConfirmationPage extends Component {
             primary
             onClick={() => this.props.closeImportPopup(reloadFilter)}
             data-test='settings_product_close_import'>
-            <FormattedMessage
-              id={`settings.view${this.props.productOffer ? 'MyInventory' : 'Product'}`}
-              defaultMessage={`View ${this.props.productOffer ? 'My Inventory' : 'Products'}`}
-            />
+            <FormattedMessage id={`settings.view${titleViewMap}`} defaultMessage={`View ${titleViewMap}`} />
           </StyledButton>
         </Grid.Row>
         <Grid.Row>
