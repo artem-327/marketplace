@@ -54,6 +54,7 @@ function mapStateToProps(store, { datagrid }) {
     clientCompany: getSafe(() => store.auth.identity.clientCompany, false),
     type: store.wantedBoard.myRequestedItemsType,
     editedId: store.wantedBoard.editWindowOpen === 'my-requested-items' ? store.wantedBoard.editedId : null,
+    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
     rows: datagrid.rows.map(row => {
       const productName = getSafe(() => row.element.echoProduct.name, null)
       const qtyPart = getSafe(() => row.unit.nameAbbreviation)
