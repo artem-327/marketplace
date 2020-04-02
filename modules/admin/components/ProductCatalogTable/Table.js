@@ -11,7 +11,7 @@ import { Button, Icon } from 'semantic-ui-react'
 import * as Actions from '../../actions'
 import moment from 'moment/moment'
 import { getLocaleDateFormat } from '~/components/date-format'
-
+import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import { echoRowActions } from './constants'
 
 class ProductCatalogTable extends Component {
@@ -20,6 +20,7 @@ class ProductCatalogTable extends Component {
       intl: { formatMessage }
     } = this.props
     return rows.map(row => {
+
       return {
         ...row,
         sds:
@@ -32,7 +33,12 @@ class ProductCatalogTable extends Component {
             ''
           ),
         manufacturerName: row.manufacturer ? row.manufacturer.name : '',
-        sdsRevisionDate: row.sdsRevisionDate ? moment(row.sdsRevisionDate).format(getLocaleDateFormat()) : ''
+        sdsRevisionDate: row.sdsRevisionDate ? moment(row.sdsRevisionDate).format(getLocaleDateFormat()) : '',
+        tagsFormatted:
+          <ArrayToFirstItem
+            values={row.tags ? row.tags.map(d => d.name ? d.name : d) : ''}
+            rowItems={2}
+          />,
       }
     })
   }
