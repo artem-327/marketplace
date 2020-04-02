@@ -285,3 +285,7 @@ export const getAdminRoles = () => api.get('/prodex/api/roles?onlyAdminRoles=tru
 export const searchCompany = (companyText, limit = 30) =>
   api.get(`/prodex/api/companies/search/all-info?limit=${limit}&pattern=${companyText}`)
      .then(response => response.data)
+
+export const searchTags = (tag, limit = 30) =>
+  api.post(`/prodex/api/tags/datagrid`, {}) // ! ! temporary endpoint (search tag endpoint currently missing)
+    .then(response => response.data)
