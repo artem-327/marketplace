@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { Table, Dropdown, Grid, Input, Select, Button } from 'semantic-ui-react'
+import styled from 'styled-components'
 
 import {
   changeHeadersCSV,
@@ -17,16 +18,17 @@ import {
   deleteCSVMapEchoProduct,
   postCSVMapProductOffer,
   putCSVMapProductOffer,
-  deleteCSVMapProductOffer
+  deleteCSVMapProductOffer,
+  getCSVMapCompanies,
+  postCSVMapCompanies,
+  putCSVMapCompanies,
+  deleteCSVMapCompanies
 } from '../../../actions'
 
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import _invert from 'lodash/invert'
 import { withToastManager } from 'react-toast-notifications'
-import {
-  MapTable,
-  SmallerTableCell
-} from '~/modules/settings/components/ProductCatalogTable/Steps/constants/layout'
+import { MapTable, SmallerTableCell } from '~/modules/settings/components/ProductCatalogTable/Steps/constants/layout'
 
 const simpleEchoProductList = {
   constant: 'global',
@@ -198,6 +200,45 @@ const simpleProductOfferList = {
   ]
 }
 
+const simpleCompaniesList = {
+  constant: 'import',
+  required: [
+    'isNacdMemberMapper',
+    'nameMapper',
+    'primaryBranchDeliveryAddressAddressCityMapper',
+    'primaryBranchDeliveryAddressAddressCountryMapper',
+    'primaryBranchDeliveryAddressAddressStreetAddressMapper',
+    'primaryBranchDeliveryAddressAddressZipMapper',
+    'primaryBranchDeliveryAddressContactEmailMapper',
+    'primaryBranchDeliveryAddressContactNameMapper',
+    'primaryBranchDeliveryAddressContactPhoneMapper',
+    'primaryBranchIsWarehouseMapper'
+  ],
+  optional: [
+    'businessTypeMapper',
+    'cinMapper',
+    'dbaMapper',
+    'dunsNumberMapper',
+    'headerLine',
+    'phoneMapper',
+    'primaryBranchDeliveryAddressAddressProvinceMapper',
+    'primaryBranchDeliveryAddressCallAheadMapper',
+    'primaryBranchDeliveryAddressCloseTimeMapper',
+    'primaryBranchDeliveryAddressDeliveryNotesMapper',
+    'primaryBranchDeliveryAddressForkLiftMapper',
+    'primaryBranchDeliveryAddressLiftGateMapper',
+    'primaryBranchDeliveryAddressNameMapper',
+    'primaryBranchDeliveryAddressReadyTimeMapper',
+    'primaryBranchTaxIdMapper',
+    'primaryUserEmailMapper',
+    'primaryUserJobTitleMapper',
+    'primaryUserNameMapper',
+    'primaryUserPhoneMapper	',
+    'tinMapper',
+    'websiteMapper'
+  ]
+}
+
 class Map extends Component {
   state = {
     newHeaders: null,
@@ -253,6 +294,11 @@ class Map extends Component {
       const mappingEchoProduct = this.getMapping(simpleEchoProductList)
       constant = simpleEchoProductList.constant
       mapping = mappingEchoProduct
+    } else if (this.props.companies) {
+      this.props.getCSVMapCompanies()
+      const mappingCompanies = this.getMapping(simpleCompaniesList)
+      constant = simpleCompaniesList.constant
+      mapping = mappingCompanies
     } else {
       const mappingCompanyProduct = this.getMapping(simpleCompanyProductList)
       constant = simpleCompanyProductList.constant
@@ -369,7 +415,7 @@ class Map extends Component {
 
     return (
       <React.Fragment>
-        {(this.props.productOffer || this.props.echoProduct) && (
+        {(this.props.productOffer || this.props.echoProduct || this.props.companies) && (
           <Grid centered padded>
             <Grid.Row verticalAlign='middle'>
               <Grid.Column width={5} textAlign='center'>
@@ -394,7 +440,7 @@ class Map extends Component {
                 />
               </Grid.Column>
               <Grid.Column width={3} textAlign='center' verticalAlign='middle'>
-                {this.props.echoProduct || this.props.productOffer ? (
+                {this.props.echoProduct || this.props.productOffer || this.props.companies ? (
                   <Button
                     type='button'
                     color='red'
@@ -406,6 +452,8 @@ class Map extends Component {
 
                       if (this.props.productOffer)
                         await this.props.deleteCSVMapProductOffer(this.props.selectedSavedMap.id)
+
+                      if (this.props.companies) await this.props.deleteCSVMapCompanies(this.props.selectedSavedMap.id)
                     }}
                     style={{ width: '100%' }}>
                     <FormattedMessage id='settings.deleteMap' defaultMessage='Delete Map'>
@@ -498,6 +546,24 @@ class Map extends Component {
 
                       this.props.getCSVMapProductOffer()
                     }
+
+                    if (this.props.companies) {
+                      if (this.props.selectedSavedMap) {
+                        mapName = this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+                        await this.props.putCSVMapCompanies(this.props.selectedSavedMap.id, {
+                          ...data,
+                          mapName: mapName
+                        })
+                      } else {
+                        mapName = this.props.mapName
+                        await this.props.postCSVMapCompanies({
+                          ...data,
+                          mapName: mapName
+                        })
+                      }
+
+                      this.props.getCSVMapCompanies()
+                    }
                   }}
                   style={{ width: '100%' }}>
                   <FormattedMessage id='settings.saveMap' defaultMessage='Save Map' />
@@ -512,10 +578,19 @@ class Map extends Component {
               <Table.HeaderCell style={{ width: '130px', minWidth: '130px' }}>
                 <FormattedMessage id='settings.csvColumns' defaultMessage='CSV Columns' />
               </Table.HeaderCell>
-              <Table.HeaderCell colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}>
+              <Table.HeaderCell
+                colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}
+                style={{
+                  width: this.props.companies ? '329px' : '229px',
+                  minWidth: this.props.companies ? '329px' : '229px'
+                }}>
                 <FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' />
               </Table.HeaderCell>
-              <Table.HeaderCell style={{ width: '229px', minWidth: '229px' }}>
+              <Table.HeaderCell
+                style={{
+                  width: this.props.companies ? '300px' : '100%',
+                  minWidth: this.props.companies ? '300px' : '100%'
+                }}>
                 <FormattedMessage id='settings.mapping' defaultMessage='Mapping' />
               </Table.HeaderCell>
             </Table.Row>
@@ -529,15 +604,17 @@ class Map extends Component {
                     return line.columns.map(lineBody => {
                       return (
                         lineHeader.columnNumber === lineBody.columnNumber && (
-                          <SmallerTableCell className={`cols${CSV.bodyCSV.length}`}>
+                          <SmallerTableCell
+                            className={`cols${CSV.bodyCSV.length}${this.props.companies ? 'companies' : ''}`}>
                             <div>{lineBody.content}</div>
                           </SmallerTableCell>
                         )
                       )
                     })
                   })}
-                  <Table.Cell style={{ width: '229px' }}>
+                  <Table.Cell style={{ width: this.props.companies ? '350px' : '229px' }}>
                     <Dropdown
+                      style={{ width: this.props.companies ? '320px' : '100%' }}
                       placeholder={formatMessage({ id: 'settings.selectColumn', defaultMessage: 'Select Column' })}
                       column_number={lineHeader.columnNumber}
                       selection
@@ -671,7 +748,11 @@ const mapDispatchToProps = {
   deleteCSVMapEchoProduct,
   postCSVMapProductOffer,
   putCSVMapProductOffer,
-  deleteCSVMapProductOffer
+  deleteCSVMapProductOffer,
+  getCSVMapCompanies,
+  postCSVMapCompanies,
+  putCSVMapCompanies,
+  deleteCSVMapCompanies
 }
 
 const mapStateToProps = state => {

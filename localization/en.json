@@ -1656,6 +1656,7 @@
   "settings.importRecordsFailed": "Records import failed: {value}",
   "settings.viewProduct": "View Products",
   "settings.viewMyInventory": "View My Inventory",
+  "settings.viewCompanies": "View Companies",
   "settings.uploadMore": "Upload more files",
   "settings.duplicateName": "Duplicate Name!",
   "settings.clickToSave": "Click to save",

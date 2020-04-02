@@ -8,7 +8,9 @@ import {
   postCSVMapEchoProduct,
   putCSVMapEchoProduct,
   postCSVMapProductOffer,
-  putCSVMapProductOffer
+  putCSVMapProductOffer,
+  postCSVMapCompanies,
+  putCSVMapCompanies
 } from '../../../actions'
 import _invert from 'lodash/invert'
 import { FormattedMessage } from 'react-intl'
@@ -49,7 +51,8 @@ class Preview extends Component {
 
   componentDidMount() {
     if (this.props.selectedSavedMap && !this.props.isSaveMapCSV) {
-      ;(this.props.productOffer || this.props.echoProduct) && this.props.dataHeaderCSV(this.props.selectedSavedMap)
+      ;(this.props.productOffer || this.props.echoProduct || this.props.companies) &&
+        this.props.dataHeaderCSV(this.props.selectedSavedMap)
 
       if (this.props.echoProduct)
         this.props.isSaveMapCSV &&
@@ -90,6 +93,14 @@ class Preview extends Component {
               ...data,
               mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
             })
+
+        if (this.props.companies)
+          this.props.isSaveMapCSV &&
+            data &&
+            this.props.putCSVMapCompanies(this.props.selectedSavedMap.id, {
+              ...data,
+              mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+            })
       } else {
         // save new maps
         if (this.props.echoProduct)
@@ -104,6 +115,14 @@ class Preview extends Component {
           this.props.isSaveMapCSV &&
             data &&
             this.props.postCSVMapProductOffer({
+              ...data,
+              mapName: this.props.mapName
+            })
+
+        if (this.props.companies)
+          this.props.isSaveMapCSV &&
+            data &&
+            this.props.postCSVMapCompanies({
               ...data,
               mapName: this.props.mapName
             })
@@ -157,7 +176,9 @@ const mapDispatchToProps = {
   postCSVMapEchoProduct,
   putCSVMapEchoProduct,
   postCSVMapProductOffer,
-  putCSVMapProductOffer
+  putCSVMapProductOffer,
+  postCSVMapCompanies,
+  putCSVMapCompanies
 }
 
 const mapStateToProps = state => {
