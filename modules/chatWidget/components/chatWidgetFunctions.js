@@ -50,6 +50,15 @@ const chatWidget_updateIdentity = identity => {
 }
 
 const chatWidget_scriptLoaded = (identity, hide) => {
+  window.zESettings = {
+    webWidget: {
+      launcher: {
+        chatLabel: {
+          '*': ' '
+        }
+      }
+    }
+  }
   zE(function() {
     $zopim(function() {
       if (hide) $zopim.livechat.window.hide()
