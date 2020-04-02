@@ -21,6 +21,7 @@ import {
 import { getSafe } from '~/utils/functions'
 import { AddressForm } from '~/modules/address-form'
 import { PhoneNumber } from '~/modules/phoneNumber'
+import { removeEmpty } from '~/utils/functions'
 
 const ConfirmSegment = styled(Segment.Group)`
   position: relative;
@@ -177,6 +178,7 @@ class ConfirmationPage extends Component {
               }
             }
           }
+          removeEmpty(payload)
 
           try {
             await reviewCompany(payload)
