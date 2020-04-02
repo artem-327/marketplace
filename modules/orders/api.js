@@ -7,7 +7,7 @@ export default {
       ...filter,
       pageSize: 50,
       pageStart: 0,
-      sortDirection: 'desc',
+      sortDirection: 'DESC',
       sortPath: 'Order.orderDate'
     }),
   create: model => api.post('/prodex/api/orders', model),

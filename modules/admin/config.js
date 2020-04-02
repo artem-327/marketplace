@@ -738,7 +738,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
-          sortPath: 'Associations.name'
+          sortPath: 'Association.name'
         }
       ]
     },
