@@ -424,7 +424,7 @@ class UsersSidebar extends React.Component {
     const companiesOptions = companiesAll.map(d => ({
       key: d.id,
       value: d.id,
-      text: getSafe(() => d.cfDisplayName, d.displayName)
+      text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
     }))
 
     return (

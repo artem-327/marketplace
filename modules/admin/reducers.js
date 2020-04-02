@@ -77,7 +77,9 @@ export const initialState = {
   adminRoles: [],
   searchedCompanies: [],
   searchedCompaniesLoading: false,
-  updating: false
+  updating: false,
+  searchedTags: [],
+  searchedTagsLoading: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -804,6 +806,20 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_EDIT_USER_REJECTED:
     case AT.ADMIN_EDIT_USER_FULFILLED: {
       return { ...state, updating: false }
+    }
+
+    case AT.ADMIN_SEARCH_TAGS_PENDING: {
+      return { ...state, searchedTagsLoading: true }
+    }
+    case AT.ADMIN_SEARCH_TAGS_REJECTED: {
+      return { ...state, searchedTagsLoading: false }
+    }
+    case AT.ADMIN_SEARCH_TAGS_FULFILLED: {
+      return {
+        ...state,
+        searchedTags: action.payload,
+        searchedTagsLoading: false
+      }
     }
 
     default: {

@@ -73,6 +73,16 @@ class Marketplace extends Component {
         align: 'center'
       },
       {
+        name: 'intProductName',
+        title: (
+          <FormattedMessage id='global.intProductName' defaultMessage='Internal Product Name'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 180,
+        sortPath: 'ProductOffer.companyProduct.intProductName'
+      },
+      {
         name: 'available',
         title: (
           <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs'>

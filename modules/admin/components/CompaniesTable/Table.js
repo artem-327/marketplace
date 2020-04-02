@@ -49,7 +49,7 @@ class CompaniesTable extends Component {
     } = this.props
 
     const { formatMessage } = intl
-    
+
     return (
       <React.Fragment>
         <ProdexTable
@@ -115,8 +115,10 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
     rows: datagrid.rows.map(c => ({
       rawData: c,
       ...c,
-      displayName: getSafe(() => c.cfDisplayName, c.displayName),
-      associations: <ArrayToFirstItem values={c.associations && c.associations.map(r => r.name)} />,
+      displayName: getSafe(() => c.cfDisplayName, '') ? c.cfDisplayName : getSafe(() => c.name, ''),
+      associations: (
+        <ArrayToFirstItem values={getSafe(() => c.associations, '') ? c.associations.map(r => r.name) : []} />
+      ),
       hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
       hasDwollaAccount: getSafe(() => c.dwollaAccountStatus, false) === 'verified' ? 'Yes' : 'No',
       primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false)
