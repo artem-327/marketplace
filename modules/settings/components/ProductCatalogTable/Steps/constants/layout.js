@@ -47,38 +47,6 @@ export const SmallerTableCell = styled(Table.Cell)`
     }
   }
 
-  &.cols1companies {
-    width: calc(
-      58vw - 404px
-    ); /* 404 = 44px for wrapper padding and border; 130px for first column; 230px for last column */
-    max-width: 407px;
-
-    > div {
-      width: calc((58vw - 404px) - 25px);
-      max-width: 483px;
-    }
-  }
-
-  &.cols2companies {
-    width: calc((58vw - 404px) / 2);
-    max-width: calc(507px / 2);
-
-    > div {
-      width: calc(((58vw - 404px) / 2) - 25px);
-      max-width: calc((507px / 2) - 24px);
-    }
-  }
-
-  &.cols3companies {
-    width: calc((58vw - 404px) / 3);
-    max-width: calc(507px / 3);
-
-    > div {
-      width: calc(((58vw - 404px) / 3) - 25px);
-      max-width: calc((507px / 3) - 24px);
-    }
-  }
-
   @media (max-width: 1919px) {
     max-width: 487px;
 
@@ -135,10 +103,7 @@ export const SmallerTableCell = styled(Table.Cell)`
     &,
     &.cols1,
     &.cols2,
-    &.cols3,
-    &.cols1companies,
-    &.cols2companies,
-    &.cols3companies {
+    &.cols3 {
       width: 100%;
       max-width: 100%;
 
