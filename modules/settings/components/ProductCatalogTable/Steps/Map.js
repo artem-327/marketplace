@@ -201,7 +201,7 @@ const simpleProductOfferList = {
 }
 
 const simpleCompaniesList = {
-  constant: 'import',
+  constant: 'import.companies',
   required: [
     'isNacdMemberMapper',
     'nameMapper',
@@ -219,7 +219,6 @@ const simpleCompaniesList = {
     'cinMapper',
     'dbaMapper',
     'dunsNumberMapper',
-    'headerLine',
     'phoneMapper',
     'primaryBranchDeliveryAddressAddressProvinceMapper',
     'primaryBranchDeliveryAddressCallAheadMapper',
@@ -233,7 +232,7 @@ const simpleCompaniesList = {
     'primaryUserEmailMapper',
     'primaryUserJobTitleMapper',
     'primaryUserNameMapper',
-    'primaryUserPhoneMapper	',
+    'primaryUserPhoneMapper',
     'tinMapper',
     'websiteMapper'
   ]
@@ -578,19 +577,10 @@ class Map extends Component {
               <Table.HeaderCell style={{ width: '130px', minWidth: '130px' }}>
                 <FormattedMessage id='settings.csvColumns' defaultMessage='CSV Columns' />
               </Table.HeaderCell>
-              <Table.HeaderCell
-                colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}
-                style={{
-                  width: this.props.companies ? '329px' : '229px',
-                  minWidth: this.props.companies ? '329px' : '229px'
-                }}>
+              <Table.HeaderCell colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}>
                 <FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' />
               </Table.HeaderCell>
-              <Table.HeaderCell
-                style={{
-                  width: this.props.companies ? '300px' : '100%',
-                  minWidth: this.props.companies ? '300px' : '100%'
-                }}>
+              <Table.HeaderCell style={{ width: '229px', minWidth: '229px' }}>
                 <FormattedMessage id='settings.mapping' defaultMessage='Mapping' />
               </Table.HeaderCell>
             </Table.Row>
@@ -604,17 +594,15 @@ class Map extends Component {
                     return line.columns.map(lineBody => {
                       return (
                         lineHeader.columnNumber === lineBody.columnNumber && (
-                          <SmallerTableCell
-                            className={`cols${CSV.bodyCSV.length}${this.props.companies ? 'companies' : ''}`}>
+                          <SmallerTableCell className={`cols${CSV.bodyCSV.length}`}>
                             <div>{lineBody.content}</div>
                           </SmallerTableCell>
                         )
                       )
                     })
                   })}
-                  <Table.Cell style={{ width: this.props.companies ? '350px' : '229px' }}>
+                  <Table.Cell style={{ width: '229px' }}>
                     <Dropdown
-                      style={{ width: this.props.companies ? '320px' : '100%' }}
                       placeholder={formatMessage({ id: 'settings.selectColumn', defaultMessage: 'Select Column' })}
                       column_number={lineHeader.columnNumber}
                       selection
