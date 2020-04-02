@@ -227,7 +227,8 @@ class AddEditEchoProduct extends React.Component {
     changedAttachments: false,
     unNumberInitOptions: [],
     popupValues: null,
-    editTab: 0
+    editTab: 0,
+    selectedTagsOptions: []
   }
 
   componentDidMount() {
@@ -295,7 +296,9 @@ class AddEditEchoProduct extends React.Component {
 
   setInitialState = (popupValues, additionalStates) => {
     let codesList = [],
-      unNumberInitOptions = []
+      unNumberInitOptions = [],
+      selectedTagsOptions = []
+
     if (popupValues) {
       codesList = popupValues.mfrProductCodes.map(code => ({
         text: code,
@@ -315,6 +318,16 @@ class AddEditEchoProduct extends React.Component {
           content: <Header content={d.unNumberCode} subheader={d.description} style={{ fontSize: '1em' }} />
         }
       })
+
+      if (popupValues.tags) {
+        selectedTagsOptions = popupValues.tags.map((d) => {
+          return {
+            key: d.id,
+            text: d.name,
+            value: d.id
+          }
+        })
+      }
     }
     this.setState({
       codesList,
@@ -322,6 +335,7 @@ class AddEditEchoProduct extends React.Component {
       changedAttachments: false,
       popupValues,
       unNumberInitOptions: unNumberInitOptions,
+      selectedTagsOptions,
       ...additionalStates
     })
   }
@@ -454,7 +468,8 @@ class AddEditEchoProduct extends React.Component {
             vaporPressure: getSafe(() => popupValues.vaporPressure, ''),
             viscosity: getSafe(() => popupValues.viscosity, ''),
             wasteDisposalMethods: getSafe(() => popupValues.wasteDisposalMethods, ''),
-            isPublished: getSafe(() => popupValues.isPublished, false)
+            isPublished: getSafe(() => popupValues.isPublished, false),
+            tags: getSafe(() => popupValues.tags, []).map(d => d.id),
           }
         : null)
     }
@@ -503,6 +518,17 @@ class AddEditEchoProduct extends React.Component {
         this.setState({ unNumberInitOptions: stateOptions })
       }
     }
+  }
+
+  handleTagsSearchChange = debounce((_, { searchQuery }) => {
+    this.props.searchTags(searchQuery)
+  }, 250)
+
+  handleTagsChange = (value, options) => {
+    const newOptions = options.filter(
+      el => value.some(v => el.value === v)
+    )
+    this.setState({ selectedTagsOptions: newOptions })
   }
 
   switchToErrors = err => {
@@ -961,12 +987,17 @@ class AddEditEchoProduct extends React.Component {
 
   renderEdit = formikProps => {
     let codesList = this.state.codesList
+    const { selectedTagsOptions } = this.state
     const {
       intl: { formatMessage },
       searchedManufacturers,
       searchedManufacturersLoading,
-      searchManufacturers
+      searchManufacturers,
+      searchedTagsLoading,
+      searchedTags
     } = this.props
+
+    const allTagsOptions = uniqueArrayByKey(searchedTags.concat(selectedTagsOptions), 'key')
 
     return (
       <Grid verticalAlign='middle'>
@@ -1040,6 +1071,28 @@ class AddEditEchoProduct extends React.Component {
           defaultMessage: 'Emergency Phone',
           props: formikProps
         })}
+        <GridRow>
+          <GridColumn width={6}>
+            <FormattedMessage id='global.tags' defaultMessage='Tags' />
+          </GridColumn>
+          <GridColumn width={10}>
+            <FormikDropdown
+              name='tags'
+              options={allTagsOptions}
+              inputProps={{
+                loading: searchedTagsLoading,
+                search: true,
+                selection: true,
+                multiple: true,
+                noResultsMessage: formatMessage(
+                  { id: 'global.startTypingToSearch', defaultMessage: 'Start typing to begin search' }
+                ),
+                onSearchChange: this.handleTagsSearchChange,
+                onChange: (_, { value }) => this.handleTagsChange(value, allTagsOptions)
+              }}
+            />
+          </GridColumn>
+        </GridRow>
         <Header as='h3'>
           <FormattedMessage id='global.sds' defaultMessage='SDS' />
         </Header>

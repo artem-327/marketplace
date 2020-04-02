@@ -114,7 +114,7 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
     rows: datagrid.rows.map(c => ({
       rawData: c,
       ...c,
-      displayName: c.displayName ? c.displayName : c.name,
+      displayName: c.cfDisplayName ? c.cfDisplayName : c.name,
       associations: <ArrayToFirstItem values={c.associations && c.associations.map(r => r.name)} />,
       hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
       hasDwollaAccount: getSafe(() => c.dwollaAccountStatus, false) === 'verified' ? 'Yes' : 'No',

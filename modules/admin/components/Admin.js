@@ -95,7 +95,7 @@ const datagridConfig = {
       v
         ? [
             { operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] },
-            { operator: 'LIKE', path: 'Company.displayName', values: [`%${v}%`] },
+            { operator: 'LIKE', path: 'Company.cfDisplayName', values: [`%${v}%`] },
           ]
         : []
   },
