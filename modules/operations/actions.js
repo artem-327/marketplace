@@ -84,3 +84,12 @@ export function createTag(name) {
     }
   }
 }
+
+export function handleActiveTab(tab) {
+  Datagrid.clear()
+
+  return {
+    type: AT.OPERATIONS_HANDLE_ACTIVE_TAB,
+    payload: { tab }
+  }
+}

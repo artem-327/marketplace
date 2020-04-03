@@ -83,6 +83,10 @@ export class DatagridProvider extends Component {
         ? 0
         : datagridParams.pageNumber
 
+    if (datagridParams.sortDirection) {
+      datagridParams.sortDirection = datagridParams.sortDirection.toUpperCase()
+    }
+
     try {
       const response = await api.request({
         url: this.apiConfig && this.apiConfig.url ? this.apiConfig.url : apiConfig.url,
@@ -90,8 +94,7 @@ export class DatagridProvider extends Component {
         params: query,
         data: {
           ...datagridParams,
-          pageNumber,
-          sortDirection: datagridParams.sortDirection ? datagridParams.sortDirection.toUpperCase() : null
+          pageNumber
         }
       })
       if (

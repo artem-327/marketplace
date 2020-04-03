@@ -35,7 +35,7 @@ class TablesHandlers extends Component {
     this.state = {
       filterValue: ''
     }
-    this.handleFiltersValue = debounce(this.handleFiltersValue, 250)
+    this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
