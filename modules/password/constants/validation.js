@@ -1,5 +1,6 @@
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
+import { errorMessages } from '~/constants/yupValidation'
 
 export const initialValues = forgottenPassword => {
   let initial = {
@@ -18,23 +19,27 @@ export const initialValues = forgottenPassword => {
 
 export const validationSchema = () =>
   Yup.lazy(values => {
-    let messages = {
-      email: <FormattedMessage id='validation.invalidEmail' defaultMessage='Invalid e-mail' />,
-      required: <FormattedMessage id='validation.required' defaultMessage='Required!' />,
-      passwordsMatch: <FormattedMessage id='validation.passwordsMustMatch' defaultMessage='Pass must match' />
-    }
     let validation = {
-      securityCode: Yup.string(messages.required).required(messages.required),
+      securityCode: Yup.string().required(errorMessages.requiredMessage),
       email: Yup.string()
-        .email(messages.email)
-        .required(messages.required),
-      password: Yup.string(messages.required).required(messages.required)
+        .trim()
+        .email(errorMessages.invalidEmail)
+        .required(errorMessages.requiredMessage),
+      password: Yup.string(errorMessages.requiredMessage)
+        .required(errorMessages.requiredMessage)
+        .test('trailing-spaces', errorMessages.trailingSpaces, val => val && val.trim() === val)
     }
 
     if (!values.passwordConfirm) {
-      validation.passwordConfirm = Yup.string('required').required('Required')
+      validation.passwordConfirm = Yup.string()
+        .required(errorMessages.requiredMessage)
     } else if (values.password !== values.passwordConfirm) {
-      validation.passwordConfirm = Yup.string('must match').oneOf([values.password], messages.passwordsMatch)
+      validation.passwordConfirm = Yup.string()
+        .oneOf([values.password], errorMessages.passwordsMatch)
+        .test('trailing-spaces', errorMessages.trailingSpaces, val => val && val.trim() === val)
+    } else {
+      validation.passwordConfirm = Yup.string()
+        .test('trailing-spaces', errorMessages.trailingSpaces, val => val && val.trim() === val)
     }
 
     return Yup.object().shape(validation)

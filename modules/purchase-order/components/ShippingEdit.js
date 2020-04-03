@@ -12,6 +12,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { PHONE_REGEXP } from '../../../src/utils/constants'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
+import { removeEmpty } from '~/utils/functions'
 
 const BottomMargedGrid = styled(Grid)`
   margin-bottom: 1rem !important;
@@ -67,6 +68,7 @@ class ShippingEdit extends Component {
       //addressName: Yup.string(invalidString).required(requiredMessage),
       // lastName: Yup.string(invalidString).required(requiredMessage),
       contactEmail: Yup.string()
+        .trim()
         .email(invalidEmail)
         .required(requiredMessage),
       contactPhone: Yup.string()
@@ -176,6 +178,7 @@ class ShippingEdit extends Component {
 
     let payload = {
       ...values,
+      contactEmail: values.contactEmail.trim(),
       address: {
         ...values.address,
         country: JSON.parse(values.address.country).countryId
