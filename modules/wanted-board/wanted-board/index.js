@@ -4,16 +4,10 @@ import { DatagridProvider } from '~/modules/datagrid'
 export const WantedBoard = props => {
   const urlApiConfig = {
     url: `/prodex/api/purchase-requests/other/datagrid?type=${props.type}`,
-    searchToFilter: v =>
+    searchViaPattern: v =>
       v
-        ? [
-          //{ operator: 'LIKE', path: 'PurchaseRequestElement.echoProduct.name', values: [`%${v}%`] },
-          //{ operator: 'LIKE', path: 'PurchaseRequestElement.casProduct.casNumber', values: [`%${v}%`] }
-        ]
-        : [],
-    params: {
-      orOperator: true
-    }
+        ? { url: `/prodex/api/purchase-requests/other/datagrid?type=${props.type}&pattern=${v}` }
+        : { url: `/prodex/api/purchase-requests/other/datagrid?type=${props.type}` }
   }
   return (
     <>
