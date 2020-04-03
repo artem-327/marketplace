@@ -57,12 +57,6 @@ const MarketplaceTab = styled(Tab)`
 class Marketplace extends Component {
   state = {
     columns: [
-      {
-        name: 'intProductName',
-        width: 200,
-        sortPath: 'ProductOffer.companyProduct.intProductName',
-        title: <FormattedMessage id='marketplace.intProductName' defaultMessage='Int Product Name' />
-      },
       { name: 'productName', disabled: true },
       { name: 'productNumber', disabled: true },
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
