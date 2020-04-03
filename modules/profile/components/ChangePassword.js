@@ -18,14 +18,18 @@ const formValidation = () =>
   Yup.lazy(values =>
     Yup.object().shape({
       oldPassword: Yup.string()
-        .trim()
         .min(3, errorMessages.minLength(3))
-        .required(errorMessages.requiredMessage),
+        .required(errorMessages.requiredMessage)
+        .test('trailing-spaces', errorMessages.trailingSpaces, val => val && val.trim() === val),
       newPassword: passwordValidation(),
-      newPasswordRetype: Yup.string(errorMessages.passwordsMustMatch).oneOf(
-        [values.newPassword],
-        errorMessages.passwordsMustMatch
-      )
+      newPasswordRetype: Yup
+        .string(errorMessages.passwordsMustMatch)
+        .required(errorMessages.requiredMessage)
+        .oneOf(
+          [values.newPassword],
+          errorMessages.passwordsMustMatch
+        )
+        .test('trailing-spaces', errorMessages.trailingSpaces, val => val && val.trim() === val)
     })
   )
 

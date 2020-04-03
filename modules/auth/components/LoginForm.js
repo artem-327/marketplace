@@ -86,8 +86,14 @@ const LoginButton = styled(Button)`
 const validationScheme = val.object().shape({
   username: val
     .string()
+    .trim()
     .email(errorMessages.invalidEmail)
+    .required(errorMessages.requiredMessage),
+  password: val
+    .string()
+    .min(3, errorMessages.minLength(3))
     .required(errorMessages.requiredMessage)
+    .test('trailing-spaces', errorMessages.trailingSpaces, val => val && val.trim() === val)
 })
 
 const initialValues = {
@@ -107,26 +113,6 @@ class LoginForm extends Component {
 
     loginInit()
     getVersion()
-  }
-
-  handleSubmit = async e => {
-    const {
-      target,
-      target: { username, password }
-    } = e
-    const { login, resetPasswordRequest } = this.props
-
-    e.preventDefault()
-
-    let inputsState = {
-      passwordError: this.state.resetPassword ? false : target['password'].value.length < 3,
-      usernameError: target['username'].value.length < 3
-    }
-
-    if (!inputsState.passwordError && !inputsState.usernameError) {
-      if (this.state.resetPassword) resetPasswordRequest(username.value)
-      else login(username.value, password.value)
-    } else this.setState(inputsState)
   }
 
   toggleResetPassword = () => {
@@ -172,7 +158,7 @@ class LoginForm extends Component {
                 try {
                   if (!inputsState.passwordError && !inputsState.usernameError) {
                     if (this.state.resetPassword) await resetPasswordRequest(username)
-                    else await login(username, password)
+                    else await login(username.trim(), password)
                   } else {
                     this.setState(inputsState)
                     actions.setSubmitting(false)

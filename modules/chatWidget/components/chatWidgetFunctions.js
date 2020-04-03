@@ -50,12 +50,12 @@ const chatWidget_updateIdentity = identity => {
 }
 
 const chatWidget_scriptLoaded = (identity, hide) => {
+  //Move chat to center bottom
   window.zESettings = {
     webWidget: {
-      launcher: {
-        chatLabel: {
-          '*': ' '
-        }
+      offset: {
+        horizontal: '40%',
+        vertical: '1%'
       }
     }
   }

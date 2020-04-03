@@ -18,6 +18,7 @@ import { errorMessages } from '~/constants/yupValidation'
 import { currencyId } from '~/constants/index'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
+import { removeEmpty } from '~/utils/functions'
 
 const userFormValidation = () =>
   Yup.object().shape({
@@ -71,6 +72,7 @@ class UsersPopup extends React.Component {
       phone: values.phone,
       preferredCurrency: currencyId //values.preferredCurrency,
     }
+    removeEmpty(data)
 
     try {
       if (popupValues) {

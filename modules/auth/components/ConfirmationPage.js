@@ -120,6 +120,7 @@ const validationScheme = val.object().shape({
     contactName: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
     contactEmail: val
       .string(errorMessages.invalidEmail)
+      .trim()
       .email(errorMessages.invalidEmail)
       .required(errorMessages.requiredMessage),
     contactPhone: phoneValidation().required(errorMessages.requiredMessage)
@@ -130,6 +131,7 @@ const validationScheme = val.object().shape({
     phone: phoneValidation(),
     email: val
       .string(errorMessages.invalidEmail)
+      .trim()
       .email(errorMessages.invalidEmail)
       .required(errorMessages.requiredMessage)
   }),

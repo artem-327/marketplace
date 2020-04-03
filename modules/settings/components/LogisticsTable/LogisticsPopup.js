@@ -5,7 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Form, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { array } from 'prop-types'
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages, passwordValidationAnyChar } from '~/constants/yupValidation'
 
 const { requiredMessage } = errorMessages
 import { Required } from '~/components/constants/layout'
@@ -20,23 +20,21 @@ import {
 
 const validationSchema = Yup.object().shape(
   {
-    providerIdentifier: Yup.object().shape({
-      type: Yup.string(requiredMessage).required(requiredMessage),
-      value: Yup.string(requiredMessage).required(requiredMessage)
-    }),
+    providerIdentifier: Yup.string(requiredMessage).required(requiredMessage),
     username: Yup.string(requiredMessage).required(requiredMessage),
-    password: Yup.string(requiredMessage).required(requiredMessage)
-  },
-  [['username', 'password']]
+    password: passwordValidationAnyChar()
+  }
 )
 
 const initialValues = {
-  providerIdentifier: {},
+  providerIdentifier: '',
+  providerIdentifierName: '',
   username: '',
   password: ''
 }
 
 class LogisticsPopup extends Component {
+
   componentDidMount() {
     this.props.getLogisticsProviders()
   }
@@ -45,7 +43,8 @@ class LogisticsPopup extends Component {
     let { popupValues } = this.props
     return popupValues
       ? {
-        providerIdentifier: popupValues.provider.identifier,
+        providerIdentifier: JSON.stringify(popupValues.provider.identifier),
+        providerIdentifierName: `${popupValues.provider.name} (${popupValues.provider.identifier.value})`,
         username: popupValues.accountInfos && popupValues.accountInfos.length
           ? popupValues.accountInfos[0].username
           : '',
@@ -85,10 +84,16 @@ class LogisticsPopup extends Component {
             initialValues={this.getInitialValues()}
             onSubmit={async (values, { setSubmitting }) => {
               try {
+                const payload = {
+                  providerIdentifier: JSON.parse(values.providerIdentifier),
+                  username: values.username,
+                  password: values.password
+                }
+
                 if (popupValues) {
-                  await updateLogisticsAccount(popupValues.id, values)
+                  await updateLogisticsAccount(popupValues.id, payload)
                 } else {
-                  await createLogisticsAccount(values)
+                  await createLogisticsAccount(payload)
                   getLogisticsAccounts()
                 }
               } catch {
@@ -104,7 +109,7 @@ class LogisticsPopup extends Component {
                   <FormGroup widths='equal' data-test='settings_logistics_apikey_inp'>
                     {popupValues ? (
                       <Input
-                        name='providerIdentifier.value'
+                        name='providerIdentifierName'
                         label={formatMessage({
                           id: 'logistics.label.logisticsProvider',
                           defaultMessage: 'Logistics Provider'
@@ -116,10 +121,10 @@ class LogisticsPopup extends Component {
                     ) : (
                       <Dropdown
                         name='providerIdentifier'
-                        options={logisticsProviders.map(provider => ({
+                        options={logisticsProviders.map((provider, index) => ({
                           key: provider.identifier.value,
                           text: `${provider.name} (${provider.identifier.value})`,
-                          value: provider.identifier
+                          value: JSON.stringify(provider.identifier)
                         }))}
                         label={formatMessage({
                           id: 'logistics.label.logisticsProvider',

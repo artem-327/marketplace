@@ -6,7 +6,7 @@ import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
 import { getSafe } from '~/utils/functions'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-
+import { removeEmpty } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 
 import {
@@ -119,7 +119,7 @@ class Filter extends Component {
     let { notifyMail, notifyPhone, notifySystem, notificationEnabled } = checkboxes
     let { filters } = this.toSavedFilter(rest)
 
-    return {
+    let data = {
       filters,
       name,
       notificationEnabled: notificationEnabled,
@@ -129,6 +129,8 @@ class Filter extends Component {
       notifyPhone,
       notifySystem
     }
+    removeEmpty(data)
+    return data
   }
 
   toSavedFilter = inputs => {
