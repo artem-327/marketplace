@@ -222,6 +222,16 @@ export class DatagridProvider extends Component {
     )
   }
 
+  setSearchPattern = value => {
+    const {
+      apiConfig: { searchViaPattern, params }
+    } = this.props
+
+    let newApiConfig =
+      typeof searchViaPattern !== 'function' ? this.apiConfig.searchViaPattern(value) : searchViaPattern(value)
+    this.setApiConfig(newApiConfig)
+  }
+
   setLoading = loading => {
     this.setState({
       loading
@@ -262,6 +272,7 @@ export class DatagridProvider extends Component {
           loadNextPage: this.loadNextPageSafe,
           clear: this.clear,
           setApiConfig: this.setApiConfig,
+          setSearchPattern: this.setSearchPattern,
 
           tableProps: {
             rows,
