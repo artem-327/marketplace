@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl'
 import { Menu, Dropdown } from 'semantic-ui-react'
 import Link from 'next/link'
 
-import { tabChanged } from '../actions'
+import { handleActiveTab } from '../actions'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 const MenuLink = ({ active, children, onClick, className, dataTest }) => {
@@ -18,7 +18,7 @@ const MenuLink = ({ active, children, onClick, className, dataTest }) => {
 function TabsOperations(props) {
   const {
     tabsNames,
-    tabChanged,
+    handleActiveTab,
     currentTab,
     intl: { formatMessage }
   } = props
@@ -33,7 +33,7 @@ function TabsOperations(props) {
             onClick={e => {
               e.preventDefault()
               e.stopPropagation()
-              tabChanged(tab)
+              handleActiveTab(tab)
             }}
             active={currentTab.name === tab.name}
             dataTest={`tabs_menu_item_${tab.name.toLowerCase()}`}
@@ -54,7 +54,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-  tabChanged
+  handleActiveTab
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(TabsOperations))

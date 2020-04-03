@@ -75,6 +75,17 @@ export default function reducers(state = initialState, action) {
       }
     }
 
+    case AT.OPERATIONS_HANDLE_ACTIVE_TAB: {
+      return {
+        ...state,
+        currentTab: action.payload.tab,
+        popupValues: null,
+        isOpenPopup: false,
+        filterValue: '',
+        loading: false
+      }
+    }
+
     default: {
       return state
     }
