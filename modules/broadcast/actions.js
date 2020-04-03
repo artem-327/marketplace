@@ -50,3 +50,5 @@ export const treeDataChanged = createAction('TREE_DATA_CHANGED', treeData => tre
 export const openModalCompanyInfo = createAction('OPEN_MODAL_COMPANY_INFO')
 export const closeModalCompanyInfo = createAction('CLOSE_MODAL_COMPANY_INFO')
 export const getCompanyInfo = createAsyncAction('GET_COMPANY_INFO', companyId => api.getCompanyInfo(companyId))
+
+export const getAssociations = createAsyncAction('GET_ASSOCIATIONS', filter => api.getAssociations(filter))

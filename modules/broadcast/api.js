@@ -16,3 +16,7 @@ export const getTemplates = () => api.get('/prodex/api/broadcast-templates').the
 
 export const getCompanyInfo = companyId =>
   api.get(`/prodex/api/companies/id/${companyId}`).then(response => response.data)
+
+export const getAssociations =
+  (filter = { orFilters: [], filters: [], pageSize: 50, pageNumber: 0, sortDirection: null }) =>
+    api.post('/prodex/api/associations/datagrid', filter).then(response => response.data)
