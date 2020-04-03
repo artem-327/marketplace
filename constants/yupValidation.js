@@ -134,7 +134,13 @@ export const errorMessages = {
   invalidShipmentQuoteId: (
     <FormattedMessage id='validation.shipmentQuoteId' defaultMessage='Value should be in format "12365-4789"' />
   ),
-  minOneRole: <FormattedMessage id='validation.minOneRole' defaultMessage='At least one role should be selected' />
+  minOneRole: <FormattedMessage id='validation.minOneRole' defaultMessage='At least one role should be selected' />,
+  trailingSpaces:
+    <FormattedMessage
+      id='validation.trailingSpaces'
+      defaultMessage='Space was detected as leading or trailing character, please check enter password is correct'
+    />,
+  passwordsMatch: <FormattedMessage id='validation.passwordsMustMatch' defaultMessage='Pass must match' />
 }
 
 export const provinceObjectRequired = hasProvinces =>
@@ -146,12 +152,17 @@ export const provinceObjectRequired = hasProvinces =>
 
 export const passwordValidation = () =>
   Yup.string()
-    .trim()
     .min(8, errorMessages.minLength(8))
     .required(errorMessages.requiredMessage)
     .matches(/[a-z]/, errorMessages.oneLowercaseChar)
     .matches(/[A-Z]/, errorMessages.oneUppercaseChar)
     .matches(/[^a-zA-Z\s]+/, errorMessages.oneSpecialChar)
+    .test('trailing spaces', errorMessages.trailingSpaces, val => val && val.trim() === val)
+
+export const passwordValidationAnyChar = () =>
+  Yup.string()
+    .required(errorMessages.requiredMessage)
+    .test('trailing-spaces', errorMessages.trailingSpaces, val => val && val.trim() === val)
 
 export const phoneValidation = () =>
   Yup.string()

@@ -350,14 +350,22 @@ class AddNewPopupCasProducts extends React.Component {
               if (
                 !values.primaryBranch.deliveryAddress ||
                 !deepSearch(values.mailingBranch.deliveryAddress, val => val !== '')
-              )
+              ) {
                 delete values['mailingBranch']
+              } else {
+                if (values.mailingBranch.deliveryAddress.contactEmail !== '')
+                  values.mailingBranch.deliveryAddress.contactEmail =
+                    values.mailingBranch.deliveryAddress.contactEmail.trim()
+              }
 
               let branches = ['primaryBranch', 'mailingBranch']
 
               if (values.businessType) values.businessType = values.businessType.id
 
               let payload = cloneDeep(values)
+              payload.primaryUser.email = payload.primaryUser.email.trim()
+              payload.primaryBranch.deliveryAddress.contactEmail =
+                payload.primaryBranch.deliveryAddress.contactEmail.trim()
 
               branches.forEach(branch => {
                 let country = getSafe(() => JSON.parse(payload[branch].deliveryAddress.address.country).countryId)
@@ -658,7 +666,8 @@ class AddNewPopupCasProducts extends React.Component {
               </Modal.Actions>
             </Modal>
           )
-        }}></Formik>
+        }}>
+      </Formik>
     )
   }
 }

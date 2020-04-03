@@ -22,6 +22,7 @@ import { errorMessages, provinceObjectRequired, minOrZeroLength } from '~/consta
 import { AddressForm } from '~/modules/address-form'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
+import { removeEmpty } from '~/utils/functions'
 
 const initialFormValues = {
   addressName: '',
@@ -112,6 +113,7 @@ class DeliveryAddressesPopup extends React.Component {
                   country: JSON.parse(values.address.country).countryId
                 }
               }
+              removeEmpty(payload)
               try {
                 if (values.address.province === '') delete payload.address['province']
                 if (popupValues) await updateDeliveryAddresses(rowId, payload, reloadFilter)
