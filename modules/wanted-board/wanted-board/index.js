@@ -7,13 +7,12 @@ export const WantedBoard = props => {
     searchToFilter: v =>
       v
         ? [
-          //{ operator: 'LIKE', path: 'PurchaseRequestElement.echoProduct.name', values: [`%${v}%`] },
-          //{ operator: 'LIKE', path: 'PurchaseRequestElement.casProduct.casNumber', values: [`%${v}%`] }
-        ]
-        : [],
-    params: {
-      orOperator: true
-    }
+            { operator: 'CONTAINS', path: 'PurchaseRequestElement.echoProduct.name', values: [v] },
+            { operator: 'CONTAINS', path: 'PurchaseRequestElement.echoProduct.code', values: [v] },
+            { operator: 'CONTAINS', path: 'PurchaseRequestElement.casProduct.casNumber', values: [v] },
+            { operator: 'CONTAINS', path: 'PurchaseRequestElement.casProduct.casIndexName', values: [v] }
+          ]
+        : []
   }
   return (
     <>
