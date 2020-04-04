@@ -2,6 +2,7 @@ context("Manufacturers CRUD", () => {
 
     let manufacturerId = null
     let filter = [{"operator": "LIKE", "path": "Manufacturer.name", "values": ["%Test%"]}]
+    let filterRename = [{"operator": "LIKE", "path": "Manufacturer.name", "values": ["%Artio%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
@@ -23,6 +24,10 @@ context("Manufacturers CRUD", () => {
     it("Creates a manufacturer", () => {
         cy.getToken().then(token => {
             cy.getFirstEntityWithFilter(token, 'manufacturers', filter).then(itemId => {
+                if (itemId != null)
+                    cy.deleteEntity(token, 'manufacturers/id', itemId)
+            })
+            cy.getFirstEntityWithFilter(token, 'manufacturers', filterRename).then(itemId => {
                 if (itemId != null)
                     cy.deleteEntity(token, 'manufacturers/id', itemId)
             })
