@@ -104,7 +104,7 @@ context("Companies CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length", 11)
+            .should("have.length", 10)
     })
 
     it("Deletes a company", () => {
