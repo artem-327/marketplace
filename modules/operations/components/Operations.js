@@ -11,6 +11,8 @@ import ShippingQuotesTable from './shipping-quotes/ShippingQuotesTable'
 import ShippingQuotesPopup from './shipping-quotes/ShippingQuotesPopup'
 import TagsTable from './tags/TagsTable'
 import TagsPopup from './tags/TagsPopup'
+import CompanyProductTable from './company-product-catalog/CompanyProductTable'
+import CompanyInventoryTable from './company-inventory/CompanyInventoryTable'
 
 import { getSafe } from '~/utils/functions'
 import { DatagridProvider } from '~/modules/datagrid'
@@ -26,7 +28,9 @@ class Operations extends Component {
 
     const tables = {
       'shipping-quotes': <ShippingQuotesTable />,
-      tags: <TagsTable />
+      tags: <TagsTable />,
+      'company-product-catalog': <CompanyProductTable />,
+      'company-inventory': <CompanyInventoryTable />
     }
 
     const popupForm = {
@@ -63,6 +67,58 @@ class Operations extends Component {
       tags: {
         url: 'prodex/api/tags/datagrid',
         searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v}%`] }] : [])
+      },
+      'company-product-catalog': {
+        url: '/prodex/api/company-products/datagrid',
+        searchToFilter: v =>
+          v
+            ? [
+              {
+                operator: 'LIKE',
+                path: 'CompanyProduct.intProductName',
+                values: [`%${v}%`]
+              },
+              {
+                operator: 'LIKE',
+                path: 'CompanyProduct.intProductCode',
+                values: [`%${v}%`]
+              },
+              {
+                operator: 'LIKE',
+                path: 'CompanyProduct.echoProduct.name',
+                values: [`%${v}%`]
+              },
+              {
+                operator: 'LIKE',
+                path: 'CompanyProduct.echoProduct.code',
+                values: [`%${v}%`]
+              }
+            ]
+            : [],
+        params: {
+          orOperator: true
+        }
+      },
+      'company-inventory': {
+        url: '/prodex/api/product-offers/admin/datagrid',
+        searchToFilter: v =>
+          v
+            ? [
+              {
+                operator: 'LIKE',
+                path: 'ProductOffer.companyProduct.intProductName',
+                values: [`%${v}%`]
+              },
+              {
+                operator: 'LIKE',
+                path: 'ProductOffer.companyProduct.intProductCode',
+                values: [`%${v}%`]
+              }
+            ]
+            : [],
+        params: {
+          orOperator: true
+        }
       }
     }
 
