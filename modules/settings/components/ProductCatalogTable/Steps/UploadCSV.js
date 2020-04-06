@@ -53,7 +53,7 @@ class UploadCSV extends Component {
           <Form>
             <StyledDropzone
               onDrop={this.onDrop}
-              accept={['.csv', '.xlsx']}
+              accept={['.csv' /*, '.xlsx' */]}
               multiple={false}
               uploaded={uploadedFile}
               error={hasError ? 'true' : undefined}>
