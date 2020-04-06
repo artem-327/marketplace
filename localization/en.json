@@ -1604,6 +1604,7 @@
   "inventory.groupOffer": "Join/Create Virtual Group",
   "inventory.detachOffer": "Detach from Virtual Group",
   "marketplace.buy": "Buy Product Offer",
+  "marketplace.association": "Association",
   "marketplace.shippingQuoteTooltip": "Select one or more Product Offers to calculate a Shipping Quote. Multiple ProductOffers can be choosed only if they are at the same Location.",
   "marketplace.multipleEchoProduct": "Please, only select inventory for the same product to get a Shipping Quote",
   "operations.tables.shippingQuotes.buttonAdd": "Add Shipping Quote",
