@@ -801,14 +801,14 @@ export function postImportCompaniesCSV(payload, id) {
 
 export function getCSVMapCompanies() {
   return {
-    type: AT.GET_CSV_MAP_COMAPNIES,
+    type: AT.GET_CSV_MAP_COMPANIES,
     payload: api.getCSVMapCompanies()
   }
 }
 
 export function postCSVMapCompanies(payload) {
   return {
-    type: AT.POST_CSV_MAP_COMAPNIES,
+    type: AT.POST_CSV_MAP_COMPANIES,
     payload: api.postCSVMapCompanies(payload)
   }
 }
