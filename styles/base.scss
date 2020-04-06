@@ -1440,6 +1440,26 @@ i.file {
           }
         }
       }
+
+      &.group-row {
+
+        &:hover {
+
+          td {
+            background-color: #eff9ff;
+          }
+        }
+      }
+
+      &.row-click {
+
+        &:hover {
+
+          td {
+            background-color: #eff9ff;
+          }
+        }
+      }
     }
 
     tr.group-row {
@@ -1510,7 +1530,7 @@ i.file {
 
       tr.table-active {
         background-color: #eff9ff;
-        
+
         > td {
           background-color: #eff9ff;
         }
@@ -1528,7 +1548,7 @@ i.file {
 }
 
 
-.price-input input[type=number]::-webkit-inner-spin-button, 
+.price-input input[type=number]::-webkit-inner-spin-button,
 .price-input input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;

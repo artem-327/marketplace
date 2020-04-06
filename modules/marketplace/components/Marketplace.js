@@ -434,6 +434,7 @@ class Marketplace extends Component {
             rowSelection
             showSelectionColumn
             groupBy={['productNumber']}
+            shrinkGroups={true}
             // sameGroupSelectionOnly
             getChildGroups={rows =>
               _(rows)
@@ -455,13 +456,12 @@ class Marketplace extends Component {
               )
             }}
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
-            /* COMMENTED #30916
             onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()
               if (targetTag !== 'input' && targetTag !== 'label') {
                 this.tableRowClicked(row.id)
               }
-            }}*/
+            }}
             data-test='marketplace_row_action'
             rowActions={rowActions}
           />
