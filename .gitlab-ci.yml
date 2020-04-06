@@ -8,4 +8,5 @@ build:
     - docker build -t prodex/web:test .
 
 after_script:
-  - docker rmi $(docker images -q prodex/web:test)
+  - docker rmi $(docker images -q prodex/web:test) || exit 0
+  - docker rmi --force $(docker images --filter dangling=true -q --no-trunc) || exit 0
