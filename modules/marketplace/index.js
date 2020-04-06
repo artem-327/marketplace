@@ -7,19 +7,20 @@ export const Marketplace = props => {
     props && props.activeIndex && props.activeIndex === 1
       ? null
       : {
-        url: '/prodex/api/product-offers/broadcasted/datagrid/',
-        searchToFilter: v => {
-          let filters = { or: [], and: [] }
-          if (v) {
-            filters.or = [
-              { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${v}%`] },
-              { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${v}%`] },
-              { operator: 'LIKE', path: 'ProductOffer.companyProduct.echoProduct.name', values: [`%${v}%`] }
-            ]
+          url: '/prodex/api/product-offers/broadcasted/datagrid/',
+          searchToFilter: v => {
+            let filters = { or: [], and: [] }
+            if (v) {
+              filters.or = [
+                { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${v}%`] },
+                { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${v}%`] },
+                { operator: 'LIKE', path: 'ProductOffer.companyProduct.echoProduct.name', values: [`%${v}%`] },
+                { operator: 'LIKE', path: 'ProductOffer.companyProduct.echoProduct.tags.name', values: [`%${v}%`] }
+              ]
+            }
+            return filters
           }
-          return filters
         }
-  }
   return (
     <>
       <CompanyProductInfo fromMarketPlace />
