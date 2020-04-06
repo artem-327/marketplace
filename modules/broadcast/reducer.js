@@ -52,6 +52,8 @@ export default typeToReducer(
       return {
         ...initialState,
         templates: state.templates,
+        associations: state.associations,
+        associationsFetching: state.associationsFetching,
         open: true,
         loading: true
       }
@@ -240,7 +242,6 @@ export default typeToReducer(
       }
     },
     [getAssociations.fulfilled]: (state, { payload }) => {
-      console.log({ payload })
       return {
         ...state,
         associations: payload.map((a) => a.name),

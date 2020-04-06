@@ -35,6 +35,8 @@ import RuleItem from './RuleItem'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import * as Yup from 'yup'
 
+import styled from 'styled-components'
+
 import { getSafe } from '~/utils/functions'
 
 import { errorMessages } from '~/constants/yupValidation'
@@ -42,6 +44,14 @@ import { errorMessages } from '~/constants/yupValidation'
 import confirm from '~/src/components/Confirmable/confirm'
 import { setBroadcast, normalizeTree, getBroadcast } from '~/modules/broadcast/utils'
 import CompanyInfo from './CompanyInfo'
+const UnpaddedRow = {
+  Bottom: styled(GridRow)`
+    padding-bottom: 0px !important
+  `,
+  Top: styled(GridRow)`
+    padding-top: 0px !important;
+  `
+}
 
 const templateInitialValues = {
   name: ''
@@ -368,6 +378,39 @@ class Broadcast extends Component {
     )
   }
 
+  getAssociationFilter = () => {
+    const { filter, associationsFetching, associations, asSidebar } = this.props
+    
+    const markup = (
+      <Form.Field>
+        <label>
+          <FormattedMessage id='global.associations' defaultMessage='Associations' />
+        </label>
+        <Dropdown
+          value={this.state.associationFilter}
+          selection
+          loading={associationsFetching}
+          options={['ALL'].concat(associations).map((a, i) => ({ key: i, text: a, value: a }))}
+          onChange={(_e, { value }) => this.setState({ associationFilter: value })}
+        />
+      </Form.Field>
+    )
+    if (filter.category === 'branch') {
+      if (asSidebar) {
+        return (
+          <UnpaddedRow.Top>
+            <GridColumn computer={8}>
+              {markup}
+            </GridColumn>
+          </UnpaddedRow.Top>
+        )
+      }
+      return markup
+    }
+
+    return null
+  }
+
   getContent = () => {
     let {
       offer,
@@ -388,9 +431,7 @@ class Broadcast extends Component {
       openModalCompanyInfo,
       getCompanyInfo,
       dataCompanyInfo,
-      isLoadingModalCompanyInfo,
-      associations,
-      associationsFetching
+      isLoadingModalCompanyInfo
     } = this.props
 
     let total =
@@ -436,46 +477,49 @@ class Broadcast extends Component {
                 <Form>
                   {asSidebar ? (
                     <Grid>
-                      <GridColumn mobile={8}>
-                        <Form.Field>
-                          <label>
-                            <FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' />
-                          </label>
-                          <Dropdown
-                            data-test='broadcast_modal_category_drpdn'
-                            selection
-                            name='category'
-                            value={filter.category}
-                            onChange={this.handleFilterChange}
-                            options={[
-                              {
-                                key: 'region',
-                                text: 'By Region',
-                                value: 'region'
-                              },
-                              {
-                                key: 'branch',
-                                text: 'By Company',
-                                value: 'branch'
-                              }
-                            ]}
-                          />
-                        </Form.Field>
-                      </GridColumn>
-                      <GridColumn mobile={8}>
-                        <Form.Field data-test='broadcast_modal_search_inp'>
-                          <label>
-                            <FormattedMessage id='broadcast.filter' defaultMessage='Filter' />
-                          </label>
-                          <Input
-                            name='search'
-                            icon='search'
-                            iconPosition='left'
-                            value={this.state.filterSearch}
-                            onChange={this.handleSearchChange}
-                          />
-                        </Form.Field>
-                      </GridColumn>
+                      <UnpaddedRow.Bottom>
+                        <GridColumn mobile={8}>
+                          <Form.Field>
+                            <label>
+                              <FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' />
+                            </label>
+                            <Dropdown
+                              data-test='broadcast_modal_category_drpdn'
+                              selection
+                              name='category'
+                              value={filter.category}
+                              onChange={this.handleFilterChange}
+                              options={[
+                                {
+                                  key: 'region',
+                                  text: 'By Region',
+                                  value: 'region'
+                                },
+                                {
+                                  key: 'branch',
+                                  text: 'By Company',
+                                  value: 'branch'
+                                }
+                              ]}
+                            />
+                          </Form.Field>
+                        </GridColumn>
+                        <GridColumn mobile={8}>
+                          <Form.Field data-test='broadcast_modal_search_inp'>
+                            <label>
+                              <FormattedMessage id='broadcast.filter' defaultMessage='Filter' />
+                            </label>
+                            <Input
+                              name='search'
+                              icon='search'
+                              iconPosition='left'
+                              value={this.state.filterSearch}
+                              onChange={this.handleSearchChange}
+                            />
+                          </Form.Field>
+                        </GridColumn>
+                      </UnpaddedRow.Bottom>
+                      {this.getAssociationFilter()}
                     </Grid>
                   ) : (
                       <>
@@ -511,20 +555,7 @@ class Broadcast extends Component {
                             })}
                           />
                         </Form.Field>
-                        {this.props.filter.category === 'branch' && (
-                          <Form.Field>
-                            <label>
-                              <FormattedMessage id='global.associations' defaultMessage='Associations' />
-                            </label>
-                            <Dropdown
-                              value={this.state.associationFilter}
-                              selection
-                              loading={associationsFetching}
-                              options={['ALL'].concat(associations).map((a, i) => ({ key: i, text: a, value: a }))}
-                              onChange={(_e, { value }) => this.setState({ associationFilter: value })}
-                            />
-                          </Form.Field>
-                        )}
+                        {this.getAssociationFilter()}
                       </>
                     )}
                 </Form>
