@@ -147,7 +147,7 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
         })
       }
       if (isGrouped) {
-        await dispatch({
+        return await dispatch({
           type: AT.INVENTORY_EDIT_GROUPED_PRODUCT_OFFER,
           payload: api.updateGroupedProductOffer(poId, {
             pkgAvailable: paramsCleaned.pkgAvailable,
@@ -155,7 +155,7 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
           })
         })
       } else {
-        await dispatch({
+        return await dispatch({
           type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
           payload: api.updateProductOffer(poId, paramsCleaned)
         })
