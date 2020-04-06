@@ -17,7 +17,7 @@ export const ProductChemicalSwitch = styled.div`
   display: inline-block;
   &.product {
     .ui.button {
-      width: 110px;
+      min-width: 150px;
       padding-left: 1.071428571em;
       padding-right: 1.071428571em;
       text-align: center;
@@ -35,7 +35,7 @@ export const ProductChemicalSwitch = styled.div`
   }
   &.chemical {
     .ui.button {
-      width: 110px;
+      min-width: 150px;
       padding-left: 1.071428571em;
       padding-right: 1.071428571em;
       text-align: center;

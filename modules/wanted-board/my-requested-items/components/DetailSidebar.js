@@ -228,11 +228,11 @@ const validationSchema = () =>
         .required(errorMessages.requiredMessage),
       maximumPricePerUOM: val
         .number()
-        .positive(errorMessages.positive)
+        .min(0, errorMessages.positive)
         .typeError(errorMessages.requiredMessage),
       maximumDeliveredPrice: val
         .number()
-        .positive(errorMessages.positive)
+        .min(0, errorMessages.positive)
         .typeError(errorMessages.requiredMessage)
     })
   })

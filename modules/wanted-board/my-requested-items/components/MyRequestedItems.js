@@ -405,7 +405,7 @@ class MyRequestedItems extends Component {
                         this.props.setMyRequestedItemsType('product')
                       }}
                       data-test='my_requested_items_product_switch_btn'>
-                      <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+                      <FormattedMessage id='wantedBoard.switcher.product' defaultMessage='Finished Goods'>
                         {text => text}
                       </FormattedMessage>
                     </Button>
@@ -416,7 +416,7 @@ class MyRequestedItems extends Component {
                         this.props.setMyRequestedItemsType('chemical')
                       }}
                       data-test='my_requested_items_chemical_switch_btn'>
-                      <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
+                      <FormattedMessage id='wantedBoard.switcher.chemical' defaultMessage='Raw Materials'>
                         {text => text}
                       </FormattedMessage>
                     </Button>
