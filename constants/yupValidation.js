@@ -152,17 +152,17 @@ export const provinceObjectRequired = hasProvinces =>
 
 export const passwordValidation = () =>
   Yup.string()
+    .test('trailing-spaces', errorMessages.trailingSpaces, val => !val || (val && val.trim() === val))
     .min(8, errorMessages.minLength(8))
     .required(errorMessages.requiredMessage)
     .matches(/[a-z]/, errorMessages.oneLowercaseChar)
     .matches(/[A-Z]/, errorMessages.oneUppercaseChar)
     .matches(/[^a-zA-Z\s]+/, errorMessages.oneSpecialChar)
-    .test('trailing spaces', errorMessages.trailingSpaces, val => val && val.trim() === val)
 
 export const passwordValidationAnyChar = () =>
   Yup.string()
     .required(errorMessages.requiredMessage)
-    .test('trailing-spaces', errorMessages.trailingSpaces, val => val && val.trim() === val)
+    .test('trailing-spaces', errorMessages.trailingSpaces, val => !val || (val && val.trim() === val))
 
 export const phoneValidation = () =>
   Yup.string()
