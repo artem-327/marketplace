@@ -134,7 +134,7 @@ export const errorMessages = {
   invalidShipmentQuoteId: (
     <FormattedMessage id='validation.shipmentQuoteId' defaultMessage='Value should be in format "12365-4789"' />
   ),
-  minOneRole: <FormattedMessage id='validation.minOneRole' defaultMessage='At least one role should be selected' />,
+  minOneRole: <FormattedMessage id='validation.minOneRole' defaultMessage='At least one role should be selected' />
 }
 
 export const provinceObjectRequired = hasProvinces =>
@@ -346,9 +346,6 @@ export const dateBefore = (date = 'lotManufacturedDate', beforeDate = 'lotExpira
       let parsedDate = moment(this.parent[date], getLocaleDateFormat())
       let parsedBeforeDate = moment(this.parent[beforeDate], getLocaleDateFormat())
 
-      return (
-        (newOpts.nullable && parsedDate.isValid() && !parsedBeforeDate.isValid()) ||
-        parsedDate.isBefore(parsedBeforeDate)
-      )
+      return (newOpts.nullable && !parsedBeforeDate.isValid()) || parsedDate.isBefore(parsedBeforeDate)
     }
   )

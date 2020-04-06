@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import moment from 'moment'
-import { removeEmpty } from '~/modules/admin/actions'
+import { removeEmpty } from '~/utils/functions'
 import { verifyEchoProduct } from '~/modules/admin/api' // No need to be an action
 import { DateInput } from '~/components/custom-formik'
 import { PhoneNumber } from '~/modules/phoneNumber'
@@ -227,7 +227,8 @@ class AddEditEchoProduct extends React.Component {
     changedAttachments: false,
     unNumberInitOptions: [],
     popupValues: null,
-    editTab: 0
+    editTab: 0,
+    selectedTagsOptions: []
   }
 
   componentDidMount() {
@@ -295,7 +296,9 @@ class AddEditEchoProduct extends React.Component {
 
   setInitialState = (popupValues, additionalStates) => {
     let codesList = [],
-      unNumberInitOptions = []
+      unNumberInitOptions = [],
+      selectedTagsOptions = []
+
     if (popupValues) {
       codesList = popupValues.mfrProductCodes.map(code => ({
         text: code,
@@ -315,6 +318,16 @@ class AddEditEchoProduct extends React.Component {
           content: <Header content={d.unNumberCode} subheader={d.description} style={{ fontSize: '1em' }} />
         }
       })
+
+      if (popupValues.tags) {
+        selectedTagsOptions = popupValues.tags.map((d) => {
+          return {
+            key: d.id,
+            text: d.name,
+            value: d.id
+          }
+        })
+      }
     }
     this.setState({
       codesList,
@@ -322,6 +335,7 @@ class AddEditEchoProduct extends React.Component {
       changedAttachments: false,
       popupValues,
       unNumberInitOptions: unNumberInitOptions,
+      selectedTagsOptions,
       ...additionalStates
     })
   }
@@ -454,19 +468,20 @@ class AddEditEchoProduct extends React.Component {
             vaporPressure: getSafe(() => popupValues.vaporPressure, ''),
             viscosity: getSafe(() => popupValues.viscosity, ''),
             wasteDisposalMethods: getSafe(() => popupValues.wasteDisposalMethods, ''),
-            isPublished: getSafe(() => popupValues.isPublished, false)
+            isPublished: getSafe(() => popupValues.isPublished, false),
+            tags: getSafe(() => popupValues.tags, []).map(d => d.id),
           }
         : null)
     }
 
     if (initialValues.sdsIssuedDate)
-      initialValues.sdsIssuedDate = moment(initialValues.sdsIssuedDate).format(getLocaleDateFormat())
+      initialValues.sdsIssuedDate = this.getDateInLocaleFormat(initialValues.sdsIssuedDate)
     if (initialValues.sdsRevisionDate)
-      initialValues.sdsRevisionDate = moment(initialValues.sdsRevisionDate).format(getLocaleDateFormat())
+      initialValues.sdsRevisionDate = this.getDateInLocaleFormat(initialValues.sdsRevisionDate)
     if (initialValues.tdsIssuedDate)
-      initialValues.tdsIssuedDate = moment(initialValues.tdsIssuedDate).format(getLocaleDateFormat())
+      initialValues.tdsIssuedDate = this.getDateInLocaleFormat(initialValues.tdsIssuedDate)
     if (initialValues.tdsRevisionDate)
-      initialValues.tdsRevisionDate = moment(initialValues.tdsRevisionDate).format(getLocaleDateFormat())
+      initialValues.tdsRevisionDate = this.getDateInLocaleFormat(initialValues.tdsRevisionDate)
 
     if (initialValues.elements.length === 0) {
       initialValues.elements = [{ name: '', casProduct: null, assayMin: '', assayMax: '', proprietary: false }]
@@ -476,6 +491,15 @@ class AddEditEchoProduct extends React.Component {
 
   tabChanged = index => {
     this.setState({ editTab: index })
+  }
+
+  getDateInLocaleFormat = value => {
+    let date = moment(value)
+    if (date.isValid()) {
+      return date.format(getLocaleDateFormat())
+    } else {
+      return ''
+    }
   }
 
   handleUnNumberSearchChange = debounce((_, { searchQuery }) => {
@@ -494,6 +518,17 @@ class AddEditEchoProduct extends React.Component {
         this.setState({ unNumberInitOptions: stateOptions })
       }
     }
+  }
+
+  handleTagsSearchChange = debounce((_, { searchQuery }) => {
+    this.props.searchTags(searchQuery)
+  }, 250)
+
+  handleTagsChange = (value, options) => {
+    const newOptions = options.filter(
+      el => value.some(v => el.value === v)
+    )
+    this.setState({ selectedTagsOptions: newOptions })
   }
 
   switchToErrors = err => {
@@ -557,6 +592,17 @@ class AddEditEchoProduct extends React.Component {
     }
   }
 
+  getDateInIsoFormat = value => {
+    if (!value) return ''
+    let date = getStringISODate(value)
+
+    if (moment(date).isValid()) {
+      return date
+    } else {
+      return ''
+    }
+  }
+
   submitForm = async (values, setSubmitting) => {
     const { putEchoProduct, postEchoProduct, closePopup, linkAttachment, listDocumentTypes } = this.props
 
@@ -579,30 +625,14 @@ class AddEditEchoProduct extends React.Component {
               assayMax: e.assayMax === null || e.assayMax === '' ? null : Number(e.assayMax)
             }
       ),
-      sdsIssuedDate: values.sdsIssuedDate ? getStringISODate(values.sdsIssuedDate) : '',
-      sdsRevisionDate: values.sdsRevisionDate ? getStringISODate(values.sdsRevisionDate) : '',
-      tdsIssuedDate: values.tdsIssuedDate ? getStringISODate(values.tdsIssuedDate) : '',
-      tdsRevisionDate: values.tdsRevisionDate ? getStringISODate(values.tdsRevisionDate) : ''
+      sdsIssuedDate: this.getDateInIsoFormat(values.sdsIssuedDate),
+      sdsRevisionDate: this.getDateInIsoFormat(values.sdsRevisionDate),
+      tdsIssuedDate: this.getDateInIsoFormat(values.tdsIssuedDate),
+      tdsRevisionDate: this.getDateInIsoFormat(values.tdsRevisionDate)
     }
     delete formValues.attachments
 
-    const fieldsToNull = [
-      'dotHazardClass',
-      'dotPackagingGroup',
-      'dotUnNumber',
-      'iataHazardClass',
-      'iataPackagingGroup',
-      'iataUnNumber',
-      'imdgImoHazardClass',
-      'imdgImoPackagingGroup',
-      'imdgImoUnNumber',
-      'tdgHazardClass',
-      'tdgPackagingGroup',
-      'tdgUnNumber'
-    ]
-    fieldsToNull.forEach(el => {
-      if (formValues[el] === '') formValues[el] = null
-    })
+    removeEmpty(formValues)
 
     try {
       if (popupValues) var { value } = await putEchoProduct(popupValues.id, formValues)
@@ -957,12 +987,17 @@ class AddEditEchoProduct extends React.Component {
 
   renderEdit = formikProps => {
     let codesList = this.state.codesList
+    const { selectedTagsOptions } = this.state
     const {
       intl: { formatMessage },
       searchedManufacturers,
       searchedManufacturersLoading,
-      searchManufacturers
+      searchManufacturers,
+      searchedTagsLoading,
+      searchedTags
     } = this.props
+
+    const allTagsOptions = uniqueArrayByKey(searchedTags.concat(selectedTagsOptions), 'key')
 
     return (
       <Grid verticalAlign='middle'>
@@ -1036,6 +1071,28 @@ class AddEditEchoProduct extends React.Component {
           defaultMessage: 'Emergency Phone',
           props: formikProps
         })}
+        <GridRow>
+          <GridColumn width={6}>
+            <FormattedMessage id='global.tags' defaultMessage='Tags' />
+          </GridColumn>
+          <GridColumn width={10}>
+            <FormikDropdown
+              name='tags'
+              options={allTagsOptions}
+              inputProps={{
+                loading: searchedTagsLoading,
+                search: true,
+                selection: true,
+                multiple: true,
+                noResultsMessage: formatMessage(
+                  { id: 'global.startTypingToSearch', defaultMessage: 'Start typing to begin search' }
+                ),
+                onSearchChange: this.handleTagsSearchChange,
+                onChange: (_, { value }) => this.handleTagsChange(value, allTagsOptions)
+              }}
+            />
+          </GridColumn>
+        </GridRow>
         <Header as='h3'>
           <FormattedMessage id='global.sds' defaultMessage='SDS' />
         </Header>

@@ -124,11 +124,23 @@ export default {
   postCSVMapEchoProduct: data => api.post('/prodex/api/imports/echo-products/import-maps', data),
   putCSVMapEchoProduct: (mapId, data) => api.put(`/prodex/api/imports/echo-products/import-maps/${mapId}`, data),
   deleteCSVMapEchoProduct: mapId => api.delete(`/prodex/api/imports/echo-products/import-maps/${mapId}`),
+
   getCSVMapProductOffer: () =>
     api.get('/prodex/api/imports/product-offers/import-maps').then(response => response.data),
   postCSVMapProductOffer: data => api.post('/prodex/api/imports/product-offers/import-maps', data),
   putCSVMapProductOffer: (mapId, data) => api.put(`/prodex/api/imports/product-offers/import-maps/${mapId}`, data),
   deleteCSVMapProductOffer: mapId => api.delete(`/prodex/api/imports/product-offers/import-maps/${mapId}`),
+
+  postImportCompaniesCSV: (body, id) => {
+    return api
+      .post(`/prodex/api/imports/companies/csv-import?temporaryFileId=${id}`, body)
+      .then(response => response.data)
+  },
+  getCSVMapCompanies: () => api.get('/prodex/api/imports/companies/import-maps').then(response => response.data),
+  postCSVMapCompanies: data => api.post('/prodex/api/imports/companies/import-maps', data),
+  putCSVMapCompanies: (mapId, data) => api.put(`/prodex/api/imports/companies/import-maps/${mapId}`, data),
+  deleteCSVMapCompanies: mapId => api.delete(`/prodex/api/imports/companies/import-maps/${mapId}`),
+
   putWarehouse: (branchId, body) => api.put(`/prodex/api/branches/${branchId}`, body).then(r => r.data),
   // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
   patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body),
@@ -186,8 +198,8 @@ export default {
   createLogisticsAccount: payload =>
     api.post('/prodex/api/logistics-accounts/', payload).then(response => response.data),
   getLogisticsAccounts: () => api.get('/prodex/api/logistics-accounts/').then(response => response.data),
-  updateLogisticsAccount: payload =>
-    api.put(`/prodex/api/logistics-accounts/id/${payload.id}`, payload).then(response => response.data),
+  updateLogisticsAccount: (id, payload) =>
+    api.put(`/prodex/api/logistics-accounts/id/${id}`, payload).then(response => response.data),
   deleteLogisticsAccount: id => api.delete(`/prodex/api/logistics-accounts/id/${id}`).then(() => id),
   getSettings: role => api.get(`/prodex/api/settings/${role}`).then(response => response.data),
   updateSettings: (role, payload) => api.patch(`/prodex/api/settings/${role}`, payload).then(response => response.data),

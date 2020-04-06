@@ -91,7 +91,13 @@ const datagridConfig = {
   },
   Companies: {
     url: '/prodex/api/companies/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] }] : [])
+    searchToFilter: v =>
+      v
+        ? [
+            { operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] },
+            { operator: 'LIKE', path: 'Company.cfDisplayName', values: [`%${v}%`] },
+          ]
+        : []
   },
   'Product Catalog': {
     url: '/prodex/api/echo-products/datagrid',
@@ -201,11 +207,12 @@ const addForms = {
 }
 
 const editSidebar = {
-  'Users': <UsersSidebar />
+  Users: <UsersSidebar />
 }
 
 const importForm = {
-  'Product Catalog': <ProductImportPopup echoProduct={true} />
+  'Product Catalog': <ProductImportPopup echoProduct={true} />,
+  Companies: <ProductImportPopup companies={true} />
 }
 
 const addDwollaForms = {

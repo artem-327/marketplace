@@ -2,7 +2,7 @@ import * as AT from './action-types'
 import * as api from './api'
 
 export const createHold = params => ({
-  type: AT.CREATE_HOLD,
+  type: AT.CREATED_HOLD,
   payload: api.createHold(params)
 })
 

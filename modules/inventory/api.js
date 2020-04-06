@@ -146,3 +146,5 @@ export const removeAttachmentLinkProductOffer = (attachmentId, productOfferId) =
   api.delete(
     `/prodex/api/attachment-links/to-product-offer?attachmentId=${attachmentId}&productOfferId=${productOfferId}`
   )
+//TODO missing implementation ???
+export const addVerificationDocuments = (attachment, type) => attachment

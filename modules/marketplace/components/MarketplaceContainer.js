@@ -30,6 +30,7 @@ function mapStateToProps(store, { datagrid }) {
         ...po,
         id: po.id,
         productName: po.companyProduct.echoProduct.name,
+        intProductName: getSafe(() => po.companyProduct.intProductName, ''),
         productNumber: getSafe(() => po.companyProduct.echoProduct.code, 'Unmapped'),
         // merchant: getSafe(() => po.warehouse.warehouseName, ''),
         available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
