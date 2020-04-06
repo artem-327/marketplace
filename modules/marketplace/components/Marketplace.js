@@ -69,7 +69,7 @@ class Marketplace extends Component {
       {
         name: 'intProductName',
         title: (
-          <FormattedMessage id='global.intProductName' defaultMessage='Internal Product Name'>
+          <FormattedMessage id='global.productName' defaultMessage='Product Name'>
             {text => text}
           </FormattedMessage>
         ),
