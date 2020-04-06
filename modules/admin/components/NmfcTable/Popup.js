@@ -52,13 +52,15 @@ class Popup extends Component {
                 code: Number(getSafe(() => values.code.replace('-', ''), values.code))
               }
 
-              if (popupValues) {
-                await editNmfcNumber({ ...payload, id: popupValues.id })
-              } else {
-                await addNmfcNumber(payload)
-              }
+              try {
+                if (popupValues) {
+                  await editNmfcNumber({...payload, id: popupValues.id})
+                } else {
+                  await addNmfcNumber(payload)
+                }
+                closeAddPopup()
+              } catch (err) {}
               setSubmitting(false)
-              closeAddPopup()
             }}
             validationSchema={validationSchema}
             initialValues={this.getInitialValues()}

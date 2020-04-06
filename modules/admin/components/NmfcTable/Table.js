@@ -18,7 +18,7 @@ export default class Table extends Component {
 
     let rows = getSafe(() => datagrid.rows, []).map(row => {
 
-      let rowCode = row.code ? row.code.toString() : ''
+      let rowCode = row.code.toString()
       rowCode = rowCode.length < 7
         ? rowCode
         : `${rowCode.slice(0, 5)}-${rowCode.slice(5)}`
