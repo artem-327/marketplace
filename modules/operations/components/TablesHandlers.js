@@ -26,6 +26,12 @@ const textsTable = {
   tags: {
     BtnAddText: 'operations.tables.tags.buttonAdd',
     SearchText: 'operations.tables.tags.search'
+  },
+  'company-product-catalog': {
+    SearchText: 'operations.tables.companyProductCatalog.search'
+  },
+  'company-inventory': {
+    SearchText: 'operations.tables.companyInventory.search'
   }
 }
 
@@ -74,24 +80,28 @@ class TablesHandlers extends Component {
 
     const { filterValue } = this.state
 
+    const item = textsTable[currentTab.type]
+
     return (
       <>
-        <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
-          <Input
-            style={{ width: 340 }}
-            icon='search'
-            value={filterValue}
-            placeholder={formatMessage({
-              id: textsTable[currentTab.type].SearchText,
-              defaultMessage: 'Select Credit Card'
-            })}
-            onChange={this.handleFilterChange}
-          />
-        </GridColumn>
-        {!currentTab.hideButtons && (
+        {item.SearchText && (
+          <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
+            <Input
+              style={{ width: 340 }}
+              icon='search'
+              value={filterValue}
+              placeholder={formatMessage({
+                id: item.SearchText,
+                defaultMessage: 'Select Credit Card'
+              })}
+              onChange={this.handleFilterChange}
+            />
+          </GridColumn>
+        )}
+        {item.BtnAddText && (
           <GridColumn widescreen={4} computer={4} tablet={5}>
             <Button fluid primary onClick={() => openPopup()} data-test='operations_open_popup_btn'>
-              <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
+              <FormattedMessage id={item.BtnAddText}>{text => text}</FormattedMessage>
             </Button>
           </GridColumn>
         )}
