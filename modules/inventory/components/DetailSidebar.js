@@ -618,7 +618,7 @@ class DetailSidebar extends Component {
     let isGrouped = getSafe(() => sidebarValues.grouped, false)
     let sendSuccess = false
     let data = null
-
+    
     await new Promise(resolve => this.setState({ edited: false }, resolve))
 
     setSubmitting(false)
