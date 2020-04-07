@@ -285,7 +285,7 @@ class WantedBoard extends Component {
                       attached='left'
                       onClick={() => this.props.setWantedBoardType('product')}
                       data-test='wanted_board_product_switch_btn'>
-                      <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+                      <FormattedMessage id='wantedBoard.switcher.product' defaultMessage='Finished Goods'>
                         {text => text}
                       </FormattedMessage>
                     </Button>
@@ -293,7 +293,7 @@ class WantedBoard extends Component {
                       attached='right'
                       onClick={() => this.props.setWantedBoardType('chemical')}
                       data-test='wanted_board_chemical_switch_btn'>
-                      <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
+                      <FormattedMessage id='wantedBoard.switcher.chemical' defaultMessage='Raw Materials'>
                         {text => text}
                       </FormattedMessage>
                     </Button>

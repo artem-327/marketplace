@@ -2112,6 +2112,8 @@
   "wantedBoard.searchByProductName": "Search by product name...",
   "wantedBoard.addNewRequest": "Add New Request",
   "wantedBoard.chemical": "Chemical",
+  "wantedBoard.switcher.product": "Finished Goods",
+  "wantedBoard.switcher.chemical": "Raw Materials",
   "wantedBoard.submitOffer": "Submit Offer",
   "wantedBoard.reject": "Reject",
   "wantedBoard.purchase": "Purchase",
