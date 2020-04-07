@@ -147,13 +147,13 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
         })
       }
       if (isGrouped) {
-        const reponse = api.updateGroupedProductOffer(poId, {
+        const response = await api.updateGroupedProductOffer(poId, {
           pkgAvailable: paramsCleaned.pkgAvailable,
           lotNumber: paramsCleaned.lotNumber
         })
         await dispatch({
           type: AT.INVENTORY_EDIT_GROUPED_PRODUCT_OFFER,
-          payload: reponse
+          payload: response
         })
         return response
       } else {

@@ -665,7 +665,7 @@ class DetailSidebar extends Component {
         } else {
           datagrid.loadData()
         }
-    
+
         this.setState({
           sidebarValues: { ...data, id: isEdit ? data.id : null },
           initValues: { ...initValues, ...this.getEditValues(data) },
