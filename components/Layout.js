@@ -50,6 +50,8 @@ import { withToastManager } from 'react-toast-notifications'
 import ChatWidget from '~/modules/chatWidget/components/ChatWidgetContainer'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
+import ErrorComponent from '~/components/error'
+
 const clientCompanyRoutes = {
   restrictedRoutes: [
     '/inventory',
@@ -63,7 +65,9 @@ const clientCompanyRoutes = {
 }
 
 class Layout extends Component {
-
+  state = {
+    fatalError: false
+  }
   componentDidMount() {
     if (this.props.hasLogo && getSafe(() => this.props.useCompanyLogo.value === 'true', false))
       this.loadCompanyLogo()
@@ -72,6 +76,8 @@ class Layout extends Component {
 
     Router.events.on('beforeHistoryChange', this.handleRouteChange)
     Router.events.on('routeChangeStart', this.handleRouteChange)
+
+    if (this.state.fatalError) this.setState({ fatalError: false })
 
     if (!phoneCountryCodes.length) getCountryCodes()
   }
@@ -95,6 +101,11 @@ class Layout extends Component {
 
   componentWillUpdate() {
     this.handleRouteChange(this.props.router.route)
+  }
+
+  componentDidCatch(error, info) {
+    console.error('Error!', error, info)
+    this.setState({ fatalError: true })
   }
 
   handleRouteChange = url => {
@@ -223,15 +234,15 @@ class Layout extends Component {
                   {(!getSafe(() => auth.identity.isAdmin, false) ||
                     takeover ||
                     !getSafe(() => auth.identity.isCompanyAdmin, false)) && (
-                    <Menu.Item
-                      onClick={() => triggerSystemSettingsModal(true)}
-                      data-test='navigation_menu_settings_lnk'>
-                      <>
-                        {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
-                        <Settings role='user' />
-                      </>
-                    </Menu.Item>
-                  )}
+                      <Menu.Item
+                        onClick={() => triggerSystemSettingsModal(true)}
+                        data-test='navigation_menu_settings_lnk'>
+                        <>
+                          {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
+                          <Settings role='user' />
+                        </>
+                      </Menu.Item>
+                    )}
                   <Dropdown.Item
                     as={Menu.Item}
                     onClick={() => window.open('https://www.echosystem.com/terms-of-service')}
@@ -265,7 +276,9 @@ class Layout extends Component {
             <Messages />
           </TopMenuContainer>
           <ContentContainer fluid className='page-wrapper flex stretched'>
-            {children}
+            {!this.state.fatalError ?
+              children : <ErrorComponent />
+            }
           </ContentContainer>
         </FlexContainer>
         <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />

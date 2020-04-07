@@ -104,7 +104,7 @@ class TablesHandlers extends Component {
               {config[currentTab.name].addEditText}
             </Button>
           </CustomMenuItemRight>
-          {currentTab.name === 'Product Catalog' ? (
+          {currentTab.name === 'Product Catalog' || currentTab.name === 'Companies' ? (
             <CustomMenuItemRight>
               <Button size='large' primary onClick={() => openImportPopup()} data-test='admin_import_btn'>
                 {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}

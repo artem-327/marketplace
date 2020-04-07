@@ -50,15 +50,6 @@ const chatWidget_updateIdentity = identity => {
 }
 
 const chatWidget_scriptLoaded = (identity, hide) => {
-  //Move chat to center bottom
-  window.zESettings = {
-    webWidget: {
-      offset: {
-        horizontal: '40%',
-        vertical: '1%'
-      }
-    }
-  }
   zE(function() {
     $zopim(function() {
       if (hide) $zopim.livechat.window.hide()
