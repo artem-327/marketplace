@@ -1329,6 +1329,7 @@
   "cart.freightClass": "Freight Class",
   "cart.nmfcNumber": "NMFC Number",
   "cart.purchaseOrder.logisticAccRequired": "To be able to complete Order, your Company needs to have Logistics account defined. This can be done in Settings.",
+  "cart.purchaseOrder.purchaseHazmatEligible": "You are not authorized to purchase this hazardous item.",
   "cart.packagesRequested": "Packages Requested:",
   "cart.requestedQuantity": "Requested Quantity:",
   "cart.selectFirst": "Select Packages Requested first.",
