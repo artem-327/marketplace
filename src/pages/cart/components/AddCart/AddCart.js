@@ -33,7 +33,8 @@ import './AddCart.scss'
 import { checkToken } from '../../../../utils/auth'
 import { tabsMarketPlace, echoProductGrouping, dropdownOptions, regulatoryFilter } from './constants'
 import _ from 'lodash'
-import {yesNoOptions} from "../../../../../modules/company-product-info/constants";
+import {yesNoOptions} from "../../../../../modules/company-product-info/constants"
+import { FlexTabs } from "~/modules/inventory/constants/layout"
 
 const FlexContent = styled(Segment)`
   flex: 1;
@@ -1388,54 +1389,56 @@ class AddCart extends Component {
     const { activeTab } = this.state
     let { isOpen } = sidebar
     return (
-      <Sidebar
-        onHide={e => {
-          try {
-            if (
-              (e &&
-                !(e.path[0] instanceof HTMLTableCellElement) &&
-                !(e.path[1] instanceof HTMLTableCellElement) &&
-                e.target &&
-                e.target.className &&
-                typeof e.target.className.includes !== 'undefined' &&
-                e.target.className.includes('js-focus-visible')) ||
-              (e &&
-                e.target &&
-                e.target.className &&
-                typeof e.target.className.includes !== 'undefined' &&
-                !(e.target.className.includes('item') || e.target.className.includes('text'))) ||
-              !(e.target.nodeName === 'svg' || e.target.nodeName === 'circle' || e.target.nodeName === 'SPAN')
-            ) {
-              sidebarChanged({ isOpen: false, isHoldRequest: false })
+      <FlexTabs>
+        <Sidebar
+          onHide={e => {
+            try {
+              if (
+                (e &&
+                  !(e.path[0] instanceof HTMLTableCellElement) &&
+                  !(e.path[1] instanceof HTMLTableCellElement) &&
+                  e.target &&
+                  e.target.className &&
+                  typeof e.target.className.includes !== 'undefined' &&
+                  e.target.className.includes('js-focus-visible')) ||
+                (e &&
+                  e.target &&
+                  e.target.className &&
+                  typeof e.target.className.includes !== 'undefined' &&
+                  !(e.target.className.includes('item') || e.target.className.includes('text'))) ||
+                !(e.target.nodeName === 'svg' || e.target.nodeName === 'circle' || e.target.nodeName === 'SPAN')
+              ) {
+                sidebarChanged({ isOpen: false, isHoldRequest: false })
+              }
+            } catch (e) {
+              console.error(e)
             }
-          } catch (e) {
-            console.error(e)
-          }
-        }}
-        width='very wide'
-        className='cart-sidebar flex'
-        direction='right'
-        animation='scale down'
-        visible={isOpen}
-        style={{ zIndex: 601 }}>
-        {offerDetailIsFetching ? (
-          <Dimmer active inverted>
-            {' '}
-            <Loader size='large' />{' '}
-          </Dimmer>
-        ) : (
-          <>
-            <Menu pointing secondary>
-              {tabsMarketPlace.map((tab, i) =>
-                <Menu.Item onClick={() => this.setState({ activeTab: i })} active={activeTab === i}>
-                  {formatMessage(tab.text)}
-                </Menu.Item>
-              )}
-            </Menu>
-            {this.getContent()}
-          </>
-        )}
-      </Sidebar>
+          }}
+          width='very wide'
+          className='cart-sidebar flex'
+          direction='right'
+          animation='scale down'
+          visible={isOpen}
+          style={{ zIndex: 601 }}>
+          {offerDetailIsFetching ? (
+            <Dimmer active inverted>
+              {' '}
+              <Loader size='large' />{' '}
+            </Dimmer>
+          ) : (
+            <>
+              <Menu pointing secondary>
+                {tabsMarketPlace.map((tab, i) =>
+                  <Menu.Item onClick={() => this.setState({ activeTab: i })} active={activeTab === i}>
+                    {formatMessage(tab.text)}
+                  </Menu.Item>
+                )}
+              </Menu>
+              {this.getContent()}
+            </>
+          )}
+        </Sidebar>
+      </FlexTabs>
     )
   }
 }
