@@ -661,12 +661,13 @@ class DetailSidebar extends Component {
       try {
         data = await addProductOffer(props, isEdit, false, isGrouped, attachmentFiles)
         if (isEdit) {
-          datagrid.updateRow(data.value.id, () => data.value)
+          datagrid.updateRow(data.id, () => data)
         } else {
           datagrid.loadData()
         }
+
         this.setState({
-          sidebarValues: { ...data.value, id: isEdit ? data.value.id : null },
+          sidebarValues: { ...data, id: isEdit ? data.id : null },
           initValues: { ...initValues, ...this.getEditValues(data) },
           edited: false
         })
