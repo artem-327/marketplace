@@ -815,14 +815,14 @@ export function postCSVMapCompanies(payload) {
 
 export function putCSVMapCompanies(mapId, data) {
   return {
-    type: AT.PUT_CSV_MAP_COMAPNIES,
+    type: AT.PUT_CSV_MAP_COMPANIES,
     payload: api.putCSVMapCompanies(mapId, data)
   }
 }
 
 export function deleteCSVMapCompanies(mapId) {
   return {
-    type: AT.DELETE_CSV_MAP_COMAPNIES,
+    type: AT.DELETE_CSV_MAP_COMPANIES,
     meta: mapId,
     payload: api.deleteCSVMapCompanies(mapId)
   }
