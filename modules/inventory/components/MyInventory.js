@@ -517,6 +517,7 @@ class MyInventory extends Component {
       tutorialCompleted
     } = this.props
     const { columns, selectedRows, clientMessage, request, filterValue } = this.state
+    
     return (
       <>
         <Modal size='small' open={this.state.open} onClose={() => this.setState({ open: false })} closeIcon>
