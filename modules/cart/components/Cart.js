@@ -59,6 +59,9 @@ const ItemDescriptionGrid = styled(Grid)`
   > .row {
     padding: 0 !important;
   }
+  > .row .column span {
+    float: right;
+  }
 `
 
 const Item = styled.div`
@@ -73,7 +76,7 @@ const DescriptionValue = styled.span`
 
 const TotalRow = styled(GridRow)`
   background-color: #f8f9fb;
-  box-shadow: 0 1px 0 0 #dee2e6';
+  border-top: 1px solid #dee2e6;
 `
 
 export default class Cart extends Component {
@@ -139,7 +142,7 @@ export default class Cart extends Component {
             <GridColumn textAlign='right' largeScreen={8}>
               <Button negative basic onClick={() =>
                 confirm('Remove item', 'Are you sure you want to remove item from Shopping Cart?')
-                  .then(() => deleteCartItem(cartItem.id))
+                  .then(() => deleteCartItem(item.id))
               }>
                 <Icon name='trash alternate outline' />
                 {formatMessage({ id: 'global.delete', defaultMessage: 'Delete' })}
@@ -156,7 +159,8 @@ export default class Cart extends Component {
           <GridRow>
             <GridColumn>
               <FormattedMessage id='cart.packaging' defaultMessage='Packaging:' /> <DescriptionValue><FormattedNumber minimumFractionDigits={0} value={packagingSize} />
-                {' '} {unitName} <CapitalizedText>{packagingType}</CapitalizedText></DescriptionValue>
+                {' '} {unitName} &nbsp;
+                <CapitalizedText>{packagingType}</CapitalizedText></DescriptionValue>
             </GridColumn>
             <GridColumn>
               <FormattedMessage id='cart.origin' defaultMessage='Origin:' />{' '} <DescriptionValue>{getSafe(() => item.productOffer.origin.name, 'N/A')}</DescriptionValue>
@@ -334,7 +338,7 @@ export default class Cart extends Component {
                   }
                 </GridColumn>
                 <GridColumn computer={7}>
-                  <Button fluid positive disabled={itemsCount === 0 || cartIsFetching} onClick={this.handleContinue}>
+                  <Button fluid primary disabled={itemsCount === 0 || cartIsFetching} onClick={this.handleContinue}>
                     {formatMessage({ id: 'global.continue', defaultMessage: 'Continue' })}
                     <Icon name='arrow right' />
                   </Button>
