@@ -696,7 +696,7 @@ class AddCart extends Component {
         </GridColumn>
 
         <GridColumn width={9} className='field=value'>
-          {_.get(offer, name, 'N/A')}
+          {_.get(offer, name, '')}
         </GridColumn>
       </GridRow>
     )
@@ -742,7 +742,7 @@ class AddCart extends Component {
     const { offer } = this.state
     const value = _.get(offer, name, null)
 
-    let displayValue = 'N/A'
+    let displayValue = ''
     if (value !== null && props && props.options) {
 
       const index = props.options.findIndex(el => el.value === value)
