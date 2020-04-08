@@ -45,6 +45,11 @@ const FlexContent = styled(Segment)`
 const RelaxedSegment = styled(Segment)`
   padding-top: 0px;
   margin: 0 !important;
+  
+  .row {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
 `
 
 const ErrorLabel = styled.label`
@@ -54,6 +59,8 @@ const ErrorLabel = styled.label`
 const CustomList = styled(List)`
   pointer-events: none;
   margin-top: 0px !important;
+  padding-left: 30px !important;
+  padding-right: 30px !important;
 `
 
 const ListHeader = styled(List.Header)`
@@ -71,10 +78,13 @@ const CustomGridColumn = styled(GridColumn)`
   display: flex !important;
 `
 
-const CustomGrid = styled(Grid)`  
-  margin: 14px !important;
+const CustomGrid = styled(Grid)`
+  &,
+  &.ui.grid {  
+    margin: 14px !important;
+    
     > .row.select-row {
-      padding: 1.071428571em 0;
+      padding: 1.071428571em 30px !important;
       > .column:first-child {
         padding: 0 0.714285714em 0 0;
       }
@@ -92,7 +102,7 @@ const CustomGrid = styled(Grid)`
     }
     
     > .row.table-name {
-      padding: 1.071428571em 0 0.714285714em 0;
+      padding: 1.071428571em 30px 0.714285714em 30px !important;
       > .column {
         padding: 0;
         color: #20273a;
@@ -101,7 +111,7 @@ const CustomGrid = styled(Grid)`
     
     > table {
       padding: 0;
-      margin: 0 0 1.428571429em 0;
+      margin: 0 30px 1.428571429em 30px;
       thead tr {
         th {
           font-size: 1em;
@@ -126,19 +136,28 @@ const CustomGrid = styled(Grid)`
     
     > .row:not(.select-row):not(.table-name) {
       box-shadow: 0 1px 0 0 #dee2e6;
-      padding: 16px 0 !important;
+      padding: 16px 30px !important;
+      
       > .column:first-child {
         padding: 0 0.714285714em 0 0;
+        white-space: normal;
       }
-       > .column:last-child {
+      
+      > .column:last-child {
         padding: 0 0 0 0.714285714em;
+        font-weight: 400;
+        color: #20273a;
       }
+      
       > .column {
-        
+      
+        .field > .ui.dropdown,
+        .field > .ui.input input {
+          color: #20273a;
+        }
       }
     }
-  
-
+  }
 `
 
 
@@ -1077,7 +1096,7 @@ class AddCart extends Component {
     return (
       <>
         <GridRow className='select-row'>
-          <GridColumn computer={8}>
+          <GridColumn computer={7}>
             <label>
               <FormattedMessage id='global.casProduct' defaultMessage='CAS Product' />
             </label>
@@ -1105,7 +1124,7 @@ class AddCart extends Component {
             />
           </GridColumn>
 
-          <GridColumn computer={8}>
+          <GridColumn computer={9}>
             <label>
               <FormattedMessage id='global.propsFilter' defaultMessage='Properties Filter' />
             </label>
@@ -1359,12 +1378,12 @@ class AddCart extends Component {
           <FlexContent basic>
             <CustomGrid verticalAlign='middle'>
               <GridRow className='select-row'>
-                <GridColumn computer={8}>
+                <GridColumn computer={7}>
                   <label>
                     <FormattedMessage id='global.filter' defaultMessage='Filter' />
                   </label>
                 </GridColumn>
-                <GridColumn computer={8}>
+                <GridColumn computer={9}>
                   <Dropdown
                     selection
                     fluid
@@ -1500,56 +1519,54 @@ class AddCart extends Component {
     const { activeTab } = this.state
     let { isOpen } = sidebar
     return (
-      <FlexTabs>
-        <Sidebar
-          onHide={e => {
-            try {
-              if (
-                (e &&
-                  !(e.path[0] instanceof HTMLTableCellElement) &&
-                  !(e.path[1] instanceof HTMLTableCellElement) &&
-                  e.target &&
-                  e.target.className &&
-                  typeof e.target.className.includes !== 'undefined' &&
-                  e.target.className.includes('js-focus-visible')) ||
-                (e &&
-                  e.target &&
-                  e.target.className &&
-                  typeof e.target.className.includes !== 'undefined' &&
-                  !(e.target.className.includes('item') || e.target.className.includes('text'))) ||
-                !(e.target.nodeName === 'svg' || e.target.nodeName === 'circle' || e.target.nodeName === 'SPAN')
-              ) {
-                sidebarChanged({ isOpen: false, isHoldRequest: false })
-              }
-            } catch (e) {
-              console.error(e)
+      <Sidebar
+        onHide={e => {
+          try {
+            if (
+              (e &&
+                !(e.path[0] instanceof HTMLTableCellElement) &&
+                !(e.path[1] instanceof HTMLTableCellElement) &&
+                e.target &&
+                e.target.className &&
+                typeof e.target.className.includes !== 'undefined' &&
+                e.target.className.includes('js-focus-visible')) ||
+              (e &&
+                e.target &&
+                e.target.className &&
+                typeof e.target.className.includes !== 'undefined' &&
+                !(e.target.className.includes('item') || e.target.className.includes('text'))) ||
+              !(e.target.nodeName === 'svg' || e.target.nodeName === 'circle' || e.target.nodeName === 'SPAN')
+            ) {
+              sidebarChanged({ isOpen: false, isHoldRequest: false })
             }
-          }}
-          width='very wide'
-          className='cart-sidebar flex'
-          direction='right'
-          animation='scale down'
-          visible={isOpen}
-          style={{ zIndex: 601 }}>
-          {offerDetailIsFetching ? (
-            <Dimmer active inverted>
-              {' '}
-              <Loader size='large' />{' '}
-            </Dimmer>
-          ) : (
-            <>
-              <Menu pointing secondary>
-                {tabsMarketPlace.map((tab, i) =>
-                  <Menu.Item onClick={() => this.setState({ activeTab: i })} active={activeTab === i}>
-                    {formatMessage(tab.text)}
-                  </Menu.Item>
-                )}
-              </Menu>
-              {this.getContent()}
-            </>
-          )}
-        </Sidebar>
-      </FlexTabs>
+          } catch (e) {
+            console.error(e)
+          }
+        }}
+        width='very wide'
+        className='cart-sidebar flex'
+        direction='right'
+        animation='scale down'
+        visible={isOpen}
+        style={{ zIndex: 601 }}>
+        {offerDetailIsFetching ? (
+          <Dimmer active inverted>
+            {' '}
+            <Loader size='large' />{' '}
+          </Dimmer>
+        ) : (
+          <>
+            <Menu pointing secondary>
+              {tabsMarketPlace.map((tab, i) =>
+                <Menu.Item onClick={() => this.setState({ activeTab: i })} active={activeTab === i}>
+                  {formatMessage(tab.text)}
+                </Menu.Item>
+              )}
+            </Menu>
+            {this.getContent()}
+          </>
+        )}
+      </Sidebar>
     )
   }
 }

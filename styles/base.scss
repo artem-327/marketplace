@@ -705,6 +705,29 @@ div.cart-sidebar {
   }
 }
 
+div.cart-sidebar {
+  width: 630px !important;
+
+  > .ui.pointing.secondary.menu:not(.vertical) {
+    padding: 0 30px;
+  }
+
+  > .ui.basic.segment {
+    margin-top: 0 !important;
+    padding-left: 30px;
+    padding-right: 30px;
+
+    > .grid {
+      margin: -16px -30px !important;
+
+      > .row {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+    }
+  }
+}
+
 .ui.secondary.pointing.menu:not(.vertical) {
   .menu.right {
     padding-right: 0.57142857em;
