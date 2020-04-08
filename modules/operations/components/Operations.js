@@ -69,7 +69,7 @@ class Operations extends Component {
         searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v}%`] }] : [])
       },
       'company-product-catalog': {
-        url: '/prodex/api/company-products/datagrid',
+        url: '/prodex/api/company-products/admin/datagrid',
         searchToFilter: v =>
           v
             ? [
