@@ -57,9 +57,9 @@ class SaleReturnShipping extends React.Component {
     const { closePopup, order, orderId, shippingQuotes } = this.props
 
     let formValues = {
-      quoteId: (order.cfWeightExceeded || !shippingQuotes.length
+      quoteId: (order.cfWeightExceeded || !getSafe(() => shippingQuotes.rates.length, false)
         ? values.shipmentQuoteId
-        : shippingQuotes[this.state.selectedShippingQuote].quoteId
+        : getSafe(() => shippingQuotes.rates[this.state.selectedShippingQuote].quoteId, '')
       ).trim(),
       pickupRemarks: values.pickupRemarks.trim(),
       deliveryRemarks: values.deliveryRemarks.trim(),

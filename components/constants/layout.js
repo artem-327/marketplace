@@ -335,8 +335,8 @@ export const LeftMenu = styled(Menu)`
 
     .scrollbar-container > img {
       object-fit: contain;
-      height: 34px;
-      margin: 33px auto;
+      height: 70px;
+      margin: 15px auto;
     }
 
     .container > a.item,
@@ -703,6 +703,12 @@ export const LeftMenu = styled(Menu)`
 
     &.collapsed {
       width: 70px !important;
+      
+      .scrollbar-container > img {
+        width: 30px;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
 
       .flex-wrapper,
       .scrollbar-container > .flex-wrapper {
