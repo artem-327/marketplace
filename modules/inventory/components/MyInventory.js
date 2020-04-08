@@ -419,7 +419,7 @@ class MyInventory extends Component {
                     try {
                       this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
                       datagrid.updateRow(r.id, () => ({
-                        ...r,
+                        ...r.rawData,
                         cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
                       }))
                     } catch (error) {
