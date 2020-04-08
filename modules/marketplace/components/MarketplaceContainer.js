@@ -69,7 +69,8 @@ function mapStateToProps(store, { datagrid }) {
         conditionNotes: getSafe(() => po.conditionNotes, false),
         form: getSafe(() => po.form.name),
         location: getLocationString(po),
-        nacdMember: po && po.ownerNacdMember ? 'Yes' : po.ownerNacdMember === false ? 'No' : ''
+        nacdMember: po && po.ownerNacdMember ? 'Yes' : po.ownerNacdMember === false ? 'No' : '',
+        notes: getSafe(() => po.externalNotes, '')
       }
     }),
     sidebar: store.cart.sidebar,

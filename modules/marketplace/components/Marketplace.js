@@ -54,6 +54,12 @@ const MarketplaceTab = styled(Tab)`
   flex-shrink: 1;
 `
 
+const CustomDiv = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
 class Marketplace extends Component {
   state = {
     columns: [
@@ -185,6 +191,15 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 160
+      },
+      {
+        name: 'notes',
+        title: (
+          <FormattedMessage id='marketplace.notes' defaultMessage='Notes'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160
       }
     ],
     selectedRows: [],
@@ -248,7 +263,13 @@ class Marketplace extends Component {
           {`${r.packagingSize} ${r.packagingUnit} `}
           <CapitalizedText>{r.packagingType}</CapitalizedText>{' '}
         </>
-      )
+      ),
+      notes: r.notes ? (
+        <Popup
+          content={r.notes}
+          trigger={<CustomDiv>{r.notes}</CustomDiv>} // <div> has to be there otherwise popup will be not shown
+        />
+      ) : null
     }))
   }
 
