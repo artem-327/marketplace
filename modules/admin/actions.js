@@ -799,7 +799,18 @@ export const initSearchCompany = (id) => ({
 
 export const searchTags = (tag) => ({
   type: AT.ADMIN_SEARCH_TAGS,
-  payload: api.searchTags(tag)
+  payload: api.searchTags({
+    orFilters: [
+      {
+        operator: "LIKE",
+        path: "Tag.name",
+        values: [tag.toString()]
+      }
+    ],
+    pageNumber: 0,
+    pageSize: 50
+  })
 })
+
 
 
