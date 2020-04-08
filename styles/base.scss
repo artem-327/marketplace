@@ -655,7 +655,8 @@ div.inventory {
   }
 }
 
-div.inventory-sidebar {
+div.inventory-sidebar,
+div.cart-sidebar {
   position: relative;
   top: 0;
   left: 0;
@@ -700,6 +701,29 @@ div.inventory-sidebar {
     .ui.message.attached {
       margin-left: 0;
       margin-right: 0;
+    }
+  }
+}
+
+div.cart-sidebar {
+  width: 630px !important;
+
+  > .ui.pointing.secondary.menu:not(.vertical) {
+    padding: 0 30px;
+  }
+
+  > .ui.basic.segment {
+    margin-top: 0 !important;
+    padding-left: 30px;
+    padding-right: 30px;
+
+    > .grid {
+      margin: -16px -30px !important;
+
+      > .row {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
     }
   }
 }
@@ -1440,6 +1464,26 @@ i.file {
           }
         }
       }
+
+      &.group-row {
+
+        &:hover {
+
+          td {
+            background-color: #eff9ff;
+          }
+        }
+      }
+
+      &.row-click {
+
+        &:hover {
+
+          td {
+            background-color: #eff9ff;
+          }
+        }
+      }
     }
 
     tr.group-row {
@@ -1510,7 +1554,7 @@ i.file {
 
       tr.table-active {
         background-color: #eff9ff;
-        
+
         > td {
           background-color: #eff9ff;
         }
@@ -1528,7 +1572,7 @@ i.file {
 }
 
 
-.price-input input[type=number]::-webkit-inner-spin-button, 
+.price-input input[type=number]::-webkit-inner-spin-button,
 .price-input input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
