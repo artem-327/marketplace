@@ -218,7 +218,8 @@ class Settings extends Component {
             onSubmit={async (values, { setSubmitting }) => {
               try {
                 const { updateCompany } = this.props
-
+                // access to assocaitions has only admin
+                delete values.associations
                 await updateCompany(values.id, {
                   ...values,
                   businessType: values.businessType ? values.businessType.id : null
