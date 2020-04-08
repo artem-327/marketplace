@@ -296,7 +296,8 @@ i.icon.clickable:hover {
 
 div.page-wrapper {
   background: #f8f9fb;
-
+  overflow-y: auto;
+  overflow-x: hidden;
   > .flex.stretched,
   .marketplace-container > .flex.stretched {
     flex-grow: 1;

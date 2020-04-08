@@ -30,12 +30,10 @@ export default class ShoppingCart extends Component {
   }
 
   handleContinueShopping = () => {
-    this.props.removePopup()
     Router.push('/marketplace/all')
   }
 
   handleContinue = () => {
-    if (checkToken(this.props)) return
     Router.push('/purchase-order')
   }
 
@@ -124,7 +122,6 @@ export default class ShoppingCart extends Component {
 }
 
 ShoppingCart.propTypes = {
-  addPopup: func,
   cartItem: array,
   history: object,
   deleteCartItem: func
