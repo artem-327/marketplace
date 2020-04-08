@@ -479,12 +479,14 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_ALL_BRANCHES_DATA: {
-      const branches = action.payload.map(branch => {
-        return {
-          value: branch.id,
-          text: branch.deliveryAddress.cfName
-        }
-      })
+      let branches = []
+      action.payload.forEach(
+        branch =>
+          branch.warehouse === false && {
+            value: branch.id,
+            text: branch.deliveryAddress.cfName
+          }
+      )
       return {
         ...state,
         branchesAll: branches
