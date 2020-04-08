@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Modal, Checkbox, Popup, Button } from 'semantic-ui-react'
+import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input } from 'semantic-ui-react'
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import ProdexTable from '~/components/table'
@@ -18,6 +18,7 @@ import { getSafe } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
 import Tutorial from '~/modules/tutorial/Tutorial'
+import { debounce } from 'lodash'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -287,7 +288,8 @@ class MyInventory extends Component {
     // pageNumber: 0,
     open: false,
     clientMessage: '',
-    request: null
+    request: null,
+    filterValue: ''
   }
 
   componentDidMount() {
@@ -311,33 +313,20 @@ class MyInventory extends Component {
     }
     // Because of #31767
     this.props.setCompanyElligible()
-    this.handleFilterClear()
+    this.props.applyDatagridFilter('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
+
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
       datagrid.setFilter(datagridFilter)
     }
   }
 
-  filterInventory = async filter => {
-    let productIds = []
-    if (filter.search) {
-      let foundProducts = await this.props.findProducts(filter.search)
-      foundProducts.value.data.reduce((filteredProducts, product) => {
-        if (product.casProduct.chemicalName === filter.search || product.casProduct.casNumber === filter.search)
-          productIds.push(product.id)
-      }, [])
-
-      if (productIds.length) {
-        filter = { ...filter, product: productIds }
-      }
-    }
-    //this.props.getMyProductOffers(filter, PAGE_SIZE)
-  }
-
   getRows = rows => {
+    const { datagrid } = this.props
+
     let title = ''
 
     return rows.map((r, rIndex) => {
@@ -427,7 +416,15 @@ class MyInventory extends Component {
                   }
                   onChange={(e, data) => {
                     e.preventDefault()
-                    this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
+                    try {
+                      this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
+                      datagrid.updateRow(r.id, () => ({
+                        ...r.rawData,
+                        cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
+                      }))
+                    } catch (error) {
+                      console.error(error)
+                    }
                   }}
                 />
               }
@@ -437,16 +434,6 @@ class MyInventory extends Component {
         )
       }
     })
-  }
-
-  // ! ! delete
-  handleFilterApply = filter => {
-    this.props.datagrid.setFilter(filter)
-  }
-
-  handleFilterClear = () => {
-    this.props.applyFilter({ filters: [] })
-    this.props.datagrid.setFilter({ filters: [] })
   }
 
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
@@ -501,6 +488,17 @@ class MyInventory extends Component {
     }
   }
 
+  handleFiltersValue = debounce(value => {
+    const { applyDatagridFilter } = this.props
+    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    else applyDatagridFilter(value)
+  }, 250)
+
+  handleFilterChange = (e, { value }) => {
+    this.setState({ filterValue: value })
+    this.handleFiltersValue(value)
+  }
+
   render() {
     const {
       openBroadcast,
@@ -518,7 +516,7 @@ class MyInventory extends Component {
       closeSidebarDetail,
       tutorialCompleted
     } = this.props
-    const { columns, selectedRows, clientMessage, request } = this.state
+    const { columns, selectedRows, clientMessage, request, filterValue } = this.state
     return (
       <>
         <Modal size='small' open={this.state.open} onClose={() => this.setState({ open: false })} closeIcon>
@@ -552,44 +550,65 @@ class MyInventory extends Component {
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
         {!tutorialCompleted && <Tutorial />}
         <Container fluid style={{ padding: '0 32px' }}>
-          <Menu secondary className='page-part'>
-            {/*selectedRows.length > 0 ? (
-              <Menu.Item>
-                <Header as='h3' size='small' color='grey'>
-                  <FormattedMessage
-                    id='myInventory.smallHeader'
-                    defaultMessage={selectedRows.length + ' products offerings selected'}
-                    values={{ number: selectedRows.length }}
-                  />
-                </Header>
-              </Menu.Item>
-            ) : null*/}
-
-            <Menu.Menu position='right'>
-              <Menu.Item>
-                <Button
-                  size='large'
-                  primary
-                  onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
-                  data-test='my_inventory_add_btn'>
-                  <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
-                    {text => text}
-                  </FormattedMessage>
-                </Button>
-              </Menu.Item>
-              <Menu.Item>
-                <Button size='large' primary onClick={() => openImportPopup()} data-test='my_inventory_import_btn'>
-                  {formatMessage({
-                    id: 'myInventory.import',
-                    defaultMessage: 'Import'
+          <Grid>
+            <Grid.Row>
+              <Grid.Column width={4} style={{ paddingTop: '9px' }}>
+                <Input
+                  fluid
+                  icon='search'
+                  value={filterValue}
+                  onChange={this.handleFilterChange}
+                  placeholder={formatMessage({
+                    id: 'myInventory.searchByProductName',
+                    defaultMessage: 'Search by product name...'
                   })}
-                </Button>
-              </Menu.Item>
-              <MenuItemFilters>
-                <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
-              </MenuItemFilters>
-            </Menu.Menu>
-          </Menu>
+                />
+              </Grid.Column>
+              <Grid.Column width={12}>
+                <Menu secondary className='page-part'>
+                  {/*selectedRows.length > 0 ? (
+                    <Menu.Item>
+                      <Header as='h3' size='small' color='grey'>
+                        <FormattedMessage
+                          id='myInventory.smallHeader'
+                          defaultMessage={selectedRows.length + ' products offerings selected'}
+                          values={{ number: selectedRows.length }}
+                        />
+                      </Header>
+                    </Menu.Item>
+                  ) : null*/}
+                  <Menu.Menu position='right'>
+                    <Menu.Item>
+                      <Button
+                        size='large'
+                        primary
+                        onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
+                        data-test='my_inventory_add_btn'>
+                        <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
+                          {text => text}
+                        </FormattedMessage>
+                      </Button>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <Button
+                        size='large'
+                        primary
+                        onClick={() => openImportPopup()}
+                        data-test='my_inventory_import_btn'>
+                        {formatMessage({
+                          id: 'myInventory.import',
+                          defaultMessage: 'Import'
+                        })}
+                      </Button>
+                    </Menu.Item>
+                    <MenuItemFilters>
+                      <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
+                    </MenuItemFilters>
+                  </Menu.Menu>
+                </Menu>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
         </Container>
 
         <div className='flex stretched' style={{ padding: '10px 32px' }}>

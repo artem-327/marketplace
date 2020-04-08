@@ -15,7 +15,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
-import Axios from 'axios'
+import { Required } from '~/components/constants/layout'
 
 const initialFormValues = {
   accountNumber: '',
@@ -134,21 +134,45 @@ class BankAccountsPopup extends React.Component {
             <FormGroup widths='equal' data-test='settings_bank_account_accountNumber_inp'>
               <Input
                 type='text'
-                label={formatMessage({ id: 'settings.accountNumber', defaultMessage: 'Account Number' })}
+                label={
+                  <>
+                    {formatMessage({ id: 'settings.accountNumber', defaultMessage: 'Account Number' })}
+                    <Required />
+                  </>
+                }
                 name='accountNumber'
               />
               <Dropdown
-                label={formatMessage({ id: 'settings.accountType', defaultMessage: 'Account Type' })}
+                label={
+                  <>
+                    {formatMessage({ id: 'settings.accountType', defaultMessage: 'Account Type' })}
+                    <Required />
+                  </>
+                }
                 name='bankAccountType'
                 options={bankAccountType}
                 inputProps={{ 'data-test': 'settings_bank_account_popup_type_drpdn' }}
               />
             </FormGroup>
             <FormGroup widths='equal' data-test='settings_bank_account_nameNumber_inp'>
-              <Input type='text' label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })} name='name' />
               <Input
                 type='text'
-                label={formatMessage({ id: 'settings.routingNumber', defaultMessage: 'Routing Number' })}
+                label={
+                  <>
+                    {formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
+                    <Required />
+                  </>
+                }
+                name='name'
+              />
+              <Input
+                type='text'
+                label={
+                  <>
+                    {formatMessage({ id: 'settings.routingNumber', defaultMessage: 'Routing Number' })}
+                    <Required />
+                  </>
+                }
                 name='routingNumber'
               />
             </FormGroup>

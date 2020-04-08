@@ -25,6 +25,9 @@ import { AddressForm } from '~/modules/address-form'
 import { ControllerForm } from '~/components/custom-formik'
 
 import { postNewDwollaAccount } from '~/modules/admin/api'
+import { getStringISODate } from '~/components/date-format'
+import { Required } from '~/components/constants/layout'
+import { removeEmpty } from '~/utils/functions'
 
 const Wrapper = styled.div`
   background-color: rgba(208, 224, 240, 0.3);
@@ -96,6 +99,7 @@ class DwollaRegister extends Component {
         .typeError(requiredMessage)
         .required(requiredMessage),
       email: Yup.string(invalidEmail)
+        .trim()
         .email(invalidEmail)
         .required(requiredMessage)
     }
@@ -208,22 +212,42 @@ class DwollaRegister extends Component {
                   </Header>
                   {/* <Header as='h5'><FormattedMessage id='global.step' defaultMessage='Step' /> {' '} {this.state.step} / {numberOfSteps}</Header> */}
                   <Input
-                    label={<FormattedMessage id='global.legalFirstName' defaultMessage='Legal First Name' />}
+                    label={
+                      <>
+                        <FormattedMessage id='global.legalFirstName' defaultMessage='Legal First Name' />
+                        <Required />
+                      </>
+                    }
                     inputProps={{ fluid: true }}
                     name='firstName'
                   />
                   <Input
-                    label={<FormattedMessage id='global.legalLastName' defaultMessage='Legal Last Name' />}
+                    label={
+                      <>
+                        <FormattedMessage id='global.legalLastName' defaultMessage='Legal Last Name' />
+                        <Required />
+                      </>
+                    }
                     inputProps={{ fluid: true }}
                     name='lastName'
                   />
                   <Input
-                    label={<FormattedMessage id='global.email' defaultMessage='E-Mail' />}
+                    label={
+                      <>
+                        <FormattedMessage id='global.email' defaultMessage='E-Mail' />
+                        <Required />
+                      </>
+                    }
                     inputProps={{ fluid: true }}
                     name='email'
                   />
                   <Input
-                    label={<FormattedMessage id='global.websiteURL' defaultMessage='Website URL' />}
+                    label={
+                      <>
+                        <FormattedMessage id='global.websiteURL' defaultMessage='Website URL' />
+                        <Required />
+                      </>
+                    }
                     inputProps={{ fluid: true }}
                     name='website'
                   />
@@ -255,14 +279,24 @@ class DwollaRegister extends Component {
                   </Header>
                   {/* <Header as='h5'><FormattedMessage id='global.step' defaultMessage='Step' /> {' '} {this.state.step} / {numberOfSteps}</Header> */}
                   <Input
-                    label={<FormattedMessage id='global.businessName' defaultMessage='Business Name' />}
+                    label={
+                      <>
+                        <FormattedMessage id='global.businessName' defaultMessage='Business Name' />
+                        <Required />
+                      </>
+                    }
                     inputProps={{ fluid: true }}
                     name='businessName'
                   />
                   <Dropdown
                     loading={this.props.businessTypes.loading}
                     name='businessType'
-                    label={<FormattedMessage id='global.businessType' defaultMessage='Business Type' />}
+                    label={
+                      <>
+                        <FormattedMessage id='global.businessType' defaultMessage='Business Type' />
+                        <Required />
+                      </>
+                    }
                     options={this.props.businessTypes.data.map(el => ({
                       key: el.id,
                       value: el.id,
@@ -270,12 +304,15 @@ class DwollaRegister extends Component {
                     }))}
                   />
 
-                  <AddressForm values={values} setFieldValue={setFieldValue} displayHeader={false} />
+                  <AddressForm values={values} setFieldValue={setFieldValue} displayHeader={false} required={true} />
 
                   <Dropdown
                     name='businessClassification'
                     label={
-                      <FormattedMessage id='global.businessClassification' defaultMessage='Business Classification' />
+                      <>
+                        <FormattedMessage id='global.businessClassification' defaultMessage='Business Classification' />
+                        <Required />
+                      </>
                     }
                     inputProps={{
                       loading: businessClassificationsLoading,
@@ -291,7 +328,10 @@ class DwollaRegister extends Component {
                   <Dropdown
                     name='industryClassification'
                     label={
-                      <FormattedMessage id='global.industryClassification' defaultMessage='Industry Classification' />
+                      <>
+                        <FormattedMessage id='global.industryClassification' defaultMessage='Industry Classification' />
+                        <Required />
+                      </>
                     }
                     inputProps={{
                       disabled: values.businessClassification === '',
@@ -301,7 +341,15 @@ class DwollaRegister extends Component {
                     options={industryOptions}
                   />
 
-                  <Input name='ein' label={<FormattedMessage id='global.ein' defaultMessage='EIN' />} />
+                  <Input
+                    name='ein'
+                    label={
+                      <>
+                        <FormattedMessage id='global.ein' defaultMessage='EIN' />
+                        <Required />
+                      </>
+                    }
+                  />
 
                   <RightAlignedDiv>
                     <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
@@ -565,7 +613,12 @@ class DwollaRegister extends Component {
                   <GridRow>
                     <GridColumn>
                       <Input
-                        label={<FormattedMessage id='global.legalFirstName' defaultMessage='Legal First Name' />}
+                        label={
+                          <>
+                            <FormattedMessage id='global.legalFirstName' defaultMessage='Legal First Name' />
+                            <Required />
+                          </>
+                        }
                         inputProps={{ fluid: true }}
                         name='firstName'
                       />
@@ -574,7 +627,12 @@ class DwollaRegister extends Component {
                   <GridRow>
                     <GridColumn>
                       <Input
-                        label={<FormattedMessage id='global.legalLastName' defaultMessage='Legal Last Name' />}
+                        label={
+                          <>
+                            <FormattedMessage id='global.legalLastName' defaultMessage='Legal Last Name' />
+                            <Required />
+                          </>
+                        }
                         inputProps={{ fluid: true }}
                         name='lastName'
                       />
@@ -584,7 +642,12 @@ class DwollaRegister extends Component {
                   <GridRow>
                     <GridColumn>
                       <Input
-                        label={<FormattedMessage id='global.title' defaultMessage='Title' />}
+                        label={
+                          <>
+                            <FormattedMessage id='global.title' defaultMessage='Title' />
+                            <Required />
+                          </>
+                        }
                         inputProps={{ fluid: true }}
                         name='dwollaController.jobTitle'
                       />
@@ -777,6 +840,9 @@ class DwollaRegister extends Component {
                 city: values.address.city,
                 dwollaController: {
                   ...values.dwollaController,
+                  dateOfBirth: values.dwollaController.dateOfBirth
+                    ? getStringISODate(values.dwollaController.dateOfBirth).split('T')[0]
+                    : '',
                   ...values.address,
                   country: JSON.parse(values.dwollaController.address.country).countryId
                   // zip: JSON.parse(values.dwollaController.address.zip).zip
@@ -785,12 +851,12 @@ class DwollaRegister extends Component {
                 postalCode: values.address.zip,
                 address: values.address.streetAddress
               }
-
               delete payload.dwollaController.address
               delete payload.acceptance
               delete payload.beneficialOwnersNotApplicable
               try {
                 if (payload.beneficialOwners.length === 0) delete payload.beneficialOwners
+                removeEmpty(payload)
                 if (companyId) await postNewDwollaAccount(payload, companyId)
                 else await postDwollaAccount(payload)
                 this.setState({ step: this.state.step + 1 })

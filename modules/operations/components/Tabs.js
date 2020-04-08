@@ -1,36 +1,49 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-import Router, { withRouter } from 'next/router'
+import { injectIntl } from 'react-intl'
+import { Menu, Dropdown } from 'semantic-ui-react'
 import Link from 'next/link'
-import { Menu } from 'semantic-ui-react'
 
-import { tabChanged } from '../actions'
+import { handleActiveTab } from '../actions'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
-class Tabs extends Component {
-  handleTabClick = tab => {
-    let { currentTab, tabChanged } = this.props
-    if (tab.type !== currentTab.type) {
-      tabChanged(tab)
-    }
-  }
+const MenuLink = ({ active, children, onClick, className, dataTest }) => {
+  return (
+    <Menu.Item as='a' active={active} data-test={dataTest} onClick={onClick} className={className}>
+      {children}
+    </Menu.Item>
+  )
+}
 
-  render() {
-    const { tabsNames, currentTab } = this.props
-    return (
-      <Menu pointing secondary vertical fluid>
+function TabsOperations(props) {
+  const {
+    tabsNames,
+    handleActiveTab,
+    currentTab,
+    intl: { formatMessage }
+  } = props
+
+  return (
+    <Dropdown.Menu data-test='navigation_menu_operations_drpdn'>
+      <PerfectScrollbar>
         {tabsNames.map((tab, i) => (
-          <Link href={`/operations?type=${tab.type}`} key={i}>
-            <Menu.Item
-              onClick={() => this.handleTabClick(tab)}
-              name={tab.name.toUpperCase()}
-              active={currentTab.type === tab.type}
-              data-test='tabs_tab_click'
-            />
-          </Link>
+          <Dropdown.Item
+            as={MenuLink}
+            key={tab.id}
+            onClick={e => {
+              e.preventDefault()
+              e.stopPropagation()
+              handleActiveTab(tab)
+            }}
+            active={currentTab.name === tab.name}
+            dataTest={`tabs_menu_item_${tab.name.toLowerCase()}`}
+            tab={tab.id}>
+            {formatMessage({ id: `navigation.${tab.name}`, defaultMessage: `${tab.name}` })}
+          </Dropdown.Item>
         ))}
-      </Menu>
-    )
-  }
+      </PerfectScrollbar>
+    </Dropdown.Menu>
+  )
 }
 
 const mapStateToProps = state => {
@@ -41,7 +54,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-  tabChanged
+  handleActiveTab
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Tabs))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(TabsOperations))

@@ -1,4 +1,5 @@
 import { FormattedMessage } from 'react-intl'
+import React from 'react'
 
 export const config = {
   'CAS Products': {
@@ -57,7 +58,17 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 220,
           sortPath: 'Company.name'
+        },
+        {
+          name: 'associations',
+          title: (
+            <FormattedMessage id='admin.associations' defaultMessage='Associations'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 165
         },
         {
           name: 'primaryBranchAddress',
@@ -66,6 +77,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 185,
           sortPath: 'Company.primaryBranch.deliveryAddress.address.streetAddress'
         },
         {
@@ -75,6 +87,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'ClientCompany.primaryBranch.deliveryAddress.contactName'
         },
         {
@@ -84,6 +97,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 175,
           sortPath: 'ClientCompany.primaryBranch.deliveryAddress.contactEmail'
         },
         {
@@ -92,7 +106,8 @@ export const config = {
             <FormattedMessage id='global.dwollaAccount' defaultMessage='Dwolla Account'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 145
         },
         {
           name: 'hasLogisticsAccounts',
@@ -100,7 +115,8 @@ export const config = {
             <FormattedMessage id='global.logisticAccounts' defaultMessage='Logistics Accounts'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 150
         },
         {
           name: 'reviewRequested',
@@ -108,7 +124,8 @@ export const config = {
             <FormattedMessage id='global.reviewRequested' defaultMessage='Review Requested'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 150
         },
         {
           name: 'nacdMember',
@@ -116,7 +133,8 @@ export const config = {
             <FormattedMessage id='global.nacdMember' defaultMessage='NACD Member'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 130
         }
       ]
     }
@@ -139,6 +157,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.name'
         },
         {
@@ -148,6 +167,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.code'
         },
         {
@@ -157,6 +177,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.manufacturer.name'
         },
         {
@@ -165,7 +186,8 @@ export const config = {
             <FormattedMessage id='admin.echoProducts.sds' defaultMessage='SDS'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 150
         },
         {
           name: 'sdsVersionNumber',
@@ -174,6 +196,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.sdsVersionNumber'
         },
         {
@@ -183,8 +206,18 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.sdsRevisionDate'
-        }
+        },
+        {
+          name: 'tagsFormatted',
+          title: (
+            <FormattedMessage id='global.tags' defaultMessage='Tags'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
+        },
       ]
     }
   },
@@ -696,6 +729,65 @@ export const config = {
     ]
   },
 
+  Associations: {
+    tableName: 'admin_associations',
+    addEditText: (
+      <FormattedMessage id='admin.associations' defaultMessage='Associations'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    formattedMessageName: 'associations',
+    searchText: 'admin.searchAssociations',
+    display: {
+      columns: [
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.name' defaultMessage='Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'Association.name'
+        }
+      ]
+    },
+    edit: [
+      {
+        name: 'name',
+        title: (
+          <FormattedMessage id='global.name' defaultMessage='Name'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'text',
+        required: true
+      }
+    ],
+    api: {
+      get: {
+        dataName: 'associationsRows',
+        typeRequest: 'GET_ASSOCIATIONS',
+        typeSuccess: 'GET_ASSOCIATIONS_FULFILLED',
+        apiCall: '/prodex/api/associations'
+      },
+      post: {
+        typeRequest: 'ADD_ASSOCIATION',
+        apiCall: '/prodex/api/associations',
+        typeQuery: true
+      },
+      update: {
+        method: 'patch',
+        typeRequest: 'EDIT_ASSOCIATION',
+        apiCall: '/prodex/api/associations/id/',
+        typeQuery: true
+      },
+      delete: {
+        typeRequest: 'DELETE_ASSOCIATION',
+        apiCall: '/prodex/api/associations/id/'
+      }
+    }
+  },
+
   'Document Types': {
     tableName: 'admin_document_types',
     addEditText: (
@@ -806,6 +898,107 @@ export const config = {
         typeRequest: 'ADMIN_DELETE_MARKET_SEGMENTS_DATA',
         apiCall: '/prodex/api/market-segments/id/'
       }
+    }
+  },
+  Users: {
+    tableName: 'admin_users',
+    addEditText: (
+      <FormattedMessage id='admin.user' defaultMessage='User'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    formattedMessageName: 'user',
+    searchText: 'admin.searchUser',
+    display: {
+      columns: [
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.user' defaultMessage='User'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180,
+          sortPath: 'User.name'
+        },
+        {
+          name: 'companyName',
+          title: (
+            <FormattedMessage id='global.companyName' defaultMessage='Company Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180
+        },
+        {
+          name: 'jobTitle',
+          title: (
+            <FormattedMessage id='global.jobTitle' defaultMessage='Job Title'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 130
+        },
+        {
+          name: 'email',
+          title: (
+            <FormattedMessage id='global.email' defaultMessage='E-mail'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180,
+          sortPath: 'User.email'
+        },
+        {
+          name: 'phoneFormatted',
+          title: (
+            <FormattedMessage id='global.phone' defaultMessage='Phone'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        /*
+        {
+          name: 'homeBranchName',
+          title: (
+            <FormattedMessage id='global.homeBranch' defaultMessage='Home Branch'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180
+        },
+        */
+        {
+          name: 'userRoles',
+          title: (
+            <FormattedMessage id='global.roles' defaultMessage='Roles'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        /*
+        {
+          name: 'lastLoginAt',
+          title: (
+            <FormattedMessage id='global.lastLogin' defaultMessage='Last Login'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180
+        },
+        */
+        {
+          name: 'switchEnable',
+          title: (
+            <FormattedMessage id='global.enableUser' defaultMessage='Enable User'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        }
+      ]
     }
   },
   'Admin Settings': {

@@ -24,7 +24,7 @@ const FixyWrapper = styled.div`
 
 const ButtonsWrapper = styled(Grid)`
   position: fixed;
-  bottom: 1em;
+  bottom: 4em;
   left: 1em;
   width: calc(100% - 2em);
   margin: 0 !important;

@@ -5,38 +5,53 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Form, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { array } from 'prop-types'
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages, passwordValidationAnyChar } from '~/constants/yupValidation'
 
 const { requiredMessage } = errorMessages
+import { Required } from '~/components/constants/layout'
 
 import {
   closePopup,
   getLogisticsProviders,
   createLogisticsAccount,
-  updateLogisticsAccount
+  updateLogisticsAccount,
+  getLogisticsAccounts
 } from '~/modules/settings/actions'
 
 const validationSchema = Yup.object().shape(
   {
-    providerIdentifier: Yup.object().shape({
-      type: Yup.string(requiredMessage).required(requiredMessage),
-      value: Yup.string(requiredMessage).required(requiredMessage)
-    }),
+    providerIdentifier: Yup.string(requiredMessage).required(requiredMessage),
     username: Yup.string(requiredMessage).required(requiredMessage),
-    password: Yup.string(requiredMessage).required(requiredMessage)
-  },
-  [['username', 'password']]
+    password: passwordValidationAnyChar()
+  }
 )
 
 const initialValues = {
-  providerIdentifier: {},
+  providerIdentifier: '',
+  providerIdentifierName: '',
   username: '',
   password: ''
 }
 
 class LogisticsPopup extends Component {
+
   componentDidMount() {
     this.props.getLogisticsProviders()
+  }
+
+  getInitialValues = () => {
+    let { popupValues } = this.props
+    return popupValues
+      ? {
+        providerIdentifier: JSON.stringify(popupValues.provider.identifier),
+        providerIdentifierName: `${popupValues.provider.name} (${popupValues.provider.identifier.value})`,
+        username: popupValues.accountInfos && popupValues.accountInfos.length
+          ? popupValues.accountInfos[0].username
+          : '',
+        password: ''
+      }
+      :
+      initialValues
   }
 
   render() {
@@ -47,8 +62,10 @@ class LogisticsPopup extends Component {
       logisticsProvidersFetching,
       createLogisticsAccount,
       updateLogisticsAccount,
+      getLogisticsAccounts,
       intl: { formatMessage }
     } = this.props
+
     return (
       <Modal closeIcon onClose={() => closePopup()} open centered={false}>
         <Modal.Header>
@@ -64,13 +81,20 @@ class LogisticsPopup extends Component {
             enableReinitialize={true}
             validateOnChange={false}
             validateOnBlur={false}
-            initialValues={popupValues || initialValues}
+            initialValues={this.getInitialValues()}
             onSubmit={async (values, { setSubmitting }) => {
               try {
+                const payload = {
+                  providerIdentifier: JSON.parse(values.providerIdentifier),
+                  username: values.username,
+                  password: values.password
+                }
+
                 if (popupValues) {
-                  await updateLogisticsAccount(values)
+                  await updateLogisticsAccount(popupValues.id, payload)
                 } else {
-                  await createLogisticsAccount(values)
+                  await createLogisticsAccount(payload)
+                  getLogisticsAccounts()
                 }
               } catch {
               } finally {
@@ -78,44 +102,68 @@ class LogisticsPopup extends Component {
                 closePopup()
               }
             }}>
-            {({ submitForm }) => {
+            {({ submitForm, values }) => {
               this.handleSubmit = submitForm
               return (
                 <>
                   <FormGroup widths='equal' data-test='settings_logistics_apikey_inp'>
-                    <Dropdown
-                      name='providerIdentifier'
-                      options={logisticsProviders.map(provider => ({
-                        key: provider.identifier.value,
-                        text: provider.name,
-                        value: provider.identifier
-                      }))}
-                      label={formatMessage({
-                        id: 'logistics.label.logisticsProvider',
-                        defaultMessage: 'Logistics Provider'
-                      })}
-                      inputProps={{
-                        'data-test': 'settings_logistics_provider_drpdn',
-                        placeholder: formatMessage({
-                          id: 'logistics.placeholder.logisticsProvider',
-                          label: 'Select Logistics Provider'
-                        }),
-                        loading: logisticsProvidersFetching
-                      }}
-                    />
+                    {popupValues ? (
+                      <Input
+                        name='providerIdentifierName'
+                        label={formatMessage({
+                          id: 'logistics.label.logisticsProvider',
+                          defaultMessage: 'Logistics Provider'
+                        })}
+                        inputProps={{
+                          readOnly: true
+                        }}
+                      />
+                    ) : (
+                      <Dropdown
+                        name='providerIdentifier'
+                        options={logisticsProviders.map((provider, index) => ({
+                          key: provider.identifier.value,
+                          text: `${provider.name} (${provider.identifier.value})`,
+                          value: JSON.stringify(provider.identifier)
+                        }))}
+                        label={formatMessage({
+                          id: 'logistics.label.logisticsProvider',
+                          defaultMessage: 'Logistics Provider'
+                        })}
+                        inputProps={{
+                          search: true,
+                          'data-test': 'settings_logistics_provider_drpdn',
+                          placeholder: formatMessage({
+                            id: 'logistics.placeholder.logisticsProvider',
+                            label: 'Select Logistics Provider'
+                          }),
+                          loading: logisticsProvidersFetching
+                        }}
+                      />
+                    )}
                   </FormGroup>
 
                   <FormGroup widths='equal' data-test='settings_logistics_namePassword_inp'>
                     <Input
                       name='username'
-                      label={formatMessage({ id: 'logistics.label.username', defaultMessage: 'User Name' })}
+                      label={
+                        <>
+                          {formatMessage({ id: 'logistics.label.username', defaultMessage: 'User Name' })}
+                          <Required />
+                        </>
+                      }
                       inputProps={{
                         placeholder: formatMessage({ id: 'logistics.placeholder.username', defaultMessage: 'username' })
                       }}
                     />
                     <Input
                       name='password'
-                      label={formatMessage({ id: 'logistics.label.password', defaultMessage: 'Password' })}
+                      label={
+                        <>
+                          {formatMessage({ id: 'logistics.label.password', defaultMessage: 'Password' })}
+                          <Required />
+                        </>
+                      }
                       inputProps={{ type: 'password' }}
                     />
                   </FormGroup>
@@ -153,7 +201,8 @@ const mapDispatchToProps = {
   closePopup,
   getLogisticsProviders,
   createLogisticsAccount,
-  updateLogisticsAccount
+  updateLogisticsAccount,
+  getLogisticsAccounts
 }
 
 const mapStateToProps = ({ settings: { popupValues, logisticsProvidersFetching, logisticsProviders } }) => ({

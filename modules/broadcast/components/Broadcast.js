@@ -35,6 +35,8 @@ import RuleItem from './RuleItem'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import * as Yup from 'yup'
 
+import styled from 'styled-components'
+
 import { getSafe } from '~/utils/functions'
 
 import { errorMessages } from '~/constants/yupValidation'
@@ -42,6 +44,14 @@ import { errorMessages } from '~/constants/yupValidation'
 import confirm from '~/src/components/Confirmable/confirm'
 import { setBroadcast, normalizeTree, getBroadcast } from '~/modules/broadcast/utils'
 import CompanyInfo from './CompanyInfo'
+const UnpaddedRow = {
+  Bottom: styled(GridRow)`
+    padding-bottom: 0px !important
+  `,
+  Top: styled(GridRow)`
+    padding-top: 0px !important;
+  `
+}
 
 const templateInitialValues = {
   name: ''
@@ -55,6 +65,7 @@ const templateValidation = () =>
 class Broadcast extends Component {
   state = {
     filterSearch: '',
+    associationFilter: 'ALL',
     selectedTemplate: { name: null, id: null },
     broadcastingTo: 0,
     change: false,
@@ -66,6 +77,7 @@ class Broadcast extends Component {
   componentDidMount() {
     if (this.props.filter.category !== 'region') this.handleFilterChange(null, { name: 'category', value: 'region' })
     this.props.getTemplates()
+    this.props.getAssociations()
   }
 
   formChanged = () => {
@@ -171,76 +183,78 @@ class Broadcast extends Component {
     const searchParentFn = n => n.first(i => searchFn(i))
 
     const presets = {
-      region: () =>
-        new TreeModel().parse({
-          name: formatMessage({
-            id: 'broadcast.byRegion',
-            defaultMessage: 'By Region'
-          }),
-          rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
-          depth: 1,
-          children: treeData.children
-            .filter(n => searchParentFn(n))
-            .map(n1 => ({
-              name: n1.model.name,
-              // rule: n1.model,
-              rule: { ...n1.model, broadcast: getBroadcast(n1) },
-              depth: 2,
-              children: n1.children
-                .filter(n => searchFn(n) || searchParentFn(n))
-                .map(n2 => ({
-                  name: n2.model.name,
-                  rule: n2.model,
-                  depth: 3,
-                  children: n2
-                    .all(n => n.model.type === 'branch' && searchFn(n))
-                    .map(n3 => ({
-                      name: n3.model.name,
-                      rule: n3.model,
-                      // rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
-                      depth: 4,
-                      children: []
-                    }))
-                }))
-            }))
+      region: {
+        name: formatMessage({
+          id: 'broadcast.byRegion',
+          defaultMessage: 'By Region'
         }),
-      branch: () =>
-        new TreeModel().parse({
-          // name: 'By company',
-          name: formatMessage({
-            id: 'broadcast.byCompany',
-            defaultMessage: 'By Company'
-          }),
-          // rule: treeData.model,
-          rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
-          depth: 1,
-          children: _.uniqBy(
-            treeData.all(n => n.model.type === 'company'),
-            n => n.model.id
-          )
-            .sort((a, b) => (a.model.name > b.model.name ? 1 : b.model.name > a.model.name ? -1 : 0))
-            .filter(searchFn)
-            .map(n1 => ({
-              name: n1.model.name,
-              // rule: n1.model,
-              rule: { ...n1.model, broadcast: getBroadcast(n1) },
-              depth: 2,
-              children: treeData
-                .all(n => n.model.type === 'branch' && n.parent.model.id === n1.model.id)
-                .map(n2 => ({
-                  name: n2.model.name,
-                  rule: n2.model,
-                  // rule: { ...n2.model, broadcast: getBroadcast(n2) },
-                  depth: 3,
-                  children: []
-                }))
-            }))
-        })
+        rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
+        depth: 1,
+        children: treeData.children
+          .filter(n => searchParentFn(n))
+          .map(n1 => ({
+            name: n1.model.name,
+            // rule: n1.model,
+            rule: { ...n1.model, broadcast: getBroadcast(n1) },
+            depth: 2,
+            children: n1.children
+              .filter(n => searchFn(n) || searchParentFn(n))
+              .map(n2 => ({
+                name: n2.model.name,
+                rule: n2.model,
+                depth: 3,
+                children: n2
+                  .all(n => n.model.type === 'branch' && searchFn(n))
+                  .map(n3 => ({
+                    name: n3.model.name,
+                    rule: n3.model,
+                    // rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
+                    depth: 4,
+                    children: []
+                  }))
+              }))
+          }))
+      },
+      branch: {
+        // name: 'By company',
+        name: formatMessage({
+          id: 'broadcast.byCompany',
+          defaultMessage: 'By Company'
+        }),
+        // rule: treeData.model,
+        rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
+        depth: 1,
+        children: _.uniqBy(
+          treeData.all(n => n.model.type === 'company'),
+          n => n.model.id
+        )
+          .sort((a, b) => (a.model.name > b.model.name ? 1 : b.model.name > a.model.name ? -1 : 0))
+          .filter(searchFn)
+          .map(n1 => ({
+            name: n1.model.name,
+            // rule: n1.model,
+            rule: { ...n1.model, broadcast: getBroadcast(n1) },
+            depth: 2,
+            children: treeData
+              .all(n => n.model.type === 'branch' && n.parent.model.id === n1.model.id)
+              .map(n2 => ({
+                name: n2.model.name,
+                rule: n2.model,
+                // rule: { ...n2.model, broadcast: getBroadcast(n2) },
+                depth: 3,
+                children: []
+              }))
+          }))
+      }
     }
 
-    let tree = presets[filter.category]()
-    // expand when search is active
+    let preset = presets[filter.category]
 
+    let tree = new TreeModel().parse(preset)
+
+    if (filter.category === 'branch') this.applyAssociationFilter(tree)
+
+    // expand when search is active
     if (fs.length > 0) {
       tree.walk(n => (n.model.expanded = true))
     }
@@ -249,6 +263,34 @@ class Broadcast extends Component {
 
     return tree
   }
+
+  applyAssociationFilter = tree => {
+    const { associationFilter } = this.state
+
+    if (associationFilter === 'ALL') return tree
+
+    let nodesToDrop = tree.all(n => {
+      if (n.model.rule.type === 'branch') {
+        let company = this.findCompany(n)
+
+        if (!getSafe(() => company.model.associations, []).includes(this.state.associationFilter)) {
+          return true
+        }
+      }
+      return false
+    })
+
+    nodesToDrop.forEach(n => n.drop())
+
+    let companiesToDrop = tree.all(n => n.model.rule.type === 'company' && !n.hasChildren())
+
+    companiesToDrop.forEach(c => c.model.rule.hidden = true)
+
+    return tree
+  }
+
+  findCompany = branch =>
+    this.props.treeData.first(n => n.model.id === getSafe(() => branch.model.rule.id, branch.id)).parent
 
   handleChange = node => {
     const { treeData } = this.props
@@ -302,8 +344,8 @@ class Broadcast extends Component {
   }
 
   onTemplateSelected = async (_, data, setFieldValue) => {
-    const { getTemplate, toastManager, intl } = this.props
-    const { formatMessage } = intl
+    const { getTemplate } = this.props
+
     let name = data.options.find(opt => opt.value === data.value).text
     setFieldValue('name', name)
     this.setState({ selectedTemplate: { name, id: data.value } })
@@ -334,6 +376,39 @@ class Broadcast extends Component {
       ),
       { appearance: 'success' }
     )
+  }
+
+  getAssociationFilter = () => {
+    const { filter, associationsFetching, associations, asSidebar } = this.props
+    
+    const markup = (
+      <Form.Field>
+        <label>
+          <FormattedMessage id='global.associations' defaultMessage='Associations' />
+        </label>
+        <Dropdown
+          value={this.state.associationFilter}
+          selection
+          loading={associationsFetching}
+          options={['ALL'].concat(associations).map((a, i) => ({ key: i, text: a, value: a }))}
+          onChange={(_e, { value }) => this.setState({ associationFilter: value })}
+        />
+      </Form.Field>
+    )
+    if (filter.category === 'branch') {
+      if (asSidebar) {
+        return (
+          <UnpaddedRow.Top>
+            <GridColumn computer={8}>
+              {markup}
+            </GridColumn>
+          </UnpaddedRow.Top>
+        )
+      }
+      return markup
+    }
+
+    return null
   }
 
   getContent = () => {
@@ -378,7 +453,7 @@ class Broadcast extends Component {
           closeModalCompanyInfo={closeModalCompanyInfo}
         />
         <StretchedGrid
-          className='flex stretched'
+          className={asSidebar ? 'flex stretched' : ''}
           {...additionalGridProps}
           style={asSidebar ? { height: 'auto' } : null}>
           <Grid.Row divided className='flex stretched'>
@@ -402,7 +477,52 @@ class Broadcast extends Component {
                 <Form>
                   {asSidebar ? (
                     <Grid>
-                      <GridColumn mobile={8}>
+                      <UnpaddedRow.Bottom>
+                        <GridColumn mobile={8}>
+                          <Form.Field>
+                            <label>
+                              <FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' />
+                            </label>
+                            <Dropdown
+                              data-test='broadcast_modal_category_drpdn'
+                              selection
+                              name='category'
+                              value={filter.category}
+                              onChange={this.handleFilterChange}
+                              options={[
+                                {
+                                  key: 'region',
+                                  text: 'By Region',
+                                  value: 'region'
+                                },
+                                {
+                                  key: 'branch',
+                                  text: 'By Company',
+                                  value: 'branch'
+                                }
+                              ]}
+                            />
+                          </Form.Field>
+                        </GridColumn>
+                        <GridColumn mobile={8}>
+                          <Form.Field data-test='broadcast_modal_search_inp'>
+                            <label>
+                              <FormattedMessage id='broadcast.filter' defaultMessage='Filter' />
+                            </label>
+                            <Input
+                              name='search'
+                              icon='search'
+                              iconPosition='left'
+                              value={this.state.filterSearch}
+                              onChange={this.handleSearchChange}
+                            />
+                          </Form.Field>
+                        </GridColumn>
+                      </UnpaddedRow.Bottom>
+                      {this.getAssociationFilter()}
+                    </Grid>
+                  ) : (
+                      <>
                         <Form.Field>
                           <label>
                             <FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' />
@@ -414,21 +534,11 @@ class Broadcast extends Component {
                             value={filter.category}
                             onChange={this.handleFilterChange}
                             options={[
-                              {
-                                key: 'region',
-                                text: 'By Region',
-                                value: 'region'
-                              },
-                              {
-                                key: 'branch',
-                                text: 'By Company',
-                                value: 'branch'
-                              }
+                              { key: 'region', text: 'By Region', value: 'region' },
+                              { key: 'branch', text: 'By Company', value: 'branch' }
                             ]}
                           />
                         </Form.Field>
-                      </GridColumn>
-                      <GridColumn mobile={8}>
                         <Form.Field data-test='broadcast_modal_search_inp'>
                           <label>
                             <FormattedMessage id='broadcast.filter' defaultMessage='Filter' />
@@ -436,49 +546,18 @@ class Broadcast extends Component {
                           <Input
                             name='search'
                             icon='search'
-                            iconPosition='left'
+                            iconPosition='right'
                             value={this.state.filterSearch}
                             onChange={this.handleSearchChange}
+                            placeholder={formatMessage({
+                              id: 'broadcast.keyword',
+                              defaultMessage: 'Keyword'
+                            })}
                           />
                         </Form.Field>
-                      </GridColumn>
-                    </Grid>
-                  ) : (
-                    <>
-                      <Form.Field>
-                        <label>
-                          <FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' />
-                        </label>
-                        <Dropdown
-                          data-test='broadcast_modal_category_drpdn'
-                          selection
-                          name='category'
-                          value={filter.category}
-                          onChange={this.handleFilterChange}
-                          options={[
-                            { key: 'region', text: 'By Region', value: 'region' },
-                            { key: 'branch', text: 'By Company', value: 'branch' }
-                          ]}
-                        />
-                      </Form.Field>
-                      <Form.Field data-test='broadcast_modal_search_inp'>
-                        <label>
-                          <FormattedMessage id='broadcast.filter' defaultMessage='Filter' />
-                        </label>
-                        <Input
-                          name='search'
-                          icon='search'
-                          iconPosition='right'
-                          value={this.state.filterSearch}
-                          onChange={this.handleSearchChange}
-                          placeholder={formatMessage({
-                            id: 'broadcast.keyword',
-                            defaultMessage: 'Keyword'
-                          })}
-                        />
-                      </Form.Field>
-                    </>
-                  )}
+                        {this.getAssociationFilter()}
+                      </>
+                    )}
                 </Form>
                 <Divider />
                 <Formik
@@ -613,58 +692,58 @@ class Broadcast extends Component {
                               </GridColumn>
                             </GridRow>
                           ) : (
-                            <GridRow>
-                              <GridColumn computer={11}>
-                                <Dropdown
-                                  selectOnBlur={false}
-                                  data-test='broadcast_modal_template_drpdn'
-                                  fluid
-                                  selection
-                                  value={this.state.selectedTemplate.id}
-                                  onChange={(e, data) => {
-                                    this.onTemplateSelected(e, data, props.setFieldValue)
-                                    this.setState({
-                                      selectedTemplate: {
-                                        id: data.value,
-                                        name: data.options.find(el => el.value === data.value).text
-                                      }
-                                    })
-                                    this.formChanged()
-                                  }}
-                                  options={templates.map(template => ({
-                                    key: template.id,
-                                    text: template.name,
-                                    value: template.id
-                                  }))}
-                                />
-                              </GridColumn>
-                              <GridColumn computer={5}>
-                                <Button
-                                  data-test='broadcast_modal_delete_btn'
-                                  onClick={() => this.handleTemplateDelete(props.setFieldValue)}
-                                  disabled={!this.state.selectedTemplate}
-                                  loading={this.props.templateDeleting}
-                                  type='button'
-                                  basic
-                                  fluid
-                                  negative>
-                                  {formatMessage({
-                                    id: 'global.delete',
-                                    defaultMessage: 'Delete'
-                                  })}
-                                </Button>
-                              </GridColumn>
-                            </GridRow>
-                          )}
+                              <GridRow>
+                                <GridColumn computer={11}>
+                                  <Dropdown
+                                    selectOnBlur={false}
+                                    data-test='broadcast_modal_template_drpdn'
+                                    fluid
+                                    selection
+                                    value={this.state.selectedTemplate.id}
+                                    onChange={(e, data) => {
+                                      this.onTemplateSelected(e, data, props.setFieldValue)
+                                      this.setState({
+                                        selectedTemplate: {
+                                          id: data.value,
+                                          name: data.options.find(el => el.value === data.value).text
+                                        }
+                                      })
+                                      this.formChanged()
+                                    }}
+                                    options={templates.map(template => ({
+                                      key: template.id,
+                                      text: template.name,
+                                      value: template.id
+                                    }))}
+                                  />
+                                </GridColumn>
+                                <GridColumn computer={5}>
+                                  <Button
+                                    data-test='broadcast_modal_delete_btn'
+                                    onClick={() => this.handleTemplateDelete(props.setFieldValue)}
+                                    disabled={!this.state.selectedTemplate}
+                                    loading={this.props.templateDeleting}
+                                    type='button'
+                                    basic
+                                    fluid
+                                    negative>
+                                    {formatMessage({
+                                      id: 'global.delete',
+                                      defaultMessage: 'Delete'
+                                    })}
+                                  </Button>
+                                </GridColumn>
+                              </GridRow>
+                            )}
 
                           <GridRow
                             style={
                               asSidebar
                                 ? {
-                                    position: 'absolute',
-                                    top: '-20000px',
-                                    left: '-20000px'
-                                  }
+                                  position: 'absolute',
+                                  top: '-20000px',
+                                  left: '-20000px'
+                                }
                                 : null
                             }>
                             <GridColumn computer={11}>
@@ -705,7 +784,7 @@ class Broadcast extends Component {
             <Grid.Column
               width={asSidebar ? 16 : 10}
               stretched
-              style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : { height: '80vh' }}>
+              style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : null}>
               <Rule.Root style={asSidebar ? null : { overflowY: 'scroll' }}>
                 <Rule.Header style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
                   <Rule.RowContent>
@@ -831,7 +910,7 @@ class Broadcast extends Component {
         <Modal.Header>
           <FormattedMessage id='inventory.broadcast' defaultMessage='Price Book' />
         </Modal.Header>
-        <Modal.Content scrolling style={{ minHeight: '70vh' }} className='flex stretched'>
+        <Modal.Content scrolling className='flex stretched'>
           {this.getContent()}
         </Modal.Content>
         <Modal.Actions>{this.getButtons()}</Modal.Actions>

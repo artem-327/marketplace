@@ -11,6 +11,8 @@ import { withToastManager } from 'react-toast-notifications'
 
 import { PHONE_REGEXP } from '../../../src/utils/constants'
 import { PhoneNumber } from '~/modules/phoneNumber'
+import { Required } from '~/components/constants/layout'
+import { removeEmpty } from '~/utils/functions'
 
 const BottomMargedGrid = styled(Grid)`
   margin-bottom: 1rem !important;
@@ -66,6 +68,7 @@ class ShippingEdit extends Component {
       //addressName: Yup.string(invalidString).required(requiredMessage),
       // lastName: Yup.string(invalidString).required(requiredMessage),
       contactEmail: Yup.string()
+        .trim()
         .email(invalidEmail)
         .required(requiredMessage),
       contactPhone: Yup.string()
@@ -82,7 +85,7 @@ class ShippingEdit extends Component {
 
     return (
       <>
-        <AddressForm displayHeader={false} values={values} setFieldValue={setFieldValue} />
+        <AddressForm required displayHeader={false} values={values} setFieldValue={setFieldValue} />
         <CustomDiv>
           <Input
             label={<FormattedMessage id='global.addressName' defaultMessage='Address Name' />}
@@ -90,15 +93,36 @@ class ShippingEdit extends Component {
           />
         </CustomDiv>
         <CustomDiv>
-          <Input label={<FormattedMessage id='global.contactName' default='Contact Name' />} name='contactName' />
+          <Input
+            label={
+              <>
+                <FormattedMessage id='global.contactName' default='Contact Name' />
+                <Required />
+              </>
+            }
+            name='contactName'
+          />
         </CustomDiv>
         <FormGroup widths='equal' data-test='purchase_order_shipping_edit_emailPhone_inp'>
-          <Input label={<FormattedMessage id='global.email' defaultMessage='E-mail Address' />} name='contactEmail' />
+          <Input
+            label={
+              <>
+                <FormattedMessage id='global.email' defaultMessage='E-mail Address' />
+                <Required />
+              </>
+            }
+            name='contactEmail'
+          />
 
           <PhoneNumber
             name='contactPhone'
             values={values}
-            label={<FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />}
+            label={
+              <>
+                <FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />
+                <Required />
+              </>
+            }
             setFieldValue={setFieldValue}
             setFieldTouched={setFieldTouched}
             errors={errors}
@@ -154,6 +178,7 @@ class ShippingEdit extends Component {
 
     let payload = {
       ...values,
+      contactEmail: values.contactEmail.trim(),
       address: {
         ...values.address,
         country: JSON.parse(values.address.country).countryId

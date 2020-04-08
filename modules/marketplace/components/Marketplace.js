@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Button, Popup, List, Icon, Tab } from 'semantic-ui-react'
+import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
 import { AlertTriangle } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
@@ -15,6 +15,8 @@ import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 import { Holds } from '~/modules/marketplace/holds'
 import Tutorial from '~/modules/tutorial/Tutorial'
+import { Datagrid } from '~/modules/datagrid'
+import { debounce } from 'lodash'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -63,6 +65,16 @@ class Marketplace extends Component {
         title: <RedTriangle className='grey' />,
         width: 45,
         align: 'center'
+      },
+      {
+        name: 'intProductName',
+        title: (
+          <FormattedMessage id='global.productName' defaultMessage='Product Name'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 180,
+        sortPath: 'ProductOffer.companyProduct.intProductName'
       },
       {
         name: 'available',
@@ -177,7 +189,8 @@ class Marketplace extends Component {
     ],
     selectedRows: [],
     //pageNumber: 0,
-    open: false
+    open: false,
+    filterValue: ''
   }
 
   initData = () => {
@@ -186,8 +199,7 @@ class Marketplace extends Component {
   }
 
   componentDidMount() {
-    this.handleFilterClear()
-    //this.initData()
+    this.props.applyDatagridFilter('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -249,13 +261,15 @@ class Marketplace extends Component {
     sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest })
   }
 
-  handleFilterApply = filter => {
-    this.props.datagrid.setFilter(filter)
-  }
+  handleFiltersValue = debounce(value => {
+    const { applyDatagridFilter } = this.props
+    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    else applyDatagridFilter(value)
+  }, 250)
 
-  handleFilterClear = () => {
-    this.props.applyFilter({ filters: [] })
-    this.props.datagrid.setFilter({ filters: [] })
+  handleFilterChange = (e, { value }) => {
+    this.setState({ filterValue: value })
+    this.handleFiltersValue(value)
   }
 
   handleClearAutocompleteData = () => {
@@ -289,7 +303,7 @@ class Marketplace extends Component {
 
   renderTabMarketplace = () => {
     const { datagrid, intl, openPopup, isMerchant, tutorialCompleted } = this.props
-    const { columns, selectedRows } = this.state
+    const { columns, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
 
@@ -344,47 +358,65 @@ class Marketplace extends Component {
           {...this.props}
         />
 
-        <Menu secondary className='page-part'>
-          <Menu.Menu position='right'>
-            <Menu.Item>
-              <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
-            </Menu.Item>
-            <Popup
-              wide='very'
-              data-test='array_to_multiple_list'
-              content={
-                <FormattedMessage
-                  id='marketplace.shippingQuoteTooltip'
-                  defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
-                />
-              }
-              disabled={selectedRows.length !== 0}
-              position='bottom right'
-              trigger={
-                <DivButtonWithToolTip
-                  data-tooltip={
-                    this.isSelectedMultipleEcho(rows, selectedRows)
-                      ? formatMessage({
-                          id: 'marketplace.multipleEchoProduct',
-                          defaultMessage: 'Multiple ProductOffers can not be calculate.'
-                        })
-                      : null
-                  }
-                  data-position='bottom right'>
-                  <Button
-                    disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
-                    primary
-                    onClick={() => this.setState({ open: true })}
-                    data-test='marketplace_shipping_quote_btn'>
-                    <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                </DivButtonWithToolTip>
-              }
-            />
-          </Menu.Menu>
-        </Menu>
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={4} style={{ paddingTop: '9px' }}>
+              <Input
+                fluid
+                icon='search'
+                value={filterValue}
+                onChange={this.handleFilterChange}
+                placeholder={formatMessage({
+                  id: 'myInventory.searchByProductName',
+                  defaultMessage: 'Search by product name...'
+                })}
+              />
+            </Grid.Column>
+            <Grid.Column width={12}>
+              <Menu secondary className='page-part'>
+                <Menu.Menu position='right'>
+                  <Menu.Item>
+                    <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
+                  </Menu.Item>
+                  <Popup
+                    wide='very'
+                    data-test='array_to_multiple_list'
+                    content={
+                      <FormattedMessage
+                        id='marketplace.shippingQuoteTooltip'
+                        defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
+                      />
+                    }
+                    disabled={selectedRows.length !== 0}
+                    position='bottom right'
+                    trigger={
+                      <DivButtonWithToolTip
+                        data-tooltip={
+                          this.isSelectedMultipleEcho(rows, selectedRows)
+                            ? formatMessage({
+                                id: 'marketplace.multipleEchoProduct',
+                                defaultMessage: 'Multiple ProductOffers can not be calculate.'
+                              })
+                            : null
+                        }
+                        data-position='bottom right'>
+                        <Button
+                          disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
+                          primary
+                          onClick={() => this.setState({ open: true })}
+                          data-test='marketplace_shipping_quote_btn'>
+                          <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
+                            {text => text}
+                          </FormattedMessage>
+                        </Button>
+                      </DivButtonWithToolTip>
+                    }
+                  />
+                </Menu.Menu>
+              </Menu>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
 
         <div class='flex stretched' style={{ padding: '10px 0' }}>
           <ProdexGrid

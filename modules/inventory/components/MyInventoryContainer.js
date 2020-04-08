@@ -64,6 +64,7 @@ function mapStateToProps(store, { datagrid }) {
       }
       return {
         ...po,
+        rawData: po,
         id: po.id,
         product: po.product,
         productName: getSafe(() => po.companyProduct.intProductName),

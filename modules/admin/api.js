@@ -55,8 +55,11 @@ export async function getDataRequest(config, values) {
 }
 
 export async function postNewRequest(config, values) {
-  const { data } = await api.post(config.api.post.apiCall, values)
-  return data
+  if (getSafe(() => config.api.post.typeQuery, false)) {
+    return await api.post(`${config.api.post.apiCall}${generateQueryString(values)}`).data
+  } else {
+    return await api.post(config.api.post.apiCall, values).data
+  }
 }
 
 export async function postNewDwollaAccount(values, companyId) {
@@ -70,6 +73,18 @@ export async function deleteItem(config, id) {
 }
 
 export async function putEditedDataRequest(config, values, id) {
+  if (getSafe(() => config.api.update.typeQuery, false)) {
+    const { data } = await api[getSafe(() => config.api.update.method, 'put')](
+      `${config.api.update.apiCall}${id}${generateQueryString(values)}`
+    )
+    return data
+  } else {
+    const { data } = await api[getSafe(() => config.api.update.method, 'put')](config.api.update.apiCall + id, values)
+    return data
+  }
+}
+
+export async function putEditedDataRequest2(config, values, id) {
   const { data } = await api[getSafe(() => config.api.update.method, 'put')](config.api.update.apiCall + id, values)
   return data
 }
@@ -119,7 +134,7 @@ export async function createCompany(formData) {
 }
 
 export async function updateCompany(id, formData) {
-  const { data } = await api.patch(`/prodex/api/companies/id/${id}`, formData)
+  const { data } = await api.patch(`/prodex/api/companies/admin/id/${id}`, formData)
 
   return data
 }
@@ -252,3 +267,25 @@ export const editNmfcNumber = nmfc =>
 export const getNmfcNumbers = () => api.get('/prodex/api/nmfc-numbers').then(response => response.data)
 export const getSpecificNmfcNumber = id => api.get(`/prodex/api/nmfc-numbers/${id}`).then(response => response.data)
 export const deleteNmfcNumber = id => api.delete(`/prodex/api/nmfc-numbers/${id}`).then(() => id)
+
+export const getUsersMe = () => api.get('/prodex/api/users/me').then(response => response.data)
+export const getUser = (id) => api.get(`/prodex/api/users/id/${id}`).then(response => response.data)
+export const getCompanyInfo = (id) => api.get(`/prodex/api/companies/id/${id}`).then(response => response.data)
+
+export const userSwitchEnableDisable = id => api.patch(`/prodex/api/users/id/${id}/switch-enabled`)
+  .then(response => response.data)
+
+export const postNewUserRequest = (body) => api.post('/prodex/api/users', body).then(response => response.data)
+export const submitUserEdit = (id, body) => api.patch(`/prodex/api/users/id/${id}`, body).then(response => response.data)
+
+export const deleteUser = id => api.delete(`/prodex/api/users/id/${id}`).then(() => id)
+export const getRoles = () => api.get('/prodex/api/roles?includeAdminRoles=true').then(response => response.data)
+export const getAdminRoles = () => api.get('/prodex/api/roles?onlyAdminRoles=true').then(response => response.data)
+
+export const searchCompany = (companyText, limit = 30) =>
+  api.get(`/prodex/api/companies/search/all-info?limit=${limit}&pattern=${companyText}`)
+     .then(response => response.data)
+
+export const searchTags = (filter) =>
+  api.post(`/prodex/api/tags/datagrid`, filter)
+    .then(response => response.data)

@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { Table, Dropdown, Grid, Input, Select, Button } from 'semantic-ui-react'
+import styled from 'styled-components'
 
 import {
   changeHeadersCSV,
@@ -17,16 +18,17 @@ import {
   deleteCSVMapEchoProduct,
   postCSVMapProductOffer,
   putCSVMapProductOffer,
-  deleteCSVMapProductOffer
+  deleteCSVMapProductOffer,
+  getCSVMapCompanies,
+  postCSVMapCompanies,
+  putCSVMapCompanies,
+  deleteCSVMapCompanies
 } from '../../../actions'
 
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import _invert from 'lodash/invert'
 import { withToastManager } from 'react-toast-notifications'
-import {
-  MapTable,
-  SmallerTableCell
-} from '~/modules/settings/components/ProductCatalogTable/Steps/constants/layout'
+import { MapTable, SmallerTableCell } from '~/modules/settings/components/ProductCatalogTable/Steps/constants/layout'
 
 const simpleEchoProductList = {
   constant: 'global',
@@ -126,6 +128,7 @@ const simpleEchoProductList = {
     'stotSingleExposureMapper',
     'supplementalInformationMapper',
     'symptomsEffectsMapper',
+    'tagsMapper',
     'tdgHazardClassMapper',
     'tdgHazardLabelMapper',
     'tdgPackagingGroupMapper',
@@ -160,9 +163,9 @@ const simpleCompanyProductList = {
     'stackableMapper'
   ],
   optional: [
-    'echoProductName',
-    'echoProductCode',
-    'echoProductNameOrCode',
+    'echoProductNameMapper',
+    'echoProductCodeMapper',
+    'echoProductNameOrCodeMapper',
     'freezeProtectMapper',
     'hazardousMapper',
     'inciNameMapper',
@@ -195,6 +198,44 @@ const simpleProductOfferList = {
     'originMapper',
     'splitPkgMapper',
     'validityDateMapper'
+  ]
+}
+
+const simpleCompaniesList = {
+  constant: 'import.companies',
+  required: [
+    'isNacdMemberMapper',
+    'nameMapper',
+    'primaryBranchDeliveryAddressAddressCityMapper',
+    'primaryBranchDeliveryAddressAddressCountryMapper',
+    'primaryBranchDeliveryAddressAddressStreetAddressMapper',
+    'primaryBranchDeliveryAddressAddressZipMapper',
+    'primaryBranchDeliveryAddressContactEmailMapper',
+    'primaryBranchDeliveryAddressContactNameMapper',
+    'primaryBranchDeliveryAddressContactPhoneMapper',
+    'primaryBranchIsWarehouseMapper'
+  ],
+  optional: [
+    'businessTypeMapper',
+    'cinMapper',
+    'dbaMapper',
+    'dunsNumberMapper',
+    'phoneMapper',
+    'primaryBranchDeliveryAddressAddressProvinceMapper',
+    'primaryBranchDeliveryAddressCallAheadMapper',
+    'primaryBranchDeliveryAddressCloseTimeMapper',
+    'primaryBranchDeliveryAddressDeliveryNotesMapper',
+    'primaryBranchDeliveryAddressForkLiftMapper',
+    'primaryBranchDeliveryAddressLiftGateMapper',
+    'primaryBranchDeliveryAddressNameMapper',
+    'primaryBranchDeliveryAddressReadyTimeMapper',
+    'primaryBranchTaxIdMapper',
+    'primaryUserEmailMapper',
+    'primaryUserJobTitleMapper',
+    'primaryUserNameMapper',
+    'primaryUserPhoneMapper',
+    'tinMapper',
+    'websiteMapper'
   ]
 }
 
@@ -253,6 +294,11 @@ class Map extends Component {
       const mappingEchoProduct = this.getMapping(simpleEchoProductList)
       constant = simpleEchoProductList.constant
       mapping = mappingEchoProduct
+    } else if (this.props.companies) {
+      this.props.getCSVMapCompanies()
+      const mappingCompanies = this.getMapping(simpleCompaniesList)
+      constant = simpleCompaniesList.constant
+      mapping = mappingCompanies
     } else {
       const mappingCompanyProduct = this.getMapping(simpleCompanyProductList)
       constant = simpleCompanyProductList.constant
@@ -369,7 +415,7 @@ class Map extends Component {
 
     return (
       <React.Fragment>
-        {(this.props.productOffer || this.props.echoProduct) && (
+        {(this.props.productOffer || this.props.echoProduct || this.props.companies) && (
           <Grid centered padded>
             <Grid.Row verticalAlign='middle'>
               <Grid.Column width={5} textAlign='center'>
@@ -394,7 +440,7 @@ class Map extends Component {
                 />
               </Grid.Column>
               <Grid.Column width={3} textAlign='center' verticalAlign='middle'>
-                {this.props.echoProduct || this.props.productOffer ? (
+                {this.props.echoProduct || this.props.productOffer || this.props.companies ? (
                   <Button
                     type='button'
                     color='red'
@@ -406,6 +452,8 @@ class Map extends Component {
 
                       if (this.props.productOffer)
                         await this.props.deleteCSVMapProductOffer(this.props.selectedSavedMap.id)
+
+                      if (this.props.companies) await this.props.deleteCSVMapCompanies(this.props.selectedSavedMap.id)
                     }}
                     style={{ width: '100%' }}>
                     <FormattedMessage id='settings.deleteMap' defaultMessage='Delete Map'>
@@ -497,6 +545,24 @@ class Map extends Component {
                       }
 
                       this.props.getCSVMapProductOffer()
+                    }
+
+                    if (this.props.companies) {
+                      if (this.props.selectedSavedMap) {
+                        mapName = this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
+                        await this.props.putCSVMapCompanies(this.props.selectedSavedMap.id, {
+                          ...data,
+                          mapName: mapName
+                        })
+                      } else {
+                        mapName = this.props.mapName
+                        await this.props.postCSVMapCompanies({
+                          ...data,
+                          mapName: mapName
+                        })
+                      }
+
+                      this.props.getCSVMapCompanies()
                     }
                   }}
                   style={{ width: '100%' }}>
@@ -671,7 +737,11 @@ const mapDispatchToProps = {
   deleteCSVMapEchoProduct,
   postCSVMapProductOffer,
   putCSVMapProductOffer,
-  deleteCSVMapProductOffer
+  deleteCSVMapProductOffer,
+  getCSVMapCompanies,
+  postCSVMapCompanies,
+  putCSVMapCompanies,
+  deleteCSVMapCompanies
 }
 
 const mapStateToProps = state => {

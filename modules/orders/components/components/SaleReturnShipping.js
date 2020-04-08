@@ -41,9 +41,7 @@ class SaleReturnShipping extends React.Component {
   validationSchema = manualShipmentQuoteId =>
     Yup.lazy(values =>
       Yup.object().shape({
-        shipmentQuoteId: manualShipmentQuoteId
-          ? validateShipmentQuoteId()
-          : Yup.string().notRequired()
+        shipmentQuoteId: manualShipmentQuoteId ? validateShipmentQuoteId() : Yup.string().notRequired()
       })
     )
 
@@ -139,7 +137,8 @@ class SaleReturnShipping extends React.Component {
       shippingQuotes
     } = this.props
 
-    const manualShipmentQuoteId = (order && order.cfWeightExceeded) || (shippingQuotes && !shippingQuotes.length)
+    const manualShipmentQuoteId =
+      getSafe(() => order.cfWeightExceeded, false) || getSafe(() => !shippingQuotes.rates.length, false)
 
     return (
       <>

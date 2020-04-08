@@ -5,11 +5,14 @@ import { getSafe, deepSearch } from '~/utils/functions'
 import { isValid } from 'ein-validator'
 import validator from 'validator'
 import React from 'react'
-import { getLocaleDateFormat } from '~/components/date-format'
+import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 
 const allowedFreightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500]
 
 export const errorMessages = {
+  dateBefore: date => (
+    <FormattedMessage id='validation.dateBefore' defaultMessage={`Date must be before ${date}`} values={{ date }} />
+  ),
   mustBeInFuture: <FormattedMessage id='validation.dateInFuture' defaultMessage='Date must be in future' />,
   dateNotInPast: <FormattedMessage id='validation.dateNotInPast' defaultMessage='Date must not be in past' />,
   invalidString: <FormattedMessage id='validation.invalidString' defaultMessage='Invalid value' />,
@@ -130,7 +133,14 @@ export const errorMessages = {
   positive: <FormattedMessage id='validation.positive' defaultMessage='Number value should be positive' />,
   invalidShipmentQuoteId: (
     <FormattedMessage id='validation.shipmentQuoteId' defaultMessage='Value should be in format "12365-4789"' />
-  )
+  ),
+  minOneRole: <FormattedMessage id='validation.minOneRole' defaultMessage='At least one role should be selected' />,
+  trailingSpaces:
+    <FormattedMessage
+      id='validation.trailingSpaces'
+      defaultMessage='Space was detected as leading or trailing character, please check enter password is correct'
+    />,
+  passwordsMatch: <FormattedMessage id='validation.passwordsMustMatch' defaultMessage='Pass must match' />
 }
 
 export const provinceObjectRequired = hasProvinces =>
@@ -142,12 +152,17 @@ export const provinceObjectRequired = hasProvinces =>
 
 export const passwordValidation = () =>
   Yup.string()
-    .trim()
+    .test('trailing-spaces', errorMessages.trailingSpaces, val => !val || (val && val.trim() === val))
     .min(8, errorMessages.minLength(8))
     .required(errorMessages.requiredMessage)
     .matches(/[a-z]/, errorMessages.oneLowercaseChar)
     .matches(/[A-Z]/, errorMessages.oneUppercaseChar)
     .matches(/[^a-zA-Z\s]+/, errorMessages.oneSpecialChar)
+
+export const passwordValidationAnyChar = () =>
+  Yup.string()
+    .required(errorMessages.requiredMessage)
+    .test('trailing-spaces', errorMessages.trailingSpaces, val => !val || (val && val.trim() === val))
 
 export const phoneValidation = () =>
   Yup.string()
@@ -177,8 +192,8 @@ export const nmfcValidation = (required = true) =>
     // .max(8, errorMessages.maxLength(8))
     .test(
       'code',
-      errorMessages.invalidValueFormat('123456 or 12345-67'),
-      value => /^[0-9]{6}$/.test(value) || /^[0-9]{5}\-[0-9]{2}$/.test(value)
+      errorMessages.invalidValueFormat('1 .. 123456, 1234567 or 12345-67'),
+      value => /^[0-9]{1,6}$/.test(value) || /^[0-9]{7}$/.test(value) || /^[0-9]{5}\-[0-9]{2}$/.test(value)
     )
     .concat(required ? Yup.string().required() : Yup.string().notRequired())
 
@@ -260,8 +275,14 @@ export const dwollaControllerValidation = () =>
 
 export const dateOfBirthValidation = (minimumAge = 18) =>
   Yup.string(errorMessages.requiredMessage)
-    .test('min-age', errorMessages.aboveAge(minimumAge), val => moment().diff(val, 'years') >= minimumAge)
-    .test('date-format', errorMessages.invalidDateFormat(), value => moment(value, 'YYYY-MM-DD', true).isValid())
+    .test(
+      'min-age',
+      errorMessages.aboveAge(minimumAge),
+      val => moment().diff(getStringISODate(val), 'years') >= minimumAge
+    )
+    .test('date-format', errorMessages.invalidDateFormat(), value =>
+      moment(value, getLocaleDateFormat(), true).isValid()
+    )
     .required(errorMessages.requiredMessage)
 
 export const einValidation = () =>
@@ -319,3 +340,23 @@ function validShipmentQuoteId(str) {
   const pattern = new RegExp(/^\d+-\d+$/)
   return !!pattern.test(str.trim())
 }
+
+export const dateBefore = (date = 'lotManufacturedDate', beforeDate = 'lotExpirationDate', opts = {}) =>
+  Yup.string().test(
+    'is-before',
+    errorMessages.dateBefore(getSafe(() => opts.beforeDateError, 'Expired Date')),
+    function(_val) {
+      let defaultOpts = {
+        nullable: true,
+        beforeDateError: 'Expired Date'
+      }
+      let newOpts = {
+        ...defaultOpts,
+        ...opts
+      }
+      let parsedDate = moment(this.parent[date], getLocaleDateFormat())
+      let parsedBeforeDate = moment(this.parent[beforeDate], getLocaleDateFormat())
+
+      return (newOpts.nullable && !parsedBeforeDate.isValid()) || parsedDate.isBefore(parsedBeforeDate)
+    }
+  )

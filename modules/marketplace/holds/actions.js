@@ -2,7 +2,7 @@ import * as AT from './action-types'
 import * as api from './api'
 
 export const createHold = params => ({
-  type: AT.CREATE_HOLD,
+  type: AT.CREATED_HOLD,
   payload: api.createHold(params)
 })
 
@@ -35,3 +35,10 @@ export const toCartHold = id => ({
   type: AT.TO_CART_HOLD,
   payload: api.toCartHold(id)
 })
+
+export function applyDatagridFilter(filter) {
+  return {
+    type: AT.HOLD_APPLY_FILTER,
+    payload: filter
+  }
+}

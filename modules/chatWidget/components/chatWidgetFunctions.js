@@ -18,18 +18,17 @@ export const ChatWidget_create = (identity, props) => {
       script.onreadystatechange = () => {
         if (script.readyState == 'loaded' || script.readyState == 'complete') {
           script.onreadystatechange = null
-          chatWidget_scriptLoaded(identity, true)
+          chatWidget_scriptLoaded(identity, false)
           chatWidget_addCallBack(identity, props)
         }
       }
     } else {
       //Others
       script.onload = () => {
-        chatWidget_scriptLoaded(identity, true)
+        chatWidget_scriptLoaded(identity, false)
         chatWidget_addCallBack(identity, props)
       }
     }
-
     script.async = true
     script.id = 'ze-snippet'
     //script.src = "https://static.zdassets.com/ekr/snippet.js?key=c9ecb4b1-1c91-482b-bce2-aac2a343619b"  // https://echoexchange.zendesk.com
@@ -40,7 +39,7 @@ export const ChatWidget_create = (identity, props) => {
   }
 }
 
-const chatWidget_updateIdentity = (identity) => {
+const chatWidget_updateIdentity = identity => {
   zE(function() {
     $zopim(function() {
       $zopim.livechat.setLanguage(identity.lang)
@@ -51,16 +50,26 @@ const chatWidget_updateIdentity = (identity) => {
 }
 
 const chatWidget_scriptLoaded = (identity, hide) => {
+  //Move chat to center bottom
+  window.zESettings = {
+    webWidget: {
+      offset: {
+        horizontal: '40%',
+        vertical: '1%'
+      }
+    }
+  }
   zE(function() {
     $zopim(function() {
       if (hide) $zopim.livechat.window.hide()
       $zopim.livechat.setStatus('online')
+      $zopim.livechat.button.show()
     })
   })
   chatWidget_updateIdentity(identity)
 }
 
-const chatWidget_onConnected = (identity) => {
+const chatWidget_onConnected = identity => {
   zE(function() {
     $zopim(function() {
       $zopim.livechat.setLanguage(identity.lang)
@@ -71,13 +80,9 @@ const chatWidget_onConnected = (identity) => {
   })
 }
 
-const chatWidget_onChatStart = () => {
+const chatWidget_onChatStart = () => {}
 
-}
-
-const chatWidget_onChatEnd = () => {
-
-}
+const chatWidget_onChatEnd = () => {}
 
 const chatWidget_addCallBack = (identity, props) => {
   zE(function() {
@@ -102,7 +107,17 @@ export const chatWidget_hide = () => {
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
     zE(function() {
       $zopim(function() {
-        $zopim.livechat.window.hide()
+        $zopim.livechat.hideAll()
+      })
+    })
+  }
+}
+
+export const chatWidget_showLable = () => {
+  if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
+    zE(function() {
+      $zopim(function() {
+        $zopim.livechat.button.show()
       })
     })
   }

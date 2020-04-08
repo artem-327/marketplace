@@ -1,21 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withDatagrid } from '~/modules/datagrid'
-
-import { Header, FormGroup, Dimmer, Loader, Menu, Segment } from 'semantic-ui-react'
+import { Formik } from 'formik'
+import { Header, FormGroup, Dimmer, Loader, Menu, Segment, Form } from 'semantic-ui-react'
 import {
   closeSidebar,
   putEditWarehouse,
   postNewWarehouseRequest,
   getProvinces,
   getAddressSearch,
-  removeEmpty,
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
   loadFile
 } from '../../actions'
-import { Form, Input, Button, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
+import { Input, Checkbox, TextArea, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import Router from 'next/router'
 import styled from 'styled-components'
@@ -31,6 +30,8 @@ import { PhoneNumber } from '~/modules/phoneNumber'
 import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
 import DocumentTab from '~/components/document-tab'
 import { AlertCircle } from 'react-feather'
+import { Required } from '~/components/constants/layout'
+import { removeEmpty } from '~/utils/functions'
 
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
@@ -94,6 +95,10 @@ const CustomDivInTitle = styled.div`
   padding-left: 10px;
 `
 
+const CustomMenu = styled(Menu)`
+  padding-left: 63px !important;
+`
+
 const CustomSegmentContent = styled(Segment)`
   padding-top: 0px !important;
 `
@@ -123,7 +128,8 @@ const formValidation = () =>
 class WarehouseSidebar extends React.Component {
   state = {
     editTab: 0,
-    attachmentFiles: []
+    attachmentFiles: [],
+    loadSidebar: false
   }
   componentDidMount() {
     const { popupValues, getProvinces, openTab } = this.props
@@ -141,10 +147,9 @@ class WarehouseSidebar extends React.Component {
     if (this.props[name].length === 0) fn()
   }
 
-  submitHandler = async (values, actions) => {
-    const { popupValues, currentTab, putEditWarehouse, postNewWarehouseRequest, datagrid } = this.props
+  submitHandler = async (values, setSubmitting) => {
+    const { popupValues, currentTab, putEditWarehouse, postNewWarehouseRequest } = this.props
     const { attachmentFiles } = this.state
-
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
     let requestData = {}
 
@@ -167,6 +172,7 @@ class WarehouseSidebar extends React.Component {
       taxId: values.taxId,
       warehouse: currentTab.type === 'warehouses' ? true : false
     }
+    removeEmpty(requestData)
 
     try {
       if (popupValues) {
@@ -176,8 +182,8 @@ class WarehouseSidebar extends React.Component {
       }
     } catch {
     } finally {
-      actions.setSubmitting(false)
-      datagrid.loadData()
+      setSubmitting(false)
+      this.setState({ loadSidebar: false })
     }
   }
 
@@ -249,6 +255,7 @@ class WarehouseSidebar extends React.Component {
 
         <AddressForm
           prefix={'deliveryAddress'}
+          required={true}
           setFieldValue={setFieldValue}
           values={values}
           initialZipCodes={{
@@ -270,7 +277,12 @@ class WarehouseSidebar extends React.Component {
           <FormGroup data-test='settings_warehouse_popup_contactName_inp'>
             <Input
               type='text'
-              label={formatMessage({ id: 'global.contactName', defaultMessage: 'Contact Name' })}
+              label={
+                <>
+                  {formatMessage({ id: 'global.contactName', defaultMessage: 'Contact Name' })}
+                  <Required />
+                </>
+              }
               name='deliveryAddress.contactName'
               fieldProps={{ width: 8 }}
             />
@@ -279,7 +291,12 @@ class WarehouseSidebar extends React.Component {
             <PhoneNumber
               name='deliveryAddress.contactPhone'
               values={values}
-              label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+              label={
+                <>
+                  {<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+                  <Required />
+                </>
+              }
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
               errors={errors}
@@ -288,7 +305,12 @@ class WarehouseSidebar extends React.Component {
             />
             <Input
               type='text'
-              label={formatMessage({ id: 'global.contactEmail', defaultMessage: 'Contact Email' })}
+              label={
+                <>
+                  {formatMessage({ id: 'global.contactEmail', defaultMessage: 'Contact Email' })}
+                  <Required />
+                </>
+              }
               name='deliveryAddress.contactEmail'
             />
           </FormGroup>
@@ -451,56 +473,73 @@ class WarehouseSidebar extends React.Component {
     ]
 
     return (
-      <CustomForm
+      <Formik
         initialValues={initialValues}
         validationSchema={formValidation()}
         enableReinitialize
         onReset={closeSidebar}
-        onSubmit={this.submitHandler}>
+        onSubmit={this.submitHandler}
+        loading={loading}>
         {formikProps => (
           <>
-            <FlexSidebar
-              visible={isOpenSidebar}
-              width='very wide'
-              style={{ width: '500px' }}
-              direction='right'
-              animation='overlay'>
-              <Dimmer inverted active={loading}>
-                <Loader />
-              </Dimmer>
-              <div>
-                <CustomHighSegment basic>
-                  <Menu pointing secondary>
-                    {tabs.map((tab, i) => (
-                      <Menu.Item
-                        onClick={() => this.tabChanged(i)}
-                        active={editTab === i}
-                        disabled={tab.key === 'certificates' && !formikProps.values.branchId}>
-                        {formatMessage(tab.text)}
-                      </Menu.Item>
-                    ))}
-                  </Menu>
-                </CustomHighSegment>
-              </div>
-              <FlexContent style={{ padding: '16px' }}>
-                <CustomSegmentContent basic>{this.getContent(formikProps)}</CustomSegmentContent>
-              </FlexContent>
-              <CustomDiv>
-                <Button.Reset onClick={closeSidebar} data-test='settings_warehouse_popup_reset_btn'>
-                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                    {text => text}
-                  </FormattedMessage>
-                </Button.Reset>
-                <CustomButtonSubmit data-test='settings_warehouse_popup_submit_btn'>
-                  <FormattedMessage id='global.save' defaultMessage='Save'>
-                    {text => text}
-                  </FormattedMessage>
-                </CustomButtonSubmit>
-              </CustomDiv>
-            </FlexSidebar>
+            <CustomForm>
+              <FlexSidebar
+                visible={isOpenSidebar}
+                width='very wide'
+                style={{ width: '500px' }}
+                direction='right'
+                animation='overlay'>
+                <div>
+                  <Dimmer inverted active={loading || this.state.loadSidebar}>
+                    <Loader />
+                  </Dimmer>
+                  <CustomHighSegment basic>
+                    <CustomMenu pointing secondary>
+                      {tabs.map((tab, i) => (
+                        <Menu.Item
+                          onClick={() => this.tabChanged(i)}
+                          active={editTab === i}
+                          disabled={tab.key === 'certificates' && !formikProps.values.branchId}>
+                          {formatMessage(tab.text)}
+                        </Menu.Item>
+                      ))}
+                    </CustomMenu>
+                  </CustomHighSegment>
+                </div>
+                <FlexContent style={{ padding: '16px' }}>
+                  <CustomSegmentContent basic>{this.getContent(formikProps)}</CustomSegmentContent>
+                </FlexContent>
+                <CustomDiv>
+                  <Button.Reset onClick={closeSidebar} data-test='settings_warehouse_popup_reset_btn'>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button.Reset>
+                  <CustomButtonSubmit
+                    onClick={() => {
+                      formikProps.validateForm().then(err => {
+                        const errors = Object.keys(err)
+                        if (errors.length && errors[0] !== 'isCanceled') {
+                          // Errors found
+                          formikProps.submitForm() // to show errors
+                        } else {
+                          // No errors found
+                          this.setState({ loadSidebar: true })
+                          this.submitHandler(formikProps.values, formikProps.setSubmitting)
+                        }
+                      })
+                    }}
+                    data-test='settings_warehouse_popup_submit_btn'>
+                    <FormattedMessage id='global.save' defaultMessage='Save'>
+                      {text => text}
+                    </FormattedMessage>
+                  </CustomButtonSubmit>
+                </CustomDiv>
+              </FlexSidebar>
+            </CustomForm>
           </>
         )}
-      </CustomForm>
+      </Formik>
     )
   }
 }
@@ -517,7 +556,6 @@ const mapDispatchToProps = {
   closeSidebar,
   getProvinces,
   getAddressSearch,
-  removeEmpty,
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,

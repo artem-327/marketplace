@@ -4,6 +4,7 @@ import { AlertTriangle } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { withRouter } from 'next/router'
+import { debounce } from 'lodash'
 import { ShippingQuotes } from '~/modules/shipping'
 import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
@@ -76,6 +77,7 @@ class WantedBoard extends Component {
         ),
         width: 150
       },
+      /*
       {
         name: 'manufacturer',
         title: (
@@ -85,6 +87,7 @@ class WantedBoard extends Component {
         ),
         width: 420
       },
+      */
       {
         name: 'form',
         title: (
@@ -97,7 +100,7 @@ class WantedBoard extends Component {
       {
         name: 'fobPrice',
         title: (
-          <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price'>
+          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
             {text => text}
           </FormattedMessage>
         ),
@@ -106,7 +109,7 @@ class WantedBoard extends Component {
       {
         name: 'quantity',
         title: (
-          <FormattedMessage id='wantedBoard.quantity' defaultMessage='Quantity'>
+          <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
             {text => text}
           </FormattedMessage>
         ),
@@ -162,6 +165,7 @@ class WantedBoard extends Component {
         ),
         width: 150
       },
+      /*
       {
         name: 'manufacturer',
         title: (
@@ -171,6 +175,7 @@ class WantedBoard extends Component {
         ),
         width: 420
       },
+      */
       {
         name: 'form',
         title: (
@@ -183,7 +188,7 @@ class WantedBoard extends Component {
       {
         name: 'fobPrice',
         title: (
-          <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price'>
+          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
             {text => text}
           </FormattedMessage>
         ),
@@ -192,7 +197,7 @@ class WantedBoard extends Component {
       {
         name: 'quantity',
         title: (
-          <FormattedMessage id='wantedBoard.quantity' defaultMessage='Quantity'>
+          <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
             {text => text}
           </FormattedMessage>
         ),
@@ -228,11 +233,11 @@ class WantedBoard extends Component {
     //}
   }
 
-  handleFiltersValue = value => {
+  handleFiltersValue = debounce(value => {
     const { handleFiltersValue } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    if (Datagrid.isReady()) Datagrid.setSearchPattern(value)
     else handleFiltersValue(value)
-  }
+  }, 300)
 
   handleFilterChange = (e, { value }) => {
     this.setState({ filterValue: value })
@@ -298,7 +303,7 @@ class WantedBoard extends Component {
                     primary
                     onClick={() => sidebarDetailTrigger(null, 'wanted-board')}
                     data-test='wanted_board_open_popup_btn'>
-                    <FormattedMessage id='wantedBoard.addNewItem' defaultMessage='Add New Item'>
+                    <FormattedMessage id='wantedBoard.addNewRequest' defaultMessage='Add New Request'>
                       {text => text}
                     </FormattedMessage>
                   </Button>

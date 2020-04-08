@@ -1,17 +1,38 @@
 import React, { Component } from 'react'
-import { FormGroup, FormField, Popup, Image } from 'semantic-ui-react'
-import { Input, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { FormGroup, FormField, Popup, Image, Dropdown } from 'semantic-ui-react'
+import { Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import { withToastManager } from 'react-toast-notifications'
 
 import { generateToastMarkup } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
+import { Required } from '~/components/constants/layout'
+import { getSafe } from '~/utils/functions'
 
 class CompanyForm extends Component {
-  componentDidMount() {
+  state = {
+    associations: [],
+    businessType: {
+      id: ''
+    }
+  }
+  async componentDidMount() {
     this.loadCompanyLogo()
-    if (this.props.data.length === 0) this.props.getBusinessTypes()
+    try {
+      if (!getSafe(() => this.props.data.length, false)) await this.props.getBusinessTypes()
+      if (!getSafe(() => this.props.associations.length, false))
+        await this.props.getAssociations({ filters: [], pageSize: 50 })
+    } catch (error) {
+      console.error(error)
+    }
+
+    this.setState({
+      businessType: { id: getSafe(() => this.props.values.businessType.id, '') },
+      associations: getSafe(() => this.props.values.associations.length, false)
+        ? this.props.values.associations.map(assoc => assoc.id)
+        : []
+    })
   }
 
   loadCompanyLogo = async () => {
@@ -80,36 +101,72 @@ class CompanyForm extends Component {
   }
 
   render() {
-    let { intl, loading, data, setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = this.props
+    let {
+      intl,
+      loading,
+      data,
+      setFieldValue,
+      values,
+      setFieldTouched,
+      errors,
+      touched,
+      isSubmitting,
+      associations
+    } = this.props
     let { selectLogo, removeLogo } = this
-
     const { formatMessage } = intl
 
     return (
       <>
         <FormGroup widths='equal' data-test='company_form_legalCompanyName_inp'>
-          <Input
-            label={<FormattedMessage id='company.legalCompanyName' defaultMessage='Legal Company Name' />}
-            name='name'
-          />
-          <Dropdown
-            options={data.map(type => ({
-              text: type.name,
-              value: type.id,
-              key: type.id
-            }))}
-            inputProps={{
-              loading,
-              clearable: true
-            }}
-            label={<FormattedMessage id='company.businessType' defaultMessage='Business Type' />}
-            name='businessType.id'
-            data-test='company_form_businessType_drpdn'
-          />
+          <FormField className='upload-input' width={8}>
+            <Input
+              label={
+                <>
+                  <FormattedMessage id='company.legalCompanyName' defaultMessage='Legal Company Name' />
+                  <Required />
+                </>
+              }
+              name='name'
+            />
+          </FormField>
+          <FormField className='upload-input' width={8}>
+            <label htmlFor='field_dropdown_associations'>
+              <FormattedMessage id='company.businessType' defaultMessage='Business Type' />
+            </label>
+            <Dropdown
+              options={
+                data && data.length
+                  ? data.map(type => ({
+                      text: type.name,
+                      value: type.id,
+                      key: type.id
+                    }))
+                  : []
+              }
+              clearable
+              loading={loading}
+              selection
+              value={this.state.businessType.id}
+              onChange={(e, data) => {
+                e.preventDefault()
+                this.setState({
+                  businessType: { id: data.value }
+                })
+                setFieldValue('businessType.id', data.value)
+              }}
+              name='businessType.id'
+              data-test='company_form_businessType_drpdn'
+            />
+          </FormField>
         </FormGroup>
         <FormGroup widths='equal' data-test='company_form_dbaDuns_inp'>
           <Input label={<FormattedMessage id='company.dba' defaultMessage='Doing Business As' />} name='dba' />
-          <Input label={<FormattedMessage id='company.duns' defaultMessage='DUNS Number' />} name='dunsNumber' />
+          <Input
+            inputProps={{ type: 'number' }}
+            label={<FormattedMessage id='company.duns' defaultMessage='DUNS Number' />}
+            name='dunsNumber'
+          />
         </FormGroup>
 
         <FormGroup widths='equal' data-test='company_form_tinCin_inp'>
@@ -150,7 +207,14 @@ class CompanyForm extends Component {
         </FormGroup>
 
         <FormGroup widths='equal' data-test='company_form_websiteUrlPhone_inp'>
-          <Input label={<FormattedMessage id='global.websiteUrl' defaultMessage='Website URL' />} name='website' />
+          <Input
+            label={
+              <>
+                <FormattedMessage id='global.websiteUrl' defaultMessage='Website URL' />
+              </>
+            }
+            name='website'
+          />
           <PhoneNumber
             label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
             name='phone'
@@ -169,10 +233,53 @@ class CompanyForm extends Component {
             name='nacdMember'
             data-test='company_form_nacdNumber_chckb'
           />
-        </FormGroup>
 
-        <FormGroup>
-          <FormField className='upload-input' width={8}>
+          {this.props.admin && (
+            <Checkbox
+              label={formatMessage({
+                id: 'company.purchaseHazmatEligible ',
+                defaultMessage: 'Purchase Hazardous Materials'
+              })}
+              name='purchaseHazmatEligible'
+              data-test='company_form_purchaseHazmatEligible_chckb'
+            />
+          )}
+        </FormGroup>
+        <FormGroup widths={this.props.admin && 'equal'} data-test='company_form_associationMembership_upload_inp'>
+          {this.props.admin && (
+            <FormField className='upload-input' width={!this.props.admin && 8}>
+              <label htmlFor='field_dropdown_associations'>
+                <FormattedMessage id='company.associationMembership' defaultMessage='Association Membership' />
+              </label>
+              <Dropdown
+                options={
+                  associations && associations.length
+                    ? associations.map(assoc => ({
+                        text: assoc.name,
+                        value: assoc.id,
+                        key: assoc.id
+                      }))
+                    : []
+                }
+                clearable
+                multiple
+                loading={loading}
+                search
+                selection
+                value={this.state.associations}
+                onChange={(e, data) => {
+                  e.preventDefault()
+                  this.setState({
+                    associations: data.value
+                  })
+                  setFieldValue('associations', data.value)
+                }}
+                name='associations'
+                data-test='company_form_association_drpdn'
+              />
+            </FormField>
+          )}
+          <FormField className='upload-input' width={!this.props.admin && 8}>
             <label htmlFor='field_input_phone'>
               <span>Company Logo</span>
             </label>

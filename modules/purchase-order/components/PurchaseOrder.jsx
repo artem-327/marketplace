@@ -42,21 +42,21 @@ class PurchaseOrder extends Component {
     otherAddresses: true,
     submitting: false,
     addressId: 'deliveryAddressId',
-    shippingQuotes: [],
     selectedAddress: ''
   }
   componentDidMount = async () => {
     const { preFilledValues, clearPreFilledValues, getWarehouses } = this.props
-    this.props.getCart()
     this.props.getDeliveryAddresses()
     this.props.getPayments()
     this.props.getIdentity()
+    await this.props.getCart()
 
     if (preFilledValues) {
       const warehouses = await getWarehouses()
-      const filteredWarehouses = warehouses.value.filter(el =>
-        getSafe(() => el.deliveryAddress.address.zip.zip, '') === preFilledValues.zip
-        && getSafe(() => el.deliveryAddress.address.country.id, '') === preFilledValues.country
+      const filteredWarehouses = warehouses.value.filter(
+        el =>
+          getSafe(() => el.deliveryAddress.address.zip.zip, '') === preFilledValues.zip &&
+          getSafe(() => el.deliveryAddress.address.country.id, '') === preFilledValues.country
       )
 
       let selectedAddress = null
@@ -68,12 +68,12 @@ class PurchaseOrder extends Component {
 
         this.formikProps.setFieldValue('address', filteredWarehouses[0].id)
 
-        this.setState({
-          otherAddresses: false,
-          addressId: 'warehouseId',
-          shippingQuotes: preFilledValues.quotes.rates.map(d => d.shipmentRate),
-          selectedAddress: selectedAddress
-        },
+        this.setState(
+          {
+            otherAddresses: false,
+            addressId: 'warehouseId',
+            selectedAddress: selectedAddress
+          },
           () => this.handleQuoteSelect(preFilledValues.freightIndex)
         )
       }
@@ -84,7 +84,7 @@ class PurchaseOrder extends Component {
 
   handleQuoteSelect = index => {
     let { shippingQuoteSelected, shippingQuotes } = this.props
-    shippingQuoteSelected({ index, quote: this.state.shippingQuotes[index] })
+    shippingQuoteSelected({ index, quote: shippingQuotes.rates[index] })
   }
 
   getAddress = selectedAddressId => {
@@ -114,8 +114,7 @@ class PurchaseOrder extends Component {
   getShippingQuotes = async selectedAddress => {
     let { address } = selectedAddress
     try {
-      const shippingQuotes = await this.props.getShippingQuotes(address.country.id, address.zip.zip)
-      this.setState({ shippingQuotes: shippingQuotes.value.rates })
+      await this.props.getShippingQuotes(address.country.id, address.zip.zip)
     } catch (error) {
       console.error(error)
     }
@@ -171,13 +170,14 @@ class PurchaseOrder extends Component {
     }
   }
 
-  handlePurchase = async (shipping, shipmentQuoteId) => {
+  handlePurchase = async (shipping, shipmentQuoteId, dwollaBankAccountId) => {
     if (this.state.submitting) return
     this.setState({ submitting: true })
 
     const data = {
       [this.state.addressId]: this.state.selectedAddress.id,
-      shipmentQuoteId
+      shipmentQuoteId,
+      dwollaBankAccountId
     }
 
     try {
@@ -237,9 +237,10 @@ class PurchaseOrder extends Component {
       cartIsFetching,
       shippingQuotes,
       shippingQuotesAreFetching,
-      shipping
+      shipping,
+      purchaseHazmatEligible,
+      cartItems
     } = this.props
-
     if (cartIsFetching) return <Spinner />
     if (cart.cartItems.length === 0) Router.push('/cart')
 
@@ -257,6 +258,10 @@ class PurchaseOrder extends Component {
     }
 
     let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit}` : ''
+
+    let isAnyItemHazardous = cartItems.some(
+      item => getSafe(() => item.productOffer.companyProduct.hazardous, false) === true
+    )
 
     return (
       <div className='app-inner-main flex stretched'>
@@ -286,6 +291,7 @@ class PurchaseOrder extends Component {
           initialValues={initialValues}
           validationSchema={validationSchema}
           className='purchase-order'
+          enableReinitialize
           render={formikProps => {
             let { values } = formikProps
             this.formikProps = formikProps
@@ -349,7 +355,7 @@ class PurchaseOrder extends Component {
                           selectedShippingQuote={this.props.cart.selectedShipping}
                           handleQuoteSelect={this.handleQuoteSelect}
                           selectedAddress={this.state.selectedAddress}
-                          shippingQuotes={this.state.shippingQuotes}
+                          shippingQuotes={shippingQuotes}
                           shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
                         />
                       ) : (
@@ -378,7 +384,7 @@ class PurchaseOrder extends Component {
                         </>
                       )}
 
-                      {this.state.shippingQuotes.length === 0 &&
+                      {getSafe(() => shippingQuotes.rates.length, false) === 0 &&
                         this.state.selectedAddress &&
                         !shippingQuotesAreFetching &&
                         !cart.weightLimitExceed && (
@@ -394,7 +400,7 @@ class PurchaseOrder extends Component {
                       {this.state.selectedAddress &&
                         // shippingQuotes.length === 0 &&
                         !shippingQuotesAreFetching &&
-                        (cart.weightLimitExceed || shippingQuotes.length === 0) && (
+                        (cart.weightLimitExceed || getSafe(() => shippingQuotes.rates.length, false) === 0) && (
                           <>
                             <GridRow>
                               <GridColumn computer={16}>
@@ -471,6 +477,7 @@ class PurchaseOrder extends Component {
                             <GridColumn>
                               <Button
                                 disabled={
+                                  (!purchaseHazmatEligible && isAnyItemHazardous) ||
                                   this.state.submitting ||
                                   !values.payment ||
                                   !this.props.logisticsAccount ||
@@ -488,7 +495,8 @@ class PurchaseOrder extends Component {
                                     getSafe(
                                       () => this.props.cart.selectedShipping.quote.quoteId,
                                       values.shipmentQuoteId
-                                    )
+                                    ),
+                                    values.payment
                                   )
                                 }}
                                 data-test='purchase_order_place_order_btn'>
@@ -501,12 +509,19 @@ class PurchaseOrder extends Component {
                             </GridColumn>
                           }
                           content={
-                            <FormattedMessage
-                              id='cart.purchaseOrder.logisticAccRequired'
-                              defaultMessage='To be able to complete Order, your Company needs to have Logistics account defined. This can be done in Settings.'
-                            />
+                            !this.props.logisticsAccount ? (
+                              <FormattedMessage
+                                id='cart.purchaseOrder.logisticAccRequired'
+                                defaultMessage='To be able to complete Order, your Company needs to have Logistics account defined. This can be done in Settings.'
+                              />
+                            ) : (
+                              <FormattedMessage
+                                id='cart.purchaseOrder.purchaseHazmatEligible'
+                                defaultMessage='You are not authorized to purchase this hazardous item.'
+                              />
+                            )
                           }
-                          disabled={this.props.logisticsAccount}
+                          disabled={this.props.logisticsAccount && purchaseHazmatEligible && isAnyItemHazardous}
                         />
                       </GridRow>
                     }
@@ -535,5 +550,7 @@ PurchaseOrder.propTypes = {
   postPurchaseOrder: PropTypes.func,
   deleteCart: PropTypes.func,
   selectedAddressId: PropTypes.number,
-  shippingQuotes: PropTypes.array
+  shippingQuotes: PropTypes.object,
+  purchaseHazmatEligible: PropTypes.bool,
+  cartItems: PropTypes.bool
 }

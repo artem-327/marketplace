@@ -379,8 +379,8 @@ export function putEditWarehouse(payload, id, attachmentFiles) {
         })
       })
     }
-    //Datagrid.updateRow(id, () => response)
     dispatch(closeSidebar())
+    Datagrid.updateRow(id, () => response)
   }
 }
 
@@ -401,7 +401,7 @@ export function postNewWarehouseRequest(payload, attachmentFiles) {
     }
     //dispatch(getWarehousesDataRequest())
     dispatch(closeSidebar())
-    //Datagrid.loadData()
+    Datagrid.loadData()
   }
 }
 
@@ -792,6 +792,42 @@ export function deleteCSVMapProductOffer(mapId) {
   }
 }
 
+export function postImportCompaniesCSV(payload, id) {
+  return {
+    type: AT.POST_CSV_IMPORT_COMPANIES,
+    payload: api.postImportCompaniesCSV(payload, id)
+  }
+}
+
+export function getCSVMapCompanies() {
+  return {
+    type: AT.GET_CSV_MAP_COMPANIES,
+    payload: api.getCSVMapCompanies()
+  }
+}
+
+export function postCSVMapCompanies(payload) {
+  return {
+    type: AT.POST_CSV_MAP_COMPANIES,
+    payload: api.postCSVMapCompanies(payload)
+  }
+}
+
+export function putCSVMapCompanies(mapId, data) {
+  return {
+    type: AT.PUT_CSV_MAP_COMPANIES,
+    payload: api.putCSVMapCompanies(mapId, data)
+  }
+}
+
+export function deleteCSVMapCompanies(mapId) {
+  return {
+    type: AT.DELETE_CSV_MAP_COMPANIES,
+    meta: mapId,
+    payload: api.deleteCSVMapCompanies(mapId)
+  }
+}
+
 export function handleSaveMapCSV() {
   return {
     type: AT.SAVE_MAP_CSV
@@ -1021,7 +1057,10 @@ export function removeAttachment(aId) {
 
 export const addTab = payload => ({ type: AT.ADD_TAB, payload })
 
-export const tabChanged = tab => ({ type: AT.TAB_CHANGED, payload: tab })
+export const tabChanged = tab => {
+  Datagrid && Datagrid.clear()
+  return { type: AT.TAB_CHANGED, payload: tab }
+}
 
 export const resendWelcomeEmail = userId => ({
   type: AT.SETTINGS_RESEND_WELCOME_EMAIL,
@@ -1037,9 +1076,9 @@ export const createLogisticsAccount = payload => ({
 
 export const getLogisticsAccounts = () => ({ type: AT.GET_LOGISTICS_ACCOUNTS, payload: api.getLogisticsAccounts() })
 
-export const updateLogisticsAccount = payload => ({
+export const updateLogisticsAccount = (id, payload) => ({
   type: AT.UPDATE_LOGISTICS_ACCOUNT,
-  payload: api.updateLogisticsAccount(payload)
+  payload: api.updateLogisticsAccount(id, payload)
 })
 
 export const deleteLogisticsAccount = id => ({

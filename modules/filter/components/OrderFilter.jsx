@@ -59,9 +59,10 @@ class OrderFilter extends Component {
 
   toDatagrid = values => {
     let { sortDirection, sortPath, applyDatagridFilter } = this.props
+
     let payload = {
       filters: [],
-      sortDirection,
+      sortDirection: sortDirection ? sortDirection.toUpperCase() : sortDirection,
       sortPath
     }
 
@@ -93,10 +94,7 @@ class OrderFilter extends Component {
   accordionTitle = (name, text) => (
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
       {text}
-      <Icon
-        name={!this.state.inactiveAccordion[name] ? 'chevron down' : 'chevron right'}
-        color={'blue'}
-      />
+      <Icon name={!this.state.inactiveAccordion[name] ? 'chevron down' : 'chevron right'} color={'blue'} />
     </AccordionTitle>
   )
 
@@ -230,7 +228,7 @@ OrderFilter.defaultProps = {
   sortDirection: '',
   ordersType: 'sales',
   onApply: filter => {},
-  onClear: () => {},
+  onClear: () => {}
 }
 
 export default injectIntl(OrderFilter)

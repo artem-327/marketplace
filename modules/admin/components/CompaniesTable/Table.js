@@ -8,7 +8,7 @@ import { Checkbox } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
-
+import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import * as Actions from '../../actions'
 
 class CompaniesTable extends Component {
@@ -56,6 +56,7 @@ class CompaniesTable extends Component {
           {...datagrid.tableProps}
           tableName='admin_companies'
           columns={columns}
+          defaultSorting={{ columnName: 'displayName', direction: 'asc', sortPath: 'Company.name' }}
           rows={this.getRows(rows)}
           rowActions={[
             {
@@ -114,8 +115,12 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
     rows: datagrid.rows.map(c => ({
       rawData: c,
       ...c,
-      hasLogisticsAccounts: c.logisticsAccount ? 'Yes' : 'No',
-      hasDwollaAccount: c.dwollaAccountStatus === 'verified' ? 'Yes' : 'No',
+      displayName: getSafe(() => c.cfDisplayName, '') ? c.cfDisplayName : getSafe(() => c.name, ''),
+      associations: (
+        <ArrayToFirstItem values={getSafe(() => c.associations, '') ? c.associations.map(r => r.name) : []} />
+      ),
+      hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
+      hasDwollaAccount: getSafe(() => c.dwollaAccountStatus, false) === 'verified' ? 'Yes' : 'No',
       primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false)
         ? c.primaryBranch.deliveryAddress.address.streetAddress +
           ', ' +
@@ -126,14 +131,14 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
             : '') +
           (c.primaryBranch.deliveryAddress.address.country ? c.primaryBranch.deliveryAddress.address.country.name : '')
         : '',
-      primaryContact: c.primaryUser ? c.primaryUser.name : '',
-      contactEmail: c.primaryUser ? c.primaryUser.email : '',
-      reviewRequested: c.reviewRequested,
-      hasLogo: c.hasLogo,
-      nacdMember: c && c.nacdMember ? 'Yes' : c.nacdMember === false ? 'No' : ''
+      primaryContact: getSafe(() => c.primaryUser.name, ''),
+      contactEmail: getSafe(() => c.primaryUser.email, ''),
+      reviewRequested: getSafe(() => c.reviewRequested, ''),
+      hasLogo: getSafe(() => c.hasLogo, ''),
+      nacdMember: c && c.nacdMember ? 'Yes' : c && c.nacdMember === false ? 'No' : ''
     })),
-    confirmMessage: admin.confirmMessage,
-    deleteRowById: admin.deleteRowById
+    confirmMessage: getSafe(() => admin.confirmMessage, ''),
+    deleteRowById: getSafe(() => admin.deleteRowById, '')
   }
 }
 

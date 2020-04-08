@@ -22,7 +22,7 @@ class ConfirmationPage extends Component {
     const recordsUpdated = result.recordsUpdated || 0
     const recordsFailed = result.recordsFailed || 0
 
-    const status = recordsFailed ? (recordsFailed === recordCount ? 'Failed' : 'SomeFailed') : 'Success'
+    const status = recordsFailed ? 'SomeFailed' : 'Success'
 
     return clientMessage ? (
       <React.Fragment>
@@ -99,19 +99,18 @@ class ConfirmationPage extends Component {
 
   render() {
     const { csvImportError, reloadFilter } = this.props
+    const titleViewMap = this.props.productOffer ? 'MyInventory' : this.props.echoProduct ? 'Products' : 'Companies'
+
     return (
       <Grid centered padded>
-        {csvImportError ? this.createReport(csvImportError) : ''}
+        {this.createReport(csvImportError)}
         <Grid.Row>
           <StyledButton
             basic
             primary
             onClick={() => this.props.closeImportPopup(reloadFilter)}
             data-test='settings_product_close_import'>
-            <FormattedMessage
-              id={`settings.view${this.props.productOffer ? 'MyInventory' : 'Product'}`}
-              defaultMessage={`View ${this.props.productOffer ? 'My Inventory' : 'Products'}`}
-            />
+            <FormattedMessage id={`settings.view${titleViewMap}`} defaultMessage={`View ${titleViewMap}`} />
           </StyledButton>
         </Grid.Row>
         <Grid.Row>

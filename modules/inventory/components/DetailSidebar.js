@@ -52,7 +52,7 @@ import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import ProdexGrid from '~/components/table'
 import * as val from 'yup'
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages, dateBefore } from '~/constants/yupValidation'
 import moment from 'moment'
 import UploadLot from './upload/UploadLot'
 import { withDatagrid } from '~/modules/datagrid'
@@ -256,6 +256,7 @@ const validationScheme = val.object().shape({
       .string()
       .typeError(errorMessages.invalidString)
       .nullable(),
+    lotManufacturedDate: val.lazy(_value => dateBefore()),
     inStock: val.bool().required(errorMessages.requiredMessage),
     minimum: val
       .number()
@@ -527,7 +528,7 @@ class DetailSidebar extends Component {
     validateForm()
   }, 250)
 
-  renderPricingTiers = (count) => {
+  renderPricingTiers = count => {
     const { setFieldValue } = this.formikProps
     let tiers = []
 
@@ -535,7 +536,9 @@ class DetailSidebar extends Component {
       tiers.push(
         <GridRow>
           <GridColumn computer={2} textAlign='center'>
-            <PricingLabel name={`priceTiers.pricingTiers[${i}].level`} style={{ verticalAlign: 'middle'}}>{i + 1}</PricingLabel>
+            <PricingLabel name={`priceTiers.pricingTiers[${i}].level`} style={{ verticalAlign: 'middle' }}>
+              {i + 1}
+            </PricingLabel>
           </GridColumn>
 
           <GridColumn computer={1}>
@@ -547,19 +550,16 @@ class DetailSidebar extends Component {
           </GridColumn>
 
           <GridColumn computer={6} data-test={`add_inventory_quantityFrom_${i}_inp`}>
-            {this.quantityWrapper(
-              `priceTiers.pricingTiers[${i}].quantityFrom`,
-              {
-                type: 'number',
-                min: 1,
-                value: null,
-                onChange: (e, { value }) => {
-                  setFieldValue(`priceTiers.pricingTiers[${i}].manuallyModified`, 1)
-                  if (i === 0) setFieldValue('edit.minimum', value)
-                },
-                placeholder: '0'
-              }
-            )}
+            {this.quantityWrapper(`priceTiers.pricingTiers[${i}].quantityFrom`, {
+              type: 'number',
+              min: 1,
+              value: null,
+              onChange: (e, { value }) => {
+                setFieldValue(`priceTiers.pricingTiers[${i}].manuallyModified`, 1)
+                if (i === 0) setFieldValue('edit.minimum', value)
+              },
+              placeholder: '0'
+            })}
           </GridColumn>
 
           <GridColumn computer={5} data-test={`add_inventory_price_${i}_inp`}>
@@ -596,9 +596,7 @@ class DetailSidebar extends Component {
             <Required />
           </GridColumn>
         </Grid>
-        <SmallGrid verticalAlign='top'>
-          {tiers}
-        </SmallGrid>
+        <SmallGrid verticalAlign='top'>{tiers}</SmallGrid>
       </>
     )
   }
@@ -662,14 +660,13 @@ class DetailSidebar extends Component {
     if (Object.keys(props).length) {
       try {
         data = await addProductOffer(props, isEdit, false, isGrouped, attachmentFiles)
-
         if (isEdit) {
-          datagrid.updateRow(data.id, () => data)
+          datagrid.updateRow(data.value.id, () => data.value)
         } else {
           datagrid.loadData()
         }
         this.setState({
-          sidebarValues: { ...data, id: isEdit ? data.id : null },
+          sidebarValues: { ...data.value, id: isEdit ? data.value.id : null },
           initValues: { ...initValues, ...this.getEditValues(data) },
           edited: false
         })
@@ -920,12 +917,9 @@ class DetailSidebar extends Component {
   inputWrapper = (name, inputProps, label, labelText) => {
     return (
       <InputWrapper>
-        {label && (<div className='field-label'>{label}</div>)}
+        {label && <div className='field-label'>{label}</div>}
         <div>
-          <PriceField
-            inputProps={inputProps}
-            name={name}
-          />
+          <PriceField inputProps={inputProps} name={name} />
           <Label>{labelText}</Label>
         </div>
       </InputWrapper>
@@ -935,11 +929,8 @@ class DetailSidebar extends Component {
   inputLabeledWrapper = (name, inputProps, label) => {
     return (
       <InputLabeledWrapper>
-        {label && (<div className='field-label'>{label}</div>)}
-          <Input
-            inputProps={inputProps}
-            name={name}
-          />
+        {label && <div className='field-label'>{label}</div>}
+        <Input inputProps={inputProps} name={name} />
       </InputLabeledWrapper>
     )
   }
@@ -949,12 +940,9 @@ class DetailSidebar extends Component {
     const value = _.get(values, name)
     return (
       <QuantityWrapper>
-        {label && (<div className='field-label'>{label}</div>)}
+        {label && <div className='field-label'>{label}</div>}
         <div>
-          <Input
-            name={name}
-            inputProps={inputProps}
-          />
+          <Input name={name} inputProps={inputProps} />
           <div className='sideButtons'>
             <Button
               type='button'
@@ -963,28 +951,28 @@ class DetailSidebar extends Component {
                 if (isNaN(value) || value === '') {
                   setFieldValue(name, 1)
                   setFieldTouched(name, true, true)
-                }
-                else {
+                } else {
                   setFieldValue(name, parseInt(value) + 1)
                   setFieldTouched(name, true, true)
                 }
-              }}
-            >+</Button>
+              }}>
+              +
+            </Button>
             <Button
               type='button'
               className='buttonMinus'
               onClick={() => {
-                if (isNaN(value) || value === '' ) {
+                if (isNaN(value) || value === '') {
                   setFieldValue(name, 1)
                   setFieldTouched(name, true, true)
-                }
-                else {
+                } else {
                   const val = parseInt(value)
                   if (val > 1) setFieldValue(name, val - 1) // ! ! fix minimal value - inputProps
                   setFieldTouched(name, true, true)
                 }
-              }}
-            >-</Button>
+              }}>
+              -
+            </Button>
           </div>
         </div>
       </QuantityWrapper>
@@ -1079,7 +1067,7 @@ class DetailSidebar extends Component {
       }
     ]
 
-    const { toggleFilter } = this.props
+    // const { toggleFilter } = this.props
 
     return (
       <Formik
@@ -1179,7 +1167,8 @@ class DetailSidebar extends Component {
                                 data-test='detail_inventory_tab_edit'>
                                 {formatMessage({
                                   id: getSafe(() => this.state.sidebarValues.id, false)
-                                    ? 'addInventory.editHeader' : 'addInventory.addHeader',
+                                    ? 'addInventory.editHeader'
+                                    : 'addInventory.addHeader',
                                   defaultMessage: getSafe(() => this.state.sidebarValues.id, false) ? 'EDIT' : 'ADD'
                                 })}
                               </Menu.Item>
@@ -1201,7 +1190,9 @@ class DetailSidebar extends Component {
                                   <GridRow>
                                     <GridColumn width={8}>
                                       <FormField>
-                                        <FormattedMessage id='addInventory.companyProduct' defaultMessage='Company Product'>
+                                        <FormattedMessage
+                                          id='addInventory.companyProduct'
+                                          defaultMessage='Company Product'>
                                           {text => (
                                             <label>
                                               {text}
@@ -1280,8 +1271,7 @@ class DetailSidebar extends Component {
                                         <>
                                           <FormattedMessage
                                             id='addInventory.pkgsAvailable'
-                                            defaultMessage='PKGs Available'
-                                          >
+                                            defaultMessage='PKGs Available'>
                                             {text => text}
                                           </FormattedMessage>
                                           <Required />
@@ -1385,9 +1375,10 @@ class DetailSidebar extends Component {
                                             type: 'number',
                                             min: '0',
                                             onChange: (e, { value }) => {
-                                            if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
-                                            setFieldValue(`priceTiers.pricingTiers[0].price`, value)
-                                            }},
+                                              if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
+                                                setFieldValue(`priceTiers.pricingTiers[0].price`, value)
+                                              }
+                                            },
                                             placeholder: '0.000'
                                           },
                                           <>
@@ -1455,7 +1446,9 @@ class DetailSidebar extends Component {
                                     </GridColumn>
                                     <GridColumn width={8}>
                                       <FormField>
-                                        <FormattedMessage id='addInventory.conditionNotes' defaultMessage='Condition Notes'>
+                                        <FormattedMessage
+                                          id='addInventory.conditionNotes'
+                                          defaultMessage='Condition Notes'>
                                           {text => (
                                             <label>
                                               {text}
@@ -1497,20 +1490,22 @@ class DetailSidebar extends Component {
                                                 inputProps={{
                                                   placeholder: '0'
                                                 }}
-                                                />
+                                              />
                                             </GridColumn>
                                           </GridRow>
                                           <GridRow>
                                             <GridColumn>
                                               <DateInput
                                                 label={
-                                                  <FormattedMessage id='global.expiredDate' defaultMessage='Expired Date'>
+                                                  <FormattedMessage
+                                                    id='global.expiredDate'
+                                                    defaultMessage='Expired Date'>
                                                     {text => text}
                                                   </FormattedMessage>
                                                 }
                                                 inputProps={{
                                                   'data-test': 'sidebar_detail_lot_exp_date',
-                                                  disabled: sidebarValues && sidebarValues.grouped,
+                                                  disabled: sidebarValues && sidebarValues.grouped
                                                 }}
                                                 name='edit.lotExpirationDate'
                                               />
@@ -1578,7 +1573,9 @@ class DetailSidebar extends Component {
                                           <GridColumn width={7}>
                                             <Dropdown
                                               label={
-                                                <FormattedMessage id='global.offerExpiration' defaultMessage='Offer Expiration'>
+                                                <FormattedMessage
+                                                  id='global.offerExpiration'
+                                                  defaultMessage='Offer Expiration'>
                                                   {text => text}
                                                 </FormattedMessage>
                                               }
@@ -1601,7 +1598,8 @@ class DetailSidebar extends Component {
                                                 </FormattedMessage>
                                               }
                                               inputProps={{
-                                                disabled: !values.edit.doesExpire || (sidebarValues && sidebarValues.grouped),
+                                                disabled:
+                                                  !values.edit.doesExpire || (sidebarValues && sidebarValues.grouped),
                                                 'data-test': 'sidebar_detail_expiration_date'
                                                 //! ! crashes on component calendar open if expirationDate is in past:
                                                 //! ! minDate: moment().add(1, 'days')
@@ -1611,9 +1609,7 @@ class DetailSidebar extends Component {
                                           </GridColumn>
                                         </GridRow>
                                         <GridRow>
-                                          <GridColumn
-                                            width={8}
-                                            data-test='add_inventory_product_minimumOQ_inp'>
+                                          <GridColumn width={8} data-test='add_inventory_product_minimumOQ_inp'>
                                             {this.quantityWrapper(
                                               'edit.minimum',
                                               {
@@ -1631,18 +1627,14 @@ class DetailSidebar extends Component {
                                                 }
                                               },
                                               <>
-                                                <FormattedMessage
-                                                  id='global.minimumPkgs'
-                                                  defaultMessage='Minimum PKGs'>
+                                                <FormattedMessage id='global.minimumPkgs' defaultMessage='Minimum PKGs'>
                                                   {text => text}
                                                 </FormattedMessage>
                                                 <Required />
                                               </>
                                             )}
                                           </GridColumn>
-                                          <GridColumn
-                                            width={8}
-                                            data-test='add_inventory_product_splits_inp'>
+                                          <GridColumn width={8} data-test='add_inventory_product_splits_inp'>
                                             {this.quantityWrapper(
                                               'edit.splits',
                                               {
@@ -1978,13 +1970,11 @@ class DetailSidebar extends Component {
                                       </Header>
                                     </GridColumn>
                                   </GridRow>
-                                {/* <Grid> */}
+                                  {/* <Grid> */}
                                   <GridRow>
-                                    <GridColumn>
-                                      {this.renderPricingTiers(values.priceTiers.priceTiers)}
-                                    </GridColumn>
+                                    <GridColumn>{this.renderPricingTiers(values.priceTiers.priceTiers)}</GridColumn>
                                   </GridRow>
-                                {/* </Grid> */}
+                                  {/* </Grid> */}
                                 </Grid>
                               </Tab.Pane>
                             )
@@ -1996,66 +1986,70 @@ class DetailSidebar extends Component {
                 </FlexContent>
                 <BottomButtons>
                   <div>
-
-                      <Button
-                        size='large'
-                        inputProps={{ type: 'button' }}
-                        onClick={() => {
-                          this.setState({ edited: false }, () => this.props.closeSidebarDetail())
-                        }}
-                        data-test='sidebar_inventory_cancel'>
-                        {Object.keys(touched).length || this.state.changedForm
-                          ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
-                          : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
-                      </Button>
-                      <Button
-                        disabled={!(Object.keys(touched).length || this.state.changedForm)}
-                        primary
-                        size='large'
-                        type='button'
-                        onClick={() =>
-                          validateForm().then(async r => {
-                            if (Object.keys(r).length && this.state.activeTab !== 1) {
-                              this.switchToErrors(r)
-                              submitForm() // to show errors
-                            } else {
-                              let { data } = await this.submitForm(values, setSubmitting, setTouched)
-                              if (!getSafe(() => this.state.sidebarValues.id, false)) {
-                                confirm(
-                                  formatMessage({
-                                    id: 'confirm.editOrAddNew.header',
-                                    defaultMessage: 'Edit or add New'
-                                  }),
-                                  formatMessage({
-                                    id: 'confirm.editOrAddNew.content',
-                                    defaultMessage:
-                                      'If you like to continue editing this product offer by adding documents, price tiers, or price book rules, click Edit. If you would like to add a new Inventory Item, click New.'
-                                  }),
-                                  {
-                                    cancelText: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-                                    proceedText: formatMessage({ id: 'global.new', defaultMessage: 'New' })
-                                  }
-                                )
-                                  .then(() => {
-                                    this.setState(state => ({
-                                      ...state,
-                                      sidebarValues: { ...state.sidebarValues, id: null }
-                                    }))
-                                  })
-                                  .catch(() => {
-                                    this.setState(state => ({
-                                      ...state,
-                                      sidebarValues: { ...state.sidebarValues, id: data.id }
-                                    }))
-                                  })
-                              }
-                            }
-                          })
+                    <Button
+                      size='large'
+                      inputProps={{ type: 'button' }}
+                      onClick={() => {
+                        this.setState({ edited: false }, () => this.props.closeSidebarDetail())
+                      }}
+                      data-test='sidebar_inventory_cancel'>
+                      {Object.keys(touched).length || this.state.changedForm
+                        ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
+                        : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
+                    </Button>
+                    <Button
+                      disabled={!(Object.keys(touched).length || this.state.changedForm)}
+                      primary
+                      size='large'
+                      type='button'
+                      onClick={() => {
+                        // Dont validate if it is a broadcast tab
+                        if (this.state.activeTab === 2) {
+                          this.submitForm(values, setSubmitting, setTouched)
+                          return true
                         }
-                        data-test='sidebar_inventory_save_new'>
-                        {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-                      </Button>
 
+                        return validateForm().then(async r => {
+                          if (Object.keys(r).length && this.state.activeTab !== 1) {
+                            this.switchToErrors(r)
+                            submitForm() // to show errors
+                          } else {
+                            let { data } = await this.submitForm(values, setSubmitting, setTouched)
+                            if (!getSafe(() => this.state.sidebarValues.id, false)) {
+                              confirm(
+                                formatMessage({
+                                  id: 'confirm.editOrAddNew.header',
+                                  defaultMessage: 'Edit or add New'
+                                }),
+                                formatMessage({
+                                  id: 'confirm.editOrAddNew.content',
+                                  defaultMessage:
+                                    'If you like to continue editing this product offer by adding documents, price tiers, or price book rules, click Edit. If you would like to add a new Inventory Item, click New.'
+                                }),
+                                {
+                                  cancelText: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+                                  proceedText: formatMessage({ id: 'global.new', defaultMessage: 'New' })
+                                }
+                              )
+                                .then(() => {
+                                  this.setState(state => ({
+                                    ...state,
+                                    sidebarValues: { ...state.sidebarValues, id: null }
+                                  }))
+                                })
+                                .catch(() => {
+                                  this.setState(state => ({
+                                    ...state,
+                                    sidebarValues: { ...state.sidebarValues, id: data.id }
+                                  }))
+                                })
+                            }
+                          }
+                        })
+                      }}
+                      data-test='sidebar_inventory_save_new'>
+                      {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                    </Button>
                   </div>
                 </BottomButtons>
               </FlexSidebar>
