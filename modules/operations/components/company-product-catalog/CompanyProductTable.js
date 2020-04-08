@@ -46,7 +46,7 @@ class CompanyProductTable extends Component {
           </FormattedMessage>
         ),
         width: 250,
-        //sortPath: 'CompanyProduct.intProductCode'
+        sortPath: 'CompanyProduct.owner.cfDisplayName'
       },
       {
         name: 'mapped',
@@ -56,7 +56,7 @@ class CompanyProductTable extends Component {
           </FormattedMessage>
         ),
         width: 130,
-        //sortPath: 'CompanyProduct.intProductCode'
+        sortPath: 'CompanyProduct.echoProduct.name'
       },
       {
         name: 'cfProductOfferCount',
@@ -103,13 +103,14 @@ const mapStateToProps = (state, { datagrid }) => {
     loading: state.operations.loading,
     rows: datagrid.rows.map(d => {
       return {
-        ...d,
+        id: d.id,
         intProductName: getSafe(() => d.intProductName, 'N/A'),
         intProductCode: getSafe(() => d.intProductCode, 'N/A'),
+        owner: getSafe(() => d.owner.cfDisplayName, 'N/A'),
         mapped: d.echoProduct
           ? <FormattedMessage id='global.yes' defaultMessage='Yes'/>
           : <FormattedMessage id='global.no' defaultMessage='No'/>,
-        ProductOffersCnt: 'test ProductOffersCnt'
+        cfProductOfferCount: d.cfProductOfferCount
       }
     }),
     currentTab: getSafe(() => Router.router.query.type)

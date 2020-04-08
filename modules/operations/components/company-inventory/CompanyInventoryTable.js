@@ -25,7 +25,7 @@ class CompanyInventoryTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        sortPath: 'CompanyProduct.intProductName'
+        sortPath: 'ProductOffer.companyProduct.intProductName'
       },
       {
         name: 'productCode',
@@ -34,7 +34,7 @@ class CompanyInventoryTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        sortPath: 'CompanyProduct.intProductCode'
+        sortPath: 'ProductOffer.companyProduct.intProductCode'
       },
       {
         name: 'owner',
@@ -43,7 +43,7 @@ class CompanyInventoryTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        //sortPath: 'CompanyProduct.owner'
+        sortPath: 'ProductOffer.companyProduct.owner.cfDisplayName'
       },
       {
         name: 'complete',
@@ -61,7 +61,7 @@ class CompanyInventoryTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        //sortPath: 'CompanyProduct.broadcasted'
+        sortPath: 'ProductOffer.cfStatus'
       }
     ]
   }
@@ -100,10 +100,10 @@ const mapStateToProps = (state, { datagrid }) => {
         (d.validityDate ? moment().isBefore(d.validityDate) : true)
       && (d.cfStatus === 'Broadcasting' || d.cfStatus === 'Not broadcasting')
       return {
-        ...d,
-        productName: getSafe(() => d.intProductName, 'N/A'),
-        productCode: getSafe(() => d.intProductCode, 'N/A'),
-        //owner: 'Owner',
+        id: d.id,
+        productName: getSafe(() => d.companyProduct.intProductName, 'N/A'),
+        productCode: getSafe(() => d.companyProduct.intProductCode, 'N/A'),
+        owner: getSafe(() => d.owner.cfDisplayName, 'N/A'),
         complete: isComplete
           ? <FormattedMessage id='global.yes' defaultMessage='Yes'/>
           : <FormattedMessage id='global.no' defaultMessage='No'/>,
