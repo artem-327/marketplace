@@ -172,22 +172,22 @@ export const LeftMenu = styled(Menu)`
           background: #edeef2;
         }
       }
-      
+
       > .flex-wrapper {
         overflow: hidden;
         display: flex;
         flex-flow: column;
         height: calc(100% - 100px); // 100px for logo
-        
+
         > a.item {
           flex-grow: 0;
           flex-shrink: 0;
-          
+
           &.opened {
             margin-bottom: 0;
             border-bottom-left-radius: 0 !important;
             border-bottom-right-radius: 0 !important;
-          
+
             + form {
               flex-grow: 1;
               flex-shrink: 1;
@@ -195,47 +195,48 @@ export const LeftMenu = styled(Menu)`
               height: auto;
               border-bottom-left-radius: 4px !important;
               border-bottom-right-radius: 4px !important;
-              
+
               > div {
                 height: 100%;
                 margin-top: 0;
-                
+
                 > div {
                   flex-grow: 0;
                   flex-shrink: 1;
                   overflow: hidden;
                   height: auto;
-                
+
                   &:first-child,
                   &:last-child {
                     flex-grow: 0;
                     flex-shrink: 0;
                     overflow: hidden;
                   }
-                  
+
                   &.dimmable {
                     flex-grow: 1;
                     width: 100%;
                     padding: 0 !important;
-                  
+
                     > .scrollbar-container {
                       position: relative;
                       overflow: hidden;
                       width: 100%;
                       height: 100%;
                       padding: 0 10px;
-                  
-                      > div.ui.basic.segment { // dimmer area
+
+                      > div.ui.basic.segment {
+                        // dimmer area
                         width: 100% !important;
                         height: 100% !important;
                         margin: 0 !important;
                         padding: 0 !important;
                       }
-                      
+
                       &:not(.ps--active-y) > .ps__rail-y {
                         display: none !important;
                       }
-                      
+
                       &.ps--active-y > .ps__rail-y {
                         position: absolute;
                         top: 0;
@@ -244,7 +245,7 @@ export const LeftMenu = styled(Menu)`
                         display: block !important;
                         width: 4px;
                         background: rgba(0, 0, 0, 0.1);
-                        
+
                         .ps__thumb-y {
                           width: 100%;
                           margin: 0;
@@ -254,12 +255,12 @@ export const LeftMenu = styled(Menu)`
                       }
                     }
                   }
-                  
+
                   &.transition.visible {
                     overflow: hidden;
                     display: flex !important;
                     flex-flow: column;
-                  
+
                     &.up,
                     &.down {
                       position: absolute;
@@ -268,20 +269,20 @@ export const LeftMenu = styled(Menu)`
                       z-index: 1000;
                       max-height: calc(100% - 119px);
                     }
-                    
+
                     &.up {
                       bottom: 59px;
                     }
-                    
+
                     &.down {
                       top: 59px;
                     }
-                    
+
                     > .grid {
                       flex-grow: 0;
                       flex-shrink: 0;
                     }
-                  
+
                     > .scrollbar-container {
                       flex-grow: 0;
                       flex-shrink: 1;
@@ -291,11 +292,11 @@ export const LeftMenu = styled(Menu)`
                       height: auto;
                       padding: 0;
                       background: #edeef2;
-                      
+
                       &:not(.ps--active-y) > .ps__rail-y {
                         display: none !important;
                       }
-                      
+
                       &.ps--active-y > .ps__rail-y {
                         position: absolute;
                         top: 0;
@@ -305,7 +306,7 @@ export const LeftMenu = styled(Menu)`
                         width: 4px;
                         height: 100%;
                         background: rgba(0, 0, 0, 0.1);
-                        
+
                         .ps__thumb-y {
                           width: 100%;
                           margin: 0;
@@ -320,11 +321,11 @@ export const LeftMenu = styled(Menu)`
             }
           }
         }
-        
+
         > div.item {
           flex-grow: 0;
           flex-shrink: 0;
-          
+
           &.opened {
             flex-grow: 0;
             flex-shrink: 1;
@@ -361,7 +362,7 @@ export const LeftMenu = styled(Menu)`
       &.active svg {
         color: #2599d5 !important;
       }
-      
+
       .active-filter {
         position: absolute;
         top: 13px;
@@ -376,12 +377,11 @@ export const LeftMenu = styled(Menu)`
         font-size: 22px;
         line-height: 22px;
       }
-      
+
       &.active {
-        
         .active-filter {
           display: block;
-          
+
           > svg {
             position: static;
             width: 16px !important;
@@ -411,7 +411,7 @@ export const LeftMenu = styled(Menu)`
 
       &:before,
       &:after {
-        content: "" !important;
+        content: '' !important;
         position: absolute !important;
         top: 20px !important;
         left: auto !important;
@@ -426,7 +426,7 @@ export const LeftMenu = styled(Menu)`
         border-radius: 1px;
         background: #cecfd4 !important;
       }
-      
+
       &:nth-child(n):before,
       &:nth-child(n):after {
         display: block !important; // solving rewrites from semantic css
@@ -478,7 +478,6 @@ export const LeftMenu = styled(Menu)`
 
         &:not(.upward),
         &.upward {
-        
           > .menu {
             position: static !important;
             overflow: hidden !important;
@@ -493,7 +492,7 @@ export const LeftMenu = styled(Menu)`
             border-top-left-radius: 0;
             border-top-right-radius: 0;
             padding: 0 !important;
-          
+
             > .scrollbar-container {
               flex-grow: 0;
               flex-shrink: 1;
@@ -503,11 +502,11 @@ export const LeftMenu = styled(Menu)`
               height: 100% !important;
               margin: -10px 0 !important;
               padding: 10px 0 !important;
-              
+
               &:not(.ps--active-y) > .ps__rail-y {
                 display: none !important;
               }
-              
+
               &.ps--active-y > .ps__rail-y {
                 position: absolute;
                 top: 0;
@@ -517,7 +516,7 @@ export const LeftMenu = styled(Menu)`
                 width: 4px;
                 height: 100%;
                 background: rgba(0, 0, 0, 0.1);
-                
+
                 .ps__thumb-y {
                   width: 100%;
                   margin: 0;
@@ -703,7 +702,7 @@ export const LeftMenu = styled(Menu)`
 
     &.collapsed {
       width: 70px !important;
-      
+
       .scrollbar-container > img {
         width: 30px;
         margin-left: 10px;
@@ -714,7 +713,7 @@ export const LeftMenu = styled(Menu)`
       .scrollbar-container > .flex-wrapper {
         overflow: visible;
         display: block;
-        
+
         > img {
           width: 40px;
           height: 50px;
@@ -743,11 +742,11 @@ export const LeftMenu = styled(Menu)`
       .scrollbar-container,
       .scrollbar-container > .flex-wrapper {
         overflow: visible !important;
-    
+
         &:not(.ps--active-y) > .ps__rail-y {
           display: none !important;
         }
-        
+
         &.ps--active-y > .ps__rail-y {
           display: none !important;
         }
@@ -786,7 +785,7 @@ export const LeftMenu = styled(Menu)`
             border-color: #dee2e6;
             border-radius: 0;
             border-bottom-right-radius: 4px;
-            
+
             > .scrollbar-container {
               margin: 0 !important;
               padding: 0 !important;
@@ -799,13 +798,12 @@ export const LeftMenu = styled(Menu)`
 
           &:not(.upward),
           &.upward {
-          
             > .menu {
               overflow: hidden !important;
               display: flex !important;
               flex-flow: column;
               padding: 0 !important;
-          
+
               > .scrollbar-container {
                 flex-grow: 0;
                 flex-shrink: 1;
@@ -816,11 +814,11 @@ export const LeftMenu = styled(Menu)`
                 max-height: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
-              
+
                 &:not(.ps--active-y) > .ps__rail-y {
                   display: none !important;
                 }
-                        
+
                 &.ps--active-y > .ps__rail-y {
                   position: absolute;
                   top: 0;
@@ -830,7 +828,7 @@ export const LeftMenu = styled(Menu)`
                   width: 4px;
                   height: 100%;
                   background: rgba(0, 0, 0, 0.1);
-                  
+
                   .ps__thumb-y {
                     position: absolute;
                     width: 100%;
@@ -866,7 +864,6 @@ export const LeftMenu = styled(Menu)`
     }
 
     &:not(.collapsed) {
-    
       .scrollbar-container {
         position: relative;
         width: calc(100% + 10px);
@@ -877,7 +874,7 @@ export const LeftMenu = styled(Menu)`
           margin: 0 2px;
         }
       }
-      
+
       .scrollbar-container > .flex-wrapper > .item.dropdown.upward.opened > .menu,
       .scrollbar-container > .flex-wrapper > .item.dropdown:not(.upward).opened > .menu {
         max-height: calc(100% - 26px) !important;
@@ -960,9 +957,18 @@ export const MainTitle = styled(Header)`
   line-height: 31px;
 `
 
+export const MainTitleWithMessage = styled.span`
+  margin: 0 !important;
+  padding: 12px 0 !important;
+  font-size: 25px !important;
+  font-weight: 400 !important;
+  color: #000;
+  line-height: 31px;
+`
+
 export const Required = styled.span`
   &:before {
-    content: "*";
+    content: '*';
     display: inline;
     margin-left: 0.5em;
     font-size: 1em;
@@ -973,10 +979,36 @@ export const Required = styled.span`
 
 export const Or = styled.span`
   &:before {
-    content: "/";
+    content: '/';
     display: inline;
     margin: 0 0.5em;
     font-size: 1em;
     line-height: ‭1.2857143‬;
   }
+`
+
+export const CustomDiv = styled.div`
+  width: 65vw;
+  margin-right: 32px;
+  color: #848893;
+`
+
+export const Rectangle = styled.div`
+  text-align: center;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+  padding: 0px 20px 0px 20px;
+  height: 22px;
+`
+
+export const CustomSpan = styled.span`
+  text-align: center;
+  font-size: 12px;
+`
+
+export const CustomSpanReturn = styled.span`
+  color: #4183c4;
+  cursor: pointer;
 `
