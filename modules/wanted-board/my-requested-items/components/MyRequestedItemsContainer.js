@@ -173,7 +173,8 @@ function mapStateToProps(store, { datagrid }) {
         measurement: qtyPart,
         fobQuote: '',
         deliveredQuote: '',
-        purchaseRequestOffers
+        purchaseRequestOffers,
+        ownerBranch: getSafe(() => row.ownerBranch.deliveryAddress.cfName, '')
       }
     }) //.filter(row => row.purchaseRequestOffers.length !== 0)
   }

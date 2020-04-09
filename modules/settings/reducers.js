@@ -107,10 +107,10 @@ export const initialState = {
                 </Link>
               )}
             </FormattedMessage>
-          )
+          ),
         }}
       />
-    )
+    ),
   },
   languages: [],
   languagesFetching: false,
@@ -121,7 +121,7 @@ export const initialState = {
   csvImportError: null,
   tabClicked: false,
   isOpenSidebar: false,
-  openTab: 0
+  openTab: 0,
 }
 
 export default function reducer(state = initialState, action) {
@@ -133,14 +133,14 @@ export default function reducer(state = initialState, action) {
         ...state,
         loaded: false,
         isOpenPopup: true,
-        popupValues: action.payload
+        popupValues: action.payload,
       }
     }
     case AT.CLOSE_POPUP: {
       return {
         ...state,
         isOpenPopup: false,
-        popupValues: null
+        popupValues: null,
       }
     }
     case AT.OPEN_SIDEBAR: {
@@ -148,7 +148,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loaded: false,
         isOpenSidebar: true,
-        openTab: action.payload
+        openTab: action.payload,
       }
     }
     case AT.CLOSE_SIDEBAR: {
@@ -156,45 +156,45 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenSidebar: false,
         openTab: null,
-        popupValues: null
+        popupValues: null,
       }
     }
     case AT.OPEN_DWOLLA_POPUP: {
       return {
         ...state,
-        isDwollaOpenPopup: true
+        isDwollaOpenPopup: true,
       }
     }
     case AT.CLOSE_DWOLLA_POPUP: {
       return {
         ...state,
-        isDwollaOpenPopup: false
+        isDwollaOpenPopup: false,
       }
     }
     case AT.OPEN_IMPORT_POPUP: {
       return {
         ...state,
-        isOpenImportPopup: true
+        isOpenImportPopup: true,
         //popupValues: action.payload
       }
     }
     case AT.SETTINGS_CLOSE_IMPORT_POPUP: {
       return {
         ...state,
-        isOpenImportPopup: false
+        isOpenImportPopup: false,
         //popupValues: null
       }
     }
     case AT.SETTINGS_OPEN_UPLOAD_DOCUMENTS_POPUP: {
       return {
         ...state,
-        isOpenUploadDocumentsPopup: true
+        isOpenUploadDocumentsPopup: true,
       }
     }
     case AT.SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP: {
       return {
         ...state,
-        isOpenUploadDocumentsPopup: false
+        isOpenUploadDocumentsPopup: false,
       }
     }
     case AT.OPEN_ROLES_POPUP: {
@@ -202,7 +202,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenPopup: true,
         popupValues: action.payload,
-        userEditRoles: true
+        userEditRoles: true,
       }
     }
     case AT.CLOSE_ROLES_POPUP: {
@@ -210,7 +210,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenPopup: false,
         popupValues: null,
-        userEditRoles: false
+        userEditRoles: false,
       }
     }
     case AT.OPEN_EDIT_POPUP: {
@@ -218,7 +218,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         currentForm: state.currentTab, // ! ! ???
         editPopupBoolean: state.editPopupBoolean === false ? true : false,
-        popupValues: action.payload
+        popupValues: action.payload,
       }
     }
     case AT.CLOSE_EDIT_POPUP: {
@@ -226,26 +226,26 @@ export default function reducer(state = initialState, action) {
         ...state,
         currentForm: null,
         editPopupBoolean: state.editPopupBoolean === false ? true : false,
-        popupValues: null
+        popupValues: null,
       }
     }
     case AT.OPEN_CONFIRM_POPUP: {
       return {
         ...state,
         confirmMessage: true,
-        deleteRowById: action.payload
+        deleteRowById: action.payload,
       }
     }
     case AT.OPEN_TOAST: {
       return {
         ...state,
-        toast: action.payload
+        toast: action.payload,
       }
     }
     case AT.CLOSE_TOAST: {
       return {
         ...state,
-        toast: { message: null, isSuccess: null }
+        toast: { message: null, isSuccess: null },
       }
     }
     /* DELETE DELIVERY ADDRESS */
@@ -253,7 +253,7 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
       }
     }
 
@@ -261,14 +261,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        deliveryAddressesRows: state.deliveryAddressesRows.filter(address => address.id !== payload)
+        deliveryAddressesRows: state.deliveryAddressesRows.filter(address => address.id !== payload),
       }
     }
 
     case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_REJECTED: {
       return {
         ...state,
-        loading: false
+        loading: false,
       }
     }
 
@@ -276,14 +276,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         deleteRowById: null,
-        confirmMessage: null
+        confirmMessage: null,
       }
     }
     case AT.CONFIRM_FULFILLED: {
       return {
         ...state,
         deleteRowById: null,
-        confirmMessage: null
+        confirmMessage: null,
       }
     }
 
@@ -291,14 +291,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentForm: state.currentTab,
-        popupValues: action.payload
+        popupValues: action.payload,
       }
     }
     case AT.CLOSE_ADD_POPUP: {
       return {
         ...state,
         currentForm: null,
-        currentEditForm: null
+        currentEditForm: null,
       }
     }
 
@@ -314,28 +314,28 @@ export default function reducer(state = initialState, action) {
     case AT.HANDLE_FILTERS_VALUE: {
       return {
         ...state,
-        filterValue: action.payload
+        filterValue: action.payload,
       }
     }
 
     case AT.SAVE_MAP_CSV: {
       return {
         ...state,
-        isSaveMapCSV: !state.isSaveMapCSV
+        isSaveMapCSV: !state.isSaveMapCSV,
       }
     }
 
     case AT.CHANGE_MAP_CSV_NAME: {
       return {
         ...state,
-        mapName: action.payload
+        mapName: action.payload,
       }
     }
 
     case AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE: {
       return {
         ...state,
-        productCatalogUnmappedValue: action.payload
+        productCatalogUnmappedValue: action.payload,
       }
     }
 
@@ -367,27 +367,27 @@ export default function reducer(state = initialState, action) {
           permissions: user.roles ? user.roles.name : '', // ! ! array?
           id: user.id,
           allUserRoles: user.roles || [],
-          lastLoginAt: user.lastLoginAt
+          lastLoginAt: user.lastLoginAt,
         }
       })
       return {
         ...state,
         loading: false,
-        usersRows: usersRows
+        usersRows: usersRows,
       }
     }
 
     case AT.GET_ROLES_DATA: {
       return {
         ...state,
-        roles: action.payload
+        roles: action.payload,
       }
     }
 
     case AT.GET_CURRENT_USER_DATA_FULFILLED: {
       return {
         ...state,
-        currentUser: action.payload
+        currentUser: action.payload,
       }
     }
 
@@ -414,7 +414,7 @@ export default function reducer(state = initialState, action) {
         email: warehouse.contactEmail,
         branchId: warehouse.id,
         id: warehouse.id,
-        warehouse: warehouse.warehouse
+        warehouse: warehouse.warehouse,
       }))
 
       warehousesRows.forEach(element => {
@@ -430,7 +430,7 @@ export default function reducer(state = initialState, action) {
         loading: false,
         warehousesRows: warehousesRows,
         country: action.payload.newCountryFormat,
-        countries: action.payload.country
+        countries: action.payload.country,
       }
     }
 
@@ -458,7 +458,7 @@ export default function reducer(state = initialState, action) {
           email: branch.contactEmail,
           branchId: branch.id,
           id: branch.id,
-          warehouse: branch.warehouse
+          warehouse: branch.warehouse,
         }
       })
       branchesRows.forEach(element => {
@@ -474,20 +474,23 @@ export default function reducer(state = initialState, action) {
         loading: false,
         branchesRows: branchesRows,
         country: action.payload.newCountryFormat,
-        countries: action.payload.country
+        countries: action.payload.country,
       }
     }
 
     case AT.GET_ALL_BRANCHES_DATA: {
-      const branches = action.payload.map(branch => {
-        return {
-          value: branch.id,
-          text: branch.deliveryAddress.cfName
-        }
-      })
+      let branches = []
+      action.payload.forEach(
+        branch =>
+          branch.warehouse === false &&
+          branches.push({
+            value: branch.id,
+            text: branch.deliveryAddress.cfName,
+          })
+      )
       return {
         ...state,
-        branchesAll: branches
+        branchesAll: branches,
       }
     }
 
@@ -495,7 +498,7 @@ export default function reducer(state = initialState, action) {
       // ! ! pending
       return {
         ...state,
-        loading: true
+        loading: true,
       }
     }
 
@@ -508,14 +511,14 @@ export default function reducer(state = initialState, action) {
           expirationMonth: card.expMonth,
           expirationYear: card.expYear,
           last4: `**** **** **** ${card.last4}`,
-          expMonthYear: card.expMonth + ' / ' + card.expYear
+          expMonthYear: card.expMonth + ' / ' + card.expYear,
         }
       })
 
       return {
         ...state,
         loading: false,
-        creditCardsRows: rows
+        creditCardsRows: rows,
       }
     }
 
@@ -527,7 +530,7 @@ export default function reducer(state = initialState, action) {
     case AT.GET_BANK_ACCOUNTS_DATA_FULFILLED: {
       const {
         bankAccountsData,
-        newCountryFormat
+        newCountryFormat,
         // newCurrencyFormat
       } = action.payload
 
@@ -535,7 +538,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         bankAccountsRows: bankAccountsData,
-        country: newCountryFormat
+        country: newCountryFormat,
         // currency: newCurrencyFormat
       }
     }
@@ -543,14 +546,14 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_GET_DWOLLA_BALANCE_FULFILLED: {
       return {
         ...state,
-        dwollaAccBalance: action.payload
+        dwollaAccBalance: action.payload,
       }
     }
 
     case AT.SETTINGS_GET_CURRENCIES_FULFILLED: {
       return {
         ...state,
-        currency: action.payload
+        currency: action.payload,
       }
     }
 
@@ -559,14 +562,14 @@ export default function reducer(state = initialState, action) {
         return {
           key: id,
           text: type.name,
-          value: type.id
+          value: type.id,
         }
       })
       const packagingUnitsType = action.payload.units.map((type, id) => {
         return {
           key: id,
           text: type.name,
-          value: type.id
+          value: type.id,
         }
       })
       // TODO: Freight Classes - should be used same array as anywhere else
@@ -575,21 +578,21 @@ export default function reducer(state = initialState, action) {
         return {
           key: fClass,
           text: fClass,
-          value: fClass
+          value: fClass,
         }
       })
       const hazardClasses = action.payload.hazardClasses.map((hClass, id) => {
         return {
           key: id,
           text: hClass.classCode + ': ' + hClass.description,
-          value: hClass.id
+          value: hClass.id,
         }
       })
       const packagingGroups = action.payload.packagingGroups.map((pGroup, id) => {
         return {
           key: id,
           text: pGroup.groupCode + ': ' + pGroup.description,
-          value: pGroup.id
+          value: pGroup.id,
         }
       })
       const packageWeightUnits = action.payload.units
@@ -598,7 +601,7 @@ export default function reducer(state = initialState, action) {
           return {
             key: id,
             text: type.name,
-            value: type.id
+            value: type.id,
           }
         })
 
@@ -614,7 +617,7 @@ export default function reducer(state = initialState, action) {
         productsHazardClasses: hazardClasses,
         productsFreightClasses: freightClasses,
         productsPackagingGroups: packagingGroups,
-        packageWeightUnits: packageWeightUnits
+        packageWeightUnits: packageWeightUnits,
       }
     }
 
@@ -622,7 +625,7 @@ export default function reducer(state = initialState, action) {
     case AT.DELETE_USER_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
       }
     }
 
@@ -630,7 +633,7 @@ export default function reducer(state = initialState, action) {
     case AT.DELETE_USER_FULFILLED: {
       return {
         ...state,
-        loading: false
+        loading: false,
       }
     }
 
@@ -638,7 +641,7 @@ export default function reducer(state = initialState, action) {
     case AT.DELETE_USER_REJECTED: {
       return {
         ...state,
-        loading: false
+        loading: false,
       }
     }
 
@@ -650,12 +653,12 @@ export default function reducer(state = initialState, action) {
           productNumber: item.product.unNumber,
           productId: item.product.id,
           packagingType: item.packaging.packagingType === undefined ? '' : item.packaging.packagingType.name,
-          packagingSize: item.packaging.size
+          packagingSize: item.packaging.size,
         }
       })
       return {
         ...state,
-        editPopupSearchProducts
+        editPopupSearchProducts,
       }
     }
 
@@ -663,13 +666,13 @@ export default function reducer(state = initialState, action) {
       const CSV = {
         headerCSV: action.payload.lines[0].columns.map(column => ({
           ...column,
-          content: column.content.trim()
+          content: column.content.trim(),
         })),
-        bodyCSV: action.payload.lines.slice(1)
+        bodyCSV: action.payload.lines.slice(1),
       }
       return {
         ...state,
-        CSV
+        CSV,
       }
     }
 
@@ -678,14 +681,14 @@ export default function reducer(state = initialState, action) {
     case AT.GET_CSV_MAP_COMPANIES_FULFILLED: {
       return {
         ...state,
-        maps: action.payload
+        maps: action.payload,
       }
     }
 
     case AT.SELECT_SAVED_MAP: {
       return {
         ...state,
-        selectedSavedMap: action.payload
+        selectedSavedMap: action.payload,
       }
     }
 
@@ -693,28 +696,28 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         mappedHeaders: action.payload.mappedHeaders,
-        missingRequired: action.payload.missingRequired
+        missingRequired: action.payload.missingRequired,
       }
     }
 
     case AT.DATA_HEADER_CSV: {
       return {
         ...state,
-        dataHeaderCSV: action.payload
+        dataHeaderCSV: action.payload,
       }
     }
 
     case AT.POST_NEW_WAREHOUSE_POPUP: {
       return {
         ...state,
-        currentAddForm: state.currentTab
+        currentAddForm: state.currentTab,
       }
     }
 
     case AT.POST_UPLOAD_CSV_FILE_FULFILLED: {
       return {
         ...state,
-        fileCSVId: action.payload.id
+        fileCSVId: action.payload.id,
       }
     }
 
@@ -723,7 +726,7 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_PENDING: {
       return {
         ...state,
-        csvImportError: null
+        csvImportError: null,
       }
     }
 
@@ -736,7 +739,7 @@ export default function reducer(state = initialState, action) {
     case AT.POST_CSV_IMPORT_COMPANIES_FULFILLED: {
       return {
         ...state,
-        csvImportError: action.payload
+        csvImportError: action.payload,
       }
     }
 
@@ -751,7 +754,7 @@ export default function reducer(state = initialState, action) {
         isSaveMapCSV: false,
         mapName: null,
         selectedSavedMap: null,
-        csvImportError: null
+        csvImportError: null,
       }
     }
 
@@ -765,7 +768,7 @@ export default function reducer(state = initialState, action) {
         isSaveMapCSV: false,
         mapName: null,
         selectedSavedMap: null,
-        csvImportError: null
+        csvImportError: null,
       }
     }
 
@@ -776,7 +779,7 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
-        searchedCasProducts
+        searchedCasProducts,
       }
     }
 
@@ -787,7 +790,7 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
-        searchedCasProducts
+        searchedCasProducts,
       }
     }
 
@@ -796,7 +799,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         searchedCasProducts: action.payload.casProducts.map(casProduct => {
           return [casProduct.item.casProduct]
-        })
+        }),
       }
     }
 
@@ -809,14 +812,14 @@ export default function reducer(state = initialState, action) {
           } else {
             return list
           }
-        })
+        }),
       }
     }
 
     case AT.SEARCH_UN_NUMBER_FULFILLED: {
       return {
         ...state,
-        searchedUnNumbers: action.payload.data
+        searchedUnNumbers: action.payload.data,
       }
     }
 
@@ -826,7 +829,7 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
       }
     }
 
@@ -834,13 +837,13 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_FULFILLED: {
       return {
         ...state,
-        loading: false
+        loading: false,
       }
     }
 
     case AT.SETTINGS_GET_ADDRESSES_SEARCH_PENDING: {
       return {
-        ...state
+        ...state,
         //loading: true  //it is bug if fill Address fields in Add or Edit warehouse. Load all settings - warehouses page.
       }
     }
@@ -849,14 +852,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         addressSearch: action.payload,
-        loading: false
+        loading: false,
       }
     }
 
     case AT.SETTINGS_GET_ADDRESSES_SEARCH_REJECTED: {
       return {
         ...state,
-        loading: false
+        loading: false,
       }
     }
 
@@ -865,7 +868,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         deliveryAddressesRows: action.payload,
-        loading: false
+        loading: false,
       }
     }
 
@@ -876,28 +879,28 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_REJECTED: {
       return {
         ...state,
-        loading: false
+        loading: false,
       }
     }
 
     case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_PENDING: {
       return {
         ...state,
-        productDataLoading: true
+        productDataLoading: true,
       }
     }
 
     case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_REJECTED: {
       return {
         ...state,
-        productDataLoading: false
+        productDataLoading: false,
       }
     }
 
     case AT.SETTINGS_GET_COUNTRIES_PENDING: {
       return {
         ...state,
-        countriesLoading: true
+        countriesLoading: true,
       }
     }
 
@@ -909,15 +912,15 @@ export default function reducer(state = initialState, action) {
         countriesDropDown: payload.map(c => ({
           text: c.name,
           value: c.id,
-          key: c.id
-        }))
+          key: c.id,
+        })),
       }
     }
 
     case AT.SETTINGS_GET_COUNTRIES_REJECTED: {
       return {
         ...state,
-        countriesLoading: false
+        countriesLoading: false,
       }
     }
 
@@ -928,8 +931,8 @@ export default function reducer(state = initialState, action) {
         provincesDropDown: payload.map(d => ({
           text: d.name,
           value: d.id,
-          key: d.id
-        }))
+          key: d.id,
+        })),
       }
     }
 
@@ -940,7 +943,7 @@ export default function reducer(state = initialState, action) {
       }
       return {
         ...state,
-        tabsNames: tabsNames
+        tabsNames: tabsNames,
       }
     }
 
@@ -949,7 +952,7 @@ export default function reducer(state = initialState, action) {
     case AT.POST_NEW_BANK_ACCOUNT_REQUEST_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
       }
     }
 
@@ -957,7 +960,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        popupValues: null
+        popupValues: null,
         // isOpenPopup: false,
       }
     }
@@ -968,14 +971,14 @@ export default function reducer(state = initialState, action) {
         loading: false,
         popupValues: null,
         isOpenPopup: false,
-        bankAccountsRows: [...state.bankAccountsRows, action.payload]
+        bankAccountsRows: [...state.bankAccountsRows, action.payload],
       }
     }
 
     case AT.DELETE_BANK_ACCOUNT_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
       }
     }
 
@@ -983,7 +986,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        bankAccountsRows: state.bankAccountsRows.filter(account => account.id !== payload)
+        bankAccountsRows: state.bankAccountsRows.filter(account => account.id !== payload),
       }
     }
 
@@ -991,7 +994,7 @@ export default function reducer(state = initialState, action) {
     case AT.DELETE_BANK_ACCOUNT_REJECTED: {
       return {
         ...state,
-        loading: false
+        loading: false,
       }
     }
 
@@ -999,7 +1002,7 @@ export default function reducer(state = initialState, action) {
     case AT.DWOLLA_START_VERIFICATION_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
       }
     }
 
@@ -1013,14 +1016,14 @@ export default function reducer(state = initialState, action) {
           } else {
             return baRow
           }
-        })
+        }),
       }
     }
 
     case AT.DWOLLA_FINALIZE_VERIFICATION_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
       }
     }
 
@@ -1028,7 +1031,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        bankAccountsRows: action.payload
+        bankAccountsRows: action.payload,
       }
     }
 
@@ -1037,7 +1040,7 @@ export default function reducer(state = initialState, action) {
     case AT.DELETE_BRANCH_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
       }
     }
 
@@ -1047,14 +1050,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        [property]: state[property].filter(warehouse => warehouse.id !== payload)
+        [property]: state[property].filter(warehouse => warehouse.id !== payload),
       }
     }
 
     case AT.DELETE_BRANCH_REJECTED: {
       return {
         ...state,
-        loading: false
+        loading: false,
       }
     }
 
@@ -1064,7 +1067,7 @@ export default function reducer(state = initialState, action) {
         currentTab: payload,
         isOpenSidebar: false,
         filterValue: state.currentTab !== payload ? '' : state.filterValue,
-        tabClicked: !state.tabClicked
+        tabClicked: !state.tabClicked,
       }
     }
 
@@ -1075,9 +1078,9 @@ export default function reducer(state = initialState, action) {
           return {
             key: docType.id,
             text: docType.name,
-            value: docType.id
+            value: docType.id,
           }
-        })
+        }),
       }
     }
 
@@ -1086,7 +1089,7 @@ export default function reducer(state = initialState, action) {
     case AT.GET_LOGISTICS_ACCOUNTS_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
       }
     }
 
@@ -1094,14 +1097,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        logisticsAccounts: payload
+        logisticsAccounts: payload,
       }
     }
 
     case AT.GET_LOGISTICS_ACCOUNTS_REJECTED: {
       return {
         ...state,
-        loading: false
+        loading: false,
       }
     }
 
@@ -1110,7 +1113,7 @@ export default function reducer(state = initialState, action) {
     case AT.GET_LOGISTICS_PROVIDERS_PENDING: {
       return {
         ...state,
-        logisticsProvidersFetching: true
+        logisticsProvidersFetching: true,
       }
     }
 
@@ -1118,14 +1121,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         logisticsProvidersFetching: false,
-        logisticsProviders: payload
+        logisticsProviders: payload,
       }
     }
 
     case AT.GET_LOGISTICS_PROVIDERS_REJECTED: {
       return {
         ...state,
-        logisticsProvidersFetching: false
+        logisticsProvidersFetching: false,
       }
     }
 
@@ -1133,7 +1136,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.CREATE_LOGISTICS_ACCOUNT_FULFILLED: {
       return {
-        ...state
+        ...state,
         //logisticsAccounts: [].concat([payload], state.logisticsAccounts)  // ! ! not working now (missing response)
       }
     }
@@ -1145,7 +1148,7 @@ export default function reducer(state = initialState, action) {
       logisticsAccounts[state.logisticsAccounts.findIndex(el => el.id === payload.id)] = payload
       return {
         ...state,
-        logisticsAccounts
+        logisticsAccounts,
       }
     }
 
@@ -1154,7 +1157,7 @@ export default function reducer(state = initialState, action) {
     case AT.DELETE_LOGISTICS_ACCOUNT_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
       }
     }
 
@@ -1162,20 +1165,20 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        logisticsAccounts: state.logisticsAccounts.filter(el => el.id !== payload)
+        logisticsAccounts: state.logisticsAccounts.filter(el => el.id !== payload),
       }
     }
 
     case AT.DELETE_LOGISTICS_ACCOUNT_REJECTED: {
       return {
         ...state,
-        loading: false
+        loading: false,
       }
     }
 
     case AT.RESET_SETTINGS: {
       return {
-        ...initialState
+        ...initialState,
       }
     }
 
@@ -1231,7 +1234,7 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
-        systemSettingsModalOpen: isOpen
+        systemSettingsModalOpen: isOpen,
       }
     }
 
@@ -1240,7 +1243,7 @@ export default function reducer(state = initialState, action) {
     case AT.GET_BUSINESS_CLASSIFICATIONS_PENDING: {
       return {
         ...state,
-        bussinessClassificationsLoading: true
+        bussinessClassificationsLoading: true,
       }
     }
 
@@ -1248,14 +1251,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         businessClassifications: payload,
-        bussinessClassificationsLoading: false
+        bussinessClassificationsLoading: false,
       }
     }
 
     case AT.GET_BUSINESS_CLASSIFICATIONS_REJECTED: {
       return {
         ...state,
-        bussinessClassificationsLoading: false
+        bussinessClassificationsLoading: false,
       }
     }
 
@@ -1264,7 +1267,7 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_CREATE_DWOLLA_ACCOUNT_PENDING: {
       return {
         ...state,
-        dwollaSaving: true
+        dwollaSaving: true,
       }
     }
 
@@ -1272,7 +1275,7 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_CREATE_DWOLLA_ACCOUNT_REJECTED: {
       return {
         ...state,
-        dwollaSaving: false
+        dwollaSaving: false,
       }
     }
 
@@ -1283,7 +1286,7 @@ export default function reducer(state = initialState, action) {
     case inventoryAT.INVENTORY_REMOVE_ATTACHMENT_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
       }
     }
 
@@ -1295,7 +1298,7 @@ export default function reducer(state = initialState, action) {
     case inventoryAT.INVENTORY_REMOVE_ATTACHMENT_REJECTED: {
       return {
         ...state,
-        loading: false
+        loading: false,
       }
     }
 
@@ -1311,16 +1314,16 @@ export default function reducer(state = initialState, action) {
         ...state,
         agreementModal: {
           ...state.agreementModal,
-          open
+          open,
           // ...modalProps
-        }
+        },
       }
     }
 
     case AT.SETTINGS_GET_VERIFICATION_DOCUMENT_TYPES_FULFILLED: {
       return {
         ...state,
-        verificationDocumentTypes: action.payload
+        verificationDocumentTypes: action.payload,
       }
     }
 
@@ -1329,7 +1332,7 @@ export default function reducer(state = initialState, action) {
     case AT.GET_LANGUAGES_PENDING: {
       return {
         ...state,
-        languagesFetching: true
+        languagesFetching: true,
       }
     }
 
@@ -1337,21 +1340,21 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         languages: payload,
-        languagesFetching: false
+        languagesFetching: false,
       }
     }
 
     case AT.GET_LANGUAGES_REJECTED: {
       return {
         ...state,
-        languagesFetching: false
+        languagesFetching: false,
       }
     }
 
     case AT.SEARCH_ECHO_PRODUCTS_PENDING: {
       return {
         ...state,
-        echoProductsFetching: true
+        echoProductsFetching: true,
       }
     }
 
@@ -1359,14 +1362,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         echoProducts: payload,
-        echoProductsFetching: false
+        echoProductsFetching: false,
       }
     }
 
     case AT.SEARCH_ECHO_PRODUCTS_REJECTED: {
       return {
         ...state,
-        echoProductsFetching: false
+        echoProductsFetching: false,
       }
     }
 
@@ -1374,7 +1377,7 @@ export default function reducer(state = initialState, action) {
     case AT.GET_NMFC_NUMBERS_PENDING: {
       return {
         ...state,
-        nmfcNumbersFetching: true
+        nmfcNumbersFetching: true,
       }
     }
 
@@ -1382,7 +1385,7 @@ export default function reducer(state = initialState, action) {
     case AT.GET_NMFC_NUMBERS_REJECTED: {
       return {
         ...state,
-        nmfcNumbersFetching: false
+        nmfcNumbersFetching: false,
       }
     }
 
@@ -1391,7 +1394,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         nmfcNumbersFetching: false,
-        nmfcNumbersFiltered: action.payload
+        nmfcNumbersFiltered: action.payload,
       }
     }
 
@@ -1406,7 +1409,7 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
-        nmfcNumbersFiltered: payloadNew
+        nmfcNumbersFiltered: payloadNew,
       }
     }
 
@@ -1416,14 +1419,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         selectedSavedMap: null,
-        maps: state.maps.filter(map => map.id !== action.meta)
+        maps: state.maps.filter(map => map.id !== action.meta),
       }
     }
 
     case AT.GET_BRANCH_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
       }
     }
 
@@ -1431,7 +1434,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        popupValues: null
+        popupValues: null,
         // isOpenPopup: false,
       }
     }
@@ -1440,7 +1443,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        popupValues: action.payload.data
+        popupValues: action.payload.data,
       }
     }
 

@@ -127,14 +127,14 @@ class SaleAttachingProductOffer extends Component {
           totalPkgAmount += pkgAmount
         }
 
-        const sumPkgAllocated = offers.reduce(function(sum, offer) {
+        const sumPkgAllocated = offers.reduce(function (sum, offer) {
           return sum + offer.pkgAllocated
         }, 0)
-        sumAllocated.push(sumPkgAllocated)
+        sumAllocated.push(0)
         const pkgAvailable = offers.map(offer => offer.pkgAvailable)
         available.push(pkgAvailable)
 
-        const cfPkgTotal = offers.reduce(function(sum, offer) {
+        const cfPkgTotal = offers.reduce(function (sum, offer) {
           return sum + offer.cfPkgTotal
         }, 0)
         sumPkgTotal.push(cfPkgTotal)
@@ -282,13 +282,10 @@ class SaleAttachingProductOffer extends Component {
                                 }
 
                                 if (checked) {
-                                  setFieldValue(
-                                    `tab[${tabIndex}].groupedOffer[${index}].allocated`,
-                                    allocatedIndex + differenceNumber
-                                  )
+                                  setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].allocated`, differenceNumber)
                                   setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].available`, 0)
                                   available[tabIndex][index] = availableIndex - differenceNumber
-                                  allocated[tabIndex][index] += differenceNumber
+                                  allocated[tabIndex][index] = differenceNumber
                                   //sumAvailable[tabIndex] = sumAvailable[tabIndex] - availableIndex
                                   sumAllocated[tabIndex] = sumAllocated[tabIndex] + differenceNumber
                                   this.setState({ available, allocated, sumAllocated })

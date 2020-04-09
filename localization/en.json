@@ -1611,6 +1611,7 @@
   "marketplace.association": "Association",
   "marketplace.shippingQuoteTooltip": "Select one or more Product Offers to calculate a Shipping Quote. Multiple ProductOffers can be choosed only if they are at the same Location.",
   "marketplace.multipleEchoProduct": "Please, only select inventory for the same product to get a Shipping Quote",
+  "marketplace.notes": "Notes",
   "operations.tables.shippingQuotes.buttonAdd": "Add Shipping Quote",
   "operations.tables.tags.buttonAdd": "Add Tag",
   "operations.tables.shippingQuotes.search": "Search shipping quote by TBD",
@@ -2143,8 +2144,6 @@
   "wantedBoard.searchByProductName": "Search by product name...",
   "wantedBoard.addNewRequest": "Add New Request",
   "wantedBoard.chemical": "Chemical",
-  "wantedBoard.switcher.product": "Finished Goods",
-  "wantedBoard.switcher.chemical": "Raw Materials",
   "wantedBoard.submitOffer": "Submit Offer",
   "wantedBoard.reject": "Reject",
   "wantedBoard.purchase": "Purchase",
@@ -2192,6 +2191,5 @@
   "wantedBoard.purchased": "Purchased",
   "wantedBoard.rejected": "Rejected",
   "wantedBoard.submitOfferHeader": "SUBMIT OFFER",
-  "wantedBoard.ownerBranch": "Requested By",
-  "wantedBoard.location": "Location"
+  "wantedBoard.requestedBy": "Requested By"
 }
