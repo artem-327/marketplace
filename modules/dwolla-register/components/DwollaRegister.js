@@ -138,7 +138,8 @@ class DwollaRegister extends Component {
     const {
       intl: { formatMessage },
       businessClassifications,
-      businessClassificationsLoading
+      businessClassificationsLoading,
+      isAdmin
     } = this.props
 
     let selectedBusiness = businessClassifications.find(el => el.id === values.businessClassification)
@@ -745,7 +746,7 @@ class DwollaRegister extends Component {
                     <GridRow>
                       <GridColumn>
                         <RightAlignedDiv>
-                          <Button onClick={() => Router.push('/settings')} primary>
+                          <Button onClick={() => (isAdmin ? Router.push('/admin') : Router.push('/settings'))} primary>
                             <FormattedMessage id='global.complete' defaultMessage='Complete'>
                               {text => text}
                             </FormattedMessage>

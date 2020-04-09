@@ -14,7 +14,7 @@ import {
   CircularLabel,
   MainTitle
 } from '~/components/constants/layout'
-import { Container, Menu, Dropdown, Icon, Image } from 'semantic-ui-react'
+import {Container, Menu, Dropdown, Icon, Image, FormField} from 'semantic-ui-react'
 import { Sidebar } from 'react-feather'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/logo-echosystem.png'
@@ -44,10 +44,13 @@ import { getCountryCodes } from '~/modules/phoneNumber/actions'
 
 import { chatWidgetToggle } from '~/modules/chatWidget/actions'
 import { toggleMenu } from '~/modules/layout/actions'
+import { getCompanyLogo } from '~/modules/company-form/actions'
 import { withToastManager } from 'react-toast-notifications'
 
 import ChatWidget from '~/modules/chatWidget/components/ChatWidgetContainer'
 import PerfectScrollbar from 'react-perfect-scrollbar'
+
+import ErrorComponent from '~/components/error'
 
 const clientCompanyRoutes = {
   restrictedRoutes: [
@@ -62,17 +65,47 @@ const clientCompanyRoutes = {
 }
 
 class Layout extends Component {
+  state = {
+    fatalError: false
+  }
   componentDidMount() {
-    const { auth, phoneCountryCodes, getCountryCodes } = this.props
+    if (this.props.hasLogo && getSafe(() => this.props.useCompanyLogo.value === 'true', false))
+      this.loadCompanyLogo()
+
+    const { auth, phoneCountryCodes, getCountryCodes, hasLogo } = this.props
 
     Router.events.on('beforeHistoryChange', this.handleRouteChange)
     Router.events.on('routeChangeStart', this.handleRouteChange)
 
+    if (this.state.fatalError) this.setState({ fatalError: false })
+
     if (!phoneCountryCodes.length) getCountryCodes()
+  }
+
+  loadCompanyLogo = async () => {
+    if (this.props.hasLogo && getSafe(() => this.props.useCompanyLogo.value === 'true', false) && this.props.getCompanyLogo) {
+      await this.props.getCompanyLogo(this.props.companyId)
+    }
+  }
+
+  getCompanyLogo = () => {
+    if (this.props.companyLogo) {
+      const file = new Blob([this.props.companyLogo], { type: this.props.companyLogo.type })
+      let fileURL = URL.createObjectURL(file)
+
+      return fileURL
+    }
+
+    return Logo
   }
 
   componentWillUpdate() {
     this.handleRouteChange(this.props.router.route)
+  }
+
+  componentDidCatch(error, info) {
+    console.error('Error!', error, info)
+    this.setState({ fatalError: true })
   }
 
   handleRouteChange = url => {
@@ -106,7 +139,9 @@ class Layout extends Component {
       isOpen,
       agreeWithTOS,
       collapsedMenu,
-      toggleMenu
+      toggleMenu,
+      hasLogo,
+      useCompanyLogo
     } = this.props
     let icon = <Icon name='user thick' />
     let gravatarSrc = getSafe(() => auth.identity.gravatarSrc)
@@ -124,7 +159,7 @@ class Layout extends Component {
         <LeftMenu vertical fixed='left' inverted size='large' borderless className={collapsedMenu ? 'collapsed' : ''}>
           <LeftMenuContainer fluid>
             <PerfectScrollbar>
-              <LogoImage src={!collapsedMenu ? Logo : LogoSmall} />
+              <LogoImage src={!collapsedMenu ? (hasLogo && getSafe(() => useCompanyLogo.value === 'true', false) ? this.getCompanyLogo() : Logo) : LogoSmall} />
 
               <NavigationMenu takeover={takeover} collapsed={collapsedMenu} />
             </PerfectScrollbar>
@@ -199,15 +234,15 @@ class Layout extends Component {
                   {(!getSafe(() => auth.identity.isAdmin, false) ||
                     takeover ||
                     !getSafe(() => auth.identity.isCompanyAdmin, false)) && (
-                    <Menu.Item
-                      onClick={() => triggerSystemSettingsModal(true)}
-                      data-test='navigation_menu_settings_lnk'>
-                      <>
-                        {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
-                        <Settings role='user' />
-                      </>
-                    </Menu.Item>
-                  )}
+                      <Menu.Item
+                        onClick={() => triggerSystemSettingsModal(true)}
+                        data-test='navigation_menu_settings_lnk'>
+                        <>
+                          {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
+                          <Settings role='user' />
+                        </>
+                      </Menu.Item>
+                    )}
                   <Dropdown.Item
                     as={Menu.Item}
                     onClick={() => window.open('https://www.echosystem.com/terms-of-service')}
@@ -241,7 +276,9 @@ class Layout extends Component {
             <Messages />
           </TopMenuContainer>
           <ContentContainer fluid className='page-wrapper flex stretched'>
-            {children}
+            {!this.state.fatalError ?
+              children : <ErrorComponent />
+            }
           </ContentContainer>
         </FlexContainer>
         <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
@@ -257,7 +294,8 @@ const mapDispatchToProps = {
   triggerSystemSettingsModal,
   agreeWithTOS,
   getCountryCodes,
-  toggleMenu
+  toggleMenu,
+  getCompanyLogo
 }
 
 const mapStateToProps = state => {
@@ -268,7 +306,11 @@ const mapStateToProps = state => {
     isOpen: getSafe(() => !state.auth.identity.tosAgreementDate, false),
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
     takeover: getSafe(() => !!state.auth.identity.company.id, false),
-    phoneCountryCodes: getSafe(() => state.phoneNumber.phoneCountryCodes, [])
+    phoneCountryCodes: getSafe(() => state.phoneNumber.phoneCountryCodes, []),
+    companyId: getSafe(() => state.auth.identity.company.id, false),
+    hasLogo: getSafe(() => state.auth.identity.company.hasLogo, false),
+    companyLogo: getSafe(() => state.businessTypes.companyLogo, null),
+    useCompanyLogo: getSafe(() => state.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO'), false)
   }
 }
 
