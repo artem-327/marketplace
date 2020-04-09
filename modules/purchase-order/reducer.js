@@ -486,7 +486,10 @@ export default function reducer(state = initialState, action) {
         preFilledValues: action.payload,
         country: action.payload.country,
         zip: action.payload.zip,
-        shippingQuotes: action.payload.quotes,
+        shippingQuotes: {
+          rates: action.payload.quotes.rates.map((quote) =>
+            ({ productOfferId: quote.productOfferId, ...quote.shipmentRate }))
+        },
       }
     }
 
