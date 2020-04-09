@@ -351,7 +351,7 @@ class PurchaseOrder extends Component {
                           selectedShippingQuote={this.props.cart.selectedShipping}
                           handleQuoteSelect={this.handleQuoteSelect}
                           selectedAddress={this.state.selectedAddress}
-                          shippingQuotes={this.state.shippingQuotes}
+                          shippingQuotes={this.props.shippingQuotes}
                           shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
                         />
                       ) : (

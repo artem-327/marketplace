@@ -47,7 +47,7 @@ function mapStateToProps(store) {
     logisticsAccount: getSafe(() => store.auth.identity.company.logisticsAccount, false),
     billingInfo: getSafe(() => store.auth.identity.company.primaryBranch.deliveryAddress, null),
     companyName: getSafe(() => store.auth.identity.company.name, null),
-    shippingQuotes: getSafe(() => store.orders.shippingQuotes.rates, [])
+    shippingQuotes: getSafe(() => store.cart.shippingQuotes, {})
   }
 }
 
