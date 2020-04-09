@@ -49,16 +49,18 @@ class Popup extends Component {
             onSubmit={async (values, { setSubmitting }) => {
               let payload = {
                 ...values,
-                code: getSafe(() => values.code.replace('-', ''), values.code)
+                code: Number(getSafe(() => values.code.replace('-', ''), values.code))
               }
 
-              if (popupValues) {
-                await editNmfcNumber({ ...payload, id: popupValues.id })
-              } else {
-                await addNmfcNumber(payload)
-              }
+              try {
+                if (popupValues) {
+                  await editNmfcNumber({...payload, id: popupValues.id})
+                } else {
+                  await addNmfcNumber(payload)
+                }
+                closeAddPopup()
+              } catch (err) {}
               setSubmitting(false)
-              closeAddPopup()
             }}
             validationSchema={validationSchema}
             initialValues={this.getInitialValues()}

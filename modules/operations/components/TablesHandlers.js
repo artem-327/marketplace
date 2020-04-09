@@ -13,10 +13,25 @@ const PositionHeaderSettings = styled.div`
   z-index: 602;
 `
 
+const CustomGridRow = styled(GridRow)`
+  padding: 0 !important;
+  margin: 10px 0 10px 4px !important;
+`
+
 const textsTable = {
   'shipping-quotes': {
     BtnAddText: 'operations.tables.shippingQuotes.buttonAdd',
     SearchText: 'operations.tables.shippingQuotes.search'
+  },
+  tags: {
+    BtnAddText: 'operations.tables.tags.buttonAdd',
+    SearchText: 'operations.tables.tags.search'
+  },
+  'company-product-catalog': {
+    SearchText: 'operations.tables.companyProductCatalog.search'
+  },
+  'company-inventory': {
+    SearchText: 'operations.tables.companyInventory.search'
   }
 }
 
@@ -26,7 +41,7 @@ class TablesHandlers extends Component {
     this.state = {
       filterValue: ''
     }
-    this.handleFiltersValue = debounce(this.handleFiltersValue, 250)
+    this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -38,8 +53,9 @@ class TablesHandlers extends Component {
 
   handleFiltersValue = value => {
     const { handleFiltersValue } = this.props
-    //if (Datagrid.isReady()) Datagrid.setSearch(value) // temporary - missing filter path in BE
-    //else handleFiltersValue(value)
+    //TODO temporary - missing filter path in BE for carrierName (shipment/manual-quotes)
+    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    else handleFiltersValue(value)
   }
 
   handleFilterChange = (e, { value }) => {
@@ -64,24 +80,28 @@ class TablesHandlers extends Component {
 
     const { filterValue } = this.state
 
+    const item = textsTable[currentTab.type]
+
     return (
       <>
-        <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
-          <Input
-            fluid
-            icon='search'
-            value={filterValue}
-            placeholder={formatMessage({
-              id: textsTable[currentTab.type].SearchText,
-              defaultMessage: 'Select Credit Card'
-            })}
-            onChange={this.handleFilterChange}
-          />
-        </GridColumn>
-        {!currentTab.hideButtons && (
+        {item.SearchText && (
+          <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
+            <Input
+              style={{ width: 340 }}
+              icon='search'
+              value={filterValue}
+              placeholder={formatMessage({
+                id: item.SearchText,
+                defaultMessage: 'Select Credit Card'
+              })}
+              onChange={this.handleFilterChange}
+            />
+          </GridColumn>
+        )}
+        {item.BtnAddText && (
           <GridColumn widescreen={4} computer={4} tablet={5}>
             <Button fluid primary onClick={() => openPopup()} data-test='operations_open_popup_btn'>
-              <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
+              <FormattedMessage id={item.BtnAddText}>{text => text}</FormattedMessage>
             </Button>
           </GridColumn>
         )}
@@ -93,7 +113,7 @@ class TablesHandlers extends Component {
     return (
       <PositionHeaderSettings>
         <Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
-          <GridRow>{!this.props.currentTab.hideHandler && this.renderHandler()}</GridRow>
+          <CustomGridRow>{this.renderHandler()}</CustomGridRow>
         </Grid>
       </PositionHeaderSettings>
     )

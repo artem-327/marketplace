@@ -9,7 +9,6 @@ import {
   postNewWarehouseRequest,
   getProvinces,
   getAddressSearch,
-  removeEmpty,
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
@@ -32,6 +31,7 @@ import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/const
 import DocumentTab from '~/components/document-tab'
 import { AlertCircle } from 'react-feather'
 import { Required } from '~/components/constants/layout'
+import { removeEmpty } from '~/utils/functions'
 
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
@@ -172,6 +172,7 @@ class WarehouseSidebar extends React.Component {
       taxId: values.taxId,
       warehouse: currentTab.type === 'warehouses' ? true : false
     }
+    removeEmpty(requestData)
 
     try {
       if (popupValues) {
@@ -555,7 +556,6 @@ const mapDispatchToProps = {
   closeSidebar,
   getProvinces,
   getAddressSearch,
-  removeEmpty,
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,

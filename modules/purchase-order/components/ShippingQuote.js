@@ -100,7 +100,7 @@ export default class ShippingQuote extends Component {
       )
     }
 
-    if (!getSafe(() => shippingQuotes.length, false)) {
+    if (!getSafe(() => shippingQuotes.rates.length, false)) {
       return (
         <RelaxedRowPaddingTop>
           <GridColumn computer={16}>
@@ -150,7 +150,7 @@ export default class ShippingQuote extends Component {
         </RelaxedColumn>
 
         <InnerGrid padded verticalAlign='middle'>
-          {getSafe(() => shippingQuotes, []).map((el, i) => this.renderItem(el, i))}
+          {getSafe(() => shippingQuotes.rates, []).map((el, i) => this.renderItem(el, i))}
         </InnerGrid>
       </>
     )

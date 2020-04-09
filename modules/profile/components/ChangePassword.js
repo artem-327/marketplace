@@ -18,14 +18,18 @@ const formValidation = () =>
   Yup.lazy(values =>
     Yup.object().shape({
       oldPassword: Yup.string()
-        .trim()
+        .test('trailing-spaces', errorMessages.trailingSpaces, val => !val || (val && val.trim() === val))
         .min(3, errorMessages.minLength(3))
         .required(errorMessages.requiredMessage),
       newPassword: passwordValidation(),
-      newPasswordRetype: Yup.string(errorMessages.passwordsMustMatch).oneOf(
-        [values.newPassword],
-        errorMessages.passwordsMustMatch
-      )
+      newPasswordRetype: Yup
+        .string(errorMessages.passwordsMustMatch)
+        .test('trailing-spaces', errorMessages.trailingSpaces, val => !val || (val && val.trim() === val))
+        .required(errorMessages.requiredMessage)
+        .oneOf(
+          [values.newPassword],
+          errorMessages.passwordsMustMatch
+        )
     })
   )
 
@@ -45,6 +49,7 @@ class ChangePassword extends Component {
           <Form
             enableReinitialize
             initialValues={initialFormValues}
+            validateOnChange={true}
             validationSchema={formValidation}
             onReset={closeChangePasswordPopup}
             onSubmit={async (values, actions) => {

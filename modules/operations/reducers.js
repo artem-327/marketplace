@@ -7,11 +7,11 @@ export const initialState = {
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
   filterValue: '',
-  loading: false,
+  loading: false
 }
 
 export default function reducers(state = initialState, action) {
-  const {payload} = action
+  const { payload } = action
 
   switch (action.type) {
     case AT.OPERATIONS_OPEN_POPUP: {
@@ -47,7 +47,10 @@ export default function reducers(state = initialState, action) {
 
     case AT.OPERATIONS_UPDATE_SHIPPING_QUOTE_PENDING:
     case AT.OPERATIONS_CREATE_SHIPPING_QUOTE_PENDING:
-    case AT.OPERATIONS_DELETE_SHIPPING_QUOTE_PENDING: {
+    case AT.OPERATIONS_DELETE_SHIPPING_QUOTE_PENDING:
+    case AT.OPERATIONS_CREATE_TAG_PENDING:
+    case AT.OPERATIONS_UPDATE_TAG_PENDING:
+    case AT.OPERATIONS_DELETE_TAG_PENDING: {
       return {
         ...state,
         loading: true
@@ -59,9 +62,26 @@ export default function reducers(state = initialState, action) {
     case AT.OPERATIONS_DELETE_SHIPPING_QUOTE_FULFILLED:
     case AT.OPERATIONS_DELETE_SHIPPING_QUOTE_REJECTED:
     case AT.OPERATIONS_CREATE_SHIPPING_QUOTE_FULFILLED:
-    case AT.OPERATIONS_CREATE_SHIPPING_QUOTE_REJECTED: {
+    case AT.OPERATIONS_CREATE_SHIPPING_QUOTE_REJECTED:
+    case AT.OPERATIONS_CREATE_TAG_FULFILLED:
+    case AT.OPERATIONS_UPDATE_TAG_FULFILLED:
+    case AT.OPERATIONS_DELETE_TAG_FULFILLED:
+    case AT.OPERATIONS_CREATE_TAG_REJECTED:
+    case AT.OPERATIONS_UPDATE_TAG_REJECTED:
+    case AT.OPERATIONS_DELETE_TAG_REJECTED: {
       return {
         ...state,
+        loading: false
+      }
+    }
+
+    case AT.OPERATIONS_HANDLE_ACTIVE_TAB: {
+      return {
+        ...state,
+        currentTab: action.payload.tab,
+        popupValues: null,
+        isOpenPopup: false,
+        filterValue: '',
         loading: false
       }
     }

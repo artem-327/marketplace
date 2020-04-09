@@ -318,12 +318,15 @@ class MyInventory extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
+
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
       datagrid.setFilter(datagridFilter)
     }
   }
 
   getRows = rows => {
+    const { datagrid } = this.props
+
     let title = ''
 
     return rows.map((r, rIndex) => {
@@ -413,7 +416,15 @@ class MyInventory extends Component {
                   }
                   onChange={(e, data) => {
                     e.preventDefault()
-                    this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
+                    try {
+                      this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
+                      datagrid.updateRow(r.id, () => ({
+                        ...r.rawData,
+                        cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
+                      }))
+                    } catch (error) {
+                      console.error(error)
+                    }
                   }}
                 />
               }
@@ -506,6 +517,7 @@ class MyInventory extends Component {
       tutorialCompleted
     } = this.props
     const { columns, selectedRows, clientMessage, request, filterValue } = this.state
+    
     return (
       <>
         <Modal size='small' open={this.state.open} onClose={() => this.setState({ open: false })} closeIcon>
@@ -571,8 +583,7 @@ class MyInventory extends Component {
                       <Button
                         size='large'
                         primary
-                        onClick={() =>
-                          this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
+                        onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
                         data-test='my_inventory_add_btn'>
                         <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
                           {text => text}
@@ -584,8 +595,7 @@ class MyInventory extends Component {
                         size='large'
                         primary
                         onClick={() => openImportPopup()}
-                        data-test='my_inventory_import_btn'
-                      >
+                        data-test='my_inventory_import_btn'>
                         {formatMessage({
                           id: 'myInventory.import',
                           defaultMessage: 'Import'

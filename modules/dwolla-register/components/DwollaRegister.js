@@ -27,6 +27,7 @@ import { ControllerForm } from '~/components/custom-formik'
 import { postNewDwollaAccount } from '~/modules/admin/api'
 import { getStringISODate } from '~/components/date-format'
 import { Required } from '~/components/constants/layout'
+import { removeEmpty } from '~/utils/functions'
 
 const Wrapper = styled.div`
   background-color: rgba(208, 224, 240, 0.3);
@@ -98,6 +99,7 @@ class DwollaRegister extends Component {
         .typeError(requiredMessage)
         .required(requiredMessage),
       email: Yup.string(invalidEmail)
+        .trim()
         .email(invalidEmail)
         .required(requiredMessage)
     }
@@ -854,6 +856,7 @@ class DwollaRegister extends Component {
               delete payload.beneficialOwnersNotApplicable
               try {
                 if (payload.beneficialOwners.length === 0) delete payload.beneficialOwners
+                removeEmpty(payload)
                 if (companyId) await postNewDwollaAccount(payload, companyId)
                 else await postDwollaAccount(payload)
                 this.setState({ step: this.state.step + 1 })

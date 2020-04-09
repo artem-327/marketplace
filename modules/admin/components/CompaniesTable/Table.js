@@ -56,6 +56,7 @@ class CompaniesTable extends Component {
           {...datagrid.tableProps}
           tableName='admin_companies'
           columns={columns}
+          defaultSorting={{ columnName: 'displayName', direction: 'asc', sortPath: 'Company.name' }}
           rows={this.getRows(rows)}
           rowActions={[
             {

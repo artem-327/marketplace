@@ -16,6 +16,20 @@ const PositionHeaderSettings = styled.div`
   z-index: 602;
 `
 
+const CustomMenuItemLeft = styled(Menu.Item)`
+  margin-left: 0px !important;
+  padding-left: 0px !important;
+`
+
+const CustomMenuItemRight = styled(Menu.Item)`
+  margin-right: 0px !important;
+  padding-right: 0px !important;
+`
+
+const CustomGrid = styled(Grid)`
+  margin-top: 10px !important;
+`
+
 class TablesHandlers extends Component {
   constructor(props) {
     super(props)
@@ -69,8 +83,8 @@ class TablesHandlers extends Component {
 
     return (
       <PositionHeaderSettings>
-        <Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
-          <Menu.Item position='left' data-test='admin_table_search_inp'>
+        <CustomGrid as={Menu} secondary verticalAlign='middle' className='page-part'>
+          <CustomMenuItemLeft position='left' data-test='admin_table_search_inp'>
             <Input
               style={{ width: 340 }}
               icon='search'
@@ -81,23 +95,23 @@ class TablesHandlers extends Component {
               }}
               value={this.state.filterValue}
             />
-          </Menu.Item>
-          <Menu.Item position='right'>
+          </CustomMenuItemLeft>
+          <CustomMenuItemRight position='right'>
             <Button size='large' data-test='admin_table_add_btn' primary onClick={() => openPopup()}>
               <FormattedMessage id='global.add' defaultMessage='Add'>
                 {text => `${text} `}
               </FormattedMessage>
               {config[currentTab.name].addEditText}
             </Button>
-          </Menu.Item>
+          </CustomMenuItemRight>
           {currentTab.name === 'Product Catalog' || currentTab.name === 'Companies' ? (
-            <Menu.Item>
+            <CustomMenuItemRight>
               <Button size='large' primary onClick={() => openImportPopup()} data-test='admin_import_btn'>
                 {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}
               </Button>
-            </Menu.Item>
+            </CustomMenuItemRight>
           ) : null}
-        </Grid>
+        </CustomGrid>
       </PositionHeaderSettings>
     )
   }

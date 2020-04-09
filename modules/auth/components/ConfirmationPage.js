@@ -21,6 +21,7 @@ import {
 import { getSafe } from '~/utils/functions'
 import { AddressForm } from '~/modules/address-form'
 import { PhoneNumber } from '~/modules/phoneNumber'
+import { removeEmpty } from '~/utils/functions'
 
 const ConfirmSegment = styled(Segment.Group)`
   position: relative;
@@ -119,6 +120,7 @@ const validationScheme = val.object().shape({
     contactName: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
     contactEmail: val
       .string(errorMessages.invalidEmail)
+      .trim()
       .email(errorMessages.invalidEmail)
       .required(errorMessages.requiredMessage),
     contactPhone: phoneValidation().required(errorMessages.requiredMessage)
@@ -129,6 +131,7 @@ const validationScheme = val.object().shape({
     phone: phoneValidation(),
     email: val
       .string(errorMessages.invalidEmail)
+      .trim()
       .email(errorMessages.invalidEmail)
       .required(errorMessages.requiredMessage)
   }),
@@ -177,6 +180,7 @@ class ConfirmationPage extends Component {
               }
             }
           }
+          removeEmpty(payload)
 
           try {
             await reviewCompany(payload)

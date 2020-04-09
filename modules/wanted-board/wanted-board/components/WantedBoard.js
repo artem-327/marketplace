@@ -4,6 +4,7 @@ import { AlertTriangle } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { withRouter } from 'next/router'
+import { debounce } from 'lodash'
 import { ShippingQuotes } from '~/modules/shipping'
 import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
@@ -232,11 +233,11 @@ class WantedBoard extends Component {
     //}
   }
 
-  handleFiltersValue = value => {
+  handleFiltersValue = debounce(value => {
     const { handleFiltersValue } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    if (Datagrid.isReady()) Datagrid.setSearchPattern(value)
     else handleFiltersValue(value)
-  }
+  }, 300)
 
   handleFilterChange = (e, { value }) => {
     this.setState({ filterValue: value })

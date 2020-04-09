@@ -8,7 +8,7 @@ export default {
 
     return api.post(
       `/prodex/api/attachments?type=${docType}&isTemporary=true` +
-        (expirationDate ? '&expirationDate=' + expirationDate : ''),
+      (expirationDate ? '&expirationDate=' + expirationDate : ''),
       formData,
       {
         headers: {
@@ -108,16 +108,12 @@ export default {
       .post(`/prodex/api/imports/product-offers/csv-import?temporaryFileId=${id}`, body)
       .then(response => response.data)
   },
-  uploadCSVFile: body => {
+  uploadCSVFile: file => {
     const formData = new FormData()
-    formData.append('file', new Blob([body], { type: 'text/plain' }))
+    formData.append('file', new Blob([file], { type: 'text/csv' }), file.name)
 
     return api
-      .post('/prodex/api/imports/temporary-files', formData, {
-        headers: {
-          'Content-Type': 'text/plain'
-        }
-      })
+      .post('/prodex/api/imports/temporary-files', formData)
       .then(response => response.data)
   },
   getCSVMapEchoProduct: () => api.get('/prodex/api/imports/echo-products/import-maps').then(response => response.data),

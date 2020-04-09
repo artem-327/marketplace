@@ -83,6 +83,10 @@ export class DatagridProvider extends Component {
         ? 0
         : datagridParams.pageNumber
 
+    if (datagridParams.sortDirection) {
+      datagridParams.sortDirection = datagridParams.sortDirection.toUpperCase()
+    }
+
     try {
       const response = await api.request({
         url: this.apiConfig && this.apiConfig.url ? this.apiConfig.url : apiConfig.url,
@@ -90,8 +94,7 @@ export class DatagridProvider extends Component {
         params: query,
         data: {
           ...datagridParams,
-          pageNumber,
-          sortDirection: datagridParams.sortDirection ? datagridParams.sortDirection.toUpperCase() : null
+          pageNumber
         }
       })
       if (
@@ -222,6 +225,16 @@ export class DatagridProvider extends Component {
     )
   }
 
+  setSearchPattern = value => {
+    const {
+      apiConfig: { searchViaPattern, params }
+    } = this.props
+
+    let newApiConfig =
+      typeof searchViaPattern !== 'function' ? this.apiConfig.searchViaPattern(value) : searchViaPattern(value)
+    this.setApiConfig(newApiConfig)
+  }
+
   setLoading = loading => {
     this.setState({
       loading
@@ -262,6 +275,7 @@ export class DatagridProvider extends Component {
           loadNextPage: this.loadNextPageSafe,
           clear: this.clear,
           setApiConfig: this.setApiConfig,
+          setSearchPattern: this.setSearchPattern,
 
           tableProps: {
             rows,

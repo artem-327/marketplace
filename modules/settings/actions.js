@@ -801,28 +801,28 @@ export function postImportCompaniesCSV(payload, id) {
 
 export function getCSVMapCompanies() {
   return {
-    type: AT.GET_CSV_MAP_COMAPNIES,
+    type: AT.GET_CSV_MAP_COMPANIES,
     payload: api.getCSVMapCompanies()
   }
 }
 
 export function postCSVMapCompanies(payload) {
   return {
-    type: AT.POST_CSV_MAP_COMAPNIES,
+    type: AT.POST_CSV_MAP_COMPANIES,
     payload: api.postCSVMapCompanies(payload)
   }
 }
 
 export function putCSVMapCompanies(mapId, data) {
   return {
-    type: AT.PUT_CSV_MAP_COMAPNIES,
+    type: AT.PUT_CSV_MAP_COMPANIES,
     payload: api.putCSVMapCompanies(mapId, data)
   }
 }
 
 export function deleteCSVMapCompanies(mapId) {
   return {
-    type: AT.DELETE_CSV_MAP_COMAPNIES,
+    type: AT.DELETE_CSV_MAP_COMPANIES,
     meta: mapId,
     payload: api.deleteCSVMapCompanies(mapId)
   }
@@ -1057,7 +1057,10 @@ export function removeAttachment(aId) {
 
 export const addTab = payload => ({ type: AT.ADD_TAB, payload })
 
-export const tabChanged = tab => ({ type: AT.TAB_CHANGED, payload: tab })
+export const tabChanged = tab => {
+  Datagrid && Datagrid.clear()
+  return { type: AT.TAB_CHANGED, payload: tab }
+}
 
 export const resendWelcomeEmail = userId => ({
   type: AT.SETTINGS_RESEND_WELCOME_EMAIL,

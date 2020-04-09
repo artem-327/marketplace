@@ -121,7 +121,7 @@ class AddNewPopupCasProducts extends React.Component {
       //   values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
       //   values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''
       let mailingBranchRequired = getSafe(() => values.mailingBranch.deliveryAddress, false)
-        ? deepSearch(values.mailingBranch.deliveryAddress, val => val.trim() !== '')
+        ? deepSearch(values.mailingBranch.deliveryAddress, val => val !== '')
         : ''
 
       let minLength = errorMessages.minLength(2)
@@ -327,7 +327,7 @@ class AddNewPopupCasProducts extends React.Component {
                 businessType: getSafe(() => values.businessType.id, null),
                 cin: getSafe(() => values.cin, ''),
                 dba: getSafe(() => values.dba, ''),
-                dunsNumber: getSafe(() => values.dunsNumber, null),
+                dunsNumber: getSafe(() => parseInt(values.dunsNumber), null),
                 nacdMember: getSafe(() => values.nacdMember, false),
                 name: getSafe(() => values.name, ''),
                 phone: getSafe(() => values.phone, ''),
@@ -347,19 +347,33 @@ class AddNewPopupCasProducts extends React.Component {
                 Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: false }))
               }
             } else {
-              if (!values.deliveryAddress || !deepSearch(values.mailingBranch.deliveryAddress, val => val !== ''))
+              if (
+                !values.primaryBranch.deliveryAddress ||
+                !deepSearch(values.mailingBranch.deliveryAddress, val => val !== '')
+              ) {
                 delete values['mailingBranch']
+              } else {
+                if (values.mailingBranch.deliveryAddress.contactEmail !== '')
+                  values.mailingBranch.deliveryAddress.contactEmail =
+                    values.mailingBranch.deliveryAddress.contactEmail.trim()
+              }
 
               let branches = ['primaryBranch', 'mailingBranch']
 
               if (values.businessType) values.businessType = values.businessType.id
 
               let payload = cloneDeep(values)
+              payload.primaryUser.email = payload.primaryUser.email.trim()
+              payload.primaryBranch.deliveryAddress.contactEmail =
+                payload.primaryBranch.deliveryAddress.contactEmail.trim()
 
               branches.forEach(branch => {
                 let country = getSafe(() => JSON.parse(payload[branch].deliveryAddress.address.country).countryId)
                 if (country) payload[branch].deliveryAddress.address.country = country
               })
+
+              if (payload.dunsNumber) payload.dunsNumber = getSafe(() => parseInt(values.dunsNumber), null)
+              if (!payload.businessType) delete payload.businessType
 
               if (this.state.companyLogo) {
                 let reader = new FileReader()
@@ -390,7 +404,7 @@ class AddNewPopupCasProducts extends React.Component {
           let { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = props
           let colorIcon = accordionActive.companyAdmin && 'blue'
           let mailingBranchRequired = getSafe(() => values.mailingBranch.deliveryAddress, false)
-            ? deepSearch(values.mailingBranch.deliveryAddress, val => val.trim() !== '')
+            ? deepSearch(values.mailingBranch.deliveryAddress, val => val !== '')
             : ''
           return (
             <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
@@ -546,11 +560,10 @@ class AddNewPopupCasProducts extends React.Component {
                             />
                             <FormGroup widths='equal'>
                               <Checkbox
-                                label={
-                                  formatMessage({
-                                    id: 'admin.createWarehouseWith',
-                                    defaultMessage: 'Create Warehouse with same parameters'
-                                  })}
+                                label={formatMessage({
+                                  id: 'admin.createWarehouseWith',
+                                  defaultMessage: 'Create Warehouse with same parameters'
+                                })}
                                 name='primaryBranch.warehouse'
                                 inputProps={{ 'data-test': 'admin_popup_company_primaryBranch_warehouse_chckb' }}
                               />
@@ -624,11 +637,10 @@ class AddNewPopupCasProducts extends React.Component {
                             />
                             <FormGroup widths='equal'>
                               <Checkbox
-                                label={
-                                  formatMessage({
-                                    id: 'admin.createWarehouseWith',
-                                    defaultMessage: 'Create Warehouse with same parameters'
-                                  })}
+                                label={formatMessage({
+                                  id: 'admin.createWarehouseWith',
+                                  defaultMessage: 'Create Warehouse with same parameters'
+                                })}
                                 name='mailingBranch.warehouse'
                                 inputProps={{ 'data-test': 'admin_popup_company_mailingBranch_warehouse_chckb' }}
                               />

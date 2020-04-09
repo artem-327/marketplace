@@ -147,18 +147,22 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
         })
       }
       if (isGrouped) {
+        const response = await api.updateGroupedProductOffer(poId, {
+          pkgAvailable: paramsCleaned.pkgAvailable,
+          lotNumber: paramsCleaned.lotNumber
+        })
         await dispatch({
           type: AT.INVENTORY_EDIT_GROUPED_PRODUCT_OFFER,
-          payload: api.updateGroupedProductOffer(poId, {
-            pkgAvailable: paramsCleaned.pkgAvailable,
-            lotNumber: paramsCleaned.lotNumber
-          })
+          payload: response
         })
+        return response
       } else {
+        const response = await api.updateProductOffer(poId, paramsCleaned)
         await dispatch({
           type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
-          payload: api.updateProductOffer(poId, paramsCleaned)
+          payload: response
         })
+        return response
       }
     } else {
       const newProd = await dispatch({

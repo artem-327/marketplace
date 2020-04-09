@@ -17,6 +17,7 @@ import { Holds } from '~/modules/marketplace/holds'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { Datagrid } from '~/modules/datagrid'
 import { debounce } from 'lodash'
+import { ArrayToFirstItem } from '~/components/formatted-messages/'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -69,7 +70,7 @@ class Marketplace extends Component {
       {
         name: 'intProductName',
         title: (
-          <FormattedMessage id='global.intProductName' defaultMessage='Internal Product Name'>
+          <FormattedMessage id='global.productName' defaultMessage='Product Name'>
             {text => text}
           </FormattedMessage>
         ),
@@ -178,9 +179,9 @@ class Marketplace extends Component {
         width: 160
       },
       {
-        name: 'nacdMember',
+        name: 'association',
         title: (
-          <FormattedMessage id='marketplace.nacdMember' defaultMessage='NACD Member'>
+          <FormattedMessage id='marketplace.association' defaultMessage='Association'>
             {text => text}
           </FormattedMessage>
         ),
@@ -248,7 +249,8 @@ class Marketplace extends Component {
           {`${r.packagingSize} ${r.packagingUnit} `}
           <CapitalizedText>{r.packagingType}</CapitalizedText>{' '}
         </>
-      )
+      ),
+      association: (<ArrayToFirstItem values={r.association} rowItems={1} />)
     }))
   }
 
@@ -373,47 +375,47 @@ class Marketplace extends Component {
               />
             </Grid.Column>
             <Grid.Column width={12}>
-        <Menu secondary className='page-part'>
-          <Menu.Menu position='right'>
-            <Menu.Item>
-              <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
-            </Menu.Item>
-            <Popup
-              wide='very'
-              data-test='array_to_multiple_list'
-              content={
-                <FormattedMessage
-                  id='marketplace.shippingQuoteTooltip'
-                  defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
-                />
-              }
-              disabled={selectedRows.length !== 0}
-              position='bottom right'
-              trigger={
-                <DivButtonWithToolTip
-                  data-tooltip={
-                    this.isSelectedMultipleEcho(rows, selectedRows)
-                      ? formatMessage({
-                          id: 'marketplace.multipleEchoProduct',
-                          defaultMessage: 'Multiple ProductOffers can not be calculate.'
-                        })
-                      : null
-                  }
-                  data-position='bottom right'>
-                  <Button
-                    disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
-                    primary
-                    onClick={() => this.setState({ open: true })}
-                    data-test='marketplace_shipping_quote_btn'>
-                    <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                </DivButtonWithToolTip>
-              }
-            />
-          </Menu.Menu>
-        </Menu>
+              <Menu secondary className='page-part'>
+                <Menu.Menu position='right'>
+                  <Menu.Item>
+                    <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
+                  </Menu.Item>
+                  <Popup
+                    wide='very'
+                    data-test='array_to_multiple_list'
+                    content={
+                      <FormattedMessage
+                        id='marketplace.shippingQuoteTooltip'
+                        defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
+                      />
+                    }
+                    disabled={selectedRows.length !== 0}
+                    position='bottom right'
+                    trigger={
+                      <DivButtonWithToolTip
+                        data-tooltip={
+                          this.isSelectedMultipleEcho(rows, selectedRows)
+                            ? formatMessage({
+                                id: 'marketplace.multipleEchoProduct',
+                                defaultMessage: 'Multiple ProductOffers can not be calculate.'
+                              })
+                            : null
+                        }
+                        data-position='bottom right'>
+                        <Button
+                          disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
+                          primary
+                          onClick={() => this.setState({ open: true })}
+                          data-test='marketplace_shipping_quote_btn'>
+                          <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
+                            {text => text}
+                          </FormattedMessage>
+                        </Button>
+                      </DivButtonWithToolTip>
+                    }
+                  />
+                </Menu.Menu>
+              </Menu>
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -434,6 +436,7 @@ class Marketplace extends Component {
             rowSelection
             showSelectionColumn
             groupBy={['productNumber']}
+            shrinkGroups={true}
             // sameGroupSelectionOnly
             getChildGroups={rows =>
               _(rows)
@@ -455,13 +458,12 @@ class Marketplace extends Component {
               )
             }}
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
-            /* COMMENTED #30916
             onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()
               if (targetTag !== 'input' && targetTag !== 'label') {
                 this.tableRowClicked(row.id)
               }
-            }}*/
+            }}
             data-test='marketplace_row_action'
             rowActions={rowActions}
           />

@@ -17,7 +17,8 @@ import {
   treeDataChanged,
   openModalCompanyInfo,
   closeModalCompanyInfo,
-  getCompanyInfo
+  getCompanyInfo,
+  getAssociations
 } from './actions'
 
 const initialState = {
@@ -26,6 +27,8 @@ const initialState = {
     pricingTiers: [{ price: 0 }],
     price: {}
   },
+  associations: [],
+  associationsFetching: false,
   open: false,
   loading: false,
   data: null,
@@ -49,6 +52,8 @@ export default typeToReducer(
       return {
         ...initialState,
         templates: state.templates,
+        associations: state.associations,
+        associationsFetching: state.associationsFetching,
         open: true,
         loading: true
       }
@@ -229,7 +234,27 @@ export default typeToReducer(
     [getCompanyInfo.rejected]: state => ({
       ...state,
       isLoadingModalCompanyInfo: false
-    })
+    }),
+    [getAssociations.pending]: state => {
+      return {
+        ...state,
+        associationsFetching: true
+      }
+    },
+    [getAssociations.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        associations: payload.map((a) => a.name),
+        associationsFetching: false
+      }
+    },
+    [getAssociations.rejected]: state => {
+      return {
+        ...state,
+        associationsFetching: false
+      }
+    }
   },
+
   initialState
 )
