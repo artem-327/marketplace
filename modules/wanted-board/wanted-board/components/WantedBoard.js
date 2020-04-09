@@ -123,6 +123,24 @@ class WantedBoard extends Component {
           </FormattedMessage>
         ),
         width: 120
+      },
+      {
+        name: 'ownerBranch',
+        title: (
+          <FormattedMessage id='wantedBoard.requestedBy' defaultMessage='Requested By'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120
+      },
+      {
+        name: 'location',
+        title: (
+          <FormattedMessage id='wantedBoard.location' defaultMessage='Location'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120
       }
     ],
     columnsChemical: [
@@ -207,6 +225,24 @@ class WantedBoard extends Component {
         name: 'neededBy',
         title: (
           <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120
+      },
+      {
+        name: 'ownerBranch',
+        title: (
+          <FormattedMessage id='wantedBoard.requestedBy' defaultMessage='Requested By'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120
+      },
+      {
+        name: 'location',
+        title: (
+          <FormattedMessage id='wantedBoard.location' defaultMessage='Location'>
             {text => text}
           </FormattedMessage>
         ),

@@ -74,7 +74,9 @@ function mapStateToProps(store, { datagrid }) {
           moment(row.neededAt).format(getLocaleDateFormat())
         ) : (
           <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
-        )
+        ),
+        ownerBranch: getSafe(() => row.ownerBranch.deliveryAddress.cfName, ''),
+        location: getSafe(() => row.ownerBranch.deliveryAddress.address.country.name, '')
       }
     })
   }

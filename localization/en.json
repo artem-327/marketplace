@@ -2191,5 +2191,7 @@
   "wantedBoard.submit": "Submit",
   "wantedBoard.purchased": "Purchased",
   "wantedBoard.rejected": "Rejected",
-  "wantedBoard.submitOfferHeader": "SUBMIT OFFER"
+  "wantedBoard.submitOfferHeader": "SUBMIT OFFER",
+  "wantedBoard.ownerBranch": "Requested By",
+  "wantedBoard.location": "Location"
 }
