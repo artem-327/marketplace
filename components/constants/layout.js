@@ -988,27 +988,28 @@ export const Or = styled.span`
 `
 
 export const CustomDiv = styled.div`
-  width: 65vw;
-  margin-right: 32px;
+  width: 100vw;
   color: #848893;
 `
 
 export const Rectangle = styled.div`
+  background: #ff9d42 !important;
   text-align: center;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-  border: solid 1px #dee2e6;
   background-color: #ffffff;
-  padding: 0px 20px 0px 20px;
-  height: 22px;
+  height: 30px;
+  color: #ffffff;
+  text-align: center;
+  font-size: 14px;
+  display: flex;
+  align-items: center !important;
 `
 
-export const CustomSpan = styled.span`
-  text-align: center;
-  font-size: 12px;
+export const DivInRectangle = styled.div`
+  text-align: center !important;
 `
 
 export const CustomSpanReturn = styled.span`
+  text-align: center;
   color: #4183c4;
   cursor: pointer;
 `

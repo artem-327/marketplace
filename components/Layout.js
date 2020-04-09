@@ -16,11 +16,11 @@ import {
   MainTitleWithMessage,
   CustomDiv,
   Rectangle,
-  CustomSpan,
+  DivInRectangle,
   CustomSpanReturn
 } from '~/components/constants/layout'
 import { Container, Menu, Dropdown, Icon, Image, FormField } from 'semantic-ui-react'
-import { Sidebar } from 'react-feather'
+import { Sidebar, Minimize2 } from 'react-feather'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/logo-echosystem.png'
 import LogoSmall from '~/assets/images/nav/logo4x.png'
@@ -56,6 +56,11 @@ import ChatWidget from '~/modules/chatWidget/components/ChatWidgetContainer'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import ErrorComponent from '~/components/error'
+
+export const IconMinimize2 = styled(Minimize2)`
+  text-align: center;
+  padding-right: 10px;
+`
 
 const clientCompanyRoutes = {
   restrictedRoutes: [
@@ -199,10 +204,11 @@ class Layout extends Component {
             {takeover ? (
               <CustomDiv>
                 <Rectangle>
-                  <CustomSpan>
-                    <span>You are in take-over mode. Company: {companyName}. </span>
+                  <IconMinimize2 size='28' />
+                  <div>
+                    <span>You are working on take-over mode. Company: {companyName}. </span>
                     {<CustomSpanReturn onClick={() => takeOverCompanyFinish()}>Return to admin</CustomSpanReturn>}
-                  </CustomSpan>
+                  </div>
                 </Rectangle>
                 <MainTitleWithMessage as='h1'>{title}</MainTitleWithMessage>
               </CustomDiv>
