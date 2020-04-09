@@ -35,6 +35,7 @@ import { tabsMarketPlace, echoProductGrouping, dropdownOptions, regulatoryFilter
 import _ from 'lodash'
 import {yesNoOptions} from "../../../../../modules/company-product-info/constants"
 import { FlexTabs } from "~/modules/inventory/constants/layout"
+import { ChevronDown } from 'react-feather'
 
 const FlexContent = styled(Segment)`
   flex: 1;
@@ -43,12 +44,49 @@ const FlexContent = styled(Segment)`
 `
 
 const RelaxedSegment = styled(Segment)`
-  padding-top: 0px;
+  height: 60px;
   margin: 0 !important;
+  padding: 26px 50px !important;
+  box-shadow: inset 0 1px 0 0 #dee2e6 !important;
   
-  .row {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+  .grid {
+  
+    .row {
+      padding: 0 !important;
+      background: transparent !important;
+      
+      .column {
+        float: right;
+        width: auto !important;
+        padding: 0 10px !important;
+        
+        button.button {
+          height: 40px;
+          margin: 0;
+          padding: 0 25px;
+          vertical-align: top;
+          line-height: 40px;
+          
+          &.primary {
+            background: #2599d5 !important;
+            
+            &:hover {
+              background: #188ec9 !important;
+            }
+          }
+          
+          &.cancel {
+            border: solid 1px #dee2e6;
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+          }
+          
+          + button.button {
+            margin-left: 10px;
+          }
+        }
+      }
+    }
   }
 `
 
@@ -64,13 +102,16 @@ const CustomList = styled(List)`
 `
 
 const ListHeader = styled(List.Header)`
-  font-size: 1rem !important;
-  padding-bottom: 15px;
+  padding-bottom: 7px;
+  font-size: 14px !important;
+  line-height: 18px;
 `
 const CustomSpanShowMore = styled.span`
-  font-size: medium;
   float: right;
+  font-size: 14px;
+  font-size: 500;
   color: #2599d5;
+  line-height: 17px;
   cursor: pointer;
 `
 
@@ -88,8 +129,11 @@ const CustomGrid = styled(Grid)`
       > .column:first-child {
         padding: 0 0.714285714em 0 0;
       }
-       > .column:last-child {
+      > .column:last-child {
         padding: 0 0 0 0.714285714em;
+      }
+      > .column:first-child:last-child {
+        padding: 0;
       }
       > .column label {
         padding-bottom: 0.5em;
@@ -114,29 +158,34 @@ const CustomGrid = styled(Grid)`
       margin: 0 30px 1.428571429em 30px;
       thead tr {
         th {
-          font-size: 1em;
+          padding: 10px;
+          font-size: 14px;
           font-weight: bold;
           font-stretch: normal;
           font-style: normal;
-          line-height: 1.43;
+          line-height: 1.4285714;
           letter-spacing: normal;
           color: #848893;
           background-color: #ffffff;
         }
       }
-      tbody tr {
-        font-size: 1em;
+      tbody tr td {
+        padding: 10px;
+        font-size: 14px;
         font-weight: normal;
         font-stretch: normal;
         font-style: normal;
         letter-spacing: normal;
         color: #20273a;
+        line-height: 1.4285714;
       }
     }
     
     > .row:not(.select-row):not(.table-name) {
       box-shadow: 0 1px 0 0 #dee2e6;
-      padding: 16px 30px !important;
+      margin-left: 30px !important;
+      margin-right: 30px !important;
+      padding: 16px 0 !important;
       
       > .column:first-child {
         padding: 0 0.714285714em 0 0;
@@ -392,10 +441,7 @@ class AddCart extends Component {
             </GridRow> */}
 
             <GridRow>
-              <GridColumn computer={6}>
-                <FormattedMessage id='cart.productName' defaultMessage='Product Name:' />
-              </GridColumn>
-              <GridColumn computer={10}>{offer.companyProduct.echoProduct.name}</GridColumn>
+              <GridColumn computer={16} className='productName'>{offer.companyProduct.echoProduct.name}</GridColumn>
             </GridRow>
 
             <GridRow>
@@ -497,40 +543,19 @@ class AddCart extends Component {
                 </Header>
               </GridColumn>
             </GridRow>
-
-            <CustomList selection>
-              <ListHeader>
-                <FormattedMessage id='cart.fobPricing' defaultMessage='FOB Pricing:' />
-              </ListHeader>
-              {dropdownOptions.map((el, i) => (
-                <List.Item key={i} active={el.value.price === this.props.sidebar.pricing.price}>
-                  <List.Content>{el.text}</List.Content>
-                </List.Item>
-              ))}
-            </CustomList>
-            <GridRow columns={2}>
-              <Popup
-                trigger={
-                  <GridColumn>
-                    <FormattedMessage id='cart.minimumPackges' defaultMessage='Minimum Packages' />:
-                  </GridColumn>
-                }
-                content={<FormattedMessage id='cart.minimumOrderQQ' defaultMessage='Minimum Order Quantity' />}
-              />
-              <GridColumn>{offer.minPkg}</GridColumn>
-            </GridRow>
-
             <GridRow columns={2}>
               <GridColumn>
-                <FormattedMessage id='cart.split' defaultMessage='Split' />:
-              </GridColumn>
-              <GridColumn>{offer.splitPkg}</GridColumn>
-            </GridRow>
-            <GridRow verticalAlign='middle' columns={2}>
-              <GridColumn>
-                <FormattedMessage id='cart.packagesRequested' defaultMessage='Packages Requested:' />
+                <FormattedMessage id='cart.priceLevel' defaultMessage='Price Level'>{text => (<label>{text}</label>)}</FormattedMessage>
+                <Dropdown disabled fluid icon={<ChevronDown />} text={dropdownOptions.find(el => el.value.price === this.props.sidebar.pricing.price).text}>
+                  <Dropdown.Menu>
+                    {dropdownOptions.map((el, i) => (
+                      <Dropdown.Item key={i} text={el.text} value={i} selected={el.value.price === this.props.sidebar.pricing.price}></Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
               </GridColumn>
               <GridColumn data-test='add_cart_quantity_inp'>
+                <FormattedMessage id='cart.selectQuantity' defaultMessage='Select Quantity'>{text => (<label>{text}</label>)}</FormattedMessage>
                 <Input
                   step={offer.splitPkg}
                   error={!!error}
@@ -560,6 +585,7 @@ class AddCart extends Component {
                   <Dropdown
                     options={[{ key: 0, text: '24:00', value: this.state.expirationTime }]}
                     selection
+                    icon={<ChevronDown />}
                     disabled
                     fluid
                     value={this.state.expirationTime}
@@ -580,9 +606,9 @@ class AddCart extends Component {
 
             <GridRow>
               <GridColumn computer={6}>
-                <FormattedMessage id='cart.requestedQuantity' defaultMessage='Requested Quantity:' />
+                <FormattedMessage id='cart.totalQuantity' defaultMessage='Total Quantity' />
               </GridColumn>
-              <GridColumn computer={10}>
+              <GridColumn computer={10} textAlign='right'>
                 {(pkgAmount && pkgAmount > 0 ? (
                   <>
                     {' '}
@@ -608,9 +634,9 @@ class AddCart extends Component {
 
             <GridRow>
               <GridColumn computer={6}>
-                <FormattedMessage id='cart.price' defaultMessage='Price' />
+                <FormattedMessage id='cart.priceLb' defaultMessage='Price/LB' />
               </GridColumn>
-              <GridColumn computer={10}>
+              <GridColumn computer={10} textAlign='right'>
                 {price && !isNaN(price) ? (
                   <>
                     <FormattedNumber style='currency' currency={currencyCode} value={price} />{' '}
@@ -622,9 +648,9 @@ class AddCart extends Component {
             <Divider />
             <GridRow>
               <GridColumn computer={6}>
-                <FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />:
+                <FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />
               </GridColumn>
-              <GridColumn computer={10}>
+              <GridColumn computer={10} textAlign='right'>
                 {totalPrice ? (
                   <FormattedNumber style='currency' currency={currencyCode} value={totalPrice} />
                 ) : (
@@ -637,28 +663,22 @@ class AddCart extends Component {
 
         <RelaxedSegment basic>
           <Grid>
-            <GridRow className='action' columns={2}>
-              <GridColumn>
+            <GridRow className='action' columns={1}>
+              <GridColumn textAlign='right'>
                 <Button
-                  fluid
-                  floated='right'
                   onClick={() => {
                     this.props.sidebarChanged({ isOpen: false, isHoldRequest: false })
                     this.setState({ showMore: false })
                   }}
+                  className='cancel'
                   data-test='add_cart_cancel_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                     {text => text}
                   </FormattedMessage>
                 </Button>
-              </GridColumn>
-
-              <GridColumn>
                 {!isEdit ? (
                   <Button
                     disabled={!canProceed}
-                    fluid
-                    floated='right'
                     primary
                     onClick={this.createOrder}
                     data-test='add_cart_create_order_btn'>
@@ -669,8 +689,6 @@ class AddCart extends Component {
                 ) : (
                   <Button
                     disabled={!canProceed}
-                    fluid
-                    floated='right'
                     primary
                     onClick={this.editOrder}
                     data-test='add_cart_edit_order_btn'>
@@ -1096,13 +1114,14 @@ class AddCart extends Component {
     return (
       <>
         <GridRow className='select-row'>
-          <GridColumn computer={7}>
+          <GridColumn computer={8}>
             <label>
               <FormattedMessage id='global.casProduct' defaultMessage='CAS Product' />
             </label>
             <Dropdown
               fluid
               selection
+              icon={<ChevronDown />}
               value={this.state.casProductIndex}
               options={casProducts.map((cp, index ) => {
                 try {
@@ -1124,13 +1143,14 @@ class AddCart extends Component {
             />
           </GridColumn>
 
-          <GridColumn computer={9}>
+          <GridColumn computer={8}>
             <label>
               <FormattedMessage id='global.propsFilter' defaultMessage='Properties Filter' />
             </label>
             <Dropdown
               fluid
               selection
+              icon={<ChevronDown />}
               value={this.state.regulatoryFilter}
               options={Object.keys(regulatoryFilter).map(key => regulatoryFilter[key])}
               onChange={(_, { value }) => this.setState({ regulatoryFilter: value })}
@@ -1152,359 +1172,446 @@ class AddCart extends Component {
       case 1: {
         // Info
         return (
-          <FlexContent basic>
-            <CustomGrid verticalAlign='middle'>
-              {this.renderField({
-                id: 'global.productName',
-                defaultMessage: 'Product Name',
-                name: 'companyProduct.echoProduct.name'
-              })}
-              {this.renderElements({
-                id: 'global.mixtures',
-                defaultMessage: 'Mixtures',
-                elements: getSafe(() => offer.companyProduct.echoProduct.elements, [])
-              })}
-              {this.renderField({
-                id: 'global.manufacturer',
-                defaultMessage: 'Manufacturer',
-                name: 'companyProduct.echoProduct.manufacturer.name'
-              })}
-              {this.renderField({
-                id: 'global.manufacturerProductCode',
-                defaultMessage: 'Manufacturer Product Code',
-                name: 'companyProduct.echoProduct.mfrProductCodes'
-              })}
-              {this.renderField({
-                id: 'global.emergencyNumber',
-                defaultMessage: 'Emergency Number',
-                name: 'companyProduct.echoProduct.emergencyPhone'
-              })}
-              {/* not in response (swagger 1.0.3-COVID-19.9)
+          <>
+            <FlexContent basic>
+              <CustomGrid verticalAlign='middle'>
+                {this.renderField({
+                  id: 'global.productName',
+                  defaultMessage: 'Product Name',
+                  name: 'companyProduct.echoProduct.name'
+                })}
+                {this.renderElements({
+                  id: 'global.mixtures',
+                  defaultMessage: 'Mixtures',
+                  elements: getSafe(() => offer.companyProduct.echoProduct.elements, [])
+                })}
+                {this.renderField({
+                  id: 'global.manufacturer',
+                  defaultMessage: 'Manufacturer',
+                  name: 'companyProduct.echoProduct.manufacturer.name'
+                })}
+                {this.renderField({
+                  id: 'global.manufacturerProductCode',
+                  defaultMessage: 'Manufacturer Product Code',
+                  name: 'companyProduct.echoProduct.mfrProductCodes'
+                })}
+                {this.renderField({
+                  id: 'global.emergencyNumber',
+                  defaultMessage: 'Emergency Number',
+                  name: 'companyProduct.echoProduct.emergencyPhone'
+                })}
+                {/* not in response (swagger 1.0.3-COVID-19.9)
+                  this.renderField({
+                  id: 'global.esin',
+                  defaultMessage: 'ESIN',
+                  name: 'companyProduct.echoProduct.esin'
+                })*/
+                }
+                {this.renderField({
+                  id: 'global.recommendedUse',
+                  defaultMessage: 'Recommended Uses',
+                  name: 'companyProduct.echoProduct.recommendedUse'
+                })}
+                {/* not in response (swagger 1.0.3-COVID-19.9)
                 this.renderField({
-                id: 'global.esin',
-                defaultMessage: 'ESIN',
-                name: 'companyProduct.echoProduct.esin'
-              })*/
-              }
-              {this.renderField({
-                id: 'global.recommendedUse',
-                defaultMessage: 'Recommended Uses',
-                name: 'companyProduct.echoProduct.recommendedUse'
-              })}
-              {/* not in response (swagger 1.0.3-COVID-19.9)
-              this.renderField({
-                id: 'global.recommendedRestrictions',
-                defaultMessage: 'Recommended Restrictions',
-                name: 'companyProduct.echoProduct.recommendedRestrictions'
-              })*/
-              }
-              {this.renderField({
-                id: 'global.version',
-                defaultMessage: 'Version',
-                name: 'companyProduct.echoProduct.sdsVersionNumber'
-              })}
-              {this.renderField({
-                id: 'global.revisionDate',
-                defaultMessage: 'Revision Date',
-                name: 'companyProduct.echoProduct.sdsRevisionDate'
-              })}
-              {/* not in response (swagger 1.0.3-COVID-19.9)
-              this.renderField({
-                id: 'global.synonyms',
-                defaultMessage: 'Synonyms',
-                name: 'companyProduct.echoProduct.synonyms'
-              })*/}
-              {this.renderField({
-                id: 'global.formula',
-                defaultMessage: 'Formula',
-                name: 'companyProduct.echoProduct.molecularFormula'
-              })}
-              {this.renderField({
-                id: 'global.molecularWeight',
-                defaultMessage: 'Molecular Weight',
-                name: 'companyProduct.echoProduct.molecularWeight'
-              })}
-            </CustomGrid>
-          </FlexContent>
+                  id: 'global.recommendedRestrictions',
+                  defaultMessage: 'Recommended Restrictions',
+                  name: 'companyProduct.echoProduct.recommendedRestrictions'
+                })*/
+                }
+                {this.renderField({
+                  id: 'global.version',
+                  defaultMessage: 'Version',
+                  name: 'companyProduct.echoProduct.sdsVersionNumber'
+                })}
+                {this.renderField({
+                  id: 'global.revisionDate',
+                  defaultMessage: 'Revision Date',
+                  name: 'companyProduct.echoProduct.sdsRevisionDate'
+                })}
+                {/* not in response (swagger 1.0.3-COVID-19.9)
+                this.renderField({
+                  id: 'global.synonyms',
+                  defaultMessage: 'Synonyms',
+                  name: 'companyProduct.echoProduct.synonyms'
+                })*/}
+                {this.renderField({
+                  id: 'global.formula',
+                  defaultMessage: 'Formula',
+                  name: 'companyProduct.echoProduct.molecularFormula'
+                })}
+                {this.renderField({
+                  id: 'global.molecularWeight',
+                  defaultMessage: 'Molecular Weight',
+                  name: 'companyProduct.echoProduct.molecularWeight'
+                })}
+              </CustomGrid>
+            </FlexContent>
+
+            <RelaxedSegment basic>
+              <Grid>
+                <GridRow className='action' columns={1}>
+                  <GridColumn textAlign='right'>
+                    <Button
+                      onClick={() => {
+                        this.props.sidebarChanged({ isOpen: false, isHoldRequest: false })
+                        this.setState({ showMore: false })
+                      }}
+                      className='cancel'
+                      data-test='add_cart_close_btn'>
+                      <FormattedMessage id='global.close' defaultMessage='Close'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                  </GridColumn>
+                </GridRow>
+              </Grid>
+            </RelaxedSegment>
+          </>
         )
       }
       case 2: {
         // Properties
         const prefix = 'companyProduct.echoProduct.'
         return (
-          <FlexContent basic>
-            <CustomGrid verticalAlign='middle'>
-              {this.renderField({
-                id: 'global.physicalState',
-                defaultMessage: 'Physical State',
-                name: `${prefix}physicalState`
-              })}
-              {this.renderField({
-                id: 'global.appearance',
-                defaultMessage: 'Appearance',
-                name: `${prefix}appearance`
-              })}
-              {this.renderField({
-                id: 'global.odor',
-                defaultMessage: 'Odor',
-                name: `${prefix}odor`
-              })}
-              {this.renderField({
-                id: 'global.odorThreshold',
-                defaultMessage: 'Odor Threshold',
-                name: `${prefix}odorThreshold`
-              })}
-              {this.renderField({
-                id: 'global.ph',
-                defaultMessage: 'pH',
-                name: `${prefix}ph`
-              })}
-              {this.renderField({
-                id: 'global.meltingPointRange',
-                defaultMessage: 'Melting Point/Range',
-                name: `${prefix}meltingPointRange`
-              })}
-              {this.renderField({
-                id: 'global.boilingPointRange',
-                defaultMessage: 'Boiling Point/Range',
-                name: `${prefix}boilingPointRange`
-              })}
-              {this.renderField({
-                id: 'global.flashPoint',
-                defaultMessage: 'Flash Point',
-                name: `${prefix}flashPoint`
-              })}
-              {this.renderField({
-                id: 'global.evaporationPoint',
-                defaultMessage: 'Evaporation Point',
-                name: `${prefix}evaporationPoint`
-              })}
-              {this.renderField({
-                id: 'global.flammabilitySolidGas',
-                defaultMessage: 'Flammability (solid, gas)',
-                name: `${prefix}flammabilitySolidGas`
-              })}
-              {this.renderField({
-                id: 'global.flammabilityOrExplosiveUpper',
-                defaultMessage: 'Flammability or Explosive Upper',
-                name: `${prefix}flammabilityOrExplosiveUpper`
-              })}
-              {this.renderField({
-                id: 'global.flammabilityOrExplosiveLower',
-                defaultMessage: 'Flammability or Explosive Lower',
-                name: `${prefix}flammabilityOrExplosiveLower`
-              })}
-              {this.renderField({
-                id: 'global.vaporPressure',
-                defaultMessage: 'Vapor Pressure',
-                name: `${prefix}vaporPressure`
-              })}
-              {this.renderField({
-                id: 'global.vaporDensity',
-                defaultMessage: 'Vapor Density',
-                name: `${prefix}vaporDensity`
-              })}
-              {/* {this.renderField({ id: 'global.specificGravity', defaultMessage: 'Specific Gravity', name: `${prefix}specificGravity` })} */}
-              {this.renderField({
-                id: 'global.solubility',
-                defaultMessage: 'Solubility',
-                name: `${prefix}solubility`
-              })}
-              {this.renderField({
-                id: 'global.partitionCoefficient',
-                defaultMessage: 'Partition Coefficient',
-                name: `${prefix}partitionCoefficient`
-              })}
-              {this.renderField({
-                id: 'global.autoIgnitionTemperature',
-                defaultMessage: 'Auto Ignition Temperature',
-                name: `${prefix}autoIgnitionTemperature`
-              })}
-              {this.renderField({
-                id: 'global.decompositionTemperature',
-                defaultMessage: 'Decomposition Temperature',
-                name: `${prefix}decompositionTemperature`
-              })}
-              {this.renderField({
-                id: 'global.viscosity',
-                defaultMessage: 'Viscosity',
-                name: `${prefix}viscosity`
-              })}
-              {this.renderField({
-                id: 'global.molecularFormula',
-                defaultMessage: 'Molecular Formula',
-                name: `${prefix}molecularFormula`
-              })}
-              {this.renderField({
-                id: 'global.molecularWeight',
-                defaultMessage: 'Molecular Weight',
-                name: `${prefix}molecularWeight`
-              })}
-              {/* not in response (swagger 1.0.3-COVID-19.9)
-              this.renderField({
-                id: 'global.specificVolume',
-                defaultMessage: 'Specific Volume',
-                name: `${prefix}specificVolume`
-              })*/
-              }
-              {this.renderField({
-                id: 'global.recommendedUse',
-                defaultMessage: 'Recommended Uses',
-                name: `${prefix}recommendedUse`
-              })}
-              {this.renderField({
-                id: 'global.usesAdvisedAgainst',
-                defaultMessage: 'Uses Advised Against',
-                name: `${prefix}usesAdvisedAgainst`
-              })}
-            </CustomGrid>
-          </FlexContent>
+          <>
+            <FlexContent basic>
+              <CustomGrid verticalAlign='middle'>
+                {this.renderField({
+                  id: 'global.physicalState',
+                  defaultMessage: 'Physical State',
+                  name: `${prefix}physicalState`
+                })}
+                {this.renderField({
+                  id: 'global.appearance',
+                  defaultMessage: 'Appearance',
+                  name: `${prefix}appearance`
+                })}
+                {this.renderField({
+                  id: 'global.odor',
+                  defaultMessage: 'Odor',
+                  name: `${prefix}odor`
+                })}
+                {this.renderField({
+                  id: 'global.odorThreshold',
+                  defaultMessage: 'Odor Threshold',
+                  name: `${prefix}odorThreshold`
+                })}
+                {this.renderField({
+                  id: 'global.ph',
+                  defaultMessage: 'pH',
+                  name: `${prefix}ph`
+                })}
+                {this.renderField({
+                  id: 'global.meltingPointRange',
+                  defaultMessage: 'Melting Point/Range',
+                  name: `${prefix}meltingPointRange`
+                })}
+                {this.renderField({
+                  id: 'global.boilingPointRange',
+                  defaultMessage: 'Boiling Point/Range',
+                  name: `${prefix}boilingPointRange`
+                })}
+                {this.renderField({
+                  id: 'global.flashPoint',
+                  defaultMessage: 'Flash Point',
+                  name: `${prefix}flashPoint`
+                })}
+                {this.renderField({
+                  id: 'global.evaporationPoint',
+                  defaultMessage: 'Evaporation Point',
+                  name: `${prefix}evaporationPoint`
+                })}
+                {this.renderField({
+                  id: 'global.flammabilitySolidGas',
+                  defaultMessage: 'Flammability (solid, gas)',
+                  name: `${prefix}flammabilitySolidGas`
+                })}
+                {this.renderField({
+                  id: 'global.flammabilityOrExplosiveUpper',
+                  defaultMessage: 'Flammability or Explosive Upper',
+                  name: `${prefix}flammabilityOrExplosiveUpper`
+                })}
+                {this.renderField({
+                  id: 'global.flammabilityOrExplosiveLower',
+                  defaultMessage: 'Flammability or Explosive Lower',
+                  name: `${prefix}flammabilityOrExplosiveLower`
+                })}
+                {this.renderField({
+                  id: 'global.vaporPressure',
+                  defaultMessage: 'Vapor Pressure',
+                  name: `${prefix}vaporPressure`
+                })}
+                {this.renderField({
+                  id: 'global.vaporDensity',
+                  defaultMessage: 'Vapor Density',
+                  name: `${prefix}vaporDensity`
+                })}
+                {/* {this.renderField({ id: 'global.specificGravity', defaultMessage: 'Specific Gravity', name: `${prefix}specificGravity` })} */}
+                {this.renderField({
+                  id: 'global.solubility',
+                  defaultMessage: 'Solubility',
+                  name: `${prefix}solubility`
+                })}
+                {this.renderField({
+                  id: 'global.partitionCoefficient',
+                  defaultMessage: 'Partition Coefficient',
+                  name: `${prefix}partitionCoefficient`
+                })}
+                {this.renderField({
+                  id: 'global.autoIgnitionTemperature',
+                  defaultMessage: 'Auto Ignition Temperature',
+                  name: `${prefix}autoIgnitionTemperature`
+                })}
+                {this.renderField({
+                  id: 'global.decompositionTemperature',
+                  defaultMessage: 'Decomposition Temperature',
+                  name: `${prefix}decompositionTemperature`
+                })}
+                {this.renderField({
+                  id: 'global.viscosity',
+                  defaultMessage: 'Viscosity',
+                  name: `${prefix}viscosity`
+                })}
+                {this.renderField({
+                  id: 'global.molecularFormula',
+                  defaultMessage: 'Molecular Formula',
+                  name: `${prefix}molecularFormula`
+                })}
+                {this.renderField({
+                  id: 'global.molecularWeight',
+                  defaultMessage: 'Molecular Weight',
+                  name: `${prefix}molecularWeight`
+                })}
+                {/* not in response (swagger 1.0.3-COVID-19.9)
+                this.renderField({
+                  id: 'global.specificVolume',
+                  defaultMessage: 'Specific Volume',
+                  name: `${prefix}specificVolume`
+                })*/
+                }
+                {this.renderField({
+                  id: 'global.recommendedUse',
+                  defaultMessage: 'Recommended Uses',
+                  name: `${prefix}recommendedUse`
+                })}
+                {this.renderField({
+                  id: 'global.usesAdvisedAgainst',
+                  defaultMessage: 'Uses Advised Against',
+                  name: `${prefix}usesAdvisedAgainst`
+                })}
+              </CustomGrid>
+            </FlexContent>
+
+            <RelaxedSegment basic>
+              <Grid>
+                <GridRow className='action' columns={1}>
+                  <GridColumn textAlign='right'>
+                    <Button
+                      onClick={() => {
+                        this.props.sidebarChanged({ isOpen: false, isHoldRequest: false })
+                        this.setState({ showMore: false })
+                      }}
+                      className='cancel'
+                      data-test='add_cart_close_btn'>
+                      <FormattedMessage id='global.close' defaultMessage='Close'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                  </GridColumn>
+                </GridRow>
+              </Grid>
+            </RelaxedSegment>
+          </>
         )
       }
       case 3: {
         // Regulatory
         return (
-          <FlexContent basic>
-            <CustomGrid verticalAlign='middle'>
-              {this.renderCasProduct()}
-            </CustomGrid>
-          </FlexContent>
+          <>
+            <FlexContent basic>
+              <CustomGrid verticalAlign='middle'>
+                {this.renderCasProduct()}
+              </CustomGrid>
+            </FlexContent>
+
+            <RelaxedSegment basic>
+              <Grid>
+                <GridRow className='action' columns={1}>
+                  <GridColumn textAlign='right'>
+                    <Button
+                      onClick={() => {
+                        this.props.sidebarChanged({ isOpen: false, isHoldRequest: false })
+                        this.setState({ showMore: false })
+                      }}
+                      className='cancel'
+                      data-test='add_cart_close_btn'>
+                      <FormattedMessage id='global.close' defaultMessage='Close'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                  </GridColumn>
+                </GridRow>
+              </Grid>
+            </RelaxedSegment>
+          </>
         )
       }
       case 4: {
         // Transportation
         const prefix = 'companyProduct.echoProduct.'
         return (
-          <FlexContent basic>
-            <CustomGrid verticalAlign='middle'>
-              <GridRow className='select-row'>
-                <GridColumn computer={7}>
-                  <label>
-                    <FormattedMessage id='global.filter' defaultMessage='Filter' />
-                  </label>
-                </GridColumn>
-                <GridColumn computer={9}>
-                  <Dropdown
-                    selection
-                    fluid
-                    options={echoProductGrouping}
-                    value={this.state.echoProductGroup}
-                    onChange={(_, { value }) => this.setState({ echoProductGroup: value })}
-                  />
-                </GridColumn>
-              </GridRow>
-              {this.renderField({
-                id: 'global.unNumber',
-                defaultMessage: 'UN Number',
-                name: `${prefix}${this.state.echoProductGroup}UnNumber.unNumberCode`
-              })}
-              {this.renderField({
-                id: 'global.properShippingName',
-                defaultMessage: 'Proper Shipping Name',
-                name: `${prefix}${this.state.echoProductGroup}ProperShippingName`
-              })}
-              {this.renderField({
-                id: 'global.properTechnicalName',
-                defaultMessage: 'Proper Technical Name',
-                name: `${prefix}${this.state.echoProductGroup}ProperTechnicalName`
-              })}
-              {this.renderField({
-                id: 'global.hazardClass',
-                defaultMessage: 'Hazard Class',
-                name: `${prefix}${this.state.echoProductGroup}HazardClass.classCode`
-              })}
-              {this.renderField({
-                id: 'global.packagingGroup',
-                defaultMessage: 'Packaging Group',
-                name: `${prefix}${this.state.echoProductGroup}PackagingGroup.groupCode`
-              })}
-              {this.renderField({
-                id: 'global.reportableQuantity',
-                defaultMessage: 'Reportable Quantity',
-                name: `${prefix}${this.state.echoProductGroup}ReportableQuantity`
-              })}
-              {this.renderField({
-                id: 'global.enviromentalHazards',
-                defaultMessage: 'Enviromental Hazards',
-                name: `${prefix}${this.state.echoProductGroup}HazardLabel`  // ? (EnviromentalHazards)
-              })}
-              {/* not in response (swagger 1.0.3-COVID-19.9)
-              this.renderField({
-                id: 'global.emsNumbers',
-                defaultMessage: 'Ems Numbers',
-                name: `${prefix}${this.state.echoProductGroup}EmsNumbers`
-              })*/
-              }
-              {/* not in response (swagger 1.0.3-COVID-19.9)
-              this.renderField({
-                id: 'global.exceptions',
-                defaultMessage: 'Exceptions',
-                name: `${prefix}${this.state.echoProductGroup}Exceptions`
-              })*/}
-              {this.renderField({
-                id: 'global.specialPrecautionForUser',
-                defaultMessage: 'Special Precautions For User',
-                name: `${prefix}precautionaryStatements`  // ? (SpecialPrecautionsForUser)
-              })}
-              {this.renderField({
-                id: 'global.marinePollutant',
-                defaultMessage: 'Marine Pollutant',
-                name: `${prefix}${this.state.echoProductGroup}MarinePollutant`
-              })}
-              {this.renderField({
-                id: 'global.severeMarinePollutant',
-                defaultMessage: 'Severe Marine Pollutant',
-                name: `${prefix}${this.state.echoProductGroup}SevereMarinePollutant`
-              })}
-              {/* not in response (swagger 1.0.3-COVID-19.9)
-              this.renderField({
-                id: 'global.packagingExceptions',
-                defaultMessage: 'Packaging Exceptions',
-                name: `${prefix}${this.state.echoProductGroup}PackagingExceptions`
-              })*/
-              }
-              {/* not in response (swagger 1.0.3-COVID-19.9)
-              this.renderField({
-                id: 'global.packagingNonBulk',
-                defaultMessage: 'Packaging Non Bulk',
-                name: `${prefix}${this.state.echoProductGroup}PackagingNonBulk`
-              })*/
-              }
-              {/* not in response (swagger 1.0.3-COVID-19.9)
-              this.renderField({
-                id: 'global.packagingBulk',
-                defaultMessage: 'Packaging Bulk',
-                name: `${prefix}${this.state.echoProductGroup}PackagingBulk`
-              })*/}
-              {/* not in response (swagger 1.0.3-COVID-19.9)
-              this.renderField({
-                id: 'global.quantityLimitationsPassengerAircraftRail',
-                defaultMessage: 'Quantity Limitations Passenger Aircraft/Rail',
-                name: `${prefix}${this.state.echoProductGroup}QuantityLimitationsPassengerAircraftRail`
-              })*/
-              }
-              {/* not in response (swagger 1.0.3-COVID-19.9)
-              this.renderField({
-                id: 'global.quantityLimitationsCargoAircraftOnly',
-                defaultMessage: 'Quantity Limitations Cargo Aircraft Only',
-                name: `${prefix}${this.state.echoProductGroup}QuantityLimitationsCargoAircraftOnly`
-              })*/
-              }
-              {/* not in response (swagger 1.0.3-COVID-19.9)
-              this.renderField({
-                id: 'global.vesselStowageLocation',
-                defaultMessage: 'Vessel Stowage Location',
-                name: `${prefix}${this.state.echoProductGroup}VesselStowageLocation`
-              })*/
-              }
-              {/* not in response (swagger 1.0.3-COVID-19.9)
-              this.renderField({
-                id: 'global.vesselStowageOther',
-                defaultMessage: 'Vessel Stowage Other',
-                name: `${prefix}${this.state.echoProductGroup}VesselStowageOther`
-              })*/}
-            </CustomGrid>
-          </FlexContent>
+          <>
+            <FlexContent basic>
+              <CustomGrid verticalAlign='middle'>
+                <GridRow className='select-row'>
+                  <GridColumn computer={8}>
+                    <label>
+                      <FormattedMessage id='global.filter' defaultMessage='Filter' />
+                    </label>
+                    <Dropdown
+                      selection
+                      fluid
+                      icon={<ChevronDown />}
+                      options={echoProductGrouping}
+                      value={this.state.echoProductGroup}
+                      onChange={(_, { value }) => this.setState({ echoProductGroup: value })}
+                    />
+                  </GridColumn>
+                </GridRow>
+                {this.renderField({
+                  id: 'global.unNumber',
+                  defaultMessage: 'UN Number',
+                  name: `${prefix}${this.state.echoProductGroup}UnNumber.unNumberCode`
+                })}
+                {this.renderField({
+                  id: 'global.properShippingName',
+                  defaultMessage: 'Proper Shipping Name',
+                  name: `${prefix}${this.state.echoProductGroup}ProperShippingName`
+                })}
+                {this.renderField({
+                  id: 'global.properTechnicalName',
+                  defaultMessage: 'Proper Technical Name',
+                  name: `${prefix}${this.state.echoProductGroup}ProperTechnicalName`
+                })}
+                {this.renderField({
+                  id: 'global.hazardClass',
+                  defaultMessage: 'Hazard Class',
+                  name: `${prefix}${this.state.echoProductGroup}HazardClass.classCode`
+                })}
+                {this.renderField({
+                  id: 'global.packagingGroup',
+                  defaultMessage: 'Packaging Group',
+                  name: `${prefix}${this.state.echoProductGroup}PackagingGroup.groupCode`
+                })}
+                {this.renderField({
+                  id: 'global.reportableQuantity',
+                  defaultMessage: 'Reportable Quantity',
+                  name: `${prefix}${this.state.echoProductGroup}ReportableQuantity`
+                })}
+                {this.renderField({
+                  id: 'global.enviromentalHazards',
+                  defaultMessage: 'Enviromental Hazards',
+                  name: `${prefix}${this.state.echoProductGroup}HazardLabel`  // ? (EnviromentalHazards)
+                })}
+                {/* not in response (swagger 1.0.3-COVID-19.9)
+                this.renderField({
+                  id: 'global.emsNumbers',
+                  defaultMessage: 'Ems Numbers',
+                  name: `${prefix}${this.state.echoProductGroup}EmsNumbers`
+                })*/
+                }
+                {/* not in response (swagger 1.0.3-COVID-19.9)
+                this.renderField({
+                  id: 'global.exceptions',
+                  defaultMessage: 'Exceptions',
+                  name: `${prefix}${this.state.echoProductGroup}Exceptions`
+                })*/}
+                {this.renderField({
+                  id: 'global.specialPrecautionForUser',
+                  defaultMessage: 'Special Precautions For User',
+                  name: `${prefix}precautionaryStatements`  // ? (SpecialPrecautionsForUser)
+                })}
+                {this.renderField({
+                  id: 'global.marinePollutant',
+                  defaultMessage: 'Marine Pollutant',
+                  name: `${prefix}${this.state.echoProductGroup}MarinePollutant`
+                })}
+                {this.renderField({
+                  id: 'global.severeMarinePollutant',
+                  defaultMessage: 'Severe Marine Pollutant',
+                  name: `${prefix}${this.state.echoProductGroup}SevereMarinePollutant`
+                })}
+                {/* not in response (swagger 1.0.3-COVID-19.9)
+                this.renderField({
+                  id: 'global.packagingExceptions',
+                  defaultMessage: 'Packaging Exceptions',
+                  name: `${prefix}${this.state.echoProductGroup}PackagingExceptions`
+                })*/
+                }
+                {/* not in response (swagger 1.0.3-COVID-19.9)
+                this.renderField({
+                  id: 'global.packagingNonBulk',
+                  defaultMessage: 'Packaging Non Bulk',
+                  name: `${prefix}${this.state.echoProductGroup}PackagingNonBulk`
+                })*/
+                }
+                {/* not in response (swagger 1.0.3-COVID-19.9)
+                this.renderField({
+                  id: 'global.packagingBulk',
+                  defaultMessage: 'Packaging Bulk',
+                  name: `${prefix}${this.state.echoProductGroup}PackagingBulk`
+                })*/}
+                {/* not in response (swagger 1.0.3-COVID-19.9)
+                this.renderField({
+                  id: 'global.quantityLimitationsPassengerAircraftRail',
+                  defaultMessage: 'Quantity Limitations Passenger Aircraft/Rail',
+                  name: `${prefix}${this.state.echoProductGroup}QuantityLimitationsPassengerAircraftRail`
+                })*/
+                }
+                {/* not in response (swagger 1.0.3-COVID-19.9)
+                this.renderField({
+                  id: 'global.quantityLimitationsCargoAircraftOnly',
+                  defaultMessage: 'Quantity Limitations Cargo Aircraft Only',
+                  name: `${prefix}${this.state.echoProductGroup}QuantityLimitationsCargoAircraftOnly`
+                })*/
+                }
+                {/* not in response (swagger 1.0.3-COVID-19.9)
+                this.renderField({
+                  id: 'global.vesselStowageLocation',
+                  defaultMessage: 'Vessel Stowage Location',
+                  name: `${prefix}${this.state.echoProductGroup}VesselStowageLocation`
+                })*/
+                }
+                {/* not in response (swagger 1.0.3-COVID-19.9)
+                this.renderField({
+                  id: 'global.vesselStowageOther',
+                  defaultMessage: 'Vessel Stowage Other',
+                  name: `${prefix}${this.state.echoProductGroup}VesselStowageOther`
+                })*/}
+              </CustomGrid>
+            </FlexContent>
+
+            <RelaxedSegment basic>
+              <Grid>
+                <GridRow className='action' columns={1}>
+                  <GridColumn textAlign='right'>
+                    <Button
+                      onClick={() => {
+                        this.props.sidebarChanged({ isOpen: false, isHoldRequest: false })
+                        this.setState({ showMore: false })
+                      }}
+                      className='cancel'
+                      data-test='add_cart_close_btn'>
+                      <FormattedMessage id='global.close' defaultMessage='Close'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                  </GridColumn>
+                </GridRow>
+              </Grid>
+            </RelaxedSegment>
+          </>
         )
       }
     }
