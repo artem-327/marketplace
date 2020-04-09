@@ -419,7 +419,7 @@ class MyInventory extends Component {
                     try {
                       this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
                       datagrid.updateRow(r.id, () => ({
-                        ...r,
+                        ...r.rawData,
                         cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
                       }))
                     } catch (error) {
@@ -517,6 +517,7 @@ class MyInventory extends Component {
       tutorialCompleted
     } = this.props
     const { columns, selectedRows, clientMessage, request, filterValue } = this.state
+    
     return (
       <>
         <Modal size='small' open={this.state.open} onClose={() => this.setState({ open: false })} closeIcon>

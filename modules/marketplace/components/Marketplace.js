@@ -17,6 +17,7 @@ import { Holds } from '~/modules/marketplace/holds'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { Datagrid } from '~/modules/datagrid'
 import { debounce } from 'lodash'
+import { ArrayToFirstItem } from '~/components/formatted-messages/'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -178,9 +179,9 @@ class Marketplace extends Component {
         width: 160
       },
       {
-        name: 'nacdMember',
+        name: 'association',
         title: (
-          <FormattedMessage id='marketplace.nacdMember' defaultMessage='NACD Member'>
+          <FormattedMessage id='marketplace.association' defaultMessage='Association'>
             {text => text}
           </FormattedMessage>
         ),
@@ -248,7 +249,8 @@ class Marketplace extends Component {
           {`${r.packagingSize} ${r.packagingUnit} `}
           <CapitalizedText>{r.packagingType}</CapitalizedText>{' '}
         </>
-      )
+      ),
+      association: (<ArrayToFirstItem values={r.association} rowItems={1} />)
     }))
   }
 
@@ -434,6 +436,7 @@ class Marketplace extends Component {
             rowSelection
             showSelectionColumn
             groupBy={['productNumber']}
+            shrinkGroups={true}
             // sameGroupSelectionOnly
             getChildGroups={rows =>
               _(rows)
@@ -455,13 +458,12 @@ class Marketplace extends Component {
               )
             }}
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
-            /* COMMENTED #30916
             onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()
               if (targetTag !== 'input' && targetTag !== 'label') {
                 this.tableRowClicked(row.id)
               }
-            }}*/
+            }}
             data-test='marketplace_row_action'
             rowActions={rowActions}
           />

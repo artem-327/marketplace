@@ -52,13 +52,12 @@ class Operations extends Component {
     const datagridApiMap = {
       'shipping-quotes': {
         url: '/prodex/api/shipment/manual-quotes/datagrid',
-        //TODO add path when exist
         searchToFilter: v =>
           v
             ? [
                 {
                   operator: 'LIKE',
-                  path: '',
+                  path: 'ShippingQuote.carrierName',
                   values: [`%${v}%`]
                 }
               ]
@@ -69,31 +68,31 @@ class Operations extends Component {
         searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v}%`] }] : [])
       },
       'company-product-catalog': {
-        url: '/prodex/api/company-products/datagrid',
+        url: '/prodex/api/company-products/admin/datagrid',
         searchToFilter: v =>
           v
             ? [
-              {
-                operator: 'LIKE',
-                path: 'CompanyProduct.intProductName',
-                values: [`%${v}%`]
-              },
-              {
-                operator: 'LIKE',
-                path: 'CompanyProduct.intProductCode',
-                values: [`%${v}%`]
-              },
-              {
-                operator: 'LIKE',
-                path: 'CompanyProduct.echoProduct.name',
-                values: [`%${v}%`]
-              },
-              {
-                operator: 'LIKE',
-                path: 'CompanyProduct.echoProduct.code',
-                values: [`%${v}%`]
-              }
-            ]
+                {
+                  operator: 'LIKE',
+                  path: 'CompanyProduct.intProductName',
+                  values: [`%${v}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'CompanyProduct.intProductCode',
+                  values: [`%${v}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'CompanyProduct.echoProduct.name',
+                  values: [`%${v}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'CompanyProduct.echoProduct.code',
+                  values: [`%${v}%`]
+                }
+              ]
             : [],
         params: {
           orOperator: true
@@ -104,17 +103,17 @@ class Operations extends Component {
         searchToFilter: v =>
           v
             ? [
-              {
-                operator: 'LIKE',
-                path: 'ProductOffer.companyProduct.intProductName',
-                values: [`%${v}%`]
-              },
-              {
-                operator: 'LIKE',
-                path: 'ProductOffer.companyProduct.intProductCode',
-                values: [`%${v}%`]
-              }
-            ]
+                {
+                  operator: 'LIKE',
+                  path: 'ProductOffer.companyProduct.intProductName',
+                  values: [`%${v}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'ProductOffer.companyProduct.intProductCode',
+                  values: [`%${v}%`]
+                }
+              ]
             : [],
         params: {
           orOperator: true

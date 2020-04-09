@@ -236,6 +236,7 @@ class AddEditEchoProduct extends React.Component {
 
     if (hazardClasses.length === 0) getHazardClassesDataRequest()
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
+    this.props.searchTags('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -1082,6 +1083,7 @@ class AddEditEchoProduct extends React.Component {
               inputProps={{
                 loading: searchedTagsLoading,
                 search: true,
+                icon: 'search',
                 selection: true,
                 multiple: true,
                 noResultsMessage: formatMessage(
