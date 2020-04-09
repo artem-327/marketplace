@@ -40,7 +40,9 @@ context("Holds tests", () => {
             cy.getMarketPlaceFilteredDatagridBody(token, warehouseFilter).then(sameWarehouseOffer => {
                 let marketPlaceId = sameWarehouseOffer[0].id
                 warehouseOffer = marketPlaceId
+                let marketPlaceName = sameWarehouseOffer[0].companyProduct.echoProduct.name
 
+                cy.contains(marketPlaceName).click()
                 cy.openElement(marketPlaceId, 1)
                 cy.get("[data-test='add_cart_quantity_inp']").within(() => {
                     cy.get("input").type("1")

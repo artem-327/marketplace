@@ -1,6 +1,7 @@
 context("Shopping cart CRUD", () => {
 
     let marketPlaceId = null
+    let marketPlaceName = null
     const userJSON = require('../fixtures/user.json')
 
     beforeEach(function () {
@@ -36,7 +37,9 @@ context("Shopping cart CRUD", () => {
                     })
 
                     marketPlaceId = suitableOffers[0].id
+                    marketPlaceName = suitableOffers[0].companyProduct.echoProduct.name
 
+                    cy.contains(marketPlaceName).click()
                     cy.openElement(marketPlaceId, 0)
 
                     cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
@@ -100,7 +103,11 @@ context("Shopping cart CRUD", () => {
                 cy.getMarketPlaceFilteredDatagridBody(token, warehouseFilter).then(sameWarehouseOffer => {
                     let marketPlaceIdNum1 = sameWarehouseOffer[0].id
                     let marketPlaceIdNum2 = sameWarehouseOffer[1].id
+                    let marketPlaceName1 = sameWarehouseOffer[0].companyProduct.echoProduct.name
+                    let marketPlaceName2 = sameWarehouseOffer[1].companyProduct.echoProduct.name
                     marketPlaceId = marketPlaceIdNum1
+
+                    cy.contains(marketPlaceName1).click()
                     cy.openElement(sameWarehouseOffer[0].id, 0)
 
                     cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
@@ -117,6 +124,9 @@ context("Shopping cart CRUD", () => {
                     cy.wait("@marketplaceLoading", {timeout: 30000})
 
                     cy.waitForUI()
+                    if(marketPlaceName2 != marketPlaceName1){
+                        cy.contains(marketPlaceName2).click()
+                    }
                     cy.openElement(marketPlaceIdNum2, 0)
 
                     cy.get('[data-test="add_cart_quantity_inp"]').within(() => {

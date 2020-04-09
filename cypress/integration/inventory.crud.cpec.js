@@ -127,7 +127,7 @@ context("Inventory CRUD", () => {
         cy.get("[id='field_input_edit.pkgAvailable']").click()
         cy.get("[id='field_input_edit.fobPrice']").click()
 
-        cy.get("[data-test=sidebar_inventory_save_new]").click()
+        cy.get("[data-test=sidebar_inventory_save_new]").click({force:true})
         cy.get(".error")
             .should("have.length", 4)
             .find(".sui-error-message").each((element) => {
