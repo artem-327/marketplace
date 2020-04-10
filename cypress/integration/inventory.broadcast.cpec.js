@@ -54,7 +54,7 @@ context("Inventory Broadcasting", () => {
         })
 
         cy.reload()
-        cy.wait("@inventoryLoading", {timeout: 100000})
+        cy.waitForUI()
 
         cy.openElement(offerId, 2)
 
