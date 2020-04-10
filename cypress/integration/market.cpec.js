@@ -40,11 +40,8 @@ context("Market place tests",() => {
 
         cy.contains("Apply").click()
 
-        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
-                cy.get("[data-test=action_" + marketPlaceBody[0].id + "]")
-            })
-        })
+        cy.get('.actions').should("be.visible")
+
         cy.get("[name='quantity'").click()
         cy.get("#field_input_quantityTo").type(searchedValue + 5)
         cy.contains("Apply").click()
