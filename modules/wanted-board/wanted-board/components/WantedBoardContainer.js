@@ -75,8 +75,10 @@ function mapStateToProps(store, { datagrid }) {
         ) : (
           <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
         ),
-        ownerBranch: getSafe(() => row.ownerBranch.deliveryAddress.cfName, ''),
-        location: getSafe(() => row.ownerBranch.deliveryAddress.address.country.name, '')
+        ownerBranch: getSafe(() => row.homeBranch.company.cfDisplayName, ''),
+        location: getSafe(() => row.homeBranch.deliveryAddress.address.province.name,
+          getSafe(() => row.homeBranch.deliveryAddress.address.country.name, '')
+        )
       }
     })
   }
