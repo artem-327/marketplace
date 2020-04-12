@@ -76,7 +76,8 @@ const clientCompanyRoutes = {
 
 class Layout extends Component {
   state = {
-    fatalError: false
+    fatalError: false,
+    mainClass: null
   }
   componentDidMount() {
     if (this.props.hasLogo && getSafe(() => this.props.useCompanyLogo.value === 'true', false)) this.loadCompanyLogo()
@@ -91,6 +92,9 @@ class Layout extends Component {
     if (this.props.takeover && this.props.auth.identity.isAdmin && Router.router.route === '/admin') {
       Router.push('/inventory/my')
     }
+
+    const mainClass = this.props.takeover ? 'takeover' : null
+    this.setState({ mainClass: mainClass })
   }
 
   loadCompanyLogo = async () => {
@@ -163,8 +167,10 @@ class Layout extends Component {
     let gravatarSrc = getSafe(() => auth.identity.gravatarSrc)
     if (gravatarSrc) icon = <Image src={gravatarSrc} avatar size='small' />
 
+    const { mainClass } = this.state
+
     return (
-      <MainContainer fluid>
+      <MainContainer fluid className={mainClass}>
         <PopUp />
         <Head>
           <title>
@@ -201,20 +207,7 @@ class Layout extends Component {
 
         <TopMenu fixed='top' size='large' borderless className='topbar'>
           <TopMenuContainer>
-            {takeover ? (
-              <CustomDiv>
-                <Rectangle>
-                  <IconMinimize2 size='28' />
-                  <div>
-                    <span>You are working on take-over mode. Company: {companyName}. </span>
-                    {<CustomSpanReturn onClick={() => takeOverCompanyFinish()}>Return to admin</CustomSpanReturn>}
-                  </div>
-                </Rectangle>
-                <MainTitleWithMessage as='h1'>{title}</MainTitleWithMessage>
-              </CustomDiv>
-            ) : (
-              <MainTitle as='h1'>{title}</MainTitle>
-            )}
+            <MainTitle as='h1'>{title}</MainTitle>
 
             <Menu.Menu position='right' className='black'>
               {auth && auth.identity && !auth.identity.isAdmin && (
@@ -318,6 +311,18 @@ class Layout extends Component {
           </ContentContainer>
         </FlexContainer>
         <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
+
+        {takeover ? (
+          <CustomDiv>
+            <Rectangle>
+              <IconMinimize2 size='28' />
+              <div>
+                <span>You are working on take-over mode. Company: {companyName}. </span>
+                {<CustomSpanReturn onClick={() => takeOverCompanyFinish()}>Return to admin</CustomSpanReturn>}
+              </div>
+            </Rectangle>
+          </CustomDiv>
+        ) : null}
       </MainContainer>
     )
   }
@@ -341,7 +346,7 @@ const mapStateToProps = state => {
     collapsedMenu: state.layout.collapsedMenu,
     isOpen: getSafe(() => !state.auth.identity.tosAgreementDate, false),
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
-    takeover: getSafe(() => !!state.auth.identity.company.id, false),
+    takeover: getSafe(() => !!state.auth.identity.company.id, false) && getSafe(() => state.auth.identity.isAdmin, false),
     phoneCountryCodes: getSafe(() => state.phoneNumber.phoneCountryCodes, []),
     companyId: getSafe(() => state.auth.identity.company.id, false),
     hasLogo: getSafe(() => state.auth.identity.company.hasLogo, false),

@@ -133,6 +133,7 @@ export const TopMenu = styled(Menu)`
   }
 `
 export const TopMenuContainer = styled(Container)`
+  width: 100% !important;
   padding: 0 30px;
 `
 export const LeftMenu = styled(Menu)`
@@ -910,6 +911,15 @@ export const MainContainer = styled(Container)`
   right: 0;
   bottom: 0;
   left: 0;
+  
+  &.takeover {
+    transform: translateX(0);
+    margin-top: 30px;
+    
+    > .menu.left > .container {
+      max-height: calc(100vh - 30px) !important;
+    }
+  }
 `
 export const ContentContainer = styled(Container)`
   /* padding: 0 20px; */
@@ -957,15 +967,6 @@ export const MainTitle = styled(Header)`
   line-height: 31px;
 `
 
-export const MainTitleWithMessage = styled.span`
-  margin: 0 !important;
-  padding: 12px 0 !important;
-  font-size: 25px !important;
-  font-weight: 400 !important;
-  color: #000;
-  line-height: 31px;
-`
-
 export const Required = styled.span`
   &:before {
     content: '*';
@@ -988,20 +989,33 @@ export const Or = styled.span`
 `
 
 export const CustomDiv = styled.div`
+  display: flex;
   width: 100vw;
   color: #848893;
 `
 
 export const Rectangle = styled.div`
+  position: fixed;
+  top: -30px;
+  left: 0;
+  width: 100vw;
   background: #ff9d42 !important;
-  text-align: center;
+  text-align: center !important;
   background-color: #ffffff;
   height: 30px;
   color: #ffffff;
   text-align: center;
   font-size: 14px;
-  display: flex;
-  align-items: center !important;
+  display: block;
+  
+  > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  + h1 {
+    align-self: center;
+  }
 `
 
 export const DivInRectangle = styled.div`
