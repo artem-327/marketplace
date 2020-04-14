@@ -292,6 +292,11 @@ class MyInventory extends Component {
     filterValue: ''
   }
 
+  initData = () => {
+    const { datagrid } = this.props
+    datagrid.loadData()
+  }
+
   componentDidMount() {
     const { sidebarDetailTrigger } = this.props
     if (window) {
@@ -314,6 +319,12 @@ class MyInventory extends Component {
     // Because of #31767
     this.props.setCompanyElligible()
     this.props.applyDatagridFilter('')
+    //Refresh datagrid every 60 seconds
+    this.interval = setInterval(this.initData, 60000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
