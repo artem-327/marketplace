@@ -263,10 +263,8 @@ export const dwollaControllerValidation = () =>
     //   country: Yup.string().required(errorMessages.requiredMessage),
     //   number: Yup.string().required(errorMessages.requiredMessage),
     // }),
-    ssn: Yup.number()
-      .typeError(errorMessages.mustBeNumber)
-      .positive(errorMessages.mustBeNumber)
-      .test('num-length', errorMessages.exactDigits(4), value => (value + '').length === 4)
+    ssn: Yup.string()
+      .test('num-length', errorMessages.exactDigits(4), value => /^[0-9]{4}$/.test(value))
       .required(errorMessages.requiredMessage),
     jobTitle: Yup.string()
       .trim()

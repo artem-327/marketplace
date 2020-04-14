@@ -12,10 +12,15 @@ import {
   FlexContainer,
   LogoImage,
   CircularLabel,
-  MainTitle
+  MainTitle,
+  MainTitleWithMessage,
+  CustomDiv,
+  Rectangle,
+  DivInRectangle,
+  CustomSpanReturn
 } from '~/components/constants/layout'
-import { Container, Menu, Dropdown, Icon, Image } from 'semantic-ui-react'
-import { Sidebar } from 'react-feather'
+import { Container, Menu, Dropdown, Icon, Image, FormField } from 'semantic-ui-react'
+import { Sidebar, Minimize2 } from 'react-feather'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/logo-echosystem.png'
 import LogoSmall from '~/assets/images/nav/logo4x.png'
@@ -44,10 +49,18 @@ import { getCountryCodes } from '~/modules/phoneNumber/actions'
 
 import { chatWidgetToggle } from '~/modules/chatWidget/actions'
 import { toggleMenu } from '~/modules/layout/actions'
+import { getCompanyLogo } from '~/modules/company-form/actions'
 import { withToastManager } from 'react-toast-notifications'
 
 import ChatWidget from '~/modules/chatWidget/components/ChatWidgetContainer'
 import PerfectScrollbar from 'react-perfect-scrollbar'
+
+import ErrorComponent from '~/components/error'
+
+export const IconMinimize2 = styled(Minimize2)`
+  text-align: center;
+  padding-right: 10px;
+`
 
 const clientCompanyRoutes = {
   restrictedRoutes: [
@@ -62,17 +75,56 @@ const clientCompanyRoutes = {
 }
 
 class Layout extends Component {
+  state = {
+    fatalError: false,
+    mainClass: null
+  }
   componentDidMount() {
-    const { auth, phoneCountryCodes, getCountryCodes } = this.props
+    if (this.props.hasLogo && getSafe(() => this.props.useCompanyLogo.value === 'true', false)) this.loadCompanyLogo()
+
+    const { auth, phoneCountryCodes, getCountryCodes, hasLogo } = this.props
 
     Router.events.on('beforeHistoryChange', this.handleRouteChange)
     Router.events.on('routeChangeStart', this.handleRouteChange)
 
+    if (this.state.fatalError) this.setState({ fatalError: false })
     if (!phoneCountryCodes.length) getCountryCodes()
+    if (this.props.takeover && this.props.auth.identity.isAdmin && Router.router.route === '/admin') {
+      Router.push('/inventory/my')
+    }
+
+    const mainClass = this.props.takeover ? 'takeover' : null
+    this.setState({ mainClass: mainClass })
+  }
+
+  loadCompanyLogo = async () => {
+    if (
+      this.props.hasLogo &&
+      getSafe(() => this.props.useCompanyLogo.value === 'true', false) &&
+      this.props.getCompanyLogo
+    ) {
+      await this.props.getCompanyLogo(this.props.companyId)
+    }
+  }
+
+  getCompanyLogo = () => {
+    if (this.props.companyLogo) {
+      const file = new Blob([this.props.companyLogo], { type: this.props.companyLogo.type })
+      let fileURL = URL.createObjectURL(file)
+
+      return fileURL
+    }
+
+    return Logo
   }
 
   componentWillUpdate() {
     this.handleRouteChange(this.props.router.route)
+  }
+
+  componentDidCatch(error, info) {
+    console.error('Error!', error, info)
+    this.setState({ fatalError: true })
   }
 
   handleRouteChange = url => {
@@ -106,14 +158,19 @@ class Layout extends Component {
       isOpen,
       agreeWithTOS,
       collapsedMenu,
-      toggleMenu
+      toggleMenu,
+      hasLogo,
+      useCompanyLogo,
+      companyName
     } = this.props
     let icon = <Icon name='user thick' />
     let gravatarSrc = getSafe(() => auth.identity.gravatarSrc)
     if (gravatarSrc) icon = <Image src={gravatarSrc} avatar size='small' />
 
+    const { mainClass } = this.state
+
     return (
-      <MainContainer fluid>
+      <MainContainer fluid className={mainClass}>
         <PopUp />
         <Head>
           <title>
@@ -124,7 +181,15 @@ class Layout extends Component {
         <LeftMenu vertical fixed='left' inverted size='large' borderless className={collapsedMenu ? 'collapsed' : ''}>
           <LeftMenuContainer fluid>
             <PerfectScrollbar>
-              <LogoImage src={!collapsedMenu ? Logo : LogoSmall} />
+              <LogoImage
+                src={
+                  !collapsedMenu
+                    ? hasLogo && getSafe(() => useCompanyLogo.value === 'true', false)
+                      ? this.getCompanyLogo()
+                      : Logo
+                    : LogoSmall
+                }
+              />
 
               <NavigationMenu takeover={takeover} collapsed={collapsedMenu} />
             </PerfectScrollbar>
@@ -141,8 +206,9 @@ class Layout extends Component {
         </LeftMenu>
 
         <TopMenu fixed='top' size='large' borderless className='topbar'>
-          <TopMenuContainer fluid>
+          <TopMenuContainer>
             <MainTitle as='h1'>{title}</MainTitle>
+
             <Menu.Menu position='right' className='black'>
               {auth && auth.identity && !auth.identity.isAdmin && (
                 <>
@@ -241,10 +307,22 @@ class Layout extends Component {
             <Messages />
           </TopMenuContainer>
           <ContentContainer fluid className='page-wrapper flex stretched'>
-            {children}
+            {!this.state.fatalError ? children : <ErrorComponent />}
           </ContentContainer>
         </FlexContainer>
         <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
+
+        {takeover ? (
+          <CustomDiv>
+            <Rectangle>
+              <IconMinimize2 size='28' />
+              <div>
+                <span>You are working on take-over mode. Company: {companyName}. </span>
+                {<CustomSpanReturn onClick={() => takeOverCompanyFinish()}>Return to admin</CustomSpanReturn>}
+              </div>
+            </Rectangle>
+          </CustomDiv>
+        ) : null}
       </MainContainer>
     )
   }
@@ -257,7 +335,8 @@ const mapDispatchToProps = {
   triggerSystemSettingsModal,
   agreeWithTOS,
   getCountryCodes,
-  toggleMenu
+  toggleMenu,
+  getCompanyLogo
 }
 
 const mapStateToProps = state => {
@@ -267,8 +346,13 @@ const mapStateToProps = state => {
     collapsedMenu: state.layout.collapsedMenu,
     isOpen: getSafe(() => !state.auth.identity.tosAgreementDate, false),
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
-    takeover: getSafe(() => !!state.auth.identity.company.id, false),
-    phoneCountryCodes: getSafe(() => state.phoneNumber.phoneCountryCodes, [])
+    takeover: getSafe(() => !!state.auth.identity.company.id, false) && getSafe(() => state.auth.identity.isAdmin, false),
+    phoneCountryCodes: getSafe(() => state.phoneNumber.phoneCountryCodes, []),
+    companyId: getSafe(() => state.auth.identity.company.id, false),
+    hasLogo: getSafe(() => state.auth.identity.company.hasLogo, false),
+    companyLogo: getSafe(() => state.businessTypes.companyLogo, null),
+    useCompanyLogo: getSafe(() => state.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO'), false),
+    companyName: getSafe(() => state.auth.identity.company.name, false)
   }
 }
 

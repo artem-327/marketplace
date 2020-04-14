@@ -10,7 +10,8 @@
   "overrides": [
     {
       "files": [".prettierrc", ".babelrc", ".eslintrc"],
-      "options": {"parser": "json"}
+      "options": { "parser": "json" }
     }
-  ]
+  ],
+  "trailingComma": "none"
 }

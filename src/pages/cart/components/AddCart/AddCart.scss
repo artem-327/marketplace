@@ -6,7 +6,6 @@
 .cart-sidebar {
   display: flex;
   flex-direction: column;
-  background-color: #fbfbfb;
   top: 80px !important;
   padding-bottom: 80px;
   height: 100%;
@@ -26,12 +25,6 @@
      padding-top: 0px !important;
    }
     font-size: 1rem !important;
-  }
-
-  .row {
-    .column:nth-child(2):not(.purchase-info) {
-      font-weight: bolder;
-    }
   }
  
   .action {

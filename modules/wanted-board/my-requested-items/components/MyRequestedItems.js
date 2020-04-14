@@ -192,6 +192,15 @@ class MyRequestedItems extends Component {
         ),
         align: 'right',
         width: 145
+      },
+      {
+        name: 'ownerBranch',
+        title: (
+          <FormattedMessage id='wantedBoard.requestedBy' defaultMessage='Requested By'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 145
       }
     ],
     columnsChemical: [
@@ -338,6 +347,15 @@ class MyRequestedItems extends Component {
           </FormattedMessage>
         ),
         align: 'right',
+        width: 145
+      },
+      {
+        name: 'ownerBranch',
+        title: (
+          <FormattedMessage id='wantedBoard.requestedBy' defaultMessage='Requested By'>
+            {text => text}
+          </FormattedMessage>
+        ),
         width: 145
       }
     ],

@@ -281,11 +281,11 @@ class UsersSidebar extends React.Component {
   }
 
   getBranchesOptions = branches => {
-    return branches.map(b => ({
-      key: b.id,
-      value: b.id,
-      text: b.deliveryAddress.cfName
-    }))
+    let result = []
+    branches.forEach(
+      b => b.warehouse === false && result.push({ key: b.id, value: b.id, text: b.deliveryAddress.cfName })
+    )
+    return result
   }
 
   submitUser = async (values, actions, closeOnSubmit = true) => {

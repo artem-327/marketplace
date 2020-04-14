@@ -384,7 +384,7 @@ class PurchaseOrder extends Component {
                         </>
                       )}
 
-                      {getSafe(() => shippingQuotes.rates.length, false) === 0 &&
+                      {getSafe(() => shippingQuotes.rates, []).length === 0 &&
                         this.state.selectedAddress &&
                         !shippingQuotesAreFetching &&
                         !cart.weightLimitExceed && (
@@ -398,9 +398,8 @@ class PurchaseOrder extends Component {
                           </GridRow>
                         )}
                       {this.state.selectedAddress &&
-                        // shippingQuotes.length === 0 &&
                         !shippingQuotesAreFetching &&
-                        (cart.weightLimitExceed || getSafe(() => shippingQuotes.rates.length, false) === 0) && (
+                        (cart.weightLimitExceed || getSafe(() => shippingQuotes.rates, []).length === 0) && (
                           <>
                             <GridRow>
                               <GridColumn computer={16}>
@@ -521,7 +520,7 @@ class PurchaseOrder extends Component {
                               />
                             )
                           }
-                          disabled={this.props.logisticsAccount && purchaseHazmatEligible && isAnyItemHazardous}
+                          disabled={this.props.logisticsAccount || (!purchaseHazmatEligible && isAnyItemHazardous)}
                         />
                       </GridRow>
                     }

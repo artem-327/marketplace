@@ -66,7 +66,7 @@ class ProdexApp extends App {
     }
   }
 
-  
+
 
   render() {
     const { Component, pageProps, store } = this.props
@@ -76,7 +76,7 @@ class ProdexApp extends App {
         <IntlProvider locale='en' messages={EN} textComponent={({ children }) => <>{children}</>}>
           <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={10 * 1000} components={{ Toast: ProdexToast }}>
             <Provider store={store}>
-              <Component {...pageProps} test={this.test} />
+              <Component {...pageProps} />
             </Provider>
           </ToastProvider>
         </IntlProvider>

@@ -69,13 +69,15 @@ function mapStateToProps(store, { datagrid }) {
         conditionNotes: getSafe(() => po.conditionNotes, false),
         form: getSafe(() => po.form.name),
         location: getLocationString(po),
-        nacdMember: po && po.ownerNacdMember ? 'Yes' : po.ownerNacdMember === false ? 'No' : ''
+        nacdMember: po && po.ownerNacdMember ? 'Yes' : po.ownerNacdMember === false ? 'No' : '',
+        notes: getSafe(() => po.externalNotes, ''),
+        association: po && po.ownerAssociations && getSafe(() => po.ownerAssociations.map(a => a.name), []),
       }
     }),
     sidebar: store.cart.sidebar,
     isProductInfoOpen: store.companyProductInfo.isOpen,
     isMerchant: getSafe(() => store.auth.identity.isMerchant, false),
-    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false)
+    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
   }
 }
 
@@ -86,6 +88,6 @@ export default withDatagrid(
     openPopup,
     closePopup,
     getProductOffer,
-    applyFilter
+    applyFilter,
   })(Marketplace)
 )
