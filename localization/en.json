@@ -2191,5 +2191,7 @@
   "wantedBoard.purchased": "Purchased",
   "wantedBoard.rejected": "Rejected",
   "wantedBoard.submitOfferHeader": "SUBMIT OFFER",
-  "wantedBoard.requestedBy": "Requested By"
+  "wantedBoard.requestedBy": "Requested By",
+  "wantedBoard.notify.noInventoryItems.Header": "No Items Match",
+  "wantedBoard.notify.noInventoryItems.Content": "You do not have any Inventory item matching the requested item to offer."
 }
