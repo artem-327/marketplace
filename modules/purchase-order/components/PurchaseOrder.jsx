@@ -34,7 +34,7 @@ const RelaxedForm = styled(Form)`
 `
 
 const validationSchema = Yup.object().shape({
-  address: Yup.number().required(errorMessages.requiredMessage),
+  address: Yup.number().required(errorMessages.requiredMessage)
 })
 
 class PurchaseOrder extends Component {
@@ -42,7 +42,7 @@ class PurchaseOrder extends Component {
     otherAddresses: true,
     submitting: false,
     addressId: 'deliveryAddressId',
-    selectedAddress: '',
+    selectedAddress: ''
   }
   componentDidMount = async () => {
     const { preFilledValues, clearPreFilledValues, getWarehouses } = this.props
@@ -72,7 +72,7 @@ class PurchaseOrder extends Component {
           {
             otherAddresses: false,
             addressId: 'warehouseId',
-            selectedAddress: selectedAddress,
+            selectedAddress: selectedAddress
           },
           () => this.handleQuoteSelect(preFilledValues.freightIndex)
         )
@@ -154,12 +154,12 @@ class PurchaseOrder extends Component {
       return confirm(
         formatMessage({
           id: 'order.deleteHeader',
-          defaultMessage: 'Delete Order',
+          defaultMessage: 'Delete Order'
         }),
         formatMessage({
           id: 'order.deleteBody',
           defaultMessage:
-            'You are about to delete last item of order. Doing so will redirect you to Shopping cart. Do you wish to continue?',
+            'You are about to delete last item of order. Doing so will redirect you to Shopping cart. Do you wish to continue?'
         })
       ).then(() => {
         this.props.deleteCart()
@@ -177,7 +177,7 @@ class PurchaseOrder extends Component {
     const data = {
       [this.state.addressId]: this.state.selectedAddress.id,
       shipmentQuoteId,
-      dwollaBankAccountId,
+      dwollaBankAccountId
     }
 
     try {
@@ -194,7 +194,7 @@ class PurchaseOrder extends Component {
     let {
       requestManualShipment,
       shipping: { selectedAddress },
-      toastManager,
+      toastManager
     } = this.props
     setFieldTouched('address')
     setSubmitting(false)
@@ -202,7 +202,7 @@ class PurchaseOrder extends Component {
     if (values.address) {
       let payload = {
         destinationCountryId: this.state.selectedAddress.address.country.id,
-        destinationZIP: this.state.selectedAddress.address.zip.zip,
+        destinationZIP: this.state.selectedAddress.address.zip.zip
       }
       await requestManualShipment(payload)
       toastManager.add(
@@ -228,7 +228,7 @@ class PurchaseOrder extends Component {
       postNewDeliveryAddress,
       updateDeliveryAddress,
       preferredBankAccountId,
-      intl: { formatMessage },
+      intl: { formatMessage }
     } = this.props
     let {
       cart,
@@ -239,7 +239,7 @@ class PurchaseOrder extends Component {
       shippingQuotesAreFetching,
       shipping,
       purchaseHazmatEligible,
-      cartItems,
+      cartItems
     } = this.props
     if (cartIsFetching) return <Spinner />
     if (cart.cartItems.length === 0) Router.push('/cart')
@@ -254,7 +254,7 @@ class PurchaseOrder extends Component {
     let initialValues = {
       payment,
       address: '',
-      shipmentQuoteId: '',
+      shipmentQuoteId: ''
     }
 
     let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit}` : ''
@@ -502,7 +502,7 @@ class PurchaseOrder extends Component {
                                 {/* <FormattedMessage id='cart.placeOrder' defaultMessage='Place Order1' /> */}
                                 {formatMessage({
                                   id: 'cart.placeOrder',
-                                  defaultMessage: 'Place Order',
+                                  defaultMessage: 'Place Order'
                                 })}
                               </Button>
                             </GridColumn>
@@ -520,7 +520,7 @@ class PurchaseOrder extends Component {
                               />
                             )
                           }
-                          disabled={this.props.logisticsAccount && purchaseHazmatEligible && isAnyItemHazardous}
+                          disabled={this.props.logisticsAccount || (!purchaseHazmatEligible && isAnyItemHazardous)}
                         />
                       </GridRow>
                     }
@@ -551,5 +551,5 @@ PurchaseOrder.propTypes = {
   selectedAddressId: PropTypes.number,
   shippingQuotes: PropTypes.object,
   purchaseHazmatEligible: PropTypes.bool,
-  cartItems: PropTypes.bool,
+  cartItems: PropTypes.bool
 }
