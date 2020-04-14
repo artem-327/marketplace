@@ -520,7 +520,12 @@ class PurchaseOrder extends Component {
                               />
                             )
                           }
-                          disabled={this.props.logisticsAccount || (!purchaseHazmatEligible && isAnyItemHazardous)}
+                          disabled={
+                            this.props.logisticsAccount ||
+                            (purchaseHazmatEligible && isAnyItemHazardous) ||
+                            (purchaseHazmatEligible && !isAnyItemHazardous) ||
+                            (!purchaseHazmatEligible && !isAnyItemHazardous)
+                          }
                         />
                       </GridRow>
                     }
