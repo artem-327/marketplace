@@ -1,7 +1,7 @@
 context("Prodex User CRUD", () => {
     let userID = null
-    let filter = [{"operator": "LIKE", "path": "User.name", "values": ["%John Automator%"]},
-        {"operator": "LIKE", "path": "User.homeBranch.deliveryAddress.contactName", "values": ["%John Automator%"]}]
+    let filter = [{"operator": "LIKE", "path": "User.name", "values": ["%Automator%"]},
+        {"operator": "LIKE", "path": "User.homeBranch.deliveryAddress.contactName", "values": ["%Automator%"]}]
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
@@ -118,6 +118,7 @@ context("Prodex User CRUD", () => {
     })
 
     it("Deletes a user", () => {
+        cy.waitForUI()
         cy.openElement(userID, 2)
 
         cy.clickSave()

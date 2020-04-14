@@ -9,7 +9,6 @@ test:
   script:
     - cd ..
     - docker run -v $PWD:/test -w /test -u appuser cypress/artio
-
   artifacts:
     when: always
     paths:
@@ -17,3 +16,6 @@ test:
     reports:
       junit:
         - ./cypress/results/results*.xml
+
+after_script:
+  - docker rmi --force $(docker images --filter dangling=true -q --no-trunc) || exit 0
