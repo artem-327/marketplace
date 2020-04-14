@@ -7,7 +7,7 @@ context("Holds tests", () => {
     const userJSON2 = require('../fixtures/user2.json')
 
     beforeEach(function () {
-        cy.viewport(2300, 1250)
+        cy.viewport(2500, 1250)
         cy.server()
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
@@ -43,6 +43,7 @@ context("Holds tests", () => {
                 let marketPlaceName = sameWarehouseOffer[0].companyProduct.echoProduct.name
 
                 cy.contains(marketPlaceName).click()
+                cy.waitForUI()
                 cy.openElement(marketPlaceId, 1)
                 cy.get("[data-test='add_cart_quantity_inp']").within(() => {
                     cy.get("input").type("1")
