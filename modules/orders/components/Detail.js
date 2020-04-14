@@ -1133,15 +1133,15 @@ class Detail extends Component {
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.shippingContact' defaultMessage='Shipping Contact' />
                           </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.shippingContact}</GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.returnAddressName}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.contactNumber' defaultMessage='Contact Number' />
                           </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.contactNumber}</GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.returnAddressPhone}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.contactEmail' defaultMessage='Contact E-Mail' />
                           </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.contactEmail}</GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.returnAddressEmail}</GridDataColumn>
                         </GridData>
                       </Grid.Column>
                     </Grid.Row>
