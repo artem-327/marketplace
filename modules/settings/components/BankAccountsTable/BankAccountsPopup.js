@@ -31,14 +31,8 @@ const formValidation = Yup.object().shape({
     .max(17, errorMessages.maxLength(17))
     .test('numeric-string', errorMessages.mustBeNumber, value => /^[0-9]*$/gm.test(value))
     .required(errorMessages.requiredMessage),
-  bankAccountType: Yup.string()
-    .trim()
-    .min(3, errorMessages.minLength(3))
-    .required(errorMessages.requiredMessage),
-  name: Yup.string()
-    .trim()
-    .min(3, errorMessages.minLength(3))
-    .required(errorMessages.requiredMessage),
+  bankAccountType: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+  name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
   routingNumber: Yup.string()
     .trim()
     .matches(/^\d{9}$/, errorMessages.exactLength(9))
@@ -80,7 +74,6 @@ class BankAccountsPopup extends React.Component {
   onSuccess = (public_token, metadata) => {
     console.log('onSuccess - public_token', public_token)
     console.log('onSuccess - metadata', metadata)
-
     // Send the public_token to an internal server
     // and exchange it for an access_token.
     axios.post('/get_access_token', {
@@ -112,9 +105,9 @@ class BankAccountsPopup extends React.Component {
             className='CustomButton'
             style={{ padding: '20px', fontSize: '16px', cursor: 'pointer' }}
             clientName={'Echo system'}
-            env={'sandbox'} //process.env.NODE_ENV||
+            env={process.env.NODE_ENV}
             product={['auth', 'transactions']}
-            publicKey={process.env.PLAID_PUBLIC_KEY || '...'}
+            publicKey={process.env.PLAID_PUBLIC_KEY}
             onExit={this.onExit}
             onSuccess={this.onSuccess}
             onEvent={this.onEvent}>

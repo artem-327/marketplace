@@ -15,17 +15,22 @@ const plaid = require('plaid')
 let ACCESS_TOKEN = null
 let PUBLIC_TOKEN = null
 let ITEM_ID = null
-
+const environmentPlaid =
+  process.env.NODE_ENV === 'development'
+    ? plaid.environments.development
+    : process.env.NODE_ENV === 'production'
+    ? plaid.environments.production
+    : plaid.environments.sandbox
 const client = new plaid.Client(
   process.env.PLAID_CLIENT_ID,
   process.env.PLAID_SECRET,
   process.env.PLAID_PUBLIC_KEY,
-  plaid.environments.sandbox
+  environmentPlaid
 )
 
 let router = express()
 const app = express()
-//app.use(express.static('public'))
+app.use(express.static('public'))
 //app.set('view engine', 'ejs')
 app.use(
   bodyParser.urlencoded({
@@ -34,9 +39,9 @@ app.use(
 )
 app.use(bodyParser.json())
 
-app.post('/get_access_token', (request, response, next) => {
-  PUBLIC_TOKEN = request.body.public_token
-  client.exchangePublicToken(PUBLIC_TOKEN, function(error, tokenResponse) {
+app.post('/get_access_token', (req, response, next) => {
+  PUBLIC_TOKEN = req.body.public_token
+  client.exchangePublicToken(PUBLIC_TOKEN, function (error, tokenResponse) {
     if (error != null) {
       console.log('Could not exchange public_token!' + '\n' + error)
       return response.json({ error: msg })
@@ -57,11 +62,13 @@ app.post('/get_access_token', (request, response, next) => {
 router.get('/attachments/:id', (req, res) => {
   request
     .get(
-      `${(process &&
-        process.env &&
-        process.env.REACT_APP_API_URL &&
-        process.env.REACT_APP_API_URL.replace(/\/\s*$/, '')) ||
-        'http://127.0.0.1:8080'}/prodex/api/attachments/${req.params.id}/download`,
+      `${
+        (process &&
+          process.env &&
+          process.env.REACT_APP_API_URL &&
+          process.env.REACT_APP_API_URL.replace(/\/\s*$/, '')) ||
+        'http://127.0.0.1:8080'
+      }/prodex/api/attachments/${req.params.id}/download`,
       {
         auth: {
           bearer: JSON.parse(req.cookies.auth).access_token
