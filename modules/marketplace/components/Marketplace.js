@@ -239,13 +239,8 @@ class Marketplace extends Component {
     filterValue: ''
   }
 
-  initData = () => {
-    const { datagrid } = this.props
-    datagrid.loadData()
-  }
-
   componentDidMount() {
-    //this.props.applyDatagridFilter('')
+    // this.props.applyDatagridFilter('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
