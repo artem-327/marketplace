@@ -121,8 +121,14 @@ class InventoryFilter extends Component {
       fetchWarehouses,
       setParams,
       autocompleteManufacturer,
-      autocompleteOrigin
+      autocompleteOrigin,
+      filterState,
+      appliedFilter,
+      onApply,
+      applyDatagridFilter
     } = this.props
+
+    setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
     if (typeof this.props.searchWarehouseUrl !== 'undefined')
       this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
@@ -136,16 +142,27 @@ class InventoryFilter extends Component {
     //  this.props.getAutocompleteOrigin(this.props.getOriginUrl)
     //}
     this.handleGetSavedFilters()
-    setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
     Promise.all([
       this.fetchIfNoData(fetchProductConditions, 'productConditions'),
       this.fetchIfNoData(fetchProductForms, 'productForms'),
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
       this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
-      this.fetchIfNoData(fetchProductGrade, 'productGrade'),
+      this.fetchIfNoData(fetchProductGrade, 'productGrades'),
       this.fetchIfNoData(fetchWarehouses, 'warehouses')
-    ]).finally(() => this.setState({ loaded: true }))
+    ]).finally(() => this.setState({
+      ...(filterState !== null && filterState.state),
+      loaded: true
+    }))
+    if (appliedFilter && appliedFilter.filters) {
+      let datagridFilter = this.toDatagridFilter(appliedFilter)
+      applyDatagridFilter(datagridFilter)
+      onApply(datagridFilter)
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.saveFilterState({ state: this.state, values: this.values })
   }
 
   generateRequestData = ({ notifications, checkboxes, name, ...rest }) => {
@@ -200,9 +217,12 @@ class InventoryFilter extends Component {
             if (typeof datagridValues[key] !== 'undefined') {
               let filter = datagridValues[key] && datagridValues[key].toFilter(inputs[key], this.props.filterType)
 
-              if (!(filter.values instanceof Array)) filter.values = [filter.values] // We need values to be an array
+              if (filter) {
 
-              datagridFilter.filters.push(filter)
+                if (!(filter.values instanceof Array)) filter.values = [filter.values] // We need values to be an array
+
+                datagridFilter.filters.push(filter)
+              }
             }
           } catch (err) {
             console.error(err)
@@ -412,10 +432,10 @@ class InventoryFilter extends Component {
   }
 
   handleGetSavedFilters = () => {
-    let { packagingTypes, productConditions, productGrade, productForms } = this.props
+    let { packagingTypes, productConditions, productGrades, productForms } = this.props
     this.props.getSavedFilters(
       this.props.savedUrl,
-      { packagingTypes, productConditions, productGrade, productForms },
+      { packagingTypes, productConditions, productGrades, productForms },
       this.props.apiUrl,
       this.props.filterType
     )
@@ -691,7 +711,7 @@ class InventoryFilter extends Component {
       productConditions,
       productForms,
       packagingTypes,
-      productGrade,
+      productGrades,
       intl,
       isFilterSaving,
       autocompleteData,
@@ -710,7 +730,7 @@ class InventoryFilter extends Component {
 
     let packagingTypesRows = this.generateCheckboxes(packagingTypes, values, 'packagingTypes')
     let productConditionRows = this.generateCheckboxes(productConditions, values, 'productConditions')
-    let productGradeRows = this.generateCheckboxes(productGrade, values, 'productGrade')
+    let productGradeRows = this.generateCheckboxes(productGrades, values, 'productGrades')
     let productFormsRows = this.generateCheckboxes(productForms, values, 'productForms')
 
     var noResultsMessage = null
@@ -1075,7 +1095,7 @@ class InventoryFilter extends Component {
       isFilterApplying,
       isFilterSaving,
       intl: { formatMessage },
-      toggleFilter
+      filterState
     } = this.props
 
     const { savedFiltersActive, openedSaveFilter } = this.state
@@ -1083,7 +1103,7 @@ class InventoryFilter extends Component {
     return (
       <Form
         enableReinitialize={true}
-        initialValues={initialValues}
+        initialValues={filterState ? filterState.values : initialValues}
         validateOnChange={true}
         validationSchema={validationSchema(openedSaveFilter)}
         onSubmit={(values, { setSubmitting }) => {
@@ -1096,6 +1116,8 @@ class InventoryFilter extends Component {
           this.submitForm = props.submitForm
           this.resetForm = props.resetForm
           this.setFieldValue = props.setFieldValue
+          this.values = props.values
+
           return (
             <FlexSidebar {...additionalSidebarProps}>
               <TopButtons>
@@ -1115,10 +1137,12 @@ class InventoryFilter extends Component {
                 </Button>
               </TopButtons>
               <Dimmer.Dimmable as={FlexContent}>
-                <PerfectScrollbar>
-                  {!this.state.savedFiltersActive ? (
-                    this.formMarkup(props)
-                  ) : (
+                {!this.state.savedFiltersActive ? (
+                  <PerfectScrollbar key='set'>
+                    {this.formMarkup(props)}
+                  </PerfectScrollbar>
+                ) : (
+                  <PerfectScrollbar key='saved'>
                     <SavedFilters
                       params={this.props.params}
                       onApply={filter => this.handleSavedFilterApply(filter, props)}
@@ -1129,8 +1153,8 @@ class InventoryFilter extends Component {
                       updateFilterNotifications={this.props.updateFilterNotifications}
                       savedFilterUpdating={this.props.savedFilterUpdating}
                     />
-                  )}
-                </PerfectScrollbar>
+                  </PerfectScrollbar>
+                )}
                 <Dimmer active={this.state.openedSaveFilter} />
               </Dimmer.Dimmable>
               <Transition visible={openedSaveFilter} animation='fade up' duration={500}>
@@ -1173,7 +1197,7 @@ class InventoryFilter extends Component {
                   size='large'
                   onClick={(e, data) => {
                     this.resetForm({ ...initialValues })
-                    toggleFilter(false)
+                    //! !toggleFilter(false)
                     this.props.applyFilter({ filters: [] })
                     this.props.applyDatagridFilter({ filters: [] })
                     this.props.onClear(e, data)

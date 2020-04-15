@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
-import { AlertTriangle } from 'react-feather'
+import { AlertTriangle, Clock } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { number } from 'prop-types'
@@ -50,6 +50,21 @@ const RedTriangle = styled(AlertTriangle)`
   }
 `
 
+const ClockIcon = styled(Clock)`
+  display: block;
+  width: 20px;
+  height: 19px;
+  margin: 0 auto;
+  vertical-align: top;
+  font-size: 20px;
+  color: #f16844;
+  line-height: 20px;
+
+  &.grey {
+    color: #848893;
+  }
+`
+
 const MarketplaceTab = styled(Tab)`
   flex-grow: 1;
   flex-shrink: 1;
@@ -70,6 +85,12 @@ class Marketplace extends Component {
       {
         name: 'conformingIcon',
         title: <RedTriangle className='grey' />,
+        width: 45,
+        align: 'center'
+      },
+      {
+        name: 'expired',
+        title: <ClockIcon className='grey' />,
         width: 45,
         align: 'center'
       },
@@ -215,7 +236,7 @@ class Marketplace extends Component {
   }
 
   componentDidMount() {
-    this.props.applyDatagridFilter('')
+    // this.props.applyDatagridFilter('')
     //Refresh datagrid every 60 seconds
     this.interval = setInterval(this.initData, 60000)
   }
@@ -249,6 +270,16 @@ class Marketplace extends Component {
           trigger={
             <div>
               <RedTriangle />
+            </div>
+          } // <div> has to be there otherwise popup will be not shown
+        />
+      ) : null,
+      expired: r.expired ? (
+        <Popup
+          header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
+          trigger={
+            <div>
+              <ClockIcon />
             </div>
           } // <div> has to be there otherwise popup will be not shown
         />

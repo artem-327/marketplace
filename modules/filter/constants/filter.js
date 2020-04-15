@@ -18,7 +18,7 @@ export const filterTypes = {
   MARKETPLACE: 'marketplace',
   PURCHASE_ORDERS: 'PURCHASE_ORDERS',
   SALES_ORDERS: 'SALES_ORDERS',
-  WANTED_BOARD: 'WANTED_BOARD'
+  WANTED_BOARD: 'wantedBoard'
 }
 
 export const filterPresets = {
@@ -34,7 +34,7 @@ export const paths = {
     price: 'ProductOffer.cfPricePerUOM',
     packagingTypes: 'ProductOffer.companyProduct.packagingType.id',
     productConditions: 'ProductOffer.condition.id',
-    productGrade: 'ProductGrade.id',
+    productGrades: 'ProductGrade.id',
     productForms: 'ProductOffer.form.id',
     expirationDate: 'ProductOffer.lotExpirationDate',
     assayFrom: 'ProductOffer.assayMin',
@@ -402,8 +402,8 @@ export const datagridValues = {
 
     nested: true
   },
-  productGrade: {
-    paths: [paths.productOffers.productGrade],
+  productGrades: {
+    paths: [paths.productOffers.productGrades],
     description: 'Product Grades',
     operator: operators.EQUALS,
 
