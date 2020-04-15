@@ -106,11 +106,9 @@ class OrderFilter extends Component {
 
   render() {
     let {
-      ordersIsOpen,
       width,
       direction,
       animation,
-      toggleFilter,
       intl: { formatMessage },
       ordersType
     } = this.props
@@ -192,7 +190,7 @@ class OrderFilter extends Component {
                   <Button
                     type='button'
                     onClick={() => {
-                      toggleFilter(false, filterPresets.ORDERS)
+                      //! ! toggleFilter(false, filterPresets.ORDERS)
                     }}
                     data-test='filter_clear'>
                     <FormattedMessage id='filter.clear' defaultMessage='Clear'>
