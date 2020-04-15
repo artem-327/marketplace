@@ -215,7 +215,9 @@ class Navigation extends Component {
       sidebarDetailTrigger,
       router: { pathname, asPath },
       collapsedMenu,
-      activeFilter
+      activeInventoryFilter,
+      activeMarketplaceFilter,
+      activeWantedBoardFilter
     } = this.props
 
     const {
@@ -266,6 +268,11 @@ class Navigation extends Component {
               <>
                 <Layers size={22} />
                 {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
+                {!collapsedMenu && asPath === '/inventory/my' && activeInventoryFilter ? (
+                  <div className='active-filter'>
+                    <Sliders />
+                  </div>
+                ) : null}
               </>
             </MenuLink>
             {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
@@ -280,7 +287,7 @@ class Navigation extends Component {
               <>
                 <ShoppingBag size={22} />
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
-                {asPath === '/marketplace/all' && activeFilter ? (
+                {!collapsedMenu && asPath === '/marketplace/all' && activeMarketplaceFilter ? (
                   <div className='active-filter'>
                     <Sliders />
                   </div>
@@ -296,7 +303,7 @@ class Navigation extends Component {
           <>
             <Grid size={22} />
             {formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}
-            {false && asPath === '/wanted-board/wanted-board' && activeFilter ? (
+            {false && asPath === '/wanted-board/wanted-board' && activeWantedBoardFilter ? (
               <div className='active-filter'>
                 <Sliders />
               </div>
@@ -483,7 +490,9 @@ export default withAuth(
         tabsNames: store.settings.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
         collapsedMenu: store.layout.collapsedMenu,
-        activeFilter: getSafe(() => store.filter.filter.appliedFilter.filters.length > 0, false)
+        activeInventoryFilter: getSafe(() => store.filter.inventory.appliedFilter.filters.length > 0, false),
+        activeMarketplaceFilter: getSafe(() => store.filter.marketplace.appliedFilter.filters.length > 0, false),
+        activeWantedBoardFilter: getSafe(() => store.filter.wantedBoard.appliedFilter.filters.length > 0, false),
       }),
       {
         triggerSystemSettingsModal,

@@ -27,7 +27,7 @@ function mapStateToProps(store, { datagrid }) {
     ...store.simpleAdd,
     editedId,
     sellEligible: getSafe(() => store.auth.identity.company.sellEligible, false),
-    appliedFilter: store.filter.filter.appliedFilter,
+    appliedFilter: store.filter.inventory.appliedFilter,
     sidebarValues,
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)

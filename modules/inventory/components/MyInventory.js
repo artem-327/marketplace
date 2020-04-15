@@ -335,7 +335,7 @@ class MyInventory extends Component {
     }
     // Because of #31767
     this.props.setCompanyElligible()
-    this.props.applyDatagridFilter('')
+    //this.props.applyDatagridFilter('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -686,7 +686,6 @@ class MyInventory extends Component {
                 rows,
                 values[values.length - 1],
                 sidebarDetailOpen,
-                //! ! sidebarDetailTrigger,
                 closeSidebarDetail,
                 openPopup
               ).map(a => ({

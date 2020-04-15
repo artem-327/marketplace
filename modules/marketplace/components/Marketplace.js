@@ -236,7 +236,7 @@ class Marketplace extends Component {
   }
 
   componentDidMount() {
-    this.props.applyDatagridFilter('')
+    //this.props.applyDatagridFilter('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
