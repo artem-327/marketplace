@@ -1123,7 +1123,11 @@ class Detail extends Component {
                       <Grid.Column>
                         <GridData columns={2}>
                           <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.pickupAddress' defaultMessage='Pick-Up Address' />
+                            <FormattedMessage id='order.pickupFrom' defaultMessage='Pick-Up From' />
+                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.pickUpFrom}</GridDataColumn>
+                          <GridDataColumn width={keyColumn} className='key'>
+                            <FormattedMessage id='order.pickupFromAddress' defaultMessage='Pick-Up From Address' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.pickUpAddress}</GridDataColumn>
                         </GridData>

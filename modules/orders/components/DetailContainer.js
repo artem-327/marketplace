@@ -90,9 +90,8 @@ function prepareDetail(data, type) {
     paymentSendDate:
       typeof data.paymentSendDate !== 'undefined' ? moment(data.paymentSendDate).toDate().toLocaleString() : 'N/A',
     paymentStatus: OrdersHelper.getPaymentStatus(data.paymentStatus),
+    pickUpFrom: data.sellerCompanyName,
     pickUpAddress:
-      data.sellerCompanyName +
-      ', ' +
       data.returnAddressStreet +
       ', ' +
       data.returnAddressCity +

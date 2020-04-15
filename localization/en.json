@@ -1900,6 +1900,8 @@
   "order.deliveryTotal": "Delivery Total",
   "order.pickupInfo": "Pick Up Info",
   "order.pickupAddress": "Pick-Up Address",
+  "order.pickupFromAddress": "Pick-Up From Address",
+  "order.pickupFrom": "Pick-Up From",
   "order.shippingContact": "Shipping Contact",
   "order.contactNumber": "Contact Number",
   "order.contactEmail": "Contact E-Mail",
