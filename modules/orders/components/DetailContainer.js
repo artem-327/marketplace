@@ -142,7 +142,7 @@ function prepareDetail(data, type) {
       ', ' +
       data.shippingAddressCountry,
     subtotal: <FormattedNumber style='currency' currency={currency} value={subtotal} />, //"$" + totalPrice.formatMoney(2),
-    terms: 'Net 30', // ! ! TBD
+    terms: data.cfPaymentTerms ? data.cfPaymentTerms : 'N/A',
     total: <FormattedNumber style='currency' currency={currency} value={totalPriceWithShipping} />, //"$" + totalPriceWithShipping.formatMoney(2),
     totalPkg: orderItems.map(d => {
       if (!d.productOffers.length) return 'N/A'
