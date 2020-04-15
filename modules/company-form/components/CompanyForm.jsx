@@ -162,11 +162,7 @@ class CompanyForm extends Component {
         </FormGroup>
         <FormGroup widths='equal' data-test='company_form_dbaDuns_inp'>
           <Input label={<FormattedMessage id='company.dba' defaultMessage='Doing Business As' />} name='dba' />
-          <Input
-            inputProps={{ type: 'number' }}
-            label={<FormattedMessage id='company.duns' defaultMessage='DUNS Number' />}
-            name='dunsNumber'
-          />
+          <Input label={<FormattedMessage id='company.duns' defaultMessage='DUNS Number' />} name='dunsNumber' />
         </FormGroup>
 
         <FormGroup widths='equal' data-test='company_form_tinCin_inp'>
