@@ -230,19 +230,8 @@ class Marketplace extends Component {
     filterValue: ''
   }
 
-  initData = () => {
-    const { datagrid } = this.props
-    datagrid.loadData()
-  }
-
   componentDidMount() {
     // this.props.applyDatagridFilter('')
-    //Refresh datagrid every 60 seconds
-    this.interval = setInterval(this.initData, 60000)
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {

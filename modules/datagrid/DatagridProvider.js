@@ -27,7 +27,8 @@ export class DatagridProvider extends Component {
     apiConfig: pt.shape({
       url: pt.string.isRequired,
       method: pt.oneOf(['POST', 'GET'])
-    }).isRequired
+    }).isRequired,
+    autoRefresh: pt.bool
   }
 
   constructor(props) {
@@ -36,6 +37,15 @@ export class DatagridProvider extends Component {
     this.state = initialState
 
     Datagrid = this
+  }
+
+  componentDidMount() {
+    //Refresh datagrid every 60 seconds
+    if (this.props.autoRefresh) this.interval = setInterval(this.loadData, 60000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval)
   }
 
   // componentWillReceiveProps({apiConfig}) {
@@ -265,6 +275,7 @@ export class DatagridProvider extends Component {
           rows,
           loading,
           filters,
+          autoRefresh: this.props.autoRefresh,
           removeRow: this.removeRowById,
           updateRow: this.updateRow,
           loadData: this.loadData,

@@ -24,7 +24,7 @@ export const Marketplace = props => {
   return (
     <>
       <CompanyProductInfo fromMarketPlace />
-      <DatagridProvider apiConfig={urlApiConfig}>
+      <DatagridProvider apiConfig={urlApiConfig} autoRefresh>
         <MarketplaceContainer {...props} />
       </DatagridProvider>
     </>
