@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
-import { AlertTriangle } from 'react-feather'
+import { AlertTriangle, Clock } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { number } from 'prop-types'
@@ -50,6 +50,21 @@ const RedTriangle = styled(AlertTriangle)`
   }
 `
 
+const ClockIcon = styled(Clock)`
+  display: block;
+  width: 20px;
+  height: 19px;
+  margin: 0 auto;
+  vertical-align: top;
+  font-size: 20px;
+  color: #f16844;
+  line-height: 20px;
+
+  &.grey {
+    color: #848893;
+  }
+`
+
 const MarketplaceTab = styled(Tab)`
   flex-grow: 1;
   flex-shrink: 1;
@@ -71,7 +86,13 @@ class Marketplace extends Component {
         name: 'conformingIcon',
         title: <RedTriangle className='grey' />,
         width: 45,
-        align: 'center',
+        align: 'center'
+      },
+      {
+        name: 'expired',
+        title: <ClockIcon className='grey' />,
+        width: 45,
+        align: 'center'
       },
       {
         name: 'intProductName',
@@ -81,7 +102,7 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 180,
-        sortPath: 'ProductOffer.companyProduct.intProductName',
+        sortPath: 'ProductOffer.companyProduct.intProductName'
       },
       {
         name: 'available',
@@ -92,7 +113,7 @@ class Marketplace extends Component {
         ),
         width: 140,
         align: 'right',
-        sortPath: 'ProductOffer.pkgAvailable',
+        sortPath: 'ProductOffer.pkgAvailable'
       },
       {
         name: 'packaging',
@@ -101,7 +122,7 @@ class Marketplace extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 140,
+        width: 140
       },
       {
         name: 'quantity',
@@ -112,7 +133,7 @@ class Marketplace extends Component {
         ),
         width: 140,
         align: 'right',
-        sortPath: 'ProductOffer.quantity',
+        sortPath: 'ProductOffer.quantity'
       },
       {
         name: 'fobPrice',
@@ -123,7 +144,7 @@ class Marketplace extends Component {
         ),
         width: 160,
         align: 'right',
-        sortPath: 'ProductOffer.cfPricePerUOM',
+        sortPath: 'ProductOffer.cfPricePerUOM'
       },
       {
         name: 'manufacturer',
@@ -133,7 +154,7 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 220,
-        sortPath: 'ProductOffer.companyProduct.echoProduct.manufacturer.name',
+        sortPath: 'ProductOffer.companyProduct.echoProduct.manufacturer.name'
       },
       {
         name: 'origin',
@@ -143,7 +164,7 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 120,
-        sortPath: 'ProductOffer.origin.name',
+        sortPath: 'ProductOffer.origin.name'
       },
       {
         name: 'expiration',
@@ -153,7 +174,7 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 120,
-        sortPath: 'ProductOffer.lotExpirationDate',
+        sortPath: 'ProductOffer.lotExpirationDate'
       },
       {
         name: 'condition',
@@ -163,7 +184,7 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 100,
-        sortPath: 'ProductOffer.condition.name',
+        sortPath: 'ProductOffer.condition.name'
       },
       {
         name: 'form',
@@ -173,7 +194,7 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 100,
-        sortPath: 'ProductOffer.productForm.name',
+        sortPath: 'ProductOffer.productForm.name'
       },
       {
         name: 'location',
@@ -182,7 +203,7 @@ class Marketplace extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 160,
+        width: 160
       },
       {
         name: 'association',
@@ -191,7 +212,7 @@ class Marketplace extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 160,
+        width: 160
       },
       {
         name: 'notes',
@@ -200,13 +221,22 @@ class Marketplace extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 160,
+        width: 160
       },
+      {
+        name: 'leadTime',
+        title: (
+          <FormattedMessage id='marketplace.leadTime' defaultMessage='Lead Time (days)'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160
+      }
     ],
     selectedRows: [],
     //pageNumber: 0,
     open: false,
-    filterValue: '',
+    filterValue: ''
   }
 
   initData = () => {
@@ -215,7 +245,7 @@ class Marketplace extends Component {
   }
 
   componentDidMount() {
-    this.props.applyDatagridFilter('')
+    //this.props.applyDatagridFilter('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -228,7 +258,7 @@ class Marketplace extends Component {
   getRows = () => {
     const {
       rows,
-      intl: { formatMessage },
+      intl: { formatMessage }
     } = this.props
 
     return rows.map(r => ({
@@ -243,6 +273,16 @@ class Marketplace extends Component {
           trigger={
             <div>
               <RedTriangle />
+            </div>
+          } // <div> has to be there otherwise popup will be not shown
+        />
+      ) : null,
+      expired: r.expired ? (
+        <Popup
+          header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
+          trigger={
+            <div>
+              <ClockIcon />
             </div>
           } // <div> has to be there otherwise popup will be not shown
         />
@@ -271,7 +311,7 @@ class Marketplace extends Component {
           trigger={<CustomDiv>{r.notes}</CustomDiv>} // <div> has to be there otherwise popup will be not shown
         />
       ) : null,
-      association: <ArrayToFirstItem values={r.association} rowItems={1} />,
+      association: <ArrayToFirstItem values={r.association} rowItems={1} />
     }))
   }
 
@@ -334,16 +374,16 @@ class Marketplace extends Component {
     const buttonRequestHold = {
       text: formatMessage({
         id: 'hold.requestHold',
-        defaultMessage: 'Request Hold',
+        defaultMessage: 'Request Hold'
       }),
-      callback: row => this.tableRowClicked(row.id, true),
+      callback: row => this.tableRowClicked(row.id, true)
     }
     const buttonBuy = {
       text: formatMessage({
         id: 'marketplace.buy',
-        defaultMessage: 'Buy Product Offer',
+        defaultMessage: 'Buy Product Offer'
       }),
-      callback: row => this.tableRowClicked(row.id),
+      callback: row => this.tableRowClicked(row.id)
     }
     if (isMerchant) {
       rowActions.push(buttonBuy)
@@ -358,7 +398,7 @@ class Marketplace extends Component {
         <ShippingQuotes
           modalProps={{
             open: this.state.open,
-            closeModal: () => this.setState({ open: false }),
+            closeModal: () => this.setState({ open: false })
           }}
           productOfferIds={rows.reduce(function (filtered, row) {
             if (selectedRows.includes(row.id)) {
@@ -371,7 +411,7 @@ class Marketplace extends Component {
               filtered.push({
                 id: row.id,
                 min: row.minPkg,
-                split: row.splitPkg,
+                split: row.splitPkg
               })
             }
             return filtered
@@ -391,7 +431,7 @@ class Marketplace extends Component {
                 onChange={this.handleFilterChange}
                 placeholder={formatMessage({
                   id: 'myInventory.searchByProductName',
-                  defaultMessage: 'Search by product name...',
+                  defaultMessage: 'Search by product name...'
                 })}
               />
             </Grid.Column>
@@ -418,7 +458,7 @@ class Marketplace extends Component {
                           this.isSelectedMultipleEcho(rows, selectedRows)
                             ? formatMessage({
                                 id: 'marketplace.multipleEchoProduct',
-                                defaultMessage: 'Multiple ProductOffers can not be calculate.',
+                                defaultMessage: 'Multiple ProductOffers can not be calculate.'
                               })
                             : null
                         }
@@ -447,7 +487,7 @@ class Marketplace extends Component {
               let values = row.key.split('_')
               return groupActionsMarketplace(rows, values[values.length - 1], openPopup).map(a => ({
                 ...a,
-                text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>,
+                text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
               }))
             }}
             tableName='marketplace_grid'
@@ -464,7 +504,7 @@ class Marketplace extends Component {
                 .groupBy('productName')
                 .map(v => ({
                   key: `${v[0].productName}_${v[0].productNumber}_${v.length}_${v[0].companyProduct.id}`,
-                  childRows: v,
+                  childRows: v
                 }))
                 .value()
             }
@@ -504,7 +544,7 @@ class Marketplace extends Component {
             MARKETPLACE
           </MenuLink>
         ),
-        render: () => <>{this.renderTabMarketplace()}</>,
+        render: () => <>{this.renderTabMarketplace()}</>
       },
       // {
       //   menuItem: <MenuLink to='/marketplace/wanted-board' data-test='marketplace_submenu_tab_wanted_board'>WANTED BOARD</MenuLink>,
@@ -516,8 +556,8 @@ class Marketplace extends Component {
             HOLDS
           </MenuLink>
         ),
-        render: () => <>{<Holds />}</>,
-      },
+        render: () => <>{<Holds />}</>
+      }
     ]
     return (
       <>
@@ -535,11 +575,11 @@ class Marketplace extends Component {
 }
 
 Marketplace.propTypes = {
-  activeIndex: number,
+  activeIndex: number
 }
 
 Marketplace.defaultProps = {
-  activeIndex: 0,
+  activeIndex: 0
 }
 
 export default injectIntl(Marketplace)
