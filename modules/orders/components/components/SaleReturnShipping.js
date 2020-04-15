@@ -27,7 +27,6 @@ import { currency } from '~/constants/index'
 import ShippingQuote from '~/modules/purchase-order/components/ShippingQuote'
 import '~/modules/purchase-order/styles/PurchaseOrder.scss'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
-import { validateShipmentQuoteId } from '~/constants/yupValidation'
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
@@ -38,18 +37,9 @@ class SaleReturnShipping extends React.Component {
     shipmentQuoteId: ''
   }
 
-  validationSchema = manualShipmentQuoteId =>
-    Yup.lazy(values =>
-      Yup.object().shape({
-        shipmentQuoteId: manualShipmentQuoteId ? validateShipmentQuoteId() : Yup.string().notRequired()
-      })
-    )
-
   componentDidMount() {
     if (!this.props.order.cfWeightExceeded) {
-      let pickupDate = moment()
-        .add(1, 'minutes')
-        .format()
+      let pickupDate = moment().add(1, 'minutes').format()
       this.props.getReturnShipmentRates(this.props.orderId, pickupDate)
     }
   }
@@ -155,7 +145,6 @@ class SaleReturnShipping extends React.Component {
                 enableReinitialize
                 validateOnChange={false}
                 initialValues={this.getInitialFormValues()}
-                validationSchema={this.validationSchema(manualShipmentQuoteId)}
                 onSubmit={this.submitHandler}
                 className='flex stretched'
                 style={{ padding: '0' }}>
