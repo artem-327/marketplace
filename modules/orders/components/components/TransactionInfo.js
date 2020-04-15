@@ -24,7 +24,6 @@ class TransactionInfo extends Component {
     `
 
     const { order, echoSupportPhone } = this.props
-    const { buyerCompanyName } = order
     const echoSystemTransaction = getSafe(() => order.dwollaTransfers[0].transferId, 'N/A')
 
     return (
@@ -33,7 +32,11 @@ class TransactionInfo extends Component {
           <GridRow columns={3}>
             <SmallerTextColumn>
               <FormattedMessage id='order.detail.nameOfOppositeParty' defaultMessage='Name of Opposite Party' />
-              <RightSpan>{buyerCompanyName}</RightSpan>
+              <RightSpan>
+                {getSafe(() => order.orderType, '') === 'Purchase'
+                  ? getSafe(() => order.sellerCompanyName, '')
+                  : getSafe(() => order.buyerCompanyName, '')}
+              </RightSpan>
             </SmallerTextColumn>
             <GridColumn>
               <FormattedMessage id='order.detail.echoSystemTransaction' defaultMessage='Echo System Transaction' />
@@ -55,7 +58,7 @@ TransactionInfo.defaultProps = {
     buyerCompanyName: '',
     dwollaTransfers: []
   },
-  echoSupportPhone: '',
+  echoSupportPhone: ''
 }
 
 export default injectIntl(TransactionInfo)

@@ -222,6 +222,15 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 160
+      },
+      {
+        name: 'leadTime',
+        title: (
+          <FormattedMessage id='marketplace.leadTime' defaultMessage='Lead Time (days)'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160
       }
     ],
     selectedRows: [],

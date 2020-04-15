@@ -127,10 +127,7 @@ class AddNewPopupCasProducts extends React.Component {
       let minLength = errorMessages.minLength(2)
 
       let validation = Yup.object().shape({
-        name: Yup.string()
-          .trim()
-          .min(2, minLength)
-          .required(minLength),
+        name: Yup.string().trim().min(2, minLength).required(minLength),
         website: websiteValidationNotRequired(),
 
         mailingBranch: Yup.lazy(() => {
@@ -142,13 +139,8 @@ class AddNewPopupCasProducts extends React.Component {
                   .trim()
                   .email(errorMessages.invalidEmail)
                   .required(errorMessages.invalidEmail),
-                contactName: Yup.string()
-                  .trim()
-                  .min(2, minLength)
-                  .required(minLength),
-                contactPhone: Yup.string()
-                  .trim()
-                  .required(errorMessages.enterPhoneNumber),
+                contactName: Yup.string().trim().min(2, minLength).required(minLength),
+                contactPhone: Yup.string().trim().required(errorMessages.enterPhoneNumber),
                 address: addressValidationSchema()
               })
             })
@@ -158,14 +150,8 @@ class AddNewPopupCasProducts extends React.Component {
         primaryBranch: Yup.object().shape({
           deliveryAddress: Yup.object().shape({
             addressName: minOrZeroLength(3),
-            contactEmail: Yup.string()
-              .trim()
-              .email(errorMessages.invalidEmail)
-              .required(errorMessages.invalidEmail),
-            contactName: Yup.string()
-              .trim()
-              .min(2, minLength)
-              .required(minLength),
+            contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
+            contactName: Yup.string().trim().min(2, minLength).required(minLength),
             contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),
             address: addressValidationSchema()
           })
@@ -173,14 +159,8 @@ class AddNewPopupCasProducts extends React.Component {
         primaryUser: Yup.lazy(() => {
           // if (primaryUserRequired)
           return Yup.object().shape({
-            email: Yup.string()
-              .trim()
-              .email(errorMessages.invalidEmail)
-              .required(errorMessages.invalidEmail),
-            name: Yup.string()
-              .trim()
-              .min(2, minLength)
-              .required(minLength)
+            email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
+            name: Yup.string().trim().min(2, minLength).required(minLength)
           })
           // return Yup.mixed().notRequired()
         })
@@ -327,7 +307,7 @@ class AddNewPopupCasProducts extends React.Component {
                 businessType: getSafe(() => values.businessType.id, null),
                 cin: getSafe(() => values.cin, ''),
                 dba: getSafe(() => values.dba, ''),
-                dunsNumber: getSafe(() => parseInt(values.dunsNumber), null),
+                dunsNumber: getSafe(() => values.dunsNumber, ''),
                 nacdMember: getSafe(() => values.nacdMember, false),
                 name: getSafe(() => values.name, ''),
                 phone: getSafe(() => values.phone, ''),
@@ -354,8 +334,7 @@ class AddNewPopupCasProducts extends React.Component {
                 delete values['mailingBranch']
               } else {
                 if (values.mailingBranch.deliveryAddress.contactEmail !== '')
-                  values.mailingBranch.deliveryAddress.contactEmail =
-                    values.mailingBranch.deliveryAddress.contactEmail.trim()
+                  values.mailingBranch.deliveryAddress.contactEmail = values.mailingBranch.deliveryAddress.contactEmail.trim()
               }
 
               let branches = ['primaryBranch', 'mailingBranch']
@@ -364,20 +343,18 @@ class AddNewPopupCasProducts extends React.Component {
 
               let payload = cloneDeep(values)
               payload.primaryUser.email = payload.primaryUser.email.trim()
-              payload.primaryBranch.deliveryAddress.contactEmail =
-                payload.primaryBranch.deliveryAddress.contactEmail.trim()
+              payload.primaryBranch.deliveryAddress.contactEmail = payload.primaryBranch.deliveryAddress.contactEmail.trim()
 
               branches.forEach(branch => {
                 let country = getSafe(() => JSON.parse(payload[branch].deliveryAddress.address.country).countryId)
                 if (country) payload[branch].deliveryAddress.address.country = country
               })
 
-              if (payload.dunsNumber) payload.dunsNumber = getSafe(() => parseInt(values.dunsNumber), null)
               if (!payload.businessType) delete payload.businessType
 
               if (this.state.companyLogo) {
                 let reader = new FileReader()
-                reader.onload = async function() {
+                reader.onload = async function () {
                   const loadedLogo = btoa(reader.result)
                   const data = await createCompany(payload)
                   await postCompanyLogo(data.id, companyLogo)
@@ -666,8 +643,7 @@ class AddNewPopupCasProducts extends React.Component {
               </Modal.Actions>
             </Modal>
           )
-        }}>
-      </Formik>
+        }}></Formik>
     )
   }
 }
