@@ -647,6 +647,7 @@
   "global.warning": "Warning!",
   "global.info": "Info!",
   "global.nonConforming.tooltip": "This is a non-conforming product",
+  "global.expiredProduct.tooltip": "Expired Product",
   "global.unlink": "Unlink",
   "global.counter": "Counter",
   "global.returnReview": "Return to review",
@@ -1614,6 +1615,7 @@
   "marketplace.association": "Association",
   "marketplace.shippingQuoteTooltip": "Select one or more Product Offers to calculate a Shipping Quote. Multiple ProductOffers can be choosed only if they are at the same Location.",
   "marketplace.multipleEchoProduct": "Please, only select inventory for the same product to get a Shipping Quote",
+  "marketplace.notes": "Notes",
   "operations.tables.shippingQuotes.buttonAdd": "Add Shipping Quote",
   "operations.tables.tags.buttonAdd": "Add Tag",
   "operations.tables.shippingQuotes.search": "Search shipping quote by TBD",
@@ -2192,5 +2194,8 @@
   "wantedBoard.submit": "Submit",
   "wantedBoard.purchased": "Purchased",
   "wantedBoard.rejected": "Rejected",
-  "wantedBoard.submitOfferHeader": "SUBMIT OFFER"
+  "wantedBoard.submitOfferHeader": "SUBMIT OFFER",
+  "wantedBoard.requestedBy": "Requested By",
+  "wantedBoard.notify.noInventoryItems.Header": "No Items Match",
+  "wantedBoard.notify.noInventoryItems.Content": "You do not have any Inventory item matching the requested item to offer."
 }

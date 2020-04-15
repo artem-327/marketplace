@@ -27,7 +27,7 @@ function mapStateToProps(store, { datagrid }) {
     ...store.simpleAdd,
     editedId,
     sellEligible: getSafe(() => store.auth.identity.company.sellEligible, false),
-    appliedFilter: store.filter.filter.appliedFilter,
+    appliedFilter: store.filter.inventory.appliedFilter,
     sidebarValues,
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
@@ -67,6 +67,7 @@ function mapStateToProps(store, { datagrid }) {
         rawData: po,
         id: po.id,
         product: po.product,
+        expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate): false,
         productName: getSafe(() => po.companyProduct.intProductName),
         productNumber: getSafe(() => po.companyProduct.intProductCode, 'N/A'),
         echoName: getSafe(() => po.companyProduct.echoProduct.name, ''),
