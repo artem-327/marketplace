@@ -13,7 +13,7 @@ import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
-import { Holds } from '~/modules/marketplace/holds'
+import Holds from '~/modules/marketplace/holds'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { Datagrid } from '~/modules/datagrid'
 import { debounce } from 'lodash'
@@ -239,13 +239,8 @@ class Marketplace extends Component {
     filterValue: ''
   }
 
-  initData = () => {
-    const { datagrid } = this.props
-    datagrid.loadData()
-  }
-
   componentDidMount() {
-    //this.props.applyDatagridFilter('')
+    // this.props.applyDatagridFilter('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
