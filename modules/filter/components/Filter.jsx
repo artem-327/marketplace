@@ -95,23 +95,40 @@ class Filter extends Component {
       fetchWarehouseDistances,
       fetchProductGrade,
       fetchWarehouses,
-      setParams
+      setParams,
+      filterState,
+      appliedFilter,
+      onApply,
+      applyDatagridFilter
     } = this.props
+
+    setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
     if (typeof this.props.searchWarehouseUrl !== 'undefined')
       this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
 
     this.handleGetSavedFilters()
-    setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
     Promise.all([
       this.fetchIfNoData(fetchProductConditions, 'productConditions'),
       this.fetchIfNoData(fetchProductForms, 'productForms'),
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
       this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
-      this.fetchIfNoData(fetchProductGrade, 'productGrade'),
+      this.fetchIfNoData(fetchProductGrade, 'productGrades'),
       this.fetchIfNoData(fetchWarehouses, 'warehouses')
-    ]).finally(() => this.setState({ loaded: true }))
+    ]).finally(() => this.setState({
+      ...(filterState !== null && filterState.state),
+      loaded: true
+    }))
+    if (appliedFilter && appliedFilter.filters) {
+      let datagridFilter = this.toDatagridFilter(appliedFilter)
+      applyDatagridFilter(datagridFilter)
+      onApply(datagridFilter)
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.saveFilterState({ state: this.state, values: this.values })
   }
 
   generateRequestData = ({ notifications, checkboxes, name, ...rest }) => {
@@ -370,10 +387,10 @@ class Filter extends Component {
   }
 
   handleGetSavedFilters = () => {
-    let { packagingTypes, productConditions, productGrade, productForms } = this.props
+    let { packagingTypes, productConditions, productGrades, productForms } = this.props
     this.props.getSavedFilters(
       this.props.savedUrl,
-      { packagingTypes, productConditions, productGrade, productForms },
+      { packagingTypes, productConditions, productGrades, productForms },
       this.props.apiUrl,
       this.props.filterType
     )
@@ -644,7 +661,7 @@ class Filter extends Component {
       productConditions,
       productForms,
       packagingTypes,
-      productGrade,
+      productGrades,
       intl,
       isFilterSaving,
       autocompleteData,
@@ -659,7 +676,7 @@ class Filter extends Component {
 
     let packagingTypesRows = this.generateCheckboxes(packagingTypes, values, 'packagingTypes')
     let productConditionRows = this.generateCheckboxes(productConditions, values, 'productConditions')
-    let productGradeRows = this.generateCheckboxes(productGrade, values, 'productGrade')
+    let productGradeRows = this.generateCheckboxes(productGrades, values, 'productGrades')
     let productFormsRows = this.generateCheckboxes(productForms, values, 'productForms')
 
     var noResultsMessage = null
@@ -897,7 +914,7 @@ class Filter extends Component {
       isFilterApplying,
       isFilterSaving,
       intl: { formatMessage },
-      toggleFilter
+      filterState
     } = this.props
 
     const { savedFiltersActive, openedSaveFilter } = this.state
@@ -905,7 +922,7 @@ class Filter extends Component {
     return (
       <Form
         enableReinitialize={true}
-        initialValues={initialValues}
+        initialValues={filterState ? filterState.values : initialValues}
         validateOnChange={true}
         validationSchema={validationSchema(openedSaveFilter)}
         onSubmit={(values, { setSubmitting }) => {
@@ -918,6 +935,8 @@ class Filter extends Component {
           this.submitForm = props.submitForm
           this.resetForm = props.resetForm
           this.setFieldValue = props.setFieldValue
+          this.values = props.values
+
           return (
             <FlexSidebar {...additionalSidebarProps}>
               <TopButtons>
@@ -938,10 +957,12 @@ class Filter extends Component {
                 </Button>
               </TopButtons>
               <Dimmer.Dimmable as={FlexContent}>
-                <PerfectScrollbar>
-                  {!this.state.savedFiltersActive ? (
-                    this.formMarkup(props)
-                  ) : (
+                {!this.state.savedFiltersActive ? (
+                  <PerfectScrollbar key='set'>
+                    {this.formMarkup(props)}
+                  </PerfectScrollbar>
+                ) : (
+                  <PerfectScrollbar key='saved'>
                     <SavedFilters
                       params={this.props.params}
                       onApply={filter => this.handleSavedFilterApply(filter, props)}
@@ -952,8 +973,8 @@ class Filter extends Component {
                       updateFilterNotifications={this.props.updateFilterNotifications}
                       savedFilterUpdating={this.props.savedFilterUpdating}
                     />
-                  )}
-                </PerfectScrollbar>
+                  </PerfectScrollbar>
+                )}
                 <Dimmer active={this.state.openedSaveFilter} />
               </Dimmer.Dimmable>
               <Transition visible={openedSaveFilter} animation='fade up' duration={500}>
@@ -995,7 +1016,6 @@ class Filter extends Component {
                   size='large'
                   onClick={(e, data) => {
                     this.resetForm({ ...initialValues })
-                    toggleFilter(false)
                     this.props.applyFilter({ filters: [] })
                     this.props.applyDatagridFilter({ filters: [] })
                     this.props.onClear(e, data)

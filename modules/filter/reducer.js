@@ -38,24 +38,62 @@ const asignFiltersDescription = (filter, params) => {
 }
 
 export const initialState = {
-  isOpen: false,
-  ordersIsOpen: false,
-  isFilterSaving: false,
-  isFilterApplying: false,
-  autocompleteWarehouse: [],
-  autocompleteWarehouseLoading: false,
-  savedFilters: [],
-  appliedFilter: [],
-  savedFiltersLoading: false,
-  savedFilterUpdating: false,
-  savedAutocompleteData: [],
+  productConditions: [],
+  productForms: [],
+  packagingTypes: [],
+  productGrades: [],
+  warehouses: [],
   params: {
     currencyCode: currency
   },
-  autocompleteManufacturer: [],
-  autocompleteManufacturerLoading: false,
-  autocompleteOrigin: [],
-  autocompleteOriginLoading: false
+  inventory: {
+    isFilterSaving: false,
+    isFilterApplying: false,
+    autocompleteWarehouse: [],
+    autocompleteWarehouseLoading: false,
+    savedFilters: [],
+    appliedFilter: [],
+    savedFiltersLoading: false,
+    savedFilterUpdating: false,
+    savedAutocompleteData: [],
+    autocompleteManufacturer: [],
+    autocompleteManufacturerLoading: false,
+    autocompleteOrigin: [],
+    autocompleteOriginLoading: false,
+    filterState: null
+  },
+  marketplace: {
+    isFilterSaving: false,
+    isFilterApplying: false,
+    autocompleteWarehouse: [],
+    autocompleteWarehouseLoading: false,
+    savedFilters: [],
+    appliedFilter: [],
+    savedFiltersLoading: false,
+    savedFilterUpdating: false,
+    savedAutocompleteData: [],
+    autocompleteManufacturer: [],
+    autocompleteManufacturerLoading: false,
+    autocompleteOrigin: [],
+    autocompleteOriginLoading: false,
+    filterState: null
+  },
+  wantedBoard: {
+    isFilterSaving: false,
+    isFilterApplying: false,
+    autocompleteWarehouse: [],
+    autocompleteWarehouseLoading: false,
+    savedFilters: [],
+    appliedFilter: [],
+    savedFiltersLoading: false,
+    savedFilterUpdating: false,
+    savedAutocompleteData: [],
+    autocompleteManufacturer: [],
+    autocompleteManufacturerLoading: false,
+    autocompleteOrigin: [],
+    autocompleteOriginLoading: false,
+    filterState: null
+  }
 }
 
 export default typeToReducer(
@@ -70,6 +108,7 @@ export default typeToReducer(
 
     /* TOGGLE_FILTER */
 
+    /* // ! ! can be deleted?
     [a.toggleFilter]: (state, { payload: { value, type } }) => {
       let propName = 'isOpen'
       if (type === filterPresets.ORDERS) propName = 'ordersIsOpen'
@@ -78,31 +117,48 @@ export default typeToReducer(
         ...state,
         [propName]: typeof value === 'boolean' ? value : !state[propName]
       }
-    },
+    },*/
 
     /* FILTER_SAVING */
 
-    [a.filterSaving]: (state, { payload: isSaving }) => ({
+    [a.filterSaving]: (state, { payload: isSaving }) => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      return {
       ...state,
-      isFilterSaving: isSaving
-    }),
+        [filterType]: {
+          ...state[filterType],
+          isFilterSaving: isSaving
+        }
+      }
+    },
 
     /* FILTER_APPLYING */
 
-    [a.filterApplying]: (state, { payload: isApplying }) => ({
+    [a.filterApplying]: (state, { payload: isApplying }) => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      return {
       ...state,
-      isFilterApplying: isApplying
-    }),
+        [filterType]: {
+          ...state[filterType],
+          isFilterApplying: isApplying
+        }
+      }
+    },
 
     /* GET_SAVED_FILTERS */
 
     [a.getSavedFilters.pending]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        savedFiltersLoading: true
+        [filterType]: {
+          ...state[filterType],
+          savedFiltersLoading: true
+        }
       }
     },
     [a.getSavedFilters.fulfilled]: (state, { payload }) => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       let { data } = payload
       let autocompleteData = []
 
@@ -121,99 +177,146 @@ export default typeToReducer(
 
       return {
         ...state,
-        savedFiltersLoading: false,
-        savedFilters: data,
-        savedAutocompleteData: uniqueArrayByKey(
-          mapAutocompleteData(autocompleteData).concat(state.savedAutocompleteData),
-          'key'
-        )
+        [filterType]: {
+          ...state[filterType],
+          savedFiltersLoading: false,
+          savedFilters: data,
+          savedAutocompleteData: uniqueArrayByKey(
+            mapAutocompleteData(autocompleteData).concat(state[filterType].savedAutocompleteData),
+            'key'
+          )
+        }
       }
     },
     [a.getSavedFilters.rejected]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        savedFiltersLoading: false,
-        savedFilters: []
+        [filterType]: {
+          ...state[filterType],
+          savedFiltersLoading: false,
+          savedFilters: []
+        }
       }
     },
 
     /* GET_AUTOCOMPLETE_DATA */
 
     // [a.getAutocompleteData.pending]: (state) => {
+    //   const filterType = state.params.filterType; if (!filterType) return { ...state }
     //   return {
     //     ...state,
-    //     autocompleteDataLoading: true
+    //     [filterType]: {
+    //       ...state[filterType],
+    //       autocompleteDataLoading: true
+    //     }
     //   }
     // },
     // [a.getAutocompleteData.fulfilled]: (state, { payload }) => {
+    //   const filterType = state.params.filterType; if (!filterType) return { ...state }
     //   return {
     //     ...state,
-    //     autocompleteDataLoading: false,
-    //     autocompleteData: uniqueArrayByKey(payload.concat(state.autocompleteData), 'id'),
+    //     [filterType]: {
+    //       ...state[filterType],
+    //       autocompleteDataLoading: false,
+    //       autocompleteData: uniqueArrayByKey(payload.concat(state[filterType].autocompleteData), 'id'),
+    //     }
     //   }
     // },
     // [a.getAutocompleteData.rejected]: (state) => {
+    //   const filterType = state.params.filterType; if (!filterType) return { ...state }
     //   return {
     //     ...state,
-    //     autocompleteDataLoading: false,
-    //     autocompleteData: []
+    //     [filterType]: {
+    //       ...state[filterType],
+    //       autocompleteDataLoading: false,
+    //       autocompleteData: []
+    //     }
     //   }
     // },
 
     /* GET_AUTOCOMPLETE_WAREHOUSE_DATA */
 
     [a.getAutocompleteWarehouse.pending]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        autocompleteWarehouseLoading: true
+        [filterType]: {
+          ...state[filterType],
+          autocompleteWarehouseLoading: false
+        }
       }
     },
     [a.getAutocompleteWarehouse.fulfilled]: (state, { payload }) => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        autocompleteWarehouseLoading: false,
-        autocompleteWarehouse: uniqueArrayByKey(payload.concat(state.autocompleteWarehouse), 'id')
+        [filterType]: {
+          ...state[filterType],
+          autocompleteWarehouseLoading: false,
+          autocompleteWarehouse: uniqueArrayByKey(payload.concat(state[filterType].autocompleteWarehouse), 'id')
+        }
       }
     },
     [a.getAutocompleteWarehouse.rejected]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        autocompleteWarehouseLoading: false,
-        autocompleteWarehouse: []
+        [filterType]: {
+          ...state[filterType],
+          autocompleteWarehouseLoading: false,
+          autocompleteWarehouse: []
+        }
       }
     },
 
     /* SAVE_FILTER */
 
     [a.saveFilter.pending]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        isFilterSaving: true
+        [filterType]: {
+          ...state[filterType],
+          isFilterSaving: true
+        }
       }
     },
     [a.saveFilter.fulfilled]: (state, { payload }) => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        isFilterSaving: false,
-        savedFilters: [].concat(asignFiltersDescription(payload, state.params), state.savedFilters)
+        [filterType]: {
+          ...state[filterType],
+          isFilterSaving: false,
+          savedFilters: [].concat(asignFiltersDescription(payload, state.params), state[filterType].savedFilters)
+        }
       }
     },
     [a.saveFilter.rejected]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        isFilterSaving: false
+        [filterType]: {
+          ...state[filterType],
+          isFilterSaving: false
+        }
       }
     },
 
     /* APPLY_FILTER */
 
     [a.applyFilter]: (state, { payload }) => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       let appliedFilter = asignFiltersDescription(payload, state.params)
       return {
         ...state,
-        appliedFilter: {
-          ...state.appliedFilter,
-          ...appliedFilter
+        [filterType]: {
+          ...state[filterType],
+          appliedFilter: {
+            ...state[filterType].appliedFilter,
+            ...appliedFilter
+          }
         }
       }
     },
@@ -221,130 +324,219 @@ export default typeToReducer(
     /* DELETE_FILTER */
 
     [a.deleteFilter.pending]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        savedFiltersLoading: true
+        [filterType]: {
+          ...state[filterType],
+          savedFiltersLoading: true
+        }
       }
     },
 
     [a.deleteFilter.fulfilled]: (state, { payload }) => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        savedFilters: state.savedFilters.filter(filter => filter.id !== payload),
-        savedFiltersLoading: false
+        [filterType]: {
+          ...state[filterType],
+          savedFilters: state[filterType].savedFilters.filter(filter => filter.id !== payload),
+          savedFiltersLoading: false
+        }
       }
     },
 
     [a.deleteFilter.rejected]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        savedFiltersLoading: false
+        [filterType]: {
+          ...state[filterType],
+          savedFiltersLoading: false
+        }
       }
     },
 
     /* UPDATE_FILTER_NOTIFICATIONS */
 
     [a.updateFilterNotifications.pending]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        savedFilterUpdating: true
+        [filterType]: {
+          ...state[filterType],
+          savedFilterUpdating: true
+        }
       }
     },
 
     [a.updateFilterNotifications.fulfilled]: (state, { payload }) => {
-      let savedFilters = state.savedFilters.slice(0)
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      let savedFilters = state[filterType].savedFilters.slice(0)
       let index = savedFilters.findIndex(el => el.id === payload.id)
 
       savedFilters[index] = asignFiltersDescription(payload, state.params)
 
       return {
         ...state,
-        savedFilters,
-        savedFilterUpdating: false
+        [filterType]: {
+          ...state[filterType],
+          savedFilters,
+          savedFilterUpdating: false
+        }
       }
     },
 
     [a.updateFilterNotifications.rejected]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        savedFilterUpdating: false
+        [filterType]: {
+          ...state[filterType],
+          savedFilterUpdating: false
+        }
       }
     },
 
     /* UPDATE_FILTER */
 
     [a.updateFilter.pending]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        isFilterSaving: true
+        [filterType]: {
+          ...state[filterType],
+          isFilterSaving: true
+        }
       }
     },
 
     [a.updateFilter.fulfilled]: (state, { payload }) => {
-      let savedFilters = state.savedFilters.slice(0)
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      let savedFilters = state[filterType].savedFilters.slice(0)
       let index = savedFilters.findIndex(el => el.id === payload.id)
 
       savedFilters[index] = asignFiltersDescription(payload, state.params)
 
       return {
         ...state,
-        savedFilters,
-        isFilterSaving: false
-      }
-    },
-
-    [a.updateFilter.pending]: state => {
-      return {
-        ...state,
-        isFilterSaving: false
+        [filterType]: {
+          ...state[filterType],
+          savedFilters,
+          isFilterSaving: false
+        }
       }
     },
 
     /* GET_AUTOCOMPLETE_MANUFACTURER_DATA */
 
     [a.getAutocompleteManufacturer.pending]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        autocompleteManufacturerLoading: true
+        [filterType]: {
+          ...state[filterType],
+          autocompleteManufacturerLoading: true
+        }
       }
     },
     [a.getAutocompleteManufacturer.fulfilled]: (state, { payload }) => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        autocompleteManufacturerLoading: false,
-        autocompleteManufacturer: uniqueArrayByKey(payload.concat(state.autocompleteManufacturer), 'id')
+        [filterType]: {
+          ...state[filterType],
+          autocompleteManufacturerLoading: false,
+          autocompleteManufacturer: uniqueArrayByKey(payload.concat(state[filterType].autocompleteManufacturer), 'id')
+        }
       }
     },
     [a.getAutocompleteManufacturer.rejected]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        autocompleteManufacturerLoading: false,
-        autocompleteManufacturer: []
+        [filterType]: {
+          ...state[filterType],
+          autocompleteManufacturerLoading: false,
+          autocompleteManufacturer: []
+        }
       }
     },
 
     /* GET_AUTOCOMPLETE_ORIGIN_DATA */
 
     [a.getAutocompleteOrigin.pending]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        autocompleteOriginLoading: true
+        [filterType]: {
+          ...state[filterType],
+          autocompleteOriginLoading: true
+        }
       }
     },
     [a.getAutocompleteOrigin.fulfilled]: (state, { payload }) => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        autocompleteOriginLoading: false,
-        autocompleteOrigin: uniqueArrayByKey(payload.concat(state.autocompleteOrigin), 'id')
+        [filterType]: {
+          ...state[filterType],
+          autocompleteOriginLoading: false,
+          autocompleteOrigin: uniqueArrayByKey(payload.concat(state[filterType].autocompleteOrigin), 'id')
+        }
       }
     },
     [a.getAutocompleteOrigin.rejected]: state => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
       return {
         ...state,
-        autocompleteOriginLoading: false,
-        autocompleteOrigin: []
+        [filterType]: {
+          ...state[filterType],
+          autocompleteOriginLoading: false,
+          autocompleteOrigin: []
+        }
       }
-    }
+    },
+    [a.saveFilterState]: (state, { payload }) => {
+      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      return {
+        ...state,
+        [filterType]: {
+          ...state[filterType],
+          filterState: payload
+        }
+      }
+    },
+    [a.fetchProductConditions.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        productConditions: payload
+      }
+    },
+    [a.fetchProductForms.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        productForms: payload
+      }
+    },
+    [a.fetchPackagingTypes.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        packagingTypes: payload
+      }
+    },
+    [a.fetchProductGrade.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        productGrades: payload
+      }
+    },
+    [a.fetchWarehouses.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        warehouses: payload
+      }
+    },
   },
   initialState
 )
