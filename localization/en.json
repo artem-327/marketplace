@@ -647,6 +647,7 @@
   "global.warning": "Warning!",
   "global.info": "Info!",
   "global.nonConforming.tooltip": "This is a non-conforming product",
+  "global.expiredProduct.tooltip": "Expired Product",
   "global.unlink": "Unlink",
   "global.counter": "Counter",
   "global.returnReview": "Return to review",
