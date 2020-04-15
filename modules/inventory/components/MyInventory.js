@@ -19,6 +19,7 @@ import { Datagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { debounce } from 'lodash'
+import { Clock } from 'react-feather'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -45,9 +46,30 @@ const CustomProdexTable = styled(ProdexTable)`
   }
 `
 
+const ClockIcon = styled(Clock)`
+  display: block;
+  width: 20px;
+  height: 19px;
+  margin: 0 auto;
+  vertical-align: top;
+  font-size: 20px;
+  color: #f16844;
+  line-height: 20px;
+
+  &.grey {
+    color: #848893;
+  }
+`
+
 class MyInventory extends Component {
   state = {
     columns: [
+      {
+        name: 'expired',
+        title: <ClockIcon className='grey' />,
+        width: 45,
+        align: 'center'
+      },
       {
         name: 'productName',
         title: (
@@ -389,6 +411,19 @@ class MyInventory extends Component {
 
       return {
         ...r,
+        expired: r.expired
+          ? (
+            <Popup
+              header={
+                <FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />
+              }
+              trigger={
+                <div>
+                  <ClockIcon />
+                </div>
+              } // <div> has to be there otherwise popup will be not shown
+            />
+            ) : null,
         condition: r.condition ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (

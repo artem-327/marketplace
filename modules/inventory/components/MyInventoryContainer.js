@@ -67,6 +67,7 @@ function mapStateToProps(store, { datagrid }) {
         rawData: po,
         id: po.id,
         product: po.product,
+        expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate): false,
         productName: getSafe(() => po.companyProduct.intProductName),
         productNumber: getSafe(() => po.companyProduct.intProductCode, 'N/A'),
         echoName: getSafe(() => po.companyProduct.echoProduct.name, ''),
