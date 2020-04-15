@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Router from 'next/router'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import { object, func } from 'prop-types'
+import { object, func, boolean } from 'prop-types'
 import moment from 'moment/moment'
 import {
   Sidebar,
@@ -185,7 +185,7 @@ const CustomGrid = styled(Grid)`
       box-shadow: 0 1px 0 0 #dee2e6;
       margin-left: 30px !important;
       margin-right: 30px !important;
-      padding: 16px 0 !important;
+      padding: 15px 0 !important;
       
       > .column:first-child {
         padding: 0 0.714285714em 0 0;
@@ -205,6 +205,11 @@ const CustomGrid = styled(Grid)`
           color: #20273a;
         }
       }
+    }
+    
+    .field-value {
+      white-space: normal;
+      font-weight: 400 !important;
     }
   }
 `
@@ -236,7 +241,7 @@ class AddCart extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.sidebar.isOpen && !prevProps.sidebar.isOpen) {
-      this.setState({ activeTab: 0 }) // Buy tab
+      this.setState({ activeTab: this.props.openInfo ? 1 : 0 }) // Buy or Info tab
     }
     if (this.props.offer !== prevProps.offer) {
       this.setState({ offer: this.formatData() })
@@ -461,7 +466,7 @@ class AddCart extends Component {
                 <FormattedMessage id='cart.availableQuantity' defaultMessage='Available Quantity:' />
               </GridColumn>
 
-              <GridColumn company={10}>
+              <GridColumn computer={10}>
                 <FormattedUnit unit={nameAbbreviation} separator={' '} value={packagingSize * pkgAvailable} />{' '}
               </GridColumn>
             </GridRow>
@@ -713,8 +718,8 @@ class AddCart extends Component {
           <FormattedMessage id={id} defaultMessage={defaultMessage} />
         </GridColumn>
 
-        <GridColumn width={9} className='field=value'>
-          {_.get(offer, name, '')}
+        <GridColumn width={9} className='field-value'>
+          {_.get(offer, name, '') !== '' ? _.get(offer, name, '') : '-'}
         </GridColumn>
       </GridRow>
     )
@@ -775,8 +780,8 @@ class AddCart extends Component {
           <FormattedMessage id={id} defaultMessage={defaultMessage}/>
         </GridColumn>
 
-        <GridColumn width={9} className='field=value'>
-          {displayValue}
+        <GridColumn width={9} className='field-value'>
+          {displayValue !== '' ? displayValue : '-'}
         </GridColumn>
       </GridRow>
     )
@@ -1681,7 +1686,8 @@ class AddCart extends Component {
 AddCart.propTypes = {
   offer: object,
   order: object,
-  postNewOrder: func
+  postNewOrder: func,
+  openInfo: boolean,
   // id: number,
   // pkgAmount: number,
   // pricing: object,

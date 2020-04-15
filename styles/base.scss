@@ -711,6 +711,30 @@ div.cart-sidebar {
 
   > .ui.pointing.secondary.menu:not(.vertical) {
     padding: 0 30px;
+
+    > .item {
+      margin: 0 18px;
+      border-width: 0 0 2px;
+      padding-left: 0;
+      padding-right: 0;
+      text-transform: uppercase;
+      font-family: 'HelveticaNeueLTPro';
+      font-size: 14px;
+      font-weight: 500;
+      color: #848893 !important;
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &.active {
+        color: #20273a !important;
+      }
+    }
   }
 
   > .ui.basic.segment {
@@ -728,6 +752,10 @@ div.cart-sidebar {
 
       > .row {
         padding: 0 16px;
+
+        &:last-child {
+          margin-bottom: 30px;
+        }
 
         .column {
           align-self: flex-start !important;

@@ -275,13 +275,13 @@ class Marketplace extends Component {
     }))
   }
 
-  tableRowClicked = (clickedId, isHoldRequest = false) => {
+  tableRowClicked = (clickedId, isHoldRequest = false, openInfo = false) => {
     const { getProductOffer, sidebarChanged, isProductInfoOpen, closePopup } = this.props
     let { isOpen, id } = this.props.sidebar
     getProductOffer(clickedId)
 
     if (isProductInfoOpen) closePopup()
-    sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest })
+    sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
   }
 
   handleFiltersValue = debounce(value => {
@@ -325,7 +325,7 @@ class Marketplace extends Component {
   }
 
   renderTabMarketplace = () => {
-    const { datagrid, intl, openPopup, isMerchant, tutorialCompleted } = this.props
+    const { datagrid, intl, openPopup, isMerchant, tutorialCompleted, sidebar: { openInfo } } = this.props
     const { columns, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
@@ -482,14 +482,14 @@ class Marketplace extends Component {
             onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()
               if (targetTag !== 'input' && targetTag !== 'label') {
-                this.tableRowClicked(row.id)
+                this.tableRowClicked(row.id, false, true)
               }
             }}
             data-test='marketplace_row_action'
             rowActions={rowActions}
           />
         </div>
-        <AddCart />
+        <AddCart openInfo={openInfo} />
       </>
     )
   }
