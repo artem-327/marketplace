@@ -43,7 +43,7 @@ const initialState = {
   loadingRelatedDocuments: false
 }
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     /*
         case AT.ORDERS_FETCH_REQUESTED:
@@ -560,6 +560,24 @@ export default function(state = initialState, action) {
       return {
         ...state,
         detail: {}
+      }
+    }
+    //TODO check https://pm.artio.net/issues/33545 if is finished adjust cases based on new endpoint
+    case AT.EDITING_TRACKING_NUMBER_PENDING: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.EDITING_TRACKING_NUMBER_FULFILLED: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.EDITING_TRACKING_NUMBER_REJECTED: {
+      return {
+        ...state
       }
     }
 

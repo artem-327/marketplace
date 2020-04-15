@@ -56,7 +56,7 @@ export const assignLots = (orderId, tabLots) => ({
     let orderItems = []
     await asyncForEach(tabLots, async (tab, index) => {
       let orderItemId = tab.orderItemId
-      let assignedLots = tab.lots.reduce(function(filtered, lot) {
+      let assignedLots = tab.lots.reduce(function (filtered, lot) {
         if (lot.selected && lot.allocated) {
           filtered.push({ lotNumber: lot.lotNumber, pkgAmount: lot.allocated })
         }
@@ -293,5 +293,12 @@ export function linkAttachmentToOrder(query) {
 export function clearOrderDetail() {
   return {
     type: AT.CLEARE_ORDER_DETAIL
+  }
+}
+
+export function editingTrackingNumber(typeOrder, orderId, trackingNumber) {
+  return {
+    type: AT.EDITING_TRACKING_NUMBER,
+    payload: Api.editingTrackingNumber(typeOrder, orderId, trackingNumber)
   }
 }

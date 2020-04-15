@@ -1869,6 +1869,7 @@
   "order.detail.nameOfOppositeParty": "Name of Opposite Party",
   "order.detail.echoSystemTransaction": "Echo System Transaction",
   "order.detail.echoSupportPhone": "Echo Support phone number",
+  "order.detail.clickToEdit": "Click to edit",
   "order.actionRequired": "Action Required",
   "order.orderInfo": "Order Info",
   "order.oDate": "O Date",
