@@ -42,18 +42,10 @@ function prepareDetail(data, type) {
   return {
     ...data,
     acceptanceDate:
-      typeof data.acceptanceDate !== 'undefined'
-        ? moment(data.acceptanceDate)
-            .toDate()
-            .toLocaleString()
-        : 'N/A',
+      typeof data.acceptanceDate !== 'undefined' ? moment(data.acceptanceDate).toDate().toLocaleString() : 'N/A',
     amount: <FormattedNumber style='currency' currency={currency} value={subtotal} />,
     buyerRejectionDate:
-      typeof data.buyerRejectionDate !== 'undefined'
-        ? moment(data.buyerRejectionDate)
-            .toDate()
-            .toLocaleString()
-        : null,
+      typeof data.buyerRejectionDate !== 'undefined' ? moment(data.buyerRejectionDate).toDate().toLocaleString() : null,
     carrier: data.shippingCourierName ? data.shippingCourierName : 'N/A',
     chemicalName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
     confirmationDate:
@@ -65,11 +57,7 @@ function prepareDetail(data, type) {
     createdBy: data.buyerName ? data.buyerName : 'N/A',
     creditStatus: OrdersHelper.getCreditStatus(data.creditStatus),
     deliveryDate:
-      typeof data.deliveryDate !== 'undefined'
-        ? moment(data.deliveryDate)
-            .toDate()
-            .toLocaleString()
-        : 'N/A',
+      typeof data.deliveryDate !== 'undefined' ? moment(data.deliveryDate).toDate().toLocaleString() : 'N/A',
     echoFee: getSafe(() => data.echoFee, 0),
     freight: (
       <FormattedNumber style='currency' currency={currency} value={data.shippingPrice ? data.shippingPrice : 0} />
@@ -83,11 +71,7 @@ function prepareDetail(data, type) {
     ), // ! ! TBD
     id: data.id,
     incoterms: 'FOB', // ! ! TBD
-    orderDate:
-      data.orderDate &&
-      moment(data.orderDate)
-        .toDate()
-        .toLocaleString(),
+    orderDate: data.orderDate && moment(data.orderDate).toDate().toLocaleString(),
     orderStatus: OrdersHelper.getOrderStatus(data.orderStatus),
     orderType: type === 'sales' ? 'Sales' : 'Purchase',
     packaging: orderItems.map(d =>
@@ -97,33 +81,24 @@ function prepareDetail(data, type) {
     ),
     paymentInitiationDate:
       typeof data.paymentInitiationDate !== 'undefined'
-        ? moment(data.paymentInitiationDate)
-            .toDate()
-            .toLocaleString()
+        ? moment(data.paymentInitiationDate).toDate().toLocaleString()
         : 'N/A',
     paymentReceivedDate:
       typeof data.paymentReceivedDate !== 'undefined'
-        ? moment(data.paymentReceivedDate)
-            .toDate()
-            .toLocaleString()
+        ? moment(data.paymentReceivedDate).toDate().toLocaleString()
         : 'N/A',
     paymentSendDate:
-      typeof data.paymentSendDate !== 'undefined'
-        ? moment(data.paymentSendDate)
-            .toDate()
-            .toLocaleString()
-        : 'N/A',
+      typeof data.paymentSendDate !== 'undefined' ? moment(data.paymentSendDate).toDate().toLocaleString() : 'N/A',
     paymentStatus: OrdersHelper.getPaymentStatus(data.paymentStatus),
+    pickUpFrom: data.sellerCompanyName,
     pickUpAddress:
-      data.sellerCompanyName +
+      data.returnAddressStreet +
       ', ' +
-      data.sellerCompanyAddressStreet +
+      data.returnAddressCity +
       ', ' +
-      data.sellerCompanyAddressCity +
+      data.returnAddressZip +
       ', ' +
-      data.sellerCompanyAddressZip +
-      ', ' +
-      data.sellerCompanyAddressCountry,
+      data.returnAddressCountry,
     productCode: orderItems.map(d => (d.echoProductCode ? d.echoProductCode : 'N/A')),
     productName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
     productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
@@ -136,54 +111,36 @@ function prepareDetail(data, type) {
         ? `${pkgAmount * d.packagingSize} ${d.packagingUnit.nameAbbreviation}`
         : 'N/A'
     }),
-    refundDate:
-      typeof data.refundDate !== 'undefined'
-        ? moment(data.refundDate)
-            .toDate()
-            .toLocaleString()
-        : null,
+    refundDate: typeof data.refundDate !== 'undefined' ? moment(data.refundDate).toDate().toLocaleString() : null,
     returnDeliveryDate:
-      typeof data.returnDeliveryDate !== 'undefined'
-        ? moment(data.returnDeliveryDate)
-            .toDate()
-            .toLocaleString()
-        : null,
+      typeof data.returnDeliveryDate !== 'undefined' ? moment(data.returnDeliveryDate).toDate().toLocaleString() : null,
     returnShipDate:
-      typeof data.returnShipDate !== 'undefined'
-        ? moment(data.returnShipDate)
-            .toDate()
-            .toLocaleString()
-        : null,
+      typeof data.returnShipDate !== 'undefined' ? moment(data.returnShipDate).toDate().toLocaleString() : null,
     returnStatus: OrdersHelper.getReturnStatus(data.returnStatus),
     returnTo: data.sellerCompanyName,
     returnAddressName: data.returnAddressName,
+    returnAddressEmail: data.returnAddressEmail,
+    returnAddressPhone: data.returnAddressPhone,
     returnAddress: getReturnAddress(data),
     returnCourierName: data.returnCourierName,
     reviewStatus: OrdersHelper.getReviewStatus(data.reviewStatus),
     sellerRejectionDate:
       typeof data.sellerRejectionDate !== 'undefined'
-        ? moment(data.sellerRejectionDate)
-            .toDate()
-            .toLocaleString()
+        ? moment(data.sellerRejectionDate).toDate().toLocaleString()
         : null,
     service: 'N/A', // ! ! TBD
-    shipDate:
-      typeof data.shipDate !== 'undefined'
-        ? moment(data.shipDate)
-            .toDate()
-            .toLocaleString()
-        : 'N/A',
+    shipDate: typeof data.shipDate !== 'undefined' ? moment(data.shipDate).toDate().toLocaleString() : 'N/A',
     shippingContact: data.sellerCompanyContactName ? data.sellerCompanyContactName : 'N/A',
     shippingStatus: OrdersHelper.getShippingStatus(data.shippingStatus),
-    shipTo: data.buyerCompanyName,
+    shipTo: data.shippingAddressName,
     shipToAddress:
-      data.buyerCompanyAddressStreet +
+      data.shippingAddressStreet +
       ', ' +
-      data.buyerCompanyAddressCity +
+      data.shippingAddressCity +
       ', ' +
-      data.buyerCompanyAddressZip +
+      data.shippingAddressZip +
       ', ' +
-      data.buyerCompanyAddressCountry,
+      data.shippingAddressCountry,
     subtotal: <FormattedNumber style='currency' currency={currency} value={subtotal} />, //"$" + totalPrice.formatMoney(2),
     terms: 'Net 30', // ! ! TBD
     total: <FormattedNumber style='currency' currency={currency} value={totalPriceWithShipping} />, //"$" + totalPriceWithShipping.formatMoney(2),
