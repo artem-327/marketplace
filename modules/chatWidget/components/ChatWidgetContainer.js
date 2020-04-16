@@ -16,7 +16,8 @@ function mapStateToProps(state) {
       getSafe(() => state.simpleAdd.sidebarDetailOpen, false) ||
       getSafe(() => state.cart.sidebar.isOpen, false) ||
       getSafe(() => state.wantedBoard.editWindowOpen, false) ||
-      getSafe(() => state.settings.isOpenSidebar, false)
+      getSafe(() => state.settings.isOpenSidebar, false) ||
+      getSafe(() => state.companyProductInfo.isOpen, false)
     )
   }
 
