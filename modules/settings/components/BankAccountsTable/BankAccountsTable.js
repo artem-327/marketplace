@@ -38,6 +38,13 @@ const Container = styled.div`
   max-height: 70vh;
 `
 
+const CustomDiv = styled.div`
+  border-radius: 4px;
+  border: solid 1px #2599d5;
+  background-color: #ffffff;
+  padding: 30px;
+`
+
 const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
   <Formik
     initialValues={{
@@ -199,23 +206,20 @@ class BankAccountsTable extends Component {
   componentDidMount() {
     this.props.getBankAccountsDataRequest()
     this.props.getCurrentUser()
-    this.props.getIdentity()
-      .then(resp => {
-        const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
-        if (hasDwollaAccount) this.props.getDwollaAccBalance()
-      })
+    this.props.getIdentity().then(resp => {
+      const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
+      if (hasDwollaAccount) this.props.getDwollaAccBalance()
+    })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.tabClicked !== prevProps.tabClicked)
-    {
+    if (this.props.tabClicked !== prevProps.tabClicked) {
       this.props.getBankAccountsDataRequest()
       this.props.getCurrentUser()
-      this.props.getIdentity()
-        .then(resp => {
-          const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
-          if (hasDwollaAccount) this.props.getDwollaAccBalance()
-        })
+      this.props.getIdentity().then(resp => {
+        const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
+        if (hasDwollaAccount) this.props.getDwollaAccBalance()
+      })
     }
   }
 
@@ -269,7 +273,7 @@ class BankAccountsTable extends Component {
                       },
                       { item: row.name }
                     )
-                  ).then(() => deleteBankAccount(row.id)),
+                  ).then(() => deleteBankAccount(row.id))
               },
               {
                 text: formatMessage({
@@ -339,7 +343,7 @@ class BankAccountsTable extends Component {
             )}
 
             {bankAccounts.documentStatus && (
-              <div>
+              <CustomDiv>
                 <FormattedMessage id='dwolla.document.explanatory.header1'>{text => <h3>{text}</h3>}</FormattedMessage>
                 <FormattedMessage id='dwolla.document.explanatory.text1'>{text => <div>{text}</div>}</FormattedMessage>
                 <FormattedMessage id='dwolla.document.explanatory.header2'>{text => <h3>{text}</h3>}</FormattedMessage>
@@ -370,7 +374,7 @@ class BankAccountsTable extends Component {
                 <FormattedMessage id='dwolla.document.explanatory.li22'>{text => <li>{text}</li>}</FormattedMessage>
                 <FormattedMessage id='dwolla.document.explanatory.li23'>{text => <li>{text}</li>}</FormattedMessage>
                 <FormattedMessage id='dwolla.document.explanatory.li24'>{text => <li>{text}</li>}</FormattedMessage>
-              </div>
+              </CustomDiv>
             )}
           </Container>
         )}
@@ -420,8 +424,7 @@ const displayStatus = (r, preferredBankAccountId) => {
         <Label color='blue' horizontal>
           <FormattedMessage id='settings.preferred' defaultMessage='Preferred' />
         </Label>
-        ) : null
-      }
+      ) : null}
     </>
   )
 }
@@ -447,7 +450,7 @@ const mapStateToProps = state => {
     loading: state.settings.loading,
     rows: state.settings.bankAccountsRows.map(r => ({
       ...r,
-      statusLabel: displayStatus(r, preferredBankAccountId),
+      statusLabel: displayStatus(r, preferredBankAccountId)
       // some changes here
     })),
     preferredBankAccountId,

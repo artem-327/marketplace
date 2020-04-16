@@ -1,7 +1,7 @@
 .uploadVerifyFiles {
   padding: 1em;
   margin: 0 0.7142857em 1em 0.7142857em;
-  background: #f5f5f5 none;
+  background: #f8f9fb none;
   text-align: center;
   font-size: 1.4285714rem;
   color: #cccccc;
@@ -34,4 +34,8 @@
     display: block;
     padding-top: 1em;
   }
+}
+
+.ui.form .field {
+  margin: 0 !important;
 }
