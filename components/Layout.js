@@ -323,10 +323,23 @@ class Layout extends Component {
             <Rectangle>
               <IconMinimize2 size='28' />
               <div>
-                <span><FormattedMessage id='global.takeOverInfo'
-                                        defaultMessage={`You are working in take-over mode on behalf of '${companyName}'.`}
-                                        values={{ companyName: companyName }} /></span>
-                {<Popup content={<FormattedMessage id='global.returnToAdmin' defaultMessage='Return to Admin' />} trigger={<CustomSpanReturn onClick={() => takeOverCompanyFinish()}><ReturnToAdmin /></CustomSpanReturn>} />}
+                <span>
+                  <FormattedMessage
+                    id='global.takeOverInfo'
+                    defaultMessage={`You are working in take-over mode on behalf of '${companyName}'.`}
+                    values={{ companyName: companyName }}
+                  />
+                </span>
+                {
+                  <Popup
+                    content={<FormattedMessage id='global.returnToAdmin' defaultMessage='Return to Admin' />}
+                    trigger={
+                      <CustomSpanReturn onClick={() => takeOverCompanyFinish()}>
+                        <ReturnToAdmin />
+                      </CustomSpanReturn>
+                    }
+                  />
+                }
               </div>
             </Rectangle>
           </CustomDiv>
@@ -354,7 +367,8 @@ const mapStateToProps = state => {
     collapsedMenu: state.layout.collapsedMenu,
     isOpen: getSafe(() => !state.auth.identity.tosAgreementDate, false),
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
-    takeover: getSafe(() => !!state.auth.identity.company.id, false) && getSafe(() => state.auth.identity.isAdmin, false),
+    takeover:
+      getSafe(() => !!state.auth.identity.company.id, false) && getSafe(() => state.auth.identity.isAdmin, false),
     phoneCountryCodes: getSafe(() => state.phoneNumber.phoneCountryCodes, []),
     companyId: getSafe(() => state.auth.identity.company.id, false),
     hasLogo: getSafe(() => state.auth.identity.company.hasLogo, false),
