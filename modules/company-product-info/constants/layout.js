@@ -15,7 +15,10 @@ export const BottonButtonsShowOnly = styled.div`
 `
 
 export const SegmentShowOnly = styled(Segment)`
-  margin: 1.071428571em 0 0 0; 
+  margin: 1.071428571em 0 0 0;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  
   .grid {
     margin: 0;
     padding: 0 0.142857143em;

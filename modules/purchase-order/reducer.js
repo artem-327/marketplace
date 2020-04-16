@@ -407,7 +407,7 @@ export default function reducer(state = initialState, action) {
     case AT.SHIPPING_CHANGED: {
       return {
         ...state,
-        shipping: { ...state.shipping, ...action.payload }
+        shipping: { ...state.shipping, selectedAddress: action.payload }
       }
     }
 
