@@ -19,8 +19,8 @@ import {
   DivInRectangle,
   CustomSpanReturn
 } from '~/components/constants/layout'
-import { Container, Menu, Dropdown, Icon, Image, FormField } from 'semantic-ui-react'
-import { Sidebar, Minimize2 } from 'react-feather'
+import { Container, Menu, Dropdown, Icon, Image, FormField, Popup } from 'semantic-ui-react'
+import { Sidebar, Minimize2, LogOut } from 'react-feather'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/logo-echosystem.png'
 import LogoSmall from '~/assets/images/nav/logo4x.png'
@@ -43,7 +43,7 @@ import Profile from '~/modules/profile/components/Profile'
 import React, { Component } from 'react'
 import Router from 'next/router'
 import { getSafe } from '~/utils/functions'
-import { injectIntl } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import { AgreementModal } from '~/components/modals'
 import { getCountryCodes } from '~/modules/phoneNumber/actions'
 
@@ -60,6 +60,12 @@ import ErrorComponent from '~/components/error'
 export const IconMinimize2 = styled(Minimize2)`
   text-align: center;
   padding-right: 10px;
+`
+
+const ReturnToAdmin = styled(LogOut)`
+  height: 22px;
+  margin-left: 10px;
+  vertical-align: bottom;
 `
 
 const clientCompanyRoutes = {
@@ -317,8 +323,10 @@ class Layout extends Component {
             <Rectangle>
               <IconMinimize2 size='28' />
               <div>
-                <span>You are working on take-over mode. Company: {companyName}. </span>
-                {<CustomSpanReturn onClick={() => takeOverCompanyFinish()}>Return to admin</CustomSpanReturn>}
+                <span><FormattedMessage id='global.takeOverInfo'
+                                        defaultMessage={`You are working in take-over mode on behalf of '${companyName}'.`}
+                                        values={{ companyName: companyName }} /></span>
+                {<Popup content={<FormattedMessage id='global.returnToAdmin' defaultMessage='Return to Admin' />} trigger={<CustomSpanReturn onClick={() => takeOverCompanyFinish()}><ReturnToAdmin /></CustomSpanReturn>} />}
               </div>
             </Rectangle>
           </CustomDiv>
