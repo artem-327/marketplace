@@ -3,17 +3,36 @@ import { array, func, object, bool } from 'prop-types'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { GridRow, GridColumn, Divider, Header, Button } from 'semantic-ui-react'
+import { GridRow, GridColumn, Header, Button, Icon, Grid } from 'semantic-ui-react'
 import { Dropdown } from 'formik-semantic-ui-fixed-validation'
+import styled from 'styled-components'
 
 import ShippingAddress from './ShippingAddress'
 import { getSafe } from '~/utils/functions'
+
+import {
+  VerticalUnpaddedColumn,
+  StyledRow,
+  UnpaddedColumn,
+  RightUnpaddedRow,
+  TopUnpaddedColumn
+} from '~/modules/cart/components/StyledComponents'
+
+const StyledButton = styled(Button)`
+  ${props => props.basic &&
+    `
+    border-radius: 4px !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06) !important;
+    border: solid 1px #dee2e6 !important;
+  `
+  }
+`
 
 class Shipping extends Component {
   handleToggleChange = otherAddresses => {
     this.props.formikProps.setFieldValue('address', null)
     if (otherAddresses !== this.props.otherAddresses) {
-      let { branches, getBranches, warehouses, getWarehouses } = this.props
+      let { warehouses, getWarehouses } = this.props
 
       this.props.handleToggleChange(otherAddresses).then(() => {
         // if (branches.length === 0 && !this.props.otherAddresses) getBranches()
@@ -49,7 +68,7 @@ class Shipping extends Component {
   }
 
   render() {
-    let { deliveryAddresses, /* branches, */ warehouses, getAddress, selectedAddress, intl } = this.props
+    let { deliveryAddresses, /* branches, */ warehouses, getAddress, selectedAddress, intl, handleOpen } = this.props
     let { formatMessage } = intl
 
     let addresses = this.props.otherAddresses ? deliveryAddresses : warehouses // branches
@@ -64,10 +83,10 @@ class Shipping extends Component {
         text: this.props.otherAddresses
           ? `${getSafe(() => i.addressName, '') ? getSafe(() => i.addressName, '') : getSafe(() => i.cfName, '')} `
           : `${
-              getSafe(() => i.deliveryAddress.cfName, '')
-                ? getSafe(() => i.deliveryAddress.cfName, '')
-                : getSafe(() => i.deliveryAddress.addressName, '')
-            } `,
+          getSafe(() => i.deliveryAddress.cfName, '')
+            ? getSafe(() => i.deliveryAddress.cfName, '')
+            : getSafe(() => i.deliveryAddress.addressName, '')
+          } `,
         value: i.id,
         key: i.id,
         content: (
@@ -83,8 +102,8 @@ class Shipping extends Component {
                     ? getSafe(() => i.deliveryAddress.cfName, '')
                     : getSafe(() => i.deliveryAddress.addressName, '')
                   : !i.addressName
-                  ? getSafe(() => i.cfName, '')
-                  : getSafe(() => i.addressName, '')}
+                    ? getSafe(() => i.cfName, '')
+                    : getSafe(() => i.addressName, '')}
               </div>
             }
             subheader={
@@ -95,80 +114,100 @@ class Shipping extends Component {
       }
     })
 
-    const editOrAddMessage = selectedAddress ? 'Edit' : 'Add New'
-    const editOrAddId = selectedAddress ? 'global.edit' : 'global.addNew'
 
     return (
       <>
-        <GridRow columns={2} className='header'>
-          <GridColumn>
+
+        <StyledRow verticalAlign='middle' columns={2} bottomShadow>
+          <VerticalUnpaddedColumn>
             <Header as='h2'>
               <FormattedMessage id='cart.1shipping' defaultMessage='1. Shipping' />
             </Header>
-          </GridColumn>
+          </VerticalUnpaddedColumn>
 
-          <GridColumn floated='right'>
-            <span
-              className='headerAddtext'
-              onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !selectedAddress })}
-              data-test='purchase_order_edit_address'>
-              <FormattedMessage id={editOrAddId} defaultMessage={editOrAddMessage}>
+          <UnpaddedColumn textAlign='right'>
+            <Button
+              type='button'
+              data-test='purchase_order_edit_address'
+              color='blue'
+              size='tiny'
+              onClick={() => handleOpen({ modalOpen: true, isNewAddress: true })}>
+              <Icon name='plus circle' />
+              <FormattedMessage id='global.addNew' defaultMessage='Add New'>
                 {text => text}
               </FormattedMessage>
-            </span>
-          </GridColumn>
-        </GridRow>
-        <GridRow>
-          <GridColumn textAlign='center' tablet={16} computer={8}>
-            <Button.Group>
-              <Button
-                type='button'
-                disabled={this.props.shippingQuotesAreFetching}
-                onClick={() => this.handleToggleChange(true)}
-                active={this.props.otherAddresses}
-                data-test='purchase_order_address_btn'>
-                <FormattedMessage id='cart.addresses' defaultMessage='Addresses'>
-                  {text => text}
-                </FormattedMessage>
-              </Button>
-              <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
-              <Button
-                type='button'
-                disabled={this.props.shippingQuotesAreFetching}
-                onClick={() => this.handleToggleChange(false)}
-                active={!this.props.otherAddresses}
-                data-test='purchase_order_branches_btn'>
-                <FormattedMessage id='cart.warehouses' defaultMessage='Warehouses'>
-                  {text => text}
-                </FormattedMessage>
-              </Button>
-            </Button.Group>
-          </GridColumn>
-        </GridRow>
-        <GridRow>
-          <GridColumn tablet={16} computer={8}>
-            <Dropdown
-              name='address'
-              fluid
-              selection
-              inputProps={{
-                icon: 'search',
-                search: (options, query) => {
-                  return options.filter(opt => opt.searchText.toLowerCase().includes(query.trim().toLowerCase()))
-                },
-                disabled: this.props.shippingQuotesAreFetching,
-                onChange: (_, { value }) => getAddress(value),
-                placeholder: <FormattedMessage id='global.selectLocation' defaultMessage='Select Location' />
-              }}
-              options={dropdownOptions}
-              value={selectedAddress ? selectedAddress.id : null}
-              data-test='purchase_order_location_drpdn'
-            />
-          </GridColumn>
-        </GridRow>
-        {selectedAddress && <Divider />}
+            </Button>
+          </UnpaddedColumn>
+        </StyledRow>
 
-        <ShippingAddress selectedAddress={selectedAddress} />
+        <GridColumn computer={8}>
+          <Grid>
+            <RightUnpaddedRow>
+              <UnpaddedColumn computer={16}>
+                <Button.Group fluid>
+                  <StyledButton
+                    type='button'
+                    disabled={this.props.shippingQuotesAreFetching}
+                    onClick={() => this.handleToggleChange(true)}
+                    active={this.props.otherAddresses}
+                    {...this.props.otherAddresses ? { color: 'blue' } : { basic: true }}
+                    data-test='purchase_order_address_btn'>
+                    <FormattedMessage id='cart.addresses' defaultMessage='Addresses'>
+                      {text => text}
+                    </FormattedMessage>
+                  </StyledButton>
+                  <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
+                  <StyledButton
+                    type='button'
+                    disabled={this.props.shippingQuotesAreFetching}
+                    onClick={() => this.handleToggleChange(false)}
+                    active={!this.props.otherAddresses}
+                    {...!this.props.otherAddresses ? { color: 'blue' } : { basic: true }}
+                    data-test='purchase_order_branches_btn'>
+                    <FormattedMessage id='cart.warehouses' defaultMessage='Warehouses'>
+                      {text => text}
+                    </FormattedMessage>
+                  </StyledButton>
+                </Button.Group>
+              </UnpaddedColumn>
+            </RightUnpaddedRow>
+
+            <RightUnpaddedRow>
+              <UnpaddedColumn computer={16}>
+                <Dropdown
+                  name='address'
+                  fluid
+                  selection
+                  inputProps={{
+                    icon: 'search',
+                    search: (options, query) => {
+                      return options.filter(opt => opt.searchText.toLowerCase().includes(query.trim().toLowerCase()))
+                    },
+                    disabled: this.props.shippingQuotesAreFetching,
+                    onChange: (_, { value }) => getAddress(value),
+                    placeholder: <FormattedMessage id='global.selectLocation' defaultMessage='Select Location' />
+                  }}
+                  options={dropdownOptions}
+                  value={selectedAddress ? selectedAddress.id : null}
+                  data-test='purchase_order_location_drpdn'
+                />
+              </UnpaddedColumn>
+            </RightUnpaddedRow>
+          </Grid>
+        </GridColumn>
+
+        <GridColumn computer={8}>
+          <ShippingAddress billingInfo={selectedAddress} companyName={this.props.companyName} additionalContent={
+            <GridRow>
+              <TopUnpaddedColumn computer={16}>
+                <Button type='button' onClick={() => handleOpen({ modalOpen: true, isNewAddress: false })} fluid basic>
+                  <Icon name='edit outline' />
+                  <FormattedMessage id='global.edit' defaultMessage='Edit'>{text => text}</FormattedMessage>
+                </Button>
+              </TopUnpaddedColumn>
+            </GridRow>
+          } />
+        </GridColumn>
       </>
     )
   }

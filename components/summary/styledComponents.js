@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 export const RelaxedSegment = styled(Segment)`
   margin-top: 0px !important;
-  background-color: #fafafa !important;
+  background-color: #ffffff !important;
 `
 
 export const RelaxedRow = styled(GridRow)`
