@@ -70,10 +70,12 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
         : []
 
     params = {
+      anonymous: getSafe(() => values.anonymous, null),
       assayMin: getSafe(() => parseFloat(values.assayMin)),
       assayMax: getSafe(() => parseFloat(values.assayMax)),
       attachments: attachments.concat(additional),
       broadcasted: getSafe(() => values.broadcasted, false),
+      certOfAnalysis: getSafe(() => values.certOfAnalysis, null),
       costRecords:
         values.trackSubCosts && values.costs
           ? values.costs.map(cost => {
@@ -104,7 +106,7 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
           values.pricingTiers.map((tier, index) => {
             return {
               pricePerUOM: parseFloat(tier.price),
-              quantityFrom: parseInt(!index ? values.minimum : tier.quantityFrom)
+              quantityFrom: parseInt(tier.quantityFrom)
             }
           }),
         []
@@ -468,5 +470,19 @@ export function removeAttachmentLinkProductOffer(attachmentId, productOfferId) {
     async payload() {
       return await api.removeAttachmentLinkProductOffer(attachmentId, productOfferId)
     }
+  }
+}
+
+export function setPricingEditOpenId(id) {
+  return {
+    type: AT.INVENTORY_SET_PRICING_EDIT_OPEN_ID,
+    payload: id
+  }
+}
+
+export function closePricingEditPopup() {
+  return {
+    type: AT.INVENTORY_SET_PRICING_EDIT_OPEN_ID,
+    payload: null
   }
 }

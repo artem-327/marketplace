@@ -1147,7 +1147,11 @@ class Detail extends Component {
                       <Grid.Column>
                         <GridData columns={2}>
                           <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.pickupAddress' defaultMessage='Pick-Up Address' />
+                            <FormattedMessage id='order.pickupFrom' defaultMessage='Pick-Up From' />
+                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.pickUpFrom}</GridDataColumn>
+                          <GridDataColumn width={keyColumn} className='key'>
+                            <FormattedMessage id='order.pickupFromAddress' defaultMessage='Pick-Up From Address' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.pickUpAddress}</GridDataColumn>
                         </GridData>
@@ -1157,15 +1161,15 @@ class Detail extends Component {
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.shippingContact' defaultMessage='Shipping Contact' />
                           </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.shippingContact}</GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.returnAddressName}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.contactNumber' defaultMessage='Contact Number' />
                           </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.contactNumber}</GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.returnAddressPhone}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.contactEmail' defaultMessage='Contact E-Mail' />
                           </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.contactEmail}</GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.returnAddressEmail}</GridDataColumn>
                         </GridData>
                       </Grid.Column>
                     </Grid.Row>

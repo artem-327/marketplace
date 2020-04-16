@@ -50,7 +50,7 @@ function prepareDetail(data, type) {
     chemicalName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
     confirmationDate:
       typeof data.confirmationDate !== 'undefined'
-        ? moment(data.confirmationDate).format('MMM Do, YYYY h:mm:ss A')
+        ? moment(data.confirmationDate).toDate().toLocaleString()
         : 'N/A',
     contactEmail: data.sellerCompanyContactEmail ? data.sellerCompanyContactEmail : 'N/A',
     contactNumber: data.sellerCompanyContactPhone ? data.sellerCompanyContactPhone : 'N/A',
@@ -90,16 +90,15 @@ function prepareDetail(data, type) {
     paymentSendDate:
       typeof data.paymentSendDate !== 'undefined' ? moment(data.paymentSendDate).toDate().toLocaleString() : 'N/A',
     paymentStatus: OrdersHelper.getPaymentStatus(data.paymentStatus),
+    pickUpFrom: data.sellerCompanyName,
     pickUpAddress:
-      data.sellerCompanyName +
+      data.returnAddressStreet +
       ', ' +
-      data.sellerCompanyAddressStreet +
+      data.returnAddressCity +
       ', ' +
-      data.sellerCompanyAddressCity +
+      data.returnAddressZip +
       ', ' +
-      data.sellerCompanyAddressZip +
-      ', ' +
-      data.sellerCompanyAddressCountry,
+      data.returnAddressCountry,
     productCode: orderItems.map(d => (d.echoProductCode ? d.echoProductCode : 'N/A')),
     productName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
     productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
@@ -120,6 +119,8 @@ function prepareDetail(data, type) {
     returnStatus: OrdersHelper.getReturnStatus(data.returnStatus),
     returnTo: data.sellerCompanyName,
     returnAddressName: data.returnAddressName,
+    returnAddressEmail: data.returnAddressEmail,
+    returnAddressPhone: data.returnAddressPhone,
     returnAddress: getReturnAddress(data),
     returnCourierName: data.returnCourierName,
     reviewStatus: OrdersHelper.getReviewStatus(data.reviewStatus),
@@ -131,17 +132,17 @@ function prepareDetail(data, type) {
     shipDate: typeof data.shipDate !== 'undefined' ? moment(data.shipDate).toDate().toLocaleString() : 'N/A',
     shippingContact: data.sellerCompanyContactName ? data.sellerCompanyContactName : 'N/A',
     shippingStatus: OrdersHelper.getShippingStatus(data.shippingStatus),
-    shipTo: data.buyerCompanyName,
+    shipTo: data.shippingAddressName,
     shipToAddress:
-      data.buyerCompanyAddressStreet +
+      data.shippingAddressStreet +
       ', ' +
-      data.buyerCompanyAddressCity +
+      data.shippingAddressCity +
       ', ' +
-      data.buyerCompanyAddressZip +
+      data.shippingAddressZip +
       ', ' +
-      data.buyerCompanyAddressCountry,
+      data.shippingAddressCountry,
     subtotal: <FormattedNumber style='currency' currency={currency} value={subtotal} />, //"$" + totalPrice.formatMoney(2),
-    terms: 'Net 30', // ! ! TBD
+    terms: data.cfPaymentTerms ? data.cfPaymentTerms : 'N/A',
     total: <FormattedNumber style='currency' currency={currency} value={totalPriceWithShipping} />, //"$" + totalPriceWithShipping.formatMoney(2),
     totalPkg: orderItems.map(d => {
       if (!d.productOffers.length) return 'N/A'

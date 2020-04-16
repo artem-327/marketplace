@@ -5,7 +5,19 @@ import Shipping from './Shipping'
 import ShippingEdit from './ShippingEdit'
 import ShippingQuote from './ShippingQuote'
 import Payment from './Payment'
-import { Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment, Popup } from 'semantic-ui-react'
+import {
+  Container as SemanticContainer,
+  Header,
+  Button,
+  Icon,
+  Grid,
+  GridColumn,
+  GridRow,
+  Segment,
+  Popup,
+  Message,
+  Divider
+} from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -27,10 +39,33 @@ import * as Yup from 'yup'
 import '../styles/PurchaseOrder.scss'
 import { errorMessages } from '~/constants/yupValidation'
 
+import {
+  VerticalUnpaddedColumn,
+  StyledRow,
+  TopUnpaddedRow,
+  GridContainer,
+  VerticalUnpaddedRow
+} from '~/modules/cart/components/StyledComponents'
+
 const RelaxedForm = styled(Form)`
   padding-top: 1.5rem !important;
   padding-bottom: 50px !important;
   overflow: auto;
+`
+
+const Container = styled(SemanticContainer)`
+  padding: 20px 30px 30px 30px !important;
+`
+
+const WarningMessage = styled(Message)`
+  border-radius: 4px;
+  border: solid 1px #ff9d42;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  background-color: #ffffff !important;
+  > i {
+    color: #ff9d42;
+  }
 `
 
 const validationSchema = Yup.object().shape({
@@ -39,9 +74,12 @@ const validationSchema = Yup.object().shape({
 
 class PurchaseOrder extends Component {
   state = {
+    modalOpen: false,
+    isNewAddress: false,
     otherAddresses: true,
     submitting: false,
     addressId: 'deliveryAddressId',
+    shippingQuotes: [],
     selectedAddress: ''
   }
   componentDidMount = async () => {
@@ -72,6 +110,7 @@ class PurchaseOrder extends Component {
           {
             otherAddresses: false,
             addressId: 'warehouseId',
+            shippingQuotes: preFilledValues.quotes.rates.map(d => d.shipmentRate),
             selectedAddress: selectedAddress
           },
           () => this.handleQuoteSelect(preFilledValues.freightIndex)
@@ -238,8 +277,7 @@ class PurchaseOrder extends Component {
       shippingQuotes,
       shippingQuotesAreFetching,
       shipping,
-      purchaseHazmatEligible,
-      cartItems
+      purchaseHazmatEligible
     } = this.props
     if (cartIsFetching) return <Spinner />
     if (cart.cartItems.length === 0) Router.push('/cart')
@@ -259,34 +297,18 @@ class PurchaseOrder extends Component {
 
     let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit}` : ''
 
-    let isAnyItemHazardous = cartItems.some(
+    let isAnyItemHazardous = cart.cartItems.some(
       item => getSafe(() => item.productOffer.companyProduct.hazardous, false) === true
     )
 
     return (
-      <div className='app-inner-main flex stretched'>
-        <div className='header-top' style={{ zIndex: 10, backgroundColor: '#FFF' }}>
-          <Container fluid style={{ padding: '0 32px' }}>
-            <Menu secondary className='page-part'>
-              <Menu.Menu position='right'>
-                <Menu.Item>
-                  <Button
-                    icon
-                    basic
-                    labelPosition='left'
-                    onClick={() => Router.push('/cart')}
-                    data-test='purchase_order_back_to_cart_btn'>
-                    <Icon name='chevron left' />
-                    <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                </Menu.Item>
-              </Menu.Menu>
-            </Menu>
-          </Container>
-        </div>
-
+      <Container>
+        <Button basic onClick={() => Router.push('/cart')} data-test='purchase_order_back_to_cart_btn'>
+          <Icon name='shopping cart' />
+          <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart'>
+            {text => text}
+          </FormattedMessage>
+        </Button>
         <RelaxedForm
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -297,13 +319,14 @@ class PurchaseOrder extends Component {
             this.formikProps = formikProps
 
             return (
-              <Grid centered>
-                <GridColumn mobile={14} tablet={9} computer={8}>
-                  {shipping.isShippingEdit && (
+              <GridContainer>
+                <GridColumn mobile={14} tablet={9} computer={9}>
+                  {this.state.modalOpen && (
                     <ShippingEdit
+                      onClose={() => this.setState({ modalOpen: false })}
                       savedShippingPreferences={shipping.savedShippingPreferences}
                       selectedAddress={this.state.selectedAddress}
-                      isNewAddress={shipping.isNewAddress}
+                      isNewAddress={this.state.isNewAddress}
                       shippingChanged={this.props.shippingChanged}
                       postNewDeliveryAddress={this.postNewDeliveryAddress}
                       updateDeliveryAddress={this.updateDeliveryAddress}
@@ -312,43 +335,43 @@ class PurchaseOrder extends Component {
                       states={this.props.states}
                       provinces={this.props.provinces}
                       isFetching={this.props.isFetching}
-                      initialValues={this.props.initialValues}
+                      initialValues={this.state.isNewAddress ? null : this.props.initialValues}
                     />
-                  )}
-                  {!shipping.isShippingEdit && (
-                    <Segment>
-                      <Grid className='bottom-padded'>
-                        <Shipping
-                          otherAddresses={this.state.otherAddresses}
-                          deliveryAddresses={deliveryAddresses}
-                          dispatch={dispatch}
-                          shippingChanged={this.props.shippingChanged}
-                          getAddress={this.getAddress}
-                          selectedAddress={this.state.selectedAddress}
-                          getBranches={this.props.getBranches}
-                          branchesAreFetching={this.props.branchesAreFetching}
-                          branches={this.props.branches}
-                          getWarehouses={this.props.getWarehouses}
-                          warehousesFetching={this.props.warehousesFetching}
-                          warehouses={this.props.warehouses}
-                          handleToggleChange={this.handleToggleChange}
-                          shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
-                          formikProps={formikProps}
-                          weightLimitExceed={cart.weightLimitExceed}
-                        />
-                      </Grid>
-                    </Segment>
                   )}
 
                   <Segment>
                     <Grid className='bottom-padded'>
-                      <GridRow className='header'>
-                        <GridColumn>
+                      <Shipping
+                        handleOpen={({ modalOpen, isNewAddress }) => this.setState({ modalOpen, isNewAddress })}
+                        otherAddresses={this.state.otherAddresses}
+                        deliveryAddresses={deliveryAddresses}
+                        dispatch={dispatch}
+                        shippingChanged={this.props.shippingChanged}
+                        getAddress={this.getAddress}
+                        selectedAddress={this.state.selectedAddress}
+                        getBranches={this.props.getBranches}
+                        branchesAreFetching={this.props.branchesAreFetching}
+                        branches={this.props.branches}
+                        getWarehouses={this.props.getWarehouses}
+                        warehousesFetching={this.props.warehousesFetching}
+                        warehouses={this.props.warehouses}
+                        handleToggleChange={this.handleToggleChange}
+                        shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
+                        formikProps={formikProps}
+                        weightLimitExceed={cart.weightLimitExceed}
+                      />
+                    </Grid>
+                  </Segment>
+
+                  <Segment>
+                    <Grid>
+                      <StyledRow verticalAlign='middle' bottomShadow>
+                        <VerticalUnpaddedColumn>
                           <Header as='h2'>
                             <FormattedMessage id='cart.2freightSelection' defaultMessage='2. Freight Selection' />
                           </Header>
-                        </GridColumn>
-                      </GridRow>
+                        </VerticalUnpaddedColumn>
+                      </StyledRow>
                       {!cart.weightLimitExceed && this.state.selectedAddress ? (
                         <ShippingQuote
                           currency={currency}
@@ -362,10 +385,14 @@ class PurchaseOrder extends Component {
                         !this.state.selectedAddress && (
                           <GridRow>
                             <GridColumn>
-                              <FormattedMessage
-                                id='cart.selectWhOrAddress'
-                                defaultMessage='Please, select delivery address or warehouse first.'
-                              />
+                              <WarningMessage>
+                                <Icon size='large' name='warning circle' />
+                                <FormattedMessage
+                                  id='cart.selectWhOrAddress'
+                                  defaultMessage='Please, select delivery address or warehouse first.'>
+                                  {text => text}{' '}
+                                </FormattedMessage>
+                              </WarningMessage>
                             </GridColumn>
                           </GridRow>
                         )
@@ -374,11 +401,20 @@ class PurchaseOrder extends Component {
                         <>
                           <GridRow>
                             <GridColumn computer={16}>
-                              <FormattedMessage
-                                id='cart.weightLimitExceeded'
-                                defaultMessage={`Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
-                                values={{ limit: weightLimitStr }}
-                              />
+                              <WarningMessage
+                                icon='warning circle'
+                                header={formatMessage({
+                                  id: 'cart.weightLimitExceeded.header',
+                                  defaultMessage:
+                                    'We are sorry, but no matching Shipping Quotes were provided by logistics company.'
+                                })}
+                                content={formatMessage(
+                                  {
+                                    id: 'cart.weightLimitExceeded.content',
+                                    defaultMessage: `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
+                                  },
+                                  { limit: weightLimitStr }
+                                )}></WarningMessage>
                             </GridColumn>
                           </GridRow>
                         </>
@@ -401,9 +437,11 @@ class PurchaseOrder extends Component {
                         !shippingQuotesAreFetching &&
                         (cart.weightLimitExceed || getSafe(() => shippingQuotes.rates, []).length === 0) && (
                           <>
-                            <GridRow>
-                              <GridColumn computer={16}>
+                            <TopUnpaddedRow>
+                              <VerticalUnpaddedColumn computer={8}>
                                 <Button
+                                  basic
+                                  fluid
                                   loading={this.props.manualShipmentPending}
                                   type='button'
                                   onClick={() => this.handleManualShipment(formikProps)}>
@@ -413,16 +451,19 @@ class PurchaseOrder extends Component {
                                     {text => text}
                                   </FormattedMessage>
                                 </Button>
-                              </GridColumn>
-                            </GridRow>
-                            <GridRow>
-                              <GridColumn computer={16}>
-                                <FormattedMessage
-                                  id='cart.quoteReceived'
-                                  defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
-                                />
-                              </GridColumn>
-                            </GridRow>
+                              </VerticalUnpaddedColumn>
+                            </TopUnpaddedRow>
+                            <Divider />
+                            <VerticalUnpaddedRow>
+                              <VerticalUnpaddedColumn computer={16}>
+                                <Header as='h2'>
+                                  <FormattedMessage
+                                    id='cart.quoteReceived'
+                                    defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
+                                  />
+                                </Header>
+                              </VerticalUnpaddedColumn>
+                            </VerticalUnpaddedRow>
                             <GridRow>
                               <GridColumn computer={8}>
                                 <Input
@@ -440,13 +481,13 @@ class PurchaseOrder extends Component {
 
                   <Segment>
                     <Grid className='bottom-padded'>
-                      <GridRow className='header'>
-                        <GridColumn>
+                      <StyledRow verticalAlign='middle' bottomShadow>
+                        <VerticalUnpaddedColumn>
                           <Header as='h2'>
                             <FormattedMessage id='cart.3payment' defaultMessage='3. Payment' />
                           </Header>
-                        </GridColumn>
-                      </GridRow>
+                        </VerticalUnpaddedColumn>
+                      </StyledRow>
 
                       <Payment
                         dispatch={dispatch}
@@ -460,7 +501,7 @@ class PurchaseOrder extends Component {
                   </Segment>
                 </GridColumn>
 
-                <GridColumn mobile={14} tablet={6} computer={5}>
+                <GridColumn mobile={14} tablet={6} computer={7}>
                   <CartItemSummary
                     updateHazmatInfo={this.props.updateHazmatInfo}
                     currency={currency}
@@ -470,7 +511,7 @@ class PurchaseOrder extends Component {
 
                   <Summary
                     additionalContent={
-                      <GridRow centered>
+                      <GridRow className='default-padded' centered>
                         <Popup
                           trigger={
                             <GridColumn>
@@ -520,7 +561,12 @@ class PurchaseOrder extends Component {
                               />
                             )
                           }
-                          disabled={this.props.logisticsAccount || (!purchaseHazmatEligible && isAnyItemHazardous)}
+                          disabled={
+                            this.props.logisticsAccount &&
+                            ((purchaseHazmatEligible && isAnyItemHazardous) ||
+                              (purchaseHazmatEligible && !isAnyItemHazardous) ||
+                              (!purchaseHazmatEligible && !isAnyItemHazardous))
+                          }
                         />
                       </GridRow>
                     }
@@ -529,11 +575,11 @@ class PurchaseOrder extends Component {
                     totalPrice={this.props.cart.cfPriceSubtotal}
                   />
                 </GridColumn>
-              </Grid>
+              </GridContainer>
             )
           }}
         />
-      </div>
+      </Container>
     )
   }
 }
@@ -549,7 +595,5 @@ PurchaseOrder.propTypes = {
   postPurchaseOrder: PropTypes.func,
   deleteCart: PropTypes.func,
   selectedAddressId: PropTypes.number,
-  shippingQuotes: PropTypes.object,
-  purchaseHazmatEligible: PropTypes.bool,
-  cartItems: PropTypes.bool
+  shippingQuotes: PropTypes.array
 }
