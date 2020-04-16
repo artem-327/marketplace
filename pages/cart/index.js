@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import securePage from '~/hocs/securePage'
 import Layout from 'components/Layout'
-import ShoppingCart from '~/src/pages/cart/ShoppingCart'
+// import ShoppingCart from '~/src/pages/cart/ShoppingCart'
 import { injectIntl } from "react-intl"
+import Cart from '~/modules/cart'
 
 class CartPage extends Component {
   render() {
@@ -10,7 +11,7 @@ class CartPage extends Component {
 
     return (
       <Layout title={formatMessage({ id: 'cart.shoppingCart', defaultMessage: 'Shopping Cart' })}>
-        <ShoppingCart />
+        <Cart />
       </Layout>
     )
   }

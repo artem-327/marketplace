@@ -5,6 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import ProdexTable from '~/components/table'
 
 import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
+import QuickEditPricingPopup from '~/modules/inventory/components/QuickEditPricingPopup'
 
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
@@ -58,6 +59,19 @@ const ClockIcon = styled(Clock)`
 
   &.grey {
     color: #848893;
+  }
+`
+
+const StyledPopup = styled(Popup)`
+  padding: 0 !important;
+  border-radius: 4px;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+  
+  .ui.form {
+    width: 570px;
+    padding: 0;
   }
 `
 
@@ -263,7 +277,7 @@ class MyInventory extends Component {
       {
         name: 'expDate',
         title: (
-          <FormattedMessage id='myInventory.expDate' defaultMessage='EXP Date'>
+          <FormattedMessage id='myInventory.expDate' defaultMessage='Lot Exp. Date'>
             {text => text}
           </FormattedMessage>
         ),
@@ -281,7 +295,7 @@ class MyInventory extends Component {
       {
         name: 'offerExpiration',
         title: (
-          <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Expiration Date'>
+          <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer Exp. Date'>
             {text => text}
           </FormattedMessage>
         ),
@@ -347,7 +361,7 @@ class MyInventory extends Component {
   }
 
   getRows = rows => {
-    const { datagrid } = this.props
+    const { datagrid, pricingEditOpenId, setPricingEditOpenId } = this.props
 
     let title = ''
 
@@ -425,6 +439,18 @@ class MyInventory extends Component {
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
           <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+        ),
+        fobPrice: (
+          <StyledPopup
+            content={<QuickEditPricingPopup rawData={r.rawData}/>}
+            on='click'
+            pinned
+            position='left center'
+            trigger={<div>{r.fobPrice}</div>}
+            open={pricingEditOpenId === r.rawData.id}
+            onOpen={() => setPricingEditOpenId(r.rawData.id)}
+            onClose={() => setPricingEditOpenId(null)}
+          />
         ),
         broadcast: (
           <div style={{ float: 'right' }}>

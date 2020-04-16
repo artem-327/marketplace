@@ -13,3 +13,4 @@ export const sharedTo = [
 
 export const currency = 'USD'
 export const currencyId = 1
+export const currencySymbol = '$'
