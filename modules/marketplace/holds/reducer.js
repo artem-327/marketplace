@@ -4,7 +4,8 @@ export const initialState = {
   loading: false,
   holds: [],
   datagridFilter: { filters: [] },
-  datagridFilterUpdate: false
+  datagridFilterUpdate: false,
+  typeHolds: 'my'
 }
 
 export default function reducer(state = initialState, action) {
@@ -170,6 +171,13 @@ export default function reducer(state = initialState, action) {
         ...state,
         datagridFilter: payload,
         datagridFilterUpdate: !state.datagridFilterUpdate
+      }
+    }
+
+    case AT.TOGGLE_HOLDS: {
+      return {
+        ...state,
+        typeHolds: payload
       }
     }
 

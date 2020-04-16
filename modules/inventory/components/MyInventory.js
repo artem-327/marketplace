@@ -425,19 +425,16 @@ class MyInventory extends Component {
 
       return {
         ...r,
-        expired: r.expired
-          ? (
-            <Popup
-              header={
-                <FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />
-              }
-              trigger={
-                <div>
-                  <ClockIcon />
-                </div>
-              } // <div> has to be there otherwise popup will be not shown
-            />
-            ) : null,
+        expired: r.expired ? (
+          <Popup
+            header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
+            trigger={
+              <div>
+                <ClockIcon />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />
+        ) : null,
         condition: r.condition ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
@@ -578,7 +575,7 @@ class MyInventory extends Component {
       tutorialCompleted
     } = this.props
     const { columns, selectedRows, clientMessage, request, filterValue } = this.state
-    
+
     return (
       <>
         <Modal size='small' open={this.state.open} onClose={() => this.setState({ open: false })} closeIcon>
