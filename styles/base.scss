@@ -44,6 +44,10 @@ a.ui.button {
   }
 }
 
+.ui.buttons .or:before {
+  background-color: #dee2e6 !important;
+}
+
 .ui.button.primary {
   background: #84C225;
 
@@ -1314,8 +1318,8 @@ i.file {
   }
 
   .column {
-    padding-top: 13px;
-    padding-bottom: 13px;
+    padding-top: 14px;
+    padding-bottom: 14px;
     font-size: 14px;
     font-weight: normal;
     color: #848893;
@@ -1336,7 +1340,7 @@ i.file {
   &.orange,
   &.yellow {
     border-radius: 4px;
-    padding: 13px 35px 13px 45px;
+    padding: 14px 35px 14px 45px;
     background-color: #fff;
     box-shadow: 0 0 0 0 transparent !important;
     font-size: 14px;
