@@ -16,10 +16,22 @@ import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
 import { currency } from '~/constants/index'
 import { SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP_FULFILLED } from '../action-types'
 import { generateToastMarkup } from '~/utils/functions'
+import { PlusCircle } from 'react-feather'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
   z-index: 602;
+`
+
+const CustomButton = styled(Button)`
+  background-color: #2599d5 !important;
+  color: #ffffff !important;
+  align-items: center !important;
+  display: flex !important;
+`
+
+const CustomIcon = styled(PlusCircle)`
+  margin-right: 10px;
 `
 
 const textsTable = {
@@ -212,18 +224,18 @@ class TablesHandlers extends Component {
           </GridColumn>
         )}
         {bankAccTab && bankAccounts.registerButton && (
-          <GridColumn computer={3} tablet={4}>
-            <Button
+          <GridColumn computer={5} tablet={4}>
+            <CustomButton
               fluid
-              primary
               onClick={() => Router.push('/dwolla-register')}
               data-test='settings_dwolla_open_popup_btn'>
+              <CustomIcon size='20' />
               <FormattedMessage
                 id='settings.tables.bankAccounts.registerDwolla'
                 defaultMessage='Register Dwolla Account'>
                 {text => text}
               </FormattedMessage>
-            </Button>
+            </CustomButton>
           </GridColumn>
         )}
         {bankAccTab && bankAccounts.uploadDocumentsButton && (
