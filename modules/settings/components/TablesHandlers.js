@@ -16,7 +16,7 @@ import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
 import { currency } from '~/constants/index'
 import { SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP_FULFILLED } from '../action-types'
 import { generateToastMarkup } from '~/utils/functions'
-import { PlusCircle } from 'react-feather'
+import { PlusCircle, UploadCloud } from 'react-feather'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -31,6 +31,10 @@ const CustomButton = styled(Button)`
 `
 
 const CustomIcon = styled(PlusCircle)`
+  margin-right: 10px;
+`
+
+const CustomUploadCloud = styled(UploadCloud)`
   margin-right: 10px;
 `
 
@@ -239,16 +243,16 @@ class TablesHandlers extends Component {
           </GridColumn>
         )}
         {bankAccTab && bankAccounts.uploadDocumentsButton && (
-          <GridColumn computer={3} tablet={4}>
-            <Button
+          <GridColumn computer={4} tablet={4}>
+            <CustomButton
               fluid
-              primary
               onClick={() => openUploadDocumentsPopup()}
               data-test='settings_dwolla_upload_documents_btn'>
+              <CustomUploadCloud size='20' />
               <FormattedMessage id='settings.tables.bankAccounts.uploadDoc' defaultMessage='Upload Documents'>
                 {text => text}
               </FormattedMessage>
-            </Button>
+            </CustomButton>
           </GridColumn>
         )}
         {bankAccTab && bankAccounts.dwollaBalance && (
