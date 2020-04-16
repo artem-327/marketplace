@@ -50,7 +50,7 @@ function prepareDetail(data, type) {
     chemicalName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
     confirmationDate:
       typeof data.confirmationDate !== 'undefined'
-        ? moment(data.confirmationDate).format('MMM Do, YYYY h:mm:ss A')
+        ? moment(data.confirmationDate).toDate().toLocaleString()
         : 'N/A',
     contactEmail: data.sellerCompanyContactEmail ? data.sellerCompanyContactEmail : 'N/A',
     contactNumber: data.sellerCompanyContactPhone ? data.sellerCompanyContactPhone : 'N/A',
