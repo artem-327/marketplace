@@ -563,19 +563,20 @@ export default function (state = initialState, action) {
       }
     }
     //TODO check https://pm.artio.net/issues/33545 if is finished adjust cases based on new endpoint
-    case AT.EDITING_TRACKING_NUMBER_PENDING: {
+    case AT.EDIT_TRACKING_CODE_PENDING: {
       return {
         ...state
       }
     }
 
-    case AT.EDITING_TRACKING_NUMBER_FULFILLED: {
+    case AT.EDIT_TRACKING_CODE_FULFILLED: {
       return {
-        ...state
+        ...state,
+        detail: action.payload.data
       }
     }
 
-    case AT.EDITING_TRACKING_NUMBER_REJECTED: {
+    case AT.EDIT_TRACKING_CODE_REJECTED: {
       return {
         ...state
       }

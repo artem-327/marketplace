@@ -296,9 +296,9 @@ export function clearOrderDetail() {
   }
 }
 
-export function editingTrackingNumber(typeOrder, orderId, trackingNumber) {
+export function editTrackingCode(orderId, trackingCode) {
   return {
-    type: AT.EDITING_TRACKING_NUMBER,
-    payload: Api.editingTrackingNumber(typeOrder, orderId, trackingNumber)
+    type: AT.EDIT_TRACKING_CODE,
+    payload: Api.editTrackingCode(orderId, trackingCode)
   }
 }

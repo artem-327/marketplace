@@ -403,6 +403,10 @@ class Detail extends Component {
         attachmentRows: this.getRows(order.attachments)
       })
     }
+
+    if (getSafe(() => prevProps.order.shippingTrackingCode, '') !== getSafe(() => order.shippingTrackingCode, '')) {
+      this.setState({ shippingTrackingCode: order.shippingTrackingCode })
+    }
   }
 
   componentWillUnmount() {
@@ -608,13 +612,13 @@ class Detail extends Component {
       listDocumentTypes,
       loadingRelatedDocuments,
       intl: { formatMessage },
-      echoSupportPhone
+      echoSupportPhone,
+      editTrackingCode
     } = this.props
     const { activeIndexes } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
 
     let orderDate = moment(order.orderDate, 'MMM Do, YYYY h:mm:ss A')
-
     const keyColumn = 5
     const valColumn = 16 - keyColumn
 
@@ -1290,8 +1294,8 @@ class Detail extends Component {
                             <FormattedMessage id='order.trackingNumber' defaultMessage='Tracking Number' />
                           </GridDataColumn>
                           <GridDataColumnTrackingID width={valColumn}>
-                            {order.isTrackingNumberEditable ? (
-                              this.state.shippingTrackingCode
+                            {!order.isTrackingNumberEditable ? (
+                              order.shippingTrackingCode
                             ) : this.state.toggleTrackingID ? (
                               <>
                                 <CustomInput
@@ -1302,11 +1306,15 @@ class Detail extends Component {
                                 />
                                 <CustomButton
                                   type='button'
-                                  onClick={e => {
+                                  onClick={async e => {
                                     e.preventDefault()
-                                    //TODO check https://pm.artio.net/issues/33545 if is finished adjust based on new endpoint
-                                    // editingTrackingNumber(ordersType.toLowerCase(), order.id, this.state.shippingTrackingCode)
-                                    this.setState({ toggleTrackingID: false })
+                                    try {
+                                      await editTrackingCode(order.id, this.state.shippingTrackingCode)
+                                    } catch (error) {
+                                      this.setState({ shippingTrackingCode: order.shippingTrackingCode })
+                                    } finally {
+                                      this.setState({ toggleTrackingID: false })
+                                    }
                                   }}>
                                   <FormattedMessage id='global.save' defaultMessage='Save' />
                                 </CustomButton>

@@ -132,7 +132,6 @@ export default {
   getDocumentTypes: () => api.get(`/prodex/api/document-types/`),
   unlinkAttachmentToOrder: query => api.delete(`/prodex/api/attachment-links/to-order${generateQueryString(query)}`),
   linkAttachmentToOrder: query => api.post(`/prodex/api/attachment-links/to-order${generateQueryString(query)}`),
-  //TODO check https://pm.artio.net/issues/33545 if is finished adjust based on new endpoint
-  editingTrackingNumber: (typeOrder, orderId, trackingNumber) =>
-    api.patch(`/prodex/api/${typeOrder}-orders/${orderId}?trackingNumber=${trackingNumber}`)
+  editTrackingCode: (orderId, trackingCode) =>
+    api.patch(`/prodex/api/purchase-orders/${orderId}/shipping-tracking-code?trackingCode=${trackingCode}`)
 }
