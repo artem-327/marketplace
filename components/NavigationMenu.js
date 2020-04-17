@@ -203,6 +203,13 @@ class Navigation extends Component {
         current.lastChild.style.maxHeight = ''
       }
     }
+
+    console.log('DROPDOWN MODIFIED')
+
+    // TODO: need to be used dynamically - same as dropdowns[type].ref.current
+    this.settingsScroll.updateScroll()
+
+    console.log('SCROLLBAR MODIFIED')
   }
 
   render() {
@@ -323,7 +330,7 @@ class Navigation extends Component {
           refId={'orders'}
           data-test='navigation_orders_drpdn'>
           <Dropdown.Menu data-test='navigation_menu_orders_drpdn_menu'>
-            <PerfectScrollbar>
+            <PerfectScrollbar ref={element => this.ordersScroll = element}>
               {!clientCompany && (
                 <Dropdown.Item as={MenuLink} to='/orders?type=sales' dataTest='navigation_orders_sales_orders_drpdn'>
                   {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
@@ -349,7 +356,7 @@ class Navigation extends Component {
             refId={'settings'}
             data-test='navigation_menu_settings_drpdn'>
             <Dropdown.Menu data-test='navigation_menu_settings_drpdn_menu'>
-              <PerfectScrollbar>
+              <PerfectScrollbar ref={element => this.settingsScroll = element}>
                 {isCompanyAdmin ? (
                   <>
                     <Dropdown.Item
