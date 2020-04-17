@@ -9,7 +9,7 @@ context("Permissions tests",() => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST","**/datagrid").as("loading")
+        cy.route("POST","**/datagrid**").as("loading")
     })
 
     it("Merchant permissions", () =>{

@@ -7,7 +7,7 @@ context("Holds tests", () => {
     const userJSON2 = require('../fixtures/user2.json')
 
     beforeEach(function () {
-        cy.viewport(2500, 1250)
+        cy.viewport(2750, 1250)
         cy.server()
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
@@ -98,7 +98,7 @@ context("Holds tests", () => {
         cy.getUserToken(userJSON1.email, userJSON1.password).then(token => {
             //Check product name
             cy.getItemBody(token, warehouseOffer).then(itemBody => {
-                cy.get(".item-cart-body-section-name").should('contain', itemBody.companyProduct.echoProduct.name)
+                cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.echoProduct.name)
             })
         })
     })

@@ -6,5 +6,6 @@
     "toConsole": true
   },
   "viewportHeight" : 800,
-  "viewportWidth" : 2250
+  "viewportWidth" : 2250,
+  "video": false
 }
