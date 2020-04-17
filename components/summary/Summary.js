@@ -1,11 +1,27 @@
 import React, { Component } from 'react'
-import { Grid, GridColumn, Header, Segment, GridRow } from 'semantic-ui-react'
+import { Header, Segment } from 'semantic-ui-react'
 import { string, array, func, number, node } from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { RelaxedRow, HeaderTextRow } from './styledComponents'
 import { currency } from '~/constants/index'
 
-import './styles.scss'
+import {
+  CapitalizedText,
+  CartColumn,
+  SummaryColumn,
+  ContentSegment,
+  VerticalUnpaddedColumn,
+  StyledRow,
+  TopUnpaddedRow,
+  BottomUnpaddedRow,
+  ItemDescriptionGrid,
+  Item,
+  DescriptionValue,
+  TotalRow,
+  SummaryGrid,
+  BottomUnpaddedColumn,
+  TotalPriceRow
+} from '~/modules/cart/components/StyledComponents'
 
 export default class Summary extends Component {
   render() {
@@ -14,100 +30,88 @@ export default class Summary extends Component {
 
     if (cartItems.length === 0) return null
 
-    //let totalWeight = 0
-    /*
-    for (let i = 0; i < cartItems.length; i++) {
-      //subtotal += (cartItems[i].quantity * cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].pricing.price)
-      totalWeight += cartItems[i].productOffer.companyProduct.packagingSize * cartItems[i].quantity
-    }
-    */
 
     let shipping = cart.selectedShipping ? cart.selectedShipping.quote.estimatedPrice : 'N/A'
-    // let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, 'USD')  // ! !
-
-    //let pricePerUnit = (totalPrice + shipping) / totalWeight
 
     return (
-      <Segment>
-        <Grid className='bottom-padded darker-gray' verticalAlign='middle'>
-          <GridRow className='header'>
-            <GridColumn>
-              <Header>{header}</Header>
-            </GridColumn>
-          </GridRow>
+      <>
+        <Segment>
+          <SummaryGrid verticalAlign='middle'>
+            <StyledRow bottomShadow>
+              <VerticalUnpaddedColumn>
+                <Header as='h2'>{header}</Header>
+              </VerticalUnpaddedColumn>
+            </StyledRow>
 
-          <GridColumn computer={16}>
-            <Grid className='light-gray cart-item-summary' style={{ fontSize: '16px' }}>
+            <RelaxedRow columns={2}>
+              <VerticalUnpaddedColumn>
+                <FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />
+              </VerticalUnpaddedColumn>
+
+              <VerticalUnpaddedColumn>
+                <FormattedNumber style='currency' currency={currency} value={totalPrice} />
+              </VerticalUnpaddedColumn>
+            </RelaxedRow>
+
+            {/*
               <RelaxedRow columns={2}>
-                <GridColumn>
-                  <FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />
-                </GridColumn>
-
-                <GridColumn>
-                  <FormattedNumber style='currency' currency={currency} value={totalPrice} />
-                </GridColumn>
-              </RelaxedRow>
-
-              {/*
-              <RelaxedRow columns={2}>
-                <GridColumn>
+                <VerticalUnpaddedColumn>
                   <FormattedMessage id='cart.estimatedShipping' defaultMessage='Estimated Shipping' />
-                </GridColumn>
+                </VerticalUnpaddedColumn>
 
-                <GridColumn>
+                <VerticalUnpaddedColumn>
                   {shipping > 0 && <FormattedNumber style='currency' currency={currency} value={shipping} />}
-                </GridColumn>
+                </VerticalUnpaddedColumn>
               </RelaxedRow>
               */}
 
-              <RelaxedRow columns={2}>
-                <GridColumn>
-                  <FormattedMessage id='cart.estimatedTax' defaultMessage='Estimated Tax' />
-                </GridColumn>
+            <RelaxedRow columns={2}>
+              <VerticalUnpaddedColumn>
+                <FormattedMessage id='cart.estimatedTax' defaultMessage='Estimated Tax' />
+              </VerticalUnpaddedColumn>
 
-                <GridColumn>
-                  <FormattedNumber style='currency' currency={currency} value={0} />
-                </GridColumn>
-              </RelaxedRow>
+              <VerticalUnpaddedColumn>
+                <FormattedNumber style='currency' currency={currency} value={0} />
+              </VerticalUnpaddedColumn>
+            </RelaxedRow>
 
-              {/*
+            {/*
               <RelaxedRow columns={2}>
-                <GridColumn>
+                <VerticalUnpaddedColumn>
                   <FormattedMessage
                     id='global.pricePer'
                     values={{ unit: cartItems[0].productOffer.companyProduct.packagingUnit.nameAbbreviation }}
                   />
-                </GridColumn>
+                </VerticalUnpaddedColumn>
 
-                <GridColumn>
+                <VerticalUnpaddedColumn>
                   <FormattedNumber
                     style='currency'
                     currency={currency}
                     value={cart.cfPricePerUomTotal}
                   />
 
-                </GridColumn>
+                </VerticalUnpaddedColumn>
               </RelaxedRow>
               */}
 
-              <HeaderTextRow columns={2}>
-                <GridColumn>
-                  <FormattedMessage id='cart.total' defaultMessage='Total' />
-                </GridColumn>
+            <TotalPriceRow columns={2}>
+              <VerticalUnpaddedColumn>
+                <FormattedMessage id='cart.total' defaultMessage='Total' />
+              </VerticalUnpaddedColumn>
 
-                <GridColumn>
-                  <FormattedNumber
-                    style='currency'
-                    currency={currency}
-                    value={totalPrice + (shipping !== 'N/A' ? shipping : 0)}
-                  />
-                </GridColumn>
-              </HeaderTextRow>
-              {additionalContent}
-            </Grid>
-          </GridColumn>
-        </Grid>
-      </Segment>
+              <VerticalUnpaddedColumn>
+                <FormattedNumber
+                  style='currency'
+                  currency={currency}
+                  value={totalPrice + (shipping !== 'N/A' ? shipping : 0)}
+                />
+              </VerticalUnpaddedColumn>
+            </TotalPriceRow>
+          </SummaryGrid>
+        </Segment>
+        {additionalContent}
+      </>
     )
   }
 }

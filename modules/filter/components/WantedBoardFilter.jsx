@@ -95,7 +95,8 @@ class WantedBoardFilter extends Component {
       fetchWarehouses,
       setParams,
       autocompleteManufacturer,
-      autocompleteOrigin
+      autocompleteOrigin,
+      filterState
     } = this.props
 
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
@@ -104,8 +105,14 @@ class WantedBoardFilter extends Component {
     this.fetchIfNoData(fetchProductForms, 'productForms')
     //this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes')
     //this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances')
-    this.fetchIfNoData(fetchProductGrade, 'productGrade')
+    this.fetchIfNoData(fetchProductGrade, 'productGrades')
     //this.fetchIfNoData(fetchWarehouses, 'warehouses')
+
+    if (filterState) this.setState(filterState.state)
+  }
+
+  componentWillUnmount() {
+    this.props.saveFilterState({ state: this.state, values: this.values })
   }
 
   fetchIfNoData = (fn, propertyName) => {
@@ -259,7 +266,7 @@ class WantedBoardFilter extends Component {
       productConditions,
       productForms,
       packagingTypes,
-      productGrade,
+      productGrades,
       intl,
       isFilterSaving,
       autocompleteData,
@@ -276,7 +283,7 @@ class WantedBoardFilter extends Component {
 
     const { formatMessage } = intl
 
-    let productGradeRows = this.generateCheckboxes(productGrade, values, 'productGrade')
+    let productGradeRows = this.generateCheckboxes(productGrades, values, 'productGrades')
     let productFormsRows = this.generateCheckboxes(productForms, values, 'productForms')
 
     let noResultsMessage = null
@@ -419,14 +426,14 @@ class WantedBoardFilter extends Component {
       isFilterApplying,
       isFilterSaving,
       intl: {formatMessage},
-      toggleFilter
+      filterState
     } = this.props
 
 
     return (
       <Form
         enableReinitialize={true}
-        initialValues={initialValues}
+        initialValues={filterState ? filterState.values : initialValues}
         validateOnChange={true}
         onSubmit={(values, { setSubmitting }) => {
           this.handleSubmit(values)
@@ -436,6 +443,8 @@ class WantedBoardFilter extends Component {
           this.submitForm = props.submitForm
           this.resetForm = props.resetForm
           this.setFieldValue = props.setFieldValue
+          this.values = props.values
+
           return (
             <FlexSidebar
               {...additionalSidebarProps}>
@@ -448,7 +457,7 @@ class WantedBoardFilter extends Component {
                   size='large'
                   onClick={(e, data) => {
                     this.resetForm({ ...initialValues })
-                    toggleFilter(false)
+                    //! !toggleFilter(false)
                     this.props.applyFilter({ filters: [] })
                     this.props.applyDatagridFilter({ filters: [] })
                     this.props.onClear(e, data)

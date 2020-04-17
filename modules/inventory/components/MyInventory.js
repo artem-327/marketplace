@@ -5,6 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import ProdexTable from '~/components/table'
 
 import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
+import QuickEditPricingPopup from '~/modules/inventory/components/QuickEditPricingPopup'
 
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
@@ -19,6 +20,7 @@ import { Datagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { debounce } from 'lodash'
+import { Clock } from 'react-feather'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -45,9 +47,43 @@ const CustomProdexTable = styled(ProdexTable)`
   }
 `
 
+const ClockIcon = styled(Clock)`
+  display: block;
+  width: 20px;
+  height: 19px;
+  margin: 0 auto;
+  vertical-align: top;
+  font-size: 20px;
+  color: #f16844;
+  line-height: 20px;
+
+  &.grey {
+    color: #848893;
+  }
+`
+
+const StyledPopup = styled(Popup)`
+  padding: 0 !important;
+  border-radius: 4px;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+  
+  .ui.form {
+    width: 570px;
+    padding: 0;
+  }
+`
+
 class MyInventory extends Component {
   state = {
     columns: [
+      {
+        name: 'expired',
+        title: <ClockIcon className='grey' />,
+        width: 45,
+        align: 'center'
+      },
       {
         name: 'productName',
         title: (
@@ -241,7 +277,7 @@ class MyInventory extends Component {
       {
         name: 'expDate',
         title: (
-          <FormattedMessage id='myInventory.expDate' defaultMessage='EXP Date'>
+          <FormattedMessage id='myInventory.expDate' defaultMessage='Lot Exp. Date'>
             {text => text}
           </FormattedMessage>
         ),
@@ -259,7 +295,7 @@ class MyInventory extends Component {
       {
         name: 'offerExpiration',
         title: (
-          <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Expiration Date'>
+          <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer Exp. Date'>
             {text => text}
           </FormattedMessage>
         ),
@@ -313,7 +349,7 @@ class MyInventory extends Component {
     }
     // Because of #31767
     this.props.setCompanyElligible()
-    this.props.applyDatagridFilter('')
+    //this.props.applyDatagridFilter('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -325,7 +361,7 @@ class MyInventory extends Component {
   }
 
   getRows = rows => {
-    const { datagrid } = this.props
+    const { datagrid, pricingEditOpenId, setPricingEditOpenId } = this.props
 
     let title = ''
 
@@ -389,10 +425,32 @@ class MyInventory extends Component {
 
       return {
         ...r,
+        expired: r.expired ? (
+          <Popup
+            header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
+            trigger={
+              <div>
+                <ClockIcon />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />
+        ) : null,
         condition: r.condition ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
           <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+        ),
+        fobPrice: (
+          <StyledPopup
+            content={<QuickEditPricingPopup rawData={r.rawData}/>}
+            on='click'
+            pinned
+            position='left center'
+            trigger={<div>{r.fobPrice}</div>}
+            open={pricingEditOpenId === r.rawData.id}
+            onOpen={() => setPricingEditOpenId(r.rawData.id)}
+            onClose={() => setPricingEditOpenId(null)}
+          />
         ),
         broadcast: (
           <div style={{ float: 'right' }}>
@@ -517,7 +575,7 @@ class MyInventory extends Component {
       tutorialCompleted
     } = this.props
     const { columns, selectedRows, clientMessage, request, filterValue } = this.state
-    
+
     return (
       <>
         <Modal size='small' open={this.state.open} onClose={() => this.setState({ open: false })} closeIcon>
@@ -651,7 +709,6 @@ class MyInventory extends Component {
                 rows,
                 values[values.length - 1],
                 sidebarDetailOpen,
-                //! ! sidebarDetailTrigger,
                 closeSidebarDetail,
                 openPopup
               ).map(a => ({

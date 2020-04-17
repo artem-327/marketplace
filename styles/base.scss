@@ -44,6 +44,10 @@ a.ui.button {
   }
 }
 
+.ui.buttons .or:before {
+  background-color: #dee2e6 !important;
+}
+
 .ui.button.primary {
   background: #84C225;
 
@@ -296,7 +300,8 @@ i.icon.clickable:hover {
 
 div.page-wrapper {
   background: #f8f9fb;
-
+  overflow-y: auto;
+  overflow-x: hidden;
   > .flex.stretched,
   .marketplace-container > .flex.stretched {
     flex-grow: 1;
@@ -711,6 +716,30 @@ div.cart-sidebar {
 
   > .ui.pointing.secondary.menu:not(.vertical) {
     padding: 0 30px;
+
+    > .item {
+      margin: 0 18px;
+      border-width: 0 0 2px;
+      padding-left: 0;
+      padding-right: 0;
+      text-transform: uppercase;
+      font-family: 'HelveticaNeueLTPro';
+      font-size: 14px;
+      font-weight: 500;
+      color: #848893 !important;
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &.active {
+        color: #20273a !important;
+      }
+    }
   }
 
   > .ui.basic.segment {
@@ -728,6 +757,10 @@ div.cart-sidebar {
 
       > .row {
         padding: 0 16px;
+
+        &:last-child {
+          margin-bottom: 30px;
+        }
 
         .column {
           align-self: flex-start !important;
@@ -1313,8 +1346,8 @@ i.file {
   }
 
   .column {
-    padding-top: 13px;
-    padding-bottom: 13px;
+    padding-top: 14px;
+    padding-bottom: 14px;
     font-size: 14px;
     font-weight: normal;
     color: #848893;
@@ -1335,7 +1368,7 @@ i.file {
   &.orange,
   &.yellow {
     border-radius: 4px;
-    padding: 13px 35px 13px 45px;
+    padding: 14px 35px 14px 45px;
     background-color: #fff;
     box-shadow: 0 0 0 0 transparent !important;
     font-size: 14px;

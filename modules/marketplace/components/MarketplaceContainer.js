@@ -21,7 +21,7 @@ function mapStateToProps(store, { datagrid }) {
     ...store.marketplace,
     // rows: store.marketplace.broadcastedProductOffers.map(po => {
     ...datagrid,
-    appliedFilter: store.filter.filter.appliedFilter,
+    appliedFilter: store.filter.marketplace.appliedFilter,
     defaultZip: getSafe(() => store.auth.identity.homeBranch.deliveryAddress.address.zip.zip, ''),
     defaultCountry: getSafe(() => store.auth.identity.homeBranch.deliveryAddress.address.country.id, 1),
     rows: datagrid.rows.map(po => {
@@ -29,6 +29,7 @@ function mapStateToProps(store, { datagrid }) {
       return {
         ...po,
         id: po.id,
+        expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
         productName: po.companyProduct.echoProduct.name,
         intProductName: getSafe(() => po.companyProduct.intProductName, ''),
         productNumber: getSafe(() => po.companyProduct.echoProduct.code, 'Unmapped'),
@@ -72,12 +73,13 @@ function mapStateToProps(store, { datagrid }) {
         nacdMember: po && po.ownerNacdMember ? 'Yes' : po.ownerNacdMember === false ? 'No' : '',
         notes: getSafe(() => po.externalNotes, ''),
         association: po && po.ownerAssociations && getSafe(() => po.ownerAssociations.map(a => a.name), []),
+        leadTime: getSafe(() => po.leadTime, 'N/A')
       }
     }),
     sidebar: store.cart.sidebar,
     isProductInfoOpen: store.companyProductInfo.isOpen,
     isMerchant: getSafe(() => store.auth.identity.isMerchant, false),
-    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
+    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false)
   }
 }
 
@@ -88,6 +90,6 @@ export default withDatagrid(
     openPopup,
     closePopup,
     getProductOffer,
-    applyFilter,
+    applyFilter
   })(Marketplace)
 )

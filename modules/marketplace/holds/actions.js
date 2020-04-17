@@ -42,3 +42,10 @@ export function applyDatagridFilter(filter) {
     payload: filter
   }
 }
+
+export function toggleHolds(type) {
+  return {
+    type: AT.TOGGLE_HOLDS,
+    payload: type
+  }
+}
