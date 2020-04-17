@@ -243,19 +243,19 @@ class DocumentTab extends Component {
             <ProdexGrid
               virtual={false}
               tableName='attachment_documents'
-              onTableReady={() => {}}
+              onTableReady={() => { }}
               columns={columns}
               normalWidth={false}
               rows={
                 getSafe(() => values.attachments.length, false)
                   ? values.attachments
-                      .map(row => {
-                        return {
-                          ...row,
-                          documentTypeName: row.documentType && row.documentType.name
-                        }
-                      })
-                      .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))
+                    .map(row => {
+                      return {
+                        ...row,
+                        documentTypeName: row.documentType && row.documentType.name
+                      }
+                    })
+                    .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))
                   : []
               }
               rowActions={[

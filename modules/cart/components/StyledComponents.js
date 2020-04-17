@@ -130,6 +130,10 @@ export const UnpaddedColumn = styled(GridColumn)`
   padding: 0 !important;
 `
 
+export const UnpaddedRow = styled(GridRow)`
+  padding: 0 !important;
+`
+
 export const RightUnpaddedRow = styled(GridRow)`
   padding-right: 0px !important;
 `
