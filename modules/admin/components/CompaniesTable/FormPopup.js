@@ -328,8 +328,11 @@ class AddNewPopupCasProducts extends React.Component {
               }
             } else {
               if (
-                !values.primaryBranch.deliveryAddress ||
-                !deepSearch(values.mailingBranch.deliveryAddress, val => val !== '')
+                !getSafe(() => values.primaryBranch.deliveryAddress, '') ||
+                !deepSearch(
+                  getSafe(() => values.mailingBranch.deliveryAddress, ''),
+                  val => val !== ''
+                )
               ) {
                 delete values['mailingBranch']
               } else {
@@ -351,7 +354,6 @@ class AddNewPopupCasProducts extends React.Component {
               })
 
               if (!payload.businessType) delete payload.businessType
-
               if (this.state.companyLogo) {
                 let reader = new FileReader()
                 reader.onload = async function () {
