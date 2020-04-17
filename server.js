@@ -10,54 +10,8 @@ const axios = require('axios')
 const bodyParser = require('body-parser')
 const plaid = require('plaid')
 
-// We store the access_token in memory - in production, store it in
-// a secure persistent data store.
-let ACCESS_TOKEN = null
-let PUBLIC_TOKEN = null
-let ITEM_ID = null
-const environmentPlaid =
-  process.env.NODE_ENV === 'development'
-    ? plaid.environments.development
-    : process.env.NODE_ENV === 'production'
-    ? plaid.environments.production
-    : plaid.environments.sandbox
-const client = new plaid.Client(
-  process.env.PLAID_CLIENT_ID,
-  process.env.PLAID_SECRET,
-  process.env.PLAID_PUBLIC_KEY,
-  environmentPlaid
-)
-
 let router = express()
 const app = express()
-app.use(express.static('public'))
-//app.set('view engine', 'ejs')
-app.use(
-  bodyParser.urlencoded({
-    extended: false
-  })
-)
-app.use(bodyParser.json())
-
-app.post('/get_access_token', (req, response, next) => {
-  PUBLIC_TOKEN = req.body.public_token
-  client.exchangePublicToken(PUBLIC_TOKEN, function (error, tokenResponse) {
-    if (error != null) {
-      console.log('Could not exchange public_token!' + '\n' + error)
-      return response.json({ error: msg })
-    }
-    ACCESS_TOKEN = tokenResponse.access_token
-    ITEM_ID = tokenResponse.item_id
-    console.log('Access Token: ' + ACCESS_TOKEN)
-    console.log('Item ID: ' + ITEM_ID)
-    prettyPrintResponse(tokenResponse)
-    response.json({
-      access_token: ACCESS_TOKEN,
-      item_id: ITEM_ID,
-      error: false
-    })
-  })
-})
 
 router.get('/attachments/:id', (req, res) => {
   request
@@ -105,3 +59,72 @@ nextApp
     console.error(ex.stack)
     process.exit(1)
   })
+
+// We store the access_token in memory - in production, store it in
+// a secure persistent data store.
+let ACCESS_TOKEN = null
+let PUBLIC_TOKEN = null
+let ITEM_ID = null
+
+const plaidClient = new plaid.Client(
+  process.env.PLAID_CLIENT_ID,
+  process.env.PLAID_SECRET,
+  process.env.PLAID_PUBLIC_KEY,
+  plaid.environments.sandbox //plaid.environments[process.env.NODE_ENV]
+)
+
+app.use(express.static('public'))
+app.use(bodyParser.json())
+
+//TODO get balance to FE
+// Accept the public_token sent from Link
+app.post('/get_access_token', function (request, response, next) {
+  PUBLIC_TOKEN = request.body.public_token
+  plaidClient.exchangePublicToken(PUBLIC_TOKEN, function (error, tokenResponse) {
+    if (error != null) {
+      console.log('Could not exchange public_token!' + '\n' + error)
+      return response.json({ error: msg })
+    }
+    ACCESS_TOKEN = tokenResponse.access_token
+    ITEM_ID = tokenResponse.item_id
+    console.log('Access Token: ' + ACCESS_TOKEN)
+    console.log('Item ID: ' + ITEM_ID)
+    // Use Auth and pull account numbers for an Item
+    plaidClient.getAuth(ACCESS_TOKEN, {}, (err, results) => {
+      console.log('results====================================')
+      console.log(JSON.stringify(results, 0, 2))
+      console.log('====================================')
+      //TODO Create a Dwolla processor token for a specific account id.
+      //We have ERROR 400 because INVALID_PRODUCT. One of the account_id (s) specified is invalid or does not exist.
+      plaidClient.createProcessorToken(ACCESS_TOKEN, results.accounts[0].account_id, 'dwolla', function (err, res) {
+        console.log('res====================================')
+        console.log(JSON.stringify(res, 0, 2))
+        console.log('====================================')
+        console.log('res====================================')
+        console.log(JSON.stringify(err, 0, 2))
+        console.log('====================================')
+        //const processorToken = res.processor_token
+      })
+      // Handle err
+      var accountData = results.accounts
+      if (results.numbers.ach.length > 0) {
+        // Handle ACH numbers (US accounts)
+        var achNumbers = results.numbers.ach
+      }
+      if (results.numbers.eft.length > 0) {
+        // Handle EFT numbers (Canadian accounts)
+        var eftNumbers = results.numbers.eft
+      }
+      if (results.numbers.international.length > 0) {
+        // Handle International numbers (Standard International accounts)
+        var internationalNumbers = results.numbers.international
+      }
+      if (results.numbers.bacs.length > 0) {
+        // Handle BACS numbers (British accounts)
+        var bacsNumbers = results.numbers.bacs
+      }
+    })
+
+    response.json({ error: false })
+  })
+})

@@ -71,17 +71,23 @@ class BankAccountsPopup extends React.Component {
     console.log('onEvent - eventName', eventName)
     console.log('onEvent - metadata', metadata)
   }
-  onSuccess = (public_token, metadata) => {
+  onSuccess = async (public_token, metadata) => {
     console.log('onSuccess - public_token', public_token)
     console.log('onSuccess - metadata', metadata)
     // Send the public_token to an internal server
     // and exchange it for an access_token.
-    axios.post('/get_access_token', {
-      public_token: public_token,
-      accounts: metadata.accounts,
-      institution: metadata.institution,
-      link_session_id: metadata.link_session_id
-    })
+    metadata.accounts.map(account => console.log(account))
+    try {
+      await axios.post('/get_access_token', {
+        account_id: metadata.account_id,
+        public_token: public_token,
+        accounts: metadata.accounts,
+        institution: metadata.institution,
+        link_session_id: metadata.link_session_id
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   render() {
@@ -105,14 +111,15 @@ class BankAccountsPopup extends React.Component {
             className='CustomButton'
             style={{ padding: '20px', fontSize: '16px', cursor: 'pointer' }}
             clientName={'Echo system'}
-            env={process.env.NODE_ENV}
-            product={['auth', 'transactions']}
+            env='sandbox' //TODO process.env.NODE_ENV
+            product={['auth']}
             publicKey={process.env.PLAID_PUBLIC_KEY}
             onExit={this.onExit}
             onSuccess={this.onSuccess}
             onEvent={this.onEvent}>
             Open Link and connect your bank!
           </PlaidLink>
+
           <Form
             enableReinitialize
             initialValues={{
