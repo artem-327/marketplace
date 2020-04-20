@@ -459,26 +459,32 @@ class Settings extends Component {
 
       documents: {
         url: '/prodex/api/attachments/datagrid/',
-        searchToFilter: v =>
-          v
-            ? [
-                {
-                  operator: 'LIKE',
-                  path: 'Attachment.name',
-                  values: [`%${v}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'Attachment.customName',
-                  values: [`%${v}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'Attachment.documentType.name',
-                  values: [`%${v}%`]
-                }
-              ]
-            : [],
+        searchToFilter: v => {
+          let filter = { or: [], and: [] }
+
+          if (v && v.filterValue) filter.or =
+            [
+              {
+                operator: 'LIKE',
+                path: 'Attachment.name',
+                values: [`%${v.filterValue}%`]
+              },
+              {
+                operator: 'LIKE',
+                path: 'Attachment.customName',
+                values: [`%${v.filterValue}%`]
+              }
+            ]
+          if (v && v.documentType) filter.and =
+            [
+              {
+                operator: 'LIKE',
+                path: 'Attachment.documentType.name',
+                values: [`%${v.documentType}%`]
+              }
+            ]
+          return filter
+        },
         params: {
           orOperator: true
         }

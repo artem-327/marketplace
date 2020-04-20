@@ -9,5 +9,8 @@ export default {
   //TODO missing endpoints
   deleteTag: id => api.delete(`/prodex/api/tags/id/${id}`),
   createTag: name => api.post(`/prodex/api/tags?name=${name}`),
-  updateTag: (id, name) => api.patch(`/prodex/api/tags/id/${id}?name=${name}`)
+  updateTag: (id, name) => api.patch(`/prodex/api/tags/id/${id}?name=${name}`),
+  searchCompany: (companyText, limit = 30) =>
+    api.get(`/prodex/api/companies/search?limit=${limit}&pattern=${companyText}`)
+      .then(response => response.data)
 }

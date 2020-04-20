@@ -47,8 +47,7 @@ class Operations extends Component {
   }
 
   getApiConfig = () => {
-    const { currentTab } = this.props
-
+    const { currentTab, companyProductUnmappedOnly } = this.props
     const datagridApiMap = {
       'shipping-quotes': {
         url: '/prodex/api/shipment/manual-quotes/datagrid',
@@ -68,32 +67,44 @@ class Operations extends Component {
         searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v}%`] }] : [])
       },
       'company-product-catalog': {
-        url: '/prodex/api/company-products/admin/datagrid',
-        searchToFilter: v =>
-          v
-            ? [
-                {
-                  operator: 'LIKE',
-                  path: 'CompanyProduct.intProductName',
-                  values: [`%${v}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'CompanyProduct.intProductCode',
-                  values: [`%${v}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'CompanyProduct.echoProduct.name',
-                  values: [`%${v}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'CompanyProduct.echoProduct.code',
-                  values: [`%${v}%`]
-                }
-              ]
-            : [],
+        url: `/prodex/api/company-products/admin/datagrid?unmappedOnly=${companyProductUnmappedOnly}`,
+        searchToFilter: v => {
+          let filter = { or: [], and: [] }
+
+          if (v && v.filterValue) filter.or =
+            [
+              {
+                operator: 'LIKE',
+                path: 'CompanyProduct.intProductName',
+                values: [`%${v.filterValue}%`]
+              },
+              {
+                operator: 'LIKE',
+                path: 'CompanyProduct.intProductCode',
+                values: [`%${v.filterValue}%`]
+              },
+              {
+                operator: 'LIKE',
+                path: 'CompanyProduct.echoProduct.name',
+                values: [`%${v.filterValue}%`]
+              },
+              {
+                operator: 'LIKE',
+                path: 'CompanyProduct.echoProduct.code',
+                values: [`%${v.filterValue}%`]
+              }
+            ]
+
+          if (v && v.company) filter.and =
+            [
+              {
+                operator: 'EQUALS',
+                path: 'CompanyProduct.owner.id',
+                values: [`${v.company}`]
+              }
+            ]
+          return filter
+        },
         params: {
           orOperator: true
         }
