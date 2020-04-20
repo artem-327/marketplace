@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input } from 'semantic-ui-react'
+import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import ProdexTable from '~/components/table'
@@ -15,7 +15,7 @@ import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
 import moment from 'moment/moment'
-import { getSafe } from '~/utils/functions'
+import { getSafe, uniqueArrayByKey } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
 import Tutorial from '~/modules/tutorial/Tutorial'
@@ -68,7 +68,7 @@ const StyledPopup = styled(Popup)`
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
   border: solid 1px #dee2e6;
   background-color: #ffffff;
-  
+
   .ui.form {
     width: 570px;
     padding: 0;
@@ -325,11 +325,13 @@ class MyInventory extends Component {
     open: false,
     clientMessage: '',
     request: null,
-    filterValue: ''
+    filterValue: '',
+    selectedTagsOptions: []
   }
 
   componentDidMount() {
     const { sidebarDetailTrigger } = this.props
+    const selectedTagsOptions = []
     if (window) {
       const searchParams = new URLSearchParams(getSafe(() => window.location.href, ''))
 
@@ -348,8 +350,13 @@ class MyInventory extends Component {
       }
     }
     // Because of #31767
-    this.props.setCompanyElligible()
-    //this.props.applyDatagridFilter('')
+    try {
+      this.props.setCompanyElligible()
+      //this.props.applyDatagridFilter('')
+      this.props.searchTags('')
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -442,7 +449,7 @@ class MyInventory extends Component {
         ),
         fobPrice: (
           <StyledPopup
-            content={<QuickEditPricingPopup rawData={r.rawData}/>}
+            content={<QuickEditPricingPopup rawData={r.rawData} />}
             on='click'
             pinned
             position='left center'
@@ -557,6 +564,19 @@ class MyInventory extends Component {
     this.handleFiltersValue(value)
   }
 
+  handleTagsSearchChange = debounce((_, { searchQuery }) => {
+    this.props.searchTags(searchQuery)
+  }, 250)
+
+  //TODO call datagrid filter for tags
+  handleTagsChange = (value, options) => {
+    console.log('value====================================')
+    console.log(value)
+    console.log('====================================')
+    const newOptions = options.filter(el => value.some(v => el.value === v))
+    this.setState({ selectedTagsOptions: newOptions })
+  }
+
   render() {
     const {
       openBroadcast,
@@ -572,9 +592,13 @@ class MyInventory extends Component {
       openPopup,
       editedId,
       closeSidebarDetail,
-      tutorialCompleted
+      tutorialCompleted,
+      searchedTags,
+      searchedTagsLoading
     } = this.props
-    const { columns, selectedRows, clientMessage, request, filterValue } = this.state
+    const { columns, selectedRows, clientMessage, request, filterValue, selectedTagsOptions } = this.state
+
+    const allTagsOptions = uniqueArrayByKey(searchedTags.concat(selectedTagsOptions), 'key')
 
     return (
       <>
@@ -623,7 +647,30 @@ class MyInventory extends Component {
                   })}
                 />
               </Grid.Column>
-              <Grid.Column width={12}>
+              <Grid.Column width={4} style={{ paddingTop: '9px' }}>
+                <Dropdown
+                  style={{ zIndex: '501' }}
+                  fluid
+                  name='tags'
+                  options={allTagsOptions}
+                  loading={searchedTagsLoading}
+                  search
+                  icon='search'
+                  selection
+                  multiple
+                  placeholder={formatMessage({
+                    id: 'global.selectTags',
+                    defaultMessage: 'Select tags'
+                  })}
+                  noResultsMessage={formatMessage({
+                    id: 'global.startTypingToSearch',
+                    defaultMessage: 'Start typing to begin search'
+                  })}
+                  onSearchChange={this.handleTagsSearchChange}
+                  onChange={(_, { value }) => this.handleTagsChange(value, allTagsOptions)}
+                />
+              </Grid.Column>
+              <Grid.Column width={8}>
                 <Menu secondary className='page-part'>
                   {/*selectedRows.length > 0 ? (
                     <Menu.Item>

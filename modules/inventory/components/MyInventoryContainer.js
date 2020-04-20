@@ -18,6 +18,7 @@ import { FormattedUnit, UnitOfPackaging, ArrayToFirstItem, FormattedAssay } from
 import { getSafe } from '~/utils/functions'
 import moment from 'moment/moment'
 import { getLocaleDateFormat } from '~/components/date-format'
+import { searchTags } from '~/modules/admin/actions'
 
 function mapStateToProps(store, { datagrid }) {
   const sidebarValues = store.simpleAdd.sidebarValues
@@ -29,6 +30,14 @@ function mapStateToProps(store, { datagrid }) {
     sellEligible: getSafe(() => store.auth.identity.company.sellEligible, false),
     appliedFilter: store.filter.inventory.appliedFilter,
     sidebarValues,
+    searchedTags: store.admin.searchedTags.map(d => {
+      return {
+        key: d.id,
+        text: d.name,
+        value: d.id
+      }
+    }),
+    searchedTagsLoading: store.admin.searchedTagsLoading,
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
       let fobPrice = 'N/A'
@@ -67,7 +76,7 @@ function mapStateToProps(store, { datagrid }) {
         rawData: po,
         id: po.id,
         product: po.product,
-        expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate): false,
+        expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
         productName: getSafe(() => po.companyProduct.intProductName),
         productNumber: getSafe(() => po.companyProduct.intProductCode, 'N/A'),
         echoName: getSafe(() => po.companyProduct.echoProduct.name, ''),
@@ -128,6 +137,7 @@ export default withDatagrid(
     openImportPopup,
     openBroadcast,
     applyFilter,
-    setCompanyElligible
+    setCompanyElligible,
+    searchTags
   })(MyInventory)
 )
