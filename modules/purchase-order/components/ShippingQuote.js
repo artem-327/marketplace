@@ -12,6 +12,7 @@ const GridContainer = styled.div`
   padding-top: 15px !important;
   overflow-x: hidden;
 `
+
 const columns = [
   {
     name: 'selected',
@@ -26,7 +27,7 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 220
+    width: 85
   },
   {
     name: 'estimatedPrice',
@@ -35,7 +36,7 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 168
+    width: 90
   },
   {
     name: 'deliveryTime',
@@ -44,7 +45,7 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 168
+    width: 150
   },
   {
     name: 'etd',
@@ -53,7 +54,7 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 168
+    width: 85
   },
   {
     name: 'serviceType',
@@ -62,7 +63,7 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 168
+    width: 120
   }
 ]
 
@@ -102,6 +103,7 @@ export default class ShippingQuote extends Component {
       let timeObj = rate.estimatedDeliveryDate && moment(rate.estimatedDeliveryDate)
       let deliveryTime = rate.estimatedDeliveryDate ? moment(rate.estimatedDeliveryDate).format(getLocaleDateFormat()) : ''
       return {
+        id: index,
         selected: <Radio
           checked={selectedShippingQuote && selectedShippingQuote.index === index}
           onChange={() => handleQuoteSelect(index)}
@@ -122,7 +124,7 @@ export default class ShippingQuote extends Component {
 
     return (
       <GridContainer>
-        <ProdexGrid loading={shippingQuotesAreFetching} columns={columns} rows={this.getRows()} />
+        <ProdexGrid tableName='checkout_freight_table' loading={shippingQuotesAreFetching} columns={columns} rows={this.getRows()} />
       </GridContainer>
     )
   }

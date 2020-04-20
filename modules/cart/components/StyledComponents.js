@@ -67,6 +67,7 @@ export const ContentSegment = styled(Segment)`
 export const VerticalUnpaddedColumn = styled(GridColumn)`
   padding-top: 0px !important;
   padding-bottom: 0px !important;
+  ${props => props.black && 'color: black !important;'}
 `
 
 export const VerticalUnpaddedRow = styled(GridRow)`
@@ -124,6 +125,7 @@ export const TotalPriceRow = styled(GridRow)`
 
 export const TopUnpaddedColumn = styled(GridColumn)`
   padding-top: 0px !important;
+  ${props => props.black && 'color: black !important;'}
 `
 
 export const UnpaddedColumn = styled(GridColumn)`

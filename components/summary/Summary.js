@@ -48,7 +48,7 @@ export default class Summary extends Component {
                 <FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />
               </VerticalUnpaddedColumn>
 
-              <VerticalUnpaddedColumn>
+              <VerticalUnpaddedColumn black>
                 <FormattedNumber style='currency' currency={currency} value={totalPrice} />
               </VerticalUnpaddedColumn>
             </RelaxedRow>
@@ -70,7 +70,7 @@ export default class Summary extends Component {
                 <FormattedMessage id='cart.estimatedTax' defaultMessage='Estimated Tax' />
               </VerticalUnpaddedColumn>
 
-              <VerticalUnpaddedColumn>
+              <VerticalUnpaddedColumn black>
                 <FormattedNumber style='currency' currency={currency} value={0} />
               </VerticalUnpaddedColumn>
             </RelaxedRow>
