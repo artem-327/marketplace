@@ -33,7 +33,7 @@ import './AddCart.scss'
 import { checkToken } from '../../../../utils/auth'
 import { tabsMarketPlace, echoProductGrouping, dropdownOptions, regulatoryFilter } from './constants'
 import _ from 'lodash'
-import {yesNoOptions} from "../../../../../modules/company-product-info/constants"
+import { yesNoOptions } from "../../../../../modules/company-product-info/constants"
 import { FlexTabs } from "~/modules/inventory/constants/layout"
 import { ChevronDown } from 'react-feather'
 
@@ -345,8 +345,8 @@ class AddCart extends Component {
           i + 1 >= pricingTiers.length
             ? pkgAvailable
             : tier.quantityFrom > pricingTiers[i + 1].quantityFrom
-            ? tier.quantityFrom
-            : pricingTiers[i + 1].quantityFrom - 1
+              ? tier.quantityFrom
+              : pricingTiers[i + 1].quantityFrom - 1
 
         let text = (
           <>
@@ -543,11 +543,28 @@ class AddCart extends Component {
                   {isHoldRequest ? (
                     <FormattedMessage id='cart.holdRequestInfo' defaultMessage='2. Hold Request Info' />
                   ) : (
-                    <FormattedMessage id='cart.PurchaseHeader' defaultMessage='2. Purchase Info' />
-                  )}
+                      <FormattedMessage id='cart.PurchaseHeader' defaultMessage='2. Purchase Info' />
+                    )}
                 </Header>
               </GridColumn>
             </GridRow>
+            <GridRow columns={2}>
+              <GridColumn>
+                <FormattedMessage id='cart.minimumPackges' defaultMessage='Minimum Packages' />
+              </GridColumn>
+              <GridColumn>
+                {offer.minPkg}
+              </GridColumn>
+            </GridRow>
+            <GridRow columns={2}>
+              <GridColumn>
+                <FormattedMessage id='cart.split' defaultMessage='!Split' />
+              </GridColumn>
+              <GridColumn>
+                {offer.splitPkg}
+              </GridColumn>
+            </GridRow>
+
             <GridRow columns={2}>
               <GridColumn>
                 <FormattedMessage id='cart.priceLevel' defaultMessage='Price Level'>{text => (<label>{text}</label>)}</FormattedMessage>
@@ -620,8 +637,8 @@ class AddCart extends Component {
                     <FormattedUnit unit={nameAbbreviation} separator={' '} value={packagingSize * pkgAmount} />{' '}
                   </>
                 ) : (
-                  <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
-                )) ||
+                    <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
+                  )) ||
                   (isEdit ? (
                     <>
                       {' '}
@@ -632,8 +649,8 @@ class AddCart extends Component {
                       />{' '}
                     </>
                   ) : (
-                    <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
-                  ))}
+                      <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
+                    ))}
               </GridColumn>
             </GridRow>
 
@@ -659,8 +676,8 @@ class AddCart extends Component {
                 {totalPrice ? (
                   <FormattedNumber style='currency' currency={currencyCode} value={totalPrice} />
                 ) : (
-                  <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
-                )}
+                    <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
+                  )}
               </GridColumn>
             </GridRow>
           </Grid>
@@ -692,16 +709,16 @@ class AddCart extends Component {
                     </FormattedMessage>
                   </Button>
                 ) : (
-                  <Button
-                    disabled={!canProceed}
-                    primary
-                    onClick={this.editOrder}
-                    data-test='add_cart_edit_order_btn'>
-                    <FormattedMessage id='global.save' defaultMessage='Save'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                )}
+                    <Button
+                      disabled={!canProceed}
+                      primary
+                      onClick={this.editOrder}
+                      data-test='add_cart_edit_order_btn'>
+                      <FormattedMessage id='global.save' defaultMessage='Save'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                  )}
               </GridColumn>
             </GridRow>
           </Grid>
@@ -777,7 +794,7 @@ class AddCart extends Component {
     return (
       <GridRow>
         <GridColumn width={7} className='field-name'>
-          <FormattedMessage id={id} defaultMessage={defaultMessage}/>
+          <FormattedMessage id={id} defaultMessage={defaultMessage} />
         </GridColumn>
 
         <GridColumn width={9} className='field-value'>
@@ -1128,7 +1145,7 @@ class AddCart extends Component {
               selection
               icon={<ChevronDown />}
               value={this.state.casProductIndex}
-              options={casProducts.map((cp, index ) => {
+              options={casProducts.map((cp, index) => {
                 try {
                   var text = `${cp.casProduct.casNumber} ${cp.casProduct.casIndexName}`
                 } catch {
@@ -1667,17 +1684,17 @@ class AddCart extends Component {
             <Loader size='large' />{' '}
           </Dimmer>
         ) : (
-          <>
-            <Menu pointing secondary>
-              {tabsMarketPlace.map((tab, i) =>
-                <Menu.Item onClick={() => this.setState({ activeTab: i })} active={activeTab === i}>
-                  {formatMessage(tab.text)}
-                </Menu.Item>
-              )}
-            </Menu>
-            {this.getContent()}
-          </>
-        )}
+            <>
+              <Menu pointing secondary>
+                {tabsMarketPlace.map((tab, i) =>
+                  <Menu.Item onClick={() => this.setState({ activeTab: i })} active={activeTab === i}>
+                    {formatMessage(tab.text)}
+                  </Menu.Item>
+                )}
+              </Menu>
+              {this.getContent()}
+            </>
+          )}
       </Sidebar>
     )
   }
