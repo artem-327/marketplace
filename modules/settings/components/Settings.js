@@ -49,6 +49,7 @@ import { DatagridProvider } from '~/modules/datagrid'
 import { withToastManager } from 'react-toast-notifications'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
+import { getIdentity } from '~/modules/auth/actions'
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
@@ -185,8 +186,13 @@ class Settings extends Component {
     }
   }
 
-  componentDidMount() {
-    const { isCompanyAdmin, addTab, tabsNames } = this.props
+  async componentDidMount() {
+    const { isCompanyAdmin, addTab, tabsNames, getIdentity } = this.props
+    try {
+      await getIdentity()
+    } catch (error) {
+      console.error(error)
+    }
 
     if (isCompanyAdmin) addTab(companyDetailsTab)
     let queryTab =
@@ -462,8 +468,8 @@ class Settings extends Component {
         searchToFilter: v => {
           let filter = { or: [], and: [] }
 
-          if (v && v.filterValue) filter.or =
-            [
+          if (v && v.filterValue)
+            filter.or = [
               {
                 operator: 'LIKE',
                 path: 'Attachment.name',
@@ -475,8 +481,8 @@ class Settings extends Component {
                 values: [`%${v.filterValue}%`]
               }
             ]
-          if (v && v.documentType) filter.and =
-            [
+          if (v && v.documentType)
+            filter.and = [
               {
                 operator: 'LIKE',
                 path: 'Attachment.documentType.name',
@@ -536,5 +542,6 @@ export default connect(mapStateToProps, {
   resetSettings,
   loadLogo,
   postCompanyLogo,
-  deleteCompanyLogo
+  deleteCompanyLogo,
+  getIdentity
 })(withToastManager(Settings))
