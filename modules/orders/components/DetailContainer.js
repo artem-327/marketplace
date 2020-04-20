@@ -49,9 +49,7 @@ function prepareDetail(data, type) {
     carrier: data.shippingCourierName ? data.shippingCourierName : 'N/A',
     chemicalName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
     confirmationDate:
-      typeof data.confirmationDate !== 'undefined'
-        ? moment(data.confirmationDate).toDate().toLocaleString()
-        : 'N/A',
+      typeof data.confirmationDate !== 'undefined' ? moment(data.confirmationDate).toDate().toLocaleString() : 'N/A',
     contactEmail: data.sellerCompanyContactEmail ? data.sellerCompanyContactEmail : 'N/A',
     contactNumber: data.sellerCompanyContactPhone ? data.sellerCompanyContactPhone : 'N/A',
     createdBy: data.buyerName ? data.buyerName : 'N/A',
@@ -194,6 +192,7 @@ function prepareDetail(data, type) {
     paymentPhone: type === 'sales' ? data.buyerCompanyContactPhone : data.sellerCompanyContactPhone,
     paymentContact: type === 'sales' ? data.buyerCompanyContactName : data.sellerCompanyContactName,
     shippingTrackingCode: data.shippingTrackingCode ? data.shippingTrackingCode : '',
+    isTrackingNumberEditable: data.trackingNumberEditable ? data.trackingNumberEditable : false,
     returnShippingTrackingCode: data.returnShippingTrackingCode ? data.returnShippingTrackingCode : '',
     note: getSafe(() => data.note, ''),
     attachments: getSafe(() => data.attachments, [])

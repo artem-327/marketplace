@@ -10,13 +10,7 @@ import Router from 'next/router'
 import { Required } from '~/components/constants/layout'
 import Logo from '~/assets/images/login/logo-login.png'
 
-import {
-  dunsValidation,
-  addressValidationSchema,
-  errorMessages,
-  einValidation,
-  phoneValidation
-} from '~/constants/yupValidation'
+import { addressValidationSchema, errorMessages, einValidation, phoneValidation } from '~/constants/yupValidation'
 
 import { getSafe } from '~/utils/functions'
 import { AddressForm } from '~/modules/address-form'
@@ -136,7 +130,6 @@ const validationScheme = val.object().shape({
       .required(errorMessages.requiredMessage)
   }),
   dba: val.string(),
-  dunsNumber: dunsValidation(),
   name: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
   tin: einValidation()
 })
@@ -185,7 +178,8 @@ class ConfirmationPage extends Component {
             await reviewCompany(payload)
             actions.setSubmitting(false)
             Router.push('/settings')
-          } catch {
+          } catch (err) {
+            console.error(err)
           } finally {
             actions.setSubmitting(false)
           }

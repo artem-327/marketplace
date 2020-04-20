@@ -93,3 +93,13 @@ export function handleActiveTab(tab) {
     payload: { tab }
   }
 }
+
+export const searchCompany = (companyText, limit) => ({
+  type: AT.OPERATIONS_SEARCH_COMPANY,
+  payload: api.searchCompany(companyText, limit)
+})
+
+export const setProductMappedUnmaped = value => ({
+  type: AT.OPERATIONS_SET_PRODUCT_MAPPED_UNMAPPED,
+  payload: value
+})

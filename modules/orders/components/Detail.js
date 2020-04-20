@@ -14,7 +14,8 @@ import {
   Header,
   Popup,
   GridRow,
-  Dropdown
+  Dropdown,
+  Input
 } from 'semantic-ui-react'
 import { ChevronDown, DownloadCloud } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
@@ -298,6 +299,26 @@ const DocumentsDropdown = styled(Dropdown)`
   margin-left: 16px;
 `
 
+const GridDataColumnTrackingID = styled(GridDataColumn)`
+  display: flex !important;
+`
+
+const CustomInput = styled(Input)`
+  max-width: 70% !important;
+  margin-right: 10px !important;
+`
+
+const CustomButton = styled(Button)`
+  background-color: #2599d5 !important;
+  color: #ffffff !important;
+`
+
+const CustomA = styled.a`
+  cursor: pointer;
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+`
+
 class Detail extends Component {
   state = {
     activeIndexes: [true, true, true, false, false, false, false, false],
@@ -342,7 +363,9 @@ class Detail extends Component {
     isOpenManager: false,
     replaceRow: '',
     listDocumentTypes: '',
-    attachmentRows: []
+    attachmentRows: [],
+    toggleTrackingID: false,
+    shippingTrackingCode: ''
   }
 
   constructor(props) {
@@ -350,11 +373,12 @@ class Detail extends Component {
   }
 
   componentDidMount() {
-    const { listDocumentTypes } = this.props
+    const { listDocumentTypes, order } = this.props
     let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
     this.props.loadDetail(endpointType, this.props.router.query.id)
 
     if (listDocumentTypes && !listDocumentTypes.length) this.props.getDocumentTypes()
+    this.setState({ shippingTrackingCode: order.shippingTrackingCode })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -378,6 +402,10 @@ class Detail extends Component {
       this.setState({
         attachmentRows: this.getRows(order.attachments)
       })
+    }
+
+    if (getSafe(() => prevProps.order.shippingTrackingCode, '') !== getSafe(() => order.shippingTrackingCode, '')) {
+      this.setState({ shippingTrackingCode: order.shippingTrackingCode })
     }
   }
 
@@ -584,13 +612,13 @@ class Detail extends Component {
       listDocumentTypes,
       loadingRelatedDocuments,
       intl: { formatMessage },
-      echoSupportPhone
+      echoSupportPhone,
+      editTrackingCode
     } = this.props
     const { activeIndexes } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
 
     let orderDate = moment(order.orderDate, 'MMM Do, YYYY h:mm:ss A')
-
     const keyColumn = 5
     const valColumn = 16 - keyColumn
 
@@ -1265,7 +1293,45 @@ class Detail extends Component {
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.trackingNumber' defaultMessage='Tracking Number' />
                           </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.shippingTrackingCode}</GridDataColumn>
+                          <GridDataColumnTrackingID width={valColumn}>
+                            {!order.isTrackingNumberEditable ? (
+                              order.shippingTrackingCode
+                            ) : this.state.toggleTrackingID ? (
+                              <>
+                                <CustomInput
+                                  onChange={(e, { value }) => {
+                                    this.setState({ shippingTrackingCode: value })
+                                  }}
+                                  value={this.state.shippingTrackingCode}
+                                />
+                                <CustomButton
+                                  type='button'
+                                  onClick={async e => {
+                                    e.preventDefault()
+                                    try {
+                                      await editTrackingCode(order.id, this.state.shippingTrackingCode)
+                                    } catch (error) {
+                                      this.setState({ shippingTrackingCode: order.shippingTrackingCode })
+                                    } finally {
+                                      this.setState({ toggleTrackingID: false })
+                                    }
+                                  }}>
+                                  <FormattedMessage id='global.save' defaultMessage='Save' />
+                                </CustomButton>
+                              </>
+                            ) : (
+                              <Popup
+                                content={
+                                  <FormattedMessage id='order.detail.clickToEdit' defaultMessage='Click to edit' />
+                                }
+                                trigger={
+                                  <CustomA onClick={() => this.setState({ toggleTrackingID: true })}>
+                                    {this.state.shippingTrackingCode}
+                                  </CustomA>
+                                }
+                              />
+                            )}
+                          </GridDataColumnTrackingID>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.incoterms' defaultMessage='Incoterms' />
                           </GridDataColumn>

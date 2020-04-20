@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Header, Menu, Button, Input, Grid, GridRow, GridColumn } from 'semantic-ui-react'
+import { Header, Menu, Button, Input, Grid, GridRow, GridColumn, Dropdown } from 'semantic-ui-react'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
 
 import * as Actions from '../actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import { getSafe } from '~/utils/functions'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -16,6 +17,16 @@ const PositionHeaderSettings = styled.div`
 const CustomGridRow = styled(GridRow)`
   padding: 0 !important;
   margin: 10px 0 10px 4px !important;
+`
+
+const CustomMenuItemLeft = styled(Menu.Item)`
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+`
+
+const CustomMenuItemRight = styled(Menu.Item)`
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 `
 
 const textsTable = {
@@ -28,7 +39,9 @@ const textsTable = {
     SearchText: 'operations.tables.tags.search'
   },
   'company-product-catalog': {
-    SearchText: 'operations.tables.companyProductCatalog.search'
+    SearchText: 'operations.tables.companyProductCatalog.search',
+    SearchCompanyText: 'operations.tables.companyProductCatalog.SearchCompanyText',
+    MappedText: 'operations.tables.companyProductCatalog.MappedText'
   },
   'company-inventory': {
     SearchText: 'operations.tables.companyInventory.search'
@@ -39,7 +52,8 @@ class TablesHandlers extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      filterValue: ''
+      filterValue: '',
+      company: '',
     }
     this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
   }
@@ -60,7 +74,11 @@ class TablesHandlers extends Component {
 
   handleFilterChange = (e, { value }) => {
     this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
+    const filter = {
+      filterValue: value,
+      company: this.state.company,
+    }
+    this.handleFiltersValue(filter)
   }
 
   renderHeader = () => (
@@ -71,49 +89,135 @@ class TablesHandlers extends Component {
     </GridColumn>
   )
 
+  handleFilterChangeMappedUnmapped = (e, { value }) => {
+    this.props.setProductMappedUnmaped(value)
+  }
+
+  handleFilterChangeCompany = (e, { value }) => {
+    this.setState({ company: value })
+    const filter = {
+      filterValue: this.state.filterValue,
+      company: value
+    }
+    this.handleFiltersValue(filter)
+  }
+
+  searchCompanies = debounce(text => {
+    this.props.searchCompany(text, 5)
+  }, 250)
+
   renderHandler = () => {
     const {
       currentTab,
       openPopup,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      searchedCompaniesLoading,
+      searchedCompanies,
+      companyProductUnmappedOnly
     } = this.props
 
-    const { filterValue } = this.state
+    const { filterValue, company } = this.state
 
     const item = textsTable[currentTab.type]
 
-    return (
-      <>
-        {item.SearchText && (
-          <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
-            <Input
-              style={{ width: 340 }}
-              icon='search'
-              value={filterValue}
-              placeholder={formatMessage({
-                id: item.SearchText,
-                defaultMessage: 'Select Credit Card'
-              })}
-              onChange={this.handleFilterChange}
-            />
-          </GridColumn>
-        )}
-        {item.BtnAddText && (
-          <GridColumn widescreen={4} computer={4} tablet={5}>
-            <Button fluid primary onClick={() => openPopup()} data-test='operations_open_popup_btn'>
-              <FormattedMessage id={item.BtnAddText}>{text => text}</FormattedMessage>
-            </Button>
-          </GridColumn>
-        )}
-      </>
-    )
+    switch (currentTab.type) {
+      case 'company-product-catalog':
+        return (
+          <CustomGridRow>
+            <CustomMenuItemLeft >
+              <Input
+                style={{ width: 340 }}
+                icon='search'
+                value={filterValue}
+                placeholder={formatMessage({
+                  id: item.SearchText,
+                  defaultMessage: 'Select Credit Card'
+                })}
+                onChange={this.handleFilterChange}
+              />
+            </CustomMenuItemLeft>
+            <CustomMenuItemLeft >
+              <Dropdown
+                style={{ width: 340 }}
+                placeholder={formatMessage({
+                  id: item.SearchCompanyText,
+                  defaultMessage: 'Search product catalog by company'
+                })}
+                icon='search'
+                selection
+                clearable
+                options={searchedCompanies}
+                search={options => options}
+                value={company}
+                loading={searchedCompaniesLoading}
+                onSearchChange={(e, { searchQuery }) => {
+                  searchQuery.length > 0 && this.searchCompanies(searchQuery)
+                }}
+                onChange={this.handleFilterChangeCompany}
+              />
+            </CustomMenuItemLeft>
+            <CustomMenuItemLeft >
+              <Dropdown
+                style={{ width: 250 }}
+                placeholder={formatMessage({
+                  id: item.MappedText,
+                  defaultMessage: 'Select mapped/unmapped only'
+                })}
+                fluid
+                selection
+                options={[
+                  {
+                    key: 0,
+                    text: formatMessage({ id: 'operations.noSelection', defaultMessage: 'All' }),
+                    value: false
+                  },
+                  {
+                    key: 1,
+                    text: formatMessage({ id: 'operations.unmapped', defaultMessage: 'Unmapped Only' }),
+                    value: true
+                  }
+                ]}
+                value={companyProductUnmappedOnly}
+                onChange={this.handleFilterChangeMappedUnmapped}
+              />
+            </CustomMenuItemLeft>
+          </CustomGridRow>
+        )
+
+      default:
+        return (
+          <CustomGridRow>
+            {item.SearchText && (
+              <CustomMenuItemLeft position='left'>
+                <Input
+                  style={{ width: 340 }}
+                  icon='search'
+                  value={filterValue}
+                  placeholder={formatMessage({
+                    id: item.SearchText,
+                    defaultMessage: 'Select Credit Card'
+                  })}
+                  onChange={this.handleFilterChange}
+                />
+              </CustomMenuItemLeft>
+            )}
+            {item.BtnAddText && (
+              <CustomMenuItemRight position='right'>
+                <Button fluid primary onClick={() => openPopup()} data-test='operations_open_popup_btn'>
+                  <FormattedMessage id={item.BtnAddText}>{text => text}</FormattedMessage>
+                </Button>
+              </CustomMenuItemRight>
+            )}
+          </CustomGridRow>
+        )
+    }
   }
 
   render() {
     return (
       <PositionHeaderSettings>
         <Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
-          <CustomGridRow>{this.renderHandler()}</CustomGridRow>
+          {this.renderHandler()}
         </Grid>
       </PositionHeaderSettings>
     )
@@ -123,7 +227,14 @@ class TablesHandlers extends Component {
 const mapStateToProps = state => {
   return {
     currentTab: state.operations.currentTab,
-    filterValue: state.operations.filterValue
+    filterValue: state.operations.filterValue,
+    searchedCompanies: state.operations.searchedCompanies.map(d => ({
+      key: d.id,
+      value: d.id,
+      text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
+    })),
+    searchedCompaniesLoading: state.operations.searchedCompaniesLoading,
+    companyProductUnmappedOnly: state.operations.companyProductUnmappedOnly
   }
 }
 
