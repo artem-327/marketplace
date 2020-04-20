@@ -1602,7 +1602,7 @@
   "laststep.address.duns": "DUNS Number",
   "laststep.address.ein": "EIN Number",
   "laststep.address.header": "Company Primary Address",
-  "laststep.admin.header": "Company Primary Profile",
+  "laststep.admin.header": "Company Primary Admin",
   "laststep.admin.email": "E-Mail",
   "laststep.admin.name": "Name",
   "laststep.admin.phone": "Phone",
