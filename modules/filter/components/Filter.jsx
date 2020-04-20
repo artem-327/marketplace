@@ -84,7 +84,8 @@ class Filter extends Component {
     },
     searchQuery: '',
     searchWarehouseQuery: '',
-    isTyping: false
+    isTyping: false,
+    hasProvinces: false
   }
 
   componentDidMount() {
@@ -99,7 +100,8 @@ class Filter extends Component {
       filterState,
       appliedFilter,
       onApply,
-      applyDatagridFilter
+      applyDatagridFilter,
+      fetchCountries,
     } = this.props
 
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
@@ -115,7 +117,8 @@ class Filter extends Component {
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
       this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
       this.fetchIfNoData(fetchProductGrade, 'productGrades'),
-      this.fetchIfNoData(fetchWarehouses, 'warehouses')
+      //this.fetchIfNoData(fetchWarehouses, 'warehouses'),
+      this.fetchIfNoData(fetchCountries, 'countries')
     ]).finally(() => this.setState({
       ...(filterState !== null && filterState.state),
       loaded: true
@@ -669,7 +672,12 @@ class Filter extends Component {
       autocompleteWarehouse,
       autocompleteWarehouseLoading,
       layout,
-      savedAutocompleteData
+      savedAutocompleteData,
+      countries,
+      countriesLoading,
+      provinces,
+      provincesLoading,
+      fetchProvinces
     } = this.props
 
     const { formatMessage } = intl
@@ -749,6 +757,49 @@ class Filter extends Component {
     if (!autocompleteDataLoading) dropdownProps.icon = null
     //if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
 
+    let dropdownCountry = {
+      selection: true,
+      multiple: false,
+      fluid: true,
+      clearable: true,
+      options: countries.map(d => ({
+        key: d.id,
+        text: d.name,
+        value: JSON.stringify({ id: d.id, name: d.name, text: d.name, hasProvinces: d.hasProvinces })
+      })),
+      loading: countriesLoading,
+      name: 'country',
+      placeholder: <FormattedMessage id='filter.selectCountry' defaultMessage='Select Country' />,
+      value: values.country,
+      onChange: (e, data) => {
+        setFieldValue('country', data.value)
+        setFieldValue('province', '')
+        const parsed = data.value ? JSON.parse(data.value) : null
+        if (parsed && parsed.hasProvinces) fetchProvinces(parsed.id)
+        this.setState({ hasProvinces: parsed && parsed.hasProvinces })
+      }
+    }
+
+    let dropdownProvince = {
+      selection: true,
+      multiple: false,
+      fluid: true,
+      clearable: true,
+      options: provinces.map(d => ({
+        key: d.id,
+        text: d.name,
+        value: JSON.stringify({ id: d.id, name: d.name, text: d.name })
+      })),
+      loading: provincesLoading,
+      name: 'province',
+      disabled: !this.state.hasProvinces,
+      placeholder: <FormattedMessage id='filter.selectState' defaultMessage='Select State' />,
+      value: values.province,
+      onChange: (e, data) => {
+        setFieldValue('province', data.value)
+      }
+    }
+
     let currencySymbol = getSafe(() => this.props.preferredCurrency.symbol, '$')
 
     return (
@@ -819,9 +870,12 @@ class Filter extends Component {
         </AccordionItem>
 
         <AccordionItem>
-          {this.accordionTitle('warehouse', <FormattedMessage id='filter.location' />)}
-          <AccordionContent active={this.state.activeAccordion.warehouse}>
-            <BottomMargedDropdown {...dropdownWarehouseProps} />
+          {this.accordionTitle('location', <FormattedMessage id='filter.location' />)}
+          <AccordionContent active={this.state.activeAccordion.location}>
+            <div className='field-label'><FormattedMessage id='global.country' /></div>
+            <BottomMargedDropdown {...dropdownCountry} />
+            <div className='field-label'><FormattedMessage id='global.state' /></div>
+            <BottomMargedDropdown {...dropdownProvince} />
           </AccordionContent>
         </AccordionItem>
 
@@ -936,6 +990,10 @@ class Filter extends Component {
           this.resetForm = props.resetForm
           this.setFieldValue = props.setFieldValue
           this.values = props.values
+
+          console.log('!!!!!!!!!! render this.state', this.state)
+          console.log('!!!!!!!!!! render values', props.values)
+
 
           return (
             <FlexSidebar {...additionalSidebarProps}>
