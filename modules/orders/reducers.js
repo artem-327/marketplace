@@ -26,7 +26,7 @@ const initialState = {
   bankAccounts: [],
   bankAccountsLoading: false,
   relatedOrders: [],
-  returnShipmentRates: [],
+  returnShipmentRates: {},
   shipmentOrderResult: {},
   returnShipmentOrderResult: {},
   loadRelatedOrders: false,
@@ -43,7 +43,7 @@ const initialState = {
   loadingRelatedDocuments: false
 }
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     /*
         case AT.ORDERS_FETCH_REQUESTED:
@@ -314,13 +314,13 @@ export default function(state = initialState, action) {
     case AT.RETURN_SHIPMENT_RATES_PENDING:
       return {
         ...state,
-        returnShipmentRates: [],
+        returnShipmentRates: {},
         isSending: true
       }
     case AT.RETURN_SHIPMENT_RATES_REJECTED:
       return {
         ...state,
-        returnShipmentRates: [],
+        returnShipmentRates: {},
         isSending: false
       }
     case AT.ORDER_PURCHASE_SHIPMENT_ORDER_PENDING:
@@ -560,6 +560,25 @@ export default function(state = initialState, action) {
       return {
         ...state,
         detail: {}
+      }
+    }
+    //TODO check https://pm.artio.net/issues/33545 if is finished adjust cases based on new endpoint
+    case AT.EDIT_TRACKING_CODE_PENDING: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.EDIT_TRACKING_CODE_FULFILLED: {
+      return {
+        ...state,
+        detail: action.payload.data
+      }
+    }
+
+    case AT.EDIT_TRACKING_CODE_REJECTED: {
+      return {
+        ...state
       }
     }
 

@@ -283,6 +283,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         country: action.country,
         zip: action.zip,
+        shippingQuotes: [],
         shippingQuotesAreFetching: true,
         cart: { ...state.cart, selectedShipping: null }
       }
@@ -324,7 +325,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         isPurchasing: false,
         sidebar: { ...state.cart.sidebar, isOpen: false },
-        cart: payload,
+        cart: payload
       }
     }
 
@@ -489,7 +490,7 @@ export default function reducer(state = initialState, action) {
         shippingQuotes: {
           rates: action.payload.quotes.rates.map((quote) =>
             ({ productOfferId: quote.productOfferId, ...quote.shipmentRate }))
-        },
+        }
       }
     }
 

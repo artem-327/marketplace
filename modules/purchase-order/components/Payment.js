@@ -44,7 +44,7 @@ export default class Payment extends Component {
                 />
               )}
           </GridColumn>
-          {payments.length &&
+          {payments.length !== 0 &&
             <GridColumn computer={8}>
               <ShippingAddress billingInfo={billingInfo} companyName={companyName} />
             </GridColumn>

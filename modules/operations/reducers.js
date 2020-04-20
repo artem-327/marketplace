@@ -7,7 +7,10 @@ export const initialState = {
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
   filterValue: '',
-  loading: false
+  loading: false,
+  searchedCompanies: [],
+  searchedCompaniesLoading: false,
+  companyProductUnmappedOnly: false
 }
 
 export default function reducers(state = initialState, action) {
@@ -83,6 +86,23 @@ export default function reducers(state = initialState, action) {
         isOpenPopup: false,
         filterValue: '',
         loading: false
+      }
+    }
+
+    case AT.OPERATIONS_SEARCH_COMPANY_PENDING: {return { ...state, searchedCompaniesLoading: true }}
+    case AT.OPERATIONS_SEARCH_COMPANY_REJECTED: {return { ...state, searchedCompaniesLoading: false }}
+    case AT.OPERATIONS_SEARCH_COMPANY_FULFILLED: {
+      return {
+        ...state,
+        searchedCompanies: action.payload,
+        searchedCompaniesLoading: false
+      }
+    }
+
+    case AT.OPERATIONS_SET_PRODUCT_MAPPED_UNMAPPED: {
+      return {
+        ...state,
+        companyProductUnmappedOnly: payload
       }
     }
 

@@ -32,7 +32,7 @@ function mapStateToProps(store) {
     ...store.cart,
     selectedAddressId: store.forms.cart.selectedAddressId,
     initialValues: selectedAddress && {
-      ...selectedAddress,
+      ...selectedAddress.warehouse ? selectedAddress.deliveryAddress : selectedAddress,
       addressName: getAddressName(),
       address: {
         ...address,

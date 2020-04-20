@@ -18,14 +18,14 @@ const CompanyHeader = styled.b`
 
 export default class ShippingAddress extends Component {
   render() {
-    let { billingInfo, companyName, additionalContent } = this.props
+    let { billingInfo, companyName, additionalContent, header } = this.props
     if (!billingInfo) return null
 
     return (
       <ItemDescriptionGrid>
         <GridRow>
           <GridColumn>
-            <FormattedMessage id='cart.billingInfo' defaultMessage='Billing Info' />
+            {header}
           </GridColumn>
         </GridRow>
 
@@ -58,5 +58,6 @@ export default class ShippingAddress extends Component {
 }
 
 ShippingAddress.defaultProps = {
-  additionalContent: null
+  additionalContent: null,
+  header: <FormattedMessage id='cart.billingInfo' defaultMessage='Billing Info' />
 }

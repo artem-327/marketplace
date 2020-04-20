@@ -23,6 +23,11 @@ import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
 
+const FREIGHT_TYPES = {
+  ECHO: 'ECHO_FREIGHT',
+  OWN: 'OWN_FREIGHT'
+}
+
 import CartItemSummary from '~/components/summary/CartItemSummary'
 import Summary from '~/components/summary/Summary'
 
@@ -44,27 +49,44 @@ import {
   StyledRow,
   TopUnpaddedRow,
   GridContainer,
-  VerticalUnpaddedRow
+  VerticalUnpaddedRow,
+  BottomUnpaddedRow
 } from '~/modules/cart/components/StyledComponents'
 
 const RelaxedForm = styled(Form)`
   padding-top: 1.5rem !important;
   padding-bottom: 50px !important;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 `
 
 const Container = styled(SemanticContainer)`
   padding: 20px 30px 30px 30px !important;
+  overflow-x: hidden;
 `
 
-const WarningMessage = styled(Message)`
+const CustomMessage = styled(Message)`
   border-radius: 4px;
-  border: solid 1px #ff9d42;
+  ${props => props.warning && `border: solid 1px #ff9d42;`}
+  ${props => props.informative && `border: solid 1px #2599d5;`}
+  ${props => props.ownFreight && `border: solid 1px #84c225;`}
   box-shadow: none !important;
   -webkit-box-shadow: none !important;
   background-color: #ffffff !important;
-  > i {
-    color: #ff9d42;
+  display: block !important;
+  i {
+    ${props => props.warning && `color: #ff9d42;`}
+    ${props => props.informative && `color: #2599d5;`}
+    ${props => props.ownFreight && `color: #84c225;`}
+  }
+
+  *:not(i) {
+    color: black !important;
+  }
+  & .button {
+    float: right;
+    bottom: 7px;
+    position: relative;
   }
 `
 
@@ -209,14 +231,15 @@ class PurchaseOrder extends Component {
     }
   }
 
-  handlePurchase = async (shipping, shipmentQuoteId, dwollaBankAccountId) => {
+  handlePurchase = async payload => {
     if (this.state.submitting) return
     this.setState({ submitting: true })
-
+    const { shipmentQuoteId, dwollaBankAccountId, freightType } = payload
     const data = {
       [this.state.addressId]: this.state.selectedAddress.id,
       shipmentQuoteId,
-      dwollaBankAccountId
+      dwollaBankAccountId,
+      freightType
     }
 
     try {
@@ -292,7 +315,8 @@ class PurchaseOrder extends Component {
     let initialValues = {
       payment,
       address: '',
-      shipmentQuoteId: ''
+      shipmentQuoteId: '',
+      freightType: FREIGHT_TYPES.ECHO
     }
 
     let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit}` : ''
@@ -315,12 +339,13 @@ class PurchaseOrder extends Component {
           className='purchase-order'
           enableReinitialize
           render={formikProps => {
-            let { values } = formikProps
+            let { values, setFieldValue } = formikProps
             this.formikProps = formikProps
+            const echoFreight = values.freightType === FREIGHT_TYPES.ECHO
 
             return (
               <GridContainer>
-                <GridColumn mobile={14} tablet={9} computer={9}>
+                <GridColumn mobile={14} tablet={9} computer={10}>
                   {this.state.modalOpen && (
                     <ShippingEdit
                       onClose={() => this.setState({ modalOpen: false })}
@@ -345,20 +370,13 @@ class PurchaseOrder extends Component {
                         handleOpen={({ modalOpen, isNewAddress }) => this.setState({ modalOpen, isNewAddress })}
                         otherAddresses={this.state.otherAddresses}
                         deliveryAddresses={deliveryAddresses}
-                        dispatch={dispatch}
-                        shippingChanged={this.props.shippingChanged}
                         getAddress={this.getAddress}
                         selectedAddress={this.state.selectedAddress}
-                        getBranches={this.props.getBranches}
-                        branchesAreFetching={this.props.branchesAreFetching}
-                        branches={this.props.branches}
                         getWarehouses={this.props.getWarehouses}
-                        warehousesFetching={this.props.warehousesFetching}
                         warehouses={this.props.warehouses}
                         handleToggleChange={this.handleToggleChange}
                         shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
                         formikProps={formikProps}
-                        weightLimitExceed={cart.weightLimitExceed}
                       />
                     </Grid>
                   </Segment>
@@ -372,6 +390,43 @@ class PurchaseOrder extends Component {
                           </Header>
                         </VerticalUnpaddedColumn>
                       </StyledRow>
+                      {this.state.selectedAddress && (
+                        <BottomUnpaddedRow>
+                          <GridColumn>
+                            <CustomMessage informative={echoFreight} ownFreight={!echoFreight}>
+                              <Icon size='large' name={echoFreight ? 'info circle' : 'check circle outline'} />
+                              {echoFreight ? (
+                                <FormattedMessage id='cart.useOwnFreight' defaultMessage='Use my own freight' />
+                              ) : (
+                                <FormattedMessage
+                                  id='cart.usingOwnFreight'
+                                  defaultMessage='You are using your own freight'
+                                />
+                              )}
+                              <Button
+                                type='button'
+                                color={echoFreight && 'blue'}
+                                basic
+                                onClick={() =>
+                                  setFieldValue('freightType', echoFreight ? FREIGHT_TYPES.OWN : FREIGHT_TYPES.ECHO)
+                                }>
+                                {echoFreight ? (
+                                  <>
+                                    <Icon name='archive' />
+                                    <FormattedMessage id='cart.ownFreight' defaultMessage='Own Freight'>
+                                      {text => text}
+                                    </FormattedMessage>
+                                  </>
+                                ) : (
+                                  <FormattedMessage id='global.cancel' defaultMessage='!Cancel'>
+                                    {text => text}
+                                  </FormattedMessage>
+                                )}
+                              </Button>
+                            </CustomMessage>
+                          </GridColumn>
+                        </BottomUnpaddedRow>
+                      )}
                       {!cart.weightLimitExceed && this.state.selectedAddress ? (
                         <ShippingQuote
                           currency={currency}
@@ -385,14 +440,14 @@ class PurchaseOrder extends Component {
                         !this.state.selectedAddress && (
                           <GridRow>
                             <GridColumn>
-                              <WarningMessage>
+                              <CustomMessage warning>
                                 <Icon size='large' name='warning circle' />
                                 <FormattedMessage
                                   id='cart.selectWhOrAddress'
                                   defaultMessage='Please, select delivery address or warehouse first.'>
-                                  {text => text}{' '}
+                                  {text => text}
                                 </FormattedMessage>
-                              </WarningMessage>
+                              </CustomMessage>
                             </GridColumn>
                           </GridRow>
                         )
@@ -401,20 +456,25 @@ class PurchaseOrder extends Component {
                         <>
                           <GridRow>
                             <GridColumn computer={16}>
-                              <WarningMessage
-                                icon='warning circle'
-                                header={formatMessage({
-                                  id: 'cart.weightLimitExceeded.header',
-                                  defaultMessage:
-                                    'We are sorry, but no matching Shipping Quotes were provided by logistics company.'
-                                })}
-                                content={formatMessage(
-                                  {
-                                    id: 'cart.weightLimitExceeded.content',
-                                    defaultMessage: `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
-                                  },
-                                  { limit: weightLimitStr }
-                                )}></WarningMessage>
+                              <CustomMessage warning>
+                                <CustomMessage.Header>
+                                  <Icon name='warning circle' />
+                                  {formatMessage({
+                                    id: 'cart.weightLimitExceeded.header',
+                                    defaultMessage:
+                                      'We are sorry, but no matching Shipping Quotes were provided by logistics company.'
+                                  })}
+                                </CustomMessage.Header>
+                                <CustomMessage.Content>
+                                  {formatMessage(
+                                    {
+                                      id: 'cart.weightLimitExceeded.content',
+                                      defaultMessage: `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
+                                    },
+                                    { limit: weightLimitStr }
+                                  )}
+                                </CustomMessage.Content>
+                              </CustomMessage>
                             </GridColumn>
                           </GridRow>
                         </>
@@ -501,7 +561,7 @@ class PurchaseOrder extends Component {
                   </Segment>
                 </GridColumn>
 
-                <GridColumn mobile={14} tablet={6} computer={7}>
+                <GridColumn mobile={14} tablet={6} computer={6}>
                   <CartItemSummary
                     updateHazmatInfo={this.props.updateHazmatInfo}
                     currency={currency}
@@ -517,27 +577,27 @@ class PurchaseOrder extends Component {
                             <GridColumn>
                               <Button
                                 disabled={
-                                  (!purchaseHazmatEligible && isAnyItemHazardous) ||
-                                  this.state.submitting ||
-                                  !values.payment ||
-                                  !this.props.logisticsAccount ||
+                                  (!purchaseHazmatEligible && isAnyItemHazardous) || // false
+                                  this.state.submitting || // false
+                                  !values.payment || // !true
+                                  !this.props.logisticsAccount || // !true
                                   !(
-                                    this.state.selectedAddress &&
-                                    (this.props.cart.selectedShipping || values.shipmentQuoteId)
+                                    this.state.selectedAddress && // true
+                                    (this.props.cart.selectedShipping || values.shipmentQuoteId || !echoFreight)
                                   )
                                 }
                                 loading={this.state.submitting}
                                 fluid
                                 primary
                                 onClick={() => {
-                                  this.handlePurchase(
-                                    shipping,
-                                    getSafe(
+                                  this.handlePurchase({
+                                    shipmentQuoteId: getSafe(
                                       () => this.props.cart.selectedShipping.quote.quoteId,
                                       values.shipmentQuoteId
                                     ),
-                                    values.payment
-                                  )
+                                    dwollaBankAccountId: values.payment,
+                                    freightType: values.freightType
+                                  })
                                 }}
                                 data-test='purchase_order_place_order_btn'>
                                 {/* <FormattedMessage id='cart.placeOrder' defaultMessage='Place Order1' /> */}

@@ -36,9 +36,9 @@ class PurchaseOrderShipping extends React.Component {
 
     try {
       let formValues = {
-        quoteId: (order.cfWeightExceeded || !shippingQuotes.length
+        quoteId: (order.cfWeightExceeded || getSafe(() => !shippingQuotes.rates.length, false)
           ? values.shipmentQuoteId
-          : shippingQuotes[this.state.selectedShippingQuote].quoteId
+          : shippingQuotes.rates[this.state.selectedShippingQuote].quoteId
         ).trim(),
         pickupRemarks: values.pickupRemarks.trim(),
         deliveryRemarks: values.deliveryRemarks.trim(),
@@ -114,12 +114,14 @@ class PurchaseOrderShipping extends React.Component {
       shippingQuotes
     } = this.props
 
-    const manualShipmentQuoteId = order.cfWeightExceeded || !shippingQuotes.length
+    const manualShipmentQuoteId = order.cfWeightExceeded || getSafe(() => !shippingQuotes.rates.length, false)
 
     return (
       <>
         <Modal closeIcon onClose={() => this.props.closePopup()} open={true} size='small'>
-          <Dimmer active={isSending || (shippingQuotesAreFetching && !shippingQuotes.length)} inverted>
+          <Dimmer
+            active={isSending || (shippingQuotesAreFetching && getSafe(() => !shippingQuotes.rates.length, false))}
+            inverted>
             <Loader />
           </Dimmer>
           <Modal.Header>
@@ -290,7 +292,7 @@ function mapStateToProps(state) {
     orderId: detail.id,
     isSending: orders.isSending,
     shippingQuotesAreFetching: orders.shippingQuotesAreFetching,
-    shippingQuotes: getSafe(() => orders.shippingQuotes.rates, [])
+    shippingQuotes: getSafe(() => orders.shippingQuotes, {})
     /*
     shippingQuotes: [ // ! ! temporary
       {
