@@ -317,7 +317,7 @@ class ConfirmationPage extends Component {
                 </Grid>
 
                 <Header as='h3'>
-                  <FormattedMessage id='laststep.admin.header' defaultMessage='Company Admin Profile' />
+                  <FormattedMessage id='laststep.admin.header' defaultMessage='Company Primary Profile' />
                 </Header>
                 <Grid>
                   <Grid.Row columns={2}>
