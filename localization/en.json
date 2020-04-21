@@ -1890,7 +1890,7 @@
   "order.detail.status.draft": "This is an order draft as its creator has exceeded allow ordering limits. The draft order can be approved or discarded. It needs to be done within 24h from its creation, otherwise it will be discarded automatically. Draft orders are not visible to Seller.",
   "order.detail.nameOfOppositeParty": "Name of Opposite Party",
   "order.detail.echoSystemTransaction": "Echo System Transaction",
-  "order.detail.echoSupportPhone": "Echo Support phone number",
+  "order.detail.echoSupportPhone": "Echo Support Phone",
   "order.detail.clickToEdit": "Click to edit",
   "order.actionRequired": "Action Required",
   "order.orderInfo": "Order Info",
