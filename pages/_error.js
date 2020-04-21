@@ -8,7 +8,6 @@ export default class Error extends Component {
   }
 
   render() {
-    <ErrorComponent statusCode={this.props.statusCode} />
+    return <ErrorComponent statusCode={this.props.statusCode} />
   }
 }
-
