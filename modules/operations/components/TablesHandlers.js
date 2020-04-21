@@ -53,7 +53,7 @@ class TablesHandlers extends Component {
     super(props)
     this.state = {
       filterValue: '',
-      company: '',
+      company: ''
     }
     this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
   }
@@ -76,7 +76,7 @@ class TablesHandlers extends Component {
     this.setState({ filterValue: value })
     const filter = {
       filterValue: value,
-      company: this.state.company,
+      company: this.state.company
     }
     this.handleFiltersValue(filter)
   }
@@ -91,6 +91,10 @@ class TablesHandlers extends Component {
 
   handleFilterChangeMappedUnmapped = (e, { value }) => {
     this.props.setProductMappedUnmaped(value)
+    this.handleFiltersValue({
+      filterValue: this.state.filterValue,
+      company: this.state.company
+    })
   }
 
   handleFilterChangeCompany = (e, { value }) => {
@@ -124,7 +128,7 @@ class TablesHandlers extends Component {
       case 'company-product-catalog':
         return (
           <CustomGridRow>
-            <CustomMenuItemLeft >
+            <CustomMenuItemLeft>
               <Input
                 style={{ width: 340 }}
                 icon='search'
@@ -136,7 +140,7 @@ class TablesHandlers extends Component {
                 onChange={this.handleFilterChange}
               />
             </CustomMenuItemLeft>
-            <CustomMenuItemLeft >
+            <CustomMenuItemLeft>
               <Dropdown
                 style={{ width: 340 }}
                 placeholder={formatMessage({
@@ -156,7 +160,7 @@ class TablesHandlers extends Component {
                 onChange={this.handleFilterChangeCompany}
               />
             </CustomMenuItemLeft>
-            <CustomMenuItemLeft >
+            <CustomMenuItemLeft>
               <Dropdown
                 style={{ width: 250 }}
                 placeholder={formatMessage({
