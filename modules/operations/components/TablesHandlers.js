@@ -53,14 +53,14 @@ class TablesHandlers extends Component {
     super(props)
     this.state = {
       filterValue: '',
-      company: '',
+      company: ''
     }
     this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.currentTab !== this.props.currentTab) {
-      this.setState({ filterValue: '' })
+      this.setState({ filterValue: '', company: '' })
       this.handleFiltersValue('')
     }
   }
@@ -68,15 +68,20 @@ class TablesHandlers extends Component {
   handleFiltersValue = value => {
     const { handleFiltersValue } = this.props
     //TODO temporary - missing filter path in BE for carrierName (shipment/manual-quotes)
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
-    else handleFiltersValue(value)
+    if (Datagrid.isReady()) {
+      Datagrid.setSearch(value)
+    }
+    else {
+      //handleFiltersValue(value) <- this is not working, but why Datagrid.isReady() returns false?
+      Datagrid.setSearch(value)
+    }
   }
 
   handleFilterChange = (e, { value }) => {
     this.setState({ filterValue: value })
     const filter = {
       filterValue: value,
-      company: this.state.company,
+      company: this.state.company
     }
     this.handleFiltersValue(filter)
   }
@@ -91,6 +96,10 @@ class TablesHandlers extends Component {
 
   handleFilterChangeMappedUnmapped = (e, { value }) => {
     this.props.setProductMappedUnmaped(value)
+    this.handleFiltersValue({
+      filterValue: this.state.filterValue,
+      company: this.state.company
+    })
   }
 
   handleFilterChangeCompany = (e, { value }) => {
@@ -124,7 +133,7 @@ class TablesHandlers extends Component {
       case 'company-product-catalog':
         return (
           <CustomGridRow>
-            <CustomMenuItemLeft >
+            <CustomMenuItemLeft>
               <Input
                 style={{ width: 340 }}
                 icon='search'
@@ -136,7 +145,7 @@ class TablesHandlers extends Component {
                 onChange={this.handleFilterChange}
               />
             </CustomMenuItemLeft>
-            <CustomMenuItemLeft >
+            <CustomMenuItemLeft>
               <Dropdown
                 style={{ width: 340 }}
                 placeholder={formatMessage({
@@ -156,7 +165,7 @@ class TablesHandlers extends Component {
                 onChange={this.handleFilterChangeCompany}
               />
             </CustomMenuItemLeft>
-            <CustomMenuItemLeft >
+            <CustomMenuItemLeft>
               <Dropdown
                 style={{ width: 250 }}
                 placeholder={formatMessage({
