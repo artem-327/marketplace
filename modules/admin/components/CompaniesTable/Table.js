@@ -135,7 +135,8 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
       contactEmail: getSafe(() => c.primaryUser.email, ''),
       reviewRequested: getSafe(() => c.reviewRequested, ''),
       hasLogo: getSafe(() => c.hasLogo, ''),
-      nacdMember: c && c.nacdMember ? 'Yes' : c && c.nacdMember === false ? 'No' : ''
+      nacdMember: c && c.nacdMember ? 'Yes' : c && c.nacdMember === false ? 'No' : '',
+      enabled: getSafe(() => c.enabled, false) ? 'Yes' : 'No'
     })),
     confirmMessage: getSafe(() => admin.confirmMessage, ''),
     deleteRowById: getSafe(() => admin.deleteRowById, '')

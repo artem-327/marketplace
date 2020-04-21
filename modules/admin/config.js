@@ -135,6 +135,15 @@ export const config = {
             </FormattedMessage>
           ),
           width: 130
+        },
+        {
+          name: 'enabled',
+          title: (
+            <FormattedMessage id='global.enabled' defaultMessage='Enabled'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 130
         }
       ]
     }
@@ -217,7 +226,7 @@ export const config = {
             </FormattedMessage>
           ),
           width: 150
-        },
+        }
       ]
     }
   },
@@ -483,7 +492,7 @@ export const config = {
         apiCall: '/prodex/api/manufacturers/search',
         retFcnProcess: (state, action, config) => {
           // Order alphabetically by name
-          const rows = action.payload.sort(function(a, b) {
+          const rows = action.payload.sort(function (a, b) {
             let x = a.name.toLowerCase()
             let y = b.name.toLowerCase()
             if (x < y) {
