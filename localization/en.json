@@ -2221,5 +2221,6 @@
   "wantedBoard.notify.noInventoryItems.Header": "No Items Match",
   "addDocuments.existingDocuments": "Existing Documents",
   "addDocuments.addDocuments": "ADD DOCUMENTS",
-  "wantedBoard.notify.noInventoryItems.Content": "You do not have any Inventory item matching the requested item to offer."
+  "wantedBoard.notify.noInventoryItems.Content": "You do not have any Inventory item matching the requested item to offer.",
+  "global.selectTags": "Select tags"
 }
