@@ -114,9 +114,8 @@ const GridColumnBtn = styled(GridColumn)`
   padding-bottom: 0 !important;
 `
 
-
-Yup.addMethod(Yup.object, 'uniqueProperty', function(propertyName, message) {
-  return this.test('unique', message, function(value) {
+Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
+  return this.test('unique', message, function (value) {
     if (!value || !value[propertyName]) {
       return true
     }
@@ -139,14 +138,8 @@ Yup.addMethod(Yup.object, 'uniqueProperty', function(propertyName, message) {
 })
 
 const validationScheme = Yup.object().shape({
-  code: Yup.string()
-    .trim()
-    .min(2, errorMessages.minLength(2))
-    .required(errorMessages.minLength(2)),
-  name: Yup.string()
-    .trim()
-    .min(2, errorMessages.minLength(2))
-    .required(errorMessages.minLength(2)),
+  code: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
+  name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
   elements: Yup.array().of(
     Yup.object()
       .uniqueProperty(
@@ -160,7 +153,7 @@ const validationScheme = Yup.object().shape({
       .shape({
         name: Yup.string()
           .trim()
-          .test('requiredIfProprietary', errorMessages.requiredMessage, function(value) {
+          .test('requiredIfProprietary', errorMessages.requiredMessage, function (value) {
             const { proprietary } = this.parent
             if (proprietary) {
               return value !== null && value !== ''
@@ -170,7 +163,7 @@ const validationScheme = Yup.object().shape({
         casProduct: Yup.string()
           .nullable()
           .trim()
-          .test('requiredIfNotProprietary', errorMessages.requiredMessage, function(value) {
+          .test('requiredIfNotProprietary', errorMessages.requiredMessage, function (value) {
             const { proprietary } = this.parent
             if (!proprietary) {
               return parseInt(value)
@@ -178,39 +171,39 @@ const validationScheme = Yup.object().shape({
             return true
           }),
         assayMin: Yup.string()
-          .test('v', errorMessages.minUpToMax, function(v) {
+          .test('v', errorMessages.minUpToMax, function (v) {
             const { assayMax: v2 } = this.parent
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             if (v2 === null || v2 === '' || isNaN(v2)) return true // No max limit value - can not be tested
             return Number(v) <= v2
           })
-          .test('v', errorMessages.minimum(0), function(v) {
+          .test('v', errorMessages.minimum(0), function (v) {
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             return Number(v) >= 0
           })
-          .test('v', errorMessages.maximum(100), function(v) {
+          .test('v', errorMessages.maximum(100), function (v) {
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             return Number(v) <= 100
           })
-          .test('v', errorMessages.mustBeNumber, function(v) {
+          .test('v', errorMessages.mustBeNumber, function (v) {
             return v === null || v === '' || !isNaN(v)
           }),
         assayMax: Yup.string()
-          .test('v', errorMessages.maxAtLeastMin, function(v) {
+          .test('v', errorMessages.maxAtLeastMin, function (v) {
             const { assayMin: v2 } = this.parent
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             if (v2 === null || v2 === '' || isNaN(v2)) return true // No min limit value - can not be tested
             return Number(v) >= v2
           })
-          .test('v', errorMessages.minimum(0), function(v) {
+          .test('v', errorMessages.minimum(0), function (v) {
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             return Number(v) >= 0
           })
-          .test('v', errorMessages.maximum(100), function(v) {
+          .test('v', errorMessages.maximum(100), function (v) {
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             return Number(v) <= 100
           })
-          .test('v', errorMessages.mustBeNumber, function(v) {
+          .test('v', errorMessages.mustBeNumber, function (v) {
             return v === null || v === '' || !isNaN(v)
           })
       })
@@ -321,7 +314,7 @@ class AddEditEchoProduct extends React.Component {
       })
 
       if (popupValues.tags) {
-        selectedTagsOptions = popupValues.tags.map((d) => {
+        selectedTagsOptions = popupValues.tags.map(d => {
           return {
             key: d.id,
             text: d.name,
@@ -470,7 +463,7 @@ class AddEditEchoProduct extends React.Component {
             viscosity: getSafe(() => popupValues.viscosity, ''),
             wasteDisposalMethods: getSafe(() => popupValues.wasteDisposalMethods, ''),
             isPublished: getSafe(() => popupValues.isPublished, false),
-            tags: getSafe(() => popupValues.tags, []).map(d => d.id),
+            tags: getSafe(() => popupValues.tags, []).map(d => d.id)
           }
         : null)
     }
@@ -526,9 +519,7 @@ class AddEditEchoProduct extends React.Component {
   }, 250)
 
   handleTagsChange = (value, options) => {
-    const newOptions = options.filter(
-      el => value.some(v => el.value === v)
-    )
+    const newOptions = options.filter(el => value.some(v => el.value === v))
     this.setState({ selectedTagsOptions: newOptions })
   }
 
@@ -1086,9 +1077,10 @@ class AddEditEchoProduct extends React.Component {
                 icon: 'search',
                 selection: true,
                 multiple: true,
-                noResultsMessage: formatMessage(
-                  { id: 'global.startTypingToSearch', defaultMessage: 'Start typing to begin search' }
-                ),
+                noResultsMessage: formatMessage({
+                  id: 'global.startTypingToSearch',
+                  defaultMessage: 'Start typing to begin search'
+                }),
                 onSearchChange: this.handleTagsSearchChange,
                 onChange: (_, { value }) => this.handleTagsChange(value, allTagsOptions)
               }}
@@ -1720,9 +1712,7 @@ class AddEditEchoProduct extends React.Component {
                 <Segment basic>{this.getContent(formikProps)}</Segment>
               </FlexContent>
 
-              <GraySegment
-                basic
-                style={{ position: 'relative', overflow: 'visible', margin: '0' }}>
+              <GraySegment basic style={{ position: 'relative', overflow: 'visible', margin: '0' }}>
                 <Grid>
                   <GridRow>
                     <GridColumnBtn computer={6} textAlign='left'>

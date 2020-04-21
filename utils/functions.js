@@ -146,3 +146,16 @@ export const getPrice = (quantity, pricingTiers) => {
   }
   return 0
 }
+
+export const getFormattedAddress = address => {
+  return (
+    address.street +
+    ', ' +
+    address.city +
+    ', ' +
+    address.zip +
+    ', ' +
+    (address.province ? address.province + ', ' : '') +
+    address.country
+  )
+}

@@ -39,7 +39,7 @@ export const ProductChemicalSwitch = styled.div`
       padding-left: 1.071428571em;
       padding-right: 1.071428571em;
       text-align: center;
-      }
+    }
     .ui.left.button {
       border: solid 1px #dee2e6;
       background-color: #ffffff;
@@ -49,7 +49,7 @@ export const ProductChemicalSwitch = styled.div`
       border: solid 1px #dee2e6;
       background-color: #edeef2;
       color: #20273a;
-    }  
+    }
   }
 `
 
@@ -63,7 +63,7 @@ export const FlexSidebar = styled(Sidebar)`
   z-index: 1000 !important;
   text-align: left;
   font-size: 14px;
-    
+
   .ui.grid {
     margin: 1.607142857em 1.428571429em;
     .row {
@@ -87,7 +87,7 @@ export const FlexSidebar = styled(Sidebar)`
       }
     }
   }
-  
+
   .field {
     font-size: 1em !important;
     line-height: 1.29 !important;
@@ -113,7 +113,7 @@ export const FlexSidebar = styled(Sidebar)`
       }
       > .default.text {
         margin: 0;
-      }      
+      }
     }
     > .ui.multiple.selection.search.dropdown,
     > .ui.multiple.selection.dropdown {
@@ -135,9 +135,9 @@ export const FlexSidebar = styled(Sidebar)`
       }
     }
     > .ui.multiple.selection.search.dropdown {
-    > .default.text {
+      > .default.text {
         padding-top: 0.714285714em;
-      } 
+      }
       > input.search {
         margin: 0 0 0 0.64285714em;
         padding: 4px 0;
@@ -147,11 +147,8 @@ export const FlexSidebar = styled(Sidebar)`
 `
 
 export const TopButtons = styled.div`
+  padding-top: 9px;
   float: right;
-  .ui.button,
-  button {
-    height: 40px;
-  }
 `
 
 export const BottomButtons = styled.div`
@@ -177,7 +174,7 @@ export const BottomButtons = styled.div`
     background-color: #2599d5;
     border: none;
   }
-  
+
   .ui.modal & {
     margin: 30px -1.5rem -1.5rem;
     border-top: 1px solid #dee2e6;
@@ -202,17 +199,16 @@ export const FlexContent = styled.div`
 `
 
 export const InputWrapper = styled.div`
-  
   td > & {
     position: relative;
     min-width: 107px;
     height: 22px;
     margin: 0 -5px;
-  
+
     * {
       max-height: 100%;
     }
-  
+
     > div {
       position: absolute !important;
       top: -5px;
@@ -221,32 +217,30 @@ export const InputWrapper = styled.div`
       height: 32px !important;
       max-height: 32px !important;
     }
-    
+
     div {
-    
       > .field {
-      
         // .ui.input input {
-          box-sizing: border-box;
-          max-width: 100%;
-          padding: 5px 30px 5px 13px; 
-          background-color: #fdfdfd;
-          font-size: 14px;
-          line-height: 1.4285714;
-          
-          &::-webkit-outer-spin-button,
-          &::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-          }
-          
-          /* Firefox */
-          &[type=number] {
-            -moz-appearance: textfield;
-          }
+        box-sizing: border-box;
+        max-width: 100%;
+        padding: 5px 30px 5px 13px;
+        background-color: #fdfdfd;
+        font-size: 14px;
+        line-height: 1.4285714;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
         }
+
+        /* Firefox */
+        &[type='number'] {
+          -moz-appearance: textfield;
+        }
+      }
       // }
-      
+
       > .ui.label {
         position: absolute;
         top: 4px;
@@ -266,21 +260,21 @@ export const InputWrapper = styled.div`
       }
     }
   }
-    
+
   > .field-label {
-      margin: 0em 0em 0.428571429em 0em;
-      font-size: 1em;
-      line-height: 1.29;
-      color: #404040;
+    margin: 0em 0em 0.428571429em 0em;
+    font-size: 1em;
+    line-height: 1.29;
+    color: #404040;
   }
   div {
     position: relative;
-    
+
     > .field {
       margin: 0 !important;
-      
+
       .ui.input input {
-        padding-right: 47px; 
+        padding-right: 47px;
         background-color: #fdfdfd;
       }
     }
@@ -314,7 +308,7 @@ export const InputLabeledWrapper = styled.div`
         border-radius: 3px 0 0 3px;
         width: 50% !important;
       }
-      > div.ui.label {    
+      > div.ui.label {
         font-weight: normal;
         border-radius: 0 3px 3px 0;
         border: solid 1px #dee2e6;
@@ -337,10 +331,10 @@ export const QuantityWrapper = styled.div`
     > .field {
       margin: 0 !important;
       .ui.input input {
-        padding-right: 47px; 
+        padding-right: 47px;
         background-color: #fdfdfd;
       }
-    }    
+    }
     > .sideButtons {
       position: absolute;
       width: 2.8571429em;
@@ -355,7 +349,7 @@ export const QuantityWrapper = styled.div`
         font-family: feathericon;
         text-align: center;
         color: #848893;
-        
+
         &.buttonPlus {
           border-radius: 0 3px 0 0;
           width: 2.8571429em;
@@ -371,4 +365,3 @@ export const QuantityWrapper = styled.div`
     }
   }
 `
-

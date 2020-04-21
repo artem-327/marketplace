@@ -239,7 +239,7 @@ export class DatagridProvider extends Component {
     const {
       apiConfig: { searchViaPattern, params }
     } = this.props
-
+    if (!searchViaPattern) return
     let newApiConfig =
       typeof searchViaPattern !== 'function' ? this.apiConfig.searchViaPattern(value) : searchViaPattern(value)
     this.setApiConfig(newApiConfig)

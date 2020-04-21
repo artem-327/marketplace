@@ -1151,11 +1151,7 @@ class Detail extends Component {
                       <Grid.Column>
                         <GridData columns={2}>
                           <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.pickupFrom' defaultMessage='Pick-Up From' />
-                          </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.pickUpFrom}</GridDataColumn>
-                          <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.pickupFromAddress' defaultMessage='Pick-Up From Address' />
+                            <FormattedMessage id='order.pickupAddress' defaultMessage='Pick-Up Address' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.pickUpAddress}</GridDataColumn>
                         </GridData>
@@ -1169,11 +1165,11 @@ class Detail extends Component {
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.contactNumber' defaultMessage='Contact Number' />
                           </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.returnAddressPhone}</GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.returnAddressContactPhone}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.contactEmail' defaultMessage='Contact E-Mail' />
                           </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.returnAddressEmail}</GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.returnAddressContactEmail}</GridDataColumn>
                         </GridData>
                       </Grid.Column>
                     </Grid.Row>
@@ -1274,6 +1270,14 @@ class Detail extends Component {
                             <FormattedMessage id='order.shipDate' defaultMessage='Ship Date' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shipDate}</GridDataColumn>
+                          <GridDataColumn width={keyColumn} className='key'>
+                            <FormattedMessage id='order.contactNumber' defaultMessage='Contact Number' />
+                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.shipToPhone}</GridDataColumn>
+                          <GridDataColumn width={keyColumn} className='key'>
+                            <FormattedMessage id='order.contactEmail' defaultMessage='Contact E-Mail' />
+                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.shipToEmail}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.deliveryDate' defaultMessage='Delivery Date' />
                           </GridDataColumn>
