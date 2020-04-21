@@ -21,6 +21,7 @@ import styled from 'styled-components'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { debounce } from 'lodash'
 import { Clock } from 'react-feather'
+import SearchByNamesAndTags from '~/modules/search'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -325,13 +326,11 @@ class MyInventory extends Component {
     open: false,
     clientMessage: '',
     request: null,
-    filterValue: '',
     selectedTagsOptions: []
   }
 
   componentDidMount() {
     const { sidebarDetailTrigger } = this.props
-    const selectedTagsOptions = []
     if (window) {
       const searchParams = new URLSearchParams(getSafe(() => window.location.href, ''))
 
@@ -352,18 +351,8 @@ class MyInventory extends Component {
     // Because of #31767
     try {
       this.props.setCompanyElligible()
-      //this.props.applyDatagridFilter('')
-      this.props.searchTags('')
     } catch (error) {
       console.error(error)
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
-
-    if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter)
     }
   }
 
@@ -553,30 +542,6 @@ class MyInventory extends Component {
     }
   }
 
-  handleFiltersValue = debounce(value => {
-    const { applyDatagridFilter } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
-    else applyDatagridFilter(value)
-  }, 250)
-
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
-  }
-
-  handleTagsSearchChange = debounce((_, { searchQuery }) => {
-    this.props.searchTags(searchQuery)
-  }, 250)
-
-  //TODO call datagrid filter for tags
-  handleTagsChange = (value, options) => {
-    console.log('value====================================')
-    console.log(value)
-    console.log('====================================')
-    const newOptions = options.filter(el => value.some(v => el.value === v))
-    this.setState({ selectedTagsOptions: newOptions })
-  }
-
   render() {
     const {
       openBroadcast,
@@ -588,17 +553,12 @@ class MyInventory extends Component {
       isOpenImportPopup,
       simpleEditTrigger,
       sidebarDetailTrigger,
-      sidebarValues,
       openPopup,
       editedId,
       closeSidebarDetail,
-      tutorialCompleted,
-      searchedTags,
-      searchedTagsLoading
+      tutorialCompleted
     } = this.props
-    const { columns, selectedRows, clientMessage, request, filterValue, selectedTagsOptions } = this.state
-
-    const allTagsOptions = uniqueArrayByKey(searchedTags.concat(selectedTagsOptions), 'key')
+    const { columns, clientMessage, request } = this.state
 
     return (
       <>
@@ -635,41 +595,8 @@ class MyInventory extends Component {
         <Container fluid style={{ padding: '0 32px' }}>
           <Grid>
             <Grid.Row>
-              <Grid.Column width={4} style={{ paddingTop: '9px' }}>
-                <Input
-                  fluid
-                  icon='search'
-                  value={filterValue}
-                  onChange={this.handleFilterChange}
-                  placeholder={formatMessage({
-                    id: 'myInventory.searchByProductName',
-                    defaultMessage: 'Search by product name...'
-                  })}
-                />
-              </Grid.Column>
-              <Grid.Column width={4} style={{ paddingTop: '9px' }}>
-                <Dropdown
-                  style={{ zIndex: '501' }}
-                  fluid
-                  name='tags'
-                  options={allTagsOptions}
-                  loading={searchedTagsLoading}
-                  search
-                  icon='search'
-                  selection
-                  multiple
-                  placeholder={formatMessage({
-                    id: 'global.selectTags',
-                    defaultMessage: 'Select tags'
-                  })}
-                  noResultsMessage={formatMessage({
-                    id: 'global.startTypingToSearch',
-                    defaultMessage: 'Start typing to begin search'
-                  })}
-                  onSearchChange={this.handleTagsSearchChange}
-                  onChange={(_, { value }) => this.handleTagsChange(value, allTagsOptions)}
-                />
-              </Grid.Column>
+              <SearchByNamesAndTags />
+
               <Grid.Column width={8}>
                 <Menu secondary className='page-part'>
                   {/*selectedRows.length > 0 ? (
