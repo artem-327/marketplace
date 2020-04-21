@@ -124,10 +124,10 @@ export default function reducer(state = initialState, action) {
                   readyTime: deliveryAddress.readyTime || null
                 },
                 companyAdminUser: {
-                  name: payload.identity.name,
-                  jobTitle: payload.identity.jobTitle,
-                  phone: payload.identity.phone,
-                  email: payload.identity.email
+                  name: payload.identity.company.primaryUser.name,
+                  jobTitle: payload.identity.company.primaryUser.jobTitle,
+                  phone: payload.identity.company.primaryUser.phone,
+                  email: payload.identity.company.primaryUser.email
                 },
                 dba: payload.identity.company.dba,
                 dunsNumber: payload.identity.company.dunsNumber,
