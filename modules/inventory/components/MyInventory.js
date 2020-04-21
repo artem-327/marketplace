@@ -68,7 +68,7 @@ const StyledPopup = styled(Popup)`
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
   border: solid 1px #dee2e6;
   background-color: #ffffff;
-  
+
   .ui.form {
     width: 570px;
     padding: 0;
@@ -442,7 +442,7 @@ class MyInventory extends Component {
         ),
         fobPrice: (
           <StyledPopup
-            content={<QuickEditPricingPopup rawData={r.rawData}/>}
+            content={<QuickEditPricingPopup rawData={r.rawData} />}
             on='click'
             pinned
             position='left center'
@@ -470,7 +470,7 @@ class MyInventory extends Component {
                     r.cfStatus.toLowerCase() === 'unmapped' ||
                     r.cfStatus.toLowerCase() === 'n/a' ||
                     !isOfferValid ||
-                    r.groupId
+                    !!r.groupId
                   }
                   onChange={(e, data) => {
                     e.preventDefault()
