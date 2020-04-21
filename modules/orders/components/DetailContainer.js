@@ -4,7 +4,7 @@ import Detail from './Detail'
 import * as Actions from '../actions'
 import * as OrdersHelper from '~/src/helpers/Orders'
 import moment from 'moment/moment'
-import { getSafe } from '~/utils/functions'
+import { getSafe, getFormattedAddress } from '~/utils/functions'
 import { FormattedNumber } from 'react-intl'
 import { ArrayToMultiple } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
@@ -88,15 +88,13 @@ function prepareDetail(data, type) {
     paymentSendDate:
       typeof data.paymentSendDate !== 'undefined' ? moment(data.paymentSendDate).toDate().toLocaleString() : 'N/A',
     paymentStatus: OrdersHelper.getPaymentStatus(data.paymentStatus),
-    pickUpFrom: data.sellerCompanyName,
-    pickUpAddress:
-      data.returnAddressStreet +
-      ', ' +
-      data.returnAddressCity +
-      ', ' +
-      data.returnAddressZip +
-      ', ' +
-      data.returnAddressCountry,
+    pickUpAddress: getFormattedAddress({
+      street: data.returnAddressStreet,
+      city: data.returnAddressCity,
+      zip: data.returnAddressZip,
+      province: data.returnAddressProvince,
+      country: data.returnAddressCountry
+    }),
     productCode: orderItems.map(d => (d.echoProductCode ? d.echoProductCode : 'N/A')),
     productName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
     productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
@@ -116,9 +114,9 @@ function prepareDetail(data, type) {
       typeof data.returnShipDate !== 'undefined' ? moment(data.returnShipDate).toDate().toLocaleString() : null,
     returnStatus: OrdersHelper.getReturnStatus(data.returnStatus),
     returnTo: data.sellerCompanyName,
-    returnAddressName: data.returnAddressName,
-    returnAddressEmail: data.returnAddressEmail,
-    returnAddressPhone: data.returnAddressPhone,
+    returnAddressName: data.returnAddressContactName,
+    returnAddressContactEmail: data.returnAddressContactEmail,
+    returnAddressContactPhone: data.returnAddressContactPhone,
     returnAddress: getReturnAddress(data),
     returnCourierName: data.returnCourierName,
     reviewStatus: OrdersHelper.getReviewStatus(data.reviewStatus),
@@ -130,15 +128,16 @@ function prepareDetail(data, type) {
     shipDate: typeof data.shipDate !== 'undefined' ? moment(data.shipDate).toDate().toLocaleString() : 'N/A',
     shippingContact: data.sellerCompanyContactName ? data.sellerCompanyContactName : 'N/A',
     shippingStatus: OrdersHelper.getShippingStatus(data.shippingStatus),
-    shipTo: data.shippingAddressName,
-    shipToAddress:
-      data.shippingAddressStreet +
-      ', ' +
-      data.shippingAddressCity +
-      ', ' +
-      data.shippingAddressZip +
-      ', ' +
-      data.shippingAddressCountry,
+    shipTo: data.shippingAddressContactName,
+    shipToAddress: getFormattedAddress({
+      street: data.shippingAddressStreet,
+      city: data.shippingAddressCity,
+      zip: data.shippingAddressZip,
+      province: data.shippingAddressProvince,
+      country: data.shippingAddressCountry
+    }),
+    shipToEmail: data.shippingAddressContactEmail,
+    shipToPhone: data.shippingAddressContactPhone,
     subtotal: <FormattedNumber style='currency' currency={currency} value={subtotal} />, //"$" + totalPrice.formatMoney(2),
     terms: data.cfPaymentTerms ? data.cfPaymentTerms : 'N/A',
     total: <FormattedNumber style='currency' currency={currency} value={totalPriceWithShipping} />, //"$" + totalPriceWithShipping.formatMoney(2),
