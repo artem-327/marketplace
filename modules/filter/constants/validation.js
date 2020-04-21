@@ -33,8 +33,8 @@ export const initialValues = {
     notificationMail: '',
     notificationPhone: ''
   },
-  country: '',
-  province: '',
+  country: [],
+  province: [],
   broadcast: '',
   manufacturer: '',
   origin: ''
