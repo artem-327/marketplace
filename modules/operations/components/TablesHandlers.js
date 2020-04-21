@@ -60,7 +60,7 @@ class TablesHandlers extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.currentTab !== this.props.currentTab) {
-      this.setState({ filterValue: '' })
+      this.setState({ filterValue: '', company: '' })
       this.handleFiltersValue('')
     }
   }
@@ -68,8 +68,13 @@ class TablesHandlers extends Component {
   handleFiltersValue = value => {
     const { handleFiltersValue } = this.props
     //TODO temporary - missing filter path in BE for carrierName (shipment/manual-quotes)
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
-    else handleFiltersValue(value)
+    if (Datagrid.isReady()) {
+      Datagrid.setSearch(value)
+    }
+    else {
+      //handleFiltersValue(value) <- this is not working, but why Datagrid.isReady() returns false?
+      Datagrid.setSearch(value)
+    }
   }
 
   handleFilterChange = (e, { value }) => {

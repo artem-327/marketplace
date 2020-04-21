@@ -63,7 +63,11 @@ export class DatagridProvider extends Component {
       this.props.apiConfig.url &&
       prevProps.apiConfig.url !== this.props.apiConfig.url
     ) {
-      this.setFilter({ filters: [], orFilters: [] })
+      if (this.props.preserveFilters) {
+        this.loadData()
+      } else {
+        this.setFilter({filters: [], orFilters: []})
+      }
     }
   }
 
