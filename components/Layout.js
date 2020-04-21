@@ -169,7 +169,7 @@ class Layout extends Component {
       useCompanyLogo,
       companyName
     } = this.props
-    let icon = <Icon name='user thick' />
+    let icon = Icon && <Icon name='user' />
     let gravatarSrc = getSafe(() => auth.identity.gravatarSrc)
     if (gravatarSrc) icon = <Image src={gravatarSrc} avatar size='small' />
 

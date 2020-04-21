@@ -477,7 +477,7 @@ class MyInventory extends Component {
                     r.cfStatus.toLowerCase() === 'unmapped' ||
                     r.cfStatus.toLowerCase() === 'n/a' ||
                     !isOfferValid ||
-                    r.groupId
+                    !!r.groupId
                   }
                   onChange={(e, data) => {
                     e.preventDefault()

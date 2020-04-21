@@ -6,7 +6,9 @@ import { injectIntl } from 'react-intl'
 
 class MyInventoryPage extends Component {
   render() {
-    const { intl: { formatMessage } } = this.props
+    const {
+      intl: { formatMessage }
+    } = this.props
 
     return (
       <Layout title={formatMessage({ id: 'global.myInventory', defaultMessage: 'My Inventory' })}>
