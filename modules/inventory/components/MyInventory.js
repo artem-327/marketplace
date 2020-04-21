@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input } from 'semantic-ui-react'
+import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import ProdexTable from '~/components/table'
@@ -15,12 +15,13 @@ import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
 import moment from 'moment/moment'
-import { getSafe } from '~/utils/functions'
+import { getSafe, uniqueArrayByKey } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { debounce } from 'lodash'
 import { Clock } from 'react-feather'
+import SearchByNamesAndTags from '~/modules/search'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -325,7 +326,7 @@ class MyInventory extends Component {
     open: false,
     clientMessage: '',
     request: null,
-    filterValue: ''
+    selectedTagsOptions: []
   }
 
   componentDidMount() {
@@ -348,15 +349,10 @@ class MyInventory extends Component {
       }
     }
     // Because of #31767
-    this.props.setCompanyElligible()
-    //this.props.applyDatagridFilter('')
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
-
-    if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter)
+    try {
+      this.props.setCompanyElligible()
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -546,17 +542,6 @@ class MyInventory extends Component {
     }
   }
 
-  handleFiltersValue = debounce(value => {
-    const { applyDatagridFilter } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
-    else applyDatagridFilter(value)
-  }, 250)
-
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
-  }
-
   render() {
     const {
       openBroadcast,
@@ -568,13 +553,12 @@ class MyInventory extends Component {
       isOpenImportPopup,
       simpleEditTrigger,
       sidebarDetailTrigger,
-      sidebarValues,
       openPopup,
       editedId,
       closeSidebarDetail,
       tutorialCompleted
     } = this.props
-    const { columns, selectedRows, clientMessage, request, filterValue } = this.state
+    const { columns, clientMessage, request } = this.state
 
     return (
       <>
@@ -611,19 +595,9 @@ class MyInventory extends Component {
         <Container fluid style={{ padding: '0 32px' }}>
           <Grid>
             <Grid.Row>
-              <Grid.Column width={4} style={{ paddingTop: '9px' }}>
-                <Input
-                  fluid
-                  icon='search'
-                  value={filterValue}
-                  onChange={this.handleFilterChange}
-                  placeholder={formatMessage({
-                    id: 'myInventory.searchByProductName',
-                    defaultMessage: 'Search by product name...'
-                  })}
-                />
-              </Grid.Column>
-              <Grid.Column width={12}>
+              <SearchByNamesAndTags />
+
+              <Grid.Column width={8}>
                 <Menu secondary className='page-part'>
                   {/*selectedRows.length > 0 ? (
                     <Menu.Item>
