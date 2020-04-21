@@ -8,25 +8,25 @@ import { currency } from '~/constants/index'
 
 export function getIdentity() {
   return {
-      type: AT.GET_IDENTITY,
-      async payload() {
-        const identity = await api.getIdentity()
-        const company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
-        const preferredCurrency = getSafe(() => identity.preferredCurrency, currency)
-        return {
-          identity: {
-            ...identity,
-            company:
-              identity.company || company
-                ? {
+    type: AT.GET_IDENTITY,
+    async payload() {
+      const identity = await api.getIdentity()
+      const company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
+      const preferredCurrency = getSafe(() => identity.preferredCurrency, currency)
+      return {
+        identity: {
+          ...identity,
+          company:
+            identity.company || company
+              ? {
                   ...identity.company,
                   ...company
                 }
-                : null
-          },
-          preferredCurrency
-        }
+              : null
+        },
+        preferredCurrency
       }
+    }
   }
 }
 
@@ -44,7 +44,7 @@ export function login(username, password) {
         const auth = await authorize(username, password)
         setAuth(auth)
         const identity = await api.getIdentity()
-       
+
         let company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
         const preferredCurrency = getSafe(() => identity.preferredCurrency, currency)
 
@@ -168,13 +168,7 @@ export const reviewCompany = values => {
   return {
     type: AT.AUTH_REVIEW_COMPANY,
     async payload() {
-      const response = api.reviewCompany(values)
-      const identity = await api.getIdentity()
-      // const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
-
-      // isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
-
-      return response
+      return await api.reviewCompany(values)
     }
   }
 }

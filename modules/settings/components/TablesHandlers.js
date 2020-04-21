@@ -88,6 +88,7 @@ class TablesHandlers extends Component {
     this.state = {
       filterFieldCurrentValue: 'None',
       filterValue: '',
+      documentType: '',
       options: []
     }
     this.handleFiltersValue = debounce(this.handleFiltersValue, 250)
@@ -147,8 +148,22 @@ class TablesHandlers extends Component {
     this.handleFiltersValue(value)
   }
 
+  handleDocumentFilterChange = (e, { value }) => {
+    this.setState({ filterValue: value })
+    const filter = {
+      filterValue: value,
+      documentType: this.state.documentType
+    }
+    this.handleFiltersValue(filter)
+  }
+
   handleFilterChangeDocumentType = (e, { value }) => {
-    this.handleFiltersValue(value)
+    this.setState({ documentType: value })
+    const filter = {
+      filterValue: this.state.filterValue,
+      documentType: value
+    }
+    this.handleFiltersValue(filter)
   }
 
   saveRulesBroadcast = async (model, toastManager) => {
@@ -184,7 +199,8 @@ class TablesHandlers extends Component {
     const bankAccTab = currentTab.type === 'bank-accounts'
     return (
       <>
-        {currentTab.type !== 'global-broadcast' && (
+        {currentTab.type !== 'global-broadcast'
+          && currentTab.type !== 'documents' && (
           <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
             <Input
               fluid
@@ -200,18 +216,32 @@ class TablesHandlers extends Component {
         )}
 
         {currentTab.type === 'documents' && (
-          <GridColumn floated='right' computer={4} tablet={4}>
-            <Dropdown
-              placeholder={formatMessage({
-                id: 'settings.tables.documents.dropdown',
-                defaultMessage: 'Choose document type'
-              })}
-              fluid
-              selection
-              options={this.state.options}
-              onChange={this.handleFilterChangeDocumentType}
-            />
-          </GridColumn>
+          <>
+            <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
+              <Input
+                fluid
+                icon='search'
+                value={filterValue}
+                placeholder={formatMessage({
+                  id: textsTable[currentTab.type].SearchText,
+                  defaultMessage: 'Select Credit Card'
+                })}
+                onChange={this.handleDocumentFilterChange}
+              />
+            </GridColumn>
+            <GridColumn floated='right' computer={4} tablet={4}>
+              <Dropdown
+                placeholder={formatMessage({
+                  id: 'settings.tables.documents.dropdown',
+                  defaultMessage: 'Choose document type'
+                })}
+                fluid
+                selection
+                options={this.state.options}
+                onChange={this.handleFilterChangeDocumentType}
+              />
+            </GridColumn>
+            </>
         )}
 
         {currentTab.type === 'products' && (

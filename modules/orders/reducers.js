@@ -26,7 +26,7 @@ const initialState = {
   bankAccounts: [],
   bankAccountsLoading: false,
   relatedOrders: [],
-  returnShipmentRates: [],
+  returnShipmentRates: {},
   shipmentOrderResult: {},
   returnShipmentOrderResult: {},
   loadRelatedOrders: false,
@@ -314,13 +314,13 @@ export default function (state = initialState, action) {
     case AT.RETURN_SHIPMENT_RATES_PENDING:
       return {
         ...state,
-        returnShipmentRates: [],
+        returnShipmentRates: {},
         isSending: true
       }
     case AT.RETURN_SHIPMENT_RATES_REJECTED:
       return {
         ...state,
-        returnShipmentRates: [],
+        returnShipmentRates: {},
         isSending: false
       }
     case AT.ORDER_PURCHASE_SHIPMENT_ORDER_PENDING:

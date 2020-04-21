@@ -354,6 +354,8 @@ export const deleteCompany = id => ({ type: AT.ADMIN_DELETE_COMPANIES, payload: 
 
 export function createCompany(formData) {
   return async dispatch => {
+    const enabled = formData.enabled
+    delete formData.enabled
     let response = await api.createCompany(formData)
     await dispatch({
       type: AT.ADMIN_CREATE_COMPANY,
@@ -364,14 +366,23 @@ export function createCompany(formData) {
     Datagrid.clear()
     Datagrid.loadData()
     */
-
+    await dispatch(udpateEnabled(response.id, enabled))
     dispatch(closePopup())
     return response
   }
 }
 
+export function udpateEnabled(id, enabled) {
+  return {
+    type: AT.ADMIN_ENABLED_COMPANY,
+    payload: api.udpateEnabled(id, enabled)
+  }
+}
+
 export function updateCompany(id, formData) {
   return async dispatch => {
+    await dispatch(udpateEnabled(id, formData.enabled))
+    delete formData.enabled
     let response = await api.updateCompany(id, formData)
     dispatch({
       type: AT.ADMIN_UPDATE_COMPANY,
@@ -755,14 +766,14 @@ export const deleteNmfcNumber = id => {
 
 export const getUsersMe = () => ({ type: AT.ADMIN_GET_USERS_ME, payload: api.getUsersMe() })
 
-export const getUser = (id) => ({ type: AT.ADMIN_GET_USER, payload: api.getUser(id) })
+export const getUser = id => ({ type: AT.ADMIN_GET_USER, payload: api.getUser(id) })
 
-export const userSwitchEnableDisable = (id) => ({
+export const userSwitchEnableDisable = id => ({
   type: AT.ADMIN_USER_SWITCH_ENABLE_DISABLE,
   payload: api.userSwitchEnableDisable(id)
 })
 
-export const postNewUserRequest = (data) => ({
+export const postNewUserRequest = data => ({
   type: AT.ADMIN_POST_NEW_USER,
   payload: api.postNewUserRequest(data)
 })
@@ -772,7 +783,7 @@ export const submitUserEdit = (id, data) => ({
   payload: api.submitUserEdit(id, data)
 })
 
-export const deleteUser = (id) => ({
+export const deleteUser = id => ({
   type: AT.ADMIN_DELETE_USER,
   payload: api.deleteUser(id)
 })
@@ -792,18 +803,18 @@ export const searchCompany = (companyText, limit) => ({
   payload: api.searchCompany(companyText, limit)
 })
 
-export const initSearchCompany = (id) => ({
+export const initSearchCompany = id => ({
   type: AT.ADMIN_INIT_SEARCH_COMPANY,
   payload: api.getCompanyInfo(id)
 })
 
-export const searchTags = (tag) => ({
+export const searchTags = tag => ({
   type: AT.ADMIN_SEARCH_TAGS,
   payload: api.searchTags({
     orFilters: [
       {
-        operator: "LIKE",
-        path: "Tag.name",
+        operator: 'LIKE',
+        path: 'Tag.name',
         values: [tag.toString()]
       }
     ],
@@ -811,6 +822,3 @@ export const searchTags = (tag) => ({
     pageSize: 50
   })
 })
-
-
-

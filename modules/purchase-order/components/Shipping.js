@@ -197,16 +197,19 @@ class Shipping extends Component {
         </GridColumn>
 
         <GridColumn computer={8}>
-          <ShippingAddress billingInfo={selectedAddress} companyName={this.props.companyName} additionalContent={
-            <GridRow>
-              <TopUnpaddedColumn computer={16}>
-                <Button type='button' onClick={() => handleOpen({ modalOpen: true, isNewAddress: false })} fluid basic>
-                  <Icon name='edit outline' />
-                  <FormattedMessage id='global.edit' defaultMessage='Edit'>{text => text}</FormattedMessage>
-                </Button>
-              </TopUnpaddedColumn>
-            </GridRow>
-          } />
+          <ShippingAddress
+            header={<FormattedMessage id='cart.shippingAddress' defaultMessage='Shipping Address' />}
+            billingInfo={selectedAddress} companyName={this.props.companyName}
+            additionalContent={
+              <GridRow>
+                <TopUnpaddedColumn computer={16}>
+                  <Button type='button' onClick={() => handleOpen({ modalOpen: true, isNewAddress: false })} fluid basic>
+                    <Icon name='edit outline' />
+                    <FormattedMessage id='global.edit' defaultMessage='Edit'>{text => text}</FormattedMessage>
+                  </Button>
+                </TopUnpaddedColumn>
+              </GridRow>
+            } />
         </GridColumn>
       </>
     )
@@ -218,10 +221,8 @@ export default injectIntl(Shipping)
 Shipping.propTypes = {
   deliveryAddresses: array,
   otherAddresses: bool,
-  dispatch: func,
   getAddress: func,
-  selectedAddress: object,
-  toggleShippingEdit: func
+  selectedAddress: object
 }
 
 Shipping.defaultProps = {

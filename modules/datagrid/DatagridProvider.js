@@ -63,7 +63,11 @@ export class DatagridProvider extends Component {
       this.props.apiConfig.url &&
       prevProps.apiConfig.url !== this.props.apiConfig.url
     ) {
-      this.setFilter({ filters: [] })
+      if (this.props.preserveFilters) {
+        this.loadData()
+      } else {
+        this.setFilter({filters: [], orFilters: []})
+      }
     }
   }
 
@@ -239,7 +243,7 @@ export class DatagridProvider extends Component {
     const {
       apiConfig: { searchViaPattern, params }
     } = this.props
-
+    if (!searchViaPattern) return
     let newApiConfig =
       typeof searchViaPattern !== 'function' ? this.apiConfig.searchViaPattern(value) : searchViaPattern(value)
     this.setApiConfig(newApiConfig)

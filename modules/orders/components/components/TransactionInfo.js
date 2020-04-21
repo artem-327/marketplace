@@ -70,7 +70,7 @@ class TransactionInfo extends Component {
               <RightSpan>{echoSystemTransaction}</RightSpan>
             </SmallerTextColumn>
             <SmallerTextColumn>
-              <FormattedMessage id='order.detail.echoSupportPhone' defaultMessage='Echo Support phone number' />
+              <FormattedMessage id='order.detail.echoSupportPhone' defaultMessage='Echo Support Phone' />
               <RightSpan>{echoSupportPhone}</RightSpan>
             </SmallerTextColumn>
           </GridRow>

@@ -121,10 +121,12 @@ class Filter extends Component {
       this.fetchIfNoData(fetchProductGrade, 'productGrades'),
       //this.fetchIfNoData(fetchWarehouses, 'warehouses'),
       this.fetchIfNoData(fetchCountries, 'countries')
-    ]).finally(() => this.setState({
-      ...(filterState !== null && filterState.state),
-      loaded: true
-    }))
+    ]).finally(() =>
+      this.setState({
+        ...(filterState !== null && filterState.state),
+        loaded: true
+      })
+    )
     if (appliedFilter && appliedFilter.filters) {
       let datagridFilter = this.toDatagridFilter(appliedFilter)
       applyDatagridFilter(datagridFilter)
@@ -620,7 +622,9 @@ class Filter extends Component {
             </GridRow>
             <GridRow>
               <GridColumn computer={12}>
-                <label>{formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}</label>
+                <label>
+                  {formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}
+                </label>
               </GridColumn>
               <GridColumn computer={4}>
                 <FormikCheckbox
@@ -1069,9 +1073,7 @@ class Filter extends Component {
               </TopButtons>
               <Dimmer.Dimmable as={FlexContent}>
                 {!this.state.savedFiltersActive ? (
-                  <PerfectScrollbar key='set'>
-                    {this.formMarkup(props)}
-                  </PerfectScrollbar>
+                  <PerfectScrollbar key='set'>{this.formMarkup(props)}</PerfectScrollbar>
                 ) : (
                   <PerfectScrollbar key='saved'>
                     <SavedFilters

@@ -74,10 +74,14 @@ const CustomMessage = styled(Message)`
   -webkit-box-shadow: none !important;
   background-color: #ffffff !important;
   display: block !important;
-  & > i {
+  i {
     ${props => props.warning && `color: #ff9d42;`}
     ${props => props.informative && `color: #2599d5;`}
     ${props => props.ownFreight && `color: #84c225;`}
+  }
+
+  *:not(i) {
+    color: black !important;
   }
   & .button {
     float: right;
@@ -303,7 +307,7 @@ class PurchaseOrder extends Component {
 
     //let currency = cart.cartItems[0].productOffer.pricingTiers[0].price.currency.code
     //let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, currency)  // ! !
- 
+
     let payment = null
     if (payments.length === 1) payment = payments[0].id
     else if (preferredBankAccountId) payment = preferredBankAccountId
@@ -338,7 +342,7 @@ class PurchaseOrder extends Component {
             let { values, setFieldValue } = formikProps
             this.formikProps = formikProps
             const echoFreight = values.freightType === FREIGHT_TYPES.ECHO
-          
+
             return (
               <GridContainer>
                 <GridColumn mobile={14} tablet={9} computer={10}>
@@ -366,20 +370,13 @@ class PurchaseOrder extends Component {
                         handleOpen={({ modalOpen, isNewAddress }) => this.setState({ modalOpen, isNewAddress })}
                         otherAddresses={this.state.otherAddresses}
                         deliveryAddresses={deliveryAddresses}
-                        dispatch={dispatch}
-                        shippingChanged={this.props.shippingChanged}
                         getAddress={this.getAddress}
                         selectedAddress={this.state.selectedAddress}
-                        getBranches={this.props.getBranches}
-                        branchesAreFetching={this.props.branchesAreFetching}
-                        branches={this.props.branches}
                         getWarehouses={this.props.getWarehouses}
-                        warehousesFetching={this.props.warehousesFetching}
                         warehouses={this.props.warehouses}
                         handleToggleChange={this.handleToggleChange}
                         shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
                         formikProps={formikProps}
-                        weightLimitExceed={cart.weightLimitExceed}
                       />
                     </Grid>
                   </Segment>
@@ -459,20 +456,25 @@ class PurchaseOrder extends Component {
                         <>
                           <GridRow>
                             <GridColumn computer={16}>
-                              <WarningMessage
-                                icon='warning circle'
-                                header={formatMessage({
-                                  id: 'cart.weightLimitExceeded.header',
-                                  defaultMessage:
-                                    'We are sorry, but no matching Shipping Quotes were provided by logistics company.'
-                                })}
-                                content={formatMessage(
-                                  {
-                                    id: 'cart.weightLimitExceeded.content',
-                                    defaultMessage: `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
-                                  },
-                                  { limit: weightLimitStr }
-                                )}></WarningMessage>
+                              <CustomMessage warning>
+                                <CustomMessage.Header>
+                                  <Icon name='warning circle' />
+                                  {formatMessage({
+                                    id: 'cart.weightLimitExceeded.header',
+                                    defaultMessage:
+                                      'We are sorry, but no matching Shipping Quotes were provided by logistics company.'
+                                  })}
+                                </CustomMessage.Header>
+                                <CustomMessage.Content>
+                                  {formatMessage(
+                                    {
+                                      id: 'cart.weightLimitExceeded.content',
+                                      defaultMessage: `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
+                                    },
+                                    { limit: weightLimitStr }
+                                  )}
+                                </CustomMessage.Content>
+                              </CustomMessage>
                             </GridColumn>
                           </GridRow>
                         </>
