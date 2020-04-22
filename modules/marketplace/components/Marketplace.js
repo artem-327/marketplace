@@ -239,6 +239,13 @@ class Marketplace extends Component {
     open: false
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
+    if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
+      datagrid.setFilter(datagridFilter)
+    }
+  }
+
   getRows = () => {
     const {
       rows,
