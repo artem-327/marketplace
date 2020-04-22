@@ -181,22 +181,28 @@ class PurchaseOrder extends Component {
     }
   }
 
-  postNewDeliveryAddress = async payload => {
-    try {
-      const response = await this.props.postNewDeliveryAddress(payload)
-      this.getAddress(response.value.id)
-    } catch (e) {
-      console.error(e)
-    }
-  }
+  handleSubmit = async payload => {
+    let id = getSafe(() => this.state.selectedAddress.id)
+    const isWarehouse = !this.state.otherAddresses
+    const { isNewAddress } = this.state
+    const { postNewDeliveryAddress, updateDeliveryAddress, postNewWarehouse, updateWarehouse } = this.props
+    let response = null
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (isNewAddress) {
+          if (!isWarehouse) response = await postNewDeliveryAddress(payload)
+          else response = await postNewWarehouse(payload)
+        } else {
+          if (!isWarehouse) response = await updateDeliveryAddress(payload, id)
+          else response = await updateWarehouse(payload, id)
+        }
 
-  updateDeliveryAddress = async payload => {
-    try {
-      const response = await this.props.updateDeliveryAddress(payload)
-      this.getAddress(response.value.id)
-    } catch (e) {
-      console.error(e)
-    }
+        this.getAddress(response.value.id)
+        resolve(response)
+      } catch (e) {
+        reject(e)
+      }
+    })
   }
 
   handleToggleChange = otherAddresses => {
@@ -287,10 +293,10 @@ class PurchaseOrder extends Component {
     const {
       billingInfo,
       dispatch,
-      postNewDeliveryAddress,
-      updateDeliveryAddress,
       preferredBankAccountId,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      updateWarehouse,
+      postNewWarehouse
     } = this.props
     let {
       cart,
@@ -349,12 +355,12 @@ class PurchaseOrder extends Component {
                   {this.state.modalOpen && (
                     <ShippingEdit
                       onClose={() => this.setState({ modalOpen: false })}
+                      isWarehouse={!this.state.otherAddresses}
                       savedShippingPreferences={shipping.savedShippingPreferences}
                       selectedAddress={this.state.selectedAddress}
                       isNewAddress={this.state.isNewAddress}
                       shippingChanged={this.props.shippingChanged}
-                      postNewDeliveryAddress={this.postNewDeliveryAddress}
-                      updateDeliveryAddress={this.updateDeliveryAddress}
+                      handleSubmit={this.handleSubmit}
                       getStates={this.props.getStates}
                       getProvinces={this.props.getProvinces}
                       states={this.props.states}

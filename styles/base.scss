@@ -1709,3 +1709,7 @@ i.file {
   -webkit-appearance: none;
   margin: 0;
 }
+
+.visible.menu.transition {
+  z-index: 600 !important;
+}
