@@ -613,7 +613,8 @@ class Detail extends Component {
       loadingRelatedDocuments,
       intl: { formatMessage },
       echoSupportPhone,
-      editTrackingCode
+      editTrackingCode,
+      permissionOrderUpdate
     } = this.props
     const { activeIndexes } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
@@ -843,18 +844,22 @@ class Detail extends Component {
           ) : (
             <>
               <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
-              <ActionsRequired order={order} ordersType={ordersType} />
-              {openedAssignLots ? <AssignLots /> : null}
-              {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
-              {openedEnterTrackingIdShip ? <EnterTrackingIdShip /> : null}
-              {openedEnterTrackingIdReturnShip ? <EnterTrackingIdReturnShip /> : null}
-              {openedPurchaseRejectDelivery ? <PurchaseRejectDelivery /> : null}
-              {openedPurchaseRequestCreditDelivery ? <PurchaseRequestCreditDelivery /> : null}
-              {openedPurchaseReviewCreditRequest ? <PurchaseReviewCreditRequest /> : null}
-              {openedSaleReturnShipping ? <SaleReturnShipping /> : null}
-              {openedSaleReviewCreditRequest ? <SaleReviewCreditRequest /> : null}
-              {openedPurchaseOrderShipping ? <PurchaseOrderShipping /> : null}
-              {opendSaleAttachingProductOffer ? <SaleAttachingProductOffer /> : null}
+              {permissionOrderUpdate ? (
+                <>
+                  <ActionsRequired order={order} ordersType={ordersType} />
+                  {openedAssignLots ? <AssignLots /> : null}
+                  {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
+                  {openedEnterTrackingIdShip ? <EnterTrackingIdShip /> : null}
+                  {openedEnterTrackingIdReturnShip ? <EnterTrackingIdReturnShip /> : null}
+                  {openedPurchaseRejectDelivery ? <PurchaseRejectDelivery /> : null}
+                  {openedPurchaseRequestCreditDelivery ? <PurchaseRequestCreditDelivery /> : null}
+                  {openedPurchaseReviewCreditRequest ? <PurchaseReviewCreditRequest /> : null}
+                  {openedSaleReturnShipping ? <SaleReturnShipping /> : null}
+                  {openedSaleReviewCreditRequest ? <SaleReviewCreditRequest /> : null}
+                  {openedPurchaseOrderShipping ? <PurchaseOrderShipping /> : null}
+                  {opendSaleAttachingProductOffer ? <SaleAttachingProductOffer /> : null}
+                </>
+              ) : null}
 
               <Divider hidden />
               <OrderAccordion
@@ -1259,7 +1264,7 @@ class Detail extends Component {
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shippingStatus}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.shipTo' defaultMessage='Ship To' />
+                            <FormattedMessage id='order.contactName' defaultMessage='Contact name' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shipTo}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>

@@ -2225,5 +2225,6 @@
   "addDocuments.addDocuments": "ADD DOCUMENTS",
   "wantedBoard.notify.noInventoryItems.Content": "You do not have any Inventory item matching the requested item to offer.",
   "global.enabled": "Enabled",
-  "global.selectTags": "Select tags"
+  "global.selectTags": "Select tags",
+  "order.contactName": "Contact name"
 }
