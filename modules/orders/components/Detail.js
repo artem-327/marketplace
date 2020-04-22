@@ -1259,7 +1259,7 @@ class Detail extends Component {
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shippingStatus}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.shipTo' defaultMessage='Ship To' />
+                            <FormattedMessage id='order.contactName' defaultMessage='Contact name' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shipTo}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
