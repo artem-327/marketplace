@@ -14,7 +14,15 @@ class UploadVerifyFiles extends Component {
     super(props)
 
     this.state = {
-      files: []
+      attachmentFiles: []
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.attachments.length !== this.props.attachments.length) {
+      if (this.state.attachmentFiles.length !== this.props.attachments.length) {
+        this.onPreviewDrop(this.props.attachmentFiles)
+      }
     }
   }
 
@@ -54,6 +62,7 @@ class UploadVerifyFiles extends Component {
       addVerificationDocument
     } = this.props
     let { onDropRejected, onUploadSuccess } = this
+    this.setState(prevState => ({ attachmentFiles: prevState.attachmentFiles.push(files) }))
 
     if (typeof unspecifiedTypes === 'undefined') unspecifiedTypes = []
     if (unspecifiedTypes.indexOf(type) >= 0) {
@@ -171,6 +180,9 @@ class UploadVerifyFiles extends Component {
         defaultMessage={`You can't upload more than ${filesLimit} document(s)`}
       />
     )
+    console.log('hasFile====================================')
+    console.log(hasFile)
+    console.log('====================================')
 
     return (
       <>
