@@ -225,7 +225,10 @@ function mapStateToProps(state, ownProps) {
     action: actionRequired(orders.detail),
     opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer,
     listDocumentTypes: orders.listDocumentTypes,
-    loadingRelatedDocuments: orders.loadingRelatedDocuments
+    loadingRelatedDocuments: orders.loadingRelatedDocuments,
+    permissionOrderUpdate: getSafe(() => state.auth.identity.roles, []).some(
+      role => role.permissions.some(permission => permission.id === 6) // id: 6 = ORDER_UPDATE
+    )
   }
 }
 
