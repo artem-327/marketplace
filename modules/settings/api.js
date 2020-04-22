@@ -8,7 +8,7 @@ export default {
 
     return api.post(
       `/prodex/api/attachments?type=${docType}&isTemporary=true` +
-      (expirationDate ? '&expirationDate=' + expirationDate : ''),
+        (expirationDate ? '&expirationDate=' + expirationDate : ''),
       formData,
       {
         headers: {
@@ -79,7 +79,7 @@ export default {
       url: attachment.preview,
       method: 'GET',
       responseType: 'blob'
-    }).then(r => new File([r.data], attachment.name, { type: attachment.type }))
+    }).then(r => new File([r.data], attachment.name, { type: attachment.type || attachment.documentType.name }))
   },
   postLinkAttachment: (attachmentId, productId) =>
     api.post(
@@ -112,9 +112,7 @@ export default {
     const formData = new FormData()
     formData.append('file', new Blob([file], { type: 'text/csv' }), file.name)
 
-    return api
-      .post('/prodex/api/imports/temporary-files', formData)
-      .then(response => response.data)
+    return api.post('/prodex/api/imports/temporary-files', formData).then(response => response.data)
   },
   getCSVMapEchoProduct: () => api.get('/prodex/api/imports/echo-products/import-maps').then(response => response.data),
   postCSVMapEchoProduct: data => api.post('/prodex/api/imports/echo-products/import-maps', data),

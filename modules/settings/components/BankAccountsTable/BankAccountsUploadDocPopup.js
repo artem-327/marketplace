@@ -73,9 +73,28 @@ class BankAccountsUploadDocPopup extends React.Component {
   }
 
   attachDocumentsUploadLot = (newDocument, values, setFieldValue, setFieldNameAttachments) => {
+    console.log('newDocument====================================')
+    console.log(newDocument)
+    console.log('====================================')
+    console.log('Array.isArray(newDocument)====================================')
+    console.log(Array.isArray(newDocument))
+    console.log('====================================')
+    console.log('unique====================================')
+    console.log(uniqueArrayByKey(values.attachments.concat(newDocument), 'id'))
+    console.log('====================================')
     const docArray = Array.isArray(newDocument)
       ? uniqueArrayByKey(values.attachments.concat(newDocument), 'id')
       : uniqueArrayByKey(values.attachments.concat([newDocument]), 'id')
+
+    console.log('docArray====================================')
+    console.log(docArray)
+    console.log('====================================')
+
+    const newFile = new File(['foo'], docArray[0].name, { type: 'image/png' })
+    console.log('newFile====================================')
+    console.log(newFile)
+    console.log('====================================')
+    return
     setFieldNameAttachments && setFieldValue(setFieldNameAttachments, docArray)
   }
 
