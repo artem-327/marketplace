@@ -889,11 +889,12 @@ export const datagridValues = {
           let parsed = JSON.parse(val)
           return {
             value: parsed.id,
-            //description: parsed.name
-            description: JSON.stringify({
-              name: parsed.name,
-              text: parsed.text
-            })
+            description: val
+            //! !description: parsed.name
+            //description: JSON.stringify({
+              //name: parsed.name,
+              //text: parsed.text
+            //})
           }
         })
       } else {
@@ -932,10 +933,8 @@ export const datagridValues = {
     },
 
     toFormik: function({ values }) {
-      let parsed = JSON.parse(values[0].description)
-      return JSON.stringify({
-        id: parseInt(values[0].value),
-        text: parsed.text
+      return values.map(val => {
+        return val.description
       })
     }
   },
@@ -952,11 +951,7 @@ export const datagridValues = {
           let parsed = JSON.parse(val)
           return {
             value: parsed.id,
-            //description: parsed.name
-            description: JSON.stringify({
-              name: parsed.name,
-              text: parsed.text
-            })
+            description: val
           }
         })
       } else {
@@ -995,10 +990,8 @@ export const datagridValues = {
     },
 
     toFormik: function({ values }) {
-      let parsed = JSON.parse(values[0].description)
-      return JSON.stringify({
-        id: parseInt(values[0].value),
-        text: parsed.text
+      return values.map(val => {
+        return val.description
       })
     }
   }

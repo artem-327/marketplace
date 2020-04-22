@@ -108,8 +108,8 @@ class Filter extends Component {
 
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
-    if (typeof this.props.searchWarehouseUrl !== 'undefined')
-      this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
+    //if (typeof this.props.searchWarehouseUrl !== 'undefined')
+    //  this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
 
     this.handleGetSavedFilters()
 
@@ -390,6 +390,28 @@ class Filter extends Component {
 
     this.toggleFilter(false)
 
+    let savedProvinces = this.state.savedProvinces
+    let provinceOptions = []
+
+    for (const d of formikValues.country) {
+      const parsed = JSON.parse(d)
+      if (parsed.hasProvinces) {
+        let provinces = []
+        if (savedProvinces[parsed.id]) {
+          provinces = savedProvinces[parsed.id]
+        } else {
+          const { value } = await this.props.fetchProvinces(parsed.id)
+          provinces = value.map(d => ({
+            key: d.id,
+            text: d.name,
+            value: JSON.stringify({ id: d.id, name: d.name, text: d.name, country: d.country.id })
+          }))
+          savedProvinces[[parsed.id]] = provinces
+        }
+        provinceOptions = provinceOptions.concat(provinces)
+      }
+    }
+    this.setState({ savedProvinces, provinceOptions })
     this.handleSubmit(formikValues)
   }
 
@@ -779,63 +801,36 @@ class Filter extends Component {
       placeholder: <FormattedMessage id='filter.selectCountry' defaultMessage='Select Country' />,
       value: values.country,
       onChange: async (e, data) => {
-        console.log('!!!!!!!!!! onChange country data.value', data.value)
         setFieldValue('country', data.value)
-        //setFieldValue('province', [])
 
         let savedProvinces = this.state.savedProvinces
         let provinceOptions = []
 
-
         for (const d of data.value) {
-
-
-
-
-          console.log('!!!!!!!!!! forEach d', d)
           const parsed = JSON.parse(d)
-
-          console.log('!!!!!!!!!! forEach parsed', parsed)
-
           if (parsed.hasProvinces) {
             let provinces = []
             if (savedProvinces[parsed.id]) {
               provinces = savedProvinces[parsed.id]
             } else {
               const { value } = await fetchProvinces(parsed.id)
-              console.log('!!!!!!!!!! 1111 value', value)
               provinces = value.map(d => ({
                 key: d.id,
                 text: d.name,
-                value: JSON.stringify({ id: d.id, name: d.name, text: d.name })
+                value: JSON.stringify({ id: d.id, name: d.name, text: d.name, country: d.country.id })
               }))
               savedProvinces[[parsed.id]] = provinces
             }
             provinceOptions = provinceOptions.concat(provinces)
           }
         }
-
-        console.log('!!!!!!!!!! onChange savedProvinces', savedProvinces)
-        console.log('!!!!!!!!!! onChange provinceOptions', provinceOptions)
-
+        let newProvinceValues = values.province.filter(p =>
+          data.value.some(c =>
+            JSON.parse(p).country === JSON.parse(c).id
+          )
+        )
         this.setState({ savedProvinces, provinceOptions })
-
-          /*
-          let provinces = []
-          const parsed = data.value ? JSON.parse(data.value) : null
-          if (parsed && parsed.hasProvinces) {
-
-            const { value } = await fetchProvinces(parsed.id)
-            provinces = value.map(d => ({
-              key: d.id,
-              text: d.name,
-              value: JSON.stringify({ id: d.id, name: d.name, text: d.name })
-            }))
-
-            console.log('!!!!!!!!!! onChange provinces', provinces)
-          }
-          this.setState({ hasProvinces: parsed && parsed.hasProvinces })
-          */
+        setFieldValue('province', newProvinceValues)
       }
     }
 
@@ -852,7 +847,6 @@ class Filter extends Component {
       placeholder: <FormattedMessage id='filter.selectState' defaultMessage='Select State' />,
       value: values.province,
       onChange: (e, data) => {
-        console.log('!!!!!!!!!! onChange province data.value', data.value)
         setFieldValue('province', data.value)
       }
     }
@@ -1047,10 +1041,6 @@ class Filter extends Component {
           this.resetForm = props.resetForm
           this.setFieldValue = props.setFieldValue
           this.values = props.values
-
-          console.log('!!!!!!!!!! render this.state', this.state)
-          console.log('!!!!!!!!!! render values', props.values)
-
 
           return (
             <FlexSidebar {...additionalSidebarProps}>
