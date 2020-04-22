@@ -1248,6 +1248,8 @@
   "checkout.contactInfo": "Contact Info",
   "checkout.addNewAddress": "Add New Address",
   "checkout.editAddress": "Edit Address",
+  "checkout.addNewWarehouse": "Add New Warehouse",
+  "checkout.editWarehouse": "Edit Warehouse",
   "cart.useOwnFreight": "Use my own freight",
   "cart.usingOwnFreight": "You are using your own freight",
   "cart.ownFreight": "Own Freight",
