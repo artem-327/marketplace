@@ -63,11 +63,7 @@ export class DatagridProvider extends Component {
       this.props.apiConfig.url &&
       prevProps.apiConfig.url !== this.props.apiConfig.url
     ) {
-      if (this.props.preserveFilters) {
-        this.loadData()
-      } else {
-        this.setFilter({filters: [], orFilters: []})
-      }
+      this.setFilter({ filters: [], orFilters: [] })
     }
   }
 
@@ -181,6 +177,7 @@ export class DatagridProvider extends Component {
   loadData = (params = {}, query = {}) => {
     this.setState(
       s => ({
+        ready: true,
         datagridParams: {
           // pageNumber: 0,
           ...s.datagridParams,
@@ -256,7 +253,6 @@ export class DatagridProvider extends Component {
   }
 
   onTableReady = (params = {}) => {
-    this.setState({ ready: true })
     this.loadData(params)
   }
 
