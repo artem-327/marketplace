@@ -137,8 +137,10 @@ class Operations extends Component {
     //if (!(getSafe(() => this.props.auth.identity.isAdmin, false) || getSafe(() => this.props.auth.identity.isEchoOperator, false)))
     //      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
 
+    const preserveFilters = this.props.currentTab.type === 'company-product-catalog'
+
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}>
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
         <Container fluid className='flex stretched'>
           <Container fluid style={{ padding: '0 1.5vh' }}>
             {<TablesHandlers currentTab={currentTab} />}
