@@ -213,6 +213,12 @@ export const FilterAccordion = styled(Accordion)`
 export const AccordionContent = styled(Accordion.Content)`
   font-size: 13px;
   padding-top: 0px !important;
+  > .field-label {
+    margin: 0em 0em 0.384615385em 0em;
+    font-size: 1em;
+    line-height: 1.38;
+    color: #546f93;
+  }
   .fields {
     margin-bottom: 10px !important;
     .field {
