@@ -65,4 +65,11 @@ export const fetchWarehouses = createAsyncAction('GET_WAREHOUSES', () =>
   api.getWarehouses()
 )
 
+export const fetchCountries = createAsyncAction('FILTER_GET_COUNTRIES', () =>
+  api.getCountries()
+)
+
+export const fetchProvinces = createAsyncAction('FILTER_GET_PROVINCES', (id) =>
+  api.getProvinces(id)
+)
 
