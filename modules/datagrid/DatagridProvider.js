@@ -66,7 +66,7 @@ export class DatagridProvider extends Component {
       if (this.props.preserveFilters) {
         this.loadData()
       } else {
-        this.setFilter({filters: [], orFilters: []})
+        this.setFilter({ filters: [], orFilters: [] })
       }
     }
   }
@@ -198,6 +198,28 @@ export class DatagridProvider extends Component {
   // }
 
   setFilter = (filters, reload = true) => {
+    if (!filters) return
+
+    const { datagridParams } = this.state
+    // If user combine tag filter with sidebar filters we
+    // need to be connect both filters to one array "filters.filters"
+    if (
+      filters.filters.some(filterAnd => filterAnd.path.includes('.tags.id')) &&
+      !filters.filters.some(filterAnd => filterAnd.values[0] === null)
+    ) {
+      filters.filters.push(...datagridParams.filters.filter(fil => !fil.path.includes('.tags.id')))
+    } else if (
+      filters.filters.some(filterAnd => filterAnd.path.includes('.tags.id')) &&
+      filters.filters.some(filterAnd => filterAnd.values[0] === null)
+    ) {
+      filters.filters = datagridParams.filters.filter(fil => !fil.path.includes('.tags.id'))
+    } else if (
+      datagridParams.filters.some(filterAnd => filterAnd.path.includes('.tags.id')) &&
+      !filters.filters.some(filterAnd => filterAnd.values[0] === null)
+    ) {
+      filters.filters.push(...datagridParams.filters.filter(fil => fil.path.includes('.tags.id')))
+    }
+
     this.setState(
       s => ({
         datagridParams: {
@@ -222,6 +244,9 @@ export class DatagridProvider extends Component {
 
     let filters = typeof searchToFilter !== 'function' ? this.apiConfig.searchToFilter(value) : searchToFilter(value)
 
+    if (filters.url) {
+      this.apiConfig = { url: filters.url }
+    }
     this.setState(
       s => ({
         datagridParams: { ...s.datagridParams, ...params },
@@ -237,16 +262,6 @@ export class DatagridProvider extends Component {
         )
       }
     )
-  }
-
-  setSearchPattern = value => {
-    const {
-      apiConfig: { searchViaPattern, params }
-    } = this.props
-    if (!searchViaPattern) return
-    let newApiConfig =
-      typeof searchViaPattern !== 'function' ? this.apiConfig.searchViaPattern(value) : searchViaPattern(value)
-    this.setApiConfig(newApiConfig)
   }
 
   setLoading = loading => {
