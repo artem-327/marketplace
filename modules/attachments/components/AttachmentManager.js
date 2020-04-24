@@ -83,7 +83,6 @@ class AttachmentClass extends Component {
         return { ...datagrid.rows.find(att => att.id === id) }
       })
     )
-    //this.handleSearch({ name: '', type: [] })
     this.setState({ open: false })
   }
 
@@ -195,11 +194,6 @@ class AttachmentClass extends Component {
                     value={this.state.documentTypes}
                     selection
                     onChange={(event, { name, value }) => {
-                      {
-                        /* const documents = documentTypesForCertificates || documentTypes
-                      const data = documents.find(option => parseInt(option.value) === parseInt(value)) */
-                      }
-
                       this.setState({ [name]: value })
                       this.handleSearch({ name: this.state.searchValue, type: value })
                     }}
