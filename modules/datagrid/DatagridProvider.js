@@ -68,10 +68,7 @@ export class DatagridProvider extends Component {
       if (this.props.preserveFilters) {
         this.loadData()
       } else {
-        this.setState(
-          { savedFilters: {} },
-          () => this.setFilter({ filters: [], orFilters: [] })
-        )
+        this.setState({ savedFilters: {} }, () => this.setFilter({ filters: [], orFilters: [] }))
       }
     }
   }
@@ -204,7 +201,8 @@ export class DatagridProvider extends Component {
   // }
 
   setFilter = (filterValue, reload = true, filterId = null) => {
-    let filters = [], orFilters = []
+    let filters = [],
+      orFilters = []
 
     let savedFilters = this.state.savedFilters
 
@@ -215,7 +213,7 @@ export class DatagridProvider extends Component {
       if (filterValue && filterValue.orFilters) orFilters = filterValue.orFilters
     }
 
-    Object.keys(savedFilters).forEach((key) => {
+    Object.keys(savedFilters).forEach(key => {
       if (savedFilters[key].filters) filters = filters.concat(savedFilters[key].filters)
       if (savedFilters[key].orFilters) orFilters = orFilters.concat(savedFilters[key].orFilters)
     })
@@ -247,6 +245,9 @@ export class DatagridProvider extends Component {
 
     let filters = typeof searchToFilter !== 'function' ? this.apiConfig.searchToFilter(value) : searchToFilter(value)
 
+    if (filters.url) {
+      this.apiConfig = { url: filters.url }
+    }
     this.setState(
       s => ({
         datagridParams: { ...s.datagridParams, ...params },
@@ -263,16 +264,6 @@ export class DatagridProvider extends Component {
         )
       }
     )
-  }
-
-  setSearchPattern = value => {
-    const {
-      apiConfig: { searchViaPattern, params }
-    } = this.props
-    if (!searchViaPattern) return
-    let newApiConfig =
-      typeof searchViaPattern !== 'function' ? this.apiConfig.searchViaPattern(value) : searchViaPattern(value)
-    this.setApiConfig(newApiConfig)
   }
 
   setLoading = loading => {
