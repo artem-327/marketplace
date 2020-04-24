@@ -236,6 +236,7 @@ class CompanyProductInfo extends Component {
   getTextarea = ({ id, defaultMessage, name, required }) => {
     const { values, setFieldValue } = this.formikProps
     let value = name.split('.').reduce(this.getValue, values)
+    if (typeof value === 'undefined') value = ''
     return (
       <GridRow>
         <GridColumn width={7}>
@@ -848,21 +849,21 @@ class CompanyProductInfo extends Component {
               defaultMessage: 'Emergency Number',
               name: 'echoProduct.emergencyPhone'
             })}
-            {this.getTextarea({
+            {/*this.getTextarea({
               id: 'global.esin',
               defaultMessage: 'ESIN',
               name: 'echoProduct.esin'
-            })}
+            })*/}
             {this.getTextarea({
               id: 'global.recommendedUse',
               defaultMessage: 'Recommended Uses',
               name: 'echoProduct.recommendedUse',
             })}
-            {this.getTextarea({
+            {/*this.getTextarea({
               id: 'global.recommendedRestrictions',
               defaultMessage: 'Recommended Restrictions',
               name: 'echoProduct.recommendedRestrictions'
-            })}{' '}
+            })*/}
             {this.getTextarea({
               id: 'global.version',
               defaultMessage: 'Version',
@@ -873,11 +874,11 @@ class CompanyProductInfo extends Component {
               defaultMessage: 'Revision Date',
               name: 'echoProduct.sdsRevisionDate'
             })}
-            {this.getTextarea({
+            {/*this.getTextarea({
               id: 'global.synonyms',
               defaultMessage: 'Synonyms',
               name: 'echoProduct.synonyms'
-            })}
+            })*/}
             {this.getTextarea({
               id: 'global.formula',
               defaultMessage: 'Formula',
@@ -951,30 +952,26 @@ class CompanyProductInfo extends Component {
               defaultMessage: 'Reportable Quantity',
               name: `echoProduct.${this.state.echoProductGroup}ReportableQuantity`
             })}
-            {this.getTextarea({
+            {/*this.getTextarea({
               id: 'global.enviromentalHazards',
               defaultMessage: 'Enviromental Hazards',
               name: `echoProduct.${this.state.echoProductGroup}EnviromentalHazards`
-            })}{' '}
-            {/* ?? */}
-            {this.getTextarea({
+            })*/}
+            {/*this.getTextarea({
               id: 'global.emsNumbers',
               defaultMessage: 'Ems Numbers',
               name: `echoProduct.${this.state.echoProductGroup}EmsNumbers`
-            })}{' '}
-            {/* ?? */}
-            {this.getTextarea({
+            })*/}
+            {/*this.getTextarea({
               id: 'global.exceptions',
               defaultMessage: 'Exceptions',
               name: `echoProduct.${this.state.echoProductGroup}Exceptions`
-            })}{' '}
-            {/* ?? */}
-            {this.getTextarea({
+            })*/}
+            {/*this.getTextarea({
               id: 'global.specialPrecautionForUser',
               defaultMessage: 'Special Precautions For User',
               name: `echoProduct.${this.state.echoProductGroup}SpecialPrecautionsForUser`
-            })}{' '}
-            {/* ?? */}
+            })*/}
             {this.getTextarea({
               id: 'global.marinePollutant',
               defaultMessage: 'Marine Pollutant',
@@ -985,48 +982,41 @@ class CompanyProductInfo extends Component {
               defaultMessage: 'Severe Marine Pollutant',
               name: `echoProduct.${this.state.echoProductGroup}SevereMarinePollutant`
             })}
-            {this.getTextarea({
+            {/*this.getTextarea({
               id: 'global.packagingExceptions',
               defaultMessage: 'Packaging Exceptions',
               name: `echoProduct.${this.state.echoProductGroup}PackagingExceptions`
-            })}{' '}
-            {/* ?? */}
-            {this.getTextarea({
+            })*/}
+            {/*this.getTextarea({
               id: 'global.packagingNonBulk',
               defaultMessage: 'Packaging Non Bulk',
               name: `echoProduct.${this.state.echoProductGroup}PackagingNonBulk`
-            })}{' '}
-            {/* ?? */}
-            {this.getTextarea({
+            })*/}
+            {/*this.getTextarea({
               id: 'global.packagingBulk',
               defaultMessage: 'Packaging Bulk',
               name: `echoProduct.${this.state.echoProductGroup}PackagingBulk`
-            })}{' '}
-            {/* ?? */}
-            {this.getTextarea({
+            })*/}
+            {/*this.getTextarea({
               id: 'global.quantityLimitationsPassengerAircraftRail',
               defaultMessage: 'Quantity Limitations Passenger Aircraft/Rail',
               name: `echoProduct.${this.state.echoProductGroup}QuantityLimitationsPassengerAircraftRail`
-            })}{' '}
-            {/* ?? */}
-            {this.getTextarea({
+            })*/}
+            {/*this.getTextarea({
               id: 'global.quantityLimitationsCargoAircraftOnly',
               defaultMessage: 'Quantity Limitations Cargo Aircraft Only',
               name: `echoProduct.${this.state.echoProductGroup}QuantityLimitationsCargoAircraftOnly`
-            })}{' '}
-            {/* ?? */}
-            {this.getTextarea({
+            })*/}
+            {/*this.getTextarea({
               id: 'global.vesselStowageLocation',
               defaultMessage: 'Vessel Stowage Location',
               name: `echoProduct.${this.state.echoProductGroup}VesselStowageLocation`
-            })}{' '}
-            {/* ?? */}
-            {this.getTextarea({
+            })*/}
+            {/*this.getTextarea({
               id: 'global.vesselStowageOther',
               defaultMessage: 'Vessel Stowage Other',
               name: `echoProduct.${this.state.echoProductGroup}VesselStowageOther`
-            })}{' '}
-            {/* ?? */}
+            })*/}
           </Grid>
         )
       }
