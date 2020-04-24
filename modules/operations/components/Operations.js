@@ -65,17 +65,15 @@ class Operations extends Component {
       tags: {
         url: 'prodex/api/tags/datagrid',
         searchToFilter: v =>
-          v && v.filterValue
-            ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v.filterValue}%`] }]
-            : []
+          v && v.filterValue ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v.filterValue}%`] }] : []
       },
       'company-product-catalog': {
         url: `/prodex/api/company-products/admin/datagrid?unmappedOnly=${companyProductUnmappedOnly}`,
         searchToFilter: v => {
           let filter = { or: [], and: [] }
 
-          if (v && v.filterValue) filter.or =
-            [
+          if (v && v.filterValue)
+            filter.or = [
               {
                 operator: 'LIKE',
                 path: 'CompanyProduct.intProductName',
@@ -98,8 +96,8 @@ class Operations extends Component {
               }
             ]
 
-          if (v && v.company) filter.and =
-            [
+          if (v && v.company)
+            filter.and = [
               {
                 operator: 'EQUALS',
                 path: 'CompanyProduct.owner.id',
@@ -107,9 +105,6 @@ class Operations extends Component {
               }
             ]
           return filter
-        },
-        params: {
-          orOperator: true
         }
       },
       'company-inventory': {
@@ -128,10 +123,7 @@ class Operations extends Component {
                   values: [`%${v.filterValue}%`]
                 }
               ]
-            : [],
-        params: {
-          orOperator: true
-        }
+            : []
       }
     }
 
