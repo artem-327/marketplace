@@ -14,7 +14,7 @@ import { searchTags } from '../actions'
 class SearchByNamesAndTags extends Component {
   state = {
     or: '',
-    and: []
+    and: ''
   }
 
   componentDidMount() {
@@ -37,7 +37,7 @@ class SearchByNamesAndTags extends Component {
     this.setState({ or: value })
     const filters = {
       or: value,
-      and: this.state.and.length > 0 ? this.state.and.map(option => option.key) : [null]
+      and: this.state.and.length > 0 ? this.state.and.map(option => option.key) : ''
     }
     this.handleFiltersValue(filters)
   }
@@ -47,7 +47,7 @@ class SearchByNamesAndTags extends Component {
     this.setState({ and: selectedTags })
     const filters = {
       or: this.state.or,
-      and: selectedTags.length > 0 ? selectedTags.map(option => option.key) : [null]
+      and: selectedTags.length > 0 ? selectedTags.map(option => option.key) : ''
     }
     this.handleFiltersValue(filters)
   }
