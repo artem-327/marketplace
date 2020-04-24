@@ -14,13 +14,7 @@ import { errorMessages } from '~/constants/yupValidation'
 
 class AddEditCasProductsPopup extends React.Component {
   render() {
-    const {
-      closeAddPopup,
-      popupValues,
-      config,
-      postNewCasProductRequest,
-      updateCasProductRequest,
-    } = this.props
+    const { closeAddPopup, popupValues, config, postNewCasProductRequest, updateCasProductRequest } = this.props
 
     return (
       <CompanyProductInfo
@@ -41,9 +35,12 @@ class AddEditCasProductsPopup extends React.Component {
         handleSubmit={async (values, formikProps) => {
           let { setSubmitting } = formikProps
           removeEmpty(values)
-
-          if (popupValues) await updateCasProductRequest(popupValues.id, values.casProduct)
-          else await postNewCasProductRequest(values.casProduct)
+          try {
+            if (popupValues) await updateCasProductRequest(popupValues.id, values.casProduct)
+            else await postNewCasProductRequest(values.casProduct)
+          } catch (err) {
+            console.error(err)
+          }
 
           setSubmitting(false)
         }}
