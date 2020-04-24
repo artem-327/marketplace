@@ -18,12 +18,6 @@ class UploadVerifyFiles extends Component {
     }
   }
 
-  // componentDidUpdate(prevProps) {
-  //   if (prevProps.attachments.length !== this.props.attachments.length) {
-  //     this.onPreviewDrop(this.props.attachments)
-  //   }
-  // }
-
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.attachments.length !== this.props.attachments.length) {
       this.onPreviewDrop(nextProps.attachments)
@@ -66,13 +60,6 @@ class UploadVerifyFiles extends Component {
       addVerificationDocument
     } = this.props
     let { onDropRejected, onUploadSuccess } = this
-
-    console.log('files1====================================')
-    console.log(files)
-    console.log('====================================')
-    console.log('unspecifiedTypes====================================')
-    console.log(unspecifiedTypes)
-    console.log('====================================')
 
     if (typeof unspecifiedTypes === 'undefined') unspecifiedTypes = []
     if (unspecifiedTypes.indexOf(type) >= 0) {
@@ -121,9 +108,7 @@ class UploadVerifyFiles extends Component {
         i--
       }
     }
-    console.log('files====================================')
-    console.log(files)
-    console.log('====================================')
+
     // upload new files as temporary attachments
     if (loadFile && addVerificationDocument) {
       ;(async function loop(j) {
@@ -164,10 +149,10 @@ class UploadVerifyFiles extends Component {
                     <Popup
                       wide='very'
                       data-test='array_to_multiple_list'
-                      content={getSafe(() => file.documentType.name, '') || getSafe(() => file.type.name, '')}
+                      content={getSafe(() => file.type, '')}
                       trigger={
                         <span key={index} className='file lot' style={{ opacity: disabled ? '0.45' : '1' }}>
-                          <Icon name='file image outline' bordered size='large' />
+                          <Icon name='file image outline' size='large' />
                           {file.name}
                         </span>
                       }
@@ -193,12 +178,6 @@ class UploadVerifyFiles extends Component {
         defaultMessage={`You can't upload more than ${filesLimit} document(s)`}
       />
     )
-    console.log('hasFile====================================')
-    console.log(hasFile)
-    console.log('====================================')
-    console.log('this.props.attachments====================================')
-    console.log(this.props.attachments)
-    console.log('====================================')
 
     return (
       <>
@@ -216,9 +195,6 @@ class UploadVerifyFiles extends Component {
                   onDrop={acceptedFiles => {
                     if (acceptedFiles.length) {
                       if (!filesLimit || acceptedFiles.length <= filesLimit) {
-                        console.log('acceptedFiles====================================')
-                        console.log(acceptedFiles)
-                        console.log('====================================')
                         this.onPreviewDrop(acceptedFiles)
                       } else {
                         toastManager.add(limitMsg, {

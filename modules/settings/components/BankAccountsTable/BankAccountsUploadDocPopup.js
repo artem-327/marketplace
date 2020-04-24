@@ -10,8 +10,7 @@ import * as Actions from '../../actions'
 import Router from 'next/dist/client/router'
 import UploadVerifyFiles from './UploadVerifyFiles'
 import { getIdentity } from '~/modules/auth/actions'
-import { getSafe, uniqueArrayByKey } from '~/utils/functions'
-import { AttachmentManager } from '~/modules/attachments'
+import { getSafe } from '~/utils/functions'
 
 export const CustomDiv = styled.div`
   padding: 1em;
@@ -72,32 +71,6 @@ class BankAccountsUploadDocPopup extends React.Component {
     }
   }
 
-  attachDocumentsUploadLot = (newDocument, values, setFieldValue, setFieldNameAttachments) => {
-    console.log('newDocument====================================')
-    console.log(newDocument)
-    console.log('====================================')
-    console.log('Array.isArray(newDocument)====================================')
-    console.log(Array.isArray(newDocument))
-    console.log('====================================')
-    console.log('unique====================================')
-    console.log(uniqueArrayByKey(values.attachments.concat(newDocument), 'id'))
-    console.log('====================================')
-    const docArray = Array.isArray(newDocument)
-      ? uniqueArrayByKey(values.attachments.concat(newDocument), 'id')
-      : uniqueArrayByKey(values.attachments.concat([newDocument]), 'id')
-
-    console.log('docArray====================================')
-    console.log(docArray)
-    console.log('====================================')
-
-    const newFile = new File(['foo'], docArray[0].name, { type: 'image/png' })
-    console.log('newFile====================================')
-    console.log(newFile)
-    console.log('====================================')
-    return
-    setFieldNameAttachments && setFieldValue(setFieldNameAttachments, docArray)
-  }
-
   render() {
     const {
       verificationDocumentTypes,
@@ -136,17 +109,7 @@ class BankAccountsUploadDocPopup extends React.Component {
                         <CustomSpanFiles>.jpeg</CustomSpanFiles> or <CustomSpanFiles>.png</CustomSpanFiles>
                       </CustomSpan>
                     </FormField>
-                    <FormField width={8}>
-                      <label>
-                        <FormattedMessage id='addDocuments.existingDocuments' defaultMessage={'Existing Documents'} />
-                      </label>
-                      <AttachmentManager
-                        asModal
-                        returnSelectedRows={rows =>
-                          this.attachDocumentsUploadLot(rows, values, setFieldValue, 'attachments')
-                        }
-                      />
-                    </FormField>
+                    <FormField width={8}></FormField>
                     <GridRow>
                       <UploadVerifyFiles
                         {...this.props}
