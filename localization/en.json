@@ -990,6 +990,8 @@
   "filter.keywordSearch": "Keyword Search",
   "filter.enterAnyChemicalOrCas": "Enter any Chemical Name or CAS",
   "filter.seeAll": "See All ({value})",
+  "filter.selectCountry": "Select Country",
+  "filter.selectState": "Select State",
   "dataTable.ProductName": "Product Name",
   "dataTable.ProductNumber": "Product Number",
   "dataTable.Available": "Available PKGs",
