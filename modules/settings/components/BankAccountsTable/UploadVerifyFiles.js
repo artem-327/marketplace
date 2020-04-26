@@ -142,10 +142,10 @@ class UploadVerifyFiles extends Component {
                     <Popup
                       wide='very'
                       data-test='array_to_multiple_list'
-                      content={getSafe(() => file.documentType.name, '')}
+                      content={getSafe(() => file.documentType.name, '') || getSafe(() => file.type, '')}
                       trigger={
                         <span key={index} className='file lot' style={{ opacity: disabled ? '0.45' : '1' }}>
-                          <Icon name='file image outline' bordered size='large' />
+                          <Icon name='file image outline' size='large' />
                           {file.name}
                         </span>
                       }

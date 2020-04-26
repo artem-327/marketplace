@@ -28,7 +28,7 @@ class SearchByNamesAndTags extends Component {
 
   handleFiltersValue = debounce(filters => {
     if (Datagrid.isReady()) {
-      Datagrid.setSearch(filters)
+      Datagrid.setSearch(filters, true, 'searchByNamesAndTags')
     } else this.props.applyDatagridFilter(filters)
   }, 250)
 
@@ -36,7 +36,7 @@ class SearchByNamesAndTags extends Component {
     if (!filters) return
     if (Datagrid.isReady()) {
       Datagrid.setSearchPattern(filters.or)
-      isEmptyTag && Datagrid.setSearch(this.state.searchValue)
+      isEmptyTag && Datagrid.setSearch(this.state.searchValue, true, 'searchByNamesAndTags')
     }
   }, 250)
 
@@ -125,7 +125,6 @@ SearchByNamesAndTags.propTypes = {
   applyDatagridFilter: PropTypes.func.isRequired,
   Datagrid: PropTypes.object.isRequired,
   searchTags: PropTypes.func.isRequired,
-  applyDatagridFilter: PropTypes.func.isRequired,
   datagridFilterUpdate: PropTypes.bool.isRequired,
   datagridFilter: PropTypes.object.isRequired
 }
@@ -136,7 +135,6 @@ SearchByNamesAndTags.defaultProps = {
   tags: [],
   applyDatagridFilter: () => {},
   searchTags: () => {},
-  applyDatagridFilter: () => {},
   Datagrid: {},
   datagridFilter: {}
 }

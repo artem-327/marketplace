@@ -14,9 +14,9 @@ export const getProductOffer = (id, isEdit = false) => ({
   }
 })
 
-export const updateDeliveryAddress = address => ({
+export const updateDeliveryAddress = (address, id) => ({
   type: AT.DELIVERY_ADDRESS_EDIT,
-  payload: api.updateDeliveryAddress(address)
+  payload: api.updateDeliveryAddress(address, id)
 })
 
 export const getShippingQuotes = (countryId, zip) => ({
@@ -53,6 +53,16 @@ export const postNewDeliveryAddress = address => ({
   payload: api.postNewDeliveryAddress(address)
 })
 
+export const postNewWarehouse = payload => ({
+  type: AT.WAREHOUSE_CREATE,
+  payload: api.postNewWarehouse(payload)
+})
+
+export const updateWarehouse = (payload, id) => ({
+  type: AT.UPDATE_WAREHOUSE,
+  payload: api.updateWarehouse(payload, id)
+})
+
 export const getProvinces = (countryId, search = null) => ({
   type: AT.PROVINCES_FETCH,
   payload: api.getProvinces({ countryId, search })
@@ -79,3 +89,4 @@ export const getIdentity = () => ({ type: AT.PURCHASE_GET_IDENTITY, payload: api
 export const setPreFilledValues = values => ({ type: AT.SET_PRE_FILLED_VALUES, payload: values })
 
 export const clearPreFilledValues = () => ({ type: AT.CLEAR_PRE_FILLED_VALUES, payload: null })
+
