@@ -768,10 +768,10 @@ export const getUsersMe = () => ({ type: AT.ADMIN_GET_USERS_ME, payload: api.get
 
 export const getUser = id => ({ type: AT.ADMIN_GET_USER, payload: api.getUser(id) })
 
-export const userSwitchEnableDisable = id => ({
-  type: AT.ADMIN_USER_SWITCH_ENABLE_DISABLE,
-  payload: api.userSwitchEnableDisable(id)
-})
+export const userSwitchEnableDisable = (id, row) => {
+  Datagrid.updateRow(id, () => ({ ...row, enabled: !row.enabled }))
+  return { type: AT.ADMIN_USER_SWITCH_ENABLE_DISABLE, payload: api.userSwitchEnableDisable(id) }
+}
 
 export const postNewUserRequest = data => ({
   type: AT.ADMIN_POST_NEW_USER,
