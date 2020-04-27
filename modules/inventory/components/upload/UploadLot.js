@@ -34,7 +34,7 @@ class UploadLot extends Component {
   removeFile = file => {
     let poId = this.props.edit
     // delete attachment from database
-    if (file.isFromDocumentManager) {
+    if (file.isLinkedFromDocumentManager) {
       this.props.onRemoveFile(file.id)
     } else if (file.linked) {
       if (file.isToOrderItem) {
@@ -202,7 +202,7 @@ class UploadLot extends Component {
     let { type, toastManager, lot } = this.props
 
     await new Promise((resolve, reject) => {
-      this.onUploadSuccess(att)
+      this.onUploadSuccess({ ...att, isLinkedFromDocumentManager: true })
       this.removeDuplicateFile(index)
       resolve()
     }).catch(e => {

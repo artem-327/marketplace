@@ -737,7 +737,7 @@ class AddEditEchoProduct extends React.Component {
       setFieldValue &&
         setFieldValue(
           `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
-          { ...doc, isFromDocumentManager: true }
+          { ...doc, isLinkedFromDocumentManager: true }
         )
     })
     this.setState({ changedForm: true })
@@ -761,7 +761,8 @@ class AddEditEchoProduct extends React.Component {
               {
                 id: files.id,
                 name: files.name,
-                documentType: files.documentType
+                documentType: files.documentType,
+                isLinkedFromDocumentManager: getSafe(() => files.isLinkedFromDocumentManager, false)
               }
             )
             this.setState({ changedForm: true })
