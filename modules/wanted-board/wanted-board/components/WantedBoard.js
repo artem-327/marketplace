@@ -267,17 +267,6 @@ class WantedBoard extends Component {
     //}
   }
 
-  handleFiltersValue = debounce(value => {
-    const { handleFiltersValue } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearchPattern(value)
-    else handleFiltersValue(value)
-  }, 300)
-
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
-  }
-
   renderContent = () => {
     const {
       datagrid,

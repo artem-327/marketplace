@@ -4,7 +4,7 @@ import { DatagridProvider } from '~/modules/datagrid'
 export const MyRequestedItems = props => {
   const apiConfig = {
     url: `/prodex/api/purchase-requests/own/datagrid?type=${props.type}`,
-    searchViaPattern: v =>
+    searchToFilter: v =>
       v
         ? { url: `/prodex/api/purchase-requests/own/datagrid?type=${props.type}&pattern=${v}` }
         : { url: `/prodex/api/purchase-requests/own/datagrid?type=${props.type}` }
