@@ -605,7 +605,6 @@ class AddEditEchoProduct extends React.Component {
     const { putEchoProduct, postEchoProduct, closePopup, linkAttachment, listDocumentTypes } = this.props
 
     const { popupValues } = this.state
-
     let sendSuccess = false
 
     let formValues = {
@@ -730,9 +729,10 @@ class AddEditEchoProduct extends React.Component {
       setFieldValue &&
         setFieldValue(
           `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
-          doc
+          { ...doc, isFromDocumentManager: true }
         )
     })
+    this.setState({ changedForm: true })
   }
 
   RowDocument = (formikProps, values, popupValues, documentType) => {
@@ -757,7 +757,10 @@ class AddEditEchoProduct extends React.Component {
             )
             this.setState({ changedForm: true })
           }}
-          onRemoveFile={id => {
+          onRemoveFile={async id => {
+            await formikProps.setFieldValue('attachments', [])
+            const arrayAttachments = values.attachments.filter(attachment => attachment.id !== id)
+            await formikProps.setFieldValue('attachments', arrayAttachments)
             this.setState({ changedForm: true, changedAttachments: true })
           }}
           data-test='settings_product_import_attachments'
@@ -803,6 +806,7 @@ class AddEditEchoProduct extends React.Component {
           }
         />
         <AttachmentManager
+          singleSelection
           ducumentTypeIds={[documentType]}
           asModal
           returnSelectedRows={rows => this.attachDocumentsUploadLot(rows, values, formikProps.setFieldValue)}

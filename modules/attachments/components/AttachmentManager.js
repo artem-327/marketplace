@@ -100,9 +100,11 @@ class AttachmentClass extends Component {
   }
 
   getContent = () => {
-    const { datagrid, selectable } = this.props
+    const { datagrid, selectable, singleSelection } = this.props
+
     return (
       <ProdexTable
+        singleSelection={singleSelection}
         loading={datagrid.loading}
         rows={datagrid.rows.map(r => ({
           id: r.id,
@@ -278,7 +280,8 @@ AttachmentModal.propTypes = {
   tableProps: object,
   asModal: bool,
   selectable: bool,
-  documentTypesForCertificates: array
+  documentTypesForCertificates: array,
+  singleSelection: bool
 }
 
 AttachmentModal.defaultProps = {
@@ -293,7 +296,8 @@ AttachmentModal.defaultProps = {
   tableProps: {},
   asModal: true,
   selectable: true,
-  documentTypesForCertificates: []
+  documentTypesForCertificates: [],
+  singleSelection: false
 }
 
 class AttachmentManager extends Component {
