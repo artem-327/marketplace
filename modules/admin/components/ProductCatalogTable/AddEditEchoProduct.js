@@ -231,10 +231,18 @@ class AddEditEchoProduct extends React.Component {
   }
 
   componentDidMount() {
-    const { hazardClasses, packagingGroups, getHazardClassesDataRequest, getPackagingGroupsDataRequest } = this.props
+    const {
+      hazardClasses,
+      packagingGroups,
+      getHazardClassesDataRequest,
+      getPackagingGroupsDataRequest,
+      listDocumentTypes,
+      getDocumentTypes
+    } = this.props
 
     if (hazardClasses.length === 0) getHazardClassesDataRequest()
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
+    if (!listDocumentTypes || (listDocumentTypes && !listDocumentTypes.length)) getDocumentTypes()
     this.props.searchTags('')
   }
 
@@ -746,6 +754,7 @@ class AddEditEchoProduct extends React.Component {
           type={documentType.toString()}
           filesLimit={1}
           fileMaxSize={20}
+          listDocumentTypes={this.props.listDocumentTypes}
           onChange={files => {
             formikProps.setFieldValue(
               `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
