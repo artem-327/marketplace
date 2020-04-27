@@ -3,6 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Grid, GridColumn, Modal, Divider, FormGroup, Segment } from 'semantic-ui-react'
 import { Form, Input, Button, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { bool, func, object } from 'prop-types'
+import { removeEmpty } from '~/utils/functions'
 
 import * as Yup from 'yup'
 import styled from 'styled-components'
@@ -172,8 +173,8 @@ class ShippingEdit extends Component {
             </GridColumn>
 
             <GridColumn>
-              <Input name='tax'
-                label={formatMessage({ id: 'global.taxId', defaultMessage: '!Tax ID' })}
+              <Input name='taxId'
+                label={formatMessage({ id: 'global.taxId', defaultMessage: 'Tax ID' })}
                 inputProps={{ placeholder: formatMessage({ id: 'global.placeholder.taxId', defaultMessage: '!Enter Tax ID' }) }} />
               < TextArea
                 inputProps={{ rows: 2 }}
@@ -191,33 +192,53 @@ class ShippingEdit extends Component {
   }
 
   handleSubmit = async (values, { setSubmitting }) => {
-    let { isNewAddress } = this.props
+    let { isNewAddress, onClose, isWarehouse } = this.props
 
-    const { postNewDeliveryAddress, updateDeliveryAddress, toastManager } = this.props
+    const { handleSubmit, toastManager } = this.props
 
-    let payload = {
-      ...values,
-      contactEmail: values.contactEmail.trim(),
-      address: {
-        ...values.address,
-        country: JSON.parse(values.address.country).countryId
-      }
-    }
+    let payload = {}
 
     try {
-      if (isNewAddress) await postNewDeliveryAddress(payload)
-      else
-        await updateDeliveryAddress({
-          ...payload,
-          id: this.props.selectedAddress.id
-        })
+      if (isWarehouse) {
+        payload = {
+          deliveryAddress: {
+            ...values,
+            contactEmail: values.contactEmail.trim(),
+            address: {
+              ...values.address,
+              country: JSON.parse(values.address.country).countryId
+            }
+          },
+          taxId: values.taxId,
+          warehouse: true
+        }
+
+
+      }
+      else {
+        payload = {
+          ...values,
+          contactEmail: values.contactEmail.trim(),
+          address: {
+            ...values.address,
+            country: JSON.parse(values.address.country).countryId
+          }
+        }
+
+      }
+      removeEmpty(payload)
+      await handleSubmit(payload)
+
+
+      onClose()
 
       let status = isNewAddress ? 'Created' : 'Updated'
+      let type = isWarehouse ? 'warehouse' : 'address'
 
       toastManager.add(
         generateToastMarkup(
-          <FormattedMessage id={`notifications.address${status}.header`} />,
-          <FormattedMessage id={`notifications.address${status}.content`} values={{ name: payload.contactName }} />
+          <FormattedMessage id={`notifications.${type}${status}.header`} />,
+          <FormattedMessage id={`notifications.${type}${status}.content`} values={{ name: payload.contactName }} />
         ),
         { appearance: 'success' }
       )
@@ -229,9 +250,13 @@ class ShippingEdit extends Component {
   }
 
   render() {
-    let { isNewAddress, shippingChanged, onClose } = this.props
-
-    let header = isNewAddress ? { id: 'checkout.addNewAddress', defaultMessage: 'Add New Address' } : { id: 'checkout.editAddress', defaultMessage: 'Edit Address' }
+    let { isWarehouse, isNewAddress, shippingChanged, onClose } = this.props
+    let header = null
+    if (isWarehouse) {
+      header = isNewAddress ? { id: 'checkout.addNewWarehouse', defaultMessage: '!Add New Warehouse' } : { id: 'checkout.editWarehouse', defaultMessage: '!Edit Warehouse' }
+    } else {
+      header = isNewAddress ? { id: 'checkout.addNewAddress', defaultMessage: 'Add New Address' } : { id: 'checkout.editAddress', defaultMessage: 'Edit Address' }
+    }
 
     return (
       <Modal closeIcon open onClose={onClose}>

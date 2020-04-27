@@ -19,6 +19,7 @@ import { Datagrid } from '~/modules/datagrid'
 import { number } from 'prop-types'
 import Link from 'next/link'
 import Tutorial from '~/modules/tutorial/Tutorial'
+import { debounce } from 'lodash'
 
 import { UpperCaseText, ControlPanel } from '../../constants/layout'
 
@@ -97,11 +98,11 @@ class MyOffers extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
-  handleFiltersValue = value => {
+  handleFiltersValue = debounce(value => {
     const { handleFiltersValue } = this.props
     if (Datagrid.isReady()) Datagrid.setSearch(value)
     else handleFiltersValue(value)
-  }
+  }, 300)
 
   handleFilterChange = (e, { value }) => {
     this.setState({ filterValue: value })

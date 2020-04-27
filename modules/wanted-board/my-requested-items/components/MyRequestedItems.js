@@ -382,7 +382,7 @@ class MyRequestedItems extends Component {
 
   handleFiltersValue = debounce(value => {
     const { handleFiltersValue } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearchPattern(value)
+    if (Datagrid.isReady()) Datagrid.setSearch(value)
     else handleFiltersValue(value)
   }, 300)
 

@@ -18,15 +18,6 @@ export function closePopup(rows = null) {
   }
 }
 
-export function handleFiltersValue(value) {
-  return async dispatch => {
-    dispatch({
-      type: AT.OPERATIONS_HANDLE_FILTERS_VALUE,
-      payload: value
-    })
-  }
-}
-
 export function deleteShippingQuote(id) {
   return {
     type: AT.OPERATIONS_DELETE_SHIPPING_QUOTE,

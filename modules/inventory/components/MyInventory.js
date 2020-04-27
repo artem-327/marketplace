@@ -1,27 +1,25 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
-import SubMenu from '~/src/components/SubMenu'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import ProdexTable from '~/components/table'
-
-import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
-import QuickEditPricingPopup from '~/modules/inventory/components/QuickEditPricingPopup'
-
-import confirm from '~/src/components/Confirmable/confirm'
-import FilterTags from '~/modules/filter/components/FitlerTags'
 import cn from 'classnames'
-
-import { groupActions } from '~/modules/company-product-info/constants'
-import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
-
 import moment from 'moment/moment'
-import { getSafe, uniqueArrayByKey } from '~/utils/functions'
-import { Datagrid } from '~/modules/datagrid'
-import styled from 'styled-components'
-import Tutorial from '~/modules/tutorial/Tutorial'
 import { debounce } from 'lodash'
 import { Clock } from 'react-feather'
+import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { withToastManager } from 'react-toast-notifications'
+import styled from 'styled-components'
+
+import ProdexTable from '~/components/table'
+import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
+import QuickEditPricingPopup from '~/modules/inventory/components/QuickEditPricingPopup'
+import confirm from '~/src/components/Confirmable/confirm'
+import FilterTags from '~/modules/filter/components/FitlerTags'
+import { groupActions } from '~/modules/company-product-info/constants'
+import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
+import { getSafe, uniqueArrayByKey, generateToastMarkup } from '~/utils/functions'
+import { Datagrid } from '~/modules/datagrid'
+import Tutorial from '~/modules/tutorial/Tutorial'
 import SearchByNamesAndTags from '~/modules/search'
+import SubMenu from '~/src/components/SubMenu'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -360,13 +358,12 @@ class MyInventory extends Component {
     const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
 
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter)
+      datagrid.setFilter(datagridFilter, true, 'myInventoryFilter')
     }
   }
 
   getRows = rows => {
-    const { datagrid, pricingEditOpenId, setPricingEditOpenId } = this.props
-
+    const { datagrid, pricingEditOpenId, setPricingEditOpenId, toastManager } = this.props
     let title = ''
 
     return rows.map((r, rIndex) => {
@@ -484,6 +481,25 @@ class MyInventory extends Component {
                         ...r.rawData,
                         cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
                       }))
+                      {
+                        if (!data.checked) {
+                          toastManager.add(
+                            generateToastMarkup(
+                              <FormattedMessage
+                                id='broadcast.turnoff.title'
+                                defaultMessage='Price book for this offer has been deleted!'
+                              />,
+                              <FormattedMessage
+                                id='broadcast.turnoff.content'
+                                defaultMessage='Global rules are going to be used. To turn off broadcasting completely, edit it inside Edit tab.'
+                              />
+                            ),
+                            {
+                              appearance: 'info'
+                            }
+                          )
+                        }
+                      }
                     } catch (error) {
                       console.error(error)
                     }
@@ -798,4 +814,4 @@ class MyInventory extends Component {
   }
 }
 
-export default injectIntl(MyInventory)
+export default injectIntl(withToastManager(MyInventory))

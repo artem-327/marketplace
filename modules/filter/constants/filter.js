@@ -46,7 +46,9 @@ export const paths = {
     origin: 'ProductOffer.origin.id',
     expiration: 'ProductOffer.lotExpirationDate',
     mfg: 'ProductOffer.lotManufacturedDate',
-    cfStatus: 'ProductOffer.cfStatus'
+    cfStatus: 'ProductOffer.cfStatus',
+    country: 'ProductOffer.warehouse.deliveryAddress.address.country.id',
+    province: 'ProductOffer.warehouse.deliveryAddress.address.province.id'
   },
   orders: {
     orderDate: 'Order.orderDate',
@@ -872,6 +874,125 @@ export const datagridValues = {
         result = 'To'
       }
       return result
+    }
+  },
+
+  country: {
+    paths: [paths.productOffers.country],
+    description: 'Country',
+    operator: operators.EQUALS,
+
+    toFilter: function(values) {
+      let data
+      if (Array.isArray(values)) {
+        data = values.map(val => {
+          let parsed = JSON.parse(val)
+          return {
+            value: parsed.id,
+            description: val
+            //! !description: parsed.name
+            //description: JSON.stringify({
+              //name: parsed.name,
+              //text: parsed.text
+            //})
+          }
+        })
+      } else {
+        let parsed = JSON.parse(values)
+        data = [
+          {
+            value: parsed.id,
+            description: JSON.stringify({
+              name: parsed.name,
+              text: parsed.text
+            })
+          }
+        ]
+      }
+
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: data,
+        description: this.description
+      }
+    },
+
+    valuesDescription: function(values) {
+      return values.map(val => {
+        try {
+          return JSON.parse(val.description).text
+        } catch {
+          return val.description
+        }
+      })
+    },
+
+    tagDescription: function(values) {
+      return `Country: ${this.valuesDescription(values)}`
+    },
+
+    toFormik: function({ values }) {
+      return values.map(val => {
+        return val.description
+      })
+    }
+  },
+
+  province: {
+    paths: [paths.productOffers.province],
+    description: 'Province',
+    operator: operators.EQUALS,
+
+    toFilter: function(values) {
+      let data
+      if (Array.isArray(values)) {
+        data = values.map(val => {
+          let parsed = JSON.parse(val)
+          return {
+            value: parsed.id,
+            description: val
+          }
+        })
+      } else {
+        let parsed = JSON.parse(values)
+        data = [
+          {
+            value: parsed.id,
+            description: JSON.stringify({
+              name: parsed.name,
+              text: parsed.text
+            })
+          }
+        ]
+      }
+
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: data,
+        description: this.description
+      }
+    },
+
+    valuesDescription: function(values) {
+      return values.map(val => {
+        try {
+          return JSON.parse(val.description).text
+        } catch {
+          return val.description
+        }
+      })
+    },
+
+    tagDescription: function(values) {
+      return `Province: ${this.valuesDescription(values)}`
+    },
+
+    toFormik: function({ values }) {
+      return values.map(val => {
+        return val.description
+      })
     }
   }
 }
