@@ -1784,6 +1784,7 @@
   "settings.tables.bankAccounts.search": "Search bank account ...",
   "settings.tables.bankAccounts.registerDwolla": "Register Dwolla Account",
   "settings.tables.bankAccounts.uploadDoc": "Upload Documents",
+  "settings.tables.bankAccounts.uploadOwnerDoc": "Upload Owner Documents",
   "settings.bankAccounts.uploadDoc.passport": "Passport",
   "settings.bankAccounts.uploadDoc.license": "License",
   "settings.bankAccounts.uploadDoc.idcard": "ID Card",
