@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as Actions from '../../actions'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import {
   Modal,
   ModalContent,
@@ -12,21 +12,31 @@ import {
   Segment,
   GridColumn,
   GridRow,
-  Table
+  Table,
+  Message
 } from 'semantic-ui-react'
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import moment from 'moment'
-
-import { getSafe } from '~/utils/functions'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import styled from 'styled-components'
+//Components
 import { errorMessages } from '~/constants/yupValidation'
 import { DateInput } from '~/components/custom-formik'
 import { currency } from '~/constants/index'
 import ShippingQuote from '~/modules/purchase-order/components/ShippingQuote'
 import '~/modules/purchase-order/styles/PurchaseOrder.scss'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
+import { getSafe } from '~/utils/functions'
+import FreightLabel from '~/components/freight'
+//Actions
+import * as Actions from '../../actions'
+//Styled
+import { CustomMessage } from '~/modules/cart/components/StyledComponents'
+import styled from 'styled-components'
+
+const FREIGHT_TYPES = {
+  ECHO: 'ECHO_FREIGHT',
+  OWN: 'OWN_FREIGHT'
+}
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
@@ -53,7 +63,8 @@ class SaleReturnShipping extends React.Component {
       ).trim(),
       pickupRemarks: values.pickupRemarks.trim(),
       deliveryRemarks: values.deliveryRemarks.trim(),
-      shipperRefNo: values.shipperRefNo.trim()
+      shipperRefNo: values.shipperRefNo.trim(),
+      freightType: values.freightType
     }
 
     try {
@@ -107,7 +118,8 @@ class SaleReturnShipping extends React.Component {
       shipmentQuoteId: '',
       pickupRemarks: '',
       deliveryRemarks: '',
-      shipperRefNo: ''
+      shipperRefNo: '',
+      freightType: FREIGHT_TYPES.ECHO
     }
 
     if (initialValues.pickupDate && moment(initialValues.pickupDate).isAfter(moment()))
@@ -149,7 +161,8 @@ class SaleReturnShipping extends React.Component {
                 className='flex stretched'
                 style={{ padding: '0' }}>
                 {formikProps => {
-                  let { touched, validateForm, resetForm, values } = formikProps
+                  let { touched, validateForm, resetForm, values, setFieldValue } = formikProps
+                  const echoFreight = values.freightType === FREIGHT_TYPES.ECHO
                   return (
                     <>
                       <Grid>
@@ -228,18 +241,21 @@ class SaleReturnShipping extends React.Component {
                             </Grid.Row>
                           </>
                         ) : (
-                          <Grid.Row>
-                            <Grid.Column width={16}>
-                              <ShippingQuote
-                                currency={currency}
-                                selectedShippingQuote={{ index: this.state.selectedShippingQuote }}
-                                handleQuoteSelect={index => this.setState({ selectedShippingQuote: index })}
-                                selectedAddress={1}
-                                shippingQuotes={shippingQuotes}
-                                shippingQuotesAreFetching={shippingQuotesAreFetching}
-                              />
-                            </Grid.Column>
-                          </Grid.Row>
+                          <>
+                            <FreightLabel echoFreight={echoFreight} setFieldValue={setFieldValue} />
+                            <Grid.Row>
+                              <Grid.Column width={16}>
+                                <ShippingQuote
+                                  currency={currency}
+                                  selectedShippingQuote={{ index: this.state.selectedShippingQuote }}
+                                  handleQuoteSelect={index => this.setState({ selectedShippingQuote: index })}
+                                  selectedAddress={1}
+                                  shippingQuotes={shippingQuotes}
+                                  shippingQuotesAreFetching={shippingQuotesAreFetching}
+                                />
+                              </Grid.Column>
+                            </Grid.Row>
+                          </>
                         )}
                         <Grid.Row>
                           <Grid.Column width={16}>
