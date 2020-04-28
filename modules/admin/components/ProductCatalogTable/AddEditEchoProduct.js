@@ -33,7 +33,7 @@ import {
 import TextareaAutosize from 'react-autosize-textarea'
 import { FieldArray, Field } from 'formik'
 
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import { getSafe } from '~/utils/functions'
 import { tabs, defaultValues, transportationTypes, onErrorFieldTabs } from './constants'
@@ -728,7 +728,7 @@ class AddEditEchoProduct extends React.Component {
     </GridRow>
   )
 
-  attachDocumentsUploadLot = (newDocument, values, setFieldValue) => {
+  attachDocumentsUploadAttachment = (newDocument, values, setFieldValue) => {
     const docArray = Array.isArray(newDocument)
       ? uniqueArrayByKey(values.attachments.concat(newDocument), 'id')
       : uniqueArrayByKey(values.attachments.concat([newDocument]), 'id')
@@ -746,7 +746,7 @@ class AddEditEchoProduct extends React.Component {
   RowDocument = (formikProps, values, popupValues, documentType) => {
     return (
       <>
-        <UploadLot
+        <UploadAttachment
           {...this.props}
           attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === documentType)}
           edit={getSafe(() => popupValues.id, '')}
@@ -819,7 +819,7 @@ class AddEditEchoProduct extends React.Component {
           singleSelection
           ducumentTypeIds={[documentType]}
           asModal
-          returnSelectedRows={rows => this.attachDocumentsUploadLot(rows, values, formikProps.setFieldValue)}
+          returnSelectedRows={rows => this.attachDocumentsUploadAttachment(rows, values, formikProps.setFieldValue)}
         />
       </>
     )
