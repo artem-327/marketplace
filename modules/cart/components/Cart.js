@@ -10,6 +10,7 @@ import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 import { getLocaleDateFormat } from '~/components/date-format'
 
+
 import AddCart from '~/src/pages/cart/components/AddCart'
 
 import {
@@ -27,6 +28,12 @@ import {
   DescriptionValue,
   TotalRow
 } from './StyledComponents'
+
+const CART_ITEM_TYPES = {
+  INVENTORY_HOLD: 'INVENTORY_HOLD',
+  PURCHASE_REQUEST_OFFER: 'PURCHASE_REQUEST_OFFER',
+  MARKETPLACE_OFFER: 'MARKETPLACE_OFFER'
+}
 
 export default class Cart extends Component {
   state = {
@@ -78,7 +85,6 @@ export default class Cart extends Component {
     const packagingSize = getSafe(() => item.productOffer.companyProduct.packagingSize, 0)
     const pkgAmount = getSafe(() => item.pkgAmount, 0)
 
-
     return (
       <Item key={index} bottomShadow={index !== cart.cartItems.length - 1}>
         <Grid>
@@ -96,7 +102,7 @@ export default class Cart extends Component {
                 <Icon name='trash alternate outline' />
                 {formatMessage({ id: 'global.delete', defaultMessage: 'Delete' })}
               </Button>
-              <Button basic onClick={() => this.editCart(item)}>
+              <Button disabled={item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD || item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER} basic onClick={() => this.editCart(item)}>
                 <Icon name='edit outline' />
                 {formatMessage({ id: 'global.edit', defaultMessage: 'Edit' })}
               </Button>
