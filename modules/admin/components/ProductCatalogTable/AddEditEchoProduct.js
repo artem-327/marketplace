@@ -33,7 +33,7 @@ import {
 import TextareaAutosize from 'react-autosize-textarea'
 import { FieldArray, Field } from 'formik'
 
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import { getSafe } from '~/utils/functions'
 import { tabs, defaultValues, transportationTypes, onErrorFieldTabs } from './constants'
@@ -231,10 +231,18 @@ class AddEditEchoProduct extends React.Component {
   }
 
   componentDidMount() {
-    const { hazardClasses, packagingGroups, getHazardClassesDataRequest, getPackagingGroupsDataRequest } = this.props
+    const {
+      hazardClasses,
+      packagingGroups,
+      getHazardClassesDataRequest,
+      getPackagingGroupsDataRequest,
+      listDocumentTypes,
+      getDocumentTypes
+    } = this.props
 
     if (hazardClasses.length === 0) getHazardClassesDataRequest()
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
+    if (!listDocumentTypes || (listDocumentTypes && !listDocumentTypes.length)) getDocumentTypes()
     this.props.searchTags('')
   }
 
@@ -720,7 +728,7 @@ class AddEditEchoProduct extends React.Component {
     </GridRow>
   )
 
-  attachDocumentsUploadLot = (newDocument, values, setFieldValue) => {
+  attachDocumentsUploadAttachment = (newDocument, values, setFieldValue) => {
     const docArray = Array.isArray(newDocument)
       ? uniqueArrayByKey(values.attachments.concat(newDocument), 'id')
       : uniqueArrayByKey(values.attachments.concat([newDocument]), 'id')
@@ -729,7 +737,7 @@ class AddEditEchoProduct extends React.Component {
       setFieldValue &&
         setFieldValue(
           `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
-          { ...doc, isFromDocumentManager: true }
+          { ...doc, isLinkedFromDocumentManager: true }
         )
     })
     this.setState({ changedForm: true })
@@ -738,7 +746,7 @@ class AddEditEchoProduct extends React.Component {
   RowDocument = (formikProps, values, popupValues, documentType) => {
     return (
       <>
-        <UploadLot
+        <UploadAttachment
           {...this.props}
           attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === documentType)}
           edit={getSafe(() => popupValues.id, '')}
@@ -746,13 +754,15 @@ class AddEditEchoProduct extends React.Component {
           type={documentType.toString()}
           filesLimit={1}
           fileMaxSize={20}
+          listDocumentTypes={this.props.listDocumentTypes}
           onChange={files => {
             formikProps.setFieldValue(
               `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
               {
                 id: files.id,
                 name: files.name,
-                documentType: files.documentType
+                documentType: files.documentType,
+                isLinkedFromDocumentManager: getSafe(() => files.isLinkedFromDocumentManager, false)
               }
             )
             this.setState({ changedForm: true })
@@ -809,7 +819,7 @@ class AddEditEchoProduct extends React.Component {
           singleSelection
           ducumentTypeIds={[documentType]}
           asModal
-          returnSelectedRows={rows => this.attachDocumentsUploadLot(rows, values, formikProps.setFieldValue)}
+          returnSelectedRows={rows => this.attachDocumentsUploadAttachment(rows, values, formikProps.setFieldValue)}
         />
       </>
     )
