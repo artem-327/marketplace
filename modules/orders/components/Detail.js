@@ -1306,6 +1306,7 @@ class Detail extends Component {
                                   onChange={(e, { value }) => {
                                     this.setState({ shippingTrackingCode: value })
                                   }}
+                                  type='number'
                                   value={this.state.shippingTrackingCode}
                                 />
                                 <CustomButton
