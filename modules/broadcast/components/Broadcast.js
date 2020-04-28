@@ -259,22 +259,21 @@ class Broadcast extends Component {
       tree.walk(n => (n.model.expanded = true))
     }
 
-
     return tree
   }
 
   applyAssociationFilter = tree => {
     const { associationFilter } = this.state
 
-    this.setHidden((_element) => true, false)
-    tree.walk((n) => {
+    this.setHidden(_element => true, false)
+    tree.walk(n => {
       if (n.model.rule.hidden) {
         n.model.rule.hidden = false
         if (n.model.rule.type === 'branch') {
           let company = this.findCompany(n)
           company.model.hidden = false
           if (company.model.elements) {
-            company.model.elements.forEach(c => c.hidden = false)
+            company.model.elements.forEach(c => (c.hidden = false))
           }
         }
       }
@@ -296,25 +295,22 @@ class Broadcast extends Component {
       }
       return false
     })
-    companiesToHide.forEach(company => company.model.hidden = true)
+    companiesToHide.forEach(company => (company.model.hidden = true))
 
     nodesToHide.forEach(n => {
       n.model.rule.hidden = true
-      this.setHidden((element) => element.id === n.model.rule.id && element.type === 'branch', true)
+      this.setHidden(element => element.id === n.model.rule.id && element.type === 'branch', true)
     })
 
     return tree
   }
-
 
   setHidden = (predicate, hidden, elements = this.props.data.elements) => {
     for (let i = 0; i < elements.length; i++) {
       if (predicate(elements[i])) {
         elements[i].hidden = hidden
         return
-      }
-      else if (elements[i].elements.length > 0)
-        this.setHidden(predicate, hidden, elements[i].elements)
+      } else if (elements[i].elements.length > 0) this.setHidden(predicate, hidden, elements[i].elements)
     }
   }
 
@@ -324,7 +320,7 @@ class Broadcast extends Component {
   handleChange = (node, propertyName, e) => {
     e.preventDefault()
     e.stopPropagation()
-    
+
     const { rule } = node.model
 
     const value = rule[propertyName]
@@ -345,13 +341,10 @@ class Broadcast extends Component {
         if (!getSafe(() => n.model.rule.hidden, n.model.hidden)) {
           n.model.rule[propertyName] = newValue
         }
-
       })
 
       this.changeInModel(node.model.rule.elements, { propertyName, value: newValue })
-
     }
-
 
     const { treeData } = this.props
     const findInData = node =>
@@ -386,7 +379,6 @@ class Broadcast extends Component {
 
       if (element.elements.length > 0) this.changeInModel(element.elements, { propertyName, value })
     })
-
   }
 
   handleRowClick = node => {
@@ -448,7 +440,12 @@ class Broadcast extends Component {
   }
 
   getAssociationFilter = () => {
-    const { associationsFetching, associations, asSidebar, intl: { formatMessage } } = this.props
+    const {
+      associationsFetching,
+      associations,
+      asSidebar,
+      intl: { formatMessage }
+    } = this.props
 
     const associationsDropdown = (
       <Form.Field>
@@ -468,7 +465,11 @@ class Broadcast extends Component {
     const broadcastButton = (
       <Form.Field>
         <label>&nbsp;</label>
-        <Button onClick={(e) => this.handleChange(this.getFilteredTree().getPath()[0], 'broadcast', e)} fluid basic color='blue'>
+        <Button
+          onClick={e => this.handleChange(this.getFilteredTree().getPath()[0], 'broadcast', e)}
+          fluid
+          basic
+          color='blue'>
           {formatMessage({ id: 'broadcast.toAll', defaultMessage: 'Broadcast to All' })}
         </Button>
       </Form.Field>
@@ -476,12 +477,8 @@ class Broadcast extends Component {
     if (asSidebar) {
       return (
         <UnpaddedRow.Top verticalAlign='middle'>
-          <GridColumn computer={8}>
-            {associationsDropdown}
-          </GridColumn>
-          <GridColumn computer={8}>
-            {broadcastButton}
-          </GridColumn>
+          <GridColumn computer={8}>{associationsDropdown}</GridColumn>
+          <GridColumn computer={8}>{broadcastButton}</GridColumn>
         </UnpaddedRow.Top>
       )
     }
@@ -491,7 +488,6 @@ class Broadcast extends Component {
         {broadcastButton}
       </Form.Group>
     )
-
   }
 
   getContent = () => {
@@ -951,6 +947,23 @@ class Broadcast extends Component {
         saved: true,
         initialize: true
       })
+      if (getSafe(() => filteredTree.model.rule.broadcast, null) === 0) {
+        toastManager.add(
+          generateToastMarkup(
+            <FormattedMessage
+              id='broadcast.turnoff.title'
+              defaultMessage='Price book for this offer has been deleted!'
+            />,
+            <FormattedMessage
+              id='broadcast.turnoff.content'
+              defaultMessage='Global rules are going to be used. To turn off broadcasting completely, edit it inside Edit tab.'
+            />
+          ),
+          {
+            appearance: 'info'
+          }
+        )
+      }
     } catch (err) {
       console.error(err)
     }
