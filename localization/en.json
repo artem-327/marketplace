@@ -2123,6 +2123,7 @@
   "global.certificates": "Certificates",
   "broadcast.turnoff.title": "Price book for this offer has been deleted",
   "broadcast.turnoff.content": "Global rules are going to be used. To turn off broadcasting completely, edit it inside Edit tab.",
+  "broadcast.toAll": "Broadcast to All",
   "order.detail.documents.issuer": "Issuer",
   "order.detail.documents.date": "Document Date",
   "order.detail.documents.type": "Type",
