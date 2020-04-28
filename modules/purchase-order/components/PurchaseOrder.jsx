@@ -295,8 +295,7 @@ class PurchaseOrder extends Component {
       dispatch,
       preferredBankAccountId,
       intl: { formatMessage },
-      updateWarehouse,
-      postNewWarehouse
+      shippingQuoteSelected
     } = this.props
     let {
       cart,
@@ -413,8 +412,10 @@ class PurchaseOrder extends Component {
                                 type='button'
                                 color={echoFreight && 'blue'}
                                 basic
-                                onClick={() =>
+                                onClick={() => {
+                                  shippingQuoteSelected(null)
                                   setFieldValue('freightType', echoFreight ? FREIGHT_TYPES.OWN : FREIGHT_TYPES.ECHO)
+                                }
                                 }>
                                 {echoFreight ? (
                                   <>
@@ -424,7 +425,7 @@ class PurchaseOrder extends Component {
                                     </FormattedMessage>
                                   </>
                                 ) : (
-                                  <FormattedMessage id='global.cancel' defaultMessage='!Cancel'>
+                                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                                     {text => text}
                                   </FormattedMessage>
                                 )}
@@ -435,6 +436,7 @@ class PurchaseOrder extends Component {
                       )}
                       {!cart.weightLimitExceed && this.state.selectedAddress ? (
                         <ShippingQuote
+                          selectionDisabled={!echoFreight}
                           currency={currency}
                           selectedShippingQuote={this.props.cart.selectedShipping}
                           handleQuoteSelect={this.handleQuoteSelect}
