@@ -185,15 +185,15 @@ class PurchaseOrderShipping extends React.Component {
                                 </GridColumn>
                               </GridRow>
                             ) : (
-                              <GridRow>
-                                <GridColumn computer={16}>
-                                  <FormattedMessage
-                                    id='cart.noShippingQuotes.processManually'
-                                    defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
-                                  />
-                                </GridColumn>
-                              </GridRow>
-                            )}
+                                <GridRow>
+                                  <GridColumn computer={16}>
+                                    <FormattedMessage
+                                      id='cart.noShippingQuotes.processManually'
+                                      defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
+                                    />
+                                  </GridColumn>
+                                </GridRow>
+                              )}
                             <Grid.Row>
                               <Grid.Column width={8}>
                                 <Button type='button' fluid onClick={() => this.requestManualShippingQuote()}>
@@ -227,22 +227,26 @@ class PurchaseOrderShipping extends React.Component {
                             </Grid.Row>
                           </>
                         ) : (
-                          <>
-                            <FreightLabel echoFreight={echoFreight} setFieldValue={setFieldValue} />
-                            <Grid.Row>
-                              <Grid.Column width={16}>
-                                <ShippingQuote
-                                  currency={currency}
-                                  selectedShippingQuote={{ index: this.state.selectedShippingQuote }}
-                                  handleQuoteSelect={index => this.setState({ selectedShippingQuote: index })}
-                                  selectedAddress={1}
-                                  shippingQuotes={shippingQuotes}
-                                  shippingQuotesAreFetching={shippingQuotesAreFetching}
-                                />
-                              </Grid.Column>
-                            </Grid.Row>
-                          </>
-                        )}
+                            <>
+                              <FreightLabel echoFreight={echoFreight} setFieldValue={(fieldName, value) => {
+                                this.setState({ selectedShippingQuote: null })
+                                setFieldValue(fieldName, value)
+                              }} />
+                              <Grid.Row>
+                                <Grid.Column width={16}>
+                                  <ShippingQuote
+                                    selectionDisabled={!echoFreight}
+                                    currency={currency}
+                                    selectedShippingQuote={{ index: this.state.selectedShippingQuote }}
+                                    handleQuoteSelect={index => this.setState({ selectedShippingQuote: index })}
+                                    selectedAddress={1}
+                                    shippingQuotes={shippingQuotes}
+                                    shippingQuotesAreFetching={shippingQuotesAreFetching}
+                                  />
+                                </Grid.Column>
+                              </Grid.Row>
+                            </>
+                          )}
                         <Grid.Row>
                           <Grid.Column width={16}>
                             <TextArea
