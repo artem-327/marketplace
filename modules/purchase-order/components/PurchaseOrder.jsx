@@ -267,8 +267,7 @@ class PurchaseOrder extends Component {
       dispatch,
       preferredBankAccountId,
       intl: { formatMessage },
-      updateWarehouse,
-      postNewWarehouse
+      shippingQuoteSelected
     } = this.props
     let {
       cart,
@@ -369,10 +368,17 @@ class PurchaseOrder extends Component {
                         </VerticalUnpaddedColumn>
                       </StyledRow>
                       {this.state.selectedAddress && (
-                        <FreightLabel echoFreight={echoFreight} setFieldValue={setFieldValue} />
+                        <FreightLabel
+                          echoFreight={echoFreight}
+                          setFieldValue={(fieldName, value) => {
+                            shippingQuoteSelected(null)
+                            setFieldValue(fieldName, value)
+                          }}
+                        />
                       )}
                       {!cart.weightLimitExceed && this.state.selectedAddress ? (
                         <ShippingQuote
+                          selectionDisabled={!echoFreight}
                           currency={currency}
                           selectedShippingQuote={this.props.cart.selectedShipping}
                           handleQuoteSelect={this.handleQuoteSelect}
