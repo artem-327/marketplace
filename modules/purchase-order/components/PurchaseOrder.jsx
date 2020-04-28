@@ -368,7 +368,13 @@ class PurchaseOrder extends Component {
                         </VerticalUnpaddedColumn>
                       </StyledRow>
                       {this.state.selectedAddress && (
-                        <FreightLabel echoFreight={echoFreight} setFieldValue={setFieldValue} />
+                        <FreightLabel
+                          echoFreight={echoFreight}
+                          setFieldValue={(fieldName, value) => {
+                            shippingQuoteSelected(null)
+                            setFieldValue(fieldName, value)
+                          }}
+                        />
                       )}
                       {!cart.weightLimitExceed && this.state.selectedAddress ? (
                         <ShippingQuote
