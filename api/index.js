@@ -9,7 +9,7 @@ axios.defaults.validateStatus = status => {
 }
 
 axios.interceptors.request.use(
-  function(config) {
+  function (config) {
     // Do something before request is sent
     const auth = Cookie.getJSON('auth')
 
@@ -17,7 +17,7 @@ axios.interceptors.request.use(
 
     return config
   },
-  function(error) {
+  function (error) {
     // Do something with request error
     return Promise.reject(error)
   }
@@ -26,13 +26,13 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     try {
-      Message.checkForMessages(response)
+      Message && Message.checkForMessages && Message.checkForMessages(response)
     } catch (e) {
       console.error(e)
     }
     return response
   },
-  function(error) {
+  function (error) {
     if (
       error.request.responseType === 'blob' &&
       error.response.data instanceof Blob &&
@@ -71,7 +71,7 @@ axios.interceptors.response.use(
 
     // const errData = error && error.response && error.response.data
     try {
-      Message.checkForMessages(error.response)
+      Message && Message.checkForMessages && Message.checkForMessages(error.response)
     } catch (e) {
       console.error(e)
     }

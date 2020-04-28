@@ -1,26 +1,25 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input } from 'semantic-ui-react'
-import SubMenu from '~/src/components/SubMenu'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import ProdexTable from '~/components/table'
-
-import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
-import QuickEditPricingPopup from '~/modules/inventory/components/QuickEditPricingPopup'
-
-import confirm from '~/src/components/Confirmable/confirm'
-import FilterTags from '~/modules/filter/components/FitlerTags'
 import cn from 'classnames'
-
-import { groupActions } from '~/modules/company-product-info/constants'
-import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
-
 import moment from 'moment/moment'
-import { getSafe } from '~/utils/functions'
-import { Datagrid } from '~/modules/datagrid'
-import styled from 'styled-components'
-import Tutorial from '~/modules/tutorial/Tutorial'
 import { debounce } from 'lodash'
 import { Clock } from 'react-feather'
+import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { withToastManager } from 'react-toast-notifications'
+import styled from 'styled-components'
+
+import ProdexTable from '~/components/table'
+import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
+import QuickEditPricingPopup from '~/modules/inventory/components/QuickEditPricingPopup'
+import confirm from '~/src/components/Confirmable/confirm'
+import FilterTags from '~/modules/filter/components/FitlerTags'
+import { groupActions } from '~/modules/company-product-info/constants'
+import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
+import { getSafe, uniqueArrayByKey, generateToastMarkup } from '~/utils/functions'
+import { Datagrid } from '~/modules/datagrid'
+import Tutorial from '~/modules/tutorial/Tutorial'
+import SearchByNamesAndTags from '~/modules/search'
+import SubMenu from '~/src/components/SubMenu'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -68,7 +67,7 @@ const StyledPopup = styled(Popup)`
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
   border: solid 1px #dee2e6;
   background-color: #ffffff;
-  
+
   .ui.form {
     width: 570px;
     padding: 0;
@@ -325,7 +324,7 @@ class MyInventory extends Component {
     open: false,
     clientMessage: '',
     request: null,
-    filterValue: ''
+    selectedTagsOptions: []
   }
 
   componentDidMount() {
@@ -348,21 +347,23 @@ class MyInventory extends Component {
       }
     }
     // Because of #31767
-    this.props.setCompanyElligible()
-    //this.props.applyDatagridFilter('')
+    try {
+      this.props.setCompanyElligible()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
 
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter)
+      datagrid.setFilter(datagridFilter, true, 'myInventoryFilter')
     }
   }
 
   getRows = rows => {
-    const { datagrid, pricingEditOpenId, setPricingEditOpenId } = this.props
-
+    const { datagrid, pricingEditOpenId, setPricingEditOpenId, toastManager } = this.props
     let title = ''
 
     return rows.map((r, rIndex) => {
@@ -442,7 +443,7 @@ class MyInventory extends Component {
         ),
         fobPrice: (
           <StyledPopup
-            content={<QuickEditPricingPopup rawData={r.rawData}/>}
+            content={<QuickEditPricingPopup rawData={r.rawData} />}
             on='click'
             pinned
             position='left center'
@@ -470,7 +471,7 @@ class MyInventory extends Component {
                     r.cfStatus.toLowerCase() === 'unmapped' ||
                     r.cfStatus.toLowerCase() === 'n/a' ||
                     !isOfferValid ||
-                    r.groupId
+                    !!r.groupId
                   }
                   onChange={(e, data) => {
                     e.preventDefault()
@@ -480,6 +481,25 @@ class MyInventory extends Component {
                         ...r.rawData,
                         cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
                       }))
+                      {
+                        if (!data.checked) {
+                          toastManager.add(
+                            generateToastMarkup(
+                              <FormattedMessage
+                                id='broadcast.turnoff.title'
+                                defaultMessage='Price book for this offer has been deleted!'
+                              />,
+                              <FormattedMessage
+                                id='broadcast.turnoff.content'
+                                defaultMessage='Global rules are going to be used. To turn off broadcasting completely, edit it inside Edit tab.'
+                              />
+                            ),
+                            {
+                              appearance: 'info'
+                            }
+                          )
+                        }
+                      }
                     } catch (error) {
                       console.error(error)
                     }
@@ -546,17 +566,6 @@ class MyInventory extends Component {
     }
   }
 
-  handleFiltersValue = debounce(value => {
-    const { applyDatagridFilter } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
-    else applyDatagridFilter(value)
-  }, 250)
-
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
-  }
-
   render() {
     const {
       openBroadcast,
@@ -568,13 +577,12 @@ class MyInventory extends Component {
       isOpenImportPopup,
       simpleEditTrigger,
       sidebarDetailTrigger,
-      sidebarValues,
       openPopup,
       editedId,
       closeSidebarDetail,
       tutorialCompleted
     } = this.props
-    const { columns, selectedRows, clientMessage, request, filterValue } = this.state
+    const { columns, clientMessage, request } = this.state
 
     return (
       <>
@@ -611,19 +619,9 @@ class MyInventory extends Component {
         <Container fluid style={{ padding: '0 32px' }}>
           <Grid>
             <Grid.Row>
-              <Grid.Column width={4} style={{ paddingTop: '9px' }}>
-                <Input
-                  fluid
-                  icon='search'
-                  value={filterValue}
-                  onChange={this.handleFilterChange}
-                  placeholder={formatMessage({
-                    id: 'myInventory.searchByProductName',
-                    defaultMessage: 'Search by product name...'
-                  })}
-                />
-              </Grid.Column>
-              <Grid.Column width={12}>
+              <SearchByNamesAndTags />
+
+              <Grid.Column width={8}>
                 <Menu secondary className='page-part'>
                   {/*selectedRows.length > 0 ? (
                     <Menu.Item>
@@ -816,4 +814,4 @@ class MyInventory extends Component {
   }
 }
 
-export default injectIntl(MyInventory)
+export default injectIntl(withToastManager(MyInventory))

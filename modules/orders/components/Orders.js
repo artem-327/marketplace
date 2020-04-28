@@ -168,7 +168,8 @@ class Orders extends Component {
           </FormattedMessage>
         ),
         width: 100,
-        align: 'right'
+        align: 'right',
+        sortPath: 'Order.id'
       },
       {
         name: 'globalStatus',
@@ -893,7 +894,7 @@ class Orders extends Component {
         <CustomDivAddDocument>
           <div>
             <AttachmentManager
-              relatedDocumentType={this.state.relatedDocumentType}
+              ducumentTypeIds={[this.state.relatedDocumentType.value]}
               isOpenManager={this.state.isOpenManager}
               asModal
               returnSelectedRows={rows => this.attachDocumentsManager(rows)}
@@ -1256,6 +1257,7 @@ class Orders extends Component {
               loading={datagrid.loading}
               rows={this.getRows()}
               // onSortingChange={sorting => sorting.sortPath && this.setState({ sorting })}
+              defaultSorting={{ columnName: 'orderId', sortPath: 'Order.id', direction: 'desc' }}
               rowActions={[
                 {
                   text: formatMessage({

@@ -6,7 +6,6 @@ export const initialState = {
   isOpenPopup: false,
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
-  filterValue: '',
   loading: false,
   searchedCompanies: [],
   searchedCompaniesLoading: false,
@@ -36,15 +35,13 @@ export default function reducers(state = initialState, action) {
     case AT.OPERATIONS_TAB_CHANGED: {
       return {
         ...state,
-        currentTab: payload,
-        filterValue: state.currentTab !== payload ? '' : state.filterValue
+        currentTab: payload
       }
     }
 
     case AT.OPERATIONS_HANDLE_FILTERS_VALUE: {
       return {
-        ...state,
-        filterValue: action.payload
+        ...state
       }
     }
 
@@ -84,13 +81,16 @@ export default function reducers(state = initialState, action) {
         currentTab: action.payload.tab,
         popupValues: null,
         isOpenPopup: false,
-        filterValue: '',
         loading: false
       }
     }
 
-    case AT.OPERATIONS_SEARCH_COMPANY_PENDING: {return { ...state, searchedCompaniesLoading: true }}
-    case AT.OPERATIONS_SEARCH_COMPANY_REJECTED: {return { ...state, searchedCompaniesLoading: false }}
+    case AT.OPERATIONS_SEARCH_COMPANY_PENDING: {
+      return { ...state, searchedCompaniesLoading: true }
+    }
+    case AT.OPERATIONS_SEARCH_COMPANY_REJECTED: {
+      return { ...state, searchedCompaniesLoading: false }
+    }
     case AT.OPERATIONS_SEARCH_COMPANY_FULFILLED: {
       return {
         ...state,

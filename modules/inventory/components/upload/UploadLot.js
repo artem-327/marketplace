@@ -34,7 +34,9 @@ class UploadLot extends Component {
   removeFile = file => {
     let poId = this.props.edit
     // delete attachment from database
-    if (file.linked) {
+    if (file.isFromDocumentManager) {
+      this.props.onRemoveFile(file.id)
+    } else if (file.linked) {
       if (file.isToOrderItem) {
         this.props.removeOrderItem(file)
       } else {
@@ -53,7 +55,7 @@ class UploadLot extends Component {
 
   onDropRejected = blobs => {
     let { fileMaxSize, toastManager } = this.props
-    blobs.forEach(function(blob) {
+    blobs.forEach(function (blob) {
       if (blob.size > fileMaxSize * 1024 * 1024) {
         toastManager.add(
           generateToastMarkup(

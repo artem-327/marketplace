@@ -84,7 +84,11 @@ class Filter extends Component {
     },
     searchQuery: '',
     searchWarehouseQuery: '',
-    isTyping: false
+    isTyping: false,
+    hasProvinces: false,
+    savedProvinces: {},
+    provinceOptions: [],
+    applyingSavedFilter: false
   }
 
   componentDidMount() {
@@ -99,13 +103,14 @@ class Filter extends Component {
       filterState,
       appliedFilter,
       onApply,
-      applyDatagridFilter
+      applyDatagridFilter,
+      fetchCountries,
     } = this.props
 
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
-    if (typeof this.props.searchWarehouseUrl !== 'undefined')
-      this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
+    //if (typeof this.props.searchWarehouseUrl !== 'undefined')
+    //  this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
 
     this.handleGetSavedFilters()
 
@@ -115,11 +120,14 @@ class Filter extends Component {
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
       this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
       this.fetchIfNoData(fetchProductGrade, 'productGrades'),
-      this.fetchIfNoData(fetchWarehouses, 'warehouses')
-    ]).finally(() => this.setState({
-      ...(filterState !== null && filterState.state),
-      loaded: true
-    }))
+      //this.fetchIfNoData(fetchWarehouses, 'warehouses'),
+      this.fetchIfNoData(fetchCountries, 'countries')
+    ]).finally(() =>
+      this.setState({
+        ...(filterState !== null && filterState.state),
+        loaded: true
+      })
+    )
     if (appliedFilter && appliedFilter.filters) {
       let datagridFilter = this.toDatagridFilter(appliedFilter)
       applyDatagridFilter(datagridFilter)
@@ -339,6 +347,7 @@ class Filter extends Component {
   }
 
   handleSavedFilterApply = async (filter, { setFieldValue, resetForm }) => {
+    this.setState({ applyingSavedFilter: true })
     resetForm({ ...initialValues })
 
     let formikValues = {}
@@ -381,8 +390,31 @@ class Filter extends Component {
 
     Object.keys(formikValues).forEach(key => setFieldValue(key, formikValues[key]))
 
-    this.toggleFilter(false)
+    let savedProvinces = this.state.savedProvinces
+    let provinceOptions = []
 
+    if (formikValues.country) {
+      for (const d of formikValues.country) {
+        const parsed = JSON.parse(d)
+        if (parsed.hasProvinces) {
+          let provinces = []
+          if (savedProvinces[parsed.id]) {
+            provinces = savedProvinces[parsed.id]
+          } else {
+            const {value} = await this.props.fetchProvinces(parsed.id)
+            provinces = value.map(d => ({
+              key: d.id,
+              text: d.name,
+              value: JSON.stringify({id: d.id, name: d.name, text: d.name, country: d.country.id})
+            }))
+            savedProvinces[[parsed.id]] = provinces
+          }
+          provinceOptions = provinceOptions.concat(provinces)
+        }
+      }
+    }
+    this.setState({ savedProvinces, provinceOptions, applyingSavedFilter: false })
+    this.toggleFilter(false)
     this.handleSubmit(formikValues)
   }
 
@@ -615,7 +647,9 @@ class Filter extends Component {
             </GridRow>
             <GridRow>
               <GridColumn computer={12}>
-                <label>{formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}</label>
+                <label>
+                  {formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}
+                </label>
               </GridColumn>
               <GridColumn computer={4}>
                 <FormikCheckbox
@@ -669,7 +703,12 @@ class Filter extends Component {
       autocompleteWarehouse,
       autocompleteWarehouseLoading,
       layout,
-      savedAutocompleteData
+      savedAutocompleteData,
+      countries,
+      countriesLoading,
+      provinces,
+      provincesLoading,
+      fetchProvinces
     } = this.props
 
     const { formatMessage } = intl
@@ -749,6 +788,72 @@ class Filter extends Component {
     if (!autocompleteDataLoading) dropdownProps.icon = null
     //if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
 
+    let dropdownCountry = {
+      search: true,
+      selection: true,
+      multiple: true,
+      fluid: true,
+      clearable: true,
+      options: countries.map(d => ({
+        key: d.id,
+        text: d.name,
+        value: JSON.stringify({ id: d.id, name: d.name, text: d.name, hasProvinces: d.hasProvinces })
+      })),
+      loading: countriesLoading,
+      name: 'country',
+      placeholder: <FormattedMessage id='filter.selectCountry' defaultMessage='Select Country' />,
+      value: values.country,
+      onChange: async (e, data) => {
+        setFieldValue('country', data.value)
+
+        let savedProvinces = this.state.savedProvinces
+        let provinceOptions = []
+
+        for (const d of data.value) {
+          const parsed = JSON.parse(d)
+          if (parsed.hasProvinces) {
+            let provinces = []
+            if (savedProvinces[parsed.id]) {
+              provinces = savedProvinces[parsed.id]
+            } else {
+              const { value } = await fetchProvinces(parsed.id)
+              provinces = value.map(d => ({
+                key: d.id,
+                text: d.name,
+                value: JSON.stringify({ id: d.id, name: d.name, text: d.name, country: d.country.id })
+              }))
+              savedProvinces[[parsed.id]] = provinces
+            }
+            provinceOptions = provinceOptions.concat(provinces)
+          }
+        }
+        let newProvinceValues = values.province.filter(p =>
+          data.value.some(c =>
+            JSON.parse(p).country === JSON.parse(c).id
+          )
+        )
+        this.setState({ savedProvinces, provinceOptions })
+        setFieldValue('province', newProvinceValues)
+      }
+    }
+
+    let dropdownProvince = {
+      search: true,
+      selection: true,
+      multiple: true,
+      fluid: true,
+      clearable: true,
+      options: this.state.provinceOptions,
+      loading: provincesLoading,
+      name: 'province',
+      disabled: !this.state.provinceOptions.length,
+      placeholder: <FormattedMessage id='filter.selectState' defaultMessage='Select State' />,
+      value: values.province,
+      onChange: (e, data) => {
+        setFieldValue('province', data.value)
+      }
+    }
+
     let currencySymbol = getSafe(() => this.props.preferredCurrency.symbol, '$')
 
     return (
@@ -819,9 +924,12 @@ class Filter extends Component {
         </AccordionItem>
 
         <AccordionItem>
-          {this.accordionTitle('warehouse', <FormattedMessage id='filter.location' />)}
-          <AccordionContent active={this.state.activeAccordion.warehouse}>
-            <BottomMargedDropdown {...dropdownWarehouseProps} />
+          {this.accordionTitle('location', <FormattedMessage id='filter.location' />)}
+          <AccordionContent active={this.state.activeAccordion.location}>
+            <div className='field-label'><FormattedMessage id='global.country' /></div>
+            <BottomMargedDropdown {...dropdownCountry} />
+            <div className='field-label'><FormattedMessage id='global.state' /></div>
+            <BottomMargedDropdown {...dropdownProvince} />
           </AccordionContent>
         </AccordionItem>
 
@@ -917,7 +1025,7 @@ class Filter extends Component {
       filterState
     } = this.props
 
-    const { savedFiltersActive, openedSaveFilter } = this.state
+    const { savedFiltersActive, openedSaveFilter, applyingSavedFilter } = this.state
 
     return (
       <Form
@@ -958,16 +1066,14 @@ class Filter extends Component {
               </TopButtons>
               <Dimmer.Dimmable as={FlexContent}>
                 {!this.state.savedFiltersActive ? (
-                  <PerfectScrollbar key='set'>
-                    {this.formMarkup(props)}
-                  </PerfectScrollbar>
+                  <PerfectScrollbar key='set'>{this.formMarkup(props)}</PerfectScrollbar>
                 ) : (
                   <PerfectScrollbar key='saved'>
                     <SavedFilters
                       params={this.props.params}
                       onApply={filter => this.handleSavedFilterApply(filter, props)}
                       savedFilters={this.props.savedFilters}
-                      savedFiltersLoading={this.props.savedFiltersLoading}
+                      savedFiltersLoading={this.props.savedFiltersLoading || applyingSavedFilter}
                       getSavedFilters={this.handleGetSavedFilters}
                       deleteFilter={this.props.deleteFilter}
                       updateFilterNotifications={this.props.updateFilterNotifications}

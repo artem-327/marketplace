@@ -150,10 +150,12 @@ class InventoryFilter extends Component {
       this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
       this.fetchIfNoData(fetchProductGrade, 'productGrades'),
       this.fetchIfNoData(fetchWarehouses, 'warehouses')
-    ]).finally(() => this.setState({
-      ...(filterState !== null && filterState.state),
-      loaded: true
-    }))
+    ]).finally(() =>
+      this.setState({
+        ...(filterState !== null && filterState.state),
+        loaded: true
+      })
+    )
     if (appliedFilter && appliedFilter.filters) {
       let datagridFilter = this.toDatagridFilter(appliedFilter)
       applyDatagridFilter(datagridFilter)
@@ -218,7 +220,6 @@ class InventoryFilter extends Component {
               let filter = datagridValues[key] && datagridValues[key].toFilter(inputs[key], this.props.filterType)
 
               if (filter) {
-
                 if (!(filter.values instanceof Array)) filter.values = [filter.values] // We need values to be an array
 
                 datagridFilter.filters.push(filter)
@@ -792,7 +793,7 @@ class InventoryFilter extends Component {
       loading: autocompleteWarehouseLoading,
       name: 'warehouse',
       placeholder: <FormattedMessage id='filter.searchWarehouse' defaultMessage='Search Warehouse' />,
-      noWarehouseResultsMessage,
+      noWarehouseResultsMessage: noWarehouseResultsMessage,
       onSearchChange: (_, data) => {
         this.handleSearchWarehouse(data)
       },
@@ -1138,9 +1139,7 @@ class InventoryFilter extends Component {
               </TopButtons>
               <Dimmer.Dimmable as={FlexContent}>
                 {!this.state.savedFiltersActive ? (
-                  <PerfectScrollbar key='set'>
-                    {this.formMarkup(props)}
-                  </PerfectScrollbar>
+                  <PerfectScrollbar key='set'>{this.formMarkup(props)}</PerfectScrollbar>
                 ) : (
                   <PerfectScrollbar key='saved'>
                     <SavedFilters

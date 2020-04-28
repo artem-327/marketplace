@@ -18,6 +18,7 @@ import Tutorial from '~/modules/tutorial/Tutorial'
 import { Datagrid } from '~/modules/datagrid'
 import { debounce } from 'lodash'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
+import SearchByNamesAndTags from '~/modules/search'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -235,18 +236,13 @@ class Marketplace extends Component {
     ],
     selectedRows: [],
     //pageNumber: 0,
-    open: false,
-    filterValue: ''
-  }
-
-  componentDidMount() {
-    // this.props.applyDatagridFilter('')
+    open: false
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter)
+      datagrid.setFilter(datagridFilter, true, 'marketPlaceFilter')
     }
   }
 
@@ -319,21 +315,6 @@ class Marketplace extends Component {
     sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
   }
 
-  handleFiltersValue = debounce(value => {
-    const { applyDatagridFilter } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
-    else applyDatagridFilter(value)
-  }, 250)
-
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
-  }
-
-  handleClearAutocompleteData = () => {
-    this.props.clearAutocompleteData()
-  }
-
   isSelectedMultipleEcho = (rows, selectedRows) => {
     if (!rows || !selectedRows) return
     const filteredRows = rows.reduce((filtered, row, rowIndex) => {
@@ -360,8 +341,15 @@ class Marketplace extends Component {
   }
 
   renderTabMarketplace = () => {
-    const { datagrid, intl, openPopup, isMerchant, tutorialCompleted, sidebar: { openInfo } } = this.props
-    const { columns, selectedRows, filterValue } = this.state
+    const {
+      datagrid,
+      intl,
+      openPopup,
+      isMerchant,
+      tutorialCompleted,
+      sidebar: { openInfo }
+    } = this.props
+    const { columns, selectedRows } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
 
@@ -418,19 +406,9 @@ class Marketplace extends Component {
 
         <Grid>
           <Grid.Row>
-            <Grid.Column width={4} style={{ paddingTop: '9px' }}>
-              <Input
-                fluid
-                icon='search'
-                value={filterValue}
-                onChange={this.handleFilterChange}
-                placeholder={formatMessage({
-                  id: 'myInventory.searchByProductName',
-                  defaultMessage: 'Search by product name...'
-                })}
-              />
-            </Grid.Column>
-            <Grid.Column width={12}>
+            <SearchByNamesAndTags />
+
+            <Grid.Column width={8}>
               <Menu secondary className='page-part'>
                 <Menu.Menu position='right'>
                   <Menu.Item>

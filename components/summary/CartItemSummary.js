@@ -193,7 +193,8 @@ class CartItemSummary extends Component {
                 setSubmitting(false)
               }
             }}
-            children={() => {
+            children={({ submitForm }) => {
+              this.handleSubmit = submitForm
               return (
                 <>
                   <FormGroup widths='equal'>
@@ -313,7 +314,7 @@ class CartItemSummary extends Component {
             type='button'
             {... this.state.edittingHazmatInfo ? { positive: true } : { color: 'blue' }}
             onClick={() => {
-              if (this.state.edittingHazmatInfo) handleSubmit()
+              if (this.state.edittingHazmatInfo) this.handleSubmit()
               else this.setState(prevState => ({ edittingHazmatInfo: !prevState.edittingHazmatInfo }))
             }}
             data-test='shopping_cart_hazmat'>
@@ -355,7 +356,7 @@ class CartItemSummary extends Component {
                 <FormattedMessage id='global.location' defaultMessage='Location' />
               </BottomUnpaddedColumn>
 
-              <VerticalUnpaddedColumn>{item.locationStr}</VerticalUnpaddedColumn>
+              <VerticalUnpaddedColumn black>{item.locationStr}</VerticalUnpaddedColumn>
             </RelaxedRow>
 
             <RelaxedRow columns={2}>
@@ -390,7 +391,7 @@ class CartItemSummary extends Component {
                 <FormattedMessage id='global.packages' defaultMessage='Packages' />
               </VerticalUnpaddedColumn>
 
-              <VerticalUnpaddedColumn>
+              <VerticalUnpaddedColumn black>
                 <FormattedNumber minimumFractionDigits={0} value={item.pkgAmount} /> x{' '}
                 {item.productOffer.companyProduct.packagingSize}{' '}
                 {item.productOffer.companyProduct.packagingUnit.nameAbbreviation}{' '}
@@ -403,7 +404,7 @@ class CartItemSummary extends Component {
                 <FormattedMessage id='global.quantity' defaultMessage='Quantity' />
               </VerticalUnpaddedColumn>
 
-              <VerticalUnpaddedColumn>
+              <VerticalUnpaddedColumn black>
                 <FormattedUnit
                   unit={item.productOffer.companyProduct.packagingUnit.nameAbbreviation}
                   separator=' '
@@ -431,7 +432,7 @@ class CartItemSummary extends Component {
                 <FormattedMessage id='global.fobPrice' defaultMessage='!FOB Price' />
               </VerticalUnpaddedColumn>
 
-              <VerticalUnpaddedColumn>
+              <VerticalUnpaddedColumn black>
                 <FormattedNumber style='currency' currency={currency} id='cart.packs' value={item.cfPricePerUOM} /> /{' '}
                 {productOffer.companyProduct.packagingUnit.nameAbbreviation}
               </VerticalUnpaddedColumn>
@@ -442,7 +443,7 @@ class CartItemSummary extends Component {
                 <FormattedMessage id='cart.productTotal' defaultMessage='Product Total' />
               </VerticalUnpaddedColumn>
 
-              <VerticalUnpaddedColumn>
+              <VerticalUnpaddedColumn black>
                 <FormattedNumber style='currency' currency={currency} value={item.cfPriceSubtotal} />
               </VerticalUnpaddedColumn>
             </RelaxedRow>
@@ -452,7 +453,7 @@ class CartItemSummary extends Component {
                 <FormattedMessage id='global.leadTime' defaultMessage='!Lead Time' />
               </VerticalUnpaddedColumn>
 
-              <VerticalUnpaddedColumn>
+              <VerticalUnpaddedColumn black>
                 {leadTime}
               </VerticalUnpaddedColumn>
             </RelaxedRow>
@@ -468,7 +469,7 @@ class CartItemSummary extends Component {
                     </GridRow>
 
                     <GridRow>
-                      <TopUnpaddedColumn className='default'>
+                      <TopUnpaddedColumn black className='default'>
                         {externalNotes}
                       </TopUnpaddedColumn>
                     </GridRow>

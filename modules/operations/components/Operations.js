@@ -52,27 +52,28 @@ class Operations extends Component {
       'shipping-quotes': {
         url: '/prodex/api/shipment/manual-quotes/datagrid',
         searchToFilter: v =>
-          v
+          v && v.filterValue
             ? [
                 {
                   operator: 'LIKE',
                   path: 'ShippingQuote.carrierName',
-                  values: [`%${v}%`]
+                  values: [`%${v.filterValue}%`]
                 }
               ]
             : []
       },
       tags: {
         url: 'prodex/api/tags/datagrid',
-        searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v}%`] }] : [])
+        searchToFilter: v =>
+          v && v.filterValue ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v.filterValue}%`] }] : []
       },
       'company-product-catalog': {
         url: `/prodex/api/company-products/admin/datagrid?unmappedOnly=${companyProductUnmappedOnly}`,
         searchToFilter: v => {
           let filter = { or: [], and: [] }
 
-          if (v && v.filterValue) filter.or =
-            [
+          if (v && v.filterValue)
+            filter.or = [
               {
                 operator: 'LIKE',
                 path: 'CompanyProduct.intProductName',
@@ -95,8 +96,8 @@ class Operations extends Component {
               }
             ]
 
-          if (v && v.company) filter.and =
-            [
+          if (v && v.company)
+            filter.and = [
               {
                 operator: 'EQUALS',
                 path: 'CompanyProduct.owner.id',
@@ -104,31 +105,25 @@ class Operations extends Component {
               }
             ]
           return filter
-        },
-        params: {
-          orOperator: true
         }
       },
       'company-inventory': {
         url: '/prodex/api/product-offers/admin/datagrid',
         searchToFilter: v =>
-          v
+          v && v.filterValue
             ? [
                 {
                   operator: 'LIKE',
                   path: 'ProductOffer.companyProduct.intProductName',
-                  values: [`%${v}%`]
+                  values: [`%${v.filterValue}%`]
                 },
                 {
                   operator: 'LIKE',
                   path: 'ProductOffer.companyProduct.intProductCode',
-                  values: [`%${v}%`]
+                  values: [`%${v.filterValue}%`]
                 }
               ]
-            : [],
-        params: {
-          orOperator: true
-        }
+            : []
       }
     }
 
@@ -142,8 +137,10 @@ class Operations extends Component {
     //if (!(getSafe(() => this.props.auth.identity.isAdmin, false) || getSafe(() => this.props.auth.identity.isEchoOperator, false)))
     //      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
 
+    const preserveFilters = this.props.currentTab.type === 'company-product-catalog'
+
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}>
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
         <Container fluid className='flex stretched'>
           <Container fluid style={{ padding: '0 1.5vh' }}>
             {<TablesHandlers currentTab={currentTab} />}

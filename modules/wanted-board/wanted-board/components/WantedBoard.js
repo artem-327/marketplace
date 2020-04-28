@@ -17,14 +17,12 @@ import confirm from '~/src/components/Confirmable/confirm'
 import DetailSidebar from './DetailSidebar'
 import { Datagrid } from '~/modules/datagrid'
 import { SubmitOffer } from './SubmitOffer/index'
-
 import { PlusCircle } from 'react-feather'
-
 import { number } from 'prop-types'
 import Link from 'next/link'
 import Tutorial from '~/modules/tutorial/Tutorial'
-
 import { UpperCaseText, ControlPanel, ProductChemicalSwitch, TopButtons } from '../../constants/layout'
+import SearchByNamesAndTags from '~/modules/search'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
@@ -233,17 +231,6 @@ class WantedBoard extends Component {
     //}
   }
 
-  handleFiltersValue = debounce(value => {
-    const { handleFiltersValue } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearchPattern(value)
-    else handleFiltersValue(value)
-  }, 300)
-
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
-  }
-
   renderContent = () => {
     const {
       datagrid,
@@ -266,20 +253,8 @@ class WantedBoard extends Component {
         <ControlPanel>
           <Grid>
             <Grid.Row>
-              <GridColumn floated='left' width={5} data-test='wanted_board_search_inp'>
-                <Input
-                  fluid
-                  icon='search'
-                  value={filterValue}
-                  placeholder={formatMessage({
-                    id: 'wantedBoard.searchByProductName',
-                    defaultMessage: 'Search by product name...'
-                  })}
-                  onChange={this.handleFilterChange}
-                />
-              </GridColumn>
-
-              <GridColumn width={11}>
+              <SearchByNamesAndTags />
+              <GridColumn width={8}>
                 <TopButtons>
                   <ProductChemicalSwitch className={type}>
                     <Button

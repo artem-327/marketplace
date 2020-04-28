@@ -1,17 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import confirm from '~/src/components/Confirmable/confirm'
 //import ProdexGrid from '~/components/table'
 import ProdexTable from '~/components/table'
-import {
-  deleteUser,
-  getUsersMe,
-  userSwitchEnableDisable,
-  openPopup,
-  getRoles,
-  getAdminRoles,
-} from '../../actions'
+import { deleteUser, getUsersMe, userSwitchEnableDisable, openPopup, getRoles, getAdminRoles } from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { ArrayToFirstItem, FormattedPhone } from '~/components/formatted-messages/'
 import moment from 'moment'
@@ -19,12 +12,11 @@ import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 import { Checkbox, Popup, Label, List } from 'semantic-ui-react'
 
-const handleSwitchEnabled = id => {
-  userSwitchEnableDisable(id)
+const handleSwitchEnabled = (id, row) => {
+  userSwitchEnableDisable(id, row)
 }
 
 class UsersTable extends Component {
-
   componentDidMount() {
     this.props.getUsersMe()
     if (!this.props.allRoles.length) this.props.getRoles()
@@ -70,12 +62,10 @@ class UsersTable extends Component {
               callback: row =>
                 confirm(
                   formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
-                  formatMessage(
-                    {
-                      id: 'confirm.deleteUser.content',
-                      defaultMessage: 'Do you really want to delete user?'
-                    }
-                  )
+                  formatMessage({
+                    id: 'confirm.deleteUser.content',
+                    defaultMessage: 'Do you really want to delete user?'
+                  })
                 ).then(async () => {
                   try {
                     await deleteUser(row.id)
@@ -98,7 +88,7 @@ const mapDispatchToProps = {
   userSwitchEnableDisable,
   openPopup,
   getRoles,
-  getAdminRoles,
+  getAdminRoles
 }
 
 const userEnableDisableStatus = (r, currentUserId) => {
@@ -113,7 +103,7 @@ const userEnableDisableStatus = (r, currentUserId) => {
             toggle={true}
             defaultChecked={r.enabled}
             disabled={r.id === currentUserId}
-            onChange={() => handleSwitchEnabled(r.id)}
+            onChange={() => handleSwitchEnabled(r.id, r)}
             data-test={`settings_user_enabled_${r.id}_chckb`}
           />
         }
@@ -159,11 +149,7 @@ const mapStateToProps = (state, { datagrid }) => {
         roles: user.roles || [],
         userRoles: <ArrayToFirstItem values={user && user.roles && user.roles.length && user.roles.map(r => r.name)} />,
         switchEnable: userEnableDisableStatus(user, currentUserId),
-        lastLoginAt: user.lastLoginAt
-          ? moment(user.lastLoginAt)
-            .toDate()
-            .toLocaleString()
-          : ''
+        lastLoginAt: user.lastLoginAt ? moment(user.lastLoginAt).toDate().toLocaleString() : ''
       }
     }),
     currentUser,
@@ -173,7 +159,7 @@ const mapStateToProps = (state, { datagrid }) => {
     currentTab: state.admin.currentTab,
     loading: state.admin.loading,
     allRoles: state.admin.roles,
-    adminRoles: state.admin.adminRoles.map(d => d.id),
+    adminRoles: state.admin.adminRoles.map(d => d.id)
   }
 }
 

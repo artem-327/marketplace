@@ -16,7 +16,8 @@ const initialState = {
     pageSize: 50,
     pageNumber: 0
   },
-  isScrollToEnd: false
+  isScrollToEnd: false,
+  savedFilters: {}
 }
 
 // singleton instance
@@ -42,6 +43,7 @@ export class DatagridProvider extends Component {
   componentDidMount() {
     //Refresh datagrid every 60 seconds
     if (this.props.autoRefresh) this.interval = setInterval(this.loadData, 60000)
+    this.setState({ savedFilters: {} })
   }
 
   componentWillUnmount() {
@@ -63,7 +65,11 @@ export class DatagridProvider extends Component {
       this.props.apiConfig.url &&
       prevProps.apiConfig.url !== this.props.apiConfig.url
     ) {
-      this.setFilter({ filters: [] })
+      if (this.props.preserveFilters) {
+        this.loadData()
+      } else {
+        this.setState({ savedFilters: {} }, () => this.setFilter({ filters: [], orFilters: [] }))
+      }
     }
   }
 
@@ -177,6 +183,7 @@ export class DatagridProvider extends Component {
   loadData = (params = {}, query = {}) => {
     this.setState(
       s => ({
+        ready: true,
         datagridParams: {
           // pageNumber: 0,
           ...s.datagridParams,
@@ -193,15 +200,35 @@ export class DatagridProvider extends Component {
   //   reload && this.loadData()
   // }
 
-  setFilter = (filters, reload = true) => {
+  setFilter = (filterValue, reload = true, filterId = null) => {
+    let filters = [],
+      orFilters = []
+
+    let savedFilters = this.state.savedFilters
+
+    if (filterId) {
+      savedFilters[filterId] = filterValue
+    } else {
+      if (filterValue && filterValue.filters) filters = filterValue.filters
+      if (filterValue && filterValue.orFilters) orFilters = filterValue.orFilters
+    }
+
+    Object.keys(savedFilters).forEach(key => {
+      if (savedFilters[key].filters) filters = filters.concat(savedFilters[key].filters)
+      if (savedFilters[key].orFilters) orFilters = orFilters.concat(savedFilters[key].orFilters)
+    })
+
+    const allFilters = { filters, orFilters }
+
     this.setState(
       s => ({
         datagridParams: {
           ...s.datagridParams,
-          ...filters
+          ...allFilters
           //pageNumber: 0
         },
-        rows: []
+        rows: [],
+        savedFilters
       }),
       () => reload && this.loadData()
     )
@@ -211,13 +238,16 @@ export class DatagridProvider extends Component {
     this.setState({ query }, () => reload && this.loadData())
   }
 
-  setSearch = (value, reload = true) => {
+  setSearch = (value, reload = true, filterId = null) => {
     const {
       apiConfig: { searchToFilter, params }
     } = this.props
 
     let filters = typeof searchToFilter !== 'function' ? this.apiConfig.searchToFilter(value) : searchToFilter(value)
 
+    if (filters.url) {
+      this.apiConfig = { url: filters.url }
+    }
     this.setState(
       s => ({
         datagridParams: { ...s.datagridParams, ...params },
@@ -229,20 +259,11 @@ export class DatagridProvider extends Component {
             orFilters: filters.or ? filters.or : filters.length ? filters : [],
             filters: filters.and ? filters.and : []
           },
-          reload
+          reload,
+          filterId
         )
       }
     )
-  }
-
-  setSearchPattern = value => {
-    const {
-      apiConfig: { searchViaPattern, params }
-    } = this.props
-
-    let newApiConfig =
-      typeof searchViaPattern !== 'function' ? this.apiConfig.searchViaPattern(value) : searchViaPattern(value)
-    this.setApiConfig(newApiConfig)
   }
 
   setLoading = loading => {
@@ -252,7 +273,6 @@ export class DatagridProvider extends Component {
   }
 
   onTableReady = (params = {}) => {
-    this.setState({ ready: true })
     this.loadData(params)
   }
 

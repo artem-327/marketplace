@@ -71,7 +71,7 @@ export default class Cart extends Component {
 
 
   renderCartItem = (item, index) => {
-    const { intl: { formatMessage }, cart, deleteCartItem, } = this.props
+    const { intl: { formatMessage }, cart, deleteCartItem } = this.props
 
     const packagingType = getSafe(() => item.productOffer.companyProduct.packagingType.name, '')
     const unitName = getSafe(() => item.productOffer.companyProduct.packagingUnit.nameAbbreviation, '')

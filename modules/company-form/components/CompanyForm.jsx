@@ -225,9 +225,9 @@ class CompanyForm extends Component {
 
         <FormGroup widths='equal'>
           <Checkbox
-            label={formatMessage({ id: 'global.nacdMember', defaultMessage: 'NACD Member' })}
-            name='nacdMember'
-            data-test='company_form_nacdNumber_chckb'
+            label={formatMessage({ id: 'global.enabled', defaultMessage: 'Enabled' })}
+            name='enabled'
+            data-test='company_form_enabled_chckb'
           />
 
           {this.props.admin && (
