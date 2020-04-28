@@ -17,13 +17,13 @@ const MyInventory = () => (
             ]
           }
           if (v && v.and && v.and.length > 0) {
-            filters.and = [
-              {
+            filters.and = v.and.map(idTag => {
+              return {
                 operator: 'EQUALS',
                 path: 'ProductOffer.companyProduct.echoProduct.tags.id',
-                values: v.and
+                values: [idTag]
               }
-            ]
+            })
           }
           return filters
         }

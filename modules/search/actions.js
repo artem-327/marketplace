@@ -15,10 +15,3 @@ export const searchTags = tag => ({
     pageSize: 50
   })
 })
-
-export function applyDatagridFilter(filter) {
-  return {
-    type: AT.APPLY_FILTER,
-    payload: filter
-  }
-}

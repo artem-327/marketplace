@@ -45,6 +45,8 @@ import { Datagrid } from '~/modules/datagrid'
 import confirm from '~/src/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { Required, Or } from '~/components/constants/layout'
+import { AttachmentManager } from '~/modules/attachments'
+import { UploadCloud } from 'react-feather'
 
 export const MyContainer = styled.div`
   margin: 0 15px 0 0;
@@ -112,6 +114,10 @@ const TabsWrapper = styled.div`
 const GridColumnBtn = styled(GridColumn)`
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+`
+
+const DivIcon = styled.div`
+  margin-top: 8px;
 `
 
 Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
@@ -599,7 +605,6 @@ class AddEditEchoProduct extends React.Component {
     const { putEchoProduct, postEchoProduct, closePopup, linkAttachment, listDocumentTypes } = this.props
 
     const { popupValues } = this.state
-
     let sendSuccess = false
 
     let formValues = {
@@ -715,66 +720,98 @@ class AddEditEchoProduct extends React.Component {
     </GridRow>
   )
 
+  attachDocumentsUploadLot = (newDocument, values, setFieldValue) => {
+    const docArray = Array.isArray(newDocument)
+      ? uniqueArrayByKey(values.attachments.concat(newDocument), 'id')
+      : uniqueArrayByKey(values.attachments.concat([newDocument]), 'id')
+
+    docArray.forEach(doc => {
+      setFieldValue &&
+        setFieldValue(
+          `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+          { ...doc, isFromDocumentManager: true }
+        )
+    })
+    this.setState({ changedForm: true })
+  }
+
   RowDocument = (formikProps, values, popupValues, documentType) => {
     return (
-      <UploadLot
-        {...this.props}
-        attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === documentType)}
-        edit={getSafe(() => popupValues.id, '')}
-        name='attachments'
-        type={documentType.toString()}
-        filesLimit={1}
-        fileMaxSize={20}
-        onChange={files => {
-          formikProps.setFieldValue(
-            `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
-            {
-              id: files.id,
-              name: files.name,
-              documentType: files.documentType
-            }
-          )
-          this.setState({ changedForm: true })
-        }}
-        onRemoveFile={id => {
-          this.setState({ changedForm: true, changedAttachments: true })
-        }}
-        data-test='settings_product_import_attachments'
-        emptyContent={
-          <label>
-            <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-            <br />
-            <FormattedMessage
-              id='addInventory.dragDropOr'
-              defaultMessage={'or {link} to select from computer'}
-              values={{
-                link: (
-                  <a>
-                    <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                  </a>
-                )
-              }}
-            />
-          </label>
-        }
-        uploadedContent={
-          <label>
-            <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-            <br />
-            <FormattedMessage
-              id='addInventory.dragDropOr'
-              defaultMessage={'or {link} to select from computer'}
-              values={{
-                link: (
-                  <a>
-                    <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                  </a>
-                )
-              }}
-            />
-          </label>
-        }
-      />
+      <>
+        <UploadLot
+          {...this.props}
+          attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === documentType)}
+          edit={getSafe(() => popupValues.id, '')}
+          name='attachments'
+          type={documentType.toString()}
+          filesLimit={1}
+          fileMaxSize={20}
+          onChange={files => {
+            formikProps.setFieldValue(
+              `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+              {
+                id: files.id,
+                name: files.name,
+                documentType: files.documentType
+              }
+            )
+            this.setState({ changedForm: true })
+          }}
+          onRemoveFile={async id => {
+            await formikProps.setFieldValue('attachments', [])
+            const arrayAttachments = values.attachments.filter(attachment => attachment.id !== id)
+            await formikProps.setFieldValue('attachments', arrayAttachments)
+            this.setState({ changedForm: true, changedAttachments: true })
+          }}
+          data-test='settings_product_import_attachments'
+          emptyContent={
+            <label>
+              <DivIcon>
+                <UploadCloud size='25' color='#dee2e6' />
+              </DivIcon>
+              <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+              <br />
+              <FormattedMessage
+                id='addInventory.dragDropOr'
+                defaultMessage={'or {link} to select from computer'}
+                values={{
+                  link: (
+                    <a>
+                      <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                    </a>
+                  )
+                }}
+              />
+            </label>
+          }
+          uploadedContent={
+            <label>
+              <DivIcon>
+                <UploadCloud size='25' color='#dee2e6' />
+              </DivIcon>
+              <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+              <br />
+              <FormattedMessage
+                id='addInventory.dragDropOr'
+                defaultMessage={'or {link} to select from computer'}
+                values={{
+                  link: (
+                    <a>
+                      <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                    </a>
+                  )
+                }}
+              />
+            </label>
+          }
+        />
+        <AttachmentManager
+          singleSelection
+          ducumentTypeIds={[documentType]}
+          asModal
+          returnSelectedRows={rows => this.attachDocumentsUploadLot(rows, values, formikProps.setFieldValue)}
+        />
+      </>
     )
   }
 

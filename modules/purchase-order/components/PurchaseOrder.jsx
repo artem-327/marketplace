@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
-import Shipping from './Shipping'
-import ShippingEdit from './ShippingEdit'
-import ShippingQuote from './ShippingQuote'
-import Payment from './Payment'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import Router from 'next/router'
 import {
   Container as SemanticContainer,
   Header,
@@ -19,39 +16,39 @@ import {
   Divider
 } from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
-import styled from 'styled-components'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import Router from 'next/router'
-
-const FREIGHT_TYPES = {
-  ECHO: 'ECHO_FREIGHT',
-  OWN: 'OWN_FREIGHT'
-}
-
+import { withToastManager } from 'react-toast-notifications'
+import * as Yup from 'yup'
+//Components
+import Shipping from './Shipping'
+import ShippingEdit from './ShippingEdit'
+import ShippingQuote from './ShippingQuote'
+import Payment from './Payment'
 import CartItemSummary from '~/components/summary/CartItemSummary'
 import Summary from '~/components/summary/Summary'
-
 import Spinner from '../../../src/components/Spinner/Spinner'
 import confirm from '~/src/components/Confirmable/confirm'
 import { checkToken } from '../../../src/utils/auth'
-import { withToastManager } from 'react-toast-notifications'
-
-import { generateToastMarkup } from '~/utils/functions'
-import { getSafe } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
-import * as Yup from 'yup'
-
-import '../styles/PurchaseOrder.scss'
 import { errorMessages } from '~/constants/yupValidation'
-
+import FreightLabel from '~/components/freight'
+//Styled
 import {
   VerticalUnpaddedColumn,
   StyledRow,
   TopUnpaddedRow,
   GridContainer,
   VerticalUnpaddedRow,
-  BottomUnpaddedRow
+  BottomUnpaddedRow,
+  CustomMessage
 } from '~/modules/cart/components/StyledComponents'
+import '../styles/PurchaseOrder.scss'
+import styled from 'styled-components'
+
+const FREIGHT_TYPES = {
+  ECHO: 'ECHO_FREIGHT',
+  OWN: 'OWN_FREIGHT'
+}
 
 const RelaxedForm = styled(Form)`
   padding-top: 1.5rem !important;
@@ -63,31 +60,6 @@ const RelaxedForm = styled(Form)`
 const Container = styled(SemanticContainer)`
   padding: 20px 30px 30px 30px !important;
   overflow-x: hidden;
-`
-
-const CustomMessage = styled(Message)`
-  border-radius: 4px;
-  ${props => props.warning && `border: solid 1px #ff9d42;`}
-  ${props => props.informative && `border: solid 1px #2599d5;`}
-  ${props => props.ownFreight && `border: solid 1px #84c225;`}
-  box-shadow: none !important;
-  -webkit-box-shadow: none !important;
-  background-color: #ffffff !important;
-  display: block !important;
-  i {
-    ${props => props.warning && `color: #ff9d42;`}
-    ${props => props.informative && `color: #2599d5;`}
-    ${props => props.ownFreight && `color: #84c225;`}
-  }
-
-  *:not(i) {
-    color: black !important;
-  }
-  & .button {
-    float: right;
-    bottom: 7px;
-    position: relative;
-  }
 `
 
 const validationSchema = Yup.object().shape({
@@ -396,43 +368,7 @@ class PurchaseOrder extends Component {
                         </VerticalUnpaddedColumn>
                       </StyledRow>
                       {this.state.selectedAddress && (
-                        <BottomUnpaddedRow>
-                          <GridColumn>
-                            <CustomMessage informative={echoFreight} ownFreight={!echoFreight}>
-                              <Icon size='large' name={echoFreight ? 'info circle' : 'check circle outline'} />
-                              {echoFreight ? (
-                                <FormattedMessage id='cart.useOwnFreight' defaultMessage='Use my own freight' />
-                              ) : (
-                                <FormattedMessage
-                                  id='cart.usingOwnFreight'
-                                  defaultMessage='You are using your own freight'
-                                />
-                              )}
-                              <Button
-                                type='button'
-                                color={echoFreight && 'blue'}
-                                basic
-                                onClick={() => {
-                                  shippingQuoteSelected(null)
-                                  setFieldValue('freightType', echoFreight ? FREIGHT_TYPES.OWN : FREIGHT_TYPES.ECHO)
-                                }
-                                }>
-                                {echoFreight ? (
-                                  <>
-                                    <Icon name='archive' />
-                                    <FormattedMessage id='cart.ownFreight' defaultMessage='Own Freight'>
-                                      {text => text}
-                                    </FormattedMessage>
-                                  </>
-                                ) : (
-                                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                                    {text => text}
-                                  </FormattedMessage>
-                                )}
-                              </Button>
-                            </CustomMessage>
-                          </GridColumn>
-                        </BottomUnpaddedRow>
+                        <FreightLabel echoFreight={echoFreight} setFieldValue={setFieldValue} />
                       )}
                       {!cart.weightLimitExceed && this.state.selectedAddress ? (
                         <ShippingQuote
