@@ -45,7 +45,10 @@ const textsTable = {
   },
   'company-inventory': {
     SearchText: 'operations.tables.companyInventory.search'
-  }
+  },
+  orders: {
+    SearchText: 'operations.tables.orders.search'
+  },
 }
 
 class TablesHandlers extends Component {
@@ -67,7 +70,7 @@ class TablesHandlers extends Component {
 
   handleFiltersValue = value => {
     // this condition must be ready evrytimes if you inicializate datagridProvider
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    if (Datagrid.isReady()) Datagrid.setSearch(value, true, 'pageFilters')
   }
 
   handleFilterChange = (e, { value }) => {
@@ -115,6 +118,7 @@ class TablesHandlers extends Component {
       intl: { formatMessage },
       searchedCompaniesLoading,
       searchedCompanies,
+      searchedCompaniesByName,
       companyProductUnmappedOnly
     } = this.props
 
@@ -186,6 +190,32 @@ class TablesHandlers extends Component {
           </CustomGridRow>
         )
 
+      case 'orders':
+        return (
+          <CustomGridRow>
+            <CustomMenuItemLeft>
+              <Dropdown
+                style={{ width: 340 }}
+                placeholder={formatMessage({
+                  id: item.SearchText,
+                  defaultMessage: 'Search orders by company'
+                })}
+                icon='search'
+                selection
+                clearable
+                options={searchedCompaniesByName}
+                search={options => options}
+                value={company}
+                loading={searchedCompaniesLoading}
+                onSearchChange={(e, { searchQuery }) => {
+                  searchQuery.length > 0 && this.searchCompanies(searchQuery)
+                }}
+                onChange={this.handleFilterChangeCompany}
+              />
+            </CustomMenuItemLeft>
+          </CustomGridRow>
+        )
+
       default:
         return (
           <CustomGridRow>
@@ -232,6 +262,11 @@ const mapStateToProps = state => {
     searchedCompanies: state.operations.searchedCompanies.map(d => ({
       key: d.id,
       value: d.id,
+      text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
+    })),
+    searchedCompaniesByName: state.operations.searchedCompanies.map(d => ({
+      key: d.id,
+      value: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, ''),
       text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
     })),
     searchedCompaniesLoading: state.operations.searchedCompaniesLoading,

@@ -9,7 +9,10 @@ export const initialState = {
   loading: false,
   searchedCompanies: [],
   searchedCompaniesLoading: false,
-  companyProductUnmappedOnly: false
+  companyProductUnmappedOnly: false,
+  ordersStatusFilter: 'All',
+  orderDetailData: null,
+  listDocumentTypes: []
 }
 
 export default function reducers(state = initialState, action) {
@@ -78,10 +81,11 @@ export default function reducers(state = initialState, action) {
     case AT.OPERATIONS_HANDLE_ACTIVE_TAB: {
       return {
         ...state,
-        currentTab: action.payload.tab,
+        currentTab: payload.tab,
         popupValues: null,
         isOpenPopup: false,
-        loading: false
+        loading: false,
+        orderDetailData: null
       }
     }
 
@@ -103,6 +107,20 @@ export default function reducers(state = initialState, action) {
       return {
         ...state,
         companyProductUnmappedOnly: payload
+      }
+    }
+
+    case AT.OPERATIONS_ORDERS_FETCH_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        ordersStatusFilter: action.payload.filter.status,
+      }
+
+    case AT.OPERATIONS_OPEN_ORDER_DETAIL: {
+      return {
+        ...state,
+        orderDetailData: payload
       }
     }
 
