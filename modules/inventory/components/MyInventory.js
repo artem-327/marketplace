@@ -481,25 +481,6 @@ class MyInventory extends Component {
                         ...r.rawData,
                         cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
                       }))
-                      {
-                        if (!data.checked) {
-                          toastManager.add(
-                            generateToastMarkup(
-                              <FormattedMessage
-                                id='broadcast.turnoff.title'
-                                defaultMessage='Price book for this offer has been deleted!'
-                              />,
-                              <FormattedMessage
-                                id='broadcast.turnoff.content'
-                                defaultMessage='Global rules are going to be used. To turn off broadcasting completely, edit it inside Edit tab.'
-                              />
-                            ),
-                            {
-                              appearance: 'info'
-                            }
-                          )
-                        }
-                      }
                     } catch (error) {
                       console.error(error)
                     }
