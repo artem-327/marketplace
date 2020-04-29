@@ -141,6 +141,18 @@ export const bankAccountsConfig = {
     uploadDocumentsButton: true,
     documentStatus: true
   },
+  documentOwner: {
+    registerButton: false,
+    addButton: false,
+    dwollaBalance: false,
+    searchField: false,
+    accountStatus: true,
+    bankAccountList: false,
+    uploadDocumentsButton: false,
+    documentStatus: true,
+    uploadOwnerDocumentsButton: true,
+    documentOwner: true
+  },
   verified: {
     registerButton: false,
     addButton: true,
@@ -208,7 +220,9 @@ class BankAccountsTable extends Component {
     this.props.getCurrentUser()
     this.props.getIdentity().then(resp => {
       const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
-      if (hasDwollaAccount) this.props.getDwollaAccBalance()
+      if (hasDwollaAccount) {
+        this.props.getDwollaAccBalance()
+      }
     })
   }
 
@@ -218,7 +232,9 @@ class BankAccountsTable extends Component {
       this.props.getCurrentUser()
       this.props.getIdentity().then(resp => {
         const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
-        if (hasDwollaAccount) this.props.getDwollaAccBalance()
+        if (hasDwollaAccount) {
+          this.props.getDwollaAccBalance()
+        }
       })
     }
   }
@@ -246,7 +262,7 @@ class BankAccountsTable extends Component {
 
     return (
       <React.Fragment>
-        {bankAccounts.bankAccountList && (
+        {bankAccounts.bankAccountList && !bankAccounts.documentOwner && (
           <ProdexTable
             tableName='settings_bankaccounts'
             rows={rows}
@@ -307,7 +323,7 @@ class BankAccountsTable extends Component {
 
         {(bankAccounts.accountStatus || bankAccounts.documentStatus) && (
           <Container>
-            {bankAccounts.accountStatus && (
+            {bankAccounts.accountStatus && !bankAccounts.documentOwner && (
               <>
                 <Table style={{ marginTop: 0, marginBottom: 30 }}>
                   <Table.Header>
@@ -342,12 +358,47 @@ class BankAccountsTable extends Component {
               </>
             )}
 
-            {bankAccounts.documentStatus && (
+            {bankAccounts.accountStatus && bankAccounts.documentOwner && (
               <CustomDiv>
                 <FormattedMessage id='dwolla.document.owner.header1'>{text => <h3>{text}</h3>}</FormattedMessage>
                 <FormattedMessage id='dwolla.document.owner.text1'>{text => <div>{text}</div>}</FormattedMessage>
                 <FormattedMessage id='dwolla.document.owner.text2'>{text => <div>{text}</div>}</FormattedMessage>
                 <FormattedMessage id='dwolla.document.owner.text3'>{text => <div>{text}</div>}</FormattedMessage>
+              </CustomDiv>
+            )}
+
+            {bankAccounts.documentStatus && !bankAccounts.documentOwner && (
+              <CustomDiv>
+                <FormattedMessage id='dwolla.document.explanatory.header1'>{text => <h3>{text}</h3>}</FormattedMessage>
+                <FormattedMessage id='dwolla.document.explanatory.text1'>{text => <div>{text}</div>}</FormattedMessage>
+                <FormattedMessage id='dwolla.document.explanatory.header2'>{text => <h3>{text}</h3>}</FormattedMessage>
+                <FormattedMessage id='dwolla.document.explanatory.text21'>{text => <div>{text}</div>}</FormattedMessage>
+                <br></br>
+                <li>
+                  <FormattedMessage id='dwolla.document.explanatory.BoldLi11'>{text => <b>{text}</b>}</FormattedMessage>
+                  <FormattedMessage id='dwolla.document.explanatory.TextLi11'>
+                    {text => <span>{text}</span>}
+                  </FormattedMessage>
+                </li>
+                <li>
+                  <FormattedMessage id='dwolla.document.explanatory.BoldLi12'>{text => <b>{text}</b>}</FormattedMessage>
+                  <FormattedMessage id='dwolla.document.explanatory.TextLi12'>
+                    {text => <span>{text}</span>}
+                  </FormattedMessage>
+                </li>
+                <li>
+                  <FormattedMessage id='dwolla.document.explanatory.BoldLi13'>{text => <b>{text}</b>}</FormattedMessage>
+                  <FormattedMessage id='dwolla.document.explanatory.TextLi13'>
+                    {text => <span>{text}</span>}
+                  </FormattedMessage>
+                </li>
+                <br></br>
+                <FormattedMessage id='dwolla.document.explanatory.text22'>{text => <div>{text}</div>}</FormattedMessage>
+                <br></br>
+                <FormattedMessage id='dwolla.document.explanatory.li21'>{text => <li>{text}</li>}</FormattedMessage>
+                <FormattedMessage id='dwolla.document.explanatory.li22'>{text => <li>{text}</li>}</FormattedMessage>
+                <FormattedMessage id='dwolla.document.explanatory.li23'>{text => <li>{text}</li>}</FormattedMessage>
+                <FormattedMessage id='dwolla.document.explanatory.li24'>{text => <li>{text}</li>}</FormattedMessage>
               </CustomDiv>
             )}
           </Container>
@@ -409,7 +460,14 @@ const mapStateToProps = state => {
 
   let dwollaDocumentRequired =
     company && company.dwollaDocumentRequired ? company.dwollaDocumentRequired : 'verify-with-document'
-  const dwollaAccountStatus = getSafe(() => company.dwollaAccountStatus, 'none')
+  let dwollaAccountStatus = 'none'
+  if (company.dwollaAccountStatus) dwollaAccountStatus = company.dwollaAccountStatus
+  if (
+    dwollaAccountStatus === 'verified' &&
+    getSafe(() => state.settings.documentsOwner.length, '') &&
+    getSafe(() => state.settings.documentsOwner[0].verificationStatus, '') !== 'verified'
+  )
+    dwollaAccountStatus = 'documentOwner'
   //const dwollaAccountStatus = 'document'
   //let dwollaDocumentRequired = 'verify-with-document'
 

@@ -38,7 +38,7 @@ import PriceBook from './PriceBook'
 
 import Router from 'next/router'
 
-import { addTab, tabChanged, resetSettings, loadLogo } from '../actions'
+import { addTab, tabChanged, resetSettings, loadLogo, getDwollaBeneficiaryOwners } from '../actions'
 
 import { updateCompany } from '~/modules/auth/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
@@ -187,9 +187,11 @@ class Settings extends Component {
   }
 
   async componentDidMount() {
-    const { isCompanyAdmin, addTab, tabsNames, getIdentity } = this.props
+    const { isCompanyAdmin, addTab, tabsNames, getIdentity, getDwollaBeneficiaryOwners } = this.props
     try {
       await getIdentity()
+      //check dwolla if exist some document which has to be verified
+      await getDwollaBeneficiaryOwners()
     } catch (error) {
       console.error(error)
     }
@@ -531,7 +533,8 @@ const mapStateToProps = ({ settings, auth }) => {
     currentTab: settings.currentTab,
     isProductCatalogAdmin: getSafe(() => auth.identity.isProductCatalogAdmin, false),
     isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
-    tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false)
+    tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
+    documentsOwner: getSafe(() => settings.documentsOwner, [])
   }
 }
 
@@ -543,5 +546,6 @@ export default connect(mapStateToProps, {
   loadLogo,
   postCompanyLogo,
   deleteCompanyLogo,
-  getIdentity
+  getIdentity,
+  getDwollaBeneficiaryOwners
 })(withToastManager(Settings))
