@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import moment from 'moment'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
-import { Grid, GridRow, GridColumn, Header, Divider, Radio, Dimmer, Loader } from 'semantic-ui-react'
+import { Radio } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 import { getLocaleDateFormat } from '~/components/date-format'
-import { getSafe } from '~/utils/functions'
 import ProdexGrid from '~/components/table'
 
 const GridContainer = styled.div`
@@ -67,36 +66,9 @@ const columns = [
   }
 ]
 
-const InnerGrid = styled(Grid)`
-  display: block !important;
-  width: 100%;
-  height: 260px;
-  overflow-y: auto;
-`
-
-const RelaxedColumn = styled(GridColumn)`
-  padding-bottom: 0px !important;
-`
-
-const RelaxedRow = styled(GridRow)`
-  padding-bottom: 0px !important;
-  padding-top: 0px !important;
-`
-
-const RelaxedRowPaddingTop = styled(GridRow)`
-  padding-bottom: 0px !important;
-  padding-top: 5px !important;
-`
-
-const EllipsisColumn = styled(GridColumn)`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`
-
 export default class ShippingQuote extends Component {
   getRows = () => {
-    const { handleQuoteSelect, selectedShippingQuote, shippingQuotes: { rates }, currency } = this.props
+    const { selectionDisabled, handleQuoteSelect, selectedShippingQuote, shippingQuotes: { rates }, currency } = this.props
     if (!rates) return []
 
     return rates.map((rate, index) => {
@@ -105,6 +77,7 @@ export default class ShippingQuote extends Component {
       return {
         id: index,
         selected: <Radio
+          disabled={selectionDisabled}
           checked={selectedShippingQuote && selectedShippingQuote.index === index}
           onChange={() => handleQuoteSelect(index)}
           data-test={`purchase_order_shipping_quote_${index}_rad`}

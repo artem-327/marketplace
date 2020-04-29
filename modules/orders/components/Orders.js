@@ -14,7 +14,7 @@ import FilterTags from '~/modules/filter/components/FitlerTags'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import DocumentsPopup from '~/modules/settings/components/Documents/DocumentManagerPopup'
 import Link from 'next/link'
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { UploadCloud, CheckCircle, PlusCircle } from 'react-feather'
 import { handleFiltersValue } from '~/modules/settings/actions'
 import { withToastManager } from 'react-toast-notifications'
@@ -59,7 +59,7 @@ const RelatedDocumentsDropdown = styled(Dropdown)`
   z-index: 601 !important;
 `
 
-const CustomDivUploadLot = styled.div`
+const CustomDivUploadAttachment = styled.div`
   margin-bottom: 30px !important;
   margin-top: 20px !important;
 `
@@ -506,7 +506,7 @@ class Orders extends Component {
     ],
     relatedDocumentsDropdown: '',
     documentType: '',
-    openUploadLot: false,
+    openUploadAttachment: false,
     relatedDocumentsTypeDropdown: [],
     documentFiles: [],
     isAddedNewDocument: false,

@@ -90,7 +90,7 @@ yarn-error.log*
 /src/pages/inventory/addInventory/components/Chemical/components/SearchProducts.css
 /src/pages/inventory/addInventory/components/Upload/attachment.css
 /src/pages/inventory/addInventory/components/Upload/components/file.css
-/src/pages/inventory/addInventory/components/Upload/uploadLot.css
+/src/pages/inventory/addInventory/components/Upload/uploadAttachment.css
 /src/pages/inventory/allInventory/components/ProductOffers.css
 /src/pages/inventory/myInventory/components/BroadcastRule.css
 /src/pages/inventory/myInventory/components/BroadcastTargets.css
@@ -153,7 +153,7 @@ src/pages/inventory/addInventory/components/Chemical/components/ProductOffering.
 src/pages/inventory/addInventory/components/Chemical/components/SearchProducts.css.map
 src/pages/inventory/addInventory/components/Upload/attachment.css.map
 src/pages/inventory/addInventory/components/Upload/components/file.css.map
-src/pages/inventory/addInventory/components/Upload/uploadLot.css.map
+src/pages/inventory/addInventory/components/Upload/uploadAttachment.css.map
 src/pages/inventory/allInventory/components/ProductOffers.css.map
 src/pages/inventory/myInventory/components/BroadcastRule.css.map
 src/pages/inventory/myInventory/components/BroadcastTargets.css.map

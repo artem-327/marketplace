@@ -18,7 +18,8 @@ import {
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
   getUnNumbersByString,
-  searchTags
+  searchTags,
+  getDocumentTypes
 } from '~/modules/admin/actions'
 
 import { Header } from 'semantic-ui-react'
@@ -41,7 +42,8 @@ const mapDispatchToProps = {
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
   getUnNumbersByString,
-  searchTags
+  searchTags,
+  getDocumentTypes
 }
 
 const mapStateToProps = ({ admin }, props) => {
@@ -85,7 +87,7 @@ const mapStateToProps = ({ admin }, props) => {
 
     config: admin.config[admin.currentTab.name],
     listDocumentTypes: admin.documentTypes,
-    searchedTags: admin.searchedTags.map((d) => {
+    searchedTags: admin.searchedTags.map(d => {
       return {
         key: d.id,
         text: d.name,
