@@ -894,7 +894,7 @@ class Orders extends Component {
         <CustomDivAddDocument>
           <div>
             <AttachmentManager
-              ducumentTypeIds={[this.state.relatedDocumentType.value]}
+              documentTypeIds={[this.state.relatedDocumentType.value]}
               isOpenManager={this.state.isOpenManager}
               asModal
               returnSelectedRows={rows => this.attachDocumentsManager(rows)}

@@ -817,7 +817,7 @@ class AddEditEchoProduct extends React.Component {
         />
         <AttachmentManager
           singleSelection
-          ducumentTypeIds={[documentType]}
+          documentTypeIds={[documentType]}
           asModal
           returnSelectedRows={rows => this.attachDocumentsUploadAttachment(rows, values, formikProps.setFieldValue)}
         />
