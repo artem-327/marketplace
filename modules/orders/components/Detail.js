@@ -1218,6 +1218,14 @@ class Detail extends Component {
                                   <GridDataColumn width={valColumn}>{order.returnDeliveryDate}</GridDataColumn>
                                 </>
                               )}
+                              <GridDataColumn width={keyColumn} className='key'>
+                                <FormattedMessage id='order.contactNumber' defaultMessage='Contact Number' />
+                              </GridDataColumn>
+                              <GridDataColumn width={valColumn}>{order.returnAddressContactPhone}</GridDataColumn>
+                              <GridDataColumn width={keyColumn} className='key'>
+                                <FormattedMessage id='order.contactEmail' defaultMessage='Contact E-Mail' />
+                              </GridDataColumn>
+                              <GridDataColumn width={valColumn}>{order.returnAddressContactEmail}</GridDataColumn>
                             </GridData>
                           </Grid.Column>
                           <Grid.Column>
