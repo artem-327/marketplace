@@ -54,7 +54,8 @@ class UploadVerifyFiles extends Component {
       addVerificationDocument,
       documentsOwner,
       addVerificationDocumentsOwner,
-      getDwollaBeneficiaryOwners
+      getDwollaBeneficiaryOwners,
+      dwollaAccountStatus
     } = this.props
     let { onDropRejected, onUploadSuccess } = this
 
@@ -116,7 +117,8 @@ class UploadVerifyFiles extends Component {
                   documentsOwner &&
                   documentsOwner.length &&
                   getSafe(() => documentsOwner[0].verificationStatus, '') !== 'verified' &&
-                  typeof addVerificationDocumentsOwner === 'function'
+                  typeof addVerificationDocumentsOwner === 'function' &&
+                  dwollaAccountStatus === 'verified'
                 ) {
                   addVerificationDocumentsOwner(file.value, documentsOwner[0].id, type) //only first id from documentsOwner verificate
                     .then(aId => {
