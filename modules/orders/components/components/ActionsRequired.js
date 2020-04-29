@@ -62,10 +62,8 @@ class ActionsRequired extends React.Component {
   }
 
   markShipped = () => {
-    const { order, shippingTrackingCode, shipOrder, openPopupName, actionNeeded } = this.props
-    if (actionNeeded === 'PRODUCT-OFFER-ASSIGN') {
-      openPopupName('opendSaleAttachingProductOffer')
-    } else if (shippingTrackingCode.length) {
+    const { order, shippingTrackingCode, shipOrder, openPopupName } = this.props
+    if (shippingTrackingCode.length) {
       this.confirmCall({
         action: () => shipOrder(order.id, shippingTrackingCode),
         confirmTitleId: 'confirm.order.actions.shipped.title',
@@ -217,7 +215,8 @@ class ActionsRequired extends React.Component {
       orderCreditHistoryOpen,
       isSending,
       openedPopup,
-      sellEligible
+      sellEligible,
+      actionNeeded
     } = this.props
     const repayUntil = moment(detail.orderDate)
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
@@ -268,13 +267,25 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}*/}
-            {orderStatus === 2 && shippingStatus === 1 && !assignLotsRequired // Confirmed && Not shipped
+            {orderStatus === 2 && shippingStatus === 1 && !assignLotsRequired && actionNeeded !== 'PRODUCT-OFFER-ASSIGN' // Confirmed && Not shipped
               ? this.renderSegment(null, 11, null, 'order.ship.description', [
                   {
                     buttonType: 'primary',
                     onClick: this.markShipped,
                     dataTest: 'orders_detail_markAsShipped_btn',
                     text: 'order.markAsShipped',
+                    loading: isSending && !openedPopup
+                  }
+                ])
+              : null}
+
+            {orderStatus === 2 && shippingStatus === 1 && !assignLotsRequired && actionNeeded === 'PRODUCT-OFFER-ASSIGN' // Confirmed && Not shipped yet && virtual products
+              ? this.renderSegment(null, 11, null, 'order.attach.products', [
+                  {
+                    buttonType: 'primary',
+                    onClick: () => openPopupName('opendSaleAttachingProductOffer'),
+                    dataTest: 'orders_detail_attachproductOffers_btn',
+                    text: 'order.attachproductOffers',
                     loading: isSending && !openedPopup
                   }
                 ])
@@ -443,7 +454,7 @@ function checkAssignLotsRequired(data) {
       data.orderItems.filter(orderItem => {
         return (
           orderItem.amount ===
-          orderItem.lots.reduce(function(allocated, lot) {
+          orderItem.lots.reduce(function (allocated, lot) {
             return allocated + lot.amount
           }, 0)
         )
