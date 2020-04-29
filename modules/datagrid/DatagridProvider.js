@@ -200,6 +200,20 @@ export class DatagridProvider extends Component {
   //   reload && this.loadData()
   // }
 
+  setSorting = (sortFilter, reload = true) => {
+    this.setState(
+      s => ({
+        datagridParams: {
+          ...s.datagridParams,
+          ...sortFilter
+          //pageNumber: 0
+        },
+        rows: []
+      }),
+      () => reload && this.loadData()
+    )
+  }
+
   setFilter = (filterValue, reload = true, filterId = null) => {
     let filters = [],
       orFilters = []
@@ -312,7 +326,7 @@ export class DatagridProvider extends Component {
             rows,
             loading,
             onTableReady: this.onTableReady,
-            onSortingChange: this.setFilter,
+            onSortingChange: this.setSorting,
             onScrollToEnd: this.onScrollToEnd
           }
         }}>
