@@ -947,7 +947,7 @@ class Broadcast extends Component {
         saved: true,
         initialize: true
       })
-      if (getSafe(() => filteredTree.model.rule.broadcast, null) === 0) {
+      if (asSidebar && getSafe(() => filteredTree.model.rule.broadcast, null) === 0) {
         toastManager.add(
           generateToastMarkup(
             <FormattedMessage
