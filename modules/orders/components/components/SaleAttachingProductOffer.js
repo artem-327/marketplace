@@ -25,7 +25,7 @@ import moment from 'moment'
 import * as Actions from '../../actions'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import confirm from '~/src/components/Confirmable/confirm'
 import { loadFile, addAttachment } from '~/modules/inventory/actions'
 import { getLocaleDateFormat } from '~/components/date-format'
@@ -50,7 +50,7 @@ const LotsTab = styled(TabPane)`
   margin: 0 !important;
   border: 0 none !important;
   padding: 0 !important;
-  .uploadLot {
+  .uploadAttachment {
     padding: 0em !important;
     font-size: 1rem !important;
   }
@@ -371,7 +371,7 @@ class SaleAttachingProductOffer extends Component {
                             : 'N/A'}
                         </Table.Cell>
                         <Table.Cell textAlign='center'>
-                          <UploadLot
+                          <UploadAttachment
                             {...this.props}
                             removeOrderItem={file => {
                               this.removeAttachment(offer, file, setFieldValue, index)

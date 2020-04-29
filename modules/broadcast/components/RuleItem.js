@@ -29,27 +29,6 @@ const RuleItem = props => {
     model: { name, rule }
   } = item
 
-  const handleChange = (propertyName, e) => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    const value = rule[propertyName]
-    const newValue = value === 1 ? 0 : 1
-
-    rule[propertyName] = newValue
-
-    if (item.hasChildren()) {
-      item.walk(node => {
-        node.model.rule[propertyName] = newValue
-      })
-
-      // Hack...
-      // For some reason walk above doesn't change broadcast value of regions...
-      item.model.rule.elements.forEach(element => (element[propertyName] = newValue))
-    }
-    onChange(item)
-  }
-
   const handleRowClick = i => {
     onRowClick(i)
   }
@@ -80,10 +59,10 @@ const RuleItem = props => {
   const nodeBroadcast = rule.broadcast
 
   let companyName = findCompany()
-  if(rule.hidden) {
+  if (rule.hidden) {
     return null
   }
-  
+
   return (
     <>
       <Rule.Row
@@ -96,25 +75,25 @@ const RuleItem = props => {
           {item.children.length > 0 && rule.type !== 'root' ? (
             <Icon name={`chevron ${item.model.rule.expanded ? 'down' : 'right'}`} />
           ) : (
-            <EmptyIconSpace />
-          )}
+              <EmptyIconSpace />
+            )}
           {rule.type !== 'branch' || (rule.type === 'branch' && companyName) ? (
             <span>{companyName ? `${companyName} ${name}` : `${name}`}</span>
           ) : (
-            <a
-              onClick={() => {
-                try {
-                  if (getSafe(() => item.parent.model.rule.id, '')) {
-                    getCompanyInfo(item.parent.model.rule.id)
-                    openModalCompanyInfo()
+              <a
+                onClick={() => {
+                  try {
+                    if (getSafe(() => item.parent.model.rule.id, '')) {
+                      getCompanyInfo(item.parent.model.rule.id)
+                      openModalCompanyInfo()
+                    }
+                  } catch (error) {
+                    console.error(error)
                   }
-                } catch (error) {
-                  console.error(error)
-                }
-              }}>
-              {companyName ? `${companyName} ${name}` : `${name}`}
-            </a>
-          )}
+                }}>
+                {companyName ? `${companyName} ${name}` : `${name}`}
+              </a>
+            )}
         </Rule.RowContent>
 
         <Rule.Toggle style={asSidebar ? { flex: '0 0 62px' } : null}>
@@ -126,7 +105,7 @@ const RuleItem = props => {
             indeterminate={nodeBroadcast === 2}
             checked={nodeBroadcast === 1}
             // disabled={toggleDisabled}
-            onClick={e => handleChange('broadcast', e)}
+            onClick={e => onChange(item, 'broadcast', e)}
           />
         </Rule.Toggle>
 

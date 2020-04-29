@@ -1,21 +1,25 @@
 import React, { Component } from 'react'
-import './uploadLot.scss'
 import PropTypes from 'prop-types'
-import File from '~/src/pages/inventory/addInventory/components/Upload/components/File'
-import ReactDropzone from 'react-dropzone'
+import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-
-import { FieldArray } from 'formik'
-import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup } from '~/utils/functions'
-import styled from 'styled-components'
+import ReactDropzone from 'react-dropzone'
 import { Table, TableCell, Modal, Button } from 'semantic-ui-react'
+import { withToastManager } from 'react-toast-notifications'
+import { FieldArray } from 'formik'
+//Components
+import File from '~/src/pages/inventory/addInventory/components/Upload/components/File'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
+//Actions
+import { getDocumentTypes } from '~/modules/inventory/actions'
+//Styles
+import './uploadAttachment.scss'
+import styled from 'styled-components'
 
 const StyledButton = styled(Button)`
   margin: 4px 4px 4px 4px !important;
 `
 
-class UploadLot extends Component {
+class UploadAttachment extends Component {
   constructor(props) {
     super(props)
 
@@ -26,6 +30,8 @@ class UploadLot extends Component {
   }
 
   componentDidMount() {
+    const { listDocumentTypes, getDocumentTypes } = this.props
+    if (!listDocumentTypes || (listDocumentTypes && !listDocumentTypes.length)) getDocumentTypes()
     this.setState({
       files: this.props.fileIds
     })
@@ -34,7 +40,7 @@ class UploadLot extends Component {
   removeFile = file => {
     let poId = this.props.edit
     // delete attachment from database
-    if (file.isFromDocumentManager) {
+    if (file.isLinkedFromDocumentManager) {
       this.props.onRemoveFile(file.id)
     } else if (file.linked) {
       if (file.isToOrderItem) {
@@ -150,10 +156,10 @@ class UploadLot extends Component {
                     resolve()
                   })
                   .catch(e => {
-                    if (e.clientMessage) {
-                      const docType = listDocumentTypes.find(x => x.value === type)
+                    if (e.response.data.clientMessage) {
+                      const docType = listDocumentTypes.find(x => x.value === parseInt(type))
                       duplicateFiles.push({
-                        id: parseInt(e.clientMessage),
+                        id: parseInt(e.response.data.exceptionMessage),
                         name: files[j].name,
                         documentType: { id: docType.value, name: docType.text },
                         file: file
@@ -202,7 +208,7 @@ class UploadLot extends Component {
     let { type, toastManager, lot } = this.props
 
     await new Promise((resolve, reject) => {
-      this.onUploadSuccess(att)
+      this.onUploadSuccess({ ...att, isLinkedFromDocumentManager: true })
       this.removeDuplicateFile(index)
       resolve()
     }).catch(e => {
@@ -241,7 +247,7 @@ class UploadLot extends Component {
                     <Table.Row key={index}>
                       <TableCell>{d.name}</TableCell>
                       <TableCell>
-                        <div style={{ 'text-align': 'center' }}>
+                        <div style={{ textAlign: 'center' }}>
                           <StyledButton
                             type='button'
                             data-test='attachments_duplicate_cancel_btn'
@@ -311,7 +317,7 @@ class UploadLot extends Component {
     return (
       <>
         {this.renderDuplicateFilesModal()}
-        <div className={'uploadLot ' + (hasFile ? ' has-file' : '')}>
+        <div className={'uploadAttachment ' + (hasFile ? ' has-file' : '')}>
           {this.props.header}
           {disabled ? (
             <span className='file-space'>
@@ -419,13 +425,18 @@ class UploadLot extends Component {
   }
 }
 
-UploadLot.propTypes = {
+UploadAttachment.propTypes = {
   className: PropTypes.string,
   content: PropTypes.string,
   files: PropTypes.array,
   type: PropTypes.string,
   uploadClass: PropTypes.string,
-  uploadedClass: PropTypes.string
+  uploadedClass: PropTypes.string,
+  listDocumentTypes: PropTypes.array
 }
 
-export default withToastManager(UploadLot)
+const mapStateToProps = state => ({
+  listDocumentTypes: getSafe(() => state.simpleAdd.listDocumentTypes, [])
+})
+
+export default withToastManager(connect(mapStateToProps, { getDocumentTypes })(UploadAttachment))

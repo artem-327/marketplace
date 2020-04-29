@@ -268,7 +268,7 @@ class Admin extends Component {
               <TablesHandlers />
             </Container>
           )}
-          <Grid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
+          <Grid columns='equal' className='flex stretched' style={{ marginTop: '0', marginBottom: '0', padding: '0 32px' }}>
             <Grid.Row>
               <Grid.Column key={this.props.currentTab} style={{ marginTop: '10px' }} className='flex stretched'>
                 {this.renderContent()}

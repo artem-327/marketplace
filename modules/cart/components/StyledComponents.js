@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
-import { Header, GridColumn, GridRow, Grid, Segment } from 'semantic-ui-react'
-
+import { Header, GridColumn, GridRow, Grid, Segment, Message } from 'semantic-ui-react'
 
 export const GridContainer = styled(Grid)`
   .row:not(.default-padded) {
@@ -29,10 +28,9 @@ export const SummaryGrid = styled(Grid)`
   .row > .column:last-child:not(:first-child) {
     text-align: right;
   }
-  .grid { 
+  .grid {
     padding-top: 0px !important;
   }
-
 `
 
 export const CapitalizedText = styled.span`
@@ -76,9 +74,9 @@ export const VerticalUnpaddedRow = styled(GridRow)`
 `
 
 export const StyledRow = styled(GridRow)`
-  box-shadow: ${props => props.bottomShadow ? '0 1px 0 0 #dee2e6' : '0 0 0 0'};
-  margin-top: ${props => props.topMarged ? '5px' : '0px'} !important;
-  ${props => props.verticallyUnpadded ? 'padding-bottom: 0px !important; padding-top: 0px !important;' : ''};
+  box-shadow: ${props => (props.bottomShadow ? '0 1px 0 0 #dee2e6' : '0 0 0 0')};
+  margin-top: ${props => (props.topMarged ? '5px' : '0px')} !important;
+  ${props => (props.verticallyUnpadded ? 'padding-bottom: 0px !important; padding-top: 0px !important;' : '')};
 `
 
 export const BottomUnpaddedColumn = styled(GridColumn)`
@@ -99,13 +97,13 @@ export const ItemDescriptionGrid = styled(Grid)`
 `
 
 export const Item = styled.div`
-  box-shadow: ${props => props.bottomShadow ? '0 1px 0 0 #dee2e6 !important' : '0 0 0 0'};
+  box-shadow: ${props => (props.bottomShadow ? '0 1px 0 0 #dee2e6 !important' : '0 0 0 0')};
   padding-bottom: 30px;
 `
 
 export const DescriptionValue = styled.span`
   color: #20273a;
-  font-weight: ${props => props.bold ? 'bold' : 'normal'};
+  font-weight: ${props => (props.bold ? 'bold' : 'normal')};
 `
 
 export const TotalRow = styled(GridRow)`
@@ -116,11 +114,11 @@ export const TotalRow = styled(GridRow)`
 export const TotalPriceRow = styled(GridRow)`
   > .column:last-child {
     color: #84c225 !important;
-  }  
+  }
   background-color: #f8f9fb;
   border-top: 1px solid #dee2e6;
-  
- padding-right: 30px !important;
+
+  padding-right: 30px !important;
 `
 
 export const TopUnpaddedColumn = styled(GridColumn)`
@@ -138,4 +136,29 @@ export const UnpaddedRow = styled(GridRow)`
 
 export const RightUnpaddedRow = styled(GridRow)`
   padding-right: 0px !important;
+`
+
+export const CustomMessage = styled(Message)`
+  border-radius: 4px;
+  ${props => props.warning && `border: solid 1px #ff9d42;`}
+  ${props => props.informative && `border: solid 1px #2599d5;`}
+  ${props => props.ownFreight && `border: solid 1px #84c225;`}
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  background-color: #ffffff !important;
+  display: block !important;
+  i {
+    ${props => props.warning && `color: #ff9d42;`}
+    ${props => props.informative && `color: #2599d5;`}
+    ${props => props.ownFreight && `color: #84c225;`}
+  }
+
+  *:not(i) {
+    color: black !important;
+  }
+  & .button {
+    float: right;
+    bottom: 7px;
+    position: relative;
+  }
 `

@@ -1,18 +1,27 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as Actions from '../../actions'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader, GridColumn, GridRow } from 'semantic-ui-react'
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
-import { getSafe } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import styled from 'styled-components'
+import moment from 'moment'
+import * as Yup from 'yup'
+//Actions
+import * as Actions from '../../actions'
+//Components
+import { getSafe } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 import { DateInput } from '~/components/custom-formik'
-import moment from 'moment'
 import { currency } from '~/constants/index'
 import ShippingQuote from '~/modules/purchase-order/components/ShippingQuote'
-import * as Yup from 'yup'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
+import FreightLabel from '~/components/freight'
+//Styled
+import styled from 'styled-components'
+
+const FREIGHT_TYPES = {
+  ECHO: 'ECHO_FREIGHT',
+  OWN: 'OWN_FREIGHT'
+}
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
@@ -42,7 +51,8 @@ class PurchaseOrderShipping extends React.Component {
         ).trim(),
         pickupRemarks: values.pickupRemarks.trim(),
         deliveryRemarks: values.deliveryRemarks.trim(),
-        shipperRefNo: values.shipperRefNo.trim()
+        shipperRefNo: values.shipperRefNo.trim(),
+        freightType: values.freightType
       }
 
       await this.props.purchaseShipmentOrder(orderId, formValues)
@@ -94,7 +104,8 @@ class PurchaseOrderShipping extends React.Component {
       shipmentQuoteId: '',
       pickupRemarks: '',
       deliveryRemarks: '',
-      shipperRefNo: ''
+      shipperRefNo: '',
+      freightType: FREIGHT_TYPES.ECHO
     }
 
     if (initialValues.pickupDate && moment(initialValues.pickupDate).isAfter(moment()))
@@ -137,7 +148,8 @@ class PurchaseOrderShipping extends React.Component {
                 className='flex stretched'
                 style={{ padding: '0' }}>
                 {formikProps => {
-                  let { touched, validateForm, resetForm, values } = formikProps
+                  let { touched, validateForm, resetForm, values, setFieldValue } = formikProps
+                  const echoFreight = values.freightType === FREIGHT_TYPES.ECHO
                   return (
                     <>
                       <Grid>
@@ -173,15 +185,15 @@ class PurchaseOrderShipping extends React.Component {
                                 </GridColumn>
                               </GridRow>
                             ) : (
-                              <GridRow>
-                                <GridColumn computer={16}>
-                                  <FormattedMessage
-                                    id='cart.noShippingQuotes.processManually'
-                                    defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
-                                  />
-                                </GridColumn>
-                              </GridRow>
-                            )}
+                                <GridRow>
+                                  <GridColumn computer={16}>
+                                    <FormattedMessage
+                                      id='cart.noShippingQuotes.processManually'
+                                      defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
+                                    />
+                                  </GridColumn>
+                                </GridRow>
+                              )}
                             <Grid.Row>
                               <Grid.Column width={8}>
                                 <Button type='button' fluid onClick={() => this.requestManualShippingQuote()}>
@@ -215,19 +227,26 @@ class PurchaseOrderShipping extends React.Component {
                             </Grid.Row>
                           </>
                         ) : (
-                          <Grid.Row>
-                            <Grid.Column width={16}>
-                              <ShippingQuote
-                                currency={currency}
-                                selectedShippingQuote={{ index: this.state.selectedShippingQuote }}
-                                handleQuoteSelect={index => this.setState({ selectedShippingQuote: index })}
-                                selectedAddress={1}
-                                shippingQuotes={shippingQuotes}
-                                shippingQuotesAreFetching={shippingQuotesAreFetching}
-                              />
-                            </Grid.Column>
-                          </Grid.Row>
-                        )}
+                            <>
+                              <FreightLabel echoFreight={echoFreight} setFieldValue={(fieldName, value) => {
+                                this.setState({ selectedShippingQuote: null })
+                                setFieldValue(fieldName, value)
+                              }} />
+                              <Grid.Row>
+                                <Grid.Column width={16}>
+                                  <ShippingQuote
+                                    selectionDisabled={!echoFreight}
+                                    currency={currency}
+                                    selectedShippingQuote={{ index: this.state.selectedShippingQuote }}
+                                    handleQuoteSelect={index => this.setState({ selectedShippingQuote: index })}
+                                    selectedAddress={1}
+                                    shippingQuotes={shippingQuotes}
+                                    shippingQuotesAreFetching={shippingQuotesAreFetching}
+                                  />
+                                </Grid.Column>
+                              </Grid.Row>
+                            </>
+                          )}
                         <Grid.Row>
                           <Grid.Column width={16}>
                             <TextArea

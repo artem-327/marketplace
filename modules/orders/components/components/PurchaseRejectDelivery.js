@@ -5,7 +5,7 @@ import { Modal, ModalContent, Button, Grid, Dimmer, Loader, FormGroup } from 'se
 import { Form } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
@@ -140,7 +140,7 @@ class PurchaseRejectDelivery extends React.Component {
                                 })}
                                 data-test='purchase_reject_text_area'
                               />
-                              <UploadLot
+                              <UploadAttachment
                                 {...this.props}
                                 name='attachments'
                                 attachments={values.attachments}

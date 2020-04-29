@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { FormGroup, FormField, Popup, Image, Dropdown } from 'semantic-ui-react'
 import { Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { withToastManager } from 'react-toast-notifications'
 
 import { generateToastMarkup } from '~/utils/functions'
@@ -279,7 +279,7 @@ class CompanyForm extends Component {
             <label htmlFor='field_input_phone'>
               <span>Company Logo</span>
             </label>
-            <UploadLot
+            <UploadAttachment
               {...this.props}
               attachments={this.props.companyLogo ? [this.props.companyLogo] : []}
               name={`companyLogo`}
