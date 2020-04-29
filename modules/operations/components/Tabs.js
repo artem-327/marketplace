@@ -33,12 +33,12 @@ function TabsOperations(props) {
             onClick={e => {
               e.preventDefault()
               e.stopPropagation()
-              handleActiveTab(tab)
+              handleActiveTab(tab, currentTab)
             }}
-            active={currentTab.name === tab.name}
-            dataTest={`tabs_menu_item_${tab.name.toLowerCase()}`}
+            active={currentTab.type === tab.type}
+            dataTest={`tabs_menu_item_${tab.type}`}
             tab={tab.id}>
-            {formatMessage({ id: `navigation.${tab.name}`, defaultMessage: `${tab.name}` })}
+            {formatMessage({ id: `navigation.${tab.type}`, defaultMessage: `${tab.name}` })}
           </Dropdown.Item>
         ))}
       </PerfectScrollbar>

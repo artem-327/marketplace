@@ -76,9 +76,8 @@ export function createTag(name) {
   }
 }
 
-export function handleActiveTab(tab) {
-  Datagrid.clear()
-
+export function handleActiveTab(tab, currentTab) {
+  if (tab.type !== currentTab.type) Datagrid.clear()
   return {
     type: AT.OPERATIONS_HANDLE_ACTIVE_TAB,
     payload: { tab }
@@ -93,4 +92,14 @@ export const searchCompany = (companyText, limit) => ({
 export const setProductMappedUnmaped = value => ({
   type: AT.OPERATIONS_SET_PRODUCT_MAPPED_UNMAPPED,
   payload: value
+})
+
+export const loadData = (filter = null) => ({
+  type: AT.OPERATIONS_ORDERS_FETCH_SUCCESS,
+  payload: { filter }
+})
+
+export const openOrderDetail = (data = null) => ({
+  type: AT.OPERATIONS_OPEN_ORDER_DETAIL,
+  payload: data
 })
