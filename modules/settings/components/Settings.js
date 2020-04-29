@@ -38,7 +38,7 @@ import PriceBook from './PriceBook'
 
 import Router from 'next/router'
 
-import { addTab, tabChanged, resetSettings, loadLogo, getDwollaBeneficiaryOwners } from '../actions'
+import { addTab, tabChanged, resetSettings, loadLogo } from '../actions'
 
 import { updateCompany } from '~/modules/auth/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
@@ -159,7 +159,7 @@ class Settings extends Component {
     )
   }
 
-  redirectPage = queryTab => {
+  redirectPage = async queryTab => {
     const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin } = this.props
     const tab = getSafe(() => queryTab.type, '')
 
@@ -187,11 +187,9 @@ class Settings extends Component {
   }
 
   async componentDidMount() {
-    const { isCompanyAdmin, addTab, tabsNames, getIdentity, getDwollaBeneficiaryOwners } = this.props
+    const { isCompanyAdmin, addTab, tabsNames, getIdentity } = this.props
     try {
       await getIdentity()
-      //check dwolla if exist some document which has to be verified
-      await getDwollaBeneficiaryOwners()
     } catch (error) {
       console.error(error)
     }
@@ -546,6 +544,5 @@ export default connect(mapStateToProps, {
   loadLogo,
   postCompanyLogo,
   deleteCompanyLogo,
-  getIdentity,
-  getDwollaBeneficiaryOwners
+  getIdentity
 })(withToastManager(Settings))

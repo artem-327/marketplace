@@ -77,7 +77,8 @@ class BankAccountsUploadDocPopup extends React.Component {
       intl: { formatMessage },
       documentsOwner,
       addVerificationDocumentsOwner,
-      getDwollaBeneficiaryOwners
+      getDwollaBeneficiaryOwners,
+      dwollaAccountStatus
     } = this.props
 
     return (
@@ -123,6 +124,7 @@ class BankAccountsUploadDocPopup extends React.Component {
                         documentsOwner={documentsOwner}
                         addVerificationDocumentsOwner={addVerificationDocumentsOwner}
                         getDwollaBeneficiaryOwners={getDwollaBeneficiaryOwners}
+                        dwollaAccountStatus={dwollaAccountStatus}
                         fileMaxSize={10}
                         onChange={files =>
                           setFieldValue(
@@ -230,7 +232,8 @@ const mapStateToProps = state => {
         value: docType
       }
     }),
-    documentsOwner: state.settings.documentsOwner,
+    documentsOwner: getSafe(() => state.settings.documentsOwner, ''),
+    dwollaAccountStatus: getSafe(() => state.auth.identity.company.dwollaAccountStatus, ''),
     currentTab:
       Router && Router.router && Router.router.query && Router.router.query.type
         ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)

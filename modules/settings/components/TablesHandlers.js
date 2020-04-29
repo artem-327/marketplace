@@ -95,8 +95,12 @@ class TablesHandlers extends Component {
   }
 
   async componentDidMount() {
-    const { documentTypes, getDocumentTypes, initGlobalBroadcast } = this.props
+    const { documentTypes, getDocumentTypes, initGlobalBroadcast, getDwollaBeneficiaryOwners } = this.props
     try {
+      //check dwolla if exist some document which has to be verified
+      if (this.props.currentTab.type === 'bank-accounts') {
+        await getDwollaBeneficiaryOwners()
+      }
       await initGlobalBroadcast()
     } catch (err) {
       console.error(err)
@@ -130,8 +134,16 @@ class TablesHandlers extends Component {
     })
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  async componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.currentTab !== this.props.currentTab) {
+      //check dwolla if exist some document which has to be verified
+      if (this.props.currentTab.type === 'bank-accounts') {
+        try {
+          await this.props.getDwollaBeneficiaryOwners()
+        } catch (error) {
+          console.error(error)
+        }
+      }
       this.setState({ filterValue: '' })
       this.handleFiltersValue('')
     }
