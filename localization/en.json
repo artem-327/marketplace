@@ -32,6 +32,8 @@
   "error.apologize": "We apologize for inconvenience.",
   "error.backButtonText": "Back to Echo Exchange",
   "error.footer": "If this issue persists please contact: {email}",
+  "error.title": "Error!",
+  "success.title": "Success!",
   "admin.duplicateName": "Duplicate name!",
   "admin.clickToSave": "Click to save",
   "admin.nameTooShort": "Name too short!",

@@ -522,6 +522,7 @@ class MyInventory extends Component {
   }
 
   showMessage = (response, request = null) => {
+    const { toastManager } = this.props
     response &&
       response.value &&
       response.value.productOfferStatuses &&
@@ -534,6 +535,15 @@ class MyInventory extends Component {
             ...rowData[0],
             parentOffer: status.virtualOfferId ? status.virtualOfferId : ''
           }))
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id={`success.title`} defaultMessage='Success' />,
+              `${status.clientMessage}`
+            ),
+            {
+              appearance: 'success'
+            }
+          )
         } else if (status.code === 'BROADCAST_RULE_CONFLICT') {
           this.setState({ open: true, clientMessage: status.clientMessage, request })
         } else if (status.code === 'DETACHED') {
@@ -542,6 +552,25 @@ class MyInventory extends Component {
             ...rowData[0],
             parentOffer: ''
           }))
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id={`success.title`} defaultMessage='Success' />,
+              `${status.clientMessage}`
+            ),
+            {
+              appearance: 'success'
+            }
+          )
+        } else if (status.code === 'ERROR') {
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id={`error.title`} defaultMessage='Error' />,
+              `${status.clientMessage}`
+            ),
+            {
+              appearance: 'error'
+            }
+          )
         }
       })
   }
