@@ -215,5 +215,16 @@ export default {
     api.post(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&branchId=${branchId}`),
   getBranch: branchId => api.get(`/prodex/api/branches/${branchId}`),
   removeAttachmentLinkToBranch: (attachmentId, branchId) =>
-    api.delete(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&branchId=${branchId}`)
+    api.delete(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&branchId=${branchId}`),
+  addVerificationDocumentsOwner: (attachment, id, docType) => {
+    const formData = new FormData()
+    formData.append('file', attachment)
+    return api.post(`/prodex/api/payments/dwolla/beneficiary-owners/${id}/documents/upload?type=${docType}`, formData, {
+      headers: {
+        accept: 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+      }
+    })
+  }
 }

@@ -24,8 +24,7 @@ import {
   dwollaFinalizeVerification,
   dwollaFinalizeVerificationConfirmOpen,
   getCurrentUser,
-  dwollaSetPreferred,
-  getDwollaBeneficiaryOwners
+  dwollaSetPreferred
 } from '../../actions'
 import Router from 'next/router'
 
@@ -151,7 +150,8 @@ export const bankAccountsConfig = {
     bankAccountList: false,
     uploadDocumentsButton: false,
     documentStatus: true,
-    uploadOwnerDocumentsButton: true
+    uploadOwnerDocumentsButton: true,
+    documentOwner: true
   },
   verified: {
     registerButton: false,
@@ -254,8 +254,7 @@ class BankAccountsTable extends Component {
       dwollaAccountStatus,
       dwollaDocumentRequired,
       dwollaSetPreferred,
-      preferredBankAccountId,
-      documentsOwner
+      preferredBankAccountId
     } = this.props
 
     let { columns } = this.state
@@ -263,7 +262,7 @@ class BankAccountsTable extends Component {
 
     return (
       <React.Fragment>
-        {bankAccounts.bankAccountList && !documentsOwner.length && (
+        {bankAccounts.bankAccountList && !bankAccounts.documentOwner && (
           <ProdexTable
             tableName='settings_bankaccounts'
             rows={rows}
@@ -324,7 +323,7 @@ class BankAccountsTable extends Component {
 
         {(bankAccounts.accountStatus || bankAccounts.documentStatus) && (
           <Container>
-            {bankAccounts.accountStatus && !documentsOwner.length && (
+            {bankAccounts.accountStatus && !bankAccounts.documentOwner && (
               <>
                 <Table style={{ marginTop: 0, marginBottom: 30 }}>
                   <Table.Header>
@@ -359,7 +358,7 @@ class BankAccountsTable extends Component {
               </>
             )}
 
-            {bankAccounts.accountStatus && documentsOwner.length && (
+            {bankAccounts.accountStatus && bankAccounts.documentOwner && (
               <CustomDiv>
                 <FormattedMessage id='dwolla.document.owner.header1'>{text => <h3>{text}</h3>}</FormattedMessage>
                 <FormattedMessage id='dwolla.document.owner.text1'>{text => <div>{text}</div>}</FormattedMessage>
@@ -368,7 +367,7 @@ class BankAccountsTable extends Component {
               </CustomDiv>
             )}
 
-            {bankAccounts.documentStatus && !documentsOwner.length && (
+            {bankAccounts.documentStatus && !bankAccounts.documentOwner && (
               <CustomDiv>
                 <FormattedMessage id='dwolla.document.explanatory.header1'>{text => <h3>{text}</h3>}</FormattedMessage>
                 <FormattedMessage id='dwolla.document.explanatory.text1'>{text => <div>{text}</div>}</FormattedMessage>
@@ -421,8 +420,7 @@ const mapDispatchToProps = {
   dwollaFinalizeVerificationConfirmOpen,
   getCurrentUser,
   dwollaSetPreferred,
-  getIdentity,
-  getDwollaBeneficiaryOwners
+  getIdentity
 }
 
 const statusToLabel = {
@@ -464,7 +462,11 @@ const mapStateToProps = state => {
     company && company.dwollaDocumentRequired ? company.dwollaDocumentRequired : 'verify-with-document'
   let dwollaAccountStatus = 'none'
   if (company.dwollaAccountStatus) dwollaAccountStatus = company.dwollaAccountStatus
-  if (dwollaAccountStatus === 'verified' && getSafe(() => state.settings.documentsOwner.length, ''))
+  if (
+    dwollaAccountStatus === 'verified' &&
+    getSafe(() => state.settings.documentsOwner.length, '') &&
+    getSafe(() => state.settings.documentsOwner[0].verificationStatus, '') !== 'verified'
+  )
     dwollaAccountStatus = 'documentOwner'
   //const dwollaAccountStatus = 'document'
   //let dwollaDocumentRequired = 'verify-with-document'
@@ -493,8 +495,7 @@ const mapStateToProps = state => {
         : state.settings.tabsNames[0],
     company: company,
     currentUser: state.settings.currentUser,
-    tabClicked: state.settings.tabClicked,
-    documentsOwner: state.settings.documentsOwner
+    tabClicked: state.settings.tabClicked
   }
 }
 

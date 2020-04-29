@@ -361,7 +361,11 @@ const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
   let dwollaAccountStatus = 'none'
   if (company.dwollaAccountStatus) dwollaAccountStatus = company.dwollaAccountStatus
-  if (dwollaAccountStatus === 'verified' && getSafe(() => state.settings.documentsOwner.length, ''))
+  if (
+    dwollaAccountStatus === 'verified' &&
+    getSafe(() => state.settings.documentsOwner.length, '') &&
+    getSafe(() => state.settings.documentsOwner[0].verificationStatus, '') !== 'verified'
+  )
     dwollaAccountStatus = 'documentOwner'
   const {
     broadcast: { data, filter, ...rest }

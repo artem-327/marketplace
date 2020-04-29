@@ -1148,3 +1148,12 @@ export const getBranch = branchId => ({
   type: AT.GET_BRANCH,
   payload: api.getBranch(branchId)
 })
+
+export const addVerificationDocumentsOwner = (attachment, id, docType) => {
+  return {
+    type: AT.ADD_VERIFICATION_DOCUMENT_OWNER,
+    async payload() {
+      return await api.addVerificationDocumentsOwner(attachment, id, docType)
+    }
+  }
+}
