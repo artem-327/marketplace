@@ -29,7 +29,7 @@ const ModalBody = styled(ModalContent)`
 
 class PurchaseOrderShipping extends React.Component {
   state = {
-    selectedShippingQuote: 0,
+    selectedShippingQuote: '',
     shipmentQuoteId: ''
   }
 
@@ -51,11 +51,13 @@ class PurchaseOrderShipping extends React.Component {
         freightType: values.freightType
       }
 
-      values.freightType === FREIGHT_TYPES.ECHO ? formValues.quoteId = (order.cfWeightExceeded || getSafe(() => !shippingQuotes.rates.length, false)
-        ? values.shipmentQuoteId
-        : shippingQuotes.rates[this.state.selectedShippingQuote].quoteId
-      ).trim() : null,
-
+      values.freightType === FREIGHT_TYPES.ECHO
+        ? (formValues.quoteId = (order.cfWeightExceeded ||
+          !getSafe(() => shippingQuotes.rates[this.state.selectedShippingQuote].quoteId, '')
+            ? values.shipmentQuoteId
+            : getSafe(() => shippingQuotes.rates[this.state.selectedShippingQuote].quoteId, '')
+          ).trim())
+        : null,
         await this.props.purchaseShipmentOrder(orderId, formValues)
       this.props.getPurchaseOrder(orderId)
       closePopup()
@@ -175,12 +177,16 @@ class PurchaseOrderShipping extends React.Component {
                             />
                           </Grid.Column>
                         </Grid.Row>
+                        <FreightLabel
+                          echoFreight={echoFreight}
+                          setFieldValue={(fieldName, value) => {
+                            this.setState({ selectedShippingQuote: null })
+                            setFieldValue(fieldName, value)
+                            if (value === 'OWN_FREIGHT') setFieldValue('shipmentQuoteId', '')
+                          }}
+                        />
                         {manualShipmentQuoteId ? (
                           <>
-                            <FreightLabel echoFreight={echoFreight} setFieldValue={(fieldName, value) => {
-                              this.setState({ selectedShippingQuote: null })
-                              setFieldValue(fieldName, value)
-                            }} />
                             {order.cfWeightExceeded ? (
                               <GridRow>
                                 <GridColumn computer={16}>
@@ -191,15 +197,15 @@ class PurchaseOrderShipping extends React.Component {
                                 </GridColumn>
                               </GridRow>
                             ) : (
-                                <GridRow>
-                                  <GridColumn computer={16}>
-                                    <FormattedMessage
-                                      id='cart.noShippingQuotes.processManually'
-                                      defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
-                                    />
-                                  </GridColumn>
-                                </GridRow>
-                              )}
+                              <GridRow>
+                                <GridColumn computer={16}>
+                                  <FormattedMessage
+                                    id='cart.noShippingQuotes.processManually'
+                                    defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
+                                  />
+                                </GridColumn>
+                              </GridRow>
+                            )}
                             <Grid.Row>
                               <Grid.Column width={8}>
                                 <Button type='button' fluid onClick={() => this.requestManualShippingQuote()}>
@@ -212,47 +218,48 @@ class PurchaseOrderShipping extends React.Component {
                                 </Button>
                               </Grid.Column>
                             </Grid.Row>
-                            <GridRow>
-                              <GridColumn computer={16}>
-                                <FormattedMessage
-                                  id='order.quoteReceived'
-                                  defaultMessage='If you already received the shipping quote and agree, please type in the provided Quote Id and continue with shipping order.'
-                                />
-                              </GridColumn>
-                            </GridRow>
-                            <Grid.Row>
-                              <GridColumn computer={16}>
-                                <Input
-                                  name='shipmentQuoteId'
-                                  label={formatMessage({
-                                    id: 'cart.shipmentQuote',
-                                    defaultMessage: 'Shipment Quote'
-                                  })}
-                                />
-                              </GridColumn>
-                            </Grid.Row>
                           </>
                         ) : (
-                            <>
-                              <FreightLabel echoFreight={echoFreight} setFieldValue={(fieldName, value) => {
-                                this.setState({ selectedShippingQuote: null })
-                                setFieldValue(fieldName, value)
-                              }} />
-                              <Grid.Row>
-                                <Grid.Column width={16}>
-                                  <ShippingQuote
-                                    selectionDisabled={!echoFreight}
-                                    currency={currency}
-                                    selectedShippingQuote={{ index: this.state.selectedShippingQuote }}
-                                    handleQuoteSelect={index => this.setState({ selectedShippingQuote: index })}
-                                    selectedAddress={1}
-                                    shippingQuotes={shippingQuotes}
-                                    shippingQuotesAreFetching={shippingQuotesAreFetching}
-                                  />
-                                </Grid.Column>
-                              </Grid.Row>
-                            </>
-                          )}
+                          <Grid.Row>
+                            <Grid.Column width={16}>
+                              <ShippingQuote
+                                selectionDisabled={!echoFreight}
+                                currency={currency}
+                                selectedShippingQuote={{ index: this.state.selectedShippingQuote }}
+                                handleQuoteSelect={index => {
+                                  this.setState({ selectedShippingQuote: index })
+                                  setFieldValue('shipmentQuoteId', '')
+                                }}
+                                selectedAddress={1}
+                                shippingQuotes={shippingQuotes}
+                                shippingQuotesAreFetching={shippingQuotesAreFetching}
+                              />
+                            </Grid.Column>
+                          </Grid.Row>
+                        )}
+                        <GridRow>
+                          <GridColumn computer={16}>
+                            <FormattedMessage
+                              id='order.quoteReceived'
+                              defaultMessage='If you already received the shipping quote and agree, please type in the provided Quote Id and continue with shipping order.'
+                            />
+                          </GridColumn>
+                        </GridRow>
+                        <Grid.Row>
+                          <GridColumn computer={16}>
+                            <Input
+                              inputProps={{
+                                onChange: () => this.setState({ selectedShippingQuote: '' }),
+                                disabled: values.freightType === 'OWN_FREIGHT'
+                              }}
+                              name='shipmentQuoteId'
+                              label={formatMessage({
+                                id: 'cart.shipmentQuote',
+                                defaultMessage: 'Shipment Quote'
+                              })}
+                            />
+                          </GridColumn>
+                        </Grid.Row>
                         <Grid.Row>
                           <Grid.Column width={16}>
                             <TextArea

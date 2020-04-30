@@ -30,8 +30,8 @@ export default class Summary extends Component {
 
     if (cartItems.length === 0) return null
 
-
-    let shipping = cart.selectedShipping ? cart.selectedShipping.quote.estimatedPrice : 'N/A'
+    let shipping =
+      cart.selectedShipping && cart.selectedShipping.quote ? cart.selectedShipping.quote.estimatedPrice : 'N/A'
 
     return (
       <>
