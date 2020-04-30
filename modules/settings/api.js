@@ -8,7 +8,7 @@ export default {
 
     return api.post(
       `/prodex/api/attachments?type=${docType}&isTemporary=true` +
-      (expirationDate ? '&expirationDate=' + expirationDate : ''),
+        (expirationDate ? '&expirationDate=' + expirationDate : ''),
       formData,
       {
         headers: {
@@ -43,6 +43,8 @@ export default {
   getCreditCardsData: () => api.get('/prodex/api/payments/cards').then(response => response.data),
   getBankAccountsData: () => api.get('/prodex/api/payments/bank-accounts').then(response => response.data),
   getDwollaAccBalance: () => api.get('/prodex/api/payments/dwolla/balance').then(response => response.data),
+  getDwollaBeneficiaryOwners: () =>
+    api.get(`/prodex/api/payments/dwolla/beneficiary-owners`).then(response => response.data),
   getProductsCatalogByString: async (data, limit = 30) => {
     return await api
       .get(`/prodex/api/products/search?limit=${limit}&onlyMapped=${data.unmapped}&search=${data.body}`)
@@ -112,9 +114,7 @@ export default {
     const formData = new FormData()
     formData.append('file', new Blob([file], { type: 'text/csv' }), file.name)
 
-    return api
-      .post('/prodex/api/imports/temporary-files', formData)
-      .then(response => response.data)
+    return api.post('/prodex/api/imports/temporary-files', formData).then(response => response.data)
   },
   getCSVMapEchoProduct: () => api.get('/prodex/api/imports/echo-products/import-maps').then(response => response.data),
   postCSVMapEchoProduct: data => api.post('/prodex/api/imports/echo-products/import-maps', data),
@@ -215,5 +215,16 @@ export default {
     api.post(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&branchId=${branchId}`),
   getBranch: branchId => api.get(`/prodex/api/branches/${branchId}`),
   removeAttachmentLinkToBranch: (attachmentId, branchId) =>
-    api.delete(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&branchId=${branchId}`)
+    api.delete(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&branchId=${branchId}`),
+  addVerificationDocumentsOwner: (attachment, id, docType) => {
+    const formData = new FormData()
+    formData.append('file', attachment)
+    return api.post(`/prodex/api/payments/dwolla/beneficiary-owners/${id}/documents/upload?type=${docType}`, formData, {
+      headers: {
+        accept: 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+      }
+    })
+  }
 }

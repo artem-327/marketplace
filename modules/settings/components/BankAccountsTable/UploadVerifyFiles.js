@@ -51,7 +51,11 @@ class UploadVerifyFiles extends Component {
       unspecifiedTypes,
       toastManager,
       loadFile,
-      addVerificationDocument
+      addVerificationDocument,
+      documentsOwner,
+      addVerificationDocumentsOwner,
+      getDwollaBeneficiaryOwners,
+      dwollaAccountStatus
     } = this.props
     let { onDropRejected, onUploadSuccess } = this
 
@@ -109,19 +113,42 @@ class UploadVerifyFiles extends Component {
           await new Promise((resolve, reject) => {
             loadFile(files[j])
               .then(file => {
-                addVerificationDocument(file.value, type)
-                  .then(aId => {
-                    onUploadSuccess({
-                      name: file.value.name,
-                      id: aId.value.data.id,
-                      type: type
+                if (
+                  documentsOwner &&
+                  documentsOwner.length &&
+                  getSafe(() => documentsOwner[0].verificationStatus, '') !== 'verified' &&
+                  typeof addVerificationDocumentsOwner === 'function' &&
+                  dwollaAccountStatus === 'verified'
+                ) {
+                  addVerificationDocumentsOwner(file.value, documentsOwner[0].id, type) //only first id from documentsOwner verificate
+                    .then(aId => {
+                      getDwollaBeneficiaryOwners() //call dwolla if is verified
+                      onUploadSuccess({
+                        name: file.value.name,
+                        id: aId.value.data.id,
+                        type: type
+                      })
+                      resolve()
                     })
-                    resolve()
-                  })
-                  .catch(e => {
-                    resolve()
-                  })
+                    .catch(e => {
+                      resolve()
+                    })
+                } else {
+                  addVerificationDocument(file.value, type)
+                    .then(aId => {
+                      onUploadSuccess({
+                        name: file.value.name,
+                        id: aId.value.data.id,
+                        type: type
+                      })
+                      resolve()
+                    })
+                    .catch(e => {
+                      resolve()
+                    })
+                }
               })
+
               .catch(e => {
                 resolve()
               })

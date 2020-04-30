@@ -722,7 +722,13 @@ class Orders extends Component {
   }
 
   prepareLinkToAttachment = async documentId => {
-    let downloadedFile = await this.props.downloadAttachmentPdf(documentId)
+    let downloadedFile = null
+    const { openModal, openModalAcounting } = this.state
+    if (openModalAcounting) {
+      downloadedFile = await this.props.downloadAttachmentPdf(documentId)
+    } else if (openModal) {
+      downloadedFile = await this.props.downloadAttachment(documentId)
+    }
     const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
     const mimeType = fileName && this.getMimeType(fileName)
     const element = document.createElement('a')
@@ -746,7 +752,7 @@ class Orders extends Component {
   }
 
   closePopup = () => {
-    this.setState({ attachmentPopup: null, openModal: false })
+    this.setState({ attachmentPopup: null, openModal: false, openModalAcounting: false })
     this.props.clearRelatedOrders()
   }
 
@@ -894,7 +900,7 @@ class Orders extends Component {
         <CustomDivAddDocument>
           <div>
             <AttachmentManager
-              ducumentTypeIds={[this.state.relatedDocumentType.value]}
+              documentTypeIds={[this.state.relatedDocumentType.value]}
               isOpenManager={this.state.isOpenManager}
               asModal
               returnSelectedRows={rows => this.attachDocumentsManager(rows)}
@@ -1035,7 +1041,6 @@ class Orders extends Component {
           <Modal
             size='small'
             closeIcon={false}
-            onClose={() => this.setState({ openModalAcounting: false })}
             centered={true}
             open={this.state.openModalAcounting}>
             <Modal.Header>

@@ -45,20 +45,22 @@ class PurchaseOrderShipping extends React.Component {
 
     try {
       let formValues = {
-        quoteId: (order.cfWeightExceeded || getSafe(() => !shippingQuotes.rates.length, false)
-          ? values.shipmentQuoteId
-          : shippingQuotes.rates[this.state.selectedShippingQuote].quoteId
-        ).trim(),
         pickupRemarks: values.pickupRemarks.trim(),
         deliveryRemarks: values.deliveryRemarks.trim(),
         shipperRefNo: values.shipperRefNo.trim(),
         freightType: values.freightType
       }
 
-      await this.props.purchaseShipmentOrder(orderId, formValues)
+      values.freightType === FREIGHT_TYPES.ECHO ? formValues.quoteId = (order.cfWeightExceeded || getSafe(() => !shippingQuotes.rates.length, false)
+        ? values.shipmentQuoteId
+        : shippingQuotes.rates[this.state.selectedShippingQuote].quoteId
+      ).trim() : null,
+
+        await this.props.purchaseShipmentOrder(orderId, formValues)
       this.props.getPurchaseOrder(orderId)
       closePopup()
-    } catch {
+    } catch (e) {
+      console.error(e)
     } finally {
       actions.setSubmitting(false)
     }

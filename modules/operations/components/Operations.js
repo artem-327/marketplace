@@ -13,6 +13,9 @@ import TagsTable from './tags/TagsTable'
 import TagsPopup from './tags/TagsPopup'
 import CompanyProductTable from './company-product-catalog/CompanyProductTable'
 import CompanyInventoryTable from './company-inventory/CompanyInventoryTable'
+import Orders from './orders/OrdersContainer'
+import OrdersMenu from './orders/OrdersMenu'
+import OrderDetail from './orders/DetailContainer'
 
 import { getSafe } from '~/utils/functions'
 import { DatagridProvider } from '~/modules/datagrid'
@@ -24,13 +27,14 @@ const CustomGridColumn = styled(GridColumn)`
 
 class Operations extends Component {
   renderContent = () => {
-    const { currentTab, isOpenPopup } = this.props
+    const { currentTab, isOpenPopup, orderDetailData } = this.props
 
     const tables = {
       'shipping-quotes': <ShippingQuotesTable />,
       tags: <TagsTable />,
       'company-product-catalog': <CompanyProductTable />,
-      'company-inventory': <CompanyInventoryTable />
+      'company-inventory': <CompanyInventoryTable />,
+      orders: orderDetailData ? <OrderDetail /> : <Orders />,
     }
 
     const popupForm = {
@@ -124,6 +128,21 @@ class Operations extends Component {
                 }
               ]
             : []
+      },
+      orders: {
+        url: 'prodex/api/purchase-orders/datagrid',
+        searchToFilter: v => {
+          let filter = { or: [], and: [] }
+          if (v && v.company)
+            filter.and = [
+              {
+                operator: 'LIKE',
+                path: 'Order.sellerCompanyName',
+                values: [`%${v.company}%`]
+              }
+            ]
+          return filter
+        }
       }
     }
 
@@ -131,25 +150,39 @@ class Operations extends Component {
   }
 
   render() {
-    const { currentTab } = this.props
+    const { currentTab, orderDetailData } = this.props
 
     //! ! Temporary commented
     //if (!(getSafe(() => this.props.auth.identity.isAdmin, false) || getSafe(() => this.props.auth.identity.isEchoOperator, false)))
     //      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
 
-    const preserveFilters = this.props.currentTab.type === 'company-product-catalog'
+    const preserveFilters =
+      currentTab.type === 'company-product-catalog'
+    || currentTab.type === 'orders'
+
+    const displayPage = !!orderDetailData
 
     return (
       <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
         <Container fluid className='flex stretched'>
-          <Container fluid style={{ padding: '0 1.5vh' }}>
-            {<TablesHandlers currentTab={currentTab} />}
-          </Container>
+          {currentTab.type === 'orders' && !orderDetailData && <OrdersMenu/>}
+          {displayPage
+            ? (this.renderContent())
+            : (
+
+
+            <>
+            <Container fluid style={{ padding: '0 1.5vh' }}>
+              <TablesHandlers currentTab={currentTab} />
+            </Container>
+
           <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
             <Grid.Row>
               <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
             </Grid.Row>
           </Grid>
+            </>
+            )}
         </Container>
       </DatagridProvider>
     )

@@ -59,13 +59,18 @@ class AttachmentClass extends Component {
   }
 
   componentDidMount() {
-    const { documentTypes, getDocumentTypes, isOpenManager } = this.props
+    const { documentTypes, documentTypeIds, getDocumentTypes, isOpenManager } = this.props
     if (!documentTypes || (documentTypes && !documentTypes.length)) {
       getDocumentTypes()
     }
     if (isOpenManager) {
       this.setState({ open: true })
     }
+
+    // basic settings - necessary especially for Orders list (auto-opening Attachment Manager by click on grey icon without any document)
+    const docTypeIds = documentTypeIds && documentTypeIds.length ? documentTypeIds : []
+    this.handleSearch({ name: '', type: docTypeIds })
+    this.setState({ documentTypes: docTypeIds })
   }
 
   componentDidUpdate(prevProps) {
@@ -140,7 +145,7 @@ class AttachmentClass extends Component {
   }
 
   render() {
-    const { trigger, asModal, documentTypes, ducumentTypeIds } = this.props
+    const { trigger, asModal, documentTypes, documentTypeIds } = this.props
     if (!asModal) return this.getContent()
 
     return (
@@ -160,11 +165,11 @@ class AttachmentClass extends Component {
           trigger={React.cloneElement(trigger, {
             onClick: () => {
               this.setState({ open: true })
-              if (ducumentTypeIds && ducumentTypeIds.length) {
-                this.handleSearch({ name: '', type: ducumentTypeIds })
-                this.setState({ documentTypes: ducumentTypeIds })
+              if (documentTypeIds && documentTypeIds.length) {
+                this.handleSearch({ name: '', type: documentTypeIds })
+                this.setState({ documentTypes: documentTypeIds })
               } else {
-                this.handleSearch({ name: '', type: [] })
+                this.setState({ documentTypes: [] })
               }
             }
           })}

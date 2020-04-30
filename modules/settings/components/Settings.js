@@ -159,7 +159,7 @@ class Settings extends Component {
     )
   }
 
-  redirectPage = queryTab => {
+  redirectPage = async queryTab => {
     const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin } = this.props
     const tab = getSafe(() => queryTab.type, '')
 
@@ -531,7 +531,8 @@ const mapStateToProps = ({ settings, auth }) => {
     currentTab: settings.currentTab,
     isProductCatalogAdmin: getSafe(() => auth.identity.isProductCatalogAdmin, false),
     isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
-    tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false)
+    tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
+    documentsOwner: getSafe(() => settings.documentsOwner, [])
   }
 }
 

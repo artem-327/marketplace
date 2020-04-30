@@ -168,12 +168,12 @@ class SaleAttachingProductOffer extends Component {
     this.props.clearGroupedProductOffer()
   }
 
-  linkAttachment = async (offerId, files, setFieldValue, index) => {
+  linkAttachment = async (orderItemId, files, setFieldValue, index) => {
     try {
       const response = await this.props.addAttachment(files[0], 1, {})
       const query = {
         attachmentId: response.value.data.id,
-        orderItemId: offerId
+        orderItemId: orderItemId
       }
       await this.props.linkAttachmentToOrderItem(query)
 
@@ -385,7 +385,9 @@ class SaleAttachingProductOffer extends Component {
                             lot={offer}
                             filesLimit={1}
                             fileMaxSize={20}
-                            onChange={files => this.linkAttachment(offer.id, files, setFieldValue, index)}
+                            onChange={files =>
+                              this.linkAttachment(this.props.orderItemsId[index], files, setFieldValue, index)
+                            }
                             data-test={`grouped_offer_${index}_attachments`}
                             emptyContent={
                               <DivIcon>
