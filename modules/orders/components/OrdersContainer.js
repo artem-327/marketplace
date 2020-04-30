@@ -12,7 +12,7 @@ import { withDatagrid } from '~/modules/datagrid'
 import { applyFilter } from '~/modules/filter/actions'
 import { ArrayToMultiple } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
-import { downloadAttachmentPdf } from '~/modules/inventory/actions'
+import { downloadAttachment, downloadAttachmentPdf } from '~/modules/inventory/actions'
 import { getLocaleDateFormat } from '~/components/date-format'
 import { getSafe } from '~/utils/functions'
 
@@ -79,7 +79,7 @@ function mapStateToProps(state, { router, datagrid }) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ ...Actions, downloadAttachmentPdf, dispatch, applyFilter }, dispatch)
+  return bindActionCreators({ ...Actions, downloadAttachment, downloadAttachmentPdf, dispatch, applyFilter }, dispatch)
 }
 
 export default withDatagrid(withRouter(connect(mapStateToProps, mapDispatchToProps)(Orders)))
