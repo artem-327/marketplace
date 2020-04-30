@@ -79,7 +79,9 @@ export const initialState = {
   searchedCompaniesLoading: false,
   updating: false,
   searchedTags: [],
-  searchedTagsLoading: false
+  searchedTagsLoading: false,
+  searchedMarketSegments: [],
+  searchedMarketSegmentsLoading: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -819,6 +821,20 @@ export default function reducer(state = initialState, action) {
         ...state,
         searchedTags: action.payload,
         searchedTagsLoading: false
+      }
+    }
+
+    case AT.ADMIN_SEARCH_MARKET_SEGMENTS_PENDING: {
+      return { ...state, searchedMarketSegmentsLoading: true }
+    }
+    case AT.ADMIN_SEARCH_MARKET_SEGMENTS_REJECTED: {
+      return { ...state, searchedMarketSegmentsLoading: false }
+    }
+    case AT.ADMIN_SEARCH_MARKET_SEGMENTS_FULFILLED: {
+      return {
+        ...state,
+        searchedMarketSegments: action.payload,
+        searchedMarketSegmentsLoading: false
       }
     }
 

@@ -287,6 +287,8 @@ export const searchCompany = (companyText, limit = 30) =>
   api.get(`/prodex/api/companies/search/all-info?limit=${limit}&pattern=${companyText}`).then(response => response.data)
 
 export const searchTags = filter => api.post(`/prodex/api/tags/datagrid`, filter).then(response => response.data)
+export const searchMarketSegments = filter =>
+  api.post(`/prodex/api/market-segments/datagrid`, filter).then(response => response.data)
 
 export const udpateEnabled = (id, enabled) =>
   api.patch(`/prodex/api/companies/admin/id/${id}/enabled?enabled=${enabled}`)

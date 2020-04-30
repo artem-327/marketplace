@@ -822,3 +822,18 @@ export const searchTags = tag => ({
     pageSize: 50
   })
 })
+
+export const searchMarketSegments = segment => ({
+  type: AT.ADMIN_SEARCH_MARKET_SEGMENTS,
+  payload: api.searchMarketSegments({
+    orFilters: [
+      {
+        operator: 'LIKE',
+        path: 'MarketSegment.name',
+        values: [segment.toString()]
+      }
+    ],
+    pageNumber: 0,
+    pageSize: 50
+  })
+})
