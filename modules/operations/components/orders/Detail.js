@@ -7,20 +7,15 @@ import {
   Accordion,
   Table,
   List,
-  Label,
   Button,
   Icon,
   Divider,
   Header,
-  Popup,
   GridRow,
-  Dropdown,
-  Input,
   Modal
 } from 'semantic-ui-react'
-import { ChevronDown, DownloadCloud } from 'react-feather'
+import { ChevronDown, DownloadCloud, ArrowLeft } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
-import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
 import moment from 'moment/moment'
 import { FormattedPhone } from '~/components/formatted-messages/'
@@ -283,20 +278,71 @@ const GridDataColumnTrackingID = styled(GridDataColumn)`
   display: flex !important;
 `
 
-const ButtonsWrapper = styled(Grid)`
-  margin-left: -21px !important;
-  margin-right: -21px !important;
-  margin-bottom: -21px !important;
-  border-top: 1px solid #dee2e6;
+const StyledModal = styled(Modal)`
+  > .header {
+    padding: 21px 30px !important;
+    font-size: 14px !important;
+  }
 
-  > div {
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
+  > .content {
+    padding: 30px !important;
+  }
 
+  > .actions {
+    background-color: #ffffff !important;
+    padding: 10px 5px !important;
     button {
-      height: 40px !important;
+      margin: 0 5px;
+      height: 40px;
     }
   }
+`
+
+const TopRow = styled.div`
+  margin: 0 32px;
+  padding: 20px 0 50px 0;
+  vertical-align: middle;  
+  display: block;
+  
+  > a {
+    float: left;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    border: solid 1px #dee2e6;
+    background-color: #ffffff;
+    color: #848893;
+    font-size: 14px !important;
+    font-weight: 500;
+    line-height: 1.43;
+    padding: 9px 17px 11px 17px;
+  
+    > svg {
+      width: 18px;
+      height: 20px;
+      color: #848893;
+      margin-right: 9px;
+      vertical-align: middle;
+    }
+  }
+  
+  > div.field {
+    float: right;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    border: solid 1px #dee2e6;
+    background-color: #ffffff;
+
+    > div {
+      padding: 12px 18px;
+    }
+     
+    > div:first-child {
+      color: #848893;
+    }  
+  } 
 `
 
 const StyledHeader = styled.span`
@@ -373,7 +419,6 @@ class Detail extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { order } = this.props
-    //let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
     let dataCells = document.querySelectorAll('.data-list dd')
     for (let i = 0; i < dataCells.length; i++) {
       if (dataCells[i].textContent === 'N/A') {
@@ -389,7 +434,7 @@ class Detail extends Component {
   }
 
   downloadOrder = async () => {
-    let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
+    let endpointType = 'sale'
     let pdf = await this.props.downloadPdf(endpointType, this.props.order.id)
 
     const element = document.createElement('a')
@@ -397,7 +442,7 @@ class Detail extends Component {
     let fileURL = URL.createObjectURL(file)
 
     element.href = fileURL
-    element.download = `${this.props.router.query.type}-order-${this.props.order.id}.pdf`
+    element.download = `${endpointType}-order-${this.props.order.id}.pdf`
     document.body.appendChild(element) // Required for this to work in FireFox
     element.click()
   }
@@ -547,23 +592,12 @@ class Detail extends Component {
         </a>
     }))
     return (
-      <>
-        <ProdexGrid
-          loading={this.state.submitting}
-          tableName='related_orders'
-          columns={this.state.columnsRelatedOrdersDetailDocuments}
-          rows={rowsDocuments}
-        />
-        <ButtonsWrapper>
-          <Grid.Column textAlign='right'>
-            <Button basic onClick={() => this.setState({ openDocumentsPopup: false })}>
-              <FormattedMessage id='global.close' defaultMessage='Close'>
-                {text => text}
-              </FormattedMessage>
-            </Button>
-          </Grid.Column>
-        </ButtonsWrapper>
-      </>
+      <ProdexGrid
+        loading={this.state.submitting}
+        tableName='related_orders'
+        columns={this.state.columnsRelatedOrdersDetailDocuments}
+        rows={rowsDocuments}
+      />
     )
   }
 
@@ -585,7 +619,7 @@ class Detail extends Component {
       <div id='page' className='auto-scrolling'>
         {this.state.openDocumentsPopup &&
         (
-          <Modal
+          <StyledModal
             size='Default'
             closeIcon={false}
             onClose={() => this.setState({ openDocumentsPopup: false })}
@@ -602,10 +636,31 @@ class Detail extends Component {
               </>
             </Modal.Header>
             <Modal.Content scrolling>{this.getRelatedDocumentsContent()}</Modal.Content>
-          </Modal>
+            <Modal.Actions>
+              <Button basic onClick={() => this.setState({ openDocumentsPopup: false })}>
+                <FormattedMessage id='global.close' defaultMessage='Close'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+            </Modal.Actions>
+          </StyledModal>
         )}
         <div class='scroll-area'>
-          <Divider hidden />
+          <TopRow>
+            <a
+              onClick={() => this.props.openOrderDetail(null)}
+              style={{ cursor: 'pointer' }}
+              data-test='orders_detail_back_btn'>
+              <ArrowLeft />
+              <FormattedMessage id='order.detail.backToOrders' defaultMessage='Back to Orders' />
+            </a>
+            <div className='field'>
+              <div>
+                <FormattedMessage id='order.detail.buyerCompanyEin' defaultMessage='Buyer Company EIN' />
+              </div>
+              <div><strong>N/A</strong></div>
+            </div>
+          </TopRow>
           <OrderSegment>
             <Grid verticalAlign='middle'>
               <GridRow>
