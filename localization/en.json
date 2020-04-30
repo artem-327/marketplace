@@ -2148,6 +2148,8 @@
   "order.detail.documents.name": "Document #",
   "order.detail.documents.dropdown": "Select Type",
   "order.detail.documents.dropdown.all": "Select All",
+  "order.detail.backToOrders": "Back to Orders",
+  "order.detail.buyerCompanyEin": "Buyer Company EIN",
   "settings.warehouse.certificates.message.title": "This state/province already has certificate documents uploaded",
   "settings.warehouse.certificates.message.content": "If you want to update the documents, you will replace all existing certificates for warehouses in this state.",
   "settings.warehouse.certificateIcon.header": "Certificate is attached and so will be visible anywhere",

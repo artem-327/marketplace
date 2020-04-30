@@ -1,158 +1,39 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
-import { Modal, Menu, Header, Container, Grid, Icon, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react'
-import styled, { withTheme } from 'styled-components'
-
-import SubMenu from '~/src/components/SubMenu'
+import { Modal, Container, Icon, Button } from 'semantic-ui-react'
+import styled from 'styled-components'
 import Spinner from '~/src/components/Spinner/Spinner'
 import ProdexGrid from '~/components/table'
 import { actions } from 'react-redux-form'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
-import FilterTags from '~/modules/filter/components/FitlerTags'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
-import DocumentsPopup from '~/modules/settings/components/Documents/DocumentManagerPopup'
-import Link from 'next/link'
-import { UploadCloud, CheckCircle, PlusCircle } from 'react-feather'
 import { handleFiltersValue } from '~/modules/settings/actions'
 import { withToastManager } from 'react-toast-notifications'
 import { Datagrid } from '~/modules/datagrid/DatagridProvider'
 import { AttachmentManager } from '~/modules/attachments'
 import { uniqueArrayByKey } from '~/utils/functions'
 
-const ButtonsWrapper = styled(Grid)`
-  margin-left: -21px !important;
-  margin-right: -21px !important;
-  margin-bottom: -21px !important;
-  border-top: 1px solid #dee2e6;
+const StyledModal = styled(Modal)`
+  > .header {
+    padding: 21px 30px !important;
+    font-size: 14px !important;
+  }
 
-  > div {
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
+  > .content {
+    padding: 30px !important;
+    //margin: 30px 0;
+  }
 
+  > .actions {
+    background-color: #ffffff !important;
+    padding: 10px 5px !important;
     button {
-      height: 40px !important;
+      margin: 0 5px;
+      height: 40px;
     }
   }
-`
-
-const ButtonsWrapperDocuments = styled(Grid)`
-  margin-left: -21px !important;
-  margin-right: -21px !important;
-  margin-bottom: -21px !important;
-  border-top: 1px solid #dee2e6;
-
-  > div {
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
-
-    button {
-      height: 40px !important;
-    }
-  }
-`
-
-const RelatedDocumentsDropdown = styled(Dropdown)`
-  z-index: 601 !important;
-`
-
-const CustomDivUploadLot = styled.div`
-  margin-bottom: 30px !important;
-  margin-top: 20px !important;
-`
-
-const CustomDivAddDocument = styled.div`
-  display: flex;
-  flex-direction: row-reverse;
-  justify-content: space-between;
-`
-
-const CustomDivLabelDocumentType = styled.div`
-  margin-bottom: 8px;
-`
-
-const Rectangle = styled.div`
-  height: 50px;
-  border-radius: 4px;
-  border: solid 1px #84c225;
-  background-color: #ffffff;
-  margin-bottom: 15px;
-  align-items: center;
-  display: flex;
-`
-
-const RectangleRed = styled.div`
-  height: 50px;
-  border-radius: 4px;
-  border: solid 1px #db2828;
-  background-color: #ffffff;
-  margin-bottom: 15px;
-  align-items: center;
-  display: flex;
-`
-
-const CustomCheckCircleRed = styled(CheckCircle)`
-  width: 24px;
-  height: 20px;
-  font-family: feathericon;
-  font-size: 24px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 0.83;
-  letter-spacing: normal;
-  color: #db2828;
-  margin: 0 10px 0 10px;
-`
-
-const CustomCheckCircle = styled(CheckCircle)`
-  width: 24px;
-  height: 20px;
-  font-family: feathericon;
-  font-size: 24px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 0.83;
-  letter-spacing: normal;
-  color: #84c225;
-  margin: 0 10px 0 10px;
-`
-
-const CustomDivAddedMewDocument = styled.div`
-  display: flex;
-`
-
-const CustomDivTextAddedMewDocument = styled.div`
-  font-size: 14px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.43;
-  letter-spacing: normal;
-  color: #848893;
-`
-
-const CustomAddButton = styled(Button)`
-  display: flex !important;
-  align-items: center !important;
-  color: white !important;
-  background-color: #2599d5 !important;
-  margin-right: 0px !important;
-`
-
-const CustomPlusCircle = styled(PlusCircle)`
-  margin-right: 10px !important;
-  display: flex;
-  font-size: 18px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.11;
-  letter-spacing: normal;
-  text-align: center;
-  color: #ffffff;
 `
 
 class Orders extends Component {
@@ -576,52 +457,8 @@ class Orders extends Component {
     this.setState({ attachmentPopup: null, openModal: false, openRelatedPopup: false })
   }
 
-  handleUnlink = async row => {
-    const { unlinkAttachmentToOrder, datagrid } = this.props
-    const query = {
-      attachmentId: row.id,
-      orderId: row.orderId
-    }
-    try {
-      await unlinkAttachmentToOrder(query)
-      if (datagrid && datagrid.rows) {
-        //This construction is for update all attachments in order
-        const rowDatagrid = datagrid.rows.find(r => r.id === row.orderId)
-        const attachments =
-          rowDatagrid &&
-          rowDatagrid.attachments &&
-          rowDatagrid.attachments.length &&
-          rowDatagrid.attachments.filter(ro => ro.id !== row.id)
-        //This construction is for update only in one table. for example in C of A or B/L or SDS
-        const attachment =
-          rowDatagrid &&
-          rowDatagrid.attachments &&
-          rowDatagrid.attachments.length &&
-          rowDatagrid.attachments.filter(ro => ro.id !== row.id && ro.documentType.name === row.documenType)
-
-        datagrid.updateRow(row && row.orderId, () => ({
-          ...rowDatagrid,
-          attachments
-        }))
-        this.setState({
-          attachmentPopup: {
-            attachment: attachment && attachment.length ? attachment : null,
-            order: { id: row.orderId }
-          },
-          isAddedNewDocument: false,
-          isUnlinkDocument: true
-        })
-      }
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
   getRelatedDocumentsContent = () => {
-    const {
-      intl: { formatMessage }
-    } = this.props
-    let { relatedId, relatedAttachments, relatedPopupType } = this.state
+    let { relatedAttachments } = this.state
 
     const rowsRelatedDocuments = relatedAttachments.map(att => ({
       id: att.id,
@@ -639,41 +476,28 @@ class Orders extends Component {
         </a>
     }))
     return (
-      <>
-        <ProdexGrid
-          loading={this.state.submitting}
-          tableName='related_orders'
-          columns={this.state.columnsRelatedOrders}
-          rows={rowsRelatedDocuments}
-        />
-        <ButtonsWrapper>
-          <Grid.Column textAlign='right'>
-            <Button basic onClick={() => this.closePopup()}>
-              <FormattedMessage id='global.close' defaultMessage='Close'>
-                {text => text}
-              </FormattedMessage>
-            </Button>
-          </Grid.Column>
-        </ButtonsWrapper>
-      </>
+      <ProdexGrid
+        loading={this.state.submitting}
+        tableName='related_orders'
+        columns={this.state.columnsRelatedOrders}
+        rows={rowsRelatedDocuments}
+      />
     )
   }
 
   render() {
     const {
-      /*match, rows,*/ isFetching,
-      activeStatus,
-      router,
+      isFetching,
       datagrid,
       intl: { formatMessage }
     } = this.props
 
-    const { columns, row, openModal, attachmentPopup, isOpenManager, relatedDocumentType } = this.state
+    const { columns } = this.state
 
     return (
       <div id='page' className='flex stretched scrolling'>
         {this.state.openRelatedPopup && (
-          <Modal
+          <StyledModal
             size='small'
             closeIcon={false}
             onClose={() => this.setState({ openRelatedPopup: false })}
@@ -685,7 +509,14 @@ class Orders extends Component {
               </FormattedMessage>
             </Modal.Header>
             <Modal.Content scrolling>{this.getRelatedDocumentsContent()}</Modal.Content>
-          </Modal>
+            <Modal.Actions>
+              <Button basic onClick={() => this.closePopup()}>
+                <FormattedMessage id='global.close' defaultMessage='Close'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+            </Modal.Actions>
+          </StyledModal>
         )}
         <Container fluid className='flex stretched'>
           {isFetching ? (
@@ -733,18 +564,5 @@ class Orders extends Component {
     )
   }
 }
-
-// FilterTags.propTypes = {
-//   filter: array,
-//   onClick: func,
-//   filters: arrayOf(
-//     shape({
-//       description: string,
-//       indexes: arrayOf(number),
-//       tagDescription: arrayOf(string),
-//       valuesDescription: arrayOf(string)
-//     })
-//   )
-// }
 
 export default injectIntl(withToastManager(Orders))
