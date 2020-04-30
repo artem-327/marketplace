@@ -1850,6 +1850,8 @@
   "marketplace.location": "Location",
   "marketplace.merchant": "Merchant",
   "marketplace.leadTime": "Lead Time (days)",
+  "order.VENDOR": "VENDOR",
+  "order.CUSTOMER": "CUSTOMER",
   "order.returnShippingSale": "ORDER RETURN SHIPPING",
   "order.return.EnterPickupRemarks": "Enter pickup remarks:",
   "order.return.EnterDeliveryRemarks": "Enter delivery remarks:",
