@@ -15,7 +15,7 @@ import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
 import { currency } from '~/constants/index'
 import { SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP_FULFILLED } from '../action-types'
-import { generateToastMarkup } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { PlusCircle, UploadCloud } from 'react-feather'
 
 const PositionHeaderSettings = styled.div`
@@ -95,8 +95,12 @@ class TablesHandlers extends Component {
   }
 
   async componentDidMount() {
-    const { documentTypes, getDocumentTypes, initGlobalBroadcast } = this.props
+    const { documentTypes, getDocumentTypes, initGlobalBroadcast, getDwollaBeneficiaryOwners } = this.props
     try {
+      //check dwolla if exist some document which has to be verified
+      if (this.props.currentTab.type === 'bank-accounts') {
+        await getDwollaBeneficiaryOwners()
+      }
       await initGlobalBroadcast()
     } catch (err) {
       console.error(err)
@@ -130,8 +134,16 @@ class TablesHandlers extends Component {
     })
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  async componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.currentTab !== this.props.currentTab) {
+      //check dwolla if exist some document which has to be verified
+      if (this.props.currentTab.type === 'bank-accounts') {
+        try {
+          await this.props.getDwollaBeneficiaryOwners()
+        } catch (error) {
+          console.error(error)
+        }
+      }
       this.setState({ filterValue: '' })
       this.handleFiltersValue('')
     }
@@ -199,8 +211,7 @@ class TablesHandlers extends Component {
     const bankAccTab = currentTab.type === 'bank-accounts'
     return (
       <>
-        {currentTab.type !== 'global-broadcast'
-          && currentTab.type !== 'documents' && (
+        {currentTab.type !== 'global-broadcast' && currentTab.type !== 'documents' && (
           <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
             <Input
               fluid
@@ -241,7 +252,7 @@ class TablesHandlers extends Component {
                 onChange={this.handleFilterChangeDocumentType}
               />
             </GridColumn>
-            </>
+          </>
         )}
 
         {currentTab.type === 'products' && (
@@ -280,6 +291,21 @@ class TablesHandlers extends Component {
               data-test='settings_dwolla_upload_documents_btn'>
               <CustomUploadCloud size='20' />
               <FormattedMessage id='settings.tables.bankAccounts.uploadDoc' defaultMessage='Upload Documents'>
+                {text => text}
+              </FormattedMessage>
+            </CustomButton>
+          </GridColumn>
+        )}
+        {bankAccTab && bankAccounts.uploadOwnerDocumentsButton && (
+          <GridColumn computer={5} tablet={5}>
+            <CustomButton
+              fluid
+              onClick={() => openUploadDocumentsPopup()}
+              data-test='settings_dwolla_owner_upload_documents_btn'>
+              <CustomUploadCloud size='20' />
+              <FormattedMessage
+                id='settings.tables.bankAccounts.uploadOwnerDoc'
+                defaultMessage='Upload Owner Documents'>
                 {text => text}
               </FormattedMessage>
             </CustomButton>
@@ -345,7 +371,14 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
-  const dwollaAccountStatus = (company && company.dwollaAccountStatus) || 'none'
+  let dwollaAccountStatus = 'none'
+  if (company.dwollaAccountStatus) dwollaAccountStatus = company.dwollaAccountStatus
+  if (
+    dwollaAccountStatus === 'verified' &&
+    getSafe(() => state.settings.documentsOwner.length, '') &&
+    getSafe(() => state.settings.documentsOwner[0].verificationStatus, '') !== 'verified'
+  )
+    dwollaAccountStatus = 'documentOwner'
   const {
     broadcast: { data, filter, ...rest }
   } = state

@@ -7,45 +7,25 @@ import {
   Accordion,
   Table,
   List,
-  Label,
   Button,
   Icon,
   Divider,
   Header,
-  Popup,
   GridRow,
-  Dropdown,
-  Input
+  Modal
 } from 'semantic-ui-react'
-import { ChevronDown, DownloadCloud } from 'react-feather'
+import { ChevronDown, DownloadCloud, ArrowLeft } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
-import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
-import ActionsRequired from './components/ActionsRequired'
-import AssignLots from './components/AssignLots'
-import ReinitiateTransfer from './components/ReinitiateTransfer'
-import EnterTrackingIdShip from './components/EnterTrackingIdShip'
-import EnterTrackingIdReturnShip from './components/EnterTrackingIdReturnShip'
-
-import PurchaseRejectDelivery from './components/PurchaseRejectDelivery'
-import PurchaseRequestCreditDelivery from './components/PurchaseRequestCreditDelivery'
-import PurchaseReviewCreditRequest from './components/PurchaseReviewCreditRequest'
-import SaleReviewCreditRequest from './components/SaleReviewCreditRequest'
-import SaleReturnShipping from './components/SaleReturnShipping'
-import PurchaseOrderShipping from './components/PurchaseOrderShipping'
-import SaleAttachingProductOffer from './components/SaleAttachingProductOffer'
-
-import confirm from '~/src/components/Confirmable/confirm'
 import moment from 'moment/moment'
 import { FormattedPhone } from '~/components/formatted-messages/'
 import { withToastManager } from 'react-toast-notifications'
 import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
 import { injectIntl, FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
-import { AttachmentManager } from '~/modules/attachments'
 import ProdexGrid from '~/components/table'
 import { getLocaleDateFormat } from '~/components/date-format'
-import TransactionInfo from './components/TransactionInfo'
+import TransactionInfo from '~/modules/orders/components/components/TransactionInfo'
 
 export const OrderSegment = styled(Segment)`
   width: calc(100% - 64px);
@@ -294,29 +274,79 @@ const TableRowData = styled(Table.Row)`
   }
 `
 
-const DocumentsDropdown = styled(Dropdown)`
-  z-index: 601 !important;
-  margin-left: 16px;
-`
-
 const GridDataColumnTrackingID = styled(GridDataColumn)`
   display: flex !important;
 `
 
-const CustomInput = styled(Input)`
-  max-width: 70% !important;
-  margin-right: 10px !important;
+const StyledModal = styled(Modal)`
+  > .header {
+    padding: 21px 30px !important;
+    font-size: 14px !important;
+  }
+
+  > .content {
+    padding: 30px !important;
+  }
+
+  > .actions {
+    background-color: #ffffff !important;
+    padding: 10px 5px !important;
+    button {
+      margin: 0 5px;
+      height: 40px;
+    }
+  }
 `
 
-const CustomButton = styled(Button)`
-  background-color: #2599d5 !important;
-  color: #ffffff !important;
+const TopRow = styled.div`
+  margin: 0 32px;
+  padding: 20px 0 50px 0;
+  vertical-align: middle;  
+  display: block;
+  
+  > a {
+    float: left;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    border: solid 1px #dee2e6;
+    background-color: #ffffff;
+    color: #848893;
+    font-size: 14px !important;
+    font-weight: 500;
+    line-height: 1.43;
+    padding: 9px 17px 11px 17px;
+  
+    > svg {
+      width: 18px;
+      height: 20px;
+      color: #848893;
+      margin-right: 9px;
+      vertical-align: middle;
+    }
+  }
+  
+  > div.field {
+    float: right;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    border: solid 1px #dee2e6;
+    background-color: #ffffff;
+
+    > div {
+      padding: 12px 18px;
+    }
+     
+    > div:first-child {
+      color: #848893;
+    }  
+  } 
 `
 
-const CustomA = styled.a`
-  cursor: pointer;
-  text-decoration-line: underline;
-  text-decoration-style: dashed;
+const StyledHeader = styled.span`
+  color: #2599d5;
 `
 
 class Detail extends Component {
@@ -358,14 +388,24 @@ class Detail extends Component {
           </FormattedMessage>
         ),
         width: 150
+      },
+      {
+        name: 'download',
+        title: (
+          <FormattedMessage id='global.download' defaultMessage='Download'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150,
+        align: 'center'
       }
     ],
-    isOpenManager: false,
     replaceRow: '',
-    listDocumentTypes: '',
-    attachmentRows: [],
     toggleTrackingID: false,
-    shippingTrackingCode: ''
+    shippingTrackingCode: '',
+    openDocumentsPopup: false,
+    openDocumentsAttachments: [],
+    documentsPopupProduct: ''
   }
 
   constructor(props) {
@@ -373,17 +413,12 @@ class Detail extends Component {
   }
 
   componentDidMount() {
-    const { listDocumentTypes, order } = this.props
-    let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
-    this.props.loadDetail(endpointType, this.props.router.query.id)
-
-    if (listDocumentTypes && !listDocumentTypes.length) this.props.getDocumentTypes()
+    const { order } = this.props
     this.setState({ shippingTrackingCode: order.shippingTrackingCode })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { order } = this.props
-    let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
     let dataCells = document.querySelectorAll('.data-list dd')
     for (let i = 0; i < dataCells.length; i++) {
       if (dataCells[i].textContent === 'N/A') {
@@ -393,28 +428,13 @@ class Detail extends Component {
       }
     }
 
-    if (
-      !getSafe(() => prevState.attachmentRows.length, false) &&
-      !getSafe(() => this.state.attachmentRows.length, false) &&
-      !getSafe(() => prevProps.order.attachments.length, false) &&
-      getSafe(() => order.attachments.length, false)
-    ) {
-      this.setState({
-        attachmentRows: this.getRows(order.attachments)
-      })
-    }
-
     if (getSafe(() => prevProps.order.shippingTrackingCode, '') !== getSafe(() => order.shippingTrackingCode, '')) {
       this.setState({ shippingTrackingCode: order.shippingTrackingCode })
     }
   }
 
-  componentWillUnmount() {
-    this.props.clearOrderDetail()
-  }
-
   downloadOrder = async () => {
-    let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
+    let endpointType = 'sale'
     let pdf = await this.props.downloadPdf(endpointType, this.props.order.id)
 
     const element = document.createElement('a')
@@ -422,7 +442,7 @@ class Detail extends Component {
     let fileURL = URL.createObjectURL(file)
 
     element.href = fileURL
-    element.download = `${this.props.router.query.type}-order-${this.props.order.id}.pdf`
+    element.download = `${endpointType}-order-${this.props.order.id}.pdf`
     document.body.appendChild(element) // Required for this to work in FireFox
     element.click()
   }
@@ -434,61 +454,6 @@ class Detail extends Component {
     activeIndexes[index] = activeIndexes[index] ? false : true
 
     this.setState({ activeIndexes })
-  }
-
-  attachDocumentsManager = async newDocuments => {
-    const { linkAttachmentToOrder, order, getPurchaseOrder, getSaleOrder } = this.props
-    if (this.state.replaceRow) {
-      await this.handleUnlink(this.state.replaceRow)
-      this.setState({ replaceRow: '' })
-    }
-    const docArray = uniqueArrayByKey(newDocuments, 'id')
-
-    try {
-      if (docArray.length) {
-        await docArray.forEach(doc => {
-          linkAttachmentToOrder({ attachmentId: doc.id, orderId: order.id })
-        })
-      }
-      let response = ''
-      if (getSafe(() => this.props.router.query.type, false) === 'sales') {
-        response = await getSaleOrder(order.id)
-      } else {
-        response = await getPurchaseOrder(order.id)
-      }
-
-      const attachmentRows = this.getRows(getSafe(() => response.value.data.attachments, []))
-
-      this.setState({ isOpenManager: false, attachmentRows })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  replaceExiting = row => {
-    this.setState({ isOpenManager: true, replaceRow: row })
-  }
-
-  handleUnlink = async row => {
-    const { unlinkAttachmentToOrder, order, getSaleOrder, getPurchaseOrder } = this.props
-    const query = {
-      attachmentId: row.id,
-      orderId: order.id
-    }
-    try {
-      await unlinkAttachmentToOrder(query)
-      let response = ''
-      if (getSafe(() => this.props.router.query.type, false) === 'sales') {
-        response = await getSaleOrder(order.id)
-      } else {
-        response = await getPurchaseOrder(order.id)
-      }
-
-      const attachmentRows = this.getRows(getSafe(() => response.value.data.attachments, []))
-      this.setState({ attachmentRows })
-    } catch (err) {
-      console.error(err)
-    }
   }
 
   getMimeType = documentName => {
@@ -573,7 +538,6 @@ class Detail extends Component {
           documentTypeId: getSafe(() => row.documentType.id, 'N/A'),
           documentName: (
             <Button as='a' onClick={() => this.downloadAttachment(row.name, row.id)}>
-              <Icon name='download' />
               {row.name}
             </Button>
           ),
@@ -581,7 +545,16 @@ class Detail extends Component {
           documenDate: row.expirationDate
             ? getSafe(() => moment(row.expirationDate).format(getLocaleDateFormat()), 'N/A')
             : 'N/A',
-          documenIssuer: getSafe(() => row.issuer, 'N/A')
+          documenIssuer: getSafe(() => row.issuer, 'N/A'),
+          download: (
+            <a
+              href='#'
+              onClick={() =>
+                this.downloadAttachment(row.name, row.id)
+              }>
+              <Icon name='file' className='positive' />
+            </a>
+          )
         }
       })
     } else {
@@ -589,44 +562,105 @@ class Detail extends Component {
     }
   }
 
+  openRelatedPopup(attachments, name) {
+    this.setState({
+      openDocumentsPopup: true,
+      openDocumentsAttachments: attachments,
+      documentsPopupProduct: name
+    })
+  }
+
+  getRelatedDocumentsContent = () => {
+    const {
+      intl: { formatMessage }
+    } = this.props
+    let { openDocumentsAttachments } = this.state
+
+    const rowsDocuments = openDocumentsAttachments.map(att => ({
+      id: att.id,
+      documentName: (
+        <Button as='a' onClick={() => this.downloadAttachment(att.name, att.id)}>
+          {att.name}
+        </Button>
+      ),
+      documenType: att.documentType.name,
+      documenDate: 'N/A',
+      documenIssuer: 'N/A',
+      download:
+        <a href='#' onClick={() => this.downloadAttachment(att.name, att.id)}>
+          <Icon name='file' className='positive' />
+        </a>
+    }))
+    return (
+      <ProdexGrid
+        loading={this.state.submitting}
+        tableName='related_orders'
+        columns={this.state.columnsRelatedOrdersDetailDocuments}
+        rows={rowsDocuments}
+      />
+    )
+  }
+
   render() {
     const {
-      router,
       order,
-      action,
       isDetailFetching,
-      openedAssignLots,
-      openedReinitiateTransfer,
-      openedEnterTrackingIdShip,
-      openedEnterTrackingIdReturnShip,
-      openedPurchaseRejectDelivery,
-      openedPurchaseRequestCreditDelivery,
-      openedPurchaseReviewCreditRequest,
-      openedSaleReturnShipping,
-      openedSaleReviewCreditRequest,
-      openedPurchaseOrderShipping,
-      cancelPayment,
-      toastManager,
-      isPaymentCancellable,
-      opendSaleAttachingProductOffer,
-      listDocumentTypes,
-      loadingRelatedDocuments,
       intl: { formatMessage },
       echoSupportPhone,
-      editTrackingCode,
-      permissionOrderUpdate
+      editTrackingCode
     } = this.props
-    const { activeIndexes } = this.state
-    let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
+    const { activeIndexes, documentsPopupProduct } = this.state
+    let ordersType = 'Sales'
 
-    let orderDate = moment(order.orderDate, 'MMM Do, YYYY h:mm:ss A')
     const keyColumn = 5
     const valColumn = 16 - keyColumn
 
     return (
       <div id='page' className='auto-scrolling'>
+        {this.state.openDocumentsPopup &&
+        (
+          <StyledModal
+            size='Default'
+            closeIcon={false}
+            onClose={() => this.setState({ openDocumentsPopup: false })}
+            centered={true}
+            open={true}>
+            <Modal.Header>
+              <>
+                <FormattedMessage id='order.relatedDocumentsFor' defaultMessage='RELATED DOCUMENTS FOR '>
+                  {text => text}
+                </FormattedMessage>
+                <StyledHeader>
+                  {documentsPopupProduct}
+                </StyledHeader>
+              </>
+            </Modal.Header>
+            <Modal.Content scrolling>{this.getRelatedDocumentsContent()}</Modal.Content>
+            <Modal.Actions>
+              <Button basic onClick={() => this.setState({ openDocumentsPopup: false })}>
+                <FormattedMessage id='global.close' defaultMessage='Close'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+            </Modal.Actions>
+          </StyledModal>
+        )}
         <div class='scroll-area'>
-          <Divider hidden />
+          <TopRow>
+            <a
+              onClick={() => this.props.openOrderDetail(null)}
+              style={{ cursor: 'pointer' }}
+              data-test='orders_detail_back_btn'>
+              <ArrowLeft />
+              <FormattedMessage id='order.detail.backToOrders' defaultMessage='Back to Orders' />
+            </a>
+            <div className='field'>
+              <div>
+                <FormattedMessage id='order.detail.buyerCompanyEin' defaultMessage='Buyer Company EIN' />
+              </div>
+              <div><strong>N/A</strong></div>
+            </div>
+          </TopRow>
           <OrderSegment>
             <Grid verticalAlign='middle'>
               <GridRow>
@@ -641,8 +675,8 @@ class Detail extends Component {
                         fontSize: '1.14285714em',
                         fontWeight: '500'
                       }}>
-                      {ordersType} <FormattedMessage id='order' defaultMessage='Order' />
-                      {isDetailFetching ? '' : '# ' + order.id}
+                      <FormattedMessage id='order' defaultMessage='Order' />
+                      {'# ' + order.id}
                     </Header>
                     <a
                       onClick={() => this.downloadOrder()}
@@ -650,9 +684,8 @@ class Detail extends Component {
                       data-test='orders_detail_download_order'>
                       <DownloadCloud />
                       <FormattedMessage
-                        id='order.downloadOrder'
-                        defaultMessage={`Download ${getSafe(() => order.orderType.charAt(0), '')}O`}
-                        values={{ orderType: getSafe(() => order.orderType.charAt(0), '') }}
+                        id='global.download'
+                        defaultMessage='Download'
                       />
                     </a>
                   </div>
@@ -783,54 +816,7 @@ class Detail extends Component {
                               ? null // could be blue
                               : null
                           }>
-                          {order.orderType === 'Purchase' &&
-                          order.paymentStatus === 'Pending' &&
-                          isPaymentCancellable ? (
-                            <Popup
-                              content={
-                                <FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />
-                              }
-                              trigger={
-                                <a
-                                  onClick={() =>
-                                    confirm(
-                                      <FormattedMessage
-                                        id='confirm.cancelPayment.title'
-                                        defaultMessage='Cancel Payment'
-                                      />,
-                                      <FormattedMessage
-                                        id='confirm.cancelPayment.content'
-                                        defaultMessage='Do you really want to Cancel Payment for Order #{orderId}'
-                                        values={{ orderId: order.id }}
-                                      />
-                                    ).then(() => {
-                                      cancelPayment(order.id).then(r => {
-                                        toastManager.add(
-                                          generateToastMarkup(
-                                            <FormattedMessage
-                                              id='order.cancelTransfer.success.header'
-                                              defaultMessage='Canceled Payment'
-                                            />,
-                                            <FormattedMessage
-                                              id='order.cancelTransfer.success.content'
-                                              defaultMessage='Payment transfer for order #{orderId} was canceled successfully'
-                                              values={{ orderId: order.id }}
-                                            />
-                                          ),
-                                          {
-                                            appearance: 'success'
-                                          }
-                                        )
-                                      })
-                                    })
-                                  }>
-                                  {order.paymentStatus}
-                                </a>
-                              }
-                            />
-                          ) : (
-                            order.paymentStatus
-                          )}
+                          {order.paymentStatus}
                         </List.Description>
                       </List.Content>
                     </List.Item>
@@ -844,23 +830,6 @@ class Detail extends Component {
           ) : (
             <>
               <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
-              {permissionOrderUpdate ? (
-                <>
-                  <ActionsRequired order={order} ordersType={ordersType} />
-                  {openedAssignLots ? <AssignLots /> : null}
-                  {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
-                  {openedEnterTrackingIdShip ? <EnterTrackingIdShip /> : null}
-                  {openedEnterTrackingIdReturnShip ? <EnterTrackingIdReturnShip /> : null}
-                  {openedPurchaseRejectDelivery ? <PurchaseRejectDelivery /> : null}
-                  {openedPurchaseRequestCreditDelivery ? <PurchaseRequestCreditDelivery /> : null}
-                  {openedPurchaseReviewCreditRequest ? <PurchaseReviewCreditRequest /> : null}
-                  {openedSaleReturnShipping ? <SaleReturnShipping /> : null}
-                  {openedSaleReviewCreditRequest ? <SaleReviewCreditRequest /> : null}
-                  {openedPurchaseOrderShipping ? <PurchaseOrderShipping /> : null}
-                  {opendSaleAttachingProductOffer ? <SaleAttachingProductOffer /> : null}
-                </>
-              ) : null}
-
               <Divider hidden />
               <OrderAccordion
                 defaultActiveIndex={[0, 1]}
@@ -990,69 +959,14 @@ class Detail extends Component {
                 <Accordion.Content active={activeIndexes[1]}>
                   <Grid>
                     <Grid.Row>
-                      <Grid.Column width={10}>
-                        <DocumentsDropdown
-                          options={[
-                            {
-                              key: 0,
-                              text: formatMessage({
-                                id: 'order.detail.documents.dropdown.all',
-                                defaultMessage: 'Select All'
-                              }),
-                              value: 0
-                            }
-                          ].concat(listDocumentTypes)}
-                          value={this.state.listDocumentTypes}
-                          selection
-                          onChange={(event, { name, value }) => {
-                            const rows = this.getRows(order.attachments)
-                            const attachmentRows = value === 0 ? rows : rows.filter(row => row.documentTypeId === value)
-                            this.setState({
-                              [name]: value,
-                              attachmentRows
-                            })
-                          }}
-                          name='listDocumentTypes'
-                          placeholder={formatMessage({
-                            id: 'order.detail.documents.dropdown',
-                            defaultMessage: 'Select Type'
-                          })}
-                        />
-                      </Grid.Column>
-                      <Grid.Column width={6}>
-                        <AttachmentManager
-                          isOpenManager={this.state.isOpenManager}
-                          asModal
-                          returnSelectedRows={rows => this.attachDocumentsManager(rows)}
-                        />
-                      </Grid.Column>
-                    </Grid.Row>
-                    <Grid.Row>
                       <Grid.Column style={{ paddingLeft: '30px', paddingRight: '2.2857143em' }}>
                         <ProdexGrid
                           displayRowActionsOverBorder
                           removeFlexClass={true}
-                          loading={loadingRelatedDocuments}
                           tableName='related_orders_detail_documents'
                           columns={this.state.columnsRelatedOrdersDetailDocuments}
-                          rows={this.state.attachmentRows}
+                          rows={this.getRows(order.attachments)}
                           hideCheckboxes
-                          rowActions={[
-                            {
-                              text: formatMessage({
-                                id: 'global.replaceExisting',
-                                defaultMessage: 'Replace Existing'
-                              }),
-                              callback: row => this.replaceExiting(row)
-                            },
-                            {
-                              text: formatMessage({
-                                id: 'global.unlink',
-                                defaultMessage: 'Unlink'
-                              }),
-                              callback: row => this.handleUnlink(row)
-                            }
-                          ]}
                         />
                       </Grid.Column>
                     </Grid.Row>
@@ -1094,13 +1008,13 @@ class Detail extends Component {
                           <Table.HeaderCell>
                             <FormattedMessage id='order.itemTotal' defaultMessage='Item Total' />
                           </Table.HeaderCell>
-                          {ordersType === 'Sales' && (
-                            <>
-                              <Table.HeaderCell>
-                                <FormattedMessage id='order.unitCost' defaultMessage='Unit Cost' />
-                              </Table.HeaderCell>
-                            </>
-                          )}
+                          <Table.HeaderCell>
+                            <FormattedMessage id='order.unitCost' defaultMessage='Unit Cost' />
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>
+                            <FormattedMessage id='global.documents' defaultMessage='Documents' />
+                          </Table.HeaderCell>
+
                           <Table.HeaderCell className='p-0'></Table.HeaderCell>
                         </Table.Row>
                       </Table.Header>
@@ -1119,21 +1033,30 @@ class Detail extends Component {
                               <Table.Cell textAlign='right'>{order.quantityOrdered[index]}</Table.Cell>
                               <Table.Cell textAlign='right'>{order.unitPrice[index]}</Table.Cell>
                               <Table.Cell textAlign='right'>{order.itemTotal[index]}</Table.Cell>
-                              {ordersType === 'Sales' && (
-                                <>
-                                  <Table.Cell textAlign='right'>
-                                    {order.unitCost[index] ? (
-                                      <FormattedNumber
-                                        style='currency'
-                                        currency={currency}
-                                        value={order.unitCost[index]}
-                                      />
-                                    ) : (
-                                      'N/A'
-                                    )}
-                                  </Table.Cell>
-                                </>
-                              )}
+                              <Table.Cell textAlign='right'>
+                                {order.unitCost[index] ? (
+                                  <FormattedNumber
+                                    style='currency'
+                                    currency={currency}
+                                    value={order.unitCost[index]}
+                                  />
+                                ) : (
+                                  'N/A'
+                                )}
+                              </Table.Cell>
+                              <Table.Cell>{
+                                order.orderItems[index].attachments.length
+                                  ? (
+                                    <a
+                                      href='#'
+                                      onClick={() =>
+                                        this.openRelatedPopup(order.orderItems[index].attachments, element)
+                                      }>
+                                      <FormattedMessage id='global.view' defaultMessage='View' />
+                                    </a>
+                                  ) : 'N/A'
+                              }
+                              </Table.Cell>
                               <Table.Cell className='p-0'></Table.Cell>
                             </Table.Row>
                           ))}
@@ -1223,14 +1146,6 @@ class Detail extends Component {
                                   <GridDataColumn width={valColumn}>{order.returnDeliveryDate}</GridDataColumn>
                                 </>
                               )}
-                              <GridDataColumn width={keyColumn} className='key'>
-                                <FormattedMessage id='order.contactNumber' defaultMessage='Contact Number' />
-                              </GridDataColumn>
-                              <GridDataColumn width={valColumn}>{order.returnAddressContactPhone}</GridDataColumn>
-                              <GridDataColumn width={keyColumn} className='key'>
-                                <FormattedMessage id='order.contactEmail' defaultMessage='Contact E-Mail' />
-                              </GridDataColumn>
-                              <GridDataColumn width={valColumn}>{order.returnAddressContactEmail}</GridDataColumn>
                             </GridData>
                           </Grid.Column>
                           <Grid.Column>
@@ -1272,7 +1187,7 @@ class Detail extends Component {
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shippingStatus}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.contactName' defaultMessage='Contact name' />
+                            <FormattedMessage id='order.shipTo' defaultMessage='Ship To' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shipTo}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
@@ -1311,44 +1226,7 @@ class Detail extends Component {
                             <FormattedMessage id='order.trackingNumber' defaultMessage='Tracking Number' />
                           </GridDataColumn>
                           <GridDataColumnTrackingID width={valColumn}>
-                            {!order.isTrackingNumberEditable ? (
-                              order.shippingTrackingCode
-                            ) : this.state.toggleTrackingID ? (
-                              <>
-                                <CustomInput
-                                  onChange={(e, { value }) => {
-                                    this.setState({ shippingTrackingCode: value })
-                                  }}
-                                  type='number'
-                                  value={this.state.shippingTrackingCode}
-                                />
-                                <CustomButton
-                                  type='button'
-                                  onClick={async e => {
-                                    e.preventDefault()
-                                    try {
-                                      await editTrackingCode(order.id, this.state.shippingTrackingCode)
-                                    } catch (error) {
-                                      this.setState({ shippingTrackingCode: order.shippingTrackingCode })
-                                    } finally {
-                                      this.setState({ toggleTrackingID: false })
-                                    }
-                                  }}>
-                                  <FormattedMessage id='global.save' defaultMessage='Save' />
-                                </CustomButton>
-                              </>
-                            ) : (
-                              <Popup
-                                content={
-                                  <FormattedMessage id='order.detail.clickToEdit' defaultMessage='Click to edit' />
-                                }
-                                trigger={
-                                  <CustomA onClick={() => this.setState({ toggleTrackingID: true })}>
-                                    {this.state.shippingTrackingCode}
-                                  </CustomA>
-                                }
-                              />
-                            )}
+                            {order.shippingTrackingCode}
                           </GridDataColumnTrackingID>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.incoterms' defaultMessage='Incoterms' />

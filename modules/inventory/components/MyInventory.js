@@ -481,25 +481,6 @@ class MyInventory extends Component {
                         ...r.rawData,
                         cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
                       }))
-                      {
-                        if (!data.checked) {
-                          toastManager.add(
-                            generateToastMarkup(
-                              <FormattedMessage
-                                id='broadcast.turnoff.title'
-                                defaultMessage='Price book for this offer has been deleted!'
-                              />,
-                              <FormattedMessage
-                                id='broadcast.turnoff.content'
-                                defaultMessage='Global rules are going to be used. To turn off broadcasting completely, edit it inside Edit tab.'
-                              />
-                            ),
-                            {
-                              appearance: 'info'
-                            }
-                          )
-                        }
-                      }
                     } catch (error) {
                       console.error(error)
                     }
@@ -522,6 +503,7 @@ class MyInventory extends Component {
   }
 
   showMessage = (response, request = null) => {
+    const { toastManager } = this.props
     response &&
       response.value &&
       response.value.productOfferStatuses &&
@@ -534,6 +516,15 @@ class MyInventory extends Component {
             ...rowData[0],
             parentOffer: status.virtualOfferId ? status.virtualOfferId : ''
           }))
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id={`success.title`} defaultMessage='Success' />,
+              `${status.clientMessage}`
+            ),
+            {
+              appearance: 'success'
+            }
+          )
         } else if (status.code === 'BROADCAST_RULE_CONFLICT') {
           this.setState({ open: true, clientMessage: status.clientMessage, request })
         } else if (status.code === 'DETACHED') {
@@ -542,6 +533,25 @@ class MyInventory extends Component {
             ...rowData[0],
             parentOffer: ''
           }))
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id={`success.title`} defaultMessage='Success' />,
+              `${status.clientMessage}`
+            ),
+            {
+              appearance: 'success'
+            }
+          )
+        } else if (status.code === 'ERROR') {
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id={`error.title`} defaultMessage='Error' />,
+              `${status.clientMessage}`
+            ),
+            {
+              appearance: 'error'
+            }
+          )
         }
       })
   }
