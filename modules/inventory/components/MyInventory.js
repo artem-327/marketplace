@@ -1,24 +1,25 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input } from 'semantic-ui-react'
-import SubMenu from '~/src/components/SubMenu'
+import cn from 'classnames'
+import moment from 'moment/moment'
+import { debounce } from 'lodash'
+import { Clock } from 'react-feather'
+import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import { withToastManager } from 'react-toast-notifications'
+import styled from 'styled-components'
+
 import ProdexTable from '~/components/table'
-
 import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
-
+import QuickEditPricingPopup from '~/modules/inventory/components/QuickEditPricingPopup'
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
-import cn from 'classnames'
-
 import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
-
-import moment from 'moment/moment'
-import { getSafe } from '~/utils/functions'
+import { getSafe, uniqueArrayByKey, generateToastMarkup } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
-import styled from 'styled-components'
 import Tutorial from '~/modules/tutorial/Tutorial'
-import { debounce } from 'lodash'
+import SearchByNamesAndTags from '~/modules/search'
+import SubMenu from '~/src/components/SubMenu'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -45,9 +46,43 @@ const CustomProdexTable = styled(ProdexTable)`
   }
 `
 
+const ClockIcon = styled(Clock)`
+  display: block;
+  width: 20px;
+  height: 19px;
+  margin: 0 auto;
+  vertical-align: top;
+  font-size: 20px;
+  color: #f16844;
+  line-height: 20px;
+
+  &.grey {
+    color: #848893;
+  }
+`
+
+const StyledPopup = styled(Popup)`
+  padding: 0 !important;
+  border-radius: 4px;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+
+  .ui.form {
+    width: 570px;
+    padding: 0;
+  }
+`
+
 class MyInventory extends Component {
   state = {
     columns: [
+      {
+        name: 'expired',
+        title: <ClockIcon className='grey' />,
+        width: 45,
+        align: 'center'
+      },
       {
         name: 'productName',
         title: (
@@ -241,7 +276,7 @@ class MyInventory extends Component {
       {
         name: 'expDate',
         title: (
-          <FormattedMessage id='myInventory.expDate' defaultMessage='EXP Date'>
+          <FormattedMessage id='myInventory.expDate' defaultMessage='Lot Exp. Date'>
             {text => text}
           </FormattedMessage>
         ),
@@ -259,7 +294,7 @@ class MyInventory extends Component {
       {
         name: 'offerExpiration',
         title: (
-          <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Expiration Date'>
+          <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer Exp. Date'>
             {text => text}
           </FormattedMessage>
         ),
@@ -289,7 +324,7 @@ class MyInventory extends Component {
     open: false,
     clientMessage: '',
     request: null,
-    filterValue: ''
+    selectedTagsOptions: []
   }
 
   componentDidMount() {
@@ -312,21 +347,23 @@ class MyInventory extends Component {
       }
     }
     // Because of #31767
-    this.props.setCompanyElligible()
-    this.props.applyDatagridFilter('')
+    try {
+      this.props.setCompanyElligible()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
 
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter)
+      datagrid.setFilter(datagridFilter, true, 'myInventoryFilter')
     }
   }
 
   getRows = rows => {
-    const { datagrid } = this.props
-
+    const { datagrid, pricingEditOpenId, setPricingEditOpenId, toastManager } = this.props
     let title = ''
 
     return rows.map((r, rIndex) => {
@@ -389,10 +426,32 @@ class MyInventory extends Component {
 
       return {
         ...r,
+        expired: r.expired ? (
+          <Popup
+            header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
+            trigger={
+              <div>
+                <ClockIcon />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />
+        ) : null,
         condition: r.condition ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
           <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+        ),
+        fobPrice: (
+          <StyledPopup
+            content={<QuickEditPricingPopup rawData={r.rawData} />}
+            on='click'
+            pinned
+            position='left center'
+            trigger={<div>{r.fobPrice}</div>}
+            open={pricingEditOpenId === r.rawData.id}
+            onOpen={() => setPricingEditOpenId(r.rawData.id)}
+            onClose={() => setPricingEditOpenId(null)}
+          />
         ),
         broadcast: (
           <div style={{ float: 'right' }}>
@@ -412,14 +471,14 @@ class MyInventory extends Component {
                     r.cfStatus.toLowerCase() === 'unmapped' ||
                     r.cfStatus.toLowerCase() === 'n/a' ||
                     !isOfferValid ||
-                    r.groupId
+                    !!r.groupId
                   }
                   onChange={(e, data) => {
                     e.preventDefault()
                     try {
                       this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
                       datagrid.updateRow(r.id, () => ({
-                        ...r,
+                        ...r.rawData,
                         cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
                       }))
                     } catch (error) {
@@ -444,6 +503,7 @@ class MyInventory extends Component {
   }
 
   showMessage = (response, request = null) => {
+    const { toastManager } = this.props
     response &&
       response.value &&
       response.value.productOfferStatuses &&
@@ -456,6 +516,15 @@ class MyInventory extends Component {
             ...rowData[0],
             parentOffer: status.virtualOfferId ? status.virtualOfferId : ''
           }))
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id={`success.title`} defaultMessage='Success' />,
+              `${status.clientMessage}`
+            ),
+            {
+              appearance: 'success'
+            }
+          )
         } else if (status.code === 'BROADCAST_RULE_CONFLICT') {
           this.setState({ open: true, clientMessage: status.clientMessage, request })
         } else if (status.code === 'DETACHED') {
@@ -464,6 +533,25 @@ class MyInventory extends Component {
             ...rowData[0],
             parentOffer: ''
           }))
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id={`success.title`} defaultMessage='Success' />,
+              `${status.clientMessage}`
+            ),
+            {
+              appearance: 'success'
+            }
+          )
+        } else if (status.code === 'ERROR') {
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id={`error.title`} defaultMessage='Error' />,
+              `${status.clientMessage}`
+            ),
+            {
+              appearance: 'error'
+            }
+          )
         }
       })
   }
@@ -488,17 +576,6 @@ class MyInventory extends Component {
     }
   }
 
-  handleFiltersValue = debounce(value => {
-    const { applyDatagridFilter } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
-    else applyDatagridFilter(value)
-  }, 250)
-
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
-  }
-
   render() {
     const {
       openBroadcast,
@@ -510,14 +587,13 @@ class MyInventory extends Component {
       isOpenImportPopup,
       simpleEditTrigger,
       sidebarDetailTrigger,
-      sidebarValues,
       openPopup,
       editedId,
       closeSidebarDetail,
       tutorialCompleted
     } = this.props
-    const { columns, selectedRows, clientMessage, request, filterValue } = this.state
-    
+    const { columns, clientMessage, request } = this.state
+
     return (
       <>
         <Modal size='small' open={this.state.open} onClose={() => this.setState({ open: false })} closeIcon>
@@ -553,19 +629,9 @@ class MyInventory extends Component {
         <Container fluid style={{ padding: '0 32px' }}>
           <Grid>
             <Grid.Row>
-              <Grid.Column width={4} style={{ paddingTop: '9px' }}>
-                <Input
-                  fluid
-                  icon='search'
-                  value={filterValue}
-                  onChange={this.handleFilterChange}
-                  placeholder={formatMessage({
-                    id: 'myInventory.searchByProductName',
-                    defaultMessage: 'Search by product name...'
-                  })}
-                />
-              </Grid.Column>
-              <Grid.Column width={12}>
+              <SearchByNamesAndTags />
+
+              <Grid.Column width={8}>
                 <Menu secondary className='page-part'>
                   {/*selectedRows.length > 0 ? (
                     <Menu.Item>
@@ -651,7 +717,6 @@ class MyInventory extends Component {
                 rows,
                 values[values.length - 1],
                 sidebarDetailOpen,
-                //! ! sidebarDetailTrigger,
                 closeSidebarDetail,
                 openPopup
               ).map(a => ({
@@ -759,4 +824,4 @@ class MyInventory extends Component {
   }
 }
 
-export default injectIntl(MyInventory)
+export default injectIntl(withToastManager(MyInventory))

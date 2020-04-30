@@ -10,13 +10,22 @@ export const Marketplace = props => {
           url: '/prodex/api/product-offers/broadcasted/datagrid/',
           searchToFilter: v => {
             let filters = { or: [], and: [] }
-            if (v) {
+            if (v && v.or) {
               filters.or = [
-                { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${v}%`] },
-                { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${v}%`] },
-                { operator: 'LIKE', path: 'ProductOffer.companyProduct.echoProduct.name', values: [`%${v}%`] },
-                { operator: 'LIKE', path: 'ProductOffer.companyProduct.echoProduct.tags.name', values: [`%${v}%`] }
+                { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${v.or}%`] },
+                { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${v.or}%`] },
+                { operator: 'LIKE', path: 'ProductOffer.companyProduct.echoProduct.name', values: [`%${v.or}%`] },
+                { operator: 'LIKE', path: 'ProductOffer.companyProduct.echoProduct.tags.name', values: [`%${v.or}%`] }
               ]
+            }
+            if (v && v.and && v.and.length > 0) {
+              filters.and = v.and.map(idTag => {
+                return {
+                  operator: 'EQUALS',
+                  path: 'ProductOffer.companyProduct.echoProduct.tags.id',
+                  values: [idTag]
+                }
+              })
             }
             return filters
           }
@@ -24,7 +33,7 @@ export const Marketplace = props => {
   return (
     <>
       <CompanyProductInfo fromMarketPlace />
-      <DatagridProvider apiConfig={urlApiConfig}>
+      <DatagridProvider apiConfig={urlApiConfig} autoRefresh>
         <MarketplaceContainer {...props} />
       </DatagridProvider>
     </>

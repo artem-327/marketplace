@@ -623,6 +623,13 @@ export function getDwollaAccBalance() {
   }
 }
 
+export function getDwollaBeneficiaryOwners() {
+  return {
+    type: AT.SETTINGS_GET_DWOLLA_BENEFICIARY_OWNERS,
+    payload: api.getDwollaBeneficiaryOwners()
+  }
+}
+
 export function getProductsWithRequiredParam(payload) {
   return {
     type: AT.GET_PRODUCTS_WITH_REQUIRED_PARAM,
@@ -1141,3 +1148,12 @@ export const getBranch = branchId => ({
   type: AT.GET_BRANCH,
   payload: api.getBranch(branchId)
 })
+
+export const addVerificationDocumentsOwner = (attachment, id, docType) => {
+  return {
+    type: AT.ADD_VERIFICATION_DOCUMENT_OWNER,
+    async payload() {
+      return await api.addVerificationDocumentsOwner(attachment, id, docType)
+    }
+  }
+}

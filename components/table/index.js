@@ -277,7 +277,7 @@ class PatchedTableSelection extends React.PureComponent {
   }
 }
 
-const Row = ({ tableRow, selected, onToggle, onClick, ...restProps }) => {
+const Row = ({ tableRow, selected, onToggle, onClick, onRowClick, ...restProps }) => {
   const rowAction = (e, row) => {
     onClick && onClick(e, tableRow.row)
   }
@@ -286,7 +286,7 @@ const Row = ({ tableRow, selected, onToggle, onClick, ...restProps }) => {
       {...restProps}
       onClick={rowAction}
       data-test='table_row_action'
-      className={getSafe(() => tableRow.row.clsName, null)}
+      className={`${typeof onClick === 'function' ? 'row-click' : ''} ${getSafe(() => tableRow.row.clsName, null)}`}
     />
   )
 }
@@ -412,14 +412,21 @@ class _Table extends Component {
   }
 
   expandGroups = () => {
-    const { groupBy, getChildGroups, rows } = this.props
+    const { groupBy, getChildGroups, rows, shrinkGroups = false } = this.props
 
-    if (groupBy.length > 0)
-      this.setState({
-        expandedGroups: getChildGroups
-          ? getChildGroups(rows).map(r => r.key)
-          : Object.keys(_.groupBy(rows, groupBy.join('|')))
-      })
+    if (groupBy.length > 0) {
+      if (shrinkGroups) {
+        this.setState({
+          expandedGroups: this.state.expandedGroups
+        })
+      } else {
+        this.setState({
+          expandedGroups: getChildGroups
+            ? getChildGroups(rows).map(r => r.key)
+            : Object.keys(_.groupBy(rows, groupBy.join('|')))
+        })
+      }
+    }
   }
 
   handleExpandedGroupsChange = expandedGroups => {

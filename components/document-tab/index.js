@@ -22,7 +22,7 @@ import { Form } from 'semantic-ui-react'
 import { FastField, Field, getIn } from 'formik'
 import { withDatagrid } from '~/modules/datagrid'
 
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import ProdexGrid from '~/components/table'
 import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
 import { AttachmentManager } from '~/modules/attachments'
@@ -93,11 +93,11 @@ const columns = [
 
 class DocumentTab extends Component {
   state = {
-    openUploadLot: false,
+    openUploadAttachment: false,
     documentType: 1
   }
 
-  attachDocumentsUploadLot = (newDocument, values, setFieldValue, setFieldNameAttachments, changedForm) => {
+  attachDocumentsUploadAttachment = (newDocument, values, setFieldValue, setFieldNameAttachments, changedForm) => {
     const docArray = Array.isArray(newDocument)
       ? uniqueArrayByKey(values.attachments.concat(newDocument), 'id')
       : uniqueArrayByKey(values.attachments.concat([newDocument]), 'id')
@@ -108,7 +108,7 @@ class DocumentTab extends Component {
   }
 
   handleChange = (e, name, value) => {
-    this.setState({ openUploadLot: true, documentType: value })
+    this.setState({ openUploadAttachment: true, documentType: value })
   }
 
   render() {
@@ -155,26 +155,29 @@ class DocumentTab extends Component {
               {text => text}
             </FormattedMessage>
             <AttachmentManager
-              documentTypesForCertificates={listDocumentTypes}
+              /*documentTypeIds={
+                // listDocumentTypes && listDocumentTypes.length ? listDocumentTypes.map(type => type.id) : [] - ids for props.documentTypes are not enough
+                [this.state.documentType] - maybe this is correct for props.documentTypeIds?
+              }*/
               asModal
               returnSelectedRows={rows =>
-                this.attachDocumentsUploadLot(rows, values, setFieldValue, setFieldNameAttachments, changedForm)
+                this.attachDocumentsUploadAttachment(rows, values, setFieldValue, setFieldNameAttachments, changedForm)
               }
             />
           </CustomColumnGrid>
           <CustomDivHr />
         </CustomGridRow>
-        {this.state.openUploadLot ? (
+        {this.state.openUploadAttachment ? (
           <CustomGridRow>
             <GridColumn>
-              <UploadLot
+              <UploadAttachment
                 addAttachment={addAttachment}
                 loadFile={loadFile}
                 header={
                   <DivIcon
                     onClick={() =>
                       this.setState({
-                        openUploadLot: false
+                        openUploadAttachment: false
                       })
                     }>
                     <CloseIcon size='16' name='close' color='#dee2e6' />
@@ -189,7 +192,13 @@ class DocumentTab extends Component {
                 filesLimit={1}
                 fileMaxSize={20}
                 onChange={files => {
-                  this.attachDocumentsUploadLot(files, values, setFieldValue, setFieldNameAttachments, changedForm)
+                  this.attachDocumentsUploadAttachment(
+                    files,
+                    values,
+                    setFieldValue,
+                    setFieldNameAttachments,
+                    changedForm
+                  )
                 }}
                 data-test='new_inventory_attachments_drop'
                 emptyContent={

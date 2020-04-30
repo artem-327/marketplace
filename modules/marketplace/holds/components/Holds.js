@@ -165,7 +165,16 @@ class Holds extends Component {
   }
 
   render() {
-    const { rows, datagrid, intl, isMerchant, isCompanyAdmin, isProductOfferManager, tutorialCompleted } = this.props
+    const {
+      rows,
+      datagrid,
+      intl,
+      isMerchant,
+      isCompanyAdmin,
+      isProductOfferManager,
+      tutorialCompleted,
+      toggleHolds
+    } = this.props
     const { columns, filterValue } = this.state
     let { formatMessage } = intl
     const buttonApprove = {
@@ -230,33 +239,33 @@ class Holds extends Component {
               />
             </Grid.Column>
             <Grid.Column width={12}>
-            <HoldDropdown
-              options={[
-                {
-                  key: 1,
-                  value: 'My Holds',
-                  text: 'My Holds'
-                },
-                {
-                  key: 2,
-                  value: 'Requsted Holds',
-                  text: 'Requsted Holds'
-                }
-              ]}
-              value={this.state.holdDropdown}
-              selection
-              onChange={(event, { name, value }) => {
-                if (value === 'My Holds') {
-                  Datagrid.setApiConfig({ url: '/prodex/api/holds/my/datagrid/' })
-                } else if (value === 'Requsted Holds') {
-                  Datagrid.setApiConfig({ url: '/prodex/api/holds/foreign/datagrid/' })
-                }
-                this.setState({ [name]: value })
-              }}
-              name='holdDropdown'
-              placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}
-            />
-          </Grid.Column>
+              <HoldDropdown
+                options={[
+                  {
+                    key: 1,
+                    value: 'My Holds',
+                    text: 'My Holds'
+                  },
+                  {
+                    key: 2,
+                    value: 'Requsted Holds',
+                    text: 'Requsted Holds'
+                  }
+                ]}
+                value={this.state.holdDropdown}
+                selection
+                onChange={(event, { name, value }) => {
+                  if (value === 'My Holds') {
+                    toggleHolds('my')
+                  } else if (value === 'Requsted Holds') {
+                    toggleHolds('foreign')
+                  }
+                  this.setState({ [name]: value })
+                }}
+                name='holdDropdown'
+                placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}
+              />
+            </Grid.Column>
           </Grid.Row>
         </Grid>
         <ProdexGrid

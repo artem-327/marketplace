@@ -59,16 +59,18 @@ class AttachmentClass extends Component {
   }
 
   componentDidMount() {
-    const { documentTypes, getDocumentTypes, isOpenManager, documentTypesForCertificates } = this.props
-    if (documentTypes && !documentTypes.length) {
+    const { documentTypes, documentTypeIds, getDocumentTypes, isOpenManager } = this.props
+    if (!documentTypes || (documentTypes && !documentTypes.length)) {
       getDocumentTypes()
-    }
-    if (documentTypesForCertificates && documentTypesForCertificates.length) {
-      this.setState({ documentTypes: documentTypesForCertificates.map(doc => doc.value) })
     }
     if (isOpenManager) {
       this.setState({ open: true })
     }
+
+    // basic settings - necessary especially for Orders list (auto-opening Attachment Manager by click on grey icon without any document)
+    const docTypeIds = documentTypeIds && documentTypeIds.length ? documentTypeIds : []
+    this.handleSearch({ name: '', type: docTypeIds })
+    this.setState({ documentTypes: docTypeIds })
   }
 
   componentDidUpdate(prevProps) {
@@ -86,8 +88,7 @@ class AttachmentClass extends Component {
         return { ...datagrid.rows.find(att => att.id === id) }
       })
     )
-    this.handleSearch({ name: '', type: [] })
-    this.setState({ open: false, documentTypes: '' })
+    this.setState({ open: false })
   }
 
   handleSearch = debounce(value => {
@@ -104,12 +105,12 @@ class AttachmentClass extends Component {
   }
 
   getContent = () => {
-    const { datagrid, lockSelection, tableProps, selectable } = this.props
+    const { datagrid, selectable, singleSelection } = this.props
 
     return (
       <ProdexTable
-        {...datagrid.tableProps}
-        {...tableProps}
+        singleSelection={singleSelection}
+        loading={datagrid.loading}
         rows={datagrid.rows.map(r => ({
           id: r.id,
           name: r.name,
@@ -144,7 +145,7 @@ class AttachmentClass extends Component {
   }
 
   render() {
-    const { trigger, asModal, documentTypes, documentTypesForCertificates } = this.props
+    const { trigger, asModal, documentTypes, documentTypeIds } = this.props
     if (!asModal) return this.getContent()
 
     return (
@@ -154,8 +155,7 @@ class AttachmentClass extends Component {
             <PaddedIcon
               onClick={() => {
                 this.returnCloseAttachmentManager()
-                this.handleSearch({ name: '', type: [] })
-                this.setState({ open: false, documentTypes: '' })
+                this.setState({ open: false })
               }}
               name='close icon'
             />
@@ -165,15 +165,17 @@ class AttachmentClass extends Component {
           trigger={React.cloneElement(trigger, {
             onClick: () => {
               this.setState({ open: true })
-              if (documentTypesForCertificates && documentTypesForCertificates.length) {
-                this.handleSearch({ name: '', type: documentTypesForCertificates.map(doc => doc.value) })
+              if (documentTypeIds && documentTypeIds.length) {
+                this.handleSearch({ name: '', type: documentTypeIds })
+                this.setState({ documentTypes: documentTypeIds })
+              } else {
+                this.setState({ documentTypes: [] })
               }
             }
           })}
           onClose={() => {
             this.returnCloseAttachmentManager()
-            this.handleSearch({ name: '', type: [] })
-            this.setState({ open: false, documentTypes: [] })
+            this.setState({ open: false })
           }}>
           <CustomHeader>
             <Grid verticalAlign='middle'>
@@ -199,9 +201,6 @@ class AttachmentClass extends Component {
                     value={this.state.documentTypes}
                     selection
                     onChange={(event, { name, value }) => {
-                      const documents = documentTypesForCertificates || documentTypes
-                      const data = documents.find(option => parseInt(option.value) === parseInt(value))
-
                       this.setState({ [name]: value })
                       this.handleSearch({ name: this.state.searchValue, type: value })
                     }}
@@ -244,8 +243,7 @@ class AttachmentClass extends Component {
               basic
               onClick={() => {
                 this.returnCloseAttachmentManager()
-                this.handleSearch({ name: '', type: [] })
-                this.setState({ open: false, documentTypes: [] })
+                this.setState({ open: false })
               }}>
               <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                 {text => text}
@@ -287,7 +285,8 @@ AttachmentModal.propTypes = {
   tableProps: object,
   asModal: bool,
   selectable: bool,
-  documentTypesForCertificates: array
+  documentTypesForCertificates: array,
+  singleSelection: bool
 }
 
 AttachmentModal.defaultProps = {
@@ -302,7 +301,8 @@ AttachmentModal.defaultProps = {
   tableProps: {},
   asModal: true,
   selectable: true,
-  documentTypesForCertificates: []
+  documentTypesForCertificates: [],
+  singleSelection: false
 }
 
 class AttachmentManager extends Component {

@@ -192,6 +192,15 @@ class MyRequestedItems extends Component {
         ),
         align: 'right',
         width: 145
+      },
+      {
+        name: 'ownerBranch',
+        title: (
+          <FormattedMessage id='wantedBoard.requestedBy' defaultMessage='Requested By'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 145
       }
     ],
     columnsChemical: [
@@ -339,6 +348,15 @@ class MyRequestedItems extends Component {
         ),
         align: 'right',
         width: 145
+      },
+      {
+        name: 'ownerBranch',
+        title: (
+          <FormattedMessage id='wantedBoard.requestedBy' defaultMessage='Requested By'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 145
       }
     ],
 
@@ -364,7 +382,7 @@ class MyRequestedItems extends Component {
 
   handleFiltersValue = debounce(value => {
     const { handleFiltersValue } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearchPattern(value)
+    if (Datagrid.isReady()) Datagrid.setSearch(value)
     else handleFiltersValue(value)
   }, 300)
 

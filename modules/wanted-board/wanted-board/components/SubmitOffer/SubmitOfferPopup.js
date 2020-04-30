@@ -28,13 +28,13 @@ import { FormattedUnit } from '~/components/formatted-messages'
 import { DateInput } from '~/components/custom-formik'
 // import { inputWrapper } from '../../../components'
 import { currency } from '~/constants/index'
-import { FieldArray } from 'formik'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexGrid from '~/components/table'
 import { Required } from '~/components/constants/layout'
+import { withToastManager } from 'react-toast-notifications'
+import { generateToastMarkup } from '~/utils/functions'
 
-import confirm from '~/src/components/Confirmable/confirm'
 
 const validationSchema = () =>
   Yup.lazy(values => {
@@ -312,6 +312,35 @@ class SubmitOfferPopup extends React.Component {
       }
     ],
     select: ''
+  }
+
+  componentDidMount() {
+    if (!this.props.datagrid.loading) this.handleDatagridResult()
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.datagrid.loading && !this.props.datagrid.loading) {
+      this.handleDatagridResult()
+    }
+  }
+
+  handleDatagridResult = () => {
+    if (!this.props.datagrid.rows.length) {
+      const { toastManager } = this.props
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage id='wantedBoard.notify.noInventoryItems.Header' defaultMessage='No Items Match' />,
+          <FormattedMessage
+            id='wantedBoard.notify.noInventoryItems.Content'
+            defaultMessage='You do not have any Inventory item matching the requested item to offer.'
+          />
+        ),
+        {
+          appearance: 'warning'
+        }
+      )
+      this.props.closePopup()
+    }
   }
 
   submitOffer = async ({ pricePerUOM, lotExpirationDate }) => {
@@ -605,4 +634,4 @@ function mapStateToProps(store, props) {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(SubmitOfferPopup)))
+export default withDatagrid(connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(SubmitOfferPopup))))

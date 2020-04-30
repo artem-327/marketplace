@@ -54,7 +54,7 @@ import ProdexGrid from '~/components/table'
 import * as val from 'yup'
 import { errorMessages, dateBefore } from '~/constants/yupValidation'
 import moment from 'moment'
-import UploadLot from './upload/UploadLot'
+import UploadAttachment from './upload/UploadAttachment'
 import { withDatagrid } from '~/modules/datagrid'
 import { AttachmentManager } from '~/modules/attachments'
 import _ from 'lodash'
@@ -190,7 +190,7 @@ const listConforming = [
   }
 ]
 
-val.addMethod(val.number, 'divisibleBy', function(ref, message) {
+val.addMethod(val.number, 'divisibleBy', function (ref, message) {
   return this.test({
     name: 'divisibleBy',
     exclusive: false,
@@ -198,7 +198,7 @@ val.addMethod(val.number, 'divisibleBy', function(ref, message) {
     params: {
       reference: ref.path
     },
-    test: function(value) {
+    test: function (value) {
       const divisedBy = parseInt(this.resolve(ref))
       if (!divisedBy || isNaN(divisedBy)) return false
 
@@ -207,8 +207,8 @@ val.addMethod(val.number, 'divisibleBy', function(ref, message) {
   })
 })
 
-val.addMethod(val.object, 'uniqueProperty', function(propertyName, message) {
-  return this.test('unique', message, function(value) {
+val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
+  return this.test('unique', message, function (value) {
     if (!value || !value[propertyName]) {
       return true
     }
@@ -232,10 +232,7 @@ val.addMethod(val.object, 'uniqueProperty', function(propertyName, message) {
 
 const validationScheme = val.object().shape({
   edit: val.object().shape({
-    product: val
-      .number()
-      .typeError(errorMessages.requiredMessage)
-      .required(errorMessages.requiredMessage),
+    product: val.number().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
     fobPrice: val
       .number()
       .min(0.001, errorMessages.minimum(0.001))
@@ -246,16 +243,13 @@ const validationScheme = val.object().shape({
       .required(errorMessages.requiredMessage),
     costPerUOM: val
       .string()
-      .test('v', errorMessages.mustBeNumber, function(v) {
+      .test('v', errorMessages.mustBeNumber, function (v) {
         return v === null || v === '' || !isNaN(v)
       })
-      .test('v', errorMessages.minimum(0), function(v) {
+      .test('v', errorMessages.minimum(0), function (v) {
         return v === null || v === '' || isNaN(v) || Number(v) >= 0
       }),
-    lotNumber: val
-      .string()
-      .typeError(errorMessages.invalidString)
-      .nullable(),
+    lotNumber: val.string().typeError(errorMessages.invalidString).nullable(),
     lotManufacturedDate: val.lazy(_value => dateBefore()),
     inStock: val.bool().required(errorMessages.requiredMessage),
     minimum: val
@@ -272,10 +266,7 @@ const validationScheme = val.object().shape({
       .positive(errorMessages.positive)
       .typeError(errorMessages.mustBeNumber)
       .required(errorMessages.requiredMessage),
-    leadTime: val
-      .number()
-      .min(1, errorMessages.minimum(1))
-      .typeError(errorMessages.mustBeNumber),
+    leadTime: val.number().min(1, errorMessages.minimum(1)).typeError(errorMessages.mustBeNumber),
     splits: val
       .number()
       .min(1, errorMessages.minimum(1))
@@ -322,10 +313,7 @@ const validationScheme = val.object().shape({
             .test('maxdec', errorMessages.maxDecimals(3), val => {
               return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
             }),
-          manuallyModified: val
-            .number()
-            .min(0)
-            .max(1)
+          manuallyModified: val.number().min(0).max(1)
         })
     )
   })
@@ -339,7 +327,7 @@ class DetailSidebar extends Component {
     saveBroadcast: 0,
     changedForm: false,
     documentType: 1,
-    openUploadLot: false,
+    openUploadAttachment: false,
     edited: false,
     sidebarValues: null,
     initValues: initValues,
@@ -510,7 +498,7 @@ class DetailSidebar extends Component {
   }
 
   handleChange = (e, name, value) => {
-    this.setState({ openUploadLot: true, documentType: value })
+    this.setState({ openUploadAttachment: true, documentType: value })
   }
 
   onSplitsChange = debounce(async (value, values, setFieldValue, validateForm) => {
@@ -618,7 +606,7 @@ class DetailSidebar extends Component {
     let isGrouped = getSafe(() => sidebarValues.grouped, false)
     let sendSuccess = false
     let data = null
-    
+
     await new Promise(resolve => this.setState({ edited: false }, resolve))
 
     setSubmitting(false)
@@ -776,7 +764,7 @@ class DetailSidebar extends Component {
     this.setState({ changedForm: true })
   }
 
-  attachDocumentsUploadLot = (newDocument, values, setFieldValue) => {
+  attachDocumentsUploadAttachment = (newDocument, values, setFieldValue) => {
     const docArray = uniqueArrayByKey(values.documents.attachments.concat([newDocument]), 'id')
     setFieldValue(`documents.attachments`, docArray)
     this.setState({ changedForm: true })
@@ -979,37 +967,6 @@ class DetailSidebar extends Component {
       </QuantityWrapper>
     )
   }
-
-  prepareLinkToAttachment = async documentId => {
-    let downloadedFile = await this.props.downloadAttachment(documentId)
-    const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
-    const mimeType = fileName && this.getMimeType(fileName)
-    const element = document.createElement('a')
-    const file = new Blob([downloadedFile.value.data], { type: mimeType })
-    let fileURL = URL.createObjectURL(file)
-    element.href = fileURL
-
-    return element
-  }
-
-  extractFileName = contentDispositionValue => {
-    var filename = ''
-    if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
-      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
-      var matches = filenameRegex.exec(contentDispositionValue)
-      if (matches != null && matches[1]) {
-        filename = matches[1].replace(/['"]/g, '')
-      }
-    }
-    return filename
-  }
-
-  getMimeType = documentName => {
-    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
-
-    let editValues = this.getEditValues()
-  }
-  onChange = debounce(() => this.setState({ edited: true, saved: false, oldProductOffer: this.values }), 200)
 
   render() {
     let {

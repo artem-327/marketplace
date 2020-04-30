@@ -1,36 +1,65 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
+import { FormattedMessage, injectIntl } from 'react-intl'
+import Router from 'next/router'
+import {
+  Container as SemanticContainer,
+  Header,
+  Button,
+  Icon,
+  Grid,
+  GridColumn,
+  GridRow,
+  Segment,
+  Popup,
+  Message,
+  Divider
+} from 'semantic-ui-react'
+import { Form, Input } from 'formik-semantic-ui-fixed-validation'
+import { withToastManager } from 'react-toast-notifications'
+import * as Yup from 'yup'
+//Components
 import Shipping from './Shipping'
 import ShippingEdit from './ShippingEdit'
 import ShippingQuote from './ShippingQuote'
 import Payment from './Payment'
-import { Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment, Popup } from 'semantic-ui-react'
-import { Form, Input } from 'formik-semantic-ui-fixed-validation'
-import styled from 'styled-components'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import Router from 'next/router'
-
 import CartItemSummary from '~/components/summary/CartItemSummary'
 import Summary from '~/components/summary/Summary'
-
 import Spinner from '../../../src/components/Spinner/Spinner'
 import confirm from '~/src/components/Confirmable/confirm'
 import { checkToken } from '../../../src/utils/auth'
-import { withToastManager } from 'react-toast-notifications'
-
-import { generateToastMarkup } from '~/utils/functions'
-import { getSafe } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
-import * as Yup from 'yup'
-
-import '../styles/PurchaseOrder.scss'
 import { errorMessages } from '~/constants/yupValidation'
+import FreightLabel from '~/components/freight'
+//Styled
+import {
+  VerticalUnpaddedColumn,
+  StyledRow,
+  TopUnpaddedRow,
+  GridContainer,
+  VerticalUnpaddedRow,
+  BottomUnpaddedRow,
+  CustomMessage
+} from '~/modules/cart/components/StyledComponents'
+import '../styles/PurchaseOrder.scss'
+import styled from 'styled-components'
+
+const FREIGHT_TYPES = {
+  ECHO: 'ECHO_FREIGHT',
+  OWN: 'OWN_FREIGHT'
+}
 
 const RelaxedForm = styled(Form)`
   padding-top: 1.5rem !important;
   padding-bottom: 50px !important;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+`
+
+const Container = styled(SemanticContainer)`
+  padding: 20px 30px 30px 30px !important;
+  overflow-x: hidden;
 `
 
 const validationSchema = Yup.object().shape({
@@ -39,6 +68,8 @@ const validationSchema = Yup.object().shape({
 
 class PurchaseOrder extends Component {
   state = {
+    modalOpen: false,
+    isNewAddress: false,
     otherAddresses: true,
     submitting: false,
     addressId: 'deliveryAddressId',
@@ -54,9 +85,10 @@ class PurchaseOrder extends Component {
 
     if (preFilledValues) {
       const warehouses = await getWarehouses()
-      const filteredWarehouses = warehouses.value.filter(el =>
-        getSafe(() => el.deliveryAddress.address.zip.zip, '') === preFilledValues.zip
-        && getSafe(() => el.deliveryAddress.address.country.id, '') === preFilledValues.country
+      const filteredWarehouses = warehouses.value.filter(
+        el =>
+          getSafe(() => el.deliveryAddress.address.zip.zip, '') === preFilledValues.zip &&
+          getSafe(() => el.deliveryAddress.address.country.id, '') === preFilledValues.country
       )
 
       let selectedAddress = null
@@ -68,12 +100,13 @@ class PurchaseOrder extends Component {
 
         this.formikProps.setFieldValue('address', filteredWarehouses[0].id)
 
-        this.setState({
-          otherAddresses: false,
-          addressId: 'warehouseId',
-          shippingQuotes: preFilledValues.quotes.rates.map(d => d.shipmentRate),
-          selectedAddress: selectedAddress
-        },
+        this.setState(
+          {
+            otherAddresses: false,
+            addressId: 'warehouseId',
+            shippingQuotes: preFilledValues.quotes.rates.map(d => d.shipmentRate),
+            selectedAddress: selectedAddress
+          },
           () => this.handleQuoteSelect(preFilledValues.freightIndex)
         )
       }
@@ -84,7 +117,7 @@ class PurchaseOrder extends Component {
 
   handleQuoteSelect = index => {
     let { shippingQuoteSelected, shippingQuotes } = this.props
-    shippingQuoteSelected({ index, quote: this.state.shippingQuotes[index] })
+    shippingQuoteSelected({ index, quote: shippingQuotes.rates[index] })
   }
 
   getAddress = selectedAddressId => {
@@ -114,29 +147,34 @@ class PurchaseOrder extends Component {
   getShippingQuotes = async selectedAddress => {
     let { address } = selectedAddress
     try {
-      const shippingQuotes = await this.props.getShippingQuotes(address.country.id, address.zip.zip)
-      this.setState({ shippingQuotes: shippingQuotes.value.rates })
+      await this.props.getShippingQuotes(address.country.id, address.zip.zip)
     } catch (error) {
       console.error(error)
     }
   }
 
-  postNewDeliveryAddress = async payload => {
-    try {
-      const response = await this.props.postNewDeliveryAddress(payload)
-      this.getAddress(response.value.id)
-    } catch (e) {
-      console.error(e)
-    }
-  }
+  handleSubmit = async payload => {
+    let id = getSafe(() => this.state.selectedAddress.id)
+    const isWarehouse = !this.state.otherAddresses
+    const { isNewAddress } = this.state
+    const { postNewDeliveryAddress, updateDeliveryAddress, postNewWarehouse, updateWarehouse } = this.props
+    let response = null
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (isNewAddress) {
+          if (!isWarehouse) response = await postNewDeliveryAddress(payload)
+          else response = await postNewWarehouse(payload)
+        } else {
+          if (!isWarehouse) response = await updateDeliveryAddress(payload, id)
+          else response = await updateWarehouse(payload, id)
+        }
 
-  updateDeliveryAddress = async payload => {
-    try {
-      const response = await this.props.updateDeliveryAddress(payload)
-      this.getAddress(response.value.id)
-    } catch (e) {
-      console.error(e)
-    }
+        this.getAddress(response.value.id)
+        resolve(response)
+      } catch (e) {
+        reject(e)
+      }
+    })
   }
 
   handleToggleChange = otherAddresses => {
@@ -171,14 +209,15 @@ class PurchaseOrder extends Component {
     }
   }
 
-  handlePurchase = async (shipping, shipmentQuoteId, dwollaBankAccountId) => {
+  handlePurchase = async payload => {
     if (this.state.submitting) return
     this.setState({ submitting: true })
-
+    const { shipmentQuoteId, dwollaBankAccountId, freightType } = payload
     const data = {
       [this.state.addressId]: this.state.selectedAddress.id,
       shipmentQuoteId,
-      dwollaBankAccountId
+      dwollaBankAccountId,
+      freightType
     }
 
     try {
@@ -226,10 +265,9 @@ class PurchaseOrder extends Component {
     const {
       billingInfo,
       dispatch,
-      postNewDeliveryAddress,
-      updateDeliveryAddress,
       preferredBankAccountId,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      shippingQuoteSelected
     } = this.props
     let {
       cart,
@@ -238,9 +276,9 @@ class PurchaseOrder extends Component {
       cartIsFetching,
       shippingQuotes,
       shippingQuotesAreFetching,
-      shipping
+      shipping,
+      purchaseHazmatEligible
     } = this.props
-
     if (cartIsFetching) return <Spinner />
     if (cart.cartItems.length === 0) Router.push('/cart')
 
@@ -254,114 +292,112 @@ class PurchaseOrder extends Component {
     let initialValues = {
       payment,
       address: '',
-      shipmentQuoteId: ''
+      shipmentQuoteId: '',
+      freightType: FREIGHT_TYPES.ECHO
     }
 
     let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit}` : ''
 
-    return (
-      <div className='app-inner-main flex stretched'>
-        <div className='header-top' style={{ zIndex: 10, backgroundColor: '#FFF' }}>
-          <Container fluid style={{ padding: '0 32px' }}>
-            <Menu secondary className='page-part'>
-              <Menu.Menu position='right'>
-                <Menu.Item>
-                  <Button
-                    icon
-                    basic
-                    labelPosition='left'
-                    onClick={() => Router.push('/cart')}
-                    data-test='purchase_order_back_to_cart_btn'>
-                    <Icon name='chevron left' />
-                    <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                </Menu.Item>
-              </Menu.Menu>
-            </Menu>
-          </Container>
-        </div>
+    let isAnyItemHazardous = cart.cartItems.some(
+      item => getSafe(() => item.productOffer.companyProduct.hazardous, false) === true
+    )
 
+    return (
+      <Container>
+        <Button basic onClick={() => Router.push('/cart')} data-test='purchase_order_back_to_cart_btn'>
+          <Icon name='shopping cart' />
+          <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart'>
+            {text => text}
+          </FormattedMessage>
+        </Button>
         <RelaxedForm
           initialValues={initialValues}
           validationSchema={validationSchema}
           className='purchase-order'
           enableReinitialize
           render={formikProps => {
-            let { values } = formikProps
+            let { values, setFieldValue } = formikProps
             this.formikProps = formikProps
+            const echoFreight = values.freightType === FREIGHT_TYPES.ECHO
 
             return (
-              <Grid centered>
-                <GridColumn mobile={14} tablet={9} computer={8}>
-                  {shipping.isShippingEdit && (
+              <GridContainer>
+                <GridColumn mobile={14} tablet={9} computer={10}>
+                  {this.state.modalOpen && (
                     <ShippingEdit
+                      onClose={() => this.setState({ modalOpen: false })}
+                      isWarehouse={!this.state.otherAddresses}
                       savedShippingPreferences={shipping.savedShippingPreferences}
                       selectedAddress={this.state.selectedAddress}
-                      isNewAddress={shipping.isNewAddress}
+                      isNewAddress={this.state.isNewAddress}
                       shippingChanged={this.props.shippingChanged}
-                      postNewDeliveryAddress={this.postNewDeliveryAddress}
-                      updateDeliveryAddress={this.updateDeliveryAddress}
+                      handleSubmit={this.handleSubmit}
                       getStates={this.props.getStates}
                       getProvinces={this.props.getProvinces}
                       states={this.props.states}
                       provinces={this.props.provinces}
                       isFetching={this.props.isFetching}
-                      initialValues={this.props.initialValues}
+                      initialValues={this.state.isNewAddress ? null : this.props.initialValues}
                     />
-                  )}
-                  {!shipping.isShippingEdit && (
-                    <Segment>
-                      <Grid className='bottom-padded'>
-                        <Shipping
-                          otherAddresses={this.state.otherAddresses}
-                          deliveryAddresses={deliveryAddresses}
-                          dispatch={dispatch}
-                          shippingChanged={this.props.shippingChanged}
-                          getAddress={this.getAddress}
-                          selectedAddress={this.state.selectedAddress}
-                          getBranches={this.props.getBranches}
-                          branchesAreFetching={this.props.branchesAreFetching}
-                          branches={this.props.branches}
-                          getWarehouses={this.props.getWarehouses}
-                          warehousesFetching={this.props.warehousesFetching}
-                          warehouses={this.props.warehouses}
-                          handleToggleChange={this.handleToggleChange}
-                          shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
-                          formikProps={formikProps}
-                          weightLimitExceed={cart.weightLimitExceed}
-                        />
-                      </Grid>
-                    </Segment>
                   )}
 
                   <Segment>
                     <Grid className='bottom-padded'>
-                      <GridRow className='header'>
-                        <GridColumn>
+                      <Shipping
+                        handleOpen={({ modalOpen, isNewAddress }) => this.setState({ modalOpen, isNewAddress })}
+                        otherAddresses={this.state.otherAddresses}
+                        deliveryAddresses={deliveryAddresses}
+                        getAddress={this.getAddress}
+                        selectedAddress={this.state.selectedAddress}
+                        getWarehouses={this.props.getWarehouses}
+                        warehouses={this.props.warehouses}
+                        handleToggleChange={this.handleToggleChange}
+                        shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
+                        formikProps={formikProps}
+                      />
+                    </Grid>
+                  </Segment>
+
+                  <Segment>
+                    <Grid>
+                      <StyledRow verticalAlign='middle' bottomShadow>
+                        <VerticalUnpaddedColumn>
                           <Header as='h2'>
                             <FormattedMessage id='cart.2freightSelection' defaultMessage='2. Freight Selection' />
                           </Header>
-                        </GridColumn>
-                      </GridRow>
+                        </VerticalUnpaddedColumn>
+                      </StyledRow>
+                      {this.state.selectedAddress && (
+                        <FreightLabel
+                          echoFreight={echoFreight}
+                          setFieldValue={(fieldName, value) => {
+                            shippingQuoteSelected(null)
+                            setFieldValue(fieldName, value)
+                          }}
+                        />
+                      )}
                       {!cart.weightLimitExceed && this.state.selectedAddress ? (
                         <ShippingQuote
+                          selectionDisabled={!echoFreight}
                           currency={currency}
                           selectedShippingQuote={this.props.cart.selectedShipping}
                           handleQuoteSelect={this.handleQuoteSelect}
                           selectedAddress={this.state.selectedAddress}
-                          shippingQuotes={this.state.shippingQuotes}
+                          shippingQuotes={shippingQuotes}
                           shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
                         />
                       ) : (
                         !this.state.selectedAddress && (
                           <GridRow>
                             <GridColumn>
-                              <FormattedMessage
-                                id='cart.selectWhOrAddress'
-                                defaultMessage='Please, select delivery address or warehouse first.'
-                              />
+                              <CustomMessage warning>
+                                <Icon size='large' name='warning circle' />
+                                <FormattedMessage
+                                  id='cart.selectWhOrAddress'
+                                  defaultMessage='Please, select delivery address or warehouse first.'>
+                                  {text => text}
+                                </FormattedMessage>
+                              </CustomMessage>
                             </GridColumn>
                           </GridRow>
                         )
@@ -370,17 +406,31 @@ class PurchaseOrder extends Component {
                         <>
                           <GridRow>
                             <GridColumn computer={16}>
-                              <FormattedMessage
-                                id='cart.weightLimitExceeded'
-                                defaultMessage={`Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
-                                values={{ limit: weightLimitStr }}
-                              />
+                              <CustomMessage warning>
+                                <CustomMessage.Header>
+                                  <Icon name='warning circle' />
+                                  {formatMessage({
+                                    id: 'cart.weightLimitExceeded.header',
+                                    defaultMessage:
+                                      'We are sorry, but no matching Shipping Quotes were provided by logistics company.'
+                                  })}
+                                </CustomMessage.Header>
+                                <CustomMessage.Content>
+                                  {formatMessage(
+                                    {
+                                      id: 'cart.weightLimitExceeded.content',
+                                      defaultMessage: `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
+                                    },
+                                    { limit: weightLimitStr }
+                                  )}
+                                </CustomMessage.Content>
+                              </CustomMessage>
                             </GridColumn>
                           </GridRow>
                         </>
                       )}
 
-                      {this.state.shippingQuotes.length === 0 &&
+                      {getSafe(() => shippingQuotes.rates, []).length === 0 &&
                         this.state.selectedAddress &&
                         !shippingQuotesAreFetching &&
                         !cart.weightLimitExceed && (
@@ -394,13 +444,14 @@ class PurchaseOrder extends Component {
                           </GridRow>
                         )}
                       {this.state.selectedAddress &&
-                        // shippingQuotes.length === 0 &&
                         !shippingQuotesAreFetching &&
-                        (cart.weightLimitExceed || shippingQuotes.length === 0) && (
+                        (cart.weightLimitExceed || getSafe(() => shippingQuotes.rates, []).length === 0) && (
                           <>
-                            <GridRow>
-                              <GridColumn computer={16}>
+                            <TopUnpaddedRow>
+                              <VerticalUnpaddedColumn computer={8}>
                                 <Button
+                                  basic
+                                  fluid
                                   loading={this.props.manualShipmentPending}
                                   type='button'
                                   onClick={() => this.handleManualShipment(formikProps)}>
@@ -410,16 +461,19 @@ class PurchaseOrder extends Component {
                                     {text => text}
                                   </FormattedMessage>
                                 </Button>
-                              </GridColumn>
-                            </GridRow>
-                            <GridRow>
-                              <GridColumn computer={16}>
-                                <FormattedMessage
-                                  id='cart.quoteReceived'
-                                  defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
-                                />
-                              </GridColumn>
-                            </GridRow>
+                              </VerticalUnpaddedColumn>
+                            </TopUnpaddedRow>
+                            <Divider />
+                            <VerticalUnpaddedRow>
+                              <VerticalUnpaddedColumn computer={16}>
+                                <Header as='h2'>
+                                  <FormattedMessage
+                                    id='cart.quoteReceived'
+                                    defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
+                                  />
+                                </Header>
+                              </VerticalUnpaddedColumn>
+                            </VerticalUnpaddedRow>
                             <GridRow>
                               <GridColumn computer={8}>
                                 <Input
@@ -437,13 +491,13 @@ class PurchaseOrder extends Component {
 
                   <Segment>
                     <Grid className='bottom-padded'>
-                      <GridRow className='header'>
-                        <GridColumn>
+                      <StyledRow verticalAlign='middle' bottomShadow>
+                        <VerticalUnpaddedColumn>
                           <Header as='h2'>
                             <FormattedMessage id='cart.3payment' defaultMessage='3. Payment' />
                           </Header>
-                        </GridColumn>
-                      </GridRow>
+                        </VerticalUnpaddedColumn>
+                      </StyledRow>
 
                       <Payment
                         dispatch={dispatch}
@@ -457,7 +511,7 @@ class PurchaseOrder extends Component {
                   </Segment>
                 </GridColumn>
 
-                <GridColumn mobile={14} tablet={6} computer={5}>
+                <GridColumn mobile={14} tablet={6} computer={6}>
                   <CartItemSummary
                     updateHazmatInfo={this.props.updateHazmatInfo}
                     currency={currency}
@@ -467,32 +521,33 @@ class PurchaseOrder extends Component {
 
                   <Summary
                     additionalContent={
-                      <GridRow centered>
+                      <GridRow className='default-padded' centered>
                         <Popup
                           trigger={
                             <GridColumn>
                               <Button
                                 disabled={
-                                  this.state.submitting ||
-                                  !values.payment ||
-                                  !this.props.logisticsAccount ||
+                                  (!purchaseHazmatEligible && isAnyItemHazardous) || // false
+                                  this.state.submitting || // false
+                                  !values.payment || // !true
+                                  !this.props.logisticsAccount || // !true
                                   !(
-                                    this.state.selectedAddress &&
-                                    (this.props.cart.selectedShipping || values.shipmentQuoteId)
+                                    this.state.selectedAddress && // true
+                                    (this.props.cart.selectedShipping || values.shipmentQuoteId || !echoFreight)
                                   )
                                 }
                                 loading={this.state.submitting}
                                 fluid
                                 primary
                                 onClick={() => {
-                                  this.handlePurchase(
-                                    shipping,
-                                    getSafe(
+                                  this.handlePurchase({
+                                    shipmentQuoteId: getSafe(
                                       () => this.props.cart.selectedShipping.quote.quoteId,
                                       values.shipmentQuoteId
                                     ),
-                                    values.payment
-                                  )
+                                    dwollaBankAccountId: values.payment,
+                                    freightType: values.freightType
+                                  })
                                 }}
                                 data-test='purchase_order_place_order_btn'>
                                 {/* <FormattedMessage id='cart.placeOrder' defaultMessage='Place Order1' /> */}
@@ -504,12 +559,24 @@ class PurchaseOrder extends Component {
                             </GridColumn>
                           }
                           content={
-                            <FormattedMessage
-                              id='cart.purchaseOrder.logisticAccRequired'
-                              defaultMessage='To be able to complete Order, your Company needs to have Logistics account defined. This can be done in Settings.'
-                            />
+                            !this.props.logisticsAccount ? (
+                              <FormattedMessage
+                                id='cart.purchaseOrder.logisticAccRequired'
+                                defaultMessage='To be able to complete Order, your Company needs to have Logistics account defined. This can be done in Settings.'
+                              />
+                            ) : (
+                              <FormattedMessage
+                                id='cart.purchaseOrder.purchaseHazmatEligible'
+                                defaultMessage='You are not authorized to purchase this hazardous item.'
+                              />
+                            )
                           }
-                          disabled={this.props.logisticsAccount}
+                          disabled={
+                            this.props.logisticsAccount &&
+                            ((purchaseHazmatEligible && isAnyItemHazardous) ||
+                              (purchaseHazmatEligible && !isAnyItemHazardous) ||
+                              (!purchaseHazmatEligible && !isAnyItemHazardous))
+                          }
                         />
                       </GridRow>
                     }
@@ -518,11 +585,11 @@ class PurchaseOrder extends Component {
                     totalPrice={this.props.cart.cfPriceSubtotal}
                   />
                 </GridColumn>
-              </Grid>
+              </GridContainer>
             )
           }}
         />
-      </div>
+      </Container>
     )
   }
 }

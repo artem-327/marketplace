@@ -14,7 +14,7 @@ import FilterTags from '~/modules/filter/components/FitlerTags'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import DocumentsPopup from '~/modules/settings/components/Documents/DocumentManagerPopup'
 import Link from 'next/link'
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { UploadCloud, CheckCircle, PlusCircle } from 'react-feather'
 import { handleFiltersValue } from '~/modules/settings/actions'
 import { withToastManager } from 'react-toast-notifications'
@@ -59,7 +59,7 @@ const RelatedDocumentsDropdown = styled(Dropdown)`
   z-index: 601 !important;
 `
 
-const CustomDivUploadLot = styled.div`
+const CustomDivUploadAttachment = styled.div`
   margin-bottom: 30px !important;
   margin-top: 20px !important;
 `
@@ -168,7 +168,8 @@ class Orders extends Component {
           </FormattedMessage>
         ),
         width: 100,
-        align: 'right'
+        align: 'right',
+        sortPath: 'Order.id'
       },
       {
         name: 'globalStatus',
@@ -505,7 +506,7 @@ class Orders extends Component {
     ],
     relatedDocumentsDropdown: '',
     documentType: '',
-    openUploadLot: false,
+    openUploadAttachment: false,
     relatedDocumentsTypeDropdown: [],
     documentFiles: [],
     isAddedNewDocument: false,
@@ -721,7 +722,13 @@ class Orders extends Component {
   }
 
   prepareLinkToAttachment = async documentId => {
-    let downloadedFile = await this.props.downloadAttachmentPdf(documentId)
+    let downloadedFile = null
+    const { openModal, openModalAcounting } = this.state
+    if (openModalAcounting) {
+      downloadedFile = await this.props.downloadAttachmentPdf(documentId)
+    } else if (openModal) {
+      downloadedFile = await this.props.downloadAttachment(documentId)
+    }
     const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
     const mimeType = fileName && this.getMimeType(fileName)
     const element = document.createElement('a')
@@ -745,7 +752,7 @@ class Orders extends Component {
   }
 
   closePopup = () => {
-    this.setState({ attachmentPopup: null, openModal: false })
+    this.setState({ attachmentPopup: null, openModal: false, openModalAcounting: false })
     this.props.clearRelatedOrders()
   }
 
@@ -893,7 +900,7 @@ class Orders extends Component {
         <CustomDivAddDocument>
           <div>
             <AttachmentManager
-              relatedDocumentType={this.state.relatedDocumentType}
+              documentTypeIds={[this.state.relatedDocumentType.value]}
               isOpenManager={this.state.isOpenManager}
               asModal
               returnSelectedRows={rows => this.attachDocumentsManager(rows)}
@@ -1034,7 +1041,6 @@ class Orders extends Component {
           <Modal
             size='small'
             closeIcon={false}
-            onClose={() => this.setState({ openModalAcounting: false })}
             centered={true}
             open={this.state.openModalAcounting}>
             <Modal.Header>
@@ -1256,6 +1262,7 @@ class Orders extends Component {
               loading={datagrid.loading}
               rows={this.getRows()}
               // onSortingChange={sorting => sorting.sortPath && this.setState({ sorting })}
+              defaultSorting={{ columnName: 'orderId', sortPath: 'Order.id', direction: 'desc' }}
               rowActions={[
                 {
                   text: formatMessage({

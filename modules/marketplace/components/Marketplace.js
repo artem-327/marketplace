@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
-import { AlertTriangle } from 'react-feather'
+import { AlertTriangle, Clock } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { number } from 'prop-types'
@@ -13,11 +13,12 @@ import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
-import { Holds } from '~/modules/marketplace/holds'
+import Holds from '~/modules/marketplace/holds'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { Datagrid } from '~/modules/datagrid'
 import { debounce } from 'lodash'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
+import SearchByNamesAndTags from '~/modules/search'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -50,9 +51,30 @@ const RedTriangle = styled(AlertTriangle)`
   }
 `
 
+const ClockIcon = styled(Clock)`
+  display: block;
+  width: 20px;
+  height: 19px;
+  margin: 0 auto;
+  vertical-align: top;
+  font-size: 20px;
+  color: #f16844;
+  line-height: 20px;
+
+  &.grey {
+    color: #848893;
+  }
+`
+
 const MarketplaceTab = styled(Tab)`
   flex-grow: 1;
   flex-shrink: 1;
+`
+
+const CustomDiv = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 class Marketplace extends Component {
@@ -64,6 +86,12 @@ class Marketplace extends Component {
       {
         name: 'conformingIcon',
         title: <RedTriangle className='grey' />,
+        width: 45,
+        align: 'center'
+      },
+      {
+        name: 'expired',
+        title: <ClockIcon className='grey' />,
         width: 45,
         align: 'center'
       },
@@ -186,27 +214,35 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 160
+      },
+      {
+        name: 'notes',
+        title: (
+          <FormattedMessage id='marketplace.notes' defaultMessage='Notes'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160
+      },
+      {
+        name: 'leadTime',
+        title: (
+          <FormattedMessage id='marketplace.leadTime' defaultMessage='Lead Time (days)'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160
       }
     ],
     selectedRows: [],
     //pageNumber: 0,
-    open: false,
-    filterValue: ''
-  }
-
-  initData = () => {
-    const { datagrid } = this.props
-    datagrid.loadData()
-  }
-
-  componentDidMount() {
-    this.props.applyDatagridFilter('')
+    open: false
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter)
+      datagrid.setFilter(datagridFilter, true, 'marketPlaceFilter')
     }
   }
 
@@ -232,6 +268,16 @@ class Marketplace extends Component {
           } // <div> has to be there otherwise popup will be not shown
         />
       ) : null,
+      expired: r.expired ? (
+        <Popup
+          header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
+          trigger={
+            <div>
+              <ClockIcon />
+            </div>
+          } // <div> has to be there otherwise popup will be not shown
+        />
+      ) : null,
       condition: r.condition ? (
         <Popup
           content={r.conditionNotes}
@@ -250,32 +296,23 @@ class Marketplace extends Component {
           <CapitalizedText>{r.packagingType}</CapitalizedText>{' '}
         </>
       ),
-      association: (<ArrayToFirstItem values={r.association} rowItems={1} />)
+      notes: r.notes ? (
+        <Popup
+          content={r.notes}
+          trigger={<CustomDiv>{r.notes}</CustomDiv>} // <div> has to be there otherwise popup will be not shown
+        />
+      ) : null,
+      association: <ArrayToFirstItem values={r.association} rowItems={1} />
     }))
   }
 
-  tableRowClicked = (clickedId, isHoldRequest = false) => {
+  tableRowClicked = (clickedId, isHoldRequest = false, openInfo = false) => {
     const { getProductOffer, sidebarChanged, isProductInfoOpen, closePopup } = this.props
     let { isOpen, id } = this.props.sidebar
     getProductOffer(clickedId)
 
     if (isProductInfoOpen) closePopup()
-    sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest })
-  }
-
-  handleFiltersValue = debounce(value => {
-    const { applyDatagridFilter } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
-    else applyDatagridFilter(value)
-  }, 250)
-
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
-  }
-
-  handleClearAutocompleteData = () => {
-    this.props.clearAutocompleteData()
+    sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
   }
 
   isSelectedMultipleEcho = (rows, selectedRows) => {
@@ -304,8 +341,15 @@ class Marketplace extends Component {
   }
 
   renderTabMarketplace = () => {
-    const { datagrid, intl, openPopup, isMerchant, tutorialCompleted } = this.props
-    const { columns, selectedRows, filterValue } = this.state
+    const {
+      datagrid,
+      intl,
+      openPopup,
+      isMerchant,
+      tutorialCompleted,
+      sidebar: { openInfo }
+    } = this.props
+    const { columns, selectedRows } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
 
@@ -339,13 +383,13 @@ class Marketplace extends Component {
             open: this.state.open,
             closeModal: () => this.setState({ open: false })
           }}
-          productOfferIds={rows.reduce(function(filtered, row) {
+          productOfferIds={rows.reduce(function (filtered, row) {
             if (selectedRows.includes(row.id)) {
               filtered.push(row.id)
             }
             return filtered
           }, [])}
-          productOffersSelected={rows.reduce(function(filtered, row) {
+          productOffersSelected={rows.reduce(function (filtered, row) {
             if (selectedRows.includes(row.id)) {
               filtered.push({
                 id: row.id,
@@ -362,19 +406,9 @@ class Marketplace extends Component {
 
         <Grid>
           <Grid.Row>
-            <Grid.Column width={4} style={{ paddingTop: '9px' }}>
-              <Input
-                fluid
-                icon='search'
-                value={filterValue}
-                onChange={this.handleFilterChange}
-                placeholder={formatMessage({
-                  id: 'myInventory.searchByProductName',
-                  defaultMessage: 'Search by product name...'
-                })}
-              />
-            </Grid.Column>
-            <Grid.Column width={12}>
+            <SearchByNamesAndTags />
+
+            <Grid.Column width={8}>
               <Menu secondary className='page-part'>
                 <Menu.Menu position='right'>
                   <Menu.Item>
@@ -436,6 +470,7 @@ class Marketplace extends Component {
             rowSelection
             showSelectionColumn
             groupBy={['productNumber']}
+            shrinkGroups={true}
             // sameGroupSelectionOnly
             getChildGroups={rows =>
               _(rows)
@@ -457,18 +492,17 @@ class Marketplace extends Component {
               )
             }}
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
-            /* COMMENTED #30916
             onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()
               if (targetTag !== 'input' && targetTag !== 'label') {
-                this.tableRowClicked(row.id)
+                this.tableRowClicked(row.id, false, true)
               }
-            }}*/
+            }}
             data-test='marketplace_row_action'
             rowActions={rowActions}
           />
         </div>
-        <AddCart />
+        <AddCart openInfo={openInfo} />
       </>
     )
   }
