@@ -2034,6 +2034,7 @@
   "order.cancelTransfer.success.content": "Payment transfer for order {orderId} was canceled successfully",
   "order.cancelOrder": "Cancel Order",
   "order.returnShipping": "Return Shipping",
+  "order.returnContact": "Return Contact",
   "order.returnTo": "Return To",
   "order.returnToAddress": "Return To Address",
   "order.returnCarrier": "Return Carrier",

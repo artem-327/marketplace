@@ -1268,6 +1268,10 @@ class Detail extends Component {
                                   </>
                                 )}
                                 <GridDataColumn width={keyColumn} className='key'>
+                                  <FormattedMessage id='order.returnContact' defaultMessage='Return Contact' />
+                                </GridDataColumn>
+                                <GridDataColumn width={valColumn}>{order.returnAddressName}</GridDataColumn>
+                                <GridDataColumn width={keyColumn} className='key'>
                                   <FormattedMessage id='order.contactNumber' defaultMessage='Contact Number' />
                                 </GridDataColumn>
                                 <GridDataColumn width={valColumn}>{order.returnAddressContactPhone}</GridDataColumn>
