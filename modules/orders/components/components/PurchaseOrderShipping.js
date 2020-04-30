@@ -177,6 +177,10 @@ class PurchaseOrderShipping extends React.Component {
                         </Grid.Row>
                         {manualShipmentQuoteId ? (
                           <>
+                            <FreightLabel echoFreight={echoFreight} setFieldValue={(fieldName, value) => {
+                              this.setState({ selectedShippingQuote: null })
+                              setFieldValue(fieldName, value)
+                            }} />
                             {order.cfWeightExceeded ? (
                               <GridRow>
                                 <GridColumn computer={16}>
