@@ -3,7 +3,7 @@ import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } 
 import { AlertTriangle, Clock } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
-import { number } from 'prop-types'
+import { number, boolean } from 'prop-types'
 import Link from 'next/link'
 import styled from 'styled-components'
 
@@ -347,6 +347,7 @@ class Marketplace extends Component {
       openPopup,
       isMerchant,
       tutorialCompleted,
+      isCompanyAdmin,
       sidebar: { openInfo }
     } = this.props
     const { columns, selectedRows } = this.state
@@ -368,7 +369,7 @@ class Marketplace extends Component {
       }),
       callback: row => this.tableRowClicked(row.id)
     }
-    if (isMerchant) {
+    if (isMerchant || isCompanyAdmin) {
       rowActions.push(buttonBuy)
       rowActions.push(buttonRequestHold)
     } else {
@@ -548,11 +549,17 @@ class Marketplace extends Component {
 }
 
 Marketplace.propTypes = {
-  activeIndex: number
+  activeIndex: number,
+  isMerchant: boolean,
+  isCompanyAdmin: boolean,
+  tutorialCompleted: boolean
 }
 
 Marketplace.defaultProps = {
-  activeIndex: 0
+  activeIndex: 0,
+  isMerchant: false,
+  isCompanyAdmin: false,
+  tutorialCompleted: false
 }
 
 export default injectIntl(Marketplace)
