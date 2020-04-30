@@ -215,10 +215,10 @@ class PurchaseOrder extends Component {
     const { shipmentQuoteId, dwollaBankAccountId, freightType } = payload
     const data = {
       [this.state.addressId]: this.state.selectedAddress.id,
-      shipmentQuoteId,
       dwollaBankAccountId,
       freightType
     }
+    freightType === FREIGHT_TYPES.ECHO ? (data.shipmentQuoteId = shipmentQuoteId) : null
 
     try {
       await this.props.postPurchaseOrder(data)
@@ -373,6 +373,7 @@ class PurchaseOrder extends Component {
                           setFieldValue={(fieldName, value) => {
                             shippingQuoteSelected(null)
                             setFieldValue(fieldName, value)
+                            if (value === 'OWN_FREIGHT') setFieldValue('shipmentQuoteId', '')
                           }}
                         />
                       )}
@@ -381,7 +382,10 @@ class PurchaseOrder extends Component {
                           selectionDisabled={!echoFreight}
                           currency={currency}
                           selectedShippingQuote={this.props.cart.selectedShipping}
-                          handleQuoteSelect={this.handleQuoteSelect}
+                          handleQuoteSelect={index => {
+                            setFieldValue('shipmentQuoteId', '')
+                            this.handleQuoteSelect(index)
+                          }}
                           selectedAddress={this.state.selectedAddress}
                           shippingQuotes={shippingQuotes}
                           shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
@@ -464,28 +468,30 @@ class PurchaseOrder extends Component {
                               </VerticalUnpaddedColumn>
                             </TopUnpaddedRow>
                             <Divider />
-                            <VerticalUnpaddedRow>
-                              <VerticalUnpaddedColumn computer={16}>
-                                <Header as='h2'>
-                                  <FormattedMessage
-                                    id='cart.quoteReceived'
-                                    defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
-                                  />
-                                </Header>
-                              </VerticalUnpaddedColumn>
-                            </VerticalUnpaddedRow>
-                            <GridRow>
-                              <GridColumn computer={8}>
-                                <Input
-                                  name='shipmentQuoteId'
-                                  label={
-                                    <FormattedMessage id='cart.shippingQuoteId' defaultMessage='Shipping Quote ID' />
-                                  }
-                                />
-                              </GridColumn>
-                            </GridRow>
                           </>
                         )}
+                      <VerticalUnpaddedRow>
+                        <VerticalUnpaddedColumn computer={16}>
+                          <Header as='h2'>
+                            <FormattedMessage
+                              id='cart.quoteReceived'
+                              defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
+                            />
+                          </Header>
+                        </VerticalUnpaddedColumn>
+                      </VerticalUnpaddedRow>
+                      <GridRow>
+                        <GridColumn computer={8}>
+                          <Input
+                            inputProps={{
+                              onChange: () => this.handleQuoteSelect(null),
+                              disabled: values.freightType === 'OWN_FREIGHT'
+                            }}
+                            name='shipmentQuoteId'
+                            label={<FormattedMessage id='cart.shippingQuoteId' defaultMessage='Shipping Quote ID' />}
+                          />
+                        </GridColumn>
+                      </GridRow>
                     </Grid>
                   </Segment>
 
@@ -526,16 +532,6 @@ class PurchaseOrder extends Component {
                           trigger={
                             <GridColumn>
                               <Button
-                                disabled={
-                                  (!purchaseHazmatEligible && isAnyItemHazardous) || // false
-                                  this.state.submitting || // false
-                                  !values.payment || // !true
-                                  !this.props.logisticsAccount || // !true
-                                  !(
-                                    this.state.selectedAddress && // true
-                                    (this.props.cart.selectedShipping || values.shipmentQuoteId || !echoFreight)
-                                  )
-                                }
                                 loading={this.state.submitting}
                                 fluid
                                 primary
@@ -570,12 +566,6 @@ class PurchaseOrder extends Component {
                                 defaultMessage='You are not authorized to purchase this hazardous item.'
                               />
                             )
-                          }
-                          disabled={
-                            this.props.logisticsAccount &&
-                            ((purchaseHazmatEligible && isAnyItemHazardous) ||
-                              (purchaseHazmatEligible && !isAnyItemHazardous) ||
-                              (!purchaseHazmatEligible && !isAnyItemHazardous))
                           }
                         />
                       </GridRow>
