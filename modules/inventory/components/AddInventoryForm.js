@@ -32,7 +32,7 @@ import {
 import styled from 'styled-components'
 import * as val from 'yup'
 import { DateInput } from '~/components/custom-formik'
-import UploadLot from './upload/UploadLot'
+import UploadAttachment from './upload/UploadAttachment'
 import { FieldArray } from 'formik'
 import { debounce } from 'lodash'
 import confirm from '~/src/components/Confirmable/confirm'
@@ -1948,7 +1948,7 @@ class AddInventoryForm extends Component {
 
                                         <InnerRow>
                                           <GridColumn>
-                                            <UploadLot
+                                            <UploadAttachment
                                               {...this.props}
                                               attachments={values.attachments}
                                               name='attachments'
@@ -2393,7 +2393,7 @@ class AddInventoryForm extends Component {
                                                         setFieldValue(`lots[${index}].attachments`, rows)
                                                       }
                                                     />
-                                                    {/* <UploadLot {...this.props}
+                                                    {/* <UploadAttachment {...this.props}
                                                 attachments={values.lots[index].attachments}
                                                 name={`lots[${index}].attachments`}
                                                 type={1}
@@ -2753,7 +2753,7 @@ class AddInventoryForm extends Component {
                                 </Header>
                                 <Grid>
                                   <GridColumn width={10}>
-                                    <UploadLot
+                                    <UploadAttachment
                                       {...this.props}
                                       attachments={values.additional}
                                       name='additional'

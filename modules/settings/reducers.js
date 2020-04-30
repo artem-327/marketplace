@@ -121,7 +121,8 @@ export const initialState = {
   csvImportError: null,
   tabClicked: false,
   isOpenSidebar: false,
-  openTab: 0
+  openTab: 0,
+  documentsOwner: []
 }
 
 export default function reducer(state = initialState, action) {
@@ -479,12 +480,15 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_ALL_BRANCHES_DATA: {
-      const branches = action.payload.map(branch => {
-        return {
-          value: branch.id,
-          text: branch.deliveryAddress.cfName
-        }
-      })
+      let branches = []
+      action.payload.forEach(
+        branch =>
+          branch.warehouse === false &&
+          branches.push({
+            value: branch.id,
+            text: branch.deliveryAddress.cfName
+          })
+      )
       return {
         ...state,
         branchesAll: branches
@@ -1441,6 +1445,30 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         popupValues: action.payload.data
+      }
+    }
+
+    case AT.SETTINGS_GET_DWOLLA_BENEFICIARY_OWNERS_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.SETTINGS_GET_DWOLLA_BENEFICIARY_OWNERS_REJECTED: {
+      return {
+        ...state,
+        loading: false,
+        documentsOwner: []
+        // isOpenPopup: false,
+      }
+    }
+
+    case AT.SETTINGS_GET_DWOLLA_BENEFICIARY_OWNERS_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        documentsOwner: action.payload
       }
     }
 

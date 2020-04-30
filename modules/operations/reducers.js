@@ -6,8 +6,13 @@ export const initialState = {
   isOpenPopup: false,
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
-  filterValue: '',
-  loading: false
+  loading: false,
+  searchedCompanies: [],
+  searchedCompaniesLoading: false,
+  companyProductUnmappedOnly: false,
+  ordersStatusFilter: 'All',
+  orderDetailData: null,
+  listDocumentTypes: []
 }
 
 export default function reducers(state = initialState, action) {
@@ -33,15 +38,13 @@ export default function reducers(state = initialState, action) {
     case AT.OPERATIONS_TAB_CHANGED: {
       return {
         ...state,
-        currentTab: payload,
-        filterValue: state.currentTab !== payload ? '' : state.filterValue
+        currentTab: payload
       }
     }
 
     case AT.OPERATIONS_HANDLE_FILTERS_VALUE: {
       return {
-        ...state,
-        filterValue: action.payload
+        ...state
       }
     }
 
@@ -78,11 +81,46 @@ export default function reducers(state = initialState, action) {
     case AT.OPERATIONS_HANDLE_ACTIVE_TAB: {
       return {
         ...state,
-        currentTab: action.payload.tab,
+        currentTab: payload.tab,
         popupValues: null,
         isOpenPopup: false,
-        filterValue: '',
-        loading: false
+        loading: false,
+        orderDetailData: null
+      }
+    }
+
+    case AT.OPERATIONS_SEARCH_COMPANY_PENDING: {
+      return { ...state, searchedCompaniesLoading: true }
+    }
+    case AT.OPERATIONS_SEARCH_COMPANY_REJECTED: {
+      return { ...state, searchedCompaniesLoading: false }
+    }
+    case AT.OPERATIONS_SEARCH_COMPANY_FULFILLED: {
+      return {
+        ...state,
+        searchedCompanies: action.payload,
+        searchedCompaniesLoading: false
+      }
+    }
+
+    case AT.OPERATIONS_SET_PRODUCT_MAPPED_UNMAPPED: {
+      return {
+        ...state,
+        companyProductUnmappedOnly: payload
+      }
+    }
+
+    case AT.OPERATIONS_ORDERS_FETCH_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        ordersStatusFilter: action.payload.filter.status,
+      }
+
+    case AT.OPERATIONS_OPEN_ORDER_DETAIL: {
+      return {
+        ...state,
+        orderDetailData: payload
       }
     }
 

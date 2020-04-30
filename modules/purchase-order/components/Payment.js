@@ -4,10 +4,12 @@ import { GridRow, GridColumn, Divider } from 'semantic-ui-react'
 import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 import ShippingAddress from './ShippingAddress'
 import Link from 'next/link'
+import styled from 'styled-components'
+
 
 export default class Payment extends Component {
   render() {
-    let { payments, billingInfo } = this.props
+    let { payments, billingInfo, companyName } = this.props
     let columns = payments.length === 0 ? { computer: 16 } : { computer: 8 }
 
     return (
@@ -26,32 +28,28 @@ export default class Payment extends Component {
                 }}
               />
             ) : (
-              <Dropdown
-                options={payments.map(payment => ({
-                  key: payment.id,
-                  value: payment.id,
-                  text: payment.name
-                }))}
-                fluid
-                selection
-                name='payment'
-                inputProps={{
-                  placeholder: <FormattedMessage id='cart.selectBankAccount' />,
-                  'data-test': 'purchase_order_payment_drpdn'
-                }}
-              />
-            )}
+                <Dropdown
+                  options={payments.map(payment => ({
+                    key: payment.id,
+                    value: payment.id,
+                    text: payment.name
+                  }))}
+                  fluid
+                  selection
+                  name='payment'
+                  inputProps={{
+                    placeholder: <FormattedMessage id='cart.selectBankAccount' />,
+                    'data-test': 'purchase_order_payment_drpdn'
+                  }}
+                />
+              )}
           </GridColumn>
+          {payments.length !== 0 &&
+            <GridColumn computer={8}>
+              <ShippingAddress billingInfo={billingInfo} companyName={companyName} />
+            </GridColumn>
+          }
         </GridRow>
-
-        <Divider />
-
-        <ShippingAddress
-          selectedAddress={billingInfo}
-          addressOnly={true}
-          header={{ id: 'cart.billingInfo', defaultMessage: 'Billing Info' }}
-          companyName={this.props.companyName}
-        />
       </>
     )
   }

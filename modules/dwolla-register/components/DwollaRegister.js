@@ -95,13 +95,8 @@ class DwollaRegister extends Component {
         .typeError(invalidString)
         .min(minLengthValue, minLengthErr)
         .required(requiredMessage),
-      basicNumber: Yup.number(requiredMessage)
-        .typeError(requiredMessage)
-        .required(requiredMessage),
-      email: Yup.string(invalidEmail)
-        .trim()
-        .email(invalidEmail)
-        .required(requiredMessage)
+      basicNumber: Yup.number(requiredMessage).typeError(requiredMessage).required(requiredMessage),
+      email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage)
     }
 
     const validation = [
@@ -138,7 +133,8 @@ class DwollaRegister extends Component {
     const {
       intl: { formatMessage },
       businessClassifications,
-      businessClassificationsLoading
+      businessClassificationsLoading,
+      isAdmin
     } = this.props
 
     let selectedBusiness = businessClassifications.find(el => el.id === values.businessClassification)
@@ -661,12 +657,9 @@ class DwollaRegister extends Component {
                         label={formatMessage(
                           {
                             id: 'dwolla.acceptance',
-                            defaultMessage: `I, ${getSafe(() => values.firstName, '') +
-                              ' ' +
-                              getSafe(
-                                () => values.lastName,
-                                ''
-                              )}, hereby certify, to the best of my knowledge, that the information provided above is complete and correct.`
+                            defaultMessage: `I, ${
+                              getSafe(() => values.firstName, '') + ' ' + getSafe(() => values.lastName, '')
+                            }, hereby certify, to the best of my knowledge, that the information provided above is complete and correct.`
                           },
                           {
                             name: getSafe(() => values.firstName, '') + ' ' + getSafe(() => values.lastName, '')
@@ -745,7 +738,7 @@ class DwollaRegister extends Component {
                     <GridRow>
                       <GridColumn>
                         <RightAlignedDiv>
-                          <Button onClick={() => Router.push('/settings')} primary>
+                          <Button onClick={() => (isAdmin ? Router.push('/admin') : Router.push('/settings'))} primary>
                             <FormattedMessage id='global.complete' defaultMessage='Complete'>
                               {text => text}
                             </FormattedMessage>
@@ -784,7 +777,7 @@ class DwollaRegister extends Component {
 
       let [firstName, ...lastName] = identity.name
         ? identity.name.split(' ')
-        : getSafe(() => identity.company.name.split(' '))
+        : getSafe(() => identity.company.primaryUser.name.split(' '))
 
       initialValues = {
         firstName,

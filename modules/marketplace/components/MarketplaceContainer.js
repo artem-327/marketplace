@@ -21,7 +21,7 @@ function mapStateToProps(store, { datagrid }) {
     ...store.marketplace,
     // rows: store.marketplace.broadcastedProductOffers.map(po => {
     ...datagrid,
-    appliedFilter: store.filter.filter.appliedFilter,
+    appliedFilter: store.filter.marketplace.appliedFilter,
     defaultZip: getSafe(() => store.auth.identity.homeBranch.deliveryAddress.address.zip.zip, ''),
     defaultCountry: getSafe(() => store.auth.identity.homeBranch.deliveryAddress.address.country.id, 1),
     rows: datagrid.rows.map(po => {
@@ -29,6 +29,7 @@ function mapStateToProps(store, { datagrid }) {
       return {
         ...po,
         id: po.id,
+        expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
         productName: po.companyProduct.echoProduct.name,
         intProductName: getSafe(() => po.companyProduct.intProductName, ''),
         productNumber: getSafe(() => po.companyProduct.echoProduct.code, 'Unmapped'),
@@ -69,7 +70,10 @@ function mapStateToProps(store, { datagrid }) {
         conditionNotes: getSafe(() => po.conditionNotes, false),
         form: getSafe(() => po.form.name),
         location: getLocationString(po),
-        association: po && po.owner && po.owner.associations && getSafe(() => po.owner.associations.map(a => a.name), [])
+        nacdMember: po && po.ownerNacdMember ? 'Yes' : po.ownerNacdMember === false ? 'No' : '',
+        notes: getSafe(() => po.externalNotes, ''),
+        association: po && po.ownerAssociations && getSafe(() => po.ownerAssociations.map(a => a.name), []),
+        leadTime: getSafe(() => po.leadTime, 'N/A')
       }
     }),
     sidebar: store.cart.sidebar,

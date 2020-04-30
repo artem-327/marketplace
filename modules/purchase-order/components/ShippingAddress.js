@@ -1,88 +1,63 @@
 import React, { Component } from 'react'
 
-import { array, bool, objectOf, string, object } from 'prop-types'
-import { RelaxedRow } from '~/components/summary/styledComponents'
-import { GridColumn, Header } from 'semantic-ui-react'
+import { GridRow, GridColumn } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
+import styled from 'styled-components'
+
+import {
+  VerticalUnpaddedColumn,
+  BottomUnpaddedRow,
+  ItemDescriptionGrid,
+  TopUnpaddedColumn
+} from '~/modules/cart/components/StyledComponents'
+
+const CompanyHeader = styled.b`
+  color: #000000;
+`
+
 
 export default class ShippingAddress extends Component {
-  getAddress = () => {
-    let { selectedAddress } = this.props
-    return (
-      selectedAddress['phone number'] && (
-        <>
-          <RelaxedRow>
-            <GridColumn>{selectedAddress['phone number']}</GridColumn>
-          </RelaxedRow>
-
-          <RelaxedRow>
-            <GridColumn>{selectedAddress.email}</GridColumn>
-          </RelaxedRow>
-        </>
-      )
-    )
-  }
-
   render() {
-    let { selectedAddress, addressOnly, header } = this.props
+    let { billingInfo, companyName, additionalContent, header } = this.props
+    if (!billingInfo) return null
 
     return (
-      selectedAddress && (
-        <>
-          <RelaxedRow>
-            <GridColumn>
-              <Header as='h3'>
-                <FormattedMessage {...header} />
-              </Header>
-            </GridColumn>
-          </RelaxedRow>
+      <ItemDescriptionGrid>
+        <GridRow>
+          <GridColumn>
+            {header}
+          </GridColumn>
+        </GridRow>
 
-          <RelaxedRow>
-            <GridColumn>
-              <strong>{this.props.companyName}</strong>
-            </GridColumn>
-          </RelaxedRow>
+        <BottomUnpaddedRow>
+          <VerticalUnpaddedColumn>
+            <CompanyHeader>{companyName}</CompanyHeader>
+          </VerticalUnpaddedColumn>
+        </BottomUnpaddedRow>
 
-          {selectedAddress['firstName'] && selectedAddress['lastName'] && (
-            <RelaxedRow>
-              <GridColumn>
-                {selectedAddress['firstName']} {selectedAddress['lastName']}
-              </GridColumn>
-            </RelaxedRow>
-          )}
+        <BottomUnpaddedRow>
+          <VerticalUnpaddedColumn>
+            {billingInfo.address.streetAddress}
+          </VerticalUnpaddedColumn>
+        </BottomUnpaddedRow>
 
-          <RelaxedRow>
-            <GridColumn computer={16}>{selectedAddress.address && selectedAddress.address.streetAddress}</GridColumn>
-            <GridColumn computer={16}>
-              {selectedAddress.address && selectedAddress.address.city}
-              {selectedAddress.address &&
-                selectedAddress.address.province &&
-                `, ${selectedAddress.address.province.name}`}
-              , {selectedAddress.address && selectedAddress.address.zip.zip}
-            </GridColumn>
-          </RelaxedRow>
+        <BottomUnpaddedRow>
+          <TopUnpaddedColumn>
+            {billingInfo.address && billingInfo.address.city}
+            {billingInfo.address &&
+              billingInfo.address.province &&
+              `, ${billingInfo.address.province.name}`}
+      , {billingInfo.address && billingInfo.address.zip.zip}
+          </TopUnpaddedColumn>
+        </BottomUnpaddedRow>
 
-          {!addressOnly && this.getAddress()}
-        </>
-      )
+        {additionalContent}
+      </ItemDescriptionGrid>
     )
   }
-}
-
-ShippingAddress.propTypes = {
-  selectedAddress: object,
-  addressOnly: bool,
-  header: objectOf({
-    id: string,
-    defaultMessage: string
-  })
 }
 
 ShippingAddress.defaultProps = {
-  selectedAddress: null,
-  addressOnly: false,
-  header: {
-    id: 'cart.shippingAddress',
-    defaultMessage: 'Shipping Address'
-  }
+  additionalContent: null,
+  header: <FormattedMessage id='cart.billingInfo' defaultMessage='Billing Info' />
 }

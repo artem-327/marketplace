@@ -283,6 +283,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         country: action.country,
         zip: action.zip,
+        shippingQuotes: [],
         shippingQuotesAreFetching: true,
         cart: { ...state.cart, selectedShipping: null }
       }
@@ -324,7 +325,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         isPurchasing: false,
         sidebar: { ...state.cart.sidebar, isOpen: false },
-        cart: payload,
+        cart: payload
       }
     }
 
@@ -407,7 +408,7 @@ export default function reducer(state = initialState, action) {
     case AT.SHIPPING_CHANGED: {
       return {
         ...state,
-        shipping: { ...state.shipping, ...action.payload }
+        shipping: { ...state.shipping, selectedAddress: action.payload }
       }
     }
 
@@ -486,7 +487,10 @@ export default function reducer(state = initialState, action) {
         preFilledValues: action.payload,
         country: action.payload.country,
         zip: action.payload.zip,
-        shippingQuotes: action.payload.quotes,
+        shippingQuotes: {
+          rates: action.payload.quotes.rates.map((quote) =>
+            ({ productOfferId: quote.productOfferId, ...quote.shipmentRate }))
+        }
       }
     }
 

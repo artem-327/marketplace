@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { FormGroup, FormField, Popup, Image, Dropdown } from 'semantic-ui-react'
 import { Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { withToastManager } from 'react-toast-notifications'
 
 import { generateToastMarkup } from '~/utils/functions'
@@ -162,11 +162,7 @@ class CompanyForm extends Component {
         </FormGroup>
         <FormGroup widths='equal' data-test='company_form_dbaDuns_inp'>
           <Input label={<FormattedMessage id='company.dba' defaultMessage='Doing Business As' />} name='dba' />
-          <Input
-            inputProps={{ type: 'number' }}
-            label={<FormattedMessage id='company.duns' defaultMessage='DUNS Number' />}
-            name='dunsNumber'
-          />
+          <Input label={<FormattedMessage id='company.duns' defaultMessage='DUNS Number' />} name='dunsNumber' />
         </FormGroup>
 
         <FormGroup widths='equal' data-test='company_form_tinCin_inp'>
@@ -229,9 +225,9 @@ class CompanyForm extends Component {
 
         <FormGroup widths='equal'>
           <Checkbox
-            label={formatMessage({ id: 'global.nacdMember', defaultMessage: 'NACD Member' })}
-            name='nacdMember'
-            data-test='company_form_nacdNumber_chckb'
+            label={formatMessage({ id: 'global.enabled', defaultMessage: 'Enabled' })}
+            name='enabled'
+            data-test='company_form_enabled_chckb'
           />
 
           {this.props.admin && (
@@ -283,7 +279,7 @@ class CompanyForm extends Component {
             <label htmlFor='field_input_phone'>
               <span>Company Logo</span>
             </label>
-            <UploadLot
+            <UploadAttachment
               {...this.props}
               attachments={this.props.companyLogo ? [this.props.companyLogo] : []}
               name={`companyLogo`}

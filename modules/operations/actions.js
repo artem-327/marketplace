@@ -18,15 +18,6 @@ export function closePopup(rows = null) {
   }
 }
 
-export function handleFiltersValue(value) {
-  return async dispatch => {
-    dispatch({
-      type: AT.OPERATIONS_HANDLE_FILTERS_VALUE,
-      payload: value
-    })
-  }
-}
-
 export function deleteShippingQuote(id) {
   return {
     type: AT.OPERATIONS_DELETE_SHIPPING_QUOTE,
@@ -85,11 +76,30 @@ export function createTag(name) {
   }
 }
 
-export function handleActiveTab(tab) {
-  Datagrid.clear()
-
+export function handleActiveTab(tab, currentTab) {
+  if (tab.type !== currentTab.type) Datagrid.clear()
   return {
     type: AT.OPERATIONS_HANDLE_ACTIVE_TAB,
     payload: { tab }
   }
 }
+
+export const searchCompany = (companyText, limit) => ({
+  type: AT.OPERATIONS_SEARCH_COMPANY,
+  payload: api.searchCompany(companyText, limit)
+})
+
+export const setProductMappedUnmaped = value => ({
+  type: AT.OPERATIONS_SET_PRODUCT_MAPPED_UNMAPPED,
+  payload: value
+})
+
+export const loadData = (filter = null) => ({
+  type: AT.OPERATIONS_ORDERS_FETCH_SUCCESS,
+  payload: { filter }
+})
+
+export const openOrderDetail = (data = null) => ({
+  type: AT.OPERATIONS_OPEN_ORDER_DETAIL,
+  payload: data
+})

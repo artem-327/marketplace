@@ -98,8 +98,15 @@ class ConfirmationPage extends Component {
   }
 
   render() {
-    const { csvImportError, reloadFilter } = this.props
-    const titleViewMap = this.props.productOffer ? 'MyInventory' : this.props.echoProduct ? 'Products' : 'Companies'
+    const { csvImportError, reloadFilter, productOffer, echoProduct, companies } = this.props
+
+    const titleViewMap = productOffer
+      ? 'MyInventory'
+      : echoProduct
+      ? 'Products'
+      : companies
+      ? 'Companies'
+      : 'Company Products'
 
     return (
       <Grid centered padded>

@@ -19,6 +19,7 @@
     "no-undef": 0,
     "no-unused-vars": 0,
     "no-console": 0,
-    "react/jsx-uses-vars": [2]
+    "react/jsx-uses-vars": [2],
+    "comma-dangle": ["error", "never"]
   }
 }

@@ -128,6 +128,7 @@ const simpleEchoProductList = {
     'stotSingleExposureMapper',
     'supplementalInformationMapper',
     'symptomsEffectsMapper',
+    'tagsMapper',
     'tdgHazardClassMapper',
     'tdgHazardLabelMapper',
     'tdgPackagingGroupMapper',

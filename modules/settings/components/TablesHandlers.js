@@ -15,11 +15,27 @@ import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
 import { currency } from '~/constants/index'
 import { SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP_FULFILLED } from '../action-types'
-import { generateToastMarkup } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
+import { PlusCircle, UploadCloud } from 'react-feather'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
   z-index: 602;
+`
+
+const CustomButton = styled(Button)`
+  background-color: #2599d5 !important;
+  color: #ffffff !important;
+  align-items: center !important;
+  display: flex !important;
+`
+
+const CustomIcon = styled(PlusCircle)`
+  margin-right: 10px;
+`
+
+const CustomUploadCloud = styled(UploadCloud)`
+  margin-right: 10px;
 `
 
 const textsTable = {
@@ -72,14 +88,19 @@ class TablesHandlers extends Component {
     this.state = {
       filterFieldCurrentValue: 'None',
       filterValue: '',
+      documentType: '',
       options: []
     }
     this.handleFiltersValue = debounce(this.handleFiltersValue, 250)
   }
 
   async componentDidMount() {
-    const { documentTypes, getDocumentTypes, initGlobalBroadcast } = this.props
+    const { documentTypes, getDocumentTypes, initGlobalBroadcast, getDwollaBeneficiaryOwners } = this.props
     try {
+      //check dwolla if exist some document which has to be verified
+      if (this.props.currentTab.type === 'bank-accounts') {
+        await getDwollaBeneficiaryOwners()
+      }
       await initGlobalBroadcast()
     } catch (err) {
       console.error(err)
@@ -113,8 +134,16 @@ class TablesHandlers extends Component {
     })
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  async componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.currentTab !== this.props.currentTab) {
+      //check dwolla if exist some document which has to be verified
+      if (this.props.currentTab.type === 'bank-accounts') {
+        try {
+          await this.props.getDwollaBeneficiaryOwners()
+        } catch (error) {
+          console.error(error)
+        }
+      }
       this.setState({ filterValue: '' })
       this.handleFiltersValue('')
     }
@@ -131,8 +160,22 @@ class TablesHandlers extends Component {
     this.handleFiltersValue(value)
   }
 
+  handleDocumentFilterChange = (e, { value }) => {
+    this.setState({ filterValue: value })
+    const filter = {
+      filterValue: value,
+      documentType: this.state.documentType
+    }
+    this.handleFiltersValue(filter)
+  }
+
   handleFilterChangeDocumentType = (e, { value }) => {
-    this.handleFiltersValue(value)
+    this.setState({ documentType: value })
+    const filter = {
+      filterValue: this.state.filterValue,
+      documentType: value
+    }
+    this.handleFiltersValue(filter)
   }
 
   saveRulesBroadcast = async (model, toastManager) => {
@@ -168,7 +211,7 @@ class TablesHandlers extends Component {
     const bankAccTab = currentTab.type === 'bank-accounts'
     return (
       <>
-        {currentTab.type !== 'global-broadcast' && (
+        {currentTab.type !== 'global-broadcast' && currentTab.type !== 'documents' && (
           <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
             <Input
               fluid
@@ -184,18 +227,32 @@ class TablesHandlers extends Component {
         )}
 
         {currentTab.type === 'documents' && (
-          <GridColumn floated='right' computer={4} tablet={4}>
-            <Dropdown
-              placeholder={formatMessage({
-                id: 'settings.tables.documents.dropdown',
-                defaultMessage: 'Choose document type'
-              })}
-              fluid
-              selection
-              options={this.state.options}
-              onChange={this.handleFilterChangeDocumentType}
-            />
-          </GridColumn>
+          <>
+            <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
+              <Input
+                fluid
+                icon='search'
+                value={filterValue}
+                placeholder={formatMessage({
+                  id: textsTable[currentTab.type].SearchText,
+                  defaultMessage: 'Select Credit Card'
+                })}
+                onChange={this.handleDocumentFilterChange}
+              />
+            </GridColumn>
+            <GridColumn floated='right' computer={4} tablet={4}>
+              <Dropdown
+                placeholder={formatMessage({
+                  id: 'settings.tables.documents.dropdown',
+                  defaultMessage: 'Choose document type'
+                })}
+                fluid
+                selection
+                options={this.state.options}
+                onChange={this.handleFilterChangeDocumentType}
+              />
+            </GridColumn>
+          </>
         )}
 
         {currentTab.type === 'products' && (
@@ -212,31 +269,46 @@ class TablesHandlers extends Component {
           </GridColumn>
         )}
         {bankAccTab && bankAccounts.registerButton && (
-          <GridColumn computer={3} tablet={4}>
-            <Button
+          <GridColumn computer={5} tablet={4}>
+            <CustomButton
               fluid
-              primary
               onClick={() => Router.push('/dwolla-register')}
               data-test='settings_dwolla_open_popup_btn'>
+              <CustomIcon size='20' />
               <FormattedMessage
                 id='settings.tables.bankAccounts.registerDwolla'
                 defaultMessage='Register Dwolla Account'>
                 {text => text}
               </FormattedMessage>
-            </Button>
+            </CustomButton>
           </GridColumn>
         )}
         {bankAccTab && bankAccounts.uploadDocumentsButton && (
-          <GridColumn computer={3} tablet={4}>
-            <Button
+          <GridColumn computer={4} tablet={4}>
+            <CustomButton
               fluid
-              primary
               onClick={() => openUploadDocumentsPopup()}
               data-test='settings_dwolla_upload_documents_btn'>
+              <CustomUploadCloud size='20' />
               <FormattedMessage id='settings.tables.bankAccounts.uploadDoc' defaultMessage='Upload Documents'>
                 {text => text}
               </FormattedMessage>
-            </Button>
+            </CustomButton>
+          </GridColumn>
+        )}
+        {bankAccTab && bankAccounts.uploadOwnerDocumentsButton && (
+          <GridColumn computer={5} tablet={5}>
+            <CustomButton
+              fluid
+              onClick={() => openUploadDocumentsPopup()}
+              data-test='settings_dwolla_owner_upload_documents_btn'>
+              <CustomUploadCloud size='20' />
+              <FormattedMessage
+                id='settings.tables.bankAccounts.uploadOwnerDoc'
+                defaultMessage='Upload Owner Documents'>
+                {text => text}
+              </FormattedMessage>
+            </CustomButton>
           </GridColumn>
         )}
         {bankAccTab && bankAccounts.dwollaBalance && (
@@ -299,7 +371,14 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
-  const dwollaAccountStatus = (company && company.dwollaAccountStatus) || 'none'
+  let dwollaAccountStatus = 'none'
+  if (company.dwollaAccountStatus) dwollaAccountStatus = company.dwollaAccountStatus
+  if (
+    dwollaAccountStatus === 'verified' &&
+    getSafe(() => state.settings.documentsOwner.length, '') &&
+    getSafe(() => state.settings.documentsOwner[0].verificationStatus, '') !== 'verified'
+  )
+    dwollaAccountStatus = 'documentOwner'
   const {
     broadcast: { data, filter, ...rest }
   } = state

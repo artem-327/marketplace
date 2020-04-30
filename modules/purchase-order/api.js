@@ -11,8 +11,8 @@ export const getCartItem = cartItemId => api.get(`/prodex/api/cart/items/${cartI
 export const getProductOffer = id => api.get(`/prodex/api/product-offers/${id}/`).then(response => response.data)
 export const postNewDeliveryAddress = address =>
   api.post('/prodex/api/delivery-addresses', address).then(response => response.data)
-export const updateDeliveryAddress = address =>
-  api.put(`/prodex/api/delivery-addresses/id/${address.id}`, address).then(response => response.data)
+export const updateDeliveryAddress = (address, id) =>
+  api.put(`/prodex/api/delivery-addresses/id/${id}`, address).then(response => response.data)
 export const getDeliveryAddresses = () => api.get('/prodex/api/delivery-addresses').then(response => response.data)
 export const getPayments = () => api.get('/prodex/api/payments/bank-accounts').then(response => response.data)
 export const getShippingQuotes = (countryId, zip) =>
@@ -38,3 +38,6 @@ export const postPurchaseOrder = data => api.post('/prodex/api/purchase-orders',
 
 export const requestManualShipment = queryString => api.post(`/prodex/api/shipment/manual-quotes/request${queryString}`)
 export const getIdentity = () => api.get('/prodex/api/users/me').then(response => response.data)
+
+export const postNewWarehouse = payload => api.post('/prodex/api/branches/', payload).then(response => response.data)
+export const updateWarehouse = (payload, id) => api.put(`/prodex/api/branches/${id}`, payload).then(response => response.data)

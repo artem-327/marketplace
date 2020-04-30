@@ -4,33 +4,48 @@ export const EchoProductResponse = {
   attachments: [],
   autoIgnitionTemperature: '',
   blend: false,
-  esin: '',
-  recommendedRestrictions: '',
-  synonyms: '',
   boilingPointRange: '',
-  cfHazardClass: '',
+  cfHazardClass: {
+    classCode: '',
+    description: '',
+    id: null
+  },
   cfHazardLabel: '',
-  cfPackagingGroup: '',
-  autoIgnitionTemperature: '',
-  blend: false,
-  boilingPointRange: '',
-  cfHazardClass: '',
-  cfHazardLabel: '',
-  cfPackagingGroup: '',
-  cfUnNumber: '',
+  cfPackagingGroup: {
+    description: '',
+    groupCode: '',
+    id: null
+  },
+  cfUnNumber: {
+    description: '',
+    id: null,
+    unNumberCode: ''
+  },
   code: '',
   conditionsToAvoid: '',
   decompositionTemperature: '',
   developmentalEffects: '',
-  dotHazardClass: '',
+  dotHazardClass: {
+    classCode	:	'',
+    description	:	'',
+    id:	null
+  },
   dotHazardLabel: '',
   dotMarinePollutant: '',
-  dotPackagingGroup: '',
+  dotPackagingGroup	: {
+    description: '',
+    groupCode: '',
+    id: null
+  },
   dotProperShippingName: '',
   dotProperTechnicalName: '',
   dotReportableQuantity: '',
   dotSevereMarinePollutant: '',
-  dotUnNumber: '',
+  dotUnNumber: {
+    description: '',
+    id: null,
+    unNumberCode: '',
+  },
   emergencyPhone: '',
   endocrineDisruptorInformation: '',
   evaporationPoint: '',
@@ -49,23 +64,48 @@ export const EchoProductResponse = {
   hmisHealthHazard: '',
   hmisPhysicalHazard: '',
   hnoc: '',
-  iataHazardClass: '',
+  iataHazardClass: {
+    classCode	:	'',
+    description	:	'',
+    id:	null
+  },
   iataHazardLabel: '',
-  iataPackagingGroup: '',
+  iataPackagingGroup: {
+    description: '',
+    groupCode: '',
+    id: null
+  },
   iataProperShippingName: '',
   iataProperTechnicalName: '',
-  iataUnNumber: '',
+  iataUnNumber: {
+    description: '',
+    id: null,
+    unNumberCode: '',
+  },
   id: 0,
-  imdgImoHazardClass: '',
+  imdgImoHazardClass: {
+    classCode	:	'',
+    description	:	'',
+    id:	null
+  },
   imdgImoHazardLabel: '',
-  imdgImoPackagingGroup: '',
+  imdgImoPackagingGroup: {
+    description: '',
+    groupCode: '',
+    id: null
+  },
   imdgImoProperShippingName: '',
   imdgImoProperTechnicalName: '',
-  imdgImoUnNumber: '',
+  imdgImoUnNumber: {
+    description: '',
+    id: null,
+    unNumberCode: '',
+  },
   incompatibleMaterials: '',
   ingestion: '',
   inhalation: '',
   irritation: '',
+  isPublished: true,
   labelElements: '',
   manufacturer: {
     id: null,
@@ -88,11 +128,6 @@ export const EchoProductResponse = {
   odorThreshold: '',
   oshaDefinedHazards: '',
   otherAdverseEffects: '',
-  packagingGroup: {
-    description: '',
-    groupCode: '',
-    id: null
-  },
   partitionCoefficient: '',
   ph: '',
   physicalState: '',
@@ -117,12 +152,25 @@ export const EchoProductResponse = {
   stotSingleExposure: '',
   supplementalInformation: '',
   symptomsEffects: '',
-  tdgHazardClass: '',
+  tags: [],
+  tdgHazardClass: {
+    classCode	:	'',
+    description	:	'',
+    id:	null
+  },
   tdgHazardLabel: '',
-  tdgPackagingGroup: '',
+  tdgPackagingGroup: {
+    description: '',
+    groupCode: '',
+    id: null
+  },
   tdgProperShippingName: '',
   tdgProperTechnicalName: '',
-  tdgUnNumber: '',
+  tdgUnNumber: {
+    description: '',
+    id: null,
+    unNumberCode: '',
+  },
   tdsIssuedDate: '',
   tdsPreparedBy: '',
   tdsRevisionDate: '',
@@ -132,7 +180,7 @@ export const EchoProductResponse = {
   vaporDensity: '',
   vaporPressure: '',
   viscosity: '',
-  wasteDisposalMethods: ''
+  wasteDisposalMethods: '',
 }
 
 export const CasProductResponse = {
@@ -145,6 +193,7 @@ export const CasProductResponse = {
   caprop65TypeofToxicity: '',
   casIndexName: '',
   casNumber: '',
+  cfChemicalOfInterest: '',
   criticalTemperature: '',
   deaDeaCode: '',
   deaListII: false,
