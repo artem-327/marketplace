@@ -18,6 +18,7 @@ import {
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { withToastManager } from 'react-toast-notifications'
 import * as Yup from 'yup'
+import { AlertCircle } from 'react-feather'
 //Components
 import Shipping from './Shipping'
 import ShippingEdit from './ShippingEdit'
@@ -60,6 +61,45 @@ const RelaxedForm = styled(Form)`
 const Container = styled(SemanticContainer)`
   padding: 20px 30px 30px 30px !important;
   overflow-x: hidden;
+`
+
+const Line = styled.div`
+  border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+`
+
+const Rectangle = styled.div`
+  border-radius: 4px;
+  border: solid 1px orange;
+  background-color: #ffffff;
+  margin-bottom: 15px;
+  align-items: center;
+  display: block;
+  padding: 10px;
+  font-size: 14px;
+`
+
+const CustomDivTitle = styled.div`
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #0d0d0d;
+  display: flex;
+`
+
+const CustomDivContent = styled.div`
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #848893;
+  padding: 4px 25.5px;
+`
+
+const CustomDivInTitle = styled.div`
+  padding-left: 10px;
 `
 
 const validationSchema = Yup.object().shape({
@@ -440,10 +480,23 @@ class PurchaseOrder extends Component {
                         !cart.weightLimitExceed && (
                           <GridRow>
                             <GridColumn computer={16}>
-                              <FormattedMessage
-                                id='cart.noShippingQuotes.processManually'
-                                defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
-                              />
+                              <Rectangle>
+                                <CustomDivTitle>
+                                  <AlertCircle color='orange' size={18} />
+                                  <CustomDivInTitle>
+                                    <FormattedMessage
+                                      id='cart.noShippingQuotes.processManually.title'
+                                      defaultMessage={`We are sorry, but no matching Shipping Quotes were provided by logistics company.`}
+                                    />
+                                  </CustomDivInTitle>
+                                </CustomDivTitle>
+                                <CustomDivContent>
+                                  <FormattedMessage
+                                    id='cart.noShippingQuotes.processManually'
+                                    defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
+                                  />
+                                </CustomDivContent>
+                              </Rectangle>
                             </GridColumn>
                           </GridRow>
                         )}
@@ -470,6 +523,11 @@ class PurchaseOrder extends Component {
                             <Divider />
                           </>
                         )}
+                      <Grid.Row>
+                        <Grid.Column width={16}>
+                          <Line />
+                        </Grid.Column>
+                      </Grid.Row>
                       <VerticalUnpaddedRow>
                         <VerticalUnpaddedColumn computer={16}>
                           <Header as='h2'>
