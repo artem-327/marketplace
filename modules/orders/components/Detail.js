@@ -18,9 +18,10 @@ import {
   GridRow,
   Dropdown,
   Input,
-  Dimmer
+  Dimmer,
+  Modal
 } from 'semantic-ui-react'
-import { ChevronDown, DownloadCloud } from 'react-feather'
+import { ArrowLeft, ChevronDown, DownloadCloud } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
@@ -322,6 +323,77 @@ const CustomA = styled.a`
   text-decoration-style: dashed;
 `
 
+const TopRow = styled.div`
+  margin: 0 32px;
+  padding: 20px 0 50px 0;
+  vertical-align: middle;  
+  display: block;
+  
+  > a {
+    float: left;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    border: solid 1px #dee2e6;
+    background-color: #ffffff;
+    color: #848893;
+    font-size: 14px !important;
+    font-weight: 500;
+    line-height: 1.43;
+    padding: 9px 17px 11px 17px;
+  
+    > svg {
+      width: 18px;
+      height: 20px;
+      color: #848893;
+      margin-right: 9px;
+      vertical-align: middle;
+    }
+  }
+  
+  > div.field {
+    float: right;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    border: solid 1px #dee2e6;
+    background-color: #ffffff;
+
+    > div {
+      padding: 12px 18px;
+    }
+     
+    > div:first-child {
+      color: #848893;
+    }  
+  } 
+`
+
+const StyledModal = styled(Modal)`
+  > .header {
+    padding: 21px 30px !important;
+    font-size: 14px !important;
+  }
+
+  > .content {
+    padding: 30px !important;
+  }
+
+  > .actions {
+    background-color: #ffffff !important;
+    padding: 10px 5px !important;
+    button {
+      margin: 0 5px;
+      height: 40px;
+    }
+  }
+`
+
+const StyledHeader = styled.span`
+  color: #2599d5;
+`
+
 class Detail extends Component {
   state = {
     activeIndexes: [true, true, true, false, false, false, false, false],
@@ -336,7 +408,7 @@ class Detail extends Component {
         width: 150
       },
       {
-        name: 'documenType',
+        name: 'documentType',
         title: (
           <FormattedMessage id='order.detail.documents.type' defaultMessage='Type'>
             {text => text}
@@ -345,7 +417,7 @@ class Detail extends Component {
         width: 150
       },
       {
-        name: 'documenDate',
+        name: 'documentDate',
         title: (
           <FormattedMessage id='order.detail.documents.date' defaultMessage='Document Date'>
             {text => text}
@@ -354,13 +426,23 @@ class Detail extends Component {
         width: 150
       },
       {
-        name: 'documenIssuer',
+        name: 'documentIssuer',
         title: (
           <FormattedMessage id='order.detail.documents.issuer' defaultMessage='Issuer'>
             {text => text}
           </FormattedMessage>
         ),
         width: 150
+      },
+      {
+        name: 'download',
+        title: (
+          <FormattedMessage id='global.download' defaultMessage='Download'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150,
+        align: 'center'
       }
     ],
     isOpenManager: false,
@@ -368,7 +450,10 @@ class Detail extends Component {
     listDocumentTypes: '',
     attachmentRows: [],
     toggleTrackingID: false,
-    shippingTrackingCode: ''
+    shippingTrackingCode: '',
+    openDocumentsPopup: false,
+    openDocumentsAttachments: [],
+    documentsPopupProduct: ''
   }
 
   constructor(props) {
@@ -580,17 +665,66 @@ class Detail extends Component {
               {row.name}
             </Button>
           ),
-          documenType: getSafe(() => row.documentType.name, 'N/A'),
-          documenDate: row.expirationDate
+          documentType: getSafe(() => row.documentType.name, 'N/A'),
+          documentDate: row.expirationDate
             ? getSafe(() => moment(row.expirationDate).format(getLocaleDateFormat()), 'N/A')
             : 'N/A',
-          documenIssuer: getSafe(() => row.issuer, 'N/A')
+          documentIssuer: getSafe(() => row.issuer, 'N/A'),
+          download: (
+            <a
+              href='#'
+              onClick={() =>
+                this.downloadAttachment(row.name, row.id)
+              }>
+              <Icon name='file' className='positive' />
+            </a>
+          )
         }
       })
     } else {
       return []
     }
   }
+
+  openRelatedPopup(attachments, name) {
+    this.setState({
+      openDocumentsPopup: true,
+      openDocumentsAttachments: attachments,
+      documentsPopupProduct: name
+    })
+  }
+
+  getRelatedDocumentsContent = () => {
+    const {
+      intl: { formatMessage }
+    } = this.props
+    let { openDocumentsAttachments } = this.state
+
+    const rowsDocuments = openDocumentsAttachments.map(att => ({
+      id: att.id,
+      documentName: (
+        <Button as='a' onClick={() => this.downloadAttachment(att.name, att.id)}>
+          {att.name}
+        </Button>
+      ),
+      documentType: att.documentType.name,
+      documentDate: 'N/A',
+      documentIssuer: 'N/A',
+      download:
+        <a href='#' onClick={() => this.downloadAttachment(att.name, att.id)}>
+          <Icon name='file' className='positive' />
+        </a>
+    }))
+    return (
+      <ProdexGrid
+        loading={this.state.submitting}
+        tableName='related_orders'
+        columns={this.state.columnsRelatedOrdersDetailDocuments}
+        rows={rowsDocuments}
+      />
+    )
+  }
+
 
   render() {
     const {
@@ -618,7 +752,7 @@ class Detail extends Component {
       echoSupportPhone,
       editTrackingCode
     } = this.props
-    const { activeIndexes } = this.state
+    const { activeIndexes, documentsPopupProduct } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
 
     let orderDate = moment(order.orderDate, 'MMM Do, YYYY h:mm:ss A')
@@ -627,8 +761,52 @@ class Detail extends Component {
 
     return (
       <div id='page' className='auto-scrolling'>
+        {this.state.openDocumentsPopup &&
+        (<StyledModal
+            size='Default'
+            closeIcon={false}
+            onClose={() => this.setState({ openDocumentsPopup: false })}
+            centered={true}
+            open={true}>
+            <Modal.Header>
+              <>
+                <FormattedMessage id='order.relatedDocumentsFor' defaultMessage='RELATED DOCUMENTS FOR '>
+                  {text => text}
+                </FormattedMessage>
+                <StyledHeader>
+                  {documentsPopupProduct}
+                </StyledHeader>
+              </>
+            </Modal.Header>
+            <Modal.Content scrolling>{this.getRelatedDocumentsContent()}</Modal.Content>
+            <Modal.Actions>
+              <Button basic onClick={() => this.setState({ openDocumentsPopup: false })}>
+                <FormattedMessage id='global.close' defaultMessage='Close'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+            </Modal.Actions>
+          </StyledModal>
+        )}
         <div class='scroll-area'>
-          <Divider hidden />
+          <TopRow>
+            <a
+              onClick={() => router.push(`/orders?type=${ordersType.toLowerCase()}`)}
+              style={{ cursor: 'pointer' }}
+              data-test='orders_detail_back_btn'>
+              <ArrowLeft />
+              <FormattedMessage id='order.detail.backToOrders' defaultMessage='Back to Orders' />
+            </a>
+            <div className='field'>
+              <div>
+                {ordersType === 'Sales'
+                  ? <FormattedMessage id='order.detail.buyerCompanyEin' defaultMessage='Buyer Company EIN' />
+                  : <FormattedMessage id='order.detail.sellerCompanyEin' defaultMessage='Seller Company EIN' />
+                }
+              </div>
+              <div><strong>N/A</strong></div>
+            </div>
+          </TopRow>
           <OrderSegment loading={isDetailFetching || Object.keys(order).length === 0}>
             <Grid verticalAlign='middle'>
               <GridRow>
@@ -1145,6 +1323,9 @@ class Detail extends Component {
                                 </Table.HeaderCell>
                               </>
                             )}
+                            <Table.HeaderCell>
+                              <FormattedMessage id='global.documents' defaultMessage='Documents' />
+                            </Table.HeaderCell>
                             <Table.HeaderCell className='p-0'></Table.HeaderCell>
                           </Table.Row>
                         </Table.Header>
@@ -1178,6 +1359,19 @@ class Detail extends Component {
                                     </Table.Cell>
                                   </>
                                 )}
+                                <Table.Cell>{
+                                  order.orderItems[index].attachments.length
+                                    ? (
+                                      <a
+                                        href='#'
+                                        onClick={() =>
+                                          this.openRelatedPopup(order.orderItems[index].attachments, element)
+                                        }>
+                                        <FormattedMessage id='global.view' defaultMessage='View' />
+                                      </a>
+                                    ) : 'N/A'
+                                }
+                                </Table.Cell>
                                 <Table.Cell className='p-0'></Table.Cell>
                               </Table.Row>
                             ))}
