@@ -532,6 +532,16 @@ class PurchaseOrder extends Component {
                           trigger={
                             <GridColumn>
                               <Button
+                                disabled={
+                                  (!purchaseHazmatEligible && isAnyItemHazardous) || // false
+                                  this.state.submitting || // false
+                                  !values.payment || // !true
+                                  !this.props.logisticsAccount || // !true
+                                  !(
+                                    this.state.selectedAddress && // true
+                                    (this.props.cart.selectedShipping || values.shipmentQuoteId || !echoFreight)
+                                  )
+                                }
                                 loading={this.state.submitting}
                                 fluid
                                 primary
@@ -566,6 +576,12 @@ class PurchaseOrder extends Component {
                                 defaultMessage='You are not authorized to purchase this hazardous item.'
                               />
                             )
+                          }
+                          disabled={
+                            this.props.logisticsAccount &&
+                            ((purchaseHazmatEligible && isAnyItemHazardous) ||
+                              (purchaseHazmatEligible && !isAnyItemHazardous) ||
+                              (!purchaseHazmatEligible && !isAnyItemHazardous))
                           }
                         />
                       </GridRow>
