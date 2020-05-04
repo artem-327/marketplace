@@ -5,6 +5,7 @@ import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment'
 import * as Yup from 'yup'
+import { AlertCircle } from 'react-feather'
 //Actions
 import * as Actions from '../../actions'
 //Components
@@ -15,7 +16,6 @@ import { currency } from '~/constants/index'
 import ShippingQuote from '~/modules/purchase-order/components/ShippingQuote'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import FreightLabel from '~/components/freight'
-import { AlertCircle } from 'react-feather'
 
 //Styled
 import styled from 'styled-components'
