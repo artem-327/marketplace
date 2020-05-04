@@ -429,22 +429,14 @@ export function getEchoProduct(id) {
 export function putEchoProduct(id, values) {
   return {
     type: AT.ADMIN_PUT_ECHO_PRODUCT,
-    async payload() {
-      const response = await api.putEchoProduct(id, values)
-      Datagrid.updateRow(id, () => response.data)
-      return response
-    }
+    payload: api.putEchoProduct(id, values)
   }
 }
 
 export function postEchoProduct(values) {
   return {
     type: AT.ADMIN_POST_ECHO_PRODUCT,
-    async payload() {
-      const response = await api.postEchoProduct(values)
-      Datagrid.loadData()
-      return response
-    }
+    payload: api.postEchoProduct(values)
   }
 }
 

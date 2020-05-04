@@ -1,6 +1,7 @@
 import AddEditEchoProduct from './AddEditEchoProduct'
 import React from 'react'
 import { connect } from 'react-redux'
+import { withDatagrid } from '~/modules/datagrid'
 
 import {
   closePopup,
@@ -104,4 +105,4 @@ const mapStateToProps = ({ admin }, props) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddEditEchoProduct))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddEditEchoProduct)))
