@@ -62,6 +62,7 @@ context("Permissions tests",() => {
         cy.contains("No records found.")
 
         cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
+        cy.waitForUI()
         cy.wait('@loading')
         cy.contains("No records found.")
 
@@ -137,6 +138,7 @@ context("Permissions tests",() => {
         cy.contains("No records found.")
 
         cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
+        cy.waitForUI()
         cy.wait('@loading')
         cy.contains("No records found.")
 

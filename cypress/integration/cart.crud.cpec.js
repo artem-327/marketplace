@@ -189,7 +189,7 @@ context("Shopping cart CRUD", () => {
             })
         })
 
-        cy.get("[data-test='purchase_order_shipping_quote_0_rad']", { timeout: 60000 }).click()
+        cy.contains("Own Freight", { timeout: 60000 }).click()
 
         cy.get("#field_dropdown_payment").click()
         cy.get("#field_dropdown_payment").within(($form) => {
