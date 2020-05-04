@@ -314,10 +314,7 @@ class Orders extends Component {
     return this.props.rows.map(row => ({
       ...row,
       orderId: (
-        <a
-          href='#'
-          onClick={() => this.props.openOrderDetail(row.rawData)}
-        >
+        <a href='#' onClick={() => this.props.openOrderDetail(row.rawData)}>
           {row.id}
         </a>
       ),
@@ -337,12 +334,13 @@ class Orders extends Component {
       sds: '',
       cofA: '',
       related:
-        row.attachments && row.attachments.length
-          ? (
-            <a href='#' onClick={() => this.openRelatedPopup(row.id, row.attachments, 'order')}>
-              <Icon className='file related'/>
-            </a>
-          ) : <Icon className='file non-related' />,
+        row.attachments && row.attachments.length ? (
+          <a href='#' onClick={e => this.openRelatedPopup(e, row.id, row.attachments, 'order')}>
+            <Icon className='file related' />
+          </a>
+        ) : (
+          <Icon className='file non-related' />
+        ),
       orderItems: row.orderItems.map(item => ({
         ...item,
         orderId: '',
@@ -355,56 +353,45 @@ class Orders extends Component {
         reviewStatus: '',
         creditStatus: '',
         paymentStatus: '',
-        bl: item.bl && item.bl.length
-          ? (
-            <a
-              href='#'
-              onClick={() =>
-                this.downloadAttachment(item.bl[0].name, item.bl[0].id)
-              }>
+        bl:
+          item.bl && item.bl.length ? (
+            <a href='#' onClick={() => this.downloadAttachment(item.bl[0].name, item.bl[0].id)}>
               <Icon name='file' className='positive' />
             </a>
           ) : (
             <Icon name='file' className='unknown' />
-        ),
-        sds: item.sds && item.sds.length
-          ? (
-            <a
-              href='#'
-              onClick={() =>
-                this.downloadAttachment(item.sds[0].name, item.sds[0].id)
-              }>
+          ),
+        sds:
+          item.sds && item.sds.length ? (
+            <a href='#' onClick={() => this.downloadAttachment(item.sds[0].name, item.sds[0].id)}>
               <Icon name='file' className='positive' />
             </a>
           ) : (
             <Icon name='file' className='unknown' />
-            ),
-        cofA: item.cofA && item.cofA.length
-          ? (
-            <a
-              href='#'
-              onClick={() =>
-                this.downloadAttachment(item.cofA[0].name, item.cofA[0].id)
-              }>
+          ),
+        cofA:
+          item.cofA && item.cofA.length ? (
+            <a href='#' onClick={() => this.downloadAttachment(item.cofA[0].name, item.cofA[0].id)}>
               <Icon name='file' className='negative' />
             </a>
           ) : (
             <Icon name='file' className='unknown' />
-            ),
-        related: item.attachments && item.attachments.length
-          ? (
-            <a href='#' onClick={() => this.openRelatedPopup(row.id, item.attachments, 'item')}>
-              <Icon className='file related'/>
+          ),
+        related:
+          item.attachments && item.attachments.length ? (
+            <a href='#' onClick={e => this.openRelatedPopup(e, row.id, item.attachments, 'item')}>
+              <Icon className='file related' />
             </a>
           ) : (
             <Icon className='file non-related' />
-            ),
+          ),
         orderTotal: ''
       }))
     }))
   }
 
-  openRelatedPopup(id, attachments, type) {
+  openRelatedPopup(e, id, attachments, type) {
+    e.stopPropagation()
     this.setState({
       openRelatedPopup: true,
       relatedId: id,
@@ -470,10 +457,11 @@ class Orders extends Component {
       type: att.documentType.name,
       issuedAt: getSafe(() => <FormattedDate value={order.issuedAt.split('T')[0]} />, 'N/A'),
       issuerCompanyName: 'N/A',
-      download:
+      download: (
         <a href='#' onClick={() => this.downloadAttachment(att.name, att.id)}>
           <Icon name='file' className='positive' />
         </a>
+      )
     }))
     return (
       <ProdexGrid
