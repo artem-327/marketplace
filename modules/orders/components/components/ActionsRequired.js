@@ -429,9 +429,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {reviewStatus === 2 &&
-            (detail.paymentStatus === 5 || detail.paymentStatus === 4) &&
-            moment().isBefore(repayUntil.add(3, 'days'))
+            {detail.paymentStatus === 5 || detail.paymentStatus === 4
               ? this.renderSegment('red', 11, null, 'order.payment.failed.description', [
                   {
                     buttonType: 'primary',
