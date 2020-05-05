@@ -1325,13 +1325,6 @@ class Detail extends Component {
                           <Table.HeaderCell>
                             <FormattedMessage id='order.itemTotal' defaultMessage='Item Total' />
                           </Table.HeaderCell>
-                          {ordersType === 'Sales' && (
-                            <>
-                              <Table.HeaderCell>
-                                <FormattedMessage id='order.unitCost' defaultMessage='Unit Cost' />
-                              </Table.HeaderCell>
-                            </>
-                          )}
                           <Table.HeaderCell>
                             <FormattedMessage id='global.documents' defaultMessage='Documents' />
                           </Table.HeaderCell>
@@ -1353,21 +1346,6 @@ class Detail extends Component {
                               <Table.Cell textAlign='right'>{order.quantityOrdered[index]}</Table.Cell>
                               <Table.Cell textAlign='right'>{order.unitPrice[index]}</Table.Cell>
                               <Table.Cell textAlign='right'>{order.itemTotal[index]}</Table.Cell>
-                              {ordersType === 'Sales' && (
-                                <>
-                                  <Table.Cell textAlign='right'>
-                                    {order.unitCost[index] ? (
-                                      <FormattedNumber
-                                        style='currency'
-                                        currency={currency}
-                                        value={order.unitCost[index]}
-                                      />
-                                    ) : (
-                                      'N/A'
-                                    )}
-                                  </Table.Cell>
-                                </>
-                              )}
                               <Table.Cell>
                                 {order.orderItems[index].attachments.length ? (
                                   <a
