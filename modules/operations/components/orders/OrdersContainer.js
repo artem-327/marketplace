@@ -40,43 +40,54 @@ function mapStateToProps(state, { router, datagrid }) {
     ...operations,
     isOpen: state.isOpen,
     filterData: state.forms.filter,
-    rows: datagrid.rows.map(r => ({
-      id: r.id,
-      clsName: 'tree-table root-row',
-      root: true,
-      treeRoot: true,
-      rawData: r,
-      globalStatus: r.cfGlobalStatus,
-      date: r.orderDate && moment(r.orderDate).format(getLocaleDateFormat()),
-      customerName: r.sellerCompanyName,
-      orderStatus: OrdersHelper.getOrderStatus(r.orderStatus),
-      shippingStatus: OrdersHelper.getShippingStatus(r.shippingStatus),
-      reviewStatus: OrdersHelper.getReviewStatus(r.reviewStatus),
-      creditStatus: OrdersHelper.getCreditStatus(r.creditReviewStatus),
-      paymentStatus: OrdersHelper.getPaymentStatus(r.paymentStatus),
-      bl: '',
-      sds: '',
-      cofA: '',
-      orderTotal: <FormattedNumber style='currency' currency={currency} value={r.cfPriceTotal} />,
-      accountingDocumentsCount: r.accountingDocumentsCount,
-      attachments: r.attachments,
-      orderItems: r.orderItems.map(item => {
-        let cofA = filterAttachments(item.attachments, 1)  // C of A
-        let sds = filterAttachments(item.attachments, 3)  // SDS
-        let bl = filterAttachments(item.attachments, 10)  // B/L
-        return ({
-          ...item,
-          rawData: item,
-          id: r.id + '_' + item.id,
-          clsName: 'tree-table nested-row',
-          cofA,
-          sds,
-          bl
+    rows: datagrid.rows.map(r => {
+      const isCancelable =
+        r.orderStatus === 4 /* Draft */
+        || r.orderStatus === 1 /* Pending */
+        || r.orderStatus === 2 /* Confirmed */
+        && r.reviewStatus === 0
+        && r.creditReviewStatus === 0
+        && r.paymentStatus === 0
+        && (r.shippingStatus === 0 || r.shippingStatus === 0) /* Not shipped */
+      return ({
+        id: r.id,
+        clsName: 'tree-table root-row',
+        isCancelable,
+        root: true,
+        treeRoot: true,
+        rawData: r,
+        globalStatus: r.cfGlobalStatus,
+        date: r.orderDate && moment(r.orderDate).format(getLocaleDateFormat()),
+        customerName: r.sellerCompanyName,
+        orderStatus: OrdersHelper.getOrderStatus(r.orderStatus),
+        shippingStatus: OrdersHelper.getShippingStatus(r.shippingStatus),
+        reviewStatus: OrdersHelper.getReviewStatus(r.reviewStatus),
+        creditStatus: OrdersHelper.getCreditStatus(r.creditReviewStatus),
+        paymentStatus: OrdersHelper.getPaymentStatus(r.paymentStatus),
+        bl: '',
+        sds: '',
+        cofA: '',
+        orderTotal: <FormattedNumber style='currency' currency={currency} value={r.cfPriceTotal} />,
+        accountingDocumentsCount: r.accountingDocumentsCount,
+        attachments: r.attachments,
+        orderItems: r.orderItems.map(item => {
+          let cofA = filterAttachments(item.attachments, 1)  // C of A
+          let sds = filterAttachments(item.attachments, 3)  // SDS
+          let bl = filterAttachments(item.attachments, 10)  // B/L
+          return ({
+            ...item,
+            rawData: item,
+            id: r.id + '_' + item.id,
+            clsName: 'tree-table nested-row',
+            cofA,
+            sds,
+            bl
+          })
         })
-      })
-    })),
+    })}),
     activeStatus: operations.ordersStatusFilter,
-    listDocumentTypes: operations.listDocumentTypes
+    //! !listDocumentTypes: operations.listDocumentTypes,
+    //! !documentTypesFetching: operations.documentTypesFetching
   }
 }
 
