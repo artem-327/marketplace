@@ -41,7 +41,6 @@ import styled from 'styled-components'
 import debounce from 'lodash/debounce'
 import { uniqueArrayByKey } from '~/utils/functions'
 import escapeRegExp from 'lodash/escapeRegExp'
-import { Datagrid } from '~/modules/datagrid'
 import confirm from '~/src/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { Required, Or } from '~/components/constants/layout'
@@ -632,7 +631,7 @@ class AddEditEchoProduct extends React.Component {
   }
 
   submitForm = async (values, setSubmitting) => {
-    const { putEchoProduct, postEchoProduct, closePopup, linkAttachment, listDocumentTypes } = this.props
+    const { putEchoProduct, postEchoProduct, closePopup, linkAttachment, listDocumentTypes, datagrid } = this.props
 
     const { popupValues } = this.state
     let sendSuccess = false
@@ -680,11 +679,14 @@ class AddEditEchoProduct extends React.Component {
       // No need to await; just fire it
       verifyEchoProduct(value.id)
 
-      Datagrid.loadData()
-      // Datagrid.updateRow(data.id, () => ({
-      //   ...data,
-      //   attachments: data.attachments.concat(notLinkedAttachments)
-      // }))
+      if (popupValues) {
+        datagrid.updateRow(value.id, () => ({
+          ...value,
+          attachments: value.attachments.concat(notLinkedAttachments)
+        }))
+      } else {
+        datagrid.loadData()
+      }
 
       setSubmitting(false)
       sendSuccess = true
@@ -1767,7 +1769,8 @@ class AddEditEchoProduct extends React.Component {
       visible,
       closePopup,
       intl: { formatMessage },
-      isLoading
+      isLoading,
+      datagrid
     } = this.props
 
     const { editTab } = this.state
@@ -1819,7 +1822,7 @@ class AddEditEchoProduct extends React.Component {
                         size='large'
                         inputProps={{ type: 'button' }}
                         onClick={() => {
-                          if (this.state.changedAttachments) Datagrid.loadData()
+                          if (this.state.changedAttachments) datagrid.loadData()
                           closePopup()
                         }}
                         data-test='sidebar_inventory_cancel'>
