@@ -190,11 +190,10 @@ class UploadAttachment extends Component {
 
   handleConfirmFile = async (index, att) => {
     let { addAttachment, type, expiration } = this.props
-
     await new Promise((resolve, reject) => {
       addAttachment(att.file.value, parseInt(type), { expiration, force: true })
         .then(a => {
-          this.onUploadSuccess(att)
+          this.onUploadSuccess(a.value.data)
           this.removeDuplicateFile(index)
           resolve()
         })

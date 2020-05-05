@@ -18,6 +18,7 @@ import {
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import moment from 'moment'
+import { AlertCircle } from 'react-feather'
 //Components
 import { errorMessages } from '~/constants/yupValidation'
 import { DateInput } from '~/components/custom-formik'
@@ -41,6 +42,70 @@ const FREIGHT_TYPES = {
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `
+
+const CustomGrid = styled(Grid)`
+  input,
+  textarea {
+    background-color: #fdfdfd !important;
+  }
+`
+
+const CustomButton = styled(Button)`
+  background-color: #ffffff !important;
+  border: solid 1px #dee2e6 !important;
+`
+
+const Rectangle = styled.div`
+  border-radius: 4px;
+  border: solid 1px orange;
+  background-color: #ffffff;
+  margin-bottom: 15px;
+  align-items: center;
+  display: block;
+  padding: 10px;
+  font-size: 14px;
+`
+
+const CustomDivTitle = styled.div`
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #0d0d0d;
+  display: flex;
+`
+
+const CustomDivContent = styled.div`
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #848893;
+  padding: 4px 30px;
+`
+
+const CustomDivInTitle = styled.div`
+  padding-left: 10px;
+`
+
+const CustomSubmitButton = styled(Button)`
+  background-color: #2599d5 !important;
+`
+
+const Line = styled.div`
+  border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+`
+
+const GridRowLine = styled(Grid.Row)`
+  border-top: 1px solid rgba(34, 36, 38, 0.15);
+`
+
+const GridColumnText = styled(GridColumn)`
+  font-weight: bold !important;
+`
+
 class SaleReturnShipping extends React.Component {
   state = {
     selectedShippingQuote: 0,
@@ -57,10 +122,6 @@ class SaleReturnShipping extends React.Component {
     const { closePopup, order, orderId, shippingQuotes } = this.props
 
     let formValues = {
-      quoteId: (order.cfWeightExceeded || !getSafe(() => shippingQuotes.rates.length, false)
-        ? values.shipmentQuoteId
-        : getSafe(() => shippingQuotes.rates[this.state.selectedShippingQuote].quoteId, '')
-      ).trim(),
       pickupRemarks: values.pickupRemarks.trim(),
       deliveryRemarks: values.deliveryRemarks.trim(),
       shipperRefNo: values.shipperRefNo.trim(),
@@ -68,7 +129,14 @@ class SaleReturnShipping extends React.Component {
     }
 
     try {
-      await this.props.returnShipmentOrder(orderId, formValues)
+      values.freightType === FREIGHT_TYPES.ECHO
+        ? (formValues.quoteId = (order.cfWeightExceeded ||
+          !getSafe(() => shippingQuotes.rates[this.state.selectedShippingQuote].quoteId, '')
+            ? values.shipmentQuoteId
+            : getSafe(() => shippingQuotes.rates[this.state.selectedShippingQuote].quoteId, '')
+          ).trim())
+        : null,
+        await this.props.returnShipmentOrder(orderId, formValues)
       this.props.getSaleOrder(orderId)
       closePopup()
     } catch (e) {
@@ -165,9 +233,9 @@ class SaleReturnShipping extends React.Component {
                   const echoFreight = values.freightType === FREIGHT_TYPES.ECHO
                   return (
                     <>
-                      <Grid>
+                      <CustomGrid>
                         <Grid.Row>
-                          <Grid.Column width={16}>
+                          <Grid.Column width={8}>
                             <DateInput
                               inputProps={{
                                 minDate: moment(),
@@ -186,7 +254,14 @@ class SaleReturnShipping extends React.Component {
                             />
                           </Grid.Column>
                         </Grid.Row>
-
+                        <FreightLabel
+                          echoFreight={echoFreight}
+                          setFieldValue={(fieldName, value) => {
+                            this.setState({ selectedShippingQuote: null })
+                            setFieldValue(fieldName, value)
+                            if (value === 'OWN_FREIGHT') setFieldValue('shipmentQuoteId', '')
+                          }}
+                        />
                         {manualShipmentQuoteId ? (
                           <>
                             {order.cfWeightExceeded ? (
@@ -201,62 +276,84 @@ class SaleReturnShipping extends React.Component {
                             ) : (
                               <GridRow>
                                 <GridColumn computer={16}>
-                                  <FormattedMessage
-                                    id='cart.noShippingQuotes.processManually'
-                                    defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
-                                  />
+                                  <Rectangle>
+                                    <CustomDivTitle>
+                                      <AlertCircle color='orange' size={18} />
+                                      <CustomDivInTitle>
+                                        <FormattedMessage
+                                          id='cart.noShippingQuotes.processManually.title'
+                                          defaultMessage={`We are sorry, but no matching Shipping Quotes were provided by logistics company.`}
+                                        />
+                                      </CustomDivInTitle>
+                                    </CustomDivTitle>
+                                    <CustomDivContent>
+                                      <FormattedMessage
+                                        id='cart.noShippingQuotes.processManually'
+                                        defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
+                                      />
+                                    </CustomDivContent>
+                                  </Rectangle>
                                 </GridColumn>
                               </GridRow>
                             )}
                             <Grid.Row>
-                              <Grid.Column width={8}>
-                                <Button type='button' fluid onClick={() => this.requestManualShippingQuote()}>
+                              <Grid.Column width={6}>
+                                <CustomButton type='button' fluid onClick={() => this.requestManualShippingQuote()}>
                                   <FormattedMessage
                                     id='cart.requestShippingQuote'
                                     defaultMessage='Request Shipping Quote'
                                     tagName='span'>
                                     {text => text}
                                   </FormattedMessage>
-                                </Button>
+                                </CustomButton>
                               </Grid.Column>
-                            </Grid.Row>
-                            <GridRow>
-                              <GridColumn computer={16}>
-                                <FormattedMessage
-                                  id='order.quoteReceived'
-                                  defaultMessage='If you already received the shipping quote and agree, please type in the provided Quote Id and continue with shipping order.'
-                                />
-                              </GridColumn>
-                            </GridRow>
-                            <Grid.Row>
-                              <GridColumn computer={16}>
-                                <Input
-                                  name='shipmentQuoteId'
-                                  label={formatMessage({
-                                    id: 'cart.shipmentQuote',
-                                    defaultMessage: 'Shipment Quote'
-                                  })}
-                                />
-                              </GridColumn>
                             </Grid.Row>
                           </>
                         ) : (
-                          <>
-                            <FreightLabel echoFreight={echoFreight} setFieldValue={setFieldValue} />
-                            <Grid.Row>
-                              <Grid.Column width={16}>
-                                <ShippingQuote
-                                  currency={currency}
-                                  selectedShippingQuote={{ index: this.state.selectedShippingQuote }}
-                                  handleQuoteSelect={index => this.setState({ selectedShippingQuote: index })}
-                                  selectedAddress={1}
-                                  shippingQuotes={shippingQuotes}
-                                  shippingQuotesAreFetching={shippingQuotesAreFetching}
-                                />
-                              </Grid.Column>
-                            </Grid.Row>
-                          </>
+                          <Grid.Row>
+                            <Grid.Column width={16}>
+                              <ShippingQuote
+                                currency={currency}
+                                selectedShippingQuote={{ index: this.state.selectedShippingQuote }}
+                                handleQuoteSelect={index => {
+                                  this.setState({ selectedShippingQuote: index })
+                                  setFieldValue('shipmentQuoteId', '')
+                                }}
+                                selectedAddress={1}
+                                shippingQuotes={shippingQuotes}
+                                shippingQuotesAreFetching={shippingQuotesAreFetching}
+                              />
+                            </Grid.Column>
+                          </Grid.Row>
                         )}
+                        <GridRow>
+                          <GridColumn width={16}>
+                            <Line />
+                          </GridColumn>
+                        </GridRow>
+                        <GridRow>
+                          <GridColumnText computer={16}>
+                            <FormattedMessage
+                              id='order.quoteReceived'
+                              defaultMessage='If you already received the shipping quote and agree, please type in the provided Quote Id and continue with shipping order.'
+                            />
+                          </GridColumnText>
+                        </GridRow>
+                        <Grid.Row>
+                          <GridColumn computer={8}>
+                            <Input
+                              inputProps={{
+                                onChange: () => this.setState({ selectedShippingQuote: '' }),
+                                disabled: values.freightType === 'OWN_FREIGHT'
+                              }}
+                              name='shipmentQuoteId'
+                              label={formatMessage({
+                                id: 'cart.shipmentQuote',
+                                defaultMessage: 'Shipment Quote'
+                              })}
+                            />
+                          </GridColumn>
+                        </Grid.Row>
                         <Grid.Row>
                           <Grid.Column width={16}>
                             <TextArea
@@ -266,6 +363,10 @@ class SaleReturnShipping extends React.Component {
                                 defaultMessage: 'Pick-up remarks'
                               })}
                             />
+                          </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                          <Grid.Column width={16}>
                             <TextArea
                               name='deliveryRemarks'
                               label={formatMessage({
@@ -273,6 +374,10 @@ class SaleReturnShipping extends React.Component {
                                 defaultMessage: 'Delivery remarks'
                               })}
                             />
+                          </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                          <Grid.Column width={8}>
                             <Input
                               name='shipperRefNo'
                               label={formatMessage({
@@ -282,7 +387,8 @@ class SaleReturnShipping extends React.Component {
                             />
                           </Grid.Column>
                         </Grid.Row>
-                        <Grid.Row>
+                        <Grid.Row></Grid.Row>
+                        <GridRowLine>
                           <Grid.Column width={10}></Grid.Column>
                           <Grid.Column floated='right' width={3}>
                             <Button basic fluid onClick={() => this.props.closePopup()}>
@@ -292,14 +398,14 @@ class SaleReturnShipping extends React.Component {
                             </Button>
                           </Grid.Column>
                           <Grid.Column floated='right' width={3}>
-                            <Button primary fluid type='submit'>
+                            <CustomSubmitButton primary fluid type='submit'>
                               <FormattedMessage id='global.save' defaultMessage='Save' tagName='span'>
                                 {text => text}
                               </FormattedMessage>
-                            </Button>
+                            </CustomSubmitButton>
                           </Grid.Column>
-                        </Grid.Row>
-                      </Grid>
+                        </GridRowLine>
+                      </CustomGrid>
                     </>
                   )
                 }}

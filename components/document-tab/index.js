@@ -155,9 +155,10 @@ class DocumentTab extends Component {
               {text => text}
             </FormattedMessage>
             <AttachmentManager
-              documentTypesIds={
-                listDocumentTypes && listDocumentTypes.length ? listDocumentTypes.map(type => type.id) : []
-              }
+              /*documentTypeIds={
+                // listDocumentTypes && listDocumentTypes.length ? listDocumentTypes.map(type => type.id) : [] - ids for props.documentTypes are not enough
+                [this.state.documentType] - maybe this is correct for props.documentTypeIds?
+              }*/
               asModal
               returnSelectedRows={rows =>
                 this.attachDocumentsUploadAttachment(rows, values, setFieldValue, setFieldNameAttachments, changedForm)

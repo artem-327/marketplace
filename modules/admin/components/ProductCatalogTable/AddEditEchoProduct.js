@@ -41,7 +41,6 @@ import styled from 'styled-components'
 import debounce from 'lodash/debounce'
 import { uniqueArrayByKey } from '~/utils/functions'
 import escapeRegExp from 'lodash/escapeRegExp'
-import { Datagrid } from '~/modules/datagrid'
 import confirm from '~/src/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { Required, Or } from '~/components/constants/layout'
@@ -227,7 +226,8 @@ class AddEditEchoProduct extends React.Component {
     unNumberInitOptions: [],
     popupValues: null,
     editTab: 0,
-    selectedTagsOptions: []
+    selectedTagsOptions: [],
+    selectedMarketSegmentsOptions: []
   }
 
   componentDidMount() {
@@ -244,6 +244,7 @@ class AddEditEchoProduct extends React.Component {
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
     if (!listDocumentTypes || (listDocumentTypes && !listDocumentTypes.length)) getDocumentTypes()
     this.props.searchTags('')
+    this.props.searchMarketSegments('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -305,7 +306,8 @@ class AddEditEchoProduct extends React.Component {
   setInitialState = (popupValues, additionalStates) => {
     let codesList = [],
       unNumberInitOptions = [],
-      selectedTagsOptions = []
+      selectedTagsOptions = [],
+      selectedMarketSegmentsOptions = []
 
     if (popupValues) {
       codesList = popupValues.mfrProductCodes.map(code => ({
@@ -336,6 +338,15 @@ class AddEditEchoProduct extends React.Component {
           }
         })
       }
+      if (popupValues.marketSegments) {
+        selectedMarketSegmentsOptions = popupValues.marketSegments.map(d => {
+          return {
+            key: d.id,
+            text: d.name,
+            value: d.id
+          }
+        })
+      }
     }
     this.setState({
       codesList,
@@ -344,6 +355,7 @@ class AddEditEchoProduct extends React.Component {
       popupValues,
       unNumberInitOptions: unNumberInitOptions,
       selectedTagsOptions,
+      selectedMarketSegmentsOptions,
       ...additionalStates
     })
   }
@@ -532,9 +544,18 @@ class AddEditEchoProduct extends React.Component {
     this.props.searchTags(searchQuery)
   }, 250)
 
+  handleMarketSegmentsSearchChange = debounce((_, { searchQuery }) => {
+    this.props.searchMarketSegments(searchQuery)
+  }, 250)
+
   handleTagsChange = (value, options) => {
     const newOptions = options.filter(el => value.some(v => el.value === v))
     this.setState({ selectedTagsOptions: newOptions })
+  }
+
+  handleMarketSegmentsChange = (value, options) => {
+    const newOptions = options.filter(el => value.some(v => el.value === v))
+    this.setState({ selectedMarketSegmentsOptions: newOptions })
   }
 
   switchToErrors = err => {
@@ -610,7 +631,7 @@ class AddEditEchoProduct extends React.Component {
   }
 
   submitForm = async (values, setSubmitting) => {
-    const { putEchoProduct, postEchoProduct, closePopup, linkAttachment, listDocumentTypes } = this.props
+    const { putEchoProduct, postEchoProduct, closePopup, linkAttachment, listDocumentTypes, datagrid } = this.props
 
     const { popupValues } = this.state
     let sendSuccess = false
@@ -658,11 +679,14 @@ class AddEditEchoProduct extends React.Component {
       // No need to await; just fire it
       verifyEchoProduct(value.id)
 
-      Datagrid.loadData()
-      // Datagrid.updateRow(data.id, () => ({
-      //   ...data,
-      //   attachments: data.attachments.concat(notLinkedAttachments)
-      // }))
+      if (popupValues) {
+        datagrid.updateRow(value.id, () => ({
+          ...value,
+          attachments: value.attachments.concat(notLinkedAttachments)
+        }))
+      } else {
+        datagrid.loadData()
+      }
 
       setSubmitting(false)
       sendSuccess = true
@@ -817,7 +841,7 @@ class AddEditEchoProduct extends React.Component {
         />
         <AttachmentManager
           singleSelection
-          ducumentTypeIds={[documentType]}
+          documentTypeIds={[documentType]}
           asModal
           returnSelectedRows={rows => this.attachDocumentsUploadAttachment(rows, values, formikProps.setFieldValue)}
         />
@@ -1026,16 +1050,22 @@ class AddEditEchoProduct extends React.Component {
 
   renderEdit = formikProps => {
     let codesList = this.state.codesList
-    const { selectedTagsOptions } = this.state
+    const { selectedTagsOptions, selectedMarketSegmentsOptions } = this.state
     const {
       intl: { formatMessage },
       searchedManufacturers,
       searchedManufacturersLoading,
       searchManufacturers,
       searchedTagsLoading,
-      searchedTags
+      searchedTags,
+      searchedmarketSegmentsLoading,
+      searchedMarketSegments
     } = this.props
 
+    const allMarketSegmentsOptions = uniqueArrayByKey(
+      searchedMarketSegments.concat(selectedMarketSegmentsOptions),
+      'key'
+    )
     const allTagsOptions = uniqueArrayByKey(searchedTags.concat(selectedTagsOptions), 'key')
 
     return (
@@ -1110,6 +1140,30 @@ class AddEditEchoProduct extends React.Component {
           defaultMessage: 'Emergency Phone',
           props: formikProps
         })}
+        <GridRow>
+          <GridColumn width={6}>
+            <FormattedMessage id='global.marketSegments' defaultMessage='Market Segments' />
+          </GridColumn>
+          <GridColumn width={10}>
+            <FormikDropdown
+              name='marketSegments'
+              options={allMarketSegmentsOptions}
+              inputProps={{
+                loading: searchedmarketSegmentsLoading,
+                search: true,
+                icon: 'search',
+                selection: true,
+                multiple: true,
+                noResultsMessage: formatMessage({
+                  id: 'global.startTypingToSearch',
+                  defaultMessage: 'Start typing to begin search'
+                }),
+                onSearchChange: this.handleMarketSegmentsSearchChange,
+                onChange: (_, { value }) => this.handleMarketSegmentsChange(value, allMarketSegmentsOptions)
+              }}
+            />
+          </GridColumn>
+        </GridRow>
         <GridRow>
           <GridColumn width={6}>
             <FormattedMessage id='global.tags' defaultMessage='Tags' />
@@ -1715,7 +1769,8 @@ class AddEditEchoProduct extends React.Component {
       visible,
       closePopup,
       intl: { formatMessage },
-      isLoading
+      isLoading,
+      datagrid
     } = this.props
 
     const { editTab } = this.state
@@ -1767,7 +1822,7 @@ class AddEditEchoProduct extends React.Component {
                         size='large'
                         inputProps={{ type: 'button' }}
                         onClick={() => {
-                          if (this.state.changedAttachments) Datagrid.loadData()
+                          if (this.state.changedAttachments) datagrid.loadData()
                           closePopup()
                         }}
                         data-test='sidebar_inventory_cancel'>
