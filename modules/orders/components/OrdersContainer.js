@@ -85,6 +85,7 @@ function mapStateToProps(state, { router, datagrid }) {
     })),
     activeStatus: orders.statusFilter,
     listDocumentTypes: orders.listDocumentTypes,
+    documentTypesFetching: orders.documentTypesFetching,
     tutorialCompleted: getSafe(() => state.auth.identity.tutorialCompleted, false)
   }
 }

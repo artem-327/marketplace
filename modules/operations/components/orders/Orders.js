@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
-import { Modal, Container, Icon, Button } from 'semantic-ui-react'
+import { Modal, Container, Icon, Button, Dropdown } from 'semantic-ui-react'
 import styled from 'styled-components'
 import Spinner from '~/src/components/Spinner/Spinner'
 import ProdexGrid from '~/components/table'
@@ -34,6 +34,16 @@ const StyledModal = styled(Modal)`
       height: 40px;
     }
   }
+`
+
+const CustomDivAddDocument = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
+const RelatedDocumentsDropdown = styled(Dropdown)`
+  z-index: 601 !important;
 `
 
 class Orders extends Component {
@@ -255,7 +265,15 @@ class Orders extends Component {
     openRelatedPopup: false,
     relatedPopupType: '',
     relatedAttachments: [],
-    expandedRowIds: []
+    expandedRowIds: [],
+    filterDocumentType: 0
+  }
+
+  componentDidMount() {
+    const { getDocumentTypes, listDocumentTypes } = this.props
+    if (listDocumentTypes && !listDocumentTypes.length) {
+      getDocumentTypes()
+    }
   }
 
   getMimeType = documentName => {
@@ -314,7 +332,13 @@ class Orders extends Component {
     return this.props.rows.map(row => ({
       ...row,
       orderId: (
-        <a href='#' onClick={() => this.props.openOrderDetail(row.rawData)}>
+        <a
+          href='#'
+          onClick={e => {
+            e.stopPropagation()
+            this.props.openOrderDetail(row.rawData)
+          }}
+        >
           {row.id}
         </a>
       ),
@@ -445,9 +469,19 @@ class Orders extends Component {
   }
 
   getRelatedDocumentsContent = () => {
-    let { relatedAttachments } = this.state
+    const {
+      intl: { formatMessage },
+      listDocumentTypes,
+      documentTypesFetching
+    } = this.props
+    let { relatedAttachments, filterDocumentType } = this.state
 
-    const rowsRelatedDocuments = relatedAttachments.map(att => ({
+    const filteredAttachments =
+      filterDocumentType === 0
+        ? relatedAttachments
+        : relatedAttachments.filter(a => a.documentType.id === filterDocumentType)
+
+    const rowsRelatedDocuments = filteredAttachments.map(att => ({
       id: att.id,
       documentNumber: (
         <Button as='a' onClick={() => this.downloadAttachment(att.name, att.id)}>
@@ -464,20 +498,58 @@ class Orders extends Component {
       )
     }))
     return (
-      <ProdexGrid
-        loading={this.state.submitting}
-        tableName='related_orders'
-        columns={this.state.columnsRelatedOrders}
-        rows={rowsRelatedDocuments}
-      />
+      <>
+        <CustomDivAddDocument>
+          <RelatedDocumentsDropdown
+            options={[
+              {
+                key: 0,
+                text: formatMessage({
+                  id: 'order.detail.documents.dropdown.all',
+                  defaultMessage: 'Select All'
+                }),
+                value: 0
+              }
+            ].concat(listDocumentTypes)}
+            value={this.state.filterDocumentType}
+            selection
+            loading={documentTypesFetching}
+            onChange={(event, { name, value }) => {
+              this.setState({ [name]: value })
+            }}
+            name='filterDocumentType'
+            placeholder={formatMessage({
+              id: 'order.detail.documents.dropdown',
+              defaultMessage: 'Select Type'
+            })}
+          />
+        </CustomDivAddDocument>
+        <ProdexGrid
+          loading={this.state.submitting}
+          tableName='related_orders'
+          columns={this.state.columnsRelatedOrders}
+          rows={rowsRelatedDocuments}
+        />
+      </>
     )
+  }
+
+  cancelOrder = async (id) => {
+    const { cancelOrder, datagrid } = this.props
+    try {
+      const response = await cancelOrder(id)
+      datagrid.updateRow(id, () => response.value.data)
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   render() {
     const {
       isFetching,
       datagrid,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      orderProcessing
     } = this.props
 
     const { columns } = this.state
@@ -514,7 +586,7 @@ class Orders extends Component {
               tableName='orders_grid'
               columns={columns}
               {...datagrid.tableProps}
-              loading={datagrid.loading}
+              loading={datagrid.loading || orderProcessing}
               rows={this.getRows()}
               treeDataType={true}
               tableTreeColumn={'orderId'}
@@ -542,6 +614,14 @@ class Orders extends Component {
                     defaultMessage: 'Detail'
                   }),
                   callback: row => this.props.openOrderDetail(row.rawData)
+                },
+                {
+                  text: formatMessage({
+                    id: 'order.cancelOrder',
+                    defaultMessage: 'Cancel Order'
+                  }),
+                  hidden: row => !row.isCancelable,
+                  callback: row => this.cancelOrder(row.id)
                 }
               ]}
               rowChildActions={[]}

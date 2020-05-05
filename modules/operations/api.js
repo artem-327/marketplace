@@ -12,5 +12,7 @@ export default {
   updateTag: (id, name) => api.patch(`/prodex/api/tags/id/${id}?name=${name}`),
   searchCompany: (companyText, limit = 30) =>
     api.get(`/prodex/api/companies/search?limit=${limit}&pattern=${companyText}`)
-      .then(response => response.data)
+      .then(response => response.data),
+  getDocumentTypes: () => api.get(`/prodex/api/document-types/`),
+  cancelOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/cancel`)
 }

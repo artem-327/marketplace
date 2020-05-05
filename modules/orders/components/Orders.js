@@ -560,7 +560,7 @@ class Orders extends Component {
       ...row,
       orderId: (
         <Link href={`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`}>
-          <a>{row.id}</a>
+          <a onClick={e => e.stopPropagation()}>{row.id}</a>
         </Link>
       ),
       productName: (
@@ -957,7 +957,8 @@ class Orders extends Component {
   getRelatedDocumentsContent = () => {
     const {
       intl: { formatMessage },
-      listDocumentTypes
+      listDocumentTypes,
+      documentTypesFetching
     } = this.props
     let {
       relatedPopupParams: { rowRawData, parentId, attachments, type },
@@ -1030,6 +1031,7 @@ class Orders extends Component {
             ].concat(listDocumentTypes)}
             value={this.state.filterDocumentType}
             selection
+            loading={documentTypesFetching}
             onChange={(event, { name, value }) => {
               this.setState({ [name]: value })
             }}
