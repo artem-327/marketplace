@@ -489,7 +489,8 @@ class AddEditEchoProduct extends React.Component {
             viscosity: getSafe(() => popupValues.viscosity, ''),
             wasteDisposalMethods: getSafe(() => popupValues.wasteDisposalMethods, ''),
             isPublished: getSafe(() => popupValues.isPublished, false),
-            tags: getSafe(() => popupValues.tags, []).map(d => d.id)
+            tags: getSafe(() => popupValues.tags, []).map(d => d.id),
+            marketSegments: getSafe(() => popupValues.marketSegments, []).map(d => d.id)
           }
         : null)
     }
