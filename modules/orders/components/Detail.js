@@ -450,7 +450,9 @@ class Detail extends Component {
     listDocumentTypes: '',
     attachmentRows: [],
     toggleTrackingID: false,
+    toggleReturnShippingTrackingCode: false,
     shippingTrackingCode: '',
+    returnShippingTrackingCode: '',
     openDocumentsPopup: false,
     openDocumentsAttachments: [],
     documentsPopupProduct: ''
@@ -466,7 +468,10 @@ class Detail extends Component {
     this.props.loadDetail(endpointType, this.props.router.query.id)
 
     if (listDocumentTypes && !listDocumentTypes.length) this.props.getDocumentTypes()
-    this.setState({ shippingTrackingCode: order.shippingTrackingCode })
+    this.setState({
+      shippingTrackingCode: getSafe(() => order.shippingTrackingCode, ''),
+      returnShippingTrackingCode: getSafe(() => order.returnShippingTrackingCode, '')
+    })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -494,6 +499,12 @@ class Detail extends Component {
 
     if (getSafe(() => prevProps.order.shippingTrackingCode, '') !== getSafe(() => order.shippingTrackingCode, '')) {
       this.setState({ shippingTrackingCode: order.shippingTrackingCode })
+    }
+    if (
+      getSafe(() => prevProps.order.returnShippingTrackingCode, '') !==
+      getSafe(() => order.returnShippingTrackingCode, '')
+    ) {
+      this.setState({ returnShippingTrackingCode: order.returnShippingTrackingCode })
     }
   }
 
@@ -746,7 +757,8 @@ class Detail extends Component {
       loadingRelatedDocuments,
       intl: { formatMessage },
       echoSupportPhone,
-      editTrackingCode
+      editTrackingCode,
+      editReturnTrackingCode
     } = this.props
     const { activeIndexes, documentsPopupProduct } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
@@ -1460,7 +1472,50 @@ class Detail extends Component {
                                   defaultMessage='Return Tracking Number'
                                 />
                               </GridDataColumn>
-                              <GridDataColumn width={valColumn}>{order.returnShippingTrackingCode}</GridDataColumn>
+
+                              <GridDataColumnTrackingID width={valColumn}>
+                                {!order.isTrackingNumberEditable ? (
+                                  order.returnShippingTrackingCode
+                                ) : this.state.toggleReturnShippingTrackingCode ? (
+                                  <>
+                                    <CustomInput
+                                      onChange={(e, { value }) => {
+                                        this.setState({ returnShippingTrackingCode: value })
+                                      }}
+                                      type='number'
+                                      value={this.state.returnShippingTrackingCode}
+                                    />
+                                    <CustomButton
+                                      type='button'
+                                      onClick={async e => {
+                                        e.preventDefault()
+                                        try {
+                                          await editReturnTrackingCode(order.id, this.state.returnShippingTrackingCode)
+                                        } catch (error) {
+                                          this.setState({
+                                            returnShippingTrackingCode: order.returnShippingTrackingCode
+                                          })
+                                        } finally {
+                                          this.setState({ toggleReturnShippingTrackingCode: false })
+                                        }
+                                      }}>
+                                      <FormattedMessage id='global.save' defaultMessage='Save' />
+                                    </CustomButton>
+                                  </>
+                                ) : (
+                                  <Popup
+                                    content={
+                                      <FormattedMessage id='order.detail.clickToEdit' defaultMessage='Click to edit' />
+                                    }
+                                    trigger={
+                                      <CustomA
+                                        onClick={() => this.setState({ toggleReturnShippingTrackingCode: true })}>
+                                        {this.state.returnShippingTrackingCode}
+                                      </CustomA>
+                                    }
+                                  />
+                                )}
+                              </GridDataColumnTrackingID>
                             </GridData>
                           </GridColumn>
                         </GridRow>

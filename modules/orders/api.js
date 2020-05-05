@@ -133,5 +133,7 @@ export default {
   unlinkAttachmentToOrder: query => api.delete(`/prodex/api/attachment-links/to-order${generateQueryString(query)}`),
   linkAttachmentToOrder: query => api.post(`/prodex/api/attachment-links/to-order${generateQueryString(query)}`),
   editTrackingCode: (orderId, trackingCode) =>
-    api.patch(`/prodex/api/purchase-orders/${orderId}/shipping-tracking-code?trackingCode=${trackingCode}`)
+    api.patch(`/prodex/api/purchase-orders/${orderId}/shipping-tracking-code?trackingCode=${trackingCode}`),
+  editReturnTrackingCode: (orderId, trackingCode) =>
+    api.patch(`/prodex/api/sale-orders/${orderId}/return-shipping-tracking-code?trackingCode=${trackingCode}`)
 }
