@@ -1,7 +1,7 @@
 import { Icon, Checkbox } from 'semantic-ui-react'
 import PriceControl from './PriceControl'
 import { Rule } from './Broadcast.style'
-import { getNodeStatus, setBroadcast } from '~/modules/broadcast/utils'
+import { getBroadcast } from '~/modules/broadcast/utils'
 import { getSafe } from '~/utils/functions'
 
 const EmptyIconSpace = () => (
@@ -33,7 +33,7 @@ const RuleItem = props => {
     onRowClick(i)
   }
 
-  //get company name from item based on id with 2 loops. When find the same id then has companyName and breaks all loops
+  // Get company name from item based on id with 2 loops. When find the same id then has companyName and breaks all loops
   const findCompany = () => {
     if (getSafe(() => item.model.rule.type, null) === 'branch') {
       for (let i in getSafe(() => item.parent.model.rule.elements, [])) {
@@ -56,12 +56,31 @@ const RuleItem = props => {
     .slice(1)
     .filter(n => n.model.rule.broadcast === 1)
   const parentBroadcasted = broadcastedParents.reverse()[0]
-  const nodeBroadcast = rule.broadcast
+  let nodeBroadcast = rule.broadcast
+  const hasNonHiddenChild = item.first((n) => !n.model.rule.hidden && n.model.rule.id !== item.model.rule.id)
 
-  let companyName = findCompany()
-  if (rule.hidden) {
+  const displayArrow =
+    item.children.length > 0 &&
+    rule.type !== 'root' &&
+    hasNonHiddenChild
+
+
+  if (filter.category === 'branch' && item.isRoot()) {
+    let all = item.all((n) => n.model.rule.type === 'branch').length
+
+    let broadcastingTo = item.all((n) => n.model.rule.type === 'branch' && n.model.rule.broadcast === 1).length
+
+    if (all === broadcastingTo) nodeBroadcast = 1
+    else if (broadcastingTo === 0) nodeBroadcast = 0
+  } else if (item.hasChildren()) {
+    nodeBroadcast = getBroadcast(item)
+  }
+
+  if (rule.hidden || (filter.category === 'branch' && rule.type === 'company' && !hasNonHiddenChild)) {
     return null
   }
+
+  let companyName = findCompany()
 
   return (
     <>
@@ -72,7 +91,7 @@ const RuleItem = props => {
         data-test='broadcast_rule_row_click'
         style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
         <Rule.RowContent>
-          {item.children.length > 0 && rule.type !== 'root' ? (
+          {displayArrow ? (
             <Icon name={`chevron ${item.model.rule.expanded ? 'down' : 'right'}`} />
           ) : (
               <EmptyIconSpace />
