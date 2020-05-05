@@ -193,6 +193,8 @@ export const LeftMenu = styled(Menu)`
               flex-grow: 1;
               flex-shrink: 1;
               overflow: hidden;
+              display: flex;
+              flex-flow: column;
               height: auto;
               border-bottom-left-radius: 4px !important;
               border-bottom-right-radius: 4px !important;
@@ -216,6 +218,8 @@ export const LeftMenu = styled(Menu)`
 
                   &.dimmable {
                     flex-grow: 1;
+                    display: flex;
+                    flex-flow: column;
                     width: 100%;
                     padding: 0 !important;
 
@@ -330,6 +334,8 @@ export const LeftMenu = styled(Menu)`
           &.opened {
             flex-grow: 0;
             flex-shrink: 1;
+            display: flex;
+            flex-flow: column;
           }
         }
       }

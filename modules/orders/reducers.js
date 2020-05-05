@@ -451,38 +451,44 @@ export default function (state = initialState, action) {
     case AT.LINK_ATTACHMENT_TO_ORDER_ITEM_PENDING: {
       return {
         ...state,
-        loadingProductOffer: true
+        loadingProductOffer: true,
+        loadingRelatedDocuments: true,
       }
     }
     case AT.LINK_ATTACHMENT_TO_ORDER_ITEM_FULFILLED: {
       return {
         ...state,
-        loadingGroupedProductOffer: false
+        loadingGroupedProductOffer: false,
+        loadingRelatedDocuments: false
       }
     }
     case AT.LINK_ATTACHMENT_TO_ORDER_ITEM_REJECTED: {
       return {
         ...state,
-        loadingProductOffer: false
+        loadingProductOffer: false,
+        loadingRelatedDocuments: false
       }
     }
 
     case AT.REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM_PENDING: {
       return {
         ...state,
-        loadingProductOffer: true
+        loadingProductOffer: true,
+        loadingRelatedDocuments: true
       }
     }
     case AT.REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM_FULFILLED: {
       return {
         ...state,
-        loadingGroupedProductOffer: false
+        loadingGroupedProductOffer: false,
+        loadingRelatedDocuments: false
       }
     }
     case AT.REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM_REJECTED: {
       return {
         ...state,
-        loadingProductOffer: false
+        loadingProductOffer: false,
+        loadingRelatedDocuments: false
       }
     }
 

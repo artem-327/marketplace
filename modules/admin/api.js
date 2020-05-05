@@ -208,7 +208,8 @@ export const getEchoProduct = id => api.get(`/prodex/api/echo-products/id/${id}`
 export const putEchoProduct = (id, values) =>
   api.put(`/prodex/api/echo-products/id/${id}/`, values).then(response => response.data)
 
-export const postEchoProduct = values => api.post(`/prodex/api/echo-products`, values).then(response => response.data)
+export const postEchoProduct = values =>
+  api.post(`/prodex/api/echo-products`, values).then(response => response.data)
 
 export const deleteEchoProduct = id => api.delete(`/prodex/api/echo-products/id/${id}`)
 
@@ -287,6 +288,8 @@ export const searchCompany = (companyText, limit = 30) =>
   api.get(`/prodex/api/companies/search/all-info?limit=${limit}&pattern=${companyText}`).then(response => response.data)
 
 export const searchTags = filter => api.post(`/prodex/api/tags/datagrid`, filter).then(response => response.data)
+export const searchMarketSegments = filter =>
+  api.post(`/prodex/api/market-segments/datagrid`, filter).then(response => response.data)
 
 export const udpateEnabled = (id, enabled) =>
   api.patch(`/prodex/api/companies/admin/id/${id}/enabled?enabled=${enabled}`)
