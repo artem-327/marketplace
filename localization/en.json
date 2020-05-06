@@ -2258,5 +2258,7 @@
   "wantedBoard.notify.noInventoryItems.Content": "You do not have any Inventory item matching the requested item to offer.",
   "global.enabled": "Enabled",
   "global.selectTags": "Select tags",
-  "global.marketSegments": "Market Segments"
+  "global.marketSegments": "Market Segments",
+  "global.sellMarketSegments": "Sell Market Segments",
+  "global.buymMrketSegments": "Buy Market Segments"
 }
