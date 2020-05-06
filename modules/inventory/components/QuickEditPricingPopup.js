@@ -18,7 +18,7 @@ import {
   Icon,
 } from 'semantic-ui-react'
 
-const StyledForm = styled(Form)` 
+const StyledForm = styled(Form)`
   .high-segment {
     padding: 16px 30px;
     
