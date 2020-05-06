@@ -202,6 +202,54 @@ class Orders extends Component {
     },
     attachmentPopup: { attachment: null, order: { id: null } },
     openModal: false,
+    columnsAccountingDocuments: [
+      {
+        name: 'documentNumber',
+        title: (
+          <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      },
+      {
+        name: 'type',
+        title: (
+          <FormattedMessage id='order.related.type' defaultMessage='Type'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      },
+      {
+        name: 'issuedAt',
+        title: (
+          <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120
+      },
+      {
+        name: 'issuerCompanyName',
+        title: (
+          <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 100
+      },
+      {
+        name: 'cfPriceTotal',
+        title: (
+          <FormattedMessage id='order.related.cfPriceTotal' defaultMessage='Total'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 100,
+        align: 'center'
+      }
+    ],
     columnsRelatedOrders: [
       {
         name: 'documentNumber',
@@ -266,7 +314,8 @@ class Orders extends Component {
     relatedPopupType: '',
     relatedAttachments: [],
     expandedRowIds: [],
-    filterDocumentType: 0
+    filterDocumentType: 0,
+    openModalAccounting: false
   }
 
   componentDidMount() {
@@ -424,6 +473,11 @@ class Orders extends Component {
     })
   }
 
+  async openAccountingPopup(orderId) {
+    this.setState({ openModalAccounting: true })
+    await this.props.getAccountingDocuments(orderId)
+  }
+
   componentDidUpdate(prevProps) {
     const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
 
@@ -441,7 +495,12 @@ class Orders extends Component {
   }
 
   prepareLinkToAttachment = async documentId => {
-    let downloadedFile = await this.props.downloadAttachment(documentId)
+    let downloadedFile = null
+    if (this.state.openModalAccounting) {
+      downloadedFile = await this.props.downloadAttachmentPdf(documentId)
+    } else {
+      downloadedFile = await this.props.downloadAttachment(documentId)
+    }
     const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
     const mimeType = fileName && this.getMimeType(fileName)
     const element = document.createElement('a')
@@ -465,7 +524,38 @@ class Orders extends Component {
   }
 
   closePopup = () => {
-    this.setState({ attachmentPopup: null, openModal: false, openRelatedPopup: false })
+    this.setState({
+      attachmentPopup: null,
+      openModal: false,
+      openRelatedPopup: false,
+      openModalAccounting: false
+    })
+    this.props.clearAccountingDocuments()
+  }
+
+  getModalAccountingContent = () => {
+    const { orderAccountingDocuments, orderAccountingDocumentsLoading } = this.props
+    const docList = orderAccountingDocuments.map(att => ({
+      documentNumber: (
+        <Button as='a' onClick={() => this.downloadAttachment(att.documentNumber, att.id)}>
+          <Icon name='download' />
+          {att.documentNumber}
+        </Button>
+      ),
+      type: att.type,
+      issuedAt: getSafe(() => <FormattedDate value={att.issuedAt.split('T')[0]} />, 'N/A'),
+      issuerCompanyName: att.issuerCompanyName,
+      cfPriceTotal: <FormattedNumber style='currency' currency={currency} value={att.cfPriceTotal} />
+    }))
+    return (
+      <ProdexGrid
+        loading={orderAccountingDocumentsLoading}
+        hideSettingsIcon={true}
+        tableName='related_orders'
+        columns={this.state.columnsAccountingDocuments}
+        rows={docList}
+      />
+    )
   }
 
   getRelatedDocumentsContent = () => {
@@ -556,6 +646,23 @@ class Orders extends Component {
 
     return (
       <div id='page' className='flex stretched scrolling'>
+        {this.state.openModalAccounting && (
+          <StyledModal size='small' closeIcon={false} centered={true} open={true}>
+            <Modal.Header>
+              <FormattedMessage id='order.related.table' defaultMessage='Related Accounting Documents'>
+                {text => text}
+              </FormattedMessage>
+            </Modal.Header>
+            <Modal.Content scrolling>{this.getModalAccountingContent()}</Modal.Content>
+            <Modal.Actions>
+              <Button basic onClick={() => this.closePopup()}>
+                <FormattedMessage id='global.close' defaultMessage='Close'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+            </Modal.Actions>
+          </StyledModal>
+        )}
         {this.state.openRelatedPopup && (
           <StyledModal
             size='small'
@@ -614,6 +721,14 @@ class Orders extends Component {
                     defaultMessage: 'Detail'
                   }),
                   callback: row => this.props.openOrderDetail(row.rawData)
+                },
+                {
+                  text: formatMessage({
+                    id: 'orders.accountingDocuments',
+                    defaultMessage: 'Accounting Documents'
+                  }),
+                  disabled: row => row.accountingDocumentsCount === 0,
+                  callback: row => this.openAccountingPopup(row.id)
                 },
                 {
                   text: formatMessage({
