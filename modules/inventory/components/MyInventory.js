@@ -61,6 +61,7 @@ const ClockIcon = styled(Clock)`
 `
 
 const StyledPopup = styled(Popup)`
+  max-width: 90%;
   padding: 0 !important;
   border-radius: 4px;
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
