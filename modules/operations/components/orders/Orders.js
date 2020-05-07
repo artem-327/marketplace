@@ -445,10 +445,16 @@ class Orders extends Component {
         cofA:
           item.cofA && item.cofA.length ? (
             <a href='#' onClick={() => this.downloadAttachment(item.cofA[0].name, item.cofA[0].id)}>
-              <Icon name='file' className='negative' />
+              <Icon name='file' className='positive' />
             </a>
           ) : (
-            <Icon name='file' className='unknown' />
+            <>
+              {
+                row.rawData.orderStatus === 2
+                  ? <Icon name='file' className='negative' />
+                  : <Icon name='file' className='unknown' />
+              }
+            </>
           ),
         related:
           item.attachments && item.attachments.length ? (

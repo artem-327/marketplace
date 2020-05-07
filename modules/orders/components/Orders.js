@@ -488,7 +488,7 @@ class Orders extends Component {
     documentFiles: [],
     isAddedNewDocument: false,
     isOpenManager: false,
-    relatedDocumentType: '',
+    relatedDocumentType: [],
     row: '',
     isUnlinkDocument: false,
     replaceExisting: false,
@@ -615,7 +615,21 @@ class Orders extends Component {
               <Icon name='file' className='positive' />
             </a>
           ) : (
-            <Icon name='file' className='unknown' />
+            <a
+              href='#'
+              onClick={e =>
+                this.openDocumentManager(e, {
+                    rowRawData: row.rawData,
+                    parentId: item.rawData.id,
+                    attachments: item.attachments,
+                    type: 'item'
+                  },
+                  [10]  // B/L
+                )
+              }
+            >
+              <Icon name='file' className='unknown' />
+            </a>
           ),
         sds:
           item.sds && item.sds.length ? (
@@ -623,15 +637,47 @@ class Orders extends Component {
               <Icon name='file' className='positive' />
             </a>
           ) : (
-            <Icon name='file' className='unknown' />
+            <a
+              href='#'
+              onClick={e =>
+                this.openDocumentManager(e, {
+                    rowRawData: row.rawData,
+                    parentId: item.rawData.id,
+                    attachments: item.attachments,
+                    type: 'item'
+                  },
+                  [3]  // SDS
+                )
+              }
+            >
+              <Icon name='file' className='unknown' />
+            </a>
           ),
         cofA:
           item.cofA && item.cofA.length ? (
             <a href='#' onClick={() => this.downloadAttachment(item.cofA[0].name, item.cofA[0].id)}>
-              <Icon name='file' className='negative' />
+              <Icon name='file' className='positive' />
             </a>
           ) : (
-            <Icon name='file' className='unknown' />
+            <a
+              href='#'
+              onClick={e =>
+                this.openDocumentManager(e, {
+                    rowRawData: row.rawData,
+                    parentId: item.rawData.id,
+                    attachments: item.attachments,
+                    type: 'item'
+                  },
+                  [1]  // C of A
+                )
+              }
+            >
+              {
+                row.rawData.orderStatus === 2
+                ? <Icon name='file' className='negative' />
+                : <Icon name='file' className='unknown' />
+              }
+            </a>
           ),
         related: (
           <a
@@ -665,6 +711,15 @@ class Orders extends Component {
     this.setState({
       openRelatedPopup: true,
       relatedPopupParams: params
+    })
+  }
+
+  openDocumentManager(e, params, relatedDocumentType) {
+    e.stopPropagation()
+    this.setState({
+      isOpenManager: true,
+      relatedPopupParams: params,
+      relatedDocumentType
     })
   }
 
@@ -1043,7 +1098,7 @@ class Orders extends Component {
           />
           <div>
             <AttachmentManager
-              documentTypeIds={[this.state.relatedDocumentType.value]}
+              documentTypeIds={[]}
               isOpenManager={this.state.isOpenManager}
               asModal
               returnSelectedRows={rows => this.attachDocumentsManager(rows)}
@@ -1146,6 +1201,22 @@ class Orders extends Component {
               </Button>
             </Modal.Actions>
           </StyledModal>
+        )}
+
+        {!this.state.openRelatedPopup && this.state.isOpenManager && (
+          <AttachmentManager
+            documentTypeIds={this.state.relatedDocumentType}
+            isOpenManager={this.state.isOpenManager}
+            asModal
+            singleSelection={true}
+            lockedFileTypes={true}
+            returnSelectedRows={rows => this.attachDocumentsManager(rows)}
+            returnCloseAttachmentManager={val =>
+              this.setState({
+                isOpenManager: false,
+                relatedDocumentType: []
+              })}
+          />
         )}
 
         <Container fluid style={{ padding: '0 32px' }}>

@@ -15,7 +15,7 @@ import { getSafe, removeEmpty } from '~/utils/functions'
 
 import { closePopup } from '~/modules/settings/actions'
 import { getDocumentTypes, addAttachment, updateAttachment } from '~/modules/inventory/actions'
-import { func } from 'prop-types'
+import {bool, func, number} from 'prop-types'
 import { getStringISODate } from '~/components/date-format'
 import Router from 'next/router'
 import { Required } from '~/components/constants/layout'
@@ -57,8 +57,9 @@ const RightAlignedGroup = styled(FormGroup)`
 
 class DocumentPopup extends Component {
   async componentDidMount() {
-    const { documentTypes, getDocumentTypes } = this.props
+    const { documentTypes, getDocumentTypes, initialFileType } = this.props
     if (documentTypes.length === 0) await getDocumentTypes()
+    if (initialFileType !== null) this.setFieldValue('documentType.id', initialFileType)
   }
 
   render() {
@@ -72,7 +73,8 @@ class DocumentPopup extends Component {
       addAttachment,
       updateAttachment,
       onClose,
-      enableClose
+      enableClose,
+      lockedFileType
     } = this.props
 
     return (
@@ -126,6 +128,8 @@ class DocumentPopup extends Component {
             }}
             render={({ values, errors, submitForm, setFieldValue, isSubmitting }) => {
               this.submitForm = submitForm
+              this.values = values
+              this.setFieldValue = setFieldValue
               return (
                 <Form loading={isSubmitting}>
                   <FormGroup widths='equal'>
@@ -188,7 +192,7 @@ class DocumentPopup extends Component {
                       />
                     )}
                     <Dropdown
-                      inputProps={{ loading: documentTypesFetching }}
+                      inputProps={{ loading: documentTypesFetching, disabled: lockedFileType }}
                       loading={documentTypesFetching}
                       name='documentType.id'
                       label={
@@ -238,11 +242,15 @@ class DocumentPopup extends Component {
 }
 
 DocumentPopup.propTypes = {
-  onClose: func
+  onClose: func,
+  lockedFileType: bool,
+  initialFileType: number
 }
 
 DocumentPopup.defaultProps = {
-  onClose: () => {}
+  onClose: () => {},
+  lockedFileType: false,
+  initialFileType: null
 }
 
 const mapStateToProps = ({ simpleAdd, settings }) => {
