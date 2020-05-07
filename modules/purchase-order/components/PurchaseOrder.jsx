@@ -157,7 +157,11 @@ class PurchaseOrder extends Component {
 
   handleQuoteSelect = index => {
     let { shippingQuoteSelected, shippingQuotes } = this.props
-    shippingQuoteSelected({ index, quote: shippingQuotes.rates[index] })
+    if (!index && index !== 0) {
+      shippingQuoteSelected(null)
+    } else {
+      shippingQuoteSelected({ index, quote: getSafe(() => shippingQuotes.rates[index], '') })
+    }
   }
 
   getAddress = selectedAddressId => {

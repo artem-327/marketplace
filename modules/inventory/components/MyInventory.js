@@ -16,7 +16,6 @@ import FilterTags from '~/modules/filter/components/FitlerTags'
 import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 import { getSafe, uniqueArrayByKey, generateToastMarkup } from '~/utils/functions'
-import { Datagrid } from '~/modules/datagrid'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import SearchByNamesAndTags from '~/modules/search'
 import SubMenu from '~/src/components/SubMenu'
@@ -62,6 +61,7 @@ const ClockIcon = styled(Clock)`
 `
 
 const StyledPopup = styled(Popup)`
+  max-width: 90%;
   padding: 0 !important;
   border-radius: 4px;
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
@@ -502,8 +502,8 @@ class MyInventory extends Component {
     sidebarDetailTrigger(row, bol, tab)
   }
 
-  showMessage = (response, request = null) => {
-    const { toastManager } = this.props
+  showMessage = (response, request = null, row) => {
+    const { toastManager, datagrid } = this.props
     response &&
       response.value &&
       response.value.productOfferStatuses &&
@@ -511,9 +511,9 @@ class MyInventory extends Component {
       response.value.productOfferStatuses.map(status => {
         if (!status.code) return
         if (status.code === 'GROUPED') {
-          const rowData = this.getRows(this.props.rows).filter(row => row.id === status.productOfferId)
-          Datagrid.updateRow(status.productOfferId, () => ({
-            ...rowData[0],
+          datagrid.updateRow(status.productOfferId, () => ({
+            ...row,
+            warehouse: { deliveryAddress: { cfName: row.warehouse } },
             parentOffer: status.virtualOfferId ? status.virtualOfferId : ''
           }))
           toastManager.add(
@@ -528,9 +528,9 @@ class MyInventory extends Component {
         } else if (status.code === 'BROADCAST_RULE_CONFLICT') {
           this.setState({ open: true, clientMessage: status.clientMessage, request })
         } else if (status.code === 'DETACHED') {
-          const rowData = this.getRows(this.props.rows).filter(row => row.id === status.productOfferId)
-          Datagrid.updateRow(status.productOfferId, () => ({
-            ...rowData[0],
+          datagrid.updateRow(status.productOfferId, () => ({
+            ...row,
+            warehouse: { deliveryAddress: { cfName: row.warehouse } },
             parentOffer: ''
           }))
           toastManager.add(
@@ -556,21 +556,21 @@ class MyInventory extends Component {
       })
   }
 
-  groupOffer = async request => {
+  groupOffer = async (request, row) => {
     const { groupOffers } = this.props
     try {
       const response = await groupOffers(request)
-      this.showMessage(response, request)
+      this.showMessage(response, request, row)
     } catch (error) {
       console.error(error)
     }
   }
 
-  detachOffer = async productOfferIds => {
+  detachOffer = async (productOfferIds, row) => {
     const { detachOffers } = this.props
     try {
       const response = await detachOffers(productOfferIds)
-      this.showMessage(response)
+      this.showMessage(response, null, row)
     } catch (error) {
       console.error(error)
     }
@@ -593,7 +593,6 @@ class MyInventory extends Component {
       tutorialCompleted
     } = this.props
     const { columns, clientMessage, request } = this.state
-
     return (
       <>
         <Modal size='small' open={this.state.open} onClose={() => this.setState({ open: false })} closeIcon>
@@ -793,10 +792,13 @@ class MyInventory extends Component {
                   defaultMessage: 'Join/Create Virtual Group'
                 }),
                 callback: row =>
-                  this.groupOffer({
-                    overrideBroadcastRules: false,
-                    productOfferIds: [row.id]
-                  }),
+                  this.groupOffer(
+                    {
+                      overrideBroadcastRules: false,
+                      productOfferIds: [row.id]
+                    },
+                    row
+                  ),
                 disabled: row => !!row.parentOffer
               },
               {
@@ -804,7 +806,7 @@ class MyInventory extends Component {
                   id: 'inventory.detachOffer',
                   defaultMessage: 'Detach from Virtual Group'
                 }),
-                callback: row => this.detachOffer([row.id]),
+                callback: row => this.detachOffer([row.id], row),
                 disabled: row => !row.parentOffer
               }
             ]}

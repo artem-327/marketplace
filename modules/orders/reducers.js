@@ -452,7 +452,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loadingProductOffer: true,
-        loadingRelatedDocuments: true,
+        loadingRelatedDocuments: true
       }
     }
     case AT.LINK_ATTACHMENT_TO_ORDER_ITEM_FULFILLED: {
@@ -568,7 +568,7 @@ export default function (state = initialState, action) {
         detail: {}
       }
     }
-    //TODO check https://pm.artio.net/issues/33545 if is finished adjust cases based on new endpoint
+
     case AT.EDIT_TRACKING_CODE_PENDING: {
       return {
         ...state
@@ -583,6 +583,25 @@ export default function (state = initialState, action) {
     }
 
     case AT.EDIT_TRACKING_CODE_REJECTED: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.EDIT_RETURN_TRACKING_CODE_PENDING: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.EDIT_RETURN_TRACKING_CODE_FULFILLED: {
+      return {
+        ...state,
+        detail: action.payload.data
+      }
+    }
+
+    case AT.EDIT_RETURN_TRACKING_CODE_REJECTED: {
       return {
         ...state
       }

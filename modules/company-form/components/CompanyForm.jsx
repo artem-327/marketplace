@@ -39,7 +39,7 @@ class CompanyForm extends Component {
     if (this.props.hasLogo && this.props.selectLogo && this.props.getCompanyLogo) {
       const companyLogo = await this.props.getCompanyLogo(this.props.companyId)
 
-      if (companyLogo.value.data.size) this.props.selectLogo(companyLogo.value.data)
+      if (companyLogo.value.data.size) this.props.selectLogo(companyLogo.value.data, false)
     }
   }
 

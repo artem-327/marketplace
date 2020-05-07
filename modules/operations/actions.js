@@ -1,7 +1,6 @@
 import * as AT from './action-types'
 import api from './api'
 import { Datagrid } from '~/modules/datagrid'
-import Api from "../orders/api";
 
 export const tabChanged = tab => ({ type: AT.OPERATIONS_TAB_CHANGED, payload: tab })
 
@@ -108,11 +107,21 @@ export const openOrderDetail = (data = null) => ({
 export function getDocumentTypes() {
   return {
     type: AT.OPERATIONS_GET_DOCUMENT_TYPES,
-    payload: Api.getDocumentTypes()
+    payload: api.getDocumentTypes()
   }
 }
 
 export const cancelOrder = orderId => ({
   type: AT.OPERATIONS_ORDERS_CANCEL_ORDER,
-  payload: Api.cancelOrder(orderId)
+  payload: api.cancelOrder(orderId)
+})
+
+export const clearAccountingDocuments = () => ({
+  type: AT.OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS_CLEAR,
+  payload: {}
+})
+
+export const getAccountingDocuments = orderId => ({
+  type: AT.OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS,
+  payload: api.getAccountingDocuments(orderId)
 })

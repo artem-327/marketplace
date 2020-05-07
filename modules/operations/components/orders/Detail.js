@@ -658,7 +658,7 @@ class Detail extends Component {
               <div>
                 <FormattedMessage id='order.detail.buyerCompanyEin' defaultMessage='Buyer Company EIN' />
               </div>
-              <div><strong>N/A</strong></div>
+              <div><strong>{order.companyEin}</strong></div>
             </div>
           </TopRow>
           <OrderSegment>

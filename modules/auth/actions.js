@@ -87,9 +87,14 @@ export function login(username, password) {
         let urlPage = '/inventory/my'
         if (typeof window !== 'undefined') {
           const searchParams = new URLSearchParams(getSafe(() => window.location.search, ''))
-
           if (searchParams.has('redirectUrl')) {
             urlPage = decodeURI(getSafe(() => window.location.search.split('redirectUrl=')[1], urlPage))
+            //Remove password from URL if exist password or username. We do not know why is password and username in URL.
+            //In ctx.req.url has credentials in securePage, but we do not know when got and why has this credentials.
+            //This is hot fix.
+            if (urlPage.includes('password') || urlPage.includes('username')) {
+              urlPage = '/'
+            }
           }
         }
         // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {

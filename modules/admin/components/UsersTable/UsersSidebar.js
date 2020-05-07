@@ -6,7 +6,9 @@ import {
   submitUserEdit,
   searchCompany,
   initSearchCompany,
-  getUser
+  getUser,
+  searchSellMarketSegments,
+  searchBuyMarketSegments
 } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Sidebar, Dimmer, Loader, Grid, GridRow, GridColumn, Checkbox, FormField, FormGroup } from 'semantic-ui-react'
@@ -138,7 +140,9 @@ class UsersSidebar extends React.Component {
   state = {
     popupValues: null,
     selectedCompany: [],
-    branches: []
+    branches: [],
+    selectedSellMarketSegmentsOptions: [],
+    selectedBuyMarketSegmentsOptions: []
   }
 
   userFormValidation = () =>
@@ -151,21 +155,11 @@ class UsersSidebar extends React.Component {
       const requiredBranch = !!popupValues || (!disabledCompany && !!values.company)
 
       return Yup.object().shape({
-        name: Yup.string()
-          .trim()
-          .min(3, errorMessages.minLength(3))
-          .required(errorMessages.requiredMessage),
-        email: Yup.string()
-          .trim()
-          .email(errorMessages.invalidEmail)
-          .required(errorMessages.requiredMessage),
+        name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+        email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
         additionalBranches: Yup.array(),
-        jobTitle: Yup.string()
-          .trim()
-          .min(3, errorMessages.minLength(3)),
-        phone: Yup.string()
-          .trim()
-          .min(3, errorMessages.minLength(3)),
+        jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
+        phone: Yup.string().trim().min(3, errorMessages.minLength(3)),
         ...(requiredCompany && {
           company: Yup.number().required(errorMessages.requiredMessage)
         }),
@@ -185,6 +179,8 @@ class UsersSidebar extends React.Component {
       this.props.searchCompany('', 30)
       this.setState({ popupValues: null })
     }
+    this.props.searchSellMarketSegments('')
+    this.props.searchBuyMarketSegments('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -246,6 +242,28 @@ class UsersSidebar extends React.Component {
       popupValues.company ? this.props.initSearchCompany(popupValues.company.id) : this.props.searchCompany('', 30),
       this.props.getUser(popupValues.id)
     ])
+    let selectedSellMarketSegmentsOptions = []
+    let selectedBuyMarketSegmentsOptions = []
+
+    if (getSafe(() => user.value.sellMarketSegments.length, [])) {
+      selectedSellMarketSegmentsOptions = user.value.sellMarketSegments.map(d => {
+        return {
+          key: d.id,
+          text: d.name,
+          value: d.id
+        }
+      })
+    }
+
+    if (getSafe(() => user.value.buyMarketSegments.length, [])) {
+      selectedBuyMarketSegmentsOptions = user.value.buyMarketSegments.map(d => {
+        return {
+          key: d.id,
+          text: d.name,
+          value: d.id
+        }
+      })
+    }
 
     if (popupValues.company) {
       const company = comp.value
@@ -260,10 +278,14 @@ class UsersSidebar extends React.Component {
       this.setState({
         branches,
         selectedCompany: company ? [company] : [],
+        selectedSellMarketSegmentsOptions,
+        selectedBuyMarketSegmentsOptions,
         popupValues: {
           ...popupValues,
           homeBranch: user.value.homeBranch,
-          additionalBranches: user.value.additionalBranches
+          additionalBranches: user.value.additionalBranches,
+          sellMarketSegments: getSafe(() => user.value.sellMarketSegments, []),
+          buyMarketSegments: getSafe(() => user.value.buyMarketSegments, [])
         }
       })
     } else {
@@ -271,10 +293,14 @@ class UsersSidebar extends React.Component {
       this.setState({
         branches: [],
         selectedCompany: [],
+        selectedSellMarketSegmentsOptions,
+        selectedBuyMarketSegmentsOptions,
         popupValues: {
           ...popupValues,
           homeBranch: user.value.homeBranch,
-          additionalBranches: user.value.additionalBranches
+          additionalBranches: user.value.additionalBranches,
+          sellMarketSegments: getSafe(() => user.value.sellMarketSegments, []),
+          buyMarketSegments: getSafe(() => user.value.buyMarketSegments, [])
         }
       })
     }
@@ -303,7 +329,9 @@ class UsersSidebar extends React.Component {
       name: values.name,
       phone: values.phone,
       preferredCurrency: currencyId,
-      roles: values.roles
+      roles: values.roles,
+      sellMarketSegments: values.sellMarketSegments,
+      buyMarketSegments: values.buyMarketSegments
     }
 
     removeEmpty(data)
@@ -336,7 +364,9 @@ class UsersSidebar extends React.Component {
           name: popupValues.name,
           phone: popupValues.phone,
           preferredCurrency: currencyId,
-          roles: popupValues.roles.map(d => d.id)
+          roles: popupValues.roles.map(d => d.id),
+          sellMarketSegments: getSafe(() => popupValues.sellMarketSegments, []).map(d => d.id),
+          buyMarketSegments: getSafe(() => popupValues.buyMarketSegments, []).map(d => d.id)
         }
       : initValues
   }
@@ -344,6 +374,24 @@ class UsersSidebar extends React.Component {
   searchCompanies = debounce(text => {
     this.props.searchCompany(text, 5)
   }, 250)
+
+  handleSellMarketSegmentsSearchChange = debounce((_, { searchQuery }) => {
+    this.props.searchSellMarketSegments(searchQuery)
+  }, 250)
+
+  handleSellMarketSegmentsChange = (value, options) => {
+    const newOptions = options.filter(el => value.some(v => el.value === v))
+    this.setState({ selectedSellMarketSegmentsOptions: newOptions })
+  }
+
+  handleBuyMarketSegmentsSearchChange = debounce((_, { searchQuery }) => {
+    this.props.searchBuyMarketSegments(searchQuery)
+  }, 250)
+
+  handleBuyMarketSegmentsChange = (value, options) => {
+    const newOptions = options.filter(el => value.some(v => el.value === v))
+    this.setState({ selectedBuyMarketSegmentsOptions: newOptions })
+  }
 
   generateCheckboxes = (data, values, groupName = null, error) => {
     if (!data) return []
@@ -356,10 +404,7 @@ class UsersSidebar extends React.Component {
     const hasCompany = values.company !== ''
 
     var getCheckbox = (el, i) => {
-      let name = el.name
-        .replace(/ /g, '')
-        .replace(/\//g, '')
-        .replace(/-/g, '')
+      let name = el.name.replace(/ /g, '').replace(/\//g, '').replace(/-/g, '')
       let path = `${group}${name}`
 
       return (
@@ -415,10 +460,22 @@ class UsersSidebar extends React.Component {
       searchedCompanies,
       searchedCompaniesLoading,
       isSuperAdmin,
-      updating
+      updating,
+      searchedSellMarketSegmentsLoading,
+      searchedSellMarketSegments,
+      searchedBuyMarketSegmentsLoading,
+      searchedBuyMarketSegments,
+      isCompanyAdmin,
+      isUserAdmin
     } = this.props
 
-    const { branches, popupValues, selectedCompany } = this.state
+    const {
+      branches,
+      popupValues,
+      selectedCompany,
+      selectedSellMarketSegmentsOptions,
+      selectedBuyMarketSegmentsOptions
+    } = this.state
 
     const companiesAll = uniqueArrayByKey(searchedCompanies.concat(selectedCompany), 'id')
     const companiesOptions = companiesAll.map(d => ({
@@ -426,6 +483,14 @@ class UsersSidebar extends React.Component {
       value: d.id,
       text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
     }))
+    const allSellMarketSegmentsOptions = uniqueArrayByKey(
+      searchedSellMarketSegments.concat(selectedSellMarketSegmentsOptions),
+      'key'
+    )
+    const allBuyMarketSegmentsOptions = uniqueArrayByKey(
+      searchedBuyMarketSegments.concat(selectedBuyMarketSegmentsOptions),
+      'key'
+    )
 
     return (
       <Form
@@ -604,6 +669,58 @@ class UsersSidebar extends React.Component {
                       />
                     </GridColumn>
                   </GridRow>
+                  <GridRow>
+                    <GridColumn width={8}>
+                      <Dropdown
+                        label={
+                          <>
+                            {formatMessage({ id: 'global.sellMarketSegments', defaultMessage: 'Sell Market Segment' })}
+                          </>
+                        }
+                        name='sellMarketSegments'
+                        options={allSellMarketSegmentsOptions}
+                        inputProps={{
+                          loading: searchedSellMarketSegmentsLoading,
+                          search: true,
+                          icon: 'search',
+                          selection: true,
+                          multiple: true,
+                          disabled: !isUserAdmin && !isCompanyAdmin,
+                          noResultsMessage: formatMessage({
+                            id: 'global.startTypingToSearch',
+                            defaultMessage: 'Start typing to begin search'
+                          }),
+                          onSearchChange: this.handleSellMarketSegmentsSearchChange,
+                          onChange: (_, { value }) =>
+                            this.handleSellMarketSegmentsChange(value, allSellMarketSegmentsOptions)
+                        }}
+                      />
+                    </GridColumn>
+                    <GridColumn width={8}>
+                      <Dropdown
+                        label={
+                          <>{formatMessage({ id: 'global.buyMarketSegments', defaultMessage: 'Buy Market Segment' })}</>
+                        }
+                        name='buyMarketSegments'
+                        options={allBuyMarketSegmentsOptions}
+                        inputProps={{
+                          loading: searchedBuyMarketSegmentsLoading,
+                          search: true,
+                          icon: 'search',
+                          selection: true,
+                          multiple: true,
+                          disabled: !isUserAdmin && !isCompanyAdmin,
+                          noResultsMessage: formatMessage({
+                            id: 'global.startTypingToSearch',
+                            defaultMessage: 'Start typing to begin search'
+                          }),
+                          onSearchChange: this.handleBuyMarketSegmentsSearchChange,
+                          onChange: (_, { value }) =>
+                            this.handleBuyMarketSegmentsChange(value, allBuyMarketSegmentsOptions)
+                        }}
+                      />
+                    </GridColumn>
+                  </GridRow>
 
                   <GridRow style={{ paddingBottom: '2.5px' }}>
                     <GridColumnWError className={errorRoles ? 'error' : ''}>
@@ -652,7 +769,9 @@ const mapDispatchToProps = {
   submitUserEdit,
   searchCompany,
   initSearchCompany,
-  getUser
+  getUser,
+  searchSellMarketSegments,
+  searchBuyMarketSegments
 }
 
 const mapStateToProps = state => {
@@ -665,7 +784,21 @@ const mapStateToProps = state => {
     popupValues: admin.popupValues,
     isSuperAdmin: admin.currentUser && admin.currentUser.roles.findIndex(d => d.id === 1) !== -1,
     searchedCompanies: admin.searchedCompanies,
-    searchedCompaniesLoading: admin.searchedCompaniesLoading
+    searchedCompaniesLoading: admin.searchedCompaniesLoading,
+    searchedSellMarketSegments: admin.searchedSellMarketSegments.map(d => ({
+      key: d.id,
+      text: d.name,
+      value: d.id
+    })),
+    searchedSellMarketSegmentsLoading: admin.searchedSellMarketSegmentsLoading,
+    searchedBuyMarketSegments: admin.searchedBuyMarketSegments.map(d => ({
+      key: d.id,
+      text: d.name,
+      value: d.id
+    })),
+    searchedBuyMarketSegmentsLoading: admin.searchedBuyMarketSegmentsLoading,
+    isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
+    isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, false)
   }
 }
 

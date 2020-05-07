@@ -829,3 +829,33 @@ export const searchMarketSegments = segment => ({
     pageSize: 50
   })
 })
+
+export const searchSellMarketSegments = segment => ({
+  type: AT.ADMIN_SEARCH_SELL_MARKET_SEGMENTS,
+  payload: api.searchMarketSegments({
+    orFilters: [
+      {
+        operator: 'LIKE',
+        path: 'MarketSegment.name',
+        values: [segment.toString()]
+      }
+    ],
+    pageNumber: 0,
+    pageSize: 50
+  })
+})
+
+export const searchBuyMarketSegments = segment => ({
+  type: AT.ADMIN_SEARCH_BUY_MARKET_SEGMENTS,
+  payload: api.searchMarketSegments({
+    orFilters: [
+      {
+        operator: 'LIKE',
+        path: 'MarketSegment.name',
+        values: [segment.toString()]
+      }
+    ],
+    pageNumber: 0,
+    pageSize: 50
+  })
+})
