@@ -812,7 +812,7 @@ class Detail extends Component {
                 )}
               </div>
               <div>
-                <strong>N/A</strong>
+                <strong>{order.companyEin}</strong>
               </div>
             </div>
           </TopRow>
