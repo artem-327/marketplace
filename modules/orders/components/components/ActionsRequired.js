@@ -429,7 +429,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && (detail.paymentStatus === 5 || detail.paymentStatus === 4)
+            {orderStatus === 2 && reviewStatus !== 3 && (detail.paymentStatus === 5 || detail.paymentStatus === 4) // Confirmed && Rejected && (Failed || Canceled)
               ? this.renderSegment('red', 11, null, 'order.payment.failed.description', [
                   {
                     buttonType: 'primary',
