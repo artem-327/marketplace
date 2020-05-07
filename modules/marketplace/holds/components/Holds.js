@@ -214,7 +214,7 @@ class Holds extends Component {
     }
     let rowActions = []
 
-    if (isMerchant && this.state.holdDropdown === 'My Holds') {
+    if ((isCompanyAdmin || isMerchant) && this.state.holdDropdown === 'My Holds') {
       rowActions.push(buttonCancel)
       rowActions.push(buttonBuy)
     } else if ((isCompanyAdmin || isProductOfferManager) && this.state.holdDropdown === 'Requsted Holds') {

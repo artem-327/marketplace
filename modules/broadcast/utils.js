@@ -1,7 +1,7 @@
 import { getSafe } from '~/utils/functions'
 
 export const normalizeTree = (tree, init = true) => {
-  if (init) initTree(tree)
+  // if (init) initTree(tree)
   tree.walk(n => {
     if (n.hasChildren()) {
       setBroadcast(n)

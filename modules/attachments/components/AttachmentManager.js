@@ -145,7 +145,7 @@ class AttachmentClass extends Component {
   }
 
   render() {
-    const { trigger, asModal, documentTypes, documentTypeIds } = this.props
+    const { trigger, asModal, documentTypes, documentTypeIds, lockedFileTypes } = this.props
     if (!asModal) return this.getContent()
 
     return (
@@ -200,6 +200,7 @@ class AttachmentClass extends Component {
                     options={documentTypes}
                     value={this.state.documentTypes}
                     selection
+                    disabled={lockedFileTypes}
                     onChange={(event, { name, value }) => {
                       this.setState({ [name]: value })
                       this.handleSearch({ name: this.state.searchValue, type: value })
@@ -261,6 +262,12 @@ class AttachmentClass extends Component {
                 onClose={() => {
                   this.setState({ uploadOpen: false })
                 }}
+                lockedFileType={lockedFileTypes}
+                initialFileType={
+                  this.state.documentTypes && this.state.documentTypes.length
+                    ? this.state.documentTypes[0]
+                    : null
+                }
               />
             )}
           </Modal.Actions>
@@ -286,7 +293,8 @@ AttachmentModal.propTypes = {
   asModal: bool,
   selectable: bool,
   documentTypesForCertificates: array,
-  singleSelection: bool
+  singleSelection: bool,
+  lockedFileTypes: bool
 }
 
 AttachmentModal.defaultProps = {
@@ -302,7 +310,8 @@ AttachmentModal.defaultProps = {
   asModal: true,
   selectable: true,
   documentTypesForCertificates: [],
-  singleSelection: false
+  singleSelection: false,
+  lockedFileTypes: false
 }
 
 class AttachmentManager extends Component {

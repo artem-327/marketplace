@@ -302,3 +302,10 @@ export function editTrackingCode(orderId, trackingCode) {
     payload: Api.editTrackingCode(orderId, trackingCode)
   }
 }
+
+export function editReturnTrackingCode(orderId, trackingCode) {
+  return {
+    type: AT.EDIT_RETURN_TRACKING_CODE,
+    payload: Api.editReturnTrackingCode(orderId, trackingCode)
+  }
+}

@@ -14,7 +14,9 @@ export const initialState = {
   orderDetailData: null,
   documentTypesFetching: false,
   listDocumentTypes: [],
-  orderProcessing: false
+  orderProcessing: false,
+  orderAccountingDocuments: [],
+  orderAccountingDocumentsLoading: false
 }
 
 export default function reducers(state = initialState, action) {
@@ -161,6 +163,29 @@ export default function reducers(state = initialState, action) {
     case AT.OPERATIONS_ORDERS_CANCEL_ORDER_FULFILLED: {
       return { ...state, orderProcessing: false }
     }
+
+    case AT.OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS_CLEAR:
+      return {
+        ...state,
+        orderAccountingDocuments: []
+      }
+    case AT.OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS_PENDING:
+      return {
+        ...state,
+        orderAccountingDocumentsLoading: true
+      }
+    case AT.OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS_REJECTED:
+      return {
+        ...state,
+        orderAccountingDocumentsLoading: false
+      }
+
+    case AT.OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS_FULFILLED:
+      return {
+        ...state,
+        orderAccountingDocumentsLoading: false,
+        orderAccountingDocuments: action.payload.data
+      }
 
     default: {
       return state

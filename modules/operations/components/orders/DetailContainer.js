@@ -42,6 +42,7 @@ function prepareDetail(data, type = 'sales') {
 
   return {
     ...data,
+    companyEin: data.buyerCompanyTin ? data.buyerCompanyTin : 'N/A',
     acceptanceDate:
       typeof data.acceptanceDate !== 'undefined' ? moment(data.acceptanceDate).toDate().toLocaleString() : 'N/A',
     amount: <FormattedNumber style='currency' currency={currency} value={subtotal} />,

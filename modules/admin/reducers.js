@@ -81,7 +81,11 @@ export const initialState = {
   searchedTags: [],
   searchedTagsLoading: false,
   searchedMarketSegments: [],
-  searchedMarketSegmentsLoading: false
+  searchedMarketSegmentsLoading: false,
+  searchedSellMarketSegments: [],
+  searchedSellMarketSegmentsLoading: false,
+  searchedBuyMarketSegments: [],
+  searchedBuyMarketSegmentsLoading: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -835,6 +839,34 @@ export default function reducer(state = initialState, action) {
         ...state,
         searchedMarketSegments: action.payload,
         searchedMarketSegmentsLoading: false
+      }
+    }
+
+    case AT.ADMIN_SEARCH_SELL_MARKET_SEGMENTS_PENDING: {
+      return { ...state, searchedSellMarketSegmentsLoading: true }
+    }
+    case AT.ADMIN_SEARCH_SELL_MARKET_SEGMENTS_REJECTED: {
+      return { ...state, searchedSellMarketSegmentsLoading: false }
+    }
+    case AT.ADMIN_SEARCH_SELL_MARKET_SEGMENTS_FULFILLED: {
+      return {
+        ...state,
+        searchedSellMarketSegments: action.payload,
+        searchedSellMarketSegmentsLoading: false
+      }
+    }
+
+    case AT.ADMIN_SEARCH_BUY_MARKET_SEGMENTS_PENDING: {
+      return { ...state, searchedBuyMarketSegmentsLoading: true }
+    }
+    case AT.ADMIN_SEARCH_BUY_MARKET_SEGMENTS_REJECTED: {
+      return { ...state, searchedBuyMarketSegmentsLoading: false }
+    }
+    case AT.ADMIN_SEARCH_BUY_MARKET_SEGMENTS_FULFILLED: {
+      return {
+        ...state,
+        searchedBuyMarketSegments: action.payload,
+        searchedBuyMarketSegmentsLoading: false
       }
     }
 

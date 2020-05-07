@@ -253,12 +253,12 @@ class AddNewPopupCasProducts extends React.Component {
   //   }
   // }
 
-  selectLogo = logo => {
-    this.setState({ companyLogo: logo })
+  selectLogo = (logo, isNew = true) => {
+    this.setState({ companyLogo: logo, shouldUpdateLogo: isNew })
   }
 
   removeLogo = () => {
-    this.setState({ companyLogo: null })
+    this.setState({ companyLogo: null, shouldUpdateLogo: true })
   }
 
   render() {
@@ -319,14 +319,11 @@ class AddNewPopupCasProducts extends React.Component {
               }
 
               const data = await updateCompany(popupValues.id, newValues)
-              if (this.state.companyLogo) {
-                postCompanyLogo(data.id, companyLogo)
+              if (this.state.shouldUpdateLogo) {
+                if (this.state.companyLogo) postCompanyLogo(data.id, companyLogo)
+                else deleteCompanyLogo(popupValues.id)
 
-                Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: true }))
-              } else {
-                if (popupValues.hasLogo) deleteCompanyLogo(popupValues.id)
-
-                Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: false }))
+                Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: !!this.state.companyLogo }))
               }
             } else {
               if (
