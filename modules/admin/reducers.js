@@ -31,7 +31,7 @@ export const initialState = {
     { name: 'Companies', id: 8 },
     { name: 'Product Catalog', id: 12 },
     { name: 'Units of Measure', id: 1 },
-    { name: 'Units of Packaging', id: 2 },
+    { name: 'Packaging Types', id: 2 },
     { name: 'Manufacturers', id: 3 },
     { name: 'Grades', id: 4 },
     { name: 'Forms', id: 5 },
