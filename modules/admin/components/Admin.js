@@ -56,7 +56,7 @@ const enableSideProductEdit = true
 
 const tables = {
   'Units of Measure': <UnitOfMeasureTable />,
-  'Units of Packaging': <UnitOfPackagingTable />,
+  'Packaging Types': <UnitOfPackagingTable />,
   Manufacturers: <DataTable />,
   Grades: <DataTable />,
   Forms: <DataTable />,
@@ -95,7 +95,7 @@ const datagridConfig = {
       v
         ? [
             { operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] },
-            { operator: 'LIKE', path: 'Company.cfDisplayName', values: [`%${v}%`] },
+            { operator: 'LIKE', path: 'Company.cfDisplayName', values: [`%${v}%`] }
           ]
         : []
   },
@@ -147,7 +147,7 @@ const datagridConfig = {
     url: '/prodex/api/market-segments/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'MarketSegment.name', values: [`%${v}%`] }] : [])
   },
-  'Units of Packaging': {
+  'Packaging Types': {
     url: '/prodex/api/packaging-types/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'PackagingType.name', values: [`%${v}%`] }] : [])
   },
@@ -173,7 +173,7 @@ const datagridConfig = {
 
 const editForms = {
   'Units of Measure': <EditUnitOfMeasurePopup />,
-  'Units of Packaging': <EditUnitOfPackagingPopup />,
+  'Packaging Types': <EditUnitOfPackagingPopup />,
   Manufacturers: <EditPopup1Parameter />,
   Grades: <EditPopup1Parameter />,
   Forms: <EditPopup1Parameter />,
@@ -193,7 +193,7 @@ const edit2Forms = {
 
 const addForms = {
   'Units of Measure': <AddNewUnitOfMeasurePopup />,
-  'Units of Packaging': <AddNewUnitOfPackagingPopup />,
+  'Packaging Types': <AddNewUnitOfPackagingPopup />,
   Manufacturers: <AddNewPopup1Parameter />,
   Grades: <AddNewPopup1Parameter />,
   Forms: <AddNewPopup1Parameter />,
@@ -268,7 +268,10 @@ class Admin extends Component {
               <TablesHandlers />
             </Container>
           )}
-          <Grid columns='equal' className='flex stretched' style={{ marginTop: '0', marginBottom: '0', padding: '0 32px' }}>
+          <Grid
+            columns='equal'
+            className='flex stretched'
+            style={{ marginTop: '0', marginBottom: '0', padding: '0 32px' }}>
             <Grid.Row>
               <Grid.Column key={this.props.currentTab} style={{ marginTop: '10px' }} className='flex stretched'>
                 {this.renderContent()}
