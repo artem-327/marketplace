@@ -135,11 +135,12 @@ export const errorMessages = {
     <FormattedMessage id='validation.shipmentQuoteId' defaultMessage='Value should be in format "12365-4789"' />
   ),
   minOneRole: <FormattedMessage id='validation.minOneRole' defaultMessage='At least one role should be selected' />,
-  trailingSpaces:
+  trailingSpaces: (
     <FormattedMessage
       id='validation.trailingSpaces'
       defaultMessage='Space was detected as leading or trailing character, please check enter password is correct'
-    />,
+    />
+  ),
   passwordsMatch: <FormattedMessage id='validation.passwordsMustMatch' defaultMessage='Pass must match' />
 }
 
@@ -192,8 +193,8 @@ export const nmfcValidation = (required = true) =>
     // .max(8, errorMessages.maxLength(8))
     .test(
       'code',
-      errorMessages.invalidValueFormat('1 .. 123456, 1234567 or 12345-67'),
-      value => /^[0-9]{1,6}$/.test(value) || /^[0-9]{7}$/.test(value) || /^[0-9]{5}\-[0-9]{2}$/.test(value)
+      errorMessages.invalidValueFormat('1 .. 123456 or 1-1 .. 123456-78'),
+      value => /^[0-9]{1,6}$/.test(value) || /^[0-9]{1,6}\-[0-9]{1,2}$/.test(value)
     )
     .concat(required ? Yup.string().required() : Yup.string().notRequired())
 
@@ -212,14 +213,8 @@ export const beneficialOwnersValidation = () =>
       return Yup.object().shape({
         address: addressValidationSchema(),
         dateOfBirth: dateOfBirthValidation(),
-        firstName: Yup.string()
-          .trim()
-          .min(3, errorMessages.minLength(3))
-          .required(errorMessages.requiredMessage),
-        lastName: Yup.string()
-          .trim()
-          .min(3, errorMessages.minLength(3))
-          .required(errorMessages.requiredMessage),
+        firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+        lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
         ssn: ssnValidation()
       })
     })
@@ -230,17 +225,9 @@ export const addressValidationSchema = () => {
 
   return Yup.lazy(values =>
     Yup.object().shape({
-      city: Yup.string()
-        .trim()
-        .min(2, minLength)
-        .required(errorMessages.requiredMessage),
-      streetAddress: Yup.string()
-        .trim()
-        .min(2, minLength)
-        .required(errorMessages.requiredMessage),
-      zip: Yup.string()
-        .trim()
-        .required(errorMessages.requiredMessage),
+      city: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
+      streetAddress: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
+      zip: Yup.string().trim().required(errorMessages.requiredMessage),
       country: Yup.string().required(errorMessages.requiredMessage),
       province: provinceObjectRequired(getSafe(() => JSON.parse(values.country).hasProvinces, false))
     })
@@ -251,14 +238,8 @@ export const dwollaControllerValidation = () =>
   Yup.object().shape({
     address: addressValidationSchema(),
     dateOfBirth: dateOfBirthValidation(),
-    firstName: Yup.string()
-      .trim()
-      .min(3, errorMessages.minLength(3))
-      .required(errorMessages.requiredMessage),
-    lastName: Yup.string()
-      .trim()
-      .min(3, errorMessages.minLength(3))
-      .required(errorMessages.requiredMessage),
+    firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+    lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
     // passport: Yup.object().shape({
     //   country: Yup.string().required(errorMessages.requiredMessage),
     //   number: Yup.string().required(errorMessages.requiredMessage),
@@ -266,9 +247,7 @@ export const dwollaControllerValidation = () =>
     ssn: Yup.string()
       .test('num-length', errorMessages.exactDigits(4), value => /^[0-9]{4}$/.test(value))
       .required(errorMessages.requiredMessage),
-    jobTitle: Yup.string()
-      .trim()
-      .required(errorMessages.requiredMessage)
+    jobTitle: Yup.string().trim().required(errorMessages.requiredMessage)
   })
 
 export const dateOfBirthValidation = (minimumAge = 18) =>
@@ -343,7 +322,7 @@ export const dateBefore = (date = 'lotManufacturedDate', beforeDate = 'lotExpira
   Yup.string().test(
     'is-before',
     errorMessages.dateBefore(getSafe(() => opts.beforeDateError, 'Expired Date')),
-    function(_val) {
+    function (_val) {
       let defaultOpts = {
         nullable: true,
         beforeDateError: 'Expired Date'
