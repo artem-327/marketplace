@@ -133,7 +133,9 @@ const initValues = {
   additionalBranches: [],
   jobTitle: '',
   phone: '',
-  roles: []
+  roles: [],
+  buyMarketSegments: [],
+  sellMarketSegments: []
 }
 
 class UsersSidebar extends React.Component {
@@ -683,7 +685,7 @@ class UsersSidebar extends React.Component {
                           icon: 'search',
                           selection: true,
                           multiple: true,
-
+                          disabled: !values.homeBranch,
                           noResultsMessage: formatMessage({
                             id: 'global.startTypingToSearch',
                             defaultMessage: 'Start typing to begin search'
@@ -707,6 +709,7 @@ class UsersSidebar extends React.Component {
                           icon: 'search',
                           selection: true,
                           multiple: true,
+                          disabled: !values.homeBranch,
                           noResultsMessage: formatMessage({
                             id: 'global.startTypingToSearch',
                             defaultMessage: 'Start typing to begin search'
