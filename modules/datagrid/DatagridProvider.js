@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import api from '~/api'
 import pt from 'prop-types'
 import { getSafe } from '~/utils/functions'
@@ -23,7 +24,7 @@ const initialState = {
 // singleton instance
 export let Datagrid
 
-export class DatagridProvider extends Component {
+class DatagridProvider extends Component {
   static propTypes = {
     apiConfig: pt.shape({
       url: pt.string.isRequired,
@@ -41,8 +42,12 @@ export class DatagridProvider extends Component {
   }
 
   componentDidMount() {
-    //Refresh datagrid every 60 seconds
-    if (this.props.autoRefresh) this.interval = setInterval(this.loadData, 60000)
+    //Refresh datagrid
+    if (this.props.autoRefresh)
+      this.interval = setInterval(
+        this.loadData,
+        getSafe(() => this.props.refreshInterval, 60000)
+      )
     this.setState({ savedFilters: {} })
   }
 
@@ -335,3 +340,14 @@ export class DatagridProvider extends Component {
     )
   }
 }
+
+const mapStateToProps = ({ auth }) => {
+  const refreshInterval = getSafe(() => auth.identity.settings, []).find(
+    set => set.key === 'COMPANY_DATATABLE_REFRESH_INTERVAL' && set.value !== 'EMPTY_SETTING'
+  )
+  return {
+    refreshInterval: getSafe(() => refreshInterval.value, null)
+  }
+}
+
+export default connect(mapStateToProps)(DatagridProvider)

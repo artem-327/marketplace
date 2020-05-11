@@ -9,6 +9,9 @@ import {
   putNewUserRoleRequest,
   getCurrencies
 } from '../../actions'
+import debounce from 'lodash/debounce'
+import { uniqueArrayByKey } from '~/utils/functions'
+import { searchSellMarketSegments, searchBuyMarketSegments } from '../../../admin/actions'
 import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { CheckboxWithValue } from '~/components/custom-formik'
 import * as Yup from 'yup'
@@ -18,26 +21,16 @@ import { errorMessages } from '~/constants/yupValidation'
 import { currencyId } from '~/constants/index'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
-import { removeEmpty } from '~/utils/functions'
+import { removeEmpty, getSafe } from '~/utils/functions'
 
 const userFormValidation = () =>
   Yup.object().shape({
-    name: Yup.string()
-      .trim()
-      .min(3, errorMessages.minLength(3))
-      .required(errorMessages.requiredMessage),
-    email: Yup.string()
-      .trim()
-      .email(errorMessages.invalidEmail)
-      .required(errorMessages.requiredMessage),
+    name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+    email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
     homeBranch: Yup.number().required(errorMessages.requiredMessage),
     additionalBranches: Yup.array(),
-    jobTitle: Yup.string()
-      .trim()
-      .min(3, errorMessages.minLength(3)),
-    phone: Yup.string()
-      .trim()
-      .min(3, errorMessages.minLength(3))
+    jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
+    phone: Yup.string().trim().min(3, errorMessages.minLength(3))
   })
 
 const rolesFormValidation = Yup.object().shape({
@@ -45,8 +38,49 @@ const rolesFormValidation = Yup.object().shape({
 })
 
 class UsersPopup extends React.Component {
+  state = {
+    selectedSellMarketSegmentsOptions: [],
+    selectedBuyMarketSegmentsOptions: []
+  }
   componentDidMount() {
-    this.props.getCurrencies()
+    try {
+      this.props.getCurrencies()
+      this.props.searchSellMarketSegments('')
+      this.props.searchBuyMarketSegments('')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (
+      this.props.popupValues &&
+      ((prevProps.popupValues && prevProps.popupValues !== this.props.popupValues) || prevProps.popupValues === null)
+    ) {
+      let selectedSellMarketSegmentsOptions = []
+      let selectedBuyMarketSegmentsOptions = []
+      if (getSafe(() => user.value.sellMarketSegments.length, [])) {
+        selectedSellMarketSegmentsOptions = user.value.sellMarketSegments.map(d => {
+          return {
+            key: d.id,
+            text: d.name,
+            value: d.id
+          }
+        })
+      }
+
+      if (getSafe(() => user.value.buyMarketSegments.length, [])) {
+        selectedBuyMarketSegmentsOptions = user.value.buyMarketSegments.map(d => {
+          return {
+            key: d.id,
+            text: d.name,
+            value: d.id
+          }
+        })
+      }
+
+      this.setState({ selectedSellMarketSegmentsOptions, selectedBuyMarketSegmentsOptions })
+    }
   }
 
   submitRoles = async (values, actions) => {
@@ -70,7 +104,9 @@ class UsersPopup extends React.Component {
       jobTitle: values.jobTitle,
       name: values.name,
       phone: values.phone,
-      preferredCurrency: currencyId //values.preferredCurrency,
+      preferredCurrency: currencyId, //values.preferredCurrency,
+      sellMarketSegments: values.sellMarketSegments,
+      buyMarketSegments: values.buyMarketSegments
     }
     removeEmpty(data)
 
@@ -84,6 +120,24 @@ class UsersPopup extends React.Component {
     actions.setSubmitting(false)
   }
 
+  handleSellMarketSegmentsSearchChange = debounce((_, { searchQuery }) => {
+    this.props.searchSellMarketSegments(searchQuery)
+  }, 250)
+
+  handleSellMarketSegmentsChange = (value, options) => {
+    const newOptions = options.filter(el => value.some(v => el.value === v))
+    this.setState({ selectedSellMarketSegmentsOptions: newOptions })
+  }
+
+  handleBuyMarketSegmentsSearchChange = debounce((_, { searchQuery }) => {
+    this.props.searchBuyMarketSegments(searchQuery)
+  }, 250)
+
+  handleBuyMarketSegmentsChange = (value, options) => {
+    const newOptions = options.filter(el => value.some(v => el.value === v))
+    this.setState({ selectedBuyMarketSegmentsOptions: newOptions })
+  }
+
   render() {
     const {
       closePopup,
@@ -94,6 +148,12 @@ class UsersPopup extends React.Component {
       roles,
       userRoles,
       currencies,
+      isCompanyAdmin,
+      isUserAdmin,
+      searchedSellMarketSegmentsLoading,
+      searchedSellMarketSegments,
+      searchedBuyMarketSegmentsLoading,
+      searchedBuyMarketSegments,
       intl: { formatMessage }
     } = this.props
 
@@ -104,7 +164,9 @@ class UsersPopup extends React.Component {
       preferredCurrency = currencyId,
       additionalBranches = [],
       jobTitle = '',
-      phone = ''
+      phone = '',
+      sellMarketSegments,
+      buyMarketSegments
     } = popupValues || {}
 
     const initialFormValues = {
@@ -115,8 +177,21 @@ class UsersPopup extends React.Component {
       preferredCurrency,
       jobTitle,
       phone,
-      roles: userRoles
+      roles: userRoles,
+      sellMarketSegments: getSafe(() => sellMarketSegments, []).map(d => d.id),
+      buyMarketSegments: getSafe(() => buyMarketSegments, []).map(d => d.id)
     }
+
+    const { selectedBuyMarketSegmentsOptions, selectedSellMarketSegmentsOptions } = this.state
+
+    const allSellMarketSegmentsOptions = uniqueArrayByKey(
+      searchedSellMarketSegments.concat(selectedSellMarketSegmentsOptions),
+      'key'
+    )
+    const allBuyMarketSegmentsOptions = uniqueArrayByKey(
+      searchedBuyMarketSegments.concat(selectedBuyMarketSegmentsOptions),
+      'key'
+    )
 
     return (
       <Modal
@@ -187,7 +262,7 @@ class UsersPopup extends React.Component {
                         isSubmitting={isSubmitting}
                       />
                     </FormGroup>
-                    <FormGroup>
+                    <FormGroup widths='equal' data-test='settings_users_popup_homeBranch_inp'>
                       <Dropdown
                         label={
                           <>
@@ -219,6 +294,57 @@ class UsersPopup extends React.Component {
                           options={currencies}
                           fieldProps={{ width: 2 }}
                           inputProps={{ 'data-test': 'settings_users_popup_preferredCurrency_drpdn' }} /> */}
+                    </FormGroup>
+                    <FormGroup widths='equal' data-test='settings_users_popup_marketSegments_inp'>
+                      <Dropdown
+                        label={
+                          <>
+                            {formatMessage({
+                              id: 'global.sellMarketSegments',
+                              defaultMessage: 'Sell Market Segment'
+                            })}
+                          </>
+                        }
+                        name='sellMarketSegments'
+                        options={allSellMarketSegmentsOptions}
+                        inputProps={{
+                          loading: searchedSellMarketSegmentsLoading,
+                          search: true,
+                          icon: 'search',
+                          selection: true,
+                          multiple: true,
+                          disabled: !isUserAdmin && !isCompanyAdmin,
+                          noResultsMessage: formatMessage({
+                            id: 'global.startTypingToSearch',
+                            defaultMessage: 'Start typing to begin search'
+                          }),
+                          onSearchChange: this.handleSellMarketSegmentsSearchChange,
+                          onChange: (_, { value }) =>
+                            this.handleSellMarketSegmentsChange(value, allSellMarketSegmentsOptions)
+                        }}
+                      />
+                      <Dropdown
+                        label={
+                          <>{formatMessage({ id: 'global.buyMarketSegments', defaultMessage: 'Buy Market Segment' })}</>
+                        }
+                        name='buyMarketSegments'
+                        options={allBuyMarketSegmentsOptions}
+                        inputProps={{
+                          loading: searchedBuyMarketSegmentsLoading,
+                          search: true,
+                          icon: 'search',
+                          selection: true,
+                          multiple: true,
+                          disabled: !isUserAdmin && !isCompanyAdmin,
+                          noResultsMessage: formatMessage({
+                            id: 'global.startTypingToSearch',
+                            defaultMessage: 'Start typing to begin search'
+                          }),
+                          onSearchChange: this.handleBuyMarketSegmentsSearchChange,
+                          onChange: (_, { value }) =>
+                            this.handleBuyMarketSegmentsChange(value, allBuyMarketSegmentsOptions)
+                        }}
+                      />
                     </FormGroup>
                     {/* <pre>
                         {JSON.stringify(values, null, 2)}
@@ -254,7 +380,9 @@ const mapDispatchToProps = {
   closePopup,
   closeRolesPopup,
   handlerSubmitUserEditPopup,
-  getCurrencies
+  getCurrencies,
+  searchSellMarketSegments,
+  searchBuyMarketSegments
 }
 
 const mapStateToProps = state => {
@@ -263,7 +391,21 @@ const mapStateToProps = state => {
     userRoles: state.settings.popupValues && state.settings.popupValues.allUserRoles.map(r => r.id),
     branchesAll: state.settings.branchesAll,
     roles: state.settings.roles,
-    userEditRoles: state.settings.userEditRoles
+    userEditRoles: state.settings.userEditRoles,
+    isUserAdmin: getSafe(() => state.auth.identity.isUserAdmin, false),
+    isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false),
+    searchedSellMarketSegments: getSafe(() => state.admin.searchedSellMarketSegments, []).map(d => ({
+      key: d.id,
+      text: d.name,
+      value: d.id
+    })),
+    searchedSellMarketSegmentsLoading: getSafe(() => state.admin.searchedSellMarketSegmentsLoading, false),
+    searchedBuyMarketSegments: getSafe(() => state.admin.searchedBuyMarketSegments, []).map(d => ({
+      key: d.id,
+      text: d.name,
+      value: d.id
+    })),
+    searchedBuyMarketSegmentsLoading: getSafe(() => state.admin.searchedBuyMarketSegmentsLoading, false)
     // currencies: state.settings.currency.map(d => {
     //   return {
     //     id: d.id,
