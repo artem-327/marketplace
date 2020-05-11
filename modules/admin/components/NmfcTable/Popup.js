@@ -47,16 +47,11 @@ class Popup extends Component {
         <Modal.Content>
           <Form
             onSubmit={async (values, { setSubmitting }) => {
-              let payload = {
-                ...values,
-                code: Number(getSafe(() => values.code.replace('-', ''), values.code))
-              }
-
               try {
                 if (popupValues) {
-                  await editNmfcNumber({...payload, id: popupValues.id})
+                  await editNmfcNumber({ ...values, id: popupValues.id })
                 } else {
-                  await addNmfcNumber(payload)
+                  await addNmfcNumber(values)
                 }
                 closeAddPopup()
               } catch (err) {}
