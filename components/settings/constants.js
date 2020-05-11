@@ -99,6 +99,15 @@ export const typeToComponent = (type, options = {}) => {
           }}
         />
       )
+    case 'ENUM':
+      return (
+        <Dropdown
+          {...getSafe(() => options.props, {})}
+          inputProps={{
+            ...getSafe(() => options.inputProps, {})
+          }}
+        />
+      )
 
     case 'BOOL': {
       return (
