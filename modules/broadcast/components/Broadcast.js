@@ -131,14 +131,14 @@ class Broadcast extends Component {
 
   updateInTreeData = node => {
     let copy = this.props.treeData
-    
+
     const { filter } = this.props
     if (!node.isRoot()) {
       let found = copy.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type)
       let index = found.getIndex()
       let path = found.getPath()
       let parent = path[path.length - 2]
-      
+
       // Remove node
       found.drop()
       // Set proper values
@@ -146,7 +146,7 @@ class Broadcast extends Component {
       // Add back removed node (with updated data)
       parent.addChildAtIndex(found, index)
       normalizeTree(node)
-      
+
       this.props.treeDataChanged(copy)
     }
 
@@ -356,14 +356,16 @@ class Broadcast extends Component {
     e.preventDefault()
     e.stopPropagation()
 
-    const { rule } = node.model
+    let { rule } = node.model
 
     const value = rule[propertyName]
     let newValue = 0
-
+    
     switch (value) {
       case 2: {
-        if (getNodeStatus(node).anyChildBroadcasting) newValue = 0
+        if (getNodeStatus(node, (n) => n.model.rule.type !== 'company' && !n.model.rule.hidden).anyChildBroadcasting) {
+          newValue = 0
+        }
         else newValue = 1
         break
       }
@@ -976,7 +978,6 @@ class Broadcast extends Component {
 
   saveBroadcastRules = async () => {
     const { saveRules, id, initGlobalBroadcast, asSidebar, toastManager } = this.props
-
     let filteredTree = this.treeToModel()
 
     try {
