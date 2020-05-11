@@ -254,11 +254,9 @@ const mapStateToProps = (state, { datagrid }) => {
       allUserRoles: user.roles || [],
       userRoles: <ArrayToFirstItem values={user && user.roles && user.roles.length && user.roles.map(r => r.name)} />,
       switchEnable: userEnableDisableStatus(user, currentUserId),
-      lastLoginAt: user.lastLoginAt
-        ? moment(user.lastLoginAt)
-            .toDate()
-            .toLocaleString()
-        : ''
+      lastLoginAt: user.lastLoginAt ? moment(user.lastLoginAt).toDate().toLocaleString() : '',
+      sellMarketSegments: getSafe(() => user.sellMarketSegments, []),
+      buyMarketSegments: getSafe(() => user.buyMarketSegments, [])
     })),
     currentUserId,
     addedItem: state.settings.addedItem,

@@ -22,7 +22,7 @@ export const initTree = tree => {
   return tree
 }
 
-export const getNodeStatus = item => {
+export const getNodeStatus = (item, additionalCondition = () => true) => {
   let allChildrenBroadcasting = false,
     anyChildBroadcasting = false
 
@@ -33,10 +33,8 @@ export const getNodeStatus = item => {
     })
       .length
     anyChildBroadcasting = !!item.first(n => {
-      return (
-        getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 &&
-        getSafe(() => n.model.rule.id, n.model.id) !== item.model.id
-      )
+      return getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 &&
+        getSafe(() => n.model.rule.id, n.model.id) !== item.model.id && additionalCondition(n)
     })
 
     allChildrenBroadcasting = all !== 0 && broadcasted !== 0 && all === broadcasted
@@ -56,7 +54,7 @@ export const getBroadcast = node => {
 
 export const setBroadcast = node => {
   let broadcast = getBroadcast(node)
-  
+
   getSafe(() => node.model.rule.broadcast, null) !== null
     ? (node.model.rule.broadcast = broadcast)
     : (node.model.broadcast = broadcast)

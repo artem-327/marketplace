@@ -133,7 +133,9 @@ const initValues = {
   additionalBranches: [],
   jobTitle: '',
   phone: '',
-  roles: []
+  roles: [],
+  buyMarketSegments: [],
+  sellMarketSegments: []
 }
 
 class UsersSidebar extends React.Component {
@@ -464,9 +466,7 @@ class UsersSidebar extends React.Component {
       searchedSellMarketSegmentsLoading,
       searchedSellMarketSegments,
       searchedBuyMarketSegmentsLoading,
-      searchedBuyMarketSegments,
-      isCompanyAdmin,
-      isUserAdmin
+      searchedBuyMarketSegments
     } = this.props
 
     const {
@@ -685,7 +685,7 @@ class UsersSidebar extends React.Component {
                           icon: 'search',
                           selection: true,
                           multiple: true,
-                          disabled: !isUserAdmin && !isCompanyAdmin,
+                          disabled: !values.homeBranch,
                           noResultsMessage: formatMessage({
                             id: 'global.startTypingToSearch',
                             defaultMessage: 'Start typing to begin search'
@@ -709,7 +709,7 @@ class UsersSidebar extends React.Component {
                           icon: 'search',
                           selection: true,
                           multiple: true,
-                          disabled: !isUserAdmin && !isCompanyAdmin,
+                          disabled: !values.homeBranch,
                           noResultsMessage: formatMessage({
                             id: 'global.startTypingToSearch',
                             defaultMessage: 'Start typing to begin search'
@@ -785,20 +785,18 @@ const mapStateToProps = state => {
     isSuperAdmin: admin.currentUser && admin.currentUser.roles.findIndex(d => d.id === 1) !== -1,
     searchedCompanies: admin.searchedCompanies,
     searchedCompaniesLoading: admin.searchedCompaniesLoading,
-    searchedSellMarketSegments: admin.searchedSellMarketSegments.map(d => ({
+    searchedSellMarketSegments: getSafe(() => admin.searchedSellMarketSegments, []).map(d => ({
       key: d.id,
       text: d.name,
       value: d.id
     })),
-    searchedSellMarketSegmentsLoading: admin.searchedSellMarketSegmentsLoading,
-    searchedBuyMarketSegments: admin.searchedBuyMarketSegments.map(d => ({
+    searchedSellMarketSegmentsLoading: getSafe(() => admin.searchedSellMarketSegmentsLoading, false),
+    searchedBuyMarketSegments: getSafe(() => admin.searchedBuyMarketSegments, []).map(d => ({
       key: d.id,
       text: d.name,
       value: d.id
     })),
-    searchedBuyMarketSegmentsLoading: admin.searchedBuyMarketSegmentsLoading,
-    isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
-    isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, false)
+    searchedBuyMarketSegmentsLoading: getSafe(() => admin.searchedBuyMarketSegmentsLoading, false)
   }
 }
 
