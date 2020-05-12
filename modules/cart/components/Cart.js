@@ -1,18 +1,16 @@
 import React, { Component } from 'react'
 import { Grid, GridColumn, Segment, GridRow, Header, Button, Icon } from 'semantic-ui-react'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
-
 import moment from 'moment'
 import Router from 'next/router'
-
+import { AlertCircle } from 'react-feather'
+//Components
 import confirm from '~/src/components/Confirmable/confirm'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 import { getLocaleDateFormat } from '~/components/date-format'
-
-
 import AddCart from '~/src/pages/cart/components/AddCart'
-
+//Styles
 import {
   CapitalizedText,
   CustomHeader,
@@ -26,7 +24,12 @@ import {
   ItemDescriptionGrid,
   Item,
   DescriptionValue,
-  TotalRow
+  TotalRow,
+  Rectangle,
+  CustomDivContent,
+  CustomDivInTitle,
+  CustomDivTitle,
+  InfoIcon
 } from './StyledComponents'
 
 const CART_ITEM_TYPES = {
@@ -59,7 +62,9 @@ export default class Cart extends Component {
   }
 
   renderEmptyCart = () => {
-    const { intl: { formatMessage } } = this.props
+    const {
+      intl: { formatMessage }
+    } = this.props
 
     return (
       <Grid verticalAlign='middle'>
@@ -76,9 +81,12 @@ export default class Cart extends Component {
     )
   }
 
-
   renderCartItem = (item, index) => {
-    const { intl: { formatMessage }, cart, deleteCartItem } = this.props
+    const {
+      intl: { formatMessage },
+      cart,
+      deleteCartItem
+    } = this.props
 
     const packagingType = getSafe(() => item.productOffer.companyProduct.packagingType.name, '')
     const unitName = getSafe(() => item.productOffer.companyProduct.packagingUnit.nameAbbreviation, '')
@@ -95,47 +103,61 @@ export default class Cart extends Component {
               {getSafe(() => item.productOffer.companyProduct.echoProduct.manufacturer.name, '')}
             </GridColumn>
             <GridColumn textAlign='right' largeScreen={8}>
-              <Button negative basic onClick={() =>
-                confirm('Remove item', 'Are you sure you want to remove item from Shopping Cart?')
-                  .then(() => deleteCartItem(item.id))
-              }>
+              <Button
+                negative
+                basic
+                onClick={() =>
+                  confirm('Remove item', 'Are you sure you want to remove item from Shopping Cart?').then(() =>
+                    deleteCartItem(item.id)
+                  )
+                }>
                 <Icon name='trash alternate outline' />
                 {formatMessage({ id: 'global.delete', defaultMessage: 'Delete' })}
               </Button>
-              <Button disabled={item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD || item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER} basic onClick={() => this.editCart(item)}>
+              <Button
+                disabled={
+                  item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD ||
+                  item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER
+                }
+                basic
+                onClick={() => this.editCart(item)}>
                 <Icon name='edit outline' />
                 {formatMessage({ id: 'global.edit', defaultMessage: 'Edit' })}
               </Button>
             </GridColumn>
           </GridRow>
-
         </Grid>
         <ItemDescriptionGrid columns={2} divided>
           <GridRow>
             <GridColumn>
-              <FormattedMessage id='cart.packaging' defaultMessage='Packaging:' /> <DescriptionValue><FormattedNumber minimumFractionDigits={0} value={packagingSize} />
-                {' '} {unitName} &nbsp;
-                <CapitalizedText>{packagingType}</CapitalizedText></DescriptionValue>
+              <FormattedMessage id='cart.packaging' defaultMessage='Packaging:' />{' '}
+              <DescriptionValue>
+                <FormattedNumber minimumFractionDigits={0} value={packagingSize} /> {unitName} &nbsp;
+                <CapitalizedText>{packagingType}</CapitalizedText>
+              </DescriptionValue>
             </GridColumn>
             <GridColumn>
-              <FormattedMessage id='cart.origin' defaultMessage='Origin:' />{' '} <DescriptionValue>{getSafe(() => item.productOffer.origin.name, 'N/A')}</DescriptionValue>
+              <FormattedMessage id='cart.origin' defaultMessage='Origin:' />{' '}
+              <DescriptionValue>{getSafe(() => item.productOffer.origin.name, 'N/A')}</DescriptionValue>
             </GridColumn>
           </GridRow>
           <GridRow>
             <GridColumn>
-              <FormattedMessage id='cart.numOfPackages' defaultMessage='# of Packages:' /> {' '}
-              <DescriptionValue><FormattedNumber minimumFractionDigits={0} value={pkgAmount} /></DescriptionValue>
+              <FormattedMessage id='cart.numOfPackages' defaultMessage='# of Packages:' />{' '}
+              <DescriptionValue>
+                <FormattedNumber minimumFractionDigits={0} value={pkgAmount} />
+              </DescriptionValue>
             </GridColumn>
 
             <GridColumn>
-              <FormattedMessage id='cart.location' defaultMessage='Location:' /> {' '}
+              <FormattedMessage id='cart.location' defaultMessage='Location:' />{' '}
               <DescriptionValue>{getSafe(() => item.locationStr, 'N/A')}</DescriptionValue>
             </GridColumn>
           </GridRow>
 
           <GridRow>
             <GridColumn>
-              <FormattedMessage id='cart.totalQuantity' defaultMessage='Total Quantity:' /> {' '}
+              <FormattedMessage id='cart.totalQuantity' defaultMessage='Total Quantity:' />{' '}
               <DescriptionValue>
                 <FormattedNumber minimumFractionDigits={0} value={pkgAmount * packagingSize} />
                 {unitName && ` ${unitName}`}
@@ -143,7 +165,7 @@ export default class Cart extends Component {
             </GridColumn>
 
             <GridColumn>
-              <FormattedMessage id='cart.expiration' defaultMessage='Expiration:' /> {' '}
+              <FormattedMessage id='cart.expiration' defaultMessage='Expiration:' />{' '}
               <DescriptionValue>
                 {item.productOffer && item.productOffer.lotExpirationDate
                   ? moment(item.productOffer.lotExpirationDate).format(getLocaleDateFormat())
@@ -154,28 +176,21 @@ export default class Cart extends Component {
 
           <GridRow>
             <GridColumn>
-              <FormattedMessage id='cart.fobPrice' defaultMessage='FOB Price:' /> {' '}
+              <FormattedMessage id='cart.fobPrice' defaultMessage='FOB Price:' />{' '}
               <DescriptionValue>
-                <FormattedNumber
-                  id='cart.fobPrice'
-                  style='currency'
-                  currency={currency}
-                  value={item.cfPricePerUOM}
-                />
+                <FormattedNumber id='cart.fobPrice' style='currency' currency={currency} value={item.cfPricePerUOM} />
                 {unitName && ` / ${unitName}`}
               </DescriptionValue>
             </GridColumn>
             <GridColumn>
-              <FormattedMessage id='cart.productForm' defaultMessage='Form:' /> {' '}
-              <DescriptionValue>
-                {getSafe(() => item.productOffer.form.name, 'N/A')}
-              </DescriptionValue>
+              <FormattedMessage id='cart.productForm' defaultMessage='Form:' />{' '}
+              <DescriptionValue>{getSafe(() => item.productOffer.form.name, 'N/A')}</DescriptionValue>
             </GridColumn>
           </GridRow>
 
           <GridRow>
             <GridColumn>
-              <FormattedMessage id='cart.totalPerItem' defaultMessage='Total per Item:' /> {' '}
+              <FormattedMessage id='cart.totalPerItem' defaultMessage='Total per Item:' />{' '}
               <DescriptionValue bold>
                 <FormattedNumber
                   id='cart.totalPerItem'
@@ -187,48 +202,82 @@ export default class Cart extends Component {
             </GridColumn>
 
             <GridColumn>
-              <FormattedMessage id='cart.condition' defaultMessage='Condition:' /> {' '}
+              <FormattedMessage id='cart.condition' defaultMessage='Condition:' />{' '}
               <DescriptionValue>
                 {item.productOffer.conforming ? (
                   <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
                 ) : (
-                    <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
-                  )}
+                  <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+                )}
               </DescriptionValue>
             </GridColumn>
           </GridRow>
-
         </ItemDescriptionGrid>
       </Item>
     )
   }
 
-
   render() {
-    const { intl: { formatMessage }, cartIsFetching, cart, sidebar } = this.props
+    const {
+      intl: { formatMessage },
+      cartIsFetching,
+      cart,
+      sidebar
+    } = this.props
     const itemsCount = getSafe(() => cart.cartItems.length, 0)
 
     return (
       <>
         <Grid>
+          {cart.paymentTerm !== 'REGULAR' && (
+            <Rectangle>
+              <CustomDivTitle>
+                <InfoIcon size={18} />
+                <CustomDivInTitle>
+                  <FormattedMessage id='cart.payment.terms.title' defaultMessage={`Payment Terms Information`} />
+                </CustomDivInTitle>
+              </CustomDivTitle>
+              <CustomDivContent>
+                {cart.paymentTerm === 'HALF_UPFRONT' ? (
+                  <FormattedMessage
+                    id='cart.payment.terms50.content'
+                    defaultMessage={`This purchase has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
+                    values={{
+                      value: <b>50/50</b>,
+                      percentage: <b>50%</b>,
+                      shipmentDate: <b>10 days after the shipment date</b>
+                    }}
+                  />
+                ) : (
+                  <FormattedMessage
+                    id='cart.payment.terms100.content'
+                    defaultMessage={`This purchase has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
+                    values={{
+                      percentage: <b>100%</b>
+                    }}
+                  />
+                )}
+              </CustomDivContent>
+            </Rectangle>
+          )}
           <CartColumn mobile={14} tablet={9} computer={9}>
             <ContentSegment loading={cartIsFetching}>
               <Grid>
                 <StyledRow bottomShadow>
                   <VerticalUnpaddedColumn>
-                    <Header as='h2'><FormattedMessage
-                      id='cart.totalItems'
-                      defaultMessage={`TOTAL ITEMS: ${itemsCount}`}
-                      values={{ count: itemsCount }}
-                    /></Header>
+                    <Header as='h2'>
+                      <FormattedMessage
+                        id='cart.totalItems'
+                        defaultMessage={`TOTAL ITEMS: ${itemsCount}`}
+                        values={{ count: itemsCount }}
+                      />
+                    </Header>
                   </VerticalUnpaddedColumn>
                 </StyledRow>
               </Grid>
-              {
-                itemsCount === 0 && !cartIsFetching
-                  ? this.renderEmptyCart()
-                  : getSafe(() => cart.cartItems, []).map((item, i) => this.renderCartItem(item, i))
-              }
+              {itemsCount === 0 && !cartIsFetching
+                ? this.renderEmptyCart()
+                : getSafe(() => cart.cartItems, []).map((item, i) => this.renderCartItem(item, i))}
             </ContentSegment>
           </CartColumn>
           <SummaryColumn mobile={14} tablet={6} computer={5}>
@@ -246,11 +295,7 @@ export default class Cart extends Component {
                     <FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />
                   </VerticalUnpaddedColumn>
                   <VerticalUnpaddedColumn textAlign='right'>
-                    <FormattedNumber
-                      style='currency'
-                      currency={currency}
-                      value={cart.cfPriceSubtotal}
-                    />
+                    <FormattedNumber style='currency' currency={currency} value={cart.cfPriceSubtotal} />
                   </VerticalUnpaddedColumn>
                 </BottomUnpaddedRow>
 
@@ -271,11 +316,7 @@ export default class Cart extends Component {
 
                   <VerticalUnpaddedColumn textAlign='right'>
                     <DescriptionValue bold>
-                      <FormattedNumber
-                        style='currency'
-                        currency={currency}
-                        value={cart.cfPriceSubtotal}
-                      />
+                      <FormattedNumber style='currency' currency={currency} value={cart.cfPriceSubtotal} />
                     </DescriptionValue>
                   </VerticalUnpaddedColumn>
                 </TotalRow>
@@ -285,12 +326,12 @@ export default class Cart extends Component {
             <Grid>
               <GridRow>
                 <GridColumn computer={9}>
-                  {itemsCount !== 0 &&
+                  {itemsCount !== 0 && (
                     <Button fluid onClick={this.handleContinueShopping}>
                       <Icon name='shopping bag' />
                       {formatMessage({ id: 'cart.keepShopping', defaultMessage: 'Keep Shopping' })}
                     </Button>
-                  }
+                  )}
                 </GridColumn>
                 <GridColumn computer={7}>
                   <Button fluid primary disabled={itemsCount === 0 || cartIsFetching} onClick={this.handleContinue}>
