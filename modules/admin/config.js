@@ -231,7 +231,8 @@ export const config = {
     }
   },
 
-  'Packaging Types': {
+  'Units of Measure': {
+    tableName: 'units_of_measure',
     addEditText: <FormattedMessage id='admin.unitOfMeasure'>{text => text}</FormattedMessage>,
     formattedMessageName: 'unitOfMeasurement',
     searchText: 'admin.searchUnitOfMeasure',
