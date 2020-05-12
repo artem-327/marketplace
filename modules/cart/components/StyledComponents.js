@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 import { Header, GridColumn, GridRow, Grid, Segment, Message } from 'semantic-ui-react'
+import { AlertCircle } from 'react-feather'
 
 export const GridContainer = styled(Grid)`
   .row:not(.default-padded) {
@@ -161,4 +162,44 @@ export const CustomMessage = styled(Message)`
     bottom: 7px;
     position: relative;
   }
+`
+
+export const Rectangle = styled.div`
+  border-radius: 4px;
+  border: solid 1px #2599d5;
+  background-color: #ffffff;
+  align-items: center;
+  display: block;
+  padding: 10px;
+  font-size: 14px;
+  margin: 44px 44px 0 44px;
+`
+
+export const CustomDivTitle = styled.div`
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #0d0d0d;
+  display: flex;
+`
+
+export const CustomDivContent = styled.div`
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #848893;
+  padding: 4px 30px;
+`
+
+export const CustomDivInTitle = styled.div`
+  padding-left: 10px;
+`
+
+export const InfoIcon = styled(AlertCircle)`
+  transform: rotate(180deg);
+  color: #2599d5;
 `

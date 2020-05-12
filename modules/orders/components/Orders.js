@@ -18,6 +18,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { AttachmentManager } from '~/modules/attachments'
 import { uniqueArrayByKey } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
+import { debounce } from 'lodash'
 
 const StyledModal = styled(Modal)`
   > .header {
@@ -542,9 +543,13 @@ class Orders extends Component {
     }
   }
 
+  setDatagridFilter = debounce(filterData => {
+    this.props.datagrid.loadData(this.state.filters[filterData.status])
+  }, 500)
+
   loadData(endpointType, filterData) {
     this.props.dispatch(actions.change('forms.filter.status', filterData.status))
-    this.props.datagrid.loadData(this.state.filters[filterData.status])
+    this.setDatagridFilter(filterData)
     this.props.loadData(endpointType, filterData)
   }
 

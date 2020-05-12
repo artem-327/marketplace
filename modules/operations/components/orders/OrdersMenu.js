@@ -5,6 +5,7 @@ import * as Actions from '../../actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { injectIntl } from 'react-intl'
 import { getSafe } from '~/utils/functions'
+import { debounce } from 'lodash'
 
 class OrdersMenu extends Component {
   state = {
@@ -125,8 +126,12 @@ class OrdersMenu extends Component {
     this.props.datagrid.setFilter(this.state.filters[this.props.activeStatus], true, 'orderMenu')
   }
 
-  loadData(filterData) {
+  setDatagridFilter = debounce(filterData => {
     this.props.datagrid.setFilter(this.state.filters[filterData.status], true, 'orderMenu')
+  }, 500)
+
+  loadData(filterData) {
+    this.setDatagridFilter(filterData)
     this.props.loadData(filterData)
   }
 
