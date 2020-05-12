@@ -250,11 +250,10 @@ class Settings extends Component {
                                     typeToComponent(el.type, {
                                       props: {
                                         ...getSafe(() => JSON.parse(el.frontendConfig).props),
-                                        //TODO BE bude posílat jinak postavený objekt pro options. Bude potřeba to upravit.
                                         options: getSafe(() => el.possibleValues, []).map((opt, i) => ({
                                           key: i,
-                                          value: opt,
-                                          text: opt
+                                          value: opt.value,
+                                          text: opt.displayName
                                         }))
                                       },
                                       inputProps: {
