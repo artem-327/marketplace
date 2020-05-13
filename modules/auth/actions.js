@@ -108,6 +108,9 @@ export function login(username, password) {
         ) {
           urlPage = '/settings'
         }
+        if (identity.roles.find(role => role.name === 'Echo Operator')) {
+          urlPage = '/operations'
+        }
         if (
           !(
             identity.roles.find(role => role.name === 'Company Admin') &&
