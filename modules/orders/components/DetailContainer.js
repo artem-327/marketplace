@@ -41,10 +41,14 @@ function prepareDetail(data, type) {
 
   return {
     ...data,
-    companyEin: (type === 'sales'
-      ? data.buyerCompanyTin ? data.buyerCompanyTin : 'N/A'
-      : data.sellerCompanyTin ? data.sellerCompanyTin : 'N/A'
-    ),
+    companyEin:
+      type === 'sales'
+        ? data.buyerCompanyTin
+          ? data.buyerCompanyTin
+          : 'N/A'
+        : data.sellerCompanyTin
+        ? data.sellerCompanyTin
+        : 'N/A',
     acceptanceDate:
       typeof data.acceptanceDate !== 'undefined' ? moment(data.acceptanceDate).toDate().toLocaleString() : 'N/A',
     amount: <FormattedNumber style='currency' currency={currency} value={subtotal} />,
@@ -175,6 +179,7 @@ function prepareDetail(data, type) {
     paymentContact: type === 'sales' ? data.buyerCompanyContactName : data.sellerCompanyContactName,
     shippingTrackingCode: data.shippingTrackingCode ? data.shippingTrackingCode : '',
     isTrackingNumberEditable: data.trackingNumberEditable ? data.trackingNumberEditable : false,
+    isReturnTrackingNumberEditable: data.returnTrackingNumberEditable ? data.returnTrackingNumberEditable : false,
     returnShippingTrackingCode: data.returnShippingTrackingCode ? data.returnShippingTrackingCode : '',
     note: getSafe(() => data.note, ''),
     attachments: getSafe(() => data.attachments, [])
