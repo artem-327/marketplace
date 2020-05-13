@@ -32,7 +32,7 @@ function mapStateToProps(store) {
     ...store.cart,
     selectedAddressId: store.forms.cart.selectedAddressId,
     initialValues: selectedAddress && {
-      ...selectedAddress.warehouse ? selectedAddress.deliveryAddress : selectedAddress,
+      ...(selectedAddress.warehouse ? selectedAddress.deliveryAddress : selectedAddress),
       addressName: getAddressName(),
       address: {
         ...address,
@@ -49,7 +49,9 @@ function mapStateToProps(store) {
     companyName: getSafe(() => store.auth.identity.company.name, null),
     shippingQuotes: getSafe(() => store.cart.shippingQuotes, {}),
     purchaseHazmatEligible: getSafe(() => store.auth.identity.company.purchaseHazmatEligible),
-    cartItems: getSafe(() => store.cart.cart.cartItems, [])
+    cartItems: getSafe(() => store.cart.cart.cartItems, []),
+    paymentTerm: getSafe(() => store.cart.cart.paymentTerm, ''),
+    paymentNetDays: getSafe(() => store.cart.cart.paymentNetDays, '')
   }
 }
 
