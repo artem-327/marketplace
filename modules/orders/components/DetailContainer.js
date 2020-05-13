@@ -214,9 +214,9 @@ function mapStateToProps(state, ownProps) {
     opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer,
     listDocumentTypes: orders.listDocumentTypes,
     loadingRelatedDocuments: orders.loadingRelatedDocuments,
-    permissionOrderUpdate: getSafe(() => state.auth.identity.roles, []).some(
-      role => role.permissions.some(permission => permission.id === 6) // id: 6 = ORDER_UPDATE
-    )
+    isAdmin: getSafe(() => state.auth.identity.isAdmin, false),
+    isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false),
+    isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false)
   }
 }
 
