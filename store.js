@@ -71,7 +71,7 @@ import operations from '~/modules/operations/reducers'
 import holds from '~/modules/marketplace/holds/reducer'
 import wantedBoard from '~/modules/wanted-board/reducer'
 import search from '~/modules/search/reducer'
-
+import alerts from '~/modules/alerts/reducer'
 import layout from '~/modules/layout/reducer'
 
 const reducer = combineReducers({
@@ -133,7 +133,8 @@ const reducer = combineReducers({
   holds,
   wantedBoard,
   search,
-  layout
+  layout,
+  alerts
 })
 
 const rootReducer = (state, action) => {
