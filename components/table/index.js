@@ -66,6 +66,11 @@ const GlobalTableOverrideStyle = createGlobalStyle`
   .tree-table.root-row td {
     background-color: #edeef2 !important;
   }
+  
+  .read td {
+    background-color: #f8f9fb !important;
+    color: #848893  !important;
+  }
 `
 
 const SettingButton = styled(Settings)`
