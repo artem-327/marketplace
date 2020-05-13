@@ -41,7 +41,12 @@ import {
   GridContainer,
   VerticalUnpaddedRow,
   BottomUnpaddedRow,
-  CustomMessage
+  CustomMessage,
+  Rectangle,
+  CustomDivContent,
+  CustomDivInTitle,
+  CustomDivTitle,
+  InfoIcon
 } from '~/modules/cart/components/StyledComponents'
 import '../styles/PurchaseOrder.scss'
 import styled from 'styled-components'
@@ -67,7 +72,7 @@ const Line = styled.div`
   border-bottom: 1px solid rgba(34, 36, 38, 0.15);
 `
 
-const Rectangle = styled.div`
+const CustomRectangle = styled.div`
   border-radius: 4px;
   border: solid 1px orange;
   background-color: #ffffff;
@@ -78,7 +83,7 @@ const Rectangle = styled.div`
   font-size: 14px;
 `
 
-const CustomDivTitle = styled.div`
+const DivTitle = styled.div`
   font-weight: bold;
   font-stretch: normal;
   font-style: normal;
@@ -88,7 +93,7 @@ const CustomDivTitle = styled.div`
   display: flex;
 `
 
-const CustomDivContent = styled.div`
+const DivContent = styled.div`
   font-weight: normal;
   font-stretch: normal;
   font-style: normal;
@@ -98,7 +103,7 @@ const CustomDivContent = styled.div`
   padding: 4px 25.5px;
 `
 
-const CustomDivInTitle = styled.div`
+const DivInTitle = styled.div`
   padding-left: 10px;
 `
 
@@ -321,7 +326,9 @@ class PurchaseOrder extends Component {
       shippingQuotes,
       shippingQuotesAreFetching,
       shipping,
-      purchaseHazmatEligible
+      purchaseHazmatEligible,
+      paymentTerm,
+      paymentNetDays
     } = this.props
     if (cartIsFetching) return <Spinner />
     if (cart.cartItems.length === 0) Router.push('/cart')
@@ -348,6 +355,37 @@ class PurchaseOrder extends Component {
 
     return (
       <Container>
+        {paymentTerm !== 'REGULAR' && (
+          <Rectangle>
+            <CustomDivTitle>
+              <InfoIcon size={18} />
+              <CustomDivInTitle>
+                <FormattedMessage id='cart.payment.terms.title' defaultMessage={`Payment Terms Information`} />
+              </CustomDivInTitle>
+            </CustomDivTitle>
+            <CustomDivContent>
+              {cart.paymentTerm === 'HALF_UPFRONT' ? (
+                <FormattedMessage
+                  id='cart.payment.terms50.content'
+                  defaultMessage={`This purchase has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
+                  values={{
+                    value: <b>50/50</b>,
+                    percentage: <b>50%</b>,
+                    shipmentDate: <b>{paymentNetDays} days after the shipment date</b>
+                  }}
+                />
+              ) : (
+                <FormattedMessage
+                  id='cart.payment.terms100.content'
+                  defaultMessage={`This purchase has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
+                  values={{
+                    percentage: <b>100%</b>
+                  }}
+                />
+              )}
+            </CustomDivContent>
+          </Rectangle>
+        )}
         <Button basic onClick={() => Router.push('/cart')} data-test='purchase_order_back_to_cart_btn'>
           <Icon name='shopping cart' />
           <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart'>
@@ -484,23 +522,23 @@ class PurchaseOrder extends Component {
                         !cart.weightLimitExceed && (
                           <GridRow>
                             <GridColumn computer={16}>
-                              <Rectangle>
-                                <CustomDivTitle>
+                              <CustomRectangle>
+                                <DivTitle>
                                   <AlertCircle color='orange' size={18} />
-                                  <CustomDivInTitle>
+                                  <DivInTitle>
                                     <FormattedMessage
                                       id='cart.noShippingQuotes.processManually.title'
                                       defaultMessage={`We are sorry, but no matching Shipping Quotes were provided by logistics company.`}
                                     />
-                                  </CustomDivInTitle>
-                                </CustomDivTitle>
-                                <CustomDivContent>
+                                  </DivInTitle>
+                                </DivTitle>
+                                <DivContent>
                                   <FormattedMessage
                                     id='cart.noShippingQuotes.processManually'
                                     defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
                                   />
-                                </CustomDivContent>
-                              </Rectangle>
+                                </DivContent>
+                              </CustomRectangle>
                             </GridColumn>
                           </GridRow>
                         )}
