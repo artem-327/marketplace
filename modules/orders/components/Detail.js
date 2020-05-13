@@ -1474,7 +1474,7 @@ class Detail extends Component {
                               </GridDataColumn>
 
                               <GridDataColumnTrackingID width={valColumn}>
-                                {!order.isTrackingNumberEditable ? (
+                                {!order.isReturnTrackingNumberEditable ? (
                                   order.returnShippingTrackingCode
                                 ) : this.state.toggleReturnShippingTrackingCode ? (
                                   <>
