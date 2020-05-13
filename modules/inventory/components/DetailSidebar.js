@@ -1973,7 +1973,7 @@ class DetailSidebar extends Component {
                             submitForm() // to show errors
                           } else {
                             let { data } = await this.submitForm(values, setSubmitting, setTouched)
-                            if (!getSafe(() => this.state.sidebarValues.id, false)) {
+                            if (data && !getSafe(() => this.state.sidebarValues.id, false)) {
                               confirm(
                                 formatMessage({
                                   id: 'confirm.editOrAddNew.header',

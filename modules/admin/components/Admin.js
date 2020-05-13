@@ -25,7 +25,6 @@ import EditPopup1Parameter from './DataTable/EditPopup1Parameter'
 
 import CasProductsTable from './CasProductsTable/CasProductsTable'
 import CompaniesTable from './CompaniesTable/Table'
-import CompaniesForm from './CompaniesTable/FormPopup'
 import CompaniesDwollaForm from './CompaniesDwolla/FormPopup'
 import AddEditEchoProduct from './ProductCatalogTable/AddEditEchoProductContainer'
 
@@ -118,7 +117,8 @@ const datagridConfig = {
     searchToFilter: v =>
       v
         ? [
-            { operator: 'EQUALS', path: 'NmfcNumber.code', values: [v] },
+            { operator: 'EQUALS', path: 'NmfcNumber.prefix', values: [v] },
+            { operator: 'EQUALS', path: 'NmfcNumber.suffix', values: [v] },
             { operator: 'LIKE', path: 'NmfcNumber.description', values: [`%${v}%`] }
           ]
         : []
@@ -180,7 +180,6 @@ const editForms = {
   Conditions: <EditPopup1Parameter />,
   'NMFC Numbers': <NmfcPopup />,
   'CAS Products': <AddEditCasProductsPopup />,
-  Companies: <CompaniesForm />,
   'Document Types': <EditPopup1Parameter />,
   Associations: <EditPopup1Parameter />,
   'Market Segments': <EditPopup1Parameter />
@@ -200,7 +199,6 @@ const addForms = {
   Conditions: <AddNewPopup1Parameter />,
   'NMFC Numbers': <NmfcPopup />,
   'CAS Products': <AddEditCasProductsPopup />,
-  Companies: <CompaniesForm />,
   'Document Types': <AddNewPopup1Parameter />,
   Associations: <AddNewPopup1Parameter />,
   'Market Segments': <AddNewPopup1Parameter />

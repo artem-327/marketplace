@@ -10,6 +10,7 @@ import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import * as Actions from '../../actions'
+import AddEditCompanySidebar from './AddEditCompanySidebar'
 
 class CompaniesTable extends Component {
   getRows = rows => {
@@ -24,9 +25,29 @@ class CompaniesTable extends Component {
             onClick={() => this.props.reviewRequest(row.id)}
             data-test={`admin_company_table_${row.id}_chckb`}
           />
+        ),
+        enabled: (
+          <Checkbox
+            key={`enabled${row.id}`}
+            toggle={true}
+            defaultChecked={row.enabled}
+            onClick={() => this.handleEnabled(row.rawData)}
+            data-test={`admin_company_table_enable_${row.id}_chckb`}
+          />
         )
       }
     })
+  }
+
+  handleEnabled = async (row) => {
+    const { datagrid, udpateEnabled } = this.props
+
+    try {
+      await udpateEnabled(row.id, !row.enabled)
+      datagrid.updateRow(row.id, () => ({ ...row, enabled: !row.enabled }))
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   render() {
@@ -45,7 +66,9 @@ class CompaniesTable extends Component {
       openRegisterDwollaAccount,
       takeOverCompany,
       resendWelcomeEmail,
-      intl
+      intl,
+      currentAddForm,
+      currentEditForm
     } = this.props
 
     const { formatMessage } = intl
@@ -61,7 +84,7 @@ class CompaniesTable extends Component {
           rowActions={[
             {
               text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openEditCompany(row.id, row)
+              callback: row => openEditCompany(row.id, row.rawData)
             },
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -76,8 +99,12 @@ class CompaniesTable extends Component {
                     { name: row.name }
                   )
                 ).then(() => {
-                  deleteCompany(row.id)
-                  datagrid.removeRow(row.id)
+                  try {
+                    deleteCompany(row.id)
+                    datagrid.removeRow(row.id)
+                  } catch (err) {
+                    console.error(err)
+                  }
                 })
             },
             {
@@ -101,6 +128,7 @@ class CompaniesTable extends Component {
             }
           ]}
         />
+        {(currentAddForm || currentEditForm) && <AddEditCompanySidebar />}
       </React.Fragment>
     )
   }
@@ -108,6 +136,8 @@ class CompaniesTable extends Component {
 
 const mapStateToProps = ({ admin }, { datagrid }) => {
   return {
+    currentAddForm: admin.currentAddForm && admin.currentAddForm.name === 'Companies',
+    currentEditForm: admin.currentEditForm && admin.currentEditForm.name === 'Companies',
     columns: admin.config[admin.currentTab.name].display.columns,
     companyListDataRequest: admin.companyListDataRequest,
     filterValue: admin.filterValue,
@@ -136,7 +166,7 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
       reviewRequested: getSafe(() => c.reviewRequested, ''),
       hasLogo: getSafe(() => c.hasLogo, ''),
       nacdMember: c && c.nacdMember ? 'Yes' : c && c.nacdMember === false ? 'No' : '',
-      enabled: getSafe(() => c.enabled, false) ? 'Yes' : 'No'
+      enabled: getSafe(() => c.enabled, false)
     })),
     confirmMessage: getSafe(() => admin.confirmMessage, ''),
     deleteRowById: getSafe(() => admin.deleteRowById, '')

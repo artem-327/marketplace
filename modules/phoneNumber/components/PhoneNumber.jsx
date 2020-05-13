@@ -182,8 +182,9 @@ export default class PhoneNumber extends Component {
     return (
       <FormField error={!!error}>
         {label && <label>{label}</label>}
-        <span style={{ display: 'flex' }}>
+        <span style={{ display: 'flex' }} className='phone-number'>
           <StyledDropdown
+            className='phone-code'
             options={phoneCountryCodes}
             onChange={this.handleChangeDropdown}
             search
@@ -193,6 +194,7 @@ export default class PhoneNumber extends Component {
             value={phoneCountryCode}
           />
           <StyledInputMask
+            className='phone-num'
             mask='999 999 9999'
             maskChar=' '
             compact='true'

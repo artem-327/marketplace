@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { Hexagon, Layers, Settings, ShoppingBag, Grid, Sliders, FileText } from 'react-feather'
+import { Hexagon, Layers, Settings, ShoppingBag, Grid, Sliders, FileText, Bell } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
@@ -447,6 +447,14 @@ class Navigation extends Component {
             </Dropdown.Menu>
           </DropdownItem>
         )}
+        <MenuLink
+          to='/alerts'
+          dataTest='navigation_menu_wanted_board_drpdn'>
+          <>
+            <Bell size={22} />
+            {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
+          </>
+        </MenuLink>
       </div>
     ) : (
       <div className='flex-wrapper'>
