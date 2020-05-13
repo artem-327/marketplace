@@ -712,7 +712,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
-          sortPath: 'NmfcNumber.code'
+          sortPath: 'NmfcNumber.prefix'
         },
         {
           name: 'description',

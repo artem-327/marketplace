@@ -117,7 +117,8 @@ const datagridConfig = {
     searchToFilter: v =>
       v
         ? [
-            { operator: 'EQUALS', path: 'NmfcNumber.code', values: [v] },
+            { operator: 'EQUALS', path: 'NmfcNumber.prefix', values: [v] },
+            { operator: 'EQUALS', path: 'NmfcNumber.suffix', values: [v] },
             { operator: 'LIKE', path: 'NmfcNumber.description', values: [`%${v}%`] }
           ]
         : []

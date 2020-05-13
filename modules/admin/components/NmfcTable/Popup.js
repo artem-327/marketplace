@@ -42,7 +42,7 @@ class Popup extends Component {
       <Modal open onClose={() => closeAddPopup()}>
         <Modal.Header>
           {formatMessage({ id: `global.${type.id}`, defaultMessage: type.defaultMessage })}{' '}
-          {formatMessage({ id: config.addEditText })}
+          {config.addEditText}
         </Modal.Header>
         <Modal.Content>
           <Form
