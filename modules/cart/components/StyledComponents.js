@@ -172,7 +172,7 @@ export const Rectangle = styled.div`
   display: block;
   padding: 10px;
   font-size: 14px;
-  margin: 44px 44px 0 44px;
+  margin-bottom: 20px;
 `
 
 export const CustomDivTitle = styled.div`

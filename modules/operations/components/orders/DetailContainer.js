@@ -194,6 +194,7 @@ function prepareDetail(data, type = 'sales') {
     paymentContact: type === 'sales' ? data.buyerCompanyContactName : data.sellerCompanyContactName,
     shippingTrackingCode: data.shippingTrackingCode ? data.shippingTrackingCode : '',
     isTrackingNumberEditable: data.trackingNumberEditable ? data.trackingNumberEditable : false,
+    isReturnTrackingNumberEditable: data.returnTrackingNumberEditable ? data.returnTrackingNumberEditable : false,
     returnShippingTrackingCode: data.returnShippingTrackingCode ? data.returnShippingTrackingCode : '',
     note: getSafe(() => data.note, ''),
     attachments: getSafe(() => data.attachments, [])
@@ -213,7 +214,7 @@ function mapStateToProps(state, ownProps) {
     isPaymentCancellable: getSafe(() => orderDetailData.isPaymentCancellable, false),
     action: actionRequired(orderDetailData),
     //! !opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer,
-    listDocumentTypes: operations.listDocumentTypes,
+    listDocumentTypes: operations.listDocumentTypes
   }
 }
 

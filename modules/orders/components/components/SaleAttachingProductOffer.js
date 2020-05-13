@@ -386,7 +386,7 @@ class SaleAttachingProductOffer extends Component {
                             filesLimit={1}
                             fileMaxSize={20}
                             onChange={files =>
-                              this.linkAttachment(this.props.orderItemsId[index], files, setFieldValue, index)
+                              this.linkAttachment(this.props.orderItemsId[tabIndex], files, setFieldValue, index)
                             }
                             data-test={`grouped_offer_${index}_attachments`}
                             emptyContent={

@@ -24,12 +24,7 @@ import {
   ItemDescriptionGrid,
   Item,
   DescriptionValue,
-  TotalRow,
-  Rectangle,
-  CustomDivContent,
-  CustomDivInTitle,
-  CustomDivTitle,
-  InfoIcon
+  TotalRow
 } from './StyledComponents'
 
 const CART_ITEM_TYPES = {
@@ -229,37 +224,6 @@ export default class Cart extends Component {
     return (
       <>
         <Grid>
-          {cart.paymentTerm !== 'REGULAR' && (
-            <Rectangle>
-              <CustomDivTitle>
-                <InfoIcon size={18} />
-                <CustomDivInTitle>
-                  <FormattedMessage id='cart.payment.terms.title' defaultMessage={`Payment Terms Information`} />
-                </CustomDivInTitle>
-              </CustomDivTitle>
-              <CustomDivContent>
-                {cart.paymentTerm === 'HALF_UPFRONT' ? (
-                  <FormattedMessage
-                    id='cart.payment.terms50.content'
-                    defaultMessage={`This purchase has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
-                    values={{
-                      value: <b>50/50</b>,
-                      percentage: <b>50%</b>,
-                      shipmentDate: <b>10 days after the shipment date</b>
-                    }}
-                  />
-                ) : (
-                  <FormattedMessage
-                    id='cart.payment.terms100.content'
-                    defaultMessage={`This purchase has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
-                    values={{
-                      percentage: <b>100%</b>
-                    }}
-                  />
-                )}
-              </CustomDivContent>
-            </Rectangle>
-          )}
           <CartColumn mobile={14} tablet={9} computer={9}>
             <ContentSegment loading={cartIsFetching}>
               <Grid>
