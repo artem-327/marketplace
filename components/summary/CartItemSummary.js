@@ -345,7 +345,7 @@ class CartItemSummary extends Component {
               </GridColumn>
 
               <GridColumn computer={4} textAlign='right'>
-                <Button onClick={() => deleteCart(item.id)} data-test={`shopping_cart_remove_${item.id}_btn`} basic icon negative>
+                <Button type='button' onClick={() => deleteCart(item.id)} data-test={`shopping_cart_remove_${item.id}_btn`} basic icon negative>
                   <Icon name='trash alternate outline' />
                 </Button>
               </GridColumn>
