@@ -257,7 +257,7 @@ class Navigation extends Component {
         clientCompany: false
       }
     )
-    return !isAdmin || takeover ? (
+    return (!isAdmin && !isEchoOperator) || takeover ? (
       <div className='flex-wrapper'>
         {!clientCompany && (
           <>
@@ -447,9 +447,7 @@ class Navigation extends Component {
             </Dropdown.Menu>
           </DropdownItem>
         )}
-        <MenuLink
-          to='/alerts'
-          dataTest='navigation_menu_wanted_board_drpdn'>
+        <MenuLink to='/alerts' dataTest='navigation_menu_wanted_board_drpdn'>
           <>
             <Bell size={22} />
             {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
@@ -501,6 +499,7 @@ export default withAuth(
         activeInventoryFilter: getSafe(() => store.filter.inventory.appliedFilter.filters.length > 0, false),
         activeMarketplaceFilter: getSafe(() => store.filter.marketplace.appliedFilter.filters.length > 0, false),
         activeWantedBoardFilter: getSafe(() => store.filter.wantedBoard.appliedFilter.filters.length > 0, false),
+        isEchoOperator: getSafe(() => store.auth.identity.roles, []).find(role => role.name === 'Echo Operator')
       }),
       {
         triggerSystemSettingsModal,
