@@ -758,7 +758,10 @@ class Detail extends Component {
       intl: { formatMessage },
       echoSupportPhone,
       editTrackingCode,
-      editReturnTrackingCode
+      editReturnTrackingCode,
+      isOrderProcessing,
+      isCompanyAdmin,
+      isAdmin
     } = this.props
     const { activeIndexes, documentsPopupProduct } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
@@ -1035,19 +1038,22 @@ class Detail extends Component {
           ) : (
             <>
               <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
-              <ActionsRequired order={order} ordersType={ordersType} />
-              {openedAssignLots ? <AssignLots /> : null}
-              {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
-              {openedEnterTrackingIdShip ? <EnterTrackingIdShip /> : null}
-              {openedEnterTrackingIdReturnShip ? <EnterTrackingIdReturnShip /> : null}
-              {openedPurchaseRejectDelivery ? <PurchaseRejectDelivery /> : null}
-              {openedPurchaseRequestCreditDelivery ? <PurchaseRequestCreditDelivery /> : null}
-              {openedPurchaseReviewCreditRequest ? <PurchaseReviewCreditRequest /> : null}
-              {openedSaleReturnShipping ? <SaleReturnShipping /> : null}
-              {openedSaleReviewCreditRequest ? <SaleReviewCreditRequest /> : null}
-              {openedPurchaseOrderShipping ? <PurchaseOrderShipping /> : null}
-              {opendSaleAttachingProductOffer ? <SaleAttachingProductOffer /> : null}
-
+              {isAdmin || isCompanyAdmin || isOrderProcessing ? (
+                <>
+                  <ActionsRequired order={order} ordersType={ordersType} />
+                  {openedAssignLots ? <AssignLots /> : null}
+                  {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
+                  {openedEnterTrackingIdShip ? <EnterTrackingIdShip /> : null}
+                  {openedEnterTrackingIdReturnShip ? <EnterTrackingIdReturnShip /> : null}
+                  {openedPurchaseRejectDelivery ? <PurchaseRejectDelivery /> : null}
+                  {openedPurchaseRequestCreditDelivery ? <PurchaseRequestCreditDelivery /> : null}
+                  {openedPurchaseReviewCreditRequest ? <PurchaseReviewCreditRequest /> : null}
+                  {openedSaleReturnShipping ? <SaleReturnShipping /> : null}
+                  {openedSaleReviewCreditRequest ? <SaleReviewCreditRequest /> : null}
+                  {openedPurchaseOrderShipping ? <PurchaseOrderShipping /> : null}
+                  {opendSaleAttachingProductOffer ? <SaleAttachingProductOffer /> : null}
+                </>
+              ) : null}
               <Divider hidden />
               <OrderAccordion
                 defaultActiveIndex={[0, 1, 2]}

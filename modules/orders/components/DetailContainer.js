@@ -213,7 +213,10 @@ function mapStateToProps(state, ownProps) {
     action: actionRequired(orders.detail),
     opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer,
     listDocumentTypes: orders.listDocumentTypes,
-    loadingRelatedDocuments: orders.loadingRelatedDocuments
+    loadingRelatedDocuments: orders.loadingRelatedDocuments,
+    isAdmin: getSafe(() => state.auth.identity.isAdmin, false),
+    isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false),
+    isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false)
   }
 }
 
