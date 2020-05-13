@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FormGroup, FormField, Popup, Image, Dropdown } from 'semantic-ui-react'
+import { FormGroup, FormField, Popup, Image, Dropdown, Grid, GridRow, GridColumn, Button } from 'semantic-ui-react'
 import { Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
@@ -9,6 +9,65 @@ import { generateToastMarkup } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
 import { getSafe } from '~/utils/functions'
+import styled from 'styled-components'
+import { Trash, UploadCloud } from 'react-feather'
+
+const LogoWrapper = styled.div`
+  border-radius: 3px;
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+  
+  > .ui.grid {
+    margin: 20px;
+    &.admin {
+      margin: 20px 100px;
+    }
+
+    > .row {
+      padding: 5px 0;
+      > .column {
+        padding: 0 5px;
+        
+        .ui.button {
+          border-radius: 3px;
+          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+          border: solid 1px #dee2e6;
+          background-color: #ffffff;
+          padding: 4px 10px;
+          color: #848893;
+          
+          &.delete {
+            color: #f16844;
+          }
+          
+          > svg {
+            width: 18px;
+            height: 20px;
+            margin-right: 10px;
+          }
+        }
+      }
+    }
+  }
+  
+  .uploadAttachment.has-file .dropzoneLotHasFile {
+    background-color: #f8f9fb;
+    > img {
+      display: unset;
+    }
+  }
+  
+  > div.logo-hint {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 20px; 
+    border-top: solid 1px #dee2e6;
+    background-color: #f8f9fb;
+    font-size: 12px;
+    text-align: center;
+    color: #848893;
+  }
+`
 
 class CompanyForm extends Component {
   state = {
@@ -49,10 +108,7 @@ class CompanyForm extends Component {
       let fileURL = URL.createObjectURL(file)
 
       return (
-        <FormField>
-          <FormattedMessage id='global.preview' defaultMessage='Preview' />
-          <Image src={fileURL} size='small' />
-        </FormField>
+        <Image src={fileURL} size='small' />
       )
     }
 
@@ -100,7 +156,7 @@ class CompanyForm extends Component {
     this.props.removeLogo()
   }
 
-  render() {
+  renderCompanyFields = () => {
     let {
       intl,
       loading,
@@ -110,10 +166,8 @@ class CompanyForm extends Component {
       setFieldTouched,
       errors,
       touched,
-      isSubmitting,
-      associations
+      isSubmitting
     } = this.props
-    let { selectLogo, removeLogo } = this
     const { formatMessage } = intl
 
     return (
@@ -138,10 +192,10 @@ class CompanyForm extends Component {
               options={
                 data && data.length
                   ? data.map(type => ({
-                      text: type.name,
-                      value: type.id,
-                      key: type.id
-                    }))
+                    text: type.name,
+                    value: type.id,
+                    key: type.id
+                  }))
                   : []
               }
               clearable
@@ -223,79 +277,327 @@ class CompanyForm extends Component {
           />
         </FormGroup>
 
+        <FormGroup widths='equal' >
+          <Checkbox
+            label={formatMessage({ id: 'global.enabled', defaultMessage: 'Enabled' })}
+            name='enabled'
+            data-test='company_form_enabled_chckb'
+          />
+          <Checkbox
+            label={formatMessage({ id: 'global.nacdMember', defaultMessage: 'NACD Member' })}
+            name='nacdMember'
+            data-test='company_form_nacdMember_chckb'
+          />
+        </FormGroup>
+      </>
+    )
+  }
+
+  renderAdminFields = () => {
+    let {
+      intl,
+      loading,
+      data,
+      setFieldValue,
+      values,
+      setFieldTouched,
+      errors,
+      touched,
+      isSubmitting,
+      associations
+    } = this.props
+    const { formatMessage } = intl
+
+    return (
+      <>
+        <FormGroup widths='equal' data-test='company_form_legalCompanyName_inp'>
+          <FormField className='upload-input' >
+            <Input
+              label={
+                <>
+                  <FormattedMessage id='company.legalCompanyName' defaultMessage='Legal Company Name' />
+                  <Required />
+                </>
+              }
+              name='name'
+            />
+          </FormField>
+        </FormGroup>
+        <FormGroup widths='equal' data-test='company_form_dbaDuns_inp'>
+          <FormField className='upload-input' >
+            <label htmlFor='field_dropdown_associations'>
+              <FormattedMessage id='company.businessType' defaultMessage='Business Type' />
+            </label>
+            <Dropdown
+              options={
+                data && data.length
+                  ? data.map(type => ({
+                    text: type.name,
+                    value: type.id,
+                    key: type.id
+                  }))
+                  : []
+              }
+              clearable
+              loading={loading}
+              selection
+              value={this.state.businessType.id}
+              onChange={(e, data) => {
+                e.preventDefault()
+                this.setState({
+                  businessType: { id: data.value }
+                })
+                setFieldValue('businessType.id', data.value)
+              }}
+              name='businessType.id'
+              data-test='company_form_businessType_drpdn'
+            />
+          </FormField>
+          <Input label={<FormattedMessage id='company.dba' defaultMessage='Doing Business As' />} name='dba' />
+        </FormGroup>
+
+        <FormGroup widths='equal' data-test='company_form_tinCin_inp'>
+          <Input label={<FormattedMessage id='company.duns' defaultMessage='DUNS Number' />} name='dunsNumber' />
+          <Input
+            label={
+              <Popup
+                content={
+                  <FormattedMessage id='company.tooltip.orEin' defaultMessage='or Employer Identification Number' />
+                }
+                trigger={
+                  <label>
+                    <FormattedMessage id='company.tin' defaultMessage='Tax Identification Number' />
+                  </label>
+                }
+              />
+            }
+            name='tin'
+          />
+        </FormGroup>
+
+        <FormGroup widths='equal' data-test='company_form_websiteUrlPhone_inp'>
+          <Input
+            label={
+              <Popup
+                content={
+                  <FormattedMessage
+                    id='company.tooltip.notRequiredIfSame'
+                    defaultMessage='Not required unless different from TIN'
+                  />
+                }
+                trigger={
+                  <label>
+                    <FormattedMessage id='company.cin' defaultMessage='Company Identification Number' />
+                  </label>
+                }
+              />
+            }
+            name='cin'
+          />
+          <Input
+            label={
+              <>
+                <FormattedMessage id='global.websiteUrl' defaultMessage='Website URL' />
+              </>
+            }
+            name='website'
+          />
+        </FormGroup>
+
+        <FormGroup widths='equal'>
+          <PhoneNumber
+            label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+            name='phone'
+            values={values}
+            setFieldValue={setFieldValue}
+            setFieldTouched={setFieldTouched}
+            errors={errors}
+            touched={touched}
+            isSubmitting={isSubmitting}
+          />
+          <FormField className='upload-input' >
+            <label htmlFor='field_dropdown_associations'>
+              <FormattedMessage id='company.associationMembership' defaultMessage='Association Membership' />
+            </label>
+            <Dropdown
+              options={
+                associations && associations.length
+                  ? associations.map(assoc => ({
+                    text: assoc.name,
+                    value: assoc.id,
+                    key: assoc.id
+                  }))
+                  : []
+              }
+              clearable
+              multiple
+              loading={loading}
+              search
+              selection
+              value={this.state.associations}
+              onChange={(e, data) => {
+                e.preventDefault()
+                this.setState({
+                  associations: data.value
+                })
+                setFieldValue('associations', data.value)
+              }}
+              name='associations'
+              data-test='company_form_association_drpdn'
+            />
+          </FormField>
+        </FormGroup>
+
         <FormGroup widths='equal'>
           <Checkbox
             label={formatMessage({ id: 'global.enabled', defaultMessage: 'Enabled' })}
             name='enabled'
             data-test='company_form_enabled_chckb'
           />
-
-          {this.props.admin && (
-            <Checkbox
-              label={formatMessage({
-                id: 'company.purchaseHazmatEligible ',
-                defaultMessage: 'Purchase Hazardous Materials'
-              })}
-              name='purchaseHazmatEligible'
-              data-test='company_form_purchaseHazmatEligible_chckb'
-            />
-          )}
-        </FormGroup>
-        <FormGroup widths={this.props.admin && 'equal'} data-test='company_form_associationMembership_upload_inp'>
-          {this.props.admin && (
-            <FormField className='upload-input' width={!this.props.admin && 8}>
-              <label htmlFor='field_dropdown_associations'>
-                <FormattedMessage id='company.associationMembership' defaultMessage='Association Membership' />
-              </label>
-              <Dropdown
-                options={
-                  associations && associations.length
-                    ? associations.map(assoc => ({
-                        text: assoc.name,
-                        value: assoc.id,
-                        key: assoc.id
-                      }))
-                    : []
-                }
-                clearable
-                multiple
-                loading={loading}
-                search
-                selection
-                value={this.state.associations}
-                onChange={(e, data) => {
-                  e.preventDefault()
-                  this.setState({
-                    associations: data.value
-                  })
-                  setFieldValue('associations', data.value)
-                }}
-                name='associations'
-                data-test='company_form_association_drpdn'
-              />
-            </FormField>
-          )}
-          <FormField className='upload-input' width={!this.props.admin && 8}>
-            <label htmlFor='field_input_phone'>
-              <span>Company Logo</span>
-            </label>
-            <UploadAttachment
-              {...this.props}
-              attachments={this.props.companyLogo ? [this.props.companyLogo] : []}
-              name={`companyLogo`}
-              filesLimit={1}
-              fileMaxSize={0.2}
-              onChange={files => (files.length ? selectLogo(files[0]) : null)}
-              removeAttachment={removeLogo}
-              emptyContent={
-                <FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='a' />
-              }
-            />
-          </FormField>
-          {this.getCompanyLogo()}
+          <Checkbox
+            label={formatMessage({ id: 'global.nacdMember', defaultMessage: 'NACD Member' })}
+            name='nacdMember'
+            data-test='company_form_nacdMember_chckb'
+          />
+          <Checkbox
+            label={formatMessage({
+              id: 'company.purchaseHazmatEligible ',
+              defaultMessage: 'Purchase Hazardous Materials'
+            })}
+            name='purchaseHazmatEligible'
+            data-test='company_form_purchaseHazmatEligible_chckb'
+          />
         </FormGroup>
       </>
     )
+  }
+
+  renderLogo = () => {
+    let { selectLogo, removeLogo } = this
+
+    const hasLogo = !!this.props.companyLogo
+    const isAdmin = !!this.props.admin
+
+    return (
+      <div>
+        <label>
+          <FormattedMessage id='global.companyLogo' defaultMessage='Company Logo' />
+        </label>
+        <LogoWrapper>
+          <Grid className={isAdmin ? 'admin' : ''}>
+            {!isAdmin && (
+              <GridRow>
+                <GridColumn style={{ textAlign: 'center' }}>
+                  <label>
+                    <FormattedMessage
+                      id='company.logoDescription'
+                      defaultMessage='This is how your logo looks on the Web Portal'
+                    />
+                  </label>
+                </GridColumn>
+              </GridRow>
+            )}
+
+            <GridRow>
+              <GridColumn>
+                <UploadAttachment
+                  {...this.props}
+                  attachments={this.props.companyLogo ? [this.props.companyLogo] : []}
+                  name={`companyLogo`}
+                  filesLimit={1}
+                  fileMaxSize={0.2}
+                  onChange={files => (files.length ? selectLogo(files[0]) : null)}
+                  removeAttachment={removeLogo}
+                  hideAttachments
+                  emptyContent={
+                    <FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='a' />
+                  }
+                  uploadedContent={this.getCompanyLogo()}
+                />
+              </GridColumn>
+            </GridRow>
+
+            <GridRow>
+              <GridColumn width={8}>
+                <Button
+                  className='delete'
+                  disabled={!hasLogo}
+                  type='button'
+                  fluid
+                  onClick={() => removeLogo()}
+                >
+                  <Trash />
+                  <FormattedMessage id='company.logoButtonDelete' defaultMessage='Delete'>
+                    {text => text}
+                  </FormattedMessage>
+                </Button>
+              </GridColumn>
+              <GridColumn width={8}>
+                <Button
+                  type='button'
+                  fluid
+                  onClick={() => /* */ console.log('Change/Upload click')}
+                >
+                  <UploadCloud />
+                  {
+                    hasLogo
+                      ? (
+                        <FormattedMessage id='company.logoButtonChange' defaultMessage='Change'>
+                          {text => text}
+                        </FormattedMessage>
+                      )
+                      : (
+                        <FormattedMessage id='company.logoButtonUpload' defaultMessage='Upload'>
+                          {text => text}
+                        </FormattedMessage>
+                      )
+                  }
+                </Button>
+              </GridColumn>
+            </GridRow>
+
+          </Grid>
+          <div className='logo-hint'>
+            <label>
+              <FormattedMessage
+                id='company.logoHintRow1'
+                defaultMessage='Minimum resolution 100 x 50 px in transparent PNG'
+              />
+            </label>
+            <label>
+              <FormattedMessage
+                id='company.logoHintRow2'
+                defaultMessage='Use the logo color that matches with dark backgrounds'
+              />
+            </label>
+          </div>
+        </LogoWrapper>
+      </div>
+    )
+  }
+
+  render() {
+    if (this.props.admin) {
+      return (
+        <>
+          {this.renderAdminFields()}
+          {this.renderLogo()}
+        </>
+      )
+    } else {
+      return (
+        <Grid>
+          <GridRow>
+            <GridColumn width={4}>
+              {this.renderLogo()}
+            </GridColumn>
+            <GridColumn width={12}>
+              {this.renderCompanyFields()}
+            </GridColumn>
+          </GridRow>
+        </Grid>
+      )
+    }
   }
 }
 
