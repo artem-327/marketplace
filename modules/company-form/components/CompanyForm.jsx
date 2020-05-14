@@ -534,6 +534,7 @@ class CompanyForm extends Component {
                   hideAttachments
                   emptyContent={<StyledImageIcon />}
                   uploadedContent={this.getCompanyLogo()}
+                  saveComponentRef={(ref) => this.logoComponentRef = ref}
                 />
               </GridColumn>
             </GridRow>
@@ -548,21 +549,18 @@ class CompanyForm extends Component {
                   onClick={() => removeLogo()}
                 >
                   <Trash />
-                  <label>
-                    <FormattedMessage id='company.logoButtonDelete' defaultMessage='Delete'>
-                      {text => text}
-                    </FormattedMessage>
-                  </label>
+                  <FormattedMessage id='company.logoButtonDelete' defaultMessage='Delete'>
+                    {text => text}
+                  </FormattedMessage>
                 </Button>
               </GridColumn>
               <GridColumn width={8}>
                 <Button
                   type='button'
                   fluid
-                  onClick={() => /* */ console.log('Change/Upload click')}
+                  onClick={() => {if (this.logoComponentRef) this.logoComponentRef.open()}}
                 >
                   <UploadCloud />
-                  <label>
                     {
                       hasLogo
                         ? (
@@ -576,7 +574,6 @@ class CompanyForm extends Component {
                           </FormattedMessage>
                         )
                     }
-                  </label>
                 </Button>
               </GridColumn>
             </GridRow>

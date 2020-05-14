@@ -22,7 +22,7 @@ const StyledButton = styled(Button)`
 class UploadAttachment extends Component {
   constructor(props) {
     super(props)
-
+    this.reactDropzoneRef = React.createRef()
     this.state = {
       files: [],
       duplicateFiles: []
@@ -35,6 +35,9 @@ class UploadAttachment extends Component {
     this.setState({
       files: this.props.fileIds
     })
+    if (this.props.saveComponentRef && this.reactDropzoneRef && this.reactDropzoneRef.current) {
+      this.props.saveComponentRef(this.reactDropzoneRef.current)
+    }
   }
 
   removeFile = file => {
@@ -347,6 +350,7 @@ class UploadAttachment extends Component {
             <React.Fragment>
               {!hasFile || this.props.uploadedContent ? (
                 <ReactDropzone
+                  ref={this.reactDropzoneRef}
                   className={hasFile ? 'dropzoneLotHasFile' : 'dropzoneLot'}
                   activeClassName='active'
                   onDrop={acceptedFiles => {
