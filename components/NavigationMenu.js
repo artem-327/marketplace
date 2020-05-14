@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { Hexagon, Layers, Settings, ShoppingBag, Grid, Sliders, FileText, Bell } from 'react-feather'
+import { Hexagon, Layers, Settings, ShoppingBag, Grid, Sliders, FileText, Bell, Briefcase } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
@@ -470,6 +470,14 @@ class Navigation extends Component {
             </DropdownItem>
           </>
         )}
+        {
+          <MenuLink to='/companies' dataTest='navigation_menu_admin_companies'>
+            <>
+              <Briefcase size={22} />
+              {formatMessage({ id: 'navigation.companies', defaultMessage: 'Companies' })}
+            </>
+          </MenuLink>
+        }
         {(isAdmin || isEchoOperator) && (
           <>
             <DropdownItem
@@ -484,6 +492,12 @@ class Navigation extends Component {
             </DropdownItem>
           </>
         )}
+        <MenuLink to='/alerts' dataTest='navigation_menu_admin_alerts'>
+          <>
+            <Bell size={22} />
+            {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
+          </>
+        </MenuLink>
       </div>
     )
   }

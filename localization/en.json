@@ -146,6 +146,7 @@
   "navigation.company-product-catalog": "Company Product Catalog",
   "navigation.company-inventory": "Company Inventory",
   "navigation.alerts": "Notifications",
+  "navigation.companies": "Companies",
   "dwolla.controllerTitlePopup": "Please read below for the definition of Controller in this context.",
   "dwolla.paymentPoweredBy": "Echo Global Chemical Exchange payment gateway is powered by:",
   "dwolla.confirmAcc": "Confirm Account Administrator Information",
@@ -2290,5 +2291,6 @@
   "global.buymMrketSegments": "Buy Market Segments",
   "cart.payment.terms.title": "Payment Terms Information",
   "cart.payment.terms50.content": "This purchase has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.",
-  "cart.payment.terms100.content": "This purchase has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account."
+  "cart.payment.terms100.content": "This purchase has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.",
+  "companies.title": "Companies"
 }

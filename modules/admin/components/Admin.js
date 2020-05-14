@@ -24,7 +24,6 @@ import EditUnitOfPackagingPopup from './UnitOfPackagingTable/EditUnitOfPackaging
 import EditPopup1Parameter from './DataTable/EditPopup1Parameter'
 
 import CasProductsTable from './CasProductsTable/CasProductsTable'
-import CompaniesTable from './CompaniesTable/Table'
 import CompaniesDwollaForm from './CompaniesDwolla/FormPopup'
 import AddEditEchoProduct from './ProductCatalogTable/AddEditEchoProductContainer'
 
@@ -62,7 +61,6 @@ const tables = {
   Conditions: <DataTable />,
   'NMFC Numbers': <NmfcTable />,
   'CAS Products': <CasProductsTable />,
-  Companies: <CompaniesTable />,
   'Product Catalog': <ProductCatalogTable />,
   'Document Types': <DataTable />,
   Associations: <DataTable />,
@@ -85,16 +83,6 @@ const datagridConfig = {
         ? [
             { operator: 'LIKE', path: 'CasProduct.casIndexName', values: [`%${v}%`] },
             { operator: 'LIKE', path: 'CasProduct.casNumber', values: [`%${v}%`] }
-          ]
-        : []
-  },
-  Companies: {
-    url: '/prodex/api/companies/datagrid',
-    searchToFilter: v =>
-      v
-        ? [
-            { operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] },
-            { operator: 'LIKE', path: 'Company.cfDisplayName', values: [`%${v}%`] }
           ]
         : []
   },
@@ -209,8 +197,7 @@ const editSidebar = {
 }
 
 const importForm = {
-  'Product Catalog': <ProductImportPopup echoProduct={true} />,
-  Companies: <ProductImportPopup companies={true} />
+  'Product Catalog': <ProductImportPopup echoProduct={true} />
 }
 
 const addDwollaForms = {

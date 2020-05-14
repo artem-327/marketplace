@@ -28,7 +28,6 @@ export const initialState = {
   mailingBranchProvinces: [],
   tabsNames: [
     { name: 'CAS Products', id: 7 },
-    { name: 'Companies', id: 8 },
     { name: 'Product Catalog', id: 12 },
     { name: 'Units of Measure', id: 1 },
     { name: 'Packaging Types', id: 2 },
@@ -46,7 +45,6 @@ export const initialState = {
 
   currentTab: { name: 'CAS Products', id: 7 },
   casListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'asc', sortPath: 'CasProduct.chemicalName' },
-  companyListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'asc', sortPath: 'Company.name' },
   currentEditForm: null,
   currentEdit2Form: null,
   currentAddForm: null,

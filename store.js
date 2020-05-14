@@ -73,6 +73,7 @@ import wantedBoard from '~/modules/wanted-board/reducer'
 import search from '~/modules/search/reducer'
 import alerts from '~/modules/alerts/reducer'
 import layout from '~/modules/layout/reducer'
+import companiesAdmin from '~/modules/companies/reducer'
 
 const reducer = combineReducers({
   auth,
@@ -134,7 +135,8 @@ const reducer = combineReducers({
   wantedBoard,
   search,
   layout,
-  alerts
+  alerts,
+  companiesAdmin
 })
 
 const rootReducer = (state, action) => {

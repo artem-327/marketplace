@@ -1,7 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import {Form, Modal, FormGroup, Divider, Accordion, Icon, Segment, Header, Loader, Dimmer,
+import {
+  Form,
+  Modal,
+  FormGroup,
+  Divider,
+  Accordion,
+  Icon,
+  Segment,
+  Header,
+  Loader,
+  Dimmer,
   Grid,
   GridRow,
   GridColumn
@@ -17,7 +27,7 @@ import {
   getAddressSearchPrimaryBranch,
   getAddressSearchMailingBranch,
   removeEmpty
-} from '~/modules/admin/actions'
+} from '~/modules/companies/actions'
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
 import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
@@ -60,7 +70,7 @@ import {
   //InputLabeledWrapper,
   //CustomLabel,
   LabeledRow
-} from '../../constants/layout'
+} from '~/modules/admin/constants/layout'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -294,7 +304,6 @@ class AddEditCompanySidebar extends React.Component {
       // countriesDropDown,
       // primaryBranchProvinces,
       // mailingBranchProvinces,
-      config,
       intl,
       // AddressSuggestPrimaryBranchInput,
       // AddressSuggestMailingBranchInput,
@@ -420,7 +429,7 @@ class AddEditCompanySidebar extends React.Component {
                   <Loader />
                 </Dimmer>
                 <HighSegment basic>
-                  <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} /> {config.addEditText}
+                  <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} /> {`${popupValues ? 'Edit' : 'Add'}`}
                 </HighSegment>
                 <FlexContent>
                   <Accordion exclusive={false}>
@@ -449,10 +458,7 @@ class AddEditCompanySidebar extends React.Component {
                               color={colorIcon}
                               name={accordionActive.companyAdmin ? 'chevron down' : 'chevron right'}
                             />
-                            <FormattedMessage
-                              id='global.companyAdmin'
-                              defaultMessage='Company Admin (Primary User)'
-                            />
+                            <FormattedMessage id='global.companyAdmin' defaultMessage='Company Admin (Primary User)' />
                           </AccordionHeader>
                         </Accordion.Title>
                         <Accordion.Content active={accordionActive.companyAdmin}>
@@ -675,8 +681,7 @@ class AddEditCompanySidebar extends React.Component {
               </FlexSidebar>
             </Form>
           )
-        }}>
-      </Formik>
+        }}></Formik>
     )
   }
 }
@@ -696,36 +701,13 @@ const mapDispatchToProps = {
   deleteCompanyLogo
 }
 
-const mapStateToProps = ({ admin, zip }) => {
-  const popupValues = admin.popupValues
+const mapStateToProps = ({ companiesAdmin, zip }) => {
+  const popupValues = companiesAdmin.popupValues
   return {
-    ...admin,
+    ...companiesAdmin,
     popupValues,
-    zip,
-    config: admin.config[admin.currentTab.name]
+    zip
   }
 }
 
 export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddEditCompanySidebar)))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
