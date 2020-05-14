@@ -22,7 +22,7 @@ const StyledButton = styled(Button)`
 class UploadAttachment extends Component {
   constructor(props) {
     super(props)
-
+    this.reactDropzoneRef = React.createRef()
     this.state = {
       files: [],
       duplicateFiles: []
@@ -35,6 +35,9 @@ class UploadAttachment extends Component {
     this.setState({
       files: this.props.fileIds
     })
+    if (this.props.saveComponentRef && this.reactDropzoneRef && this.reactDropzoneRef.current) {
+      this.props.saveComponentRef(this.reactDropzoneRef.current)
+    }
   }
 
   removeFile = file => {
@@ -343,11 +346,12 @@ class UploadAttachment extends Component {
                 )}
               />
             </span>
-          ) : hasFile ? (
+          ) : (
             <React.Fragment>
-              {this.props.uploadedContent ? (
+              {!hasFile || this.props.uploadedContent ? (
                 <ReactDropzone
-                  className='dropzoneLotHasFile'
+                  ref={this.reactDropzoneRef}
+                  className={hasFile ? 'dropzoneLotHasFile' : 'dropzoneLot'}
                   activeClassName='active'
                   onDrop={acceptedFiles => {
                     if (acceptedFiles.length) {
@@ -357,20 +361,20 @@ class UploadAttachment extends Component {
                         toastManager.add(limitMsg, {
                           appearance: 'error'
                         })
-
-                        return
                       }
-                    } else {
-                      return
                     }
                   }}
-                  onDropRejected={this.onDropRejected}>
-                  {this.props.uploadedContent}
+                  onDropRejected={this.onDropRejected}
+                >
+                  {hasFile
+                    ? this.props.uploadedContent
+                    : <div>{this.props.emptyContent}</div>
+                  }
                 </ReactDropzone>
               ) : (
                 ''
               )}
-              {!hideAttachments && (
+              {hasFile && !hideAttachments && (
                 <span className='file-space'>
                   <FieldArray
                     name={this.props.name}
@@ -396,27 +400,6 @@ class UploadAttachment extends Component {
                 </span>
               )}
             </React.Fragment>
-          ) : (
-            <ReactDropzone
-              className='dropzoneLot'
-              activeClassName='active'
-              onDrop={acceptedFiles => {
-                if (acceptedFiles.length) {
-                  if (!filesLimit || acceptedFiles.length <= filesLimit) {
-                    this.onPreviewDrop(acceptedFiles)
-                  } else {
-                    toastManager.add(limitMsg, {
-                      appearance: 'error'
-                    })
-
-                    return
-                  }
-                } else {
-                  return
-                }
-              }}>
-              <div>{this.props.emptyContent}</div>
-            </ReactDropzone>
           )}
         </div>
       </>
