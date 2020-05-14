@@ -32,7 +32,7 @@ const StyledStatusLabel = styled(Label)`
   }
 `
 
-class TagsTable extends Component {
+class Table extends Component {
   state = {
     columns: [
       {
@@ -192,4 +192,4 @@ const mapStateToProps = (state, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(withToastManager(TagsTable))))
+export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(withToastManager(Table))))
