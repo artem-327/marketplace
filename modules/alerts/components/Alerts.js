@@ -36,7 +36,7 @@ class Alerts extends Component {
 
   render() {
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}>
+      <DatagridProvider apiConfig={this.getApiConfig()} skipInitLoad>
         <Container fluid className='flex stretched'>
           <HighMenu />
           <div style={{ padding: '20px 30px' }}>
