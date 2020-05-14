@@ -128,19 +128,6 @@ export async function getCompany(id) {
 }
 */
 
-export async function createCompany(formData) {
-  const { data } = await api.post('/prodex/api/companies', formData)
-  return data
-}
-
-export async function updateCompany(id, formData) {
-  const { data } = await api.patch(`/prodex/api/companies/admin/id/${id}`, formData)
-
-  return data
-}
-
-export const deleteCompany = id => api.delete(`/prodex/api/companies/id/${id}`).then(() => id)
-
 export async function postNewProductName(productId, value) {
   const { data } = await api.post(`/prodex/api/cas-products/alternative-names/cas-product/${productId}`, value)
   return data
@@ -181,17 +168,8 @@ export async function deleteEchoProductAltName(id) {
   await api.delete(`/prodex/api/echo-products/alternative-names/id/${id}`)
 }
 
-export const takeOverCompany = id =>
-  api.patch(`/prodex/api/admin/company/${id}/take-over`).then(response => response.data)
-
 export const takeOverCompanyFinish = () =>
   api.patch('/prodex/api/admin/company/take-over/finish').then(response => response.data)
-
-export const resendWelcomeEmail = userId =>
-  api
-    .get(`/prodex/api/users/id/${userId}/email/welcome`)
-    .then(response => response.data)
-    .catch(e => console.error(e.clientMessage))
 
 export const reviewRequest = companyId => api.patch(`/prodex/api/companies/id/${companyId}/review-request`)
 

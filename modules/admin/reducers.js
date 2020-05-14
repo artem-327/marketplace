@@ -238,30 +238,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    /* DELETE COMPANY */
-
-    case AT.ADMIN_DELETE_COMPANIES_PENDING: {
-      return {
-        ...state,
-        loading: true
-      }
-    }
-
-    case AT.ADMIN_DELETE_COMPANIES_FULFILLED: {
-      return {
-        ...state,
-        loading: false,
-        companiesRows: state.companiesRows.filter(company => company.id !== payload)
-      }
-    }
-
-    case AT.ADMIN_DELETE_COMPANIES_REJECTED: {
-      return {
-        ...state,
-        loading: false
-      }
-    }
-
     case AT.ADMIN_GET_COUNTRIES_FULFILLED: {
       return {
         ...state,

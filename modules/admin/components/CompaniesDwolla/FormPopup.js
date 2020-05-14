@@ -6,8 +6,6 @@ import { Form, Modal, FormGroup, Accordion, Icon, Segment, Header } from 'semant
 import { Formik } from 'formik'
 import {
   closeRegisterDwollaAccount,
-  updateCompany,
-  createCompany,
   getCountries,
   getPrimaryBranchProvinces,
   getMailingBranchProvinces,
@@ -49,22 +47,11 @@ const formValidationNew = Yup.object().shape({
   //   // "status": "string"
   // }),
   dwollaController: Yup.object().shape({
-    firstName: Yup.string()
-      .trim()
-      .min(3, errorMessages.minLength(3))
-      .required(errorMessages.requiredMessage),
-    lastName: Yup.string()
-      .trim()
-      .min(3, errorMessages.minLength(3))
-      .required(errorMessages.requiredMessage),
-    jobTitle: Yup.string()
-      .trim()
-      .min(3, errorMessages.minLength(3)),
+    firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+    lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+    jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
     dateOfBirth: Yup.string().required(errorMessages.requiredMessage),
-    ssn: Yup.string()
-      .trim()
-      .min(8, errorMessages.minDigits(8))
-      .required(errorMessages.requiredMessage),
+    ssn: Yup.string().trim().min(8, errorMessages.minDigits(8)).required(errorMessages.requiredMessage),
     address: addressValidationSchema()
 
     //   streetAddress: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Required field'),
@@ -322,8 +309,6 @@ class AddNewPopupCasProducts extends React.Component {
 
 const mapDispatchToProps = {
   closeRegisterDwollaAccount,
-  updateCompany,
-  createCompany,
   getCountries,
   getPrimaryBranchProvinces,
   getMailingBranchProvinces,

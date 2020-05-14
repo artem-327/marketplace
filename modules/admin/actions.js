@@ -350,61 +350,10 @@ export function deleteProductName(productId, id) {
   }
 }
 
-export const deleteCompany = id => ({ type: AT.ADMIN_DELETE_COMPANIES, payload: api.deleteCompany(id) })
-
-export function createCompany(formData) {
-  return async dispatch => {
-    const enabled = formData.enabled
-    delete formData.enabled
-    let response = await api.createCompany(formData)
-    await dispatch({
-      type: AT.ADMIN_CREATE_COMPANY,
-      response
-    })
-
-    /* Called when uploaded logo
-    Datagrid.clear()
-    Datagrid.loadData()
-    */
-    await dispatch(udpateEnabled(response.id, enabled))
-    dispatch(closePopup())
-    return response
-  }
-}
-
 export function udpateEnabled(id, enabled) {
   return {
     type: AT.ADMIN_ENABLED_COMPANY,
     payload: api.udpateEnabled(id, enabled)
-  }
-}
-
-export function updateCompany(id, formData) {
-  return async dispatch => {
-    await dispatch(udpateEnabled(id, formData.enabled))
-    delete formData.enabled
-    let response = await api.updateCompany(id, formData)
-    dispatch({
-      type: AT.ADMIN_UPDATE_COMPANY,
-      response
-    })
-
-    /* Called when uploaded logo
-		Datagrid.updateRow(id, () => response)
-		*/
-
-    // dispatch(updateIdentity(response))
-    dispatch(closePopup())
-    return response
-    // dispatch(getCompanies())
-  }
-}
-
-export function openEditCompany(id, formData) {
-  return async dispatch => {
-    dispatch(openPopup(formData))
-    // const data = await api.getCompany(id)
-    // dispatch(openPopup(data))
   }
 }
 
@@ -597,26 +546,12 @@ export function getAddressSearchMailingBranch(body) {
     payload: api.getAddressSearch(body)
   }
 }
-export const takeOverCompany = id => {
-  return async dispatch => {
-    let payload = await api.takeOverCompany(id)
-    dispatch(updateIdentity(payload))
-    Router.push('/inventory/my')
-  }
-}
 
 export const takeOverCompanyFinish = () => {
   return async dispatch => {
     let payload = await api.takeOverCompanyFinish()
     dispatch(updateIdentity(payload))
     Router.push('/admin')
-  }
-}
-
-export const resendWelcomeEmail = userId => {
-  return {
-    type: AT.RESEND_WELCOME_EMAIL,
-    payload: api.resendWelcomeEmail(userId)
   }
 }
 
