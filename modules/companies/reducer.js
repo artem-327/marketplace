@@ -27,7 +27,7 @@ export default function reducer(state = initialState, action) {
   const { payload } = action
 
   switch (action.type) {
-    case AT.ADMIN_OPEN_POPUP: {
+    case AT.COMPANIES_OPEN_POPUP: {
       return {
         ...state,
         isOpenSidebar: true,
@@ -51,14 +51,14 @@ export default function reducer(state = initialState, action) {
     }
     /* DELETE COMPANY */
 
-    case AT.ADMIN_DELETE_COMPANIES_PENDING: {
+    case AT.COMPANIES_DELETE_COMPANIES_PENDING: {
       return {
         ...state,
         loading: true
       }
     }
 
-    case AT.ADMIN_DELETE_COMPANIES_FULFILLED: {
+    case AT.COMPANIES_DELETE_COMPANIES_FULFILLED: {
       return {
         ...state,
         loading: false,
@@ -66,14 +66,14 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_DELETE_COMPANIES_REJECTED: {
+    case AT.COMPANIES_DELETE_COMPANIES_REJECTED: {
       return {
         ...state,
         loading: false
       }
     }
 
-    case AT.ADMIN_HANDLE_FILTERS_VALUE: {
+    case AT.COMPANIES_HANDLE_FILTERS_VALUE: {
       return {
         ...state,
         filterValue: action.payload,
@@ -82,7 +82,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_CLOSE_POPUP: {
+    case AT.COMPANIES_CLOSE_POPUP: {
       return {
         ...state,
         isOpenSidebar: false,
@@ -93,7 +93,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_GET_COUNTRIES_FULFILLED: {
+    case AT.COMPANIES_GET_COUNTRIES_FULFILLED: {
       return {
         ...state,
         countries: payload.countries,
@@ -105,12 +105,12 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_GET_PRIMARY_BRANCH_PROVINCES_FULFILLED: {
+    case AT.COMPANIES_GET_PRIMARY_BRANCH_PROVINCES_FULFILLED: {
       return {
         ...state,
         primaryBranchProvinces: payload.map(d => ({
           text: d.name,
-          //! ! This is not working in Admin/Companies - Add/Edit submit sends wrong data body format in this case
+          //! ! This is not working in COMPANIES/Companies - Add/Edit submit sends wrong data body format in this case
           //! ! ??? value: { id: d.id, name: d.name, abbreviation: d.abbreviation || '' },
           value: d.id,
           key: d.id
@@ -118,12 +118,12 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_GET_MAILING_BRANCH_PROVINCES_FULFILLED: {
+    case AT.COMPANIES_GET_MAILING_BRANCH_PROVINCES_FULFILLED: {
       return {
         ...state,
         mailingBranchProvinces: payload.map(d => ({
           text: d.name,
-          //! ! This is not working in Admin/Companies - Add/Edit submit sends wrong data body format in this case
+          //! ! This is not working in COMPANIES/Companies - Add/Edit submit sends wrong data body format in this case
           //! ! ??? value: { id: d.id, name: d.name, abbreviation: d.abbreviation || '' },
           value: d.id,
           key: d.id
@@ -131,7 +131,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_GET_ADDRESSES_SEARCH_PRIMARY_BRANCH_FULFILLED: {
+    case AT.COMPANIES_GET_ADDRESSES_SEARCH_PRIMARY_BRANCH_FULFILLED: {
       return {
         ...state,
         addressSearchPrimaryBranch: action.payload,
@@ -139,7 +139,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_GET_ADDRESSES_SEARCH_MAILING_BRANCH_FULFILLED: {
+    case AT.COMPANIES_GET_ADDRESSES_SEARCH_MAILING_BRANCH_FULFILLED: {
       return {
         ...state,
         addressSearchMailingBranch: action.payload,

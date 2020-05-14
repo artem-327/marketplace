@@ -10,12 +10,25 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { Hexagon, Layers, Settings, ShoppingBag, Grid, Sliders, FileText, Bell, Briefcase } from 'react-feather'
+import {
+  Hexagon,
+  Layers,
+  Settings,
+  ShoppingBag,
+  Grid,
+  Sliders,
+  FileText,
+  Bell,
+  Briefcase,
+  Home,
+  Package
+} from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import { InventoryFilter, Filter, OrderFilter, WantedBoardFilter } from '~/modules/filter'
 import TabsOperations from '~/modules/operations/components/Tabs'
+import TabsProducts from '~/modules/products/components/Tabs'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -40,6 +53,7 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/orders/detail', false),
     admin: getSafe(() => Router.router.pathname === '/admin', false),
     operations: getSafe(() => Router.router.pathname === '/operations', false),
+    products: getSafe(() => Router.router.pathname === '/products', false),
     openedFilterMyInventory: true,
     openedFilterMarketplace: true,
     openedFilterOrders: false,
@@ -145,6 +159,9 @@ class Navigation extends Component {
     if (type === 'operations') {
       Router.push('/operations')
     }
+    if (type === 'products') {
+      Router.push('/products')
+    }
     // toggle dropdown state
     this.setState({
       openedFilterMyInventory: false,
@@ -154,6 +171,7 @@ class Navigation extends Component {
       settings: false,
       admin: false,
       operations: false,
+      products: false,
       [type]: !typeState
     })
 
@@ -226,6 +244,7 @@ class Navigation extends Component {
       orders,
       admin,
       operations,
+      products,
       openedFilterMyInventory,
       openedFilterMarketplace,
       openedFilterOrders,
@@ -459,8 +478,8 @@ class Navigation extends Component {
         {isAdmin && (
           <>
             <DropdownItem
-              icon={<Hexagon size={22} />}
-              text={formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}
+              icon={<Home size={22} />}
+              text={formatMessage({ id: 'navigation.dashboard', defaultMessage: 'Dashboard' })}
               className={admin ? 'opened' : null}
               opened={admin}
               onClick={() => this.toggleOpened('admin')}
@@ -470,14 +489,28 @@ class Navigation extends Component {
             </DropdownItem>
           </>
         )}
-        {
+        {isAdmin && (
           <MenuLink to='/companies' dataTest='navigation_menu_admin_companies'>
             <>
               <Briefcase size={22} />
               {formatMessage({ id: 'navigation.companies', defaultMessage: 'Companies' })}
             </>
           </MenuLink>
-        }
+        )}
+        {isAdmin && (
+          <>
+            <DropdownItem
+              icon={<Package size={22} />}
+              text={formatMessage({ id: 'navigation.products', defaultMessage: 'Products' })}
+              className={products ? 'opened' : null}
+              opened={products}
+              onClick={() => this.toggleOpened('products')}
+              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+              refId={'products'}>
+              <TabsProducts />
+            </DropdownItem>
+          </>
+        )}
         {(isAdmin || isEchoOperator) && (
           <>
             <DropdownItem

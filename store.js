@@ -74,6 +74,7 @@ import search from '~/modules/search/reducer'
 import alerts from '~/modules/alerts/reducer'
 import layout from '~/modules/layout/reducer'
 import companiesAdmin from '~/modules/companies/reducer'
+import productsAdmin from '~/modules/products/reducer'
 
 const reducer = combineReducers({
   auth,
@@ -136,7 +137,8 @@ const reducer = combineReducers({
   search,
   layout,
   alerts,
-  companiesAdmin
+  companiesAdmin,
+  productsAdmin
 })
 
 const rootReducer = (state, action) => {

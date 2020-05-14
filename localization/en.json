@@ -147,6 +147,8 @@
   "navigation.company-inventory": "Company Inventory",
   "navigation.alerts": "Notifications",
   "navigation.companies": "Companies",
+  "navigation.dashboard": "Dashboard",
+  "navigation.products": "Products",
   "dwolla.controllerTitlePopup": "Please read below for the definition of Controller in this context.",
   "dwolla.paymentPoweredBy": "Echo Global Chemical Exchange payment gateway is powered by:",
   "dwolla.confirmAcc": "Confirm Account Administrator Information",
