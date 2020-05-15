@@ -31,7 +31,18 @@ export const initialState = {
   filterCasIds: [],
   altCasNamesRows: [],
   editEchoProductEditTab: 0,
-  editEchoProductInitTrig: false
+  editEchoProductInitTrig: false,
+  searchedCasProducts: [],
+  searchedManufacturersLoading: false,
+  searchedManufacturers: [],
+  unNumbersFetching: false,
+  unNumbersFiltered: [],
+  searchedTags: [],
+  searchedTagsLoading: false,
+  documentTypes: [],
+  searchedMarketSegments: [],
+  searchedMarketSegmentsLoading: false,
+  altEchoNamesRows: []
 }
 
 export default function reducers(state = initialState, action) {
@@ -54,7 +65,6 @@ export default function reducers(state = initialState, action) {
         ...state,
         editTrig: !state.editTrig,
         popupValues: payload.data,
-
         //[payload.data ? 'currentEditForm' : 'currentAddForm']: state.currentTab,
 
         ...(payload.data
@@ -152,6 +162,14 @@ export default function reducers(state = initialState, action) {
         currentAddDwolla: null
       }
     }
+    case AT.PRODUCTS_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES_PENDING:
+    case AT.PRODUCTS_GET_ECHO_PRODUCT_PENDING:
+    case AT.PRODUCTS_REMOVE_ATTACHMENT_PENDING:
+    case AT.PRODUCTS_REMOVE_ATTACHMENT_LINK_PENDING:
+    case AT.PRODUCTS_LINK_ATTACHMENT_PENDING:
+    case AT.PRODUCTS_ADD_ATTACHMENT_PENDING:
+    case AT.PRODUCTS_POST_ECHO_PRODUCT_PENDING:
+    case AT.PRODUCTS_PUT_ECHO_PRODUCT_PENDING:
     case AT.PRODUCTS_DELETE_PRODUCT_NAME_PENDING:
     case AT.PRODUCTS_UPDATE_PRODUCT_NAME_PENDING:
     case AT.PRODUCTS_POST_NEW_PRODUCT_NAME_PENDING:
@@ -168,6 +186,21 @@ export default function reducers(state = initialState, action) {
         loading: false
       }
     }
+    case AT.PRODUCTS_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES_REJECTED:
+    case AT.PRODUCTS_GET_ECHO_PRODUCT_FULFILLED:
+    case AT.PRODUCTS_GET_ECHO_PRODUCT_REJECTED:
+    case AT.PRODUCTS_REMOVE_ATTACHMENT_FULFILLED:
+    case AT.PRODUCTS_REMOVE_ATTACHMENT_REJECTED:
+    case AT.PRODUCTS_REMOVE_ATTACHMENT_LINK_FULFILLED:
+    case AT.PRODUCTS_REMOVE_ATTACHMENT_LINK_REJECTED:
+    case AT.PRODUCTS_LINK_ATTACHMENT_FULFILLED:
+    case AT.PRODUCTS_LINK_ATTACHMENT_REJECTED:
+    case AT.PRODUCTS_ADD_ATTACHMENT_FULFILLED:
+    case AT.PRODUCTS_ADD_ATTACHMENT_REJECTED:
+    case AT.PRODUCTS_POST_ECHO_PRODUCT_FULFILLED:
+    case AT.PRODUCTS_POST_ECHO_PRODUCT_REJECTED:
+    case AT.PRODUCTS_PUT_ECHO_PRODUCT_FULFILLED:
+    case AT.PRODUCTS_PUT_ECHO_PRODUCT_REJECTED:
     case AT.PRODUCTS_DELETE_PRODUCT_NAME_REJECTED:
     case AT.PRODUCTS_UPDATE_PRODUCT_NAME_REJECTED:
     case AT.PRODUCTS_POST_NEW_PRODUCT_NAME_REJECTED:
@@ -194,6 +227,99 @@ export default function reducers(state = initialState, action) {
             }),
         currentEdit2Form: null,
         currentAddDwolla: null
+      }
+    }
+
+    case AT.PRODUCTS_SEARCH_CAS_PRODUCT_FULFILLED: {
+      return {
+        ...state,
+        // searchedCasProducts: payload.concat(state.searchedCasProducts),
+        searchedCasProducts: uniqueArrayByKey(state.searchedCasProducts.concat(payload), 'id')
+      }
+      // return {
+      //   ...state,
+      //   searchedCasProducts: state.searchedCasProducts.map((list, listIndex) => {
+      //     if (listIndex === action.payload.index) {
+      //       return action.payload.data
+      //     } else {
+      //       return list
+      //     }
+      //   })
+      // }
+    }
+    case AT.PRODUCTS_SEARCH_MANUFACTURERS_PENDING: {
+      return {
+        ...state,
+        searchedManufacturersLoading: true
+      }
+    }
+    case AT.PRODUCTS_SEARCH_MANUFACTURERS_FULFILLED: {
+      return {
+        ...state,
+        searchedManufacturers: action.payload.data.map(manufacturer => ({
+          key: manufacturer.id,
+          value: manufacturer.id,
+          text: manufacturer.name
+        })),
+        searchedManufacturersLoading: false
+      }
+    }
+    case AT.PRODUCTS_GET_UN_NUMBERS_BY_STRING_PENDING: {
+      return {
+        ...state,
+        unNumbersFetching: true
+      }
+    }
+    case AT.PRODUCTS_GET_UN_NUMBERS_BY_STRING_FULFILLED: {
+      return {
+        ...state,
+        unNumbersFetching: false,
+        unNumbersFiltered: action.payload
+      }
+    }
+    case AT.PRODUCTS_SEARCH_TAGS_PENDING: {
+      return { ...state, searchedTagsLoading: true }
+    }
+    case AT.PRODUCTS_SEARCH_TAGS_REJECTED: {
+      return { ...state, searchedTagsLoading: false }
+    }
+    case AT.PRODUCTS_SEARCH_TAGS_FULFILLED: {
+      return {
+        ...state,
+        searchedTags: action.payload,
+        searchedTagsLoading: false
+      }
+    }
+    case AT.PRODUCTS_GET_DOCUMENT_TYPES_FULFILLED: {
+      return {
+        ...state,
+        documentTypes: action.payload.data.map(docType => {
+          return {
+            ...docType,
+            value: docType.id,
+            text: docType.name
+          }
+        })
+      }
+    }
+    case AT.PRODUCTS_SEARCH_MARKET_SEGMENTS_PENDING: {
+      return { ...state, searchedMarketSegmentsLoading: true }
+    }
+    case AT.PRODUCTS_SEARCH_MARKET_SEGMENTS_REJECTED: {
+      return { ...state, searchedMarketSegmentsLoading: false }
+    }
+    case AT.PRODUCTS_SEARCH_MARKET_SEGMENTS_FULFILLED: {
+      return {
+        ...state,
+        searchedMarketSegments: action.payload,
+        searchedMarketSegmentsLoading: false
+      }
+    }
+    case AT.PRODUCTS_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES_FULFILLED: {
+      return {
+        ...state,
+        altEchoNamesRows: action.payload,
+        loading: false
       }
     }
     default: {

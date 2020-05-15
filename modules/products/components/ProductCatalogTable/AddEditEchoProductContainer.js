@@ -22,9 +22,10 @@ import {
   searchTags,
   getDocumentTypes,
   searchMarketSegments
-} from '~/modules/admin/actions'
+} from '~/modules/products/actions'
 
 import { Header } from 'semantic-ui-react'
+import { getSafe } from '~/utils/functions'
 
 import { injectIntl } from 'react-intl'
 
@@ -49,59 +50,68 @@ const mapDispatchToProps = {
   searchMarketSegments
 }
 
-const mapStateToProps = ({ admin }, props) => {
-  const currentTab = admin.currentTab.name === props.tabName
+const mapStateToProps = ({ productsAdmin }, props) => {
+  const currentTab = productsAdmin.currentTab.name === props.tabName
   return {
-    visible: currentTab && (!!admin.currentAddForm || !!admin.currentEditForm),
-    addForm: currentTab && !!admin.currentAddForm,
-    editForm: currentTab && !!admin.currentEditForm,
-    popupValues: admin.popupValues,
-    editTab: admin.editEchoProductEditTab,
-    editInitTrig: admin.editEchoProductInitTrig,
-    packagingGroups: admin.packagingGroups.map((pGroup, id) => {
-      return {
-        key: id,
-        text: pGroup.groupCode,
-        value: pGroup.id,
-        content: <Header content={pGroup.groupCode} subheader={pGroup.description} style={{ fontSize: '1em' }} />
-      }
-    }),
-    hazardClasses: admin.hazardClasses.map((d, id) => {
-      return {
-        key: id,
-        text: d.classCode,
-        value: d.id,
-        content: <Header content={d.classCode} subheader={d.description} style={{ fontSize: '1em' }} />
-      }
-    }),
-    searchedManufacturersLoading: admin.searchedManufacturersLoading,
-    searchedManufacturers: admin.searchedManufacturers,
-    searchedCasProducts: admin.searchedCasProducts,
-    isLoading: admin.loading,
-    unNumbersFiltered: admin.unNumbersFiltered.map((d, id) => {
-      return {
-        key: d.id,
-        text: d.unNumberCode,
-        value: d.id,
-        content: <Header content={d.unNumberCode} subheader={d.description} style={{ fontSize: '1em' }} />
-      }
-    }),
-    unNumbersFetching: admin.unNumbersFetching,
+    visible: currentTab && (!!productsAdmin.currentAddForm || !!productsAdmin.currentEditForm),
+    addForm: currentTab && !!productsAdmin.currentAddForm,
+    editForm: currentTab && !!productsAdmin.currentEditForm,
+    popupValues: productsAdmin.popupValues,
+    editTab: productsAdmin.editEchoProductEditTab,
+    editInitTrig: productsAdmin.editEchoProductInitTrig,
+    packagingGroups: getSafe(() => productsAdmin.packagingGroups.length, false)
+      ? productsAdmin.packagingGroups.map((pGroup, id) => {
+          return {
+            key: id,
+            text: pGroup.groupCode,
+            value: pGroup.id,
+            content: <Header content={pGroup.groupCode} subheader={pGroup.description} style={{ fontSize: '1em' }} />
+          }
+        })
+      : [],
+    hazardClasses: getSafe(() => productsAdmin.hazardClasses.length, false)
+      ? productsAdmin.hazardClasses.map((d, id) => {
+          return {
+            key: id,
+            text: d.classCode,
+            value: d.id,
+            content: <Header content={d.classCode} subheader={d.description} style={{ fontSize: '1em' }} />
+          }
+        })
+      : [],
+    searchedManufacturersLoading: productsAdmin.searchedManufacturersLoading,
+    searchedManufacturers: productsAdmin.searchedManufacturers,
+    searchedCasProducts: productsAdmin.searchedCasProducts,
+    isLoading: productsAdmin.loading,
+    unNumbersFiltered: getSafe(() => productsAdmin.unNumbersFiltered.length, false)
+      ? productsAdmin.unNumbersFiltered.map((d, id) => {
+          return {
+            key: d.id,
+            text: d.unNumberCode,
+            value: d.id,
+            content: <Header content={d.unNumberCode} subheader={d.description} style={{ fontSize: '1em' }} />
+          }
+        })
+      : [],
+    unNumbersFetching: productsAdmin.unNumbersFetching,
 
-    config: admin.config[admin.currentTab.name],
-    listDocumentTypes: admin.documentTypes,
-    searchedTags: admin.searchedTags.map(d => ({
-      key: d.id,
-      text: d.name,
-      value: d.id
-    })),
-    searchedTagsLoading: admin.searchedTagsLoading,
-    searchedMarketSegments: admin.searchedMarketSegments.map(d => ({
-      key: d.id,
-      text: d.name,
-      value: d.id
-    })),
-    searchedMarketSegmentsLoading: admin.searchedMarketSegmentsLoading
+    listDocumentTypes: productsAdmin.documentTypes,
+    searchedTags: getSafe(() => productsAdmin.searchedTags.length, false)
+      ? productsAdmin.searchedTags.map(d => ({
+          key: d.id,
+          text: d.name,
+          value: d.id
+        }))
+      : [],
+    searchedTagsLoading: productsAdmin.searchedTagsLoading,
+    searchedMarketSegments: getSafe(() => productsAdmin.searchedMarketSegments.length, false)
+      ? productsAdmin.searchedMarketSegments.map(d => ({
+          key: d.id,
+          text: d.name,
+          value: d.id
+        }))
+      : [],
+    searchedMarketSegmentsLoading: productsAdmin.searchedMarketSegmentsLoading
   }
 }
 

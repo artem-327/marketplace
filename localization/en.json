@@ -2294,5 +2294,9 @@
   "cart.payment.terms.title": "Payment Terms Information",
   "cart.payment.terms50.content": "This purchase has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.",
   "cart.payment.terms100.content": "This purchase has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.",
-  "companies.title": "Companies"
+  "companies.title": "Companies",
+  "products.productCatalog.search": "Search by Product Name or Code",
+  "products.productCatalog.buttonAdd": "Add Echo Product",
+  "products.casProducts.search": "Search cas product by name or number ...",
+  "products.casProducts.buttonAdd": "Add CAS Product"
 }

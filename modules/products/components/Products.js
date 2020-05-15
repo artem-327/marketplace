@@ -10,6 +10,9 @@ import CasProductsTable from './CasProductsTable/CasProductsTable'
 import ProductCatalogTable from './ProductCatalogTable/Table'
 import EditAltNamesCasProductsPopup from './CasProductsTable/EditAltNamesCasProductsPopup'
 import EditAltNamesEchoProductPopup from './ProductCatalogTable/EditAltNamesEchoProductPopup'
+import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
+import AddEditCasProductsPopup from './CasProductsTable/AddEditCasProductsPopup'
+import AddEditEchoProduct from './ProductCatalogTable/AddEditEchoProductContainer'
 
 import { getSafe } from '~/utils/functions'
 import { DatagridProvider } from '~/modules/datagrid'
@@ -17,24 +20,38 @@ import { DatagridProvider } from '~/modules/datagrid'
 const CustomGridColumn = styled(GridColumn)`
   padding: 0 32px 0 32px !important;
 `
-
 class Products extends Component {
   renderContent = () => {
-    const { currentTab, isOpenPopup, orderDetailData } = this.props
+    const { currentTab, currentEdit2Form, currentAddForm, currentEditForm, isOpenImportPopup } = this.props
 
     const tables = {
       'cas-products': <CasProductsTable />,
       'product-catalog': <ProductCatalogTable />
     }
 
-    const popupForm = {
+    const addForms = {
+      'cas-products': <AddEditCasProductsPopup />
+    }
+
+    const editForms = {
+      'cas-products': <AddEditCasProductsPopup />
+    }
+
+    const edit2Forms = {
       'cas-products': <EditAltNamesCasProductsPopup />,
       'product-catalog': <EditAltNamesEchoProductPopup />
     }
 
+    const importForm = {
+      'product-catalog': <ProductImportPopup echoProduct={true} />
+    }
+
     return (
       <>
-        {isOpenPopup && popupForm[currentTab.type]}
+        {currentAddForm && addForms[currentTab.type]}
+        {currentEditForm && editForms[currentTab.type]}
+        {isOpenImportPopup && importForm[currentTab.type]}
+        {currentEdit2Form && edit2Forms[currentTab.type]}
         {tables[currentTab.type] || <p>This page is still under construction</p>}
       </>
     )
@@ -92,6 +109,7 @@ class Products extends Component {
             </Grid>
           </>
         </Container>
+        <AddEditEchoProduct tabName={'Product Catalog'} />
       </DatagridProvider>
     )
   }
@@ -101,7 +119,11 @@ const mapStateToProps = state => {
   return {
     ...state.productsAdmin,
     currentTab: state.productsAdmin.currentTab,
-    auth: state.auth
+    auth: state.auth,
+    isOpenImportPopup: state.settings.isOpenImportPopup,
+    currentEdit2Form: state.productsAdmin.currentEdit2Form,
+    currentEditForm: state.productsAdmin.currentEditForm,
+    currentAddForm: state.productsAdmin.currentAddForm
   }
 }
 

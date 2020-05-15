@@ -27,8 +27,6 @@ export const initialState = {
   primaryBranchProvinces: [],
   mailingBranchProvinces: [],
   tabsNames: [
-    { name: 'CAS Products', id: 7 },
-    { name: 'Product Catalog', id: 12 },
     { name: 'Units of Measure', id: 1 },
     { name: 'Packaging Types', id: 2 },
     { name: 'Manufacturers', id: 3 },
@@ -43,7 +41,7 @@ export const initialState = {
     { name: 'Admin Settings', id: 11, hideHandler: true }
   ],
 
-  currentTab: { name: 'CAS Products', id: 7 },
+  currentTab: { name: 'Units of Measure', id: 1 },
   casListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'asc', sortPath: 'CasProduct.chemicalName' },
   currentEditForm: null,
   currentEdit2Form: null,

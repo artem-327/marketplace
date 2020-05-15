@@ -15,27 +15,18 @@ import NmfcTable from './NmfcTable/Container'
 import AddNewUnitOfMeasurePopup from './UnitOfMeasureTable/AddNewUnitOfMeasurePopup'
 import AddNewUnitOfPackagingPopup from './UnitOfPackagingTable/AddNewUnitOfPackagingPopup'
 import AddNewPopup1Parameter from './DataTable/AddNewPopup1Parameter'
-import AddEditCasProductsPopup from './CasProductsTable/AddEditCasProductsPopup'
-import EditAltNamesCasProductsPopup from './CasProductsTable/EditAltNamesCasProductsPopup'
 import NmfcPopup from './NmfcTable/Popup'
 
 import EditUnitOfMeasurePopup from './UnitOfMeasureTable/EditUnitOfMeasurePopup'
 import EditUnitOfPackagingPopup from './UnitOfPackagingTable/EditUnitOfPackagingPopup'
 import EditPopup1Parameter from './DataTable/EditPopup1Parameter'
 
-import CasProductsTable from './CasProductsTable/CasProductsTable'
 import CompaniesDwollaForm from './CompaniesDwolla/FormPopup'
-import AddEditEchoProduct from './ProductCatalogTable/AddEditEchoProductContainer'
-
-import EditAltNamesEchoProductPopup from './ProductCatalogTable/EditAltNamesEchoProductPopup'
-
-import ProductCatalogTable from './ProductCatalogTable/Table'
 
 import { getSafe } from '~/utils/functions'
 
 import { DatagridProvider } from '~/modules/datagrid'
 import Settings from '~/components/settings'
-import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
 import UsersTable from './UsersTable/Table'
 import UsersSidebar from './UsersTable/UsersSidebar'
@@ -50,8 +41,6 @@ const ScrollableSegment = styled(Segment)`
   overflow-y: auto;
 `
 
-const enableSideProductEdit = true
-
 const tables = {
   'Units of Measure': <UnitOfMeasureTable />,
   'Packaging Types': <UnitOfPackagingTable />,
@@ -60,8 +49,6 @@ const tables = {
   Forms: <DataTable />,
   Conditions: <DataTable />,
   'NMFC Numbers': <NmfcTable />,
-  'CAS Products': <CasProductsTable />,
-  'Product Catalog': <ProductCatalogTable />,
   'Document Types': <DataTable />,
   Associations: <DataTable />,
   'Market Segments': <DataTable />,
@@ -76,26 +63,6 @@ const tables = {
 }
 
 const datagridConfig = {
-  'CAS Products': {
-    url: '/prodex/api/cas-products/datagrid',
-    searchToFilter: v =>
-      v
-        ? [
-            { operator: 'LIKE', path: 'CasProduct.casIndexName', values: [`%${v}%`] },
-            { operator: 'LIKE', path: 'CasProduct.casNumber', values: [`%${v}%`] }
-          ]
-        : []
-  },
-  'Product Catalog': {
-    url: '/prodex/api/echo-products/datagrid',
-    searchToFilter: v =>
-      v
-        ? [
-            { operator: 'LIKE', path: 'EchoProduct.name', values: [`%${v}%`] },
-            { operator: 'LIKE', path: 'EchoProduct.code', values: [`%${v}%`] }
-          ]
-        : []
-  },
   Conditions: {
     url: '/prodex/api/product-conditions/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v}%`] }] : [])
@@ -167,15 +134,9 @@ const editForms = {
   Forms: <EditPopup1Parameter />,
   Conditions: <EditPopup1Parameter />,
   'NMFC Numbers': <NmfcPopup />,
-  'CAS Products': <AddEditCasProductsPopup />,
   'Document Types': <EditPopup1Parameter />,
   Associations: <EditPopup1Parameter />,
   'Market Segments': <EditPopup1Parameter />
-}
-
-const edit2Forms = {
-  'CAS Products': <EditAltNamesCasProductsPopup />,
-  'Product Catalog': <EditAltNamesEchoProductPopup />
 }
 
 const addForms = {
@@ -186,7 +147,6 @@ const addForms = {
   Forms: <AddNewPopup1Parameter />,
   Conditions: <AddNewPopup1Parameter />,
   'NMFC Numbers': <NmfcPopup />,
-  'CAS Products': <AddEditCasProductsPopup />,
   'Document Types': <AddNewPopup1Parameter />,
   Associations: <AddNewPopup1Parameter />,
   'Market Segments': <AddNewPopup1Parameter />
@@ -196,31 +156,17 @@ const editSidebar = {
   Users: <UsersSidebar />
 }
 
-const importForm = {
-  'Product Catalog': <ProductImportPopup echoProduct={true} />
-}
-
 const addDwollaForms = {
   Companies: <CompaniesDwollaForm />
 }
 
 class Admin extends Component {
   renderContent = () => {
-    const {
-      currentEditForm,
-      currentEdit2Form,
-      currentAddForm,
-      currentTab,
-      currentAddDwolla,
-      isOpenImportPopup
-    } = this.props
-
+    const { currentEditForm, currentAddForm, currentTab, currentAddDwolla } = this.props
     return (
       <>
         {currentAddForm && addForms[currentTab.name]}
         {currentEditForm && editForms[currentTab.name]}
-        {currentEdit2Form && edit2Forms[currentTab.name]}
-        {isOpenImportPopup && importForm[currentTab.name]}
         {currentAddDwolla && addDwollaForms[currentTab.name] && Router.push('/dwolla-register/')}
         {tables[currentTab.name] || <p>This page is still under construction</p>}
       </>
@@ -236,14 +182,7 @@ class Admin extends Component {
   render() {
     if (!getSafe(() => this.props.auth.identity.isAdmin, false))
       return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
-    const {
-      currentEditForm,
-      currentEdit2Form,
-      currentAddForm,
-      currentTab,
-      currentAddDwolla,
-      isOpenImportPopup
-    } = this.props
+    const { currentEditForm, currentAddForm, currentTab, currentAddDwolla } = this.props
 
     return (
       <DatagridProvider apiConfig={this.getApiConfig()}>
@@ -264,7 +203,6 @@ class Admin extends Component {
             </Grid.Row>
           </Grid>
         </Container>
-        {enableSideProductEdit && <AddEditEchoProduct tabName={'Product Catalog'} />}
         {(currentAddForm || currentEditForm) && editSidebar[currentTab.name]}
       </DatagridProvider>
     )
@@ -273,8 +211,7 @@ class Admin extends Component {
 
 const mapStateToProps = state => ({
   ...state.admin,
-  auth: state.auth,
-  isOpenImportPopup: state.settings.isOpenImportPopup
+  auth: state.auth
 })
 
 export default withAuth(connect(mapStateToProps, null)(Admin))

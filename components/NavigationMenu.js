@@ -497,7 +497,7 @@ class Navigation extends Component {
             </>
           </MenuLink>
         )}
-        {isAdmin && (
+        {(isAdmin || isEchoOperator) && (
           <>
             <DropdownItem
               icon={<Package size={22} />}
@@ -509,10 +509,6 @@ class Navigation extends Component {
               refId={'products'}>
               <TabsProducts />
             </DropdownItem>
-          </>
-        )}
-        {(isAdmin || isEchoOperator) && (
-          <>
             <DropdownItem
               icon={<Hexagon size={22} />}
               text={formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}

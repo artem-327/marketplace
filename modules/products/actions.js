@@ -176,3 +176,190 @@ export function deleteEchoProduct(echoProductId) {
     }
   }
 }
+
+export const searchCasProduct = (pattern, index) => ({
+  type: AT.PRODUCTS_SEARCH_CAS_PRODUCT,
+  payload: api.searchCasProduct(pattern)
+})
+
+export function putEchoProduct(id, values) {
+  return {
+    type: AT.PRODUCTS_PUT_ECHO_PRODUCT,
+    payload: api.putEchoProduct(id, values)
+  }
+}
+
+export function postEchoProduct(values) {
+  return {
+    type: AT.PRODUCTS_POST_ECHO_PRODUCT,
+    payload: api.postEchoProduct(values)
+  }
+}
+
+export function searchManufacturers(text, limit = false) {
+  return {
+    type: AT.PRODUCTS_SEARCH_MANUFACTURERS,
+    payload: api.searchManufacturers(text, limit)
+  }
+}
+
+export function loadFile(attachment) {
+  return {
+    type: AT.PRODUCTS_LOAD_FILE,
+    payload: api.loadFile(attachment)
+  }
+}
+
+export function addAttachment(attachment, type, additionalParams = {}) {
+  return {
+    type: AT.PRODUCTS_ADD_ATTACHMENT,
+    async payload() {
+      const data = await api.addAttachment(attachment, type, additionalParams)
+      return data
+    }
+  }
+}
+
+export function linkAttachment(isLot, echoId, attachmentIds) {
+  return {
+    type: AT.PRODUCTS_LINK_ATTACHMENT,
+    async payload() {
+      if (Array.isArray(attachmentIds)) {
+        async function asyncForEach(array, callback) {
+          for (let index = 0; index < array.length; index++) {
+            await callback(array[index], index, array)
+          }
+        }
+
+        await asyncForEach(attachmentIds, async (attachment, index) => {
+          await api.linkAttachment(echoId, attachment.id)
+        })
+      } else {
+        await api.linkAttachment(echoId, attachmentIds)
+      }
+
+      return true
+    }
+  }
+}
+
+export function removeAttachmentLink(isLot, echoId, aId) {
+  return {
+    type: AT.PRODUCTS_REMOVE_ATTACHMENT_LINK,
+    payload: api.removeAttachmentLink(echoId, aId)
+  }
+}
+
+export function removeAttachment(aId) {
+  return async dispatch => {
+    await dispatch({ type: AT.PRODUCTS_REMOVE_ATTACHMENT, payload: api.removeAttachment(aId) })
+  }
+}
+
+export function getEchoProduct(id) {
+  return {
+    type: AT.PRODUCTS_GET_ECHO_PRODUCT,
+    async payload() {
+      const response = await api.getEchoProduct(id)
+      Datagrid.updateRow(id, () => response.data)
+      return response
+    }
+  }
+}
+
+export function loadEditEchoProduct(id, editTab) {
+  return async dispatch => {
+    // get newest data
+    const response = await dispatch(getEchoProduct(id))
+    let formData = {
+      ...response.value.data
+    }
+
+    // mark attachments as linked
+    if (formData.attachments) {
+      formData.attachments = formData.attachments.map(att => {
+        return {
+          ...att,
+          linked: true
+        }
+      })
+    }
+    await dispatch(editEchoProductChangeTab(editTab, false, formData))
+  }
+}
+
+export function getUnNumbersByString(value) {
+  return {
+    type: AT.PRODUCTS_GET_UN_NUMBERS_BY_STRING,
+    payload: api.getUnNumbersByString(value)
+  }
+}
+
+export const searchTags = tag => ({
+  type: AT.PRODUCTS_SEARCH_TAGS,
+  payload: api.searchTags({
+    orFilters: [
+      {
+        operator: 'LIKE',
+        path: 'Tag.name',
+        values: [tag.toString()]
+      }
+    ],
+    pageNumber: 0,
+    pageSize: 50
+  })
+})
+
+export const getDocumentTypes = () => ({ type: AT.PRODUCTS_GET_DOCUMENT_TYPES, payload: api.getDocumentTypes() })
+
+export const searchMarketSegments = segment => ({
+  type: AT.PRODUCTS_SEARCH_MARKET_SEGMENTS,
+  payload: api.searchMarketSegments({
+    orFilters: [
+      {
+        operator: 'LIKE',
+        path: 'MarketSegment.name',
+        values: [segment.toString()]
+      }
+    ],
+    pageNumber: 0,
+    pageSize: 50
+  })
+})
+
+export function getAlternativeEchoProductNames(value) {
+  return {
+    type: AT.PRODUCTS_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES,
+    payload: api.getAlternativeEchoProductNames(value)
+  }
+}
+
+export function postNewEchoProductAltName(productId, value) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.PRODUCTS_POST_NEW_ECHO_PRODUCT_ALTERNATIVE_NAME,
+      payload: api.postNewEchoProductAltName(productId, value)
+    })
+    await dispatch(getAlternativeEchoProductNames(productId))
+  }
+}
+
+export function updateEchoProductAltName(productId, id, value) {
+  return async dispatch => {
+    const response = await dispatch({
+      type: AT.PRODUCTS_UPDATE_ECHO_PRODUCT_ALTERNATIVE_NAME,
+      payload: api.updateEchoProductAltName(id, value)
+    })
+    await dispatch(getAlternativeEchoProductNames(productId))
+  }
+}
+
+export function deleteEchoProductAltName(productId, id) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.PRODUCTS_DELETE_ECHO_PRODUCT_ALTERNATIVE_NAME,
+      payload: api.deleteEchoProductAltName(id)
+    })
+    await dispatch(getAlternativeEchoProductNames(productId))
+  }
+}

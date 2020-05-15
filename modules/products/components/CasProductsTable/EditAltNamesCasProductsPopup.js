@@ -24,6 +24,7 @@ import {
   deleteProductName
 } from '../../actions'
 import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui-fixed-validation'
+import { getSafe } from '~/utils/functions'
 
 const initialFormValues = {
   casAlternativeNames: [{}]
@@ -264,8 +265,8 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     popupValues: state.productsAdmin.popupValues,
-    altCasNamesRows: state.productAdmin.altCasNamesRows,
-    loading: state.productAdmin.loading
+    altCasNamesRows: getSafe(() => state.productAdmin.altCasNamesRows, []),
+    loading: getSafe(() => state.productAdmin.loading, false)
   }
 }
 

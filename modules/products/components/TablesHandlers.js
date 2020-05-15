@@ -8,6 +8,7 @@ import * as Actions from '../actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { getSafe } from '~/utils/functions'
+import { openImportPopup } from '~/modules/settings/actions'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -28,16 +29,14 @@ const CustomMenuItemRight = styled(Menu.Item)`
   margin-left: 0 !important;
   margin-right: 0 !important;
 `
-//TODO vlozit spravne id
 const textsTable = {
   'cas-products': {
-    BtnAddText: 'operations.tables.shippingQuotes.buttonAdd',
-    SearchText: 'operations.tables.shippingQuotes.search'
+    BtnAddText: 'products.casProducts.buttonAdd',
+    SearchText: 'products.casProducts.search'
   },
   'product-catalog': {
-    BtnAddText: 'operations.tables.tags.buttonAdd',
-    SearchText: 'operations.tables.tags.search',
-    MappedText: 'operations.tables.tags.search'
+    BtnAddText: 'products.productCatalog.buttonAdd',
+    SearchText: 'products.productCatalog.search'
   }
 }
 
@@ -45,15 +44,14 @@ class TablesHandlers extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      filterValue: '',
-      company: ''
+      filterValue: ''
     }
     this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.currentTab !== this.props.currentTab) {
-      this.setState({ filterValue: '', company: '' })
+      this.setState({ filterValue: '' })
       this.handleFiltersValue('')
     }
   }
@@ -65,148 +63,54 @@ class TablesHandlers extends Component {
 
   handleFilterChange = (e, { value }) => {
     this.setState({ filterValue: value })
-    const filter = {
-      filterValue: value,
-      company: this.state.company
-    }
-    this.handleFiltersValue(filter)
+
+    this.handleFiltersValue(value)
   }
-
-  renderHeader = () => (
-    <GridColumn widescreen={2} computer={3} tablet={3}>
-      <Header as='h1' size='medium'>
-        {this.props.currentTab.name}
-      </Header>
-    </GridColumn>
-  )
-
-  handleFilterChangeMappedUnmapped = (e, { value }) => {
-    this.props.setProductMappedUnmaped(value)
-    this.handleFiltersValue({
-      filterValue: this.state.filterValue,
-      company: this.state.company
-    })
-  }
-
-  handleFilterChangeCompany = (e, { value }) => {
-    this.setState({ company: value })
-    const filter = {
-      filterValue: this.state.filterValue,
-      company: value
-    }
-    this.handleFiltersValue(filter)
-  }
-
-  searchCompanies = debounce(text => {
-    this.props.searchCompany(text, 5)
-  }, 250)
 
   renderHandler = () => {
     const {
       currentTab,
       openPopup,
       intl: { formatMessage },
-      searchedCompaniesLoading,
-      searchedCompanies,
-      searchedCompaniesByName,
-      companyProductUnmappedOnly
+      openImportPopup
     } = this.props
 
-    const { filterValue, company } = this.state
+    const { filterValue } = this.state
 
     const item = textsTable[currentTab.type]
 
-    switch (currentTab.type) {
-      case 'product-catalog':
-        return (
-          <CustomGridRow>
-            <CustomMenuItemLeft>
-              <Input
-                style={{ width: 340 }}
-                icon='search'
-                value={filterValue}
-                placeholder={formatMessage({
-                  id: item.SearchText,
-                  defaultMessage: 'Select Credit Card'
-                })}
-                onChange={this.handleFilterChange}
-              />
-            </CustomMenuItemLeft>
-            <CustomMenuItemLeft>
-              <Dropdown
-                style={{ width: 340 }}
-                placeholder={formatMessage({
-                  id: item.SearchText,
-                  defaultMessage: 'Search product catalog by company'
-                })}
-                icon='search'
-                selection
-                clearable
-                options={searchedCompanies}
-                search={options => options}
-                value={company}
-                loading={searchedCompaniesLoading}
-                onSearchChange={(e, { searchQuery }) => {
-                  searchQuery.length > 0 && this.searchCompanies(searchQuery)
-                }}
-                onChange={this.handleFilterChangeCompany}
-              />
-            </CustomMenuItemLeft>
-            <CustomMenuItemLeft>
-              <Dropdown
-                style={{ width: 250 }}
-                placeholder={formatMessage({
-                  id: item.MappedText,
-                  defaultMessage: 'Select mapped/unmapped only'
-                })}
-                fluid
-                selection
-                options={[
-                  {
-                    key: 0,
-                    text: formatMessage({ id: 'operations.noSelection', defaultMessage: 'All' }),
-                    value: false
-                  },
-                  {
-                    key: 1,
-                    text: formatMessage({ id: 'operations.unmapped', defaultMessage: 'Unmapped Only' }),
-                    value: true
-                  }
-                ]}
-                value={companyProductUnmappedOnly}
-                onChange={this.handleFilterChangeMappedUnmapped}
-              />
-            </CustomMenuItemLeft>
-          </CustomGridRow>
-        )
-
-      default:
-        return (
-          <CustomGridRow>
-            {item.SearchText && (
-              <CustomMenuItemLeft position='left'>
-                <Input
-                  style={{ width: 340 }}
-                  icon='search'
-                  value={filterValue}
-                  placeholder={formatMessage({
-                    id: item.SearchText,
-                    defaultMessage: 'Select Credit Card'
-                  })}
-                  onChange={this.handleFilterChange}
-                />
-              </CustomMenuItemLeft>
-            )}
-            {item.BtnAddText && (
-              <CustomMenuItemRight position='right'>
-                <Button fluid primary onClick={() => openPopup()} data-test='operations_open_popup_btn'>
-                  <FormattedMessage id={item.BtnAddText}>{text => text}</FormattedMessage>
-                </Button>
-              </CustomMenuItemRight>
-            )}
-          </CustomGridRow>
-        )
-    }
+    return (
+      <CustomGridRow>
+        {item.SearchText && (
+          <CustomMenuItemLeft position='left'>
+            <Input
+              style={{ width: 340 }}
+              icon='search'
+              value={filterValue}
+              placeholder={formatMessage({
+                id: item.SearchText,
+                defaultMessage: 'Select Credit Card'
+              })}
+              onChange={this.handleFilterChange}
+            />
+          </CustomMenuItemLeft>
+        )}
+        {item.BtnAddText && (
+          <CustomMenuItemRight position='right'>
+            <Button fluid primary onClick={() => openPopup()} data-test='products_open_popup_btn'>
+              <FormattedMessage id={item.BtnAddText}>{text => text}</FormattedMessage>
+            </Button>
+          </CustomMenuItemRight>
+        )}
+        {currentTab.type === 'product-catalog' ? (
+          <CustomMenuItemRight>
+            <Button size='large' primary onClick={() => openImportPopup()} data-test='products_import_btn'>
+              {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}
+            </Button>
+          </CustomMenuItemRight>
+        ) : null}
+      </CustomGridRow>
+    )
   }
 
   render() {
@@ -238,4 +142,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(TablesHandlers)))
+export default withDatagrid(connect(mapStateToProps, { ...Actions, openImportPopup })(injectIntl(TablesHandlers)))

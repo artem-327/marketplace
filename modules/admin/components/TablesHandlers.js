@@ -3,11 +3,10 @@ import { connect } from 'react-redux'
 import { config } from '../config'
 import { debounce } from 'lodash'
 
-import { Header, Menu, Button, Input, Dropdown, Grid } from 'semantic-ui-react'
+import { Menu, Button, Input, Grid } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { openPopup, handleFiltersValue } from '../actions'
-import { openImportPopup } from '~/modules/settings/actions'
 import { Datagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
 
@@ -74,7 +73,7 @@ class TablesHandlers extends Component {
   }
 
   render() {
-    const { currentTab, openPopup, openImportPopup, intl } = this.props
+    const { currentTab, openPopup, intl } = this.props
 
     const { formatMessage } = intl
 
@@ -101,13 +100,6 @@ class TablesHandlers extends Component {
               {config[currentTab.name].addEditText}
             </Button>
           </CustomMenuItemRight>
-          {currentTab.name === 'Product Catalog' ? (
-            <CustomMenuItemRight>
-              <Button size='large' primary onClick={() => openImportPopup()} data-test='admin_import_btn'>
-                {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}
-              </Button>
-            </CustomMenuItemRight>
-          ) : null}
         </CustomGrid>
       </PositionHeaderSettings>
     )
@@ -124,7 +116,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   openPopup,
-  openImportPopup,
   handleFiltersValue
 }
 
