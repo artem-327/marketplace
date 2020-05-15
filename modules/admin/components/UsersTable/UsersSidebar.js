@@ -152,7 +152,7 @@ class UsersSidebar extends React.Component {
       const { adminRoles } = this.props
       const { popupValues } = this.state
 
-      const disabledCompany = values.roles.some(role => adminRoles.some(d => role === d))
+      const disabledCompany = values.roles.some(role => adminRoles.some(d => role === d.id))
       const requiredCompany = !!popupValues || (!disabledCompany && !values.company)
       const requiredBranch = !!popupValues || (!disabledCompany && !!values.company)
 
@@ -403,7 +403,6 @@ class UsersSidebar extends React.Component {
 
     let columnLeft = []
     let columnRight = []
-    const hasCompany = values.company !== ''
 
     var getCheckbox = (el, i) => {
       let name = el.name.replace(/ /g, '').replace(/\//g, '').replace(/-/g, '')
@@ -423,7 +422,6 @@ class UsersSidebar extends React.Component {
               setFieldValue(groupName, newArray)
               setFieldTouched(groupName, true, true)
             }}
-            disabled={values.company !== '' && this.props.adminRoles.some(d => el.id === d)}
             component={Checkbox}
             checked={!!values[groupName] && values[groupName].includes(el.id)}
             name={path}
@@ -454,7 +452,7 @@ class UsersSidebar extends React.Component {
   render() {
     const {
       closePopup,
-      allRoles,
+      userRoles,
       adminRoles,
       currencies,
       intl: { formatMessage },
@@ -502,7 +500,7 @@ class UsersSidebar extends React.Component {
           let { values, setFieldValue, setFieldTouched, errors, touched, isSubmitting } = formikProps
           this.formikProps = formikProps
 
-          const disabledCompany = values.roles.some(role => adminRoles.some(d => role === d))
+          const disabledCompany = values.roles.some(role => adminRoles.some(d => role === d.id))
           let errorRoles = get(errors, 'roles', null)
 
           return (
@@ -600,7 +598,6 @@ class UsersSidebar extends React.Component {
                         inputProps={{
                           icon: 'search',
                           search: options => options,
-                          disabled: disabledCompany,
                           selection: true,
                           onSearchChange: (e, { searchQuery }) =>
                             searchQuery.length > 0 && this.searchCompanies(searchQuery),
@@ -613,7 +610,7 @@ class UsersSidebar extends React.Component {
                             let homeBranch = ''
                             if (company) {
                               let newRoles = values.roles.slice()
-                              newRoles = newRoles.filter(role => adminRoles.every(d => role !== d))
+                              newRoles = newRoles.filter(role => adminRoles.every(d => role !== d.id))
                               setFieldValue('roles', newRoles)
                               if (company.primaryBranch) homeBranch = company.primaryBranch.id
                             }
@@ -730,7 +727,17 @@ class UsersSidebar extends React.Component {
                       <Required />
                     </GridColumnWError>
                   </GridRow>
-                  <GridRow>{this.generateCheckboxes(allRoles, values, 'roles', errorRoles)}</GridRow>
+                  <GridRow>{
+                    this.generateCheckboxes(
+                      values.company !== ''
+                        ? userRoles
+                        : adminRoles,
+                      values,
+                      'roles',
+                      errorRoles
+                    )
+                  }
+                  </GridRow>
                   <GridRow style={{ paddingTop: '0' }}>
                     <GridColumn>{errorRoles && <span className='sui-error-message'>{errorRoles}</span>}</GridColumn>
                   </GridRow>
@@ -779,8 +786,8 @@ const mapStateToProps = state => {
   return {
     editTrig: admin.editTrig,
     updating: admin.updating,
-    allRoles: admin.roles,
-    adminRoles: admin.adminRoles.map(d => d.id),
+    userRoles: admin.userRoles,
+    adminRoles: admin.adminRoles,
     popupValues: admin.popupValues,
     isSuperAdmin: admin.currentUser && admin.currentUser.roles.findIndex(d => d.id === 1) !== -1,
     searchedCompanies: admin.searchedCompanies,

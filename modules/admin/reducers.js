@@ -71,7 +71,7 @@ export const initialState = {
   editEchoProductInitTrig: false,
   currentUser: null,
   user: null,
-  roles: [],
+  userRoles: [],
   adminRoles: [],
   searchedCompanies: [],
   searchedCompaniesLoading: false,
@@ -115,6 +115,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_CLOSE_POPUP: {
       return {
         ...state,
+        popupValues: null,
         currentAddForm: null,
         currentEditForm: null,
         currentEdit2Form: null,
@@ -724,7 +725,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_GET_ROLES_FULFILLED: {
       return {
         ...state,
-        roles: action.payload
+        userRoles: action.payload
       }
     }
 

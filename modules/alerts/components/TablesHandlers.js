@@ -94,14 +94,14 @@ class TablesHandlers extends Component {
             {formatMessage({ id: 'alerts.button.all', defaultMessage: 'All' })}
           </Button>
           <Button
-            active={switchButtonsValue === '1'} // ! ! temporary value
-            onClick={() => this.handleButtonsChange('1')} // ! ! temporary value
+            active={switchButtonsValue === 'read'}
+            onClick={() => this.handleButtonsChange('read')}
           >
             {formatMessage({ id: 'alerts.button.read', defaultMessage: 'Read' })}
           </Button>
           <Button
-            active={switchButtonsValue === '2'} // ! ! temporary value
-            onClick={() => this.handleButtonsChange('2')} // ! ! temporary value
+            active={switchButtonsValue === 'unread'}
+            onClick={() => this.handleButtonsChange('unread')}
           >
             {formatMessage({ id: 'alerts.button.unread', defaultMessage: 'Unread' })}
           </Button>
