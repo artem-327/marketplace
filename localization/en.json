@@ -149,6 +149,7 @@
   "navigation.companies": "Companies",
   "navigation.dashboard": "Dashboard",
   "navigation.products": "Products",
+  "navigation.documentTypes": "Document Types",
   "dwolla.controllerTitlePopup": "Please read below for the definition of Controller in this context.",
   "dwolla.paymentPoweredBy": "Echo Global Chemical Exchange payment gateway is powered by:",
   "dwolla.confirmAcc": "Confirm Account Administrator Information",
@@ -2298,5 +2299,6 @@
   "products.productCatalog.search": "Search by Product Name or Code",
   "products.productCatalog.buttonAdd": "Add Echo Product",
   "products.casProducts.search": "Search cas product by name or number ...",
-  "products.casProducts.buttonAdd": "Add CAS Product"
+  "products.casProducts.buttonAdd": "Add CAS Product",
+  "documentTypes.title": "Document Types"
 }

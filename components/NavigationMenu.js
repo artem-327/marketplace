@@ -11,7 +11,6 @@ import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actio
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
 import {
-  Hexagon,
   Layers,
   Settings,
   ShoppingBag,
@@ -21,7 +20,8 @@ import {
   Bell,
   Briefcase,
   Home,
-  Package
+  Package,
+  Archive
 } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
@@ -489,16 +489,14 @@ class Navigation extends Component {
             </DropdownItem>
           </>
         )}
-        {isAdmin && (
-          <MenuLink to='/companies' dataTest='navigation_menu_admin_companies'>
-            <>
-              <Briefcase size={22} />
-              {formatMessage({ id: 'navigation.companies', defaultMessage: 'Companies' })}
-            </>
-          </MenuLink>
-        )}
         {(isAdmin || isEchoOperator) && (
           <>
+            <MenuLink to='/companies' dataTest='navigation_menu_admin_companies'>
+              <>
+                <Briefcase size={22} />
+                {formatMessage({ id: 'navigation.companies', defaultMessage: 'Companies' })}
+              </>
+            </MenuLink>
             <DropdownItem
               icon={<Package size={22} />}
               text={formatMessage({ id: 'navigation.products', defaultMessage: 'Products' })}
@@ -509,8 +507,14 @@ class Navigation extends Component {
               refId={'products'}>
               <TabsProducts />
             </DropdownItem>
+            <MenuLink to='/document-types' dataTest='navigation_menu_admin_document-types'>
+              <>
+                <FileText size={22} />
+                {formatMessage({ id: 'navigation.documentTypes', defaultMessage: 'Document Types' })}
+              </>
+            </MenuLink>
             <DropdownItem
-              icon={<Hexagon size={22} />}
+              icon={<Archive size={22} />}
               text={formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
               className={operations ? 'opened' : null}
               opened={operations}

@@ -1,20 +1,17 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Container } from 'semantic-ui-react'
 import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
 import TableHandlers from './TableHandlers'
 import Table from './Table'
+import EditPopup1Parameter from './EditPopup1Parameter'
+import AddNewPopup1Parameter from './AddNewPopup1Parameter'
 
-class Companies extends Component {
+class DocumentTypes extends Component {
   getApiConfig = () => ({
-    url: '/prodex/api/companies/datagrid',
-    searchToFilter: v =>
-      v
-        ? [
-            { operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] },
-            { operator: 'LIKE', path: 'Company.cfDisplayName', values: [`%${v}%`] }
-          ]
-        : []
+    url: 'prodex/api/document-types/datagrid',
+    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'DocumentType.name', values: [`%${v}%`] }] : [])
   })
 
   render() {
@@ -25,6 +22,8 @@ class Companies extends Component {
             <TableHandlers />
           </div>
           <div style={{ padding: '0 30px 20px 30px' }}>
+            {this.props.currentEditForm && <EditPopup1Parameter />}
+            {this.props.currentAddForm && <AddNewPopup1Parameter />}
             <Table />
           </div>
         </Container>
@@ -33,4 +32,9 @@ class Companies extends Component {
   }
 }
 
-export default Companies
+const mapStateToProps = ({ documentTypes }) => ({
+  currentEditForm: documentTypes.currentEditForm,
+  currentAddForm: documentTypes.currentAddForm
+})
+
+export default connect(mapStateToProps)(DocumentTypes)
