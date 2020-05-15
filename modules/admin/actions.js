@@ -780,9 +780,9 @@ export const deleteUser = id => ({
   payload: api.deleteUser(id)
 })
 
-export const getRoles = () => ({
+export const getUserRoles = () => ({
   type: AT.ADMIN_GET_ROLES,
-  payload: api.getRoles()
+  payload: api.getUserRoles()
 })
 
 export const getAdminRoles = () => ({
