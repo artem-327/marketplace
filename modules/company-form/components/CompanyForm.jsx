@@ -10,7 +10,7 @@ import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
 import { getSafe } from '~/utils/functions'
 import styled from 'styled-components'
-import { Trash, UploadCloud } from 'react-feather'
+import { Trash, UploadCloud, Image as ImageIcon } from 'react-feather'
 
 const LogoWrapper = styled.div`
   border-radius: 3px;
@@ -33,8 +33,12 @@ const LogoWrapper = styled.div`
           box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
           border: solid 1px #dee2e6;
           background-color: #ffffff;
-          padding: 4px 10px;
+          padding: 7px 10px;
           color: #848893;
+          font-size: 13px;
+          font-weight: 500;
+          font-stretch: normal;
+          font-style: normal;
           
           &.delete {
             color: #f16844;
@@ -43,17 +47,26 @@ const LogoWrapper = styled.div`
           > svg {
             width: 18px;
             height: 20px;
-            margin-right: 10px;
+            margin: -3px 10px;
           }
         }
       }
     }
   }
   
-  .uploadAttachment.has-file .dropzoneLotHasFile {
+  .uploadAttachment {
+    padding: 0;
+    border-radius: 3px;
+    border: solid 1px #dee2e6;
     background-color: #f8f9fb;
-    > img {
-      display: unset;
+
+    .dropzoneLot,
+    .dropzoneLotHasFile {
+      border: none;
+      background-color: #f8f9fb;
+      > img {
+        display: unset;
+      }
     }
   }
   
@@ -67,6 +80,14 @@ const LogoWrapper = styled.div`
     text-align: center;
     color: #848893;
   }
+`
+
+const StyledImageIcon = styled(ImageIcon)`
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  color: #dee2e6;
+  margin: 30px;
 `
 
 class CompanyForm extends Component {
@@ -480,15 +501,17 @@ class CompanyForm extends Component {
 
     return (
       <div>
-        <label>
-          <FormattedMessage id='global.companyLogo' defaultMessage='Company Logo' />
-        </label>
+        <div style={{ marginBottom: '4px' }}>
+          <label style={{ color: '#20273a' }}>
+            <FormattedMessage id='global.companyLogo' defaultMessage='Company Logo' />
+          </label>
+        </div>
         <LogoWrapper>
           <Grid className={isAdmin ? 'admin' : ''}>
             {!isAdmin && (
               <GridRow>
                 <GridColumn style={{ textAlign: 'center' }}>
-                  <label>
+                  <label style={{ color: '#848893', fontSize: '12px' }}>
                     <FormattedMessage
                       id='company.logoDescription'
                       defaultMessage='This is how your logo looks on the Web Portal'
@@ -509,10 +532,9 @@ class CompanyForm extends Component {
                   onChange={files => (files.length ? selectLogo(files[0]) : null)}
                   removeAttachment={removeLogo}
                   hideAttachments
-                  emptyContent={
-                    <FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='a' />
-                  }
+                  emptyContent={<StyledImageIcon />}
                   uploadedContent={this.getCompanyLogo()}
+                  saveComponentRef={(ref) => this.logoComponentRef = ref}
                 />
               </GridColumn>
             </GridRow>
@@ -536,22 +558,22 @@ class CompanyForm extends Component {
                 <Button
                   type='button'
                   fluid
-                  onClick={() => /* */ console.log('Change/Upload click')}
+                  onClick={() => {if (this.logoComponentRef) this.logoComponentRef.open()}}
                 >
                   <UploadCloud />
-                  {
-                    hasLogo
-                      ? (
-                        <FormattedMessage id='company.logoButtonChange' defaultMessage='Change'>
-                          {text => text}
-                        </FormattedMessage>
-                      )
-                      : (
-                        <FormattedMessage id='company.logoButtonUpload' defaultMessage='Upload'>
-                          {text => text}
-                        </FormattedMessage>
-                      )
-                  }
+                    {
+                      hasLogo
+                        ? (
+                          <FormattedMessage id='company.logoButtonChange' defaultMessage='Change'>
+                            {text => text}
+                          </FormattedMessage>
+                        )
+                        : (
+                          <FormattedMessage id='company.logoButtonUpload' defaultMessage='Upload'>
+                            {text => text}
+                          </FormattedMessage>
+                        )
+                    }
                 </Button>
               </GridColumn>
             </GridRow>

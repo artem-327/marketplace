@@ -22,13 +22,26 @@ class Alerts extends Component {
         )
       }
       if (v && v.switchButtonsValue !== '') {
-        filters.and.push(
-          {
-            operator: 'EQUALS',
-            path: 'Message.text',  // ! ! Temporary
-            values: [`${v.switchButtonsValue}`]
-          }
-        )
+        switch (v.switchButtonsValue) {
+          case 'read':
+            filters.and.push(
+              {
+                operator: 'GREATER_THAN',
+                path: 'Message.readAt',
+                values: ["0000-01-01T01:00:00.000000Z"]
+              }
+            )
+            break
+          case 'unread':
+            filters.and.push(
+              {
+                operator: 'LESS_THAN_OR_NULL',
+                path: 'Message.readAt',
+                values: ["0000-01-01T01:00:00.000000Z"]
+              }
+            )
+            break
+        }
       }
       return filters
     }
@@ -36,16 +49,20 @@ class Alerts extends Component {
 
   render() {
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}>
-        <Container fluid className='flex stretched'>
-          <HighMenu />
-          <div style={{ padding: '20px 30px' }}>
+      <DatagridProvider apiConfig={this.getApiConfig()} skipInitLoad>
+        <div id='page' className='flex stretched scrolling'>
+          <Container fluid>
+            <HighMenu />
+          </Container>
+
+          <Container fluid style={{ padding: '20px 30px' }}>
             <TablesHandlers />
-          </div>
-          <div style={{ padding: '0 30px 20px 30px' }}>
+          </Container>
+
+          <Container fluid style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
             <Table />
-          </div>
-        </Container>
+          </Container>
+        </div>
       </DatagridProvider>
     )
   }

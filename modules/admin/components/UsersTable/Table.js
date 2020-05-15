@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import confirm from '~/src/components/Confirmable/confirm'
 //import ProdexGrid from '~/components/table'
 import ProdexTable from '~/components/table'
-import { deleteUser, getUsersMe, userSwitchEnableDisable, openPopup, getRoles, getAdminRoles } from '../../actions'
+import { deleteUser, getUsersMe, userSwitchEnableDisable, openPopup, getUserRoles, getAdminRoles } from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { ArrayToFirstItem, FormattedPhone } from '~/components/formatted-messages/'
 import moment from 'moment'
@@ -19,7 +19,7 @@ const handleSwitchEnabled = (id, row) => {
 class UsersTable extends Component {
   componentDidMount() {
     this.props.getUsersMe()
-    if (!this.props.allRoles.length) this.props.getRoles()
+    if (!this.props.userRoles.length) this.props.getUserRoles()
     if (!this.props.adminRoles.length) this.props.getAdminRoles()
   }
 
@@ -87,7 +87,7 @@ const mapDispatchToProps = {
   getUsersMe,
   userSwitchEnableDisable,
   openPopup,
-  getRoles,
+  getUserRoles,
   getAdminRoles
 }
 
@@ -158,7 +158,7 @@ const mapStateToProps = (state, { datagrid }) => {
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
     loading: state.admin.loading,
-    allRoles: state.admin.roles,
+    userRoles: state.admin.userRoles,
     adminRoles: state.admin.adminRoles.map(d => d.id)
   }
 }
