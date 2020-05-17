@@ -92,6 +92,7 @@ class DocumentManager extends Component {
       ...row,
       documentTypeName: getSafe(() => row.documentType.name, ''),
       expirationDate: row.expirationDate && moment(row.expirationDate).format(getLocaleDateFormat()),
+      issuedAt: row.issuedAt && moment(row.issuedAt).format(getLocaleDateFormat()),
       customName: getSafe(() => row.customName, row.name)
     }))
 
