@@ -8,6 +8,7 @@ import { FormattedMessage } from 'react-intl'
 import { FilterTag, PopupRow, WiderTooltip } from '../constants/layout'
 import { groupFilters } from '../constants/filter'
 import { string } from 'postcss-selector-parser'
+import { getSafe } from '~/utils/functions'
 
 const TAGS_TO_DISPLAY = 3
 const MAX_TAG_ENTITIES = 2
@@ -145,9 +146,10 @@ FilterTags.defaultProps = {
 }
 
 function mapStateToProps(store) {
+  const filterType = getSafe(() => store.filter.params.filterType, null)
   return {
-    appliedFilter: store.filter.filter.appliedFilter,
-    params: store.filter.filter.params
+    appliedFilter: filterType && store.filter[filterType] ? store.filter[filterType].appliedFilter : [],
+    params: store.filter.params
   }
 }
 

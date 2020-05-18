@@ -4,7 +4,8 @@ import { Input, FormField, Button, Icon } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 
 import styled from 'styled-components'
-import { string, object, node, oneOf, func } from 'prop-types'
+import { bool, string, object, node, oneOf, func } from 'prop-types'
+import { Required } from '~/components/constants/layout'
 
 const HiddenInput = styled(Input)`
   width: 0px !important;
@@ -20,7 +21,7 @@ const ErrorLabel = styled.label`
 
 export default class FileInput extends Component {
   render() {
-    const { name, errors, errorMessage, setFieldValue, fileName } = this.props
+    const { name, errors, errorMessage, setFieldValue, fileName, required } = this.props
 
     return (
       <FormField
@@ -28,6 +29,7 @@ export default class FileInput extends Component {
         name={name}>
         <ErrorLabel error={errors[name]}>
           <FormattedMessage id='global.document' defaultMessage='Document' />
+          {required && <Required />}
         </ErrorLabel>
         <Button icon as='label'>
           <FormattedMessage id='global.upload' defaultMessage='Upload'>
@@ -53,11 +55,13 @@ FileInput.propTypes = {
   errors: object,
   errorMessage: oneOf([node, string]),
   setFieldValue: func.isRequired,
-  fileName: string
+  fileName: string,
+  required: bool
 }
 
 FileInput.defaultProps = {
   name: 'file',
   errors: {},
-  fileName: ''
+  fileName: '',
+  required: false
 }

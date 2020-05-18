@@ -62,10 +62,8 @@ class ActionsRequired extends React.Component {
   }
 
   markShipped = () => {
-    const { order, shippingTrackingCode, shipOrder, openPopupName, actionNeeded } = this.props
-    if (actionNeeded === 'PRODUCT-OFFER-ASSIGN') {
-      openPopupName('opendSaleAttachingProductOffer')
-    } else if (shippingTrackingCode.length) {
+    const { order, shippingTrackingCode, shipOrder, openPopupName } = this.props
+    if (shippingTrackingCode.length) {
       this.confirmCall({
         action: () => shipOrder(order.id, shippingTrackingCode),
         confirmTitleId: 'confirm.order.actions.shipped.title',
@@ -217,7 +215,8 @@ class ActionsRequired extends React.Component {
       orderCreditHistoryOpen,
       isSending,
       openedPopup,
-      sellEligible
+      sellEligible,
+      actionNeeded
     } = this.props
     const repayUntil = moment(detail.orderDate)
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
@@ -268,8 +267,8 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}*/}
-            {orderStatus === 2 && shippingStatus === 1 && !assignLotsRequired // Confirmed && Not shipped
-              ? this.renderSegment(null, 14, null, 'order.ship.description', [
+            {orderStatus === 2 && shippingStatus === 1 && !assignLotsRequired && actionNeeded !== 'PRODUCT-OFFER-ASSIGN' // Confirmed && Not shipped
+              ? this.renderSegment(null, 11, null, 'order.ship.description', [
                   {
                     buttonType: 'primary',
                     onClick: this.markShipped,
@@ -279,8 +278,20 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
+
+            {orderStatus === 2 && shippingStatus === 1 && !assignLotsRequired && actionNeeded === 'PRODUCT-OFFER-ASSIGN' // Confirmed && Not shipped yet && virtual products
+              ? this.renderSegment(null, 11, null, 'order.attach.products', [
+                  {
+                    buttonType: 'primary',
+                    onClick: () => openPopupName('opendSaleAttachingProductOffer'),
+                    dataTest: 'orders_detail_attachproductOffers_btn',
+                    text: 'order.attachproductOffers',
+                    loading: isSending && !openedPopup
+                  }
+                ])
+              : null}
             {orderStatus === 2 && shippingStatus === 1 && assignLotsRequired // Confirmed && Not shipped
-              ? this.renderSegment(null, 14, null, 'order.ship.description', [
+              ? this.renderSegment(null, 11, null, 'order.ship.description', [
                   {
                     // FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
                     buttonType: 'primary',
@@ -291,7 +302,7 @@ class ActionsRequired extends React.Component {
                 ])
               : null}
             {orderStatus === 2 && creditReviewStatus === 1 && creditReviewStatus === 1 // CONFIRMED && PENDING && PENDING
-              ? this.renderSegment(null, 14, null, 'order.reviewCreditRequestSales.description', [
+              ? this.renderSegment(null, 11, null, 'order.reviewCreditRequestSales.description', [
                   {
                     // FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
                     buttonType: 'primary',
@@ -302,7 +313,7 @@ class ActionsRequired extends React.Component {
                 ])
               : null}
             {orderStatus === 2 && reviewStatus === 3 && returnStatus === 0 // CONFIRMED && Rejected && null
-              ? this.renderSegment(null, 14, null, 'order.returnShipmentSale.description', [
+              ? this.renderSegment(null, 11, null, 'order.returnShipmentSale.description', [
                   {
                     buttonType: 'primary',
                     onClick: () => openPopupName('openedSaleReturnShipping'),
@@ -312,7 +323,7 @@ class ActionsRequired extends React.Component {
                 ])
               : null}
             {orderStatus === 2 && returnStatus === 2 // Confirmed && IN_TRANSIT
-              ? this.renderSegment(null, 14, null, 'order.returnInTransit.description', [
+              ? this.renderSegment(null, 11, null, 'order.returnInTransit.description', [
                   {
                     buttonType: 'primary',
                     onClick: this.markReturned,
@@ -347,7 +358,7 @@ class ActionsRequired extends React.Component {
                 ])
               : null}
             {orderStatus === 1 // Pending
-              ? this.renderSegment(null, 13, null, 'order.detail.status.pending', [
+              ? this.renderSegment(null, 11, null, 'order.detail.status.pending', [
                   {
                     buttonType: 'basic',
                     onClick: this.cancelOrder,
@@ -358,7 +369,7 @@ class ActionsRequired extends React.Component {
                 ])
               : null}
             {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
-              ? this.renderSegment(null, 14, null, 'order.shipFailed.description', [
+              ? this.renderSegment(null, 11, null, 'order.shipFailed.description', [
                   {
                     buttonType: 'primary',
                     onClick: () => openPopupName('openedPurchaseOrderShipping'),
@@ -368,7 +379,7 @@ class ActionsRequired extends React.Component {
                 ])
               : null}
             {orderStatus === 2 && shippingStatus === 2 // Confirmed && In transit
-              ? this.renderSegment(null, 13, null, 'order.transit.description', [
+              ? this.renderSegment(null, 11, null, 'order.transit.description', [
                   {
                     buttonType: 'primary',
                     onClick: this.markDelivered,
@@ -398,7 +409,7 @@ class ActionsRequired extends React.Component {
               : null}
             {orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 2
               ? // Confirmed && PENDING && COUNTER_OFFER_PENDING
-                this.renderSegment(null, 13, null, 'order.reviewCreditRequestPurchase.description', [
+                this.renderSegment(null, 11, null, 'order.reviewCreditRequestPurchase.description', [
                   {
                     buttonType: 'primary',
                     onClick: () => openPopupName('openedPurchaseReviewCreditRequest'),
@@ -408,7 +419,7 @@ class ActionsRequired extends React.Component {
                 ])
               : null}
             {orderStatus === 2 && reviewStatus === 3 && returnStatus === 1 // Confirmed && Rejected && COUNTER_OFFER_PENDING
-              ? this.renderSegment(null, 13, null, 'order.waitToReturn.description', [
+              ? this.renderSegment(null, 11, null, 'order.waitToReturn.description', [
                   {
                     buttonType: 'primary',
                     onClick: this.markShippedReturn,
@@ -418,10 +429,8 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {reviewStatus === 2 &&
-            (detail.paymentStatus === 5 || detail.paymentStatus === 4) &&
-            moment().isBefore(repayUntil.add(3, 'days'))
-              ? this.renderSegment('red', 14, null, 'order.payment.failed.description', [
+            {orderStatus === 2 && reviewStatus !== 3 && (detail.paymentStatus === 5 || detail.paymentStatus === 4) // Confirmed && Rejected && (Failed || Canceled)
+              ? this.renderSegment('red', 11, null, 'order.payment.failed.description', [
                   {
                     buttonType: 'primary',
                     onClick: openReinitiateTransfer,
@@ -443,7 +452,7 @@ function checkAssignLotsRequired(data) {
       data.orderItems.filter(orderItem => {
         return (
           orderItem.amount ===
-          orderItem.lots.reduce(function(allocated, lot) {
+          orderItem.lots.reduce(function (allocated, lot) {
             return allocated + lot.amount
           }, 0)
         )

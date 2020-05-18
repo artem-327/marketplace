@@ -11,7 +11,7 @@ import { Button, Icon } from 'semantic-ui-react'
 import * as Actions from '../../actions'
 import moment from 'moment/moment'
 import { getLocaleDateFormat } from '~/components/date-format'
-
+import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import { echoRowActions } from './constants'
 
 class ProductCatalogTable extends Component {
@@ -20,6 +20,7 @@ class ProductCatalogTable extends Component {
       intl: { formatMessage }
     } = this.props
     return rows.map(row => {
+
       return {
         ...row,
         sds:
@@ -32,9 +33,12 @@ class ProductCatalogTable extends Component {
             ''
           ),
         manufacturerName: row.manufacturer ? row.manufacturer.name : '',
-        sdsRevisionDate: row.sdsRevisionDate
-          ? moment(row.sdsRevisionDate).format(getLocaleDateFormat())
-          : ''
+        sdsRevisionDate: row.sdsRevisionDate ? moment(row.sdsRevisionDate).format(getLocaleDateFormat()) : '',
+        tagsFormatted:
+          <ArrayToFirstItem
+            values={row.tags ? row.tags.map(d => d.name ? d.name : d) : ''}
+            rowItems={2}
+          />,
       }
     })
   }
@@ -118,19 +122,16 @@ class ProductCatalogTable extends Component {
       openEditEchoAltNamesPopup,
       deleteEchoProduct,
       editedId,
+      filterValue,
     } = this.props
-
     return (
       <React.Fragment>
         <ProdexTable
+          tableName='admin_product-catalog'
           {...datagrid.tableProps}
-          tableName='admin_companies'
           columns={columns}
-          defaultSorting={{
-            columnName: 'name',
-            sortPath: 'EchoProduct.name',
-            direction: 'ASC'
-          }}
+          filterValue={filterValue}
+          loading={datagrid.loading}
           rows={this.getRows(rows)}
           rowActions={[
             ...echoRowActions((row, i) => openEditEchoProduct(row.id, i, true)),
@@ -139,17 +140,17 @@ class ProductCatalogTable extends Component {
               callback: row => openEditEchoAltNamesPopup(row)
             },
             {
-              text: formatMessage({id: 'admin.deleteEchoProduct', defaultMessage: 'Delete Echo Product'}),
+              text: formatMessage({ id: 'admin.deleteEchoProduct', defaultMessage: 'Delete Echo Product' }),
               disabled: row => editedId === row.id,
               callback: row => {
                 confirm(
-                  formatMessage({id: 'confirm.deleteEchoProduct.title', defaultMessage: 'Delete Echo Product?'}),
+                  formatMessage({ id: 'confirm.deleteEchoProduct.title', defaultMessage: 'Delete Echo Product?' }),
                   formatMessage(
                     {
                       id: 'confirm.deleteEchoProduct.content',
                       defaultMessage: `Do you really want to delete '${row.name}' echo product?`
                     },
-                    {name: row.name}
+                    { name: row.name }
                   )
                 ).then(() => {
                   deleteEchoProduct(row.id)
@@ -165,11 +166,12 @@ class ProductCatalogTable extends Component {
 }
 
 const mapStateToProps = ({ admin }, { datagrid }) => {
-
   const editedId =
-    admin.currentTab.name === 'Product Catalog'
-    && (!!admin.currentAddForm || !!admin.currentEditForm)
-    && admin.popupValues ? admin.popupValues.id : -1
+    admin.currentTab.name === 'Product Catalog' &&
+    (!!admin.currentAddForm || !!admin.currentEditForm) &&
+    admin.popupValues
+      ? admin.popupValues.id
+      : -1
 
   return {
     editedId,

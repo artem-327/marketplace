@@ -25,7 +25,7 @@ import moment from 'moment'
 import * as Actions from '../../actions'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import confirm from '~/src/components/Confirmable/confirm'
 import { loadFile, addAttachment } from '~/modules/inventory/actions'
 import { getLocaleDateFormat } from '~/components/date-format'
@@ -50,7 +50,7 @@ const LotsTab = styled(TabPane)`
   margin: 0 !important;
   border: 0 none !important;
   padding: 0 !important;
-  .uploadLot {
+  .uploadAttachment {
     padding: 0em !important;
     font-size: 1rem !important;
   }
@@ -127,14 +127,14 @@ class SaleAttachingProductOffer extends Component {
           totalPkgAmount += pkgAmount
         }
 
-        const sumPkgAllocated = offers.reduce(function(sum, offer) {
+        const sumPkgAllocated = offers.reduce(function (sum, offer) {
           return sum + offer.pkgAllocated
         }, 0)
-        sumAllocated.push(sumPkgAllocated)
+        sumAllocated.push(0)
         const pkgAvailable = offers.map(offer => offer.pkgAvailable)
         available.push(pkgAvailable)
 
-        const cfPkgTotal = offers.reduce(function(sum, offer) {
+        const cfPkgTotal = offers.reduce(function (sum, offer) {
           return sum + offer.cfPkgTotal
         }, 0)
         sumPkgTotal.push(cfPkgTotal)
@@ -168,12 +168,12 @@ class SaleAttachingProductOffer extends Component {
     this.props.clearGroupedProductOffer()
   }
 
-  linkAttachment = async (offerId, files, setFieldValue, index) => {
+  linkAttachment = async (orderItemId, files, setFieldValue, index) => {
     try {
       const response = await this.props.addAttachment(files[0], 1, {})
       const query = {
         attachmentId: response.value.data.id,
-        orderItemId: offerId
+        orderItemId: orderItemId
       }
       await this.props.linkAttachmentToOrderItem(query)
 
@@ -282,13 +282,10 @@ class SaleAttachingProductOffer extends Component {
                                 }
 
                                 if (checked) {
-                                  setFieldValue(
-                                    `tab[${tabIndex}].groupedOffer[${index}].allocated`,
-                                    allocatedIndex + differenceNumber
-                                  )
+                                  setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].allocated`, differenceNumber)
                                   setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].available`, 0)
                                   available[tabIndex][index] = availableIndex - differenceNumber
-                                  allocated[tabIndex][index] += differenceNumber
+                                  allocated[tabIndex][index] = differenceNumber
                                   //sumAvailable[tabIndex] = sumAvailable[tabIndex] - availableIndex
                                   sumAllocated[tabIndex] = sumAllocated[tabIndex] + differenceNumber
                                   this.setState({ available, allocated, sumAllocated })
@@ -374,7 +371,7 @@ class SaleAttachingProductOffer extends Component {
                             : 'N/A'}
                         </Table.Cell>
                         <Table.Cell textAlign='center'>
-                          <UploadLot
+                          <UploadAttachment
                             {...this.props}
                             removeOrderItem={file => {
                               this.removeAttachment(offer, file, setFieldValue, index)
@@ -388,7 +385,9 @@ class SaleAttachingProductOffer extends Component {
                             lot={offer}
                             filesLimit={1}
                             fileMaxSize={20}
-                            onChange={files => this.linkAttachment(offer.id, files, setFieldValue, index)}
+                            onChange={files =>
+                              this.linkAttachment(this.props.orderItemsId[tabIndex], files, setFieldValue, index)
+                            }
                             data-test={`grouped_offer_${index}_attachments`}
                             emptyContent={
                               <DivIcon>

@@ -9,6 +9,8 @@ import { beneficialOwner, maxBeneficialOwners } from '~/constants/beneficialOwne
 
 import { AddressForm } from '~/modules/address-form/'
 import { DateInput } from '~/components/custom-formik'
+import { Required } from '~/components/constants/layout'
+import { deepSearch } from '~/utils/functions'
 
 const RightAlignedDiv = styled.div`
   text-align: right !important;
@@ -22,17 +24,28 @@ class BeneficialOwnersForm extends Component {
     } = this.props
 
     for (let i = 0; i < this.props.beneficialOwnersCount; i++) {
+      let isAnyValueFilled = deepSearch(values.beneficialOwners[i], (val, key) => val !== '' && key !== 'country')
       beneficialOwners.push(
         <>
           <FormGroup widths='equal' data-test='settings_dwolla_beneficialOwner_namePostal_inp'>
             <Input
               inputProps={{ fluid: true }}
-              label={formatMessage({ id: 'global.firstName', defaultMessage: 'First Name' })}
+              label={
+                <>
+                  {formatMessage({id: 'global.firstName', defaultMessage: 'First Name'})}
+                  {isAnyValueFilled && <Required/>}
+                </>
+              }
               name={`beneficialOwners[${i}].firstName`}
             />
             <Input
               inputProps={{ fluid: true }}
-              label={formatMessage({ id: 'global.lastName', defaultMessage: 'Last Name' })}
+              label={
+                <>
+                  {formatMessage({ id: 'global.lastName', defaultMessage: 'Last Name' })}
+                  {isAnyValueFilled && <Required/>}
+                </>
+              }
               name={`beneficialOwners[${i}].lastName`}
             />
           </FormGroup>
@@ -52,17 +65,28 @@ class BeneficialOwnersForm extends Component {
             prefix={`beneficialOwners`}
             displayHeader={false}
             additionalCountryInputProps={{ disabled: true }}
+            required={isAnyValueFilled}
           />
 
           <FormGroup widths='equal' data-test='settings_dwolla_beneficialOwner_nameSsn_inp'>
             <Input
               inputProps={{ placeholder: '123-45-6789', fluid: true }}
-              label={formatMessage({ id: 'settings.ssn', defaultMessage: 'SSN' })}
+              label={
+                <>
+                  {formatMessage({ id: 'settings.ssn', defaultMessage: 'SSN' })}
+                  {isAnyValueFilled && <Required/>}
+                </>
+              }
               name={`beneficialOwners[${i}].ssn`}
             />
             <DateInput
               inputProps={{ fluid: true }}
-              label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
+              label={
+                <>
+                  {formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
+                  {isAnyValueFilled && <Required/>}
+                </>
+              }
               name={`beneficialOwners[${i}].dateOfBirth`}
             />
           </FormGroup>

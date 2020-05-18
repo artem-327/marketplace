@@ -34,17 +34,34 @@ class Messages extends Component {
     }
   }
 
+  createTaggedMessage = message => {
+    if (message) {
+      const msg = message.split('\n')
+      return msg.map(m => (
+        <>
+          {m}<br/>
+        </>
+      ))
+    }
+    return null
+  }
+
   onMessage = message => {
     let { toastManager } = this.props
+
+    const clientMessage = getSafe(() => message.clientMessage, null)
+    const descriptionMessage = getSafe(() => message.descriptionMessage, null)
+    const exceptionMessage = getSafe(() => message.exceptionMessage, null)
+
     const msg =
       message && message.level
-        ? message.descriptionMessage
-          ? `${getSafe(() => message.clientMessage, '')} ${getSafe(() => message.descriptionMessage, '')} ${
-              process.env.NODE_ENV === 'production' ? '' : getSafe(() => message.exceptionMessage, '')
-            }`
-          : `${getSafe(() => message.clientMessage, '')} ${
-              process.env.NODE_ENV === 'production' ? '' : getSafe(() => message.exceptionMessage, '')
-            }`
+        ? (
+          <>
+            {this.createTaggedMessage(clientMessage)}
+            {this.createTaggedMessage(descriptionMessage)}
+            {process.env.NODE_ENV === 'production' ? '' : this.createTaggedMessage(exceptionMessage)}
+          </>
+        )
         : message
 
     if (msg && message.level) {

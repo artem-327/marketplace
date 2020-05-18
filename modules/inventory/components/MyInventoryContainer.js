@@ -27,7 +27,6 @@ function mapStateToProps(store, { datagrid }) {
     ...store.simpleAdd,
     editedId,
     sellEligible: getSafe(() => store.auth.identity.company.sellEligible, false),
-    appliedFilter: store.filter.filter.appliedFilter,
     sidebarValues,
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
@@ -64,14 +63,16 @@ function mapStateToProps(store, { datagrid }) {
       }
       return {
         ...po,
+        rawData: po,
         id: po.id,
         product: po.product,
+        expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
         productName: getSafe(() => po.companyProduct.intProductName),
         productNumber: getSafe(() => po.companyProduct.intProductCode, 'N/A'),
         echoName: getSafe(() => po.companyProduct.echoProduct.name, ''),
         echoCode: getSafe(() => po.companyProduct.echoProduct.code, 'Unmapped'),
         chemicalName: getSafe(() => po.product.casProduct.chemicalName, po.companyProduct.intProductName),
-        warehouse: getSafe(() => po.warehouse.deliveryAddress.cfName),
+        warehouse: getSafe(() => po.warehouse.deliveryAddress.cfName, ''),
         productId: getSafe(() => po.product.casProduct.id, 0),
         available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
         packaging: getSafe(() => po.companyProduct.packagingType.name) ? (
@@ -94,7 +95,7 @@ function mapStateToProps(store, { datagrid }) {
         manufacturer: getSafe(() => po.companyProduct.echoProduct.manufacturer.name, 'N/A'),
         broadcasted: po.broadcasted,
         // lotNumber: <ArrayToMultiple values={po.lots.map(d => (d.lotNumber))} />,
-        status: po.cfStatus, // new broadcasted
+        cfStatus: getSafe(() => po.cfStatus, 'N/A'),
         minOrderQuantity: getSafe(() => po.minPkg, ''),
         splits: getSafe(() => po.splitPkg, ''),
         condition: getSafe(() => po.conforming, ''),

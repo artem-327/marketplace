@@ -6,6 +6,7 @@ import { getFieldError, setFieldValue } from './helpers'
 
 import { DateInput } from 'semantic-ui-calendar-react'
 import { getLocaleDateFormat } from '../date-format'
+import {FormattedMessage} from "react-intl";
 class FormikInput extends Component {
   constructor(props) {
     super(props)
@@ -39,6 +40,7 @@ class FormikInput extends Component {
                 closable
                 id={this.id}
                 name={name}
+                placeholder={'00/00/0000'}
                 {...safeInputProps}
                 value={field.value}
                 dateFormat={getLocaleDateFormat()}

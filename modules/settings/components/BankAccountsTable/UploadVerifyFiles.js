@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl'
 import { TOO_LARGE_FILE, UPLOAD_FILE_FAILED } from '~/src/modules/errors.js'
 import { FieldArray } from 'formik'
 import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { Popup, Icon } from 'semantic-ui-react'
 
 class UploadVerifyFiles extends Component {
@@ -20,7 +20,7 @@ class UploadVerifyFiles extends Component {
 
   onDropRejected = blobs => {
     let { fileMaxSize, toastManager } = this.props
-    blobs.forEach(function(blob) {
+    blobs.forEach(function (blob) {
       if (blob.size > fileMaxSize * 1024 * 1024) {
         toastManager.add(
           generateToastMarkup(
@@ -51,7 +51,11 @@ class UploadVerifyFiles extends Component {
       unspecifiedTypes,
       toastManager,
       loadFile,
-      addVerificationDocument
+      addVerificationDocument,
+      documentsOwner,
+      addVerificationDocumentsOwner,
+      getDwollaBeneficiaryOwners,
+      dwollaAccountStatus
     } = this.props
     let { onDropRejected, onUploadSuccess } = this
 
@@ -109,19 +113,42 @@ class UploadVerifyFiles extends Component {
           await new Promise((resolve, reject) => {
             loadFile(files[j])
               .then(file => {
-                addVerificationDocument(file.value, type)
-                  .then(aId => {
-                    onUploadSuccess({
-                      name: file.value.name,
-                      id: aId.value.data.id,
-                      type: type
+                if (
+                  documentsOwner &&
+                  documentsOwner.length &&
+                  getSafe(() => documentsOwner[0].verificationStatus, '') !== 'verified' &&
+                  typeof addVerificationDocumentsOwner === 'function' &&
+                  dwollaAccountStatus === 'verified'
+                ) {
+                  addVerificationDocumentsOwner(file.value, documentsOwner[0].id, type) //only first id from documentsOwner verificate
+                    .then(aId => {
+                      getDwollaBeneficiaryOwners() //call dwolla if is verified
+                      onUploadSuccess({
+                        name: file.value.name,
+                        id: aId.value.data.id,
+                        type: type
+                      })
+                      resolve()
                     })
-                    resolve()
-                  })
-                  .catch(e => {
-                    resolve()
-                  })
+                    .catch(e => {
+                      resolve()
+                    })
+                } else {
+                  addVerificationDocument(file.value, type)
+                    .then(aId => {
+                      onUploadSuccess({
+                        name: file.value.name,
+                        id: aId.value.data.id,
+                        type: type
+                      })
+                      resolve()
+                    })
+                    .catch(e => {
+                      resolve()
+                    })
+                }
               })
+
               .catch(e => {
                 resolve()
               })
@@ -134,25 +161,27 @@ class UploadVerifyFiles extends Component {
     return (
       <FieldArray
         name={this.props.name}
-        render={arrayHelpers => (
-          <>
-            {attachments && attachments.length
-              ? attachments.map((file, index) => (
-                  <Popup
-                    wide='very'
-                    data-test='array_to_multiple_list'
-                    content={file.type}
-                    trigger={
-                      <span key={index} className='file lot' style={{ opacity: disabled ? '0.45' : '1' }}>
-                        <Icon name='file image outline' bordered size='large' />
-                        {file.name}
-                      </span>
-                    }
-                  />
-                ))
-              : ''}
-          </>
-        )}
+        render={arrayHelpers => {
+          return (
+            <>
+              {attachments && attachments.length
+                ? attachments.map((file, index) => (
+                    <Popup
+                      wide='very'
+                      data-test='array_to_multiple_list'
+                      content={getSafe(() => file.documentType.name, '') || getSafe(() => file.type, '')}
+                      trigger={
+                        <span key={index} className='file lot' style={{ opacity: disabled ? '0.45' : '1' }}>
+                          <Icon name='file image outline' size='large' />
+                          {file.name}
+                        </span>
+                      }
+                    />
+                  ))
+                : ''}
+            </>
+          )
+        }}
       />
     )
   }
@@ -239,7 +268,7 @@ UploadVerifyFiles.propTypes = {
 }
 
 UploadVerifyFiles.defaultProps = {
-  accept: 'image/jpeg, image/png, application/pdf'
+  accept: 'image/jpeg, image/png' //, application/pdf
 }
 
 export default withToastManager(UploadVerifyFiles)

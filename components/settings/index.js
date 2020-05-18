@@ -24,7 +24,7 @@ const FixyWrapper = styled.div`
 
 const ButtonsWrapper = styled(Grid)`
   position: fixed;
-  bottom: 1em;
+  bottom: 4em;
   left: 1em;
   width: calc(100% - 2em);
   margin: 0 !important;
@@ -248,7 +248,14 @@ class Settings extends Component {
 
                                   {React.cloneElement(
                                     typeToComponent(el.type, {
-                                      props: getSafe(() => JSON.parse(el.frontendConfig).props),
+                                      props: {
+                                        ...getSafe(() => JSON.parse(el.frontendConfig).props),
+                                        options: getSafe(() => el.possibleValues, []).map((opt, i) => ({
+                                          key: i,
+                                          value: opt.value,
+                                          text: opt.displayName
+                                        }))
+                                      },
                                       inputProps: {
                                         disabled:
                                           !el.changeable ||

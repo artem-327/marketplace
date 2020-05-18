@@ -10,7 +10,7 @@ import * as val from 'yup'
 
 import { generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { getSafe } from '~/utils/functions'
 
 const ModalBody = styled(ModalContent)`
@@ -199,7 +199,7 @@ class PurchaseRequestCreditDelivery extends React.Component {
                                   defaultMessage: 'Enter reason here...'
                                 })}
                               />
-                              <UploadLot
+                              <UploadAttachment
                                 {...this.props}
                                 name='attachments'
                                 attachments={values.attachments}

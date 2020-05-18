@@ -7,7 +7,7 @@ import { Form, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FieldArray } from 'formik'
 import { getSafe } from '~/utils/functions'
 import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import confirm from '~/src/components/Confirmable/confirm'
 import styled from 'styled-components'
 import * as val from 'yup'
@@ -48,8 +48,8 @@ const initValues = {
   ]
 }
 
-val.addMethod(val.object, 'lessThanOrdered', function(propertyName, message) {
-  return this.test('lessThan', message, function(value) {
+val.addMethod(val.object, 'lessThanOrdered', function (propertyName, message) {
+  return this.test('lessThan', message, function (value) {
     if (!value || !value[propertyName]) {
       return true
     }
@@ -57,7 +57,7 @@ val.addMethod(val.object, 'lessThanOrdered', function(propertyName, message) {
     const { path } = this
     const options = [...this.parent]
     const amount = value['amount']
-    const allocated = options.reduce(function(allocated, option) {
+    const allocated = options.reduce(function (allocated, option) {
       allocated += option.allocated
       return allocated
     }, 0)
@@ -73,8 +73,8 @@ val.addMethod(val.object, 'lessThanOrdered', function(propertyName, message) {
   })
 })
 
-val.addMethod(val.object, 'moreThanOrdered', function(propertyName, message) {
-  return this.test('moreThan', message, function(value) {
+val.addMethod(val.object, 'moreThanOrdered', function (propertyName, message) {
+  return this.test('moreThan', message, function (value) {
     if (!value || !value[propertyName]) {
       return true
     }
@@ -82,7 +82,7 @@ val.addMethod(val.object, 'moreThanOrdered', function(propertyName, message) {
     const { path } = this
     const options = [...this.parent]
     const amount = value['amount']
-    const allocated = options.reduce(function(allocated, option) {
+    const allocated = options.reduce(function (allocated, option) {
       allocated += option.allocated
       return allocated
     }, 0)
@@ -134,7 +134,7 @@ class AssignLots extends React.Component {
       let allocated = this.state.allocated
       let alreadyLoadedLots = []
       orderItems.forEach(orderItem => {
-        const sumAllocated = orderItem.lots.reduce(function(sum, lot) {
+        const sumAllocated = orderItem.lots.reduce(function (sum, lot) {
           return sum + lot.amount
         }, 0)
         allocated.push(sumAllocated)
@@ -436,7 +436,7 @@ class AssignLots extends React.Component {
                           )}
                         </Table.Cell>
                         <Table.Cell textAlign='center'>
-                          <UploadLot
+                          <UploadAttachment
                             {...this.props}
                             removeAttachment={fileId => this.removeAttachment(fileId, { values, setFieldValue })}
                             attachments={getSafe(

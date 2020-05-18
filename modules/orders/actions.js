@@ -1,6 +1,5 @@
 import * as AT from './action-types'
 import Api from './api'
-import api from './api'
 
 export const loadData = (endpointType, filter = null) => ({
   type: AT.ORDERS_FETCH_SUCCESS,
@@ -57,7 +56,7 @@ export const assignLots = (orderId, tabLots) => ({
     let orderItems = []
     await asyncForEach(tabLots, async (tab, index) => {
       let orderItemId = tab.orderItemId
-      let assignedLots = tab.lots.reduce(function(filtered, lot) {
+      let assignedLots = tab.lots.reduce(function (filtered, lot) {
         if (lot.selected && lot.allocated) {
           filtered.push({ lotNumber: lot.lotNumber, pkgAmount: lot.allocated })
         }
@@ -273,20 +272,40 @@ export function removeLinkAttachmentToOrderItem(query) {
 export function getDocumentTypes() {
   return {
     type: AT.RELATED_GET_DOCUMENT_TYPES,
-    payload: api.getDocumentTypes()
+    payload: Api.getDocumentTypes()
   }
 }
 
 export function unlinkAttachmentToOrder(query) {
   return {
     type: AT.UNLINK_ATTACHMENT_TO_ORDER,
-    payload: api.unlinkAttachmentToOrder(query)
+    payload: Api.unlinkAttachmentToOrder(query)
   }
 }
 
 export function linkAttachmentToOrder(query) {
   return {
     type: AT.LINK_ATTACHMENT_TO_ORDER,
-    payload: api.linkAttachmentToOrder(query)
+    payload: Api.linkAttachmentToOrder(query)
+  }
+}
+
+export function clearOrderDetail() {
+  return {
+    type: AT.CLEARE_ORDER_DETAIL
+  }
+}
+
+export function editTrackingCode(orderId, trackingCode) {
+  return {
+    type: AT.EDIT_TRACKING_CODE,
+    payload: Api.editTrackingCode(orderId, trackingCode)
+  }
+}
+
+export function editReturnTrackingCode(orderId, trackingCode) {
+  return {
+    type: AT.EDIT_RETURN_TRACKING_CODE,
+    payload: Api.editReturnTrackingCode(orderId, trackingCode)
   }
 }

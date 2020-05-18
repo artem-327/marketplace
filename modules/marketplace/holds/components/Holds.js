@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import { Container, Grid, Dropdown, Label } from 'semantic-ui-react'
+import { Container, Grid, Dropdown, Label, Input } from 'semantic-ui-react'
 import { withRouter } from 'next/router'
 import Router from 'next/router'
 
@@ -9,6 +9,8 @@ import ProdexGrid from '~/components/table'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 import { Datagrid } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
+import Tutorial from '~/modules/tutorial/Tutorial'
+import { debounce } from 'lodash'
 
 const HoldDropdown = styled(Dropdown)`
   z-index: 601 !important;
@@ -85,8 +87,32 @@ class Holds extends Component {
     selectedRows: [],
     //pageNumber: 0,
     open: false,
-    holdDropdown: 'My Holds'
+    holdDropdown: 'My Holds',
+    filterValue: ''
   }
+
+  componentDidMount() {
+    this.props.applyDatagridFilter('')
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
+    if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
+      datagrid.setFilter(datagridFilter)
+    }
+  }
+
+  handleFiltersValue = debounce(value => {
+    const { applyDatagridFilter } = this.props
+    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    else applyDatagridFilter(value)
+  }, 250)
+
+  handleFilterChange = (e, { value }) => {
+    this.setState({ filterValue: value })
+    this.handleFiltersValue(value)
+  }
+
   handleApprove = async id => {
     try {
       const response = await this.props.approveHold(id)
@@ -139,8 +165,17 @@ class Holds extends Component {
   }
 
   render() {
-    const { rows, datagrid, intl, isMerchant, isCompanyAdmin, isProductOfferManager } = this.props
-    const { columns } = this.state
+    const {
+      rows,
+      datagrid,
+      intl,
+      isMerchant,
+      isCompanyAdmin,
+      isProductOfferManager,
+      tutorialCompleted,
+      toggleHolds
+    } = this.props
+    const { columns, filterValue } = this.state
     let { formatMessage } = intl
     const buttonApprove = {
       text: formatMessage({
@@ -179,7 +214,7 @@ class Holds extends Component {
     }
     let rowActions = []
 
-    if (isMerchant && this.state.holdDropdown === 'My Holds') {
+    if ((isCompanyAdmin || isMerchant) && this.state.holdDropdown === 'My Holds') {
       rowActions.push(buttonCancel)
       rowActions.push(buttonBuy)
     } else if ((isCompanyAdmin || isProductOfferManager) && this.state.holdDropdown === 'Requsted Holds') {
@@ -188,35 +223,50 @@ class Holds extends Component {
     }
     return (
       <Container fluid style={{ padding: '10px 0' }} className='flex stretched'>
+        {!tutorialCompleted && <Tutorial marginHolds />}
         <Grid>
-          <Grid.Column>
-            <HoldDropdown
-              options={[
-                {
-                  key: 1,
-                  value: 'My Holds',
-                  text: 'My Holds'
-                },
-                {
-                  key: 2,
-                  value: 'Requsted Holds',
-                  text: 'Requsted Holds'
-                }
-              ]}
-              value={this.state.holdDropdown}
-              selection
-              onChange={(event, { name, value }) => {
-                if (value === 'My Holds') {
-                  Datagrid.setApiConfig({ url: '/prodex/api/holds/my/datagrid/' })
-                } else if (value === 'Requsted Holds') {
-                  Datagrid.setApiConfig({ url: '/prodex/api/holds/foreign/datagrid/' })
-                }
-                this.setState({ [name]: value })
-              }}
-              name='holdDropdown'
-              placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}
-            />
-          </Grid.Column>
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <Input
+                fluid
+                icon='search'
+                value={filterValue}
+                onChange={this.handleFilterChange}
+                placeholder={formatMessage({
+                  id: 'myInventory.searchByProductName',
+                  defaultMessage: 'Search by product name...'
+                })}
+              />
+            </Grid.Column>
+            <Grid.Column width={12}>
+              <HoldDropdown
+                options={[
+                  {
+                    key: 1,
+                    value: 'My Holds',
+                    text: 'My Holds'
+                  },
+                  {
+                    key: 2,
+                    value: 'Requsted Holds',
+                    text: 'Requsted Holds'
+                  }
+                ]}
+                value={this.state.holdDropdown}
+                selection
+                onChange={(event, { name, value }) => {
+                  if (value === 'My Holds') {
+                    toggleHolds('my')
+                  } else if (value === 'Requsted Holds') {
+                    toggleHolds('foreign')
+                  }
+                  this.setState({ [name]: value })
+                }}
+                name='holdDropdown'
+                placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}
+              />
+            </Grid.Column>
+          </Grid.Row>
         </Grid>
         <ProdexGrid
           groupActions={row => {

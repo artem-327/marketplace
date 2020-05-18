@@ -1,7 +1,6 @@
 import { Component } from 'react'
 import { Modal, Button } from 'semantic-ui-react'
 import Router from 'next/router'
-import IdleTimer from 'react-idle-timer'
 import { refreshToken } from '~/utils/auth'
 import moment from 'moment'
 import styled from 'styled-components'
@@ -69,8 +68,10 @@ export default class TimeoutWarning extends Component {
   setIdleTimeout = () => {
     let ttl = window.localStorage.getItem('ttl')
     let date = new Date(parseInt(ttl, 10))
+    const timeout = moment(date).diff(moment())
 
-    this.setState({ timeout: moment(date).diff(moment()) })
+    this.setState({ timeout })
+    this.timeoutInterval = setTimeout(this.handleIdle, timeout - WARNING_OFFSET)
   }
 
   componentDidMount() {
@@ -84,16 +85,6 @@ export default class TimeoutWarning extends Component {
 
     return (
       <>
-        <IdleTimer
-          ref={r => (this.idleTimer = r)}
-          timeout={timeout - WARNING_OFFSET}
-          onIdle={this.handleIdle}
-          // onAction={this.handleAction}
-          // debounce={10000}
-          // throttle={(10 * 1000)}
-          // debounce={(1000)}
-          stopOnIdle={true}
-        />
         <Modal
           open={warningOpen}
           closeIcon

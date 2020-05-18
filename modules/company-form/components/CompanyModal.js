@@ -112,10 +112,7 @@ class CompanyModal extends React.Component {
       let minLength = errorMessages.minLength(2)
 
       let validation = Yup.object().shape({
-        name: Yup.string()
-          .trim()
-          .min(2, minLength)
-          .required(minLength),
+        name: Yup.string().trim().min(2, minLength).required(minLength),
         website: websiteValidation(),
 
         mailingBranch: Yup.lazy(() => {
@@ -127,13 +124,8 @@ class CompanyModal extends React.Component {
                   .trim()
                   .email(errorMessages.invalidEmail)
                   .required(errorMessages.invalidEmail),
-                contactName: Yup.string()
-                  .trim()
-                  .min(2, minLength)
-                  .required(minLength),
-                contactPhone: Yup.string()
-                  .trim()
-                  .required(errorMessages.enterPhoneNumber),
+                contactName: Yup.string().trim().min(2, minLength).required(minLength),
+                contactPhone: Yup.string().trim().required(errorMessages.enterPhoneNumber),
                 address: addressValidationSchema()
               })
             })
@@ -143,14 +135,8 @@ class CompanyModal extends React.Component {
         primaryBranch: Yup.object().shape({
           deliveryAddress: Yup.object().shape({
             addressName: minOrZeroLength(3),
-            contactEmail: Yup.string()
-              .trim()
-              .email(errorMessages.invalidEmail)
-              .required(errorMessages.invalidEmail),
-            contactName: Yup.string()
-              .trim()
-              .min(2, minLength)
-              .required(minLength),
+            contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
+            contactName: Yup.string().trim().min(2, minLength).required(minLength),
             contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),
             address: addressValidationSchema()
           })
@@ -158,14 +144,8 @@ class CompanyModal extends React.Component {
         primaryUser: Yup.lazy(() => {
           // if (primaryUserRequired)
           return Yup.object().shape({
-            email: Yup.string()
-              .trim()
-              .email(errorMessages.invalidEmail)
-              .required(errorMessages.invalidEmail),
-            name: Yup.string()
-              .trim()
-              .min(2, minLength)
-              .required(minLength)
+            email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
+            name: Yup.string().trim().min(2, minLength).required(minLength)
           })
         })
       })
@@ -221,7 +201,8 @@ class CompanyModal extends React.Component {
       postCompanyLogo,
       deleteCompanyLogo,
       isClientCompany,
-      onSubmit
+      onSubmit,
+      closePopupClientCompany
     } = this.props
 
     const { selectLogo, removeLogo } = this
@@ -250,7 +231,6 @@ class CompanyModal extends React.Component {
                 }
               })
               payload = { ...popupValues, ...newValues, businessType: getSafe(() => newValues.businessType.id, null) }
-    
             } else {
               if (!values.deliveryAddress || !deepSearch(values.mailingBranch.deliveryAddress, val => val !== ''))
                 delete values['mailingBranch']
@@ -261,7 +241,6 @@ class CompanyModal extends React.Component {
                 let country = getSafe(() => JSON.parse(payload[branch].deliveryAddress.address.country).countryId)
                 if (country) payload[branch].deliveryAddress.address.country = country
               })
-          
             }
 
             let data = await onSubmit(payload, isEdit)
@@ -286,7 +265,12 @@ class CompanyModal extends React.Component {
           let { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = props
           let colorIcon = accordionActive.companyAdmin && 'blue'
           return (
-            <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
+            <Modal
+              closeIcon
+              onClose={() => (isClientCompany ? closePopupClientCompany() : closePopup())}
+              open
+              centered={false}
+              size='small'>
               <Modal.Header>
                 <FormattedMessage id={`global.${isEdit ? 'edit' : 'add'}`} />{' '}
                 <FormattedMessage id={header.id} defaultMessage={header.defaultMessage} />
@@ -485,11 +469,13 @@ class CompanyModal extends React.Component {
                 </Form>
               </Segment>
               <Modal.Actions>
-                <Button.Reset data-test='admin_popup_company_cancel_btn' onClick={props.handleReset}>
+                <Button
+                  data-test='admin_popup_company_cancel_btn'
+                  onClick={() => (isClientCompany ? closePopupClientCompany() : closePopup())}>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                     {text => text}
                   </FormattedMessage>
-                </Button.Reset>
+                </Button>
                 <Button.Submit data-test='admin_popup_company_save_btn' onClick={props.handleSubmit}>
                   <FormattedMessage id='global.save' defaultMessage='Save'>
                     {text => text}
@@ -533,7 +519,8 @@ CompanyModal.propTypes = {
     defaultMessage: string
   }),
   isClientCompany: bool,
-  onSubmit: func.isRequired
+  onSubmit: func.isRequired,
+  closePopupClientCompany: func
 }
 
 CompanyModal.defaultProps = {
@@ -541,7 +528,8 @@ CompanyModal.defaultProps = {
     id: 'global.company',
     defaultMessage: 'Company'
   },
-  isClientCompany: false
+  isClientCompany: false,
+  closePopupClientCompany: () => {}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(CompanyModal))

@@ -6,7 +6,7 @@ import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
 import { getSafe } from '~/utils/functions'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-
+import { removeEmpty } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 
 import {
@@ -77,14 +77,18 @@ class Filter extends Component {
   state = {
     savedFiltersActive: false,
     openedSaveFilter: false,
-    inactiveAccordion: {},
+    activeAccordion: { chemicalType: true },
     dateDropdown: {
       expiration: dateDropdownOptions[0].value,
       mfg: dateDropdownOptions[0].value
     },
     searchQuery: '',
     searchWarehouseQuery: '',
-    isTyping: false
+    isTyping: false,
+    hasProvinces: false,
+    savedProvinces: {},
+    provinceOptions: [],
+    applyingSavedFilter: false
   }
 
   componentDidMount() {
@@ -95,23 +99,44 @@ class Filter extends Component {
       fetchWarehouseDistances,
       fetchProductGrade,
       fetchWarehouses,
-      setParams
+      setParams,
+      filterState,
+      appliedFilter,
+      onApply,
+      applyDatagridFilter,
+      fetchCountries,
     } = this.props
 
-    if (typeof this.props.searchWarehouseUrl !== 'undefined')
-      this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
+    setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
+
+    //if (typeof this.props.searchWarehouseUrl !== 'undefined')
+    //  this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
 
     this.handleGetSavedFilters()
-    setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
     Promise.all([
       this.fetchIfNoData(fetchProductConditions, 'productConditions'),
       this.fetchIfNoData(fetchProductForms, 'productForms'),
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
       this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
-      this.fetchIfNoData(fetchProductGrade, 'productGrade'),
-      this.fetchIfNoData(fetchWarehouses, 'warehouses')
-    ]).finally(() => this.setState({ loaded: true }))
+      this.fetchIfNoData(fetchProductGrade, 'productGrades'),
+      //this.fetchIfNoData(fetchWarehouses, 'warehouses'),
+      this.fetchIfNoData(fetchCountries, 'countries')
+    ]).finally(() =>
+      this.setState({
+        ...(filterState !== null && filterState.state),
+        loaded: true
+      })
+    )
+    if (appliedFilter && appliedFilter.filters) {
+      let datagridFilter = this.toDatagridFilter(appliedFilter)
+      applyDatagridFilter(datagridFilter)
+      onApply(datagridFilter)
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.saveFilterState({ state: this.state, values: this.values })
   }
 
   generateRequestData = ({ notifications, checkboxes, name, ...rest }) => {
@@ -119,7 +144,7 @@ class Filter extends Component {
     let { notifyMail, notifyPhone, notifySystem, notificationEnabled } = checkboxes
     let { filters } = this.toSavedFilter(rest)
 
-    return {
+    let data = {
       filters,
       name,
       notificationEnabled: notificationEnabled,
@@ -129,6 +154,8 @@ class Filter extends Component {
       notifyPhone,
       notifySystem
     }
+    removeEmpty(data)
+    return data
   }
 
   toSavedFilter = inputs => {
@@ -320,6 +347,7 @@ class Filter extends Component {
   }
 
   handleSavedFilterApply = async (filter, { setFieldValue, resetForm }) => {
+    this.setState({ applyingSavedFilter: true })
     resetForm({ ...initialValues })
 
     let formikValues = {}
@@ -362,25 +390,48 @@ class Filter extends Component {
 
     Object.keys(formikValues).forEach(key => setFieldValue(key, formikValues[key]))
 
-    this.toggleFilter(false)
+    let savedProvinces = this.state.savedProvinces
+    let provinceOptions = []
 
+    if (formikValues.country) {
+      for (const d of formikValues.country) {
+        const parsed = JSON.parse(d)
+        if (parsed.hasProvinces) {
+          let provinces = []
+          if (savedProvinces[parsed.id]) {
+            provinces = savedProvinces[parsed.id]
+          } else {
+            const {value} = await this.props.fetchProvinces(parsed.id)
+            provinces = value.map(d => ({
+              key: d.id,
+              text: d.name,
+              value: JSON.stringify({id: d.id, name: d.name, text: d.name, country: d.country.id})
+            }))
+            savedProvinces[[parsed.id]] = provinces
+          }
+          provinceOptions = provinceOptions.concat(provinces)
+        }
+      }
+    }
+    this.setState({ savedProvinces, provinceOptions, applyingSavedFilter: false })
+    this.toggleFilter(false)
     this.handleSubmit(formikValues)
   }
 
   handleGetSavedFilters = () => {
-    let { packagingTypes, productConditions, productGrade, productForms } = this.props
+    let { packagingTypes, productConditions, productGrades, productForms } = this.props
     this.props.getSavedFilters(
       this.props.savedUrl,
-      { packagingTypes, productConditions, productGrade, productForms },
+      { packagingTypes, productConditions, productGrades, productForms },
       this.props.apiUrl,
       this.props.filterType
     )
   }
 
   toggleAccordion = name => {
-    let { inactiveAccordion } = this.state
-    let inactive = inactiveAccordion[name]
-    this.setState({ inactiveAccordion: { ...this.state.inactiveAccordion, [name]: !inactive } })
+    let { activeAccordion } = this.state
+    let active = activeAccordion[name]
+    this.setState({ activeAccordion: { ...this.state.activeAccordion, [name]: !active } })
   }
 
   handleSearch = debounce(({ searchQuery, name }) => {
@@ -433,7 +484,7 @@ class Filter extends Component {
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
       {text}
       <IconRight>
-        <Icon name={!this.state.inactiveAccordion[name] ? 'chevron down' : 'chevron right'} />
+        <Icon name={this.state.activeAccordion[name] ? 'chevron down' : 'chevron right'} />
       </IconRight>
     </AccordionTitle>
   )
@@ -596,7 +647,9 @@ class Filter extends Component {
             </GridRow>
             <GridRow>
               <GridColumn computer={12}>
-                <label>{formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}</label>
+                <label>
+                  {formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}
+                </label>
               </GridColumn>
               <GridColumn computer={4}>
                 <FormikCheckbox
@@ -642,7 +695,7 @@ class Filter extends Component {
       productConditions,
       productForms,
       packagingTypes,
-      productGrade,
+      productGrades,
       intl,
       isFilterSaving,
       autocompleteData,
@@ -650,14 +703,19 @@ class Filter extends Component {
       autocompleteWarehouse,
       autocompleteWarehouseLoading,
       layout,
-      savedAutocompleteData
+      savedAutocompleteData,
+      countries,
+      countriesLoading,
+      provinces,
+      provincesLoading,
+      fetchProvinces
     } = this.props
 
     const { formatMessage } = intl
 
     let packagingTypesRows = this.generateCheckboxes(packagingTypes, values, 'packagingTypes')
     let productConditionRows = this.generateCheckboxes(productConditions, values, 'productConditions')
-    let productGradeRows = this.generateCheckboxes(productGrade, values, 'productGrade')
+    let productGradeRows = this.generateCheckboxes(productGrades, values, 'productGrades')
     let productFormsRows = this.generateCheckboxes(productForms, values, 'productForms')
 
     var noResultsMessage = null
@@ -730,20 +788,86 @@ class Filter extends Component {
     if (!autocompleteDataLoading) dropdownProps.icon = null
     //if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
 
+    let dropdownCountry = {
+      search: true,
+      selection: true,
+      multiple: true,
+      fluid: true,
+      clearable: true,
+      options: countries.map(d => ({
+        key: d.id,
+        text: d.name,
+        value: JSON.stringify({ id: d.id, name: d.name, text: d.name, hasProvinces: d.hasProvinces })
+      })),
+      loading: countriesLoading,
+      name: 'country',
+      placeholder: <FormattedMessage id='filter.selectCountry' defaultMessage='Select Country' />,
+      value: values.country,
+      onChange: async (e, data) => {
+        setFieldValue('country', data.value)
+
+        let savedProvinces = this.state.savedProvinces
+        let provinceOptions = []
+
+        for (const d of data.value) {
+          const parsed = JSON.parse(d)
+          if (parsed.hasProvinces) {
+            let provinces = []
+            if (savedProvinces[parsed.id]) {
+              provinces = savedProvinces[parsed.id]
+            } else {
+              const { value } = await fetchProvinces(parsed.id)
+              provinces = value.map(d => ({
+                key: d.id,
+                text: d.name,
+                value: JSON.stringify({ id: d.id, name: d.name, text: d.name, country: d.country.id })
+              }))
+              savedProvinces[[parsed.id]] = provinces
+            }
+            provinceOptions = provinceOptions.concat(provinces)
+          }
+        }
+        let newProvinceValues = values.province.filter(p =>
+          data.value.some(c =>
+            JSON.parse(p).country === JSON.parse(c).id
+          )
+        )
+        this.setState({ savedProvinces, provinceOptions })
+        setFieldValue('province', newProvinceValues)
+      }
+    }
+
+    let dropdownProvince = {
+      search: true,
+      selection: true,
+      multiple: true,
+      fluid: true,
+      clearable: true,
+      options: this.state.provinceOptions,
+      loading: provincesLoading,
+      name: 'province',
+      disabled: !this.state.provinceOptions.length,
+      placeholder: <FormattedMessage id='filter.selectState' defaultMessage='Select State' />,
+      value: values.province,
+      onChange: (e, data) => {
+        setFieldValue('province', data.value)
+      }
+    }
+
     let currencySymbol = getSafe(() => this.props.preferredCurrency.symbol, '$')
 
     return (
       <FilterAccordion>
         <AccordionItem>
           {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalProductName' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.chemicalType}>
+          <AccordionContent active={this.state.activeAccordion.chemicalType}>
             <BottomMargedDropdown {...dropdownProps} />
           </AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('quantity', <FormattedMessage id='filter.quantity' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.quantity}>
+          <AccordionContent active={this.state.activeAccordion.quantity}>
             <FormGroup widths='equal' data-test='filter_quantity_inp'>
               <FormField width={8}>
                 {this.quantityWrapper('quantityFrom', {
@@ -767,7 +891,7 @@ class Filter extends Component {
 
         <AccordionItem>
           {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.price}>
+          <AccordionContent active={this.state.activeAccordion.price}>
             <FormGroup>
               <FormField className='price-input' width={8} data-test='filter_price_inp'>
                 {this.inputWrapper(
@@ -800,30 +924,33 @@ class Filter extends Component {
         </AccordionItem>
 
         <AccordionItem>
-          {this.accordionTitle('warehouse', <FormattedMessage id='filter.location' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
-            <BottomMargedDropdown {...dropdownWarehouseProps} />
+          {this.accordionTitle('location', <FormattedMessage id='filter.location' />)}
+          <AccordionContent active={this.state.activeAccordion.location}>
+            <div className='field-label'><FormattedMessage id='global.country' /></div>
+            <BottomMargedDropdown {...dropdownCountry} />
+            <div className='field-label'><FormattedMessage id='global.state' /></div>
+            <BottomMargedDropdown {...dropdownProvince} />
           </AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('packaging', <FormattedMessage id='filter.packaging' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.packaging}>{packagingTypesRows}</AccordionContent>
+          <AccordionContent active={this.state.activeAccordion.packaging}>{packagingTypesRows}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('productGrades', <FormattedMessage id='filter.grade' defaultMessage='Grade' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.productGrades}>{productGradeRows}</AccordionContent>
+          <AccordionContent active={this.state.activeAccordion.productGrades}>{productGradeRows}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('condition', <FormattedMessage id='filter.condition' defaultMessage='Condition' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.condition}>{productConditionRows}</AccordionContent>
+          <AccordionContent active={this.state.activeAccordion.condition}>{productConditionRows}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('productForms', <FormattedMessage id='filter.form' defaultMessage='Form' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.productForms}>{productFormsRows}</AccordionContent>
+          <AccordionContent active={this.state.activeAccordion.productForms}>{productFormsRows}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
@@ -831,7 +958,7 @@ class Filter extends Component {
             'expiration',
             <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
           )}
-          <AccordionContent active={!this.state.inactiveAccordion.expiration}>
+          <AccordionContent active={this.state.activeAccordion.expiration}>
             <FormGroup widths='equal'>
               {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
             </FormGroup>
@@ -839,8 +966,8 @@ class Filter extends Component {
         </AccordionItem>
 
         <AccordionItem>
-          {this.accordionTitle('assay', <FormattedMessage id='filter.assay' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.assay}>
+          {this.accordionTitle('assay', <FormattedMessage id='filter.percentage' />)}
+          <AccordionContent active={this.state.activeAccordion.assay}>
             <FormGroup data-test='filter_assay_inp'>
               <FormField width={8}>
                 {this.inputWrapper(
@@ -875,7 +1002,7 @@ class Filter extends Component {
             'mfg',
             <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
           )}
-          <AccordionContent active={!this.state.inactiveAccordion.mfg}>
+          <AccordionContent active={this.state.activeAccordion.mfg}>
             <FormGroup widths='equal'>
               {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
             </FormGroup>
@@ -895,15 +1022,15 @@ class Filter extends Component {
       isFilterApplying,
       isFilterSaving,
       intl: { formatMessage },
-      toggleFilter
+      filterState
     } = this.props
 
-    const { savedFiltersActive, openedSaveFilter } = this.state
+    const { savedFiltersActive, openedSaveFilter, applyingSavedFilter } = this.state
 
     return (
       <Form
         enableReinitialize={true}
-        initialValues={initialValues}
+        initialValues={filterState ? filterState.values : initialValues}
         validateOnChange={true}
         validationSchema={validationSchema(openedSaveFilter)}
         onSubmit={(values, { setSubmitting }) => {
@@ -916,6 +1043,8 @@ class Filter extends Component {
           this.submitForm = props.submitForm
           this.resetForm = props.resetForm
           this.setFieldValue = props.setFieldValue
+          this.values = props.values
+
           return (
             <FlexSidebar {...additionalSidebarProps}>
               <TopButtons>
@@ -936,22 +1065,22 @@ class Filter extends Component {
                 </Button>
               </TopButtons>
               <Dimmer.Dimmable as={FlexContent}>
-                <PerfectScrollbar>
-                  {!this.state.savedFiltersActive ? (
-                    this.formMarkup(props)
-                  ) : (
+                {!this.state.savedFiltersActive ? (
+                  <PerfectScrollbar key='set'>{this.formMarkup(props)}</PerfectScrollbar>
+                ) : (
+                  <PerfectScrollbar key='saved'>
                     <SavedFilters
                       params={this.props.params}
                       onApply={filter => this.handleSavedFilterApply(filter, props)}
                       savedFilters={this.props.savedFilters}
-                      savedFiltersLoading={this.props.savedFiltersLoading}
+                      savedFiltersLoading={this.props.savedFiltersLoading || applyingSavedFilter}
                       getSavedFilters={this.handleGetSavedFilters}
                       deleteFilter={this.props.deleteFilter}
                       updateFilterNotifications={this.props.updateFilterNotifications}
                       savedFilterUpdating={this.props.savedFilterUpdating}
                     />
-                  )}
-                </PerfectScrollbar>
+                  </PerfectScrollbar>
+                )}
                 <Dimmer active={this.state.openedSaveFilter} />
               </Dimmer.Dimmable>
               <Transition visible={openedSaveFilter} animation='fade up' duration={500}>
@@ -993,14 +1122,13 @@ class Filter extends Component {
                   size='large'
                   onClick={(e, data) => {
                     this.resetForm({ ...initialValues })
-                    toggleFilter(false)
                     this.props.applyFilter({ filters: [] })
                     this.props.applyDatagridFilter({ filters: [] })
                     this.props.onClear(e, data)
                   }}
                   inputProps={{ type: 'button' }}
                   data-test='filter_clear'>
-                  {formatMessage({ id: 'filter.clearFilter', defaultMessage: 'Clear' })}
+                  {formatMessage({ id: 'filter.clear', defaultMessage: 'Clear' })}
                 </Button>
                 <Button
                   disabled={openedSaveFilter || savedFiltersActive}

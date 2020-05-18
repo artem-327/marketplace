@@ -27,7 +27,7 @@ const columns = [
   {
     name: 'name',
     title: (
-      <FormattedMessage id='global.name' defaultMessage='Name'>
+      <FormattedMessage id='global.docName' defaultMessage='Document Name'>
         {text => text}
       </FormattedMessage>
     )
@@ -58,18 +58,47 @@ const columns = [
   }
 ]
 
+const columnsReduced = [
+  // TODO - check en.json for those ids
+  {
+    name: 'name',
+    title: (
+      <FormattedMessage id='global.docName' defaultMessage='Document Name'>
+        {text => text}
+      </FormattedMessage>
+    )
+  },
+  {
+    name: 'documentTypeName',
+    title: (
+      <FormattedMessage id='global.docType' defaultMessage='Document Type'>
+        {text => text}
+      </FormattedMessage>
+    )
+  },
+  {
+    name: 'expirationDate',
+    title: (
+      <FormattedMessage id='global.expirationDate' defaultMessage='Expiration Date'>
+        {text => text}
+      </FormattedMessage>
+    )
+  }
+]
+
 class DocumentManager extends Component {
   getRows = (data = []) =>
     data.map(row => ({
       ...row,
       documentTypeName: getSafe(() => row.documentType.name, ''),
       expirationDate: row.expirationDate && moment(row.expirationDate).format(getLocaleDateFormat()),
+      issuedAt: row.issuedAt && moment(row.issuedAt).format(getLocaleDateFormat()),
       customName: getSafe(() => row.customName, row.name)
     }))
 
   render() {
     const {
-      datagrid, openPopup, removeAttachment, edit, download, deletable, loading, items, normalWidth
+      datagrid, openPopup, removeAttachment, edit, download, deletable, loading, items, normalWidth, reduceColumns
     } = this.props
 
     let rows = this.getRows(items ? items : this.props.rows)
@@ -78,7 +107,7 @@ class DocumentManager extends Component {
       <ProdexGrid
         tableName='settings_documents'
         {...datagrid.tableProps}
-        columns={columns}
+        columns={reduceColumns ? columnsReduced : columns}
         rows={rows}
         loading={items ? false : loading || datagrid.loading}
         style={{ marginTop: '5px' }}
@@ -136,14 +165,16 @@ DocumentManager.propTypes = {
   download: bool,
   delete: bool,
   items: array,
-  normalWidth: bool
+  normalWidth: bool,
+  reduceColumns: bool,
 }
 
 DocumentManager.defaultProps = {
   edit: true,
   download: true,
   deletable: true,
-  normalWidth: false
+  normalWidth: false,
+  reduceColumns: false
 }
 
 const mapStateToProps = (store, { datagrid }) => {

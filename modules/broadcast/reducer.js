@@ -14,7 +14,11 @@ import {
   deleteTemplate,
   initGlobalBroadcast,
   loadingChanged,
-  treeDataChanged
+  treeDataChanged,
+  openModalCompanyInfo,
+  closeModalCompanyInfo,
+  getCompanyInfo,
+  getAssociations
 } from './actions'
 
 const initialState = {
@@ -23,6 +27,8 @@ const initialState = {
     pricingTiers: [{ price: 0 }],
     price: {}
   },
+  associations: [],
+  associationsFetching: false,
   open: false,
   loading: false,
   data: null,
@@ -34,7 +40,10 @@ const initialState = {
     search: '',
     category: 'region'
   },
-  mode: 'client' // price
+  mode: 'client', // price
+  isOpenModalCompanyInfo: false,
+  dataCompanyInfo: {},
+  isLoadingModalCompanyInfo: false
 }
 
 export default typeToReducer(
@@ -43,6 +52,8 @@ export default typeToReducer(
       return {
         ...initialState,
         templates: state.templates,
+        associations: state.associations,
+        associationsFetching: state.associationsFetching,
         open: true,
         loading: true
       }
@@ -197,7 +208,53 @@ export default typeToReducer(
         ...state,
         data: getSafe(() => payload.model.rule, payload.model)
       }
+    },
+    [openModalCompanyInfo]: state => ({
+      ...state,
+      isOpenModalCompanyInfo: true
+    }),
+    [closeModalCompanyInfo]: state => ({
+      ...state,
+      isOpenModalCompanyInfo: false
+    }),
+
+    [getCompanyInfo.pending]: state => ({
+      ...state,
+      isLoadingModalCompanyInfo: true
+    }),
+
+    [getCompanyInfo.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        dataCompanyInfo: payload,
+        isLoadingModalCompanyInfo: false
+      }
+    },
+
+    [getCompanyInfo.rejected]: state => ({
+      ...state,
+      isLoadingModalCompanyInfo: false
+    }),
+    [getAssociations.pending]: state => {
+      return {
+        ...state,
+        associationsFetching: true
+      }
+    },
+    [getAssociations.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        associations: payload.map((a) => a.name),
+        associationsFetching: false
+      }
+    },
+    [getAssociations.rejected]: state => {
+      return {
+        ...state,
+        associationsFetching: false
+      }
     }
   },
+
   initialState
 )

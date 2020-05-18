@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { CompanyModal } from '~/modules/company-form/'
-import { updateClientCompany, createClientCompany } from '~/modules/settings/actions'
+import { updateClientCompany, createClientCompany, closePopup } from '~/modules/settings/actions'
 class Popup extends Component {
   onSubmit = (values, isEdit) => {
     return new Promise(async (resolve, _reject) => {
@@ -11,7 +11,7 @@ class Popup extends Component {
 
       if (isEdit) data = await updateClientCompany(values, values.id)
       else data = await createClientCompany(values)
-      
+
       resolve(data)
     })
   }
@@ -21,11 +21,12 @@ class Popup extends Component {
         onSubmit={this.onSubmit}
         isClientCompany
         header={{ id: 'global.clientCompany', defaultMessage: 'Client Company' }}
+        closePopupClientCompany={this.props.closePopup}
       />
     )
   }
 }
 
-const mapDispatchToProps = { updateClientCompany, createClientCompany }
+const mapDispatchToProps = { updateClientCompany, createClientCompany, closePopup }
 
 export default connect(null, mapDispatchToProps)(Popup)

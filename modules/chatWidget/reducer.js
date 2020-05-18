@@ -2,7 +2,7 @@ import * as AT from './action-types'
 
 export const initialState = {
   supportChatEnabled: false,
-  initialized: false,
+  initialized: false
 }
 
 export default function reducer(state = initialState, action) {

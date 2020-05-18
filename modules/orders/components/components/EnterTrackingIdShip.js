@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
-import {Modal, ModalContent, Button, Grid, Dimmer, Loader} from 'semantic-ui-react'
+import { Modal, ModalContent, Button, Grid, Dimmer, Loader } from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { getSafe } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -17,12 +17,8 @@ const initValues = {
 }
 
 class EnterTrackingIdShip extends React.Component {
-
   markShipped = async (value, actions) => {
-    const {
-      orderId,
-      closePopup
-    } = this.props
+    const { orderId, closePopup } = this.props
 
     try {
       await this.props.shipOrder(orderId, value)
@@ -33,7 +29,6 @@ class EnterTrackingIdShip extends React.Component {
       actions.setSubmitting(false)
     }
   }
-
 
   render() {
     const {
@@ -60,10 +55,12 @@ class EnterTrackingIdShip extends React.Component {
                 onSubmit={(values, actions) => {
                   if (values.trackingId.length) {
                     this.markShipped(values.trackingId, actions)
-                  }
-                  else {
+                  } else {
                     confirm(
-                      formatMessage({ id: 'confirm.order.actions.shippedNoTracking.title', defaultMessage: 'Mark Order as Shipped without Tracking ID' }),
+                      formatMessage({
+                        id: 'confirm.order.actions.shippedNoTracking.title',
+                        defaultMessage: 'Mark Order as Shipped without Tracking ID'
+                      }),
                       formatMessage(
                         {
                           id: 'confirm.order.actions.shippedNoTracking.content',
@@ -72,10 +69,12 @@ class EnterTrackingIdShip extends React.Component {
                         { orderId: orderId }
                       )
                     ).then(
-                      () => { // confirm
+                      () => {
+                        // confirm
                         this.markShipped(values.trackingId, actions)
                       },
-                      () => { // cancel
+                      () => {
+                        // cancel
                       }
                     )
                   }
@@ -90,7 +89,7 @@ class EnterTrackingIdShip extends React.Component {
                         <Grid.Row>
                           <Grid.Column width={16}>
                             <Input
-                              type='text'
+                              inputProps={{ type: 'number' }}
                               label={formatMessage({ id: 'order.trackingId', defaultMessage: 'Tracking ID' })}
                               name='trackingId'
                             />
@@ -100,14 +99,14 @@ class EnterTrackingIdShip extends React.Component {
                           <Grid.Column width={10}></Grid.Column>
                           <Grid.Column floated='right' width={3}>
                             <Button basic fluid onClick={() => this.props.closePopup()}>
-                              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' >
+                              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span'>
                                 {text => text}
                               </FormattedMessage>
                             </Button>
                           </Grid.Column>
                           <Grid.Column floated='right' width={3}>
                             <Button primary fluid type='submit'>
-                              <FormattedMessage id='global.save' defaultMessage='Save' tagName='span' >
+                              <FormattedMessage id='global.save' defaultMessage='Save' tagName='span'>
                                 {text => text}
                               </FormattedMessage>
                             </Button>

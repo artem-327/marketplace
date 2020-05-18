@@ -9,7 +9,7 @@ import * as val from 'yup'
 
 import * as Actions from '../../actions'
 import { errorMessages } from '~/constants/yupValidation'
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { getSafe } from '~/utils/functions'
 
 const ModalBody = styled(ModalContent)`
@@ -36,10 +36,7 @@ const validationSchema = val.object().shape({
     .min(0, errorMessages.minimum(0))
     .typeError(errorMessages.mustBeNumber)
     .required(errorMessages.requiredMessage),
-  messageBuyer: val
-    .string()
-    .typeError(errorMessages.invalidString)
-    .required(errorMessages.requiredMessage)
+  messageBuyer: val.string().typeError(errorMessages.invalidString).required(errorMessages.requiredMessage)
 })
 
 class PurchaseReviewCreditRequest extends React.Component {
@@ -318,7 +315,7 @@ class PurchaseReviewCreditRequest extends React.Component {
                             </Grid.Row>
                             <Grid.Row>
                               <Grid.Column>
-                                <UploadLot
+                                <UploadAttachment
                                   {...this.props}
                                   name='attachments'
                                   attachments={values.attachments}

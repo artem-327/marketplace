@@ -45,7 +45,7 @@ export const initialState = {
   selectedAddressId: null,
   selectedCardId: null,
   // todo remove shippingQuotes, keep them in shipping obj only
-  shippingQuotes: [],
+  shippingQuotes: {},
   sidebar: {
     isOpen: false,
     pricing: null,
@@ -58,7 +58,7 @@ export const initialState = {
     isShippingEdit: false,
     isNewAddress: true,
     savedShippingPreferences: true,
-    shippingQuotes: [],
+    shippingQuotes: {},
     selectedShippingQuote: null
   }
 }

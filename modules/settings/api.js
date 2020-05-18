@@ -43,6 +43,8 @@ export default {
   getCreditCardsData: () => api.get('/prodex/api/payments/cards').then(response => response.data),
   getBankAccountsData: () => api.get('/prodex/api/payments/bank-accounts').then(response => response.data),
   getDwollaAccBalance: () => api.get('/prodex/api/payments/dwolla/balance').then(response => response.data),
+  getDwollaBeneficiaryOwners: () =>
+    api.get(`/prodex/api/payments/dwolla/beneficiary-owners`).then(response => response.data),
   getProductsCatalogByString: async (data, limit = 30) => {
     return await api
       .get(`/prodex/api/products/search?limit=${limit}&onlyMapped=${data.unmapped}&search=${data.body}`)
@@ -108,27 +110,33 @@ export default {
       .post(`/prodex/api/imports/product-offers/csv-import?temporaryFileId=${id}`, body)
       .then(response => response.data)
   },
-  uploadCSVFile: body => {
+  uploadCSVFile: file => {
     const formData = new FormData()
-    formData.append('file', new Blob([body], { type: 'text/plain' }))
+    formData.append('file', new Blob([file], { type: 'text/csv' }), file.name)
 
-    return api
-      .post('/prodex/api/imports/temporary-files', formData, {
-        headers: {
-          'Content-Type': 'text/plain'
-        }
-      })
-      .then(response => response.data)
+    return api.post('/prodex/api/imports/temporary-files', formData).then(response => response.data)
   },
   getCSVMapEchoProduct: () => api.get('/prodex/api/imports/echo-products/import-maps').then(response => response.data),
   postCSVMapEchoProduct: data => api.post('/prodex/api/imports/echo-products/import-maps', data),
   putCSVMapEchoProduct: (mapId, data) => api.put(`/prodex/api/imports/echo-products/import-maps/${mapId}`, data),
   deleteCSVMapEchoProduct: mapId => api.delete(`/prodex/api/imports/echo-products/import-maps/${mapId}`),
+
   getCSVMapProductOffer: () =>
     api.get('/prodex/api/imports/product-offers/import-maps').then(response => response.data),
   postCSVMapProductOffer: data => api.post('/prodex/api/imports/product-offers/import-maps', data),
   putCSVMapProductOffer: (mapId, data) => api.put(`/prodex/api/imports/product-offers/import-maps/${mapId}`, data),
   deleteCSVMapProductOffer: mapId => api.delete(`/prodex/api/imports/product-offers/import-maps/${mapId}`),
+
+  postImportCompaniesCSV: (body, id) => {
+    return api
+      .post(`/prodex/api/imports/companies/csv-import?temporaryFileId=${id}`, body)
+      .then(response => response.data)
+  },
+  getCSVMapCompanies: () => api.get('/prodex/api/imports/companies/import-maps').then(response => response.data),
+  postCSVMapCompanies: data => api.post('/prodex/api/imports/companies/import-maps', data),
+  putCSVMapCompanies: (mapId, data) => api.put(`/prodex/api/imports/companies/import-maps/${mapId}`, data),
+  deleteCSVMapCompanies: mapId => api.delete(`/prodex/api/imports/companies/import-maps/${mapId}`),
+
   putWarehouse: (branchId, body) => api.put(`/prodex/api/branches/${branchId}`, body).then(r => r.data),
   // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
   patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body),
@@ -186,8 +194,8 @@ export default {
   createLogisticsAccount: payload =>
     api.post('/prodex/api/logistics-accounts/', payload).then(response => response.data),
   getLogisticsAccounts: () => api.get('/prodex/api/logistics-accounts/').then(response => response.data),
-  updateLogisticsAccount: payload =>
-    api.put(`/prodex/api/logistics-accounts/id/${payload.id}`, payload).then(response => response.data),
+  updateLogisticsAccount: (id, payload) =>
+    api.put(`/prodex/api/logistics-accounts/id/${id}`, payload).then(response => response.data),
   deleteLogisticsAccount: id => api.delete(`/prodex/api/logistics-accounts/id/${id}`).then(() => id),
   getSettings: role => api.get(`/prodex/api/settings/${role}`).then(response => response.data),
   updateSettings: (role, payload) => api.patch(`/prodex/api/settings/${role}`, payload).then(response => response.data),
@@ -209,6 +217,18 @@ export default {
   removeAttachmentLinkToBranch: (attachmentId, branchId) =>
     api.delete(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&branchId=${branchId}`),
   createClientCompany: payload => api.post('/prodex/api/companies/client', payload).then(response => response.data),
-  updateClientCompany: (payload, id) => api.put(`/prodex/api/companies/client/${id}`, payload).then(response => response.data),
-  deleteClientCompany: id => api.delete(`/prodex/api/companies/client/${id}`).then(response => response.data)
+  updateClientCompany: (payload, id) =>
+    api.put(`/prodex/api/companies/client/${id}`, payload).then(response => response.data),
+  deleteClientCompany: id => api.delete(`/prodex/api/companies/client/${id}`).then(response => response.data),
+  addVerificationDocumentsOwner: (attachment, id, docType) => {
+    const formData = new FormData()
+    formData.append('file', attachment)
+    return api.post(`/prodex/api/payments/dwolla/beneficiary-owners/${id}/documents/upload?type=${docType}`, formData, {
+      headers: {
+        accept: 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+      }
+    })
+  }
 }

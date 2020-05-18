@@ -1,24 +1,28 @@
 import React, { Component } from 'react'
-import './uploadLot.scss'
 import PropTypes from 'prop-types'
-import File from '~/src/pages/inventory/addInventory/components/Upload/components/File'
-import ReactDropzone from 'react-dropzone'
+import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-
-import { FieldArray } from 'formik'
-import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup } from '~/utils/functions'
-import styled from 'styled-components'
+import ReactDropzone from 'react-dropzone'
 import { Table, TableCell, Modal, Button } from 'semantic-ui-react'
+import { withToastManager } from 'react-toast-notifications'
+import { FieldArray } from 'formik'
+//Components
+import File from '~/src/pages/inventory/addInventory/components/Upload/components/File'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
+//Actions
+import { getDocumentTypes } from '~/modules/inventory/actions'
+//Styles
+import './uploadAttachment.scss'
+import styled from 'styled-components'
 
 const StyledButton = styled(Button)`
   margin: 4px 4px 4px 4px !important;
 `
 
-class UploadLot extends Component {
+class UploadAttachment extends Component {
   constructor(props) {
     super(props)
-
+    this.reactDropzoneRef = React.createRef()
     this.state = {
       files: [],
       duplicateFiles: []
@@ -26,15 +30,22 @@ class UploadLot extends Component {
   }
 
   componentDidMount() {
+    const { listDocumentTypes, getDocumentTypes } = this.props
+    if (!listDocumentTypes || (listDocumentTypes && !listDocumentTypes.length)) getDocumentTypes()
     this.setState({
       files: this.props.fileIds
     })
+    if (this.props.saveComponentRef && this.reactDropzoneRef && this.reactDropzoneRef.current) {
+      this.props.saveComponentRef(this.reactDropzoneRef.current)
+    }
   }
 
   removeFile = file => {
     let poId = this.props.edit
     // delete attachment from database
-    if (file.linked) {
+    if (file.isLinkedFromDocumentManager) {
+      this.props.onRemoveFile(file.id)
+    } else if (file.linked) {
       if (file.isToOrderItem) {
         this.props.removeOrderItem(file)
       } else {
@@ -53,7 +64,7 @@ class UploadLot extends Component {
 
   onDropRejected = blobs => {
     let { fileMaxSize, toastManager } = this.props
-    blobs.forEach(function(blob) {
+    blobs.forEach(function (blob) {
       if (blob.size > fileMaxSize * 1024 * 1024) {
         toastManager.add(
           generateToastMarkup(
@@ -148,10 +159,10 @@ class UploadLot extends Component {
                     resolve()
                   })
                   .catch(e => {
-                    if (e.clientMessage) {
-                      const docType = listDocumentTypes.find(x => x.value === type)
+                    if (e.response.data.clientMessage) {
+                      const docType = listDocumentTypes.find(x => x.value === parseInt(type))
                       duplicateFiles.push({
-                        id: parseInt(e.clientMessage),
+                        id: parseInt(e.response.data.exceptionMessage),
                         name: files[j].name,
                         documentType: { id: docType.value, name: docType.text },
                         file: file
@@ -182,11 +193,10 @@ class UploadLot extends Component {
 
   handleConfirmFile = async (index, att) => {
     let { addAttachment, type, expiration } = this.props
-
     await new Promise((resolve, reject) => {
       addAttachment(att.file.value, parseInt(type), { expiration, force: true })
         .then(a => {
-          this.onUploadSuccess(att)
+          this.onUploadSuccess(a.value.data)
           this.removeDuplicateFile(index)
           resolve()
         })
@@ -200,7 +210,7 @@ class UploadLot extends Component {
     let { type, toastManager, lot } = this.props
 
     await new Promise((resolve, reject) => {
-      this.onUploadSuccess(att)
+      this.onUploadSuccess({ ...att, isLinkedFromDocumentManager: true })
       this.removeDuplicateFile(index)
       resolve()
     }).catch(e => {
@@ -239,7 +249,7 @@ class UploadLot extends Component {
                     <Table.Row key={index}>
                       <TableCell>{d.name}</TableCell>
                       <TableCell>
-                        <div style={{ 'text-align': 'center' }}>
+                        <div style={{ textAlign: 'center' }}>
                           <StyledButton
                             type='button'
                             data-test='attachments_duplicate_cancel_btn'
@@ -309,7 +319,7 @@ class UploadLot extends Component {
     return (
       <>
         {this.renderDuplicateFilesModal()}
-        <div className={'uploadLot ' + (hasFile ? ' has-file' : '')}>
+        <div className={'uploadAttachment ' + (hasFile ? ' has-file' : '')}>
           {this.props.header}
           {disabled ? (
             <span className='file-space'>
@@ -336,11 +346,12 @@ class UploadLot extends Component {
                 )}
               />
             </span>
-          ) : hasFile ? (
+          ) : (
             <React.Fragment>
-              {this.props.uploadedContent ? (
+              {!hasFile || this.props.uploadedContent ? (
                 <ReactDropzone
-                  className='dropzoneLotHasFile'
+                  ref={this.reactDropzoneRef}
+                  className={hasFile ? 'dropzoneLotHasFile' : 'dropzoneLot'}
                   activeClassName='active'
                   onDrop={acceptedFiles => {
                     if (acceptedFiles.length) {
@@ -350,20 +361,20 @@ class UploadLot extends Component {
                         toastManager.add(limitMsg, {
                           appearance: 'error'
                         })
-
-                        return
                       }
-                    } else {
-                      return
                     }
                   }}
-                  onDropRejected={this.onDropRejected}>
-                  {this.props.uploadedContent}
+                  onDropRejected={this.onDropRejected}
+                >
+                  {hasFile
+                    ? this.props.uploadedContent
+                    : <div>{this.props.emptyContent}</div>
+                  }
                 </ReactDropzone>
               ) : (
                 ''
               )}
-              {!hideAttachments && (
+              {hasFile && !hideAttachments && (
                 <span className='file-space'>
                   <FieldArray
                     name={this.props.name}
@@ -389,27 +400,6 @@ class UploadLot extends Component {
                 </span>
               )}
             </React.Fragment>
-          ) : (
-            <ReactDropzone
-              className='dropzoneLot'
-              activeClassName='active'
-              onDrop={acceptedFiles => {
-                if (acceptedFiles.length) {
-                  if (!filesLimit || acceptedFiles.length <= filesLimit) {
-                    this.onPreviewDrop(acceptedFiles)
-                  } else {
-                    toastManager.add(limitMsg, {
-                      appearance: 'error'
-                    })
-
-                    return
-                  }
-                } else {
-                  return
-                }
-              }}>
-              <div>{this.props.emptyContent}</div>
-            </ReactDropzone>
           )}
         </div>
       </>
@@ -417,13 +407,18 @@ class UploadLot extends Component {
   }
 }
 
-UploadLot.propTypes = {
+UploadAttachment.propTypes = {
   className: PropTypes.string,
   content: PropTypes.string,
   files: PropTypes.array,
   type: PropTypes.string,
   uploadClass: PropTypes.string,
-  uploadedClass: PropTypes.string
+  uploadedClass: PropTypes.string,
+  listDocumentTypes: PropTypes.array
 }
 
-export default withToastManager(UploadLot)
+const mapStateToProps = state => ({
+  listDocumentTypes: getSafe(() => state.simpleAdd.listDocumentTypes, [])
+})
+
+export default withToastManager(connect(mapStateToProps, { getDocumentTypes })(UploadAttachment))

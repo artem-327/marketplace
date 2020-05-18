@@ -8,25 +8,25 @@ import { currency } from '~/constants/index'
 
 export function getIdentity() {
   return {
-      type: AT.GET_IDENTITY,
-      async payload() {
-        const identity = await api.getIdentity()
-        const company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
-        const preferredCurrency = getSafe(() => identity.preferredCurrency, currency)
-        return {
-          identity: {
-            ...identity,
-            company:
-              identity.company || company
-                ? {
+    type: AT.GET_IDENTITY,
+    async payload() {
+      const identity = await api.getIdentity()
+      const company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
+      const preferredCurrency = getSafe(() => identity.preferredCurrency, currency)
+      return {
+        identity: {
+          ...identity,
+          company:
+            identity.company || company
+              ? {
                   ...identity.company,
                   ...company
                 }
-                : null
-          },
-          preferredCurrency
-        }
+              : null
+        },
+        preferredCurrency
       }
+    }
   }
 }
 
@@ -44,7 +44,7 @@ export function login(username, password) {
         const auth = await authorize(username, password)
         setAuth(auth)
         const identity = await api.getIdentity()
-       
+
         let company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
         const preferredCurrency = getSafe(() => identity.preferredCurrency, currency)
 
@@ -87,9 +87,14 @@ export function login(username, password) {
         let urlPage = '/inventory/my'
         if (typeof window !== 'undefined') {
           const searchParams = new URLSearchParams(getSafe(() => window.location.search, ''))
-
           if (searchParams.has('redirectUrl')) {
             urlPage = decodeURI(getSafe(() => window.location.search.split('redirectUrl=')[1], urlPage))
+            //Remove password from URL if exist password or username. We do not know why is password and username in URL.
+            //In ctx.req.url has credentials in securePage, but we do not know when got and why has this credentials.
+            //This is hot fix.
+            if (urlPage.includes('password') || urlPage.includes('username')) {
+              urlPage = '/'
+            }
           }
         }
         // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
@@ -102,6 +107,9 @@ export function login(username, password) {
           !identity.lastLoginAt
         ) {
           urlPage = '/settings'
+        }
+        if (identity.roles.find(role => role.name === 'Echo Operator')) {
+          urlPage = '/operations'
         }
         if (
           !(
@@ -168,13 +176,7 @@ export const reviewCompany = values => {
   return {
     type: AT.AUTH_REVIEW_COMPANY,
     async payload() {
-      const response = api.reviewCompany(values)
-      const identity = await api.getIdentity()
-      // const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
-
-      // isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
-
-      return response
+      return await api.reviewCompany(values)
     }
   }
 }

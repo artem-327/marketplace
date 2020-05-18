@@ -1,7 +1,7 @@
 import { Icon, Checkbox } from 'semantic-ui-react'
 import PriceControl from './PriceControl'
 import { Rule } from './Broadcast.style'
-import { getNodeStatus, setBroadcast } from '~/modules/broadcast/utils'
+import { getBroadcast } from '~/modules/broadcast/utils'
 import { getSafe } from '~/utils/functions'
 
 const EmptyIconSpace = () => (
@@ -18,7 +18,9 @@ const RuleItem = props => {
     hideFobPrice,
     filter,
     loadingChanged,
-    asSidebar
+    asSidebar,
+    openModalCompanyInfo,
+    getCompanyInfo
     // tree,
   } = props
   // let item = _.cloneDeep(props.item)
@@ -27,32 +29,11 @@ const RuleItem = props => {
     model: { name, rule }
   } = item
 
-  const handleChange = (propertyName, e) => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    const value = rule[propertyName]
-    const newValue = value === 1 ? 0 : 1
-
-    rule[propertyName] = newValue
-
-    if (item.hasChildren()) {
-      item.walk(node => {
-        node.model.rule[propertyName] = newValue
-      })
-
-      // Hack...
-      // For some reason walk above doesn't change broadcast value of regions...
-      item.model.rule.elements.forEach(element => (element[propertyName] = newValue))
-    }
-    onChange(item)
-  }
-
   const handleRowClick = i => {
     onRowClick(i)
   }
 
-  //get company name from item based on id with 2 loops. When find the same id then has companyName and breaks all loops
+  // Get company name from item based on id with 2 loops. When find the same id then has companyName and breaks all loops
   const findCompany = () => {
     if (getSafe(() => item.model.rule.type, null) === 'branch') {
       for (let i in getSafe(() => item.parent.model.rule.elements, [])) {
@@ -75,7 +56,29 @@ const RuleItem = props => {
     .slice(1)
     .filter(n => n.model.rule.broadcast === 1)
   const parentBroadcasted = broadcastedParents.reverse()[0]
-  const nodeBroadcast = rule.broadcast
+  let nodeBroadcast = rule.broadcast
+  const hasNonHiddenChild = item.first((n) => !n.model.rule.hidden && n.model.rule.id !== item.model.rule.id)
+
+  const displayArrow =
+    item.children.length > 0 &&
+    rule.type !== 'root' &&
+    hasNonHiddenChild
+
+
+  if (filter.category === 'branch' && item.isRoot()) {
+    let all = item.all((n) => n.model.rule.type === 'branch').length
+
+    let broadcastingTo = item.all((n) => n.model.rule.type === 'branch' && n.model.rule.broadcast === 1).length
+
+    if (all === broadcastingTo) nodeBroadcast = 1
+    else if (broadcastingTo === 0) nodeBroadcast = 0
+  } else if (item.hasChildren()) {
+    nodeBroadcast = getBroadcast(item)
+  }
+
+  if (rule.hidden || (filter.category === 'branch' && rule.type === 'company' && !hasNonHiddenChild)) {
+    return null
+  }
 
   let companyName = findCompany()
 
@@ -88,15 +91,31 @@ const RuleItem = props => {
         data-test='broadcast_rule_row_click'
         style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
         <Rule.RowContent>
-          {item.children.length > 0 && rule.type !== 'root' ? (
+          {displayArrow ? (
             <Icon name={`chevron ${item.model.rule.expanded ? 'down' : 'right'}`} />
           ) : (
-            <EmptyIconSpace />
-          )}
-          <span>{companyName ? `${companyName} ${name}` : `${name}`}</span>
+              <EmptyIconSpace />
+            )}
+          {rule.type !== 'branch' || (rule.type === 'branch' && companyName) ? (
+            <span>{companyName ? `${companyName} ${name}` : `${name}`}</span>
+          ) : (
+              <a
+                onClick={() => {
+                  try {
+                    if (getSafe(() => item.parent.model.rule.id, '')) {
+                      getCompanyInfo(item.parent.model.rule.id)
+                      openModalCompanyInfo()
+                    }
+                  } catch (error) {
+                    console.error(error)
+                  }
+                }}>
+                {companyName ? `${companyName} ${name}` : `${name}`}
+              </a>
+            )}
         </Rule.RowContent>
 
-        <Rule.Toggle style={asSidebar ? { flex: '0 0 60px' } : null}>
+        <Rule.Toggle style={asSidebar ? { flex: '0 0 62px' } : null}>
           <Checkbox
             className={rule.priceOverride && nodeBroadcast === 1 && 'independent'}
             data-test='broadcast_rule_toggle_chckb'
@@ -105,7 +124,7 @@ const RuleItem = props => {
             indeterminate={nodeBroadcast === 2}
             checked={nodeBroadcast === 1}
             // disabled={toggleDisabled}
-            onClick={e => handleChange('broadcast', e)}
+            onClick={e => onChange(item, 'broadcast', e)}
           />
         </Rule.Toggle>
 
@@ -135,6 +154,8 @@ const RuleItem = props => {
             onPriceChange={onPriceChange}
             onChange={onChange}
             asSidebar={asSidebar}
+            openModalCompanyInfo={openModalCompanyInfo}
+            getCompanyInfo={getCompanyInfo}
           />
         ))}
     </>

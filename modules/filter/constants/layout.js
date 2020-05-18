@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Sidebar, Accordion, Segment, GridRow, Icon, Dropdown, Grid, GridColumn } from 'semantic-ui-react'
+import { Sidebar, Accordion, Segment, GridRow, Icon, Dropdown, Grid, GridColumn, FormField } from 'semantic-ui-react'
 import Tooltip from '~/components/tooltip'
 
 const popupWidth = 400
@@ -124,7 +124,11 @@ export const FlexSidebar = styled.div`
 `
 
 export const FlexContent = styled.div`
-  padding: 0 10px;  
+  padding: 0 10px;
+  
+  .dimmer {
+    background: rgba(0, 0, 0, 0.25) !important;
+  }  
 `
 
 export const FiltersContainer = styled.div`     // ! ! smazat?
@@ -209,6 +213,12 @@ export const FilterAccordion = styled(Accordion)`
 export const AccordionContent = styled(Accordion.Content)`
   font-size: 13px;
   padding-top: 0px !important;
+  > .field-label {
+    margin: 0em 0em 0.384615385em 0em;
+    font-size: 1em;
+    line-height: 1.38;
+    color: #546f93;
+  }
   .fields {
     margin-bottom: 10px !important;
     .field {
@@ -229,6 +239,12 @@ export const AccordionContent = styled(Accordion.Content)`
       }
     }
   }
+
+  .see-all {
+      color: #2599d5;
+      padding-bottom: 0.846153846em
+  }
+  
   span {
     //font-size: 14px;
     font-family: 'Cabin', sans-serif !important;
@@ -566,4 +582,8 @@ export const QuantityWrapper = styled.div`
       }
     }
   }
+`
+
+export const BottomMargedField = styled(FormField)`
+  margin-bottom: 13px !important
 `

@@ -69,6 +69,9 @@ import phoneNumber from '~/modules/phoneNumber/reducer'
 import companyProductInfo from '~/modules/company-product-info/reducer'
 import operations from '~/modules/operations/reducers'
 import holds from '~/modules/marketplace/holds/reducer'
+import wantedBoard from '~/modules/wanted-board/reducer'
+import search from '~/modules/search/reducer'
+import alerts from '~/modules/alerts/reducer'
 import layout from '~/modules/layout/reducer'
 
 const reducer = combineReducers({
@@ -89,7 +92,7 @@ const reducer = combineReducers({
   cart,
   popup,
   merchants,
-  filter: combineReducers({ filter, products }),
+  filter,
   oldFilter,
   errors,
   dataTables,
@@ -128,7 +131,10 @@ const reducer = combineReducers({
   chatWidget,
   operations,
   holds,
-  layout
+  wantedBoard,
+  search,
+  layout,
+  alerts
 })
 
 const rootReducer = (state, action) => {

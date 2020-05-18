@@ -8,6 +8,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup } from '~/utils/functions'
 import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
+import { ArrayToFirstItem } from '~/components/formatted-messages/'
 
 const columns = [
   {
@@ -50,9 +51,8 @@ class LogisticsTable extends Component {
         columns={columns}
         rows={logisticsAccounts.map(acc => ({
           ...acc,
-          provider: acc.provider.id,
           logisticsProviderName: acc.provider.name,
-          username: acc.username
+          username: <ArrayToFirstItem values={acc.accountInfos && acc.accountInfos.map(d => d.username)} />
         }))}
         loading={loading}
         rowActions={[
@@ -101,10 +101,11 @@ const mapDispatchToProps = {
   deleteLogisticsAccount
 }
 
-const mapStateToProps = ({ settings: { loading, logisticsAccounts, deleteLogisticsAccount } }) => ({
+const mapStateToProps = ({ settings: { loading, logisticsAccounts, deleteLogisticsAccount } }) => {
+  return ({
   loading,
   logisticsAccounts,
   deleteLogisticsAccount
-})
+})}
 
 export default withToastManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(LogisticsTable)))

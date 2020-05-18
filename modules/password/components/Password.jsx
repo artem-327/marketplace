@@ -43,7 +43,7 @@ class Password extends Component {
 
             try {
               await setPassword({
-                email: values.email,
+                email: values.email.trim(),
                 newPassword: values.password,
                 securityCode: values.securityCode,
                 // ...(values.termsOfAgreement && { approveTOS: true })

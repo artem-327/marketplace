@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import {Label, Popup, List, Header} from 'semantic-ui-react'
-import { string, array } from "prop-types"
+import { string, array, number } from "prop-types"
 import styled from 'styled-components'
 
 const ProductLabel = styled(Label)`
@@ -15,10 +15,13 @@ const ProductFirstItem = styled.div`
 
 export default class ArrayToFirstItem extends Component {
   render() {
-    let {values} = this.props
+    let { values, rowItems } = this.props
     if (!values || values.length === 0) return null
 
-    if (values.length > 1) {
+    let rowValues = values.slice()
+    rowValues.splice(rowItems)
+
+    if (values.length > rowItems) {
       return (
         <div>
           <Popup
@@ -35,22 +38,24 @@ export default class ArrayToFirstItem extends Component {
                 ))}
               </List>}
             position='right center'
-            trigger={<div><ProductLabel className='bordered right'>{values.length - 1}+</ProductLabel></div>}
+            trigger={<div><ProductLabel className='bordered right'>{values.length - rowItems}+</ProductLabel></div>}
           />
-          <ProductFirstItem>{values[0]}</ProductFirstItem>
+          <ProductFirstItem>{rowValues.join(', ')}</ProductFirstItem>
         </div>
       )
     }
     else {
-      return values[0]
+      return rowValues.join(', ')
     }
   }
 }
 
 ArrayToFirstItem.propTypes = {
-  values: array
+  values: array,
+  rowItems: number
 }
 
 ArrayToFirstItem.defaultProps = {
-  values: null
+  values: null,
+  rowItems: 1
 }

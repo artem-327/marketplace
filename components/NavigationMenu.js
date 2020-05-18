@@ -10,13 +10,12 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { ArrowLeftCircle, ArrowRightCircle, Layers, Settings, ShoppingBag } from 'react-feather'
+import { Hexagon, Layers, Settings, ShoppingBag, Grid, Sliders, FileText, Bell } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
-import { InventoryFilter } from '~/modules/filter'
-import { Filter } from '~/modules/filter' // Marketplace filter
-import { OrderFilter } from '~/modules/filter'
+import { InventoryFilter, Filter, OrderFilter, WantedBoardFilter } from '~/modules/filter'
+import TabsOperations from '~/modules/operations/components/Tabs'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -36,11 +35,15 @@ class Navigation extends Component {
   state = {
     dropdowns: {},
     settings: getSafe(() => Router.router.pathname === '/settings', false),
+    orders:
+      getSafe(() => Router.router.pathname === '/orders', false) ||
+      getSafe(() => Router.router.pathname === '/orders/detail', false),
     admin: getSafe(() => Router.router.pathname === '/admin', false),
     operations: getSafe(() => Router.router.pathname === '/operations', false),
-    openedFilterMyInventory: false,
-    openedFilterMarketplace: false,
-    openedFilterOrders: false
+    openedFilterMyInventory: true,
+    openedFilterMarketplace: true,
+    openedFilterOrders: false,
+    openedFilterWantedBoard: true
   }
 
   componentDidMount() {
@@ -70,14 +73,19 @@ class Navigation extends Component {
         case '/inventory/my':
           this.setState(prevState => ({
             openedFilterMyInventory: !prevState.openedFilterMyInventory,
-            settings: false
+            settings: false,
+            orders: false
           }))
           break
         case '/marketplace/all':
           this.setState(prevState => ({
             openedFilterMarketplace: !prevState.openedFilterMarketplace,
-            settings: false
+            settings: false,
+            orders: false
           }))
+          break
+        case '/wanted-board/wanted-board':
+          this.setState(prevState => ({ openedFilterWantedBoard: !prevState.openedFilterWantedBoard }))
           break
         case '/orders?type=sales':
           //temporary disabled - this.setState(prevState => ({ openedFilterOrders: !prevState.openedFilterOrders }))
@@ -90,7 +98,8 @@ class Navigation extends Component {
       this.setState({
         openedFilterMyInventory: false,
         openedFilterMarketplace: false,
-        openedFilterOrders: false
+        openedFilterOrders: false,
+        openedFilterWantedBoard: false
       })
     }
 
@@ -133,12 +142,19 @@ class Navigation extends Component {
     if (type === 'admin') {
       Router.push('/admin')
     }
+    if (type === 'operations') {
+      Router.push('/operations')
+    }
     // toggle dropdown state
     this.setState({
-      [type]: !typeState,
       openedFilterMyInventory: false,
       openedFilterMarketplace: false,
-      openedFilterOrders: false
+      openedFilterOrders: false,
+      orders: false,
+      settings: false,
+      admin: false,
+      operations: false,
+      [type]: !typeState
     })
 
     // resize dropdown
@@ -198,24 +214,30 @@ class Navigation extends Component {
       intl: { formatMessage },
       sidebarDetailTrigger,
       router: { pathname, asPath },
-      collapsedMenu
+      collapsedMenu,
+      activeInventoryFilter,
+      activeMarketplaceFilter,
+      activeWantedBoardFilter
     } = this.props
 
     const {
       dropdowns,
       settings,
+      orders,
       admin,
       operations,
       openedFilterMyInventory,
       openedFilterMarketplace,
-      openedFilterOrders
+      openedFilterOrders,
+      openedFilterWantedBoard
     } = this.state
 
-    const MenuLink = withRouter(({ router: { asPath }, to, children, tab, className }) => {
+    const MenuLink = withRouter(({ router: { asPath }, to, children, tab, className, dataTest }) => {
       return (
         <Link prefetch href={to}>
           <Menu.Item
             as='a'
+            data-test={dataTest}
             active={asPath === to}
             onClick={async e => await this.settingsLink(e, to, tab)}
             className={className}>
@@ -225,53 +247,97 @@ class Navigation extends Component {
       )
     })
 
-    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, company } = getSafe(() => auth.identity, {
-      isCompanyAdmin: null,
-      isUserAdmin: null,
-      isProductCatalogAdmin: null,
-      company: null
-    })
-
-    return !isAdmin || takeover ? (
+    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, company, clientCompany } = getSafe(
+      () => auth.identity,
+      {
+        isCompanyAdmin: null,
+        isUserAdmin: null,
+        isProductCatalogAdmin: null,
+        company: null,
+        clientCompany: false
+      }
+    )
+    return (!isAdmin && !isEchoOperator) || takeover ? (
       <div className='flex-wrapper'>
-        <MenuLink
-          to='/inventory/my'
-          data-test='navigation_menu_inventory_my_drpdn'
-          className={!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''}>
+        {!clientCompany && (
           <>
-            <Layers size={22} />
-            {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
+            <MenuLink
+              to='/inventory/my'
+              dataTest='navigation_menu_inventory_my_drpdn'
+              className={!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''}>
+              <>
+                <Layers size={22} />
+                {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
+                {!collapsedMenu && asPath === '/inventory/my' && activeInventoryFilter ? (
+                  <div className='active-filter'>
+                    <Sliders />
+                  </div>
+                ) : null}
+              </>
+            </MenuLink>
+            {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
           </>
-        </MenuLink>
-        {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
+        )}
         {getSafe(() => company.nacdMember, false) ? (
           <>
             <MenuLink
               to='/marketplace/all'
-              data-test='navigation_menu_marketplace_drpdn'
+              dataTest='navigation_menu_marketplace_drpdn'
               className={!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''}>
               <>
                 <ShoppingBag size={22} />
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
+                {!collapsedMenu && asPath === '/marketplace/all' && activeMarketplaceFilter ? (
+                  <div className='active-filter'>
+                    <Sliders />
+                  </div>
+                ) : null}
               </>
             </MenuLink>
             {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
           </>
         ) : null}
-        <MenuLink to='/orders?type=sales' data-test='navigation_menu_orders_sales_drpdn'>
+        <MenuLink
+          to={clientCompany ? '/wanted-board/my-requested-items' : '/wanted-board/wanted-board'}
+          dataTest='navigation_menu_wanted_board_drpdn'>
           <>
-            <ArrowRightCircle size={22} />
-            {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
+            <Grid size={22} />
+            {formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}
+            {false && asPath === '/wanted-board/wanted-board' && activeWantedBoardFilter ? (
+              <div className='active-filter'>
+                <Sliders />
+              </div>
+            ) : null}
           </>
         </MenuLink>
-        {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=sales' ? <OrderFilter /> : null}
-        <MenuLink to='/orders?type=purchase' data-test='navigation_menu_orders_purchase_drpdn'>
-          <>
-            <ArrowLeftCircle />
-            {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
-          </>
-        </MenuLink>
-        {!collapsedMenu && openedFilterOrders && asPath === '/orders?type=purchase' ? <OrderFilter /> : null}
+        {false && !collapsedMenu && openedFilterWantedBoard && asPath === '/wanted-board/wanted-board' ? (
+          <WantedBoardFilter />
+        ) : null}
+        <DropdownItem
+          icon={<FileText size={22} />}
+          text={formatMessage({ id: 'navigation.orders', defaultMessage: 'Orders' })}
+          className={orders ? 'opened' : null}
+          opened={orders}
+          onClick={() => this.toggleOpened('orders')}
+          refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+          refId={'orders'}
+          data-test='navigation_orders_drpdn'>
+          <Dropdown.Menu data-test='navigation_menu_orders_drpdn_menu'>
+            <PerfectScrollbar>
+              {!clientCompany && (
+                <Dropdown.Item as={MenuLink} to='/orders?type=sales' dataTest='navigation_orders_sales_orders_drpdn'>
+                  {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
+                </Dropdown.Item>
+              )}
+              <Dropdown.Item
+                as={MenuLink}
+                to='/orders?type=purchase'
+                dataTest='navigation_orders_purchase_orders_drpdn'>
+                {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
+              </Dropdown.Item>
+            </PerfectScrollbar>
+          </Dropdown.Menu>
+        </DropdownItem>
         {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
@@ -280,8 +346,9 @@ class Navigation extends Component {
             opened={settings}
             onClick={() => this.toggleOpened('settings')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-            refId={'settings'}>
-            <Dropdown.Menu data-test='navigation_menu_settings_drpdn'>
+            refId={'settings'}
+            data-test='navigation_menu_settings_drpdn'>
+            <Dropdown.Menu data-test='navigation_menu_settings_drpdn_menu'>
               <PerfectScrollbar>
                 {isCompanyAdmin ? (
                   <>
@@ -289,14 +356,14 @@ class Navigation extends Component {
                       as={MenuLink}
                       to='/settings?type=company-details'
                       tab='company-details'
-                      data-test='navigation_settings_company_details_drpdn'>
+                      dataTest='navigation_settings_company_details_drpdn'>
                       {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Details' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=system-settings'
                       tab='system-settings'
-                      data-test='navigation_settings_system_settings_drpdn'>
+                      dataTest='navigation_settings_system_settings_drpdn'>
                       {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Settings' })}
                     </Dropdown.Item>
                   </>
@@ -306,7 +373,7 @@ class Navigation extends Component {
                     as={MenuLink}
                     to='/settings?type=users'
                     tab='users'
-                    data-test='navigation_settings_users_drpdn'>
+                    dataTest='navigation_settings_users_drpdn'>
                     {formatMessage({ id: 'navigation.users', defaultMessage: 'Users' })}
                   </Dropdown.Item>
                 ) : null}
@@ -316,48 +383,48 @@ class Navigation extends Component {
                       as={MenuLink}
                       to='/settings?type=branches'
                       tab='branches'
-                      data-test='navigation_settings_branches_drpdn'>
+                      dataTest='navigation_settings_branches_drpdn'>
                       {formatMessage({ id: 'navigation.branches', defaultMessage: 'Branches' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=warehouses'
                       tab='warehouses'
-                      data-test='navigation_settings_warehouses_drpdn'>
+                      dataTest='navigation_settings_warehouses_drpdn'>
                       {formatMessage({ id: 'navigation.warehouses', defaultMessage: 'Warehouses' })}
                     </Dropdown.Item>
                   </>
                 ) : null}
-                {isCompanyAdmin || isProductCatalogAdmin ? (
+                {(isCompanyAdmin || isProductCatalogAdmin) && !clientCompany ? (
                   <Dropdown.Item
                     as={MenuLink}
                     to='/settings?type=products'
                     tab='products'
-                    data-test='navigation_settings_products_drpdn'>
+                    dataTest='navigation_settings_products_drpdn'>
                     {formatMessage({ id: 'navigation.productCatalog', defaultMessage: 'Product Catalog' })}
                   </Dropdown.Item>
                 ) : null}
-                {isCompanyAdmin ? (
+                {isCompanyAdmin && !clientCompany ? (
                   <>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=global-broadcast'
                       tab='global-broadcast'
-                      data-test='navigation_settings_global_broadcast_drpdn'>
+                      dataTest='navigation_settings_global_broadcast_drpdn'>
                       {formatMessage({ id: 'navigation.globalPriceBook', defaultMessage: 'Global Price Book' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=bank-accounts'
                       tab='bank-accounts'
-                      data-test='navigation_settings_bank_accounts_drpdn'>
+                      dataTest='navigation_settings_bank_accounts_drpdn'>
                       {formatMessage({ id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=delivery-addresses'
                       tab='delivery-addresses'
-                      data-test='navigation_settings_delivery_addresses_drpdn'>
+                      dataTest='navigation_settings_delivery_addresses_drpdn'>
                       {formatMessage({ id: 'navigation.deliveryAddresses', defaultMessage: 'Delivery Addresses' })}
                     </Dropdown.Item>
                     <Dropdown.Item
@@ -371,14 +438,14 @@ class Navigation extends Component {
                       as={MenuLink}
                       to='/settings?type=logistics'
                       tab='logistics'
-                      data-test='navigation_settings_logistics_drpdn'>
+                      dataTest='navigation_settings_logistics_drpdn'>
                       {formatMessage({ id: 'navigation.logistics', defaultMessage: 'Logistics' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=documents'
                       tab='documents'
-                      data-test='navigation_settings_documents_drpdn'>
+                      dataTest='navigation_settings_documents_drpdn'>
                       {formatMessage({ id: 'navigation.documents', defaultMessage: 'Documents' })}
                     </Dropdown.Item>
                   </>
@@ -387,13 +454,19 @@ class Navigation extends Component {
             </Dropdown.Menu>
           </DropdownItem>
         )}
+        <MenuLink to='/alerts' dataTest='navigation_menu_wanted_board_drpdn'>
+          <>
+            <Bell size={22} />
+            {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
+          </>
+        </MenuLink>
       </div>
     ) : (
       <div className='flex-wrapper'>
         {isAdmin && (
           <>
             <DropdownItem
-              icon={admin ? 'chevron up' : 'chevron down'}
+              icon={<Hexagon size={22} />}
               text={formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}
               className={admin ? 'opened' : null}
               opened={admin}
@@ -405,32 +478,23 @@ class Navigation extends Component {
           </>
         )}
         {(isAdmin || isEchoOperator) && (
-          <DropdownItem
-            icon={operations ? 'chevron up' : 'chevron down'}
-            text={formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
-            className={operations ? 'opened' : null}
-            opened={operations}
-            onClick={() => this.toggleOpened('operations')}
-            refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-            refId={'operations'}>
-            <Dropdown.Menu data-test='navigation_menu_operations_drpdn'>
-              <PerfectScrollbar>
-                <Dropdown.Item
-                  as={MenuLink}
-                  to='/operations'
-                  tab='shipping-quotes'
-                  data-test='navigation_admin_operations_shipping_quotes_drpdn'>
-                  {formatMessage({ id: 'navigation.shippingQuotes', defaultMessage: 'Shipping Quotes' })}
-                </Dropdown.Item>
-              </PerfectScrollbar>
-            </Dropdown.Menu>
-          </DropdownItem>
+          <>
+            <DropdownItem
+              icon={<Hexagon size={22} />}
+              text={formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
+              className={operations ? 'opened' : null}
+              opened={operations}
+              onClick={() => this.toggleOpened('operations')}
+              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+              refId={'operations'}>
+              <TabsOperations />
+            </DropdownItem>
+          </>
         )}
       </div>
     )
   }
 }
-
 export default withAuth(
   withRouter(
     connect(
@@ -438,7 +502,11 @@ export default withAuth(
         auth: store.auth,
         tabsNames: store.settings.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
-        collapsedMenu: store.layout.collapsedMenu
+        collapsedMenu: store.layout.collapsedMenu,
+        activeInventoryFilter: getSafe(() => store.filter.inventory.appliedFilter.filters.length > 0, false),
+        activeMarketplaceFilter: getSafe(() => store.filter.marketplace.appliedFilter.filters.length > 0, false),
+        activeWantedBoardFilter: getSafe(() => store.filter.wantedBoard.appliedFilter.filters.length > 0, false),
+        isEchoOperator: getSafe(() => store.auth.identity.roles, []).find(role => role.name === 'Echo Operator')
       }),
       {
         triggerSystemSettingsModal,

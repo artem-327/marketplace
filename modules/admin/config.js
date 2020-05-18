@@ -1,5 +1,7 @@
 import { FormattedMessage } from 'react-intl'
 import { companyDatagridColumns } from '~/constants/index'
+import React from 'react'
+
 export const config = {
   'CAS Products': {
     addEditText: (
@@ -70,6 +72,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.name'
         },
         {
@@ -79,6 +82,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.code'
         },
         {
@@ -88,6 +92,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.manufacturer.name'
         },
         {
@@ -96,7 +101,8 @@ export const config = {
             <FormattedMessage id='admin.echoProducts.sds' defaultMessage='SDS'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 150
         },
         {
           name: 'sdsVersionNumber',
@@ -105,6 +111,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.sdsVersionNumber'
         },
         {
@@ -114,13 +121,24 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
+          width: 150,
           sortPath: 'EchoProduct.sdsRevisionDate'
+        },
+        {
+          name: 'tagsFormatted',
+          title: (
+            <FormattedMessage id='global.tags' defaultMessage='Tags'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
         }
       ]
     }
   },
 
   'Units of Measure': {
+    tableName: 'units_of_measure',
     addEditText: <FormattedMessage id='admin.unitOfMeasure'>{text => text}</FormattedMessage>,
     formattedMessageName: 'unitOfMeasurement',
     searchText: 'admin.searchUnitOfMeasure',
@@ -224,7 +242,7 @@ export const config = {
     }
   },
 
-  'Units of Packaging': {
+  'Packaging Types': {
     addEditText: <FormattedMessage id='admin.unitOfPackaging'>{text => text}</FormattedMessage>,
     formattedMessageName: 'unitOfPackaging',
     searchText: 'admin.searchUnitOfPackaging',
@@ -259,7 +277,7 @@ export const config = {
           </FormattedMessage>
         ),
         type: 'text',
-        required: true
+        required: false
       },
       {
         name: 'measureType',
@@ -269,6 +287,40 @@ export const config = {
           </FormattedMessage>
         ),
         type: 'text',
+        step: 1,
+        required: true
+      },
+      {
+        name: 'height',
+        title: (
+          <FormattedMessage id='global.height' defaultMessage='Height'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'number',
+        step: 0.01,
+        required: true
+      },
+      {
+        name: 'length',
+        title: (
+          <FormattedMessage id='global.length' defaultMessage='Length'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'number',
+        step: 0.01,
+        required: true
+      },
+      {
+        name: 'width',
+        title: (
+          <FormattedMessage id='global.width' defaultMessage='Width'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'number',
+        step: 0.01,
         required: true
       }
     ],
@@ -347,7 +399,7 @@ export const config = {
         apiCall: '/prodex/api/manufacturers/search',
         retFcnProcess: (state, action, config) => {
           // Order alphabetically by name
-          const rows = action.payload.sort(function(a, b) {
+          const rows = action.payload.sort(function (a, b) {
             let x = a.name.toLowerCase()
             let y = b.name.toLowerCase()
             if (x < y) {
@@ -566,7 +618,7 @@ export const config = {
               {text => text}
             </FormattedMessage>
           ),
-          sortPath: 'NmfcNumber.code'
+          sortPath: 'NmfcNumber.prefix'
         },
         {
           name: 'description',
@@ -591,6 +643,65 @@ export const config = {
         required: true
       }
     ]
+  },
+
+  Associations: {
+    tableName: 'admin_associations',
+    addEditText: (
+      <FormattedMessage id='admin.associations' defaultMessage='Associations'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    formattedMessageName: 'associations',
+    searchText: 'admin.searchAssociations',
+    display: {
+      columns: [
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.name' defaultMessage='Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'Association.name'
+        }
+      ]
+    },
+    edit: [
+      {
+        name: 'name',
+        title: (
+          <FormattedMessage id='global.name' defaultMessage='Name'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'text',
+        required: true
+      }
+    ],
+    api: {
+      get: {
+        dataName: 'associationsRows',
+        typeRequest: 'GET_ASSOCIATIONS',
+        typeSuccess: 'GET_ASSOCIATIONS_FULFILLED',
+        apiCall: '/prodex/api/associations'
+      },
+      post: {
+        typeRequest: 'ADD_ASSOCIATION',
+        apiCall: '/prodex/api/associations',
+        typeQuery: true
+      },
+      update: {
+        method: 'patch',
+        typeRequest: 'EDIT_ASSOCIATION',
+        apiCall: '/prodex/api/associations/id/',
+        typeQuery: true
+      },
+      delete: {
+        typeRequest: 'DELETE_ASSOCIATION',
+        apiCall: '/prodex/api/associations/id/'
+      }
+    }
   },
 
   'Document Types': {
@@ -703,6 +814,107 @@ export const config = {
         typeRequest: 'ADMIN_DELETE_MARKET_SEGMENTS_DATA',
         apiCall: '/prodex/api/market-segments/id/'
       }
+    }
+  },
+  Users: {
+    tableName: 'admin_users',
+    addEditText: (
+      <FormattedMessage id='admin.user' defaultMessage='User'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    formattedMessageName: 'user',
+    searchText: 'admin.searchUser',
+    display: {
+      columns: [
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.user' defaultMessage='User'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180,
+          sortPath: 'User.name'
+        },
+        {
+          name: 'companyName',
+          title: (
+            <FormattedMessage id='global.companyName' defaultMessage='Company Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180
+        },
+        {
+          name: 'jobTitle',
+          title: (
+            <FormattedMessage id='global.jobTitle' defaultMessage='Job Title'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 130
+        },
+        {
+          name: 'email',
+          title: (
+            <FormattedMessage id='global.email' defaultMessage='E-mail'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180,
+          sortPath: 'User.email'
+        },
+        {
+          name: 'phoneFormatted',
+          title: (
+            <FormattedMessage id='global.phone' defaultMessage='Phone'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        /*
+        {
+          name: 'homeBranchName',
+          title: (
+            <FormattedMessage id='global.homeBranch' defaultMessage='Home Branch'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180
+        },
+        */
+        {
+          name: 'userRoles',
+          title: (
+            <FormattedMessage id='global.roles' defaultMessage='Roles'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        /*
+        {
+          name: 'lastLoginAt',
+          title: (
+            <FormattedMessage id='global.lastLogin' defaultMessage='Last Login'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180
+        },
+        */
+        {
+          name: 'switchEnable',
+          title: (
+            <FormattedMessage id='global.enableUser' defaultMessage='Enable User'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        }
+      ]
     }
   },
   'Admin Settings': {

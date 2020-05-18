@@ -1,16 +1,8 @@
 import React, { Component } from 'react'
 
 import moment from 'moment'
-import { removeEmpty } from '~/modules/admin/actions'
+import { removeEmpty } from '~/utils/functions'
 import { verifyEchoProduct } from '~/modules/admin/api' // No need to be an action
-import {
-  FlexSidebar,
-  FlexTabs,
-  FlexContent,
-  TopMargedColumn,
-  GraySegment,
-  HighSegment
-} from '~/modules/inventory/components/DetailSidebar'
 import { DateInput } from '~/components/custom-formik'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import * as Yup from 'yup'
@@ -25,11 +17,23 @@ import {
   Checkbox,
   TextArea
 } from 'formik-semantic-ui-fixed-validation'
-import { Menu, Grid, GridRow, GridColumn, Segment, Header, Dropdown, Icon, Dimmer, Loader } from 'semantic-ui-react'
+import {
+  Menu,
+  Grid,
+  GridRow,
+  GridColumn,
+  Segment,
+  Header,
+  Dropdown,
+  Icon,
+  Dimmer,
+  Loader,
+  Sidebar
+} from 'semantic-ui-react'
 import TextareaAutosize from 'react-autosize-textarea'
 import { FieldArray, Field } from 'formik'
 
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import { getSafe } from '~/utils/functions'
 import { tabs, defaultValues, transportationTypes, onErrorFieldTabs } from './constants'
@@ -37,9 +41,11 @@ import styled from 'styled-components'
 import debounce from 'lodash/debounce'
 import { uniqueArrayByKey } from '~/utils/functions'
 import escapeRegExp from 'lodash/escapeRegExp'
-import { Datagrid } from '~/modules/datagrid'
 import confirm from '~/src/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
+import { Required, Or } from '~/components/constants/layout'
+import { AttachmentManager } from '~/modules/attachments'
+import { UploadCloud } from 'react-feather'
 
 export const MyContainer = styled.div`
   margin: 0 15px 0 0;
@@ -48,6 +54,46 @@ export const MyContainer = styled.div`
   padding: 10px 0 15px 0;
   font-weight: bold;
   font-size: 1.1rem;
+`
+
+export const FlexSidebar = styled(Sidebar)`
+  display: flex;
+  flex-direction: column;
+  background-color: #fbfbfb;
+  top: 80px !important;
+  padding-bottom: 80px;
+  box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
+  z-index: 1000 !important;
+  text-align: left;
+`
+
+export const FlexTabs = styled.div`
+  height: 100%;
+  margin: 0;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 10px 0 15px 0;
+  font-weight: 400;
+  font-size: 1.1rem;
+
+  > .tab-menu,
+  > .tab-menu > .tab {
+    height: 100%;
+  }
+`
+
+export const FlexContent = styled.div`
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+`
+
+export const GraySegment = styled(Segment)`
+  background-color: #ededed !important;
+`
+
+export const HighSegment = styled(Segment)`
+  height: 100%;
 `
 
 const CustomTextarea = styled(TextareaAutosize)`
@@ -60,21 +106,51 @@ const CustomGridColumn = styled(GridColumn)`
   }
 `
 
+const TabsWrapper = styled.div`
+  overflow: hidden; // fix for space at the end of flex column
+`
+
+const GridColumnBtn = styled(GridColumn)`
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+`
+
+const DivIcon = styled.div`
+  margin-top: 8px;
+`
+
+Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
+  return this.test('unique', message, function (value) {
+    if (!value || !value[propertyName]) {
+      return true
+    }
+
+    const { path } = this
+    const options = [...this.parent]
+    const currentIndex = options.indexOf(value)
+
+    const subOptions = options.slice(0, currentIndex)
+
+    if (subOptions.some(option => option[propertyName] === value[propertyName])) {
+      throw this.createError({
+        path: `${path}.${propertyName}`,
+        message
+      })
+    }
+
+    return true
+  })
+})
+
 const validationScheme = Yup.object().shape({
-  code: Yup.string()
-    .trim()
-    .min(2, errorMessages.minLength(2))
-    .required(errorMessages.minLength(2)),
-  name: Yup.string()
-    .trim()
-    .min(2, errorMessages.minLength(2))
-    .required(errorMessages.minLength(2)),
+  code: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
+  name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
   elements: Yup.array().of(
     Yup.object()
       .uniqueProperty(
         'casProduct',
         errorMessages.unique(
-          <FormattedMessage id='admin.casProduct' name='CAS Product'>
+          <FormattedMessage id='admin.casProductUnique' name='CAS Product has to be unique'>
             {text => text}
           </FormattedMessage>
         )
@@ -82,7 +158,7 @@ const validationScheme = Yup.object().shape({
       .shape({
         name: Yup.string()
           .trim()
-          .test('requiredIfProprietary', errorMessages.requiredMessage, function(value) {
+          .test('requiredIfProprietary', errorMessages.requiredMessage, function (value) {
             const { proprietary } = this.parent
             if (proprietary) {
               return value !== null && value !== ''
@@ -92,7 +168,7 @@ const validationScheme = Yup.object().shape({
         casProduct: Yup.string()
           .nullable()
           .trim()
-          .test('requiredIfNotProprietary', errorMessages.requiredMessage, function(value) {
+          .test('requiredIfNotProprietary', errorMessages.requiredMessage, function (value) {
             const { proprietary } = this.parent
             if (!proprietary) {
               return parseInt(value)
@@ -100,39 +176,39 @@ const validationScheme = Yup.object().shape({
             return true
           }),
         assayMin: Yup.string()
-          .test('v', errorMessages.minUpToMax, function(v) {
+          .test('v', errorMessages.minUpToMax, function (v) {
             const { assayMax: v2 } = this.parent
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             if (v2 === null || v2 === '' || isNaN(v2)) return true // No max limit value - can not be tested
             return Number(v) <= v2
           })
-          .test('v', errorMessages.minimum(0), function(v) {
+          .test('v', errorMessages.minimum(0), function (v) {
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             return Number(v) >= 0
           })
-          .test('v', errorMessages.maximum(100), function(v) {
+          .test('v', errorMessages.maximum(100), function (v) {
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             return Number(v) <= 100
           })
-          .test('v', errorMessages.mustBeNumber, function(v) {
+          .test('v', errorMessages.mustBeNumber, function (v) {
             return v === null || v === '' || !isNaN(v)
           }),
         assayMax: Yup.string()
-          .test('v', errorMessages.maxAtLeastMin, function(v) {
+          .test('v', errorMessages.maxAtLeastMin, function (v) {
             const { assayMin: v2 } = this.parent
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             if (v2 === null || v2 === '' || isNaN(v2)) return true // No min limit value - can not be tested
             return Number(v) >= v2
           })
-          .test('v', errorMessages.minimum(0), function(v) {
+          .test('v', errorMessages.minimum(0), function (v) {
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             return Number(v) >= 0
           })
-          .test('v', errorMessages.maximum(100), function(v) {
+          .test('v', errorMessages.maximum(100), function (v) {
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             return Number(v) <= 100
           })
-          .test('v', errorMessages.mustBeNumber, function(v) {
+          .test('v', errorMessages.mustBeNumber, function (v) {
             return v === null || v === '' || !isNaN(v)
           })
       })
@@ -149,14 +225,26 @@ class AddEditEchoProduct extends React.Component {
     changedAttachments: false,
     unNumberInitOptions: [],
     popupValues: null,
-    editTab: 0
+    editTab: 0,
+    selectedTagsOptions: [],
+    selectedMarketSegmentsOptions: []
   }
 
   componentDidMount() {
-    const { hazardClasses, packagingGroups, getHazardClassesDataRequest, getPackagingGroupsDataRequest } = this.props
+    const {
+      hazardClasses,
+      packagingGroups,
+      getHazardClassesDataRequest,
+      getPackagingGroupsDataRequest,
+      listDocumentTypes,
+      getDocumentTypes
+    } = this.props
 
     if (hazardClasses.length === 0) getHazardClassesDataRequest()
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
+    if (!listDocumentTypes || (listDocumentTypes && !listDocumentTypes.length)) getDocumentTypes()
+    this.props.searchTags('')
+    this.props.searchMarketSegments('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -217,7 +305,10 @@ class AddEditEchoProduct extends React.Component {
 
   setInitialState = (popupValues, additionalStates) => {
     let codesList = [],
-      unNumberInitOptions = []
+      unNumberInitOptions = [],
+      selectedTagsOptions = [],
+      selectedMarketSegmentsOptions = []
+
     if (popupValues) {
       codesList = popupValues.mfrProductCodes.map(code => ({
         text: code,
@@ -237,6 +328,25 @@ class AddEditEchoProduct extends React.Component {
           content: <Header content={d.unNumberCode} subheader={d.description} style={{ fontSize: '1em' }} />
         }
       })
+
+      if (popupValues.tags) {
+        selectedTagsOptions = popupValues.tags.map(d => {
+          return {
+            key: d.id,
+            text: d.name,
+            value: d.id
+          }
+        })
+      }
+      if (popupValues.marketSegments) {
+        selectedMarketSegmentsOptions = popupValues.marketSegments.map(d => {
+          return {
+            key: d.id,
+            text: d.name,
+            value: d.id
+          }
+        })
+      }
     }
     this.setState({
       codesList,
@@ -244,6 +354,8 @@ class AddEditEchoProduct extends React.Component {
       changedAttachments: false,
       popupValues,
       unNumberInitOptions: unNumberInitOptions,
+      selectedTagsOptions,
+      selectedMarketSegmentsOptions,
       ...additionalStates
     })
   }
@@ -375,19 +487,22 @@ class AddEditEchoProduct extends React.Component {
             vaporDensity: getSafe(() => popupValues.vaporDensity, ''),
             vaporPressure: getSafe(() => popupValues.vaporPressure, ''),
             viscosity: getSafe(() => popupValues.viscosity, ''),
-            wasteDisposalMethods: getSafe(() => popupValues.wasteDisposalMethods, '')
+            wasteDisposalMethods: getSafe(() => popupValues.wasteDisposalMethods, ''),
+            isPublished: getSafe(() => popupValues.isPublished, false),
+            tags: getSafe(() => popupValues.tags, []).map(d => d.id),
+            marketSegments: getSafe(() => popupValues.marketSegments, []).map(d => d.id)
           }
         : null)
     }
 
     if (initialValues.sdsIssuedDate)
-      initialValues.sdsIssuedDate = moment(initialValues.sdsIssuedDate).format(getLocaleDateFormat())
+      initialValues.sdsIssuedDate = this.getDateInLocaleFormat(initialValues.sdsIssuedDate)
     if (initialValues.sdsRevisionDate)
-      initialValues.sdsRevisionDate = moment(initialValues.sdsRevisionDate).format(getLocaleDateFormat())
+      initialValues.sdsRevisionDate = this.getDateInLocaleFormat(initialValues.sdsRevisionDate)
     if (initialValues.tdsIssuedDate)
-      initialValues.tdsIssuedDate = moment(initialValues.tdsIssuedDate).format(getLocaleDateFormat())
+      initialValues.tdsIssuedDate = this.getDateInLocaleFormat(initialValues.tdsIssuedDate)
     if (initialValues.tdsRevisionDate)
-      initialValues.tdsRevisionDate = moment(initialValues.tdsRevisionDate).format(getLocaleDateFormat())
+      initialValues.tdsRevisionDate = this.getDateInLocaleFormat(initialValues.tdsRevisionDate)
 
     if (initialValues.elements.length === 0) {
       initialValues.elements = [{ name: '', casProduct: null, assayMin: '', assayMax: '', proprietary: false }]
@@ -397,6 +512,15 @@ class AddEditEchoProduct extends React.Component {
 
   tabChanged = index => {
     this.setState({ editTab: index })
+  }
+
+  getDateInLocaleFormat = value => {
+    let date = moment(value)
+    if (date.isValid()) {
+      return date.format(getLocaleDateFormat())
+    } else {
+      return ''
+    }
   }
 
   handleUnNumberSearchChange = debounce((_, { searchQuery }) => {
@@ -415,6 +539,24 @@ class AddEditEchoProduct extends React.Component {
         this.setState({ unNumberInitOptions: stateOptions })
       }
     }
+  }
+
+  handleTagsSearchChange = debounce((_, { searchQuery }) => {
+    this.props.searchTags(searchQuery)
+  }, 250)
+
+  handleMarketSegmentsSearchChange = debounce((_, { searchQuery }) => {
+    this.props.searchMarketSegments(searchQuery)
+  }, 250)
+
+  handleTagsChange = (value, options) => {
+    const newOptions = options.filter(el => value.some(v => el.value === v))
+    this.setState({ selectedTagsOptions: newOptions })
+  }
+
+  handleMarketSegmentsChange = (value, options) => {
+    const newOptions = options.filter(el => value.some(v => el.value === v))
+    this.setState({ selectedMarketSegmentsOptions: newOptions })
   }
 
   switchToErrors = err => {
@@ -478,11 +620,21 @@ class AddEditEchoProduct extends React.Component {
     }
   }
 
+  getDateInIsoFormat = value => {
+    if (!value) return ''
+    let date = getStringISODate(value)
+
+    if (moment(date).isValid()) {
+      return date
+    } else {
+      return ''
+    }
+  }
+
   submitForm = async (values, setSubmitting) => {
-    const { putEchoProduct, postEchoProduct, closePopup, linkAttachment, listDocumentTypes } = this.props
+    const { putEchoProduct, postEchoProduct, closePopup, linkAttachment, listDocumentTypes, datagrid } = this.props
 
     const { popupValues } = this.state
-
     let sendSuccess = false
 
     let formValues = {
@@ -500,30 +652,14 @@ class AddEditEchoProduct extends React.Component {
               assayMax: e.assayMax === null || e.assayMax === '' ? null : Number(e.assayMax)
             }
       ),
-      sdsIssuedDate: values.sdsIssuedDate ? getStringISODate(values.sdsIssuedDate) : '',
-      sdsRevisionDate: values.sdsRevisionDate ? getStringISODate(values.sdsRevisionDate) : '',
-      tdsIssuedDate: values.tdsIssuedDate ? getStringISODate(values.tdsIssuedDate) : '',
-      tdsRevisionDate: values.tdsRevisionDate ? getStringISODate(values.tdsRevisionDate) : ''
+      sdsIssuedDate: this.getDateInIsoFormat(values.sdsIssuedDate),
+      sdsRevisionDate: this.getDateInIsoFormat(values.sdsRevisionDate),
+      tdsIssuedDate: this.getDateInIsoFormat(values.tdsIssuedDate),
+      tdsRevisionDate: this.getDateInIsoFormat(values.tdsRevisionDate)
     }
     delete formValues.attachments
 
-    const fieldsToNull = [
-      'dotHazardClass',
-      'dotPackagingGroup',
-      'dotUnNumber',
-      'iataHazardClass',
-      'iataPackagingGroup',
-      'iataUnNumber',
-      'imdgImoHazardClass',
-      'imdgImoPackagingGroup',
-      'imdgImoUnNumber',
-      'tdgHazardClass',
-      'tdgPackagingGroup',
-      'tdgUnNumber'
-    ]
-    fieldsToNull.forEach(el => {
-      if (formValues[el] === '') formValues[el] = null
-    })
+    removeEmpty(formValues)
 
     try {
       if (popupValues) var { value } = await putEchoProduct(popupValues.id, formValues)
@@ -544,11 +680,14 @@ class AddEditEchoProduct extends React.Component {
       // No need to await; just fire it
       verifyEchoProduct(value.id)
 
-      Datagrid.loadData()
-      // Datagrid.updateRow(data.id, () => ({
-      //   ...data,
-      //   attachments: data.attachments.concat(notLinkedAttachments)
-      // }))
+      if (popupValues) {
+        datagrid.updateRow(value.id, () => ({
+          ...value,
+          attachments: value.attachments.concat(notLinkedAttachments)
+        }))
+      } else {
+        datagrid.loadData()
+      }
 
       setSubmitting(false)
       sendSuccess = true
@@ -558,10 +697,10 @@ class AddEditEchoProduct extends React.Component {
     return sendSuccess
   }
 
-  RowInput = ({ name, readOnly = false, id, defaultMessage }) => (
+  RowInput = ({ name, readOnly = false, id, defaultMessage, required }) => (
     <GridRow>
       <GridColumn width={6}>
-        <FormattedMessage id={id} defaultMessage={defaultMessage} />
+        <FormattedMessage id={id} defaultMessage={defaultMessage} /> {required === true ? <Required /> : null}
       </GridColumn>
 
       <GridColumn width={10}>
@@ -614,66 +753,100 @@ class AddEditEchoProduct extends React.Component {
     </GridRow>
   )
 
+  attachDocumentsUploadAttachment = (newDocument, values, setFieldValue) => {
+    const docArray = Array.isArray(newDocument)
+      ? uniqueArrayByKey(values.attachments.concat(newDocument), 'id')
+      : uniqueArrayByKey(values.attachments.concat([newDocument]), 'id')
+
+    docArray.forEach(doc => {
+      setFieldValue &&
+        setFieldValue(
+          `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+          { ...doc, isLinkedFromDocumentManager: true }
+        )
+    })
+    this.setState({ changedForm: true })
+  }
+
   RowDocument = (formikProps, values, popupValues, documentType) => {
     return (
-      <UploadLot
-        {...this.props}
-        attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === documentType)}
-        edit={getSafe(() => popupValues.id, '')}
-        name='attachments'
-        type={documentType.toString()}
-        filesLimit={1}
-        fileMaxSize={20}
-        onChange={files => {
-          formikProps.setFieldValue(
-            `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
-            {
-              id: files.id,
-              name: files.name,
-              documentType: files.documentType
-            }
-          )
-          this.setState({ changedForm: true })
-        }}
-        onRemoveFile={id => {
-          this.setState({ changedForm: true, changedAttachments: true })
-        }}
-        data-test='settings_product_import_attachments'
-        emptyContent={
-          <label>
-            <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-            <br />
-            <FormattedMessage
-              id='addInventory.dragDropOr'
-              defaultMessage={'or {link} to select from computer'}
-              values={{
-                link: (
-                  <a>
-                    <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                  </a>
-                )
-              }}
-            />
-          </label>
-        }
-        uploadedContent={
-          <label>
-            <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-            <br />
-            <FormattedMessage
-              id='addInventory.dragDropOr'
-              defaultMessage={'or {link} to select from computer'}
-              values={{
-                link: (
-                  <a>
-                    <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                  </a>
-                )
-              }}
-            />
-          </label>
-        }
-      />
+      <>
+        <UploadAttachment
+          {...this.props}
+          attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === documentType)}
+          edit={getSafe(() => popupValues.id, '')}
+          name='attachments'
+          type={documentType.toString()}
+          filesLimit={1}
+          fileMaxSize={20}
+          listDocumentTypes={this.props.listDocumentTypes}
+          onChange={files => {
+            formikProps.setFieldValue(
+              `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+              {
+                id: files.id,
+                name: files.name,
+                documentType: files.documentType,
+                isLinkedFromDocumentManager: getSafe(() => files.isLinkedFromDocumentManager, false)
+              }
+            )
+            this.setState({ changedForm: true })
+          }}
+          onRemoveFile={async id => {
+            await formikProps.setFieldValue('attachments', [])
+            const arrayAttachments = values.attachments.filter(attachment => attachment.id !== id)
+            await formikProps.setFieldValue('attachments', arrayAttachments)
+            this.setState({ changedForm: true, changedAttachments: true })
+          }}
+          data-test='settings_product_import_attachments'
+          emptyContent={
+            <label>
+              <DivIcon>
+                <UploadCloud size='25' color='#dee2e6' />
+              </DivIcon>
+              <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+              <br />
+              <FormattedMessage
+                id='addInventory.dragDropOr'
+                defaultMessage={'or {link} to select from computer'}
+                values={{
+                  link: (
+                    <a>
+                      <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                    </a>
+                  )
+                }}
+              />
+            </label>
+          }
+          uploadedContent={
+            <label>
+              <DivIcon>
+                <UploadCloud size='25' color='#dee2e6' />
+              </DivIcon>
+              <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+              <br />
+              <FormattedMessage
+                id='addInventory.dragDropOr'
+                defaultMessage={'or {link} to select from computer'}
+                values={{
+                  link: (
+                    <a>
+                      <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                    </a>
+                  )
+                }}
+              />
+            </label>
+          }
+        />
+        <AttachmentManager
+          singleSelection
+          documentTypeIds={[documentType]}
+          asModal
+          returnSelectedRows={rows => this.attachDocumentsUploadAttachment(rows, values, formikProps.setFieldValue)}
+        />
+      </>
     )
   }
 
@@ -755,7 +928,11 @@ class AddEditEchoProduct extends React.Component {
           </GridColumn>
           <GridColumn width={5}>
             <Header as='h5'>
-              <FormattedMessage id='global.elementNameaa' defaultMessage='Element Name / CAS Number' />
+              <FormattedMessage id='global.elementName' defaultMessage='Element Name' />
+              <Required />
+              <Or />
+              <FormattedMessage id='global.casNumber' defaultMessage='CAS Number' />
+              <Required />
             </Header>
           </GridColumn>
           <GridColumn width={3}>
@@ -874,17 +1051,28 @@ class AddEditEchoProduct extends React.Component {
 
   renderEdit = formikProps => {
     let codesList = this.state.codesList
+    const { selectedTagsOptions, selectedMarketSegmentsOptions } = this.state
     const {
       intl: { formatMessage },
       searchedManufacturers,
       searchedManufacturersLoading,
-      searchManufacturers
+      searchManufacturers,
+      searchedTagsLoading,
+      searchedTags,
+      searchedmarketSegmentsLoading,
+      searchedMarketSegments
     } = this.props
+
+    const allMarketSegmentsOptions = uniqueArrayByKey(
+      searchedMarketSegments.concat(selectedMarketSegmentsOptions),
+      'key'
+    )
+    const allTagsOptions = uniqueArrayByKey(searchedTags.concat(selectedTagsOptions), 'key')
 
     return (
       <Grid verticalAlign='middle'>
-        {this.RowInput({ name: 'name', id: 'global.productName', defaultMessage: 'Product Name' })}
-        {this.RowInput({ name: 'code', id: 'global.productCode', defaultMessage: 'Product Code' })}
+        {this.RowInput({ name: 'name', id: 'global.productName', defaultMessage: 'Product Name', required: true })}
+        {this.RowInput({ name: 'code', id: 'global.productCode', defaultMessage: 'Product Code', required: true })}
 
         <GridRow>
           <GridColumn width={6}>
@@ -910,6 +1098,15 @@ class AddEditEchoProduct extends React.Component {
         </GridRow>
 
         {this.renderMixtures(formikProps)}
+
+        <GridRow>
+          <GridColumn width={6}>
+            <FormattedMessage id='global.published' defaultMessage='Published' />
+          </GridColumn>
+          <GridColumn width={10}>
+            <Checkbox name='isPublished' />
+          </GridColumn>
+        </GridRow>
 
         <GridRow>
           <GridColumn width={6}>
@@ -944,6 +1141,54 @@ class AddEditEchoProduct extends React.Component {
           defaultMessage: 'Emergency Phone',
           props: formikProps
         })}
+        <GridRow>
+          <GridColumn width={6}>
+            <FormattedMessage id='global.marketSegments' defaultMessage='Market Segments' />
+          </GridColumn>
+          <GridColumn width={10}>
+            <FormikDropdown
+              name='marketSegments'
+              options={allMarketSegmentsOptions}
+              inputProps={{
+                loading: searchedmarketSegmentsLoading,
+                search: true,
+                icon: 'search',
+                selection: true,
+                multiple: true,
+                noResultsMessage: formatMessage({
+                  id: 'global.startTypingToSearch',
+                  defaultMessage: 'Start typing to begin search'
+                }),
+                onSearchChange: this.handleMarketSegmentsSearchChange,
+                onChange: (_, { value }) => this.handleMarketSegmentsChange(value, allMarketSegmentsOptions)
+              }}
+            />
+          </GridColumn>
+        </GridRow>
+        <GridRow>
+          <GridColumn width={6}>
+            <FormattedMessage id='global.tags' defaultMessage='Tags' />
+          </GridColumn>
+          <GridColumn width={10}>
+            <FormikDropdown
+              name='tags'
+              options={allTagsOptions}
+              inputProps={{
+                loading: searchedTagsLoading,
+                search: true,
+                icon: 'search',
+                selection: true,
+                multiple: true,
+                noResultsMessage: formatMessage({
+                  id: 'global.startTypingToSearch',
+                  defaultMessage: 'Start typing to begin search'
+                }),
+                onSearchChange: this.handleTagsSearchChange,
+                onChange: (_, { value }) => this.handleTagsChange(value, allTagsOptions)
+              }}
+            />
+          </GridColumn>
+        </GridRow>
         <Header as='h3'>
           <FormattedMessage id='global.sds' defaultMessage='SDS' />
         </Header>
@@ -1525,7 +1770,8 @@ class AddEditEchoProduct extends React.Component {
       visible,
       closePopup,
       intl: { formatMessage },
-      isLoading
+      isLoading,
+      datagrid
     } = this.props
 
     const { editTab } = this.state
@@ -1553,7 +1799,7 @@ class AddEditEchoProduct extends React.Component {
               <Dimmer inverted active={isLoading}>
                 <Loader />
               </Dimmer>
-              <div>
+              <TabsWrapper>
                 <HighSegment basic>
                   <Menu pointing secondary>
                     {tabs.map((tab, i) => (
@@ -1563,23 +1809,21 @@ class AddEditEchoProduct extends React.Component {
                     ))}
                   </Menu>
                 </HighSegment>
-              </div>
+              </TabsWrapper>
 
               <FlexContent>
                 <Segment basic>{this.getContent(formikProps)}</Segment>
               </FlexContent>
 
-              <GraySegment
-                basic
-                style={{ position: 'relative', overflow: 'visible', height: '4.57142858em', margin: '0' }}>
+              <GraySegment basic style={{ position: 'relative', overflow: 'visible', margin: '0' }}>
                 <Grid>
                   <GridRow>
-                    <GridColumn computer={6} textAlign='left'>
+                    <GridColumnBtn computer={6} textAlign='left'>
                       <Button
                         size='large'
                         inputProps={{ type: 'button' }}
                         onClick={() => {
-                          if (this.state.changedAttachments) Datagrid.loadData()
+                          if (this.state.changedAttachments) datagrid.loadData()
                           closePopup()
                         }}
                         data-test='sidebar_inventory_cancel'>
@@ -1587,8 +1831,8 @@ class AddEditEchoProduct extends React.Component {
                           ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
                           : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
                       </Button>
-                    </GridColumn>
-                    <GridColumn computer={10} textAlign='right'>
+                    </GridColumnBtn>
+                    <GridColumnBtn computer={10} textAlign='right'>
                       <Button.Submit
                         disabled={!(Object.keys(touched).length || this.state.changedForm)}
                         onClick={() =>
@@ -1604,7 +1848,7 @@ class AddEditEchoProduct extends React.Component {
                         data-test='sidebar_inventory_save_new'>
                         {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                       </Button.Submit>
-                    </GridColumn>
+                    </GridColumnBtn>
                   </GridRow>
                 </Grid>
               </GraySegment>

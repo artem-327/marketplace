@@ -23,7 +23,7 @@ import confirm from '../../../components/Confirmable/confirm'
 import './PurchaseOrder.scss'
 
 const RelaxedGrid = styled(Grid)`
-  margin-top 1.5rem !important;
+  margin-top: 1.5rem !important;
   padding-bottom: 50px !important;
 `
 
@@ -54,7 +54,7 @@ class PurchaseOrder extends Component {
 
   handleQuoteSelect = index => {
     let { shippingQuoteSelected, shippingQuotes } = this.props
-    shippingQuoteSelected({ index, quote: shippingQuotes[index] })
+    shippingQuoteSelected({ index, quote: shippingQuotes.rates[index] })
   }
 
   getAddress = selectedAddressId => {
@@ -249,5 +249,5 @@ PurchaseOrder.propTypes = {
   getDeliveryAddresses: PropTypes.func,
   deleteCart: PropTypes.func,
   selectedAddressId: PropTypes.number,
-  shippingQuotes: PropTypes.array
+  shippingQuotes: PropTypes.object
 }

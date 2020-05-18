@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Container, Segment, Grid, GridRow, GridColumn, Radio, Divider, Header, FormGroup } from 'semantic-ui-react'
+import { Grid, GridColumn, Modal, Divider, FormGroup, Segment } from 'semantic-ui-react'
 import { Form, Input, Button, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { bool, func, object } from 'prop-types'
+import { removeEmpty } from '~/utils/functions'
 
 import * as Yup from 'yup'
 import styled from 'styled-components'
@@ -11,13 +12,15 @@ import { withToastManager } from 'react-toast-notifications'
 
 import { PHONE_REGEXP } from '../../../src/utils/constants'
 import { PhoneNumber } from '~/modules/phoneNumber'
+import { Required } from '~/components/constants/layout'
 
-const BottomMargedGrid = styled(Grid)`
-  margin-bottom: 1rem !important;
-`
-
-const CustomDiv = styled.div`
-  width: 49%;
+const CustomSegment = styled(Segment)`
+  background-color: #f8f9fb !important;
+  ${props => props.placeholder && `
+    > .grid > .divider:after {
+      height: 100% !important;
+    }
+  `}
 `
 
 import { AddressForm } from '~/modules/address-form'
@@ -66,6 +69,7 @@ class ShippingEdit extends Component {
       //addressName: Yup.string(invalidString).required(requiredMessage),
       // lastName: Yup.string(invalidString).required(requiredMessage),
       contactEmail: Yup.string()
+        .trim()
         .email(invalidEmail)
         .required(requiredMessage),
       contactPhone: Yup.string()
@@ -82,98 +86,159 @@ class ShippingEdit extends Component {
 
     return (
       <>
-        <AddressForm displayHeader={false} values={values} setFieldValue={setFieldValue} />
-        <CustomDiv>
-          <Input
-            label={<FormattedMessage id='global.addressName' defaultMessage='Address Name' />}
-            name='addressName'
-          />
-        </CustomDiv>
-        <CustomDiv>
-          <Input label={<FormattedMessage id='global.contactName' default='Contact Name' />} name='contactName' />
-        </CustomDiv>
-        <FormGroup widths='equal' data-test='purchase_order_shipping_edit_emailPhone_inp'>
-          <Input label={<FormattedMessage id='global.email' defaultMessage='E-mail Address' />} name='contactEmail' />
+        <label><b><FormattedMessage id='global.address' defaultMessage='Address' /></b></label>
+        <AddressForm required displayHeader={false} values={values} setFieldValue={setFieldValue} />
+        <label><b><FormattedMessage id='checkout.contactInfo' defaultMessage='Contact Info' /></b></label>
+        <CustomSegment>
+          <FormGroup widths='equal'>
+            <Input
+              label={<FormattedMessage id='global.addressName' defaultMessage='Address Name' />}
+              name='addressName'
+            />
+            <Input
+              label={
+                <>
+                  <FormattedMessage id='global.contactName' default='Contact Name' />
+                  <Required />
+                </>
+              }
+              name='contactName'
+            />
+          </FormGroup>
 
-          <PhoneNumber
-            name='contactPhone'
-            values={values}
-            label={<FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />}
-            setFieldValue={setFieldValue}
-            setFieldTouched={setFieldTouched}
-            errors={errors}
-            touched={touched}
-            isSubmitting={isSubmitting}
-          />
-        </FormGroup>
-        <Header as='h3'>
-          <FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' />
-        </Header>
-        <FormGroup widths='3' data-test='settings_delivery_address_notes_inp' style={{ marginBottom: '0' }}>
-          <Input
-            inputProps={{ type: 'time' }}
-            label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
-            name='readyTime'
-          />
-          <Input
-            inputProps={{ type: 'time' }}
-            label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
-            name='closeTime'
-          />
-          <TextArea
-            inputProps={{ rows: 2 }}
-            name='deliveryNotes'
-            label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
-          />
-        </FormGroup>
-        <FormGroup widths='4'>
-          <Checkbox
-            label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
-            name='liftGate'
-            inputProps={{ 'data-test': 'settings_delivery_address_liftGate_inp' }}
-          />
-          <Checkbox
-            label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
-            name='forkLift'
-            inputProps={{ 'data-test': 'settings_delivery_address_forklift_inp' }}
-          />
-          <Checkbox
-            label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
-            name='callAhead'
-            inputProps={{ 'data-test': 'settings_delivery_address_callAhead_inp' }}
-          />
-        </FormGroup>
+          <FormGroup widths='equal'>
+            <PhoneNumber
+              name='contactPhone'
+              values={values}
+              label={
+                <>
+                  <FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />
+                  <Required />
+                </>
+              }
+              setFieldValue={setFieldValue}
+              setFieldTouched={setFieldTouched}
+              errors={errors}
+              touched={touched}
+              isSubmitting={isSubmitting}
+            />
+
+            <Input
+              label={
+                <>
+                  <FormattedMessage id='global.email' defaultMessage='E-mail Address' />
+                  <Required />
+                </>
+              }
+              name='contactEmail'
+            />
+          </FormGroup>
+
+        </CustomSegment>
+        <label><b> <FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' /></b></label>
+        <CustomSegment>
+          <Grid columns={2} stackable>
+            <Divider vertical />
+            <GridColumn>
+              <FormGroup widths='equal'>
+                <Input
+                  inputProps={{ type: 'time' }}
+                  label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
+                  name='readyTime'
+                />
+                <Input
+                  inputProps={{ type: 'time' }}
+                  label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
+                  name='closeTime'
+                />
+              </FormGroup>
+
+              <FormGroup widths='equal'>
+                <Checkbox
+                  label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
+                  name='liftGate'
+                  inputProps={{ 'data-test': 'settings_delivery_address_liftGate_inp' }}
+                />
+                <Checkbox
+                  label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
+                  name='forkLift'
+                  inputProps={{ 'data-test': 'settings_delivery_address_forklift_inp' }}
+                />
+                <Checkbox
+                  label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
+                  name='callAhead'
+                  inputProps={{ 'data-test': 'settings_delivery_address_callAhead_inp' }}
+                />
+              </FormGroup>
+            </GridColumn>
+
+            <GridColumn>
+              <Input name='taxId'
+                label={formatMessage({ id: 'global.taxId', defaultMessage: 'Tax ID' })}
+                inputProps={{ placeholder: formatMessage({ id: 'global.placeholder.taxId', defaultMessage: '!Enter Tax ID' }) }} />
+              < TextArea
+                inputProps={{ rows: 2 }}
+                name='deliveryNotes'
+                label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
+                inputProps={{ placeholder: formatMessage({ id: 'global.placeholder.deliveryNotes', defaultMessage: '!Write delivery notes here...' }) }}
+              />
+
+            </GridColumn>
+
+          </Grid>
+        </CustomSegment>
       </>
     )
   }
 
   handleSubmit = async (values, { setSubmitting }) => {
-    let { isNewAddress } = this.props
+    let { isNewAddress, onClose, isWarehouse } = this.props
 
-    const { postNewDeliveryAddress, updateDeliveryAddress, toastManager } = this.props
+    const { handleSubmit, toastManager } = this.props
 
-    let payload = {
-      ...values,
-      address: {
-        ...values.address,
-        country: JSON.parse(values.address.country).countryId
-      }
-    }
+    let payload = {}
 
     try {
-      if (isNewAddress) await postNewDeliveryAddress(payload)
-      else
-        await updateDeliveryAddress({
-          ...payload,
-          id: this.props.selectedAddress.id
-        })
+      if (isWarehouse) {
+        payload = {
+          deliveryAddress: {
+            ...values,
+            contactEmail: values.contactEmail.trim(),
+            address: {
+              ...values.address,
+              country: JSON.parse(values.address.country).countryId
+            }
+          },
+          taxId: values.taxId,
+          warehouse: true
+        }
+
+
+      }
+      else {
+        payload = {
+          ...values,
+          contactEmail: values.contactEmail.trim(),
+          address: {
+            ...values.address,
+            country: JSON.parse(values.address.country).countryId
+          }
+        }
+
+      }
+      removeEmpty(payload)
+      await handleSubmit(payload)
+
+
+      onClose()
 
       let status = isNewAddress ? 'Created' : 'Updated'
+      let type = isWarehouse ? 'warehouse' : 'address'
 
       toastManager.add(
         generateToastMarkup(
-          <FormattedMessage id={`notifications.address${status}.header`} />,
-          <FormattedMessage id={`notifications.address${status}.content`} values={{ name: payload.contactName }} />
+          <FormattedMessage id={`notifications.${type}${status}.header`} />,
+          <FormattedMessage id={`notifications.${type}${status}.content`} values={{ name: payload.contactName }} />
         ),
         { appearance: 'success' }
       )
@@ -185,110 +250,59 @@ class ShippingEdit extends Component {
   }
 
   render() {
-    let { isNewAddress, shippingChanged, selectedAddress, savedShippingPreferences, intl } = this.props
-    const { formatMessage } = intl
+    let { isWarehouse, isNewAddress, shippingChanged, onClose } = this.props
+    let header = null
+    if (isWarehouse) {
+      header = isNewAddress ? { id: 'checkout.addNewWarehouse', defaultMessage: '!Add New Warehouse' } : { id: 'checkout.editWarehouse', defaultMessage: '!Edit Warehouse' }
+    } else {
+      header = isNewAddress ? { id: 'checkout.addNewAddress', defaultMessage: 'Add New Address' } : { id: 'checkout.editAddress', defaultMessage: 'Edit Address' }
+    }
 
     return (
-      <Segment>
-        <BottomMargedGrid>
-          <GridRow className='header'>
-            <GridColumn>
-              <Header as='h2'>
-                <FormattedMessage id='cart.1shipping' defaultMessage='1. Shipping' />
-              </Header>
-            </GridColumn>
-          </GridRow>
-        </BottomMargedGrid>
+      <Modal closeIcon open onClose={onClose}>
+        <Modal.Header>
+          <FormattedMessage {...header} />
+        </Modal.Header>
+        <Modal.Content>
+          <Form
+            onSubmit={this.handleSubmit}
+            enableReinitialize
+            initialValues={this.props.initialValues ? { ...initialValues, ...this.props.initialValues } : initialValues}
+            validationSchema={this.validationSchema}>
+            {props => {
+              this.submitForm = props.submitForm
+              return (
+                this.markup(props)
+              )
+            }}
+          </Form>
+        </Modal.Content>
 
-        <Form
-          onSubmit={this.handleSubmit}
-          enableReinitialize
-          initialValues={this.props.initialValues ? { ...initialValues, ...this.props.initialValues } : initialValues}
-          validationSchema={this.validationSchema}>
-          {props => {
-            return (
-              <Container>
-                <GridRow>
-                  <GridColumn textAlign='center' tablet={16} computer={8}>
-                    <Button.Group fluid>
-                      {selectedAddress && (
-                        <>
-                          <Button
-                            type='button'
-                            onClick={() => shippingChanged({ isNewAddress: false })}
-                            active={!isNewAddress}
-                            disabled={!selectedAddress}
-                            data-test='purchase_order_shipping_edit_savedAddress_rad'>
-                            <FormattedMessage id='global.savedAddress' defaultMessage='Saved Address'>
-                              {text => text}
-                            </FormattedMessage>
-                          </Button>
-                          <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
-                        </>
-                      )}
-                      {!isNewAddress || this.state.clickedNewAddressInEditMode ? (
-                        <>
-                          <Button
-                            type='button'
-                            onClick={() => {
-                              shippingChanged({ isNewAddress: true })
-                              this.setState({ clickedNewAddressInEditMode: true })
-                            }}
-                            active={isNewAddress}
-                            data-test='purchase_order_shipping_edit_addNewAddress_rad'>
-                            <FormattedMessage id='global.addNewAddress' defaultMessage='Add New'>
-                              {text => text}
-                            </FormattedMessage>
-                          </Button>
-                        </>
-                      ) : null}
-                    </Button.Group>
-                  </GridColumn>
-                </GridRow>
-                {this.markup(props)}
-                <Divider />
-                <Grid>
-                  <GridRow>
-                    <GridColumn>
-                      <Grid>
-                        <GridColumn floated='right' computer={4}>
-                          <Button
-                            fieldProps={{ width: 4 }}
-                            onClick={() => shippingChanged({ isShippingEdit: false })}
-                            fluid
-                            data-test='purchase_order_shipping_edit_cancel_btn'>
-                            <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                              {text => text}
-                            </FormattedMessage>
-                          </Button>
-                        </GridColumn>
-                        <GridColumn computer={4}>
-                          <Button
-                            onClick={e => {
-                              props.submitForm()
-                              e.stopPropagation()
-                            }}
-                            loading={this.props.isFetching}
-                            primary
-                            fluid
-                            type='submit'
-                            data-test='purchase_order_shipping_edit_submit_btn'>
-                            <FormattedMessage
-                              id={`global.${!isNewAddress ? 'save' : 'addNew'}`}
-                              defaultMessage={!isNewAddress ? 'Save' : 'Add New'}>
-                              {text => text}
-                            </FormattedMessage>
-                          </Button>
-                        </GridColumn>
-                      </Grid>
-                    </GridColumn>
-                  </GridRow>
-                </Grid>
-              </Container>
-            )
-          }}
-        </Form>
-      </Segment>
+        <Modal.Actions>
+          <Button
+            onClick={onClose}
+            data-test='purchase_order_shipping_edit_cancel_btn'>
+            <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+              {text => text}
+            </FormattedMessage>
+          </Button>
+
+          <Button
+            onClick={e => {
+              this.submitForm()
+              e.stopPropagation()
+            }}
+            loading={this.props.isFetching}
+            primary
+            data-test='purchase_order_shipping_edit_submit_btn'>
+            <FormattedMessage
+              id={`global.${!isNewAddress ? 'save' : 'addNew'}`}
+              defaultMessage={!isNewAddress ? 'Save' : 'Add New'}>
+              {text => text}
+            </FormattedMessage>
+          </Button>
+        </Modal.Actions>
+      </Modal>
     )
   }
 }

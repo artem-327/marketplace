@@ -6,12 +6,13 @@ import debounce from 'lodash/debounce'
 import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {Modal, FormGroup, Popup, Grid, GridRow, GridColumn, Divider, Icon} from 'semantic-ui-react'
+import { Modal, FormGroup, FormField, Popup, Grid, GridRow, GridColumn, Divider, Icon } from 'semantic-ui-react'
 
 import { CompanyProductMixtures } from '~/components/shared-components/'
 import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
 import { DisabledButtonWrapped } from '~/utils/components'
 import confirm from '~/src/components/Confirmable/confirm'
+import { Required } from '~/components/constants/layout'
 
 import {
   closePopup,
@@ -36,8 +37,8 @@ import './styles.scss'
 import { UnitOfPackaging } from '~/components/formatted-messages'
 import { errorMessages } from '~/constants/yupValidation'
 import { AttachmentManager } from '~/modules/attachments'
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
-import styled from "styled-components"
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
+import styled from 'styled-components'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 
@@ -97,14 +98,8 @@ const columns = [
 ]
 
 const formValidation = Yup.object().shape({
-  intProductName: Yup.string()
-    .trim()
-    .min(3, errorMessages.minLength(3))
-    .required(errorMessages.requiredMessage),
-  intProductCode: Yup.string()
-    .trim()
-    .min(1, errorMessages.minLength(1))
-    .required(errorMessages.requiredMessage),
+  intProductName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+  intProductCode: Yup.string().trim().min(1, errorMessages.minLength(1)).required(errorMessages.requiredMessage),
   packagingSize: Yup.number(errorMessages.invalidNumber)
     .typeError(errorMessages.mustBeNumber)
     .required(errorMessages.requiredMessage)
@@ -186,12 +181,7 @@ class ProductPopup extends React.Component {
   }
 
   handlerSubmit = async (values, actions) => {
-    const {
-      popupValues,
-      handleSubmitProductEditPopup,
-      handleSubmitProductAddPopup,
-      datagrid
-    } = this.props
+    const { popupValues, handleSubmitProductEditPopup, handleSubmitProductAddPopup, datagrid } = this.props
     delete values.casProducts
 
     let formValues = {
@@ -308,17 +298,18 @@ class ProductPopup extends React.Component {
     this.setState({ changedForm: true, attachments: docArray })
   }
 
-  attachDocumentsUploadLot = (att, values, setFieldValue) => {
-    const newDocArray = [{
-      id: att.id,
-      name: att.name,
-      documentType: att.documentType.name,
-      linked: false
-    }]
+  attachDocumentsUploadAttachment = (att, values, setFieldValue) => {
+    const newDocArray = [
+      {
+        id: att.id,
+        name: att.name,
+        documentType: att.documentType.name,
+        linked: false
+      }
+    ]
     const docArray = uniqueArrayByKey(this.state.attachments.concat(newDocArray), 'id')
     this.setState({ changedForm: true, attachments: docArray })
   }
-
 
   render() {
     const {
@@ -410,69 +401,67 @@ class ProductPopup extends React.Component {
                     </>
                   )}
                   <FormGroup widths='equal' data-test='settings_product_popup_nameCodeInci_inp'>
-                    <Input
-                      type='text'
-                      label={formatMessage({ id: 'global.intProductName', defaultMessage: 'Internal Product Name' })}
-                      name='intProductName'
-                    />
-                    <Input
-                      type='text'
-                      label={formatMessage({ id: 'global.intProductCode', defaultMessage: 'Internal Product Code' })}
-                      name='intProductCode'
-                    />
+                    <FormField>
+                      <FormattedMessage id='global.intProductName' defaultMessage='Internal Product Name' />
+                      <Required />
+                      <Input type='text' name='intProductName' />
+                    </FormField>
+                    <FormField>
+                      <FormattedMessage id='global.intProductCode' defaultMessage='Internal Product Code' />
+                      <Required />
+                      <Input type='text' name='intProductCode' />
+                    </FormField>
                   </FormGroup>
 
                   <FormGroup data-test='settings_product_popup_packagingSize_inp'>
-                    <Input
-                      fieldProps={{
-                        width: 4
-                      }}
-                      type='number'
-                      label={formatMessage({ id: 'global.packagingSize', defaultMessage: 'Packaging Size' })}
-                      name='packagingSize'
-                    />
-                    <Dropdown
-                      fieldProps={{ width: 6 }}
-                      label={formatMessage({ id: 'global.packagingUnit', defaultMessage: 'Unit' })}
-                      name='packagingUnit'
-                      options={productsUnitsType}
-                      inputProps={{
-                        'data-test': 'settings_product_popup_packagingUnit_drpdn',
-                        onChange: (e, d) => {
-                          setFieldValue('packagingType', '')
-                          this.handleUnitChange(d.value, this.props.unitsAll, this.props.packagingTypesAll)
-                        }
-                      }}
-                    />
-                    <Dropdown
-                      fieldProps={{
-                        width: 6
-                      }}
-                      label={formatMessage({ id: 'global.packagingType', defaultMessage: 'Packaging Type' })}
-                      name='packagingType'
-                      options={packagingTypesReduced}
-                      inputProps={{ 'data-test': 'settings_product_popup_packagingType_drpdn' }}
-                    />
+                    <FormField width='4'>
+                      <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size' />
+                      <Required />
+                      <Input type='number' name='packagingSize' />
+                    </FormField>
+                    <FormField width='6'>
+                      <FormattedMessage id='global.packagingUnit' defaultMessage='Unit' />
+                      <Required />
+                      <Dropdown
+                        name='packagingUnit'
+                        options={productsUnitsType}
+                        inputProps={{
+                          'data-test': 'settings_product_popup_packagingUnit_drpdn',
+                          onChange: (e, d) => {
+                            setFieldValue('packagingType', '')
+                            this.handleUnitChange(d.value, this.props.unitsAll, this.props.packagingTypesAll)
+                          }
+                        }}
+                      />
+                    </FormField>
+                    <FormField width='6'>
+                      <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type' />
+                      <Required />
+                      <Dropdown
+                        name='packagingType'
+                        options={packagingTypesReduced}
+                        inputProps={{ 'data-test': 'settings_product_popup_packagingType_drpdn' }}
+                      />
+                    </FormField>
                   </FormGroup>
 
                   <FormGroup data-test='settings_product_popup_packageWeight_inp'>
-                    <Input
-                      fieldProps={{
-                        width: 4
-                      }}
-                      type='text'
-                      label={formatMessage({ id: 'global.packageWeight', defaultMessage: 'Package Weight' })}
-                      name='packageWeight'
-                    />
-                    <Dropdown
-                      fieldProps={{ width: 6 }}
-                      label={formatMessage({ id: 'global.packageWeightUnit', defaultMessage: 'Package Weight Unit' })}
-                      name='packageWeightUnit'
-                      options={packageWeightUnits}
-                      inputProps={{
-                        'data-test': 'settings_product_popup_packageWeightUnit_drpdn'
-                      }}
-                    />
+                    <FormField width='4'>
+                      <FormattedMessage id='global.packageWeight' defaultMessage='Package Weight' />
+                      <Required />
+                      <Input type='text' name='packageWeight' />
+                    </FormField>
+                    <FormField width='6'>
+                      <FormattedMessage id='global.packageWeightUnit' defaultMessage='Package Weight Unit' />
+                      <Required />
+                      <Dropdown
+                        name='packageWeightUnit'
+                        options={packageWeightUnits}
+                        inputProps={{
+                          'data-test': 'settings_product_popup_packageWeightUnit_drpdn'
+                        }}
+                      />
+                    </FormField>
                     <Input
                       fieldProps={{
                         width: 6
@@ -484,33 +473,37 @@ class ProductPopup extends React.Component {
                   </FormGroup>
 
                   <FormGroup widths='equal'>
-                    <Dropdown
-                      label={
-                        <FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code'>
-                          {text => text}
-                        </FormattedMessage>
-                      }
-                      options={nmfcNumbersFiltered}
-                      inputProps={{
-                        fluid: true,
-                        search: val => val,
-                        selection: true,
-                        loading: nmfcNumbersFetching,
-                        onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery)
-                      }}
-                      name='nmfcNumber'
-                    />
+                    <FormField>
+                      <FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code'>
+                        {text => text}
+                      </FormattedMessage>{' '}
+                      <Required />
+                      <Dropdown
+                        options={nmfcNumbersFiltered}
+                        inputProps={{
+                          fluid: true,
+                          search: val => val,
+                          selection: true,
+                          loading: nmfcNumbersFetching,
+                          onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery)
+                        }}
+                        name='nmfcNumber'
+                      />
+                    </FormField>
                     <Input
                       label={formatMessage({ id: 'global.inciName', defaultMessage: 'INCI Name' })}
                       type='string'
                       name='inciName'
                     />
-                    <Dropdown
-                      label={formatMessage({ id: 'global.freightClass', defaultMessage: 'Freight Class' })}
-                      name='freightClass'
-                      options={freightClasses}
-                      inputProps={{ 'data-test': 'settings_product_popup_freightClass_drpdn' }}
-                    />
+                    <FormField>
+                      <FormattedMessage id='global.freightClass' defaultMessage='Freight Class' />
+                      <Required />
+                      <Dropdown
+                        name='freightClass'
+                        options={freightClasses}
+                        inputProps={{ 'data-test': 'settings_product_popup_freightClass_drpdn' }}
+                      />
+                    </FormField>
                   </FormGroup>
 
                   <FormGroup>
@@ -563,9 +556,7 @@ class ProductPopup extends React.Component {
 
                     <GridRow>
                       <GridColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-                        <FormattedMessage
-                          id='global.existingDocuments'
-                          defaultMessage='Existing documents: '>
+                        <FormattedMessage id='global.existingDocuments' defaultMessage='Existing documents: '>
                           {text => text}
                         </FormattedMessage>
                       </GridColumn>
@@ -579,7 +570,7 @@ class ProductPopup extends React.Component {
                     {values.documents.documentType && this.state.openUpload ? (
                       <GridRow>
                         <GridColumn>
-                          <UploadLot
+                          <UploadAttachment
                             {...this.props}
                             header={
                               <DivIcon
@@ -598,7 +589,7 @@ class ProductPopup extends React.Component {
                             type={this.state.documentType}
                             fileMaxSize={20}
                             onChange={files => {
-                              this.attachDocumentsUploadLot(files, values, setFieldValue)
+                              this.attachDocumentsUploadAttachment(files, values, setFieldValue)
                             }}
                             data-test='settings_product_catalog_attachments_drop'
                             emptyContent={
@@ -611,10 +602,7 @@ class ProductPopup extends React.Component {
                                   values={{
                                     link: (
                                       <a>
-                                        <FormattedMessage
-                                          id='global.clickHere'
-                                          defaultMessage={'click here'}
-                                        />
+                                        <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
                                       </a>
                                     )
                                   }}
@@ -634,10 +622,7 @@ class ProductPopup extends React.Component {
                                   values={{
                                     link: (
                                       <a>
-                                        <FormattedMessage
-                                          id='global.clickHere'
-                                          defaultMessage={'click here'}
-                                        />
+                                        <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
                                       </a>
                                     )
                                   }}
@@ -673,15 +658,14 @@ class ProductPopup extends React.Component {
                                 callback: async row => {
                                   try {
                                     if (row.linked) {
-                                      const unlinkResponse =
-                                        await this.props.removeAttachmentLinkCompanyProduct(popupValues.id, row.id)
+                                      const unlinkResponse = await this.props.removeAttachmentLinkCompanyProduct(
+                                        popupValues.id,
+                                        row.id
+                                      )
                                       datagrid.loadData() // Reload product with updated attachments
                                       toastManager.add(
                                         generateToastMarkup(
-                                          <FormattedMessage
-                                            id='addInventory.success'
-                                            defaultMessage='Success'
-                                          />,
+                                          <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
                                           <FormattedMessage
                                             id='addInventory.unlinkeAttachment'
                                             defaultMessage='Attachment was successfully unlinked.'
@@ -705,7 +689,8 @@ class ProductPopup extends React.Component {
                                             { fileName: row.name }
                                           )
                                         ).then(
-                                          async () => { // confirm
+                                          async () => {
+                                            // confirm
                                             try {
                                               await this.props.removeAttachment(row.id)
                                               toastManager.add(
@@ -728,7 +713,8 @@ class ProductPopup extends React.Component {
                                               console.error(e)
                                             }
                                           },
-                                          () => { // cancel
+                                          () => {
+                                            // cancel
                                           }
                                         )
                                       }
@@ -739,7 +725,7 @@ class ProductPopup extends React.Component {
                                   } catch (e) {
                                     console.error(e)
                                   }
-                                },
+                                }
                               }
                             ]}
                           />
@@ -828,7 +814,7 @@ const mapStateToProps = ({ settings }) => {
           </>
         )
       }
-    }),
+    })
   }
 }
 

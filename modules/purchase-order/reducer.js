@@ -22,10 +22,11 @@ export const initialState = {
   provinces: [],
   warehouses: [],
   // TODO remove shippingQuotes, keep them in shipping obj only
-  shippingQuotes: [],
+  shippingQuotes: {},
   manualShipmentRequested: false,
   manualShipmentPending: false,
   manualShipmentError: false,
+  preFilledValues: null,
   sidebar: {
     isOpen: false,
     pricing: null,
@@ -189,13 +190,10 @@ export default function reducer(state = initialState, action) {
         let { cartItems } = payload
         cartItems.forEach(item => {
           item.locationStr = getLocationString(item.productOffer)
-          //! !item.pricing = {price: item.cfPricePerUOM} // ! ! getPricing(item.productOffer, item.quantity)
-          //! ! item.productOffer = addFirstTier(item.productOffer)
         })
       }
       return {
         ...state,
-        //cart: calculateTotalPrice(payload),
         cart: payload,
         cartIsFetching: false
       }
@@ -285,6 +283,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         country: action.country,
         zip: action.zip,
+        shippingQuotes: [],
         shippingQuotesAreFetching: true,
         cart: { ...state.cart, selectedShipping: null }
       }
@@ -301,7 +300,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         shippingQuotesAreFetching: false,
-        shippingQuotes: []
+        shippingQuotes: {}
       }
     }
 
@@ -315,10 +314,18 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.ADD_CART_ITEM_FULFILLED: {
+      let { payload } = action
+      if (payload.cartItems) {
+        let { cartItems } = payload
+        cartItems.forEach(item => {
+          item.locationStr = getLocationString(item.productOffer)
+        })
+      }
       return {
         ...state,
         isPurchasing: false,
-        sidebar: { ...state.cart.sidebar, isOpen: false }
+        sidebar: { ...state.cart.sidebar, isOpen: false },
+        cart: payload
       }
     }
 
@@ -401,7 +408,7 @@ export default function reducer(state = initialState, action) {
     case AT.SHIPPING_CHANGED: {
       return {
         ...state,
-        shipping: { ...state.shipping, ...action.payload }
+        shipping: { ...state.shipping, selectedAddress: action.payload }
       }
     }
 
@@ -470,7 +477,27 @@ export default function reducer(state = initialState, action) {
     case AT.PURCHASE_GET_IDENTITY_FULFILLED: {
       return {
         ...state,
-        identity: action.payload,
+        identity: action.payload
+      }
+    }
+
+    case AT.SET_PRE_FILLED_VALUES: {
+      return {
+        ...state,
+        preFilledValues: action.payload,
+        country: action.payload.country,
+        zip: action.payload.zip,
+        shippingQuotes: {
+          rates: action.payload.quotes.rates.map((quote) =>
+            ({ productOfferId: quote.productOfferId, ...quote.shipmentRate }))
+        }
+      }
+    }
+
+    case AT.CLEAR_PRE_FILLED_VALUES: {
+      return {
+        ...state,
+        preFilledValues: null
       }
     }
 

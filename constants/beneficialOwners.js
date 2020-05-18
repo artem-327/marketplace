@@ -1,4 +1,5 @@
 import { deepSearch } from '~/utils/functions'
+import { getStringISODate } from '~/components/date-format'
 
 export const USA = JSON.stringify({ countryId: 1, hasProvinces: true })
 
@@ -27,7 +28,8 @@ export const ownersToPayload = beneficialOwners => {
       payload.push({
         ...owner,
         ...owner.address,
-        country: JSON.parse(owner.address.country).countryId
+        country: JSON.parse(owner.address.country).countryId,
+        dateOfBirth: owner.dateOfBirth ? getStringISODate(owner.dateOfBirth).split('T')[0] : ''
         // zip: JSON.parse(owner.address.zip).zip
       })
       delete payload[i].address

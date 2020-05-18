@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import { array, string, func } from 'prop-types'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
-import { Grid, GridRow, GridColumn, Header, Divider, Segment, Button } from 'semantic-ui-react'
+import { Grid, GridRow, GridColumn, Header, Divider, Segment, Button, Icon, Modal, FormGroup } from 'semantic-ui-react'
 
-import './styles.scss'
-import { RelaxedRow, HeaderTextRow, WiderModal, CustomSpan, CustomHeader } from './styledComponents'
-import { FormattedUnit, ArrayToMultiple } from '~/components/formatted-messages'
+import { RelaxedRow } from './styledComponents'
+import { FormattedUnit } from '~/components/formatted-messages'
 import { Form, Input, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 
 import { withToastManager } from 'react-toast-notifications'
@@ -23,6 +22,21 @@ import { getCart } from '~/modules/purchase-order/actions'
 import { getNmfcNumbersByString, addNmfcNumber } from '~/modules/settings/actions'
 import { generateToastMarkup, getSafe, getFloatOrNull, getIntOrNull } from '~/utils/functions'
 import { freightClassValidation } from '~/constants/yupValidation'
+import styled from 'styled-components'
+
+import {
+  VerticalUnpaddedColumn,
+  StyledRow,
+  ItemDescriptionGrid,
+  SummaryGrid,
+  BottomUnpaddedColumn
+} from '~/modules/cart/components/StyledComponents'
+import { TopUnpaddedColumn } from '../../modules/cart/components/StyledComponents'
+
+const BlueText = styled.label`
+  color: #2599d5;
+  cursor: pointer;
+`
 
 const validationSchema = Yup.object().shape({
   freightClass: freightClassValidation()
@@ -138,323 +152,331 @@ class CartItemSummary extends Component {
     )
 
     return (
-      <Form
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        enableReinitialize
-        onSubmit={async (values, { setSubmitting }) => {
-          try {
-            this.setState({ edittingHazmatInfo: false })
-            await updateHazmatInfo(item.id, {
-              unNumber: getIntOrNull(values.unNumber),
-              packagingGroup: getIntOrNull(values.packagingGroup),
-              hazardClass: getIntOrNull(values.hazardClass),
-              freightClass: getFloatOrNull(values.freightClass),
-              nmfcNumber: getIntOrNull(values.nmfcNumber),
-              stackable: values.stackable
-            })
-            this.setState({ loadCartRequired: true })
-            toastManager.add(
-              generateToastMarkup(
-                <FormattedMessage
-                  id='notifications.hazardInfoUpdated.header'
-                  defaultMessage={`Hazardous informations for ${item.productOffer.tradeName} updated`}
-                  values={{ name: item.productOffer.tradeName }}
-                />,
-                <FormattedMessage
-                  id='notifications.hazardInfoUpdated.content'
-                  defaultMessage='Hazardous informations successfully updated'
-                />
-              ),
-              { appearance: 'success' }
-            )
-          } catch (e) {
-            console.error(e)
-          } finally {
-            setSubmitting(false)
-          }
-        }}
-        children={({ handleSubmit, errors }) => (
-          <Segment basic>
-            <Grid verticalAlign='middle'>
-              <GridRow>
-                <GridColumn computer={12}>
-                  <CustomHeader as='h2'>
-                    <FormattedMessage id='cart.shippingtInfo' defaultMessage='Shipping Information' />
-                  </CustomHeader>
-                </GridColumn>
-              </GridRow>
+      <>
+        <Modal.Header>
+          <FormattedMessage id='cart.shippingtInfo' defaultMessage='Shipping Information' />
+        </Modal.Header>
+        <Modal.Content>
+          <Form
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            enableReinitialize
+            onSubmit={async (values, { setSubmitting }) => {
+              try {
+                this.setState({ edittingHazmatInfo: false })
+                await updateHazmatInfo(item.id, {
+                  unNumber: getIntOrNull(values.unNumber),
+                  packagingGroup: getIntOrNull(values.packagingGroup),
+                  hazardClass: getIntOrNull(values.hazardClass),
+                  freightClass: getFloatOrNull(values.freightClass),
+                  nmfcNumber: getIntOrNull(values.nmfcNumber),
+                  stackable: values.stackable
+                })
+                this.setState({ loadCartRequired: true })
+                toastManager.add(
+                  generateToastMarkup(
+                    <FormattedMessage
+                      id='notifications.hazardInfoUpdated.header'
+                      defaultMessage={`Hazardous informations for ${item.productOffer.tradeName} updated`}
+                      values={{ name: item.productOffer.tradeName }}
+                    />,
+                    <FormattedMessage
+                      id='notifications.hazardInfoUpdated.content'
+                      defaultMessage='Hazardous informations successfully updated'
+                    />
+                  ),
+                  { appearance: 'success' }
+                )
+              } catch (e) {
+                console.error(e)
+              } finally {
+                setSubmitting(false)
+              }
+            }}
+            children={({ submitForm }) => {
+              this.handleSubmit = submitForm
+              return (
+                <>
+                  <FormGroup widths='equal'>
+                    <Dropdown
+                      options={unNumberOptions}
+                      fieldProps={{
+                        'data-test': 'shopping_cart_unNumber_inp'
+                      }}
+                      inputProps={{
+                        loading: unNumbersFetching,
+                        disabled,
+                        clearable: true,
+                        search: true,
+                        selection: true,
+                        onSearchChange: this.handleUnNumberChange
+                      }}
+                      name='unNumber'
+                      label={formatMessage({ id: 'global.unNumber', defaultMessage: 'UN Number' })}
+                    />
 
-              <GridRow>
-                <GridColumn data-test='shopping_cart_unNumber_inp'>
-                  <Dropdown
-                    options={unNumberOptions}
-                    inputProps={{
-                      loading: unNumbersFetching,
-                      disabled,
-                      clearable: true,
-                      search: true,
-                      selection: true,
-                      onSearchChange: this.handleUnNumberChange
-                    }}
-                    name='unNumber'
-                    label={formatMessage({ id: 'global.unNumber', defaultMessage: 'UN Number' })}
-                  />
-                </GridColumn>
-              </GridRow>
+                    <Dropdown
+                      options={packagingGroups.map(grp => ({
+                        key: grp.id,
+                        value: grp.id,
+                        text: grp.groupCode
+                      }))}
+                      fieldProps={{
+                        'data-test': 'shopping_cart_packagingGroup_inp'
+                      }}
+                      inputProps={{
+                        disabled,
+                        clearable: true,
+                        selection: true,
+                        search: true
+                      }}
+                      name='packagingGroup'
+                      label={formatMessage({ id: 'cart.packagingGroup', defaultMessage: 'Packaging Group' })}
+                    />
+                  </FormGroup>
 
-              <GridRow>
-                <GridColumn data-test='shopping_cart_packagingGroup_inp'>
-                  <Dropdown
-                    options={packagingGroups.map(grp => ({
-                      key: grp.id,
-                      value: grp.id,
-                      text: grp.groupCode
-                    }))}
-                    inputProps={{
-                      disabled,
-                      clearable: true,
-                      selection: true,
-                      search: true
-                    }}
-                    name='packagingGroup'
-                    label={formatMessage({ id: 'cart.packagingGroup', defaultMessage: 'Packaging Group' })}
-                  />
-                </GridColumn>
-              </GridRow>
+                  <FormGroup widths='equal'>
+                    <Dropdown
+                      options={hazardClasses.map(hazardClass => ({
+                        key: hazardClass.id,
+                        value: hazardClass.id,
+                        text: `${hazardClass.classCode} - ${hazardClass.description}`
+                      }))}
+                      inputProps={{ disabled, search: true, clearable: true }}
+                      fieldProps={{
+                        'data-test': 'shopping_cart_hazardClass_inp'
+                      }}
+                      name='hazardClass'
+                      label={formatMessage({ id: 'cart.hazardClass', defaultMessage: 'Hazard Class' })}
+                    />
 
-              <GridRow>
-                <GridColumn data-test='shopping_cart_hazardClass_inp'>
-                  <Dropdown
-                    options={hazardClasses.map(hazardClass => ({
-                      key: hazardClass.id,
-                      value: hazardClass.id,
-                      text: `${hazardClass.classCode} - ${hazardClass.description}`
-                    }))}
-                    inputProps={{ disabled, search: true, clearable: true }}
-                    name='hazardClass'
-                    label={formatMessage({ id: 'cart.hazardClass', defaultMessage: 'Hazard Class' })}
-                  />
-                </GridColumn>
-              </GridRow>
+                    <Input
+                      fieldProps={{
+                        'data-test': 'shopping_cart_freightClass_inp'
+                      }}
+                      inputProps={{ disabled }}
+                      name='freightClass'
+                      label={formatMessage({ id: 'cart.freightClass', defaultMessage: 'Freight Class' })}
+                    />
+                  </FormGroup>
 
-              <GridRow>
-                <GridColumn data-test='shopping_cart_freightClass_inp'>
-                  <Input
-                    inputProps={{ disabled }}
-                    name='freightClass'
-                    label={formatMessage({ id: 'cart.freightClass', defaultMessage: 'Freight Class' })}
-                  />
-                </GridColumn>
-              </GridRow>
+                  <FormGroup widths='2'>
+                    <Dropdown
+                      label={
+                        <FormattedMessage id='cart.nmfcNumber' defaultMessage='NMFC Number'>
+                          {text => text}
+                        </FormattedMessage>
+                      }
+                      options={nmfcNumberOptions}
+                      fieldProps={{
+                        'data-test': 'shopping_cart_nmfcNumber_inp'
+                      }}
+                      inputProps={{
+                        disabled,
+                        fluid: true,
+                        search: val => val,
+                        clearable: true,
+                        selection: true,
+                        loading: nmfcNumbersFetching,
+                        onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery)
+                      }}
+                      name='nmfcNumber'
+                    />
 
-              <GridRow>
-                <GridColumn data-test='shopping_cart_nmfcNumber_inp'>
-                  <Dropdown
-                    label={
-                      <FormattedMessage id='cart.nmfcNumber' defaultMessage='NMFC Number'>
-                        {text => text}
-                      </FormattedMessage>
-                    }
-                    options={nmfcNumberOptions}
-                    inputProps={{
-                      disabled,
-                      fluid: true,
-                      search: val => val,
-                      clearable: true,
-                      selection: true,
-                      loading: nmfcNumbersFetching,
-                      onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery)
-                    }}
-                    name='nmfcNumber'
-                  />
-                </GridColumn>
-              </GridRow>
+                  </FormGroup>
 
-              <GridRow>
-                <GridColumn width={8}>
-                  <Checkbox
-                    inputProps={{ disabled, 'data-test': 'shopping_cart_stackable_chckb' }}
-                    name='stackable'
-                    label={formatMessage({ id: 'cart.stackable', defaultMessage: 'Stackable' })}
-                  />
-                </GridColumn>
-                <GridColumn width={4}>
-                  <Button
-                    type='button'
-                    style={{ paddingRight: '17px', paddingLeft: '17px' }}
-                    size={'small'}
-                    secondary
-                    onClick={e => {
-                      this.setState({ edittingHazmatInfo: false, openModal: false })
-                    }}
-                    data-test='shopping_cart_hazmat_cancel'>
-                    <FormattedMessage id='global.close' defaultMessage='Close'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                </GridColumn>
-                <GridColumn width={4}>
-                  <Button
-                    type='button'
-                    style={{ paddingRight: '17px', paddingLeft: '17px' }}
-                    size={'small'}
-                    primary
-                    positive={this.state.edittingHazmatInfo}
-                    onClick={() => {
-                      if (this.state.edittingHazmatInfo) handleSubmit()
-                      else this.setState(prevState => ({ edittingHazmatInfo: !prevState.edittingHazmatInfo }))
-                    }}
-                    data-test='shopping_cart_hazmat'>
-                    <FormattedMessage id={`global.${this.state.edittingHazmatInfo ? 'save' : 'edit'}`}>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                </GridColumn>
-              </GridRow>
-            </Grid>
-          </Segment>
-        )}
-      />
+                  <FormGroup widths='2'>
+                    <Checkbox
+                      inputProps={{ disabled, 'data-test': 'shopping_cart_stackable_chckb' }}
+                      name='stackable'
+                      label={formatMessage({ id: 'cart.stackable', defaultMessage: 'Stackable' })}
+                    />
+                  </FormGroup>
+
+                </>
+              )
+            }} />
+        </Modal.Content>
+
+        <Modal.Actions>
+          <Button
+            type='button'
+            basic
+            onClick={e => {
+              this.setState({ edittingHazmatInfo: false, openModal: false })
+            }}
+            data-test='shopping_cart_hazmat_cancel'>
+            <FormattedMessage id='global.close' defaultMessage='Close'>
+              {text => text}
+            </FormattedMessage>
+          </Button>
+          <Button
+            type='button'
+            {... this.state.edittingHazmatInfo ? { positive: true } : { color: 'blue' }}
+            onClick={() => {
+              if (this.state.edittingHazmatInfo) this.handleSubmit()
+              else this.setState(prevState => ({ edittingHazmatInfo: !prevState.edittingHazmatInfo }))
+            }}
+            data-test='shopping_cart_hazmat'>
+            <FormattedMessage id={`global.${this.state.edittingHazmatInfo ? 'save' : 'edit'}`}>
+              {text => text}
+            </FormattedMessage>
+          </Button>
+        </Modal.Actions>
+      </>
     )
+
   }
 
   renderItem = ({ item, lastChild }) => {
     let { productOffer } = item
     let { deleteCart } = this.props
-    // let currency = this.props.currency
 
+    const externalNotes = getSafe(() => item.productOffer.externalNotes, '')
+    const leadTime = getSafe(() => item.productOffer.leadTime, 'N/A')
     return (
       <>
         <GridColumn computer={16}>
-          <Grid columns={2} className='light-gray cart-item-summary' style={{ fontSize: '16px' }}>
-            <HeaderTextRow>
-              <GridColumn>
+          <Grid verticalAlign='middle' columns={2} style={{ fontSize: '16px' }}>
+            <StyledRow verticallyUnpadded bottomShadow>
+              <GridColumn computer={12}>
                 {/* {productOffer.companyProduct.intProductCode + ' ' + productOffer.companyProduct.intProductName} */}
-                {productOffer.companyProduct.echoProduct.name}
+                <Header as='h2'>{productOffer.companyProduct.echoProduct.name}</Header>
               </GridColumn>
 
-              <GridColumn floated='right'>
-                <span
-                  className='headerAddtext'
-                  onClick={() => deleteCart(item.id)}
-                  data-test={`shopping_cart_remove_${item.id}_btn`}>
-                  <FormattedMessage id='global.remove' defaultMessage='Remove'>
-                    {text => text}
-                  </FormattedMessage>
-                </span>
+              <GridColumn computer={4} textAlign='right'>
+                <Button type='button' onClick={() => deleteCart(item.id)} data-test={`shopping_cart_remove_${item.id}_btn`} basic icon negative>
+                  <Icon name='trash alternate outline' />
+                </Button>
               </GridColumn>
-            </HeaderTextRow>
-
-            {/* <RelaxedRow>
-              <GridColumn>
-                <FormattedMessage id='global.mixtures' defaultMessage='Mixtures' />
-              </GridColumn>
-
-              <GridColumn floated='right'>
-                <ArrayToMultiple
-                  values={productOffer.companyProduct.echoProduct.elements.map(d => {
-                    return d.proprietary ? d.displayName : d.displayName + ' - ' + d.casProduct.casNumber
-                  })}
-                />
-              </GridColumn>
-            </RelaxedRow> */}
+            </StyledRow>
 
             <RelaxedRow>
-              <GridColumn>
+              <BottomUnpaddedColumn>
                 <FormattedMessage id='global.location' defaultMessage='Location' />
-              </GridColumn>
+              </BottomUnpaddedColumn>
 
-              <GridColumn floated='right'>{item.locationStr}</GridColumn>
+              <VerticalUnpaddedColumn black>{item.locationStr}</VerticalUnpaddedColumn>
             </RelaxedRow>
 
             <RelaxedRow columns={2}>
-              <GridColumn>
+              <VerticalUnpaddedColumn>
                 <FormattedMessage id='cart.shipingInformation' defaultMessage='Shipping Information' />
-              </GridColumn>
-              <GridColumn floated='right'>
-                <WiderModal
+              </VerticalUnpaddedColumn>
+              <VerticalUnpaddedColumn>
+                <Modal
                   open={this.state.openModal}
                   closeIcon
-                  wide
+                  size='tiny'
                   onOpen={() => this.onHazmatPopup(item)}
                   onClose={() => {
                     if (this.state.loadCartRequired) this.props.getCart()
                     this.setState({ edittingHazmatInfo: false, loadCartRequired: false, openModal: false })
                   }}
                   trigger={
-                    <span className='headerAddtext' data-test={`shopping_cart_viewEdit_${item.id}_btn`}>
+                    <BlueText>
                       <FormattedMessage id='global.viewEdit' defaultMessage='View/Edit'>
                         {text => text}
                       </FormattedMessage>
-                    </span>
+                    </BlueText>
                   }
-                  content={this.hazmatMarkup(item)}
-                />
-              </GridColumn>
+                >
+                  {this.hazmatMarkup(item)}
+                </Modal>
+              </VerticalUnpaddedColumn>
             </RelaxedRow>
 
             <RelaxedRow columns={2}>
-              <GridColumn>
+              <VerticalUnpaddedColumn>
                 <FormattedMessage id='global.packages' defaultMessage='Packages' />
-              </GridColumn>
+              </VerticalUnpaddedColumn>
 
-              <GridColumn>
+              <VerticalUnpaddedColumn black>
                 <FormattedNumber minimumFractionDigits={0} value={item.pkgAmount} /> x{' '}
                 {item.productOffer.companyProduct.packagingSize}{' '}
                 {item.productOffer.companyProduct.packagingUnit.nameAbbreviation}{' '}
                 {item.productOffer.companyProduct.packagingType.name}
-              </GridColumn>
+              </VerticalUnpaddedColumn>
             </RelaxedRow>
 
             <RelaxedRow>
-              <GridColumn>
+              <VerticalUnpaddedColumn>
                 <FormattedMessage id='global.quantity' defaultMessage='Quantity' />
-              </GridColumn>
+              </VerticalUnpaddedColumn>
 
-              <GridColumn floated='right'>
+              <VerticalUnpaddedColumn black>
                 <FormattedUnit
                   unit={item.productOffer.companyProduct.packagingUnit.nameAbbreviation}
                   separator=' '
                   value={item.pkgAmount * item.productOffer.companyProduct.packagingSize}
                 />
-              </GridColumn>
+              </VerticalUnpaddedColumn>
             </RelaxedRow>
 
             {/* <RelaxedRow>
-              <GridColumn>
+              <VerticalUnpaddedColumn>
                 <FormattedMessage id='global.weight' defaultMessage='Weight' />
-              </GridColumn>
+              </VerticalUnpaddedColumn>
 
-              <GridColumn floated='right'>
+              <VerticalUnpaddedColumn floated='right'>
                 <FormattedUnit
                   separator=''
                   unit={productOffer.companyProduct.packagingUnit.nameAbbreviation}
                   value={item.pkgAmount * productOffer.companyProduct.packagingSize}
                 />
-              </GridColumn>
+              </VerticalUnpaddedColumn>
             </RelaxedRow> */}
 
             <RelaxedRow>
-              <GridColumn>
+              <VerticalUnpaddedColumn>
                 <FormattedMessage id='global.fobPrice' defaultMessage='!FOB Price' />
-              </GridColumn>
+              </VerticalUnpaddedColumn>
 
-              <GridColumn floated='right'>
+              <VerticalUnpaddedColumn black>
                 <FormattedNumber style='currency' currency={currency} id='cart.packs' value={item.cfPricePerUOM} /> /{' '}
                 {productOffer.companyProduct.packagingUnit.nameAbbreviation}
-              </GridColumn>
+              </VerticalUnpaddedColumn>
             </RelaxedRow>
 
-            <HeaderTextRow>
-              <GridColumn>
+            <RelaxedRow>
+              <VerticalUnpaddedColumn>
                 <FormattedMessage id='cart.productTotal' defaultMessage='Product Total' />
-              </GridColumn>
+              </VerticalUnpaddedColumn>
 
-              <GridColumn floated='right'>
+              <VerticalUnpaddedColumn black>
                 <FormattedNumber style='currency' currency={currency} value={item.cfPriceSubtotal} />
-              </GridColumn>
-            </HeaderTextRow>
+              </VerticalUnpaddedColumn>
+            </RelaxedRow>
+
+            <RelaxedRow>
+              <VerticalUnpaddedColumn>
+                <FormattedMessage id='global.leadTime' defaultMessage='!Lead Time' />
+              </VerticalUnpaddedColumn>
+
+              <VerticalUnpaddedColumn black>
+                {leadTime}
+              </VerticalUnpaddedColumn>
+            </RelaxedRow>
+
+            {externalNotes &&
+              <RelaxedRow>
+                <VerticalUnpaddedColumn computer={16}>
+                  <ItemDescriptionGrid>
+                    <GridRow>
+                      <GridColumn className='default'>
+                        <FormattedMessage id='cart.externalNotes' defaultMessage='!External Notes' />
+                      </GridColumn>
+                    </GridRow>
+
+                    <GridRow>
+                      <TopUnpaddedColumn black className='default'>
+                        {externalNotes}
+                      </TopUnpaddedColumn>
+                    </GridRow>
+                  </ItemDescriptionGrid>
+                </VerticalUnpaddedColumn>
+              </RelaxedRow>
+            }
 
             {!lastChild ? <Divider /> : null}
           </Grid>
@@ -468,14 +490,14 @@ class CartItemSummary extends Component {
 
     return (
       <Segment>
-        <Grid className='bottom-padded'>
-          <GridRow className='header'>
-            <GridColumn>
-              <Header>{header}</Header>
-            </GridColumn>
-          </GridRow>
+        <SummaryGrid>
+          <StyledRow verticalAlign='middle' topMarged bottomShadow>
+            <VerticalUnpaddedColumn>
+              <Header as='h2'>{header}</Header>
+            </VerticalUnpaddedColumn>
+          </StyledRow>
           {cartItems.map((item, i) => this.renderItem({ item, i, lastChild: cartItems.length - 1 === i }))}
-        </Grid>
+        </SummaryGrid>
       </Segment>
     )
   }
@@ -489,7 +511,7 @@ CartItemSummary.propTypes = {
 }
 
 CartItemSummary.defaultProps = {
-  header: <FormattedMessage id='cart.yourOrder' defaultMessage='YOUR ORDER' />
+  header: <FormattedMessage id='cart.summary' defaultMessage='SUMMARY' />
   // currency: 'USD'
 }
 

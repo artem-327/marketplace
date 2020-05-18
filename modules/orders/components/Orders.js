@@ -3,7 +3,6 @@ import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 're
 import { Modal, Menu, Header, Container, Grid, Icon, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react'
 import styled, { withTheme } from 'styled-components'
 
-import SubMenu from '~/src/components/SubMenu'
 import Spinner from '~/src/components/Spinner/Spinner'
 import ProdexGrid from '~/components/table'
 import { actions } from 'react-redux-form'
@@ -12,66 +11,49 @@ import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
-import DocumentsPopup from '~/modules/settings/components/Documents/DocumentManagerPopup'
 import Link from 'next/link'
-import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import { UploadCloud, CheckCircle, PlusCircle } from 'react-feather'
 import { handleFiltersValue } from '~/modules/settings/actions'
 import { withToastManager } from 'react-toast-notifications'
-import { Datagrid } from '../../datagrid/DatagridProvider'
 import { AttachmentManager } from '~/modules/attachments'
 import { uniqueArrayByKey } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
+import { debounce } from 'lodash'
 
-const ButtonsWrapper = styled(Grid)`
-  margin-left: -21px !important;
-  margin-right: -21px !important;
-  margin-bottom: -21px !important;
-  border-top: 1px solid #dee2e6;
+const StyledModal = styled(Modal)`
+  > .header {
+    padding: 21px 30px !important;
+    font-size: 14px !important;
+    text-transform: uppercase;
+  }
 
-  > div {
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
+  > .content {
+    padding: 30px !important;
+    //margin: 30px 0;
+  }
 
+  > .actions {
+    background-color: #ffffff !important;
+    padding: 10px 5px !important;
     button {
-      height: 40px !important;
+      margin: 0 5px;
+      height: 40px;
     }
   }
 `
 
-const ButtonsWrapperDocuments = styled(Grid)`
-  margin-left: -21px !important;
-  margin-right: -21px !important;
-  margin-bottom: -21px !important;
-  border-top: 1px solid #dee2e6;
-
-  > div {
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
-
-    button {
-      height: 40px !important;
-    }
-  }
+const StyledHeader = styled.span`
+  color: #2599d5;
 `
 
 const RelatedDocumentsDropdown = styled(Dropdown)`
   z-index: 601 !important;
 `
 
-const CustomDivUploadLot = styled.div`
-  margin-bottom: 30px !important;
-  margin-top: 20px !important;
-`
-
 const CustomDivAddDocument = styled.div`
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   justify-content: space-between;
-`
-
-const CustomDivLabelDocumentType = styled.div`
-  margin-bottom: 8px;
 `
 
 const Rectangle = styled.div`
@@ -136,27 +118,6 @@ const CustomDivTextAddedMewDocument = styled.div`
   color: #848893;
 `
 
-const CustomAddButton = styled(Button)`
-  display: flex !important;
-  align-items: center !important;
-  color: white !important;
-  background-color: #2599d5 !important;
-  margin-right: 0px !important;
-`
-
-const CustomPlusCircle = styled(PlusCircle)`
-  margin-right: 10px !important;
-  display: flex;
-  font-size: 18px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.11;
-  letter-spacing: normal;
-  text-align: center;
-  color: #ffffff;
-`
-
 class Orders extends Component {
   state = {
     columns: [
@@ -168,7 +129,8 @@ class Orders extends Component {
           </FormattedMessage>
         ),
         width: 100,
-        align: 'right'
+        align: 'right',
+        sortPath: 'Order.id'
       },
       {
         name: 'globalStatus',
@@ -424,7 +386,6 @@ class Orders extends Component {
         ]
       }
     },
-    attachmentPopup: { attachment: null, order: { id: null } },
     openModal: false,
     columnsRelatedOrders: [
       {
@@ -462,7 +423,55 @@ class Orders extends Component {
           </FormattedMessage>
         ),
         width: 100
-      }, // ! ! ? seller vs purchaser
+      },
+      {
+        name: 'download',
+        title: (
+          <FormattedMessage id='order.related.download' defaultMessage='Download'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 100,
+        align: 'center'
+      }
+    ],
+    columnsAccountingDocuments: [
+      {
+        name: 'documentNumber',
+        title: (
+          <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      },
+      {
+        name: 'type',
+        title: (
+          <FormattedMessage id='order.related.type' defaultMessage='Type'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      },
+      {
+        name: 'issuedAt',
+        title: (
+          <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120
+      },
+      {
+        name: 'issuerCompanyName',
+        title: (
+          <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 100
+      },
       {
         name: 'cfPriceTotal',
         title: (
@@ -471,51 +480,25 @@ class Orders extends Component {
           </FormattedMessage>
         ),
         width: 100,
-        align: 'right'
+        align: 'center'
       }
     ],
-    columnsRelatedOrdersDocuments: [
-      {
-        name: 'documentName',
-        title: (
-          <FormattedMessage id='order.related.documents.name' defaultMessage='Name'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 230
-      },
-      {
-        name: 'documenType',
-        title: (
-          <FormattedMessage id='order.related.documents.type' defaultMessage='Type'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 200
-      },
-      {
-        name: 'documenDescription',
-        title: (
-          <FormattedMessage id='order.related.documents.description' defaultMessage='Document Description'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 325
-      }
-    ],
-    relatedDocumentsDropdown: '',
     documentType: '',
-    openUploadLot: false,
+    openUploadAttachment: false,
     relatedDocumentsTypeDropdown: [],
     documentFiles: [],
     isAddedNewDocument: false,
     isOpenManager: false,
-    relatedDocumentType: '',
+    relatedDocumentType: [],
     row: '',
     isUnlinkDocument: false,
     replaceExisting: false,
     replaceRow: '',
-    openModalAcounting: false
+    openModalAccounting: false,
+    openRelatedPopup: false,
+    relatedPopupParams: {},
+    expandedRowIds: [],
+    filterDocumentType: 0
   }
 
   getMimeType = documentName => {
@@ -560,9 +543,13 @@ class Orders extends Component {
     }
   }
 
+  setDatagridFilter = debounce(filterData => {
+    this.props.datagrid.loadData(this.state.filters[filterData.status])
+  }, 500)
+
   loadData(endpointType, filterData) {
     this.props.dispatch(actions.change('forms.filter.status', filterData.status))
-    this.props.datagrid.loadData(this.state.filters[filterData.status])
+    this.setDatagridFilter(filterData)
     this.props.loadData(endpointType, filterData)
   }
 
@@ -578,7 +565,7 @@ class Orders extends Component {
       ...row,
       orderId: (
         <Link href={`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`}>
-          <a>{row.id}</a>
+          <a onClick={e => e.stopPropagation()}>{row.id}</a>
         </Link>
       ),
       productName: (
@@ -593,90 +580,157 @@ class Orders extends Component {
       ),
       globalStatus: row.globalStatus === 'Failed' ? this.failedWrapper(row.globalStatus) : row.globalStatus,
       paymentStatus: row.paymentStatus === 'Failed' ? this.failedWrapper(row.paymentStatus) : row.paymentStatus,
-      bl:
-        row.bl && row.bl.length ? ( // unknown / positive / negative
-          <a
-            href='#'
-            onClick={() =>
-              this.openOverviewWindow(row.bl, { id: row.id }, false, { text: 'Bill of Lading', value: 10 }, row)
-            }>
-            <Icon name='file' className='positive' />
-          </a>
-        ) : (
-          <a
-            href='#'
-            onClick={() =>
-              this.openOverviewWindow(row.bl, { id: row.id }, true, { text: 'Bill of Lading', value: 10 }, row)
-            }>
-            <Icon name='file' className='unknown' />
-          </a>
-        ),
-      sds:
-        row.sds && row.sds.length ? (
-          <a
-            href='#'
-            onClick={() =>
-              this.openOverviewWindow(row.sds, { id: row.id }, false, { text: 'Safety Data Sheet', value: 3 }, row)
-            }>
-            <Icon name='file' className='positive' />
-          </a>
-        ) : (
-          <a
-            href='#'
-            onClick={() =>
-              this.openOverviewWindow(row.sds, { id: row.id }, true, { text: 'Safety Data Sheet', value: 3 }, row)
-            }>
-            <Icon name='file' className='unknown' />
-          </a>
-        ),
-      cofA:
-        row.cofA && row.cofA.length ? (
-          <a
-            href='#'
-            onClick={() =>
-              this.openOverviewWindow(
-                row.cofA,
-                { id: row.id },
-                false,
-                { text: 'Certificate of Analysis', value: 1 },
-                row
+      bl: '',
+      sds: '',
+      cofA: '',
+      related: (
+        <a
+          href='#'
+          onClick={e =>
+            this.openRelatedPopup(e, {
+              rowRawData: row.rawData,
+              parentId: row.id,
+              attachments: row.attachments,
+              type: 'order',
+              header: (
+                <FormattedMessage id='order.relatedDocuments' defaultMessage='RELATED DOCUMENTS'>
+                  {text => text}
+                </FormattedMessage>
               )
-            }>
-            <Icon name='file' className='positive' />
-          </a>
-        ) : (
+            })
+          }>
+          {row.attachments.length ? <Icon className='file related' /> : <Icon className='file non-related' />}
+        </a>
+      ),
+      orderItems: row.orderItems.map(item => ({
+        ...item,
+        orderId: '',
+        globalStatus: '',
+        date: '',
+        customerName: '',
+        productName: item.echoProductName ? item.echoProductName : 'N/A',
+        orderStatus: '',
+        shippingStatus: '',
+        reviewStatus: '',
+        creditStatus: '',
+        paymentStatus: '',
+        bl:
+          item.bl && item.bl.length ? (
+            <a href='#' onClick={() => this.downloadAttachment(item.bl[0].name, item.bl[0].id)}>
+              <Icon name='file' className='positive' />
+            </a>
+          ) : (
+            <a
+              href='#'
+              onClick={e =>
+                this.openDocumentManager(e, {
+                    rowRawData: row.rawData,
+                    parentId: item.rawData.id,
+                    attachments: item.attachments,
+                    type: 'item'
+                  },
+                  [10]  // B/L
+                )
+              }
+            >
+              <Icon name='file' className='unknown' />
+            </a>
+          ),
+        sds:
+          item.sds && item.sds.length ? (
+            <a href='#' onClick={() => this.downloadAttachment(item.sds[0].name, item.sds[0].id)}>
+              <Icon name='file' className='positive' />
+            </a>
+          ) : (
+            <a
+              href='#'
+              onClick={e =>
+                this.openDocumentManager(e, {
+                    rowRawData: row.rawData,
+                    parentId: item.rawData.id,
+                    attachments: item.attachments,
+                    type: 'item'
+                  },
+                  [3]  // SDS
+                )
+              }
+            >
+              <Icon name='file' className='unknown' />
+            </a>
+          ),
+        cofA:
+          item.cofA && item.cofA.length ? (
+            <a href='#' onClick={() => this.downloadAttachment(item.cofA[0].name, item.cofA[0].id)}>
+              <Icon name='file' className='positive' />
+            </a>
+          ) : (
+            <a
+              href='#'
+              onClick={e =>
+                this.openDocumentManager(e, {
+                    rowRawData: row.rawData,
+                    parentId: item.rawData.id,
+                    attachments: item.attachments,
+                    type: 'item'
+                  },
+                  [1]  // C of A
+                )
+              }
+            >
+              {
+                row.rawData.orderStatus === 2
+                ? <Icon name='file' className='negative' />
+                : <Icon name='file' className='unknown' />
+              }
+            </a>
+          ),
+        related: (
           <a
             href='#'
-            onClick={() =>
-              this.openOverviewWindow(
-                row.cofA,
-                { id: row.id },
-                true,
-                { text: 'Certificate of Analysis', value: 1 },
-                row
-              )
+            onClick={e =>
+              this.openRelatedPopup(e, {
+                rowRawData: row.rawData,
+                parentId: item.rawData.id,
+                attachments: item.attachments,
+                type: 'item',
+                header: (
+                  <>
+                    <FormattedMessage id='order.relatedDocumentsFor' defaultMessage='RELATED DOCUMENTS FOR '>
+                      {text => text}
+                    </FormattedMessage>
+                    <StyledHeader>{item.echoProductName}</StyledHeader>
+                  </>
+                )
+              })
             }>
-            <Icon name='file' className='unknown' />
+            {item.attachments.length ? <Icon className='file related' /> : <Icon className='file non-related' />}
           </a>
         ),
-      related:
-        row.accountingDocumentsCount > 0 ? (
-          <a href='#' onClick={() => this.openModalWindow(row.id)}>
-            <Icon className='file related' />
-          </a>
-        ) : (
-          <Icon className='file non-related' />
-        )
+        orderTotal: ''
+      }))
     }))
   }
 
-  async openModalWindow(orderId) {
-    this.setState({ openModalAcounting: true })
-    await this.props.getRelatedOrders(orderId)
+  openRelatedPopup(e, params) {
+    e.stopPropagation()
+    this.setState({
+      openRelatedPopup: true,
+      relatedPopupParams: params
+    })
   }
 
-  openOverviewWindow(attachment, order, isOpenManager, relatedDocumentType, row) {
-    this.setState({ openModal: true, attachmentPopup: { attachment, order }, isOpenManager, relatedDocumentType, row })
+  openDocumentManager(e, params, relatedDocumentType) {
+    e.stopPropagation()
+    this.setState({
+      isOpenManager: true,
+      relatedPopupParams: params,
+      relatedDocumentType
+    })
+  }
+
+  async openModalWindow(orderId) {
+    this.setState({ openModalAccounting: true })
+    await this.props.getRelatedOrders(orderId)
   }
 
   handleFilterApply = payload => {
@@ -721,7 +775,14 @@ class Orders extends Component {
   }
 
   prepareLinkToAttachment = async documentId => {
-    let downloadedFile = await this.props.downloadAttachmentPdf(documentId)
+    let downloadedFile = null
+    const { openModalAccounting } = this.state
+    if (openModalAccounting) {
+      downloadedFile = await this.props.downloadAttachmentPdf(documentId)
+    } else {
+      downloadedFile = await this.props.downloadAttachment(documentId)
+    }
+
     const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
     const mimeType = fileName && this.getMimeType(fileName)
     const element = document.createElement('a')
@@ -745,124 +806,250 @@ class Orders extends Component {
   }
 
   closePopup = () => {
-    this.setState({ attachmentPopup: null, openModal: false })
+    this.setState({
+      openModal: false,
+      openModalAccounting: false,
+      openRelatedPopup: false
+    })
     this.props.clearRelatedOrders()
   }
 
   handleUnlink = async row => {
-    const { endpointType, unlinkAttachmentToOrder, datagrid } = this.props
-    const query = {
-      attachmentId: row.id,
-      orderId: row.orderId
-    }
-    try {
-      await unlinkAttachmentToOrder(query)
-      if (datagrid && datagrid.rows) {
-        //This construction is for update all attachments in order
-        const rowDatagrid = datagrid.rows.find(r => r.id === row.orderId)
-        const attachments =
-          rowDatagrid &&
-          rowDatagrid.attachments &&
-          rowDatagrid.attachments.length &&
-          rowDatagrid.attachments.filter(ro => ro.id !== row.id)
-        //This construction is for update only in one table. for example in C of A or B/L or SDS
-        const attachment =
-          rowDatagrid &&
-          rowDatagrid.attachments &&
-          rowDatagrid.attachments.length &&
-          rowDatagrid.attachments.filter(ro => ro.id !== row.id && ro.documentType.name === row.documenType)
+    const { unlinkAttachmentToOrder, removeLinkAttachmentToOrderItem, datagrid } = this.props
+    const { parentId, relatedPopupType } = row
 
-        datagrid.updateRow(row && row.orderId, () => ({
-          ...rowDatagrid,
-          attachments
-        }))
-        this.setState({
-          attachmentPopup: {
-            attachment: attachment && attachment.length ? attachment : null,
-            order: { id: row.orderId }
+    const {
+      relatedPopupParams: { rowRawData }
+    } = this.state
+
+    if (relatedPopupType === 'order') {
+      const query = {
+        attachmentId: row.id,
+        orderId: parentId
+      }
+
+      try {
+        await unlinkAttachmentToOrder(query)
+        if (datagrid && datagrid.rows) {
+          //This construction is for update all attachments in order
+          const attachments =
+            rowRawData &&
+            rowRawData.attachments &&
+            rowRawData.attachments.length &&
+            rowRawData.attachments.filter(ro => ro.id !== row.id)
+
+          const newRow = {
+            ...rowRawData,
+            attachments
+          }
+
+          datagrid.updateRow(parentId, () => newRow)
+
+          this.setState(prevState => ({
+            relatedPopupParams: {
+              ...prevState.relatedPopupParams,
+              attachments: attachments,
+              rowRawData: newRow
+            },
+            isAddedNewDocument: false,
+            isUnlinkDocument: true
+          }))
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    } else if (relatedPopupType === 'item') {
+      const query = {
+        attachmentId: row.id,
+        orderItemId: parentId
+      }
+
+      try {
+        removeLinkAttachmentToOrderItem(query)
+
+        //This construction is for update all attachments in order-items
+        let orderItems = rowRawData.orderItems
+        const selectedItem = orderItems.find(r => r.id === parentId)
+        const selectedItemIndex = orderItems.findIndex(r => r.id === parentId)
+        const itemAttachments = selectedItem.attachments.filter(r => r.id !== row.id)
+
+        if (selectedItemIndex >= 0) {
+          orderItems[selectedItemIndex].attachments = itemAttachments
+        }
+
+        const newRow = {
+          ...rowRawData,
+          orderItems
+        }
+        datagrid.updateRow(rowRawData.id, () => newRow)
+
+        this.setState(prevState => ({
+          relatedPopupParams: {
+            ...prevState.relatedPopupParams,
+            attachments: itemAttachments,
+            rowRawData: newRow
           },
           isAddedNewDocument: false,
           isUnlinkDocument: true
-        })
+        }))
+      } catch (err) {
+        console.error(err)
       }
-    } catch (err) {
-      console.error(err)
     }
   }
 
   attachDocumentsManager = async newDocuments => {
-    const { linkAttachmentToOrder, datagrid } = this.props
-    if (this.state.replaceExisting && this.state.replaceRow) {
-      await this.handleUnlink(this.state.replaceRow)
+    const { linkAttachmentToOrder, linkAttachmentToOrderItem, datagrid } = this.props
+    const { replaceExisting, replaceRow } = this.state
+
+    if (replaceExisting && replaceRow) {
+      await this.handleUnlink(replaceRow)
       this.setState({ replaceExisting: false, replaceRow: '' })
     }
-    const docArray = uniqueArrayByKey(newDocuments, 'id')
-    const attach = getSafe(() => this.state.attachmentPopup.attachment, [])
-    //This construction is for update state in only one table for example only for C of A
-    const newAttachment = Array.isArray(attach) ? [...attach, ...docArray] : [...[attach], ...docArray]
-    const order = getSafe(() => this.state.attachmentPopup.order, null)
-
-    try {
-      if (docArray.length) {
-        docArray.forEach(doc => {
-          linkAttachmentToOrder({ attachmentId: doc.id, orderId: order.id })
-        })
-      }
-
-      //This construction is for update all attachments in all tables in related documents
-      const rowDatagrid = datagrid.rows.find(r => r.id === order.id)
-      let newAttachments = []
-      if (rowDatagrid && rowDatagrid.attachments && rowDatagrid.attachments.length) {
-        newAttachments = [...rowDatagrid.attachments, ...docArray]
-      } else {
-        newAttachments = docArray
-      }
-      datagrid.updateRow(order.id, () => ({
-        ...rowDatagrid,
-        attachments: newAttachments
-      }))
-
-      this.setState({
-        attachmentPopup: { attachment: newAttachment, order },
-        isAddedNewDocument: true,
-        isUnlinkDocument: false,
-        isOpenManager: false
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  getAttachmentContent = () => {
     const {
-      attachmentPopup: { attachment, order },
-      isAddedNewDocument,
-      isUnlinkDocument
+      relatedPopupParams: { rowRawData, parentId, attachments, type }
     } = this.state
-    const {
-      intl: { formatMessage }
-    } = this.props
-    let rowsRelatedOrdersDocuments = []
-    if (attachment && attachment.length) {
-      rowsRelatedOrdersDocuments = attachment.reduce((ordersList, attach) => {
-        if (attach) {
-          ordersList.push({
-            id: attach.id,
-            documentName: (
-              <Button as='a' onClick={() => this.downloadAttachment(attach.name, attach.id)}>
-                <Icon name='download' />
-                {attach.name}
-              </Button>
-            ),
-            documenType: getSafe(() => attach.documentType.name, 'N/A'),
-            documenDescription: getSafe(() => attach.description, 'N/A'),
-            orderId: order.id
+
+    const docArray = uniqueArrayByKey(newDocuments, 'id')
+
+    let newAttachments = [...attachments, ...docArray]
+    newAttachments = uniqueArrayByKey(newAttachments, 'id')
+
+    if (type === 'order') {
+      try {
+        if (docArray.length) {
+          docArray.forEach(async doc => {
+            await linkAttachmentToOrder({ attachmentId: doc.id, orderId: rowRawData.id })
+          })
+        }
+        const newRow = {
+          ...rowRawData,
+          attachments: newAttachments
+        }
+        datagrid.updateRow(rowRawData.id, () => newRow)
+
+        this.setState(prevState => ({
+          relatedPopupParams: {
+            ...prevState.relatedPopupParams,
+            attachments: newAttachments,
+            rowRawData: newRow
+          },
+          isAddedNewDocument: true,
+          isUnlinkDocument: false,
+          isOpenManager: false
+        }))
+      } catch (error) {
+        console.log(error)
+      }
+    } else if (type === 'item') {
+      try {
+        if (docArray.length) {
+          docArray.forEach(async doc => {
+            await linkAttachmentToOrderItem({ attachmentId: doc.id, orderItemId: parentId })
           })
         }
 
-        return ordersList
-      }, [])
+        let orderItems = rowRawData.orderItems
+        const selectedItem = orderItems.find(r => r.id === parentId)
+        const selectedItemIndex = orderItems.findIndex(r => r.id === parentId)
+
+        if (selectedItemIndex >= 0) {
+          orderItems[selectedItemIndex].attachments = newAttachments
+        }
+
+        const newRow = {
+          ...rowRawData,
+          orderItems
+        }
+        datagrid.updateRow(rowRawData.id, () => newRow)
+
+        this.setState(prevState => ({
+          relatedPopupParams: {
+            ...prevState.relatedPopupParams,
+            attachments: newAttachments,
+            rowRawData: newRow
+          },
+          isAddedNewDocument: true,
+          isUnlinkDocument: false,
+          isOpenManager: false
+        }))
+      } catch (error) {
+        console.log(error)
+      }
     }
+  }
+
+  replaceExiting = row => {
+    this.setState({ isOpenManager: true, replaceExisting: true, replaceRow: row })
+  }
+
+  getContent = () => {
+    const { relatedOrders, loadRelatedOrders } = this.props
+    const rowsRelatedOrders = relatedOrders.reduce((ordersList, order) => {
+      if (order) {
+        ordersList.push({
+          documentNumber: (
+            <Button as='a' onClick={() => this.downloadAttachment(order.documentNumber, order.id)}>
+              <Icon name='download' />
+              {order.documentNumber}
+            </Button>
+          ),
+          type: order.type,
+          issuedAt: getSafe(() => <FormattedDate value={order.issuedAt.split('T')[0]} />, 'N/A'),
+          issuerCompanyName: order.issuerCompanyName,
+          cfPriceTotal: <FormattedNumber style='currency' currency={currency} value={order.cfPriceTotal} />
+        })
+      }
+
+      return ordersList
+    }, [])
+    return (
+      <ProdexGrid
+        loading={this.state.submitting || loadRelatedOrders}
+        hideSettingsIcon={true}
+        tableName='related_orders'
+        columns={this.state.columnsAccountingDocuments}
+        rows={rowsRelatedOrders}
+      />
+    )
+  }
+
+  getRelatedDocumentsContent = () => {
+    const {
+      intl: { formatMessage },
+      listDocumentTypes,
+      documentTypesFetching
+    } = this.props
+    let {
+      relatedPopupParams: { rowRawData, parentId, attachments, type },
+      isAddedNewDocument,
+      isUnlinkDocument,
+      filterDocumentType
+    } = this.state
+
+    const filteredAttachments =
+      filterDocumentType === 0 ? attachments : attachments.filter(a => a.documentType.id === filterDocumentType)
+
+    const rowsRelatedDocuments = filteredAttachments.map(attach => ({
+      id: attach.id,
+      documentNumber: (
+        <Button as='a' onClick={() => this.downloadAttachment(attach.name, attach.id)}>
+          <Icon name='download' />
+          {attach.name}
+        </Button>
+      ),
+      type: getSafe(() => attach.documentType.name, 'N/A'),
+      issuedAt: getSafe(() => <FormattedDate value={attach.issuedAt.split('T')[0]} />, 'N/A'),
+      issuerCompanyName: 'N/A',
+      download: (
+        <a href='#' onClick={() => this.downloadAttachment(attach.name, attach.id)}>
+          <Icon name='file' className='positive' />
+        </a>
+      ),
+      rowRawData: rowRawData,
+      parentId,
+      relatedPopupType: type
+    }))
 
     return (
       <>
@@ -891,21 +1078,44 @@ class Orders extends Component {
           </RectangleRed>
         ) : null}
         <CustomDivAddDocument>
+          <RelatedDocumentsDropdown
+            options={[
+              {
+                key: 0,
+                text: formatMessage({
+                  id: 'order.detail.documents.dropdown.all',
+                  defaultMessage: 'Select All'
+                }),
+                value: 0
+              }
+            ].concat(listDocumentTypes)}
+            value={this.state.filterDocumentType}
+            selection
+            loading={documentTypesFetching}
+            onChange={(event, { name, value }) => {
+              this.setState({ [name]: value })
+            }}
+            name='filterDocumentType'
+            placeholder={formatMessage({
+              id: 'order.detail.documents.dropdown',
+              defaultMessage: 'Select Type'
+            })}
+          />
           <div>
             <AttachmentManager
-              relatedDocumentType={this.state.relatedDocumentType}
+              documentTypeIds={[]}
               isOpenManager={this.state.isOpenManager}
               asModal
               returnSelectedRows={rows => this.attachDocumentsManager(rows)}
+              returnCloseAttachmentManager={val => this.setState({ isOpenManager: false })}
             />
           </div>
         </CustomDivAddDocument>
         <ProdexGrid
           loading={this.props.loadingRelatedDocuments}
           tableName='related_orders_documents'
-          columns={this.state.columnsRelatedOrdersDocuments}
-          rows={rowsRelatedOrdersDocuments}
-          hideCheckboxes
+          columns={this.state.columnsRelatedOrders}
+          rows={rowsRelatedDocuments}
           rowActions={[
             {
               text: formatMessage({
@@ -927,52 +1137,6 @@ class Orders extends Component {
     )
   }
 
-  replaceExiting = row => {
-    this.setState({ isOpenManager: true, replaceExisting: true, replaceRow: row })
-  }
-
-  getContent = () => {
-    const { relatedOrders, loadRelatedOrders } = this.props
-    const rowsRelatedOrders = relatedOrders.reduce((ordersList, order) => {
-      if (order) {
-        ordersList.push({
-          documentNumber: (
-            <Button as='a' onClick={() => this.downloadAttachment(order.documentNumber, order.id)}>
-              <Icon name='download' />
-              {order.documentNumber}
-            </Button>
-          ),
-          type: order.type,
-          issuedAt: getSafe(() => <FormattedDate value={order.issuedAt.split('T')[0]} />, 'N/A'),
-          issuerCompanyName: order.issuerCompanyName,
-          cfPriceTotal: <FormattedNumber style='currency' currency={currency} value={order.cfPriceTotal} />
-        })
-      }
-
-      return ordersList
-    }, [])
-    return (
-      <>
-        <ProdexGrid
-          loading={this.state.submitting || loadRelatedOrders}
-          hideSettingsIcon={true}
-          tableName='related_orders'
-          columns={this.state.columnsRelatedOrders}
-          rows={rowsRelatedOrders}
-        />
-        <ButtonsWrapper>
-          <Grid.Column textAlign='right'>
-            <Button basic onClick={() => this.closePopup()}>
-              <FormattedMessage id='global.close' defaultMessage='Close'>
-                {text => text}
-              </FormattedMessage>
-            </Button>
-          </Grid.Column>
-        </ButtonsWrapper>
-      </>
-    )
-  }
-
   render() {
     const {
       endpointType,
@@ -985,42 +1149,54 @@ class Orders extends Component {
       intl: { formatMessage }
     } = this.props
 
-    const { columns, row, openModal, attachmentPopup, isOpenManager, relatedDocumentType } = this.state
+    const { columns, row, openModal, isOpenManager, relatedDocumentType, relatedPopupParams } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
 
     return (
       <div id='page' className='flex stretched scrolling'>
-        {!tutorialCompleted && <Tutorial />}
-        {openModal && (
-          <Modal
-            closeIcon={false}
-            onClose={() => {
-              this.setState({
-                openModal: false,
-                isAddedNewDocument: false,
-                attachmentPopup: null,
-                isUnlinkDocument: false
-              })
-            }}
-            centered={true}
-            open={this.state.openModal}>
+        {this.state.openModalAccounting && (
+          <StyledModal size='small' closeIcon={false} centered={true} open={true}>
             <Modal.Header>
-              <FormattedMessage
-                id='order.related.documents.table'
-                defaultMessage={`RELATED DOCUMENTS (${getSafe(() => relatedDocumentType.text, '')} )`}
-                values={{ documentType: getSafe(() => relatedDocumentType.text, '') }}>
+              <FormattedMessage id='order.related.table' defaultMessage='Related Accounting Documents'>
                 {text => text}
               </FormattedMessage>
             </Modal.Header>
-            <Modal.Content scrolling>{this.getAttachmentContent()}</Modal.Content>
+            <Modal.Content scrolling>{this.getContent()}</Modal.Content>
+            <Modal.Actions>
+              <Button basic onClick={() => this.closePopup()}>
+                <FormattedMessage id='global.close' defaultMessage='Close'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+            </Modal.Actions>
+          </StyledModal>
+        )}
+
+        {this.state.openRelatedPopup && (
+          <StyledModal
+            size='small'
+            closeIcon={false}
+            onClose={() => {
+              this.setState({
+                openRelatedPopup: false,
+                isAddedNewDocument: false,
+                isUnlinkDocument: false,
+                isOpenManager: false
+              })
+            }}
+            centered={true}
+            open={true}>
+            <Modal.Header>{relatedPopupParams.header}</Modal.Header>
+            <Modal.Content scrolling>{this.getRelatedDocumentsContent()}</Modal.Content>
             <Modal.Actions>
               <Button
                 basic
                 onClick={() => {
                   this.setState({
+                    openRelatedPopup: false,
                     isAddedNewDocument: false,
-                    attachmentPopup: null,
-                    isUnlinkDocument: false
+                    isUnlinkDocument: false,
+                    isOpenManager: false
                   })
                   this.closePopup()
                 }}>
@@ -1029,23 +1205,25 @@ class Orders extends Component {
                 </FormattedMessage>
               </Button>
             </Modal.Actions>
-          </Modal>
+          </StyledModal>
         )}
-        {this.props && this.props.relatedOrders && this.props.relatedOrders.length > 0 && (
-          <Modal
-            size='small'
-            closeIcon={false}
-            onClose={() => this.setState({ openModalAcounting: false })}
-            centered={true}
-            open={this.state.openModalAcounting}>
-            <Modal.Header>
-              <FormattedMessage id='order.related.table' defaultMessage='Related Accounting Documents'>
-                {text => text}
-              </FormattedMessage>
-            </Modal.Header>
-            <Modal.Content scrolling>{this.getContent()}</Modal.Content>
-          </Modal>
+
+        {!this.state.openRelatedPopup && this.state.isOpenManager && (
+          <AttachmentManager
+            documentTypeIds={this.state.relatedDocumentType}
+            isOpenManager={this.state.isOpenManager}
+            asModal
+            singleSelection={true}
+            lockedFileTypes={true}
+            returnSelectedRows={rows => this.attachDocumentsManager(rows)}
+            returnCloseAttachmentManager={val =>
+              this.setState({
+                isOpenManager: false,
+                relatedDocumentType: []
+              })}
+          />
         )}
+
         <Container fluid style={{ padding: '0 32px' }}>
           <Menu pointing secondary horizontal>
             <Menu.Item
@@ -1237,6 +1415,7 @@ class Orders extends Component {
             </Menu.Item>
           </Menu>
         </Container>
+        {!tutorialCompleted && <Tutorial marginOrders />}
         <Container fluid style={{ padding: '20px 32px 10px 32px' }} className='flex stretched'>
           {false && (
             <OrderFilter
@@ -1255,7 +1434,27 @@ class Orders extends Component {
               {...datagrid.tableProps}
               loading={datagrid.loading}
               rows={this.getRows()}
+              treeDataType={true}
+              tableTreeColumn={'orderId'}
+              getChildRows={(row, rootRows) => {
+                return row ? row.orderItems : rootRows
+              }}
+              onRowClick={(_, row) => {
+                if (row.root && row.orderItems.length) {
+                  let ids = this.state.expandedRowIds.slice()
+                  if (ids.includes(row.id)) {
+                    //ids.filter(id => id === row.id)
+                    this.setState({ expandedRowIds: ids.filter(id => id !== row.id) })
+                  } else {
+                    ids.push(row.id)
+                    this.setState({ expandedRowIds: ids })
+                  }
+                }
+              }}
+              expandedRowIds={this.state.expandedRowIds}
+              onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
               // onSortingChange={sorting => sorting.sortPath && this.setState({ sorting })}
+              defaultSorting={{ columnName: 'orderId', sortPath: 'Order.id', direction: 'desc' }}
               rowActions={[
                 {
                   text: formatMessage({
@@ -1263,15 +1462,17 @@ class Orders extends Component {
                     defaultMessage: 'Detail'
                   }),
                   callback: row => router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`)
+                },
+                {
+                  text: formatMessage({
+                    id: 'orders.accountingDocuments',
+                    defaultMessage: 'Accounting Documents'
+                  }),
+                  disabled: row => row.accountingDocumentsCount === 0,
+                  callback: row => this.openModalWindow(row.id)
                 }
               ]}
-              /* COMMENTED #30916
-            onRowClick={(e, row) => {
-              const targetTag = e.target.tagName.toLowerCase()
-              if (targetTag !== 'input' && targetTag !== 'label' && targetTag !== 'i') {
-                router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`)
-              }
-            }}*/
+              rowChildActions={[]}
             />
           )}
         </Container>
@@ -1279,18 +1480,5 @@ class Orders extends Component {
     )
   }
 }
-
-// FilterTags.propTypes = {
-//   filter: array,
-//   onClick: func,
-//   filters: arrayOf(
-//     shape({
-//       description: string,
-//       indexes: arrayOf(number),
-//       tagDescription: arrayOf(string),
-//       valuesDescription: arrayOf(string)
-//     })
-//   )
-// }
 
 export default injectIntl(withToastManager(Orders))

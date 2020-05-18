@@ -70,10 +70,12 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
         : []
 
     params = {
+      anonymous: getSafe(() => values.anonymous, null),
       assayMin: getSafe(() => parseFloat(values.assayMin)),
       assayMax: getSafe(() => parseFloat(values.assayMax)),
       attachments: attachments.concat(additional),
       broadcasted: getSafe(() => values.broadcasted, false),
+      certOfAnalysis: getSafe(() => values.certOfAnalysis, null),
       costRecords:
         values.trackSubCosts && values.costs
           ? values.costs.map(cost => {
@@ -104,7 +106,7 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
           values.pricingTiers.map((tier, index) => {
             return {
               pricePerUOM: parseFloat(tier.price),
-              quantityFrom: parseInt(!index ? values.minimum : tier.quantityFrom)
+              quantityFrom: parseInt(tier.quantityFrom)
             }
           }),
         []
@@ -147,25 +149,29 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
         })
       }
       if (isGrouped) {
+        const response = await api.updateGroupedProductOffer(poId, {
+          pkgAvailable: paramsCleaned.pkgAvailable,
+          lotNumber: paramsCleaned.lotNumber
+        })
         await dispatch({
           type: AT.INVENTORY_EDIT_GROUPED_PRODUCT_OFFER,
-          payload: api.updateGroupedProductOffer(poId, {
-            pkgAvailable: paramsCleaned.pkgAvailable,
-            lotNumber: paramsCleaned.lotNumber
-          })
+          payload: response
         })
+        return response
       } else {
+        const response = await api.updateProductOffer(poId, paramsCleaned)
         await dispatch({
           type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
-          payload: api.updateProductOffer(poId, paramsCleaned)
+          payload: response
         })
+        return response
       }
     } else {
       const newProd = await dispatch({
         type: AT.INVENTORY_ADD_PRODUCT_OFFER,
         payload: api.addProductOffer(paramsCleaned)
       })
-    
+
       if (attachmentFiles && attachmentFiles.length) {
         attachmentFiles.forEach(attachment => {
           dispatch({
@@ -464,5 +470,19 @@ export function removeAttachmentLinkProductOffer(attachmentId, productOfferId) {
     async payload() {
       return await api.removeAttachmentLinkProductOffer(attachmentId, productOfferId)
     }
+  }
+}
+
+export function setPricingEditOpenId(id) {
+  return {
+    type: AT.INVENTORY_SET_PRICING_EDIT_OPEN_ID,
+    payload: id
+  }
+}
+
+export function closePricingEditPopup() {
+  return {
+    type: AT.INVENTORY_SET_PRICING_EDIT_OPEN_ID,
+    payload: null
   }
 }

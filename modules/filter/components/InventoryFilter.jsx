@@ -6,7 +6,7 @@ import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
 import { getSafe } from '~/utils/functions'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-
+import { removeEmpty } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 
 import {
@@ -24,7 +24,8 @@ import {
   Transition,
   Header,
   Dimmer,
-  Label
+  Label,
+  Radio
 } from 'semantic-ui-react'
 
 import { uniqueArrayByKey } from '~/utils/functions'
@@ -69,7 +70,8 @@ import {
   NormalColumn,
   SaveFilterNormalRow,
   InputWrapper,
-  QuantityWrapper
+  QuantityWrapper,
+  BottomMargedField
 } from '../constants/layout'
 
 const optionsYesNo = [
@@ -93,7 +95,7 @@ class InventoryFilter extends Component {
   state = {
     savedFiltersActive: false,
     openedSaveFilter: false,
-    inactiveAccordion: {},
+    activeAccordion: { chemicalType: true },
     dateDropdown: {
       expiration: dateDropdownOptions[0].value,
       mfg: dateDropdownOptions[0].value
@@ -102,7 +104,11 @@ class InventoryFilter extends Component {
     searchWarehouseQuery: '',
     isTyping: false,
     searchManufacturerQuery: '',
-    searchOriginQuery: ''
+    searchOriginQuery: '',
+    incomplete: {
+      yes: false,
+      no: false
+    }
   }
 
   componentDidMount() {
@@ -115,8 +121,14 @@ class InventoryFilter extends Component {
       fetchWarehouses,
       setParams,
       autocompleteManufacturer,
-      autocompleteOrigin
+      autocompleteOrigin,
+      filterState,
+      appliedFilter,
+      onApply,
+      applyDatagridFilter
     } = this.props
+
+    setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
     if (typeof this.props.searchWarehouseUrl !== 'undefined')
       this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
@@ -130,23 +142,36 @@ class InventoryFilter extends Component {
     //  this.props.getAutocompleteOrigin(this.props.getOriginUrl)
     //}
     this.handleGetSavedFilters()
-    setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
     Promise.all([
       this.fetchIfNoData(fetchProductConditions, 'productConditions'),
       this.fetchIfNoData(fetchProductForms, 'productForms'),
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
       this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
-      this.fetchIfNoData(fetchProductGrade, 'productGrade'),
+      this.fetchIfNoData(fetchProductGrade, 'productGrades'),
       this.fetchIfNoData(fetchWarehouses, 'warehouses')
-    ]).finally(() => this.setState({ loaded: true }))
+    ]).finally(() =>
+      this.setState({
+        ...(filterState !== null && filterState.state),
+        loaded: true
+      })
+    )
+    if (appliedFilter && appliedFilter.filters) {
+      let datagridFilter = this.toDatagridFilter(appliedFilter)
+      applyDatagridFilter(datagridFilter)
+      onApply(datagridFilter)
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.saveFilterState({ state: this.state, values: this.values })
   }
 
   generateRequestData = ({ notifications, checkboxes, name, ...rest }) => {
     let { notificationMail, notificationPhone } = notifications
     let { notifyMail, notifyPhone, notifySystem, notificationEnabled } = checkboxes
     let { filters } = this.toSavedFilter(rest)
-    return {
+    let data = {
       filters,
       name,
       notificationEnabled: notificationEnabled,
@@ -156,6 +181,8 @@ class InventoryFilter extends Component {
       notifyPhone,
       notifySystem
     }
+    removeEmpty(data)
+    return data
   }
 
   toSavedFilter = inputs => {
@@ -192,9 +219,11 @@ class InventoryFilter extends Component {
             if (typeof datagridValues[key] !== 'undefined') {
               let filter = datagridValues[key] && datagridValues[key].toFilter(inputs[key], this.props.filterType)
 
-              if (!(filter.values instanceof Array)) filter.values = [filter.values] // We need values to be an array
+              if (filter) {
+                if (!(filter.values instanceof Array)) filter.values = [filter.values] // We need values to be an array
 
-              datagridFilter.filters.push(filter)
+                datagridFilter.filters.push(filter)
+              }
             }
           } catch (err) {
             console.error(err)
@@ -404,19 +433,19 @@ class InventoryFilter extends Component {
   }
 
   handleGetSavedFilters = () => {
-    let { packagingTypes, productConditions, productGrade, productForms } = this.props
+    let { packagingTypes, productConditions, productGrades, productForms } = this.props
     this.props.getSavedFilters(
       this.props.savedUrl,
-      { packagingTypes, productConditions, productGrade, productForms },
+      { packagingTypes, productConditions, productGrades, productForms },
       this.props.apiUrl,
       this.props.filterType
     )
   }
 
   toggleAccordion = name => {
-    let { inactiveAccordion } = this.state
-    let inactive = inactiveAccordion[name]
-    this.setState({ inactiveAccordion: { ...this.state.inactiveAccordion, [name]: !inactive } })
+    let { activeAccordion } = this.state
+    let active = activeAccordion[name]
+    this.setState({ activeAccordion: { ...this.state.activeAccordion, [name]: !active } })
   }
 
   handleSearch = debounce(({ searchQuery }) => {
@@ -469,7 +498,7 @@ class InventoryFilter extends Component {
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
       {text}
       <IconRight>
-        <Icon name={!this.state.inactiveAccordion[name] ? 'chevron down' : 'chevron right'} />
+        <Icon name={this.state.activeAccordion[name] ? 'chevron down' : 'chevron right'} />
       </IconRight>
     </AccordionTitle>
   )
@@ -604,12 +633,7 @@ class InventoryFilter extends Component {
               </SaveFilterTitle>
             </GridColumn>
             <GridColumn width={7} textAlign='right'>
-              <Button
-                type='button'
-                size='large'
-                onClick={this.toggleSaveFilter}
-                data-test='filter_save_cancel_btn'
-              >
+              <Button type='button' size='large' onClick={this.toggleSaveFilter} data-test='filter_save_cancel_btn'>
                 {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
               </Button>
             </GridColumn>
@@ -636,7 +660,9 @@ class InventoryFilter extends Component {
             </GridRow>
             <GridRow>
               <GridColumn computer={12}>
-                <label>{formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}</label>
+                <label>
+                  {formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}
+                </label>
               </GridColumn>
               <GridColumn computer={4}>
                 <FormikCheckbox
@@ -677,12 +703,16 @@ class InventoryFilter extends Component {
     })
   }
 
+  handleRadio = (_e, { name }) => {
+    this.setState(state => ({ ...state, incomplete: { yes: false, no: false, [name]: !state.incomplete[name] } }))
+  }
+
   formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError, setFieldTouched }) => {
     let {
       productConditions,
       productForms,
       packagingTypes,
-      productGrade,
+      productGrades,
       intl,
       isFilterSaving,
       autocompleteData,
@@ -701,7 +731,7 @@ class InventoryFilter extends Component {
 
     let packagingTypesRows = this.generateCheckboxes(packagingTypes, values, 'packagingTypes')
     let productConditionRows = this.generateCheckboxes(productConditions, values, 'productConditions')
-    let productGradeRows = this.generateCheckboxes(productGrade, values, 'productGrade')
+    let productGradeRows = this.generateCheckboxes(productGrades, values, 'productGrades')
     let productFormsRows = this.generateCheckboxes(productForms, values, 'productForms')
 
     var noResultsMessage = null
@@ -763,7 +793,7 @@ class InventoryFilter extends Component {
       loading: autocompleteWarehouseLoading,
       name: 'warehouse',
       placeholder: <FormattedMessage id='filter.searchWarehouse' defaultMessage='Search Warehouse' />,
-      noWarehouseResultsMessage,
+      noWarehouseResultsMessage: noWarehouseResultsMessage,
       onSearchChange: (_, data) => {
         this.handleSearchWarehouse(data)
       },
@@ -858,14 +888,14 @@ class InventoryFilter extends Component {
       <FilterAccordion>
         <AccordionItem>
           {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalProductName' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.chemicalType}>
+          <AccordionContent active={this.state.activeAccordion.chemicalType}>
             <BottomMargedDropdown {...dropdownProps} />
           </AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
+          <AccordionContent active={this.state.activeAccordion.warehouse}>
             <BottomMargedDropdown {...dropdownWarehouseProps} />
           </AccordionContent>
         </AccordionItem>
@@ -875,7 +905,7 @@ class InventoryFilter extends Component {
             'expiration',
             <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
           )}
-          <AccordionContent active={!this.state.inactiveAccordion.expiration}>
+          <AccordionContent active={this.state.activeAccordion.expiration}>
             <FormGroup widths='equal'>
               {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
             </FormGroup>
@@ -887,7 +917,7 @@ class InventoryFilter extends Component {
             'mfg',
             <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
           )}
-          <AccordionContent active={!this.state.inactiveAccordion.mfg}>
+          <AccordionContent active={this.state.activeAccordion.mfg}>
             <FormGroup widths='equal'>
               {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
             </FormGroup>
@@ -896,7 +926,7 @@ class InventoryFilter extends Component {
 
         <AccordionItem>
           {this.accordionTitle('quantity', <FormattedMessage id='filter.quantity' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.quantity}>
+          <AccordionContent active={this.state.activeAccordion.quantity}>
             <FormGroup widths='equal' data-test='filter_quantity_inp'>
               <FormField width={8}>
                 {this.quantityWrapper('quantityFrom', {
@@ -919,8 +949,30 @@ class InventoryFilter extends Component {
         </AccordionItem>
 
         <AccordionItem>
+          {this.accordionTitle('incomplete', <FormattedMessage id='filter.incomplete' defaultMessage='Incomplete' />)}
+          <AccordionContent active={this.state.activeAccordion.incomplete}>
+            <FormField>
+              <Radio
+                name='yes'
+                checked={this.state.incomplete.yes}
+                label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })}
+                onClick={this.handleRadio}
+              />
+            </FormField>
+            <BottomMargedField>
+              <Radio
+                name='no'
+                checked={this.state.incomplete.no}
+                label={formatMessage({ id: 'global.no', defaultMessage: 'No' })}
+                onClick={this.handleRadio}
+              />
+            </BottomMargedField>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem>
           {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.price}>
+          <AccordionContent active={this.state.activeAccordion.price}>
             <FormGroup>
               <FormField className='price-input' width={8} data-test='filter_price_inp'>
                 {this.inputWrapper(
@@ -955,7 +1007,7 @@ class InventoryFilter extends Component {
         {false && (
           <AccordionItem>
             {this.accordionTitle('broadcasted', <FormattedMessage id='filter.broadcast' />)}
-            <AccordionContent active={!this.state.inactiveAccordion.broadcasted}>
+            <AccordionContent active={this.state.activeAccordion.broadcasted}>
               <BottomMargedDropdown {...dropdownBroadcastedProps} />
             </AccordionContent>
           </AccordionItem>
@@ -963,27 +1015,27 @@ class InventoryFilter extends Component {
 
         <AccordionItem>
           {this.accordionTitle('packaging', <FormattedMessage id='filter.packaging' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.packaging}>{packagingTypesRows}</AccordionContent>
+          <AccordionContent active={this.state.activeAccordion.packaging}>{packagingTypesRows}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('productGrades', <FormattedMessage id='filter.grade' defaultMessage='Grade' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.productGrades}>{productGradeRows}</AccordionContent>
+          <AccordionContent active={this.state.activeAccordion.productGrades}>{productGradeRows}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('condition', <FormattedMessage id='filter.condition' defaultMessage='Condition' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.condition}>{productConditionRows}</AccordionContent>
+          <AccordionContent active={this.state.activeAccordion.condition}>{productConditionRows}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
           {this.accordionTitle('productForms', <FormattedMessage id='filter.form' defaultMessage='Form' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.productForms}>{productFormsRows}</AccordionContent>
+          <AccordionContent active={this.state.activeAccordion.productForms}>{productFormsRows}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem>
-          {this.accordionTitle('assay', <FormattedMessage id='filter.assay' />)}
-          <AccordionContent active={!this.state.inactiveAccordion.assay}>
+          {this.accordionTitle('assay', <FormattedMessage id='filter.percentage' />)}
+          <AccordionContent active={this.state.activeAccordion.assay}>
             <FormGroup data-test='filter_assay_inp'>
               <FormField width={8}>
                 {this.inputWrapper(
@@ -1016,7 +1068,7 @@ class InventoryFilter extends Component {
         {false && (
           <AccordionItem>
             {this.accordionTitle('manufacturer', <FormattedMessage id='filter.manufacturer' />)}
-            <AccordionContent active={!this.state.inactiveAccordion.manufacturer}>
+            <AccordionContent active={this.state.activeAccordion.manufacturer}>
               <BottomMargedDropdown {...dropdownManufacturerProps} />
             </AccordionContent>
           </AccordionItem>
@@ -1025,7 +1077,7 @@ class InventoryFilter extends Component {
         {false && (
           <AccordionItem>
             {this.accordionTitle('origin', <FormattedMessage id='filter.origin' />)}
-            <AccordionContent active={!this.state.inactiveAccordion.origin}>
+            <AccordionContent active={this.state.activeAccordion.origin}>
               <BottomMargedDropdown {...dropdownOriginProps} />
             </AccordionContent>
           </AccordionItem>
@@ -1044,7 +1096,7 @@ class InventoryFilter extends Component {
       isFilterApplying,
       isFilterSaving,
       intl: { formatMessage },
-      toggleFilter
+      filterState
     } = this.props
 
     const { savedFiltersActive, openedSaveFilter } = this.state
@@ -1052,12 +1104,12 @@ class InventoryFilter extends Component {
     return (
       <Form
         enableReinitialize={true}
-        initialValues={initialValues}
+        initialValues={filterState ? filterState.values : initialValues}
         validateOnChange={true}
         validationSchema={validationSchema(openedSaveFilter)}
         onSubmit={(values, { setSubmitting }) => {
           if (!openedSaveFilter) {
-            this.handleSubmit(values)
+            this.handleSubmit({ ...values, incomplete: this.state.incomplete })
           }
           setSubmitting(false)
         }}>
@@ -1065,6 +1117,8 @@ class InventoryFilter extends Component {
           this.submitForm = props.submitForm
           this.resetForm = props.resetForm
           this.setFieldValue = props.setFieldValue
+          this.values = props.values
+
           return (
             <FlexSidebar {...additionalSidebarProps}>
               <TopButtons>
@@ -1084,10 +1138,10 @@ class InventoryFilter extends Component {
                 </Button>
               </TopButtons>
               <Dimmer.Dimmable as={FlexContent}>
-                <PerfectScrollbar>
-                  {!this.state.savedFiltersActive ? (
-                    this.formMarkup(props)
-                  ) : (
+                {!this.state.savedFiltersActive ? (
+                  <PerfectScrollbar key='set'>{this.formMarkup(props)}</PerfectScrollbar>
+                ) : (
+                  <PerfectScrollbar key='saved'>
                     <SavedFilters
                       params={this.props.params}
                       onApply={filter => this.handleSavedFilterApply(filter, props)}
@@ -1098,9 +1152,9 @@ class InventoryFilter extends Component {
                       updateFilterNotifications={this.props.updateFilterNotifications}
                       savedFilterUpdating={this.props.savedFilterUpdating}
                     />
-                  )}
-                </PerfectScrollbar>
-                <Dimmer active={this.state.openedSaveFilter}/>
+                  </PerfectScrollbar>
+                )}
+                <Dimmer active={this.state.openedSaveFilter} />
               </Dimmer.Dimmable>
               <Transition visible={openedSaveFilter} animation='fade up' duration={500}>
                 <div>{this.formSaveFilter(props)}</div>
@@ -1142,14 +1196,14 @@ class InventoryFilter extends Component {
                   size='large'
                   onClick={(e, data) => {
                     this.resetForm({ ...initialValues })
-                    toggleFilter(false)
+                    //! !toggleFilter(false)
                     this.props.applyFilter({ filters: [] })
                     this.props.applyDatagridFilter({ filters: [] })
                     this.props.onClear(e, data)
                   }}
                   inputProps={{ type: 'button' }}
                   data-test='filter_clear'>
-                  {formatMessage({ id: 'filter.clearFilter', defaultMessage: 'Clear' })}
+                  {formatMessage({ id: 'filter.clear', defaultMessage: 'Clear' })}
                 </Button>
                 <Button
                   disabled={openedSaveFilter || savedFiltersActive}
@@ -1157,7 +1211,6 @@ class InventoryFilter extends Component {
                   loading={isFilterApplying}
                   type='submit'
                   primary
-                  inputProps={{ type: 'button' }}
                   data-test='filter_apply'>
                   {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
                 </Button>

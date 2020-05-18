@@ -133,6 +133,7 @@ export const TopMenu = styled(Menu)`
   }
 `
 export const TopMenuContainer = styled(Container)`
+  width: 100% !important;
   padding: 0 30px;
 `
 export const LeftMenu = styled(Menu)`
@@ -172,65 +173,84 @@ export const LeftMenu = styled(Menu)`
           background: #edeef2;
         }
       }
-      
+
       > .flex-wrapper {
         overflow: hidden;
         display: flex;
         flex-flow: column;
         height: calc(100% - 100px); // 100px for logo
-        
+
         > a.item {
           flex-grow: 0;
           flex-shrink: 0;
-          
+
           &.opened {
             margin-bottom: 0;
             border-bottom-left-radius: 0 !important;
             border-bottom-right-radius: 0 !important;
-          
+
             + form {
               flex-grow: 1;
               flex-shrink: 1;
               overflow: hidden;
+              display: flex;
+              flex-flow: column;
               height: auto;
               border-bottom-left-radius: 4px !important;
               border-bottom-right-radius: 4px !important;
-              
+
               > div {
                 height: 100%;
                 margin-top: 0;
-                
+
                 > div {
-                  flex-grow: 1;
+                  flex-grow: 0;
                   flex-shrink: 1;
                   overflow: hidden;
                   height: auto;
-                
+
                   &:first-child,
                   &:last-child {
                     flex-grow: 0;
                     flex-shrink: 0;
                     overflow: hidden;
                   }
-                  
+
                   &.dimmable {
+                    flex-grow: 1;
+                    display: flex;
+                    flex-flow: column;
                     width: 100%;
                     padding: 0 !important;
-                  
+
                     > .scrollbar-container {
                       position: relative;
                       overflow: hidden;
                       width: 100%;
                       height: 100%;
                       padding: 0 10px;
-                      
-                      .ps__rail-y {
+
+                      > div.ui.basic.segment {
+                        // dimmer area
+                        width: 100% !important;
+                        height: 100% !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                      }
+
+                      &:not(.ps--active-y) > .ps__rail-y {
+                        display: none !important;
+                      }
+
+                      &.ps--active-y > .ps__rail-y {
                         position: absolute;
                         top: 0;
+                        left: auto !important;
                         right: 0;
+                        display: block !important;
                         width: 4px;
                         background: rgba(0, 0, 0, 0.1);
-                        
+
                         .ps__thumb-y {
                           width: 100%;
                           margin: 0;
@@ -240,12 +260,12 @@ export const LeftMenu = styled(Menu)`
                       }
                     }
                   }
-                  
+
                   &.transition.visible {
                     overflow: hidden;
                     display: flex !important;
                     flex-flow: column;
-                  
+
                     &.up,
                     &.down {
                       position: absolute;
@@ -254,22 +274,22 @@ export const LeftMenu = styled(Menu)`
                       z-index: 1000;
                       max-height: calc(100% - 119px);
                     }
-                    
+
                     &.up {
                       bottom: 59px;
                     }
-                    
+
                     &.down {
                       top: 59px;
                     }
-                    
+
                     > .grid {
                       flex-grow: 0;
                       flex-shrink: 0;
                     }
-                  
+
                     > .scrollbar-container {
-                      flex-grow: 1;
+                      flex-grow: 0;
                       flex-shrink: 1;
                       position: relative;
                       overflow: hidden;
@@ -277,16 +297,21 @@ export const LeftMenu = styled(Menu)`
                       height: auto;
                       padding: 0;
                       background: #edeef2;
-                      
-                      .ps__rail-y {
+
+                      &:not(.ps--active-y) > .ps__rail-y {
+                        display: none !important;
+                      }
+
+                      &.ps--active-y > .ps__rail-y {
                         position: absolute;
                         top: 0;
                         left: auto !important;
                         right: 0 !important;
+                        display: block !important;
                         width: 4px;
                         height: 100%;
                         background: rgba(0, 0, 0, 0.1);
-                        
+
                         .ps__thumb-y {
                           width: 100%;
                           margin: 0;
@@ -301,22 +326,25 @@ export const LeftMenu = styled(Menu)`
             }
           }
         }
-        
+
         > div.item {
           flex-grow: 0;
           flex-shrink: 0;
-          
+
           &.opened {
-            flex-grow: 1;
+            flex-grow: 0;
             flex-shrink: 1;
+            display: flex;
+            flex-flow: column;
           }
         }
       }
     }
 
     .scrollbar-container > img {
-      height: 34px;
-      margin: 33px auto;
+      object-fit: contain;
+      height: 70px;
+      margin: 15px auto;
     }
 
     .container > a.item,
@@ -341,6 +369,35 @@ export const LeftMenu = styled(Menu)`
       &.active svg {
         color: #2599d5 !important;
       }
+
+      .active-filter {
+        position: absolute;
+        top: 13px;
+        right: 37px;
+        display: none;
+        width: 24px !important;
+        height: 24px;
+        margin: 0 !important;
+        border-radius: 4px;
+        background-color: #2599d5;
+        vertical-align: top;
+        font-size: 22px;
+        line-height: 22px;
+      }
+
+      &.active {
+        .active-filter {
+          display: block;
+
+          > svg {
+            position: static;
+            width: 16px !important;
+            height: 16px;
+            margin: 4px !important;
+            color: #fff !important;
+          }
+        }
+      }
     }
 
     .container > .item,
@@ -361,7 +418,7 @@ export const LeftMenu = styled(Menu)`
 
       &:before,
       &:after {
-        content: "" !important;
+        content: '' !important;
         position: absolute !important;
         top: 20px !important;
         left: auto !important;
@@ -375,6 +432,11 @@ export const LeftMenu = styled(Menu)`
         height: 9px !important;
         border-radius: 1px;
         background: #cecfd4 !important;
+      }
+
+      &:nth-child(n):before,
+      &:nth-child(n):after {
+        display: block !important; // solving rewrites from semantic css
       }
 
       &:after {
@@ -423,7 +485,6 @@ export const LeftMenu = styled(Menu)`
 
         &:not(.upward),
         &.upward {
-        
           > .menu {
             position: static !important;
             overflow: hidden !important;
@@ -438,7 +499,7 @@ export const LeftMenu = styled(Menu)`
             border-top-left-radius: 0;
             border-top-right-radius: 0;
             padding: 0 !important;
-          
+
             > .scrollbar-container {
               flex-grow: 0;
               flex-shrink: 1;
@@ -448,16 +509,21 @@ export const LeftMenu = styled(Menu)`
               height: 100% !important;
               margin: -10px 0 !important;
               padding: 10px 0 !important;
-                      
-              .ps__rail-y {
+
+              &:not(.ps--active-y) > .ps__rail-y {
+                display: none !important;
+              }
+
+              &.ps--active-y > .ps__rail-y {
                 position: absolute;
                 top: 0;
                 left: auto !important;
                 right: 0 !important;
+                display: block !important;
                 width: 4px;
                 height: 100%;
                 background: rgba(0, 0, 0, 0.1);
-                
+
                 .ps__thumb-y {
                   width: 100%;
                   margin: 0;
@@ -644,11 +710,17 @@ export const LeftMenu = styled(Menu)`
     &.collapsed {
       width: 70px !important;
 
+      .scrollbar-container > img {
+        width: 30px;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+
       .flex-wrapper,
       .scrollbar-container > .flex-wrapper {
         overflow: visible;
         display: block;
-        
+
         > img {
           width: 40px;
           height: 50px;
@@ -678,7 +750,11 @@ export const LeftMenu = styled(Menu)`
       .scrollbar-container > .flex-wrapper {
         overflow: visible !important;
 
-        > .ps__rail-y {
+        &:not(.ps--active-y) > .ps__rail-y {
+          display: none !important;
+        }
+
+        &.ps--active-y > .ps__rail-y {
           display: none !important;
         }
 
@@ -716,7 +792,7 @@ export const LeftMenu = styled(Menu)`
             border-color: #dee2e6;
             border-radius: 0;
             border-bottom-right-radius: 4px;
-            
+
             > .scrollbar-container {
               margin: 0 !important;
               padding: 0 !important;
@@ -729,13 +805,12 @@ export const LeftMenu = styled(Menu)`
 
           &:not(.upward),
           &.upward {
-          
             > .menu {
               overflow: hidden !important;
               display: flex !important;
               flex-flow: column;
               padding: 0 !important;
-          
+
               > .scrollbar-container {
                 flex-grow: 0;
                 flex-shrink: 1;
@@ -746,8 +821,12 @@ export const LeftMenu = styled(Menu)`
                 max-height: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
-                        
-                .ps__rail-y {
+
+                &:not(.ps--active-y) > .ps__rail-y {
+                  display: none !important;
+                }
+
+                &.ps--active-y > .ps__rail-y {
                   position: absolute;
                   top: 0;
                   left: auto !important;
@@ -756,7 +835,7 @@ export const LeftMenu = styled(Menu)`
                   width: 4px;
                   height: 100%;
                   background: rgba(0, 0, 0, 0.1);
-                  
+
                   .ps__thumb-y {
                     position: absolute;
                     width: 100%;
@@ -792,7 +871,6 @@ export const LeftMenu = styled(Menu)`
     }
 
     &:not(.collapsed) {
-    
       .scrollbar-container {
         position: relative;
         width: calc(100% + 10px);
@@ -803,10 +881,11 @@ export const LeftMenu = styled(Menu)`
           margin: 0 2px;
         }
       }
-      
+
       .scrollbar-container > .flex-wrapper > .item.dropdown.upward.opened > .menu,
       .scrollbar-container > .flex-wrapper > .item.dropdown:not(.upward).opened > .menu {
         max-height: calc(100% - 26px) !important;
+        margin-bottom: -12px !important;
       }
     }
   }
@@ -816,7 +895,7 @@ export const LeftMenuContainer = styled(Container)`
 
   .scrollbar-container {
     height: calc(100vh - 70px);
-    flex-grow: 1;
+    flex-grow: 0;
     flex-shrink: 1;
   }
 
@@ -838,6 +917,15 @@ export const MainContainer = styled(Container)`
   right: 0;
   bottom: 0;
   left: 0;
+  
+  &.takeover {
+    transform: translateX(0);
+    margin-top: 30px;
+    
+    > .menu.left > .container {
+      max-height: calc(100vh - 30px) !important;
+    }
+  }
 `
 export const ContentContainer = styled(Container)`
   /* padding: 0 20px; */
@@ -883,4 +971,65 @@ export const MainTitle = styled(Header)`
   font-weight: 400 !important;
   color: #000;
   line-height: 31px;
+`
+
+export const Required = styled.span`
+  &:before {
+    content: '*';
+    display: inline;
+    margin-left: 0.5em;
+    font-size: 1em;
+    line-height: ‭1.2857143‬;
+    color: #f16844;
+  }
+`
+
+export const Or = styled.span`
+  &:before {
+    content: '/';
+    display: inline;
+    margin: 0 0.5em;
+    font-size: 1em;
+    line-height: ‭1.2857143‬;
+  }
+`
+
+export const CustomDiv = styled.div`
+  display: flex;
+  width: 100vw;
+  color: #848893;
+`
+
+export const Rectangle = styled.div`
+  position: fixed;
+  top: -30px;
+  left: 0;
+  width: 100vw;
+  background: #ff9d42 !important;
+  text-align: center !important;
+  background-color: #ffffff;
+  height: 30px;
+  color: #ffffff;
+  text-align: center;
+  font-size: 14px;
+  display: block;
+  
+  > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  + h1 {
+    align-self: center;
+  }
+`
+
+export const DivInRectangle = styled.div`
+  text-align: center !important;
+`
+
+export const CustomSpanReturn = styled.span`
+  text-align: center;
+  color: #4183c4;
+  cursor: pointer;
 `

@@ -9,6 +9,7 @@ import * as Yup from 'yup'
 import { nmfcValidation } from '../../../../constants/yupValidation'
 import { getSafe } from '~/utils/functions'
 import { addNmfcNumber, editNmfcNumber } from '~/modules/admin/actions'
+import { Required } from '~/components/constants/layout'
 
 const validationSchema = Yup.object().shape({
   code: nmfcValidation()
@@ -41,23 +42,20 @@ class Popup extends Component {
       <Modal open onClose={() => closeAddPopup()}>
         <Modal.Header>
           {formatMessage({ id: `global.${type.id}`, defaultMessage: type.defaultMessage })}{' '}
-          {formatMessage({ id: config.addEditText })}
+          {config.addEditText}
         </Modal.Header>
         <Modal.Content>
           <Form
             onSubmit={async (values, { setSubmitting }) => {
-              let payload = {
-                ...values,
-                code: getSafe(() => values.code.replace('-', ''), values.code)
-              }
-
-              if (popupValues) {
-                await editNmfcNumber({ ...payload, id: popupValues.id })
-              } else {
-                await addNmfcNumber(payload)
-              }
+              try {
+                if (popupValues) {
+                  await editNmfcNumber({ ...values, id: popupValues.id })
+                } else {
+                  await addNmfcNumber(values)
+                }
+                closeAddPopup()
+              } catch (err) {}
               setSubmitting(false)
-              closeAddPopup()
             }}
             validationSchema={validationSchema}
             initialValues={this.getInitialValues()}
@@ -66,7 +64,15 @@ class Popup extends Component {
               return (
                 <>
                   <FormGroup widths='equal'>
-                    <Input name='code' label={formatMessage({ id: 'global.code', defaultMessage: '!Code' })} />
+                    <Input
+                      name='code'
+                      label={
+                        <>
+                          {formatMessage({ id: 'global.code', defaultMessage: '!Code' })}
+                          <Required />
+                        </>
+                      }
+                    />
                   </FormGroup>
 
                   <FormGroup widths='equal'>

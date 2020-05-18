@@ -17,7 +17,8 @@ export const filterTypes = {
   INVENTORY: 'inventory',
   MARKETPLACE: 'marketplace',
   PURCHASE_ORDERS: 'PURCHASE_ORDERS',
-  SALES_ORDERS: 'SALES_ORDERS'
+  SALES_ORDERS: 'SALES_ORDERS',
+  WANTED_BOARD: 'wantedBoard'
 }
 
 export const filterPresets = {
@@ -33,7 +34,7 @@ export const paths = {
     price: 'ProductOffer.cfPricePerUOM',
     packagingTypes: 'ProductOffer.companyProduct.packagingType.id',
     productConditions: 'ProductOffer.condition.id',
-    productGrade: 'ProductGrade.id',
+    productGrades: 'ProductGrade.id',
     productForms: 'ProductOffer.form.id',
     expirationDate: 'ProductOffer.lotExpirationDate',
     assayFrom: 'ProductOffer.assayMin',
@@ -44,7 +45,10 @@ export const paths = {
     broadcast: 'ProductOffer.broadcasted',
     origin: 'ProductOffer.origin.id',
     expiration: 'ProductOffer.lotExpirationDate',
-    mfg: 'ProductOffer.lotManufacturedDate'
+    mfg: 'ProductOffer.lotManufacturedDate',
+    cfStatus: 'ProductOffer.cfStatus',
+    country: 'ProductOffer.warehouse.deliveryAddress.address.country.id',
+    province: 'ProductOffer.warehouse.deliveryAddress.address.province.id'
   },
   orders: {
     orderDate: 'Order.orderDate',
@@ -212,6 +216,32 @@ export const datagridValues = {
     }
   },
 
+  incomplete: {
+    paths: [paths.productOffers.cfStatus],
+    description: 'Status',
+    operator: operators.LIKE,
+
+    toFilter: function(values) {
+      let { yes, no } = values
+      let returnValues = null
+
+      if (!(yes || no)) return null
+      if (yes) returnValues = ['Incomplete', 'Unmapped']
+      else returnValues = ['Broadcasting', 'Not broadcasting']
+
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: returnValues.map(val => ({ value: val, description: val }))
+      }
+    },
+    tagDescription: values => values.map(val => val.description).toString(),
+    valuesDescription: values =>values.map(val => val.description).toString(),
+    toFormik: values => ({
+      incomplete: values.includes('Incomplete') ? { yes: true, no: false } : { yes: false, no: true }
+    })
+  },
+
   quantityFrom: {
     paths: [paths.productOffers.quantity],
     description: 'Quantity From',
@@ -374,8 +404,8 @@ export const datagridValues = {
 
     nested: true
   },
-  productGrade: {
-    paths: [paths.productOffers.productGrade],
+  productGrades: {
+    paths: [paths.productOffers.productGrades],
     description: 'Product Grades',
     operator: operators.EQUALS,
 
@@ -844,6 +874,125 @@ export const datagridValues = {
         result = 'To'
       }
       return result
+    }
+  },
+
+  country: {
+    paths: [paths.productOffers.country],
+    description: 'Country',
+    operator: operators.EQUALS,
+
+    toFilter: function(values) {
+      let data
+      if (Array.isArray(values)) {
+        data = values.map(val => {
+          let parsed = JSON.parse(val)
+          return {
+            value: parsed.id,
+            description: val
+            //! !description: parsed.name
+            //description: JSON.stringify({
+              //name: parsed.name,
+              //text: parsed.text
+            //})
+          }
+        })
+      } else {
+        let parsed = JSON.parse(values)
+        data = [
+          {
+            value: parsed.id,
+            description: JSON.stringify({
+              name: parsed.name,
+              text: parsed.text
+            })
+          }
+        ]
+      }
+
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: data,
+        description: this.description
+      }
+    },
+
+    valuesDescription: function(values) {
+      return values.map(val => {
+        try {
+          return JSON.parse(val.description).text
+        } catch {
+          return val.description
+        }
+      })
+    },
+
+    tagDescription: function(values) {
+      return `Country: ${this.valuesDescription(values)}`
+    },
+
+    toFormik: function({ values }) {
+      return values.map(val => {
+        return val.description
+      })
+    }
+  },
+
+  province: {
+    paths: [paths.productOffers.province],
+    description: 'Province',
+    operator: operators.EQUALS,
+
+    toFilter: function(values) {
+      let data
+      if (Array.isArray(values)) {
+        data = values.map(val => {
+          let parsed = JSON.parse(val)
+          return {
+            value: parsed.id,
+            description: val
+          }
+        })
+      } else {
+        let parsed = JSON.parse(values)
+        data = [
+          {
+            value: parsed.id,
+            description: JSON.stringify({
+              name: parsed.name,
+              text: parsed.text
+            })
+          }
+        ]
+      }
+
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: data,
+        description: this.description
+      }
+    },
+
+    valuesDescription: function(values) {
+      return values.map(val => {
+        try {
+          return JSON.parse(val.description).text
+        } catch {
+          return val.description
+        }
+      })
+    },
+
+    tagDescription: function(values) {
+      return `Province: ${this.valuesDescription(values)}`
+    },
+
+    toFormik: function({ values }) {
+      return values.map(val => {
+        return val.description
+      })
     }
   }
 }

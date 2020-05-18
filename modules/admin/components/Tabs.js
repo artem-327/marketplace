@@ -7,9 +7,9 @@ import Link from 'next/link'
 import { handleActiveTab } from '../actions'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
-const MenuLink = ({ active, children, onClick, className }) => {
+const MenuLink = ({ active, children, onClick, className, dataTest }) => {
   return (
-    <Menu.Item as='a' active={active} onClick={onClick} className={className}>
+    <Menu.Item as='a' active={active} data-test={dataTest} onClick={onClick} className={className}>
       {children}
     </Menu.Item>
   )
@@ -36,7 +36,7 @@ function Tabs(props) {
             handleActiveTab(tab)
           }}
           active={currentTab.name === tab.name}
-          data-test={`tabs_menu_item_${tab.id}`}
+          dataTest={`tabs_menu_item_${tab.name.replace(/\s+/g, '-').toLowerCase()}`}
           tab={tab.id}>
           {formatMessage({ id: `navigation.${tab.name}`, defaultMessage: `${tab.name}` })}
         </Dropdown.Item>

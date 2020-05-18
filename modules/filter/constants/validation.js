@@ -18,6 +18,10 @@ export const initialValues = {
   expirationFrom: '',
   mfgTo: '',
   mfgFrom: '',
+  incomplete: {
+    yes: false,
+    no: false
+  },
   checkboxes: {
     notificationEnabled: false,
     automaticallyApply: true,
@@ -29,7 +33,8 @@ export const initialValues = {
     notificationMail: '',
     notificationPhone: ''
   },
-  warehouse: '',
+  country: [],
+  province: [],
   broadcast: '',
   manufacturer: '',
   origin: ''

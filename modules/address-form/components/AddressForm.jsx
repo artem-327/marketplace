@@ -11,6 +11,7 @@ import styled from 'styled-components'
 import { getProvinces } from '../api'
 
 import { getSafe, getDeeply } from '~/utils/functions'
+import { Required } from '~/components/constants/layout'
 
 const DatalistGroup = styled(FormGroup)`
   input::-webkit-calendar-picker-indicator {
@@ -177,14 +178,15 @@ export default class AddressForm extends Component {
       countryPopup,
       countriesLoading,
       loading,
-      initialProvince
+      initialProvince,
+      required
     } = this.props
 
     let fields = this.asignPrefix()
 
     // this.handleChange(e, data)
 
-    let { provinces, countryId, provincesAreFetching } = this.state
+    let { provinces, countryId, provincesAreFetching, hasProvinces } = this.state
     //  TODO - check whether fluid didnt mess up ui somewhere else
 
     return (
@@ -212,7 +214,11 @@ export default class AddressForm extends Component {
                 fluid: true,
                 loading
               }}
-              label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />}
+              label={
+                <>
+                  <FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />
+                  {required && <Required />}
+                </>}
               name={fields.streetAddress}
             />
 
@@ -225,7 +231,12 @@ export default class AddressForm extends Component {
                 fluid: true,
                 loading
               }}
-              label={<FormattedMessage id='global.city' defaultMessage='City' />}
+              label={
+                <>
+                  <FormattedMessage id='global.city' defaultMessage='City' />
+                  {required && <Required />}
+                </>
+              }
               name={fields.city}
             />
           </DatalistGroup>
@@ -235,6 +246,7 @@ export default class AddressForm extends Component {
               onChange={this.handleChange}
               additionalInputProps={{ loading }}
               name={fields.zip}
+              required={required}
               countryId={countryId}
               initialZipCodes={initialZipCodes}
               data-test='address_form_zip_drpdn'
@@ -244,6 +256,7 @@ export default class AddressForm extends Component {
                   trigger={
                     <label>
                       <FormattedMessage id='global.country' defaultMessage='Country' />
+                      {required && <Required />}
                     </label>
                   }
                   disabled={countryPopup.disabled}
@@ -278,7 +291,12 @@ export default class AddressForm extends Component {
            
 
             <Dropdown
-              label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />}
+              label={
+                <>
+                  <FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />
+                  {required && hasProvinces && <Required />}
+                </>
+                }
               name={fields.province}
               options={provinces
                 .map(province => ({
@@ -333,7 +351,8 @@ AddressForm.propTypes = {
   additionalCountryInputProps: object,
   fixedCountries: array,
   handleChange: func,
-  initialProvince: array
+  initialProvince: array,
+  required: bool
 }
 
 AddressForm.defaultProps = {
@@ -370,5 +389,6 @@ AddressForm.defaultProps = {
   additionalCountryInputProps: {},
   fixedCountries: [],
   handleChange: () => console.error('handleChange function not provided in AddressForm.jsx!'),
-  initialProvince: []
+  initialProvince: [],
+  required: false
 }

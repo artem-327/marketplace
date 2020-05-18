@@ -1,23 +1,24 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Modal, Checkbox, Popup, Button } from 'semantic-ui-react'
-import SubMenu from '~/src/components/SubMenu'
+import cn from 'classnames'
+import moment from 'moment/moment'
+import { debounce } from 'lodash'
+import { Clock } from 'react-feather'
+import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import { withToastManager } from 'react-toast-notifications'
+import styled from 'styled-components'
+
 import ProdexTable from '~/components/table'
-
 import DetailSidebar from '~/modules/inventory/components/DetailSidebar'
-
+import QuickEditPricingPopup from '~/modules/inventory/components/QuickEditPricingPopup'
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
-import cn from 'classnames'
-
 import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
-
-import moment from 'moment/moment'
-import { getSafe } from '~/utils/functions'
-import { Datagrid } from '~/modules/datagrid'
-import styled from 'styled-components'
+import { getSafe, uniqueArrayByKey, generateToastMarkup } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
+import SearchByNamesAndTags from '~/modules/search'
+import SubMenu from '~/src/components/SubMenu'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -44,9 +45,44 @@ const CustomProdexTable = styled(ProdexTable)`
   }
 `
 
+const ClockIcon = styled(Clock)`
+  display: block;
+  width: 20px;
+  height: 19px;
+  margin: 0 auto;
+  vertical-align: top;
+  font-size: 20px;
+  color: #f16844;
+  line-height: 20px;
+
+  &.grey {
+    color: #848893;
+  }
+`
+
+const StyledPopup = styled(Popup)`
+  max-width: 90%;
+  padding: 0 !important;
+  border-radius: 4px;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+
+  .ui.form {
+    width: 570px;
+    padding: 0;
+  }
+`
+
 class MyInventory extends Component {
   state = {
     columns: [
+      {
+        name: 'expired',
+        title: <ClockIcon className='grey' />,
+        width: 45,
+        align: 'center'
+      },
       {
         name: 'productName',
         title: (
@@ -240,7 +276,7 @@ class MyInventory extends Component {
       {
         name: 'expDate',
         title: (
-          <FormattedMessage id='myInventory.expDate' defaultMessage='EXP Date'>
+          <FormattedMessage id='myInventory.expDate' defaultMessage='Lot Exp. Date'>
             {text => text}
           </FormattedMessage>
         ),
@@ -258,7 +294,7 @@ class MyInventory extends Component {
       {
         name: 'offerExpiration',
         title: (
-          <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Expiration Date'>
+          <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer Exp. Date'>
             {text => text}
           </FormattedMessage>
         ),
@@ -287,7 +323,8 @@ class MyInventory extends Component {
     // pageNumber: 0,
     open: false,
     clientMessage: '',
-    request: null
+    request: null,
+    selectedTagsOptions: []
   }
 
   componentDidMount() {
@@ -310,38 +347,26 @@ class MyInventory extends Component {
       }
     }
     // Because of #31767
-    this.props.setCompanyElligible()
-    this.handleFilterClear()
+    try {
+      this.props.setCompanyElligible()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
+
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter)
+      datagrid.setFilter(datagridFilter, true, 'myInventoryFilter')
     }
-  }
-
-  filterInventory = async filter => {
-    let productIds = []
-    if (filter.search) {
-      let foundProducts = await this.props.findProducts(filter.search)
-      foundProducts.value.data.reduce((filteredProducts, product) => {
-        if (product.casProduct.chemicalName === filter.search || product.casProduct.casNumber === filter.search)
-          productIds.push(product.id)
-      }, [])
-
-      if (productIds.length) {
-        filter = { ...filter, product: productIds }
-      }
-    }
-    //this.props.getMyProductOffers(filter, PAGE_SIZE)
   }
 
   getRows = rows => {
+    const { datagrid, pricingEditOpenId, setPricingEditOpenId, toastManager } = this.props
     let title = ''
 
     return rows.map((r, rIndex) => {
-      if (!r || !r.cfStatus) return
       const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
 
       if (r.groupId) {
@@ -386,7 +411,9 @@ class MyInventory extends Component {
             )
             break
           default:
-            title = ''
+            title = (
+              <FormattedMessage id='myInventory.broadcasting.notAvailable' defaultMessage='Status is not available' />
+            )
         }
       } else {
         title = (
@@ -399,10 +426,32 @@ class MyInventory extends Component {
 
       return {
         ...r,
+        expired: r.expired ? (
+          <Popup
+            header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
+            trigger={
+              <div>
+                <ClockIcon />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />
+        ) : null,
         condition: r.condition ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
           <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+        ),
+        fobPrice: (
+          <StyledPopup
+            content={<QuickEditPricingPopup rawData={r.rawData} />}
+            on='click'
+            pinned
+            position='left center'
+            trigger={<div>{r.fobPrice}</div>}
+            open={pricingEditOpenId === r.rawData.id}
+            onOpen={() => setPricingEditOpenId(r.rawData.id)}
+            onClose={() => setPricingEditOpenId(null)}
+          />
         ),
         broadcast: (
           <div style={{ float: 'right' }}>
@@ -420,12 +469,21 @@ class MyInventory extends Component {
                   disabled={
                     r.cfStatus.toLowerCase() === 'incomplete' ||
                     r.cfStatus.toLowerCase() === 'unmapped' ||
+                    r.cfStatus.toLowerCase() === 'n/a' ||
                     !isOfferValid ||
-                    r.groupId
+                    !!r.groupId
                   }
                   onChange={(e, data) => {
                     e.preventDefault()
-                    this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
+                    try {
+                      this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
+                      datagrid.updateRow(r.id, () => ({
+                        ...r.rawData,
+                        cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
+                      }))
+                    } catch (error) {
+                      console.error(error)
+                    }
                   }}
                 />
               }
@@ -437,16 +495,6 @@ class MyInventory extends Component {
     })
   }
 
-  // ! ! delete
-  handleFilterApply = filter => {
-    this.props.datagrid.setFilter(filter)
-  }
-
-  handleFilterClear = () => {
-    this.props.applyFilter({ filters: [] })
-    this.props.datagrid.setFilter({ filters: [] })
-  }
-
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
     const { isProductInfoOpen, closePopup } = this.props
 
@@ -454,7 +502,8 @@ class MyInventory extends Component {
     sidebarDetailTrigger(row, bol, tab)
   }
 
-  showMessage = (response, request = null) => {
+  showMessage = (response, request = null, row) => {
+    const { toastManager, datagrid } = this.props
     response &&
       response.value &&
       response.value.productOfferStatuses &&
@@ -462,38 +511,66 @@ class MyInventory extends Component {
       response.value.productOfferStatuses.map(status => {
         if (!status.code) return
         if (status.code === 'GROUPED') {
-          const rowData = this.getRows(this.props.rows).filter(row => row.id === status.productOfferId)
-          Datagrid.updateRow(status.productOfferId, () => ({
-            ...rowData[0],
+          datagrid.updateRow(status.productOfferId, () => ({
+            ...row,
+            warehouse: { deliveryAddress: { cfName: row.warehouse } },
             parentOffer: status.virtualOfferId ? status.virtualOfferId : ''
           }))
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id={`success.title`} defaultMessage='Success' />,
+              `${status.clientMessage}`
+            ),
+            {
+              appearance: 'success'
+            }
+          )
         } else if (status.code === 'BROADCAST_RULE_CONFLICT') {
           this.setState({ open: true, clientMessage: status.clientMessage, request })
         } else if (status.code === 'DETACHED') {
-          const rowData = this.getRows(this.props.rows).filter(row => row.id === status.productOfferId)
-          Datagrid.updateRow(status.productOfferId, () => ({
-            ...rowData[0],
+          datagrid.updateRow(status.productOfferId, () => ({
+            ...row,
+            warehouse: { deliveryAddress: { cfName: row.warehouse } },
             parentOffer: ''
           }))
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id={`success.title`} defaultMessage='Success' />,
+              `${status.clientMessage}`
+            ),
+            {
+              appearance: 'success'
+            }
+          )
+        } else if (status.code === 'ERROR') {
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage id={`error.title`} defaultMessage='Error' />,
+              `${status.clientMessage}`
+            ),
+            {
+              appearance: 'error'
+            }
+          )
         }
       })
   }
 
-  groupOffer = async request => {
+  groupOffer = async (request, row) => {
     const { groupOffers } = this.props
     try {
       const response = await groupOffers(request)
-      this.showMessage(response, request)
+      this.showMessage(response, request, row)
     } catch (error) {
       console.error(error)
     }
   }
 
-  detachOffer = async productOfferIds => {
+  detachOffer = async (productOfferIds, row) => {
     const { detachOffers } = this.props
     try {
       const response = await detachOffers(productOfferIds)
-      this.showMessage(response)
+      this.showMessage(response, null, row)
     } catch (error) {
       console.error(error)
     }
@@ -510,14 +587,12 @@ class MyInventory extends Component {
       isOpenImportPopup,
       simpleEditTrigger,
       sidebarDetailTrigger,
-      sidebarValues,
       openPopup,
       editedId,
       closeSidebarDetail,
       tutorialCompleted
     } = this.props
-    const { columns, selectedRows, clientMessage, request } = this.state
-
+    const { columns, clientMessage, request } = this.state
     return (
       <>
         <Modal size='small' open={this.state.open} onClose={() => this.setState({ open: false })} closeIcon>
@@ -551,44 +626,55 @@ class MyInventory extends Component {
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
         {!tutorialCompleted && <Tutorial />}
         <Container fluid style={{ padding: '0 32px' }}>
-          <Menu secondary className='page-part'>
-            {/*selectedRows.length > 0 ? (
-              <Menu.Item>
-                <Header as='h3' size='small' color='grey'>
-                  <FormattedMessage
-                    id='myInventory.smallHeader'
-                    defaultMessage={selectedRows.length + ' products offerings selected'}
-                    values={{ number: selectedRows.length }}
-                  />
-                </Header>
-              </Menu.Item>
-            ) : null*/}
+          <Grid>
+            <Grid.Row>
+              <SearchByNamesAndTags />
 
-            <Menu.Menu position='right'>
-              <Menu.Item>
-                <Button
-                  size='large'
-                  primary
-                  onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
-                  data-test='my_inventory_add_btn'>
-                  <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
-                    {text => text}
-                  </FormattedMessage>
-                </Button>
-              </Menu.Item>
-              <Menu.Item>
-                <Button size='large' primary onClick={() => openImportPopup()} data-test='my_inventory_import_btn'>
-                  {formatMessage({
-                    id: 'myInventory.import',
-                    defaultMessage: 'Import'
-                  })}
-                </Button>
-              </Menu.Item>
-              <MenuItemFilters>
-                <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
-              </MenuItemFilters>
-            </Menu.Menu>
-          </Menu>
+              <Grid.Column width={8}>
+                <Menu secondary className='page-part'>
+                  {/*selectedRows.length > 0 ? (
+                    <Menu.Item>
+                      <Header as='h3' size='small' color='grey'>
+                        <FormattedMessage
+                          id='myInventory.smallHeader'
+                          defaultMessage={selectedRows.length + ' products offerings selected'}
+                          values={{ number: selectedRows.length }}
+                        />
+                      </Header>
+                    </Menu.Item>
+                  ) : null*/}
+                  <Menu.Menu position='right'>
+                    <Menu.Item>
+                      <Button
+                        size='large'
+                        primary
+                        onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
+                        data-test='my_inventory_add_btn'>
+                        <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
+                          {text => text}
+                        </FormattedMessage>
+                      </Button>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <Button
+                        size='large'
+                        primary
+                        onClick={() => openImportPopup()}
+                        data-test='my_inventory_import_btn'>
+                        {formatMessage({
+                          id: 'myInventory.import',
+                          defaultMessage: 'Import'
+                        })}
+                      </Button>
+                    </Menu.Item>
+                    <MenuItemFilters>
+                      <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
+                    </MenuItemFilters>
+                  </Menu.Menu>
+                </Menu>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
         </Container>
 
         <div className='flex stretched' style={{ padding: '10px 32px' }}>
@@ -630,7 +716,6 @@ class MyInventory extends Component {
                 rows,
                 values[values.length - 1],
                 sidebarDetailOpen,
-                //! ! sidebarDetailTrigger,
                 closeSidebarDetail,
                 openPopup
               ).map(a => ({
@@ -657,6 +742,7 @@ class MyInventory extends Component {
                   id: 'global.documents',
                   defaultMessage: 'Documents'
                 }),
+                disabled: row => row.groupId,
                 callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
               },
               {
@@ -706,10 +792,13 @@ class MyInventory extends Component {
                   defaultMessage: 'Join/Create Virtual Group'
                 }),
                 callback: row =>
-                  this.groupOffer({
-                    overrideBroadcastRules: false,
-                    productOfferIds: [row.id]
-                  }),
+                  this.groupOffer(
+                    {
+                      overrideBroadcastRules: false,
+                      productOfferIds: [row.id]
+                    },
+                    row
+                  ),
                 disabled: row => !!row.parentOffer
               },
               {
@@ -717,7 +806,7 @@ class MyInventory extends Component {
                   id: 'inventory.detachOffer',
                   defaultMessage: 'Detach from Virtual Group'
                 }),
-                callback: row => this.detachOffer([row.id]),
+                callback: row => this.detachOffer([row.id], row),
                 disabled: row => !row.parentOffer
               }
             ]}
@@ -737,4 +826,4 @@ class MyInventory extends Component {
   }
 }
 
-export default injectIntl(MyInventory)
+export default injectIntl(withToastManager(MyInventory))

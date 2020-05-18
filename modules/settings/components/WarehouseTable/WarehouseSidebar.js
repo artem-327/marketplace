@@ -1,21 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withDatagrid } from '~/modules/datagrid'
-
-import { Header, Modal, FormGroup, Dimmer, Loader, Menu, Segment } from 'semantic-ui-react'
+import { Formik } from 'formik'
+import { Header, FormGroup, Dimmer, Loader, Menu, Segment, Form } from 'semantic-ui-react'
 import {
   closeSidebar,
   putEditWarehouse,
   postNewWarehouseRequest,
   getProvinces,
   getAddressSearch,
-  removeEmpty,
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
   loadFile
 } from '../../actions'
-import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
+import { Input, Checkbox, TextArea, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import Router from 'next/router'
 import styled from 'styled-components'
@@ -28,8 +27,11 @@ import { AddressForm } from '~/modules/address-form/'
 
 import { getSafe } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
-import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/components/DetailSidebar'
+import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
 import DocumentTab from '~/components/document-tab'
+import { AlertCircle } from 'react-feather'
+import { Required } from '~/components/constants/layout'
+import { removeEmpty } from '~/utils/functions'
 
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
@@ -57,6 +59,50 @@ const CustomHighSegment = styled(HighSegment)`
   margin: 0 !important;
 `
 
+const Rectangle = styled.div`
+  border-radius: 4px;
+  border: solid 1px orange;
+  background-color: #ffffff;
+  margin-bottom: 15px;
+  align-items: center;
+  display: block;
+  padding: 10px;
+`
+
+const CustomDivTitle = styled.div`
+  font-size: 12px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #0d0d0d;
+  display: flex;
+`
+
+const CustomDivContent = styled.div`
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #848893;
+  padding-left: 30px;
+`
+
+const CustomDivInTitle = styled.div`
+  padding-left: 10px;
+`
+
+const CustomMenu = styled(Menu)`
+  padding-left: 63px !important;
+`
+
+const CustomSegmentContent = styled(Segment)`
+  padding-top: 0px !important;
+`
+
 const minLength = errorMessages.minLength(3)
 
 const formValidation = () =>
@@ -82,7 +128,8 @@ const formValidation = () =>
 class WarehouseSidebar extends React.Component {
   state = {
     editTab: 0,
-    attachmentFiles: []
+    attachmentFiles: [],
+    loadSidebar: false
   }
   componentDidMount() {
     const { popupValues, getProvinces, openTab } = this.props
@@ -100,10 +147,9 @@ class WarehouseSidebar extends React.Component {
     if (this.props[name].length === 0) fn()
   }
 
-  submitHandler = async (values, actions) => {
-    const { popupValues, currentTab, putEditWarehouse, postNewWarehouseRequest, datagrid } = this.props
+  submitHandler = async (values, setSubmitting) => {
+    const { popupValues, currentTab, putEditWarehouse, postNewWarehouseRequest } = this.props
     const { attachmentFiles } = this.state
-
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
     let requestData = {}
 
@@ -126,6 +172,7 @@ class WarehouseSidebar extends React.Component {
       taxId: values.taxId,
       warehouse: currentTab.type === 'warehouses' ? true : false
     }
+    removeEmpty(requestData)
 
     try {
       if (popupValues) {
@@ -135,8 +182,8 @@ class WarehouseSidebar extends React.Component {
       }
     } catch {
     } finally {
-      actions.setSubmitting(false)
-      datagrid.loadData()
+      setSubmitting(false)
+      this.setState({ loadSidebar: false })
     }
   }
 
@@ -208,6 +255,7 @@ class WarehouseSidebar extends React.Component {
 
         <AddressForm
           prefix={'deliveryAddress'}
+          required={true}
           setFieldValue={setFieldValue}
           values={values}
           initialZipCodes={{
@@ -229,7 +277,12 @@ class WarehouseSidebar extends React.Component {
           <FormGroup data-test='settings_warehouse_popup_contactName_inp'>
             <Input
               type='text'
-              label={formatMessage({ id: 'global.contactName', defaultMessage: 'Contact Name' })}
+              label={
+                <>
+                  {formatMessage({ id: 'global.contactName', defaultMessage: 'Contact Name' })}
+                  <Required />
+                </>
+              }
               name='deliveryAddress.contactName'
               fieldProps={{ width: 8 }}
             />
@@ -238,7 +291,12 @@ class WarehouseSidebar extends React.Component {
             <PhoneNumber
               name='deliveryAddress.contactPhone'
               values={values}
-              label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+              label={
+                <>
+                  {<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+                  <Required />
+                </>
+              }
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
               errors={errors}
@@ -247,7 +305,12 @@ class WarehouseSidebar extends React.Component {
             />
             <Input
               type='text'
-              label={formatMessage({ id: 'global.contactEmail', defaultMessage: 'Contact Email' })}
+              label={
+                <>
+                  {formatMessage({ id: 'global.contactEmail', defaultMessage: 'Contact Email' })}
+                  <Required />
+                </>
+              }
               name='deliveryAddress.contactEmail'
             />
           </FormGroup>
@@ -316,33 +379,53 @@ class WarehouseSidebar extends React.Component {
     const { setFieldValue, values } = formikProps
     return (
       <>
-        {
-          <DocumentTab
-            listDocumentTypes={[
-              { key: 136, text: 'Sales Tax Exemption Certificate', value: 136 },
-              { key: 137, text: 'Resale Certificate', value: 137 }
-            ]}
-            values={values}
-            setFieldValue={setFieldValue}
-            setFieldNameAttachments='attachments'
-            dropdownName='documentType'
-            removeAttachmentLink={removeAttachmentLinkToBranch}
-            removeAttachment={removeAttachment}
-            addAttachment={addAttachment}
-            loadFile={loadFile}
-            changedForm={files =>
-              this.setState(prevState => ({
-                attachmentFiles: prevState.attachmentFiles.concat(files)
-              }))
-            }
-            idForm={getSafe(() => popupValues.id, 0)}
-            attachmentFiles={this.state.attachmentFiles}
-            removeAttachmentFromUpload={id => {
-              const attachmentFiles = this.state.attachmentFiles.filter(attachment => attachment.id !== id)
-              this.setState({ attachmentFiles })
-            }}
-          />
-        }
+        {getSafe(() => popupValues.attachments.length, false) &&
+        getSafe(() => popupValues.deliveryAddress.address.country.name, false) === 'USA' ? (
+          <Rectangle>
+            <CustomDivTitle>
+              <AlertCircle color='orange' size={18} />
+              <CustomDivInTitle>
+                <FormattedMessage
+                  id='settings.warehouse.certificates.message.title'
+                  defaultMessage='This state/province already has certificate documents uploaded'>
+                  {text => text}
+                </FormattedMessage>
+              </CustomDivInTitle>
+            </CustomDivTitle>
+            <CustomDivContent>
+              <FormattedMessage
+                id='settings.warehouse.certificates.message.content'
+                defaultMessage='If you want to update the documents, you will replace all existing certificates for warehouses in this state.'>
+                {text => text}
+              </FormattedMessage>
+            </CustomDivContent>
+          </Rectangle>
+        ) : null}
+        <DocumentTab
+          listDocumentTypes={[
+            { key: 14, text: 'Resale Certificate', value: 14 },
+            { key: 13, text: 'Sales Tax Exemption Certificate', value: 13 }
+          ]}
+          values={values}
+          setFieldValue={setFieldValue}
+          setFieldNameAttachments='attachments'
+          dropdownName='documentType'
+          removeAttachmentLink={removeAttachmentLinkToBranch}
+          removeAttachment={removeAttachment}
+          addAttachment={addAttachment}
+          loadFile={loadFile}
+          changedForm={files =>
+            this.setState(prevState => ({
+              attachmentFiles: prevState.attachmentFiles.concat(files)
+            }))
+          }
+          idForm={getSafe(() => popupValues.id, 0)}
+          attachmentFiles={this.state.attachmentFiles}
+          removeAttachmentFromUpload={id => {
+            const attachmentFiles = this.state.attachmentFiles.filter(attachment => attachment.id !== id)
+            this.setState({ attachmentFiles })
+          }}
+        />
       </>
     )
   }
@@ -390,56 +473,73 @@ class WarehouseSidebar extends React.Component {
     ]
 
     return (
-      <CustomForm
+      <Formik
         initialValues={initialValues}
         validationSchema={formValidation()}
         enableReinitialize
         onReset={closeSidebar}
-        onSubmit={this.submitHandler}>
+        onSubmit={this.submitHandler}
+        loading={loading}>
         {formikProps => (
           <>
-            <FlexSidebar
-              visible={isOpenSidebar}
-              width='very wide'
-              style={{ width: '500px' }}
-              direction='right'
-              animation='overlay'>
-              <Dimmer inverted active={loading}>
-                <Loader />
-              </Dimmer>
-              <div>
-                <CustomHighSegment basic>
-                  <Menu pointing secondary>
-                    {tabs.map((tab, i) => (
-                      <Menu.Item
-                        onClick={() => this.tabChanged(i)}
-                        active={editTab === i}
-                        disabled={tab.key === 'certificates' && !formikProps.values.branchId}>
-                        {formatMessage(tab.text)}
-                      </Menu.Item>
-                    ))}
-                  </Menu>
-                </CustomHighSegment>
-              </div>
-              <FlexContent style={{ padding: '16px' }}>
-                <Segment basic>{this.getContent(formikProps)}</Segment>
-              </FlexContent>
-              <CustomDiv>
-                <Button.Reset onClick={closeSidebar} data-test='settings_warehouse_popup_reset_btn'>
-                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                    {text => text}
-                  </FormattedMessage>
-                </Button.Reset>
-                <CustomButtonSubmit data-test='settings_warehouse_popup_submit_btn'>
-                  <FormattedMessage id='global.save' defaultMessage='Save'>
-                    {text => text}
-                  </FormattedMessage>
-                </CustomButtonSubmit>
-              </CustomDiv>
-            </FlexSidebar>
+            <CustomForm>
+              <FlexSidebar
+                visible={isOpenSidebar}
+                width='very wide'
+                style={{ width: '500px' }}
+                direction='right'
+                animation='overlay'>
+                <div>
+                  <Dimmer inverted active={loading || this.state.loadSidebar}>
+                    <Loader />
+                  </Dimmer>
+                  <CustomHighSegment basic>
+                    <CustomMenu pointing secondary>
+                      {tabs.map((tab, i) => (
+                        <Menu.Item
+                          onClick={() => this.tabChanged(i)}
+                          active={editTab === i}
+                          disabled={tab.key === 'certificates' && !formikProps.values.branchId}>
+                          {formatMessage(tab.text)}
+                        </Menu.Item>
+                      ))}
+                    </CustomMenu>
+                  </CustomHighSegment>
+                </div>
+                <FlexContent style={{ padding: '16px' }}>
+                  <CustomSegmentContent basic>{this.getContent(formikProps)}</CustomSegmentContent>
+                </FlexContent>
+                <CustomDiv>
+                  <Button.Reset onClick={closeSidebar} data-test='settings_warehouse_popup_reset_btn'>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button.Reset>
+                  <CustomButtonSubmit
+                    onClick={() => {
+                      formikProps.validateForm().then(err => {
+                        const errors = Object.keys(err)
+                        if (errors.length && errors[0] !== 'isCanceled') {
+                          // Errors found
+                          formikProps.submitForm() // to show errors
+                        } else {
+                          // No errors found
+                          this.setState({ loadSidebar: true })
+                          this.submitHandler(formikProps.values, formikProps.setSubmitting)
+                        }
+                      })
+                    }}
+                    data-test='settings_warehouse_popup_submit_btn'>
+                    <FormattedMessage id='global.save' defaultMessage='Save'>
+                      {text => text}
+                    </FormattedMessage>
+                  </CustomButtonSubmit>
+                </CustomDiv>
+              </FlexSidebar>
+            </CustomForm>
           </>
         )}
-      </CustomForm>
+      </Formik>
     )
   }
 }
@@ -456,7 +556,6 @@ const mapDispatchToProps = {
   closeSidebar,
   getProvinces,
   getAddressSearch,
-  removeEmpty,
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,

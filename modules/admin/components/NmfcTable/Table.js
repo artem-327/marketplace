@@ -16,8 +16,6 @@ export default class Table extends Component {
       toastManager
     } = this.props
 
-    let rows = getSafe(() => datagrid.rows, [])
-
     const { tableName, formattedMessageName } = config
     const { columns } = config.display
 
@@ -28,7 +26,6 @@ export default class Table extends Component {
         filterValue={filterValue}
         loading={datagrid.loading || loading}
         columns={columns}
-        rows={rows}
         rowActions={[
           { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
           {

@@ -8,4 +8,4 @@ build:
     - docker build -t prodex/web:test .
 
 after_script:
-  - docker rmi $(docker images -q prodex/web:test)
+  - docker rmi $(docker images -q prodex/web:test) || exit 0

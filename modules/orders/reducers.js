@@ -26,12 +26,12 @@ const initialState = {
   bankAccounts: [],
   bankAccountsLoading: false,
   relatedOrders: [],
-  returnShipmentRates: [],
+  returnShipmentRates: {},
   shipmentOrderResult: {},
   returnShipmentOrderResult: {},
   loadRelatedOrders: false,
   shippingQuotesAreFetching: false,
-  shippingQuotes: [],
+  shippingQuotes: {},
   datagridFilter: { filters: [] },
   datagridFilterUpdate: false,
   opendSaleAttachingProductOffer: false,
@@ -43,7 +43,7 @@ const initialState = {
   loadingRelatedDocuments: false
 }
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     /*
         case AT.ORDERS_FETCH_REQUESTED:
@@ -314,13 +314,13 @@ export default function(state = initialState, action) {
     case AT.RETURN_SHIPMENT_RATES_PENDING:
       return {
         ...state,
-        returnShipmentRates: [],
+        returnShipmentRates: {},
         isSending: true
       }
     case AT.RETURN_SHIPMENT_RATES_REJECTED:
       return {
         ...state,
-        returnShipmentRates: [],
+        returnShipmentRates: {},
         isSending: false
       }
     case AT.ORDER_PURCHASE_SHIPMENT_ORDER_PENDING:
@@ -376,7 +376,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         shippingQuotesAreFetching: false,
-        shippingQuotes: []
+        shippingQuotes: {}
       }
     }
 
@@ -451,38 +451,44 @@ export default function(state = initialState, action) {
     case AT.LINK_ATTACHMENT_TO_ORDER_ITEM_PENDING: {
       return {
         ...state,
-        loadingProductOffer: true
+        loadingProductOffer: true,
+        loadingRelatedDocuments: true
       }
     }
     case AT.LINK_ATTACHMENT_TO_ORDER_ITEM_FULFILLED: {
       return {
         ...state,
-        loadingGroupedProductOffer: false
+        loadingGroupedProductOffer: false,
+        loadingRelatedDocuments: false
       }
     }
     case AT.LINK_ATTACHMENT_TO_ORDER_ITEM_REJECTED: {
       return {
         ...state,
-        loadingProductOffer: false
+        loadingProductOffer: false,
+        loadingRelatedDocuments: false
       }
     }
 
     case AT.REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM_PENDING: {
       return {
         ...state,
-        loadingProductOffer: true
+        loadingProductOffer: true,
+        loadingRelatedDocuments: true
       }
     }
     case AT.REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM_FULFILLED: {
       return {
         ...state,
-        loadingGroupedProductOffer: false
+        loadingGroupedProductOffer: false,
+        loadingRelatedDocuments: false
       }
     }
     case AT.REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM_REJECTED: {
       return {
         ...state,
-        loadingProductOffer: false
+        loadingProductOffer: false,
+        loadingRelatedDocuments: false
       }
     }
 
@@ -553,6 +559,51 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loadingRelatedDocuments: false
+      }
+    }
+
+    case AT.CLEARE_ORDER_DETAIL: {
+      return {
+        ...state,
+        detail: {}
+      }
+    }
+
+    case AT.EDIT_TRACKING_CODE_PENDING: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.EDIT_TRACKING_CODE_FULFILLED: {
+      return {
+        ...state,
+        detail: action.payload.data
+      }
+    }
+
+    case AT.EDIT_TRACKING_CODE_REJECTED: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.EDIT_RETURN_TRACKING_CODE_PENDING: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.EDIT_RETURN_TRACKING_CODE_FULFILLED: {
+      return {
+        ...state,
+        detail: action.payload.data
+      }
+    }
+
+    case AT.EDIT_RETURN_TRACKING_CODE_REJECTED: {
+      return {
+        ...state
       }
     }
 

@@ -92,6 +92,7 @@ export const mapCompanyRows = companyRows =>
   companyRows.map(c => ({
     rawData: c,
     ...c,
+    displayName: getSafe(() => c.cfDisplayName, ''),
     hasLogisticsAccounts: c.logisticsAccount ? 'Yes' : 'No',
     hasDwollaAccount: c.dwollaAccountStatus === 'verified' ? 'Yes' : 'No',
     primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false)
@@ -104,9 +105,10 @@ export const mapCompanyRows = companyRows =>
           : '') +
         (c.primaryBranch.deliveryAddress.address.country ? c.primaryBranch.deliveryAddress.address.country.name : '')
       : '',
-    primaryContact: c.primaryUser ? c.primaryUser.name : '',
-    contactEmail: c.primaryUser ? c.primaryUser.email : '',
-    reviewRequested: c.reviewRequested,
+    primaryContact: getSafe(() => c.primaryBranch.deliveryAddress.contactName, ''),
+    contactEmail: getSafe(() => c.primaryBranch.deliveryAddress.contactEmail, ''),
+    reviewRequested: c && c.reviewRequested ? 'Yes' : c.reviewRequested === false ? 'No' : '',
     hasLogo: c.hasLogo,
     nacdMember: c && c.nacdMember ? 'Yes' : c.nacdMember === false ? 'No' : ''
   }))
+export const currencySymbol = '$'

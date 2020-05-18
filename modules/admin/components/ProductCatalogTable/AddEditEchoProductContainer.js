@@ -1,6 +1,7 @@
 import AddEditEchoProduct from './AddEditEchoProduct'
 import React from 'react'
 import { connect } from 'react-redux'
+import { withDatagrid } from '~/modules/datagrid'
 
 import {
   closePopup,
@@ -17,7 +18,10 @@ import {
   loadEditEchoProduct,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
-  getUnNumbersByString
+  getUnNumbersByString,
+  searchTags,
+  getDocumentTypes,
+  searchMarketSegments
 } from '~/modules/admin/actions'
 
 import { Header } from 'semantic-ui-react'
@@ -39,7 +43,10 @@ const mapDispatchToProps = {
   loadEditEchoProduct,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
-  getUnNumbersByString
+  getUnNumbersByString,
+  searchTags,
+  getDocumentTypes,
+  searchMarketSegments
 }
 
 const mapStateToProps = ({ admin }, props) => {
@@ -82,8 +89,20 @@ const mapStateToProps = ({ admin }, props) => {
     unNumbersFetching: admin.unNumbersFetching,
 
     config: admin.config[admin.currentTab.name],
-    listDocumentTypes: admin.documentTypes
+    listDocumentTypes: admin.documentTypes,
+    searchedTags: admin.searchedTags.map(d => ({
+      key: d.id,
+      text: d.name,
+      value: d.id
+    })),
+    searchedTagsLoading: admin.searchedTagsLoading,
+    searchedMarketSegments: admin.searchedMarketSegments.map(d => ({
+      key: d.id,
+      text: d.name,
+      value: d.id
+    })),
+    searchedMarketSegmentsLoading: admin.searchedMarketSegmentsLoading
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddEditEchoProduct))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddEditEchoProduct)))
