@@ -5,7 +5,6 @@ import { Container, Grid, Segment } from 'semantic-ui-react'
 import { withAuth } from '~/hocs'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
-import styled from 'styled-components'
 
 import DataTable from './DataTable/DataTable'
 import UnitOfMeasureTable from './UnitOfMeasureTable/UnitOfMeasureTable'
@@ -26,20 +25,9 @@ import CompaniesDwollaForm from './CompaniesDwolla/FormPopup'
 import { getSafe } from '~/utils/functions'
 
 import { DatagridProvider } from '~/modules/datagrid'
-import Settings from '~/components/settings'
 
 import UsersTable from './UsersTable/Table'
 import UsersSidebar from './UsersTable/UsersSidebar'
-
-const FixyWrapper = styled.div`
-  position: relative;
-  transform: translateY(0);
-`
-
-const ScrollableSegment = styled(Segment)`
-  max-height: 90vh;
-  overflow-y: auto;
-`
 
 const tables = {
   'Units of Measure': <UnitOfMeasureTable />,
@@ -50,15 +38,7 @@ const tables = {
   Conditions: <DataTable />,
   'NMFC Numbers': <NmfcTable />,
   Associations: <DataTable />,
-  'Market Segments': <DataTable />,
-  Users: <UsersTable />,
-  'Admin Settings': (
-    <FixyWrapper>
-      <ScrollableSegment basic padded='very'>
-        <Settings inputsInGroup={3} asModal={false} role='admin' />
-      </ScrollableSegment>
-    </FixyWrapper>
-  )
+  Users: <UsersTable />
 }
 
 const datagridConfig = {
@@ -94,10 +74,6 @@ const datagridConfig = {
     url: '/prodex/api/manufacturers/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v}%`] }] : [])
   },
-  'Market Segments': {
-    url: '/prodex/api/market-segments/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'MarketSegment.name', values: [`%${v}%`] }] : [])
-  },
   'Packaging Types': {
     url: '/prodex/api/packaging-types/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'PackagingType.name', values: [`%${v}%`] }] : [])
@@ -130,8 +106,7 @@ const editForms = {
   Forms: <EditPopup1Parameter />,
   Conditions: <EditPopup1Parameter />,
   'NMFC Numbers': <NmfcPopup />,
-  Associations: <EditPopup1Parameter />,
-  'Market Segments': <EditPopup1Parameter />
+  Associations: <EditPopup1Parameter />
 }
 
 const addForms = {
@@ -142,8 +117,7 @@ const addForms = {
   Forms: <AddNewPopup1Parameter />,
   Conditions: <AddNewPopup1Parameter />,
   'NMFC Numbers': <NmfcPopup />,
-  Associations: <AddNewPopup1Parameter />,
-  'Market Segments': <AddNewPopup1Parameter />
+  Associations: <AddNewPopup1Parameter />
 }
 
 const editSidebar = {

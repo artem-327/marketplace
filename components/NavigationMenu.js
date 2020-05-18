@@ -514,7 +514,7 @@ class Navigation extends Component {
                 {formatMessage({ id: 'navigation.documentTypes', defaultMessage: 'Document Types' })}
               </>
             </MenuLink>
-            <MenuLink to='/market-segments' dataTest='navigation_menu_admin_market-segments'>
+            <MenuLink to='/market-segments' dataTest='navigation_menu_admin_market_segments'>
               <>
                 <Disc size={22} />
                 {formatMessage({ id: 'navigation.marketSegments', defaultMessage: 'Market Segments' })}
@@ -536,6 +536,12 @@ class Navigation extends Component {
           <>
             <Bell size={22} />
             {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
+          </>
+        </MenuLink>
+        <MenuLink to='/admin-settings' dataTest='navigation_menu_admin_settings'>
+          <>
+            <Settings size={22} />
+            {formatMessage({ id: 'navigation.adminSettings', defaultMessage: 'Admin Settings' })}
           </>
         </MenuLink>
       </div>

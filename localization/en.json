@@ -2308,5 +2308,6 @@
   "products.casProducts.search": "Search cas product by name or number ...",
   "products.casProducts.buttonAdd": "Add CAS Product",
   "documentTypes.title": "Document Types",
-  "marketSegments.title": "Market Segments"
+  "marketSegments.title": "Market Segments",
+  "adminSettings.title": "Admin Settings"
 }

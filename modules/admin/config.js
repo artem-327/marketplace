@@ -569,61 +569,6 @@ export const config = {
     }
   },
 
-  'Market Segments': {
-    tableName: 'admin_market_segments',
-    addEditText: (
-      <FormattedMessage id='admin.marketSegment' defaultMessage='Market Segment'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    formattedMessageName: 'marketSegment',
-    searchText: 'admin.searchMarketSegment',
-    display: {
-      columns: [
-        {
-          name: 'name',
-          title: (
-            <FormattedMessage id='global.name' defaultMessage='Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          sortPath: 'MarketSegment.name'
-        }
-      ]
-    },
-    edit: [
-      {
-        name: 'name',
-        title: (
-          <FormattedMessage id='global.name' defaultMessage='Name'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        type: 'text',
-        required: true
-      }
-    ],
-    api: {
-      get: {
-        dataName: 'marketSegmentsRows',
-        typeRequest: 'ADMIN_GET_MARKET_SEGMENTS_DATA',
-        typeSuccess: 'ADMIN_GET_MARKET_SEGMENTS_DATA_FULFILLED',
-        apiCall: '/prodex/api/market-segments'
-      },
-      post: {
-        typeRequest: 'ADMIN_POST_MARKET_SEGMENTS_DATA',
-        apiCall: '/prodex/api/market-segments'
-      },
-      update: {
-        typeRequest: 'ADMIN_PUT_MARKET_SEGMENTS_DATA',
-        apiCall: '/prodex/api/market-segments/id/'
-      },
-      delete: {
-        typeRequest: 'ADMIN_DELETE_MARKET_SEGMENTS_DATA',
-        apiCall: '/prodex/api/market-segments/id/'
-      }
-    }
-  },
   Users: {
     tableName: 'admin_users',
     addEditText: (
@@ -724,8 +669,5 @@ export const config = {
         }
       ]
     }
-  },
-  'Admin Settings': {
-    hideHandler: true
   }
 }
