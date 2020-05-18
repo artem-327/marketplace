@@ -34,7 +34,6 @@ export const initialState = {
     { name: 'Forms', id: 5 },
     { name: 'Conditions', id: 6 },
     { name: 'NMFC Numbers', id: 14 },
-    { name: 'Document Types', id: 9 },
     { name: 'Associations', id: 15 },
     { name: 'Market Segments', id: 10 },
     { name: 'Users', id: 13 },

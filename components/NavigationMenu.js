@@ -21,7 +21,8 @@ import {
   Briefcase,
   Home,
   Package,
-  Archive
+  Archive,
+  Disc
 } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
@@ -511,6 +512,12 @@ class Navigation extends Component {
               <>
                 <FileText size={22} />
                 {formatMessage({ id: 'navigation.documentTypes', defaultMessage: 'Document Types' })}
+              </>
+            </MenuLink>
+            <MenuLink to='/market-segments' dataTest='navigation_menu_admin_market-segments'>
+              <>
+                <Disc size={22} />
+                {formatMessage({ id: 'navigation.marketSegments', defaultMessage: 'Market Segments' })}
               </>
             </MenuLink>
             <DropdownItem

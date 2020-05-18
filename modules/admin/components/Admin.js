@@ -49,7 +49,6 @@ const tables = {
   Forms: <DataTable />,
   Conditions: <DataTable />,
   'NMFC Numbers': <NmfcTable />,
-  'Document Types': <DataTable />,
   Associations: <DataTable />,
   'Market Segments': <DataTable />,
   Users: <UsersTable />,
@@ -72,16 +71,12 @@ const datagridConfig = {
     searchToFilter: v => {
       let filters = []
       if (v) {
-        filters.push({operator: 'LIKE', path: 'NmfcNumber.description', values: [`%${v}%`]})
+        filters.push({ operator: 'LIKE', path: 'NmfcNumber.description', values: [`%${v}%`] })
         if (Number.isInteger(parseInt(v)))
-          filters.push({operator: 'LIKE', path: 'NmfcNumber.prefix', values: [`${parseInt(v)}%`]})
+          filters.push({ operator: 'LIKE', path: 'NmfcNumber.prefix', values: [`${parseInt(v)}%`] })
       }
       return filters
     }
-  },
-  'Document Types': {
-    url: 'prodex/api/document-types/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'DocumentType.name', values: [`%${v}%`] }] : [])
   },
   Associations: {
     url: 'prodex/api/associations/datagrid',
@@ -135,7 +130,6 @@ const editForms = {
   Forms: <EditPopup1Parameter />,
   Conditions: <EditPopup1Parameter />,
   'NMFC Numbers': <NmfcPopup />,
-  'Document Types': <EditPopup1Parameter />,
   Associations: <EditPopup1Parameter />,
   'Market Segments': <EditPopup1Parameter />
 }
@@ -148,7 +142,6 @@ const addForms = {
   Forms: <AddNewPopup1Parameter />,
   Conditions: <AddNewPopup1Parameter />,
   'NMFC Numbers': <NmfcPopup />,
-  'Document Types': <AddNewPopup1Parameter />,
   Associations: <AddNewPopup1Parameter />,
   'Market Segments': <AddNewPopup1Parameter />
 }

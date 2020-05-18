@@ -5,7 +5,7 @@ import { Datagrid } from '~/modules/datagrid'
 
 export function closePopup() {
   return {
-    type: AT.DOCUMENT_TYPES_CLOSE_POPUP
+    type: AT.MARKET_SEGMENTS_CLOSE_POPUP
   }
 }
 
@@ -18,20 +18,20 @@ export function getDataRequest(config, values = null) {
 
 export function openEditPopup(editedData) {
   return {
-    type: AT.DOCUMENT_TYPES_OPEN_EDIT_POPUP,
+    type: AT.MARKET_SEGMENTS_OPEN_EDIT_POPUP,
     payload: editedData
   }
 }
 
 export function closeConfirmPopup() {
   return {
-    type: AT.DOCUMENT_TYPES_CLOSE_CONFIRM_POPUP
+    type: AT.MARKET_SEGMENTS_CLOSE_CONFIRM_POPUP
   }
 }
 export function deleteConfirmation(id) {
   return async dispatch => {
     await dispatch({
-      type: AT.DOCUMENT_TYPES_DELETE_DOCUMENT_TYPES_DATA,
+      type: AT.MARKET_SEGMENTS_DELETE_MARKET_SEGMENTS_DATA,
       payload: api.deleteItem(id)
     })
     Datagrid.removeRow(id)
@@ -40,13 +40,13 @@ export function deleteConfirmation(id) {
 
 export function closeAddPopup() {
   return {
-    type: AT.DOCUMENT_TYPES_CLOSE_ADD_POPUP
+    type: AT.MARKET_SEGMENTS_CLOSE_ADD_POPUP
   }
 }
 export function postNewRequest(values) {
   return async dispatch => {
     await dispatch({
-      type: AT.DOCUMENT_TYPES_POST_DOCUMENT_TYPES_DATA,
+      type: AT.MARKET_SEGMENTS_POST_MARKET_SEGMENTS_DATA,
       payload: api.postNewRequest(values)
     })
     Datagrid.loadData()
@@ -56,7 +56,7 @@ export function postNewRequest(values) {
 
 export function closeEditPopup() {
   return {
-    type: AT.DOCUMENT_TYPES_CLOSE_EDIT_POPUP
+    type: AT.MARKET_SEGMENTS_CLOSE_EDIT_POPUP
   }
 }
 export function putEditedDataRequest(id, values) {
@@ -64,7 +64,7 @@ export function putEditedDataRequest(id, values) {
     const editedItem = await api.putEditedDataRequest(values, id)
 
     dispatch({
-      type: AT.DOCUMENT_TYPES_PUT_DOCUMENT_TYPES_DATA,
+      type: AT.MARKET_SEGMENTS_PUT_MARKET_SEGMENTS_DATA,
       payload: editedItem
     })
     Datagrid.updateRow(id, () => editedItem)
@@ -74,7 +74,7 @@ export function putEditedDataRequest(id, values) {
 
 export function openPopup(data) {
   return {
-    type: AT.DOCUMENT_TYPES_OPEN_POPUP,
+    type: AT.MARKET_SEGMENTS_OPEN_POPUP,
     payload: { data }
   }
 }
@@ -83,7 +83,7 @@ export function handleFiltersValue(props, value) {
   return async dispatch => {
     // save filter value
     await dispatch({
-      type: AT.DOCUMENT_TYPES_HANDLE_FILTERS_VALUE,
+      type: AT.MARKET_SEGMENTS_HANDLE_FILTERS_VALUE,
       payload: value
     })
   }

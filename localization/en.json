@@ -150,6 +150,7 @@
   "navigation.dashboard": "Dashboard",
   "navigation.products": "Products",
   "navigation.documentTypes": "Document Types",
+  "navigation.marketSegments": "Market Segments",
   "dwolla.controllerTitlePopup": "Please read below for the definition of Controller in this context.",
   "dwolla.paymentPoweredBy": "Echo Global Chemical Exchange payment gateway is powered by:",
   "dwolla.confirmAcc": "Confirm Account Administrator Information",
@@ -814,6 +815,8 @@
   "confirm.deleteCondition.content": "Do you really want to delete '{name}' condition?",
   "confirm.deleteDocumentType.title": "Delete Document Type",
   "confirm.deleteDocumentType.content": "Do you really want to delete '{name}' document type?",
+  "confirm.deleteMarketSegments.title": "Delete Market Segment",
+  "confirm.deleteMarketSegments.content": "Do you really want to delete '{name}' market segment?",
   "confirm.deleteForm.title": "Delete Form",
   "confirm.deleteForm.content": "Do you really want to delete '{name}' form?",
   "confirm.deleteGrade.title": "Delete Grade",
@@ -2304,5 +2307,6 @@
   "products.productCatalog.buttonAdd": "Add Echo Product",
   "products.casProducts.search": "Search cas product by name or number ...",
   "products.casProducts.buttonAdd": "Add CAS Product",
-  "documentTypes.title": "Document Types"
+  "documentTypes.title": "Document Types",
+  "marketSegments.title": "Market Segments"
 }

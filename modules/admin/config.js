@@ -569,63 +569,6 @@ export const config = {
     }
   },
 
-  'Document Types': {
-    tableName: 'admin_document_types',
-    addEditText: (
-      <FormattedMessage id='admin.documentType' defaultMessage='Document Type'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    formattedMessageName: 'documentType',
-    searchText: 'admin.searchDocumentType',
-    display: {
-      columns: [
-        {
-          name: 'name',
-          title: (
-            <FormattedMessage id='global.name' defaultMessage='Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          sortPath: 'DocumentType.name'
-        }
-      ]
-    },
-    edit: [
-      {
-        name: 'name',
-        title: (
-          <FormattedMessage id='global.name' defaultMessage='Name'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        type: 'text',
-        required: true
-      }
-    ],
-    api: {
-      get: {
-        dataName: 'documentTypesRows',
-        typeRequest: 'ADMIN_GET_DOCUMENT_TYPES_DATA',
-        typeSuccess: 'ADMIN_GET_DOCUMENT_TYPES_DATA_FULFILLED',
-        apiCall: '/prodex/api/document-types'
-      },
-      post: {
-        typeRequest: 'ADMIN_POST_DOCUMENT_TYPES_DATA',
-        apiCall: '/prodex/api/document-types'
-      },
-      update: {
-        method: 'patch',
-        typeRequest: 'ADMIN_PUT_DOCUMENT_TYPES_DATA',
-        apiCall: '/prodex/api/document-types/id/'
-      },
-      delete: {
-        typeRequest: 'ADMIN_DELETE_DOCUMENT_TYPES_DATA',
-        apiCall: '/prodex/api/document-types/id/'
-      }
-    }
-  },
-
   'Market Segments': {
     tableName: 'admin_market_segments',
     addEditText: (

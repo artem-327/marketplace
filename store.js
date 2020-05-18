@@ -76,6 +76,7 @@ import layout from '~/modules/layout/reducer'
 import companiesAdmin from '~/modules/companies/reducer'
 import productsAdmin from '~/modules/products/reducer'
 import documentTypes from '~/modules/document-types/reducer'
+import marketSegments from '~/modules/market-segments/reducer'
 
 const reducer = combineReducers({
   auth,
@@ -140,7 +141,8 @@ const reducer = combineReducers({
   alerts,
   companiesAdmin,
   productsAdmin,
-  documentTypes
+  documentTypes,
+  marketSegments
 })
 
 const rootReducer = (state, action) => {

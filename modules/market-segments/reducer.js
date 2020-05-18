@@ -14,14 +14,14 @@ export const initialState = {
   loading: false,
   casProductsRows: [],
   companiesRows: [],
-  currentTab: { name: 'Document Types', id: 9, type: 'document-types' }
+  currentTab: { name: 'Market Segments', id: 10, type: 'market-segments' }
 }
 
 export default function reducer(state = initialState, action) {
   const { payload, type } = action
 
   switch (type) {
-    case AT.DOCUMENT_TYPES_OPEN_POPUP: {
+    case AT.MARKET_SEGMENTS_OPEN_POPUP: {
       return {
         ...state,
         editTrig: !state.editTrig,
@@ -42,7 +42,7 @@ export default function reducer(state = initialState, action) {
         currentAddDwolla: null
       }
     }
-    case AT.DOCUMENT_TYPES_OPEN_EDIT_POPUP: {
+    case AT.MARKET_SEGMENTS_OPEN_EDIT_POPUP: {
       return {
         ...state,
         currentEditForm: state.currentTab,
@@ -53,14 +53,14 @@ export default function reducer(state = initialState, action) {
         popupValues: payload
       }
     }
-    case AT.DOCUMENT_TYPES_CLOSE_CONFIRM_POPUP: {
+    case AT.MARKET_SEGMENTS_CLOSE_CONFIRM_POPUP: {
       return {
         ...state,
         deleteRowById: null,
         confirmMessage: null
       }
     }
-    case AT.DOCUMENT_TYPES_CLOSE_ADD_POPUP: {
+    case AT.MARKET_SEGMENTS_CLOSE_ADD_POPUP: {
       return {
         ...state,
         currentAddForm: null,
@@ -69,7 +69,7 @@ export default function reducer(state = initialState, action) {
         currentAddDwolla: null
       }
     }
-    case AT.DOCUMENT_TYPES_CLOSE_EDIT_POPUP: {
+    case AT.MARKET_SEGMENTS_CLOSE_EDIT_POPUP: {
       return {
         ...state,
         currentAddForm: null,
@@ -78,7 +78,7 @@ export default function reducer(state = initialState, action) {
         currentAddDwolla: null
       }
     }
-    case AT.DOCUMENT_TYPES_HANDLE_FILTERS_VALUE: {
+    case AT.MARKET_SEGMENTS_HANDLE_FILTERS_VALUE: {
       return {
         ...state,
         filterValue: payload,
@@ -86,7 +86,7 @@ export default function reducer(state = initialState, action) {
         companiesRows: []
       }
     }
-    case AT.DOCUMENT_TYPES_CLOSE_POPUP: {
+    case AT.MARKET_SEGMENTS_CLOSE_POPUP: {
       return {
         ...state,
         popupValues: null,
