@@ -508,7 +508,7 @@ class Settings extends Component {
         <DatagridProvider apiConfig={this.getApiConfig()}>
           <Container fluid className='flex stretched'>
             {!tutorialCompleted && <Tutorial />}
-            <Container fluid style={{ padding: '0 1.5vh' }}>
+            <Container fluid style={{ padding: '0 18px' }}>
               <TablesHandlers currentTab={currentTab} />
             </Container>
             <SettingsGrid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>

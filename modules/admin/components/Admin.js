@@ -114,14 +114,15 @@ const datagridConfig = {
   },
   'NMFC Numbers': {
     url: '/prodex/api/nmfc-numbers/datagrid',
-    searchToFilter: v =>
-      v
-        ? [
-            { operator: 'EQUALS', path: 'NmfcNumber.prefix', values: [v] },
-            { operator: 'EQUALS', path: 'NmfcNumber.suffix', values: [v] },
-            { operator: 'LIKE', path: 'NmfcNumber.description', values: [`%${v}%`] }
-          ]
-        : []
+    searchToFilter: v => {
+      let filters = []
+      if (v) {
+        filters.push({operator: 'LIKE', path: 'NmfcNumber.description', values: [`%${v}%`]})
+        if (Number.isInteger(parseInt(v)))
+          filters.push({operator: 'LIKE', path: 'NmfcNumber.prefix', values: [`${parseInt(v)}%`]})
+      }
+      return filters
+    }
   },
   'Document Types': {
     url: 'prodex/api/document-types/datagrid',

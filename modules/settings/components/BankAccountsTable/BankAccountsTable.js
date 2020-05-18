@@ -121,6 +121,16 @@ export const bankAccountsConfig = {
     uploadDocumentsButton: false,
     documentStatus: false
   },
+  deactivated: {
+    registerButton: true,
+    addButton: false,
+    dwollaBalance: false,
+    searchField: false,
+    accountStatus: true,
+    bankAccountList: false,
+    uploadDocumentsButton: false,
+    documentStatus: false
+  },
   retry: {
     registerButton: true,
     addButton: false,
@@ -322,7 +332,7 @@ class BankAccountsTable extends Component {
         )}
 
         {(bankAccounts.accountStatus || bankAccounts.documentStatus) && (
-          <Container>
+          <Container style={{ padding: '0 0 28px 0' }}>
             {bankAccounts.accountStatus && !bankAccounts.documentOwner && (
               <>
                 <Table style={{ marginTop: 0, marginBottom: 30 }}>
