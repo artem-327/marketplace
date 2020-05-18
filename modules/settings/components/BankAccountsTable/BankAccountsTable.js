@@ -121,6 +121,16 @@ export const bankAccountsConfig = {
     uploadDocumentsButton: false,
     documentStatus: false
   },
+  deactivated: {
+    registerButton: true,
+    addButton: false,
+    dwollaBalance: false,
+    searchField: false,
+    accountStatus: true,
+    bankAccountList: false,
+    uploadDocumentsButton: false,
+    documentStatus: false
+  },
   retry: {
     registerButton: true,
     addButton: false,
