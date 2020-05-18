@@ -270,9 +270,9 @@ class UsersSidebar extends React.Component {
     if (popupValues.company) {
       const company = comp.value
       let branches = uniqueArrayByKey(
-        (user.value.homeBranch ? this.getBranchesOptions([user.value.homeBranch]) : []).concat(
+        (user.value.homeBranch ? this.getHomeBranchesOptions([user.value.homeBranch]) : []).concat(
           user.value.additionalBranches ? this.getBranchesOptions(user.value.additionalBranches) : [],
-          company ? this.getBranchesOptions(company.branches) : []
+          company && company.branches ? this.getBranchesOptions(company.branches) : []
         ),
         'key'
       )
@@ -307,6 +307,8 @@ class UsersSidebar extends React.Component {
       })
     }
   }
+
+  getHomeBranchesOptions = branches => branches.map(b => ({ key: b.id, value: b.id, text: b.deliveryAddress.cfName }))
 
   getBranchesOptions = branches => {
     let result = []
@@ -727,16 +729,13 @@ class UsersSidebar extends React.Component {
                       <Required />
                     </GridColumnWError>
                   </GridRow>
-                  <GridRow>{
-                    this.generateCheckboxes(
-                      values.company !== ''
-                        ? userRoles
-                        : adminRoles,
+                  <GridRow>
+                    {this.generateCheckboxes(
+                      values.company !== '' ? userRoles : adminRoles,
                       values,
                       'roles',
                       errorRoles
-                    )
-                  }
+                    )}
                   </GridRow>
                   <GridRow style={{ paddingTop: '0' }}>
                     <GridColumn>{errorRoles && <span className='sui-error-message'>{errorRoles}</span>}</GridColumn>
