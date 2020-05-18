@@ -284,7 +284,7 @@ class Navigation extends Component {
             <MenuLink
               to='/inventory/my'
               dataTest='navigation_menu_inventory_my_drpdn'
-              className={!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''}>
+              className={`menu ${!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''}`}>
               <>
                 <Layers size={22} />
                 {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
@@ -303,7 +303,7 @@ class Navigation extends Component {
             <MenuLink
               to='/marketplace/all'
               dataTest='navigation_menu_marketplace_drpdn'
-              className={!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''}>
+              className={`menu ${!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''}`}>
               <>
                 <ShoppingBag size={22} />
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
