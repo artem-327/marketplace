@@ -322,7 +322,7 @@ class BankAccountsTable extends Component {
         )}
 
         {(bankAccounts.accountStatus || bankAccounts.documentStatus) && (
-          <Container>
+          <Container style={{ padding: '0 0 28px 0' }}>
             {bankAccounts.accountStatus && !bankAccounts.documentOwner && (
               <>
                 <Table style={{ marginTop: 0, marginBottom: 30 }}>
