@@ -247,19 +247,17 @@ class Navigation extends Component {
       )
     })
 
-    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, company, clientCompany } = getSafe(
-      () => auth.identity,
-      {
-        isCompanyAdmin: null,
-        isUserAdmin: null,
-        isProductCatalogAdmin: null,
-        company: null,
-        clientCompany: false
-      }
-    )
+    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, company } = getSafe(() => auth.identity, {
+      isCompanyAdmin: null,
+      isUserAdmin: null,
+      isProductCatalogAdmin: null,
+      company: null
+    })
+
+    const { isClientCompany } = getSafe(() => company, { isClientCompany: false })
     return (!isAdmin && !isEchoOperator) || takeover ? (
       <div className='flex-wrapper'>
-        {!clientCompany && (
+        {!isClientCompany && (
           <>
             <MenuLink
               to='/inventory/my'
@@ -298,7 +296,7 @@ class Navigation extends Component {
           </>
         ) : null}
         <MenuLink
-          to={clientCompany ? '/wanted-board/my-requested-items' : '/wanted-board/wanted-board'}
+          to={isClientCompany ? '/wanted-board/my-requested-items' : '/wanted-board/wanted-board'}
           dataTest='navigation_menu_wanted_board_drpdn'>
           <>
             <Grid size={22} />
@@ -324,7 +322,7 @@ class Navigation extends Component {
           data-test='navigation_orders_drpdn'>
           <Dropdown.Menu data-test='navigation_menu_orders_drpdn_menu'>
             <PerfectScrollbar>
-              {!clientCompany && (
+              {!isClientCompany && (
                 <Dropdown.Item as={MenuLink} to='/orders?type=sales' dataTest='navigation_orders_sales_orders_drpdn'>
                   {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
                 </Dropdown.Item>
@@ -395,7 +393,7 @@ class Navigation extends Component {
                     </Dropdown.Item>
                   </>
                 ) : null}
-                {(isCompanyAdmin || isProductCatalogAdmin) && !clientCompany ? (
+                {(isCompanyAdmin || isProductCatalogAdmin) && !isClientCompany ? (
                   <Dropdown.Item
                     as={MenuLink}
                     to='/settings?type=products'
@@ -404,7 +402,7 @@ class Navigation extends Component {
                     {formatMessage({ id: 'navigation.productCatalog', defaultMessage: 'Product Catalog' })}
                   </Dropdown.Item>
                 ) : null}
-                {isCompanyAdmin && !clientCompany ? (
+                {isCompanyAdmin && !isClientCompany ? (
                   <>
                     <Dropdown.Item
                       as={MenuLink}
